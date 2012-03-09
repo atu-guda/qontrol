@@ -2,7 +2,7 @@
                           qstructview.cpp  -  description
                              -------------------
     begin                : Sat Aug 12 2000
-    copyright            : (C) 2000-2003 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -208,7 +208,7 @@ void QStructView::drawAll( QPainter &p )
     ob->getDataSI( "links.noIcon", &ob_noIcon, 0 );
     if( ob_x < 0 || ob_x >=MODEL_MX || ob_y < 0 || ob_y >= MODEL_MY )
       continue;
-    // set real boject icon origin
+    // set real object icon origin
     ob_gx = lm + ob_x * grid_sz + 4; ob_gy = tm + ob_y * grid_sz + 4;
     p.setPen( Qt::black );
 

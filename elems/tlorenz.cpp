@@ -27,6 +27,8 @@ const char* TLorenz::helpstr = "<H1>TLorenz</H1>\n"
  " \\dot{y} = x (r-z ) - y; <br>\n"
  " \\dot{z} = xy - bz.<br>\n"
  " <br>\n"
+ " Inputs 0-2: add to x, y, z <br>\n"
+ " <br>\n"
  " Outputs <b>x</b> variable - other can be get by TIinputAny<br>\n"
  " <br>\n"
  "Have 6 parameters: 3 from system, <b>sigma, r ,b </b>, <br>"
@@ -131,12 +133,12 @@ const char** TLorenz::getIcon(void) const
   return icon;
 }
 
-double TLorenz::f( const double* /* u */, double /*t*/ )
+double TLorenz::f( const double*  u , double /*t*/ )
 {
   double xn, yn, zn;
-  xn = x + tdt * ( sigma * (y-x) );
-  yn = y + tdt * ( x * (r-z) - y );
-  zn = z + tdt * ( x*y - b*z );
+  xn = x + tdt * ( sigma * (y-x) ) + u[0];
+  yn = y + tdt * ( x * (r-z) - y ) + u[1];
+  zn = z + tdt * ( x*y - b*z )     + u[2];
   x = xn; y = yn; z = zn;
   return x; 
 }

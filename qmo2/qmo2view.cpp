@@ -329,6 +329,7 @@ void QMo2View::newElm()
   di.listdata = "";
   model->insElem( &di, oord, sel_x, sel_y) ;
   changeSel( 0, 0, 1 ); // update sel
+  model->reset();
   editElm();
 }
 
@@ -337,10 +338,19 @@ void QMo2View::delElm()
   int k;
   if( ! checkState( selCheck ) )
     return;	  
+  
+  TMiso *ob = model->getMiso( sel );
+  if( ob == 0 )
+    return;
+  
+  const char *oname = ob->getName();
+
   k = QMessageBox::information( this, PACKAGE " delete confirmation",
-      "Do you really want to delete this element ?",
-      "&Yes", "&No", "&Help", 0, 1 );
+       QString("Do you really want to delete element ") 
+        + QString(oname) + QString(" ?"),
+       "&Yes", "&No", "&Help", 0, 1 );
   if( k == 0 ) {
+    model->reset();
     model->delElem( sel );
     if( sel == mark )
       mark = -1;
@@ -356,7 +366,7 @@ void QMo2View::editElm()
   int rc;	
   if( ! checkState( selCheck ) )
     return;	  
-  model->reset();
+
   ob = model->getMiso( sel );
   if( ob == 0 )
     return;
@@ -378,7 +388,7 @@ void QMo2View::linkElm()
   int rc;
   if( ! checkState( selCheck ) )
     return;	  
-  model->reset();
+
   ob = model->getMiso( sel );
   if( ob == 0 )
     return;
@@ -403,7 +413,7 @@ void QMo2View::qlinkElm()
   char oldlink[MAX_NAMELEN], lnkname[MAX_NAMELEN];
   if( ! checkState( linkToCheck ) )
     return;	  
-  model->reset();
+
   ob = model->getMiso( sel ); toob = model->getMiso( mark );
   if( ob == 0 || toob == 0 )
     return;
@@ -432,7 +442,7 @@ void QMo2View::qplinkElm()
   char oldlink[MAX_NAMELEN], lnkname[MAX_NAMELEN];
   if( ! checkState( linkToCheck ) )
     return;	  
-  model->reset();
+
   ob = model->getMiso( sel ); toob = model->getMiso( mark );
   if( ob == 0 || toob == 0 )
     return;
@@ -459,13 +469,15 @@ void QMo2View::unlinkElm()
   char lnkname[MAX_NAMELEN];
   if( ! checkState( linkToCheck ) )
     return;	  
-  model->reset();
+  
   ob = model->getMiso( sel );
   if( ob == 0 )
     return;
 
   el = static_cast<TElmLink*>( ob->getObj( "links" ) );
-  if( el == 0 ) return;
+  if( el == 0 ) 
+    return;
+
   strcpy( lnkname, "inps0" );
   for( k=0; k<4; k++ ) {
     lnkname[4] = char( '0' + k );
@@ -486,13 +498,15 @@ void QMo2View::lockElm()
   int lck;	
   if( ! checkState( selCheck ) )
     return;	  
-  model->reset();
   ob = model->getMiso( sel );
   if( ob == 0 )
     return;
+  
   ob->getDataSI( "links.locked", &lck, 0 );
   lck = !lck;
   ob->setDataSI( "links.locked", lck, 0 );
+  
+  model->reset();
   model->setModified();
   emit viewChanged();
 }
@@ -705,7 +719,7 @@ void QMo2View::editOut()
   int rc;
   if( ! checkState( validCheck ) )
     return;	
-  model->reset();
+
   if( level < 0 || level >= model->getNOutArr() )
     return;
   arr = model->getOutArr( level );
@@ -854,7 +868,7 @@ void QMo2View::editGraph()
   int rc;
   if( ! checkState( validCheck ) )
     return;	
-  model->reset();
+
   if( level < 0 || level >= model->getNGraph() )
     return;
   gra = model->getGraph( level );
@@ -1025,7 +1039,7 @@ void QMo2View::editModel()
   int rc;
   if( ! checkState( validCheck ) )
     return;	
-  model->reset();
+
   adi = new QAnyDialog( model, this, "mod_dial" );
   rc = adi->exec_trans();
   if( rc == QDialog::Accepted ) {
