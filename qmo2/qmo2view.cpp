@@ -1,7 +1,7 @@
 /***************************************************************************
   qmo2view.cpp  -  description
   begin                : Mon Jul 31 16:51:57 EEST 2000
-  copyright            : (C) 2000-2003 by atu
+  copyright            : (C) 2000-2012 by atu
   email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -327,9 +327,8 @@ void QMo2View::newElm()
   strncat( di.name, oname, MAX_NAMELEN-1 );
   di.descr = ""; 
   di.listdata = "";
-  model->insElem( &di, oord, sel_x, sel_y) ;
+  model->insElem( &di, oord, sel_x, sel_y) ; // reset() implied
   changeSel( 0, 0, 1 ); // update sel
-  model->reset();
   editElm();
 }
 
@@ -527,7 +526,7 @@ void QMo2View::ordElm()
       "Input new element order", 
       old_ord, 0, 2147483647, 1, &ok, this, "order_dialog");
   if( ok ) {
-    model->newOrder( sel, new_ord );
+    model->newOrder( sel, new_ord ); // reset implied
     emit viewChanged();
   }; 
 }
@@ -624,7 +623,7 @@ void QMo2View::infoElm()
 
 void QMo2View::newOut()
 {
-  int idx, rc, no;
+  int idx, rc;
   const TDataInfo *di;
   QString onameq, enameq;
   const char *outname, *elmname;
@@ -635,15 +634,16 @@ void QMo2View::newOut()
   QHBoxLayout *btn_lay;
   if( ! checkState( validCheck ) )
     return;
+  
   if( sel >=0 && (idx = model->elnu2idx( sel )) >=0
       && (di = model->getDataInfo( idx )) != 0 )
   {
     enameq = di->name;
+    onameq = QString("out_") + QString(enameq);
   } else {
     enameq = ":t";
+    onameq = QString("out_t");
   };
-  no = model->getNOutArr();
-  onameq = QString("out") + QString::number( no );
 
   dia = new QDialog( this, "newout_dial", true );
   dia->setCaption( "Creating new output array" );
@@ -702,8 +702,12 @@ void QMo2View::delOut()
     return;	  
   if( level < 0 || level >= model->getNOutArr() )
     return;
+  TOutArr *arr= model->getOutArr( level );
+  if( arr == 0 )
+    return;
   k = QMessageBox::information( this, PACKAGE " delete confirmation",
-      "Do you really want to delete this output array ?",
+      QString("Do you really want to delete output array \"" )
+       +QString( arr->getName() ) + QString( "\" ?" ),
       "&Yes", "&No", "&Help", 0, 1 );
   if( k == 0 ) {
     model->delOut( level );
@@ -851,8 +855,12 @@ void QMo2View::delGraph()
     return;	
   if( level < 0 || level >= model->getNGraph() )
     return;
+  TGraph *gra = model->getGraph( level );
+  if( gra == 0 )
+    return;
   k = QMessageBox::information( this, PACKAGE " delete confirmation",
-      "Do you really want to delete this graph description?",
+      QString("Do you really want to delete graph description \"")
+       + QString( gra->getName() ) + QString("\" ?") ,
       "&Yes", "&No", "&Help", 0, 1 );
   if( k == 0 ) {
     model->delGraph( level );

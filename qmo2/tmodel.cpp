@@ -2,7 +2,7 @@
                           tmodel.cpp  -  description
                              -------------------
     begin                : Tue Aug 1 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -38,7 +38,7 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
 {
   int i;
   n_el = n_out = n_graph = 0; end_loop = 0;
-  tt = 100; nn = n_tot= 10000; nl1 = 1; nl2 = 1; n_steps=100; use_sync = 0;
+  tt = 100; nn = n_tot= 100000; nl1 = 1; nl2 = 1; n_steps=100; use_sync = 0;
   prm0s = prm1s = prm2s = prm3s = 0.1; 
   prm0d = prm1d = 0.01; xval1 = xval2 = 0;
   seed = 117; useSameSeed = 1; seedType = 0;
@@ -575,7 +575,15 @@ int TModel::insOut( const char *outname, const char *objname )/*{{{1*/
   if( ob == 0 || ob->isChildOf( "TOutArr" ) == 0 ) 
     return -1;
   ob->setDataSS( "name", objname, 0 );
-  ob->setDataSS( "label", objname, 0 );
+  
+  if( strncmp( outname, "out_", 4 ) == 0 
+      && outname[4] != 0 &&
+      isGoodName(outname+4) ) 
+  {
+    ob->setDataSS( "label", outname+4, 0 );
+  } else {
+    ob->setDataSS( "label", objname, 0 );
+  }
   linkNames(); 
   modified |= 1;
   return 0;
@@ -635,7 +643,7 @@ int TModel::delOut( int out_nu )/*{{{1*/
   k = del_obj( v_out[out_nu] );
   linkNames();
   modified |= 1;
-  return 0;
+  return k;
 }/*}}}1*/
 
 int TModel::delGraph( int gr_nu )/*{{{1*/
@@ -647,7 +655,7 @@ int TModel::delGraph( int gr_nu )/*{{{1*/
   k = del_obj( v_graph[gr_nu] );
   linkNames();
   modified |= 1;
-  return 0;
+  return k;
 }/*}}}1*/
 
 int TModel::newOrder( const char *name, int new_ord )/*{{{1*/
