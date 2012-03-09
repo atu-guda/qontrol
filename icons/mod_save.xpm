@@ -1,0 +1,43 @@
+/* XPM */
+static const char *mod_save[] = {
+/* width height num_colors chars_per_pixel */
+"    20    20       16            1",
+/* colors */
+"` c #000000",
+". c #800000",
+"# c #008000",
+"a c #808000",
+"b c #000080",
+"c c #800080",
+"d c #008080",
+"e c #808080",
+"f c None",
+"g c #ff0000",
+"h c #00ff00",
+"i c #ffff00",
+"j c #0000ff",
+"k c #ff00ff",
+"l c #00ffff",
+"m c #ffffff",
+/* pixels */
+"ffffffffffffffffffff",
+"f````````fffffffffff",
+"f`######`fffffffffff",
+"f`#ii#ll`fffffffffff",
+"f`#ii#ll`f````efffff",
+"f`######`f`````effff",
+"f`#jj#ee`ffffe``ffff",
+"f`#jj#ee`fffff``ffff",
+"f`######`fffff``ffff",
+"f````````fff``````ff",
+"fffffffffffff````fff",
+"ffffffffffffff``ffff",
+"ffffffffffffffffffff",
+"ffffffff```````````f",
+"ffffffff`mmmmmmmmf`f",
+"ffffffff`mggfffffe`f",
+"ffffffff`mfffffffe`f",
+"ffffffff`feeeeeeee`f",
+"ffffffff```````````f",
+"ffffffffffffffffffff"
+};

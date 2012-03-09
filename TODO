@@ -1,0 +1,26 @@
+prepare to b obsoleted progam: migrate to qontrol
+
+describing datas: val;label;value. ( where to place it? )
+iface to gnuplot data out, call gnuplot if need qr request
+callback function in TModel::run* -- or event-driven funcs
+objects: TFileInput, TFileOutput, TMovingAver, TDiff
+  -- or File Source input/output
+may be new field in TClassInfo to misc flags: can f() w/o preRun..., 
+    class group.. etc
+implement loading objects in so.
+handling special names, filling in TAnyDial
+data inheritance -- data infos (preprocess? macro? qt?)
+macro for filling data infos
+abitary data type -- TData ? 
+functions in data info
+
+more flexible TOutArr
+Distributions analysis + plot
+RunInfo (multiple)
+rename,cut,copy,paste+rename (clipboard textual or bin)
+vector icons (language) (may be dynamic)
+Hue on elements
+Label of element (or/and floating labels on structure view)
+Labels on plot view (fixed, attached to some points)
+Report with macros
+

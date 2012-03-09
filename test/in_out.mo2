@@ -1,0 +1,579 @@
+%*ModelConstructor 2.0
+%!r root: known classes:
+%!c 1 TDataSet
+%!c 3 TDataContainer
+%!c 10 TRootData
+%!c 500 TModel
+%!c 600 TOutArr
+%!c 700 TGraph
+%!c 999 TElmLink
+%!c 1000 TMiso
+%!c 1001 TLinear
+%!c 1002 TSource
+%!c 1003 TMultipl
+%!c 1004 TPid
+%!c 1011 THyst
+%!c 1005 TFuncPoly
+%!c 1006 TFuncTrans
+%!c 1007 TFuncMisc
+%!c 1008 TDelay
+%!c 1010 TExtrLatch
+%!c 1015 TVibro
+%!c 1009 TAdjGen
+%!c 1018 TRandTrigg
+%!c 1017 TIntegrator
+%!c 1050 TLinP1Q0
+%!c 1100 TInputAny
+%!c 1101 TOutputAny
+%!c 1019 TCriterion
+%!c 1020 TLatch
+%!c 1022 TSwitch
+%!c 1012 TTrigger
+%!c 1013 TLogic
+%!c 1014 TCounter
+%!c 2000 TCorrAnalysis
+%!c 2010 TFourier
+10(TRootData)={
+%!d n=1; allow_add=1
+@ -- datainfo for model; 
+@ 10 500 0 0 0 0 0 0 0 0
+@ model
+@ "main model"
+@ ""
+model=500(TModel)
+%!m model: n_el= 8 n_out= 5 n_graph = 3
+%!m  elems:
+%!m e 0[88] 6 0
+%!m e 1[76] 10 0
+%!m e 2[77] 12 0
+%!m e 3[78] 14 0
+%!m e 4[84] 30 0
+%!m e 5[79] 50 0
+%!m e 6[80] 52 0
+%!m e 7[85] 60 0
+%!m   i0 1: -28 -1 -1 -1 
+%!m   p0 0 -1 -1 -1 -1 | -1 -1 -1 -1 
+%!m   i1 1: -110 -1 -1 -1 
+%!m   p1 0 -1 -1 -1 -1 | -1 -1 -1 -1 
+%!m   i2 1: -111 -1 -1 -1 
+%!m   p2 0 -1 -1 -1 -1 | -1 -1 -1 -1 
+%!m   i3 1: -112 -1 -1 -1 
+%!m   p3 0 -1 -1 -1 -1 | -1 -1 -1 -1 
+%!m   i4 1: -120 -1 -1 -1 
+%!m   p4 0 -1 -1 -1 -1 | -1 -1 -1 -1 
+%!m   i5 1: 1 -1 -1 -1 
+%!m   p5 0 -1 -1 -1 -1 | -1 -1 -1 -1 
+%!m   i6 1: 2 -1 -1 -1 
+%!m   p6 0 -1 -1 -1 -1 | -1 -1 -1 -1 
+%!m   i7 1: 4 -1 -1 -1 
+%!m   p7 0 -1 -1 -1 -1 | -1 -1 -1 -1 
+%!m -- outs:
+%!m o 0[81] -10 0
+%!m o 1[82] 1 0
+%!m o 2[83] 2 0
+%!m o 3[87] 4 0
+%!m o 4[89] 0 0
+500(TModel)={
+%!d n=92; allow_add=1
+tt=20 ; 
+nn=2000 ; 
+nl1=1 ; 
+nl2=1 ; 
+n_steps=1 ; 
+use_sync=1 ; 
+prm0s=0.1 ; 
+prm1s=0.1 ; 
+prm2s=0.1 ; 
+prm3s=0.1 ; 
+prm0d=0.01 ; 
+prm1d=0.01 ; 
+xval=0 ; 
+xval2=0 ; 
+seed=117 ; 
+useSameSeed=1 ; 
+ic_mouse=10 ; 
+ic_joy=-1 ; 
+ic_sound=-1 ; 
+ic_key=20 ; 
+ic_aux=-1 ; 
+oc_0=30 ; 
+oc_1=40 ; 
+oc_2=-1 ; 
+oc_3=-1 ; 
+oc_4=-1 ; 
+oc_5=-1 ; 
+oct_0=2 ; 
+oct_1=11 ; 
+oct_2=0 ; 
+oct_3=0 ; 
+oct_4=0 ; 
+oct_5=0 ; 
+long_descr="IN-out test" ; 
+@ -- datainfo for mou_x; 
+@ 10 1001 0 0 0 0 0 0 0 0
+@ mou_x
+@ ""
+@ ""
+mou_x=1001(TLinear)
+1001(TLinear)={
+%!d n=19; allow_add=0
+ord=10 ; 
+descr="mouse x- value" ; 
+a0=1 ; 
+a1=0 ; 
+a2=0 ; 
+a3=0 ; 
+b=0 ; 
+links=999(TElmLink)
+999(TElmLink)={
+%!d n=37; allow_add=0
+inps0="#10" ; 
+inps1="" ; 
+inps2="" ; 
+inps3="" ; 
+noauto=0 ; 
+locked=0 ; 
+onlyFirst=0 ; 
+onlyLast=0 ; 
+pinps0="" ; 
+pinps1="" ; 
+pinps2="" ; 
+pinps3="" ; 
+pnames0="" ; 
+pnames1="" ; 
+pnames2="" ; 
+pnames3="" ; 
+pflags0=0 ; 
+pflags1=0 ; 
+pflags2=0 ; 
+pflags3=0 ; 
+}; -- end of TElmLink ; 
+vis_x=2 ; 
+vis_y=1 ; 
+}; -- end of TLinear ; 
+@ -- datainfo for mou_y; 
+@ 10 1001 0 0 0 0 0 0 0 0
+@ mou_y
+@ ""
+@ ""
+mou_y=1001(TLinear)
+1001(TLinear)={
+%!d n=19; allow_add=0
+ord=12 ; 
+descr="mouse y-value" ; 
+a0=1 ; 
+a1=0 ; 
+a2=0 ; 
+a3=0 ; 
+b=0 ; 
+links=999(TElmLink)
+999(TElmLink)={
+%!d n=37; allow_add=0
+inps0="#11" ; 
+inps1="" ; 
+inps2="" ; 
+inps3="" ; 
+noauto=0 ; 
+locked=0 ; 
+onlyFirst=0 ; 
+onlyLast=0 ; 
+pinps0="" ; 
+pinps1="" ; 
+pinps2="" ; 
+pinps3="" ; 
+pnames0="" ; 
+pnames1="" ; 
+pnames2="" ; 
+pnames3="" ; 
+pflags0=0 ; 
+pflags1=0 ; 
+pflags2=0 ; 
+pflags3=0 ; 
+}; -- end of TElmLink ; 
+vis_x=2 ; 
+vis_y=2 ; 
+}; -- end of TLinear ; 
+@ -- datainfo for mou_l; 
+@ 10 1001 0 0 0 0 0 0 0 0
+@ mou_l
+@ ""
+@ ""
+mou_l=1001(TLinear)
+1001(TLinear)={
+%!d n=19; allow_add=0
+ord=14 ; 
+descr="mouse left button state" ; 
+a0=1 ; 
+a1=0 ; 
+a2=0 ; 
+a3=0 ; 
+b=0 ; 
+links=999(TElmLink)
+999(TElmLink)={
+%!d n=37; allow_add=0
+inps0="#12" ; 
+inps1="" ; 
+inps2="" ; 
+inps3="" ; 
+noauto=0 ; 
+locked=0 ; 
+onlyFirst=0 ; 
+onlyLast=0 ; 
+pinps0="" ; 
+pinps1="" ; 
+pinps2="" ; 
+pinps3="" ; 
+pnames0="" ; 
+pnames1="" ; 
+pnames2="" ; 
+pnames3="" ; 
+pflags0=0 ; 
+pflags1=0 ; 
+pflags2=0 ; 
+pflags3=0 ; 
+}; -- end of TElmLink ; 
+vis_x=2 ; 
+vis_y=3 ; 
+}; -- end of TLinear ; 
+@ -- datainfo for o_mou_x; 
+@ 10 1101 0 0 0 0 0 0 0 0
+@ o_mou_x
+@ ""
+@ ""
+o_mou_x=1101(TOutputAny)
+1101(TOutputAny)={
+%!d n=12; allow_add=0
+ord=50 ; 
+descr="output x mouse value" ; 
+name="#30" ; 
+useEnable=0 ; 
+links=999(TElmLink)
+999(TElmLink)={
+%!d n=37; allow_add=0
+inps0="mou_x" ; 
+inps1="" ; 
+inps2="" ; 
+inps3="" ; 
+noauto=0 ; 
+locked=0 ; 
+onlyFirst=0 ; 
+onlyLast=0 ; 
+pinps0="" ; 
+pinps1="" ; 
+pinps2="" ; 
+pinps3="" ; 
+pnames0="" ; 
+pnames1="" ; 
+pnames2="" ; 
+pnames3="" ; 
+pflags0=0 ; 
+pflags1=0 ; 
+pflags2=0 ; 
+pflags3=0 ; 
+}; -- end of TElmLink ; 
+vis_x=4 ; 
+vis_y=1 ; 
+}; -- end of TOutputAny ; 
+@ -- datainfo for o_mou_y; 
+@ 10 1101 0 0 0 0 0 0 0 0
+@ o_mou_y
+@ ""
+@ ""
+o_mou_y=1101(TOutputAny)
+1101(TOutputAny)={
+%!d n=12; allow_add=0
+ord=52 ; 
+descr="output y - mouse value" ; 
+name="#31" ; 
+useEnable=0 ; 
+links=999(TElmLink)
+999(TElmLink)={
+%!d n=37; allow_add=0
+inps0="mou_y" ; 
+inps1="" ; 
+inps2="" ; 
+inps3="" ; 
+noauto=0 ; 
+locked=0 ; 
+onlyFirst=0 ; 
+onlyLast=0 ; 
+pinps0="" ; 
+pinps1="" ; 
+pinps2="" ; 
+pinps3="" ; 
+pnames0="" ; 
+pnames1="" ; 
+pnames2="" ; 
+pnames3="" ; 
+pflags0=0 ; 
+pflags1=0 ; 
+pflags2=0 ; 
+pflags3=0 ; 
+}; -- end of TElmLink ; 
+vis_x=4 ; 
+vis_y=2 ; 
+}; -- end of TOutputAny ; 
+@ -- datainfo for out_t; 
+@ 10 600 0 0 0 0 0 0 0 0
+@ out_t
+@ ""
+@ ""
+out_t=600(TOutArr)
+600(TOutArr)={
+%!d n=16; allow_add=0
+type=0 ; 
+name=":t" ; 
+label="t" ; 
+nq=1 ; 
+}; -- end of TOutArr ; 
+@ -- datainfo for out_x; 
+@ 10 600 0 0 0 0 0 0 0 0
+@ out_x
+@ ""
+@ ""
+out_x=600(TOutArr)
+600(TOutArr)={
+%!d n=16; allow_add=0
+type=0 ; 
+name="mou_x" ; 
+label="x" ; 
+nq=1 ; 
+}; -- end of TOutArr ; 
+@ -- datainfo for out_y; 
+@ 10 600 0 0 0 0 0 0 0 0
+@ out_y
+@ ""
+@ ""
+out_y=600(TOutArr)
+600(TOutArr)={
+%!d n=16; allow_add=0
+type=0 ; 
+name="mou_y" ; 
+label="y" ; 
+nq=1 ; 
+}; -- end of TOutArr ; 
+@ -- datainfo for key_left; 
+@ 10 1001 0 0 0 0 0 0 0 0
+@ key_left
+@ ""
+@ ""
+key_left=1001(TLinear)
+1001(TLinear)={
+%!d n=19; allow_add=0
+ord=30 ; 
+descr="state of left key" ; 
+a0=0.1 ; 
+a1=0 ; 
+a2=0 ; 
+a3=0 ; 
+b=0 ; 
+links=999(TElmLink)
+999(TElmLink)={
+%!d n=37; allow_add=0
+inps0="#20" ; 
+inps1="" ; 
+inps2="" ; 
+inps3="" ; 
+noauto=0 ; 
+locked=0 ; 
+onlyFirst=0 ; 
+onlyLast=0 ; 
+pinps0="" ; 
+pinps1="" ; 
+pinps2="" ; 
+pinps3="" ; 
+pnames0="" ; 
+pnames1="" ; 
+pnames2="" ; 
+pnames3="" ; 
+pflags0=0 ; 
+pflags1=0 ; 
+pflags2=0 ; 
+pflags3=0 ; 
+}; -- end of TElmLink ; 
+vis_x=2 ; 
+vis_y=5 ; 
+}; -- end of TLinear ; 
+@ -- datainfo for o_key_l; 
+@ 10 1101 0 0 0 0 0 0 0 0
+@ o_key_l
+@ ""
+@ ""
+o_key_l=1101(TOutputAny)
+1101(TOutputAny)={
+%!d n=12; allow_add=0
+ord=60 ; 
+descr="output left key state" ; 
+name="#40" ; 
+useEnable=0 ; 
+links=999(TElmLink)
+999(TElmLink)={
+%!d n=37; allow_add=0
+inps0="key_left" ; 
+inps1="" ; 
+inps2="" ; 
+inps3="" ; 
+noauto=0 ; 
+locked=0 ; 
+onlyFirst=0 ; 
+onlyLast=0 ; 
+pinps0="" ; 
+pinps1="" ; 
+pinps2="" ; 
+pinps3="" ; 
+pnames0="" ; 
+pnames1="" ; 
+pnames2="" ; 
+pnames3="" ; 
+pflags0=0 ; 
+pflags1=0 ; 
+pflags2=0 ; 
+pflags3=0 ; 
+}; -- end of TElmLink ; 
+vis_x=4 ; 
+vis_y=5 ; 
+}; -- end of TOutputAny ; 
+@ -- datainfo for graph0; 
+@ 10 700 0 0 0 0 0 0 0 0
+@ graph0
+@ ""
+@ ""
+graph0=700(TGraph)
+700(TGraph)={
+%!d n=27; allow_add=0
+title="title" ; 
+xname="out_t" ; 
+y0name="out_x" ; 
+y1name="out_y" ; 
+y2name="out_l" ; 
+y3name="" ; 
+y4name="" ; 
+y5name="" ; 
+bgcolor=-16777120 ; 
+y0color=-1 ; 
+y1color=-256 ; 
+y2color=-65536 ; 
+y3color=-16711936 ; 
+y4color=-16776961 ; 
+y5color=-65281 ; 
+}; -- end of TGraph ; 
+@ -- datainfo for out_l; 
+@ 10 600 0 0 0 0 0 0 0 0
+@ out_l
+@ ""
+@ ""
+out_l=600(TOutArr)
+600(TOutArr)={
+%!d n=16; allow_add=0
+type=0 ; 
+name="key_left" ; 
+label="l" ; 
+nq=1 ; 
+}; -- end of TOutArr ; 
+@ -- datainfo for rt; 
+@ 10 1001 0 0 0 0 0 0 0 0
+@ rt
+@ ""
+@ ""
+rt=1001(TLinear)
+1001(TLinear)={
+%!d n=19; allow_add=0
+ord=6 ; 
+descr="real time" ; 
+a0=1 ; 
+a1=0 ; 
+a2=0 ; 
+a3=0 ; 
+b=0 ; 
+links=999(TElmLink)
+999(TElmLink)={
+%!d n=37; allow_add=0
+inps0=":rtime" ; 
+inps1="" ; 
+inps2="" ; 
+inps3="" ; 
+noauto=0 ; 
+locked=0 ; 
+onlyFirst=0 ; 
+onlyLast=0 ; 
+pinps0="" ; 
+pinps1="" ; 
+pinps2="" ; 
+pinps3="" ; 
+pnames0="" ; 
+pnames1="" ; 
+pnames2="" ; 
+pnames3="" ; 
+pflags0=0 ; 
+pflags1=0 ; 
+pflags2=0 ; 
+pflags3=0 ; 
+}; -- end of TElmLink ; 
+vis_x=0 ; 
+vis_y=0 ; 
+}; -- end of TLinear ; 
+@ -- datainfo for out_rt; 
+@ 10 600 0 0 0 0 0 0 0 0
+@ out_rt
+@ ""
+@ ""
+out_rt=600(TOutArr)
+600(TOutArr)={
+%!d n=16; allow_add=0
+type=0 ; 
+name="rt" ; 
+label="rt" ; 
+nq=1 ; 
+}; -- end of TOutArr ; 
+@ -- datainfo for graph1; 
+@ 10 700 0 0 0 0 0 0 0 0
+@ graph1
+@ ""
+@ ""
+graph1=700(TGraph)
+700(TGraph)={
+%!d n=27; allow_add=0
+title="title" ; 
+xname="out_t" ; 
+y0name="out_rt" ; 
+y1name="" ; 
+y2name="" ; 
+y3name="" ; 
+y4name="" ; 
+y5name="" ; 
+bgcolor=-16777120 ; 
+y0color=-1 ; 
+y1color=-256 ; 
+y2color=-65536 ; 
+y3color=-16711936 ; 
+y4color=-16776961 ; 
+y5color=-65281 ; 
+}; -- end of TGraph ; 
+@ -- datainfo for graph2; 
+@ 10 700 0 0 0 0 0 0 0 0
+@ graph2
+@ ""
+@ ""
+graph2=700(TGraph)
+700(TGraph)={
+%!d n=27; allow_add=0
+title="title" ; 
+xname="out_x" ; 
+y0name="out_y" ; 
+y1name="" ; 
+y2name="" ; 
+y3name="" ; 
+y4name="" ; 
+y5name="" ; 
+bgcolor=-16777120 ; 
+y0color=-1 ; 
+y1color=-256 ; 
+y2color=-65536 ; 
+y3color=-16711936 ; 
+y4color=-16776961 ; 
+y5color=-65281 ; 
+}; -- end of TGraph ; 
+}; -- end of TModel ; 
+}; -- end of TRootData
+# end of TRootData
+

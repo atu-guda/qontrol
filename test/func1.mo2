@@ -1,0 +1,364 @@
+%*ModelConstructor 2.0
+%!r root: known classes:
+%!c 1 TDataSet
+%!c 3 TDataContainer
+%!c 10 TRootData
+%!c 500 TModel
+%!c 600 TOutArr
+%!c 700 TGraph
+%!c 999 TElmLink
+%!c 1000 TMiso
+%!c 1001 TLinear
+%!c 1002 TSource
+%!c 1003 TMultipl
+%!c 1004 TPid
+%!c 1011 THyst
+%!c 1005 TFuncPoly
+%!c 1006 TFuncTrans
+%!c 1007 TFuncMisc
+%!c 1008 TDelay
+%!c 1010 TExtrLatch
+%!c 1015 TVibro
+%!c 1009 TAdjGen
+%!c 1018 TRandTrigg
+%!c 1017 TIntegrator
+10(TRootData)={
+%!d n=1; allow_add=1
+@ -- datainfo for model; 
+@ 10 500 0 0 0 0 0 0 0 0
+@ model
+@ "Model"
+@ ""
+model=500(TModel)
+%!m model: n_el= 4 n_out= 5 n_graph = 2
+%!m  elems:
+%!m e 0[35] 10 0
+%!m e 1[36] 50 0
+%!m e 2[42] 60 0
+%!m e 3[44] 70 0
+%!m   i0 0: -1 -1 -1 -1 
+%!m   p0 0 -1 -1 -1 -1 | -1 -1 -1 -1 
+%!m   i1 1: 0 -1 -1 -1 
+%!m   p1 0 -1 -1 -1 -1 | -1 -1 -1 -1 
+%!m   i2 1: 0 -1 -1 -1 
+%!m   p2 0 -1 -1 -1 -1 | -1 -1 -1 -1 
+%!m   i3 1: 0 -1 -1 -1 
+%!m   p3 0 -1 -1 -1 -1 | -1 -1 -1 -1 
+%!m -- outs:
+%!m o 0[37] -10 0
+%!m o 1[38] 0 0
+%!m o 2[39] 1 0
+%!m o 3[43] 2 0
+%!m o 4[45] 3 0
+500(TModel)={
+%!d n=46; allow_add=1
+nn=1000 ; 
+nl1=10 ; 
+nl2=4 ; 
+tt=100 ; 
+seed=117 ; 
+prm0s=0 ; 
+prm1s=0 ; 
+prm2s=0 ; 
+prm3s=0 ; 
+prm0d=0.01 ; 
+prm1d=0.01 ; 
+long_descr="" ; 
+@ -- datainfo for source; 
+@ 10 1002 0 0 0 0 0 0 0 0
+@ source
+@ ""
+@ ""
+source=1002(TSource)
+1002(TSource)={
+%!d n=39; allow_add=0
+ord=10 ; 
+descr="Test source" ; 
+type=2 ; 
+uu=5 ; 
+omega=0.7 ; 
+cc=0 ; 
+use_noise=0 ; 
+noise=0.01 ; 
+use_u_ch=0 ; 
+u_ch_v0=0.5 ; 
+u_ch_vm=1.5 ; 
+u_ch_t0=2 ; 
+u_ch_tm=10 ; 
+use_f_ch=0 ; 
+f_ch_v0=-0.2 ; 
+f_ch_vm=0.2 ; 
+f_ch_t0=2 ; 
+f_ch_tm=10 ; 
+links=999(TElmLink)
+999(TElmLink)={
+%!d n=37; allow_add=0
+inps0="" ; 
+inps1="" ; 
+inps2="" ; 
+inps3="" ; 
+noauto=0 ; 
+locked=0 ; 
+onlyFirst=0 ; 
+onlyLast=0 ; 
+pinps0="" ; 
+pinps1="" ; 
+pinps2="" ; 
+pinps3="" ; 
+pnames0="" ; 
+pnames1="" ; 
+pnames2="" ; 
+pnames3="" ; 
+pflags0=0 ; 
+pflags1=0 ; 
+pflags2=0 ; 
+pflags3=0 ; 
+}; -- end of TElmLink ; 
+vis_x=1 ; 
+vis_y=1 ; 
+}; -- end of TSource ; 
+@ -- datainfo for fun1; 
+@ 10 1005 0 0 0 0 0 0 0 0
+@ fun1
+@ ""
+@ ""
+fun1=1005(TFuncPoly)
+1005(TFuncPoly)={
+%!d n=25; allow_add=0
+ord=50 ; 
+descr="fun1" ; 
+type=1 ; 
+a=0.1 ; 
+b=-0.1 ; 
+c=0 ; 
+d=0 ; 
+e=0 ; 
+g=0.5 ; 
+x0=0 ; 
+links=999(TElmLink)
+999(TElmLink)={
+%!d n=37; allow_add=0
+inps0="source" ; 
+inps1="" ; 
+inps2="" ; 
+inps3="" ; 
+noauto=0 ; 
+locked=0 ; 
+onlyFirst=0 ; 
+onlyLast=0 ; 
+pinps0="" ; 
+pinps1="" ; 
+pinps2="" ; 
+pinps3="" ; 
+pnames0="" ; 
+pnames1="" ; 
+pnames2="" ; 
+pnames3="" ; 
+pflags0=0 ; 
+pflags1=0 ; 
+pflags2=0 ; 
+pflags3=0 ; 
+}; -- end of TElmLink ; 
+vis_x=3 ; 
+vis_y=1 ; 
+}; -- end of TFuncPoly ; 
+@ -- datainfo for o_t; 
+@ 10 600 0 0 0 0 0 0 0 0
+@ o_t
+@ ""
+@ ""
+o_t=600(TOutArr)
+600(TOutArr)={
+%!d n=13; allow_add=0
+type=0 ; 
+name=":t" ; 
+label=":t" ; 
+}; -- end of TOutArr ; 
+@ -- datainfo for x; 
+@ 10 600 0 0 0 0 0 0 0 0
+@ x
+@ ""
+@ ""
+x=600(TOutArr)
+600(TOutArr)={
+%!d n=13; allow_add=0
+type=0 ; 
+name="source" ; 
+label="source" ; 
+}; -- end of TOutArr ; 
+@ -- datainfo for y; 
+@ 10 600 0 0 0 0 0 0 0 0
+@ y
+@ ""
+@ ""
+y=600(TOutArr)
+600(TOutArr)={
+%!d n=13; allow_add=0
+type=0 ; 
+name="fun1" ; 
+label="fun1" ; 
+}; -- end of TOutArr ; 
+@ -- datainfo for graph0; 
+@ 10 700 0 0 0 0 0 0 0 0
+@ graph0
+@ ""
+@ ""
+graph0=700(TGraph)
+700(TGraph)={
+%!d n=25; allow_add=0
+xname="o_t" ; 
+y0name="x" ; 
+y1name="y" ; 
+y2name="y2" ; 
+y3name="o_y3" ; 
+y4name="" ; 
+y5name="" ; 
+bgcolor=-16777120 ; 
+y0color=-1 ; 
+y1color=-256 ; 
+y2color=-65536 ; 
+y3color=-16711936 ; 
+y4color=-16776961 ; 
+y5color=-65281 ; 
+}; -- end of TGraph ; 
+@ -- datainfo for graph1; 
+@ 10 700 0 0 0 0 0 0 0 0
+@ graph1
+@ ""
+@ ""
+graph1=700(TGraph)
+700(TGraph)={
+%!d n=25; allow_add=0
+xname="x" ; 
+y0name="y" ; 
+y1name="y2" ; 
+y2name="o_y3" ; 
+y3name="" ; 
+y4name="" ; 
+y5name="" ; 
+bgcolor=-16777120 ; 
+y0color=-1 ; 
+y1color=-256 ; 
+y2color=-65536 ; 
+y3color=-16711936 ; 
+y4color=-16776961 ; 
+y5color=-65281 ; 
+}; -- end of TGraph ; 
+@ -- datainfo for fun2; 
+@ 10 1006 0 0 0 0 0 0 0 0
+@ fun2
+@ ""
+@ ""
+fun2=1006(TFuncTrans)
+1006(TFuncTrans)={
+%!d n=25; allow_add=0
+ord=60 ; 
+descr="fun2" ; 
+type=10 ; 
+a=1 ; 
+b=1 ; 
+c=0 ; 
+d=0 ; 
+e=0 ; 
+g=0 ; 
+x0=0 ; 
+links=999(TElmLink)
+999(TElmLink)={
+%!d n=37; allow_add=0
+inps0="source" ; 
+inps1="" ; 
+inps2="" ; 
+inps3="" ; 
+noauto=0 ; 
+locked=0 ; 
+onlyFirst=0 ; 
+onlyLast=0 ; 
+pinps0="" ; 
+pinps1="" ; 
+pinps2="" ; 
+pinps3="" ; 
+pnames0="" ; 
+pnames1="" ; 
+pnames2="" ; 
+pnames3="" ; 
+pflags0=0 ; 
+pflags1=0 ; 
+pflags2=0 ; 
+pflags3=0 ; 
+}; -- end of TElmLink ; 
+vis_x=3 ; 
+vis_y=2 ; 
+}; -- end of TFuncTrans ; 
+@ -- datainfo for y2; 
+@ 10 600 0 0 0 0 0 0 0 0
+@ y2
+@ ""
+@ ""
+y2=600(TOutArr)
+600(TOutArr)={
+%!d n=13; allow_add=0
+type=0 ; 
+name="fun2" ; 
+label="fun2" ; 
+}; -- end of TOutArr ; 
+@ -- datainfo for f3; 
+@ 10 1007 0 0 0 0 0 0 0 0
+@ f3
+@ ""
+@ ""
+f3=1007(TFuncMisc)
+1007(TFuncMisc)={
+%!d n=25; allow_add=0
+ord=70 ; 
+descr="f3" ; 
+type=7 ; 
+a=1 ; 
+b=2 ; 
+c=0 ; 
+d=0 ; 
+e=0 ; 
+g=0 ; 
+x0=0 ; 
+links=999(TElmLink)
+999(TElmLink)={
+%!d n=37; allow_add=0
+inps0="source" ; 
+inps1="" ; 
+inps2="" ; 
+inps3="" ; 
+noauto=0 ; 
+locked=0 ; 
+onlyFirst=0 ; 
+onlyLast=0 ; 
+pinps0="" ; 
+pinps1="" ; 
+pinps2="" ; 
+pinps3="" ; 
+pnames0="" ; 
+pnames1="" ; 
+pnames2="" ; 
+pnames3="" ; 
+pflags0=0 ; 
+pflags1=0 ; 
+pflags2=0 ; 
+pflags3=0 ; 
+}; -- end of TElmLink ; 
+vis_x=3 ; 
+vis_y=3 ; 
+}; -- end of TFuncMisc ; 
+@ -- datainfo for o_y3; 
+@ 10 600 0 0 0 0 0 0 0 0
+@ o_y3
+@ ""
+@ ""
+o_y3=600(TOutArr)
+600(TOutArr)={
+%!d n=13; allow_add=0
+type=0 ; 
+name="f3" ; 
+label="f3" ; 
+}; -- end of TOutArr ; 
+}; -- end of TModel ; 
+}; -- end of TRootData
+# end of TRootData
+

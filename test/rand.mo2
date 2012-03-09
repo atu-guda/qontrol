@@ -1,0 +1,205 @@
+%*ModelConstructor 2.0
+%!r root: known classes:
+%!c 1 TDataSet
+%!c 3 TDataContainer
+%!c 10 TRootData
+%!c 500 TModel
+%!c 600 TOutArr
+%!c 700 TGraph
+%!c 999 TElmLink
+%!c 1000 TMiso
+%!c 1001 TLinear
+%!c 1002 TSource
+%!c 1024 TSourceLin
+%!c 1003 TMultipl
+%!c 1004 TPid
+%!c 1011 THyst
+%!c 1005 TFuncPoly
+%!c 1006 TFuncTrans
+%!c 1007 TFuncMisc
+%!c 1008 TDelay
+%!c 1010 TExtrLatch
+%!c 1015 TVibro
+%!c 1023 TFriction
+%!c 1009 TAdjGen
+%!c 1018 TRandTrigg
+%!c 1017 TIntegrator
+%!c 1050 TLinP1Q0
+%!c 1100 TInputAny
+%!c 1101 TOutputAny
+%!c 1019 TCriterion
+%!c 1020 TLatch
+%!c 1022 TSwitch
+%!c 1012 TTrigger
+%!c 1013 TLogic
+%!c 1025 TRand
+%!c 1014 TCounter
+%!c 2000 TCorrAnalysis
+%!c 2010 TFourier
+10(TRootData)={
+%!d n=1; allow_add=1
+@ -- datainfo for model; 
+@ 10 500 0 0 0 0 0 0 0 0
+@ model
+@ 
+@ 
+model=500(TModel)
+%!m model: n_el= 1 n_out= 3 n_graph = 1
+%!m  elems:
+%!m e 0[76] 10 0
+%!m   i0 1: -10 -1 -1 -1 
+%!m   p0 0 -1 -1 -1 -1 | -1 -1 -1 -1 
+%!m -- outs:
+%!m o 0[77] -10 0
+%!m o 1[78] 0 0
+%!m o 2[80] 0 1
+500(TModel)={
+%!d n=81; allow_add=1
+tt=100 ; 
+nn=10000 ; 
+nl1=20 ; 
+nl2=1 ; 
+n_steps=100 ; 
+use_sync=0 ; 
+prm0s=0.1 ; 
+prm1s=0.1 ; 
+prm2s=0.1 ; 
+prm3s=0.1 ; 
+prm0d=0.01 ; 
+prm1d=0.01 ; 
+xval=0 ; 
+xval2=0 ; 
+seed=117 ; 
+useSameSeed=1 ; 
+ic_mouse=-1 ; 
+ic_joy=-1 ; 
+ic_sound=-1 ; 
+ic_key=-1 ; 
+ic_aux=-1 ; 
+oc_0=-1 ; 
+oc_1=-1 ; 
+oc_2=-1 ; 
+oc_3=-1 ; 
+oc_4=-1 ; 
+oc_5=-1 ; 
+oct_0=0 ; 
+oct_1=0 ; 
+oct_2=0 ; 
+oct_3=0 ; 
+oct_4=0 ; 
+oct_5=0 ; 
+long_descr="" ; 
+@ -- datainfo for rs; 
+@ 10 1025 0 0 0 0 0 0 0 0
+@ rs
+@ 
+@ 
+rs=1025(TRand)
+1025(TRand)={
+%!d n=28; allow_add=0
+ord=10 ; 
+descr="Random generator" ; 
+type=0 ; 
+tau=10 ; 
+sigma=0.5 ; 
+ampl=1 ; 
+zval=0 ; 
+a=0.3 ; 
+b=1 ; 
+c=1 ; 
+seed=-12 ; 
+useSameSeed=1 ; 
+links=999(TElmLink)
+999(TElmLink)={
+%!d n=37; allow_add=0
+inps0=":t" ; 
+inps1="" ; 
+inps2="" ; 
+inps3="" ; 
+noauto=0 ; 
+locked=0 ; 
+onlyFirst=0 ; 
+onlyLast=0 ; 
+pinps0="" ; 
+pinps1="" ; 
+pinps2="" ; 
+pinps3="" ; 
+pnames0="" ; 
+pnames1="" ; 
+pnames2="" ; 
+pnames3="" ; 
+pflags0=0 ; 
+pflags1=0 ; 
+pflags2=0 ; 
+pflags3=0 ; 
+}; -- end of TElmLink ; 
+vis_x=1 ; 
+vis_y=1 ; 
+}; -- end of TRand ; 
+@ -- datainfo for out_t; 
+@ 10 600 0 0 0 0 0 0 0 0
+@ out_t
+@ 
+@ 
+out_t=600(TOutArr)
+600(TOutArr)={
+%!d n=16; allow_add=0
+type=0 ; 
+name=":t" ; 
+label=":t" ; 
+nq=1 ; 
+}; -- end of TOutArr ; 
+@ -- datainfo for out_r; 
+@ 10 600 0 0 0 0 0 0 0 0
+@ out_r
+@ 
+@ 
+out_r=600(TOutArr)
+600(TOutArr)={
+%!d n=16; allow_add=0
+type=0 ; 
+name="rs" ; 
+label="r" ; 
+nq=1 ; 
+}; -- end of TOutArr ; 
+@ -- datainfo for graph0; 
+@ 10 700 0 0 0 0 0 0 0 0
+@ graph0
+@ 
+@ 
+graph0=700(TGraph)
+700(TGraph)={
+%!d n=27; allow_add=0
+title="title" ; 
+xname="out_t" ; 
+y0name="out_r" ; 
+y1name="" ; 
+y2name="" ; 
+y3name="" ; 
+y4name="" ; 
+y5name="" ; 
+bgcolor=96 ; 
+y0color=16777215 ; 
+y1color=16776960 ; 
+y2color=16711680 ; 
+y3color=65280 ; 
+y4color=255 ; 
+y5color=16711935 ; 
+}; -- end of TGraph ; 
+@ -- datainfo for out_rr; 
+@ 10 600 0 0 0 0 0 0 0 0
+@ out_rr
+@ 
+@ 
+out_rr=600(TOutArr)
+600(TOutArr)={
+%!d n=16; allow_add=0
+type=1 ; 
+name="rs" ; 
+label="rs" ; 
+nq=1 ; 
+}; -- end of TOutArr ; 
+}; -- end of TModel ; 
+}; -- end of TRootData
+# end of TRootData
+

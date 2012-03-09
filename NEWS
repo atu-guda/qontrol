@@ -1,0 +1,115 @@
+* Fri Mar 09 2012 Guda Anton <atu near nmetau dot edu point ua>
+- version 0.0.43
+- drop configure files
+- drop CVS files -- migration to git
+
+* Mon Jun 08 2009 Guda Anton <atu near dmeti dot dp point ua>
+- version 0.0.42
+- adopt to gcc 4.4
+- add useReset to TExtrLatch
+
+* Mon Apr 14 2008 Guda Anton <atu near dmeti dot dp point ua>
+- version 0.0.41
+- start migration to qmake
+
+* Mon Apr 14 2008 Guda Anton <atu near dmeti dot dp point ua>
+- version 0.0.40
+- add r/o access to some TAdjGen inner variables
+
+* Wed Mar 12 2008 Guda Anton <atu near dmeti dot dp point ua>
+- version 0.0.39
+- adopt to gcc 4.3
+- small fixes
+
+* Tue May 02 2006 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.38
+- more functons in TFincPoly
+- new type for TAdjgen: dual
+- add sigma_? variables to TCorrAnal.. and output source for it
+
+* Sun Jan 15 2006 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.37
+- drop usage glibc rand in calculations: use only gsl_*
+- add proper seeding of random generators
+- so TRand, TRandTrigg, TSource, TMiscFun, TModel fixed
+- for now using TSource as bad random generator is not possible: need models files fixing
+
+* Tue Dec 27 2005 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.36
+- more parameters in THyst
+- small iface fixes
+
+* Mon Oct 31 2005 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.35
+- fixed bugs in plot window
+
+* Mon May 16 2005 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.34 
+- fonts in settings
+- added dialog for it
+
+* Sat Aug 07 2004 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.33 
+- added latch value to TOutArr
+- gcc34 fixes from 0.0.32a
+
+* Wed May 12 2004 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.32
+- small iface enhancments
+
+* Sun May 02 2004 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.31
+- settings
+- resource dirs
+
+* Thu Apr 29 2004 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.30
+- added flipping and noIcon element featues
+- interface enhanced
+
+* Mon Dec 22 2003 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.29: small, but painfull fixes in TRand
+
+* Sun Dec 21 2003 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.28: added TRand element
+- fixed and improved document file operations
+- now use GSL for random generations (not everyware)
+
+* Sun Nov 23 2003 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.27: TCorrAnal: added arrays analysis
+
+* Thu Aug 21 2003 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.26: fixed TFriction, MODEL_MX,Y = 64
+
+* Thu Jul 31 2003 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.25: New element TSourceLin, better link lines
+
+* Wed Jul 30 2003 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.24: added parameter ku inTLinP0Q1, small iface fixes
+
+* Sat Jul 19 2003 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.23: added TFriction, small fixes in TSource
+
+* Sun May 04 2003 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.22: Makefile.am: fixed missed subdirs, more types in TFuncTrans
+
+* Thu Feb 27 2003 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.21: migrate to gcc 3.2. new auto*
+
+* Thu Jan 02 2003 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.20: fixed export to gnuplot, small fixes
+
+* Sat Sep 14 2002 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.19 -- const descr and listdata, small fixes
+
+* Sun Sep 08 2002 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.18 -- iface rewritten
+
+# some records lost
+
+* Sun Mar 24 2002 Guda Anton <atu@dmeti.dp.ua>
+- version 0.0.13 -- added libtool to configure.in, tmp arch=i586 in final
+
+* Tue Aug 14 2001 version 0.0.11 with automake support 
+
+ 

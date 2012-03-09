@@ -1,0 +1,24 @@
+set terminal postscript eps enhanced "scbk" 14;
+# set terminal postscript eps enhanced;
+set output "g_n.eps";
+# set size 1,0.9;
+set border;
+set label 1 "Зависимость скорости идентификации от x_0 и {/Symbol g}" at screen 0.51,0.72;
+set label 2 "x_0" at graph 1.01,0.01;
+set label 3 "v" at graph 0.0,1.02;
+set label "U=2.0; {/Symbol w}_u=0.7; {/Symbol a}=0.5 x@_0^*=0.5" at screen 0.14,0.30;
+set label "{/Symbol w}_0=1; k_{/Symbol w}{}=0.1; k=0.05" at screen 0.14,0.25;
+# set title "Зависимость скорости идентификации от x_0 и {/Symbol g}" ;
+# set nokey;
+set grid;
+set tics;
+set format y "%.2e";
+set mxtics 2;
+set mytics 2;
+plot "g01.txt" using 1:2 title "{/Symbol g}=1" with lines lt 2 lw 3 ,\
+ "g10.txt" using 1:2 title "{/Symbol g}=10" with lines 1, \
+ "g50.txt" using 1:2 title "{/Symbol g}=50" with lines 2, \
+ "g100.txt" using 1:2 title "{/Symbol g}=100" with lines lt 1 lw 3, \
+ "g500.txt" using 1:2 title "{/Symbol g}=500" with lines 4;
+
+# pause 20;
