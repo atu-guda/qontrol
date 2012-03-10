@@ -14,16 +14,19 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <qmainwindow.h>
+#include <q3mainwindow.h>
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <qpen.h>
 #include <qbrush.h>
 #include <qfont.h>
-#include <qkeycode.h>
+#include <qnamespace.h>
 #include <qmessagebox.h>
-#include <qpopupmenu.h>
-#include <qkeycode.h>
+#include <q3popupmenu.h>
+#include <qnamespace.h>
+//Added by qt3to4:
+#include <QMouseEvent>
+#include <QPaintEvent>
 
 #include "resource.h"
 #include "miscfun.h"
@@ -41,7 +44,7 @@ QGraphView::QGraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent,
   grid_sz = 15;
   setBackgroundColor( QColor( 0, 128, 96 ) );
   setFixedWidth( 25 );
-  setFocusPolicy( NoFocus );
+  setFocusPolicy( Qt::NoFocus );
 }
 
 QGraphView::~QGraphView()
@@ -58,11 +61,18 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
   smlf.fromString( QMo2Win::qmo2win->getSettings()->smallFont );
   p.setFont( smlf );
   p.setPen( Qt::black );
-  if( doc == 0 ) return;
+  if( doc == 0 ) 
+    return;
   model = doc->getModel();
   if( model == 0 ) return;
   level = mainview->getLevel();
-  h = height(); w = width(); nh = 1 + h / grid_sz;
+  h = height(); 
+  nh = 1 + h / grid_sz;
+  nh += h; // FAKE TODO:
+  w = width(); ++w; --w;
+  p.setBrush( QColor( 0,128,96 ) );
+  p.drawRect( 0, 0, w, h );
+  
   n_graph = model->getNGraph();
   p.setBrush( Qt::yellow ); strcpy( yname, "y0name" );
   for( graph_nu=0; graph_nu < n_graph ; graph_nu++ ) {
@@ -93,11 +103,14 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
 void QGraphView::mousePressEvent( QMouseEvent *me )
 {
   int h, w, nh, graph_nu, n_graph, x, y, old_level;
-  QPopupMenu *menu;
+  Q3PopupMenu *menu;
   TGraph *gra;
   const char *graname = "?bad?";
   if( model == 0 ) return;
-  h = height(); w = width(); nh = h / grid_sz - 1;
+  h = height(); 
+  w = width(); 
+  nh = h / grid_sz - 1;
+  w+=nh; w-=nh; // TODO: fake
   x = me->x(); y = me->y();
   if( x < 12 || x > 24 ) return;
   graph_nu = ( y - 10 ) / grid_sz;
@@ -115,13 +128,13 @@ void QGraphView::mousePressEvent( QMouseEvent *me )
     };
   };
   switch( me->button() ) {
-    case LeftButton:
+    case Qt::LeftButton:
          if( graph_nu >= 0 ) {
            mainview->editGraph();
          };
          break;
-    case RightButton:
-         menu = new QPopupMenu( this, "graph_rbmenu" ); 
+    case Qt::RightButton:
+         menu = new Q3PopupMenu( this, "graph_rbmenu" ); 
          if( graph_nu >=0 ) {
            menu->insertItem( graname, 0 );
            menu->insertSeparator();
@@ -139,7 +152,7 @@ void QGraphView::mousePressEvent( QMouseEvent *me )
          menu->exec( mapToGlobal(QPoint( x, y )) );
          delete menu; 
          break;
-    case MidButton:
+    case Qt::MidButton:
          if( graph_nu >=0 ) {
            mainview->showGraph();
          };

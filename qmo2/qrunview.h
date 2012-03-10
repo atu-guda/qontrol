@@ -22,6 +22,12 @@
 #include <qstring.h>
 #include <qdialog.h>
 #include <qcolor.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <QResizeEvent>
+#include <QMouseEvent>
+#include <QKeyEvent>
+#include <QPaintEvent>
 
 class TModel; class TDataSet; class TMiso; 
 class QPaintEvent; class QMouseEvent; class QKeyEvent; 
@@ -37,7 +43,7 @@ class QRunView : public QDialog  {
  public:
    /** constructor */
    QRunView( TModel *amodel, int atype, 
-       QWidget *parent, const char *name, WFlags wf = 0 );
+       QWidget *parent, const char *name, Qt::WFlags wf = 0 );
    /** destructor */
    ~QRunView();
    /** hint size for good view */

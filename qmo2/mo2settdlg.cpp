@@ -2,8 +2,11 @@
 #include <qcheckbox.h>
 #include <qlayout.h>
 #include <qtooltip.h>
-#include <qwhatsthis.h>
+#include <q3whatsthis.h>
 #include <qfontdialog.h>
+//Added by qt3to4:
+#include <Q3HBoxLayout>
+#include <Q3VBoxLayout>
 
 #include "mo2settdlg.h"
 
@@ -12,11 +15,11 @@ Mo2SettDlg::Mo2SettDlg( Mo2Settings &se,  QWidget* parent )
     : QDialog( parent, "Mo2SettDlg", true, 0 ),
       pse(se), ts(se)
 {
-    Mo2SettDlgLayout = new QVBoxLayout( this, 11, 6, "Mo2SettDlgLayout"); 
+    Mo2SettDlgLayout = new Q3VBoxLayout( this, 11, 6, "Mo2SettDlgLayout"); 
 
-    layMain = new QHBoxLayout( 0, 0, 6, "layMain"); 
+    layMain = new Q3HBoxLayout( 0, 0, 6, "layMain"); 
 
-    layFontBox = new QVBoxLayout( 0, 0, 6, "layFontBox"); 
+    layFontBox = new Q3VBoxLayout( 0, 0, 6, "layFontBox"); 
 
     btnMainFont = new QPushButton( this, "btnMainFont" );
     layFontBox->addWidget( btnMainFont );
@@ -31,7 +34,7 @@ Mo2SettDlg::Mo2SettDlg( Mo2Settings &se,  QWidget* parent )
     layFontBox->addWidget( btnStructFont );
     layMain->addLayout( layFontBox );
 
-    layChecks = new QVBoxLayout( 0, 0, 6, "layChecks"); 
+    layChecks = new Q3VBoxLayout( 0, 0, 6, "layChecks"); 
 
     chkMaximize = new QCheckBox( this, "chkMaximize" );
     chkMaximize->setChecked(ts.showmax);
@@ -43,7 +46,7 @@ Mo2SettDlg::Mo2SettDlg( Mo2Settings &se,  QWidget* parent )
     spacer2 = new QSpacerItem( 20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding );
     Mo2SettDlgLayout->addItem( spacer2 );
 
-    layOkCanc = new QHBoxLayout( 0, 0, 6, "layOkCanc"); 
+    layOkCanc = new Q3HBoxLayout( 0, 0, 6, "layOkCanc"); 
 
     btnOK = new QPushButton( this, "btnOK" );
     btnOK->setDefault( TRUE );
@@ -53,7 +56,7 @@ Mo2SettDlg::Mo2SettDlg( Mo2Settings &se,  QWidget* parent )
     layOkCanc->addWidget( btnCancel );
     Mo2SettDlgLayout->addLayout( layOkCanc );
     languageChange();
-    clearWState( WState_Polished );
+    //clearWState( WState_Polished );
 
     // signals and slots connections
     connect( btnOK, SIGNAL( clicked() ), this, SLOT( accept() ) );

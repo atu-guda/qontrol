@@ -57,8 +57,8 @@ class QMo2Doc : public QObject
   void removeView( QMo2View *view );
   /** gets called if a view is removed or added */
   void changedViewList();
-  /** returns the first view instance */
-  QMo2View* firstView() const { return pViewList->first(); };
+  // /* * returns the first view instance */
+  // QMo2View* firstView() const { return &(pViewList->first()); };
   /** returns true, if the requested view is the last view of the document */
   bool isLastView() const;
   /** This method gets called when the user is about to close a frame window.

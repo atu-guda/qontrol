@@ -19,12 +19,12 @@
 #include <fstream>
 #include <iostream>
 // include files for Qt
-#include <qcstring.h>
+#include <q3cstring.h>
 #include <qdir.h>
 #include <qfileinfo.h>
 #include <qwidget.h>
-#include <qmsgbox.h>
-#include <qfiledialog.h>
+#include <qmessagebox.h>
+#include <q3filedialog.h>
 
 
 // application specific includes
@@ -39,7 +39,7 @@ using namespace std;
 QMo2Doc::QMo2Doc()
 {
   pViewList = new QList<QMo2View>;
-  pViewList->setAutoDelete( false );
+  //pViewList->setAutoDelete( false );
   rootdata = 0; model = 0; is_nonamed = true;
 }
 
@@ -51,50 +51,62 @@ QMo2Doc::~QMo2Doc()
 
 void QMo2Doc::addView( QMo2View *view )
 {
-  pViewList->append( view );
+  /* TODO: REVIVE!!!
+  pViewList->append( *view );
   changedViewList();
+  */
 }
 
 void QMo2Doc::removeView( QMo2View *view )
 {
-  pViewList->remove( view );
+  /* TODO: REVIVE!!!
+  pViewList->remove( *view );
   if( !pViewList->isEmpty() )
     changedViewList();
   else
     deleteContents();
+  */
 }
 
 void QMo2Doc::changedViewList()
 {	
-  QMo2View *w;
+  //QMo2View *w;
+  /*
   if( (int)pViewList->count() == 1 ) {
-    w = pViewList->first();
+    w = &(pViewList->first());
     w->setCaption( m_title );
   } else {
     int i;
-    for( i=1, w=pViewList->first();  w!=0;  i++, w = pViewList->next() )
+    for( i=1, w=&(pViewList->first());  w!=0;  i++, w = &(pViewList->next()) )
       w->setCaption( QString( m_title + ":%1" ).arg(i) );	
   };
+  */
 }
 
 bool QMo2Doc::isLastView() const
 {
+  /* TODO: REVIVE!!!
   int k;
   if( pViewList == 0 ) 
     return 0;
   k = (int) (pViewList->count());
   return ( k == 1 );
+  */
+  return false;
 }
 
 
 void QMo2Doc::updateAllViews( QMo2View *sender )
 {
+  // TODO: REVIVE!!!
+  /*
   QMo2View *w;
   if( pViewList == 0 ) 
     return;
   for( w=pViewList->first(); w!=0; w=pViewList->next() ) {
      w->update( sender );
   };
+  */
 }
 
 void QMo2Doc::setPathName( const QString &name )
@@ -124,6 +136,7 @@ void QMo2Doc::closeDocument()
   QMo2View *w;
   if( pViewList == 0 )
     return;
+  /* TODO: REVIVE!!!
   if( !isLastView() ) {
     for( w = pViewList->first();  w != 0;  w = pViewList->next() ) {
      if( ! w->close() )
@@ -134,6 +147,7 @@ void QMo2Doc::closeDocument()
     w = pViewList->first();
     w->close();
   };
+  */
 }
 
 bool QMo2Doc::newDocument()
@@ -162,7 +176,7 @@ bool QMo2Doc::openDocument(const QString &filename, const char * /*format */)
   int i, n, k;
   char buf[MAX_INPUTLEN];
   const TDataInfo *inf;
-  QCString fn;
+  Q3CString fn;
   ifstream is;
   fn = filename.local8Bit();
   //QMessageBox::critical( 0, "Debug: QMo2Doc::openDocument",
@@ -170,7 +184,7 @@ bool QMo2Doc::openDocument(const QString &filename, const char * /*format */)
   errno = 0;
   is.open( fn );
   if( ! is.good() ) {
-    cerr << "fail to open file " << fn << ": " << strerror(errno) << '\n';
+    // cerr << "fail to open file " << fn << ": " << strerror(errno) << '\n'; TODO: qDebug
     QMessageBox::critical( 0, "openDocument Error:",
        QString("Fail to open file: ") + filename + QString(" :\n") +
          QString( strerror(errno) ), 
@@ -224,7 +238,7 @@ bool QMo2Doc::openDocument(const QString &filename, const char * /*format */)
 bool QMo2Doc::saveDocument(const QString &filename, const char * /*format */)
 {
   int k;
-  QCString fn;
+  Q3CString fn;
   ofstream os;
   if( rootdata == 0 )
     return false;
@@ -234,8 +248,7 @@ bool QMo2Doc::saveDocument(const QString &filename, const char * /*format */)
   errno = 0;
   os.open( fn );
   if( ! os.good() ) {
-    cerr << "Fail to open for write file " << fn << ": "
-         << strerror(errno) << '\n';
+    // qDebug("Fail to open for write file %s: %s", fn, strerror(errno) ); TODO qDebug
     QMessageBox::critical( 0, "saveDocument Error",
         QString("Fail to open for write file: ") + filename +
 	    QString(":\n") + QString( strerror(errno) ), 
@@ -277,7 +290,7 @@ bool QMo2Doc::canCloseFrame( QMo2View* pFrame )
 	     QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel )) {
       case QMessageBox::Yes:
   	   if( is_nonamed ) {
-	     saveName = QFileDialog::getSaveFileName(0, 0, pFrame);
+	     saveName = Q3FileDialog::getSaveFileName(0, 0, pFrame);
              if(saveName.isEmpty())
           	return false;
 	   } else {

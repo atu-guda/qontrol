@@ -21,6 +21,8 @@
 
 #include <qwidget.h>
 #include <qstatusbar.h>
+//Added by qt3to4:
+#include <QLabel>
 #include "tmodel.h"
 #include "qmo2view.h"
 

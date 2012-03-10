@@ -17,25 +17,29 @@
 #include <cmath>
 #include <limits>
 // include files for Qt
-#include <qdir.h>
-#include <qfileinfo.h>
-#include <qprinter.h>
-#include <qpainter.h>
-#include <qfontmetrics.h>
-#include <qmessagebox.h>
-#include <qdialog.h>
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qcombobox.h>
-#include <qcheckbox.h>
-#include <qlistview.h>
-#include <qpushbutton.h>
-#include <qlayout.h>
-#include <qfiledialog.h>
+#include <QDir>
+#include <QFileInfo>
+#include <QPrinter>
+#include <QPainter>
+#include <QFontMetrics>
+#include <QMessageBox>
+#include <QDialog>
+#include <QLabel>
+#include <QLineEdit>
+#include <QComboBox>
+#include <QCheckBox>
+#include <QPushButton>
+#include <QLayout>
+#include <QScrollArea>
 #include <qinputdialog.h>
-#include <qhbox.h>
-#include <qvbox.h>
-#include <qscrollview.h>
+#include <q3filedialog.h>
+#include <q3listview.h>
+//Added by qt3to4:
+#include <QGridLayout>
+#include <Q3GridLayout>
+#include <QResizeEvent>
+#include <Q3VBoxLayout>
+#include <QCloseEvent>
 
 // application specific includes
 #include "miscfun.h"
@@ -53,30 +57,40 @@
 
 QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent,
     const char* name, int wflags )
-: QMainWindow(parent, name, wflags)
+: QWidget( parent ) // TODO: REVIVE wflags
 {
-  QHBox *hb; QVBox *vb; 
   doc = pDoc;
   QSize p_size = parent->size();
   root = doc->getRoot();
   model = doc->getModel();
   sel = mark = -1; sel_x = sel_y = 0; level = 0;
-  vb = new QVBox( this, "vbox" ); // main field(hb=3views) + status(stab)
-  hb = new QHBox( vb, "hbox" );
-  sv = new QScrollView( hb, "scrollview" );
-  sv->setVScrollBarMode( QScrollView::AlwaysOn );
-  sview = new QStructView( doc, this, sv->viewport(), "structure_view" );
-  sv->addChild( sview );
-  oview = new QOutView( doc, this, hb, "out_view" );
-  gview = new QGraphView( doc, this, hb, "graph_view" );
-  stam = new QStatusModel( this, vb, "status_model" );
+  
+  QGridLayout *grLay = new QGridLayout;
 
+  //sv = new Q3ScrollView( this, "scrollview" );
+  //sv->setVScrollBarMode( Q3ScrollView::AlwaysOn );
+  //sview = new QStructView( doc, this, sv->viewport(), "structure_view" );
+  // sv->addChild( sview );
+  scrollArea = new QScrollArea( this );
+  sview = new QStructView( doc, this, this, "structure_view" );
+  scrollArea->setWidget( sview );
+  oview = new QOutView( doc, this, this, "out_view" );
+  gview = new QGraphView( doc, this, this, "graph_view" );
+  
+  stam = new QStatusModel( this, this, "status_model" );
+
+  grLay->addWidget( scrollArea, 0, 0 );
+  grLay->addWidget( oview, 0, 1 );
+  grLay->addWidget( gview, 0, 2 );
+  grLay->addWidget( stam, 1, 0, 1, 3 );
+
+  setLayout( grLay );
+  
   QSize s_size ( sview->getElemsBound() );
   s_size += QSize( 2 * oview->width() + gview->width(), 0 );
   QSize n_size = s_size.boundedTo( p_size );
   resize( n_size );
 
-  setCentralWidget( vb );
   connect( this, SIGNAL(viewChanged()), this, SLOT(updateViews()) );
   connect( sview, SIGNAL(sig_changeSel(int,int,int)), this, SLOT(changeSel(int,int,int)) );
   connect( sview, SIGNAL(sig_changeLevel(int)), this, SLOT(changeLevel(int)) );
@@ -92,10 +106,14 @@ QMo2Doc *QMo2View::getDocument() const
   return doc;
 }
 
+const QString& QMo2View::currentFile() const 
+{ 
+  return doc->pathName(); 
+}
 
 QSize QMo2View::svSize() const 
 { 
-  return QSize( sv->visibleWidth(), sv->visibleHeight() ); 
+  return scrollArea->size();
 }
 
 
@@ -217,7 +235,7 @@ void QMo2View::changeSel( int x, int y, int rel )
   if( sel_y < 0 ) sel_y = 0;
   sel = model->xy2elnu( sel_x, sel_y );
   QPoint seco = sview->getSelCoords();
-  sv->ensureVisible( seco.x(), seco.y() );
+  scrollArea->ensureVisible( seco.x(), seco.y() );
   emit viewChanged();
 }
 
@@ -239,9 +257,9 @@ void QMo2View::newElm()
   QComboBox *cb; QLabel *la;
   QPushButton *bt_ok, *bt_can;
   QLineEdit *oname_ed, *oord_ed;
-  QVBoxLayout *main_lay, *type_lay;
-  QHBoxLayout *btn_lay;
-  QGridLayout *name_lay;
+  Q3VBoxLayout *main_lay, *type_lay;
+  Q3HBoxLayout *btn_lay;
+  Q3GridLayout *name_lay;
   QSpacerItem *spa1;
 
   const TClassInfo *ci;
@@ -253,10 +271,10 @@ void QMo2View::newElm()
 
   seld = new QDialog( this, "sel_dial", true );
 
-  main_lay = new QVBoxLayout( seld, 10, 10, "newElm_main_layout" );
-  name_lay = new QGridLayout( main_lay, 2, 2,  -1, "name_grid" );
-  type_lay = new QVBoxLayout( main_lay, -1, "type_lay" );
-  btn_lay  = new QHBoxLayout( main_lay, -1, "btn_lay" );
+  main_lay = new Q3VBoxLayout( seld, 10, 10, "newElm_main_layout" );
+  name_lay = new Q3GridLayout( main_lay, 2, 2,  -1, "name_grid" );
+  type_lay = new Q3VBoxLayout( main_lay, -1, "type_lay" );
+  btn_lay  = new Q3HBoxLayout( main_lay, -1, "btn_lay" );
 
   la = new QLabel( seld, "l1" );
   la->setText( "Name" );
@@ -552,8 +570,8 @@ void QMo2View::infoElm()
   int i, j, nelm, ibuf;
   char cbuf[256];
   double dbuf;
-  QDialog *dia; QListView *lv; QPushButton *bt_ok;
-  QVBoxLayout *lay;
+  QDialog *dia; Q3ListView *lv; QPushButton *bt_ok;
+  Q3VBoxLayout *lay;
   QString qs;
   static const char *lbl[7] = { "MR", "NRC", "ND", "ROD", "NS", "RO" , "?1" };
   if( ! checkState( selCheck ) )
@@ -565,9 +583,9 @@ void QMo2View::infoElm()
   dia = new QDialog( this, "info_elm_dia", true );
   dia->setCaption( QString( PACKAGE ": Structure of ") + ob->getName() );
 
-  lay = new QVBoxLayout( dia, 10, 10, "info_vboxlay" );
+  lay = new Q3VBoxLayout( dia, 10, 10, "info_vboxlay" );
 
-  lv = new QListView( dia, "list" );
+  lv = new Q3ListView( dia, "list" );
   lv->addColumn( "N", 24 ); lv->addColumn( "Name", 80 );
   lv->addColumn( "Type", 38 ); lv->addColumn( "Value", 150 );
   lv->addColumn( "Descr", 120 ); lv->addColumn( "Flags", 100 );
@@ -584,23 +602,23 @@ void QMo2View::infoElm()
     ibuf = 0; dbuf = 0; cbuf[0] = 0;
     switch( di->tp ) {
       case dtpInt: ob->getDataII( i, &ibuf, 0 );
-		   (void) new QListViewItem( lv, QString::number(i), 
+		   (void) new Q3ListViewItem( lv, QString::number(i), 
 					     di->name, "i/" + QString::number( di->subtp ),
 					     QString::number( ibuf ),
 					     QString::fromLocal8Bit(di->descr), qs );
 		   break;
       case dtpDbl: ob->getDataID( i, &dbuf, 0 );
-		   (void) new QListViewItem( lv, QString::number(i), 
+		   (void) new Q3ListViewItem( lv, QString::number(i), 
 					     di->name, "d", QString::number( dbuf ), 
 					     QString::fromLocal8Bit(di->descr), qs );
 		   break;
       case dtpStr: ob->getDataIS( i, cbuf, sizeof(cbuf), 0 );
-		   (void) new QListViewItem( lv, QString::number(i), di->name,
+		   (void) new Q3ListViewItem( lv, QString::number(i), di->name,
 					     QString("s") + QString::number( di->max_len ),
 					     QString::fromLocal8Bit( cbuf ), 
 					     QString::fromLocal8Bit(di->descr), qs );
 		   break;
-      default: (void) new QListViewItem( lv, QString::number(i), di->name,
+      default: (void) new Q3ListViewItem( lv, QString::number(i), di->name,
 					 QString::number(di->tp), di->listdata, 
 					 QString::fromLocal8Bit(di->descr), qs );
     };
@@ -629,9 +647,9 @@ void QMo2View::newOut()
   const char *outname, *elmname;
   QDialog *dia; QPushButton *bt_ok, *bt_can;
   QLineEdit *oname_ed, *ename_ed; QLabel *lab1, *lab2;
-  QVBoxLayout *main_lay;
-  QGridLayout *grid_lay;
-  QHBoxLayout *btn_lay;
+  Q3VBoxLayout *main_lay;
+  Q3GridLayout *grid_lay;
+  Q3HBoxLayout *btn_lay;
   if( ! checkState( validCheck ) )
     return;
   
@@ -648,9 +666,9 @@ void QMo2View::newOut()
   dia = new QDialog( this, "newout_dial", true );
   dia->setCaption( "Creating new output array" );
 
-  main_lay = new QVBoxLayout( dia, 10, 10, "main_newout_lay" );
-  grid_lay = new QGridLayout( main_lay, 2, 2, -1, "grig_newout" );
-  btn_lay =  new QHBoxLayout( main_lay, -1, "btn_newout" );
+  main_lay = new Q3VBoxLayout( dia, 10, 10, "main_newout_lay" );
+  grid_lay = new Q3GridLayout( main_lay, 2, 2, -1, "grig_newout" );
+  btn_lay =  new Q3HBoxLayout( main_lay, -1, "btn_newout" );
 
   lab1 = new QLabel( dia, "l_oname" );
   lab1->setText( "Output array name" );
@@ -742,8 +760,8 @@ void QMo2View::showOutData()
 {
   QDialog *dia;
   QDoubleTable *dv;
-  QVBoxLayout *lv;
-  QHBoxLayout *lg;
+  Q3VBoxLayout *lv;
+  Q3HBoxLayout *lg;
   QString fnq, sinf;
   QPushButton *bt_ok;
   QLabel *lab;
@@ -774,10 +792,10 @@ void QMo2View::showOutData()
 
 
   dia = new QDialog( this, "data_dial", 1 );
-  dia->setCaption( QString("Data array: ") + gi.title );
-  lv = new QVBoxLayout( dia, 10, 6, "showOutData_vbox_layout" );
+  dia->setCaption( QString("Data array: ") + QString(gi.title) );
+  lv = new Q3VBoxLayout( dia, 10, 6, "showOutData_vbox_layout" );
 
-  lg = new QHBoxLayout( lv, -1, "showOutData_gbox_layout" );
+  lg = new Q3HBoxLayout( lv, -1, "showOutData_gbox_layout" );
 
   dv = new QDoubleTable( &gi,  dia, "dv" );
   lg->addWidget( dv );
@@ -814,7 +832,7 @@ void QMo2View::exportOut()
   arr = model->getOutArr( level );
   if( arr == 0 )
     return;
-  fnq = QFileDialog::getSaveFileName( 0, 
+  fnq = Q3FileDialog::getSaveFileName( 0, 
       "Data files (*.txt *.dat *.csv);;All files (*)", this );
   if( fnq.isEmpty() )
     return;
@@ -905,7 +923,7 @@ void QMo2View::showGraph()
   if( gra == 0 )
     return;
   plotWnd = new QMainWindow( this, "plot_wnd1", 
-      WType_TopLevel | WDestructiveClose );
+      Qt::WType_TopLevel | Qt::WDestructiveClose );
   plotWnd->setCaption( QString( PACKAGE ": Plot ") + QString(gra->getName()) );
   pv = new QPlotView( doc, gra, plotWnd, "plot_view" );
   plotWnd->setCentralWidget( pv );
@@ -917,7 +935,7 @@ void QMo2View::showGraphData()
 {
   QDialog *dia;
   QDoubleTable *dv;
-  QVBoxLayout *lv;
+  Q3VBoxLayout *lv;
   GraphInfo gi;
   QString fnq; QPushButton *bt_ok;
   TGraph *gra;
@@ -932,8 +950,8 @@ void QMo2View::showGraphData()
     return;
 
   dia = new QDialog( this, "graphdata_dial", 1 );
-  dia->setCaption( QString("Graph data: ") + gi.title );
-  lv = new QVBoxLayout( dia, 10, 6, "showFraphData_vbox_layout" );
+  dia->setCaption( QString("Graph data: ") + QString(gi.title) );
+  lv = new Q3VBoxLayout( dia, 10, 6, "showFraphData_vbox_layout" );
 
   dv = new QDoubleTable( &gi, dia,  "dv" );
   lv->addWidget( dv );
@@ -960,7 +978,7 @@ void QMo2View::exportGraphData()
   gra = model->getGraph( level );
   if( gra == 0 )
     return;
-  fnq = QFileDialog::getSaveFileName( 0, 
+  fnq = Q3FileDialog::getSaveFileName( 0, 
       "Data files (*.txt *.dat *.csv);;All files (*)", this );
   if( fnq.isEmpty() )
     return;
@@ -974,7 +992,7 @@ void QMo2View::gnuplotGraph()
   QDialog *dia;
   QLabel *lb1, *lb2, *lb3; QLineEdit *ed_pgm, *ed_dat, *ed_eps;
   QCheckBox *sw_x11; QPushButton *bt_ok, *bt_can;
-  QVBoxLayout *lv; QHBoxLayout *lg;
+  Q3VBoxLayout *lv; Q3HBoxLayout *lg;
   QString f_pgm, f_dat, f_eps, cdir;
   int l, rc, use_x11;
   if( ! checkState( doneCheck ) )
@@ -998,7 +1016,7 @@ void QMo2View::gnuplotGraph()
 
   dia = new QDialog( this, "gnuplot_dia", true );
   dia->resize( 400, 260 );
-  lv = new QVBoxLayout( dia, 10, 6, "gnuplot_vbox_layouot" );
+  lv = new Q3VBoxLayout( dia, 10, 6, "gnuplot_vbox_layouot" );
   sw_x11 = new QCheckBox( dia, "sw_x11" );
   sw_x11->setText( "Output to &X11 window" );
   sw_x11->setChecked( false );
@@ -1021,7 +1039,7 @@ void QMo2View::gnuplotGraph()
   ed_pgm = new QLineEdit( dia, "ed_pgm" );
   ed_pgm->setText( f_pgm );
   lv->addWidget( ed_pgm );
-  lg = new QHBoxLayout( lv, 10, "gnuplot_btn" );
+  lg = new Q3HBoxLayout( lv, 10, "gnuplot_btn" );
   bt_ok = new QPushButton( dia, "bt_ok" );
   bt_ok->setText( "Ok" ); bt_ok->setDefault( true );
   lg->addWidget( bt_ok );
@@ -1061,7 +1079,7 @@ void QMo2View::showVars()
 {
   QDialog *dia;
   QDoubleTable *dv;
-  QVBoxLayout *lv;
+  Q3VBoxLayout *lv;
   GraphInfo gi;
   QString fnq; QPushButton *bt_ok;
   if( ! checkState( validCheck ) )
@@ -1074,7 +1092,7 @@ void QMo2View::showVars()
 
   dia = new QDialog( this, "vars_dial", 1 );
   dia->setCaption( QString("Model vars: ") );
-  lv = new QVBoxLayout( dia, 10, 6, "showVars_vbox_layouot" );
+  lv = new Q3VBoxLayout( dia, 10, 6, "showVars_vbox_layouot" );
   dv = new QDoubleTable( &gi, dia,  "dv" );
   lv->addWidget( dv );
   bt_ok = new QPushButton( dia, "bt_ok" );
@@ -1093,7 +1111,7 @@ void QMo2View::runRun()
   if( ! checkState( validCheck ) )
     return;	
   rv = new QRunView( model, 0, this, "run_view", 
-      WType_Dialog | WDestructiveClose );
+      Qt::WType_Dialog | Qt::WDestructiveClose );
   rv->exec();
   emit viewChanged();
   sview->setFocus();
@@ -1105,7 +1123,7 @@ void QMo2View::runPrm()
     return;	
   QRunView *rv;
   rv = new QRunView( model, 1, 0, "run_view",
-      WType_Dialog | WDestructiveClose );
+      Qt::WType_Dialog | Qt::WDestructiveClose );
   rv->exec();
   emit viewChanged();
   sview->setFocus();
@@ -1117,7 +1135,7 @@ void QMo2View::runPrm2()
     return;	
   QRunView *rv;
   rv = new QRunView( model, 2, 0, "run_view", 
-      WType_Dialog | WDestructiveClose );
+      Qt::WType_Dialog | Qt::WDestructiveClose );
   rv->exec();
   emit viewChanged();
   sview->setFocus();
@@ -1144,10 +1162,10 @@ const char QMo2View::helpstr[] = "<b>Hot keys:</b><br>\n"
 void QMo2View::showHelp(void)
 {
   QDialog *dia; QLabel *la; QPushButton *bt_ok;
-  QVBoxLayout *lv;
+  Q3VBoxLayout *lv;
   dia = new QDialog( this, "help_dia", true );
   dia->setCaption( "Hot keys in structure window" );
-  lv = new QVBoxLayout( dia, 10, 6, "showHelp_vbox_layouot" );
+  lv = new Q3VBoxLayout( dia, 10, 6, "showHelp_vbox_layouot" );
   
   la = new QLabel( dia, "helplabel" );
   la->setText( helpstr );

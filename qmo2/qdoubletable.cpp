@@ -17,22 +17,24 @@
 
 #include <qstring.h>
 #include <qpainter.h>
-#include <qtable.h>
+#include <q3table.h>
+//Added by qt3to4:
+#include <Q3Frame>
 #include "miscfun.h"
 #include "qdoubletable.h"
 
 QDoubleTable::QDoubleTable( const GraphInfo *agi, 
                             QWidget *parent, const char *name )
-             :QTable( agi->row, agi->col, parent, name )
+             :Q3Table( agi->row, agi->col, parent, name )
 {
   int i;
   gi = agi;
-  setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  setFrameStyle( Q3Frame::Panel | Q3Frame::Sunken );
   // setLineWidth( 2 );
   setMinimumSize( 190, 120 );
   // setCellWidth( 80 ); setCellHeight( 20 );
   // setTableFlags( Tbl_autoScrollBars );
-  QHeader *gh = horizontalHeader();
+  Q3Header *gh = horizontalHeader();
   if( gh != 0 ) {
     for( i=0; i<gi->col; i++ ) {
       gh->setLabel( i, QString::fromLocal8Bit( gi->label[i] ) );

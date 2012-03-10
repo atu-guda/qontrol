@@ -21,11 +21,13 @@
 #include <qcheckbox.h>
 #include <qcombobox.h>
 #include <qlineedit.h>
-#include <qmultilinedit.h>
-#include <qgroupbox.h>
+#include <Q3MultiLineEdit>
+#include <q3groupbox.h>
 #include <qpushbutton.h>
 #include <qvalidator.h>
-#include <qprocess.h>
+#include <q3process.h>
+//Added by qt3to4:
+#include <Q3CString>
 
 #include "../config.h"
 #include "qcolorbtn.h"
@@ -49,8 +51,8 @@ void  QAnyDialog::initDialog(void)
   int i, ne, end, x, y, h, w, k;
   QLineEdit *qle;
   QCheckBox *qch; QComboBox *qcb; 
-  QMultiLineEdit *qmle;
-  QLabel *qla; QGroupBox *qgb; QPushButton *qpb; QColorBtn *qcob;
+  Q3MultiLineEdit *qmle;
+  QLabel *qla; Q3GroupBox *qgb; QPushButton *qpb; QColorBtn *qcob;
   QString qs;
   char oname[MAX_INPUTLEN];
   ne = ds->getN(); end = 0;
@@ -117,7 +119,7 @@ void  QAnyDialog::initDialog(void)
 		        elms[i] = qle; 
 		        break;
 		      case dtpsMline: 
-		        qmle = new QMultiLineEdit( this, di->name ); 
+		        qmle = new Q3MultiLineEdit( this, di->name ); 
      		        // qmle->setMaxLength( di->max_len ); // ??
  		        qmle->setGeometry( x, y, w, h );
 		        qmle->setEnabled( !(di->flags & efRODial) );
@@ -137,7 +139,7 @@ void  QAnyDialog::initDialog(void)
 		     qla->setText( di->listdata );
 		     elms[i] = qla;
 		     break;
-      case dtpGroup: qgb = new QGroupBox( this, di->name );
+      case dtpGroup: qgb = new Q3GroupBox( this, di->name );
                      qgb->setGeometry( x, y, w, h );
 		     qgb->setTitle( di->listdata );
 		     elms[i] = qgb; 
@@ -170,7 +172,7 @@ int QAnyDialog::exec_trans(void)
   int i, rc, ne, iv, k, ena;
   double dv;
   char *sv;
-  QString qs; QCString qcs;
+  QString qs; Q3CString qcs;
   const TDataInfo *di;
   // fill from vars
   ne = ds->getN();
@@ -220,8 +222,8 @@ int QAnyDialog::exec_trans(void)
 	      case dtpsStr: ((QLineEdit*)(elms[i]))->setText( qs );
 	           ((QLineEdit*)(elms[i]))->setEnabled( ena );
 	           break;
-	      case dtpsMline: ((QMultiLineEdit*)(elms[i]))->setText( qs );
-	           ((QMultiLineEdit*)(elms[i]))->setEnabled( ena );
+	      case dtpsMline: ((Q3MultiLineEdit*)(elms[i]))->setText( qs );
+	           ((Q3MultiLineEdit*)(elms[i]))->setEnabled( ena );
 	           break;	   
 	    };
             break;        
@@ -266,7 +268,7 @@ int QAnyDialog::exec_trans(void)
                            qcs = qs.local8Bit();
                            ds->setDataIS( i, (const char*)qcs, 1 );
                   break;
-             case dtpsMline: qs = ((QMultiLineEdit*)(elms[i]))->text();
+             case dtpsMline: qs = ((Q3MultiLineEdit*)(elms[i]))->text();
                              qcs = qs.local8Bit();
                              ds->setDataIS( i, (const char*)qcs, 1 );
                   break;	
@@ -310,7 +312,7 @@ void QAnyDialog::showHelp(void)
   QString helpfile = QMo2Win::qmo2win->findRes( resname );
   if( helpfile.isEmpty() )
     return showSimpleHelp();
-  QProcess help_proc;
+  Q3Process help_proc;
   help_proc.addArgument( "htmlview" );
   help_proc.addArgument( helpfile );
   QString si;

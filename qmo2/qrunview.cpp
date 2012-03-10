@@ -22,10 +22,15 @@
 #include <qpen.h>
 #include <qbrush.h>
 #include <qfont.h>
-#include <qkeycode.h>
+#include <qnamespace.h>
 #include <qlabel.h>
-#include <qpaintdevicemetrics.h>
+#include <q3paintdevicemetrics.h>
 #include <qtimer.h>
+//Added by qt3to4:
+#include <QPaintEvent>
+#include <QResizeEvent>
+#include <QMouseEvent>
+#include <QKeyEvent>
 
 #include "resource.h"
 #include "miscfun.h"
@@ -35,15 +40,15 @@
 #include "qrunview.h"
 
 QRunView::QRunView( TModel *amodel, int atype, 
-                    QWidget *parent, const char *name, WFlags wf )
+                    QWidget *parent, const char *name, Qt::WFlags wf )
           : QDialog( parent, name, 1, wf )
 {
   int i;
   model = amodel; run_type = atype; s_time = 0;
   data = 0; pix = 0;
   s_h = 40;
-  setBackgroundMode( NoBackground );
-  setCursor( crossCursor );
+  setBackgroundMode( Qt::NoBackground );
+  setCursor( Qt::crossCursor );
   timer = new QTimer();
   connect( timer, SIGNAL(timeout()), this, SLOT(slotRunNext()) );
   model->reset();
@@ -55,7 +60,7 @@ QRunView::QRunView( TModel *amodel, int atype,
   for( i=0; i<20; i++ ) auxs[i] = 0;
   i_tot = 0; n_tot = 1; 
   setMinimumSize( 500, s_h );
-  setFocusPolicy( StrongFocus );
+  setFocusPolicy( Qt::StrongFocus );
   setFocus();
 }
 
@@ -261,9 +266,9 @@ void QRunView::mousePressEvent( QMouseEvent *me )
   x = me->x(); y = me->y(); btn = me->button();
   vis2phys( x, y, &vx, &vy );
   switch( btn ) {
-    case LeftButton:  mouse_l = 1;  break;
-    case RightButton: mouse_r = 1;  break;
-    case MidButton:   mouse_m = 1;  break;
+    case Qt::LeftButton:  mouse_l = 1;  break;
+    case Qt::RightButton: mouse_r = 1;  break;
+    case Qt::MidButton:   mouse_m = 1;  break;
     default:         break;
   };
   mouse_x = vx; mouse_y = vy;
@@ -278,9 +283,9 @@ void QRunView::mouseReleaseEvent( QMouseEvent *me )
   x = me->x(); y = me->y(); btn = me->button();
   vis2phys( x, y, &vx, &vy );
   switch( btn ) {
-    case LeftButton:  mouse_l = 0;  break;
-    case RightButton: mouse_r = 0;  break;
-    case MidButton:   mouse_m = 0;  break;
+    case Qt::LeftButton:  mouse_l = 0;  break;
+    case Qt::RightButton: mouse_r = 0;  break;
+    case Qt::MidButton:   mouse_m = 0;  break;
     default:         break;
   };
   mouse_x = vx; mouse_y = vy;
@@ -300,8 +305,8 @@ void QRunView::keyPressEvent( QKeyEvent *ke )
 {
   int k, st, btnCtrl, btnShift, mul_btn;
   k = ke->key(); st = ke->state();
-  btnShift = (( st & Qt::ShiftButton ) != 0 ) ? 2 : 1;
-  btnCtrl = (( st & Qt::ControlButton ) != 0 ) ? 4 : 1;
+  btnShift = (( st & Qt::ShiftModifier ) != 0 ) ? 2 : 1;
+  btnCtrl = (( st & Qt::ControlModifier ) != 0 ) ? 4 : 1;
   mul_btn = btnShift * btnCtrl;
   if( state == stateDone ) {
     accept();
@@ -315,13 +320,13 @@ void QRunView::keyPressEvent( QKeyEvent *ke )
     slotStartRun();
   } else {  
     switch( k ) {
-      case Key_Left:  keys_state[0] = mul_btn;	 break;
-      case Key_Right: keys_state[1] = mul_btn;	 break;
-      case Key_Up:    keys_state[2] = mul_btn;	 break;
-      case Key_Down:  keys_state[3] = mul_btn;	 break;
-      case Key_Space: keys_state[4] = mul_btn;	 break;
-      case Key_Enter: keys_state[5] = mul_btn;	 break;
-      case Key_Escape: slotStopRun(); 	         break;
+      case Qt::Key_Left:  keys_state[0] = mul_btn;	 break;
+      case Qt::Key_Right: keys_state[1] = mul_btn;	 break;
+      case Qt::Key_Up:    keys_state[2] = mul_btn;	 break;
+      case Qt::Key_Down:  keys_state[3] = mul_btn;	 break;
+      case Qt::Key_Space: keys_state[4] = mul_btn;	 break;
+      case Qt::Key_Enter: keys_state[5] = mul_btn;	 break;
+      case Qt::Key_Escape: slotStopRun(); 	         break;
       default: ke->ignore();
     };
   };
@@ -336,12 +341,12 @@ void QRunView::keyReleaseEvent( QKeyEvent *ke )
     return;
   } else {  
     switch( k ) {
-      case Key_Left:  keys_state[0] = 0;	 break;
-      case Key_Right: keys_state[1] = 0;	 break;
-      case Key_Up:    keys_state[2] = 0;	 break;
-      case Key_Down:  keys_state[3] = 0;	 break;
-      case Key_Space: keys_state[4] = 0;	 break;
-      case Key_Enter: keys_state[5] = 0;	 break;
+      case Qt::Key_Left:  keys_state[0] = 0;	 break;
+      case Qt::Key_Right: keys_state[1] = 0;	 break;
+      case Qt::Key_Up:    keys_state[2] = 0;	 break;
+      case Qt::Key_Down:  keys_state[3] = 0;	 break;
+      case Qt::Key_Space: keys_state[4] = 0;	 break;
+      case Qt::Key_Enter: keys_state[5] = 0;	 break;
       default: ke->ignore();
     };
   };

@@ -24,18 +24,23 @@
 #include <qpen.h>
 #include <qbrush.h>
 #include <qfont.h>
-#include <qkeycode.h>
+#include <qnamespace.h>
 #include <qmessagebox.h>
-#include <qpopupmenu.h>
+#include <q3popupmenu.h>
 #include <qcombobox.h>
 #include <qlineedit.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
 #include <qcheckbox.h>
-#include <qkeycode.h>
-#include <qgroupbox.h>
+#include <qnamespace.h>
+#include <q3groupbox.h>
 #include <qprinter.h>
-#include <qpaintdevicemetrics.h>
+#include <q3paintdevicemetrics.h>
+//Added by qt3to4:
+#include <QKeyEvent>
+#include <QResizeEvent>
+#include <QMouseEvent>
+#include <QPaintEvent>
 
 #include "resource.h"
 #include "miscfun.h"
@@ -74,10 +79,10 @@ QPlotView::QPlotView( QMo2Doc *adoc, TGraph *agra,
   errstr = 0;
   fontfam = "helvetica";
   setStartColors();
-  setBackgroundMode( NoBackground );
-  setFocusPolicy( QWidget::StrongFocus );
+  setBackgroundMode( Qt::NoBackground );
+  setFocusPolicy( Qt::StrongFocus );
   setMinimumSize( 350, 280 );
-  setCursor( crossCursor );
+  setCursor( Qt::crossCursor );
 }
 
 QPlotView::~QPlotView()
@@ -174,7 +179,7 @@ void QPlotView::drawGrid( QPainter &p )
       p.setPen( QPen( gridColor, 0 /*linew*/) );
       p.drawLine( ix, pix_y0,  ix, pix_y0 - pix_y );
       p.setPen( QPen( labelColor, linew ) );
-      p.drawText( ix - 20, pix_y0 + 2, 40, 12, AlignHCenter,
+      p.drawText( ix - 20, pix_y0 + 2, 40, 12, Qt::AlignHCenter,
                 QString::number( lvx ) );
     };
   };
@@ -190,7 +195,7 @@ void QPlotView::drawGrid( QPainter &p )
       p.setPen( QPen( gridColor, 0 /*linew*/ ) );
       p.drawLine( pix_l, iy, pix_x0 + pix_x, iy );
       p.setPen( QPen( labelColor, linew ) );
-      p.drawText( 1, iy - 6, pix_l-2, 12, AlignRight,
+      p.drawText( 1, iy - 6, pix_l-2, 12, Qt::AlignRight,
                   QString::number( lvy ) );
     };
   };
@@ -239,7 +244,7 @@ void QPlotView::drawAxes( QPainter &p )
   
   // -------- draw labels
   if( pix_r >= leg_sz ) {
-    p.setPen( labelColor ); p.setBrush( NoBrush );
+    p.setPen( labelColor ); p.setBrush( Qt::NoBrush );
     p.drawText( pix_x0 + pix_x + 5, pix_y0 + 6, xLabel );
     p.drawText( pix_x0 + pix_x + 5, pix_y0 - 14, QString::number(nn) );
     p.drawText( pix_x0 + pix_x + 5, pix_y0 - 24, QString::number(ny) );
@@ -265,7 +270,7 @@ void QPlotView::drawAxes( QPainter &p )
     };
   };
   // draw tool cross
-  p.setPen( QPen( scaleColor, linew ) ); p.setBrush( NoBrush );
+  p.setPen( QPen( scaleColor, linew ) ); p.setBrush( Qt::NoBrush );
   phys2vis( tool_x, tool_y, &ix, &iy );
   p.drawLine( ix-10, iy, ix-3, iy );  p.drawLine( ix+10, iy, ix+3, iy );
   p.drawLine( ix, iy-10, ix, iy-3 );  p.drawLine( ix, iy+10, ix, iy+3 );
@@ -291,12 +296,12 @@ void QPlotView::drawAxes( QPainter &p )
   };
   p.drawText( 2, pix_h-12, qs  );
   if( devTp == 0 ) {
-    p.setRasterOp( Qt::XorROP ); 
+    p.setCompositionMode( QPainter::CompositionMode_Xor ); 
   };
   p.setPen( QPen( QColor(255,255,255), linew ) );
   p.drawPoint( ix, iy ); 
   if( devTp == 0 ) {
-    p.setRasterOp( Qt::CopyROP ); 
+    p.setCompositionMode( QPainter::CompositionMode_SourceOver ); 
   };
 }
 
@@ -304,42 +309,57 @@ void QPlotView::drawPlots( QPainter &p )
 {
   int i, j, j_st, ix, iy;
   j_st = 0; 
+  
   if( ny > 1 ) { // if 3D-plot, skip 2 first data arrays
     j_st = 1;
   };
+
   for( j=j_st; j<ng; j++ ) {  // all graphs
+
     if( j == sel_g ) // seleceted printed last
       continue;
-    p.setPen( QPen( plotColor[j], linew ) );
+
     if( plotOn[j] == 0 )
         continue;
+    
+    QPainterPath path;
+
     for( i=0; i<nn; i++ ) {
       phys2vis( datax[i], datay[j][i], &ix, &iy );
       if( i == 0 || plp[j][i] == 2 ) {
-	p.moveTo( ix, iy ); 
+	path.moveTo( ix, iy ); 
       } else {
 	if( ( plp[j][i] & 1 ) || qual == 1 ) {	  
-	  p.lineTo( ix, iy );
+	  path.lineTo( ix, iy );
 	};
       };
     };   // - end of nn loop;
+    p.setPen( QPen( plotColor[j], linew ) );
+    p.drawPath( path );
+
   };   // - end of ng loop
+
   if( sel_g >=0 && sel_g < ng ) {  // draw selected
+    
     p.setPen( QPen( plotColor[sel_g], linew ) );
+    QPainterPath path;
+
     for( i=0; i<nn; i++ ) {
       phys2vis( datax[i], datay[sel_g][i], &ix, &iy );
       if( i == 0 || plp[sel_g][i] == 2  ) { // start of line
-	p.moveTo( ix, iy ); 
+	path.moveTo( ix, iy ); 
       } else {
 	if( ( plp[sel_g][i] & 1 ) || qual == 1 ) {
 	  if( maxErr > 0 ) {
-	    p.lineTo( ix, iy );
+	    path.lineTo( ix, iy );
 	  } else {
 	    p.drawPoint( ix, iy );
 	  };
 	};
       };
     };   // - end of nn loop;
+    p.drawPath( path );
+
   };
 }
 
@@ -357,21 +377,21 @@ void QPlotView::mousePressEvent( QMouseEvent *me )
   if( no < 0 || no >= ng )
     no = -1;
   switch( btn ) {
-    case LeftButton:
+    case Qt::LeftButton:
          if( no >= 0 && no >= min_sel_g && no <= max_sel_g ) { // select plot
            sel_g = no; plotOn[sel_g] = 1; sel_idx = -1;
          } else {        // move tool point
            tool_x = vx; tool_y = vy; sel_idx = -1;
          };
          break;
-    case RightButton:
+    case Qt::RightButton:
          if( no >= 0 && no != sel_g ) { // on/off plot line
            plotOn[no] = !plotOn[no];
          } else {
            // TODO: menu here
          };
          break;
-    case MidButton:
+    case Qt::MidButton:
          //QMessageBox::information( this, "Coordinates",
          //          QString("Middle button pressed at :")
          //          + QString::number( vx ) + QString(", ")
@@ -389,8 +409,8 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
   int k, st, btnCtrl, btnShift, i, di;
   double dvx, dvy, adx, ady;
   k = ke->key(); st = ke->state();
-  btnShift = (( st & Qt::ShiftButton ) != 0 );
-  btnCtrl = (( st & Qt::ControlButton ) != 0 );
+  btnShift = (( st & Qt::ShiftModifier ) != 0 );
+  btnCtrl = (( st & Qt::ControlModifier ) != 0 );
   if( btnShift ) {
     dvx = ( plotMaxX - plotMinX ) / 20;
     dvy = ( plotMaxY - plotMinY ) / 20;
@@ -399,16 +419,16 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
     dvx = 1 / kx; dvy = 1 / ky; di = 1;
   };
   switch( k ) {
-    case Key_Q: parentWidget()->close( true ); break;
-    case Key_A: qual = 1; linew = 1; break;
-    case Key_O:
+    case Qt::Key_Q: parentWidget()->close( true ); break;
+    case Qt::Key_A: qual = 1; linew = 1; break;
+    case Qt::Key_O:
          if( sel_g < 0 ) break;
 	 for( i=0; i<ng; i++ ) {
 	   if( i == sel_g ) continue;
 	   plotOn[i] = btnShift;
 	 };
          break;
-    case Key_S:
+    case Qt::Key_S:
 	 if( btnShift ){
 	   asX = gsX = asY = gsY = 1;
 	   zeroX = centerX = logX = zeroY = centerY = logY = 0;
@@ -417,7 +437,7 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
 	   setScale();
 	 };  
 	 break;
-    case Key_Plus:
+    case Qt::Key_Plus:
 	 asX = asY = 0;
 	 adx = ( plotMaxX - plotMinX ) / 4;
          ady = ( plotMaxY - plotMinY ) / 4;
@@ -425,7 +445,7 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
          plotMinY = tool_y - ady; plotMaxY = tool_y + ady;
 	 need_rescale = 1;
 	 break;
-    case Key_Minus:
+    case Qt::Key_Minus:
 	 asX = asY = 0;
 	 adx = plotMaxX - plotMinX;
          ady = plotMaxY - plotMinY;
@@ -433,22 +453,22 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
          plotMinY = tool_y - ady; plotMaxY = tool_y + ady;
 	 need_rescale = 1;
 	 break;
-    case Key_C:
+    case Qt::Key_C:
 	 if( btnShift )
 	   setStartColors();
 	 else
 	   setColors();
 	 break;
-    case Key_M:
+    case Qt::Key_M:
 	 if( btnCtrl ) {
 	   ref_x = logX; ref_y = logY;
 	 } else {
 	   ref_x = tool_x; ref_y = tool_y;
 	 };
 	 break;
-    case Key_G: moveTool(); break;
-    case Key_H: case Key_F1: showHelp(); break;
-    case Key_L:
+    case Qt::Key_G: moveTool(); break;
+    case Qt::Key_H: case Qt::Key_F1: showHelp(); break;
+    case Qt::Key_L:
 	 if( btnShift ) { sel_idx = -1; break; };
          if( sel_g < 0 ) break;
          i = findNearIndex( nn, datax, tool_x );
@@ -456,7 +476,7 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
            sel_idx = i; tool_x = datax[i]; tool_y = datay[sel_g][i];
          };
          break;
-    case Key_Left:
+    case Qt::Key_Left:
 	 if( sel_idx < 0 ) {
 	   if( btnCtrl ) {
 	     asX = 0; 
@@ -472,7 +492,7 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
 	   tool_x = datax[sel_idx]; tool_y = datay[sel_g][sel_idx];
 	 };
 	 break;
-    case Key_Right:
+    case Qt::Key_Right:
 	 if( sel_idx < 0 ) {
 	   if( btnCtrl ) {
 	     asX = 0; 
@@ -488,7 +508,7 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
 	   tool_x = datax[sel_idx]; tool_y = datay[sel_g][sel_idx];
 	 };
 	 break;
-    case Key_Up:
+    case Qt::Key_Up:
 	 if( sel_idx < 0 ) {
 	   if( btnCtrl ) {
 	     asY = 0; 
@@ -507,7 +527,7 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
 	   tool_x = datax[sel_idx]; tool_y = datay[sel_g][sel_idx];
 	 };
 	 break;
-    case Key_Down:
+    case Qt::Key_Down:
 	 if( sel_idx < 0 ) {
 	   if( btnCtrl ) {
 	     asY = 0; 
@@ -526,20 +546,20 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
            tool_x = datax[sel_idx]; tool_y = datay[sel_g][sel_idx];
 	 };
 	 break;
-    case Key_PageDown:
+    case Qt::Key_PageDown:
          if( ng < 1 ) break;
          sel_g++; 
 	 if( sel_g > max_sel_g ) 
 	   sel_g = max_sel_g;
          break;
-    case Key_PageUp:
+    case Qt::Key_PageUp:
          if( ng < 1 ) break;
          sel_g--; 
 	 if( sel_g < min_sel_g ) 
 	   sel_g = min_sel_g;
          break;
-    case Key_D: dataInfo(); break;
-    case Key_P: 
+    case Qt::Key_D: dataInfo(); break;
+    case Qt::Key_P: 
 	 if( btnCtrl ) 
 	   setPrintColors();
 	 else
@@ -949,7 +969,7 @@ void QPlotView::setStartColors(void)
 void QPlotView::setScale(void)
 {
   QDialog *dia;
-  QGroupBox *grp_x, *grp_y, *grp_m;
+  Q3GroupBox *grp_x, *grp_y, *grp_m;
   QLabel *lab;
   QLineEdit *ed_rix, *ed_pix, *ed_rax, *ed_pax, *ed_grix, *ed_tix,
             *ed_riy, *ed_piy, *ed_ray, *ed_pay, *ed_griy, *ed_tiy,
@@ -963,7 +983,7 @@ void QPlotView::setScale(void)
   dia->resize( 450, 450 );
   dia->setCaption( PACKAGE ": Plot scales" );
   // x group
-  grp_x = new QGroupBox( dia, "grp_x" );
+  grp_x = new Q3GroupBox( dia, "grp_x" );
   grp_x->setGeometry( 20, 10, 200, 250 );
   grp_x->setTitle( "X" );
   lab= new QLabel( dia, "lx1" );
@@ -1004,7 +1024,7 @@ void QPlotView::setScale(void)
   ed_tix->setGeometry( 170, 120, 40, 20 );  ed_tix->setMaxLength( 2 );
 
   // y group
-  grp_y= new QGroupBox( dia, "grp_y" );
+  grp_y= new Q3GroupBox( dia, "grp_y" );
   grp_y->setGeometry( 230, 10, 200, 250 );  grp_y->setTitle( "Y" );
   lab= new QLabel( dia, "ly1" );
   lab->setGeometry( 240, 40, 30, 20 );  lab->setText( "Min" );
@@ -1044,7 +1064,7 @@ void QPlotView::setScale(void)
   ed_tiy->setGeometry( 380, 120, 40, 20 );  ed_tiy->setMaxLength( 2 );
   
   // margins group 
-  grp_m= new QGroupBox( dia, "grp_m" );
+  grp_m= new Q3GroupBox( dia, "grp_m" );
   grp_m->setGeometry( 20, 270, 410, 50 ); grp_m->setTitle( "Margins %" );
   lab= new QLabel( dia, "lm1" );
   lab->setGeometry( 30, 290, 30, 20 );  lab->setText( "Left" );

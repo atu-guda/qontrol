@@ -1,8 +1,10 @@
 TEMPLATE = lib
-CONFIG += release \
-          warn_on \
-          staticlib \
-          thread 
+
+#The following line was inserted by qt3to4
+QT +=  qt3support 
+
+#CONFIG += release qt warn_on staticlib thread 
+CONFIG += debug qt warn_on staticlib thread 
 
 LIBS += -lgsl -lgslcblas -lm 
 
@@ -73,4 +75,3 @@ HEADERS += \
   tswitch.h \
   ttrigger.h \
   tvibro.h
-

@@ -21,6 +21,11 @@
 #include <qstring.h>
 #include <qwidget.h>
 #include <qcolor.h>
+//Added by qt3to4:
+#include <QPaintEvent>
+#include <QResizeEvent>
+#include <QMouseEvent>
+#include <QKeyEvent>
 
 class QMo2Doc; class TRootData; class TModel;
 class TDataSet; class TMiso; class TGraph;

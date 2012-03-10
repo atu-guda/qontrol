@@ -32,8 +32,8 @@ int main( int argc, char *argv[] )
 
   qmo2->show();
 
-  if( argc>1 )
-    qmo2->openDocumentFile( argv[1] );
+  //if( argc>1 )
+  //  qmo2->openDocumentFile( argv[1] );
 	
   return a.exec();
 }

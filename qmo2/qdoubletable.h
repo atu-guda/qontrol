@@ -19,14 +19,14 @@
 #define QDOUBLETABLE_H
 
 #include <qwidget.h>
-#include <qtable.h>
+#include <q3table.h>
 class QPainer; struct GraphInfo;
 
 /**draws a table filled by double values
   *@author atu
   */
 
-class QDoubleTable : public QTable {
+class QDoubleTable : public Q3Table {
   Q_OBJECT
  public:
   QDoubleTable( const GraphInfo *agi, QWidget *parent, const char *name );

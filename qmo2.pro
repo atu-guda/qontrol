@@ -1,8 +1,6 @@
 TEMPLATE = subdirs 
 SUBDIRS += qmo2 elems
-CONFIG += release \
-          warn_on \
-          qt \
-          thread 
+QT     += qt3support 
+
 DISTFILES += NEWS ChangeLog config.h
 

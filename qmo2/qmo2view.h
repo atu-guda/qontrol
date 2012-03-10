@@ -20,7 +20,11 @@
 
 // include files for Qt
 #include <qwidget.h>
-#include <qmainwindow.h>
+// #include <q3mainwindow.h>
+#include <QMainWindow>
+//Added by qt3to4:
+#include <QResizeEvent>
+#include <QCloseEvent>
 
 class QMo2Doc;
 class QStructView;
@@ -30,12 +34,13 @@ class TDataSet;
 class TRootData;
 class TModel;
 class QStatusModel;
-class QScrollView;
+class QScrollArea;
 
 /**
  * This class provides an base for QMo2Doc view.
  */
-class QMo2View : public QMainWindow
+// class QMo2View : public QMainWindow
+class QMo2View : public QWidget
 {
    Q_OBJECT
    friend class QMo2Doc;
@@ -59,6 +64,8 @@ class QMo2View : public QMainWindow
    // QSize sizeHint();
    /** inner size for structure view */
    QSize svSize() const;
+
+   const QString& currentFile() const;
 
  signals:
    void viewChanged();
@@ -135,7 +142,7 @@ class QMo2View : public QMainWindow
    virtual void resizeEvent( QResizeEvent* );
    int checkState( CheckType ctp );
  protected:  
-   QScrollView *sv;   
+   QScrollArea *scrollArea;
    QStructView *sview;
    QOutView *oview;
    QGraphView *gview;

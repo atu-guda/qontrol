@@ -23,11 +23,15 @@
 #include <qpen.h>
 #include <qbrush.h>
 #include <qfont.h>
-#include <qkeycode.h>
+#include <qnamespace.h>
 #include <qmessagebox.h>
-#include <qpopupmenu.h>
-#include <qmainwindow.h>
-#include <qkeycode.h>
+#include <q3popupmenu.h>
+#include <q3mainwindow.h>
+#include <qnamespace.h>
+//Added by qt3to4:
+#include <QKeyEvent>
+#include <QMouseEvent>
+#include <QPaintEvent>
 
 #include "resource.h"
 #include "miscfun.h"
@@ -50,10 +54,10 @@ QStructView::QStructView( QMo2Doc *adoc, QMo2View *mview,
   model = mainview->getModel(); 
   devTp = 0;
   grid_sz = 40; lm = tm = 4;
-  setBackgroundMode( NoBackground );
+  setBackgroundMode( Qt::NoBackground );
   setMaximumSize( grid_sz*MODEL_MX, grid_sz*MODEL_MY );
   setMinimumSize( grid_sz*8, grid_sz*6 );
-  setFocusPolicy( QWidget::StrongFocus );
+  setFocusPolicy( Qt::StrongFocus );
   setFocus();
 }
 
@@ -167,6 +171,7 @@ void QStructView::drawAll( QPainter &p )
   s_icons = psett->showicons;
   QFont strf;
   strf.fromString( psett->structFont );
+  //strf.fromString( psett->smallFont );
   p.setFont( strf );
   h = height(); w = width(); nh = 1 + h / grid_sz; nw = 1 + w / grid_sz;
   sel_x = mainview->getSelX();
@@ -238,6 +243,7 @@ void QStructView::drawAll( QPainter &p )
 	p.setPen( Qt::NoPen ); p.setBrush( QColor(240,240,255) );
 	p.drawRect( ob_gx, ob_gy, 31,11);
       };
+      p.setPen( Qt::black );
       p.drawText( ob_gx + 2, ob_gy + 10, QString::number(ob_ord) );
       line_busy++;
     };
@@ -248,17 +254,18 @@ void QStructView::drawAll( QPainter &p )
 	p.setPen( Qt::NoPen ); p.setBrush( QColor(255,255,225) );
 	p.drawRect( ob_gx, st_y, 31,11);
       };
+      p.setPen( Qt::black );
       p.drawText( ob_gx + 2, st_y+10, ob_name );
       line_busy++;
     };
     // TODO: vector icon here
-    p.setBrush( NoBrush ); p.setPen( QPen(black,1) );
+    p.setBrush( Qt::NoBrush ); p.setPen( QPen(Qt::black,1) );
     st_y = ob_gy + line_busy*10; ic_sz = 32 - line_busy * 10;
     //p.drawRect( ob_gx + 32 - ic_sz, st_y, ic_sz, ic_sz);
 
     
     if( elnu == mark ) { // red rect around marked element
-      p.setBrush( NoBrush ); p.setPen( Qt::red );
+      p.setBrush( Qt::NoBrush ); p.setPen( Qt::red );
       p.drawRect( lm + ob_x*grid_sz, tm + ob_y*grid_sz, grid_sz, grid_sz );
       p.drawRect( lm - 1 + ob_x*grid_sz, tm - 1 + ob_y*grid_sz, 42, 42 );
     };
@@ -293,7 +300,7 @@ void QStructView::drawAll( QPainter &p )
 	         li_mid_y = li_dst_y;
 	         //li_mid_y = ( li_src_y + li_dst_y ) / 2 ;
 
-	      p.setPen( QPen(black,1) );
+	      p.setPen( QPen(Qt::black,1) );
 	      li_dst_xs = li_dst_x - (8-ci*2) * (ob_flip?-1:1);
 	      li_dst_xa = li_dst_x + (ob_flip?3:-3);
 	      li_src_xs = li_src_x + (li[i].eflip?-4:4);
@@ -389,12 +396,12 @@ void QStructView::drawAll( QPainter &p )
   
   // ----------- draw selection
   if( devTp != 1 ) {
-    RasterOp old_op = p.rasterOp();
-    p.setRasterOp( Qt::XorROP );
+    QPainter::CompositionMode old_op = p.compositionMode();
+    p.setCompositionMode( QPainter::CompositionMode_Xor );
     p.setPen( Qt::NoPen ); 
     p.setBrush( QColor(64,64,32) );
     p.drawRect( lm + sel_x*grid_sz, tm + sel_y*grid_sz, grid_sz, grid_sz );
-    p.setRasterOp( old_op );
+    p.setCompositionMode( old_op );
   };
 
 }
@@ -403,7 +410,7 @@ void QStructView::drawAll( QPainter &p )
 void QStructView::mousePressEvent( QMouseEvent *me )
 {
   int h, w, nh, nw, ex, ey, x, y, elnu;
-  QPopupMenu *menu;
+  Q3PopupMenu *menu;
   TMiso *ob = 0;
   const char *elmname = "?bad?";
   double outval;
@@ -428,9 +435,9 @@ void QStructView::mousePressEvent( QMouseEvent *me )
       }
     };
     switch( me->button() ) {
-      case LeftButton:  break;
-      case RightButton:  
-	    menu = new QPopupMenu( this, "rbmenu" ); 
+      case Qt::LeftButton:  break;
+      case Qt::RightButton:  
+	    menu = new Q3PopupMenu( this, "rbmenu" ); 
 	    if( ob != 0 ) {
 	      menu->insertItem( title, 0 );
 	      menu->insertSeparator();
@@ -455,7 +462,7 @@ void QStructView::mousePressEvent( QMouseEvent *me )
 	    menu->exec( mapToGlobal(QPoint( x, y )) );
 	    delete menu;
             break;
-      case MidButton:   mainview->editElm();  break;
+      case Qt::MidButton:   mainview->editElm();  break;
       default: break;// none
     };
   };
@@ -471,28 +478,28 @@ void QStructView::keyPressEvent( QKeyEvent *ke )
 {
   int k, h, w, nh, nw, st, btnShift, btnCtrl, xy_delta;
   k = ke->key(); st = ke->state(); 
-  btnShift = ( ( st & Qt::ShiftButton ) != 0 );
-  btnCtrl = ( ( st & Qt::ControlButton ) != 0 );
+  btnShift = ( ( st & Qt::ShiftModifier ) != 0 );
+  btnCtrl = ( ( st & Qt::ControlModifier ) != 0 );
   h = height(); w = width(); nh = h / grid_sz - 1; nw = w / grid_sz - 1;
   xy_delta = btnShift ? 5 : 1;
   switch( k ) {
-    case Key_Return: mainview->editElm(); break; // to catch both keys
-    case Key_Home:  emit sig_changeSel( 0, 0, 0 ); break;
-    case Key_Left:  emit sig_changeSel( -xy_delta, 0, 1 );  break;
-    case Key_Right: emit sig_changeSel( xy_delta, 0, 1 );  break;
-    case Key_Up:    emit sig_changeSel( 0, -xy_delta, 1 );  break;
-    case Key_Down:  emit sig_changeSel( 0, xy_delta, 1 );  break;
-    case Key_Tab:   emit sig_changeSel( 1, 0, 2 ); break;
-    case Key_0:     emit sig_changeLevel(0); break;
-    case Key_1:     emit sig_changeLevel(1); break;
-    case Key_2:     emit sig_changeLevel(2); break;
-    case Key_3:     emit sig_changeLevel(3); break;
-    case Key_4:     emit sig_changeLevel(4); break;
-    case Key_5:     emit sig_changeLevel(5); break;
-    case Key_6:     emit sig_changeLevel(6); break;
-    case Key_7:     emit sig_changeLevel(7); break;
-    case Key_8:     emit sig_changeLevel(8); break;
-    case Key_9:     emit sig_changeLevel(9); break;
+    case Qt::Key_Return: mainview->editElm(); break; // to catch both keys
+    case Qt::Key_Home:  emit sig_changeSel( 0, 0, 0 ); break;
+    case Qt::Key_Left:  emit sig_changeSel( -xy_delta, 0, 1 );  break;
+    case Qt::Key_Right: emit sig_changeSel( xy_delta, 0, 1 );  break;
+    case Qt::Key_Up:    emit sig_changeSel( 0, -xy_delta, 1 );  break;
+    case Qt::Key_Down:  emit sig_changeSel( 0, xy_delta, 1 );  break;
+    case Qt::Key_Tab:   emit sig_changeSel( 1, 0, 2 ); break;
+    case Qt::Key_0:     emit sig_changeLevel(0); break;
+    case Qt::Key_1:     emit sig_changeLevel(1); break;
+    case Qt::Key_2:     emit sig_changeLevel(2); break;
+    case Qt::Key_3:     emit sig_changeLevel(3); break;
+    case Qt::Key_4:     emit sig_changeLevel(4); break;
+    case Qt::Key_5:     emit sig_changeLevel(5); break;
+    case Qt::Key_6:     emit sig_changeLevel(6); break;
+    case Qt::Key_7:     emit sig_changeLevel(7); break;
+    case Qt::Key_8:     emit sig_changeLevel(8); break;
+    case Qt::Key_9:     emit sig_changeLevel(9); break;
     default: ke->ignore();
   };
 }

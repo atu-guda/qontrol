@@ -19,6 +19,9 @@
 #define QGRAPHVIEW_H
 
 #include <qwidget.h>
+//Added by qt3to4:
+#include <QPaintEvent>
+#include <QMouseEvent>
 #include "tmodel.h"
 #include "qmo2doc.h"
 #include "qmo2view.h"

@@ -1,9 +1,10 @@
 TEMPLATE = app
 TARGET = qmo2
-CONFIG += release \
-          warn_on \
-          qt \
-          thread 
+#CONFIG += release warn_on qt thread 
+CONFIG += debug warn_on qt thread 
+
+#The following line was inserted by qt3to4
+QT +=  qt3support 
 
 INCLUDEPATH += .. ../elems 
 

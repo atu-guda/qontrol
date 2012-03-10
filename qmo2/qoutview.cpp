@@ -2,8 +2,8 @@
                           qoutview.cpp  -  description
                              -------------------
     begin                : Fri Aug 18 2000
-    copyright            : (C) 2000 by atu
-    email                : atu@dmeti.dp.ua
+    copyright            : (C) 2000-2012 by atu
+    email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
 /***************************************************************************
@@ -21,10 +21,13 @@
 #include <qpen.h>
 #include <qbrush.h>
 #include <qfont.h>
-#include <qkeycode.h>
+#include <qnamespace.h>
 #include <qmessagebox.h>
-#include <qpopupmenu.h>
-#include <qkeycode.h>
+#include <q3popupmenu.h>
+#include <qnamespace.h>
+//Added by qt3to4:
+#include <QMouseEvent>
+#include <QPaintEvent>
 
 #include "resource.h"
 #include "qmo2win.h"
@@ -39,9 +42,11 @@ QOutView::QOutView(  QMo2Doc *adoc,  QMo2View *mview,
 {
   doc = adoc; mainview = mview;
   model = 0; grid_sz = 15; 
-  setBackgroundColor( QColor( 0, 0, 128) );
-  setFixedWidth( 15 );
-  setFocusPolicy( NoFocus );
+  QPalette palette;
+  palette.setColor(backgroundRole(), QColor(0,0,128) );
+  setPalette(palette);
+  setFixedWidth( 17 );
+  setFocusPolicy( Qt::NoFocus );
 }
 
 QOutView::~QOutView()
@@ -61,7 +66,9 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
   smlf.fromString( QMo2Win::qmo2win->getSettings()->smallFont );
   p.setFont( smlf );
   p.setPen( Qt::black );
+  p.setBrush( QColor( 0,0,128 ) );
   h = height(); w = width(); nh = 1 + h / grid_sz; 
+  p.drawRect( 0, 0, w, h );
   n_out = model->getNOutArr();
   level = mainview->getLevel();
   for( out_nu=0; out_nu < n_out && out_nu < nh; out_nu++ ) {
@@ -91,7 +98,7 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
     p.drawText( 5, 18 + out_nu*grid_sz, QString::number( out_nu ) );
     out_st = arr->getState();
     if( out_st > 1 ) {
-      p.setBrush( NoBrush ); p.setPen( Qt::yellow );
+      p.setBrush( Qt::NoBrush ); p.setPen( Qt::yellow );
       p.drawRect( 2, 9 + out_nu*grid_sz, 12, 12 );
     };
   }; // end loop on outs
@@ -103,14 +110,14 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
 
 void QOutView::mousePressEvent( QMouseEvent *me )
 {
-  int h, w, nh, out_nu, n_out, x, y, nn, old_level;
-  QPopupMenu *menu;
+  int h, nh, out_nu, n_out, x, y, nn, old_level;
+  Q3PopupMenu *menu;
   TOutArr *arr;
   const char *outname = "?bad?";
   char elmname[MAX_NAMELEN];
   QString title;
   if( model == 0 ) return;
-  h = height(); w = width(); nh = h / grid_sz - 1; 
+  h = height(); nh = h / grid_sz - 1; 
   x = me->x(); y = me->y();
   if( x < 2 || x > 12 ) return;
   out_nu = ( y - 10 ) / grid_sz;
@@ -132,14 +139,14 @@ void QOutView::mousePressEvent( QMouseEvent *me )
   old_level = mainview->getLevel();
   mainview->changeLevel( out_nu );
   switch( me->button() ) {
-    case LeftButton: 
+    case Qt::LeftButton: 
          mainview->editOut();
          break;
-    case RightButton: 
-         menu = new QPopupMenu( this, "out_rbmenu" ); 
+    case Qt::RightButton: 
+         menu = new Q3PopupMenu( this, "out_rbmenu" ); 
          menu->insertItem( title, 0 );
          menu->insertSeparator();
-         menu->insertItem( "&New", mainview, SLOT(newElm()), Key_Insert );
+         menu->insertItem( "&New", mainview, SLOT(newElm()), Qt::Key_Insert );
          menu->insertItem( "&Edit", mainview, SLOT(editOut()), 0 );
          menu->insertItem( "&Delete", mainview, SLOT(delOut()), 0 );
          menu->insertSeparator();
@@ -148,7 +155,7 @@ void QOutView::mousePressEvent( QMouseEvent *me )
          menu->exec( mapToGlobal(QPoint( x, y )) );
          delete menu;
          break;
-    case MidButton:
+    case Qt::MidButton:
 	 old_level = out_nu;
          break;
     default: break;// none

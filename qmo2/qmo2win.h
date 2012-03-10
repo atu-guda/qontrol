@@ -19,22 +19,29 @@
 #define QMO2WIN_H
 
 // include files for QT
-#include <qapp.h>
-#include <qmainwindow.h>
+#include <Qt3Support>
+#include <qapplication.h>
+#include <Q3MainWindow>
 #include <qworkspace.h>
 #include <qmenubar.h>
-#include <qtoolbar.h>
+#include <q3toolbar.h>
 #include <qstatusbar.h>
-#include <qwhatsthis.h>
-#include <qpopupmenu.h>
-#include <qaccel.h>
+#include <q3whatsthis.h>
+#include <q3popupmenu.h>
+#include <q3accel.h>
 #include <qaction.h>
 #include <qtoolbutton.h>
-#include <qmsgbox.h>
-#include <qfiledialog.h>
+#include <qmessagebox.h>
+#include <q3filedialog.h>
 #include <qprinter.h>
 #include <qstring.h>
 #include <qpixmap.h>
+//Added by qt3to4:
+#include <QCloseEvent>
+#include <QEvent>
+
+class QMdiArea;
+class QSignalMapper;
 
 // forward declaration of the QMo2Win classes
 class QMo2Doc;
@@ -74,8 +81,9 @@ class Mo2Settings {
   * and statusbar. For the main view, an instance of class QMo2View is
   * created which creates your view.
   * 	
-  * @author atu, based on kdevelop template
+  * @author atu
   */
+// class QMo2Win : public Q3MainWindow
 class QMo2Win : public QMainWindow
 {
   Q_OBJECT
@@ -87,8 +95,6 @@ class QMo2Win : public QMainWindow
 
     /** enables/disables menu entries/toolbar items */
     void enableActions( bool ena, int id_ );
-    /** opens a file specified by commandline option */
-    void openDocumentFile( const char *file = 0 );
     /** returns apps printer */
     QPrinter* getPrinter(void) { return printer; };
     /** finds resource file among resource dirs */
@@ -99,16 +105,6 @@ class QMo2Win : public QMainWindow
   protected:
     /** overloaded for Message box on last window exit */
     bool queryExit();
-    /** event filter to catch close events for MDI child windows and is 
-      * installed in createClient() on every child window.
-      * Closing a window calls the eventFilter first which removes the 
-      * view from the connected documents' view list. If the
-      * last view is going to be closed, the eventFilter() tests 
-      * if the document is modified; if yes, it asks the user to
-      * save the document. If the document title contains "Untitled", 
-      * slotFileSaveAs() gets called to get a save name and path.
-    */
-    virtual bool eventFilter( QObject* object, QEvent* event );
     /** creates a new child window. The document that will be connected to it
      * has to be created before and the instances filled, with e.g. openDocument().
      * Then call createClient() to get a new MDI child window.
@@ -117,7 +113,9 @@ class QMo2Win : public QMainWindow
      * @param doc pointer to the document instance that the view will
      * be connected to.
      */
-     void createClient(QMo2Doc* doc);
+     QMo2View* createChild( QMo2Doc* doc );
+     QMdiSubWindow* findMdiChild( const QString &fileName );
+     QMo2View* activeMdiChild();
 
   private slots:
   
@@ -208,8 +206,6 @@ class QMo2Win : public QMainWindow
     void slotShowNames();
     /** toggle the showicons flag */
     void slotShowIcons();
-    /** creates a new view for the current document */
-    void slotWindowNewWindow();
     /** shows an about dlg*/
     void slotHelpAbout();
     /** shows an aboutQt dlg*/
@@ -240,7 +236,9 @@ class QMo2Win : public QMainWindow
     /** pWorkspace is the MDI frame widget that handles MDI child widgets. 
       * Inititalized in initView()
       */
-    QWorkspace *pWorkspace;
+    // QWorkspace *pWorkspace;
+    QMdiArea *mdiArea;
+    QSignalMapper *windowMapper;
     /** the printer instance */
     QPrinter *printer;
     /** a counter that gets increased each time the user creates 
@@ -255,16 +253,16 @@ class QMo2Win : public QMainWindow
     /** array of pointers to search dir strings */
     QString* all_dirs[6];
 
-    QPopupMenu *pFileMenu;
-    QPopupMenu *pEditMenu;
-    QPopupMenu *pElmMenu;
-    QPopupMenu *pOutMenu;
-    QPopupMenu *pGraphMenu;
-    QPopupMenu *pModelMenu;
-    QPopupMenu *pRunMenu;
-    QPopupMenu *pViewMenu;
-    QPopupMenu *pHelpMenu;
-    QPopupMenu *pWindowMenu;
+    QMenu *pFileMenu;
+    QMenu *pEditMenu;
+    QMenu *pElmMenu;
+    QMenu *pOutMenu;
+    QMenu *pGraphMenu;
+    QMenu *pModelMenu;
+    QMenu *pRunMenu;
+    QMenu *pViewMenu;
+    QMenu *pHelpMenu;
+    QMenu *pWindowMenu;
 
     QToolBar *fileToolbar;
     QToolBar *elmToolbar;
@@ -292,7 +290,7 @@ class QMo2Win : public QMainWindow
 	    // iface
 	    *act_tbar, *act_sbar,
 	    *act_showord, *act_showgrid, *act_shownames, *act_showicons,
-	    *act_winnew, *act_helpabout, *act_helpaboutqt, *act_whatsthis,
+	    *act_helpabout, *act_helpaboutqt, *act_whatsthis,
 	    *act_test;
   public:
     /** static pointer to main window -- the only allowed */

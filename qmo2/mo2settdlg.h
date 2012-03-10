@@ -2,10 +2,14 @@
 #define MO2SETTDLG_H
 
 #include <qdialog.h>
+//Added by qt3to4:
+#include <Q3VBoxLayout>
+#include <Q3GridLayout>
+#include <Q3HBoxLayout>
 
-class QVBoxLayout;
-class QHBoxLayout;
-class QGridLayout;
+class Q3VBoxLayout;
+class Q3HBoxLayout;
+class Q3GridLayout;
 class QSpacerItem;
 class QPushButton;
 class QCheckBox;
@@ -37,13 +41,13 @@ class Mo2SettDlg : public QDialog
     virtual void structFontSlot();
 
   protected:
-    QVBoxLayout* Mo2SettDlgLayout;
+    Q3VBoxLayout* Mo2SettDlgLayout;
     QSpacerItem* spacer2;
-    QHBoxLayout* layMain;
-    QVBoxLayout* layFontBox;
-    QVBoxLayout* layChecks;
+    Q3HBoxLayout* layMain;
+    Q3VBoxLayout* layFontBox;
+    Q3VBoxLayout* layChecks;
     QSpacerItem* spacer1;
-    QHBoxLayout* layOkCanc;
+    Q3HBoxLayout* layOkCanc;
 
   protected slots:
     virtual void languageChange();
