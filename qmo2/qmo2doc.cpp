@@ -2,7 +2,7 @@
                           qmo2doc.cpp  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -152,6 +152,7 @@ bool QMo2Doc::newDocument()
     QString("Fail to insert model to root: ") 
     + QString::number(k), 0,0,0 );
   model = static_cast<TModel*>( rootdata->getObj( "model" ) );
+  qDebug( "debug: QMo2Doc::newDocument: rootdata: %p model: %p", rootdata, model );
   modified = false; is_nonamed = true;
   return true;
 }
@@ -182,6 +183,7 @@ bool QMo2Doc::openDocument(const QString &filename, const char * /*format */)
   if( is.gcount() < sign_len )
   if( strncmp( FILE_SIGN, buf, sign_len ) != 0 )
     return false;
+  qDebug( "debug: QMo2Doc::openDocument:(1) rootdata: %p model: %p", rootdata, model );
   if( rootdata != 0 )
     delete rootdata;
   rootdata = new TRootData( 0 );
@@ -212,6 +214,7 @@ bool QMo2Doc::openDocument(const QString &filename, const char * /*format */)
        QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
     return false;
   };
+  qDebug( "debug: QMo2Doc::openDocument:(2) rootdata: %p model: %p", rootdata, model );
   modified = false; is_nonamed = false;
   m_filename = filename;
   m_title = QFileInfo(filename).fileName();
@@ -257,6 +260,7 @@ bool QMo2Doc::saveDocument(const QString &filename, const char * /*format */)
 
 void QMo2Doc::deleteContents()
 {
+  qDebug( "debug: QMo2Doc::deleteContents rootdata: %p model: %p", rootdata, model );
   delete rootdata; rootdata = 0; model = 0;
 }
 
@@ -328,8 +332,10 @@ bool QMo2Doc::isModified() const
 
 void QMo2Doc::fillRoot(void)
 {
-  if( rootdata == 0 )
+  if( rootdata == 0 ) {
+    qDebug( "debug: QMo2Doc::fillRoot: rootdata in null!!" );
     return;
+  }
   // TODO: must be loaded from ld.so selected by config file
   rootdata->regClass( TModel::getStaticClassInfo() );
   rootdata->regClass( TOutArr::getStaticClassInfo() );

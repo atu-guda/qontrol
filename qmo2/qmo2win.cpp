@@ -739,11 +739,11 @@ void QMo2Win::openDocumentFile( const char* file )
     };
   };
   doc = new QMo2Doc();
-  doc->newDocument();
   // Creates an untitled window if file is 0	
   if( !file ) {
     untitledCount += 1;
     QString fileName = QString( "Untitled%1" ).arg(untitledCount);
+    doc->newDocument();
     doc->setPathName(fileName);
     doc->setTitle(fileName);
   } else { // Open the file

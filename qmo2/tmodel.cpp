@@ -2,7 +2,7 @@
                           tmodel.cpp  -  description
                              -------------------
     begin                : Tue Aug 1 2000
-    copyright            : (C) 2012 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -34,9 +34,8 @@ TClassInfo TModel::class_info = {
  &TDataContainer::class_info, helpstr };
 
 TModel::TModel( TDataSet* aparent )/*{{{1*/
-       :TDataContainer( aparent )
+       :TDataContainer( aparent ), vars( MODEL_NVAR, 0 )
 {
-  int i;
   n_el = n_out = n_graph = 0; end_loop = 0;
   tt = 100; nn = n_tot= 100000; nl1 = 1; nl2 = 1; n_steps=100; use_sync = 0;
   prm0s = prm1s = prm2s = prm3s = 0.1; 
@@ -57,15 +56,12 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   v_graph.reserve( 16 );
   inps.reserve( ELM_RES ); pinps.reserve( ELM_RES ); 
   pnames.reserve( ELM_RES ); pflags.reserve( ELM_RES );
-  vars = new double[MODEL_NVAR];  outs = 0;
-  for( i=0; i<MODEL_NVAR; i++ ) vars[i] = 0;
   fillCommon();
 }/*}}}1*/
 
 TModel::~TModel()/*{{{1*/
 {
   delete[] outs; outs = 0;
-  delete[] vars; vars = 0;
 }/*}}}1*/
 
 
@@ -339,21 +335,21 @@ void TModel::resetOutArrs( int level )/*{{{1*/
 
 double TModel::getVar( int n )/*{{{1*/
 {
-  if( vars == 0 || n < 0 || n >= MODEL_NVAR )
+  if( n < 0 || n >= MODEL_NVAR )
     return 0;
   return vars[n];
 }/*}}}1*/
 
 void TModel::setVar( int n, double v )/*{{{1*/
 {
-  if( vars == 0 || n < 0 || n >= MODEL_NVAR )
+  if( n < 0 || n >= MODEL_NVAR )
     return;
   vars[n] = v;
 }/*}}}1*/
 
 double* TModel::getVars(void)/*{{{1*/
 {
-  return vars;
+  return &(vars[0]); // TODO: const vector<double>&
 }/*}}}1*/
 
 double TModel::xout( int inu )/*{{{1*/

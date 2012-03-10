@@ -1063,12 +1063,10 @@ void QMo2View::showVars()
   QDoubleTable *dv;
   QVBoxLayout *lv;
   GraphInfo gi;
-  const double *vars;
   QString fnq; QPushButton *bt_ok;
   if( ! checkState( validCheck ) )
     return;	
-  if( (vars = model->getVars()) == 0 )
-    return;
+  const double *vars = model->getVars();
   gi.row = MODEL_NVAR; gi.col = 1; gi.ny = gi.row;
   strcpy( gi.title, "Model vars" );
   gi.dat[0] = vars;

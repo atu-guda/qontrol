@@ -2,7 +2,7 @@
                           tmodel.h  -  description
                              -------------------
     begin                : Tue Aug 1 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -251,7 +251,7 @@ class TModel : public TDataContainer  {
   /** vector of param input flags */
   vector<li_el> pflags;
   /** general purpose vars[MODEL_NVAR] */
-  double *vars;
+  vector<double> vars;
   /** array of element outputs --runtime sz=n_el */
   double *outs;
   /** class decription */
