@@ -103,6 +103,12 @@ struct LinkInfo {
   int x, y;  /** coordinates of linked element or -1 */
   int eflip; /** flag: linked element is flipped */
   int pflags; /** flags from inner model array */
+  // 
+  LinkInfo() { reset(); }
+  void reset() { 
+    ltype = LinkNone; elnu = x = y = -1;  
+    eflip = 0; pflags = 0;
+  };
 };
 
 

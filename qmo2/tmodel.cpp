@@ -20,6 +20,7 @@
 #include <ctime>
 #include <cmath>
 #include <unistd.h>
+#include <algorithm>
 #include "miscfun.h"
 #include "tmodel.h"
 
@@ -812,13 +813,11 @@ void TModel::sortOrd(void)/*{{{1*/
 
 int TModel::hintOrd(void) const/*{{{1*/
 {
-  int i, mt, m = 0, m1;
-  for( i=0; i<n_el; i++ ) {
-    mt = v_ord[i];	  
-    if( m < mt ) 
-      m = mt;
-  };
-  m1 = ( (m+10) / 10 ) * 10;
+  vector<int>::const_iterator pm = max_element( v_ord.begin(), v_ord.end() );
+  int m = 0;
+  if( pm != v_ord.end() )
+    m = *pm;
+  int m1 = ( (m+10) / 10 ) * 10;
   return m1;
 }/*}}}1*/
 
@@ -830,8 +829,7 @@ int TModel::getLinkInfos( int elnu, LinkInfo *li )/*{{{1*/
   if( li == 0 )
     return -1;
   for( i=0; i<8; i++ ) {  // reset all fields to default
-    li[i].ltype = LinkNone; li[i].elnu = li[i].x = li[i].y = -1;
-    li[i].eflip = 0; li[i].pflags = 0;
+    li[i].reset();
   };
   if( elnu < 0 || elnu >= n_el )
     return -1;
