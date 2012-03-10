@@ -28,13 +28,16 @@ using namespace std;
 const char* TModel::helpstr = "<H1>TModel</H1>\n"
  "Hold all active elements, output arrays and graph descriptions";
 
+static const int RESERVED_OUTS = 1024;
 
 TClassInfo TModel::class_info = {
  CLASS_ID_TModel, "TModel", TModel::create,
  &TDataContainer::class_info, helpstr };
 
 TModel::TModel( TDataSet* aparent )/*{{{1*/
-       :TDataContainer( aparent ), vars( MODEL_NVAR, 0 )
+       :TDataContainer( aparent ), 
+         vars( MODEL_NVAR, 0 ),
+	 outs( RESERVED_OUTS, 0 )
 {
   n_el = n_out = n_graph = 0; end_loop = 0;
   tt = 100; nn = n_tot= 100000; nl1 = 1; nl2 = 1; n_steps=100; use_sync = 0;
@@ -61,7 +64,6 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
 
 TModel::~TModel()/*{{{1*/
 {
-  delete[] outs; outs = 0;
 }/*}}}1*/
 
 
@@ -72,8 +74,7 @@ double TModel::runOneElem( int elnu, const double *u, double t )/*{{{1*/
   ob = getMiso( elnu );
   if( ob == 0 ) return 0;
   v = ob->f( u, t );
-  if( outs != 0 )
-    outs[elnu] = v;
+  outs[elnu] = v;
   return v;
 }/*}}}1*/
 
@@ -225,12 +226,13 @@ int TModel::preRun( int run_tp, int anx, int any )/*{{{1*/
   int elnu, rc;
   TMiso *ob;
   tdt = tt / nn;
-  if( outs != 0 )
-    delete[] outs;
-  outs = new double[ n_el + 4 ];
+  if( outs.size() < (unsigned)n_el ) {
+    outs.resize( n_el * 2 , 0 );
+  } 
+  outs.assign( outs.size(), 0 );
+  
   state = stateRun;
   for( elnu=0; elnu<n_el; elnu++ ) {
-    outs[elnu] = 0;
     ob = getMiso( elnu );
     if( ob != 0 ) {
       rc = ob->preRun( run_tp, nn, anx, any, tdt );
@@ -266,9 +268,6 @@ int TModel::reset(void)/*{{{1*/
     if( arr == 0 ) continue; // never be!
     arr->free();
   };
-  if( outs != 0 )
-    delete[] outs;
-  outs = 0;
   linkNames();
   state = stateGood; run_type = -1; sgnt = int( time(0) );
   return 0;

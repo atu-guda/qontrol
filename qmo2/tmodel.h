@@ -253,7 +253,7 @@ class TModel : public TDataContainer  {
   /** general purpose vars[MODEL_NVAR] */
   vector<double> vars;
   /** array of element outputs --runtime sz=n_el */
-  double *outs;
+  vector<double> outs;
   /** class decription */
   static TClassInfo class_info;
   /** help str */
