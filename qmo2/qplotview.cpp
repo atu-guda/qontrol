@@ -633,7 +633,8 @@ void QPlotView::initArrs(void)
   vmin = 0; vmax = 1; datax = adr;
   arr->getDataSD( "dmin", &vmin, 0 ); arr->getDataSD( "dmax", &vmax, 0 );
   if( vmin >= vmax ) vmax = vmin + 1;
-  tp = out_tp; nn = out_nn;
+  tp = out_tp; ++tp; --tp; // TODO: fake
+  nn = out_nn;
   realMinX = plotMinX = vmin; realMaxX = plotMaxX = vmax;
   buf[0] = 0;
   arr->getDataSS( "label", buf, MAX_NAMELEN, 1 );

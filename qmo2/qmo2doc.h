@@ -23,9 +23,9 @@
 #endif 
 
 // include files for QT
-#include <qobject.h>
-#include <qstring.h>
-#include <qlist.h>
+#include <QObject>
+#include <QString>
+#include <QList>
 
 #include "dataset.h"
 #include "rootdata.h"
@@ -77,8 +77,6 @@ class QMo2Doc : public QObject
   void deleteContents();
   /** initializes the document generally */
   bool newDocument();
-  /** closes the acutal document */
-  void closeDocument();
   /** loads the document by filename and format and emits the updateViews() signal */
   bool openDocument( const QString &filename, const char *format = 0 );
   /** saves the document under filename and format.*/	

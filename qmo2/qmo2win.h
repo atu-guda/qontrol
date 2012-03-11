@@ -122,6 +122,8 @@ class QMo2Win : public QMainWindow
     /** sets the main application window title each time 
       * the active MDI child window changes. */
     void setWndTitle( QWidget* );
+    /** automaticaly enables/disable actions */
+    void updateActions();
 
     /** generate a new document in the actual view */
     void slotFileNew();
@@ -193,7 +195,7 @@ class QMo2Win : public QMainWindow
     void slotRunPrm2();
     void slotReset();
 
-    // ==== iface related
+    // ==== view related
     /** toggle the toolbar*/
     void slotViewToolBar();
     /** toggle the statusbar*/
@@ -206,6 +208,13 @@ class QMo2Win : public QMainWindow
     void slotShowNames();
     /** toggle the showicons flag */
     void slotShowIcons();
+    // ==== window related
+    void slotWindowClose();
+    void slotWindowCloseAll();
+    void slotWindowTile();
+    void slotWindowCascade();
+    void setActiveSubWindow( QWidget *win );
+    // ==== help related
     /** shows an about dlg*/
     void slotHelpAbout();
     /** shows an aboutQt dlg*/
@@ -217,9 +226,6 @@ class QMo2Win : public QMainWindow
     /** gets called when the window menu is activated; recreates 
         the window menu with all opened window titles. */
     void windowMenuAboutToShow();
-    /** activates the MDI child widget when it gets selected from 
-        the window menu. */
-    void windowMenuActivated( int id );
 
   private:
     /** handle close command */
@@ -228,15 +234,9 @@ class QMo2Win : public QMainWindow
     void initIface();
     /** setup the statusbar */
     void initStatusBar();
-    /** setup the mainview*/
-    void initView();
     /** fill directories where resources reside */
     void initDirs();
 		
-    /** pWorkspace is the MDI frame widget that handles MDI child widgets. 
-      * Inititalized in initView()
-      */
-    // QWorkspace *pWorkspace;
     QMdiArea *mdiArea;
     QSignalMapper *windowMapper;
     /** the printer instance */
@@ -290,6 +290,9 @@ class QMo2Win : public QMainWindow
 	    // iface
 	    *act_tbar, *act_sbar,
 	    *act_showord, *act_showgrid, *act_shownames, *act_showicons,
+	    // win
+	    *act_winClose, *act_winCloseAll, *act_winTile, *act_winCascade,
+	    // help
 	    *act_helpabout, *act_helpaboutqt, *act_whatsthis,
 	    *act_test;
   public:

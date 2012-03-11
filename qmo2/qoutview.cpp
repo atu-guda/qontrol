@@ -117,7 +117,7 @@ void QOutView::mousePressEvent( QMouseEvent *me )
   char elmname[MAX_NAMELEN];
   QString title;
   if( model == 0 ) return;
-  h = height(); nh = h / grid_sz - 1; 
+  h = height(); nh = h / grid_sz - 1; ++nh; --nh; // TODO: FAKE
   x = me->x(); y = me->y();
   if( x < 2 || x > 12 ) return;
   out_nu = ( y - 10 ) / grid_sz;

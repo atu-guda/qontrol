@@ -1,0 +1,8 @@
+*.o
+qmo2
+*.pro.user
+Makefile
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+

@@ -19,12 +19,10 @@
 #include <fstream>
 #include <iostream>
 // include files for Qt
-#include <q3cstring.h>
-#include <qdir.h>
-#include <qfileinfo.h>
-#include <qwidget.h>
-#include <qmessagebox.h>
-#include <q3filedialog.h>
+#include <QDir>
+#include <QFileInfo>
+#include <QWidget>
+#include <QMessageBox>
 
 
 // application specific includes
@@ -49,7 +47,7 @@ QMo2Doc::~QMo2Doc()
   delete rootdata; rootdata = 0; model = 0; // model belong to rootdata
 }
 
-void QMo2Doc::addView( QMo2View *view )
+void QMo2Doc::addView( QMo2View * /*view*/ )
 {
   /* TODO: REVIVE!!!
   pViewList->append( *view );
@@ -57,7 +55,7 @@ void QMo2Doc::addView( QMo2View *view )
   */
 }
 
-void QMo2Doc::removeView( QMo2View *view )
+void QMo2Doc::removeView( QMo2View * /*view*/ )
 {
   /* TODO: REVIVE!!!
   pViewList->remove( *view );
@@ -85,18 +83,11 @@ void QMo2Doc::changedViewList()
 
 bool QMo2Doc::isLastView() const
 {
-  /* TODO: REVIVE!!!
-  int k;
-  if( pViewList == 0 ) 
-    return 0;
-  k = (int) (pViewList->count());
-  return ( k == 1 );
-  */
-  return false;
+  return true; // now the only view exist
 }
 
 
-void QMo2Doc::updateAllViews( QMo2View *sender )
+void QMo2Doc::updateAllViews( QMo2View * /*sender*/ )
 {
   // TODO: REVIVE!!!
   /*
@@ -131,25 +122,6 @@ const QString &QMo2Doc::title() const
 }
 
 
-void QMo2Doc::closeDocument()
-{
-  QMo2View *w;
-  if( pViewList == 0 )
-    return;
-  /* TODO: REVIVE!!!
-  if( !isLastView() ) {
-    for( w = pViewList->first();  w != 0;  w = pViewList->next() ) {
-     if( ! w->close() )
- 	break;
-    };
-  };
-  if( isLastView() ) {
-    w = pViewList->first();
-    w->close();
-  };
-  */
-}
-
 bool QMo2Doc::newDocument()
 {
   int k;
@@ -176,7 +148,7 @@ bool QMo2Doc::openDocument(const QString &filename, const char * /*format */)
   int i, n, k;
   char buf[MAX_INPUTLEN];
   const TDataInfo *inf;
-  Q3CString fn;
+  QString fn;
   ifstream is;
   fn = filename.local8Bit();
   //QMessageBox::critical( 0, "Debug: QMo2Doc::openDocument",
@@ -238,7 +210,7 @@ bool QMo2Doc::openDocument(const QString &filename, const char * /*format */)
 bool QMo2Doc::saveDocument(const QString &filename, const char * /*format */)
 {
   int k;
-  Q3CString fn;
+  QString fn;
   ofstream os;
   if( rootdata == 0 )
     return false;
@@ -290,7 +262,8 @@ bool QMo2Doc::canCloseFrame( QMo2View* pFrame )
 	     QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel )) {
       case QMessageBox::Yes:
   	   if( is_nonamed ) {
-	     saveName = Q3FileDialog::getSaveFileName(0, 0, pFrame);
+	     saveName = QFileDialog::getSaveFileName( QMo2Win::qmo2win , tr("Save file"), 
+		 QString::null, "Model files (*.mo2);;All files(*)" );
              if(saveName.isEmpty())
           	return false;
 	   } else {

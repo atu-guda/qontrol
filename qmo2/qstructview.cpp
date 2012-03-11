@@ -15,20 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qapplication.h>
-#include <qpainter.h>
-#include <qpaintdevice.h>
-#include <qprinter.h>
-#include <qpixmap.h>
-#include <qpen.h>
-#include <qbrush.h>
-#include <qfont.h>
-#include <qnamespace.h>
-#include <qmessagebox.h>
-#include <q3popupmenu.h>
-#include <q3mainwindow.h>
-#include <qnamespace.h>
-//Added by qt3to4:
+#include <QApplication>
+#include <QPainter>
+#include <QPrinter>
+#include <QPen>
+#include <QBrush>
+#include <QFont>
+#include <QMessageBox>
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QPaintEvent>
@@ -54,7 +47,7 @@ QStructView::QStructView( QMo2Doc *adoc, QMo2View *mview,
   model = mainview->getModel(); 
   devTp = 0;
   grid_sz = 40; lm = tm = 4;
-  setBackgroundMode( Qt::NoBackground );
+  // setBackgroundMode( Qt::NoBackground );
   setMaximumSize( grid_sz*MODEL_MX, grid_sz*MODEL_MY );
   setMinimumSize( grid_sz*8, grid_sz*6 );
   setFocusPolicy( Qt::StrongFocus );
@@ -116,16 +109,12 @@ void QStructView::paintEvent( QPaintEvent * /*pe*/ )
   if( doc == 0 ) return;
   model = doc->getModel();
   devTp = 0;
-  QPixmap pix( width(), height() );
-  if( hasFocus() ) {
-    pix.fill( Qt::white );
-  } else {
-    pix.fill( QColor( 230, 230, 230 ) );
-  };
-  QPainter p( &pix );
+  QPainter p( this );
+  p.setBackgroundMode( Qt::OpaqueMode );
+  p.setBackground( hasFocus() ? Qt::white : QColor( 230, 230, 230 )  );
+  p.eraseRect( 2, 2, width()-4, height()-4 );
   drawAll( p );
   p.end();
-  bitBlt( this, QPoint(0,0), &pix );
 }
 
 void QStructView::printAll()
@@ -154,7 +143,7 @@ void QStructView::drawAll( QPainter &p )
   int ob_flip, ob_noIcon;
   int li_mid_y, li_src_x, li_src_y, li_dst_x, li_dst_y;
   int ob_gx, ob_gy, st_y, ic_sz;
-  int sel_x, sel_y, sel, mark, level;
+  int sel_x, sel_y, /*sel,*/ mark;
   int li_dst_xs, li_src_xs, li_dst_xa;
   int s_ord, s_grid, s_names, s_icons;
   LinkInfo li[8];
@@ -176,9 +165,8 @@ void QStructView::drawAll( QPainter &p )
   h = height(); w = width(); nh = 1 + h / grid_sz; nw = 1 + w / grid_sz;
   sel_x = mainview->getSelX();
   sel_y = mainview->getSelY();
-  sel = mainview->getSel();
+  //sel = mainview->getSel();
   mark = mainview->getMark();
-  level = mainview->getLevel();
   if( nh >= MODEL_MY ) nh = MODEL_MY;
   if( nw >= MODEL_MX ) nh = MODEL_MX;
   if( model == 0 ) {
@@ -260,7 +248,8 @@ void QStructView::drawAll( QPainter &p )
     };
     // TODO: vector icon here
     p.setBrush( Qt::NoBrush ); p.setPen( QPen(Qt::black,1) );
-    st_y = ob_gy + line_busy*10; ic_sz = 32 - line_busy * 10;
+    st_y = ob_gy + line_busy*10; 
+    ic_sz = 32 - line_busy * 10; ++ic_sz; ic_sz--; // TODO: fake
     //p.drawRect( ob_gx + 32 - ic_sz, st_y, ic_sz, ic_sz);
 
     
@@ -397,7 +386,7 @@ void QStructView::drawAll( QPainter &p )
   // ----------- draw selection
   if( devTp != 1 ) {
     QPainter::CompositionMode old_op = p.compositionMode();
-    p.setCompositionMode( QPainter::CompositionMode_Xor );
+    p.setCompositionMode( QPainter::RasterOp_SourceXorDestination );
     p.setPen( Qt::NoPen ); 
     p.setBrush( QColor(64,64,32) );
     p.drawRect( lm + sel_x*grid_sz, tm + sel_y*grid_sz, grid_sz, grid_sz );
@@ -410,7 +399,7 @@ void QStructView::drawAll( QPainter &p )
 void QStructView::mousePressEvent( QMouseEvent *me )
 {
   int h, w, nh, nw, ex, ey, x, y, elnu;
-  Q3PopupMenu *menu;
+  QMenu *menu;
   TMiso *ob = 0;
   const char *elmname = "?bad?";
   double outval;
@@ -437,28 +426,36 @@ void QStructView::mousePressEvent( QMouseEvent *me )
     switch( me->button() ) {
       case Qt::LeftButton:  break;
       case Qt::RightButton:  
-	    menu = new Q3PopupMenu( this, "rbmenu" ); 
+	    menu = new QMenu( this ); 
+	    QAction *act;
 	    if( ob != 0 ) {
-	      menu->insertItem( title, 0 );
-	      menu->insertSeparator();
-	      menu->insertSeparator();
-	      menu->insertItem( "&Edit", mainview, SLOT(editElm()), 0 );
-	      menu->insertItem( "&Delete", mainview, SLOT(delElm()), 0 );
-	      menu->insertSeparator();
-	      menu->insertItem( "&Link", mainview, SLOT(linkElm()), 0 );
-	      //menu->insertItem( "&Move", mainview, SLOT(moveElm()), 0 );
-	      menu->insertItem( "&Reorder", mainview, SLOT(ordElm()), 0 );
+	      // menu->setTitle( title );
+	      (void) menu->addAction( title ); // only a title
+	      menu->addSeparator();
+	      act = menu->addAction( "&Edit" );
+	      connect( act, SIGNAL( activated() ), mainview, SLOT(editElm() ) );
+	      act = menu->addAction( "&Delete" );
+	      connect( act, SIGNAL( activated() ), mainview, SLOT(delElm() ) );
+	      menu->addSeparator();
+	      act = menu->addAction( "&Link" );
+	      connect( act, SIGNAL( activated() ), mainview, SLOT(linkElm() ) );
+	      act = menu->addAction( "&Reorder" );
+	      connect( act, SIGNAL( activated() ), mainview, SLOT(ordElm() ) );
 	    } else {
-	      menu->insertItem( "&New", mainview, SLOT(newElm()), Qt::Key_Insert );
+	      act = menu->addAction( "&New" );
+	      connect( act, SIGNAL( activated() ), mainview, SLOT(newElm() ) );
 	      if( mainview->getMark() >= 0 )
-		menu->insertItem( "&Move to", mainview, SLOT(moveElm()), 0 );
+		act = menu->addAction( "&Move to" );
+		connect( act, SIGNAL( activated() ), mainview, SLOT(moveElm() ) );
 	    };
-	    menu->insertSeparator();
-	    menu->insertItem( "New outp&ut", mainview, SLOT(newOut()), 0 );
-	    menu->insertSeparator();
-	    menu->insertItem( "Edit model", mainview, SLOT(editModel()), 0 );
-	    menu->insertSeparator();
-	    menu->insertItem( "Print model", mainview, SLOT(print()), 0 );
+	    menu->addSeparator();
+	    act = menu->addAction( "New outp&ut" );
+	    connect( act, SIGNAL( activated() ), mainview, SLOT(newOut() ) );
+	    menu->addSeparator();
+	    act = menu->addAction( "Edit model" );
+	    connect( act, SIGNAL( activated() ), mainview, SLOT(editModel() ) );
+	    act = menu->addAction( "Print model" );
+	    connect( act, SIGNAL( activated() ), mainview, SLOT(print() ) );
 	    menu->exec( mapToGlobal(QPoint( x, y )) );
 	    delete menu;
             break;
@@ -476,11 +473,14 @@ void QStructView::mouseDoubleClickEvent( QMouseEvent * /*me*/ )
 
 void QStructView::keyPressEvent( QKeyEvent *ke )
 {
-  int k, h, w, nh, nw, st, btnShift, btnCtrl, xy_delta;
+  int k, /*h, w, nh, nw,*/ st, btnShift, /*btnCtrl,*/ xy_delta;
   k = ke->key(); st = ke->state(); 
   btnShift = ( ( st & Qt::ShiftModifier ) != 0 );
-  btnCtrl = ( ( st & Qt::ControlModifier ) != 0 );
-  h = height(); w = width(); nh = h / grid_sz - 1; nw = w / grid_sz - 1;
+  // btnCtrl = ( ( st & Qt::ControlModifier ) != 0 );
+  // h = height(); 
+  // w = width(); 
+  // nh = h / grid_sz - 1; 
+  // nw = w / grid_sz - 1;
   xy_delta = btnShift ? 5 : 1;
   switch( k ) {
     case Qt::Key_Return: mainview->editElm(); break; // to catch both keys

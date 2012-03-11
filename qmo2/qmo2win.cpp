@@ -16,13 +16,10 @@
  ***************************************************************************/
 
 #include <cstdlib>
-#include <q3vbox.h>
 #include <QSettings>
 #include <QFontDialog>
 #include <QApplication>
-//Added by qt3to4:
 #include <QPixmap>
-#include <Q3Frame>
 #include <QEvent>
 #include <QCloseEvent>
 
@@ -80,11 +77,11 @@ QMo2Win::QMo2Win(void)
   
   mdiArea = new QMdiArea;
   mdiArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAsNeeded );
-  mdiArea->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
+  //mdiArea->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
   setCentralWidget( mdiArea );
 
   connect( mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)),
-          this, SLOT(updateMenus()) );
+          this, SLOT(updateActions()) );
   windowMapper = new QSignalMapper(this);
   connect(windowMapper, SIGNAL(mapped(QWidget*)),
           this, SLOT(setActiveSubWindow(QWidget*)));
@@ -103,11 +100,12 @@ QMo2Win::QMo2Win(void)
   QApplication::setFont( mf );
   initIface();
   initStatusBar();
-  // initView();
+  
   setIcon( app_icon );
   if( sett.showmax )
     showMaximized();
   qmo2win = this;
+  updateActions();
 }
 
 QMo2Win::~QMo2Win()
@@ -396,7 +394,7 @@ void QMo2Win::initIface()
   act_runprm2->setWhatsThis( tr("Click this button start 2D parametric run.") );
   connect( act_runprm2, SIGNAL( activated() ), this, SLOT( slotRunPrm2()) );
 
-  act_reset= new QAction( "R&eset", Qt::Key_R, this, "reset");
+  act_reset= new QAction( "R&eset", this );
   act_reset->setWhatsThis( tr("Reset model state.") );
   connect( act_reset, SIGNAL( activated() ), this, SLOT( slotReset()) );
 
@@ -436,6 +434,22 @@ void QMo2Win::initIface()
 
   // ==== window group
 
+  act_winClose = new QAction( "Cl&ose Window", this);
+  act_winClose->setWhatsThis( tr("Close this window") );
+  connect( act_winClose, SIGNAL( activated() ), this, SLOT( slotWindowClose()) );
+
+  act_winCloseAll = new QAction( "Close &All Windows",  this );
+  act_winCloseAll->setWhatsThis( tr("Close all windoww") );
+  connect( act_winCloseAll, SIGNAL( activated() ), this, SLOT( slotWindowCloseAll()) );
+
+  act_winTile = new QAction( "&Tile Windows",  this );
+  act_winTile->setWhatsThis( tr("Tile the windows") );
+  connect( act_winTile, SIGNAL( activated() ), this, SLOT( slotWindowTile()) );
+
+  act_winCascade = new QAction( "&Cascade Windows",  this );
+  act_winCascade->setWhatsThis( tr("Cascade the windows") );
+  connect( act_winCascade, SIGNAL( activated() ), this, SLOT( slotWindowCascade()) );
+  
   //act_winnew = new QAction( "&New Window", 0, this, "winnew");
   //act_winnew->setWhatsThis( tr("Crerate new window for same model") );
   //connect( act_winnew, SIGNAL( activated() ), this, SLOT( slotWindowNewWindow()) );
@@ -562,7 +576,7 @@ void QMo2Win::initIface()
   ///////////////////////////////////////////////////////////////////
   // menuBar entry window-Menu
   pWindowMenu = menuBar()->addMenu( tr("&Window") );
-  // pWindowMenu->setCheckable(true); TODO? more?
+  // all to separate function windowMenuAboutToShow
 
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pHelpMenu
@@ -621,14 +635,6 @@ void QMo2Win::initStatusBar()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
-void QMo2Win::initView() // TODO: is really need ???
-{ 
-  ////////////////////////////////////////////////////////////////////
-  // set the main widget here
-  Q3VBox* view_back = new Q3VBox( this );
-  view_back->setFrameStyle( Q3Frame::StyledPanel | Q3Frame::Sunken );
-  enableActions( false, 0 );
-}
 
 void QMo2Win::enableActions( bool ena, int id_ )
 {
@@ -678,25 +684,34 @@ void QMo2Win::enableActions( bool ena, int id_ )
        act_runprm->setEnabled( ena );
        act_runprm2->setEnabled( ena );
        act_reset->setEnabled( ena );
-       // iface
-       //act_winnew->setEnabled( ena );
+       // win
+       act_winClose->setEnabled( ena );
+       act_winCloseAll->setEnabled( ena );
+       act_winTile->setEnabled( ena );
+       act_winCascade->setEnabled( ena );
        break;
     default: break;
   };
 }
 
+void QMo2Win::updateActions()
+{
+  if( mdiArea->currentSubWindow() != 0 ) { // TODO: different windows
+    enableActions( true, 0 );
+  } else {
+    enableActions( false, 0 );
+  };
+  setWndTitle( this ); // "this" is fake
+  
+}
+
 void QMo2Win::setWndTitle( QWidget* )
 {
-#ifdef atu_OLD_OLD  
-    if( pWorkspace->activeWindow() != 0 ) {
-      setCaption( pWorkspace->activeWindow()->caption() + " " PACKAGE );
-      enableActions( true, 0 );
-    } else {
-      setCaption( PACKAGE " " VERSION ); 
-      enableActions( false, 0 );
-    };
-  }
-#endif
+  if( mdiArea->currentSubWindow() != 0 ) {
+    setCaption( mdiArea->currentSubWindow()->caption() + " " PACKAGE );
+  } else {
+    setCaption( PACKAGE " " VERSION ); 
+  };
 }
 
 void QMo2Win::closeEvent ( QCloseEvent *e )
@@ -714,9 +729,6 @@ QMo2View* QMo2Win::createChild( QMo2Doc* doc )
 {
   QMo2View* w = new QMo2View( doc, this, "Name?", 0 );
   mdiArea->addSubWindow( w );
-
-  //w->setIcon( model_icon );
-  //w->show();
   return w;
 }
 
@@ -729,11 +741,6 @@ bool QMo2Win::queryExit()
 
   return ( exit==1 );
 }
-
-//bool QMo2Win::eventFilter( QObject* object, QEvent* event )
-//{
-//  return Q3MainWindow::eventFilter( object, event ); // standard event processing
-//}
 
 QMdiSubWindow* QMo2Win::findMdiChild( const QString &fileName )
 {
@@ -766,13 +773,13 @@ void QMo2Win::slotFileNew()
   
   QMo2Doc* doc = new QMo2Doc();
   ++untitledCount;
-  QString fileName = QString( "untitled_%1" ).arg(untitledCount);
+  QString fileName = QString( "untitled_%1.mo2" ).arg(untitledCount);
   doc->newDocument();
   doc->setPathName(fileName);
   doc->setTitle(fileName);
 
   QMo2View *cw = createChild( doc );
-  enableActions( true, 0 );
+  updateActions();
   cw->show();
   statusBar()->showMessage( tr( "Ready." ) );
 }
@@ -785,6 +792,7 @@ void QMo2Win::slotFileOpen()
 	"", "Model files (*.mo2);;All files(*)" );
   if ( fileName.isEmpty() ) {
      statusBar()->showMessage( tr( "Open canceled." ) );
+     updateActions();
      return;
   };
 
@@ -793,6 +801,7 @@ void QMo2Win::slotFileOpen()
   if( existing ) {
     mdiArea->setActiveSubWindow(existing);
     statusBar()->showMessage( tr( "Already opened." ) );
+    updateActions();
     return;
   }
   
@@ -801,13 +810,14 @@ void QMo2Win::slotFileOpen()
     QMessageBox::critical( this, tr("Error !"), 
 			   tr("Could not open document !" ) );
     delete doc;
+    updateActions();
     statusBar()->showMessage( tr( "Open Failed." ) );
     return;
   };
   
   QMo2View *cw = createChild( doc );
   cw->show();
-  enableActions( true, 0 );
+  updateActions();
   
   statusBar()->showMessage( tr( "Ready." ) );
 }
@@ -827,6 +837,7 @@ void QMo2Win::slotFileSave()
 	   tr("I/O Error !"), tr("Could not save the current document !" ) );
     };	 
   };
+  updateActions();
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
@@ -859,9 +870,9 @@ void QMo2Win::slotFileSaveAs()
          return;
       };
       doc->changedViewList();
-      setWndTitle( m );
     };
   };
+  updateActions();
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
@@ -872,10 +883,7 @@ void QMo2Win::slotFileClose()
   if( m ) {
     m->close();
   };
-  // TODO: see example
-  //if ( pWorkspace->windowList().isEmpty() ) {
-   // enableActions( false, 0 );
-  //};
+  updateActions();
   statusBar()->showMessage( tr ( "Ready." ) );
 }
 
@@ -885,6 +893,7 @@ void QMo2Win::slotFilePrint()
   QMo2View* m =  activeMdiChild();
   if ( m != 0 )
     m->print();
+  updateActions();
   statusBar()->showMessage( tr ( "Ready." ) );
 }
 
@@ -1011,6 +1020,32 @@ void QMo2Win::slotShowIcons()
 }
 
 
+void QMo2Win::slotWindowClose()
+{
+  mdiArea->closeActiveSubWindow();
+  updateActions();
+}
+
+
+void QMo2Win::slotWindowCloseAll()
+{
+  mdiArea->closeAllSubWindows();
+  updateActions();
+}
+
+void QMo2Win::slotWindowTile()
+{
+  mdiArea->tileSubWindows();
+  updateActions();
+}
+
+void QMo2Win::slotWindowCascade()
+{
+  mdiArea->cascadeSubWindows();
+  updateActions();
+}
+
+
 void QMo2Win::slotHelpAbout()
 {
   QString ostr = QString( PACKAGE "\nVersion " VERSION " build: " 
@@ -1065,31 +1100,33 @@ void QMo2Win::slotTest(void)
 void QMo2Win::windowMenuAboutToShow()
 {
   pWindowMenu->clear();	
-  // pWindowMenu->addAction( act_winnew );
-  // pWindowMenu->insertItem( tr( "&Cascade"), pWorkspace, SLOT(cascade() ),0 , ID_WINDOW_CASCADE );
-  // pWindowMenu->insertItem( tr( "&Tile"), pWorkspace, SLOT(tile() ),0 , ID_WINDOW_TILE );
+  pWindowMenu->addAction( act_winClose );
+  pWindowMenu->addAction( act_winCloseAll );
+  pWindowMenu->addSeparator();
+  pWindowMenu->addAction( act_winTile );
+  pWindowMenu->addAction( act_winCascade );
+  pWindowMenu->addSeparator();
+
+  // add windows to menu
+  QList<QMdiSubWindow *> windows = mdiArea->subWindowList();
+  for( int i = 0; i < windows.size(); ++i ) {
+    QMo2View *child = qobject_cast<QMo2View *>(windows.at(i)->widget());
+
+    QString text;
+    if (i < 9) {
+      text = tr("&%1 %2").arg(i + 1).arg(child->currentFile());
+    } else {
+      text = tr("%1 %2").arg(i + 1).arg(child->currentFile());
+    }
+    QAction *action  = pWindowMenu->addAction( text );
+    action->setCheckable(true);
+    action->setChecked( child == activeMdiChild() );
+    connect( action, SIGNAL(triggered()), windowMapper, SLOT(map()) );
+    windowMapper->setMapping( action, windows.at(i) );
+  }
 	
-  //if ( pWorkspace->windowList().isEmpty() ) {
-  //  enableActions( false, 0 );
-  //};
+  updateActions();
 
-  pWindowMenu->insertSeparator();
-
-  //QWidgetList windows = pWorkspace->windowList();
-  //for ( int i = 0; i < int(windows.count()); ++i ) {
-  //  int id = pWindowMenu->insertItem(QString("&%1 ").arg(i+1) + 
-  //       windows.at(i)->caption(), this, SLOT( windowMenuActivated( int ) ) );
-  //  pWindowMenu->setItemParameter( id, i );
-  //  pWindowMenu->setItemChecked( id, 
-  //            pWorkspace->activeWindow() == windows.at(i) );
-  //};
-}
-
-void QMo2Win::windowMenuActivated( int id )
-{
-  //QWidget* w = pWorkspace->windowList().at( id );
-  //if ( w )
-  //  w->setFocus();
 }
 
 
@@ -1394,6 +1431,14 @@ void QMo2Win::slotReset()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
+void QMo2Win::setActiveSubWindow( QWidget *win )
+{
+  if( !win )
+    return;
+  mdiArea->setActiveSubWindow( qobject_cast<QMdiSubWindow *>(win) );
+  updateActions();
+}
+
 // =============================== Mo2Settings =============================
 
 Mo2Settings::Mo2Settings()
@@ -1442,6 +1487,7 @@ void Mo2Settings::save() const
   sets.endGroup();
 
 }
+
 
 // end of qmo2win.cpp
 

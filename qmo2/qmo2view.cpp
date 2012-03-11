@@ -56,24 +56,25 @@
 
 
 QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent,
-    const char* name, int wflags )
-: QWidget( parent ) // TODO: REVIVE wflags
+    const char* /*name*/, int /*wflags*/ )
+: QWidget( parent ) // TODO: REVIVE wflags or KILL it with name
 {
   doc = pDoc;
   QSize p_size = parent->size();
   root = doc->getRoot();
   model = doc->getModel();
   sel = mark = -1; sel_x = sel_y = 0; level = 0;
+
+  setAttribute(Qt::WA_DeleteOnClose);
   
   QGridLayout *grLay = new QGridLayout;
 
-  //sv = new Q3ScrollView( this, "scrollview" );
-  //sv->setVScrollBarMode( Q3ScrollView::AlwaysOn );
-  //sview = new QStructView( doc, this, sv->viewport(), "structure_view" );
-  // sv->addChild( sview );
   scrollArea = new QScrollArea( this );
   sview = new QStructView( doc, this, this, "structure_view" );
   scrollArea->setWidget( sview );
+  scrollArea->setLineWidth( 2 );
+  scrollArea->setMidLineWidth( 2 );
+  scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
   oview = new QOutView( doc, this, this, "out_view" );
   gview = new QGraphView( doc, this, this, "graph_view" );
   
@@ -90,6 +91,8 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent,
   s_size += QSize( 2 * oview->width() + gview->width(), 0 );
   QSize n_size = s_size.boundedTo( p_size );
   resize( n_size );
+
+  setWindowTitle( doc->title() );
 
   connect( this, SIGNAL(viewChanged()), this, SLOT(updateViews()) );
   connect( sview, SIGNAL(sig_changeSel(int,int,int)), this, SLOT(changeSel(int,int,int)) );
@@ -131,14 +134,11 @@ void QMo2View::print()
 
 void QMo2View::closeEvent( QCloseEvent *e )
 {
-  // LEAVE THIS EMPTY: THE EVENT FILTER IN THE QMo2Win CLASS
-  // TAKES CARE FOR CLOSING
-  // QWidget closeEvent must be prevented.
-  // atu: no, i prefer do do it here, so event filter method is ill-brained
-  if( doc == 0 || doc->canCloseFrame( this ) )
+  if( doc == 0 || doc->canCloseFrame( this ) ) {
     e->accept();
-  else
+  } else {
     e->ignore();
+  }
 }
 
 void QMo2View::resizeEvent( QResizeEvent *e )
