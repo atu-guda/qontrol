@@ -14,17 +14,12 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <q3mainwindow.h>
-#include <qpainter.h>
-#include <qpixmap.h>
-#include <qpen.h>
-#include <qbrush.h>
-#include <qfont.h>
-#include <qnamespace.h>
-#include <qmessagebox.h>
-#include <q3popupmenu.h>
-#include <qnamespace.h>
-//Added by qt3to4:
+#include <QPainter>
+#include <QPen>
+#include <QBrush>
+#include <QFont>
+#include <QMenu>
+#include <QMessageBox>
 #include <QMouseEvent>
 #include <QPaintEvent>
 
@@ -103,7 +98,7 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
 void QGraphView::mousePressEvent( QMouseEvent *me )
 {
   int h, w, nh, graph_nu, n_graph, x, y, old_level;
-  Q3PopupMenu *menu;
+  QMenu *menu;
   TGraph *gra;
   const char *graname = "?bad?";
   if( model == 0 ) return;
@@ -134,20 +129,28 @@ void QGraphView::mousePressEvent( QMouseEvent *me )
          };
          break;
     case Qt::RightButton:
-         menu = new Q3PopupMenu( this, "graph_rbmenu" ); 
+         menu = new QMenu( this ); 
+         QAction *act;
          if( graph_nu >=0 ) {
-           menu->insertItem( graname, 0 );
-           menu->insertSeparator();
+	   (void) menu->addAction( graname ); // fake: title
+           menu->addSeparator();
          };
-         menu->insertItem( "&New", mainview, SLOT(newGraph()), 0 );
+	 act = menu->addAction( "&New" );
+	 connect( act, SIGNAL( activated() ), mainview, SLOT(newGraph() ) );
          if( graph_nu >=0 ) {
-           menu->insertItem( "&Edit", mainview, SLOT(editGraph()), 0 );
-           menu->insertItem( "&Delete", mainview, SLOT(delGraph()), 0 );
-           menu->insertSeparator();
-           menu->insertItem( "&Show", mainview, SLOT(showGraph()), 0 );
-           menu->insertItem( "Show D&ata", mainview, SLOT(showGraphData()), 0 );
-           menu->insertItem( "D&ump", mainview, SLOT(exportGraphData()), 0 );
-           menu->insertItem( "Gnu&plot", mainview, SLOT(gnuplotGraph()), 0 );
+	   act = menu->addAction( "&Edit" );
+	   connect( act, SIGNAL( activated() ), mainview, SLOT(editGraph() ) );
+	   act = menu->addAction( "&Delete" );
+	   connect( act, SIGNAL( activated() ), mainview, SLOT(delGraph() ) );
+           menu->addSeparator();
+	   act = menu->addAction( "&Show" );
+	   connect( act, SIGNAL( activated() ), mainview, SLOT(showGraph() ) );
+	   act = menu->addAction( "Show D&ata" );
+	   connect( act, SIGNAL( activated() ), mainview, SLOT(showGraphData() ) );
+	   act = menu->addAction( "D&ump" );
+	   connect( act, SIGNAL( activated() ), mainview, SLOT(exportGraphData() ) );
+	   act = menu->addAction( "Gnu&plot" );
+	   connect( act, SIGNAL( activated() ), mainview, SLOT(gnuplotGraph() ) );
          };
          menu->exec( mapToGlobal(QPoint( x, y )) );
          delete menu; 

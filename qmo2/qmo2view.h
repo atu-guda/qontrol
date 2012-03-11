@@ -20,9 +20,7 @@
 
 // include files for Qt
 #include <qwidget.h>
-// #include <q3mainwindow.h>
 #include <QMainWindow>
-//Added by qt3to4:
 #include <QResizeEvent>
 #include <QCloseEvent>
 

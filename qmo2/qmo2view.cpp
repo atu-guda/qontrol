@@ -17,30 +17,7 @@
 #include <cmath>
 #include <limits>
 // include files for Qt
-#include <QDir>
-#include <QFileInfo>
-#include <QPrinter>
-#include <QPainter>
-#include <QFontMetrics>
-#include <QMessageBox>
-#include <QDialog>
-#include <QLabel>
-#include <QLineEdit>
-#include <QComboBox>
-#include <QCheckBox>
-#include <QPushButton>
-#include <QLayout>
-#include <QScrollArea>
-#include <QTableWidget>
-#include <qinputdialog.h>
-#include <q3filedialog.h>
-#include <q3listview.h>
-//Added by qt3to4:
-#include <QGridLayout>
-#include <Q3GridLayout>
-#include <QResizeEvent>
-#include <Q3VBoxLayout>
-#include <QCloseEvent>
+#include <QtGui>
 
 // application specific includes
 #include "miscfun.h"
@@ -258,10 +235,7 @@ void QMo2View::newElm()
   QComboBox *cb; QLabel *la;
   QPushButton *bt_ok, *bt_can;
   QLineEdit *oname_ed, *oord_ed;
-  Q3VBoxLayout *main_lay, *type_lay;
-  Q3HBoxLayout *btn_lay;
-  Q3GridLayout *name_lay;
-  QSpacerItem *spa1;
+  QGridLayout *lay;
 
   const TClassInfo *ci;
   int i, nc, rc, oord;
@@ -272,36 +246,29 @@ void QMo2View::newElm()
 
   seld = new QDialog( this, "sel_dial", true );
 
-  main_lay = new Q3VBoxLayout( seld, 10, 10, "newElm_main_layout" );
-  name_lay = new Q3GridLayout( main_lay, 2, 2,  -1, "name_grid" );
-  type_lay = new Q3VBoxLayout( main_lay, -1, "type_lay" );
-  btn_lay  = new Q3HBoxLayout( main_lay, -1, "btn_lay" );
+  lay = new QGridLayout( seld );
 
-  la = new QLabel( seld, "l1" );
-  la->setText( "Name" );
-  name_lay->addWidget( la, 0, 0 );
+  la = new QLabel( "Name", seld );
+  lay->addWidget( la, 0, 0 );
 
-  oname_ed = new QLineEdit( seld, "oname_ed" );
+  oname_ed = new QLineEdit( seld );
   oname_ed->setText( QString("obj_")
       + QString::number( model->getNMiso() ) );
   oname_ed->setFocus();
-  name_lay->addWidget( oname_ed, 1, 0  );
+  lay->addWidget( oname_ed, 1, 0  );
 
-  la = new QLabel( seld, "l2" );
-  la->setText( "Order" );
-  name_lay->addWidget( la, 0, 1 );
+  la = new QLabel( "Order", seld );
+  lay->addWidget( la, 0, 1 );
 
   oord = model->hintOrd();
-  oord_ed = new QLineEdit( seld, "oord_ed" );
+  oord_ed = new QLineEdit( seld );
   oord_ed->setText( QString::number(oord) );
-  name_lay->addWidget( oord_ed, 1, 1 );
+  lay->addWidget( oord_ed, 1, 1 );
 
+  la = new QLabel( "Type", seld );
+  lay->addWidget( la, 2, 0 );
 
-  la = new QLabel( seld, "l3" );
-  la->setText( "Type" );
-  type_lay->addWidget( la );
-
-  cb = new QComboBox( seld, "combo" );
+  cb = new QComboBox( seld );
   nc = root->getNClasses( -1,  0 );
   for( i=0; i<nc; i++ ) {
     ci = root->classInfoByNum( i );
@@ -310,20 +277,19 @@ void QMo2View::newElm()
       cb->insertItem( ci->className );
     };
   };
-  type_lay->addWidget( cb );
-  spa1 = new QSpacerItem( 1, 200, 
-      QSizePolicy::Minimum, QSizePolicy::Expanding );
-  type_lay->addItem( spa1 );
+  lay->addWidget( cb, 3, 0, 1, 2, Qt::AlignTop );
+  lay->setRowMinimumHeight ( 3, 200 );
 
-
-  bt_ok = new QPushButton( seld, "bt_ok" );
+  bt_ok = new QPushButton( "Ok", seld );
   bt_ok->setText( "Ok" ); bt_ok->setDefault( true );
-  btn_lay->addWidget( bt_ok );
+  lay->addWidget( bt_ok, 5, 0 );
+  seld->setLayout( lay );
+
   connect( bt_ok, SIGNAL(clicked()), seld, SLOT(accept() ) );
-  bt_can = new QPushButton( seld, "bt_can" );
-  bt_can->setText( "Cancel" );
-  btn_lay->addWidget( bt_can );
+  bt_can = new QPushButton( "Cancel", seld );
+  lay->addWidget( bt_can, 5, 1 );
   connect( bt_can, SIGNAL(clicked()), seld, SLOT(reject() ) );
+
   rc = seld->exec();
   if( rc == QDialog::Accepted ) {
     cnmq = cb->currentText();
@@ -664,9 +630,7 @@ void QMo2View::newOut()
   const char *outname, *elmname;
   QDialog *dia; QPushButton *bt_ok, *bt_can;
   QLineEdit *oname_ed, *ename_ed; QLabel *lab1, *lab2;
-  Q3VBoxLayout *main_lay;
-  Q3GridLayout *grid_lay;
-  Q3HBoxLayout *btn_lay;
+  QGridLayout *lay;
   if( ! checkState( validCheck ) )
     return;
   
@@ -683,39 +647,35 @@ void QMo2View::newOut()
   dia = new QDialog( this, "newout_dial", true );
   dia->setCaption( "Creating new output array" );
 
-  main_lay = new Q3VBoxLayout( dia, 10, 10, "main_newout_lay" );
-  grid_lay = new Q3GridLayout( main_lay, 2, 2, -1, "grig_newout" );
-  btn_lay =  new Q3HBoxLayout( main_lay, -1, "btn_newout" );
+  lay = new QGridLayout( dia );
 
-  lab1 = new QLabel( dia, "l_oname" );
-  lab1->setText( "Output array name" );
-  grid_lay->addWidget( lab1, 0, 0 );
+  lab1 = new QLabel( "Output array name", dia );
+  lay->addWidget( lab1, 0, 0 );
 
-  oname_ed = new QLineEdit( dia, "oname_ed" );
+  oname_ed = new QLineEdit( dia );
   oname_ed->setMaxLength( MAX_NAMELEN-1 );
   oname_ed->setText( onameq ); oname_ed->setFocus();
-  grid_lay->addWidget( oname_ed, 0, 1 );
+  lay->addWidget( oname_ed, 0, 1 );
 
-  lab2 = new QLabel( dia, "l_ename" );
-  lab2->setText( "Element name" );
-  grid_lay->addWidget( lab2, 1, 0 );
+  lab2 = new QLabel( "Element name",  dia );
+  lay->addWidget( lab2, 1, 0 );
 
-  ename_ed = new QLineEdit( dia, "ename_ed" );
+  ename_ed = new QLineEdit( dia );
   ename_ed->setMaxLength( MAX_NAMELEN-1 );
   ename_ed->setText( enameq );
-  grid_lay->addWidget( ename_ed, 1, 1 );
+  lay->addWidget( ename_ed, 1, 1 );
 
 
-  bt_ok = new QPushButton( dia, "bt_ok" );
-  bt_ok->setText( "Ok" ); bt_ok->setDefault( true );
+  bt_ok = new QPushButton( "Ok", dia );
+  bt_ok->setDefault( true );
   connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept() ) );
-  btn_lay->addWidget( bt_ok );
+  lay->addWidget( bt_ok, 2, 0 );
 
 
-  bt_can = new QPushButton( dia, "bt_can" );
-  bt_can->setText( "Cancel" );
+  bt_can = new QPushButton( "Cancel", dia );
   connect( bt_can, SIGNAL(clicked()), dia, SLOT(reject() ) );
-  btn_lay->addWidget( bt_can );
+  lay->addWidget( bt_can, 2, 1 );
+  dia->setLayout( lay );
 
   rc = dia->exec();
   if( rc == QDialog::Accepted ) {
@@ -777,8 +737,7 @@ void QMo2View::showOutData()
 {
   QDialog *dia;
   QDoubleTable *dv;
-  Q3VBoxLayout *lv;
-  Q3HBoxLayout *lg;
+  QGridLayout *lay;
   QString fnq, sinf;
   QPushButton *bt_ok;
   QLabel *lab;
@@ -810,14 +769,11 @@ void QMo2View::showOutData()
 
   dia = new QDialog( this, "data_dial", 1 );
   dia->setCaption( QString("Data array: ") + QString(gi.title) );
-  lv = new Q3VBoxLayout( dia, 10, 6, "showOutData_vbox_layout" );
-
-  lg = new Q3HBoxLayout( lv, -1, "showOutData_gbox_layout" );
+  lay = new QGridLayout( dia );
 
   dv = new QDoubleTable( &gi,  dia, "dv" );
-  lg->addWidget( dv );
+  lay->addWidget( dv, 0, 0 );
 
-  lab = new QLabel( dia, "showOutData_lab" );
   sinf = QString( "n= " ) + QString::number( gi.row );
   sinf += QString( "; \nave= " ) + QString::number( ave ); 
   sinf += QString( "; \nave2= " ) + QString::number( ave2 ); 
@@ -827,13 +783,14 @@ void QMo2View::showOutData()
   sinf += QString( "; \nsigm= " ) + QString::number( msq ); 
   sinf += QString( "; \nmin= " ) + QString::number( vmin ); 
   sinf += QString( "; \nmax= " ) + QString::number( vmax ); 
-  lab->setText( sinf );
-  lg->addWidget(lab);
+  lab = new QLabel( sinf, dia );
+  lay->addWidget( lab, 0, 1 );
 
-  bt_ok = new QPushButton( dia, "bt_ok" );
-  bt_ok->setText( "Done" ); bt_ok->setDefault( true );
+  bt_ok = new QPushButton( "Done", dia );
+  bt_ok->setDefault( true );
   connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
-  lv->addWidget( bt_ok );
+  lay->addWidget( bt_ok, 1, 0, 1, 2 );
+  dia->setLayout( lay );
 
   dia->exec();
   delete dia;
@@ -849,8 +806,8 @@ void QMo2View::exportOut()
   arr = model->getOutArr( level );
   if( arr == 0 )
     return;
-  fnq = Q3FileDialog::getSaveFileName( 0, 
-      "Data files (*.txt *.dat *.csv);;All files (*)", this );
+  fnq = QFileDialog::getSaveFileName( this, tr("Export data"), "",
+      "Data files (*.txt *.dat *.csv);;All files (*)" );
   if( fnq.isEmpty() )
     return;
   fn = fnq.latin1();
@@ -952,7 +909,7 @@ void QMo2View::showGraphData()
 {
   QDialog *dia;
   QDoubleTable *dv;
-  Q3VBoxLayout *lv;
+  QVBoxLayout *lv;
   GraphInfo gi;
   QString fnq; QPushButton *bt_ok;
   TGraph *gra;
@@ -968,13 +925,13 @@ void QMo2View::showGraphData()
 
   dia = new QDialog( this, "graphdata_dial", 1 );
   dia->setCaption( QString("Graph data: ") + QString(gi.title) );
-  lv = new Q3VBoxLayout( dia, 10, 6, "showFraphData_vbox_layout" );
+  lv = new QVBoxLayout( dia );
 
   dv = new QDoubleTable( &gi, dia,  "dv" );
   lv->addWidget( dv );
 
-  bt_ok = new QPushButton( dia, "bt_ok" );
-  bt_ok->setText( "Done" ); bt_ok->setDefault( true );
+  bt_ok = new QPushButton( "Done", dia );
+  bt_ok->setDefault( true );
   connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
   lv->addWidget( bt_ok );
 
@@ -995,8 +952,8 @@ void QMo2View::exportGraphData()
   gra = model->getGraph( level );
   if( gra == 0 )
     return;
-  fnq = Q3FileDialog::getSaveFileName( 0, 
-      "Data files (*.txt *.dat *.csv);;All files (*)", this );
+  fnq = QFileDialog::getSaveFileName( this, tr("Export data"), "",
+      "Data files (*.txt *.dat *.csv);;All files (*)" );
   if( fnq.isEmpty() )
     return;
   fn = fnq.latin1();
@@ -1009,7 +966,7 @@ void QMo2View::gnuplotGraph()
   QDialog *dia;
   QLabel *lb1, *lb2, *lb3; QLineEdit *ed_pgm, *ed_dat, *ed_eps;
   QCheckBox *sw_x11; QPushButton *bt_ok, *bt_can;
-  Q3VBoxLayout *lv; Q3HBoxLayout *lg;
+  QGridLayout *lay; 
   QString f_pgm, f_dat, f_eps, cdir;
   int l, rc, use_x11;
   if( ! checkState( doneCheck ) )
@@ -1033,38 +990,38 @@ void QMo2View::gnuplotGraph()
 
   dia = new QDialog( this, "gnuplot_dia", true );
   dia->resize( 400, 260 );
-  lv = new Q3VBoxLayout( dia, 10, 6, "gnuplot_vbox_layouot" );
-  sw_x11 = new QCheckBox( dia, "sw_x11" );
-  sw_x11->setText( "Output to &X11 window" );
+  lay = new QGridLayout( dia );
+  sw_x11 = new QCheckBox( "Output to &X11 window", dia );
   sw_x11->setChecked( false );
-  lv->addWidget( sw_x11 );
-  lb1 = new QLabel( dia, "l1" );
-  lb1->setText( "Output to EPS file:" );
-  lv->addWidget( lb1 );
-  ed_eps = new QLineEdit( dia, "ed_eps" );
+  lay->addWidget( sw_x11, 0, 0, 1, 2 );
+
+  lb1 = new QLabel( "Output to EPS file:", dia );
+  lay->addWidget( lb1, 1, 0, 1, 2 );
+  ed_eps = new QLineEdit( dia );
   ed_eps->setText( f_eps );
-  lv->addWidget( ed_eps );
-  lb2 = new QLabel( dia, "l2" );
-  lb2->setText( "Data file:" );
-  lv->addWidget( lb2 );
-  ed_dat = new QLineEdit( dia, "ed_dat" );
+  lay->addWidget( ed_eps, 2, 0, 1, 2 );
+
+  lb2 = new QLabel( "Data file:", dia );
+  lay->addWidget( lb2, 3, 0, 1, 2 );
+  ed_dat = new QLineEdit( dia );
   ed_dat->setText( f_dat );
-  lv->addWidget( ed_dat );
-  lb3 = new QLabel( dia, "l3" );
-  lb3->setText( "Gnuplot program file:" );
-  lv->addWidget( lb3 );
-  ed_pgm = new QLineEdit( dia, "ed_pgm" );
+  lay->addWidget( ed_dat, 4, 0, 1, 2 );
+
+  lb3 = new QLabel( "Gnuplot program file:", dia );
+  lay->addWidget( lb3, 5, 0, 1, 2 );
+  ed_pgm = new QLineEdit( dia );
   ed_pgm->setText( f_pgm );
-  lv->addWidget( ed_pgm );
-  lg = new Q3HBoxLayout( lv, 10, "gnuplot_btn" );
-  bt_ok = new QPushButton( dia, "bt_ok" );
-  bt_ok->setText( "Ok" ); bt_ok->setDefault( true );
-  lg->addWidget( bt_ok );
+  lay->addWidget( ed_pgm, 6, 0, 1, 2 );
+
+  bt_ok = new QPushButton( "&Ok", dia );
+  bt_ok->setDefault( true );
+  lay->addWidget( bt_ok, 7, 0 );
   connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept() ) );
-  bt_can = new QPushButton( dia, "bt_can" );
-  bt_can->setText( "Cancel" );
-  lg->addWidget( bt_can );
+
+  bt_can = new QPushButton( "Cancel", dia );
+  lay->addWidget( bt_can, 7, 1 );
   connect( bt_can, SIGNAL(clicked()), dia, SLOT(reject() ) );
+  
   rc = dia->exec();
   if( rc == QDialog::Accepted ) {
     f_pgm = ed_pgm->text(); f_eps = ed_eps->text(); 
@@ -1096,7 +1053,7 @@ void QMo2View::showVars()
 {
   QDialog *dia;
   QDoubleTable *dv;
-  Q3VBoxLayout *lv;
+  QVBoxLayout *lv;
   GraphInfo gi;
   QString fnq; QPushButton *bt_ok;
   if( ! checkState( validCheck ) )
@@ -1109,11 +1066,11 @@ void QMo2View::showVars()
 
   dia = new QDialog( this, "vars_dial", 1 );
   dia->setCaption( QString("Model vars: ") );
-  lv = new Q3VBoxLayout( dia, 10, 6, "showVars_vbox_layouot" );
+  lv = new QVBoxLayout( dia );
   dv = new QDoubleTable( &gi, dia,  "dv" );
   lv->addWidget( dv );
-  bt_ok = new QPushButton( dia, "bt_ok" );
-  bt_ok->setText( "Done" ); bt_ok->setDefault( true );
+  bt_ok = new QPushButton( "Done", dia );
+  bt_ok->setDefault( true );
   lv->addWidget( bt_ok );
   connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
   dia->exec();
@@ -1179,17 +1136,16 @@ const char QMo2View::helpstr[] = "<b>Hot keys:</b><br>\n"
 void QMo2View::showHelp(void)
 {
   QDialog *dia; QLabel *la; QPushButton *bt_ok;
-  Q3VBoxLayout *lv;
+  QVBoxLayout *lv;
   dia = new QDialog( this, "help_dia", true );
   dia->setCaption( "Hot keys in structure window" );
-  lv = new Q3VBoxLayout( dia, 10, 6, "showHelp_vbox_layouot" );
+  lv = new QVBoxLayout( dia );
   
-  la = new QLabel( dia, "helplabel" );
+  la = new QLabel( dia );
   la->setText( helpstr );
   lv->addWidget( la );
   
-  bt_ok = new QPushButton( dia, "bt_ok" );
-  bt_ok->setText( "&Ok" );
+  bt_ok = new QPushButton( "&Ok", dia );
   bt_ok->setDefault( true );
   lv->addWidget( bt_ok );
 

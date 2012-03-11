@@ -16,12 +16,7 @@
  ***************************************************************************/
 
 #include <cstdlib>
-#include <QSettings>
-#include <QFontDialog>
-#include <QApplication>
-#include <QPixmap>
-#include <QEvent>
-#include <QCloseEvent>
+#include <QtGui>
 
 // application specific includes
 #include "../config.h"

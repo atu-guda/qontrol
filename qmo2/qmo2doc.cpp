@@ -19,11 +19,7 @@
 #include <fstream>
 #include <iostream>
 // include files for Qt
-#include <QDir>
-#include <QFileInfo>
-#include <QWidget>
-#include <QMessageBox>
-
+#include <QtGui>
 
 // application specific includes
 #include "qmo2doc.h"

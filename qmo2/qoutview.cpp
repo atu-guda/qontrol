@@ -23,9 +23,8 @@
 #include <qfont.h>
 #include <qnamespace.h>
 #include <qmessagebox.h>
-#include <q3popupmenu.h>
+#include <QMenu>
 #include <qnamespace.h>
-//Added by qt3to4:
 #include <QMouseEvent>
 #include <QPaintEvent>
 
@@ -111,7 +110,7 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
 void QOutView::mousePressEvent( QMouseEvent *me )
 {
   int h, nh, out_nu, n_out, x, y, nn, old_level;
-  Q3PopupMenu *menu;
+  QMenu *menu;
   TOutArr *arr;
   const char *outname = "?bad?";
   char elmname[MAX_NAMELEN];
@@ -138,20 +137,26 @@ void QOutView::mousePressEvent( QMouseEvent *me )
   };
   old_level = mainview->getLevel();
   mainview->changeLevel( out_nu );
+  QAction *act;
   switch( me->button() ) {
     case Qt::LeftButton: 
          mainview->editOut();
          break;
     case Qt::RightButton: 
-         menu = new Q3PopupMenu( this, "out_rbmenu" ); 
-         menu->insertItem( title, 0 );
-         menu->insertSeparator();
-         menu->insertItem( "&New", mainview, SLOT(newElm()), Qt::Key_Insert );
-         menu->insertItem( "&Edit", mainview, SLOT(editOut()), 0 );
-         menu->insertItem( "&Delete", mainview, SLOT(delOut()), 0 );
-         menu->insertSeparator();
-         menu->insertItem( "D&ump", mainview, SLOT(exportOut()), 0 );
-         menu->insertItem( "&Show data", mainview, SLOT(showOutData()), 0 );
+         menu = new QMenu( this ); 
+	 (void) menu->addAction( title ); // fake action: title
+         menu->addSeparator();
+	 act = menu->addAction( "&New" );
+	 connect( act, SIGNAL( activated() ), mainview, SLOT(newOut() ) );
+	 act = menu->addAction( "&Edit" );
+	 connect( act, SIGNAL( activated() ), mainview, SLOT(editOut() ) );
+	 act = menu->addAction( "&Delete" );
+	 connect( act, SIGNAL( activated() ), mainview, SLOT(delOut() ) );
+         menu->addSeparator();
+	 act = menu->addAction( "D&ump" );
+	 connect( act, SIGNAL( activated() ), mainview, SLOT(exportOut() ) );
+	 act = menu->addAction( "&Show data" );
+	 connect( act, SIGNAL( activated() ), mainview, SLOT(showOutData() ) );
          menu->exec( mapToGlobal(QPoint( x, y )) );
          delete menu;
          break;

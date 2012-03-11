@@ -19,29 +19,21 @@
 #define QMO2WIN_H
 
 // include files for QT
-#include <Qt3Support>
-#include <qapplication.h>
-#include <Q3MainWindow>
-#include <qworkspace.h>
-#include <qmenubar.h>
-#include <q3toolbar.h>
-#include <qstatusbar.h>
-#include <q3whatsthis.h>
-#include <q3popupmenu.h>
-#include <q3accel.h>
-#include <qaction.h>
-#include <qtoolbutton.h>
-#include <qmessagebox.h>
-#include <q3filedialog.h>
-#include <qprinter.h>
-#include <qstring.h>
-#include <qpixmap.h>
-//Added by qt3to4:
+#include <QMainWindow>
+#include <QToolBar>
+#include <QMessageBox>
+#include <QPrinter>
+#include <QString>
+#include <QPixmap>
 #include <QCloseEvent>
 #include <QEvent>
 
 class QMdiArea;
 class QSignalMapper;
+class QMenu;
+class QAction;
+class QMdiSubWindow;
+class QStatusBar;
 
 // forward declaration of the QMo2Win classes
 class QMo2Doc;
@@ -83,7 +75,6 @@ class Mo2Settings {
   * 	
   * @author atu
   */
-// class QMo2Win : public Q3MainWindow
 class QMo2Win : public QMainWindow
 {
   Q_OBJECT

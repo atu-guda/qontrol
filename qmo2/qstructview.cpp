@@ -15,16 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QApplication>
-#include <QPainter>
-#include <QPrinter>
-#include <QPen>
-#include <QBrush>
-#include <QFont>
-#include <QMessageBox>
-#include <QKeyEvent>
-#include <QMouseEvent>
-#include <QPaintEvent>
+#include <QtGui>
 
 #include "resource.h"
 #include "miscfun.h"

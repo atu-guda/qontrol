@@ -2,7 +2,7 @@
                           qplotview.cpp  -  description
                              -------------------
     begin                : Sun Aug 20 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -18,29 +18,9 @@
 // for debug:
 // #include <stdio.h>
 
-#include <math.h>
-#include <qpainter.h>
-#include <qpixmap.h>
-#include <qpen.h>
-#include <qbrush.h>
-#include <qfont.h>
-#include <qnamespace.h>
-#include <qmessagebox.h>
-#include <q3popupmenu.h>
-#include <qcombobox.h>
-#include <qlineedit.h>
-#include <qlabel.h>
-#include <qpushbutton.h>
-#include <qcheckbox.h>
-#include <qnamespace.h>
+#include <cmath>
+#include <QtGui>
 #include <q3groupbox.h>
-#include <qprinter.h>
-#include <q3paintdevicemetrics.h>
-//Added by qt3to4:
-#include <QKeyEvent>
-#include <QResizeEvent>
-#include <QMouseEvent>
-#include <QPaintEvent>
 
 #include "resource.h"
 #include "miscfun.h"
@@ -54,6 +34,8 @@
 #include "qmo2view.h"
 
 #include "qplotview.h"
+
+using namespace std;
 
 QPlotView::QPlotView( QMo2Doc *adoc, TGraph *agra,
                       QWidget *parent, const char *name )
