@@ -211,16 +211,15 @@ bool QMo2Doc::saveDocument(const QString &filename, const char * /*format */)
 {
   int k;
   QString fn;
+  fn = filename;
+  qDebug("debug: QMo2Doc::saveDocument: file %s: ", fn.local8Bit().constData() );
   ofstream os;
   if( rootdata == 0 )
     return false;
-  fn = filename.local8Bit();
-  //QMessageBox::critical( 0, "Debug: QMo2Doc::saveDocument",
-  //                       filename + ": " + QString(fn), 0,0,0 );
+
   errno = 0;
   os.open( fn );
   if( ! os.good() ) {
-    // qDebug("Fail to open for write file %s: %s", fn, strerror(errno) ); TODO qDebug
     QMessageBox::critical( 0, "saveDocument Error",
         QString("Fail to open for write file: ") + filename +
 	    QString(":\n") + QString( strerror(errno) ), 

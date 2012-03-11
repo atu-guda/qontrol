@@ -804,24 +804,29 @@ void QMo2Win::slotFileOpen()
     updateActions();
     return;
   }
+
+  bool rc = doFileOpen( fileName );
   
+  statusBar()->showMessage( rc ? tr( "Ready." ) : tr( "Fail" ) );
+}
+
+bool QMo2Win::doFileOpen( const QString &fn )
+{
   QMo2Doc* doc = new QMo2Doc();
-  if( ! doc->openDocument( fileName ) ) {
+  if( ! doc->openDocument( fn ) ) {
     QMessageBox::critical( this, tr("Error !"), 
-			   tr("Could not open document !" ) );
+			   tr("Could not read file !" ) + fn );
     delete doc;
     updateActions();
     statusBar()->showMessage( tr( "Open Failed." ) );
-    return;
+    return false;
   };
   
   QMo2View *cw = createChild( doc );
   cw->show();
   updateActions();
-  
-  statusBar()->showMessage( tr( "Ready." ) );
+  return true;
 }
-
 
 void QMo2Win::slotFileSave()
 {
@@ -844,8 +849,14 @@ void QMo2Win::slotFileSave()
 void QMo2Win::slotFileSaveAs()
 {
   statusBar()->showMessage( tr ( "Saving model file under new filename..." ) );
+  QMo2View* m =  activeMdiChild();
+  if( !m ) {
+    QMessageBox::critical ( this, 
+      tr("Critical error!"), tr("Fail to find active windown wlhile saving file!") );
+  }
   QString fn = QFileDialog::getSaveFileName( this, tr("Save File"),
       QString::null, "Model files (*.mo2);;All files(*)" );
+
   if ( !fn.isEmpty() ) {
     QFileInfo fi( fn );
     QString pfn = fi.fileName();
@@ -861,16 +872,14 @@ void QMo2Win::slotFileSaveAs()
        statusBar()->showMessage( tr( "Ready." ) );
        return;
     }
-    QMo2View* m =  activeMdiChild();
-    if( m ) {
-      QMo2Doc* doc = m->getDocument();
-      if( ! doc->saveDocument( fn ) ) {
-         QMessageBox::critical ( this, 
-	     tr("I/O Error !"), tr("Could not save the current model file!") );
-         return;
-      };
-      doc->changedViewList();
+    QMo2Doc* doc = m->getDocument();
+    if( ! doc->saveDocument( fn ) ) {
+       QMessageBox::critical ( this, 
+	   tr("I/O Error !"), tr("Could not save the current model file!") );
+       return;
     };
+    doc->changedViewList();
+    m->setWindowTitle( doc->title() );
   };
   updateActions();
   statusBar()->showMessage( tr( "Ready." ) );

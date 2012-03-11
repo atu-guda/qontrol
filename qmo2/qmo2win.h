@@ -101,6 +101,8 @@ class QMo2Win : public QMainWindow
     QString findRes( const QString &res );
     /** returns pointer to settings object */
     Mo2Settings* getSettings() { return &sett; };
+    /** reads new file: to use from slot and commanline */
+    bool doFileOpen( const QString &fn );
 
   protected:
     /** overloaded for Message box on last window exit */
