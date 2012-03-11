@@ -31,6 +31,7 @@
 #include <QPushButton>
 #include <QLayout>
 #include <QScrollArea>
+#include <QTableWidget>
 #include <qinputdialog.h>
 #include <q3filedialog.h>
 #include <q3listview.h>
@@ -568,10 +569,12 @@ void QMo2View::infoElm()
   TMiso *ob; 
   const TDataInfo *di;
   int i, j, nelm, ibuf;
-  char cbuf[256];
+  char cbuf[1024];
   double dbuf;
-  QDialog *dia; Q3ListView *lv; QPushButton *bt_ok;
-  Q3VBoxLayout *lay;
+  QDialog *dia; 
+  QPushButton *bt_ok;
+  QVBoxLayout *lay;
+  QTableWidget *tv;
   QString qs;
   static const char *lbl[7] = { "MR", "NRC", "ND", "ROD", "NS", "RO" , "?1" };
   if( ! checkState( selCheck ) )
@@ -583,54 +586,68 @@ void QMo2View::infoElm()
   dia = new QDialog( this, "info_elm_dia", true );
   dia->setCaption( QString( PACKAGE ": Structure of ") + ob->getName() );
 
-  lay = new Q3VBoxLayout( dia, 10, 10, "info_vboxlay" );
+  lay = new QVBoxLayout();
 
-  lv = new Q3ListView( dia, "list" );
-  lv->addColumn( "N", 24 ); lv->addColumn( "Name", 80 );
-  lv->addColumn( "Type", 38 ); lv->addColumn( "Value", 150 );
-  lv->addColumn( "Descr", 120 ); lv->addColumn( "Flags", 100 );
-  lv->setSorting( -1 );
-  for( i=nelm-1; i>=0; i-- ) {
+  tv = new QTableWidget( nelm, 5, dia );
+  QStringList hlabels;
+  hlabels << "Name" << "Type" << "Value" << "Descr" << "Flags";
+  tv->setHorizontalHeaderLabels( hlabels );
+  QTableWidgetItem *it;
+
+  for( i=0; i<nelm; ++i ) {
     di = ob->getDataInfo( i );
     if( di == 0 ) continue;
+    
+    it = new QTableWidgetItem( di->name );
+    tv->setItem( i, 0, it ); 
+    it = new QTableWidgetItem( QString::fromLocal8Bit(di->descr) );
+    tv->setItem( i, 3, it ); 
+
     qs = "";
     for( j=0; j<7; j++ ) {
       if( di->flags & ( 1 << j ) ) {
 	qs += lbl[j]; qs += ",";
       };
     };
+    it = new QTableWidgetItem( qs );
+    tv->setItem( i, 4, it ); 
+
     ibuf = 0; dbuf = 0; cbuf[0] = 0;
+    QString t_s, v_s;
     switch( di->tp ) {
       case dtpInt: ob->getDataII( i, &ibuf, 0 );
-		   (void) new Q3ListViewItem( lv, QString::number(i), 
-					     di->name, "i/" + QString::number( di->subtp ),
-					     QString::number( ibuf ),
-					     QString::fromLocal8Bit(di->descr), qs );
+		   t_s = QString("i/") + QString::number( di->subtp ); 
+	           v_s = QString::number(ibuf);
 		   break;
       case dtpDbl: ob->getDataID( i, &dbuf, 0 );
-		   (void) new Q3ListViewItem( lv, QString::number(i), 
-					     di->name, "d", QString::number( dbuf ), 
-					     QString::fromLocal8Bit(di->descr), qs );
+	           t_s = QString("d/") + QString::number( di->subtp );
+	           v_s = QString::number(dbuf);
 		   break;
       case dtpStr: ob->getDataIS( i, cbuf, sizeof(cbuf), 0 );
-		   (void) new Q3ListViewItem( lv, QString::number(i), di->name,
-					     QString("s") + QString::number( di->max_len ),
-					     QString::fromLocal8Bit( cbuf ), 
-					     QString::fromLocal8Bit(di->descr), qs );
+	           t_s = QString("s/") + QString::number( di->max_len );
+	           v_s = QString::fromLocal8Bit( cbuf );
 		   break;
-      default: (void) new Q3ListViewItem( lv, QString::number(i), di->name,
-					 QString::number(di->tp), di->listdata, 
-					 QString::fromLocal8Bit(di->descr), qs );
+      default: 
+	           t_s = QString("X/") + QString::number( di->tp );
+		   t_s += QString("/");
+		   t_s += QString::number( di->subtp );
+	           v_s = QString::fromLocal8Bit( di->listdata );
     };
+    it = new QTableWidgetItem( t_s );
+    tv->setItem( i, 1, it ); 
+    it = new QTableWidgetItem( v_s );
+    tv->setItem( i, 2, it ); 
   };
-  lay->addWidget( lv );
+  lay->addWidget( tv );
 
   bt_ok = new QPushButton( dia, "bt_ok" );
   bt_ok->setText( "Done" );
   bt_ok->setDefault( true );
   lay->addWidget( bt_ok );
+  dia->setLayout( lay );
 
   connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
+  dia->resize( 600, 300 );
   dia->exec();
   delete dia;
   emit viewChanged();
