@@ -1,5 +1,5 @@
 *.o
-qmo2
+qmo2x
 *.pro.user
 Makefile
 moc_*.cpp

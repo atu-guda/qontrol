@@ -55,11 +55,13 @@ class TAdjGen : public TMiso  {
  protected:
    /** type of averaging, misc flags */
    int type, useReset, useLock, outStrobe, useZero, 
-       useSignStrobe, usePlusStrobe, currOut, tick;
+       useSignStrobe, usePlusStrobe, useF, currOut, tick;
+   /** koeff to F-omega conversion if useF */
+   double omega_0, k_omega;
    /**  accumulators, ... */
    double ctt, ig, ig2;
    /** data descriptors -- with base class elements */ 
-   static TDataInfo tadjgen_d_i[22];
+   static TDataInfo tadjgen_d_i[27];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

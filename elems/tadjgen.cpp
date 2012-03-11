@@ -20,27 +20,32 @@
 
 const char* TAdjGen::helpstr = "<H1>TAdjGen</H1>\n"
  "Generator of 0/1, controlled on input frequency u[0]: <br>\n"
- "Have 6 parameters: <b>type, useReset, useLock, outStrobe</b>,<br>\n"
- " <b> useSignStrobe, usePlusStrobe </b>,<br>\n"
+ "Have 9 parameters: <b>type, useReset, useLock, outStrobe</b>,<br>\n"
+ " <b> useSignStrobe, usePlusStrobe, useF, omega_0, k_omega </b>,<br>\n"
  "None of the can be changed at run time.";
 
 TClassInfo TAdjGen::class_info = {
   CLASS_ID_TAdjGen, "TAdjGen", TAdjGen::create,
   &TMiso::class_info, helpstr };
 
-TDataInfo TAdjGen::tadjgen_d_i[22] = {
+TDataInfo TAdjGen::tadjgen_d_i[27] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
  { dtpDial,       0,   0,    0,   0, 380, 360, 0,  0.0, 0.0, 0, 0, "adjgen_dial", "", "Dialog for TAdjGen"},
  { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
  { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
  { dtpLabel,      0,   0,   30,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type",   "", "Type"},
  { dtpInt, dtpsList,   3,   20,  70, 120,  20, 2,  0.0, 0.0, 0, 0, "type", "type", "Default\nIllich\nDual(u0,u3)"},
- { dtpInt,   dtpsSw,   0,  150,  70, 120,  20, 2,  0.0, 0.0, 0, 0, "useReset", "", "Use u[1] as Reset"},
- { dtpInt,   dtpsSw,   0,  150, 100, 120,  20, 2,  0.0, 0.0, 0, 0, "useLock", "", "Use u[2] as Lock"},
- { dtpInt,   dtpsSw,   0,  150, 130, 120,  20, 2,  0.0, 0.0, 0, 0, "outStrobe", "", "Output Strobe"},
- { dtpInt,   dtpsSw,   0,  150, 160, 120,  20, 2,  0.0, 0.0, 0, 0, "useSignStrobe", "", "Signed strobe"},
- { dtpInt,   dtpsSw,   0,  150, 190, 120,  20, 2,  0.0, 0.0, 0, 0, "usePlusStrobe", "", "Only \x22+\x22 strobe"},
- { dtpInt,   dtpsSw,   0,  150, 220, 120,  20, 2,  0.0, 0.0, 0, 0, "useZero", "", "use 0 as negative out"},
+ { dtpInt,   dtpsSw,   0,  150,  70, 200,  20, 2,  0.0, 0.0, 0, 0, "useReset", "", "Use u[1] as Reset"},
+ { dtpInt,   dtpsSw,   0,  150, 100, 200,  20, 2,  0.0, 0.0, 0, 0, "useLock", "", "Use u[2] as Lock"},
+ { dtpInt,   dtpsSw,   0,  150, 130, 200,  20, 2,  0.0, 0.0, 0, 0, "outStrobe", "", "Output Strobe"},
+ { dtpInt,   dtpsSw,   0,  150, 160, 200,  20, 2,  0.0, 0.0, 0, 0, "useSignStrobe", "", "Signed strobe"},
+ { dtpInt,   dtpsSw,   0,  150, 190, 200,  20, 2,  0.0, 0.0, 0, 0, "usePlusStrobe", "", "Only \x22+\x22 strobe"},
+ { dtpInt,   dtpsSw,   0,  150, 220, 200,  20, 2,  0.0, 0.0, 0, 0, "useZero", "", "use 0 as negative out"},
+ { dtpInt,   dtpsSw,   0,  150, 250, 200,  20, 2,  0.0, 0.0, 0, 0, "useF", "", "input is F, not omega"},
+ { dtpLabel,      0,   0,   30, 100, 100,  20, 0,  0.0, 0.0, 0, 0, "l_omega_0",   "", "\\omega_0"},
+ { dtpDou,        0,   0,   20, 120, 110,  20, 0,  0.0, 1e300, 0, 0, "omega_0", "omega_0", ""},
+ { dtpLabel,      0,   0,   30, 150, 100,  20, 0,  0.0, 0.0, 0, 0, "k_omega",   "", "k_\\omega"},
+ { dtpDou,        0,   0,   20, 170, 110,  20, 0,  0.0, 1e300, 0, 0, "k_omega", "k_omega", ""},
  { dtpButton,     0,   0,   20, 300,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
  { dtpButton,     1,   0,  140, 300,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
  { dtpButton,     2,   0,  260, 300,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
@@ -61,7 +66,8 @@ TAdjGen::TAdjGen( TDataSet* aparent )
 {
   int i;
   type = useReset = useLock = outStrobe = useZero 
-       = useSignStrobe = usePlusStrobe = 0; 
+       = useSignStrobe = usePlusStrobe = useF = 0; 
+  omega_0 = 1.2; k_omega = 1.0;
   ctt = ig = ig2 = 0; currOut = 0; tick = 0;
   d_i = tadjgen_d_i;
   initHash();
@@ -72,11 +78,15 @@ TAdjGen::TAdjGen( TDataSet* aparent )
   ptrs[4] = &type; ptrs[5] = &useReset; ptrs[6] = &useLock;
   ptrs[7] = &outStrobe; ptrs[8] = &useSignStrobe; ptrs[9] = &usePlusStrobe; 
   ptrs[10] = &useZero;
-  ptrs[14] = &tick;
-  ptrs[15] = &ig; ptrs[16] = &ig2; ptrs[17] = &ctt;
+  ptrs[11] = &useF;
+  ptrs[13] = &omega_0;
+  ptrs[15] = &k_omega;
+
+  ptrs[19] = &tick;
+  ptrs[20] = &ig; ptrs[21] = &ig2; ptrs[22] = &ctt;
   // from TMiso 
-  ptrs[18] = links;
-  ptrs[19] = &vis_x; ptrs[20] = &vis_y;
+  ptrs[23] = links;
+  ptrs[24] = &vis_x; ptrs[25] = &vis_y;
 }
 
 TAdjGen::~TAdjGen()
@@ -122,9 +132,14 @@ int TAdjGen::startLoop( int acnx, int acny )
 
 double TAdjGen::f( const double* u, double /* t */ )
 {
-  double om, df, ff, v, diff_out = 0;
+  double om, om2, df, ff, v, diff_out = 0;
   int g1, g2;
-  om = u[0]; tick = 0;
+  om = u[0]; om2 = u[3];
+  if( useF ) {
+    om  = omega_0 * ( 1 + om*k_omega );
+    om2 = omega_0 * ( 1 + om2*k_omega );
+  };
+  tick = 0;
   switch( type ) {
     case 0: ig += om * tdt;                 // Pi=int_0^T(om*dt);
 	    if( useReset && u[1] > 0.01 ) {
@@ -146,7 +161,7 @@ double TAdjGen::f( const double* u, double /* t */ )
 	      tick = 1;
             };
             break;
-    case 2: ig += om * tdt; ig2 += u[3] * tdt;      // dual
+    case 2: ig += om * tdt; ig2 += om2 * tdt;      // dual
 	    g1 = ( ig  > M_PI );
 	    g2 = ( ig2 > M_PI );
 	    if( useReset && u[1] > 0.01 ) {
