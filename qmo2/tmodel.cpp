@@ -902,7 +902,7 @@ void TModel::fillCommon(void)/*{{{1*/
   // - enter nn
   d_i[i].tp = dtpInt; d_i[i].dlg_x = 120; d_i[i].dlg_y = 30;
   d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  d_i[i].v_max = 1000000;
+  d_i[i].v_max = 100000000;
   strcpy( d_i[i].name, "nn" ); d_i[i].descr = "number of steps";
   i++; ptrs.push_back( &nn );
   // - label nl1
@@ -913,7 +913,7 @@ void TModel::fillCommon(void)/*{{{1*/
   // - enter nl1
   d_i[i].tp = dtpInt; d_i[i].dlg_x = 220; d_i[i].dlg_y = 30;
   d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  d_i[i].v_max = 5000;
+  d_i[i].v_max = 10000;
   strcpy( d_i[i].name, "nl1" ); d_i[i].descr = "Loops number on parm 0";
   i++; ptrs.push_back( &nl1 );
   // - label nl2
@@ -924,7 +924,7 @@ void TModel::fillCommon(void)/*{{{1*/
   // - enter nl2
   d_i[i].tp = dtpInt; d_i[i].dlg_x = 320; d_i[i].dlg_y = 30;
   d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  d_i[i].v_max = 5000;
+  d_i[i].v_max = 10000;
   strcpy( d_i[i].name, "nl2" ); d_i[i].descr = "Loops number on parm 1";
   i++; ptrs.push_back( &nl2 );
   // - label n_steps 

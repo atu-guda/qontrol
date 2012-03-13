@@ -1081,8 +1081,11 @@ void QMo2Win::slotTest(void)
   ostr += QString::fromAscii( loc_test ) + "(Ascii)\n";
   ostr += loc_test;
   ostr += "(simple)\n";
-  ostr += QChar(0x03C0);
-  ostr += QChar(0x03C9);
+  for( unsigned ccode=0x0380; ccode < 0x0400; ++ccode )  {
+    ostr += QChar( ccode );
+    if( (ccode & 0x1F) == 0x1F ) 
+      ostr += QChar('\n');
+  }
   ostr += "\n";
 
   for(int i=0; i<5; i++) {
@@ -1452,43 +1455,43 @@ Mo2Settings::Mo2Settings()
 
 void Mo2Settings::load()
 {
-  QSettings sets;
-  sets.setPath("atu.localnet","qmo2");
-  sets.beginGroup("/qmo2");
+  QSettings sets( ORG, PACKAGE );
+  sets.beginGroup("iface");
   /* -------- flags ------------ */
-  showord = sets.readBoolEntry("/view/showord", false );
-  showgrid = sets.readBoolEntry("/view/showgrid", true );
-  shownames = sets.readBoolEntry("/view/shownames", false );
-  showicons = sets.readBoolEntry("/view/showicons", true );
-  showmax = sets.readBoolEntry("/view/showmax", true );
+  showord   = sets.value("view/showord", false ).toBool();
+  showgrid  = sets.value("view/showgrid", true ).toBool();
+  shownames = sets.value("view/shownames", true ).toBool();
+  showicons = sets.value("view/showicons", true ).toBool();
+  showmax   = sets.value("view/showmax", true ).toBool();
   /* -------- fonts ----------- */
   //  "Arial,10,-1,5,50,0,0,0,0,0" 
   QFont df;
   QString dfs = df.toString();
-  mainFont = sets.readEntry("/fonts/main", dfs );
-  smallFont = sets.readEntry("/fonts/small", "Arial,7" );
-  plotFont = sets.readEntry("/fonts/plot", "Arial,8" );
-  structFont = sets.readEntry("/fonts/struct", "Arial,8" );
+  mainFont    = sets.value("fonts/main", dfs ).toString();
+  smallFont   = sets.value("fonts/small", "Arial,7" ).toString();
+  plotFont    = sets.value("fonts/plot", "Arial,8" ).toString();
+  structFont  = sets.value("fonts/struct", "Arial,8" ).toString();
+  sets.endGroup();
 }
 
 void Mo2Settings::save() const
 {
-  QSettings sets;
-  sets.setPath( "atu.localnet", "qmo2" );
-  sets.beginGroup("/qmo2");
+  QSettings sets( ORG, PACKAGE );
+  sets.beginGroup("iface");
   /* ---------- flags ------------- */
-  sets.writeEntry( "/view/showord", showord );
-  sets.writeEntry( "/view/showgrid", showgrid );
-  sets.writeEntry( "/view/shownames", shownames );
-  sets.writeEntry( "/view/showicons", showicons );
-  sets.writeEntry( "/view/showmax", showmax );
+  sets.setValue( "view/showord", showord );
+  sets.setValue( "view/showgrid", showgrid );
+  sets.setValue( "view/shownames", shownames );
+  sets.setValue( "view/showicons", showicons );
+  sets.setValue( "view/showmax", showmax );
   /* ---------- fonts ------------- */
-  sets.writeEntry( "/fonts/main", mainFont );
-  sets.writeEntry( "/fonts/small", smallFont );
-  sets.writeEntry( "/fonts/plot", plotFont );
-  sets.writeEntry( "/fonts/struct", structFont );
+  sets.setValue( "fonts/main", mainFont );
+  sets.setValue( "fonts/small", smallFont );
+  sets.setValue( "fonts/plot", plotFont );
+  sets.setValue( "fonts/struct", structFont );
 
   sets.endGroup();
+  sets.sync();
 
 }
 
