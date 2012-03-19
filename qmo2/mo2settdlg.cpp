@@ -4,9 +4,7 @@
 #include <qtooltip.h>
 #include <q3whatsthis.h>
 #include <qfontdialog.h>
-//Added by qt3to4:
-#include <Q3HBoxLayout>
-#include <Q3VBoxLayout>
+#include <QGridLayout>
 
 #include "mo2settdlg.h"
 
@@ -15,48 +13,32 @@ Mo2SettDlg::Mo2SettDlg( Mo2Settings &se,  QWidget* parent )
     : QDialog( parent, "Mo2SettDlg", true, 0 ),
       pse(se), ts(se)
 {
-    Mo2SettDlgLayout = new Q3VBoxLayout( this, 11, 6, "Mo2SettDlgLayout"); 
+    lay = new QGridLayout; 
 
-    layMain = new Q3HBoxLayout( 0, 0, 6, "layMain"); 
+    btnMainFont = new QPushButton( this );
+    lay->addWidget( btnMainFont, 0, 0 );
 
-    layFontBox = new Q3VBoxLayout( 0, 0, 6, "layFontBox"); 
+    btnSmallFont = new QPushButton( this );
+    lay->addWidget( btnSmallFont, 1, 0 );
 
-    btnMainFont = new QPushButton( this, "btnMainFont" );
-    layFontBox->addWidget( btnMainFont );
+    btnPlotFont = new QPushButton( this );
+    lay->addWidget( btnPlotFont, 2, 0 );
 
-    btnSmallFont = new QPushButton( this, "btnSmallFont" );
-    layFontBox->addWidget( btnSmallFont );
+    btnStructFont = new QPushButton( this );
+    lay->addWidget( btnStructFont, 3, 0 );
 
-    btnPlotFont = new QPushButton( this, "btnPlotFont" );
-    layFontBox->addWidget( btnPlotFont );
-
-    btnStructFont = new QPushButton( this, "btnStructFont" );
-    layFontBox->addWidget( btnStructFont );
-    layMain->addLayout( layFontBox );
-
-    layChecks = new Q3VBoxLayout( 0, 0, 6, "layChecks"); 
-
-    chkMaximize = new QCheckBox( this, "chkMaximize" );
+    chkMaximize = new QCheckBox( this );
     chkMaximize->setChecked(ts.showmax);
-    layChecks->addWidget( chkMaximize );
-    spacer1 = new QSpacerItem( 20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding );
-    layChecks->addItem( spacer1 );
-    layMain->addLayout( layChecks );
-    Mo2SettDlgLayout->addLayout( layMain );
-    spacer2 = new QSpacerItem( 20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding );
-    Mo2SettDlgLayout->addItem( spacer2 );
+    lay->addWidget( chkMaximize, 0, 1 );
 
-    layOkCanc = new Q3HBoxLayout( 0, 0, 6, "layOkCanc"); 
-
-    btnOK = new QPushButton( this, "btnOK" );
+    btnOK = new QPushButton( this );
     btnOK->setDefault( TRUE );
-    layOkCanc->addWidget( btnOK );
+    lay->addWidget( btnOK, 4, 0 );
 
-    btnCancel = new QPushButton( this, "btnCancel" );
-    layOkCanc->addWidget( btnCancel );
-    Mo2SettDlgLayout->addLayout( layOkCanc );
+    btnCancel = new QPushButton( this );
+    lay->addWidget( btnCancel, 4, 1 );
     languageChange();
-    //clearWState( WState_Polished );
+    setLayout( lay );
 
     // signals and slots connections
     connect( btnOK, SIGNAL( clicked() ), this, SLOT( accept() ) );
