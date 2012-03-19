@@ -18,9 +18,9 @@
 #ifndef QANYDIALOG_H
 #define QANYDIALOG_H
 
-#include <qwidget.h>
-#include <qdialog.h>
-#include <qcombobox.h>
+#include <QDialog>
+// #include <QComboBox>
+class QComboBox;
 #include "dataset.h"
 
 /** Inserts textual items to QComboBox from string s

@@ -1,9 +1,6 @@
-#include <qpushbutton.h>
-#include <qcheckbox.h>
-#include <qlayout.h>
-#include <qtooltip.h>
-#include <q3whatsthis.h>
-#include <qfontdialog.h>
+#include <QPushButton>
+#include <QCheckBox>
+#include <QFontDialog>
 #include <QGridLayout>
 
 #include "mo2settdlg.h"

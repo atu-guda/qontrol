@@ -1,8 +1,7 @@
 #ifndef MO2SETTDLG_H
 #define MO2SETTDLG_H
 
-#include <qdialog.h>
-//#include <QGridLayout>
+#include <QDialog>
 
 class QGridLayout;
 class QPushButton;
