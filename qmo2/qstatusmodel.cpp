@@ -14,10 +14,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <qfont.h>
-#include <qlabel.h>
-//Added by qt3to4:
-#include <Q3Frame>
+#include <QFont>
+#include <QLabel>
 
 #include "resource.h"
 #include "miscfun.h"
@@ -31,7 +29,7 @@ QStatusModel::QStatusModel( QMo2View *mview, QWidget *parent,
   const int label_lw = 1;
   const int label_sep = 8;
   // const int label_fs = QFrame::Box | QFrame::Raised;
-  const int label_fs = Q3Frame::Panel | Q3Frame::Sunken;
+  const int label_fs = QFrame::Panel | QFrame::Sunken;
   int mw;
   
   // labels creation

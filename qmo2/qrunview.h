@@ -2,7 +2,7 @@
                           qrunview.h  -  description
                              -------------------
     begin                : Fri Aug 17 2001
-    copyright            : (C) 2001 by atu
+    copyright            : (C) 2001-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -19,15 +19,7 @@
 #ifndef QRUNVIEW_H
 #define QRUNVIEW_H
 
-#include <qstring.h>
-#include <qdialog.h>
-#include <qcolor.h>
-//Added by qt3to4:
-#include <QPixmap>
-#include <QResizeEvent>
-#include <QMouseEvent>
-#include <QKeyEvent>
-#include <QPaintEvent>
+#include <QDialog>
 
 class TModel; class TDataSet; class TMiso; 
 class QPaintEvent; class QMouseEvent; class QKeyEvent; 
@@ -104,8 +96,6 @@ class QRunView : public QDialog  {
   protected:
     /** pointer to model ro run */
     TModel *model;
-    /** pixmap to fast paint */
-    QPixmap *pix;
     /** timer to send timer events */
     QTimer *timer;
     /** geometry: w_ - window, g_ - graph, c_ center, s_ - set */

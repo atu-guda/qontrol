@@ -20,7 +20,6 @@
 
 #include <cmath>
 #include <QtGui>
-#include <q3groupbox.h>
 
 #include "resource.h"
 #include "miscfun.h"
@@ -952,7 +951,7 @@ void QPlotView::setStartColors(void)
 void QPlotView::setScale(void)
 {
   QDialog *dia;
-  Q3GroupBox *grp_x, *grp_y, *grp_m;
+  QGroupBox *grp_x, *grp_y, *grp_m;
   QLabel *lab;
   QLineEdit *ed_rix, *ed_pix, *ed_rax, *ed_pax, *ed_grix, *ed_tix,
             *ed_riy, *ed_piy, *ed_ray, *ed_pay, *ed_griy, *ed_tiy,
@@ -966,7 +965,7 @@ void QPlotView::setScale(void)
   dia->resize( 450, 450 );
   dia->setCaption( PACKAGE ": Plot scales" );
   // x group
-  grp_x = new Q3GroupBox( dia, "grp_x" );
+  grp_x = new QGroupBox( dia, "grp_x" );
   grp_x->setGeometry( 20, 10, 200, 250 );
   grp_x->setTitle( "X" );
   lab= new QLabel( dia, "lx1" );
@@ -1007,7 +1006,7 @@ void QPlotView::setScale(void)
   ed_tix->setGeometry( 170, 120, 40, 20 );  ed_tix->setMaxLength( 2 );
 
   // y group
-  grp_y= new Q3GroupBox( dia, "grp_y" );
+  grp_y= new QGroupBox( dia, "grp_y" );
   grp_y->setGeometry( 230, 10, 200, 250 );  grp_y->setTitle( "Y" );
   lab= new QLabel( dia, "ly1" );
   lab->setGeometry( 240, 40, 30, 20 );  lab->setText( "Min" );
@@ -1047,7 +1046,7 @@ void QPlotView::setScale(void)
   ed_tiy->setGeometry( 380, 120, 40, 20 );  ed_tiy->setMaxLength( 2 );
   
   // margins group 
-  grp_m= new Q3GroupBox( dia, "grp_m" );
+  grp_m= new QGroupBox( dia, "grp_m" );
   grp_m->setGeometry( 20, 270, 410, 50 ); grp_m->setTitle( "Margins %" );
   lab= new QLabel( dia, "lm1" );
   lab->setGeometry( 30, 290, 30, 20 );  lab->setText( "Left" );

@@ -15,11 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qstring.h>
-#include <qpainter.h>
-#include <q3table.h>
-//Added by qt3to4:
-#include <Q3Frame>
+#include <QString>
+#include <QPainter>
+#include <Q3Table>
 #include "miscfun.h"
 #include "qdoubletable.h"
 
@@ -29,7 +27,7 @@ QDoubleTable::QDoubleTable( const GraphInfo *agi,
 {
   int i;
   gi = agi;
-  setFrameStyle( Q3Frame::Panel | Q3Frame::Sunken );
+  setFrameStyle( QFrame::Panel | QFrame::Sunken );
   // setLineWidth( 2 );
   setMinimumSize( 190, 120 );
   // setCellWidth( 80 ); setCellHeight( 20 );

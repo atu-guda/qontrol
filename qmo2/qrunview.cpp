@@ -2,7 +2,7 @@
                           qplotview.cpp  -  description
                              -------------------
     begin                : Sat Aug 18 2001
-    copyright            : (C) 2001 by atu
+    copyright            : (C) 2001-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -15,22 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h>
-#include <qapplication.h>
-#include <qpainter.h>
-#include <qpixmap.h>
-#include <qpen.h>
-#include <qbrush.h>
-#include <qfont.h>
-#include <qnamespace.h>
-#include <qlabel.h>
-#include <q3paintdevicemetrics.h>
-#include <qtimer.h>
-//Added by qt3to4:
-#include <QPaintEvent>
-#include <QResizeEvent>
-#include <QMouseEvent>
-#include <QKeyEvent>
+#include <cmath>
+
+#include <QApplication>
+#include <QtGui>
 
 #include "resource.h"
 #include "miscfun.h"
@@ -39,13 +27,15 @@
 
 #include "qrunview.h"
 
+using namespace std;
+
 QRunView::QRunView( TModel *amodel, int atype, 
                     QWidget *parent, const char *name, Qt::WFlags wf )
           : QDialog( parent, name, 1, wf )
 {
   int i;
   model = amodel; run_type = atype; s_time = 0;
-  data = 0; pix = 0;
+  data = 0; 
   s_h = 40;
   setBackgroundMode( Qt::NoBackground );
   setCursor( Qt::crossCursor );
@@ -66,7 +56,6 @@ QRunView::QRunView( TModel *amodel, int atype,
 
 QRunView::~QRunView()
 {
-  delete pix; pix = 0;
   delete timer; timer = 0;
 }
 
@@ -143,8 +132,6 @@ void QRunView::resizeEvent( QResizeEvent *e )
   g_h = w_h - 20; g_w = w_w;
   c_x = g_w / 2; c_y = g_h / 2;
   gkx = g_w / 2; gky = g_h / 2;
-  delete pix;
-  pix = new QPixmap( w_w, w_h );
   QWidget::resizeEvent( e );
 }
 
@@ -152,13 +139,10 @@ void QRunView::paintEvent( QPaintEvent * /*pe*/ )
 {
   static const QColor bco[4] = { QColor(96,0,0),  QColor(0,64,128), 
                           QColor(32,196,64), QColor(0,0,64) };
-  if( pix == 0 )
-    pix = new QPixmap( width(), height() );
-  pix->fill( bco[state] );
-  QPainter p( pix );
+  QPainter p( this );
+  p.fillRect( 0, 0, width(), height(), QBrush( bco[state] ) );
   drawAll( p );
   p.end();
-  bitBlt( this, QPoint(0,0), pix );
 }
 
 

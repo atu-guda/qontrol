@@ -3,7 +3,7 @@
                              -------------------
 
     begin                : Sat Aug 17 2002 
-    copyright            : (C) 2002 by atu
+    copyright            : (C) 2002-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -19,10 +19,8 @@
 #ifndef QSTATUSMODEL_H
 #define QSTATUSMODEL_H
 
-#include <qwidget.h>
-#include <qstatusbar.h>
-//Added by qt3to4:
-#include <QLabel>
+#include <QStatusBar>
+
 #include "tmodel.h"
 #include "qmo2view.h"
 
