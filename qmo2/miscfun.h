@@ -15,6 +15,7 @@
 #include "defs.h"
 using namespace std;
 
+const int max_graphs = 7; // TODO: variable
 /** Structure containg data needed to plot graphs, export, view.
  *  filled by fillGraphInfo in TOutArr and TGraph
  * */
@@ -24,8 +25,8 @@ struct GraphInfo {
   int col;
   int ny;
   char title[MAX_LABELLEN];
-  char label[7][MAX_LABELLEN];
-  const double *dat[7];
+  char label[max_graphs][MAX_LABELLEN]; 
+  const double *dat[max_graphs];
 };
 
 // ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz

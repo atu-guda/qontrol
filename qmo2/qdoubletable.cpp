@@ -2,7 +2,7 @@
                           qdoubletable.cpp  -  description
                              -------------------
     begin                : Fri Sep 1 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -16,56 +16,53 @@
  ***************************************************************************/
 
 #include <QString>
-#include <QPainter>
-#include <Q3Table>
+#include <QtGui>
 #include "miscfun.h"
 #include "qdoubletable.h"
 
-QDoubleTable::QDoubleTable( const GraphInfo *agi, 
-                            QWidget *parent, const char *name )
-             :Q3Table( agi->row, agi->col, parent, name )
+DoubleTableModel::DoubleTableModel( const GraphInfo *gi, QObject *parent )
+  : QAbstractTableModel( parent ), 
+    row( gi->row ), col( gi->col ), ny ( gi->ny ),
+    title( QString::fromLocal8Bit( gi->title ) ),
+    dat( gi->row )
 {
-  int i;
-  gi = agi;
-  setFrameStyle( QFrame::Panel | QFrame::Sunken );
-  // setLineWidth( 2 );
-  setMinimumSize( 190, 120 );
-  // setCellWidth( 80 ); setCellHeight( 20 );
-  // setTableFlags( Tbl_autoScrollBars );
-  Q3Header *gh = horizontalHeader();
-  if( gh != 0 ) {
-    for( i=0; i<gi->col; i++ ) {
-      gh->setLabel( i, QString::fromLocal8Bit( gi->label[i] ) );
-    };
-  };
-  // updateTableSize();
+  for( int i=0; i<max_graphs; ++i ) { 
+    labels << QString::fromLocal8Bit( gi->label[i] );
+    dat[i] = gi->dat[i];
+  }
 }
 
-QDoubleTable::~QDoubleTable()
+int DoubleTableModel::columnCount( const QModelIndex & /*parent*/ ) const
 {
-  // we don't own any data
+  return col;
 }
 
-void QDoubleTable::paintCell( QPainter *p, int ro, int co, 
-            const QRect &cr, bool selected  )
+int DoubleTableModel::rowCount( const QModelIndex & /*parent*/ ) const
 {
-  QString qs;
-  double v;
-  if( selected ) {
-    p->setBrush( Qt::blue ); p->setPen( Qt::white );
-  } else {
-    p->setBrush( Qt::white ); p->setPen( Qt::black );
-  };
-  p->drawRect( 0, 0, cr.width(), cr.height() );
-  v = gi->dat[co][ro];
-  qs.setNum( v, 'g', 8 );
-  p->drawText( 2, 12, qs, -1 );
+  return row; 
+}
+
+QVariant DoubleTableModel::data( const QModelIndex & index, int role ) const
+{
+  if( role != Qt::DisplayRole )
+    return QVariant();
+  if( ! index.isValid() )
+    return QVariant();
+  return QVariant( dat[index.column()][index.row()] );
 }
 
 
-QWidget* QDoubleTable::createEditor ( int /*row*/, int /*col*/,
-         bool  /* initFromCell */ ) const
+QVariant DoubleTableModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  return 0;
+  if( role != Qt::DisplayRole )
+    return QVariant();
+  if( orientation == Qt::Horizontal ) {
+    if( section >= col )
+      return QVariant();
+    return QVariant( labels[section] );
+  }
+  if( section >= row )
+    return QVariant();
+  return QVariant( QString::number(section) );
 }
 

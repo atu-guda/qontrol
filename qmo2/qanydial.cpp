@@ -32,8 +32,8 @@
 #include "qmo2win.h"
 #include "qanydial.h"
 
-QAnyDialog::QAnyDialog( TDataSet *ads, QWidget *parent, const char *name ) 
-           : QDialog( parent, name, true )
+QAnyDialog::QAnyDialog( TDataSet *ads, QWidget *parent, const char * /*name*/ ) 
+           : QDialog( parent )
 {
   elms = 0; ds = ads; 
   initDialog();
@@ -65,7 +65,7 @@ void  QAnyDialog::initDialog(void)
       case dtpEnd:  end = 1; break;
       case dtpInt:  switch( di->subtp ) {
                      case dtpsInt:
-		          qle = new QLineEdit( this, di->name );
+		          qle = new QLineEdit( this );
 		          qle->setMaxLength( 12 );
 			  qle->setGeometry( x, y, w, h );
 			  //qle->setEnabled( !(di->flags & efRODial) );
@@ -77,26 +77,26 @@ void  QAnyDialog::initDialog(void)
 			  elms[i] = qle;			
 		          break;
 		     case dtpsSwitch: 
-		          qch = new QCheckBox( this, di->name );
+		          qch = new QCheckBox( this );
 			  qch->setGeometry( x, y, w, h );
 			  // qch->setEnabled( !(di->flags & efRODial) );
 			  qch->setText( di->listdata );
 			  elms[i] = qch;
 		          break;
 		     case dtpsList:  
-		          qcb = new QComboBox( this, di->name );
+		          qcb = new QComboBox( this );
 			  qcb->setGeometry( x, y, w, h );
 			  //qcb->setEnabled( !(di->flags & efRODial) );
 			  fillComboBox( qcb, di->listdata, di->max_len);
 			  elms[i] = qcb;
 		          break;
 		     case dtpsColor:
-		          qcob = new QColorBtn( this, di->name );
+		          qcob = new QColorBtn( this );
 		          qcob->setGeometry( x, y, w, h );
 		          elms[i] = qcob;
 		          break;
                     }; break;
-      case dtpDbl: qle = new QLineEdit( this, di->name ); 
+      case dtpDbl: qle = new QLineEdit( this ); 
 		   qle->setMaxLength( 20 );
  		   qle->setGeometry( x, y, w, h );
 		   //qle->setEnabled( !(di->flags & efRODial) );
@@ -110,14 +110,14 @@ void  QAnyDialog::initDialog(void)
                    break;
       case dtpStr:  switch( di->subtp ) {
                       case dtpsStr: 
-		        qle = new QLineEdit( this, di->name ); 
+		        qle = new QLineEdit( this ); 
      		        qle->setMaxLength( di->max_len - 1 );
  		        qle->setGeometry( x, y, w, h );
 		        //qle->setEnabled( !(di->flags & efRODial) );
 		        elms[i] = qle; 
 		        break;
 		      case dtpsMline: 
-		        te = new QTextEdit( this, di->name ); 
+		        te = new QTextEdit( this ); 
      		        // te->setMaxLength( di->max_len ); // ??
  		        te->setGeometry( x, y, w, h );
 		        te->setEnabled( !(di->flags & efRODial) );
@@ -130,19 +130,19 @@ void  QAnyDialog::initDialog(void)
                      k = ds->getFullName( oname );
 		     if( k == 0 )
 		       qs += oname;
-                     setCaption( qs );
+                     setWindowTitle( qs );
                      break;  
-      case dtpLabel: qla = new QLabel( this, di->name );
+      case dtpLabel: qla = new QLabel( this );
                      qla->setGeometry( x, y, w, h );
 		     qla->setText( di->listdata );
 		     elms[i] = qla;
 		     break;
-      case dtpGroup: qgb = new QGroupBox( this, di->name );
+      case dtpGroup: qgb = new QGroupBox( this );
                      qgb->setGeometry( x, y, w, h );
 		     qgb->setTitle( di->listdata );
 		     elms[i] = qgb; 
                      break;
-      case dtpButton: qpb = new QPushButton( this, di->name );
+      case dtpButton: qpb = new QPushButton( this );
                      qpb->setGeometry( x, y, w, h );
 		     qpb->setText( di->listdata );
 		     switch( di->subtp ) {
@@ -196,7 +196,7 @@ int QAnyDialog::exec_trans(void)
                    ((QCheckBox*)(elms[i]))->setEnabled( ena );
 	           break;   
 	      case dtpsList:
-                   ((QComboBox*)(elms[i]))->setCurrentItem( iv );
+                   ((QComboBox*)(elms[i]))->setCurrentIndex( iv );
                    ((QComboBox*)(elms[i]))->setEnabled( ena );
 	           break;
 	      case dtpsColor:
@@ -252,7 +252,7 @@ int QAnyDialog::exec_trans(void)
 	      iv = ((QCheckBox*)(elms[i]))->isChecked();
 	      break;
 	   case dtpsList: 
-	      iv = ((QComboBox*)(elms[i]))->currentItem();
+	      iv = ((QComboBox*)(elms[i]))->currentIndex();
 	      break;
 	   case dtpsColor:
 	      iv = ((QColorBtn*)(elms[i]))->colorInt();
@@ -267,10 +267,10 @@ int QAnyDialog::exec_trans(void)
      case dtpStr:
           switch( di->subtp ) {
              case dtpsStr: qs = ((QLineEdit*)(elms[i]))->text();
-                           ds->setDataIS( i, qs.local8Bit().constData(), 1 );
+                           ds->setDataIS( i, qs.toLocal8Bit().constData(), 1 );
                   break;
              case dtpsMline: qs = ((QTextEdit*)(elms[i]))->toPlainText();
-                             ds->setDataIS( i, qs.local8Bit().constData(), 1 );
+                             ds->setDataIS( i, qs.toLocal8Bit().constData(), 1 );
                   break;	
           };
           break;
@@ -290,7 +290,7 @@ int fillComboBox( QComboBox *qb, const char *s, int mn )
     for( k=j; k<=l; k++ ) {
       if( s[k] == '\n' || s[k] == 0 ) {
         j = k+1; buf[k1] = 0;
-        qb->insertItem( buf );
+        qb->addItem( QString::fromLocal8Bit(buf) );
         break;
       };
       buf[k1++] = s[k];
@@ -325,9 +325,9 @@ void QAnyDialog::showSimpleHelp(void)
   const char *help;
   if( ds == 0 || (help = ds->getHelp()) == 0 )
     return;
-  dia = new QDialog( this, "help_dia", true );
+  dia = new QDialog( this );
   dia->resize( 500, 480 );
-  dia->setCaption( PACKAGE ": Help on element" );
+  dia->setWindowTitle( PACKAGE ": Help on element" );
   
   lay = new QGridLayout;
   

@@ -36,8 +36,8 @@
 #include "qoutview.h"
 
 QOutView::QOutView(  QMo2Doc *adoc,  QMo2View *mview, 
-                     QWidget *parent, const char *name )
-         : QWidget( parent, name )
+                     QWidget *parent, const char * /*name*/ )
+         : QWidget( parent )
 {
   doc = adoc; mainview = mview;
   model = 0; grid_sz = 15; 

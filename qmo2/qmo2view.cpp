@@ -244,7 +244,7 @@ void QMo2View::newElm()
   if( !checkState( noselCheck ) )
     return;
 
-  seld = new QDialog( this, "sel_dial", true );
+  seld = new QDialog( this );
 
   lay = new QGridLayout( seld );
 
@@ -274,7 +274,7 @@ void QMo2View::newElm()
     ci = root->classInfoByNum( i );
     if( ci == 0 ) continue;
     if( root->isHisParent( ci->id, CLASS_ID_TMiso, 0 ) ) {
-      cb->insertItem( ci->className );
+      cb->addItem( ci->className );
     };
   };
   lay->addWidget( cb, 3, 0, 1, 2, Qt::AlignTop );
@@ -299,7 +299,7 @@ void QMo2View::newElm()
   delete seld;
   if( rc != QDialog::Accepted )
     return;
-  cnm = cnmq.latin1(); oname = onameq.latin1(); oord = oordq.toInt();
+  cnm = cnmq.toLatin1(); oname = onameq.toLatin1(); oord = oordq.toInt();
   if( ! isGoodName( oname )  )
     return;
   i = root->findClass( cnm );
@@ -507,9 +507,9 @@ void QMo2View::ordElm()
     return;
   old_ord = -1;
   ob->getDataSI( "ord", &old_ord, 0 );
-  new_ord = QInputDialog::getInteger("New element order", 
+  new_ord = QInputDialog::getInt(this, "New element order", 
       "Input new element order", 
-      old_ord, 0, 2147483647, 1, &ok, this, "order_dialog");
+      old_ord, 0, 2147483647, 1, &ok );
   if( ok ) {
     model->newOrder( sel, new_ord ); // reset implied
     emit viewChanged();
@@ -549,8 +549,8 @@ void QMo2View::infoElm()
   if( ob == 0 )
     return;
   nelm = ob->getN();
-  dia = new QDialog( this, "info_elm_dia", true );
-  dia->setCaption( QString( PACKAGE ": Structure of ") + ob->getName() );
+  dia = new QDialog( this );
+  dia->setWindowTitle( QString( PACKAGE ": Structure of ") + ob->getName() );
 
   lay = new QVBoxLayout();
 
@@ -606,8 +606,7 @@ void QMo2View::infoElm()
   };
   lay->addWidget( tv );
 
-  bt_ok = new QPushButton( dia, "bt_ok" );
-  bt_ok->setText( "Done" );
+  bt_ok = new QPushButton( tr("Done"), dia);
   bt_ok->setDefault( true );
   lay->addWidget( bt_ok );
   dia->setLayout( lay );
@@ -644,8 +643,8 @@ void QMo2View::newOut()
     onameq = QString("out_t");
   };
 
-  dia = new QDialog( this, "newout_dial", true );
-  dia->setCaption( "Creating new output array" );
+  dia = new QDialog( this );
+  dia->setWindowTitle( "Creating new output array" );
 
   lay = new QGridLayout( dia );
 
@@ -680,7 +679,7 @@ void QMo2View::newOut()
   rc = dia->exec();
   if( rc == QDialog::Accepted ) {
     onameq = oname_ed->text(); enameq = ename_ed->text();
-    outname = onameq.latin1(); elmname = enameq.latin1();
+    outname = onameq.toLatin1(); elmname = enameq.toLatin1();
     if( isGoodName( outname ) ) {
       model->insOut( outname, elmname );
       emit viewChanged();
@@ -736,7 +735,8 @@ void QMo2View::editOut()
 void QMo2View::showOutData()
 {
   QDialog *dia;
-  QDoubleTable *dv;
+  DoubleTableModel *dmod;
+  QTableView *dtv;
   QGridLayout *lay;
   QString fnq, sinf;
   QPushButton *bt_ok;
@@ -767,12 +767,14 @@ void QMo2View::showOutData()
   msq = sqrt( disp );
 
 
-  dia = new QDialog( this, "data_dial", 1 );
-  dia->setCaption( QString("Data array: ") + QString(gi.title) );
+  dia = new QDialog( this );
+  dia->setWindowTitle( QString("Data array: ") + QString(gi.title) );
   lay = new QGridLayout( dia );
 
-  dv = new QDoubleTable( &gi,  dia, "dv" );
-  lay->addWidget( dv, 0, 0 );
+  dmod = new DoubleTableModel( &gi, dia );
+  dtv = new QTableView( dia );
+  dtv->setModel( dmod );
+  lay->addWidget( dtv, 0, 0 );
 
   sinf = QString( "n= " ) + QString::number( gi.row );
   sinf += QString( "; \nave= " ) + QString::number( ave ); 
@@ -784,6 +786,8 @@ void QMo2View::showOutData()
   sinf += QString( "; \nmin= " ) + QString::number( vmin ); 
   sinf += QString( "; \nmax= " ) + QString::number( vmax ); 
   lab = new QLabel( sinf, dia );
+  lab->setTextInteractionFlags( Qt::TextSelectableByMouse 
+       | Qt::TextSelectableByKeyboard);
   lay->addWidget( lab, 0, 1 );
 
   bt_ok = new QPushButton( "Done", dia );
@@ -810,7 +814,7 @@ void QMo2View::exportOut()
       "Data files (*.txt *.dat *.csv);;All files (*)" );
   if( fnq.isEmpty() )
     return;
-  fn = fnq.latin1();
+  fn = fnq.toLatin1();
   arr->dump( fn, ' ' );
 }
 
@@ -827,11 +831,11 @@ void QMo2View::newGraph()
     return;	
   no = model->getNGraph();
   grnameq = QString("graph") + QString::number( no ); 
-  aname = QInputDialog::getText( "Creating new Graph descriptions",
+  aname = QInputDialog::getText( this, "Creating new Graph descriptions",
       "Enter name of new Graph:", QLineEdit::Normal, 
-      grnameq, &ok, this, "newgraph_dialog" );
+      grnameq, &ok );
   if( ok ) {
-    grname = aname.latin1();
+    grname = aname.toLatin1();
     if( isGoodName( grname ) ) {
       model->insGraph( grname );
       emit viewChanged();
@@ -896,9 +900,8 @@ void QMo2View::showGraph()
   gra = model->getGraph( level );
   if( gra == 0 )
     return;
-  plotWnd = new QMainWindow( this, "plot_wnd1", 
-      Qt::WType_TopLevel | Qt::WDestructiveClose );
-  plotWnd->setCaption( QString( PACKAGE ": Plot ") + QString(gra->getName()) );
+  plotWnd = new QMainWindow( this );
+  plotWnd->setWindowTitle( QString( PACKAGE ": Plot ") + QString(gra->getName()) );
   pv = new QPlotView( doc, gra, plotWnd, "plot_view" );
   plotWnd->setCentralWidget( pv );
   pv->setFocus();
@@ -908,7 +911,8 @@ void QMo2View::showGraph()
 void QMo2View::showGraphData()
 {
   QDialog *dia;
-  QDoubleTable *dv;
+  DoubleTableModel *dmod;
+  QTableView *dtv;
   QVBoxLayout *lv;
   GraphInfo gi;
   QString fnq; QPushButton *bt_ok;
@@ -923,12 +927,14 @@ void QMo2View::showGraphData()
   if( k != 0 )
     return;
 
-  dia = new QDialog( this, "graphdata_dial", 1 );
-  dia->setCaption( QString("Graph data: ") + QString(gi.title) );
+  dia = new QDialog( this );
+  dia->setWindowTitle( QString("Graph data: ") + QString(gi.title) );
   lv = new QVBoxLayout( dia );
 
-  dv = new QDoubleTable( &gi, dia,  "dv" );
-  lv->addWidget( dv );
+  dmod = new DoubleTableModel( &gi, dia );
+  dtv = new QTableView( dia );
+  dtv->setModel( dmod );
+  lv->addWidget( dtv );
 
   bt_ok = new QPushButton( "Done", dia );
   bt_ok->setDefault( true );
@@ -956,7 +962,7 @@ void QMo2View::exportGraphData()
       "Data files (*.txt *.dat *.csv);;All files (*)" );
   if( fnq.isEmpty() )
     return;
-  fn = fnq.latin1();
+  fn = fnq.toLatin1();
   gra->dump( fn, ' ' );
 }
 
@@ -978,17 +984,17 @@ void QMo2View::gnuplotGraph()
     return;
   f_pgm = doc->pathName();
   QFileInfo doc_fi( f_pgm );
-  cdir = QDir::currentDirPath();
-  if( cdir == doc_fi.dirPath() ) 
+  cdir = QDir::currentPath();
+  if( cdir == doc_fi.absolutePath() ) 
     f_pgm = doc_fi.fileName();
   if( f_pgm.length() < 1 ) { f_pgm = "gplot"; };
   l = f_pgm.length();
-  if( doc_fi.extension(false) == "mo2"  ) 
+  if( doc_fi.suffix() == "mo2"  ) 
     f_pgm.truncate( l-4 );
   f_dat = f_pgm + ".dat"; f_eps = f_pgm + ".eps";
-  f_pgm += ".gpl";
+  f_pgm += ".gp";
 
-  dia = new QDialog( this, "gnuplot_dia", true );
+  dia = new QDialog( this );
   dia->resize( 400, 260 );
   lay = new QGridLayout( dia );
   sw_x11 = new QCheckBox( "Output to &X11 window", dia );
@@ -1026,7 +1032,8 @@ void QMo2View::gnuplotGraph()
   if( rc == QDialog::Accepted ) {
     f_pgm = ed_pgm->text(); f_eps = ed_eps->text(); 
     f_dat = ed_dat->text(); use_x11 = sw_x11->isChecked();
-    gra->gnuPlot( !use_x11, f_pgm.local8Bit(), 0, f_eps.local8Bit(), f_dat.local8Bit() );
+    gra->gnuPlot( !use_x11, f_pgm.toLocal8Bit(), 0, 
+	          f_eps.toLocal8Bit(), f_dat.toLocal8Bit() );
   };
   delete dia;
 }
@@ -1052,7 +1059,8 @@ void QMo2View::editModel()
 void QMo2View::showVars()
 {
   QDialog *dia;
-  QDoubleTable *dv;
+  DoubleTableModel *dmod;
+  QTableView *dtv;
   QVBoxLayout *lv;
   GraphInfo gi;
   QString fnq; QPushButton *bt_ok;
@@ -1064,11 +1072,15 @@ void QMo2View::showVars()
   gi.dat[0] = vars;
   strcpy( gi.label[0], "vars" );
 
-  dia = new QDialog( this, "vars_dial", 1 );
-  dia->setCaption( QString("Model vars: ") );
+  dia = new QDialog( this );
+  dia->setWindowTitle( QString("Model vars: ") );
   lv = new QVBoxLayout( dia );
-  dv = new QDoubleTable( &gi, dia,  "dv" );
-  lv->addWidget( dv );
+  
+  dmod = new DoubleTableModel( &gi, dia );
+  dtv = new QTableView( dia );
+  dtv->setModel( dmod );
+  lv->addWidget( dtv );
+
   bt_ok = new QPushButton( "Done", dia );
   bt_ok->setDefault( true );
   lv->addWidget( bt_ok );
@@ -1084,8 +1096,7 @@ void QMo2View::runRun()
   QRunView *rv;
   if( ! checkState( validCheck ) )
     return;	
-  rv = new QRunView( model, 0, this, "run_view", 
-      Qt::WType_Dialog | Qt::WDestructiveClose );
+  rv = new QRunView( model, 0, this, 0 ); // TODO remove 0
   rv->exec();
   emit viewChanged();
   sview->setFocus();
@@ -1096,8 +1107,7 @@ void QMo2View::runPrm()
   if( ! checkState( validCheck ) )
     return;	
   QRunView *rv;
-  rv = new QRunView( model, 1, 0, "run_view",
-      Qt::WType_Dialog | Qt::WDestructiveClose );
+  rv = new QRunView( model, 1, 0, "run_view", 0 ); // TODO remove 0
   rv->exec();
   emit viewChanged();
   sview->setFocus();
@@ -1108,8 +1118,7 @@ void QMo2View::runPrm2()
   if( ! checkState( validCheck ) )
     return;	
   QRunView *rv;
-  rv = new QRunView( model, 2, 0, "run_view", 
-      Qt::WType_Dialog | Qt::WDestructiveClose );
+  rv = new QRunView( model, 2, 0, "run_view", 0 );  // TODO remove 0
   rv->exec();
   emit viewChanged();
   sview->setFocus();
@@ -1137,8 +1146,8 @@ void QMo2View::showHelp(void)
 {
   QDialog *dia; QLabel *la; QPushButton *bt_ok;
   QVBoxLayout *lv;
-  dia = new QDialog( this, "help_dia", true );
-  dia->setCaption( "Hot keys in structure window" );
+  dia = new QDialog( this );
+  dia->setWindowTitle( "Hot keys in structure window" );
   lv = new QVBoxLayout( dia );
   
   la = new QLabel( dia );

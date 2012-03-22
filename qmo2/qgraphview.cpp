@@ -31,13 +31,12 @@
 #include "qgraphview.h"
 
 QGraphView::QGraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent,
-                        const char *name )
-           : QWidget(parent,name)
+                        const char * /*name*/ )
+           : QWidget(parent)
 {
   doc = adoc; mainview = mview;
   model = 0;
   grid_sz = 15;
-  setBackgroundColor( QColor( 0, 128, 96 ) );
   setFixedWidth( 25 );
   setFocusPolicy( Qt::NoFocus );
 }

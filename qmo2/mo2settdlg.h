@@ -37,7 +37,6 @@ class Mo2SettDlg : public QDialog
     QGridLayout* lay;
 
   protected slots:
-    virtual void languageChange();
     virtual void accept();
 
 };

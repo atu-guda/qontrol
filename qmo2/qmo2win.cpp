@@ -26,49 +26,12 @@
 #include "mo2settdlg.h"
 #include "resource.h"
 
-#include "icons/filenew.xpm"
-//#include "icons/fileopen.xpm"
-//#include "icons/filesave.xpm"
-#include "icons/test.xpm"
-#include "icons/mod_open.xpm"
-#include "icons/mod_save.xpm"
-
-#include "icons/newelm.xpm"
-#include "icons/delelm.xpm"
-#include "icons/editelm.xpm"
-#include "icons/linkelm.xpm"
-#include "icons/markelm.xpm"
-#include "icons/orderelm.xpm"
-#include "icons/lockelm.xpm"
-#include "icons/infoelm.xpm"
-
-#include "icons/newout.xpm"
-#include "icons/delout.xpm"
-#include "icons/editout.xpm"
-#include "icons/showoutdata.xpm"
-
-#include "icons/newgraph.xpm"
-#include "icons/delgraph.xpm"
-#include "icons/editgraph.xpm"
-#include "icons/showgraph.xpm"
-#include "icons/showgraphdata.xpm"
-
-#include "icons/editmodel.xpm"
-
-#include "icons/run.xpm"
-#include "icons/run_p1.xpm"
-#include "icons/run_p2.xpm"
-
-#include "icons/exit.xpm"
-
-#include "icons/app.xpm"
-#include "icons/model.xpm"
 
 QMo2Win* QMo2Win::qmo2win = 0;
 
 QMo2Win::QMo2Win(void)
 {
-  setCaption( PACKAGE " " VERSION );
+  setWindowTitle( PACKAGE " " VERSION );
   
   mdiArea = new QMdiArea;
   mdiArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAsNeeded );
@@ -96,7 +59,7 @@ QMo2Win::QMo2Win(void)
   initIface();
   initStatusBar();
   
-  setIcon( app_icon );
+  setWindowIcon( QIcon( ":icons/app.png" ) );
   if( sett.showmax )
     showMaximized();
   qmo2win = this;
@@ -118,7 +81,7 @@ void QMo2Win::initDirs()
   
   xbuild_dir = QString::null;
   QDir d( qApp->applicationDirPath() );
-  d.convertToAbs();
+  d.makeAbsolute();
   if( d.exists( QString::fromLocal8Bit( "main.cpp" ) )  
       && d.exists( app  ) ) {
     xbuild_dir = d.canonicalPath() + sep + app;
@@ -131,14 +94,14 @@ void QMo2Win::initDirs()
   };
 
   local_dir = QString::null;
-  d.setPath( QDir::homeDirPath() + sep + app );
-  d.convertToAbs();
+  d.setPath( QDir::homePath() + sep + app );
+  d.makeAbsolute();
   if( d.isReadable() ) {
     local_dir = d.canonicalPath();
   };
   
   d.setPath( add_dir );
-  d.convertToAbs();
+  d.makeAbsolute();
   if( ! d.isReadable() ) {
     add_dir = QString::null;
   };
@@ -148,7 +111,7 @@ void QMo2Win::initDirs()
   if( evar ) {
     d.setPath( QString::fromLocal8Bit(evar) );
     if( d.isReadable() ) {
-      d.convertToAbs();
+      d.makeAbsolute();
       env_dir = d.canonicalPath();
     };
   };
@@ -177,215 +140,222 @@ void QMo2Win::initIface()
   // Actions
   // File group
  
-  act_new = new QAction( QPixmap( filenew ), "&New model",
-      Qt::CTRL+Qt::Key_N,  this, "new");
+  act_new = new QAction( QIcon( ":icons/filenew.png" ), "&New model", this );
+  act_new->setShortcuts( QKeySequence::New );
   act_new->setWhatsThis( tr("Click this button to create a new model file.") );
   connect( act_new, SIGNAL( activated() ), this, SLOT( slotFileNew() ) );
 
-  act_open = new QAction( QPixmap( mod_open ), "&Open model",
-      Qt::CTRL+Qt::Key_O, this, "open");
+  act_open = new QAction( QIcon( ":icons/mod_open.png" ), "&Open model", this );
+  act_open->setShortcuts( QKeySequence::Open );
   act_open->setWhatsThis( tr("Click this button to open a model file." ) );
   connect( act_open, SIGNAL( activated() ), this, SLOT( slotFileOpen() ) );
 
-  act_close = new QAction( "&Close", Qt::CTRL+Qt::Key_W, this, "close");
+  act_close = new QAction( "&Close", this );
   act_close->setWhatsThis( tr("Close active window") );
   connect( act_close, SIGNAL( activated() ), this, SLOT( slotFileClose() ) );
 
-  act_save = new QAction( QPixmap( mod_save ), "&Save model", 
-      Qt::CTRL+Qt::Key_S, this, "save");
+  act_save = new QAction( QIcon( ":icons/mod_save.png" ), "&Save model",  this );
+  act_save->setShortcuts( QKeySequence::Save );
   act_save->setWhatsThis( tr("Click this button to save the model file you are "
                   "editing. You will be prompted for a file name." ) );
   connect( act_save, SIGNAL( activated() ), this, SLOT( slotFileSave() ) );
 
-  act_saveas = new QAction( "Save &As", 0, this, "saveas");
+  act_saveas = new QAction( "Save &As", this );
   act_saveas->setWhatsThis( tr("Save current model with another filename") );
   connect( act_saveas, SIGNAL( activated() ), this, SLOT( slotFileSaveAs() ) );
 
-  act_print = new QAction( "&Print", Qt::CTRL+Qt::Key_P, this, "print");
+  act_print = new QAction( "&Print", this );
+  act_print->setShortcuts( QKeySequence::Print );
   act_print->setWhatsThis( tr("Print current model") );
   connect( act_print, SIGNAL( activated() ), this, SLOT( slotFilePrint() ) );
 
-  act_settings = new QAction( "Sett&ings", 0, this, "settings");
+  act_settings = new QAction( "Sett&ings", this );
   act_settings ->setWhatsThis( "Edit application settings" );
   connect( act_settings, SIGNAL( activated() ), this, SLOT( slotFileSettings() ) );
   
-  act_savesett = new QAction( "Save s&ettings", 0, this, "savesett");
+  act_savesett = new QAction( "Save s&ettings", this );
   act_savesett ->setWhatsThis( "Save application settings" );
   connect( act_savesett, SIGNAL( activated() ), this, SLOT( slotFileSaveSett() ) );
 
 
-  act_quit = new QAction( QPixmap( exit_icon ), "&Quit", 
-      Qt::CTRL+Qt::Key_Q, this, "quit");
+  act_quit = new QAction( QIcon( ":icons/exit.png" ), "&Quit", this );
+  act_quit->setShortcuts( QKeySequence::Quit );
   act_quit->setWhatsThis( tr("Click this button to quit application.") );
   connect( act_quit, SIGNAL( activated() ), this, SLOT( slotFileQuit() ) );
 
   // ==== Edit group
  
-  act_undo = new QAction( "&Undo", Qt::CTRL+Qt::Key_Z, this, "undo");
+  act_undo = new QAction( "&Undo", this );
+  act_open->setShortcuts( QKeySequence::Undo );
   act_undo->setWhatsThis( tr("Undo last action") );
   connect( act_undo, SIGNAL( activated() ), this, SLOT( slotEditUndo() ) );
  
-  act_cut = new QAction( "Cut", Qt::CTRL+Qt::Key_Delete, this, "cut");
+  act_cut = new QAction( "Cut", this );
+  act_cut->setShortcuts( QKeySequence::Cut );
   act_cut->setWhatsThis( tr("Cut selected") );
   connect( act_cut, SIGNAL( activated() ), this, SLOT( slotEditCut() ) );
  
-  act_copy = new QAction( "Copy", Qt::CTRL+Qt::Key_Insert, this, "copy");
+  act_copy = new QAction( "Copy", this );
+  act_copy->setShortcuts( QKeySequence::Copy );
   act_copy->setWhatsThis( tr("Copy selected") );
   connect( act_copy, SIGNAL( activated() ), this, SLOT( slotEditCopy() ) );
  
-  act_paste= new QAction( "Paste", Qt::SHIFT+Qt::Key_Insert, this, "paste");
+  act_paste= new QAction( "Paste", this );
+  act_paste->setShortcuts( QKeySequence::Paste );
   act_paste->setWhatsThis( tr("Paste selected") );
   connect( act_paste, SIGNAL( activated() ), this, SLOT( slotEditPaste() ) );
 
   // ==== Element group
  
-  act_newelm= new QAction( QPixmap( newelm_icon ), "&New element", 
-      Qt::Key_Insert, this, "newelm");
+  act_newelm= new QAction( QIcon( ":icons/newelm.png" ), "&New element", this ); 
+  act_newelm->setShortcut( Qt::Key_Insert );
   act_newelm->setWhatsThis( tr("Create new element") );
   connect( act_newelm, SIGNAL( activated() ), this, SLOT( slotNewElm() ) );
  
-  act_delelm= new QAction( QPixmap( delelm_icon ), "&Delete element",
-      Qt::Key_Delete, this, "delelm");
+  act_delelm= new QAction( QIcon( ":icons/delelm.png" ), "&Delete element", this );
+  act_delelm->setShortcut( Qt::Key_Delete );
   act_delelm->setWhatsThis( tr("Delete selected element") );
   connect( act_delelm, SIGNAL( activated() ), this, SLOT( slotDelElm() ) );
  
-  act_editelm= new QAction( QPixmap( editelm_icon ), "&Edit element",
-      Qt::Key_Enter, this, "editelm");
+  act_editelm= new QAction( QIcon( ":icons/editelm.png" ), "&Edit element", this );
+  act_editelm->setShortcut( Qt::Key_Enter );
   act_editelm->setWhatsThis( tr("Edit selected element") );
   connect( act_editelm, SIGNAL( activated() ), this, SLOT( slotEditElm() ));
  
-  act_linkelm= new QAction( QPixmap( linkelm_icon ), "&Link element",
-      Qt::Key_L, this, "linkelm");
+  act_linkelm= new QAction( QIcon( ":icons/linkelm.png" ), "&Link element", this );
+  act_linkelm->setShortcut( Qt::Key_L );
   act_linkelm->setWhatsThis( tr("Edit links of selected element") );
   connect( act_linkelm, SIGNAL( activated() ), this, SLOT( slotLinkElm() ));
  
-  act_qlinkelm= new QAction( "&Quick link element", 
-      Qt::CTRL+Qt::Key_L, this, "qlinkelm");
+  act_qlinkelm= new QAction( "&Quick link element", this );
+  act_qlinkelm->setShortcut( Qt::CTRL+Qt::Key_L );
   act_qlinkelm->setWhatsThis( tr("Link marked to selected element") );
   connect( act_qlinkelm, SIGNAL( activated() ), this, SLOT( slotqLinkElm() ));
  
-  act_qplinkelm= new QAction( "&Parametr link element", 
-      Qt::SHIFT+Qt::CTRL+Qt::Key_L, this, "qplinkelm");
+  act_qplinkelm= new QAction( "&Parametr link element", this );
+  act_qplinkelm->setShortcut(  Qt::SHIFT+Qt::CTRL+Qt::Key_L );
   act_qplinkelm->setWhatsThis( tr("Link marked to selected element "
 	                          "(parameter input)") );
   connect( act_qplinkelm, SIGNAL( activated() ), this, SLOT( slotqpLinkElm()));
  
-  act_unlinkelm= new QAction( "&Unlink element", 0, this, "unlinkelm");
+  act_unlinkelm= new QAction( "&Unlink element", this );
   act_unlinkelm->setWhatsThis( tr("Remove links of selected element") );
   connect( act_unlinkelm, SIGNAL( activated() ), this, SLOT( slotUnlinkElm() ));
  
-  act_lockelm= new QAction( QPixmap( lockelm_icon ), "Loc&k element", 
-      Qt::CTRL+Qt::Key_K, this, "lockelm");
+  act_lockelm= new QAction( QIcon( ":icons/lockelm.png" ), "Loc&k element",  this );
+  act_lockelm->setShortcut( Qt::CTRL+Qt::Key_K );
   act_lockelm->setWhatsThis( tr("Lock current element") );
   connect( act_lockelm, SIGNAL( activated() ), this, SLOT( slotLockElm() ));
  
-  act_ordelm= new QAction( QPixmap( orderelm_icon ), "Change &Orger", 
-      Qt::Key_O, this, "ordelm");
+  act_ordelm= new QAction( QIcon( ":icons/orderelm.png" ), "Change &Orger", this );
+  act_ordelm->setShortcut( Qt::Key_O );
   act_ordelm->setWhatsThis( tr("Change order numper of selected element") );
   connect( act_ordelm, SIGNAL( activated() ), this, SLOT( slotOrdElm() ));
  
-  act_markelm= new QAction( QPixmap( markelm_icon ), "&Mark element", 
-      Qt::Key_M, this, "markelm");
+  act_markelm= new QAction( QIcon( ":icons/markelm.png" ), "&Mark element", this );
+  act_markelm->setShortcut( Qt::Key_M );
   act_ordelm->setWhatsThis( tr("Mark selected element") );
   connect( act_markelm, SIGNAL( activated() ), this, SLOT( slotMarkElm() ));
  
-  act_moveelm= new QAction( "Move element", Qt::SHIFT+Qt::Key_M, this, "moveelm");
+  act_moveelm= new QAction( "Move element", this );
+  act_moveelm->setShortcut( Qt::SHIFT+Qt::Key_M );
   act_moveelm->setWhatsThis( tr("Move marked element to selected cell") );
   connect( act_moveelm, SIGNAL( activated() ), this, SLOT( slotMoveElm() ));
  
-  act_infoelm= new QAction( QPixmap( infoelm_icon ), "show &Info",
-      Qt::Key_I, this, "infoelm");
+  act_infoelm= new QAction( QIcon( ":icons/infoelm.png" ), "show &Info", this );
+  act_infoelm->setShortcut( Qt::Key_I );
   act_infoelm->setWhatsThis( tr("Show information about element structure") );
   connect( act_infoelm, SIGNAL( activated() ), this, SLOT( slotInfoElm() ));
  
   // ==== out group 
  
-  act_newout = new QAction( QPixmap( newout_icon ), "&New Out",
-      Qt::Key_U, this, "newout");
+  act_newout = new QAction( QIcon( ":icons/newout.png" ), "&New Out", this );
+  act_newout->setShortcut( Qt::Key_U );
   act_newout->setWhatsThis( tr("Create output collector") );
   connect( act_newout, SIGNAL( activated() ), this, SLOT( slotNewOut() ));
 
-  act_delout = new QAction( QPixmap( delout_icon ), "&Delete out", 
-      Qt::Key_X, this, "delout");
+  act_delout = new QAction( QIcon( ":icons/delout.png" ), "&Delete out", this );
+  act_delout->setShortcut( Qt::Key_X );
   act_delout->setWhatsThis( tr("Delete output collector with current level") );
   connect( act_delout, SIGNAL( activated() ), this, SLOT( slotDelOut() ));
 
-  act_editout = new QAction( QPixmap( editout_icon ), "&Edit out",
-      Qt::SHIFT+Qt::Key_U, this, "editout");
+  act_editout = new QAction( QIcon( ":icons/editout.png" ), "&Edit out", this );
+  act_editout->setShortcut( Qt::SHIFT+Qt::Key_U );
   act_editout->setWhatsThis( tr("Edit outsput collector withcurrent level") );
   connect( act_editout, SIGNAL( activated() ), this, SLOT( slotEditOut() ));
 
-  act_showoutdata = new QAction( QPixmap( showoutdata_icon ), "&Show out data",
-      Qt::Key_D, this, "showoutdata");
+  act_showoutdata = new QAction( QIcon( ":icons/showoutdata.png" ), "&Show out data", this );
+  act_showoutdata->setShortcut( Qt::Key_D );
   act_showoutdata->setWhatsThis( tr("Show data collected by output.") );
   connect( act_showoutdata, SIGNAL( activated() ), this, SLOT( slotShowOutData() ));
 
-  act_exportout = new QAction( "E&xport out data", Qt::Key_E, this, "exportout");
+  act_exportout = new QAction( "E&xport out data", this );
+  act_exportout->setShortcut( Qt::Key_E );
   act_exportout->setWhatsThis( tr("Export data collected by output to text file.") );
   connect( act_exportout, SIGNAL( activated() ), this, SLOT( slotExportOut() ));
 
   // ==== graph group
 
-  act_newgraph = new QAction( QPixmap( newgraph_icon ), "&New Graph",
-      Qt::Key_G, this, "newgraph");
+  act_newgraph = new QAction( QIcon( ":icons/newgraph.png" ), "&New Graph", this );
+  act_newgraph->setShortcut( Qt::Key_G );
   act_newgraph->setWhatsThis( tr("Create new graph") );
   connect( act_newgraph, SIGNAL( activated() ), this, SLOT( slotNewGraph()));
 
-  act_delgraph = new QAction( QPixmap( delgraph_icon ), "&Delete graph",
-      Qt::SHIFT+Qt::Key_X, this, "delgraph");
+  act_delgraph = new QAction( QIcon( ":icons/delgraph.png" ), "&Delete graph", this );
+  act_delgraph->setShortcut( Qt::SHIFT+Qt::Key_X );
   act_delgraph->setWhatsThis( tr("Delete graph with selected level") );
   connect( act_delgraph, SIGNAL( activated() ), this, SLOT( slotDelGraph()));
 
-  act_editgraph = new QAction( QPixmap( editgraph_icon ), "&Edit graph",
-      Qt::SHIFT+Qt::Key_G, this, "editgraph");
+  act_editgraph = new QAction( QIcon( ":icons/editgraph.png" ), "&Edit graph", this );
+  act_editgraph->setShortcut(  Qt::SHIFT+Qt::Key_G );
   act_editgraph->setWhatsThis( tr("Edit graph with current level") );
   connect( act_editgraph, SIGNAL( activated() ), this, SLOT( slotEditGraph() ));
 
-  act_showgraph = new QAction( QPixmap( showgraph_icon ), "&Show graph",
-      Qt::Key_S, this, "showgraph");
+  act_showgraph = new QAction( QIcon( ":icons/showgraph.png" ), "&Show graph", this );
+  act_showgraph->setShortcut( Qt::Key_S );
   act_showgraph->setWhatsThis( tr("Show graph plot") );
   connect( act_showgraph, SIGNAL( activated() ), this, SLOT( slotShowGraph() ));
 
-  act_showgraphdata = new QAction( QPixmap( showgraphdata_icon ),
-      "show graph Data", Qt::SHIFT+Qt::Key_D, this, "showgraphdata");
+  act_showgraphdata = new QAction( QIcon( ":icons/showgraphdata.png" ), "show graph Data", this );
+  act_showgraphdata->setShortcut(  Qt::SHIFT+Qt::Key_D );
   act_showgraphdata->setWhatsThis( tr("Show graph data") );
   connect( act_showgraphdata, SIGNAL( activated() ), this, SLOT( slotShowGraphData() ));
 
-  act_exportgraphdata = new QAction( "E&xport graph data",
-      Qt::SHIFT+Qt::Key_E, this, "exportgraphdata");
+  act_exportgraphdata = new QAction( "E&xport graph data", this );
+  act_exportgraphdata->setShortcut( Qt::SHIFT+Qt::Key_E );
   act_exportgraphdata->setWhatsThis( tr("Export graph data to text file") );
   connect( act_exportgraphdata, SIGNAL( activated() ), this, SLOT( slotExportGraphData() ));
 
-  act_gnuplotgraph = new QAction( "&Gnuplot graph", 0, this, "gnulpotgraph");
+  act_gnuplotgraph = new QAction( "&Gnuplot graph", this);
   act_gnuplotgraph->setWhatsThis( tr("Export graph data to gnuplot-compatiomle file") );
   connect( act_gnuplotgraph, SIGNAL( activated() ), this, SLOT( slotGnuplotGraph() ));
 
   // ==== model group
 
-  act_editmodel = new QAction( QPixmap( editmodel_icon ), "&Edit Model",
-      Qt::CTRL+Qt::Key_Enter, this, "editmodel");
+  act_editmodel = new QAction( QIcon( ":icons/editmodel.png" ), "&Edit Model", this );
+  act_editmodel->setShortcut(  Qt::CTRL+Qt::Key_Enter );
   act_editmodel->setWhatsThis( tr("Edit model parameters.") );
   connect( act_editmodel, SIGNAL( activated() ), this, SLOT( slotEditModel()));
 
-  act_showvars = new QAction( "&Show model vars", 
-      Qt::SHIFT+Qt::CTRL+Qt::Key_D, this, "showvars");
-  act_showvars->setWhatsThis( tr("Show model's vars field") );
+  act_showvars = new QAction( "&Show model vars", this ); 
+  act_showvars->setShortcut(  Qt::SHIFT+Qt::CTRL+Qt::Key_D );
+  act_showvars->setWhatsThis( tr("Show model vars field") );
   connect( act_showvars, SIGNAL( activated() ), this, SLOT( slotShowVars()));
 
   // ====  run group
 
-  act_runrun = new QAction( QPixmap( run_icon ), "&Run", 
-      Qt::Key_F9, this, "runrun");
+  act_runrun = new QAction( QIcon( ":icons/run.png" ), "&Run", this );
+  act_runrun->setShortcut( Qt::Key_F9 );
   act_runrun->setWhatsThis( tr("Click this button start simple run.") );
   connect( act_runrun, SIGNAL( activated() ), this, SLOT( slotRunRun()) );
   
-  act_runprm= new QAction( QPixmap( run_p1 ), "Run &1D Parm loop",
-      Qt::CTRL+Qt::Key_F9, this, "runrpm");
+  act_runprm= new QAction( QIcon( ":icons/run_p1.png" ), "Run &1D Parm loop", this );
+  act_runprm->setShortcut( Qt::CTRL+Qt::Key_F9 );
   act_runprm->setWhatsThis( tr("Click this button start 1D parametric run.") );
   connect( act_runprm, SIGNAL( activated() ), this, SLOT( slotRunPrm()) );
 
-  act_runprm2= new QAction( QPixmap( run_p2 ), "Run &2D Parm loop", 
-      Qt::SHIFT+Qt::CTRL+Qt::Key_F9, this, "runrpm2");
+  act_runprm2= new QAction( QIcon( ":icons/run_p2.png" ), "Run &2D Parm loop", this );
+  act_runprm2->setShortcut( Qt::SHIFT+Qt::CTRL+Qt::Key_F9 );
   act_runprm2->setWhatsThis( tr("Click this button start 2D parametric run.") );
   connect( act_runprm2, SIGNAL( activated() ), this, SLOT( slotRunPrm2()) );
 
@@ -395,36 +365,36 @@ void QMo2Win::initIface()
 
   // ==== iface group
 
-  act_tbar = new QAction( "View &Toolbar", 0, this, "tbar");
-  act_tbar->setToggleAction( true );
-  act_tbar->setOn( true );
+  act_tbar = new QAction( "View &Toolbar", this );
+  act_tbar->setCheckable( true );
+  act_tbar->setChecked( true );
   // act_tbar->setWhatsThis( tr("") );
   connect( act_tbar, SIGNAL( activated() ), this, SLOT( slotViewToolBar()) );
 
-  act_sbar = new QAction( "View &Statusbar", 0, this, "sbar" );
-  act_sbar->setToggleAction( true );
-  act_sbar->setOn( true );
+  act_sbar = new QAction( "View &Statusbar", this );
+  act_sbar->setCheckable( true );
+  act_sbar->setChecked( true );
   // act_sbar->setWhatsThis( tr("") );
   connect( act_sbar, SIGNAL( activated() ), this, SLOT( slotViewStatusBar()) );
 
-  act_showord = new QAction( "Show &Orders", 0, this, "showord" );
-  act_showord->setToggleAction( true );
-  act_showord->setOn( sett.showord );
+  act_showord = new QAction( "Show &Orders", this );
+  act_showord->setCheckable( true );
+  act_showord->setChecked( sett.showord );
   connect( act_showord, SIGNAL( activated() ), this, SLOT( slotShowOrd()) );
 
-  act_showgrid = new QAction( "Show &Grid", 0, this, "showgrid" );
-  act_showgrid->setToggleAction( true );
-  act_showgrid->setOn( sett.showgrid );
+  act_showgrid = new QAction( "Show &Grid", this );
+  act_showgrid->setCheckable( true );
+  act_showgrid->setChecked( sett.showgrid );
   connect( act_showgrid, SIGNAL( activated() ), this, SLOT( slotShowGrid()) );
 
-  act_shownames = new QAction( "Show &Names", 0, this, "shownames" );
-  act_shownames->setToggleAction( true );
-  act_shownames->setOn( sett.shownames );
+  act_shownames = new QAction( "Show &Names", this );
+  act_shownames->setCheckable( true );
+  act_shownames->setChecked( sett.shownames );
   connect( act_shownames, SIGNAL( activated() ), this, SLOT( slotShowNames()) );
 
-  act_showicons = new QAction( "Show &Icons", 0, this, "showicons" );
-  act_showicons->setToggleAction( true );
-  act_showicons->setOn( sett.showicons );
+  act_showicons = new QAction( "Show &Icons", this );
+  act_showicons->setCheckable( true );
+  act_showicons->setChecked( sett.showicons );
   connect( act_showicons, SIGNAL( activated() ), this, SLOT( slotShowIcons()) );
 
   // ==== window group
@@ -451,20 +421,20 @@ void QMo2Win::initIface()
 
   // ==== help group
 
-  act_helpabout = new QAction( "&About", 0, this, "helpabout");
+  act_helpabout = new QAction( "&About", this );
   // act_helpabout->setWhatsThis( tr("") );
   connect( act_helpabout, SIGNAL( activated() ), this, SLOT( slotHelpAbout()) );
 
-  act_helpaboutqt = new QAction( "About &Qt", 0, this, "helpaboutqt");
+  act_helpaboutqt = new QAction( "About &Qt", this );
   // act_helpabout->setWhatsThis( tr("") );
   connect( act_helpaboutqt, SIGNAL( activated() ), this, SLOT( slotHelpAboutQt()) );
   
-  act_whatsthis = new QAction( "&What's This", 0, this, "whatsthis");
+  act_whatsthis = new QAction( "&What's This", this );
   // act_whatsthis->setWhatsThis( tr("") );
   // TODO:
   //connect( act_whatsthis, SIGNAL( activated() ), this, SLOT( slotWhatsThis()) );
 
-  act_test = new QAction( QPixmap( test_icon ), "&Test", 0, this, "test");
+  act_test = new QAction( QIcon( ":icons/test.png" ), "&Test", this );
   act_test->setWhatsThis( tr("Click this button to test something.") );
   connect( act_test, SIGNAL( activated() ), this, SLOT( slotTest()) );
 
@@ -703,9 +673,9 @@ void QMo2Win::updateActions()
 void QMo2Win::setWndTitle( QWidget* )
 {
   if( mdiArea->currentSubWindow() != 0 ) {
-    setCaption( mdiArea->currentSubWindow()->caption() + " " PACKAGE );
+    setWindowTitle( mdiArea->currentSubWindow()->windowTitle() + " " PACKAGE );
   } else {
-    setCaption( PACKAGE " " VERSION ); 
+    setWindowTitle( PACKAGE " " VERSION ); 
   };
 }
 
@@ -977,11 +947,11 @@ void QMo2Win::slotViewToolBar()
   if (fileToolbar->isVisible()) {
     fileToolbar->hide();
     elmToolbar->hide();
-    act_tbar->setOn( false );
+    act_tbar->setChecked( false );
   } else {
     fileToolbar->show();
     elmToolbar->show();
-    act_tbar->setOn( true );
+    act_tbar->setChecked( true );
   };
   statusBar()->showMessage( tr( "Ready." ) );
 }
@@ -994,10 +964,10 @@ void QMo2Win::slotViewStatusBar()
   
   if (statusBar()->isVisible()) {
     statusBar()->hide();
-    act_sbar->setOn( false );
+    act_sbar->setChecked( false );
   } else {
     statusBar()->show();
-    act_sbar->setOn( true );
+    act_sbar->setChecked( true );
   };
   
   statusBar()->showMessage( tr( "Ready." ) );

@@ -1,3 +1,8 @@
+* Thu Mar 22 2012 Guda Anton <atu near nmetau dot edu point ua>
+- version 0.0.44
+- added DoubleTableModel, removed QDoubleTable
+- drop all Qt3 things
+
 * Fri Mar 09 2012 Guda Anton <atu near nmetau dot edu point ua>
 - version 0.0.43
 - drop configure files

@@ -22,8 +22,8 @@
 #include "qstatusmodel.h"
 
 QStatusModel::QStatusModel( QMo2View *mview, QWidget *parent,
-                        const char *name )
-           : QStatusBar( parent, name )
+                        const char * /*name*/ )
+           : QStatusBar( parent )
 {
   mainview = mview;
   const int label_lw = 1;
@@ -33,37 +33,37 @@ QStatusModel::QStatusModel( QMo2View *mview, QWidget *parent,
   int mw;
   
   // labels creation
-  l_mod = new QLabel( "m", this, "l_mod" );
+  l_mod = new QLabel( "m", this );
   QFontMetrics fm = l_mod->fontMetrics();
   mw = fm.width("9");
   l_mod->setFixedWidth( mw + label_sep );
   l_mod->setLineWidth( label_lw ); l_mod->setFrameStyle( label_fs );
   addWidget( l_mod );
   
-  l_level = new QLabel( "N", this, "l_level" );
+  l_level = new QLabel( "N", this );
   l_level->setFixedWidth( mw + label_sep );
   l_level->setLineWidth( label_lw ); l_level->setFrameStyle( label_fs );
   addWidget( l_level );
   
-  l_stat = new QLabel( "s", this, "l_stat" );
+  l_stat = new QLabel( "s", this );
   l_stat->setFixedWidth( 4 * mw + label_sep );
   l_stat->setLineWidth( label_lw ); l_stat->setFrameStyle( label_fs );
   addWidget( l_stat );
   
-  l_nums = new QLabel( "n/n", this, "l_nums" );
+  l_nums = new QLabel( "n/n", this );
   l_nums->setFixedWidth( 10 * mw + label_sep );
   l_nums->setLineWidth( label_lw ); l_nums->setFrameStyle( label_fs );
   addWidget( l_nums );
   
-  l_name = new QLabel( "name", this, "l_name" );
+  l_name = new QLabel( "name", this );
   l_name->setLineWidth( label_lw ); l_name->setFrameStyle( label_fs );
   addWidget( l_name, 1 );
   
-  l_desc = new QLabel( "desk", this, "l_desc" );
+  l_desc = new QLabel( "desk", this );
   l_desc->setLineWidth( label_lw ); l_desc->setFrameStyle( label_fs );
   addWidget( l_desc, 2 );
   
-  l_val = new QLabel( "val", this, "l_val" );
+  l_val = new QLabel( "val", this );
   l_val->setFixedWidth( 16 * mw + label_sep );
   l_val->setLineWidth( label_lw ); l_val->setFrameStyle( label_fs );
   addWidget( l_val );

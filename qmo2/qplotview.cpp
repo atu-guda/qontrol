@@ -37,8 +37,8 @@
 using namespace std;
 
 QPlotView::QPlotView( QMo2Doc *adoc, TGraph *agra,
-                      QWidget *parent, const char *name )
-          : QWidget( parent, name )
+                      QWidget *parent, const char * /*name*/ )
+          : QWidget( parent )
 {
   int i;
   doc = adoc; gra = agra;
@@ -60,10 +60,10 @@ QPlotView::QPlotView( QMo2Doc *adoc, TGraph *agra,
   errstr = 0;
   fontfam = "helvetica";
   setStartColors();
-  setBackgroundMode( Qt::NoBackground );
+  // setBackgroundMode( Qt::NoBackground );
   setFocusPolicy( Qt::StrongFocus );
   setMinimumSize( 350, 280 );
-  setCursor( Qt::crossCursor );
+  setCursor( Qt::CrossCursor );
 }
 
 QPlotView::~QPlotView()
@@ -84,23 +84,20 @@ void QPlotView::resizeEvent( QResizeEvent *e )
 void QPlotView::paintEvent( QPaintEvent * /*pe*/ )
 {
   devTp = 0;
-  QPixmap pix( width(), height() );
-  pix.fill( bgColor );
-  QPainter p( &pix );
+  QPainter p( this );
+  p.fillRect( 0, 0, width(), height(), QBrush( bgColor ) );
   drawAll( p );
   p.end();
-  bitBlt( this, QPoint(0,0), &pix );
 }
 
 void QPlotView::printPlot( void )
 {
-  int k;
   QPrinter *pr;
   if( QMo2Win::qmo2win == 0 ) return;
   pr = QMo2Win::qmo2win->getPrinter();
   if( pr == 0 ) return;
-  k = pr->setup();
-  if( k ) {
+  QPrintDialog pr_dialog( pr, this );
+  if( pr_dialog.exec() ) {
     devTp = 1;
     pr->setFullPage( FALSE );
     pr->newPage();
@@ -389,7 +386,7 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
 {
   int k, st, btnCtrl, btnShift, i, di;
   double dvx, dvy, adx, ady;
-  k = ke->key(); st = ke->state();
+  k = ke->key(); st = ke->modifiers();
   btnShift = (( st & Qt::ShiftModifier ) != 0 );
   btnCtrl = (( st & Qt::ControlModifier ) != 0 );
   if( btnShift ) {
@@ -400,7 +397,7 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
     dvx = 1 / kx; dvy = 1 / ky; di = 1;
   };
   switch( k ) {
-    case Qt::Key_Q: parentWidget()->close( true ); break;
+    case Qt::Key_Q: parentWidget()->close(); break;
     case Qt::Key_A: qual = 1; linew = 1; break;
     case Qt::Key_O:
          if( sel_g < 0 ) break;
@@ -961,124 +958,124 @@ void QPlotView::setScale(void)
   QPushButton *bt_ok, *bt_can; 
   QString qs; int rc;
   calcScale();
-  dia = new QDialog( this, "scale_dial", true );
-  dia->resize( 450, 450 );
-  dia->setCaption( PACKAGE ": Plot scales" );
+  dia = new QDialog( this );
+  dia->resize( 450, 450 ); // TODO: layouts or anydialog
+  dia->setWindowTitle( PACKAGE ": Plot scales" );
   // x group
-  grp_x = new QGroupBox( dia, "grp_x" );
+  grp_x = new QGroupBox( dia );
   grp_x->setGeometry( 20, 10, 200, 250 );
   grp_x->setTitle( "X" );
-  lab= new QLabel( dia, "lx1" );
-  lab->setGeometry( 30, 40, 30, 20 );  lab->setText( "Min" );
-  ed_rix= new QLineEdit( dia, "realMinX" );
+  lab= new QLabel( "Min", dia );
+  lab->setGeometry( 30, 40, 30, 20 );
+  ed_rix= new QLineEdit( dia );
   ed_rix->setGeometry( 60, 40, 70, 20 );
   ed_rix->setEnabled( false );  ed_rix->setMaxLength( 12 );
-  lab= new QLabel( dia, "lx2" );
-  lab->setGeometry( 80, 20, 40, 20 );  lab->setText( "Real" );
-  lab= new QLabel( dia, "lx3" );
-  lab->setGeometry( 160, 20, 30, 20 );  lab->setText( "Plot" );
-  ed_pix= new QLineEdit( dia, "plotMinX" );
+  lab= new QLabel( "Real", dia );
+  lab->setGeometry( 80, 20, 40, 20 );
+  lab= new QLabel( "Plot", dia );
+  lab->setGeometry( 160, 20, 30, 20 );
+  ed_pix= new QLineEdit( dia );
   ed_pix->setGeometry( 140, 40, 70, 20 );  ed_pix->setMaxLength( 12 );
-  lab= new QLabel( dia, "lx4" );
-  lab->setGeometry( 30, 70, 30, 20 );  lab->setText( "Max" );
-  ed_rax= new QLineEdit( dia, "realMaxX" );
+  lab= new QLabel( "Max", dia );
+  lab->setGeometry( 30, 70, 30, 20 );
+  ed_rax= new QLineEdit( dia );
   ed_rax->setGeometry( 60, 70, 70, 20 );
   ed_rax->setEnabled( false );  ed_rax->setMaxLength( 12 );
-  ed_pax= new QLineEdit( dia, "PlotMaxX" );
+  ed_pax= new QLineEdit( "asX", dia );
   ed_pax->setGeometry( 140, 70, 70, 20 );
-  cb_asx= new QCheckBox( dia, "asX" );
-  cb_asx->setGeometry( 30, 100, 100, 20 );  cb_asx->setText( "AutoScale" );
-  cb_agx= new QCheckBox( dia, "gsX" );
-  cb_agx->setGeometry( 30, 120, 100, 20 );  cb_agx->setText( "Best Fit" );
-  cb_zerox = new QCheckBox( dia, "zeroX" );
-  cb_zerox->setGeometry( 30, 140, 100, 20 ); cb_zerox->setText( "Zero" );
-  cb_centerx= new QCheckBox( dia, "centerX" );
-  cb_centerx->setGeometry( 30, 160, 100, 20 ); cb_centerx->setText( "Center" );
-  cb_logx= new QCheckBox( dia, "logX" );
-  cb_logx->setGeometry( 30, 180, 100, 20 ); cb_logx->setText( "Logariphmic" );
-  cb_logsx= new QCheckBox( dia, "logsX" );
-  cb_logsx->setGeometry( 30, 200, 100, 20 ); cb_logsx->setText( "Log. scale" );
-  lab= new QLabel( dia, "lx5" );
-  lab->setGeometry( 140, 100, 70, 20 );  lab->setText( "Grid/Tick" );
-  ed_grix= new QLineEdit( dia, "nxGrid" );
+  cb_asx= new QCheckBox( "AutoScale", dia );
+  cb_asx->setGeometry( 30, 100, 100, 20 );
+  cb_agx= new QCheckBox( "Best Fit", dia );
+  cb_agx->setGeometry( 30, 120, 100, 20 );
+  cb_zerox = new QCheckBox( "Zero", dia );
+  cb_zerox->setGeometry( 30, 140, 100, 20 );
+  cb_centerx= new QCheckBox( "Center", dia );
+  cb_centerx->setGeometry( 30, 160, 100, 20 );
+  cb_logx= new QCheckBox( "Log", dia );
+  cb_logx->setGeometry( 30, 180, 100, 20 );
+  cb_logsx= new QCheckBox( "Log. scale", dia );
+  cb_logsx->setGeometry( 30, 200, 100, 20 );
+  lab= new QLabel( "Grid/Tick", dia );
+  lab->setGeometry( 140, 100, 70, 20 );
+  ed_grix= new QLineEdit( dia );
   ed_grix->setGeometry( 120, 120, 40, 20 );  ed_grix->setMaxLength( 3 );
-  ed_tix= new QLineEdit( dia, "nxTick" );
+  ed_tix= new QLineEdit( dia );
   ed_tix->setGeometry( 170, 120, 40, 20 );  ed_tix->setMaxLength( 2 );
 
   // y group
-  grp_y= new QGroupBox( dia, "grp_y" );
-  grp_y->setGeometry( 230, 10, 200, 250 );  grp_y->setTitle( "Y" );
-  lab= new QLabel( dia, "ly1" );
-  lab->setGeometry( 240, 40, 30, 20 );  lab->setText( "Min" );
-  ed_riy= new QLineEdit( dia, "realMinY" );
+  grp_y= new QGroupBox( "Y", dia );
+  grp_y->setGeometry( 230, 10, 200, 250 );
+  lab= new QLabel( "Min", dia );
+  lab->setGeometry( 240, 40, 30, 20 );
+  ed_riy= new QLineEdit( dia );
   ed_riy->setGeometry( 270, 40, 70, 20 );
   ed_riy->setEnabled( false );  ed_riy->setMaxLength( 12 );
-  lab= new QLabel( dia, "ly2" );
-  lab->setGeometry( 290, 20, 40, 20 );  lab->setText( "Real" );
-  lab= new QLabel( dia, "ly3" );
-  lab->setGeometry( 370, 20, 30, 20 );  lab->setText( "Plot" );
-  ed_piy= new QLineEdit( dia, "plotMinY" );
+  lab= new QLabel( "Real", dia );
+  lab->setGeometry( 290, 20, 40, 20 );
+  lab= new QLabel( "Plot", dia );
+  lab->setGeometry( 370, 20, 30, 20 );
+  ed_piy= new QLineEdit( dia );
   ed_piy->setGeometry( 350, 40, 70, 20 );  ed_piy->setMaxLength( 12 );
-  lab= new QLabel( dia, "ly4" );
-  lab->setGeometry( 240, 70, 30, 20 );  lab->setText( "Max" );
-  ed_ray= new QLineEdit( dia, "realMaxY" );
+  lab= new QLabel( "Max", dia );
+  lab->setGeometry( 240, 70, 30, 20 );
+  ed_ray= new QLineEdit( dia );
   ed_ray->setGeometry( 270, 70, 70, 20 );
   ed_ray->setEnabled( false );  ed_ray->setMaxLength( 12 );
-  ed_pay= new QLineEdit( dia, "PlotMaxY" );
+  ed_pay= new QLineEdit( dia );
   ed_pay->setGeometry( 350, 70, 70, 20 );  ed_pay->setMaxLength( 12 );
-  cb_asy= new QCheckBox( dia, "asY" );
+  cb_asy= new QCheckBox( dia );
   cb_asy->setGeometry( 240, 100, 100, 20 );  cb_asy->setText( "AutoScale" );
-  cb_agy= new QCheckBox( dia, "gsY" );
+  cb_agy= new QCheckBox( dia );
   cb_agy->setGeometry( 240, 120, 100, 20 );  cb_agy->setText( "Best Fit" );
-  cb_zeroy = new QCheckBox( dia, "zeroY" );
+  cb_zeroy = new QCheckBox( dia );
   cb_zeroy->setGeometry( 240, 140, 100, 20 ); cb_zeroy->setText( "Zero" );
-  cb_centery= new QCheckBox( dia, "centerY" );
+  cb_centery= new QCheckBox( dia );
   cb_centery->setGeometry( 240, 160, 100, 20 ); cb_centery->setText( "Center" );
-  cb_logy= new QCheckBox( dia, "logY" );
+  cb_logy= new QCheckBox( dia );
   cb_logy->setGeometry( 240, 180, 100, 20 ); cb_logy->setText( "Logariphmic" );
-  cb_logsy= new QCheckBox( dia, "logsY" );
+  cb_logsy= new QCheckBox( dia );
   cb_logsy->setGeometry( 240, 200, 100, 20 ); cb_logsy->setText( "Log. scale" );
-  lab= new QLabel( dia, "ly5" );
+  lab= new QLabel( dia );
   lab->setGeometry( 350, 100, 70, 20 );  lab->setText( "Grid/Tick" );
-  ed_griy= new QLineEdit( dia, "nyGrid" );
+  ed_griy= new QLineEdit( dia );
   ed_griy->setGeometry( 330, 120, 40, 20 ); ed_griy->setMaxLength( 3 );
-  ed_tiy= new QLineEdit( dia, "nyTick" );
+  ed_tiy= new QLineEdit( dia );
   ed_tiy->setGeometry( 380, 120, 40, 20 );  ed_tiy->setMaxLength( 2 );
   
   // margins group 
-  grp_m= new QGroupBox( dia, "grp_m" );
+  grp_m= new QGroupBox( dia );
   grp_m->setGeometry( 20, 270, 410, 50 ); grp_m->setTitle( "Margins %" );
-  lab= new QLabel( dia, "lm1" );
+  lab= new QLabel( dia );
   lab->setGeometry( 30, 290, 30, 20 );  lab->setText( "Left" );
-  ed_ml= new QLineEdit( dia, "leftMar" );
+  ed_ml= new QLineEdit( dia );
   ed_ml->setGeometry( 60, 290, 50, 20 );  ed_ml->setMaxLength( 4 );
-  lab= new QLabel( dia, "lm2" );
+  lab= new QLabel( dia );
   lab->setGeometry( 120, 290, 40, 20 );  lab->setText( "Top" );
-  ed_mt= new QLineEdit( dia, "topMar" );
+  ed_mt= new QLineEdit( dia );
   ed_mt->setGeometry( 150, 290, 50, 20 );  ed_mt->setMaxLength( 4 );
-  lab= new QLabel( dia, "lm3" );
+  lab= new QLabel( dia );
   lab->setGeometry( 220, 290, 40, 20 );  lab->setText( "Right" );
-  ed_mr= new QLineEdit( dia, "rightMar" );
+  ed_mr= new QLineEdit( dia );
   ed_mr->setGeometry( 260, 290, 50, 20 );  ed_mr->setMaxLength( 4 );
-  lab= new QLabel( dia, "lm4" );
+  lab= new QLabel( dia );
   lab->setGeometry( 320, 290, 40, 20 );  lab->setText( "Bottom" );
-  ed_mb= new QLineEdit( dia, "bottomMar" );
+  ed_mb= new QLineEdit( dia );
   ed_mb->setGeometry( 360, 290, 50, 20 );  ed_mb->setMaxLength( 4 );
   
-  lab= new QLabel( dia, "l_font" );
+  lab= new QLabel( dia );
   lab->setGeometry( 30, 330, 100, 20 ); lab->setText( "Font" );
-  ed_font = new QLineEdit( dia, "font_ed" );
+  ed_font = new QLineEdit( dia );
   ed_font->setGeometry( 20, 350, 120, 20 ); ed_font->setMaxLength( 30 );
-  lab= new QLabel( dia, "l_maxErr" );
+  lab= new QLabel( dia );
   lab->setGeometry( 160, 330, 120, 20 ); lab->setText( "Max plot err" );
-  ed_maxErr = new QLineEdit( dia, "maxErr_ed" );
+  ed_maxErr = new QLineEdit( dia );
   ed_maxErr->setGeometry( 160, 350, 80, 20 ); ed_maxErr->setMaxLength( 8 );
 
-  bt_ok= new QPushButton( dia, "bt_ok" );
+  bt_ok= new QPushButton( dia );
   bt_ok->setGeometry( 90, 410, 100, 30 );
   bt_ok->setText( "&Ok" );
   bt_ok->setDefault( true );
-  bt_can= new QPushButton( dia, "bt_can" );
+  bt_can= new QPushButton( dia );
   bt_can->setGeometry( 260, 410, 100, 30 );
   bt_can->setText( "Cancel" );
   connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept() ) );
@@ -1158,11 +1155,11 @@ void QPlotView::setColors(void)
     "Background", "Scale", "Grid", "Labels", 
     "Line0", "Line1", "Line2", "Line3", "Line4", "Line5"
   };
-  dia = new QDialog( this, "color_dial", true );  
+  dia = new QDialog( this );  
   dia->resize( 250, 320 );
-  dia->setCaption( PACKAGE ": Plot Colors" );
+  dia->setWindowTitle( PACKAGE ": Plot Colors" );
   for( i=0; i<10; i++ ) {
-    la = new QLabel( dia, "" );
+    la = new QLabel( dia );
     la->setGeometry( 100, 10+i*20, 130, 20 );
     la->setText( labels[i] );
     colbtns[i] = new QColorBtn( dia, labels[i] );
@@ -1178,10 +1175,10 @@ void QPlotView::setColors(void)
       };
     };
   };
-  bt_ok = new QPushButton( dia, "bt_ok" );
+  bt_ok = new QPushButton( dia );
   bt_ok->setGeometry( 10, 280, 100, 30 );
   bt_ok->setText( "&Ok" );
-  bt_can = new QPushButton( dia, "bt_can" );
+  bt_can = new QPushButton( dia );
   bt_can->setGeometry( 120, 280, 100, 30 );
   bt_can->setText( "&Cancel" );
   connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
@@ -1267,27 +1264,27 @@ void QPlotView::moveTool(void)
   QPushButton *bt_ok, *bt_can;
   QLineEdit *toolx_ed, *tooly_ed;
   QString qs;
-  dia = new QDialog( this, "move_dial", true );
+  dia = new QDialog( this );
   dia->resize( 230, 160 );
-  dia->setCaption( "Move tool to point: " );
-  la = new QLabel( dia, "l_x" );
+  dia->setWindowTitle( "Move tool to point: " );
+  la = new QLabel( dia );
   la->setGeometry( 60, 10, 100, 20 );
   la->setText( "X" );
-  toolx_ed = new QLineEdit( dia, "toolx_ed" );
+  toolx_ed = new QLineEdit( dia );
   toolx_ed->setGeometry( 50, 30, 120, 20 );
   qs = QString::number( tool_x );
   toolx_ed->setText( qs );
-  la = new QLabel( dia, "l_y" );
+  la = new QLabel( dia );
   la->setGeometry( 60, 60, 100, 20 );
   la->setText( "Y" );
-  tooly_ed = new QLineEdit( dia, "tooly_ed" );
+  tooly_ed = new QLineEdit( dia );
   tooly_ed->setGeometry( 50, 80, 120, 20 );
   qs = QString::number( tool_y );
   tooly_ed->setText( qs );
-  bt_ok = new QPushButton( dia, "bt_ok" );
+  bt_ok = new QPushButton( dia );
   bt_ok->setGeometry( 10, 110, 100, 30 );
   bt_ok->setText( "&Ok" );
-  bt_can = new QPushButton( dia, "bt_can" );
+  bt_can = new QPushButton( dia );
   bt_can->setGeometry( 120, 110, 100, 30 );
   bt_can->setText( "&Cancel" );
   connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );

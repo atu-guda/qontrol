@@ -1,7 +1,5 @@
 TEMPLATE = lib
 
-#The following line was inserted by qt3to4
-QT +=  qt3support 
 
 CONFIG += release qt warn_on staticlib thread 
 #CONFIG += debug qt warn_on staticlib thread 

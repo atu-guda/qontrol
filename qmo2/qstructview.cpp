@@ -31,8 +31,8 @@
 
   
 QStructView::QStructView( QMo2Doc *adoc, QMo2View *mview,  
-                          QWidget *parent, const char *name )
-            : QWidget( parent, name )
+                          QWidget *parent, const char * /*name*/ )
+            : QWidget( parent )
 {
   doc = adoc; mainview = mview;
   model = mainview->getModel(); 
@@ -110,13 +110,12 @@ void QStructView::paintEvent( QPaintEvent * /*pe*/ )
 
 void QStructView::printAll()
 {
-  int k;
   QPrinter *pr;
   if( doc == 0 || model == 0 || QMo2Win::qmo2win == 0 ) return;
   pr = QMo2Win::qmo2win->getPrinter();
   if( pr == 0 ) return;
-  k = pr->setup();
-  if( k ) {
+  QPrintDialog pr_dialog( pr, this );
+  if( pr_dialog.exec() ) {
     devTp = 1;
     pr->setFullPage( FALSE );
     pr->newPage();
@@ -465,7 +464,7 @@ void QStructView::mouseDoubleClickEvent( QMouseEvent * /*me*/ )
 void QStructView::keyPressEvent( QKeyEvent *ke )
 {
   int k, /*h, w, nh, nw,*/ st, btnShift, /*btnCtrl,*/ xy_delta;
-  k = ke->key(); st = ke->state(); 
+  k = ke->key(); st = ke->modifiers(); 
   btnShift = ( ( st & Qt::ShiftModifier ) != 0 );
   // btnCtrl = ( ( st & Qt::ControlModifier ) != 0 );
   // h = height(); 

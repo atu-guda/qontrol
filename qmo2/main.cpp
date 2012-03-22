@@ -28,7 +28,6 @@ int main( int argc, char *argv[] )
   gsl_rng_env_setup();
 
   QMo2Win *qmo2 = new QMo2Win();
-  a.setMainWidget( qmo2 );
 
   qmo2->show();
 

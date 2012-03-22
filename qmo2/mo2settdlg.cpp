@@ -7,43 +7,44 @@
 
 
 Mo2SettDlg::Mo2SettDlg( Mo2Settings &se,  QWidget* parent )
-    : QDialog( parent, "Mo2SettDlg", true, 0 ),
+    : QDialog( parent ),
       pse(se), ts(se)
 {
-    lay = new QGridLayout; 
+  setWindowTitle( tr( "Settings" ) );
+  
+  lay = new QGridLayout; 
 
-    btnMainFont = new QPushButton( this );
-    lay->addWidget( btnMainFont, 0, 0 );
+  btnMainFont = new QPushButton( tr( "&Main Font..." ), this );
+  lay->addWidget( btnMainFont, 0, 0 );
 
-    btnSmallFont = new QPushButton( this );
-    lay->addWidget( btnSmallFont, 1, 0 );
+  btnSmallFont = new QPushButton(  tr( "&Small Font..." ), this );
+  lay->addWidget( btnSmallFont, 1, 0 );
 
-    btnPlotFont = new QPushButton( this );
-    lay->addWidget( btnPlotFont, 2, 0 );
+  btnPlotFont = new QPushButton( tr( "&Plot Font..." ), this );
+  lay->addWidget( btnPlotFont, 2, 0 );
 
-    btnStructFont = new QPushButton( this );
-    lay->addWidget( btnStructFont, 3, 0 );
+  btnStructFont = new QPushButton( tr( "Str&ucture Font..." ), this );
+  lay->addWidget( btnStructFont, 3, 0 );
 
-    chkMaximize = new QCheckBox( this );
-    chkMaximize->setChecked(ts.showmax);
-    lay->addWidget( chkMaximize, 0, 1 );
+  chkMaximize = new QCheckBox( tr( "Ma&ximize at start" ), this );
+  chkMaximize->setChecked(ts.showmax);
+  lay->addWidget( chkMaximize, 0, 1 );
 
-    btnOK = new QPushButton( this );
-    btnOK->setDefault( TRUE );
-    lay->addWidget( btnOK, 4, 0 );
+  btnOK = new QPushButton( tr( "&OK" ), this );
+  btnOK->setDefault( TRUE );
+  lay->addWidget( btnOK, 4, 0 );
 
-    btnCancel = new QPushButton( this );
-    lay->addWidget( btnCancel, 4, 1 );
-    languageChange();
-    setLayout( lay );
+  btnCancel = new QPushButton( tr( "Cancel" ), this );
+  lay->addWidget( btnCancel, 4, 1 );
+  setLayout( lay );
 
-    // signals and slots connections
-    connect( btnOK, SIGNAL( clicked() ), this, SLOT( accept() ) );
-    connect( btnCancel, SIGNAL( clicked() ), this, SLOT( reject() ) );
-    connect( btnMainFont, SIGNAL( clicked() ), this, SLOT( mainFontSlot() ) );
-    connect( btnSmallFont, SIGNAL( clicked() ), this, SLOT( smallFontSlot() ) );
-    connect( btnPlotFont, SIGNAL( clicked() ), this, SLOT( mainFontSlot() ) );
-    connect( btnStructFont, SIGNAL( clicked() ), this, SLOT( structFontSlot() ) );
+  // signals and slots connections
+  connect( btnOK, SIGNAL( clicked() ), this, SLOT( accept() ) );
+  connect( btnCancel, SIGNAL( clicked() ), this, SLOT( reject() ) );
+  connect( btnMainFont, SIGNAL( clicked() ), this, SLOT( mainFontSlot() ) );
+  connect( btnSmallFont, SIGNAL( clicked() ), this, SLOT( smallFontSlot() ) );
+  connect( btnPlotFont, SIGNAL( clicked() ), this, SLOT( mainFontSlot() ) );
+  connect( btnStructFont, SIGNAL( clicked() ), this, SLOT( structFontSlot() ) );
 }
 
 /*
@@ -52,29 +53,6 @@ Mo2SettDlg::Mo2SettDlg( Mo2Settings &se,  QWidget* parent )
 Mo2SettDlg::~Mo2SettDlg()
 {
     // no need to delete child widgets, Qt does it all for us
-}
-
-/*
- *  Sets the strings of the subwidgets using the current
- *  language.
- */
-void Mo2SettDlg::languageChange()
-{
-    setCaption( tr( "Settings" ) );
-    btnMainFont->setText( tr( "&Main Font..." ) );
-    btnMainFont->setAccel( QKeySequence( tr( "Alt+M" ) ) );
-    btnSmallFont->setText( tr( "&Small Font..." ) );
-    btnSmallFont->setAccel( QKeySequence( tr( "Alt+S" ) ) );
-    btnPlotFont->setText( tr( "&Plot Font..." ) );
-    btnPlotFont->setAccel( QKeySequence( tr( "Alt+P" ) ) );
-    btnStructFont->setText( tr( "Str&ucture Font..." ) );
-    btnStructFont->setAccel( QKeySequence( tr( "Alt+U" ) ) );
-    chkMaximize->setText( tr( "Ma&ximize at start" ) );
-    chkMaximize->setAccel( QKeySequence( tr( "Alt+X" ) ) );
-    btnOK->setText( tr( "&OK" ) );
-    btnOK->setAccel( QKeySequence( tr( "Alt+O" ) ) );
-    btnCancel->setText( tr( "Cancel" ) );
-    btnCancel->setAccel( QKeySequence( tr( "Esc" ) ) );
 }
 
 void Mo2SettDlg::accept()

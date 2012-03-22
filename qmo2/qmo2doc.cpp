@@ -144,15 +144,11 @@ bool QMo2Doc::openDocument(const QString &filename, const char * /*format */)
   int i, n, k;
   char buf[MAX_INPUTLEN];
   const TDataInfo *inf;
-  QString fn;
+  const char *fn = filename.toLocal8Bit().constData();
   ifstream is;
-  fn = filename.local8Bit();
-  //QMessageBox::critical( 0, "Debug: QMo2Doc::openDocument",
-  //                       filename + ": " + QString(fn), 0,0,0 );
   errno = 0;
   is.open( fn );
   if( ! is.good() ) {
-    // cerr << "fail to open file " << fn << ": " << strerror(errno) << '\n'; TODO: qDebug
     QMessageBox::critical( 0, "openDocument Error:",
        QString("Fail to open file: ") + filename + QString(" :\n") +
          QString( strerror(errno) ), 
@@ -206,9 +202,8 @@ bool QMo2Doc::openDocument(const QString &filename, const char * /*format */)
 bool QMo2Doc::saveDocument(const QString &filename, const char * /*format */)
 {
   int k;
-  QString fn;
-  fn = filename;
-  qDebug("debug: QMo2Doc::saveDocument: file %s: ", fn.local8Bit().constData() );
+  const char *fn = filename.toLocal8Bit().constData();
+  qDebug("debug: QMo2Doc::saveDocument: file %s: ", fn );
   ofstream os;
   if( rootdata == 0 )
     return false;

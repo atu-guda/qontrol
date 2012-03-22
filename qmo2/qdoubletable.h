@@ -2,7 +2,7 @@
                           qdoubletable.h  -  description
                              -------------------
     begin                : Fri Sep 1 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -18,29 +18,29 @@
 #ifndef QDOUBLETABLE_H
 #define QDOUBLETABLE_H
 
-#include <qwidget.h>
-#include <q3table.h>
+#include <vector>
+
+#include <QAbstractTableModel>
+#include <QWidget>
+#include <QString>
+#include <QStringList>
 class QPainer; struct GraphInfo;
 
-/**draws a table filled by double values
-  *@author atu
-  */
 
-class QDoubleTable : public Q3Table {
-  Q_OBJECT
- public:
-  QDoubleTable( const GraphInfo *agi, QWidget *parent, const char *name );
-  ~QDoubleTable();
- protected:
-  virtual void paintCell( QPainter *p, int ro, int co,
-            const QRect &cr, bool selected );
-  virtual QWidget* createEditor ( int row, int col, bool
-                 initFromCell ) const;
- protected:
-  const GraphInfo *gi;
-  int nr, nc, cw[64], ch;
-  const double **data;
-  const char **nms;
+/** new model for model/view Qt4 approach */
+class DoubleTableModel : public QAbstractTableModel {
+  public:
+   DoubleTableModel( const GraphInfo *gi, QObject *parent = 0 );
+   virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
+   virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
+   virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+   virtual QVariant headerData( int section, Qt::Orientation orientation, 
+            int role = Qt::DisplayRole ) const;
+  protected: 
+   int row, col, ny;
+   QString title;
+   QStringList labels;
+   std::vector<const double *> dat;
 };
 
 #endif

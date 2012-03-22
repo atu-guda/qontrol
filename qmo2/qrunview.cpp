@@ -30,15 +30,15 @@
 using namespace std;
 
 QRunView::QRunView( TModel *amodel, int atype, 
-                    QWidget *parent, const char *name, Qt::WFlags wf )
-          : QDialog( parent, name, 1, wf )
+                    QWidget *parent, const char * /*name*/, Qt::WFlags /*wf*/ )
+          : QDialog( parent )
 {
   int i;
   model = amodel; run_type = atype; s_time = 0;
   data = 0; 
   s_h = 40;
-  setBackgroundMode( Qt::NoBackground );
-  setCursor( Qt::crossCursor );
+  // setBackgroundMode( Qt::NoBackground );
+  setCursor( Qt::CrossCursor );
   timer = new QTimer();
   connect( timer, SIGNAL(timeout()), this, SLOT(slotRunNext()) );
   model->reset();
@@ -80,7 +80,7 @@ void QRunView::slotStartRun()
   if( use_sync )
     setMouseTracking(1);
   s_time = get_real_time();
-  timer->start( 0, 0 );
+  timer->start( 0 );
 }
 
 void QRunView::slotStopRun(void)
@@ -288,7 +288,7 @@ void QRunView::mouseMoveEvent( QMouseEvent *me )
 void QRunView::keyPressEvent( QKeyEvent *ke )
 {
   int k, st, btnCtrl, btnShift, mul_btn;
-  k = ke->key(); st = ke->state();
+  k = ke->key(); st = ke->modifiers();
   btnShift = (( st & Qt::ShiftModifier ) != 0 ) ? 2 : 1;
   btnCtrl = (( st & Qt::ControlModifier ) != 0 ) ? 4 : 1;
   mul_btn = btnShift * btnCtrl;

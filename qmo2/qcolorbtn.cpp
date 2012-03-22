@@ -21,8 +21,8 @@
 #include <qdrawutil.h>
 #include "qcolorbtn.h"
 
-QColorBtn::QColorBtn( QWidget *parent, const char *name )
-          : QPushButton( parent, name )
+QColorBtn::QColorBtn( QWidget *parent, const char * /*name*/ )
+          : QPushButton( parent )
 {
   connect( this, SIGNAL( clicked() ), SLOT( slotClicked() ) );
   col = Qt::black;
@@ -40,13 +40,13 @@ int QColorBtn::colorInt(void) const
 void QColorBtn::setColor( const QColor &c )
 {
   col = c;
-  repaint( false );
+  repaint();
 }
 
 void QColorBtn::setColor( int ic )
 {
   col = QRgb( ic );
-  repaint( false );
+  repaint();
 }
 
 void QColorBtn::slotClicked()
@@ -55,15 +55,15 @@ void QColorBtn::slotClicked()
   ncol = QColorDialog::getColor( col );
   if( ncol.isValid() )
     col = ncol;
-  repaint( false );
+  repaint();
   emit changed( col );
 }
 
 void QColorBtn::drawButtonLabel( QPainter *p )
 {
-  int w = 11;
-  QColor lnCol = colorGroup().text();
-  QColor fillCol = isEnabled() ? col : backgroundColor();
+  int w = 11; // TODO: what this?
+  QColor lnCol = Qt::black;
+  QColor fillCol = isEnabled() ? col : Qt::gray;
   qDrawPlainRect( p, w/2, w/2, width()-w, height()-w, lnCol, 1, 0 );
   w += 2;
   p->fillRect( w/2, w/2, width() - w, height() - w, fillCol );
