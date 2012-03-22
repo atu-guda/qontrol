@@ -1,2 +1,3 @@
 drop names and flags from my windows
+Stratch TableView s
 USE G_vmin = numeric_limits<double>::max(), G_vmax = numeric_limits<double>::min();
