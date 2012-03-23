@@ -1162,7 +1162,7 @@ void QPlotView::setColors(void)
     la = new QLabel( dia );
     la->setGeometry( 100, 10+i*20, 130, 20 );
     la->setText( labels[i] );
-    colbtns[i] = new QColorBtn( dia, labels[i] );
+    colbtns[i] = new QColorBtn( dia );
     colbtns[i]->setGeometry( 60, 10+i*20, 30, 20 );
     if( i >= 4 ) {
       colbtns[i]->setColor( plotColor[i-4] );

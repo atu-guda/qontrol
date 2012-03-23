@@ -2,9 +2,8 @@
                           qcolorbtn.h  -  description
                              -------------------
     begin                : Sat Aug 5 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
-    based on KDE KColorButton
  ***************************************************************************/
 
 /***************************************************************************
@@ -30,7 +29,7 @@
 class QColorBtn : public QPushButton  {
  Q_OBJECT
  public:
-   explicit QColorBtn( QWidget *parent, const char *name = 0 );
+   explicit QColorBtn( QWidget *parent );
    virtual ~QColorBtn();
    const QColor color(void) const { return col; };
    int colorInt(void) const;
@@ -42,8 +41,7 @@ class QColorBtn : public QPushButton  {
    /** called if clicked */
    void slotClicked();
  protected:
-   /** paint color on top of button */
-   virtual void drawButtonLabel( QPainter *p );   
+   virtual void paintEvent( QPaintEvent *ev );   
  protected:
    QColor col;
 };

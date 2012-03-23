@@ -2,9 +2,8 @@
                           qcolorbtn.cpp  -  description
                              -------------------
     begin                : Sat Aug 5 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
-    based on KDE KColorButton
  ***************************************************************************/
 
 /***************************************************************************
@@ -16,12 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qcolordialog.h>
-#include <qpainter.h>
-#include <qdrawutil.h>
+#include <QColorDialog>
+#include <QPainter>
 #include "qcolorbtn.h"
 
-QColorBtn::QColorBtn( QWidget *parent, const char * /*name*/ )
+QColorBtn::QColorBtn( QWidget *parent )
           : QPushButton( parent )
 {
   connect( this, SIGNAL( clicked() ), SLOT( slotClicked() ) );
@@ -59,14 +57,15 @@ void QColorBtn::slotClicked()
   emit changed( col );
 }
 
-void QColorBtn::drawButtonLabel( QPainter *p )
+void QColorBtn::paintEvent( QPaintEvent * ev )
 {
-  int w = 11; // TODO: what this?
-  QColor lnCol = Qt::black;
+  QPushButton::paintEvent( ev );
+  int bor_w = 2; // border width
+  // QColor lnCol = Qt::black;
   QColor fillCol = isEnabled() ? col : Qt::gray;
-  qDrawPlainRect( p, w/2, w/2, width()-w, height()-w, lnCol, 1, 0 );
-  w += 2;
-  p->fillRect( w/2, w/2, width() - w, height() - w, fillCol );
+  QPainter p( this );
+  p.fillRect( bor_w*2, bor_w*2, width() - 4*bor_w, height() - 5*bor_w, fillCol );
+  p.end();
 }
 
 // end of qcolorbtn.cpp
