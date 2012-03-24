@@ -76,7 +76,7 @@ QStatusModel::~QStatusModel()
 void QStatusModel::update()
 {
   static const char* modChar[] = { " ", "+", "#", "*", "?", "." };
-  char ob_descr[128];
+  QString ob_descr;
   int mod, stat, sel;
   TModel *model;
   TMiso *ob;
@@ -98,9 +98,8 @@ void QStatusModel::update()
     l_mod->setText( modChar[mod] );
     if( ob != 0 ) {
       l_name->setText( ob->getName() );
-      ob_descr[0] = 0;
-      ob->getDataSS( "descr", ob_descr, 120, 0 );
-      l_desc->setText( QString::fromLocal8Bit( ob_descr ) );
+      ob->getDataSS( "descr", &ob_descr, 120, 0 );
+      l_desc->setText( ob_descr );
       if( stat > 1 ) {
         val = model->xout( sel );
         l_val->setText( QString::number( val, 'g', 12 ) );

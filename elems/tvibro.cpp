@@ -55,15 +55,17 @@ TVibro::TVibro( TDataSet* aparent )
         :TMiso( aparent )
 {
   int i;
-  Omega = 1.2; c0 = 0.4; rfe[0] = 0; rfe_elnu = -1;
+  Omega = 1.2; c0 = 0.4; 
+  // rfe = QString(); 
+  rfe_elnu = -1;
   isStart = 1; tdt2 = 1; u_old = f_old = x_old = x_old2 = 0;
   d_i = tvibro_d_i;
   initHash();
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
-  ptrs[4] = &c0; ptrs[6] = &Omega; ptrs[8] = rfe;
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
+  ptrs[4] = &c0; ptrs[6] = &Omega; ptrs[8] = &rfe;
   // from TMiso 
   ptrs[12] = links;
   ptrs[13] = &vis_x; ptrs[14] = &vis_y;
@@ -107,7 +109,7 @@ int TVibro::preRun( int run_tp, int an, int anx, int any, double adt )
 {
   int rc = TMiso::preRun( run_tp, an, anx, any, adt );
   tdt2 = tdt * tdt; rfe_elnu = -1;
-  rfe_elnu = model->oname2elnu( rfe );
+  rfe_elnu = model->oname2elnu( rfe.toLocal8Bit().constData() );
   return rc;
 }
 

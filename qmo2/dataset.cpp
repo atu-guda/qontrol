@@ -77,6 +77,101 @@ int TDataInfo::save( ostream *os ) const
   *os << "@ \n@ \n";
   return 0;
 }
+// ---------------- HolderData .... ----------------------
+
+HolderData::HolderData( const QString &obj_name, QObject *a_parent )
+           :QObject( a_parent ), old_tp(0), old_subtp(0), dyn(0),
+	    tp(QVariant::Invalid), ptr(0)
+{
+  setObjectName( obj_name );
+}
+
+// ---------------- HolderInt ---------
+
+HolderInt::HolderInt( int *p, const QString &obj_name, QObject *a_parent  ) // if p==0 - autocreate 
+          :HolderData( obj_name, a_parent ),
+	   val(p)
+{
+  if( !val ) {
+    val = new int; dyn = 1;
+  }
+  ptr = val; tp=QVariant::Int; old_tp = dtpInt; old_subtp = dtpsInt;
+}
+
+HolderInt::~HolderInt()
+{
+  if( val )
+    delete val;
+  val = 0; ptr = val;
+}
+
+bool HolderInt::set( const QVariant & x )
+{
+  bool ok;
+  *val = x.toInt( &ok );
+  return 0;
+}
+
+QVariant HolderInt::get() const
+{
+  return QVariant( *val );
+}
+
+QString HolderInt::toString() const
+{
+  return QString::number( *val );
+}
+
+bool HolderInt::fromString( const QString &s )
+{
+  bool ok;
+  *val = s.toInt( &ok, 0 ); // 0 = auto base
+  return ok;
+}
+
+
+// ---------------- HolderDouble ---------
+
+HolderDouble::HolderDouble( double *p, const QString &obj_name, QObject *a_parent ) // if p==0 - autocreate 
+          :HolderData( obj_name, a_parent ),
+	   val(p)
+{
+  if( !val ) {
+    val = new double; dyn = 1;
+  }
+  ptr = val; tp=QVariant::Double; old_tp = dtpDouble;
+}
+
+HolderDouble::~HolderDouble()
+{
+  if( val )
+    delete val;
+  val = 0; ptr = val;
+}
+
+bool HolderDouble::set( const QVariant & x )
+{
+  bool ok;
+  *val = x.toDouble( &ok );
+  return 0;
+}
+
+QVariant HolderDouble::get() const
+{
+  return QVariant( *val );
+}
+
+QString HolderDouble::toString() const
+{
+  return QString::number( *val, 'g', 16 );
+}
+
+bool HolderDouble::fromString( const QString &s )
+{
+  bool ok;
+  *val = s.toDouble( &ok ); 
+  return ok;
+}
 
 // ---------------- TDataSet ------------------------
 
@@ -256,7 +351,8 @@ int TDataSet::getDataII( int ni, int *da, int allowConv )
     return 0;
   };
   if( tp == dtpStr ) {
-    v = atoi( (char*)(ptrs[ni]) );
+    QString *s = static_cast<QString*>(ptrs[ni]); // TODO: qobject_cast
+    v = s->toInt();
     *da = v;
     return 0;
   };
@@ -303,7 +399,8 @@ int TDataSet::getDataID( int ni, double *da, int allowConv )
   };
   if( ! allowConv ) return -2;
   if( tp == dtpStr ) {
-    v = atof( (char*)(ptrs[ni]) );
+    QString *s = static_cast<QString*>(ptrs[ni]); // TODO: qobject_cast
+    v = s->toDouble();
     *da = v;
     return 0;
   };
@@ -333,36 +430,35 @@ int TDataSet::getDataSD( const char *nm, double *da, int allowConv )
   return k;
 }
 
-int TDataSet::getDataIS( int ni, char *da, int maxlen, int allowConv )
+int TDataSet::getDataIS( int ni, QString *da, int maxlen, int allowConv )
 {
   int tp, iv; double dv;
-  char buf[64]; // must be enough for double
   if( ni >= nelm || ni < 0  || maxlen < 1 ) return -1;
   tp = d_i[ni].tp;
   if( tp == dtpStr ) {
-    da[0] = 0;
-    strncat( da, static_cast<char*>(ptrs[ni]), maxlen-1 );
+    QString *s = static_cast<QString*>(ptrs[ni]); // TODO: qobject_cast
+    *da = *s;
+    da->truncate( maxlen ); // TODO: unused?
     return 0;
   };
   if( ! allowConv ) return -2;
   if( tp == dtpInt ) {
     iv = int( *((double*)(ptrs[ni]))); 
-    snprintf( buf, sizeof(buf), "%d", iv );
-    da[0] = 0;
-    strncat( da, buf, maxlen-1 );
+    QString t;  t.setNum( iv );
+    *da = t;
     return 0;
   };
   if( tp == dtpDbl ) {
     dv = *((double*)(ptrs[ni])); 
-    snprintf( buf, sizeof(buf), "%f", dv );
-    da[0] = 0;
-    strncat( da, buf, maxlen-1 );
+    QString t;
+    t.setNum( dv, 'g', 16 );
+    *da = t;
     return 0;
   };
   return -1;
 }
 
-int TDataSet::getDataSS( const char *nm, char *da, int maxlen, int allowConv )
+int TDataSet::getDataSS( const char *nm, QString *da, int maxlen, int allowConv )
 {
   int i, k;
   char fname[MAX_NAMELEN], rname[MAX_INPUTLEN];
@@ -388,7 +484,6 @@ int TDataSet::getDataSS( const char *nm, char *da, int maxlen, int allowConv )
 int TDataSet::setDataII( int ni, int da, int allowConv )
 {
   int tp;
-  char buf[64], *s;
   if( ni >= nelm || ni < 0 ) return -1;
   if( d_i[ni].flags & efRO ) return -2;
   if( state == stateRun  &&  (d_i[ni].flags & efNoRunChange) ) return -2;
@@ -407,10 +502,8 @@ int TDataSet::setDataII( int ni, int da, int allowConv )
     modified |= 1; return 0;
   };
   if( allowConv && tp == dtpStr && d_i[ni].max_len > 1 ) {
-    snprintf( buf, sizeof(buf), "%d", da );
-    s = static_cast<char*>( ptrs[ni] );
-    s[0] = 0;
-    strncat( s, buf, d_i[ni].max_len-1 );
+    QString *s = static_cast<QString*>(ptrs[ni]); // TODO: qobject_cast
+    s->setNum( da );
     modified |= 1; return 0;
   };
   return -1;
@@ -443,7 +536,6 @@ int TDataSet::setDataSI( const char *nm, int da, int allowConv )
 int TDataSet::setDataID( int ni, double da, int allowConv )
 {
   int tp;
-  char buf[64], *s;
   if( ni >= nelm || ni < 0 ) return -1;
   if( d_i[ni].flags & efRO ) return -2;
   if( state == stateRun  &&  (d_i[ni].flags & efNoRunChange) ) return -2;
@@ -463,16 +555,14 @@ int TDataSet::setDataID( int ni, double da, int allowConv )
     modified |= 1; return 0;
   };
   if( tp == dtpStr && d_i[ni].max_len > 1 ) {
-    snprintf( buf, sizeof(buf), "%f", da );
-    s = static_cast<char*>( ptrs[ni] );
-    s[0] = 0;
-    strncat( s, buf, d_i[ni].max_len-1 );
+    QString *s = static_cast<QString*>(ptrs[ni]); // TODO: qobject_cast
+    s->setNum( da, 'g', 16 );
     modified |= 1; return 0;
   };
   return -1;
 }
 
-int TDataSet::setDataSS( const char *nm, const char *da, int allowConv )
+int TDataSet::setDataSS( const char *nm, const QString *da, int allowConv )
 {
   int i, k;
   char fname[MAX_NAMELEN], rname[MAX_INPUTLEN];
@@ -496,23 +586,22 @@ int TDataSet::setDataSS( const char *nm, const char *da, int allowConv )
   return k;
 }
 
-int TDataSet::setDataIS( int ni, const char *da, int allowConv )
+int TDataSet::setDataIS( int ni, const QString *da, int allowConv )
 {
   int tp, iv; double dv;
-  char *s;
   if( ni >= nelm || ni < 0 ) return -1;
   if( d_i[ni].flags & efRO ) return -2;
   if( state == stateRun  &&  (d_i[ni].flags & efNoRunChange) ) return -2;
   tp = d_i[ni].tp;
   if( tp == dtpStr ) {
-    s = static_cast<char*>( ptrs[ni] );
-    s[0] = 0;
-    strncat( s, da, d_i[ni].max_len-1 );
+    QString *s = static_cast<QString*>(ptrs[ni]); // TODO: qobject_cast
+    *s = *da;
+    s->truncate( d_i[ni].max_len );
     modified |= 1; return 0;
   };
   if( ! allowConv ) return -2;
   if( tp == dtpInt ) {
-    iv = atoi( da );
+    iv = da->toInt();
     if( d_i[ni].v_min < d_i[ni].v_max ) {
       if( iv < d_i[ni].v_min ) iv = int( d_i[ni].v_min );
       if( iv > d_i[ni].v_max ) iv = int( d_i[ni].v_max );
@@ -521,7 +610,7 @@ int TDataSet::setDataIS( int ni, const char *da, int allowConv )
     modified |= 1; return 0;
   };
   if( tp == dtpDbl ) {
-    dv = atof( da );
+    dv = da->toDouble();
     if( d_i[ni].v_min < d_i[ni].v_max ) {
       if( dv < d_i[ni].v_min ) dv = d_i[ni].v_min;
       if( dv > d_i[ni].v_max ) dv = d_i[ni].v_max;
@@ -579,10 +668,10 @@ int TDataSet::saveDatas( ostream *os )
 
 int TDataSet::loadDatas( istream *is )
 {
-  int k, lm, r_id;
-  const char *mcn;
+  int k, r_id;
+  //const char *mcn;
   char str[MAX_INPUTLEN], nm[MAX_NAMELEN];
-  mcn = getClassName(); lm = strlen( mcn );
+  //mcn = getClassName(); //lm = strlen( mcn );
   while( 1 ) {                           // find: id(ClassName)={
     is->getline( str, MAX_INPUTLEN );  
     if( !is->good() ) return -1;
@@ -623,7 +712,7 @@ int TDataSet::saveData( int ni, ostream *os ) const
   TDataSet* ob;
   int k, iv;
   double dv;
-  const char *sv;
+  const QString *sv;
   if( ni >= nelm || ni < 0 ) return -1;
   if( d_i[ni].flags & ( efNoSave | efStatic ) ) return 0;
   if( d_i[ni].dyna ) {  // was created dynamycaly - save info
@@ -636,9 +725,9 @@ int TDataSet::saveData( int ni, ostream *os ) const
           *os << d_i[ni].name << '=' << iv; break;
     case dtpDou: dv = *((double*)(ptrs[ni]));
           *os << d_i[ni].name << '=' << dv; break;
-    case dtpStr: sv = (const char*)(ptrs[ni]);
+    case dtpStr: sv = (const QString*)(ptrs[ni]);
           *os << d_i[ni].name << '=';
-          saveStr( os, sv ); break;
+          saveStr( os, sv->toLocal8Bit().constData() ); break;
     case dtpFun: *os << "# func: " << d_i[ni].name; break;
     case dtpFunPure: *os << "# func pure: " << d_i[ni].name; break;
     case dtpObj: ob = static_cast<TDataSet*>( ptrs[ni] );
@@ -660,15 +749,15 @@ int TDataSet::processElem( istream *is )
 {
   int i, j, k, l, tp, iv;
   double dv;
-  char *tbuf = 0;
   TDataSet* ob;
-  char nm[MAX_NAMELEN], val[MAX_INPUTLEN];
-  char str[MAX_INPUTLEN], delim[MAX_INPUTLEN];
+  QString val, delim, tbuf;
+  char nm[MAX_NAMELEN];
+  char str[MAX_INPUTLEN];
   TDataInfo inf;
   inf.descr = inf.listdata = 0; // safe values 
   is->getline( str, MAX_INPUTLEN );
   if( is->fail() ) return -1;
-  k = typeOfLine( str, MAX_INPUTLEN, &l, nm, val );
+  k = typeOfLine( str, MAX_INPUTLEN, &l, nm, &val );
   if( k == ltpEnd )
     return k;
   if( k == ltpUnk ) {
@@ -691,13 +780,13 @@ int TDataSet::processElem( istream *is )
              fprintf( stderr, "TDataSet::processElem: end datainfos?\n" );
              return -4;         // must not happend
       case dtpInt:
-             iv = (int) strtol( val, 0, 0 );
+             iv = val.toInt();
              setDataII( j, iv, 1 ); break;
       case dtpDou:
-             dv = strtod( val, 0 );      // double
+             dv =  val.toDouble();      // double
              setDataID( j, dv, 1 ); break;
       case dtpStr:
-             setDataIS( j, val, 1 );  break;
+             setDataIS( j, &val, 1 );  break;
       case dtpFun:      return ltpComment;  // for funcs -- can't be read
       case dtpFunPure:  return ltpComment;  // ==
       case dtpObj:
@@ -721,13 +810,10 @@ int TDataSet::processElem( istream *is )
     if( j < 0 ) return -3;
     tp = d_i[j].tp;
     if( tp != dtpStr ) return -4; // ???? != ????
-    strcpy( delim, val );
-    tbuf = new char [ d_i[j].max_len + 2 ];
-    i = readMlStr( is, tbuf, d_i[j].max_len, delim );
-    if( i ) { delete tbuf; return -8; };
-    l = strlen( tbuf );
-    setDataIS( j, tbuf, 1 );
-    delete tbuf;
+    delim = val;
+    i = readMlStr( is, &tbuf, d_i[j].max_len, delim.toLocal8Bit().constData() );
+    if( i ) { return -8; };
+    setDataIS( j, &tbuf, 1 );
     return ltpValStart;
   };
   
@@ -780,6 +866,7 @@ int TDataSet::add_obj( const TDataInfo* dai )
                        dai->name, dai->subtp );
               return -1;
             };
+            ob->setObjectName( QString::fromLocal8Bit(dai->name) );
             sob = ob;
             break;
     case dtpDial: case dtpLabel: case dtpGroup: sob = 0; break;

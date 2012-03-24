@@ -72,9 +72,9 @@ class TFourier : public TMiso  {
    /** arrays for summators */
    double *aa, *bb, *am;
    /** name of array to and from fill */
-   char x_oname[MAX_NAMELEN], y_oname[MAX_NAMELEN], 
-        a_oname[MAX_NAMELEN], b_oname[MAX_NAMELEN], 
-	am_oname[MAX_NAMELEN], om_oname[MAX_NAMELEN];
+   QString x_oname, y_oname, 
+        a_oname, b_oname, 
+	am_oname, om_oname;
    /** data descriptors -- with base class elements */ 
    static TDataInfo tfourier_d_i[50];
    /** class decription */

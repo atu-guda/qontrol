@@ -89,7 +89,7 @@ TFuncTrans::TFuncTrans( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
   ptrs[4] = &type; 
   ptrs[6] = &a; ptrs[8] = &b; ptrs[10] = &c;
   ptrs[12] = &d; ptrs[14] = &e; ptrs[16] = &g; ptrs[18] = &x0;

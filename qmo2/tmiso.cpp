@@ -79,8 +79,6 @@ TElmLink::TElmLink( TDataSet* apar )
   int i;
   noauto = locked = onlyFirst = onlyLast = flip = noIcon = 0;
   for( i=0; i<4; i++ ) {
-    inps[i][0] = 0;
-    pinps[i][0] = pnames[i][0] = 0;
     pflags[i] = 0;
   };
   d_i = telmlink_d_i;
@@ -88,14 +86,14 @@ TElmLink::TElmLink( TDataSet* apar )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[3] = inps[0]; ptrs[5] = inps[1]; ptrs[7] = inps[2]; ptrs[9] = inps[3];
+  ptrs[3] = &inps[0]; ptrs[5] = &inps[1]; ptrs[7] = &inps[2]; ptrs[9] = &inps[3];
   ptrs[10] = &noauto; ptrs[11] = &locked;
   ptrs[12] = &onlyFirst; ptrs[13] = &onlyLast;
   ptrs[14] = &flip; ptrs[15] = &noIcon;
-  ptrs[18] = pinps[0]; ptrs[20] = pinps[1]; 
-  ptrs[22] = pinps[2]; ptrs[24] = pinps[3];
-  ptrs[25] = pnames[0]; ptrs[26] = pnames[1]; 
-  ptrs[27] = pnames[2]; ptrs[28] = pnames[3];
+  ptrs[18] = &pinps[0]; ptrs[20] = &pinps[1]; 
+  ptrs[22] = &pinps[2]; ptrs[24] = &pinps[3];
+  ptrs[25] = &pnames[0]; ptrs[26] = &pnames[1]; 
+  ptrs[27] = &pnames[2]; ptrs[28] = &pnames[3];
   ptrs[29] = &pflags[0]; ptrs[30] = &pflags[1];
   ptrs[31] = &pflags[2]; ptrs[32] = &pflags[3];
 }
@@ -144,7 +142,7 @@ TMiso::TMiso( TDataSet* aparent )
 {
   links = new TElmLink( this );
   d_i = tmiso_d_i;
-  ord = -1; descr[0] = 0;
+  ord = -1; 
   vis_x = vis_y = 0; tdt = 0; model_nn = 0; 
   model = 0;
   initHash();

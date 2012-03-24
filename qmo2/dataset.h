@@ -12,6 +12,9 @@
 #include <iosfwd>
 #include <vector>
 #include <QObject>
+#include <QString>
+#include <QVariant>
+
 #include "defs.h"
 #define MAX_DESCRLEN 80
 #define MAX_LISTLEN  256
@@ -42,6 +45,57 @@ struct TClassInfo {
   /** ptr to help string */
   const char *helpstr;
 };
+
+/** Abstract holder for simple data types */
+class HolderData : public QObject {
+  Q_OBJECT
+ public: 
+  HolderData( const QString &obj_name, QObject *a_parent = 0 );
+  virtual ~HolderData() {}; // place to delete auto data
+  void* getPtr() const { return ptr; } ; // horror here !!!
+  QVariant::Type getTp() const { return tp; };
+  int getOldTp() const { return old_tp; };
+  int getOldSubTp() const { return old_subtp; };
+  virtual bool set( const QVariant & x ) = 0;
+  virtual QVariant get() const = 0;
+  virtual QString toString() const = 0;
+  virtual bool fromString( const QString &s ) = 0;
+  // TODO: to/from XML
+ protected:
+  int old_tp, old_subtp, dyn;
+  int flags; //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
+  QVariant::Type tp;
+  void *ptr;
+};
+
+/** Holder of int values */
+class HolderInt : public HolderData {
+  Q_OBJECT
+ public: 
+  HolderInt( int *p, const QString &obj_name, QObject *a_parent = 0 ); // if p==0 - autocreate 
+  virtual ~HolderInt();
+  virtual bool set( const QVariant & x );
+  virtual QVariant get() const;
+  virtual QString toString() const;
+  virtual bool fromString( const QString &s );
+ protected:
+  int *val;
+};
+
+/** Holder of double values */
+class HolderDouble : public HolderData {
+  Q_OBJECT
+ public: 
+  HolderDouble( double *p, const QString &obj_name, QObject *a_parent = 0 ); // if p==0 - autocreate 
+  virtual ~HolderDouble();
+  virtual bool set( const QVariant & x );
+  virtual QVariant get() const;
+  virtual QString toString() const;
+  virtual bool fromString( const QString &s );
+ protected:
+  double *val;
+};
+
 
 /** describes each element of class
 */
@@ -129,9 +183,9 @@ class TDataSet : public QObject {
    /** read double data from element by name, convert if need and allowed */
    virtual int getDataSD( const char *nm, double *da, int allowConv );
    /** read string data from element by index, convert if need and allowed */
-   virtual int getDataIS( int ni, char *da, int maxlen, int allowConv );
+   virtual int getDataIS( int ni, QString *da, int maxlen, int allowConv );
    /** read string data from element by name, convert if need and allowed */
-   virtual int getDataSS( const char *nm, char *da, int maxlen, int allowConv );
+   virtual int getDataSS( const char *nm, QString *da, int maxlen, int allowConv );
 
    /** store integer data to element by number, convert if need */
    virtual int setDataII( int ni, int da, int allowConv );
@@ -142,9 +196,9 @@ class TDataSet : public QObject {
    /** store double data to element by name, convert if need */
    virtual int setDataSD( const char *nm, double da, int allowConv );
    /** store string data to element by number, convert if need */
-   virtual int setDataIS( int ni, const char *da, int allowConv );
+   virtual int setDataIS( int ni, const QString *da, int allowConv );
    /** store string data to element by name, convert if need */
-   virtual int setDataSS( const char *nm, const char *da, int allowConv );
+   virtual int setDataSS( const char *nm, const QString *da, int allowConv );
    
    /** corrects data, if ni==-1 -- all elements -- now empty, see setData */
    virtual int checkData( int ni );

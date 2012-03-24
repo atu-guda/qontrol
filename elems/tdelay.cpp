@@ -57,7 +57,7 @@ TDelay::TDelay( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr; 
+  ptrs[1] = &ord; ptrs[2] = &descr; 
   ptrs[4] = &mdelay;  ptrs[6] = &cdelay;
   // from TMiso
   ptrs[10] = links;

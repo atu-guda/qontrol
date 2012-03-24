@@ -89,7 +89,7 @@ TLorenz::TLorenz( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr; 
+  ptrs[1] = &ord; ptrs[2] = &descr; 
 
   ptrs[4] = &sigma;  ptrs[6] = &r;     ptrs[8] = &b;  
   ptrs[10] = &x_0;   ptrs[12] = &y_0;  ptrs[14] = &z_0; 

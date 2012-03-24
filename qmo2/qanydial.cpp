@@ -159,7 +159,7 @@ int QAnyDialog::exec_trans(void)
 {
   int i, rc, ne, iv, k, ena;
   double dv;
-  char *sv;
+  QString sv;
   QTextEdit *te;
   QString qs;
   const TDataInfo *di;
@@ -202,10 +202,8 @@ int QAnyDialog::exec_trans(void)
             ((QLineEdit*)(elms[i]))->setEnabled( ena );
             break;
        case dtpStr:
-            sv = new char[ di->max_len + 4];
-            k = ds->getDataIS( i, sv, di->max_len, 1 );
-            qs = QString::fromLocal8Bit( sv, -1 );
-            delete[] sv;
+            k = ds->getDataIS( i, &sv, di->max_len, 1 );
+            qs = sv;
             if( k != 0 ) { continue; };
             switch( di->subtp ) {
 	      case dtpsStr: ((QLineEdit*)(elms[i]))->setText( qs );
@@ -257,10 +255,10 @@ int QAnyDialog::exec_trans(void)
      case dtpStr:
           switch( di->subtp ) {
              case dtpsStr: qs = ((QLineEdit*)(elms[i]))->text();
-                           ds->setDataIS( i, qs.toLocal8Bit().constData(), 1 );
+                           ds->setDataIS( i, &qs, 1 );
                   break;
              case dtpsMline: qs = ((QTextEdit*)(elms[i]))->toPlainText();
-                             ds->setDataIS( i, qs.toLocal8Bit().constData(), 1 );
+                             ds->setDataIS( i, &qs, 1 );
                   break;	
           };
           break;

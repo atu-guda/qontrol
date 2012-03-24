@@ -58,7 +58,7 @@ TMultipl::TMultipl( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
   ptrs[3] = &on[0]; ptrs[4] = &on[1]; ptrs[5] = &on[2]; ptrs[6] = &on[3]; 
   ptrs[8] = &a; 
   // from TMiso 

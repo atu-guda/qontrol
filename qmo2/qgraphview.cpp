@@ -40,7 +40,7 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
 {
   int h, w, nh, n_graph, graph_nu, out_nu, i, level;
   TGraph *gra;
-  char out_name[MAX_NAMELEN], yname[12];
+  QString out_name, yname;
   QPainter p( this );
   QFont smlf;
   smlf.fromString( QMo2Win::qmo2win->getSettings()->smallFont );
@@ -59,7 +59,8 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
   p.drawRect( 0, 0, w, h );
   
   n_graph = model->getNGraph();
-  p.setBrush( Qt::yellow ); strcpy( yname, "y0name" );
+  p.setBrush( Qt::yellow ); 
+  yname = "y0name";
   for( graph_nu=0; graph_nu < n_graph ; graph_nu++ ) {
     gra = model->getGraph( graph_nu );
     if( gra == 0 ) continue;
@@ -67,17 +68,16 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
     p.drawRect( 14, 10 + graph_nu * grid_sz, 10, 10 );
     p.drawText( grid_sz+1, 18 + graph_nu*grid_sz, QString::number( graph_nu ) );
     if( level != graph_nu ) continue;
-    out_name[0] = 0;
-    gra->getDataSS( "xname", out_name, MAX_NAMELEN, 0 );
-    out_nu = model->outname2out_nu( out_name );
+    gra->getDataSS( "xname", &out_name, MAX_NAMELEN, 0 );
+    out_nu = model->outname2out_nu( out_name.toLocal8Bit().constData() );
     if( out_nu >= 0 ) {
       p.drawLine( 0, grid_sz + out_nu*grid_sz, 12, grid_sz + graph_nu*grid_sz );
     };
     p.setPen( Qt::yellow );
     for( i=0; i<6; i++ ) {
-      out_name[0] = 0; yname[1] = char( '0' + i );
-      gra->getDataSS( yname, out_name, MAX_NAMELEN, 0 );
-      out_nu = model->outname2out_nu( out_name );
+      yname[1] = char( '0' + i );
+      gra->getDataSS( yname.toLocal8Bit().constData(), &out_name, MAX_NAMELEN, 0 );
+      out_nu = model->outname2out_nu( out_name.toLocal8Bit().constData() );
       if( out_nu >= 0 ) {
 	p.drawLine( 0, grid_sz + out_nu*grid_sz, 12, grid_sz + graph_nu*grid_sz );
       };

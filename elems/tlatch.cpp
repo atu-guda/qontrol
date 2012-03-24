@@ -67,7 +67,7 @@ TLatch::TLatch( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
   ptrs[4] = &type; ptrs[6] = &t0; ptrs[8] = &v_st;
   ptrs[9] = &usePulse; ptrs[10] = &useFirst; ptrs[11] = &useAdd;
   // from TMiso 

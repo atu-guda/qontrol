@@ -82,7 +82,7 @@ TRandTrigg::TRandTrigg( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
   ptrs[4] = &prob; ptrs[6] = &nforce; ptrs[7] = &useLevel;
   ptrs[8] = &useForce; ptrs[9] = &useLock; ptrs[10] = &useZero;
   ptrs[12] = &seed; ptrs[13] = &seedType; ptrs[14] = &addBaseSeed;

@@ -58,7 +58,7 @@ class TVibro : public TMiso  {
    /** parametrs of element: damping and natural frequency */
    double c0, Omega;
    /** name of return force element */
-   char rfe[32];
+   QString rfe;
    /** flag for start(1,2,0) and elnu of rfe */
    int isStart, rfe_elnu;
    /** old values and misc */

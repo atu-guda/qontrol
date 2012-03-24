@@ -73,7 +73,7 @@ TTrigger::TTrigger( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
   ptrs[4] = &type; ptrs[6] = &level0; ptrs[8] = &level1;  ptrs[10] = &t0; 
   ptrs[11] = &useInit1; ptrs[12] = &useEnable; ptrs[13] = &usePulse; 
   ptrs[14] = &useMinus; ptrs[15] = &useT0; 

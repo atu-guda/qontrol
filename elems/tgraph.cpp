@@ -67,10 +67,10 @@ TGraph::TGraph( TDataSet* apar )
        :TDataSet( apar )
 {
   int i;
-  xname[0] = 0; bgcolor = 0x000060;
-  strcpy( title, "title" );
+  bgcolor = 0x000060;
+  title =  "title";
   for( i=0; i<6; i++ ) {
-    yname[i][0] = 0;
+    yname[i] = "";
   };
   ycolor[0] = 0xFFFFFF; ycolor[1] = 0xFFFF00; ycolor[2] = 0xFF0000;
   ycolor[3] = 0x00FF00; ycolor[4] = 0x0000FF; ycolor[5] = 0xFF00FF;
@@ -79,10 +79,10 @@ TGraph::TGraph( TDataSet* apar )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[2] = title; 
-  ptrs[4] = xname; 
-  ptrs[6] = yname[0];    ptrs[8] = yname[1];    ptrs[10] = yname[2]; 
-  ptrs[12] = yname[3];   ptrs[14] = yname[4];   ptrs[16] = yname[5]; 
+  ptrs[2]  = &title; 
+  ptrs[4]  = &xname; 
+  ptrs[6]  = &yname[0];    ptrs[8] = &yname[1];    ptrs[10] = &yname[2]; 
+  ptrs[12] = &yname[3];   ptrs[14] = &yname[4];   ptrs[16] = &yname[5]; 
   ptrs[17] = &bgcolor;   ptrs[18] = &ycolor[0]; ptrs[19] = &ycolor[1];
   ptrs[20] = &ycolor[2]; ptrs[21] = &ycolor[3]; ptrs[22] = &ycolor[4];
   ptrs[23] = &ycolor[5];
@@ -124,7 +124,7 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
   int i, row, col, ny, out_nn, out_nu;
   TOutArr *arr;
   const double *dat;
-  char label[MAX_LABELLEN];
+  QString label;
   if( gi == 0 )
     return -1;
   gi->row = gi->col = 0; gi->ny = 1; gi->title[0] = 0; 
@@ -136,7 +136,7 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
   
   TModel *model = static_cast<TModel*>(parent);
   // x-data
-  out_nu = model->outname2out_nu( xname );
+  out_nu = model->outname2out_nu( xname.toLocal8Bit().constData() );
   if( out_nu < 0 ) return -1;
   arr = model->getOutArr( out_nu );
   if( arr == 0 ) return -1;
@@ -146,12 +146,12 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
   arr->getDataSI( "ny", &ny, 0 );
   if( dat == 0 || out_nn < 1 || ny < 0 ) return -1;
   row = out_nn; gi->dat[0] = dat;
-  arr->getDataSS( "label", label, MAX_LABELLEN, 1 );
-  if( label[0] == 0 ) { label[1] = 0; label[0] = 'x'; };
-  strncat( gi->label[0], label, MAX_LABELLEN-1 );
+  arr->getDataSS( "label", &label, MAX_LABELLEN, 1 );
+  if( label[0] == 0 ) { label = "x"; };
+  strncat( gi->label[0], label.toLocal8Bit().constData(), MAX_LABELLEN-1 );
   col = 1; // unlike show, x and y[] in single index
   for( i=0; i<6; i++ ) {
-    out_nu = model->outname2out_nu( yname[i] );
+    out_nu = model->outname2out_nu( yname[i].toLocal8Bit().constData() );
     if( out_nu < 0 ) continue;
     arr = model->getOutArr(  out_nu );
     if( arr == 0 ) continue;
@@ -159,10 +159,10 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
     dat = arr->getArray(); arr->getDataSI( "n", &out_nn, 0 );
     if( dat == 0 || out_nn != row ) continue;
     gi->dat[col] = dat;
-    label[0] = 0;
-    arr->getDataSS( "label", label, MAX_LABELLEN, 1 );
-    if( label[0] == 0 ) { label[1] = 0; label[0] = 'y'; };
-    strncat( gi->label[col], label, MAX_LABELLEN-1 );
+    label = "";
+    arr->getDataSS( "label", &label, MAX_LABELLEN, 1 );
+    if( label[0] == 0 ) { label = "y"; };
+    strncat( gi->label[col], label.toLocal8Bit().constData(), MAX_LABELLEN-1 );
     col++;
   };
   gi->col = col; gi->row = row; gi->ny = ny;

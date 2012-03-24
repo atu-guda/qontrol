@@ -393,7 +393,8 @@ void QMo2View::qlinkElm()
   TElmLink *el;
   int k;
   const char *toname;
-  char oldlink[MAX_NAMELEN], lnkname[MAX_NAMELEN];
+  QString oldlink;
+  char lnkname[MAX_NAMELEN];
   if( ! checkState( linkToCheck ) )
     return;	  
 
@@ -406,11 +407,11 @@ void QMo2View::qlinkElm()
   if( el == 0 ) return;
   strcpy( lnkname, "inps0" );
   lnkname[4] = char( '0' + level );
-  oldlink[0] = 0;
-  k = el->getDataSS( lnkname, oldlink, MAX_NAMELEN, 0 );
-  if( k != 0 || oldlink[0] != 0 )
+  k = el->getDataSS( lnkname, &oldlink, MAX_NAMELEN, 0 );
+  if( k != 0 )
     return;
-  k = el->setDataSS( lnkname, toname, 0 );
+  QString t = QString::fromLocal8Bit(toname);
+  k = el->setDataSS( lnkname, &t, 0 );
   model->reset(); model->setModified();
   emit viewChanged();
 }
@@ -422,7 +423,8 @@ void QMo2View::qplinkElm()
   TElmLink *el;
   int k;
   const char *toname;
-  char oldlink[MAX_NAMELEN], lnkname[MAX_NAMELEN];
+  QString oldlink[MAX_NAMELEN];
+  char lnkname[MAX_NAMELEN];
   if( ! checkState( linkToCheck ) )
     return;	  
 
@@ -435,11 +437,11 @@ void QMo2View::qplinkElm()
   if( el == 0 ) return;
   strcpy( lnkname, "pinps0" );
   lnkname[5] = char( '0' + level );
-  oldlink[0] = 0;
   k = el->getDataSS( lnkname, oldlink, MAX_NAMELEN, 0 );
   if( k != 0 || oldlink[0] != 0 )
     return;
-  k = el->setDataSS( lnkname, toname, 0 );
+  QString t = QString::fromLocal8Bit( toname );
+  k = el->setDataSS( lnkname, &t, 0 );
   model->reset(); model->setModified();
   emit viewChanged();
 }
@@ -462,14 +464,15 @@ void QMo2View::unlinkElm()
     return;
 
   strcpy( lnkname, "inps0" );
+  QString t("");
   for( k=0; k<4; k++ ) {
     lnkname[4] = char( '0' + k );
-    el->setDataSS( lnkname, "", 0 );
+    el->setDataSS( lnkname, &t, 0 );
   };
   strcpy( lnkname, "pinps0" );
   for( k=0; k<4; k++ ) {
     lnkname[5] = char( '0' + k );
-    el->setDataSS( lnkname, "", 0 );
+    el->setDataSS( lnkname, &t, 0 );
   };
   model->reset(); model->setModified();
   emit viewChanged();
@@ -534,7 +537,7 @@ void QMo2View::infoElm()
   TMiso *ob; 
   const TDataInfo *di;
   int i, j, nelm, ibuf;
-  char cbuf[1024];
+  QString cbuf;
   double dbuf;
   QDialog *dia; 
   QPushButton *bt_ok;
@@ -577,7 +580,7 @@ void QMo2View::infoElm()
     it = new QTableWidgetItem( qs );
     tv->setItem( i, 4, it ); 
 
-    ibuf = 0; dbuf = 0; cbuf[0] = 0;
+    ibuf = 0; dbuf = 0; cbuf = "";
     QString t_s, v_s;
     switch( di->tp ) {
       case dtpInt: ob->getDataII( i, &ibuf, 0 );
@@ -588,9 +591,9 @@ void QMo2View::infoElm()
 	           t_s = QString("d/") + QString::number( di->subtp );
 	           v_s = QString::number(dbuf);
 		   break;
-      case dtpStr: ob->getDataIS( i, cbuf, sizeof(cbuf), 0 );
+      case dtpStr: ob->getDataIS( i, &cbuf, 4096, 0 ); // TODO drop limit
 	           t_s = QString("s/") + QString::number( di->max_len );
-	           v_s = QString::fromLocal8Bit( cbuf );
+	           v_s = cbuf;
 		   break;
       default: 
 	           t_s = QString("X/") + QString::number( di->tp );

@@ -560,7 +560,7 @@ void QPlotView::initArrs(void)
 {
   int i, k, tp, out_nu, out_tp, out_nn, out_ny, start_from;
   double vmin, vmax;
-  char outname[MAX_NAMELEN], buf[MAX_NAMELEN];
+  QString outname, buf;
   TOutArr *arr;
   const double *adr;
   ng = 0; nn = 0; ny = 0;
@@ -576,14 +576,13 @@ void QPlotView::initArrs(void)
     return;
   };
 
-  outname[0] = 0;
-  gra->getDataSS( "xname", outname, MAX_NAMELEN, 0 );
-  if( !isGoodName( outname ) ) { 
+  gra->getDataSS( "xname", &outname, MAX_NAMELEN, 0 );
+  if( !isGoodName( outname.toLocal8Bit().constData() ) ) { 
     initFakeArrs(); 
     errstr = "Not found X array";
     return; 
   };
-  out_nu = model->outname2out_nu( outname );
+  out_nu = model->outname2out_nu( outname.toLocal8Bit().constData() );
   if( out_nu < 0 ) { 
     initFakeArrs(); 
     errstr = "Fail to convert X array name to array index";
@@ -612,18 +611,17 @@ void QPlotView::initArrs(void)
   tp = out_tp; ++tp; --tp; // TODO: fake
   nn = out_nn;
   realMinX = plotMinX = vmin; realMaxX = plotMaxX = vmax;
-  buf[0] = 0;
-  arr->getDataSS( "label", buf, MAX_NAMELEN, 1 );
-  if( buf[0] == 0 ) { buf[1] = 0; buf[0] = 'x'; };
+  arr->getDataSS( "label", &buf, MAX_NAMELEN, 1 );
+  if( buf.size() < 1 ) { buf = "x"; };
   xLabel = buf;
   for( i=0; i<6; i++ ) {
     start_from = 0;
     if( ny > 1 ) start_from = 1; // skip y in autoscale for 3D-like plot
-    strcpy( buf, "y0name" ); buf[1] = char( '0' + i );
-    outname[0] = 0;
-    gra->getDataSS( buf, outname, MAX_NAMELEN, 0 );
-    if( !isGoodName( outname ) ) continue;
-    out_nu = model->outname2out_nu( outname );
+    buf = "y0name"; buf[1] = char( '0' + i );
+    outname = "";
+    gra->getDataSS( buf.toLocal8Bit().constData(), &outname, MAX_NAMELEN, 0 );
+    if( !isGoodName( outname.toLocal8Bit().constData() ) ) continue;
+    out_nu = model->outname2out_nu( outname.toLocal8Bit().constData() );
     if( out_nu < 0 ) continue;
     arr = model->getOutArr( out_nu );
     if( arr == 0 ) continue;
@@ -649,10 +647,11 @@ void QPlotView::initArrs(void)
 	};
       };
     };
-    buf[0] = 0;
-    arr->getDataSS( "label", buf, MAX_NAMELEN, 1 );
-    if( buf[0] == 0 ) {
-      buf[2] = 0; buf[1] = char( '0' + i ); buf[0] = 'y';
+    buf = "";
+    arr->getDataSS( "label", &buf, MAX_NAMELEN, 1 );
+    if( buf.size() < 1 ) {
+      buf = "y0";
+      buf[1] = char( '0' + i );
     };
     yLabel[ng] = buf;
     ng++;

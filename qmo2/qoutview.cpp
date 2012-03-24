@@ -44,7 +44,7 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
 {
   int h, w, nh, n_out, out_nu, out_type, elnu, out_st, level;
   TOutArr *arr;
-  char elmname[MAX_NAMELEN];
+  QString elmname;
   if( doc == 0 ) return;
   model = doc->getModel();
   if( model == 0 ) return;
@@ -61,9 +61,9 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
   for( out_nu=0; out_nu < n_out && out_nu < nh; out_nu++ ) {
     arr = model->getOutArr( out_nu );
     if( arr == 0 ) continue;
-    elmname[0] = 0;
-    arr->getDataSS( "name", elmname, MAX_NAMELEN, 0 );
-    elnu = model->oname2elnu( elmname );
+    elmname = "";
+    arr->getDataSS( "name", &elmname, MAX_NAMELEN, 0 );
+    elnu = model->oname2elnu( elmname.toLocal8Bit().constData() );
     out_type = -1;
     arr->getDataSI( "type", &out_type, 1 );
     switch( out_type ) {
@@ -101,7 +101,7 @@ void QOutView::mousePressEvent( QMouseEvent *me )
   QMenu *menu;
   TOutArr *arr;
   const char *outname = "?bad?";
-  char elmname[MAX_NAMELEN];
+  QString elmname;
   QString title;
   if( model == 0 ) return;
   h = height(); nh = h / grid_sz - 1; ++nh; --nh; // TODO: FAKE
@@ -110,18 +110,18 @@ void QOutView::mousePressEvent( QMouseEvent *me )
   out_nu = ( y - 10 ) / grid_sz;
   n_out = model->getNOutArr();
   if( out_nu < 0 || out_nu >= n_out ) return;
-  elmname[0] = 0; title = "??bad??";
+  title = "??bad??";
   arr = model->getOutArr( out_nu );
   if( arr != 0 ) {
     outname = arr->getName();
-    arr->getDataSS( "name", elmname, MAX_NAMELEN, 0 );
+    arr->getDataSS( "name", &elmname, MAX_NAMELEN, 0 );
     if( outname == 0 || outname[0] == 0 )
       outname = "?unknown?";
     nn = -1;
     arr->getDataSI( "n", &nn, 1 );
     title = QString(outname)
             + QString( "[" ) +QString::number(nn) + QString("]")
-            + QString(" -> " ) + QString(elmname);
+            + QString(" -> " ) + elmname;
   };
   old_level = mainview->getLevel();
   mainview->changeLevel( out_nu );

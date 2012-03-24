@@ -63,16 +63,19 @@ TLinP1Q0::TLinP1Q0( TDataSet* aparent )
         :TMiso( aparent )
 {
   int i;
-  a = 1.0;  ku = 1.0; fx[0] = 0; elnu_fx = -1; x_old = 0;
+  a = 1.0;  ku = 1.0; 
+  // fx = QString(); 
+  elnu_fx = -1;
+  x_old = 0;
   d_i = tlinp1q0_d_i;
   initHash();
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
   ptrs[5] = &a; 
   ptrs[7] = &ku; 
-  ptrs[9] = fx;
+  ptrs[9] = &fx;
   // from TMiso 
   ptrs[13] = links;
   ptrs[14] = &vis_x; ptrs[15] = &vis_y;
@@ -116,7 +119,7 @@ int TLinP1Q0::preRun( int run_tp, int an, int anx, int any, double adt )
 {
   int rc = TMiso::preRun( run_tp, an, anx, any, adt );
   elnu_fx = -1;
-  elnu_fx = model->oname2elnu( fx );
+  elnu_fx = model->oname2elnu( fx.toLocal8Bit().constData() );
   return rc;
 }
 

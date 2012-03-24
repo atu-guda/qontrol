@@ -199,7 +199,7 @@ class TModel : public TDataContainer  {
   int oct_0, oct_1, oct_2, oct_3, oct_4, oct_5;
   // ---------------------------------------
   /** long description */
-  char long_descr[1024];
+  QString long_descr;
   // ======================= invisible vars ======================
   /** loops counters */
   int ii, il1, il2;

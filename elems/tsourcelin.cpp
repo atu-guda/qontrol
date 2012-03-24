@@ -118,7 +118,7 @@ TSourceLin::TSourceLin( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr; 
+  ptrs[1] = &ord; ptrs[2] = &descr; 
   for( i=0; i<16; i++ ) {
     ptrs[i+6] = t_int + i;
     ptrs[i+22] = vs + i;

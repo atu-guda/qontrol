@@ -15,6 +15,8 @@
 #include "defs.h"
 using namespace std;
 
+class QString;
+
 const int max_graphs = 7; // TODO: variable
 /** Structure containg data needed to plot graphs, export, view.
  *  filled by fillGraphInfo in TOutArr and TGraph
@@ -56,7 +58,7 @@ double get_real_time(void);
           len->*ival; if real_len > maxlen - ltpUnk returs
      if ltpStart id->*ival, className->v1
      it is safe to use 0-ptr in arguments  */
-int typeOfLine( const char *s, int maxlen, int *ival, char *v1, char *v2 );
+int typeOfLine( const char *s, int maxlen, int *ival, char *v1, QString *v2 );
 
 /** computes lentgh of string in out stream: count \n \t as 2, \x2F as 4 */
 int strQuLen( const char *s );
@@ -73,7 +75,7 @@ int deQuoteString( const char *src, char *dst, int maxlen );
 /** converts good part of src to pritable form, returns n of used chars */
 int quoteTo( const char *src, char *dst, int ml );
 /** reads multiline string up to delim, but no more then ml char with 0 */
-int readMlStr( istream *is, char* buf, int ml, const char *delim );
+int readMlStr( istream *is, QString* buf, int ml, const char *delim );
 /** splits string like aa.b.cc.d to first="aa" and next="b.cc.d"
     max sizes: name,next: MAX_INPUTLEN; first: MAX_NAMELEN
     @returns: 0 -- both parts, 1 -- only first, -1 -- bad line  */

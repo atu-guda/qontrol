@@ -52,13 +52,15 @@ TInputAny::TInputAny( TDataSet* aparent )
         :TMiso( aparent )
 {
   int i;
-  type = -1; name[0] = 0; ne = -1; pel = 0;
+  type = -1; 
+  // name = QString(); 
+  ne = -1; pel = 0;
   d_i = tinputany_d_i;
   initHash();
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
   ptrs[4] = &name;
   // from TMiso 
   ptrs[8] = links;
@@ -106,14 +108,15 @@ int TInputAny::preRun( int run_tp, int an, int anx, int any, double adt )
   TDataSet* cob; const TDataInfo *di;
   rc = TMiso::preRun( run_tp, an, anx, any, adt );
   type = -1; ne = -1; pel = 0;
-  l = strlen( name );
+  l = name.size();
   if( l < 2 ) return 0; // smallest: '#0'
   if( name[0] == '#' ) { // access to model vars by number
     type = 1; 
-    ne = atoi( name + 1 );
+    ne = atoi( name.toLocal8Bit().constData() + 1 );
     return 0;
   };
-  cob = parent; tname[0] = 0; strncat( tname, name, MAX_INPUTLEN-1 );
+  cob = parent; tname[0] = 0; 
+  strncat( tname, name.toLocal8Bit().constData(), MAX_INPUTLEN-1 );
   while( 1 ) {
     k = splitName( tname, fname, rname );
     if( k < 0 )  return 0;  // bad name

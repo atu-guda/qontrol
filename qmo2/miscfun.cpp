@@ -16,6 +16,9 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include "../config.h"
+
+#include <QString>
+
 #include "miscfun.h"
 
 using namespace std;
@@ -70,7 +73,7 @@ int isCharType( int c, int ctp, int start )
   return 0;
 }
 
-int typeOfLine( const char *s, int maxlen, int *ival, char *v1, char *v2  )
+int typeOfLine( const char *s, int maxlen, int *ival, char *v1, QString *v2  )
 {
   int i, j, k, l, l1, was_bs, id;
   char buf1[MAX_NAMELEN], buf2[MAX_INPUTLEN];
@@ -100,7 +103,8 @@ int typeOfLine( const char *s, int maxlen, int *ival, char *v1, char *v2  )
         if( k != 0 ) return ltpUnk;
 	l1 = strlen0( buf2 );
 	if( ival != 0 ) *ival = l1;
-	if( *v2 != 0 && l1 < maxlen ) strcpy( v2, buf2 ); 
+	if( *v2 != 0 && l1 < maxlen ) 
+	  *v2 = QString::fromLocal8Bit( buf2 ); 
         return ltpStr;
       }; 	
     };
@@ -157,7 +161,7 @@ int typeOfLine( const char *s, int maxlen, int *ival, char *v1, char *v2  )
       if( l1 >= maxlen || l1 < 2 ) return ltpUnk;
       if( ival != 0 ) *ival = l1-1;
       if( v1 != 0 ) { v1[0] = 0; strncat( v1, buf1, MAX_NAMELEN-1 ); };
-      if( v2 != 0 ) { v2[0] = 0; strncat( v2, buf2+1, maxlen-1 ); };
+      if( v2 != 0 ) { *v2 = QString::fromLocal8Bit( buf2+1 ); v2->truncate( maxlen-1 ); };
       return ltpValStart;
     };
     k = deQuoteString( s+i, buf2, MAX_INPUTLEN );
@@ -166,7 +170,7 @@ int typeOfLine( const char *s, int maxlen, int *ival, char *v1, char *v2  )
     if( l1 >= maxlen ) return ltpUnk;
     if( ival != 0 ) *ival = l1;
     if( v1 != 0 ) { v1[0] = 0; strncat( v1, buf1, MAX_NAMELEN-1 ); };
-    if( v2 != 0 ) { v2[0] = 0; strncat( v2, buf2, maxlen-1 ); };
+    if( v2 != 0 ) { *v2 = QString::fromLocal8Bit( buf2 ); v2->truncate( maxlen ); };
     return ltpVal;
   };
   return ltpUnk;
@@ -358,22 +362,23 @@ int deQuoteString( const char *src, char *dst, int maxlen )
   return 0;
 }
 
-int readMlStr( istream *is, char* buf, int ml, const char *delim )
+int readMlStr( istream *is, QString* buf, int ml, const char *delim )
 {
   int j, k, l, lt;
-  char bi[MAX_INPUTLEN], bq[MAX_INPUTLEN];
+  char bi[MAX_INPUTLEN];
+  QString  bq;
   lt = strlen0( delim );
   if( lt < 1  ||  ml < 1 ) return -1;
-  l = 0; buf[0] = 0;
+  l = 0; *buf = QString();
   while( 1 ) {
     is->getline( bi, MAX_INPUTLEN );
     if( ! is->good() ) return -1;
     if( strncmp( delim, bi, lt ) == 0 ) break;
-    k = typeOfLine( bi, MAX_INPUTLEN, &j, 0, bq );
+    k = typeOfLine( bi, MAX_INPUTLEN, &j, 0, &bq );
     if( k == ltpComment ) continue;
     if( k != ltpStr ) return -1;
     if( l+j >= ml ) return -1;
-    strcat( buf, bq ); l += j;
+    *buf += bq ; l += j;
   };
   return 0;
 }

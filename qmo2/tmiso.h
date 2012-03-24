@@ -55,7 +55,7 @@ class TElmLink : public TDataSet { //@ c,{},(380,320),"Object links"
    virtual const char* getHelp(void) const;
  protected:
    /** names of elements, which outputs will be used as inputs */
-   char inps[4][MAX_NAMELEN]; 
+   QString inps[4]; 
    /** flag: no autotomatic processing */
    int noauto; 
    /** flag: locked state: x = u[0] */
@@ -69,9 +69,9 @@ class TElmLink : public TDataSet { //@ c,{},(380,320),"Object links"
    /** flag: dont show icon */
    int noIcon;
    /** names of elms, which outputs will be used as parm inputs */
-   char pinps[4][MAX_NAMELEN]; 
+   QString pinps[4]; 
    /** names of inner params, to be modifyed */ 
-   char pnames[4][MAX_NAMELEN]; 
+   QString pnames[4]; 
    /** inner flags for params: 1-only start of loop, ..? */
    int pflags[4]; 
    /** data descriptors */ 
@@ -171,7 +171,7 @@ class TMiso : public TDataSet  {
    /** order, in which elements will be used */
    int ord; 
    /** description on element */
-   char descr[60]; 
+   QString descr; 
    /** visual coordinates */
    int vis_x, vis_y;
    /** time step -- setted by preRun */

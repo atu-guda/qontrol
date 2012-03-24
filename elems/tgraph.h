@@ -55,15 +55,15 @@ class TGraph : public TDataSet  {
    /** fills fields in GraphInfo structure */
    int fillGraphInfo( GraphInfo *gi ) const;
  protected:
-   /** title of graph ++title_s80: */
-   char title[80];
-   /** name of output array for x ++xname_s32 */
-   char xname[MAX_NAMELEN];
-   /** names of output array for y0 ++yname{0-5}_s32 */
-   char yname[6][MAX_NAMELEN];
-   /** back color ++bgcolor_ic */
+   /** title of graph  */
+   QString title;
+   /** name of output array for x  */
+   QString xname;
+   /** names of output array for y0  */
+   QString yname[6];
+   /** back color  */
    int bgcolor;
-   /** color of lines ++colors{0..5}_ic */
+   /** color of lines */
    int ycolor[6];
    // TODO: legend
  

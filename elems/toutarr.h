@@ -73,9 +73,9 @@ class TOutArr : public TDataSet  {
    /** type of array: 0:simple, 1:parm1, 2:parm2, 3:special */
    int type;
    /** name of element to use */
-   char name[MAX_NAMELEN];
+   QString name;
    /** label of data */
-   char label[MAX_LABELLEN];
+   QString label;
    /** each n-th data collect. def=1, current value of counter(0..nq-1) */
    int nq, cnq;
    /** latch value of counter */

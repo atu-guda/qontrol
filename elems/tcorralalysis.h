@@ -73,11 +73,11 @@ class TCorrAnalysis : public TMiso  {
    /** time start / stop values */
    double t0, t1;
    /** Names of input arrays if type=UseArrays */
-   char x_in[MAX_NAMELEN], y_in[MAX_NAMELEN];
+   QString x_in, y_in;
    /** indexes of output values to be stored to model */
    int out_a, out_b, out_corr, out_ok;
    /** names of output arrays */
-   char x_oname[MAX_NAMELEN], y_oname[MAX_NAMELEN], c_oname[MAX_NAMELEN];
+   QString x_oname, y_oname, c_oname;
    /** main output source */
    int mainOutput;
    /** current loop # and number of collected data,  ok state - calculated */

@@ -67,7 +67,7 @@ TLogic::TLogic( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
   ptrs[4] = &type; ptrs[6] = &level; 
   ptrs[7] = &useNInp0; ptrs[8] = &useNInp1;  
   ptrs[9] = &useNInp2;  ptrs[10] = &useNInp3;  

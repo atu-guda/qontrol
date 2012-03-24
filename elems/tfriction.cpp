@@ -76,7 +76,7 @@ TFriction::TFriction( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
   ptrs[4] = &mass; ptrs[6] = &f_mx; ptrs[8] = &kf_mx;
   ptrs[10] = &kfv; ptrs[11] = &useMf;
   ptrs[12] = &v;

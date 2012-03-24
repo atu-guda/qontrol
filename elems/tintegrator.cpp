@@ -85,7 +85,7 @@ TIntegrator::TIntegrator( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
   ptrs[4] = &ki;  ptrs[6] = &useMin; ptrs[7] = &vmin;
   ptrs[8] = &useMax; ptrs[9] = &vmax;
   ptrs[11] = &s_val; ptrs[12] = &useReset; ptrs[13] = &useBase;

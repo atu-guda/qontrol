@@ -91,8 +91,6 @@ TFourier::TFourier( TDataSet* aparent )
   omega = 1; t0 = 0; t1 = 1e6; tp = 2 * M_PI / omega; 
   np = n_st = n_en = ii = 0; nn = nper = 1;
   ng = 3; useOptim = 1; useFill = 0;
-  a_oname[0] = b_oname[0] = am_oname[0] = om_oname[0] 
-    = x_oname[0] = y_oname[0] = 0;
   out_a = out_b = out_am = out_om = -1;
   s_x2 = a0 = a1 = b1 = ampl = ampl1 = phi = qpow = qpow1 = 0;
   aa = bb = am = 0; 
@@ -101,7 +99,7 @@ TFourier::TFourier( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
   ptrs[4] = &omega; ptrs[6] = &ng; ptrs[8] = &t0;
   ptrs[10] = &t1; ptrs[11] = &useOptim;
   ptrs[16] = &out_a; ptrs[17] = &a_oname; 
@@ -205,28 +203,28 @@ int TFourier::endLoop(void)
     for( i=0; i<=ng; i++ ) 
       model->setVar( out_om + i, omega * i );
   };
-  arran = model->outname2out_nu( a_oname );// ---- fill a,b,am output arrays
+  arran = model->outname2out_nu( a_oname.toLocal8Bit().constData() );// ---- fill a,b,am output arrays
   arra = model->getOutArr( arran );
   if( arra != 0 ) {
     arra->alloc( ng+1, 1 );
     for( i=0; i<=ng; i++ )
       arra->push_val( aa[i], 10000 ); // ignore level
   };
-  arrbn = model->outname2out_nu( b_oname );
+  arrbn = model->outname2out_nu( b_oname.toLocal8Bit().constData() );
   arrb = model->getOutArr( arrbn );
   if( arrb != 0 ) {
     arrb->alloc( ng+1, 1 );
     for( i=0; i<=ng; i++ )
       arrb->push_val( bb[i], 10000 ); // ignore level
   };
-  arramn = model->outname2out_nu( am_oname );
+  arramn = model->outname2out_nu( am_oname.toLocal8Bit().constData() );
   arram = model->getOutArr( arramn );
   if( arram != 0 ) {
     arram->alloc( ng+1, 1 );
     for( i=0; i<=ng; i++ )
       arram->push_val( am[i], 10000 ); // ignore level
   };
-  arromn = model->outname2out_nu( om_oname );
+  arromn = model->outname2out_nu( om_oname.toLocal8Bit().constData() );
   arrom = model->getOutArr( arromn );
   if( arrom != 0 ) {
     arrom->alloc( ng+1, 1 );
@@ -235,8 +233,8 @@ int TFourier::endLoop(void)
   };
 
   if( ! useFill ) return rc;
-  arrxn = model->outname2out_nu( x_oname ); // -- fill compare out array
-  arryn = model->outname2out_nu( y_oname );
+  arrxn = model->outname2out_nu( x_oname.toLocal8Bit().constData() ); // -- fill compare out array
+  arryn = model->outname2out_nu( y_oname.toLocal8Bit().constData() );
   arrx = model->getOutArr( arrxn );
   arry = model->getOutArr( arryn );
   if( arrx == 0 || arry == 0 ) return rc;

@@ -65,7 +65,7 @@ class TLinP1Q0 : public TMiso  {
    /** coefficient near f(x), near u(t), old value of x  */
    double a, ku, x_old;
    /** name of element to compute f(x) */
-   char fx[MAX_NAMELEN];
+   QString fx;
    /** element # */
    int elnu_fx;
    /** data descriptors -- with base class elements */ 

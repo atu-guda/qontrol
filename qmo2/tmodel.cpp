@@ -48,7 +48,6 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   ic_mouse = ic_joy = ic_sound = ic_key = ic_aux = -1;
   oc_0 = oc_1 = oc_2 = oc_3 = oc_4 = oc_5 = -1;
   oct_0 = oct_1 = oct_2 = oct_3 = oct_4 = oct_5 = 0;
-  long_descr[0] = 0;
   ii = il1 = il2 = i_tot = 0;
   rtime = t = 0; tdt = tt / nn; 
   prm0 = prm1 = prm2 = prm3 = 0; start_time = 0; 
@@ -570,15 +569,17 @@ int TModel::insOut( const char *outname, const char *objname )/*{{{1*/
   ob = static_cast<TOutArr*>( ptrs[nelm-1] );
   if( ob == 0 || ob->isChildOf( "TOutArr" ) == 0 ) 
     return -1;
-  ob->setDataSS( "name", objname, 0 );
+  QString t_objname( objname ); // TODO drop
+  ob->setDataSS( "name", &t_objname, 0 );
   
   if( strncmp( outname, "out_", 4 ) == 0 
       && outname[4] != 0 &&
       isGoodName(outname+4) ) 
   {
-    ob->setDataSS( "label", outname+4, 0 );
+    QString t( outname+4 );
+    ob->setDataSS( "label", &t, 0 );
   } else {
-    ob->setDataSS( "label", objname, 0 );
+    ob->setDataSS( "label", &t_objname, 0 );
   }
   linkNames(); 
   modified |= 1;
@@ -712,8 +713,7 @@ int TModel::linkNames(void)/*{{{1*/
   static const char* p_names[] = {"pinps0","pinps1","pinps2","pinps3"};
   static const char* n_names[] = {"pnames0","pnames1","pnames2","pnames3"};
   static const char* f_names[] = {"pflags0","pflags1","pflags2","pflags3"};
-  char lname[MAX_NAMELEN], pname[MAX_NAMELEN], nname[MAX_NAMELEN];
-  char oname[MAX_NAMELEN];
+  QString lname, pname, nname, oname;
   TDataSet* ob; TElmLink* lob; TOutArr *arr;
   n_el = n_out = n_graph = 0;    
   v_el.clear(); v_ord.clear(); v_flg.clear();
@@ -756,19 +756,19 @@ int TModel::linkNames(void)/*{{{1*/
     if( ob_first ) k |= 4; if( ob_last ) k |= 8;
     v_flg.push_back( k );
     for( j=0; j<4; j++ ) {
-      lname[0] = 0;  pname[0] = 0; nname[0] = 0;
-      lob->getDataSS( i_names[j], lname, MAX_NAMELEN, 0 );
-      lob->getDataSS( p_names[j], pname, MAX_NAMELEN, 0 );
-      lob->getDataSS( n_names[j], nname, MAX_NAMELEN, 0  );
+      lname = "";  pname = ""; nname = "";
+      lob->getDataSS( i_names[j], &lname, MAX_NAMELEN, 0 );
+      lob->getDataSS( p_names[j], &pname, MAX_NAMELEN, 0 );
+      lob->getDataSS( n_names[j], &nname, MAX_NAMELEN, 0  );
       lob->getDataSI( f_names[j], &flg, 0 );
-      if( lname[0] == 0 || ( iin = oname2elnu( lname ) ) == -1 ) {
+      if( lname[0] == 0 || ( iin = oname2elnu( lname.toLocal8Bit().constData() ) ) == -1 ) {
 	inps[i].l[j] = -1;
       } else {
         inps[i].l[j] = iin;
         maxli = j+1;
       };
-      if( pname[0] == 0 || ( ipa = oname2elnu( pname ) ) == -1 ||
-			   ( ipn = ob->getDataIdx( nname )) < 0 ) {
+      if( pname[0] == 0 || ( ipa = oname2elnu( pname.toLocal8Bit().constData() ) ) == -1 ||
+			   ( ipn = ob->getDataIdx( nname.toLocal8Bit().constData() )) < 0 ) {
 	pinps[i].l[j] = -1; pnames[i].l[j] = -1;
       } else {
         pinps[i].l[j] = ipa;
@@ -783,10 +783,10 @@ int TModel::linkNames(void)/*{{{1*/
   for( out_nu=0; out_nu<n_out; out_nu++ ) {
     arr = getOutArr( out_nu );
     if( arr == 0 ) { v_oute.push_back(-1); v_outt.push_back(-1); };
-    oname[0] = 0; out_tp = -1;
-    arr->getDataSS( "name", oname, MAX_NAMELEN, 0 );
+    oname = ""; out_tp = -1;
+    arr->getDataSS( "name", &oname, MAX_NAMELEN, 0 );
     arr->getDataSI( "type", &out_tp, 0 );
-    elnu = oname2elnu( oname );
+    elnu = oname2elnu( oname.toLocal8Bit().constData() );
     v_oute.push_back( elnu ); v_outt.push_back( out_tp );
   };
   return 0;
@@ -1236,7 +1236,7 @@ void TModel::fillCommon(void)/*{{{1*/
   strcpy( d_i[i].name, "long_descr" );
   d_i[i].dlg_x = 20;  d_i[i].dlg_y = 330;
   d_i[i].dlg_w = 580; d_i[i].dlg_h = 90;
-  i++; ptrs.push_back( long_descr );
+  i++; ptrs.push_back( &long_descr );
   
   // ------------------------- line ------------------------------
   // -- button Ok

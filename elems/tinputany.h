@@ -55,7 +55,7 @@ class TInputAny : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** name of source */
-   char name[80];
+   QString name;
    /** type of input: -1:bad, 0:object, 1-vars.  */
    int type, ne;
    /** pointer to element  */

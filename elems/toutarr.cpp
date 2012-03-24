@@ -60,14 +60,14 @@ TOutArr::TOutArr( TDataSet* apar )
 {
   int i;
   arrsize = 0; dmin = 0; dmax = 1; n = ny = 0; nq = 1; cnq = lnq = 0;
-  type = 0; name[0] = 0; label[0] = 0;
+  type = 0; // name[0] = 0; label[0] = 0;
   arr = 0;
   d_i = toutarr_d_i;
   initHash();
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &type; ptrs[3] = name; ptrs[5] = label;
+  ptrs[1] = &type; ptrs[3] = &name; ptrs[5] = &label;
   ptrs[7] = &nq;
   ptrs[9] = &lnq;
   ptrs[13] = &arrsize; ptrs[14] = &dmin; ptrs[15] = &dmax; 
@@ -172,7 +172,7 @@ int TOutArr::fillGraphInfo( GraphInfo *gi ) const
   gi->row = gi->col = 0; gi->title[0] = 0; gi->ny = 1;
   for( i=0; i<7; i++ ) gi->label[i][0] = 0;
   strncat( gi->title, getName(), sizeof( gi->title )-1 );
-  strncat( gi->label[0], label, sizeof( gi->label[0] )-1 );
+  strncat( gi->label[0], label.toLocal8Bit().constData(), sizeof( gi->label[0] )-1 );
   if( arr == 0  ||  n < 1 )
     return -2;
   gi->row = n; gi->col = 1; gi->ny = ny;

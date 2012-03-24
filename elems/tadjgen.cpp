@@ -74,7 +74,7 @@ TAdjGen::TAdjGen( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
   ptrs[4] = &type; ptrs[5] = &useReset; ptrs[6] = &useLock;
   ptrs[7] = &outStrobe; ptrs[8] = &useSignStrobe; ptrs[9] = &usePlusStrobe; 
   ptrs[10] = &useZero;

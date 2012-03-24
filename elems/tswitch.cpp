@@ -61,7 +61,7 @@ TSwitch::TSwitch( TDataSet* aparent )
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[1] = &ord; ptrs[2] = descr;  // from TMiso
+  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
   ptrs[4] = &level1; ptrs[6] = &level2;
   // from TMiso 
   ptrs[10] = links;
