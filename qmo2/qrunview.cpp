@@ -20,7 +20,6 @@
 #include <QApplication>
 #include <QtGui>
 
-#include "resource.h"
 #include "miscfun.h"
 #include "dataset.h"
 #include "tmodel.h"
@@ -29,8 +28,7 @@
 
 using namespace std;
 
-QRunView::QRunView( TModel *amodel, int atype, 
-                    QWidget *parent, const char * /*name*/, Qt::WFlags /*wf*/ )
+QRunView::QRunView( TModel *amodel, int atype, QWidget *parent )
           : QDialog( parent )
 {
   int i;

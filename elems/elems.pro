@@ -6,7 +6,7 @@ CONFIG += release qt warn_on staticlib thread
 
 LIBS += -lgsl -lgslcblas -lm 
 
-INCLUDEPATH += ../qmo2
+INCLUDEPATH += .. ../qmo2
 
 SOURCES += \
   tadjgen.cpp \

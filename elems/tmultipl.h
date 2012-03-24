@@ -2,7 +2,7 @@
                           tmultipl.h  -  description
                              -------------------
     begin                : Fri Aug 25 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -27,6 +27,7 @@
   */
 
 class TMultipl : public TMiso  {
+  Q_OBJECT
  public:
    /** constructor */
    explicit TMultipl( TDataSet* aparent );

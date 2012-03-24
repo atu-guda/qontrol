@@ -2,7 +2,7 @@
                           tdelay.h  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -29,6 +29,7 @@ class TCircBuf;
   */
 
 class TDelay : public TMiso  {
+  Q_OBJECT
  public:
    /** constructor */
    explicit TDelay( TDataSet *aparent );

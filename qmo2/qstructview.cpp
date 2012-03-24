@@ -17,7 +17,6 @@
 
 #include <QtGui>
 
-#include "resource.h"
 #include "miscfun.h"
 #include "qanydial.h"
 #include "qstructview.h"
@@ -30,8 +29,7 @@
 
 
   
-QStructView::QStructView( QMo2Doc *adoc, QMo2View *mview,  
-                          QWidget *parent, const char * /*name*/ )
+QStructView::QStructView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
             : QWidget( parent )
 {
   doc = adoc; mainview = mview;

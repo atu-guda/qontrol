@@ -2,7 +2,7 @@
                           qstatusmodel.cpp  -  description
                              -------------------
     begin                : Sat Aug 17 2002 
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -14,15 +14,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <QFont>
-#include <QLabel>
 
-#include "resource.h"
+#include <QtGui>
+
 #include "miscfun.h"
 #include "qstatusmodel.h"
 
-QStatusModel::QStatusModel( QMo2View *mview, QWidget *parent,
-                        const char * /*name*/ )
+QStatusModel::QStatusModel( QMo2View *mview, QWidget *parent )
            : QStatusBar( parent )
 {
   mainview = mview;

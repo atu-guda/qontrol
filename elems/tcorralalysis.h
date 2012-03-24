@@ -2,7 +2,7 @@
                           tcorralalysis.h  -  description
                              -------------------
     begin                : Fri Sep 8 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -27,6 +27,7 @@
   */
 
 class TCorrAnalysis : public TMiso  {
+  Q_OBJECT
  public:
    /** constructor */
    explicit TCorrAnalysis( TDataSet* aparent );

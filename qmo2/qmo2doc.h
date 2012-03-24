@@ -2,7 +2,7 @@
                           qmo2doc.h  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -18,9 +18,7 @@
 #ifndef QMO2DOC_H
 #define QMO2DOC_H
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif 
 
 // include files for QT
 #include <QObject>

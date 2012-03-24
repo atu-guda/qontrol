@@ -49,7 +49,6 @@ HEADERS += \
   qrunview.h \
   qstatusmodel.h \
   qstructview.h \
-  resource.h \
   rootdata.h \
   tmiso.h \
   tmodel.h 

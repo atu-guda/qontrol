@@ -16,23 +16,14 @@
  ***************************************************************************/
 
 #include <QString>
-#include <QLabel>
-#include <QCheckBox>
-#include <QComboBox>
-#include <QLineEdit>
-#include <QTextEdit>
-#include <QPushButton>
-#include <QGridLayout>
-#include <QValidator>
-#include <QTextBrowser>
-#include <QGroupBox>
+#include <QtGui>
 
 #include "../config.h"
 #include "qcolorbtn.h"
 #include "qmo2win.h"
 #include "qanydial.h"
 
-QAnyDialog::QAnyDialog( TDataSet *ads, QWidget *parent, const char * /*name*/ ) 
+QAnyDialog::QAnyDialog( TDataSet *ads, QWidget *parent ) 
            : QDialog( parent )
 {
   elms = 0; ds = ads; 
@@ -101,8 +92,7 @@ void  QAnyDialog::initDialog(void)
  		   qle->setGeometry( x, y, w, h );
 		   //qle->setEnabled( !(di->flags & efRODial) );
 		   if( di->v_max <= di->v_min )
-  		     qle->setValidator( new QDoubleValidator( -9.99999e300, 
-	        	                             9.99999e300, 12, this) );
+  		     qle->setValidator( new QDoubleValidator( this ) );
  		   else     
 		     qle->setValidator( new QDoubleValidator( di->v_min, 
 		                              di->v_max, 12, this ) );

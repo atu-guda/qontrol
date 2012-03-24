@@ -2,7 +2,7 @@
                           tgraph.h  -  description
                              -------------------
     begin                : Sat Aug 5 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -19,6 +19,7 @@
 #define TGRAPH_H
 
 #include "dataset.h"
+class GraphInfo;
 
 #define CLASS_ID_TGraph 700
 
@@ -27,6 +28,7 @@
   */
 
 class TGraph : public TDataSet  {
+  Q_OBJECT
  public:
     /** constructor */ 
    explicit TGraph( TDataSet *apar );

@@ -33,7 +33,7 @@ class QLabel;
 class QStatusModel : public QStatusBar  {
  Q_OBJECT
  public:
-   QStatusModel( QMo2View* mview, QWidget *parent, const char *name );
+   QStatusModel( QMo2View* mview, QWidget *parent );
    ~QStatusModel();
    void update();
 

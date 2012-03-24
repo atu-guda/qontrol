@@ -2,7 +2,7 @@
                           tlatch.h  -  description
                              -------------------
     begin                : Sat Sep 2 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -27,6 +27,7 @@
   */
 
 class TLatch : public TMiso  {
+  Q_OBJECT
  public:
    /** constructor */
    explicit TLatch( TDataSet *aparent );

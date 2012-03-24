@@ -2,7 +2,7 @@
                           qplotview.h  -  description
                              -------------------
     begin                : Sun Aug 20 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -18,15 +18,11 @@
 #ifndef QPLOTVIEW_H
 #define QPLOTVIEW_H
 
-#include <qstring.h>
-#include <qwidget.h>
-#include <qcolor.h>
-//Added by qt3to4:
-#include <QPaintEvent>
-#include <QResizeEvent>
-#include <QMouseEvent>
-#include <QKeyEvent>
+#include <QString>
+#include <QWidget>
+#include <QColor>
 
+class QResizeEvent;
 class QMo2Doc; class TRootData; class TModel;
 class TDataSet; class TMiso; class TGraph;
 class QPaintEvent; class QMouseEvent; class QKeyEvent; 
@@ -40,8 +36,7 @@ class QPlotView : public QWidget  {
  Q_OBJECT
  public:
    /** constructor */
-   QPlotView( QMo2Doc *adoc, TGraph *agra,
-              QWidget *parent, const char *name );
+   QPlotView( QMo2Doc *adoc, TGraph *agra, QWidget *parent );
    /** destructor */
    ~QPlotView();
    /** hint size for good view */

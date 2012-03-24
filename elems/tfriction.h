@@ -2,7 +2,7 @@
                           tfriction.h  -  description
                              -------------------
     begin                : Jul 18 2003
-    copyright            : (C) 2003 by atu
+    copyright            : (C) 2003-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -27,6 +27,7 @@
   */
 
 class TFriction : public TMiso  {
+  Q_OBJECT
  public:
    /** constructor */
    explicit TFriction( TDataSet *aparent );

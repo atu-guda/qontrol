@@ -2,7 +2,7 @@
                           trand.h  -  description
                              -------------------
     begin                : Thu Dec 18 2003
-    copyright            : (C) 2003 by atu
+    copyright            : (C) 2003-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -30,6 +30,7 @@
   */
 
 class TRand : public TMiso  {
+  Q_OBJECT
  public:
    /** constructor */
    explicit TRand( TDataSet* aparent );

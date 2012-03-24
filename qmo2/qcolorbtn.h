@@ -18,9 +18,9 @@
 #ifndef QCOLORBTN_H
 #define QCOLORBTN_H
 
-#include <qwidget.h>
-#include <qpushbutton.h>
-#include <qcolor.h>
+#include <QWidget>
+#include <QPushButton>
+#include <QColor>
 
 /**allow select color by pressing button
   *@author atu

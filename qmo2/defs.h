@@ -2,17 +2,14 @@
                           defs.h  -  description
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000 by atu
+    copyright            : GPL (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ********************************Ñ*****************************************/
 
 #ifndef _DEFS_H 
 #define _DEFS_H
 
-/** autoconf values */
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
 
 /* General constants */
 #define MAX_NAMELEN   32
@@ -37,6 +34,13 @@
 #define OBJ_NPRM 4
 
 typedef void *pvoid;
+
+#define IMIN (numeric_limits<int>::min())
+#define IMAX (numeric_limits<int>::max())
+#define UMIN (numeric_limits<unsigned int>::min())
+#define UMAX (numeric_limits<unsigned int>::max())
+#define DMIN (numeric_limits<double>::min())
+#define DMAX (numeric_limits<double>::max())
  
 enum _DATA_TYPES {
    dtpEnd = 0, dtpUndef = 0, 

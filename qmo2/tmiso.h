@@ -2,7 +2,7 @@
                           tmiso.h  -  description
                              -------------------
     begin                : Mon Jul 24 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -35,6 +35,7 @@ class TModel;
 */
 
 class TElmLink : public TDataSet { //@ c,{},(380,320),"Object links"
+  Q_OBJECT
  friend class TMiso;
  public:
    /** constructor */
@@ -120,6 +121,7 @@ struct LinkInfo {
  */
 
 class TMiso : public TDataSet  { 
+  Q_OBJECT
  public: 
    /** constructor */ 
    explicit TMiso( TDataSet *aparent );

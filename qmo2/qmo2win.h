@@ -20,13 +20,10 @@
 
 // include files for QT
 #include <QMainWindow>
-#include <QToolBar>
-#include <QMessageBox>
-#include <QPrinter>
 #include <QString>
-#include <QPixmap>
-#include <QCloseEvent>
-#include <QEvent>
+class QToolBar;
+class QPrinter;
+class QCloseEvent;
 
 class QMdiArea;
 class QSignalMapper;

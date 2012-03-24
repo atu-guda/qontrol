@@ -2,7 +2,7 @@
                           textrlatch.h  -  description
                              -------------------
     begin                : Mon Aug 28 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -29,6 +29,7 @@
   */
 
 class TExtrLatch : public TMiso  {
+  Q_OBJECT
  public:
    /** constructor */
    explicit TExtrLatch( TDataSet *aparent );

@@ -41,6 +41,7 @@ struct li_el { // structure for links representation in arrays;
   */
 
 class TModel : public TDataContainer  {
+  Q_OBJECT
  public:
   /** constructor */
   explicit TModel( TDataSet* aparent );

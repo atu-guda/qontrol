@@ -2,7 +2,7 @@
                           qanydial.h  -  description
                              -------------------
     begin                : Mon Jun 26 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -19,7 +19,7 @@
 #define QANYDIALOG_H
 
 #include <QDialog>
-// #include <QComboBox>
+
 class QComboBox;
 #include "dataset.h"
 
@@ -42,7 +42,7 @@ class QAnyDialog : public QDialog  {
  public: 
   /** default constructor -- 
       TDataSet *ads -- pointer to data containing element */
-  explicit QAnyDialog( TDataSet *ads , QWidget *parent=0, const char *name=0 );
+  explicit QAnyDialog( TDataSet *ads , QWidget *parent=0 );
   ~QAnyDialog();
   /** Creates all elements described in *ds */
   void initDialog(void);

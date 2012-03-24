@@ -2,7 +2,7 @@
                           tswitch.h  -  description
                              -------------------
     begin                : Sun Nov 19 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -27,6 +27,7 @@
 #define CLASS_ID_TSwitch 1022
 
 class TSwitch : public TMiso  {
+  Q_OBJECT
  public:
    /** constructor */
    explicit TSwitch( TDataSet* aparent );

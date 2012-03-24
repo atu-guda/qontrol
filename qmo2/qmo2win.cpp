@@ -24,7 +24,6 @@
 #include "qmo2doc.h"
 #include "qmo2win.h"
 #include "mo2settdlg.h"
-#include "resource.h"
 
 
 QMo2Win* QMo2Win::qmo2win = 0;
@@ -692,7 +691,7 @@ void QMo2Win::closeEvent ( QCloseEvent *e )
 
 QMo2View* QMo2Win::createChild( QMo2Doc* doc )
 {
-  QMo2View* w = new QMo2View( doc, this, "Name?", 0 );
+  QMo2View* w = new QMo2View( doc, this );
   mdiArea->addSubWindow( w );
   return w;
 }

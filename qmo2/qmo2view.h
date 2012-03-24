@@ -2,7 +2,7 @@
                           qmo2view.h  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -19,10 +19,9 @@
 #define QMO2VIEW_H
 
 // include files for Qt
-#include <qwidget.h>
-#include <QMainWindow>
-#include <QResizeEvent>
-#include <QCloseEvent>
+#include <QWidget>
+class QResizeEvent;
+class QCloseEvent;
 
 class QMo2Doc;
 class QStructView;
@@ -37,7 +36,6 @@ class QScrollArea;
 /**
  * This class provides an base for QMo2Doc view.
  */
-// class QMo2View : public QMainWindow
 class QMo2View : public QWidget
 {
    Q_OBJECT
@@ -51,7 +49,7 @@ class QMo2View : public QWidget
      * @param pDoc  your document instance that the view represents. 
      * Create a document before calling the constructor
      * or connect an already existing document to a new MDI child widget.*/
-   QMo2View( QMo2Doc* pDoc, QWidget* parent, const char *name, int wflags );
+   QMo2View( QMo2Doc* pDoc, QWidget* parent );
    /** Destructor for the main view */
    ~QMo2View();
    /** returns a pointer to the document connected to the view*/

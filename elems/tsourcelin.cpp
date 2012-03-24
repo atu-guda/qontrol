@@ -2,7 +2,7 @@
                           tsourcelin.cpp  -  description
                              -------------------
     begin                : Thu Jul 31 2003
-    copyright            : (C) 2003 by atu
+    copyright            : (C) 2003-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 

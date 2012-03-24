@@ -2,7 +2,7 @@
                           tlogic.h  -  description
                              -------------------
     begin                : Mon Sep 4 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -27,6 +27,7 @@
   */
 
 class TLogic : public TMiso  {
+  Q_OBJECT
  public:
    /** constructor */
    explicit TLogic( TDataSet* aparent );

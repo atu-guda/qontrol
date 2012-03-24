@@ -34,8 +34,7 @@ class QRunView : public QDialog  {
  Q_OBJECT
  public:
    /** constructor */
-   QRunView( TModel *amodel, int atype, 
-       QWidget *parent, const char *name, Qt::WFlags wf = 0 );
+   QRunView( TModel *amodel, int atype, QWidget *parent );
    /** destructor */
    ~QRunView();
    /** hint size for good view */

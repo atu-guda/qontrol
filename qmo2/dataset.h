@@ -2,7 +2,7 @@
                           dataset.h  -  description
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000 by atu
+    copyright            : GPL (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -11,6 +11,7 @@
 
 #include <iosfwd>
 #include <vector>
+#include <QObject>
 #include "defs.h"
 #define MAX_DESCRLEN 80
 #define MAX_LISTLEN  256
@@ -78,7 +79,8 @@ typedef TDataInfo *PTDataInfo;
 typedef const TDataInfo *CPTDataInfo;
 
 /** base class for all objects */
-class TDataSet {
+class TDataSet : public QObject {
+  Q_OBJECT
  public:
    /** default constructor */
    explicit TDataSet( TDataSet *aparent );

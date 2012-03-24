@@ -27,6 +27,7 @@
   */
 
 class TLorenz : public TMiso  {
+  Q_OBJECT
  public:
    /** constructor */
    explicit TLorenz( TDataSet* aparent );

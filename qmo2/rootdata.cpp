@@ -2,7 +2,7 @@
                           root.cpp  -  TRootData implementation
                              -------------------
     begin                : Thu Apr 20 2000
-    copyright            : GPL (C) 2000 by atu
+    copyright            : GPL (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 

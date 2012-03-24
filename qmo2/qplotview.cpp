@@ -21,7 +21,6 @@
 #include <cmath>
 #include <QtGui>
 
-#include "resource.h"
 #include "miscfun.h"
 #include "dataset.h"
 #include "qanydial.h"
@@ -36,8 +35,7 @@
 
 using namespace std;
 
-QPlotView::QPlotView( QMo2Doc *adoc, TGraph *agra,
-                      QWidget *parent, const char * /*name*/ )
+QPlotView::QPlotView( QMo2Doc *adoc, TGraph *agra, QWidget *parent )
           : QWidget( parent )
 {
   int i;

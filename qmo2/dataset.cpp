@@ -2,17 +2,19 @@
                           dataset.cpp  -  description
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000 by atu
+    copyright            : GPL (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
 #include <vector>
-#include <stdio.h>
+#include <cstdio>
 #include "miscfun.h"
 #include "dataset.h"
+
+using namespace std;
 
 // ---------------- TDataInfo -----------------------
 
@@ -90,6 +92,7 @@ const char* TDataSet::helpstr =
  "Never to be used directly";
 
 TDataSet::TDataSet( TDataSet* aparent )
+         :QObject( aparent )
 {
  parent = aparent;
  nelm = 0; allow_add = 0; d_i_alloc = 0; state = stateGood; modified = 0;

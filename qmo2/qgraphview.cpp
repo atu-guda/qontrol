@@ -2,7 +2,7 @@
                           qgraphview.cpp  -  description
                              -------------------
     begin                : Sat Aug 19 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -14,24 +14,15 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <QPainter>
-#include <QPen>
-#include <QBrush>
-#include <QFont>
-#include <QMenu>
-#include <QMessageBox>
-#include <QMouseEvent>
-#include <QPaintEvent>
+#include <QtGui>
 
-#include "resource.h"
 #include "miscfun.h"
 #include "qmo2doc.h"
 #include "qmo2win.h"
 #include "qmo2view.h"
 #include "qgraphview.h"
 
-QGraphView::QGraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent,
-                        const char * /*name*/ )
+QGraphView::QGraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
            : QWidget(parent)
 {
   doc = adoc; mainview = mview;

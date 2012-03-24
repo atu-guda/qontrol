@@ -2,7 +2,7 @@
                           rootdata.h  -  description lcass TRootData
                              -------------------
     begin                : Thu Apr 20 16:55:07 2000
-    copyright            : GPL (C) 2000 by atu
+    copyright            : GPL (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -17,6 +17,7 @@
     so can create all registered class objects
 */
 class TRootData : public TDataContainer {
+  Q_OBJECT
  public:
    /** constructor - registered def classes */
    explicit TRootData( TDataSet* aparent );

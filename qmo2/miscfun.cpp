@@ -2,17 +2,17 @@
                           miscfun.cpp  -  description
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000 by atu
+    copyright            : GPL (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
 #include <fstream>
 #include <iomanip>
-#include <ctype.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
+#include <cctype>
+#include <cstring>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
 #include <unistd.h>
 #include <sys/time.h>
 #include "../config.h"

@@ -2,7 +2,7 @@
                           qstructview.h  -  description
                              -------------------
     begin                : Sat Aug 12 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -18,11 +18,12 @@
 #ifndef QSTRUCTVIEW_H
 #define QSTRUCTVIEW_H
 
-#include <qwidget.h>
-//Added by qt3to4:
-#include <QPaintEvent>
-#include <QMouseEvent>
-#include <QKeyEvent>
+#include <QWidget>
+
+class QPaintEvent;
+class QMouseEvent;
+class QKeyEvent;
+
 #include "tmodel.h"
 #include "qmo2doc.h"
 #include "qmo2view.h"
@@ -37,7 +38,7 @@ class QStructView : public QWidget  {
    Q_OBJECT
  public:
    /** constructor */
-   QStructView( QMo2Doc *adoc, QMo2View *mview,  QWidget *parent, const char *name = 0 );
+   QStructView( QMo2Doc *adoc, QMo2View *mview,  QWidget *parent );
    /** destructor */
    virtual ~QStructView();
    /** print contents */

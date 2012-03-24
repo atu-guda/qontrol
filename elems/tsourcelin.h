@@ -2,7 +2,7 @@
                           tsourcelin.h  -  description
                              -------------------
     begin                : Thu Aug 24 2003
-    copyright            : (C) 2003 by atu
+    copyright            : (C) 2003-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -28,6 +28,7 @@
   */
 
 class TSourceLin : public TMiso  {
+  Q_OBJECT
  public:
    /** constructor */
    explicit TSourceLin( TDataSet* aparent );

@@ -2,7 +2,7 @@
                           tlinp1q0.h  -  description
                              -------------------
     begin                : Fri Sep 1 2000
-    copyright            : (C) 2000-2003 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -34,6 +34,7 @@
   */
 
 class TLinP1Q0 : public TMiso  {
+  Q_OBJECT
  public:
    /** constructor */
    explicit TLinP1Q0( TDataSet *aparent );

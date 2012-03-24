@@ -15,20 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <qwidget.h>
-#include <qpainter.h>
-#include <qpixmap.h>
-#include <qpen.h>
-#include <qbrush.h>
-#include <qfont.h>
-#include <qnamespace.h>
-#include <qmessagebox.h>
-#include <QMenu>
-#include <qnamespace.h>
-#include <QMouseEvent>
-#include <QPaintEvent>
+#include <QtGui>
 
-#include "resource.h"
 #include "qmo2win.h"
 #include "qmo2doc.h"
 #include "qmo2view.h"
@@ -36,7 +24,7 @@
 #include "qoutview.h"
 
 QOutView::QOutView(  QMo2Doc *adoc,  QMo2View *mview, 
-                     QWidget *parent, const char * /*name*/ )
+                     QWidget *parent )
          : QWidget( parent )
 {
   doc = adoc; mainview = mview;

@@ -33,9 +33,8 @@
 #include "qplotview.h"
 
 
-QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent,
-    const char* /*name*/, int /*wflags*/ )
-: QWidget( parent ) // TODO: REVIVE wflags or KILL it with name
+QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
+: QWidget( parent ) 
 {
   doc = pDoc;
   QSize p_size = parent->size();
@@ -48,15 +47,15 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent,
   QGridLayout *grLay = new QGridLayout;
 
   scrollArea = new QScrollArea( this );
-  sview = new QStructView( doc, this, this, "structure_view" );
+  sview = new QStructView( doc, this, this );
   scrollArea->setWidget( sview );
   scrollArea->setLineWidth( 2 );
   scrollArea->setMidLineWidth( 2 );
   scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
-  oview = new QOutView( doc, this, this, "out_view" );
-  gview = new QGraphView( doc, this, this, "graph_view" );
+  oview = new QOutView( doc, this, this );
+  gview = new QGraphView( doc, this, this );
   
-  stam = new QStatusModel( this, this, "status_model" );
+  stam = new QStatusModel( this, this );
 
   grLay->addWidget( scrollArea, 0, 0 );
   grLay->addWidget( oview, 0, 1 );
@@ -354,7 +353,7 @@ void QMo2View::editElm()
   ob = model->getMiso( sel );
   if( ob == 0 )
     return;
-  adi = new QAnyDialog( ob, this, "edit_dial" );
+  adi = new QAnyDialog( ob, this );
   rc = adi->exec_trans();
   if( rc == QDialog::Accepted ) {
     model->reset();
@@ -379,7 +378,7 @@ void QMo2View::linkElm()
 
   el = static_cast<TElmLink*>( ob->getObj( "links" ) );
   if( el == 0 ) return ;
-  adi = new QAnyDialog( el, this, "link_dial" );
+  adi = new QAnyDialog( el, this );
   rc = adi->exec_trans();
   delete adi;
   if( rc == QDialog::Accepted ) {
@@ -723,7 +722,7 @@ void QMo2View::editOut()
   arr = model->getOutArr( level );
   if( arr == 0 )
     return;
-  adi = new QAnyDialog( arr, this, "out_dial" );
+  adi = new QAnyDialog( arr, this );
   rc = adi->exec_trans();
   delete adi;
   if( rc == QDialog::Accepted ) {
@@ -878,7 +877,7 @@ void QMo2View::editGraph()
   gra = model->getGraph( level );
   if( gra == 0 )
     return;
-  adi = new QAnyDialog( gra, this, "graph_dial" );
+  adi = new QAnyDialog( gra, this );
   rc = adi->exec_trans();
   delete adi;
   if( rc == QDialog::Accepted ) {
@@ -902,7 +901,7 @@ void QMo2View::showGraph()
     return;
   plotWnd = new QMainWindow( this );
   plotWnd->setWindowTitle( QString( PACKAGE ": Plot ") + QString(gra->getName()) );
-  pv = new QPlotView( doc, gra, plotWnd, "plot_view" );
+  pv = new QPlotView( doc, gra, plotWnd );
   plotWnd->setCentralWidget( pv );
   pv->setFocus();
   plotWnd->show();
@@ -1047,7 +1046,7 @@ void QMo2View::editModel()
   if( ! checkState( validCheck ) )
     return;	
 
-  adi = new QAnyDialog( model, this, "mod_dial" );
+  adi = new QAnyDialog( model, this );
   rc = adi->exec_trans();
   if( rc == QDialog::Accepted ) {
     model->reset();
@@ -1096,7 +1095,7 @@ void QMo2View::runRun()
   QRunView *rv;
   if( ! checkState( validCheck ) )
     return;	
-  rv = new QRunView( model, 0, this, 0 ); // TODO remove 0
+  rv = new QRunView( model, 0, this );
   rv->exec();
   emit viewChanged();
   sview->setFocus();
@@ -1107,7 +1106,7 @@ void QMo2View::runPrm()
   if( ! checkState( validCheck ) )
     return;	
   QRunView *rv;
-  rv = new QRunView( model, 1, 0, "run_view", 0 ); // TODO remove 0
+  rv = new QRunView( model, 1, this );
   rv->exec();
   emit viewChanged();
   sview->setFocus();
@@ -1118,7 +1117,7 @@ void QMo2View::runPrm2()
   if( ! checkState( validCheck ) )
     return;	
   QRunView *rv;
-  rv = new QRunView( model, 2, 0, "run_view", 0 );  // TODO remove 0
+  rv = new QRunView( model, 2, this );  // TODO remove 0
   rv->exec();
   emit viewChanged();
   sview->setFocus();

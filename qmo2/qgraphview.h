@@ -2,7 +2,7 @@
                           qgraphview.h  -  description
                              -------------------
     begin                : Sat Aug 19 2000
-    copyright            : (C) 2000 by atu
+    copyright            : (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -18,10 +18,10 @@
 #ifndef QGRAPHVIEW_H
 #define QGRAPHVIEW_H
 
-#include <qwidget.h>
-//Added by qt3to4:
-#include <QPaintEvent>
-#include <QMouseEvent>
+#include <QWidget>
+class QPaintEvent;
+class QMouseEvent;
+
 #include "tmodel.h"
 #include "qmo2doc.h"
 #include "qmo2view.h"
@@ -32,7 +32,7 @@
 class QGraphView : public QWidget  {
  Q_OBJECT
  public:
-   QGraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent, const char *name );
+   QGraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent );
    ~QGraphView();
 
  protected:

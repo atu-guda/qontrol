@@ -2,7 +2,7 @@
                           datacont.h  -  description
                              -------------------
     begin                : Thu Apr 20 2000
-    copyright            : GPL (C) 2000 by atu
+    copyright            : GPL (C) 2000-2012 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -11,7 +11,7 @@
 #ifndef _DATACONT_H
 #define _DATACONT_H
 
-#include <dataset.h>
+#include "dataset.h"
 
 #define CLASS_ID_TDataContainer 3
 
@@ -20,6 +20,7 @@
   */
 
 class TDataContainer : public TDataSet  {
+  Q_OBJECT
  public:
   /** allocates d_i for each instance */
   explicit TDataContainer( TDataSet* aparent );
