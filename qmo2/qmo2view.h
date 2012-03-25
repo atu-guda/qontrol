@@ -88,6 +88,8 @@ class QMo2View : public QWidget
    void markElm();
    void moveElm();
    void infoElm();
+   void testElm1();
+   void testElm2();
    
    // outs related
    void newOut();

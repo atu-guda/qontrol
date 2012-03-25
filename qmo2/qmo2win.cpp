@@ -266,6 +266,13 @@ void QMo2Win::initIface()
   act_infoelm->setWhatsThis( tr("Show information about element structure") );
   connect( act_infoelm, SIGNAL( activated() ), this, SLOT( slotInfoElm() ));
  
+  act_testelm1= new QAction( "test element 1", this );
+  act_testelm1->setWhatsThis( tr("Test something in element") );
+  connect( act_testelm1, SIGNAL( activated() ), this, SLOT( slotTestElm1() ));
+  
+  act_testelm2= new QAction( "test element 2", this );
+  act_testelm2->setWhatsThis( tr("Test something in element") );
+  connect( act_testelm2, SIGNAL( activated() ), this, SLOT( slotTestElm2() ));
   // ==== out group 
  
   act_newout = new QAction( QIcon( ":icons/newout.png" ), "&New Out", this );
@@ -485,6 +492,9 @@ void QMo2Win::initIface()
   pElmMenu->addAction( act_moveelm );
   pElmMenu->addSeparator();
   pElmMenu->addAction( act_infoelm );
+  pElmMenu->addSeparator();
+  pElmMenu->addAction( act_testelm1 );
+  pElmMenu->addAction( act_testelm2 );
 
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pOutMenu
@@ -1226,6 +1236,27 @@ void QMo2Win::slotInfoElm()
     m->infoElm();
   statusBar()->showMessage( tr( "Ready." ) );
 }
+
+void QMo2Win::slotTestElm1()
+{
+  statusBar()->showMessage( tr( "Test element 1..." ) );
+  
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->testElm1();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+void QMo2Win::slotTestElm2()
+{
+  statusBar()->showMessage( tr( "Test element 2..." ) );
+  
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->testElm2();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
 
 void QMo2Win::slotNewOut()
 {

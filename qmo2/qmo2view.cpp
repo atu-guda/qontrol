@@ -620,6 +620,61 @@ void QMo2View::infoElm()
   emit viewChanged();
 }
 
+void QMo2View::testElm1()
+{
+  int nelm;
+  QString buf;
+  if( ! checkState( selCheck ) )
+    return;	  
+  TMiso *ob = model->getMiso( sel );
+  if( ob == 0 )
+    return;
+  nelm = ob->getN();
+  
+  QDialog *dia = new QDialog( this );
+  dia->setWindowTitle( QString( PACKAGE ": test1 ") + ob->objectName() );
+  
+  buf = ob->toString();
+  buf += QString::number( nelm ) + "\n";
+
+  QObjectList childs = ob->children();
+  for( QObjectList::iterator o = childs.begin(); o != childs.end(); ++o ) {
+    QObject *xo = *o;
+    buf += QString(xo->metaObject()->className()) + " " + xo->objectName();
+    if( ! xo->inherits("HolderData" )) {
+      buf += " -\n";
+      continue;
+    }
+    HolderData *ho = qobject_cast<HolderData*>(xo);
+    buf += QString("=\"") + ho->toString() + "\"";
+
+    buf += " \n";
+  }
+
+
+  QVBoxLayout *lay = new QVBoxLayout();
+
+  QLabel *la = new QLabel( dia );
+  la->setText( buf );
+  lay->addWidget( la );
+
+
+  QPushButton *bt_ok = new QPushButton( tr("Done"), dia);
+  bt_ok->setDefault( true );
+  lay->addWidget( bt_ok );
+  dia->setLayout( lay );
+
+  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
+  dia->resize( 600, 300 );
+  dia->exec();
+  delete dia;
+  emit viewChanged();
+}
+
+void QMo2View::testElm2()
+{
+}
+
 
 // ==== outs related 
 
