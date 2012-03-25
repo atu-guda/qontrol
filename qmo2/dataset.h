@@ -22,6 +22,7 @@
 
 using namespace std;
 
+class QColor;
 class   TDataSet;
 typedef TDataSet* PTDataSet;
 typedef const TDataSet* CPTDataSet;
@@ -50,52 +51,130 @@ struct TClassInfo {
 class HolderData : public QObject {
   Q_OBJECT
  public: 
-  HolderData( const QString &obj_name, QObject *a_parent = 0 );
+  HolderData( const QString &obj_name, const QString &v_name = QString(), 
+              QObject *a_parent = 0 );
   virtual ~HolderData() {}; // place to delete auto data
   void* getPtr() const { return ptr; } ; // horror here !!!
   QVariant::Type getTp() const { return tp; };
   int getOldTp() const { return old_tp; };
   int getOldSubTp() const { return old_subtp; };
+  void setFlags( int a_flags ) { flags = a_flags; };
+  int getFlags() const { return flags; };
+  void setMinMax( double a_min, double a_max ) { v_min = a_min; v_max = a_max; };
+  void setVisName( const QString &av_name ) { vis_name = av_name; };
+  const QString& getVisName() const { return vis_name; };
+  void setDescr( const QString &a_descr ) { descr = a_descr; };
+  const QString& getDescr() const { return descr; };
   virtual bool set( const QVariant & x ) = 0;
   virtual QVariant get() const = 0;
+  virtual void post_set() = 0;
   virtual QString toString() const = 0;
   virtual bool fromString( const QString &s ) = 0;
   // TODO: to/from XML
+  // TODO: metadata in/out
  protected:
   int old_tp, old_subtp, dyn;
   int flags; //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
+  double v_min, v_max; // double as most common type, v_max = max_len
   QVariant::Type tp;
   void *ptr;
+  QString vis_name; //* user visible name, default = obj_name
+  QString descr;    //* short description
 };
 
 /** Holder of int values */
 class HolderInt : public HolderData {
   Q_OBJECT
  public: 
-  HolderInt( int *p, const QString &obj_name, QObject *a_parent = 0 ); // if p==0 - autocreate 
+  HolderInt( int *p, const QString &obj_name,  // if p==0 - autocreate 
+      const QString &v_name = QString(), QObject *a_parent = 0 );
   virtual ~HolderInt();
   virtual bool set( const QVariant & x );
   virtual QVariant get() const;
+  virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
  protected:
   int *val;
 };
 
+/** Holder of int values ad Switch */
+class HolderSwitch : public HolderInt {
+  Q_OBJECT
+ public: 
+  HolderSwitch( int *p, const QString &obj_name,  // if p==0 - autocreate 
+      const QString &v_name = QString(), QObject *a_parent = 0 );
+  virtual ~HolderSwitch();
+  virtual void post_set();
+};
+
+
 /** Holder of double values */
 class HolderDouble : public HolderData {
   Q_OBJECT
  public: 
-  HolderDouble( double *p, const QString &obj_name, QObject *a_parent = 0 ); // if p==0 - autocreate 
+  HolderDouble( double *p, const QString &obj_name,  // if p==0 - autocreate 
+      const QString &v_name = QString(), QObject *a_parent = 0 );
   virtual ~HolderDouble();
   virtual bool set( const QVariant & x );
   virtual QVariant get() const;
+  virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
  protected:
   double *val;
 };
 
+/** Holder of QString values */
+class HolderString : public HolderData {
+  Q_OBJECT
+ public: 
+  HolderString( QString *p, const QString &obj_name,  // if p==0 - autocreate 
+      const QString &v_name = QString(), QObject *a_parent = 0 );
+  virtual ~HolderString();
+  virtual bool set( const QVariant & x );
+  virtual QVariant get() const;
+  virtual void post_set();
+  virtual QString toString() const;
+  virtual bool fromString( const QString &s );
+ protected:
+  QString *val;
+};
+
+/** Holder of QColor values */
+class HolderColor : public HolderData {
+  Q_OBJECT
+ public: 
+  HolderColor( QColor *p, const QString &obj_name,  // if p==0 - autocreate 
+      const QString &v_name = QString(), QObject *a_parent = 0 );
+  virtual ~HolderColor();
+  virtual bool set( const QVariant & x );
+  virtual QVariant get() const;
+  virtual void post_set();
+  virtual QString toString() const;
+  virtual bool fromString( const QString &s );
+ protected:
+  QColor *val;
+};
+
+/** Holder of objects ??? TODO: ?? combine with TDataSet? or proxy */
+class HolderObj : public HolderData {
+  Q_OBJECT
+ public: 
+  HolderObj( TDataSet *p, const QString &obj_name,  // NO autocreate !
+      const QString &v_name = QString(), QObject *a_parent = 0 );
+  virtual ~HolderObj();
+  virtual bool set( const QVariant & x );
+  virtual QVariant get() const;
+  virtual void post_set();
+  virtual QString toString() const;
+  virtual bool fromString( const QString &s );
+ protected:
+  TDataSet *obj;
+};
+
+
+// ----===============************** OLD part ----------------------------
 
 /** describes each element of class
 */
@@ -221,6 +300,12 @@ class TDataSet : public QObject {
    virtual int isChildOf( const char *cname );
    /** is this class child of given or the same by index */
    virtual int isChildOf( int cid );
+   /** new part - iface a-la Holder FIXME: implement it */
+   virtual bool set( const QVariant & x );
+   virtual QVariant get() const;
+   virtual void post_set();
+   virtual QString toString() const;
+   virtual bool fromString( const QString &s );
  protected:
    /** count nelm, fills hval in d_i  */
    int initHash(void);

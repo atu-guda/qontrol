@@ -11,6 +11,8 @@
 #include <cstring>
 #include <vector>
 #include <cstdio>
+#include <limits>
+#include <QColor>
 #include "miscfun.h"
 #include "dataset.h"
 
@@ -79,42 +81,55 @@ int TDataInfo::save( ostream *os ) const
 }
 // ---------------- HolderData .... ----------------------
 
-HolderData::HolderData( const QString &obj_name, QObject *a_parent )
-           :QObject( a_parent ), old_tp(0), old_subtp(0), dyn(0),
-	    tp(QVariant::Invalid), ptr(0)
+HolderData::HolderData( const QString &obj_name, 
+                        const QString &v_name,  QObject *a_parent )
+           :QObject( a_parent ), old_tp(0), old_subtp(0), dyn(0), flags(0),
+	    v_min(DMIN), v_max(DMAX),
+	    tp(QVariant::Invalid), ptr(0), vis_name(v_name), descr()
 {
   setObjectName( obj_name );
+  if( vis_name.isNull() )  {
+    vis_name = obj_name;
+  }
 }
 
 // ---------------- HolderInt ---------
 
-HolderInt::HolderInt( int *p, const QString &obj_name, QObject *a_parent  ) // if p==0 - autocreate 
-          :HolderData( obj_name, a_parent ),
+HolderInt::HolderInt( int *p, const QString &obj_name, 
+                      const QString &v_name, QObject *a_parent  )
+          :HolderData( obj_name, v_name, a_parent ),
 	   val(p)
 {
   if( !val ) {
-    val = new int; dyn = 1;
+    val = new int; *val = (int)(v_min); dyn = 1;
   }
   ptr = val; tp=QVariant::Int; old_tp = dtpInt; old_subtp = dtpsInt;
+  post_set();
 }
 
 HolderInt::~HolderInt()
 {
-  if( val )
+  if( dyn )
     delete val;
-  val = 0; ptr = val;
+  val = 0; ptr = 0; dyn = 0;
 }
 
 bool HolderInt::set( const QVariant & x )
 {
   bool ok;
   *val = x.toInt( &ok );
-  return 0;
+  post_set();
+  return ok;
 }
 
 QVariant HolderInt::get() const
 {
   return QVariant( *val );
+}
+
+void HolderInt::post_set()
+{
+  *val = qBound( (int)(v_min), *val, (int)(v_max) );
 }
 
 QString HolderInt::toString() const
@@ -126,39 +141,68 @@ bool HolderInt::fromString( const QString &s )
 {
   bool ok;
   *val = s.toInt( &ok, 0 ); // 0 = auto base
+  post_set();
   return ok;
+}
+
+// ---------------- HolderSwitch ---------
+HolderSwitch::HolderSwitch( int *p, const QString &obj_name, 
+                      const QString &v_name, QObject *a_parent  )
+          :HolderInt( p, obj_name, v_name, a_parent )
+{
+  old_subtp = dtpsSwitch;
+  post_set();
+}
+
+HolderSwitch::~HolderSwitch()
+{
+  // NOP
+}
+
+
+void HolderSwitch::post_set()
+{
+  *val = (*val) ? 1 : 0;
 }
 
 
 // ---------------- HolderDouble ---------
 
-HolderDouble::HolderDouble( double *p, const QString &obj_name, QObject *a_parent ) // if p==0 - autocreate 
-          :HolderData( obj_name, a_parent ),
+HolderDouble::HolderDouble( double *p, const QString &obj_name,
+                            const QString &v_name,  QObject *a_parent )
+          :HolderData( obj_name, v_name, a_parent ),
 	   val(p)
 {
   if( !val ) {
-    val = new double; dyn = 1;
+    val = new double; *val = v_min; dyn = 1;
   }
+  post_set();
   ptr = val; tp=QVariant::Double; old_tp = dtpDouble;
 }
 
 HolderDouble::~HolderDouble()
 {
-  if( val )
+  if( dyn )
     delete val;
-  val = 0; ptr = val;
+  val = 0; ptr = val; dyn = 0;
 }
 
 bool HolderDouble::set( const QVariant & x )
 {
   bool ok;
   *val = x.toDouble( &ok );
-  return 0;
+  post_set();
+  return ok;
 }
 
 QVariant HolderDouble::get() const
 {
   return QVariant( *val );
+}
+
+void HolderDouble::post_set()
+{
+  *val = qBound( v_min, *val, v_max );
 }
 
 QString HolderDouble::toString() const
@@ -170,8 +214,160 @@ bool HolderDouble::fromString( const QString &s )
 {
   bool ok;
   *val = s.toDouble( &ok ); 
+  post_set();
   return ok;
 }
+
+
+// ---------------- HolderString ---------
+
+HolderString::HolderString( QString *p, const QString &obj_name,
+                            const QString &v_name,  QObject *a_parent )
+          :HolderData( obj_name, v_name, a_parent ),
+	   val(p)
+{
+  if( !val ) {
+    val = new QString; dyn = 1;
+  }
+  post_set();
+  ptr = val; tp=QVariant::String; old_tp = dtpString;
+}
+
+HolderString::~HolderString()
+{
+  if( dyn )
+    delete val;
+  val = 0; ptr = val; dyn = 0;
+}
+
+bool HolderString::set( const QVariant & x )
+{
+  *val = x.toString();
+  post_set();
+  return true;
+}
+
+QVariant HolderString::get() const
+{
+  return QVariant( *val );
+}
+
+void HolderString::post_set()
+{
+  val->truncate( (int)(v_max) );
+}
+
+QString HolderString::toString() const
+{
+  return *val;
+}
+
+bool HolderString::fromString( const QString &s )
+{
+  *val = s; 
+  post_set();
+  return true;
+}
+
+// ---------------- HolderColor ---------
+
+HolderColor::HolderColor( QColor *p, const QString &obj_name,
+                            const QString &v_name,  QObject *a_parent )
+          :HolderData( obj_name, v_name, a_parent ),
+	   val(p)
+{
+  if( !val ) {
+    val = new QColor( Qt::red ); dyn = 1;
+  }
+  post_set();
+  ptr = val; tp=QVariant::Color; old_tp = dtpInt; old_subtp = dtpsColor;
+}
+
+HolderColor::~HolderColor()
+{
+  if( dyn )
+    delete val;
+  val = 0; ptr = val;
+}
+
+bool HolderColor::set( const QVariant & x )
+{
+  QRgb rgba = x.toInt();
+  val->setRgba( rgba );
+  post_set();
+  return true;
+}
+
+QVariant HolderColor::get() const
+{
+  return QVariant( (int)(val->rgba()) );
+}
+
+void HolderColor::post_set()
+{
+  if( !val->isValid() )
+    *val = QColor(Qt::red);
+}
+
+QString HolderColor::toString() const
+{
+  return QString::number( (int)(val->rgba()) );
+}
+
+bool HolderColor::fromString( const QString &s )
+{
+  QRgb rgba = s.toInt();
+  val->setRgba( rgba );
+  post_set();
+  return true;
+}
+
+
+// ---------------- HolderObj ---------
+
+HolderObj::HolderObj( TDataSet *p, const QString &obj_name,
+                            const QString &v_name,  QObject *a_parent )
+          :HolderData( obj_name, v_name, a_parent ),
+	   obj(p)
+{
+  // no create? what to do if p == 0 ?
+  post_set();
+  ptr = obj; tp=QVariant::UserType; old_tp = dtpObj; 
+  old_subtp = obj->getClassId();
+}
+
+HolderObj::~HolderObj()
+{
+  if( dyn )
+    delete obj;
+  obj = 0; ptr = 0;
+}
+
+bool HolderObj::set( const QVariant & x )
+{
+  return obj->set( x );
+}
+
+QVariant HolderObj::get() const
+{
+  return obj->get();
+}
+
+void HolderObj::post_set()
+{
+  obj->post_set();
+}
+
+QString HolderObj::toString() const
+{
+  return obj->toString();
+}
+
+bool HolderObj::fromString( const QString &s )
+{
+  return obj->fromString( s );
+}
+
 
 // ---------------- TDataSet ------------------------
 
@@ -954,6 +1150,32 @@ int TDataSet::isChildOf( int cid )
     ci = pci;
   };
   return 0;
+}
+
+// FIXME: implement 
+bool TDataSet::set( const QVariant & x )
+{
+  return fromString( x.toString() );
+}
+
+QVariant TDataSet::get() const
+{
+  return QVariant( this->toString() );// TODO:
+}
+
+void TDataSet::post_set()
+{
+// TODO:
+}
+
+QString TDataSet::toString() const
+{
+  return QString(); // TODO:
+}
+
+bool TDataSet::fromString( const QString & /*s*/ )
+{
+  return false; // TODO;
 }
 
 // end of dataset.cpp

@@ -15,8 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <limits>
 #include "tmiso.h"
 #include "tmodel.h"
+
+using namespace  std;
 
 const char* TElmLink::helpstr = "<H1>TElmLink</H1> \n"
  "Defines signal and parametric inputs for given element. \n"
@@ -74,7 +77,29 @@ TDataInfo TElmLink::telmlink_d_i[40] = {
 
 
 TElmLink::TElmLink( TDataSet* apar )
-         :TDataSet( apar )
+         :TDataSet( apar ),
+	  ho_inps0( &inps[0], "inps0", "Input 0", this ),
+	  ho_inps1( &inps[1], "inps1", "Input 1", this ),
+	  ho_inps2( &inps[2], "inps2", "Input 2", this ),
+	  ho_inps3( &inps[3], "inps3", "Input 3", this ),
+	  ho_noauto( &noauto, "noauto", "No Auto", this ),
+	  ho_locked( &locked, "locked", "Locked", this ),
+	  ho_onlyFirst( &onlyFirst, "onlyFirst", "only First", this ),
+	  ho_onlyLast( &onlyLast, "onlyLast", "only Last", this ),
+	  ho_flip( &flip, "flip", "flip image", this ),
+	  ho_noIcon( &noIcon, "noIcon", "no Icon", this ),
+	  ho_pinps0( &pinps[0], "pinps0", "Parm. input 0", this ),
+	  ho_pinps1( &pinps[1], "pinps1", "Parm. input 1", this ),
+	  ho_pinps2( &pinps[2], "pinps2", "Parm. input 2", this ),
+	  ho_pinps3( &pinps[3], "pinps3", "Parm. input 3", this ),
+	  ho_pnames0( &pnames[0], "pnames0", "Parm. name 0", this ),
+	  ho_pnames1( &pnames[1], "pnames1", "Parm. name 1", this ),
+	  ho_pnames2( &pnames[2], "pnames2", "Parm. name 2", this ),
+	  ho_pnames3( &pnames[3], "pnames3", "Parm. name 3", this ),
+	  ho_pflags0( &pflags[0], "pflags0", "only First 0", this ),
+	  ho_pflags1( &pflags[1], "pflags1", "only First 1", this ),
+	  ho_pflags2( &pflags[2], "pflags2", "only First 2", this ),
+	  ho_pflags3( &pflags[3], "pflags3", "only First 3", this )
 {
   int i;
   noauto = locked = onlyFirst = onlyLast = flip = noIcon = 0;
@@ -96,6 +121,18 @@ TElmLink::TElmLink( TDataSet* apar )
   ptrs[27] = &pnames[2]; ptrs[28] = &pnames[3];
   ptrs[29] = &pflags[0]; ptrs[30] = &pflags[1];
   ptrs[31] = &pflags[2]; ptrs[32] = &pflags[3];
+  ho_inps0.setFlags( efNoRunChange );
+  ho_inps1.setFlags( efNoRunChange );
+  ho_inps2.setFlags( efNoRunChange );
+  ho_inps3.setFlags( efNoRunChange );
+  ho_pinps0.setFlags( efNoRunChange );
+  ho_pinps1.setFlags( efNoRunChange );
+  ho_pinps2.setFlags( efNoRunChange );
+  ho_pinps3.setFlags( efNoRunChange );
+  ho_pnames0.setFlags( efNoRunChange );
+  ho_pnames1.setFlags( efNoRunChange );
+  ho_pnames2.setFlags( efNoRunChange );
+  ho_pnames3.setFlags( efNoRunChange );
 }
 
 TDataSet* TElmLink::create( TDataSet* apar )
@@ -138,15 +175,26 @@ TDataInfo TMiso::tmiso_d_i[2] = {
 };
 
 TMiso::TMiso( TDataSet* aparent )
-      :TDataSet( aparent )	
+      :TDataSet( aparent ),
+       ho_ord( &ord, "ord", "order", this ), 
+       ho_descr( &descr, "descr", "description", this ),
+       ho_vis_x( &vis_x, "vis_x", "visual x", this ), 
+       ho_vis_y( &vis_y, "vis_y", "visual_y", this ),
+       links( new TElmLink( this ) ),
+       ho_links( links, "links", "object Links", this )
 {
-  links = new TElmLink( this );
   d_i = tmiso_d_i;
   ord = -1; 
   vis_x = vis_y = 0; tdt = 0; model_nn = 0; 
   model = 0;
   initHash();
   ptrs[0] = links;
+  ho_ord.setFlags( efRO | efNoRunChange );
+  ho_ord.setMinMax( 0, IMAX );
+  ho_descr.setMinMax( 0, 128 ); // TODO: define
+  ho_vis_x.setFlags( efNoDial | efNoRunChange );
+  ho_vis_y.setFlags( efNoDial | efNoRunChange );
+
 }
 
 TMiso::~TMiso()

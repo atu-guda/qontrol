@@ -56,24 +56,34 @@ class TElmLink : public TDataSet { //@ c,{},(380,320),"Object links"
  protected:
    /** names of elements, which outputs will be used as inputs */
    QString inps[4]; 
+   HolderString ho_inps0, ho_inps1, ho_inps2, ho_inps3;
    /** flag: no autotomatic processing */
-   int noauto; 
+   int noauto;
+   HolderSwitch ho_noauto;
    /** flag: locked state: x = u[0] */
    int locked; 
+   HolderSwitch ho_locked;
    /** flag: call f(u,t) only first time */
    int onlyFirst; 
+   HolderSwitch ho_onlyFirst;
    /** flag: call f(u,t) only last time */
    int onlyLast; 
+   HolderSwitch ho_onlyLast;
    /** flag: flip left-right element icon */
    int flip;
+   HolderSwitch ho_flip;
    /** flag: dont show icon */
    int noIcon;
+   HolderSwitch ho_noIcon;
    /** names of elms, which outputs will be used as parm inputs */
    QString pinps[4]; 
+   HolderString ho_pinps0, ho_pinps1, ho_pinps2, ho_pinps3;
    /** names of inner params, to be modifyed */ 
    QString pnames[4]; 
+   HolderString ho_pnames0, ho_pnames1, ho_pnames2, ho_pnames3;
    /** inner flags for params: 1-only start of loop, ..? */
    int pflags[4]; 
+   HolderSwitch ho_pflags0, ho_pflags1, ho_pflags2, ho_pflags3; 
    /** data descriptors */ 
    static TDataInfo telmlink_d_i[40];
    /** class decription */
@@ -168,12 +178,15 @@ class TMiso : public TDataSet  {
    /** will be called after each inner loop  */
    virtual int endLoop(void);
  protected:
-   /** order, in which elements will be used */
+   /** order, in which elements will be used and holder */
    int ord; 
+   HolderInt ho_ord;
    /** description on element */
-   QString descr; 
+   QString descr;
+   HolderString ho_descr;
    /** visual coordinates */
    int vis_x, vis_y;
+   HolderInt ho_vis_x, ho_vis_y;
    /** time step -- setted by preRun */
    double tdt; 
    /** number of iteration per loop -- setted by PreRun */
@@ -183,6 +196,7 @@ class TMiso : public TDataSet  {
    TModel *model;
    /** pointer to link data */
    TElmLink *links;
+   HolderObj ho_links;
    /** data descriptors -- empty -- never be used */ 
    static TDataInfo tmiso_d_i[2];
    /** class decription */
@@ -191,6 +205,7 @@ class TMiso : public TDataSet  {
    static const char* helpstr;
    /** icon */
    static const char* icon[];
+
 }; 
 
 typedef TMiso* PTMiso;
