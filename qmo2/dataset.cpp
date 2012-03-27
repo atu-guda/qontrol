@@ -1218,9 +1218,9 @@ void TDataSet::post_set()
 
 QString TDataSet::toString() const
 {
+  static int lev = -1; 
+  ++lev;
   QString buf;
-  QString data_sep1(" \""), data_sep2( "\"" ), obj_sep1(" {\n"), obj_sep2("} " );
-  QString sep1, sep2;
   buf.reserve(4096); // TODO ?
   QObjectList childs = children();
 
@@ -1231,14 +1231,14 @@ QString TDataSet::toString() const
       continue;
     }
     HolderData *ho = qobject_cast<HolderData*>(xo);
+    buf += QString( lev*2, QChar(' ') ); // for indent (human view). Is needed?
     if( ho->inherits( "HolderObj" ) ) {
-      sep1 = obj_sep1; sep2 = obj_sep2;
+      buf += xo->objectName() + " = {\n" + ho->toString() + "}\n"; 
     } else {
-      sep1 = data_sep1; sep2 = data_sep2;
+      buf += xo->objectName() + " = \"" + quoteString( ho->toString() ) + "\"\n"; 
     }
-    buf += xo->objectName() + " = " + sep1 + ho->toString() + sep2 + "\n"; // TODO: quote
   }
-
+  --lev;
   return buf; 
 }
 

@@ -160,55 +160,81 @@ class TModel : public TDataContainer  {
  protected:
   // =============== iface objects ==============================
   /** total model time, starts with 0 each inner loop */ 
-  double tt;
+  PRM_DOUBLE( tt, efNoRunChange );
   /** number of inner loop iterations */
-  int nn;
-  /** number of parametric loops iterations */
-  int nl1, nl2;
+  PRM_INT( nn, efNoRunChange );
+  /** number of inner parametric loops iterations */
+  PRM_INT( nl1, efNoRunChange );
+  /** number of outer parametric loops iterations */
+  PRM_INT( nl2, efNoRunChange );
   /** number of steps per i/o action */
-  int n_steps;
+  PRM_INT( n_steps, efNoRunChange );
   /** flag for real and model time syncronization */
-  int use_sync;
+  PRM_SWITCH( use_sync, efNoRunChange );
   /** Initial parametrs values */
-  double prm0s, prm1s, prm2s, prm3s;
-  /** Parameter deltas */
-  double prm0d, prm1d;
+  PRM_DOUBLE( prm0s, efNoRunChange );
+  PRM_DOUBLE( prm1s, efNoRunChange );
+  PRM_DOUBLE( prm2s, efNoRunChange );
+  PRM_DOUBLE( prm3s, efNoRunChange );
+  /** Parameter 0 delta */
+  PRM_DOUBLE( prm0d, efNoRunChange );
+  /** Parameter 1 delta */
+  PRM_DOUBLE( prm1d, efNoRunChange );
   /** Reserved for future */
-  double xval1, xval2;
+  PRM_DOUBLE( xval1, 0 );
+  PRM_DOUBLE( xval2, 0 );
   /** random generator seed */
-  int seed;
+  PRM_INT( seed, efNoRunChange );
   /** use same seed for each iteration -- obsoleted by seedType */
-  int useSameSeed;
+  PRM_INT( useSameSeed, efNoDial | efRO );
   /** type of seeding: 0 - every run, 1 - every 1d loop .. obj: 3 - as model */
-  int seedType;
+  PRM_LIST( seedType, efNoRunChange );
   // -------- input channels indexes -------
   /** input from mouse (x,y,btn1,btn2,btn3) abs(x,y) <= 1, 0 - center */
-  int ic_mouse;
+  PRM_INT( ic_mouse, efNoRunChange );
   /** input from joystick (x,y,btn) abs(x,y) <= 1, 0 - center */
-  int ic_joy;
+  PRM_INT( ic_joy, efNoRunChange );
   /** input from soundcard (lert,right) */
-  int ic_sound;
+  PRM_INT( ic_sound, efNoRunChange );
   /** input from keyboard (left,right,top,bottom,space,enter) */
-  int ic_key;
+  PRM_INT( ic_key, efNoRunChange );
   /** input from unknown device, up to 20 values */
-  int ic_aux;
+  PRM_INT( ic_aux, efNoRunChange );
   // -------- output channels indexes -------
   /** indexes for output */
-  int oc_0, oc_1, oc_2, oc_3, oc_4, oc_5;
+  PRM_INT( oc_0, efNoRunChange );
+  PRM_INT( oc_1, efNoRunChange );
+  PRM_INT( oc_2, efNoRunChange );
+  PRM_INT( oc_3, efNoRunChange );
+  PRM_INT( oc_4, efNoRunChange );
+  PRM_INT( oc_5, efNoRunChange );
   /** types of output 1-3=cross, 4-7=vbar, 8-11=gbar, 12-15=leds, 16,17=sound */
-  int oct_0, oct_1, oct_2, oct_3, oct_4, oct_5;
+  PRM_LIST( oct_0, efNoRunChange );
+  PRM_LIST( oct_1, efNoRunChange );
+  PRM_LIST( oct_2, efNoRunChange );
+  PRM_LIST( oct_3, efNoRunChange );
+  PRM_LIST( oct_4, efNoRunChange );
+  PRM_LIST( oct_5, efNoRunChange );
   // ---------------------------------------
   /** long description */
-  QString long_descr;
+  PRM_STRING( long_descr, 0 );
   // ======================= invisible vars ======================
   /** loops counters */
-  int ii, il1, il2;
+  PRM_INT( ii, efInner );
+  PRM_INT( il1, efInner );
+  PRM_INT( il2, efInner );
   /** current time and time step, real time */ 
-  double t, tdt, rtime;
+  PRM_DOUBLE( t, efInner );
+  PRM_DOUBLE( tdt, efInner );
+  PRM_DOUBLE( rtime, efInner );
   /** parametrs */
-  double prm0, prm1, prm2, prm3;
+  PRM_DOUBLE( prm0, efInner );
+  PRM_DOUBLE( prm1, efInner );
+  PRM_DOUBLE( prm2, efInner );
+  PRM_DOUBLE( prm3, efInner );
   /** signature to check from plot painters, etc... */
-  int sgnt;
+  PRM_INT( sgnt, efInner );
+
   /** total number of loops */
   int n_tot;
   /** total counter */

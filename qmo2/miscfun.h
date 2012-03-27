@@ -12,10 +12,10 @@
 #define __MISCFUN_H
 
 #include <fstream>
+#include <QString>
 #include "defs.h"
 using namespace std;
 
-class QString;
 
 const int max_graphs = 7; // TODO: variable
 /** Structure containg data needed to plot graphs, export, view.
@@ -74,6 +74,10 @@ int saveStr1( ostream *os, const char *s );
 int deQuoteString( const char *src, char *dst, int maxlen );
 /** converts good part of src to pritable form, returns n of used chars */
 int quoteTo( const char *src, char *dst, int ml );
+/** converts QChar to QString quote-aware replesentation */
+QString quoteChar( QChar c );
+/** converts QString to xxxx \t \n \\ \" \xFF  representation w/o " "*/ 
+QString quoteString( const QString &s );
 /** reads multiline string up to delim, but no more then ml char with 0 */
 int readMlStr( istream *is, QString* buf, int ml, const char *delim );
 /** splits string like aa.b.cc.d to first="aa" and next="b.cc.d"

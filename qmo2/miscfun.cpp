@@ -243,6 +243,40 @@ int quoteTo( const char *src, char *dst, int ml )
   return n;
 }
 
+QString quoteChar( QChar c )
+{
+  uint code = c.unicode();
+  const char xdig[] = "0123456789ABCDEF???????????";
+  if( code >= 0x005D                         // >= ']', 
+      || (code >= 0x0023 && code <= 0x005B ) // # - [
+      || code == 0x0020 || code == 0x0021    // ' ', !
+    ) 
+    return QString(c);
+  unsigned char lc = (unsigned char)(code); // high by is zero - see above
+  if( lc == '\\' )
+    return QString("\\\\");
+  if( lc == '"' )
+    return QString("\\\"");
+  if( lc == '\n' )
+    return QString("\\n");
+  if( lc == '\t' )
+    return QString("\\t");
+  if( lc == '\r' )
+    return QString("\\r");
+  int d1 = lc & 0x0F; 
+  int d2 = ((unsigned char)lc) >> 4;
+  return QString("\\x") + xdig[d1] + xdig[d2];
+}
+
+QString quoteString( const QString &s )
+{
+  QString r, ch;
+  r.reserve( 12 + s.size() ); // semi-black magic
+  foreach( QChar c, s ) 
+    r += quoteChar( c );
+  return r;
+}
+
 int saveStr( ostream *os, const char *s )
 {
   int l, k;
