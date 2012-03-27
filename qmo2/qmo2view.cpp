@@ -238,7 +238,6 @@ void QMo2View::newElm()
 
   const TClassInfo *ci;
   int i, nc, rc, oord;
-  const char *cnm, *oname;
   QString cnmq, onameq, oordq;
   if( !checkState( noselCheck ) )
     return;
@@ -298,17 +297,24 @@ void QMo2View::newElm()
   delete seld;
   if( rc != QDialog::Accepted )
     return;
-  cnm = cnmq.toLatin1(); oname = onameq.toLatin1(); oord = oordq.toInt();
-  if( ! isGoodName( oname )  )
+  oord = oordq.toInt();
+  if( ! isGoodName( onameq.toLocal8Bit().constData() )  ) {
+    qDebug( "error: QMo2View::newElm(): bad object name: <%s>", 
+	   onameq.toLocal8Bit().constData() );
     return;
-  i = root->findClass( cnm );
-  if( i < 1 ) return;
+  }
+  i = root->findClass( cnmq.toLocal8Bit().constData() );
+  if( i < 1 ) {
+    qDebug( "error: QMo2View::newElm(): class <%s> not found", 
+	cnmq.toLocal8Bit().constData() );
+    return;
+  }
   ci = root->classInfoByNum( i );
   di.tp = dtpObj; di.subtp = ci->id;
   di.max_len = 0; di.dlg_x = di.dlg_y = di.dlg_w = di.dlg_h = 0;
   di.hval = di.dyna = 0; di.flags = 0; di.v_min = di.v_max = 0;
   di.name[0] = 0;
-  strncat( di.name, oname, MAX_NAMELEN-1 );
+  strncat( di.name, onameq.toLocal8Bit().constData(), MAX_NAMELEN-1 );
   di.descr = ""; 
   di.listdata = "";
   model->insElem( &di, oord, sel_x, sel_y) ; // reset() implied
@@ -635,28 +641,30 @@ void QMo2View::testElm1()
   dia->setWindowTitle( QString( PACKAGE ": test1 ") + ob->objectName() );
   
   buf = ob->toString();
-  buf += QString::number( nelm ) + "\n";
+  buf += "# nelm= " + QString::number( nelm ) + "\n";
 
-  QObjectList childs = ob->children();
-  for( QObjectList::iterator o = childs.begin(); o != childs.end(); ++o ) {
-    QObject *xo = *o;
-    buf += QString(xo->metaObject()->className()) + " " + xo->objectName();
-    if( ! xo->inherits("HolderData" )) {
-      buf += " -\n";
-      continue;
-    }
-    HolderData *ho = qobject_cast<HolderData*>(xo);
-    buf += QString("=\"") + ho->toString() + "\"";
-
-    buf += " \n";
-  }
+  //QObjectList childs = ob->children();
+  //for( QObjectList::iterator o = childs.begin(); o != childs.end(); ++o ) {
+  //  QObject *xo = *o;
+  //  buf += QString(xo->metaObject()->className()) + " " + xo->objectName();
+  //  if( ! xo->inherits("HolderData" )) {
+  //    buf += " -\n";
+  //    continue;
+  //  }
+  //  HolderData *ho = qobject_cast<HolderData*>(xo);
+  //  buf += QString("=\"") + ho->toString() + "\"";
+  //
+  //  buf += " \n";
+  //}
 
 
   QVBoxLayout *lay = new QVBoxLayout();
 
   QLabel *la = new QLabel( dia );
   la->setText( buf );
-  lay->addWidget( la );
+  QScrollArea *scroll = new QScrollArea( dia );
+  scroll->setWidget( la );
+  lay->addWidget( scroll );
 
 
   QPushButton *bt_ok = new QPushButton( tr("Done"), dia);

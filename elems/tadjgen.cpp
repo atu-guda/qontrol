@@ -62,7 +62,22 @@ TDataInfo TAdjGen::tadjgen_d_i[27] = {
 
 
 TAdjGen::TAdjGen( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	PRM_INIT( type, "Type" ),
+	PRM_INIT( useReset,  "Use u[1] as Reset" ),
+	PRM_INIT( useLock, "Use u[2] as Lock" ),
+	PRM_INIT( outStrobe, "Output Strobe" ),
+	PRM_INIT( useZero, "use 0 as negative out" ),
+	PRM_INIT( useSignStrobe, "Signed ttrobe" ),
+	PRM_INIT( usePlusStrobe, "Only + strobe" ),
+	PRM_INIT( useF, "input is F, not omega" ),
+	PRM_INIT( currOut, "current output" ),
+	PRM_INIT( tick, "1 means generator ticks now" ),
+	PRM_INIT( omega_0, "\\omega_0" ),
+	PRM_INIT( k_omega, "k_\\omega" ),
+	PRM_INIT( ctt, "ctt" ),
+	PRM_INIT( ig, "ig" ),
+	PRM_INIT( ig2, "ig2" )
 {
   int i;
   type = useReset = useLock = outStrobe = useZero 
@@ -87,6 +102,9 @@ TAdjGen::TAdjGen( TDataSet* aparent )
   // from TMiso 
   ptrs[23] = links;
   ptrs[24] = &vis_x; ptrs[25] = &vis_y;
+
+  PRMI(type).setElems( "Default\nMAI\nDual(u0,u3)" );
+
 }
 
 TAdjGen::~TAdjGen()

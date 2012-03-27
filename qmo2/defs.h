@@ -70,8 +70,11 @@ enum _DATA_STYPES {
 enum _ELEM_FLAGS {
   efMustRead = 1, efNoRunChange = 2,         /* MR, NRC */ 
   efNoDial = 4, efRODial = 8,                /* ND, ROD */
-  efNoSave = 16, efRO = 32, efStatic = 64    /* NS, RO, - */
+  efNoSave = 16, efRO = 32, efStatic = 64,   /* NS, RO, - */
+  efInner = efNoDial | efNoSave | efRO 
 };
+
+// todo: func QString elemFlagsToString( int );
 
 enum _STATE_VALUES {
   stateBad = 0, stateGood = 1, stateDone = 2, stateRun = 3,

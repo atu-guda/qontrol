@@ -78,61 +78,47 @@ TDataInfo TElmLink::telmlink_d_i[40] = {
 
 TElmLink::TElmLink( TDataSet* apar )
          :TDataSet( apar ),
-	  ho_inps0( &inps[0], "inps0", "Input 0", this ),
-	  ho_inps1( &inps[1], "inps1", "Input 1", this ),
-	  ho_inps2( &inps[2], "inps2", "Input 2", this ),
-	  ho_inps3( &inps[3], "inps3", "Input 3", this ),
-	  ho_noauto( &noauto, "noauto", "No Auto", this ),
-	  ho_locked( &locked, "locked", "Locked", this ),
-	  ho_onlyFirst( &onlyFirst, "onlyFirst", "only First", this ),
-	  ho_onlyLast( &onlyLast, "onlyLast", "only Last", this ),
-	  ho_flip( &flip, "flip", "flip image", this ),
-	  ho_noIcon( &noIcon, "noIcon", "no Icon", this ),
-	  ho_pinps0( &pinps[0], "pinps0", "Parm. input 0", this ),
-	  ho_pinps1( &pinps[1], "pinps1", "Parm. input 1", this ),
-	  ho_pinps2( &pinps[2], "pinps2", "Parm. input 2", this ),
-	  ho_pinps3( &pinps[3], "pinps3", "Parm. input 3", this ),
-	  ho_pnames0( &pnames[0], "pnames0", "Parm. name 0", this ),
-	  ho_pnames1( &pnames[1], "pnames1", "Parm. name 1", this ),
-	  ho_pnames2( &pnames[2], "pnames2", "Parm. name 2", this ),
-	  ho_pnames3( &pnames[3], "pnames3", "Parm. name 3", this ),
-	  ho_pflags0( &pflags[0], "pflags0", "only First 0", this ),
-	  ho_pflags1( &pflags[1], "pflags1", "only First 1", this ),
-	  ho_pflags2( &pflags[2], "pflags2", "only First 2", this ),
-	  ho_pflags3( &pflags[3], "pflags3", "only First 3", this )
+	  PRM_INIT( inps0, "Input 0" ),
+	  PRM_INIT( inps1, "Input 0" ),
+	  PRM_INIT( inps2, "Input 0" ),
+	  PRM_INIT( inps3, "Input 0" ),
+	  PRM_INIT( noauto, "No Auto" ),
+	  PRM_INIT( locked, "Locked" ),
+	  PRM_INIT( onlyFirst, "only First" ),
+	  PRM_INIT( onlyLast, "only Last" ),
+	  PRM_INIT( flip, "flip image" ),
+	  PRM_INIT( noIcon, "no Icon" ),
+	  PRM_INIT( pinps0,  "Parm. input 0" ),
+	  PRM_INIT( pinps1,  "Parm. input 1" ),
+	  PRM_INIT( pinps2,  "Parm. input 2" ),
+	  PRM_INIT( pinps3,  "Parm. input 3" ),
+	  PRM_INIT( pnames0, "Parm. name 0" ),
+	  PRM_INIT( pnames1, "Parm. name 1" ),
+	  PRM_INIT( pnames2, "Parm. name 2" ),
+	  PRM_INIT( pnames3, "Parm. name 3" ),
+	  PRM_INIT( pflags0, "only First 0" ),
+	  PRM_INIT( pflags1, "only First 1" ),
+	  PRM_INIT( pflags2, "only First 2" ),
+	  PRM_INIT( pflags3, "only First 3" )
 {
   int i;
   noauto = locked = onlyFirst = onlyLast = flip = noIcon = 0;
-  for( i=0; i<4; i++ ) {
-    pflags[i] = 0;
-  };
+  pflags0 = pflags1 = pflags2 = pflags3 = 0;
   d_i = telmlink_d_i;
   initHash();
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
-  ptrs[3] = &inps[0]; ptrs[5] = &inps[1]; ptrs[7] = &inps[2]; ptrs[9] = &inps[3];
-  ptrs[10] = &noauto; ptrs[11] = &locked;
+  ptrs[3] =  &inps0;   ptrs[5] = &inps1; ptrs[7] = &inps2; ptrs[9] = &inps3;
+  ptrs[10] = &noauto;  ptrs[11] = &locked;
   ptrs[12] = &onlyFirst; ptrs[13] = &onlyLast;
-  ptrs[14] = &flip; ptrs[15] = &noIcon;
-  ptrs[18] = &pinps[0]; ptrs[20] = &pinps[1]; 
-  ptrs[22] = &pinps[2]; ptrs[24] = &pinps[3];
-  ptrs[25] = &pnames[0]; ptrs[26] = &pnames[1]; 
-  ptrs[27] = &pnames[2]; ptrs[28] = &pnames[3];
-  ptrs[29] = &pflags[0]; ptrs[30] = &pflags[1];
-  ptrs[31] = &pflags[2]; ptrs[32] = &pflags[3];
-  ho_inps0.setFlags( efNoRunChange );
-  ho_inps1.setFlags( efNoRunChange );
-  ho_inps2.setFlags( efNoRunChange );
-  ho_inps3.setFlags( efNoRunChange );
-  ho_pinps0.setFlags( efNoRunChange );
-  ho_pinps1.setFlags( efNoRunChange );
-  ho_pinps2.setFlags( efNoRunChange );
-  ho_pinps3.setFlags( efNoRunChange );
-  ho_pnames0.setFlags( efNoRunChange );
-  ho_pnames1.setFlags( efNoRunChange );
-  ho_pnames2.setFlags( efNoRunChange );
-  ho_pnames3.setFlags( efNoRunChange );
+  ptrs[14] = &flip;    ptrs[15] = &noIcon;
+  ptrs[18] = &pinps0;  ptrs[20] = &pinps1; 
+  ptrs[22] = &pinps2;  ptrs[24] = &pinps3;
+  ptrs[25] = &pnames0; ptrs[26] = &pnames1; 
+  ptrs[27] = &pnames2; ptrs[28] = &pnames3;
+  ptrs[29] = &pflags0; ptrs[30] = &pflags1;
+  ptrs[31] = &pflags2; ptrs[32] = &pflags3;
 }
 
 TDataSet* TElmLink::create( TDataSet* apar )
@@ -176,12 +162,12 @@ TDataInfo TMiso::tmiso_d_i[2] = {
 
 TMiso::TMiso( TDataSet* aparent )
       :TDataSet( aparent ),
-       ho_ord( &ord, "ord", "order", this ), 
-       ho_descr( &descr, "descr", "description", this ),
-       ho_vis_x( &vis_x, "vis_x", "visual x", this ), 
-       ho_vis_y( &vis_y, "vis_y", "visual_y", this ),
+       PRM_INIT( ord,   "order" ), 
+       PRM_INIT( descr, "description" ),
+       PRM_INIT( vis_x, "visual x" ), 
+       PRM_INIT( vis_y, "visual_y" ),
        links( new TElmLink( this ) ),
-       ho_links( links, "links", "object Links", this )
+       POBJ_INIT( links, "object Links" )
 {
   d_i = tmiso_d_i;
   ord = -1; 
@@ -189,11 +175,7 @@ TMiso::TMiso( TDataSet* aparent )
   model = 0;
   initHash();
   ptrs[0] = links;
-  ho_ord.setFlags( efRO | efNoRunChange );
-  ho_ord.setMinMax( 0, IMAX );
-  ho_descr.setMinMax( 0, 128 ); // TODO: define
-  ho_vis_x.setFlags( efNoDial | efNoRunChange );
-  ho_vis_y.setFlags( efNoDial | efNoRunChange );
+  PRMI(descr).setMinMax( 0, 128 ); // TODO: define
 
 }
 

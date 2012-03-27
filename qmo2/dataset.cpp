@@ -79,11 +79,14 @@ int TDataInfo::save( ostream *os ) const
   *os << "@ \n@ \n";
   return 0;
 }
+
+// ================================================================
 // ---------------- HolderData .... ----------------------
 
 HolderData::HolderData( const QString &obj_name, 
-                        const QString &v_name,  QObject *a_parent )
-           :QObject( a_parent ), old_tp(0), old_subtp(0), dyn(0), flags(0),
+                        const QString &v_name, QObject *a_parent, int a_flags)
+           :QObject( a_parent ), old_tp(0), old_subtp(0), 
+	    dyn(0), flags(a_flags),
 	    v_min(DMIN), v_max(DMAX),
 	    tp(QVariant::Invalid), ptr(0), vis_name(v_name), descr()
 {
@@ -93,11 +96,23 @@ HolderData::HolderData( const QString &obj_name,
   }
 }
 
+void HolderData::setParm( const QString &name, const QString &value )
+{
+  parms[name] = value;
+}
+
+QString HolderData::getParm( const QString &name ) const
+{
+  if( parms.contains( name ) )
+    return parms[name];
+  return QString();
+}
+
 // ---------------- HolderInt ---------
 
 HolderInt::HolderInt( int *p, const QString &obj_name, 
-                      const QString &v_name, QObject *a_parent  )
-          :HolderData( obj_name, v_name, a_parent ),
+                      const QString &v_name, QObject *a_parent, int a_flags )
+          :HolderData( obj_name, v_name, a_parent, a_flags ),
 	   val(p)
 {
   if( !val ) {
@@ -147,8 +162,8 @@ bool HolderInt::fromString( const QString &s )
 
 // ---------------- HolderSwitch ---------
 HolderSwitch::HolderSwitch( int *p, const QString &obj_name, 
-                      const QString &v_name, QObject *a_parent  )
-          :HolderInt( p, obj_name, v_name, a_parent )
+                      const QString &v_name, QObject *a_parent, int a_flags )
+          :HolderInt( p, obj_name, v_name, a_parent, a_flags )
 {
   old_subtp = dtpsSwitch;
   post_set();
@@ -166,11 +181,35 @@ void HolderSwitch::post_set()
 }
 
 
+// ---------------- HolderList ---------
+HolderList::HolderList( int *p, const QString &obj_name, 
+                      const QString &v_name, QObject *a_parent, int a_flags )
+          :HolderInt( p, obj_name, v_name, a_parent, a_flags )
+{
+  old_subtp = dtpsList;
+  v_min = v_max = 0;
+  post_set();
+}
+
+HolderList::~HolderList()
+{
+  // NOP
+}
+
+
+void HolderList::setElems( const QString &els )
+{
+  parms["list_elems"] = els;
+  elems = els.split("\n");
+  v_max = elems.size() - 1;
+}
+
+
 // ---------------- HolderDouble ---------
 
 HolderDouble::HolderDouble( double *p, const QString &obj_name,
-                            const QString &v_name,  QObject *a_parent )
-          :HolderData( obj_name, v_name, a_parent ),
+                    const QString &v_name,  QObject *a_parent, int a_flags )
+          :HolderData( obj_name, v_name, a_parent, a_flags ),
 	   val(p)
 {
   if( !val ) {
@@ -222,8 +261,8 @@ bool HolderDouble::fromString( const QString &s )
 // ---------------- HolderString ---------
 
 HolderString::HolderString( QString *p, const QString &obj_name,
-                            const QString &v_name,  QObject *a_parent )
-          :HolderData( obj_name, v_name, a_parent ),
+                  const QString &v_name,  QObject *a_parent, int a_flags )
+          :HolderData( obj_name, v_name, a_parent, a_flags ),
 	   val(p)
 {
   if( !val ) {
@@ -272,8 +311,8 @@ bool HolderString::fromString( const QString &s )
 // ---------------- HolderColor ---------
 
 HolderColor::HolderColor( QColor *p, const QString &obj_name,
-                            const QString &v_name,  QObject *a_parent )
-          :HolderData( obj_name, v_name, a_parent ),
+                  const QString &v_name,  QObject *a_parent, int a_flags )
+          :HolderData( obj_name, v_name, a_parent, a_flags ),
 	   val(p)
 {
   if( !val ) {
@@ -326,14 +365,21 @@ bool HolderColor::fromString( const QString &s )
 // ---------------- HolderObj ---------
 
 HolderObj::HolderObj( TDataSet *p, const QString &obj_name,
-                            const QString &v_name,  QObject *a_parent )
-          :HolderData( obj_name, v_name, a_parent ),
+                 const QString &v_name,  QObject *a_parent, int a_flags )
+          :HolderData( obj_name, v_name, a_parent, a_flags ),
 	   obj(p)
 {
   // no create? what to do if p == 0 ?
+  if( !p ) {
+    qDebug( "*** HolderObj::HolderObj p = 0 obj_name=%s !",
+	obj_name.toLocal8Bit().constData() );
+  }
   post_set();
   ptr = obj; tp=QVariant::UserType; old_tp = dtpObj; 
   old_subtp = obj->getClassId();
+  obj->setObjectName( QString("_real_") + obj_name );
+  //qDebug( "*** HolderObj::HolderObj obj = %p obj_name=%s !",
+  //    obj, obj_name.toLocal8Bit().constData() );
 }
 
 HolderObj::~HolderObj()
@@ -969,8 +1015,8 @@ int TDataSet::processElem( istream *is )
     };
     tp = d_i[j].tp;
     // atu: debug
-    //fprintf( stderr, "TDataSet::processElem: reading %s[%d](%d.%d)\n" ,
-    //         nm, j, tp, d_i[j].subtp  );
+    //fprintf( stderr, "TDataSet::processElem: reading %s.%s[%d](%d.%d)\n" ,
+    //         getName(), nm, j, tp, d_i[j].subtp  );
     switch( tp ) {
       case dtpEnd:
              fprintf( stderr, "TDataSet::processElem: end datainfos?\n" );
@@ -989,6 +1035,8 @@ int TDataSet::processElem( istream *is )
              ob = static_cast<TDataSet*> (ptrs[j]);
 	     if( ob == 0 ) {
 	       fprintf( stderr, "TDataSet::processElem: empty ptrs[%d]\n", j );
+	       dumpStruct();
+	       abort();
 	       return -7;
 	     };
 	     k = ob->loadDatas( is );
@@ -1170,12 +1218,60 @@ void TDataSet::post_set()
 
 QString TDataSet::toString() const
 {
-  return QString(); // TODO:
+  QString buf;
+  QString data_sep1(" \""), data_sep2( "\"" ), obj_sep1(" {\n"), obj_sep2("} " );
+  QString sep1, sep2;
+  buf.reserve(4096); // TODO ?
+  QObjectList childs = children();
+
+  
+  for( QObjectList::iterator o = childs.begin(); o != childs.end(); ++o ) {
+    QObject *xo = *o;
+    if( ! xo->inherits("HolderData" )) {
+      continue;
+    }
+    HolderData *ho = qobject_cast<HolderData*>(xo);
+    if( ho->inherits( "HolderObj" ) ) {
+      sep1 = obj_sep1; sep2 = obj_sep2;
+    } else {
+      sep1 = data_sep1; sep2 = data_sep2;
+    }
+    buf += xo->objectName() + " = " + sep1 + ho->toString() + sep2 + "\n"; // TODO: quote
+  }
+
+  return buf; 
 }
 
 bool TDataSet::fromString( const QString & /*s*/ )
 {
   return false; // TODO;
+}
+
+void TDataSet::dumpStruct() const
+{
+  static int dump_lev = -1;
+  ++dump_lev;
+  qDebug( "*%d struct of %s %s nelm=%d this=%p", 
+         dump_lev, getClassName(), getName(), nelm, this );
+  for( int i=0; i<nelm; ++i ) {
+    qDebug( "** [%d] %s %d.%d = %p", 
+	i, d_i[i].name, d_i[i].tp, d_i[i].subtp, ptrs[i] );
+  }
+  // new part
+  QObjectList childs = children();
+  int i = 0;
+  for( QObjectList::iterator o = childs.begin(); o != childs.end(); ++o,++i ) {
+    QObject *xo = *o;
+    qDebug( "*# [%d] (%p) %s %s ", 
+	i, xo, xo->metaObject()->className(), xo->objectName().toLocal8Bit().constData() );
+    if( ! xo->inherits("HolderData" )) {
+      continue;
+    }
+    HolderData *ho = qobject_cast<HolderData*>(xo);
+    qDebug( "*#    = %s", ho->toString().toLocal8Bit().constData() );
+  }
+  qDebug( "*%d END", dump_lev );
+  --dump_lev;
 }
 
 // end of dataset.cpp

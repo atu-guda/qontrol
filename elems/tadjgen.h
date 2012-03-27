@@ -54,13 +54,25 @@ class TAdjGen : public TMiso  {
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
-   /** type of averaging, misc flags */
-   int type, useReset, useLock, outStrobe, useZero, 
-       useSignStrobe, usePlusStrobe, useF, currOut, tick;
+   /** type of averaging, */
+   PRM_LIST( type, efNoRunChange );
+   /** misc flags */
+   PRM_SWITCH( useReset, efNoRunChange );
+   PRM_SWITCH( useLock, efNoRunChange );
+   PRM_SWITCH( outStrobe, efNoRunChange );
+   PRM_SWITCH( useZero, efNoRunChange );
+   PRM_SWITCH( useSignStrobe, efNoRunChange );
+   PRM_SWITCH( usePlusStrobe, efNoRunChange );
+   PRM_SWITCH( useF, efNoRunChange );
+   PRM_INT( currOut, efInner );
+   PRM_INT( tick, efInner );
    /** koeff to F-omega conversion if useF */
-   double omega_0, k_omega;
+   PRM_DOUBLE( omega_0, 0 );
+   PRM_DOUBLE( k_omega, 0 );
    /**  accumulators, ... */
-   double ctt, ig, ig2;
+   PRM_DOUBLE( ctt, efInner );
+   PRM_DOUBLE( ig, efInner );
+   PRM_DOUBLE( ig2, efInner );
    /** data descriptors -- with base class elements */ 
    static TDataInfo tadjgen_d_i[27];
    /** class decription */

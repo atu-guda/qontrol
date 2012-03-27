@@ -55,35 +55,37 @@ class TElmLink : public TDataSet { //@ c,{},(380,320),"Object links"
    virtual const char* getHelp(void) const;
  protected:
    /** names of elements, which outputs will be used as inputs */
-   QString inps[4]; 
-   HolderString ho_inps0, ho_inps1, ho_inps2, ho_inps3;
+   PRM_STRING( inps0, efNoRunChange );
+   PRM_STRING( inps1, efNoRunChange );
+   PRM_STRING( inps2, efNoRunChange );
+   PRM_STRING( inps3, efNoRunChange );
    /** flag: no autotomatic processing */
-   int noauto;
-   HolderSwitch ho_noauto;
+   PRM_SWITCH( noauto, efNoRunChange );
    /** flag: locked state: x = u[0] */
-   int locked; 
-   HolderSwitch ho_locked;
+   PRM_SWITCH( locked, efNoRunChange );
    /** flag: call f(u,t) only first time */
-   int onlyFirst; 
-   HolderSwitch ho_onlyFirst;
+   PRM_SWITCH( onlyFirst, efNoRunChange ); 
    /** flag: call f(u,t) only last time */
-   int onlyLast; 
-   HolderSwitch ho_onlyLast;
+   PRM_SWITCH( onlyLast, efNoRunChange ); 
    /** flag: flip left-right element icon */
-   int flip;
-   HolderSwitch ho_flip;
+   PRM_SWITCH( flip, efNoRunChange );
    /** flag: dont show icon */
-   int noIcon;
-   HolderSwitch ho_noIcon;
+   PRM_SWITCH( noIcon, efNoRunChange );
    /** names of elms, which outputs will be used as parm inputs */
-   QString pinps[4]; 
-   HolderString ho_pinps0, ho_pinps1, ho_pinps2, ho_pinps3;
+   PRM_STRING( pinps0, efNoRunChange );
+   PRM_STRING( pinps1, efNoRunChange );
+   PRM_STRING( pinps2, efNoRunChange );
+   PRM_STRING( pinps3, efNoRunChange );
    /** names of inner params, to be modifyed */ 
-   QString pnames[4]; 
-   HolderString ho_pnames0, ho_pnames1, ho_pnames2, ho_pnames3;
+   PRM_STRING( pnames0, efNoRunChange );
+   PRM_STRING( pnames1, efNoRunChange );
+   PRM_STRING( pnames2, efNoRunChange );
+   PRM_STRING( pnames3, efNoRunChange );
    /** inner flags for params: 1-only start of loop, ..? */
-   int pflags[4]; 
-   HolderSwitch ho_pflags0, ho_pflags1, ho_pflags2, ho_pflags3; 
+   PRM_SWITCH( pflags0, efNoRunChange );
+   PRM_SWITCH( pflags1, efNoRunChange );
+   PRM_SWITCH( pflags2, efNoRunChange );
+   PRM_SWITCH( pflags3, efNoRunChange );
    /** data descriptors */ 
    static TDataInfo telmlink_d_i[40];
    /** class decription */
@@ -179,14 +181,12 @@ class TMiso : public TDataSet  {
    virtual int endLoop(void);
  protected:
    /** order, in which elements will be used and holder */
-   int ord; 
-   HolderInt ho_ord;
+   PRM_INT( ord, efRODial | efNoRunChange );
    /** description on element */
-   QString descr;
-   HolderString ho_descr;
+   PRM_STRING( descr, efNoRunChange );
    /** visual coordinates */
-   int vis_x, vis_y;
-   HolderInt ho_vis_x, ho_vis_y;
+   PRM_INT( vis_x, efNoDial | efNoRunChange );
+   PRM_INT( vis_y, efNoDial | efNoRunChange );
    /** time step -- setted by preRun */
    double tdt; 
    /** number of iteration per loop -- setted by PreRun */
@@ -196,7 +196,7 @@ class TMiso : public TDataSet  {
    TModel *model;
    /** pointer to link data */
    TElmLink *links;
-   HolderObj ho_links;
+   PRM_OBJ( links, 0 );
    /** data descriptors -- empty -- never be used */ 
    static TDataInfo tmiso_d_i[2];
    /** class decription */
