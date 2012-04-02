@@ -52,7 +52,8 @@ class TSwitch : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** levels  */
-   double level1, level2;
+   PRM_DOUBLE( level1, 0 );
+   PRM_DOUBLE( level2, 0 );
    /** data descriptors -- with base class elements */ 
    static TDataInfo tswitch_d_i[14];
    /** class decription */

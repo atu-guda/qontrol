@@ -49,21 +49,31 @@ TDataInfo TMultipl::tmultipl_d_i[16] = {
 
 
 TMultipl::TMultipl( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	 PRM_INIT( on0, "On 0" ),
+	 PRM_INIT( on1, "On 1" ),
+	 PRM_INIT( on2, "On 2" ),
+	 PRM_INIT( on3, "On 3" ),
+	 PRM_INIT( a,    "a" )
 {
   int i;
-  on[0] = on[1] = 1; on[2] = on[3] = 0; a = 1;
+  on0 = on1 = 1; on2 = on3 = 0; a = 1;
   d_i = tmultipl_d_i;
   initHash();
   for( i=0; i<nelm; i++ ) {
     ptrs.push_back( 0 );
   };
   ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[3] = &on[0]; ptrs[4] = &on[1]; ptrs[5] = &on[2]; ptrs[6] = &on[3]; 
+  ptrs[3] = &on0; ptrs[4] = &on1; ptrs[5] = &on2; ptrs[6] = &on3; 
   ptrs[8] = &a; 
   // from TMiso 
   ptrs[12] = links;
   ptrs[13] = &vis_x; ptrs[14] = &vis_y;
+  PRMI(on0).setDescr( "Use input 0" );
+  PRMI(on1).setDescr( "Use input 1" );
+  PRMI(on2).setDescr( "Use input 2" );
+  PRMI(on3).setDescr( "Use input 3" );
+  PRMI(a).setDescr( "Common factor" );
 }
 
 TMultipl::~TMultipl()
@@ -102,12 +112,15 @@ const char** TMultipl::getIcon(void) const
 
 double TMultipl::f( const double* u, double /* t */ )
 {
-  double v = 1; 
-  int i;
-  for( i=0; i<4; i++ )
-    if( on[i] )
-      v *= u[i];
-  v *= a;
+  double v = a; 
+  if( on0 )
+    v *= u[0];
+  if( on1 )
+    v *= u[1];
+  if( on2 )
+    v *= u[2];
+  if( on3 )
+    v *= u[3];
   return v; 
 }
 

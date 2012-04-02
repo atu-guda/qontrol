@@ -52,7 +52,11 @@ TDataInfo TCounter::tcounter_d_i[16] = {
 
 
 TCounter::TCounter( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	 PRM_INIT( type, "Type" ),
+	 PRM_INIT( n, "n" ),
+	 PRM_INIT( cn, "cn" ),
+	 PRM_INIT( useReset, "use Reset" )
 {
   int i;
   cn = type = useReset = flip = 0; u_old = 9e300; n = 2;
@@ -67,6 +71,12 @@ TCounter::TCounter( TDataSet* aparent )
   // from TMiso 
   ptrs[12] = links;
   ptrs[13] = &vis_x; ptrs[14] = &vis_y;
+  PRMI(type).setDescr( "Type of counters output" );
+  PRMI(type).setElems( "level\npulse+\npulse+-\nn" );
+  PRMI(n).setDescr( "Number to count" );
+  PRMI(cn).setDescr( "Current counter value" );
+  PRMI(useReset).setDescr( "Use u[1] as Reset signal" );
+
 }
 
 TCounter::~TCounter()

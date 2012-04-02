@@ -55,9 +55,15 @@ class TFuncTrans : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** type of function */
-   int type;
+   PRM_LIST( type, 0 );
    /** coefficients and shift */
-   double a, b, c, d, e, g, x0;
+   PRM_DOUBLE( a, 0 );
+   PRM_DOUBLE( b, 0 );
+   PRM_DOUBLE( c, 0 );
+   PRM_DOUBLE( d, 0 );
+   PRM_DOUBLE( e, 0 );
+   PRM_DOUBLE( g, 0 );
+   PRM_DOUBLE( x0, 0 );
    /** data descriptors -- with base class elements */ 
    static TDataInfo tfunctrans_d_i[26];
    /** class decription */

@@ -17,6 +17,8 @@
 
 #include "tlatch.h"
 
+static const char* const tlatch_list = "Time\nSignal u[1]";
+
 const char* TLatch::helpstr = "<H1>TLatch</H1>\n"
  "Latch: can latch (or add) input value u[0], depend on <b>type</b>: <br>\n"
  "a) at given time <b>t0</b> (type=0); <br>\n"
@@ -39,7 +41,7 @@ TDataInfo TLatch::tlatch_d_i[19] = {
  { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
  { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
  { dtpLabel,      0,   0,   30,  60,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type", "", "Type"},
- { dtpInt, dtpsList,   2,   20,  80, 120,  20, 2,  0.0, 0.0, 0, 0, "type", "", "Time\nSignal u[1]"},
+ { dtpInt, dtpsList,   2,   20,  80, 120,  20, 2,  0.0, 0.0, 0, 0, "type", "", tlatch_list },
  { dtpLabel,      0,   0,   30, 120,  50,  20, 0,  0.0, 0.0, 0, 0, "l_t0", "", "t0"},
  { dtpDou,        0,   0,   20, 140, 120,  20, 2,  0.0, 1e300, 0, 0, "t0", "t0", ""},
  { dtpLabel,      0,   0,   30, 180, 100,  20, 0,  0.0, 0.0, 0, 0, "l_v_st", "", "Start value"},
@@ -57,7 +59,11 @@ TDataInfo TLatch::tlatch_d_i[19] = {
 };
 
 TLatch::TLatch( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	 PRM_INIT( type, "Type" ),
+	 PRM_INIT( t0, "Time" ),
+	 PRM_INIT( v_st, "Start value" ),
+	 PRM_INIT( v, "v" )
 {
   int i;
   t0 = u_old = 0; type = 0; usePulse = useFirst = useAdd = 0; wasLatch = -1;
@@ -73,6 +79,12 @@ TLatch::TLatch( TDataSet* aparent )
   // from TMiso 
   ptrs[15] = links;
   ptrs[16] = &vis_x; ptrs[17] = &vis_y;
+
+  PRMI(type).setDescr( "Type" );
+  PRMI(type).setElems( tlatch_list );
+  PRMI(t0).setDescr( "Time" );
+  PRMI(v_st).setDescr( "Start value" );
+  PRMI(v).setDescr( "v" );
 }
 
 TLatch::~TLatch()

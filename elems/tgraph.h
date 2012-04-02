@@ -19,7 +19,10 @@
 #define TGRAPH_H
 
 #include "dataset.h"
+#include <QColor>
+#include <QString>
 class GraphInfo;
+
 
 #define CLASS_ID_TGraph 700
 
@@ -56,15 +59,25 @@ class TGraph : public TDataSet  {
    int fillGraphInfo( GraphInfo *gi ) const;
  protected:
    /** title of graph  */
-   QString title;
+   PRM_STRING( title, 0 );
    /** name of output array for x  */
-   QString xname;
+   PRM_STRING( xname, 0 );
    /** names of output array for y0  */
-   QString yname[6];
+   PRM_STRING( y0name, 0 );
+   PRM_STRING( y1name, 0 );
+   PRM_STRING( y2name, 0 );
+   PRM_STRING( y3name, 0 );
+   PRM_STRING( y4name, 0 );
+   PRM_STRING( y5name, 0 );
    /** back color  */
-   int bgcolor;
+   PRM_COLOR( bgcolor, 0 );
    /** color of lines */
-   int ycolor[6];
+   PRM_COLOR( y0color, 0 );
+   PRM_COLOR( y1color, 0 );
+   PRM_COLOR( y2color, 0 );
+   PRM_COLOR( y3color, 0 );
+   PRM_COLOR( y4color, 0 );
+   PRM_COLOR( y5color, 0 );
    // TODO: legend
  
    /** data descriptors */ 

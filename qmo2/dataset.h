@@ -212,8 +212,8 @@ class HolderColor : public HolderData {
 };
 
 #define PRM_COLOR( name, flags ) \
- int name; \
- QColor __HO_##name ; \
+ QColor name; \
+ HolderColor __HO_##name ; \
  static const int __PRM_FLAGS_##name = flags ; 
 
 /** Holder of objects ??? TODO: ?? combine with TDataSet? or proxy */

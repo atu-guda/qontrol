@@ -74,7 +74,23 @@ TDataInfo TIntegrator::tintegrator_d_i[29] = {
 
 
 TIntegrator::TIntegrator( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	 PRM_INIT( ki, "k_i" ),
+	 PRM_INIT( s_val, "Start value" ),
+	 PRM_INIT( dis, "Discharde coeff" ),
+	 PRM_INIT( vmin, "Min limit" ),
+	 PRM_INIT( vmax, "Max limit" ),
+	 PRM_INIT( v, "Current value" ),
+	 PRM_INIT( useMin, "use Min value" ),
+	 PRM_INIT( useMax, "use Max value" ),
+	 PRM_INIT( useReset, "[u1] is Reset" ),
+	 PRM_INIT( useBase, "u[3] is Base" ),
+	 PRM_INIT( useAdd, "use Base" ),
+	 PRM_INIT( useDis, "use Disacharge" ),
+	 PRM_INIT( useHold, "Hold" ),
+	 PRM_INIT( useAver, "Calc Average" ),
+	 PRM_INIT( useSqIn, "x^2 on input " ),
+	 PRM_INIT( useSqrOut, "sqrt of output" )
 {
   int i;
   ki = 1; vmin = -1000;  vmax = 1000; s_val = 0; dis = 1e-3; t_rst = 0;
@@ -98,6 +114,23 @@ TIntegrator::TIntegrator( TDataSet* aparent )
   // from TMiso 
   ptrs[25] = links;
   ptrs[26] = &vis_x; ptrs[27] = &vis_y;
+
+  PRMI(ki).setDescr( "Factor before integral" );
+  PRMI(s_val).setDescr( "Start value" );
+  PRMI(dis).setDescr( "Discharde coeff (if enabled)" );
+  PRMI(vmin).setDescr( "Limit min value" );
+  PRMI(vmax).setDescr( "Limit ma value" );
+  PRMI(v).setDescr( "Current value" );
+  PRMI(useMin).setDescr( "use Min value" );
+  PRMI(useMax).setDescr( "use Max value" );
+  PRMI(useReset).setDescr( "[u1] is Reset" );
+  PRMI(useBase).setDescr( "u[3] is Base" );
+  PRMI(useAdd).setDescr( "use Base" );
+  PRMI(useDis).setDescr( "use Disacharge" );
+  PRMI(useHold).setDescr( "Hold" );
+  PRMI(useAver).setDescr( "Calc Average" );
+  PRMI(useSqIn).setDescr( "x^2 on input " );
+  PRMI(useSqrOut).setDescr( "sqrt of output" );
 }
 
 TIntegrator::~TIntegrator()

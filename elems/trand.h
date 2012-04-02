@@ -61,23 +61,26 @@ class TRand : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** type of distribution */
-   int type;
+   PRM_LIST( type, efNoRunChange );
    /** time of const output value, if <=0 -- chacge every tick */
-   double tau;
+   PRM_DOUBLE( tau, efNoRunChange );
    /** amplitude of output */
-   double ampl;
+   PRM_DOUBLE( ampl, 0 );
    /** zero value of output */
-   double zval;
+   PRM_DOUBLE( zval, 0 );
    /** coefficients of distribution */
-   double sigma, a, b, c;
+   PRM_DOUBLE( sigma, 0 );
+   PRM_DOUBLE( a, 0 );
+   PRM_DOUBLE( b, 0 );
+   PRM_DOUBLE( c, 0 );
    /** seed value for generator */
-   int seed;
+   PRM_INT( seed, efNoRunChange );
    /** use same seed every loop -- obsoleted by seedType */
-   int useSameSeed;
+   PRM_SWITCH( useSameSeed, efInner );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
-   int seedType;
-   /** flag: add base sedd to element seed */
-   int addBaseSeed;
+   PRM_LIST( seedType, efNoRunChange );
+   /** flag: add base seed to element seed */
+   PRM_SWITCH( addBaseSeed, efNoRunChange );
    /** data descriptors -- with base class elements */ 
    static TDataInfo trand_d_i[31];
    /** class decription */

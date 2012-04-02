@@ -54,8 +54,15 @@ class TCounter : public TMiso  {
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
-   /** type of output from counter, n of counts, current counter */
-   int type, n, cn, useReset, flip;
+   /** type of output from counter */
+   PRM_LIST( type, efNoRunChange );
+   //* n of counts */
+   PRM_INT( n, efNoRunChange );
+   //* current counter */
+   PRM_INT( cn, efInner );
+   /** use u[1] as reset */
+   PRM_SWITCH( useReset, 0 );
+   int flip;
    /** old value of input */
    double u_old;
    /** data descriptors -- with base class elements */ 

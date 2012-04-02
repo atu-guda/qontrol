@@ -54,9 +54,13 @@ class TOutputAny : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** name of source */
-   QString name;
-   /** enabler, type of output: -1:bad, 0:object, 1-vars.  */
-   int useEnable, type, ne;
+   PRM_STRING( name, efNoRunChange );
+   /** enabler = u[1]  */
+   PRM_SWITCH( useEnable, 0 );
+   /** type of output: -1:bad, 0:object, 1-vars.  */
+   int type;
+   /** idx of sink */
+   int ne;
    /** pointer to element  */
    TDataSet *pel;
    /** data descriptors -- with base class elements */ 

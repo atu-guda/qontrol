@@ -49,11 +49,11 @@ TDataInfo TInputAny::tinputany_d_i[12] = {
 
 
 TInputAny::TInputAny( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	PRM_INIT( name, "Name" )
 {
   int i;
   type = -1; 
-  // name = QString(); 
   ne = -1; pel = 0;
   d_i = tinputany_d_i;
   initHash();
@@ -65,6 +65,9 @@ TInputAny::TInputAny( TDataSet* aparent )
   // from TMiso 
   ptrs[8] = links;
   ptrs[9] = &vis_x; ptrs[10] = &vis_y;
+
+  PRMI(name).setDescr( "Name of element to get values" );
+  // TODO: PRMI(name).setXXX: type is element/output name
 }
 
 TInputAny::~TInputAny()

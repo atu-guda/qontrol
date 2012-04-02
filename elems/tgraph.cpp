@@ -64,16 +64,28 @@ TDataInfo TGraph::tgraph_d_i[28] = {
 
 
 TGraph::TGraph( TDataSet* apar )
-       :TDataSet( apar )
+       :TDataSet( apar ),
+       PRM_INIT( title, "Title" ),
+       PRM_INIT( xname, "X name" ),
+       PRM_INIT( y0name, "y0 name" ),
+       PRM_INIT( y1name, "y1 name" ),
+       PRM_INIT( y2name, "y2 name" ),
+       PRM_INIT( y3name, "y3 name" ),
+       PRM_INIT( y4name, "y4 name" ),
+       PRM_INIT( y5name, "y5 name" ),
+       PRM_INIT( bgcolor, "BG color" ),
+       PRM_INIT( y0color, "y0 color" ),
+       PRM_INIT( y1color, "y1 color" ),
+       PRM_INIT( y2color, "y2 color" ),
+       PRM_INIT( y3color, "y3 color" ),
+       PRM_INIT( y4color, "y4 color" ),
+       PRM_INIT( y5color, "y5 color" )
 {
   int i;
   bgcolor = 0x000060;
   title =  "title";
-  for( i=0; i<6; i++ ) {
-    yname[i] = "";
-  };
-  ycolor[0] = 0xFFFFFF; ycolor[1] = 0xFFFF00; ycolor[2] = 0xFF0000;
-  ycolor[3] = 0x00FF00; ycolor[4] = 0x0000FF; ycolor[5] = 0xFF00FF;
+  y0color = 0xFFFFFF; y1color = 0xFFFF00; y2color = 0xFF0000;
+  y3color = 0x00FF00; y4color = 0x0000FF; y5color = 0xFF00FF;
   d_i = tgraph_d_i;
   initHash();
   for( i=0; i<nelm; i++ ) {
@@ -81,11 +93,27 @@ TGraph::TGraph( TDataSet* apar )
   };
   ptrs[2]  = &title; 
   ptrs[4]  = &xname; 
-  ptrs[6]  = &yname[0];    ptrs[8] = &yname[1];    ptrs[10] = &yname[2]; 
-  ptrs[12] = &yname[3];   ptrs[14] = &yname[4];   ptrs[16] = &yname[5]; 
-  ptrs[17] = &bgcolor;   ptrs[18] = &ycolor[0]; ptrs[19] = &ycolor[1];
-  ptrs[20] = &ycolor[2]; ptrs[21] = &ycolor[3]; ptrs[22] = &ycolor[4];
-  ptrs[23] = &ycolor[5];
+  ptrs[6]  = &y0name;   ptrs[8]  = &y1name;   ptrs[10] = &y2name; 
+  ptrs[12] = &y3name;   ptrs[14] = &y4name;   ptrs[16] = &y5name; 
+  ptrs[17] = &bgcolor;   
+  ptrs[18] = &y0color; ptrs[19] = &y1color;  ptrs[20] = &y2color; 
+  ptrs[21] = &y3color; ptrs[22] = &y4color;  ptrs[23] = &y5color;
+
+  PRMI(title).setDescr( "Plot title" );
+  PRMI(xname).setDescr( "X name" );
+  PRMI(y0name).setDescr( "Name of y0 output" );
+  PRMI(y1name).setDescr( "Name of y1 output" );
+  PRMI(y2name).setDescr( "Name of y2 output" );
+  PRMI(y3name).setDescr( "Name of y3 output" );
+  PRMI(y4name).setDescr( "Name of y4 output" );
+  PRMI(y5name).setDescr( "Name of y5 output" );
+  PRMI(bgcolor).setDescr( "Background color" );
+  PRMI(y0color).setDescr( "color of y0 data" );
+  PRMI(y1color).setDescr( "color of y1 data" );
+  PRMI(y2color).setDescr( "color of y2 data" );
+  PRMI(y3color).setDescr( "color of y3 data" );
+  PRMI(y4color).setDescr( "color of y4 data" );
+  PRMI(y5color).setDescr( "color of y5 data" );
 }
 
 TGraph::~TGraph()
@@ -150,8 +178,9 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
   if( label[0] == 0 ) { label = "x"; };
   strncat( gi->label[0], label.toLocal8Bit().constData(), MAX_LABELLEN-1 );
   col = 1; // unlike show, x and y[] in single index
+  const QString* ynms[] = { &y0name, &y1name, &y2name, &y3name, &y4name, &y5name }; // TODO: replace
   for( i=0; i<6; i++ ) {
-    out_nu = model->outname2out_nu( yname[i].toLocal8Bit().constData() );
+    out_nu = model->outname2out_nu( ynms[i]->toLocal8Bit().constData() );
     if( out_nu < 0 ) continue;
     arr = model->getOutArr(  out_nu );
     if( arr == 0 ) continue;

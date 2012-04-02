@@ -77,7 +77,16 @@ TDataInfo TLorenz::tlorenz_d_i[25] = {
 
 
 TLorenz::TLorenz( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	PRM_INIT( sigma, "\\sigma" ),
+	PRM_INIT( r, "r" ),
+	PRM_INIT( b, "b" ),
+	PRM_INIT( x_0, "x_0" ),
+	PRM_INIT( y_0, "y_0" ),
+	PRM_INIT( z_0, "z_0" ),
+	PRM_INIT( x, "x" ),
+	PRM_INIT( y, "y" ),
+	PRM_INIT( z, "z" )
 {
   int i;
   sigma = 10.0; r = 28.0; b = 8.0/3.0; // Well-known Lorenz params
@@ -97,6 +106,16 @@ TLorenz::TLorenz( TDataSet* aparent )
   // from TMiso
   ptrs[21] = links;
   ptrs[22] = &vis_x; ptrs[23] = &vis_y;
+
+  PRMI(sigma).setDescr( "\\sigma" );
+  PRMI(r).setDescr( "r" );
+  PRMI(b).setDescr( "b" );
+  PRMI(x_0).setDescr( "Initial value of x" );
+  PRMI(y_0).setDescr( "Initial value of y_0" );
+  PRMI(z_0).setDescr( "Initial value of z" );
+  PRMI(x).setDescr( "x" );
+  PRMI(y).setDescr( "y" );
+  PRMI(z).setDescr( "z" );
 }
 
 TLorenz::~TLorenz()

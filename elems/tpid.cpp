@@ -53,7 +53,13 @@ TDataInfo TPid::tpid_d_i[21] = {
 
 
 TPid::TPid( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	PRM_INIT( kd2,  "k_d2" ),
+	PRM_INIT( kd1,  "k_d1" ),
+	PRM_INIT( kp,   "k_p" ),
+	PRM_INIT( ki1,  "k_i1" ),
+	PRM_INIT( ki2,  "k_i2" ),
+	PRM_INIT( aver, "Average" )
 {
   int i;
   kd2 = kd1 = ki2 = ki1 = 0; kp = 1; aver = 0;
@@ -69,6 +75,13 @@ TPid::TPid( TDataSet* aparent )
   // from TMiso 
   ptrs[17] = links;
   ptrs[18] = &vis_x; ptrs[19] = &vis_y;
+
+  PRMI(kd2).setDescr(  "Coefficient in second derivation" );
+  PRMI(kd1).setDescr(  "Coefficient in first derivation" );
+  PRMI(kp).setDescr(   "Coefficient in proportional part" );
+  PRMI(ki1).setDescr(  "Coefficient in first intergator" );
+  PRMI(ki2).setDescr(  "Coefficient in second intergator" );
+  PRMI(aver).setDescr( "Average" );
 }
 
 TPid::~TPid()

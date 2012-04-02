@@ -49,7 +49,7 @@ TDataInfo TTrigger::ttrigger_d_i[23] = {
  { dtpDou,        0,   0,   20, 210, 120,  20, 0,  0.0, 1e300, 0, 0, "t0", "autoreset time", ""},
  { dtpInt,   dtpsSw,   0,  180,  50, 150,  20, 2,  0.0, 0.0, 0, 0, "useInit1", "", "Set to 1 on start"},
  { dtpInt,   dtpsSw,   0,  180,  70, 150,  20, 2,  0.0, 0.0, 0, 0, "useEnable", "", "Use u3 as enable"},
- { dtpInt,   dtpsSw,   0,  180,  90, 150,  20, 2,  0.0, 0.0, 0, 0, "usePulse", "", "Pulse ouput"},
+ { dtpInt,   dtpsSw,   0,  180,  90, 150,  20, 2,  0.0, 0.0, 0, 0, "usePulse", "", "Pulse output"},
  { dtpInt,   dtpsSw,   0,  180, 110, 150,  20, 2,  0.0, 0.0, 0, 0, "useMinus", "", "Use -1 as neg. out"},
  { dtpInt,   dtpsSw,   0,  180, 130, 150,  20, 2,  0.0, 0.0, 0, 0, "useT0", "", "Autoreset after t0"},
  { dtpButton,     0,   0,   20, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
@@ -63,7 +63,19 @@ TDataInfo TTrigger::ttrigger_d_i[23] = {
 
 
 TTrigger::TTrigger( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	PRM_INIT( type, "Type" ),
+	PRM_INIT( cst, "Current state" ),
+	PRM_INIT( level0, "Level of 0 " ),
+	PRM_INIT( level1, "Level of 1" ),
+	PRM_INIT( t0, "Autoreset time" ),
+	PRM_INIT( et, "Elapsed time" ),
+	PRM_INIT( useInit1, "Set on start" ),
+	PRM_INIT( useEnable, "Use u3 as enable" ),
+	PRM_INIT( usePulse, "Pulse output" ),
+	PRM_INIT( useMinus, "Negative pulse" ),
+	PRM_INIT( useT0, "Autoreset (t0)" )
+
 {
   int i;
   type = 0; level0 = 0.1; level1 = 0.5; t0 = 2; et = 0; u2_old = 0;
@@ -80,6 +92,22 @@ TTrigger::TTrigger( TDataSet* aparent )
   // from TMiso 
   ptrs[19] = links;
   ptrs[20] = &vis_x; ptrs[21] = &vis_y;
+  PRMI(type).setDescr("Type of trigger");
+  PRMI(type).setElems(
+   "RS\n"             // 0
+   "Shmitt(u2)\n"     // 1
+   "CountRise(u2)\n"  // 2
+   "CountDown(u2)\n"  // 3
+   "CountLevel(u2)"   // 4 
+  );
+  PRMI(level0).setDescr("Level of '0' signal");
+  PRMI(level1).setDescr("Level of '1' signal (sor shmidt)");
+  PRMI(t0).setDescr("Time of autoreset (if enabled))");
+  PRMI(useInit1).setDescr("Set triggers value to 1 of start");
+  PRMI(useEnable).setDescr("Use u[3] as enable signal");
+  PRMI(usePulse).setDescr("Output is pulse, no level");
+  PRMI(useMinus).setDescr("Drop pulse is negative, not 0");
+  PRMI(useT0).setDescr("Use autoreset after t0 time elapsed");
 }
 
 TTrigger::~TTrigger()

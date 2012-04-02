@@ -60,7 +60,10 @@ TDataInfo TLinP1Q0::tlinp1q0_d_i[17] = {
 
 
 TLinP1Q0::TLinP1Q0( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	PRM_INIT( a, "a" ),
+	PRM_INIT( ku, "k_u" ),
+	PRM_INIT( fx, "elem name" )
 {
   int i;
   a = 1.0;  ku = 1.0; 
@@ -79,6 +82,11 @@ TLinP1Q0::TLinP1Q0( TDataSet* aparent )
   // from TMiso 
   ptrs[13] = links;
   ptrs[14] = &vis_x; ptrs[15] = &vis_y;
+
+  PRMI(a).setDescr( "Frequency in dx/dt = a*f(ku*u(t)-x)" );
+  PRMI(ku).setDescr( "Amplification " );
+  PRMI(fx).setDescr( "Function f(x) element name" );
+  // TODO: element name or DROP it!
 }
 
 TLinP1Q0::~TLinP1Q0()

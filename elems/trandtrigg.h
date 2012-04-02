@@ -59,16 +59,24 @@ class TRandTrigg : public TMiso  {
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
-   /** coefficients  */
-   double prob, u_old; 
-   /** flags */
-   int nforce, useLevel, useForce, useLock, useZero, ns, currOut;
+   /** Probability of spontatious flip  */
+   PRM_DOUBLE( prob, 0 ); 
+   /** Forced every */
+   PRM_INT( nforce, 0 /* ??? */ );
+   /* flags */
+   PRM_SWITCH( useLevel, efNoRunChange );
+   PRM_SWITCH( useForce, efNoRunChange );
+   PRM_SWITCH( useLock, efNoRunChange );
+   PRM_SWITCH( useZero, efNoRunChange );
    /** seed value for generator */
-   int seed;
+   PRM_INT( seed, efNoRunChange );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
-   int seedType;
-   /** flag: add base sedd to element seed */
-   int addBaseSeed;
+   PRM_LIST( seedType, efNoRunChange );
+   /** flag: add base seed to element seed */
+   PRM_SWITCH( addBaseSeed, efNoRunChange );
+   int ns, currOut;
+   /** old value */
+   double u_old; 
    
    /** data descriptors -- with base class elements */ 
    static TDataInfo trandtrigg_d_i[22];

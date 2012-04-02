@@ -71,25 +71,29 @@ class TOutArr : public TDataSet  {
    int fillGraphInfo( GraphInfo *gi ) const;
  protected:
    /** type of array: 0:simple, 1:parm1, 2:parm2, 3:special */
-   int type;
+   PRM_LIST( type, efNoRunChange );
    /** name of element to use */
-   QString name;
+   PRM_STRING( name, efNoRunChange );
    /** label of data */
-   QString label;
-   /** each n-th data collect. def=1, current value of counter(0..nq-1) */
-   int nq, cnq;
-   /** latch value of counter */
-   int lnq;
-   /** array size */
-   int arrsize;
-   /** min and max values */
-   double dmin, dmax;
-   /** data storage */
-   double *arr;
-   /** current number of datas */
-   int n;
+   PRM_STRING( label, 0 );
    /** size of x=const block in 2-d arrays */
-   int ny;
+   PRM_INT( ny, efInner );
+   /** each n-th data collect. def=1 */
+   PRM_INT( nq, efNoRunChange );
+   /** latch value of counter */
+   PRM_INT( lnq, efNoRunChange );
+   /** current value of counter(0..nq-1) */
+   PRM_INT( cnq, efInner );
+   /** min value */
+   PRM_DOUBLE( dmin, efInner );
+   /** max value */
+   PRM_DOUBLE( dmax, efInner );
+   /** array size */
+   PRM_INT( arrsize, efInner );
+   /** current number of datas */
+   PRM_INT( n, efInner );
+   /** data storage TODO: vector */
+   double *arr;
    /** data descriptors */ 
    static TDataInfo toutarr_d_i[19]; 
    /** class decription */

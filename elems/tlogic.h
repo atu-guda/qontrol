@@ -52,11 +52,16 @@ class TLogic : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** type of logic element */
-   int type;
+   PRM_LIST( type, efNoRunChange );
    /** level of 1  */
-   double level;
+   PRM_DOUBLE( level, 0 );
    /** misc flags */
-   int useNInp0, useNInp1, useNInp2, useNInp3, useNOut, useMinus;
+   PRM_SWITCH( useNInp0, efNoRunChange );
+   PRM_SWITCH( useNInp1, efNoRunChange );
+   PRM_SWITCH( useNInp2, efNoRunChange );
+   PRM_SWITCH( useNInp3, efNoRunChange );
+   PRM_SWITCH( useNOut, efNoRunChange );
+   PRM_SWITCH( useMinus, efNoRunChange );
    /** data descriptors -- with base class elements */ 
    static TDataInfo tlogic_d_i[20];
    /** class decription */

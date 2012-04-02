@@ -20,6 +20,12 @@
 #include "miscfun.h"
 #include "toutarr.h"
 
+static const char* const toutarr_list = 
+  "Simple\n" // 0
+  "Parm 1\n" // 1
+  "Parm 2\n" // 2
+  "Special"  // 3
+;
 
 const char* TOutArr::helpstr = "<H1>TOutArr</H1>\n"
  "Collector of output during simulation.\n"
@@ -34,7 +40,7 @@ TClassInfo TOutArr::class_info = {
 TDataInfo TOutArr::toutarr_d_i[19] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
  { dtpDial,       0,   0,    0,   0, 440, 200, 0,  0.0, 0.0, 0, 0, "OutArr",  "",   "Output array"},
- { dtpInt, dtpsList,   4,   20,  30, 110,  20, 2,  0.0, 0.0, 0, 0, "type",   "output type", "Simple\nParm 1\nParm 2\nSpecial"},
+ { dtpInt, dtpsList,   4,   20,  30, 110,  20, 2,  0.0, 0.0, 0, 0, "type",   "output type", toutarr_list },
  { dtpLabel,      0,   0,   20,  60, 120,  20, 0,  0.0, 0.0, 0, 0, "l_oname",   "",   "Output elem. name"},
  { dtpStr,        0,  MAX_NAMELEN,   20,  80, 110,  20, 2,  0.0, 0.0, 0, 0, "name",   "Name of elem wrom which putput stored",   ""},
  { dtpLabel,      0,   0,   20, 110, 120,  20, 0,  0.0, 0.0, 0, 0, "l_label", "",   "Output Label"},
@@ -56,7 +62,18 @@ TDataInfo TOutArr::toutarr_d_i[19] = {
 
 
 TOutArr::TOutArr( TDataSet* apar )
-        :TDataSet( apar )
+        :TDataSet( apar ),
+       PRM_INIT( type, "Type" ),
+       PRM_INIT( name, "Element name" ),
+       PRM_INIT( label, "Label" ),
+       PRM_INIT( ny, "ny" ),
+       PRM_INIT( nq, "Every n" ),
+       PRM_INIT( lnq, "Catch at n=" ),
+       PRM_INIT( cnq, "Current n" ),
+       PRM_INIT( dmin, "min" ),
+       PRM_INIT( dmax, "max" ),
+       PRM_INIT( arrsize, "full size" ),
+       PRM_INIT( n, "current size" )
 {
   int i;
   arrsize = 0; dmin = 0; dmax = 1; n = ny = 0; nq = 1; cnq = lnq = 0;
@@ -72,6 +89,20 @@ TOutArr::TOutArr( TDataSet* apar )
   ptrs[9] = &lnq;
   ptrs[13] = &arrsize; ptrs[14] = &dmin; ptrs[15] = &dmax; 
   ptrs[16] = &n; ptrs[17] = &ny;
+
+  PRMI(type).setDescr( "Type of array: 0:simple, 1:parm1, 2:parm2, 3:special " );
+  PRMI(name).setDescr( "Name of element to use" );
+  PRMI(label).setDescr( "Label of data" );
+  PRMI(ny).setDescr( "size of x=const block in 2-d arrays " );
+  PRMI(nq).setDescr( "each n-th data collect. def=1" );
+  PRMI(nq).setMinMax( 1, 1e6 );
+  PRMI(lnq).setDescr( "latch value of counter " );
+  PRMI(lnq).setMinMax( 0, 1e6 );
+  PRMI(cnq).setDescr( "current value of counter(0..nq-1)" );
+  PRMI(dmin).setDescr( "min value" );
+  PRMI(dmax).setDescr( "max value" );
+  PRMI(arrsize).setDescr( "Full array size" );
+  PRMI(n).setDescr( "Current number of datas" );
 }
 
 TOutArr::~TOutArr()

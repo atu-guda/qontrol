@@ -54,21 +54,23 @@ class TFriction : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** Parameter: mody mass */
-   double mass;
+   PRM_DOUBLE( mass, 0 );
    /** Parameter: max dry friction force (if constant)  */
-   double f_mx;
+   PRM_DOUBLE( f_mx, 0 );
    /** Parameter: start force addition coeff */
-   double kf_mx;
-   /** Parameter: max viscous friction coeff */
-   double kfv;
+   PRM_DOUBLE( kf_mx, 0 );
+   /** Parameter: viscous friction coeff */
+   PRM_DOUBLE( kfv, 0 );
    /** Switch: use u[1] as max dry friction force */
-   int useMf;
+   PRM_SWITCH( useMf, efNoRunChange );
    /** Current speed */
-   double v;
+   PRM_DOUBLE( v, efInner );
+   /** Current friction force */
+   PRM_DOUBLE( Ff, efInner );
+   /** state of mass: 0 -- sleep, 1 -- moving */
+   PRM_INT( bodyState, efInner );
    /** old values and misc */
    double v_old, x_old;
-   /** state of mass: 0 -- sleep, 1 -- moving */
-   int bodyState;
    /** data descriptors -- with base class elements */ 
    static TDataInfo tfriction_d_i[20];
    /** class decription */

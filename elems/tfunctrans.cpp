@@ -19,24 +19,7 @@
 #include "miscfun.h"
 #include "tfunctrans.h"
 
-const char* TFuncTrans::helpstr = "<H1>TFuncTrans</H1>\n"
- "Harmonic-alike functions: <br>\n"
- "Argument <b>y</b> calculates as:<br>\n"
- "<b>y = u[0] - u[1] - x0</b><br>\n"
- "Integer parameter <b>type</b> selects type of function.<br>\n"
- "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n";
-
-TClassInfo TFuncTrans::class_info = {
-  CLASS_ID_TFuncTrans, "TFuncTrans", TFuncTrans::create,
-  &TMiso::class_info, helpstr };
-
-TDataInfo TFuncTrans::tfunctrans_d_i[26] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 480, 350, 0,  0.0, 0.0, 0, 0, "functrans_dial", "", "Dialog for TFuncTrans"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type", "", "Type"},
- { dtpInt, dtpsList,  17,   20,  70, 290,  20, 2,  0.0, 0.0, 0, 0, "type", "func type",
+static const char* const tfunctrans_list = 
      "a*sin(b*y)+g\n"                // 0
      "a*sign(sin(b*y)+c)+g\n"        // 1 
      "a*tanh(by)+g\n"                // 2
@@ -54,7 +37,26 @@ TDataInfo TFuncTrans::tfunctrans_d_i[26] = {
      "a*tan(b*y)+g\n"                // 14
      "a*exp(-b*y*y)*(1-c*sin^2(dy))+g\n" // 15
      "a*(1-exp(-b*y*y))*(1-c*sin^2(dy))+g" // 16
- },
+;
+
+const char* TFuncTrans::helpstr = "<H1>TFuncTrans</H1>\n"
+ "Harmonic-alike functions: <br>\n"
+ "Argument <b>y</b> calculates as:<br>\n"
+ "<b>y = u[0] - u[1] - x0</b><br>\n"
+ "Integer parameter <b>type</b> selects type of function.<br>\n"
+ "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n";
+
+TClassInfo TFuncTrans::class_info = {
+  CLASS_ID_TFuncTrans, "TFuncTrans", TFuncTrans::create,
+  &TMiso::class_info, helpstr };
+
+TDataInfo TFuncTrans::tfunctrans_d_i[26] = {
+// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
+ { dtpDial,       0,   0,    0,   0, 480, 350, 0,  0.0, 0.0, 0, 0, "functrans_dial", "", "Dialog for TFuncTrans"},
+ { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
+ { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
+ { dtpLabel,      0,   0,   30,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type", "", "Type"},
+ { dtpInt, dtpsList,  17,   20,  70, 290,  20, 2,  0.0, 0.0, 0, 0, "type", "func type", tfunctrans_list },
  { dtpLabel,      0,   0,  360,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_a",   "", "a"},
  { dtpDou,        0,   0,  350,  70, 120,  20, 0,  -1e300, 1e300, 0, 0, "a", "a", ""},
  { dtpLabel,      0,   0,  360,  90,  50,  20, 0,  0.0, 0.0, 0, 0, "l_b",   "", "b"},
@@ -79,7 +81,15 @@ TDataInfo TFuncTrans::tfunctrans_d_i[26] = {
 };
 
 TFuncTrans::TFuncTrans( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	PRM_INIT( type, "Type" ),
+	PRM_INIT( a,  "a" ),
+	PRM_INIT( b,  "b" ),
+	PRM_INIT( c,  "c" ),
+	PRM_INIT( d,  "d" ),
+	PRM_INIT( e,  "e" ),
+	PRM_INIT( g,  "g" ),
+	PRM_INIT( x0, "x0" )
 {
   int i;
   type = 0;
@@ -96,6 +106,16 @@ TFuncTrans::TFuncTrans( TDataSet* aparent )
   // from TMiso 
   ptrs[22] = links;
   ptrs[23] = &vis_x; ptrs[24] = &vis_y;
+
+  PRMI(type).setDescr( "Functon type" );
+  PRMI(type).setElems( tfunctrans_list );
+  PRMI(a).setDescr(  "Coefficient a" );
+  PRMI(b).setDescr(  "Coefficient b" );
+  PRMI(c).setDescr(  "Coefficient c" );
+  PRMI(d).setDescr(  "Coefficient d" );
+  PRMI(e).setDescr(  "Coefficient e" );
+  PRMI(g).setDescr(  "Coefficient g" );
+  PRMI(x0).setDescr( "Input shift: y = u[0] - u[1] - x0;" );
 }
 
 TFuncTrans::~TFuncTrans()

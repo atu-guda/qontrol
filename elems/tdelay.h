@@ -61,8 +61,14 @@ class TDelay : public TMiso  {
    /** deallocates buf */
    virtual int postRun( int good );
  protected:
-   /** max delay, current delay + */
-   double mdelay, cdelay, v1, v2, u00;
+   /** max delay */
+   PRM_DOUBLE( mdelay, efNoRunChange );
+   /** current delay */
+   PRM_DOUBLE( cdelay, 0 );
+
+   double v1;
+   double v2;
+   double u00;
    /** max and current delays indexes ... */
    int imd, icd;
    /** data container */

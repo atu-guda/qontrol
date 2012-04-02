@@ -54,9 +54,15 @@ class TLatch : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** type of */
-   int type;
-   /** time to latch, start value, current value, old input  */
-   double t0, v_st, v, u_old;
+   PRM_LIST( type, efNoRunChange );
+   /** time to latch */
+   PRM_DOUBLE( t0, efNoRunChange );
+   /** start value */
+   PRM_DOUBLE( v_st, efNoRunChange );
+   /** current value */
+   PRM_DOUBLE( v, efInner );
+   /** old input  */
+   double u_old;
    /** flags, state */
    int usePulse, useFirst, useAdd, wasLatch;
    /** data descriptors -- with base class elements */ 

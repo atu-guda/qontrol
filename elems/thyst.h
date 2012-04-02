@@ -56,14 +56,20 @@ class THyst : public TMiso  {
  protected:
    void fixState(void);
  protected:
-   /** type of hysteresis +- */
-   int type;
-   /** coefficients of hysteresys + */
-   double x0, alpha;
+   /** type of hysteresis */
+   PRM_LIST( type, efNoRunChange );
+   /** width of hysteresis  */
+   PRM_DOUBLE( x0, 0 );
+   /** slope of hysteresis  */
+   PRM_DOUBLE( alpha, 0 );
    /** output scale */
-   double a, b;
-   /** state */
-   double d, s;
+   PRM_DOUBLE( a, 0 );
+   /** output shift */
+   PRM_DOUBLE( b, 0 );
+   /** state d */
+   PRM_DOUBLE( d, efInner );
+   /** state d */
+   PRM_DOUBLE( s, efInner );
    /** data descriptors -- with base class elements */ 
    static TDataInfo thyst_d_i[20];
    /** class decription */

@@ -26,17 +26,7 @@ const char* TFuncMisc::helpstr = "<H1>TFuncMisc</H1>\n"
  "Integer parameter <b>type</b> selects type of function.<br>\n"
  "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n";
 
-TClassInfo TFuncMisc::class_info = {
-  CLASS_ID_TFuncMisc, "TFuncMisc", TFuncMisc::create,
-  &TMiso::class_info, helpstr };
-
-TDataInfo TFuncMisc::tfuncmisc_d_i[26] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 420, 350, 0,  0.0, 0.0, 0, 0, "funcmisc_dial", "", "Dialog for TFuncMisc"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type", "", "Type"},
- { dtpInt, dtpsList,  17,   20,  70, 220,  20, 2,  0.0, 0.0, 0, 0, "type", "func type", 
+static const char* const tfuncmisc_list = 
      "a*deadLine(y,b)+g\n"           // 0
      "a*limitLine(y,b)+g\n"          // 1 
      "a*deadLimitLine(y,b,c,d)+g\n"  // 2
@@ -54,7 +44,19 @@ TDataInfo TFuncMisc::tfuncmisc_d_i[26] = {
      "a*erf(y*b)+g\n"                // 14
      "a*min(u0,u1)+g\n"              // 15
      "a*max(u0,u1)+g"                // 16
- },
+;
+
+TClassInfo TFuncMisc::class_info = {
+  CLASS_ID_TFuncMisc, "TFuncMisc", TFuncMisc::create,
+  &TMiso::class_info, helpstr };
+
+TDataInfo TFuncMisc::tfuncmisc_d_i[26] = {
+// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
+ { dtpDial,       0,   0,    0,   0, 420, 350, 0,  0.0, 0.0, 0, 0, "funcmisc_dial", "", "Dialog for TFuncMisc"},
+ { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
+ { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
+ { dtpLabel,      0,   0,   30,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type", "", "Type"},
+ { dtpInt, dtpsList,  17,   20,  70, 220,  20, 2,  0.0, 0.0, 0, 0, "type", "func type", tfuncmisc_list },
  { dtpLabel,      0,   0,  270,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_a",   "", "a"},
  { dtpDou,        0,   0,  260,  70, 120,  20, 0,  -1e300, 1e300, 0, 0, "a", "a", ""},
  { dtpLabel,      0,   0,  270,  90,  50,  20, 0,  0.0, 0.0, 0, 0, "l_b",   "", "b"},
@@ -79,7 +81,15 @@ TDataInfo TFuncMisc::tfuncmisc_d_i[26] = {
 };
 
 TFuncMisc::TFuncMisc( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	PRM_INIT( type, "Type" ),
+	PRM_INIT( a,  "a" ),
+	PRM_INIT( b,  "b" ),
+	PRM_INIT( c,  "c" ),
+	PRM_INIT( d,  "d" ),
+	PRM_INIT( e,  "e" ),
+	PRM_INIT( g,  "g" ),
+	PRM_INIT( x0, "x0" )
 {
   int i;
   type = 0;
@@ -96,6 +106,16 @@ TFuncMisc::TFuncMisc( TDataSet* aparent )
   // from TMiso 
   ptrs[22] = links;
   ptrs[23] = &vis_x; ptrs[24] = &vis_y;
+
+  PRMI(type).setDescr( "Functon type" );
+  PRMI(type).setElems( tfuncmisc_list );
+  PRMI(a).setDescr(  "Coefficient a" );
+  PRMI(b).setDescr(  "Coefficient b" );
+  PRMI(c).setDescr(  "Coefficient c" );
+  PRMI(d).setDescr(  "Coefficient d" );
+  PRMI(e).setDescr(  "Coefficient e" );
+  PRMI(g).setDescr(  "Coefficient g" );
+  PRMI(x0).setDescr( "Input shift: y = u[0] - u[1] - x0;" );
 }
 
 TFuncMisc::~TFuncMisc()

@@ -54,11 +54,26 @@ class TIntegrator : public TMiso  {
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
-   /** coefficients  */
-   double ki, s_val, dis, vmin, vmax, v, v_old, t_rst;
+   PRM_DOUBLE( ki, 0 );
+   PRM_DOUBLE( s_val, 0 );
+   PRM_DOUBLE( dis, 0 );
+   PRM_DOUBLE( vmin, 0 );
+   PRM_DOUBLE( vmax, 0 );
+   PRM_DOUBLE( v, efInner );
    /** flags */
-   int useMin, useMax, useReset, useBase, useAdd, useDis, useHold, useAver,
-       useSqIn, useSqrOut;
+   PRM_SWITCH( useMin, efNoRunChange );
+   PRM_SWITCH( useMax, efNoRunChange );
+   PRM_SWITCH( useReset, efNoRunChange );
+   PRM_SWITCH( useBase, efNoRunChange );
+   PRM_SWITCH( useAdd, efNoRunChange );
+   PRM_SWITCH( useDis, efNoRunChange );
+   PRM_SWITCH( useHold, efNoRunChange );
+   PRM_SWITCH( useAver, efNoRunChange );
+   PRM_SWITCH( useSqIn, efNoRunChange );
+   PRM_SWITCH( useSqrOut, efNoRunChange );
+   double v_old;
+   double t_rst;
+
    /** data descriptors -- with base class elements */ 
    static TDataInfo tintegrator_d_i[29];
    /** class decription */

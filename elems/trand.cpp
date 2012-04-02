@@ -36,6 +36,22 @@ const char* TRand::helpstr = "<H1>TRand</H1>\n"
  "Input is u[0], <b>not time</b>. If need time, link first input to 't'.<br>\n"
 ;
 
+static const char* const trand_list_type = 
+     "flat(-sigma,sigma)\n"       // 0
+     "gaussian(sigma)\n"          // 1 
+     "gaussian_tail(a,sigma)\n"   // 2
+     "exponential(sigma)\n"       // 3
+     "laplace(a)\n"               // 4
+     "exppow(a,b)"                // 5
+;
+
+static const char* const trand_list_seedType = 
+     "Every run\n"          // 0
+     "Start of 1d-loop\n"   // 1 
+     "Start of 2d-loop\n"   // 2
+     "As model"             // 3
+;
+
 TClassInfo TRand::class_info = {
   CLASS_ID_TRand, "TRand", TRand::create,
   &TMiso::class_info, helpstr };
@@ -46,14 +62,7 @@ TDataInfo TRand::trand_d_i[31] = {
  { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
  { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
  { dtpLabel,      0,   0,   30,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type", "", "Type"},
- { dtpInt, dtpsList,   6,   20,  70, 220,  20, 2,  0.0, 0.0, 0, 0, "type", "dist type", // 4 
-     "flat(-sigma,sigma)\n"       // 0
-     "gaussian(sigma)\n"          // 1 
-     "gaussian_tail(a,sigma)\n"   // 2
-     "exponential(sigma)\n"       // 3
-     "laplace(a)\n"               // 4
-     "exppow(a,b)"                // 5
- },
+ { dtpInt, dtpsList,   6,   20,  70, 220,  20, 2,  0.0, 0.0, 0, 0, "type", "dist type", trand_list_type },
  { dtpLabel,      0,   0,   30, 130, 100,  20, 0,  0.0, 0.0, 0, 0, "l_tau",   "", "tau"}, //5
  { dtpDou,        0,   0,   20, 150, 120,  20, 0,  -1e300, 1e300, 0, 0, "tau", "tau", ""},
  { dtpLabel,      0,   0,   30, 180, 100,  20, 0,  0.0, 0.0, 0, 0, "l_sigma",   "", "sigma"},
@@ -71,12 +80,7 @@ TDataInfo TRand::trand_d_i[31] = {
  { dtpLabel,      0,   0,  270, 280,  50,  20, 0,  0.0, 0.0, 0, 0, "l_seed",   "", "seed"},
  { dtpInt,        0,   0,  260, 300, 120,  20, 0,  1.0, 0.0, 0, 0, "seed", "seed", ""}, // 20
  { dtpInt,dtpsSwitch,  0,   20, 330, 150,  20, efNoDial | efRO,  0.0, 0.0, 0, 0, "useSameSeed",   "", "useSameSeed"},
- { dtpInt, dtpsList,   4,   20, 330, 150,  20, efNoRunChange,  0.0, 0.0, 0, 0, "seedType", "Seed at",
-     "Every run\n"          // 0
-     "Start of 1d-loop\n"   // 1 
-     "Start of 2d-loop\n"   // 2
-     "As model"             // 3
- },
+ { dtpInt, dtpsList,   4,   20, 330, 150,  20, efNoRunChange,  0.0, 0.0, 0, 0, "seedType", "Seed at", trand_list_seedType },
  { dtpInt,dtpsSwitch,  0,  260, 330, 150,  20, efNoRunChange,  0.0, 0.0, 0, 0, "addBaseSeed",   "", "addBaseSeed"},
  { dtpButton,     0,   0,   20, 400,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"}, // 22
  { dtpButton,     1,   0,  140, 400,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
@@ -88,7 +92,19 @@ TDataInfo TRand::trand_d_i[31] = {
 };
 
 TRand::TRand( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	 PRM_INIT( type, "Type" ),
+	 PRM_INIT( tau, "tau" ),
+	 PRM_INIT( ampl, "Amplitude" ),
+	 PRM_INIT( zval, "Base value" ),
+	 PRM_INIT( sigma, "\\sigma" ),
+	 PRM_INIT( a, "a" ),
+	 PRM_INIT( b, "b" ),
+	 PRM_INIT( c, "c" ),
+	 PRM_INIT( seed, "Seed" ),
+	 PRM_INIT( useSameSeed, "Same seed" ),
+	 PRM_INIT( seedType, "Seed type" ),
+	 PRM_INIT( addBaseSeed, "Add base" )
 {
   int i;
   type = 0;
@@ -119,6 +135,20 @@ TRand::TRand( TDataSet* aparent )
   ptrs[27] = links;
   ptrs[28] = &vis_x; ptrs[29] = &vis_y;
 
+  PRMI(type).setDescr( "Type of distribution" );
+  PRMI(type).setElems( trand_list_type );
+  PRMI(tau).setDescr( "time of const output value, if <=0 -- change every tick " );
+  PRMI(ampl).setDescr( "Amplitude of output" );
+  PRMI(zval).setDescr( "Zero value of output " );
+  PRMI(sigma).setDescr( "\\sigma" );
+  PRMI(a).setDescr( "a" );
+  PRMI(b).setDescr( "b" );
+  PRMI(c).setDescr( "c" );
+  PRMI(seed).setDescr( "Seed value for generator" );
+  PRMI(useSameSeed).setDescr( "Obsoleted" );
+  PRMI(seedType).setDescr( "0 - every run 1- 1d loop .. 3-by model " );
+  PRMI(seedType).setElems( trand_list_seedType );
+  PRMI(addBaseSeed).setDescr( "Add base seed to element seed " );
 }
 
 TRand::~TRand()

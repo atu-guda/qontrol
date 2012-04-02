@@ -55,11 +55,18 @@ class TCriterion : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** type of criterion */
-   int type;
+   PRM_LIST( type, efNoRunChange );
    /** coefficients  */
-   double a, b, t0;
+   PRM_DOUBLE( a, 0 );
+   PRM_DOUBLE( b, 0 );
+   PRM_DOUBLE( t0, 0 );
    /** flags and state */
-   int useA, useT0, useEnable, useLock, usePulse, st;
+   PRM_SWITCH( useA, efNoRunChange );
+   PRM_SWITCH( useT0, efNoRunChange );
+   PRM_SWITCH( useEnable, efNoRunChange );
+   PRM_SWITCH( useLock, efNoRunChange );
+   PRM_SWITCH( usePulse, efNoRunChange );
+   PRM_INT( st, efInner );
    /** data descriptors -- with base class elements */ 
    static TDataInfo tcriterion_d_i[23];
    /** class decription */

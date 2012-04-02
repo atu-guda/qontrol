@@ -58,15 +58,21 @@ class TLorenz : public TMiso  {
    virtual int startLoop( int acnx, int acny );
  protected:
    /** main system parameters */
-   double sigma, r, b;
-   /** start x, y, x valuez */
-   double x_0, y_0, z_0;
+   PRM_DOUBLE( sigma, 0 );
+   PRM_DOUBLE( r, 0 );
+   PRM_DOUBLE( b, 0 );
+   /** start x, y, x values */
+   PRM_DOUBLE( x_0, efNoRunChange );
+   PRM_DOUBLE( y_0, efNoRunChange );
+   PRM_DOUBLE( z_0, efNoRunChange );
    /** variable of state */
-   double x, y, z;
+   PRM_DOUBLE( x, efInner );
+   PRM_DOUBLE( y, efInner );
+   PRM_DOUBLE( z, efInner );
    /** values to store some model vars */	  
    double tt;
    /** data descriptors -- with base class elements */
-   static TDataInfo tlorenz_d_i[25]; // TODO: fix
+   static TDataInfo tlorenz_d_i[25]; 
    /** class decription */
    static TClassInfo class_info;
    /** help str */

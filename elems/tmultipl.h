@@ -52,9 +52,12 @@ class TMultipl : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** shitches -- is this input on */
-   int on[4];
-   /** coefficient */
-   double a;
+   PRM_SWITCH( on0, 0 );
+   PRM_SWITCH( on1, 0 );
+   PRM_SWITCH( on2, 0 );
+   PRM_SWITCH( on3, 0 );
+   /** common coefficient */
+   PRM_DOUBLE( a, 0 );
    /** data descriptors -- with base class elements */ 
    static TDataInfo tmultipl_d_i[16];
    /** class decription */

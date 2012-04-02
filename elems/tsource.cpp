@@ -21,6 +21,28 @@
 #include "tmodel.h"
 #include "tsource.h"
 
+static const char* const tsource_list_type = 
+             "U*sin(o*t)\n"           // 0
+             "U*sign(sin(o*t))\n"     // 1
+             "U*t/T*sin(o*t)\n"       // 2
+             "U*t/T*sign(sin(o*t))\n" // 3
+             "Dirac(t-tau)\n"         // 4
+             "U*Thetta(t-tau)\n"      // 5
+             "U*t/T\n"                // 6
+             "saw(t,tau) /|/|/| \n"   // 7
+             "saw2(t.tau) /\\/\\ \n"  // 8
+             "Chaos Wave(Phi)\n"      // 9
+             "U*triangle(o*t)\n"      // 10
+             "Phase"                 // 11
+;
+
+static const char* const tsource_list_seedType = 
+     "Every run\n"          // 0
+     "Start of 1d-loop\n"   // 1 
+     "Start of 2d-loop\n"   // 2
+     "As model"             // 3
+;
+
 const char* TSource::helpstr = "<H1>TSource</H1>\n"
  "Source of different kind of signals: <br>\n"
  "Have N parameters: <b>type, U, omega, noise .. b</b>,"
@@ -36,19 +58,7 @@ TDataInfo TSource::tsource_d_i[48] = {
  { dtpInt, 0, 0, 20, 10, 60, 20, 8, 0.0, 0.0, 0, 0, "ord", "Order", "" }, 
  { dtpStr, 0, 60, 100, 10, 380, 20, 2, 0.0, 0.0, 0, 0, "descr", "Description", "" },
  { dtpLabel, 0, 0, 20, 40, 50, 20, 0, 0.0, 0.0, 0, 0, "l_type", "", "Type" }, 
- { dtpInt, dtpsList, 12, 20, 60, 210, 20, 2, 0.0, 0.0, 0, 0, "type", "Type", 
-             "U*sin(o*t)\n"           // 0
-             "U*sign(sin(o*t))\n"     // 1
-             "U*t/T*sin(o*t)\n"       // 2
-             "U*t/T*sign(sin(o*t))\n" // 3
-             "Dirac(t-tau)\n"         // 4
-             "U*Thetta(t-tau)\n"      // 5
-             "U*t/T\n"                // 6
-             "saw(t,tau) /|/|/| \n"   // 7
-             "saw2(t.tau) /\\/\\ \n"  // 8
-             "Chaos Wave(Phi)\n"      // 9
-             "U*triangle(o*t)\n"      // 10
-             "Phase" },               // 11
+ { dtpInt, dtpsList, 12, 20, 60, 210, 20, 2, 0.0, 0.0, 0, 0, "type", "Type", tsource_list_type },
  { dtpLabel, 0, 0, 250, 40, 90, 20, 0, 0.0, 0.0, 0, 0, "l_uu", "no", "U" }, 
  { dtpDbl, 0, 0, 240, 60, 100, 20, 0, 0.0, -1.0, 0, 0, "uu", "Amplitude", "" }, 
  { dtpLabel, 0, 0, 360, 40, 100, 20, 0, 0.0, 0.0, 0, 0, "l_omega", "", "omega (o)  | tau" },
@@ -71,12 +81,7 @@ TDataInfo TSource::tsource_d_i[48] = {
  // rnd_u
  { dtpLabel,      0,   0,  400, 130,  50,  20, 0,  0.0, 0.0, 0, 0, "l_seed_u",   "", "seed"},
  { dtpInt,        0,   0,  390, 150,  80,  20, 0,  1.0, 0.0, 0, 0, "seed_u", "seed_u", ""},
- { dtpInt, dtpsList,   4,  390, 180, 100,  20, efNoRunChange,  0.0, 0.0, 0, 0, "seedType_u", "Seed at",
-     "Every run\n"          // 0
-     "Start of 1d-loop\n"   // 1 
-     "Start of 2d-loop\n"   // 2
-     "As model"             // 3
- },
+ { dtpInt, dtpsList,   4,  390, 180, 100,  20, efNoRunChange,  0.0, 0.0, 0, 0, "seedType_u", "Seed at", tsource_list_seedType },
  { dtpInt,dtpsSwitch,  0,  390, 200, 100,  20, efNoRunChange,  0.0, 0.0, 0, 0, "addBaseSeed_u",   "", "addBaseSeed_u"},
 
  // Phi-chaos group
@@ -93,12 +98,7 @@ TDataInfo TSource::tsource_d_i[48] = {
  // rnd_p
  { dtpLabel,      0,   0,  400, 240,  50,  20, 0,  0.0, 0.0, 0, 0, "l_seed_p",   "", "seed"},
  { dtpInt,        0,   0,  390, 260,  80,  20, 0,  1.0, 0.0, 0, 0, "seed_p", "seed_p", ""},
- { dtpInt, dtpsList,   4,  390, 290, 100,  20, efNoRunChange,  0.0, 0.0, 0, 0, "seedType_p", "Seed at",
-     "Every run\n"          // 0
-     "Start of 1d-loop\n"   // 1 
-     "Start of 2d-loop\n"   // 2
-     "As model"             // 3
- },
+ { dtpInt, dtpsList,   4,  390, 290, 100,  20, efNoRunChange,  0.0, 0.0, 0, 0, "seedType_p", "Seed at", tsource_list_seedType },
  { dtpInt,dtpsSwitch,  0,  390, 310, 100,  20, efNoRunChange,  0.0, 0.0, 0, 0, "addBaseSeed_p",   "", "addBaseSeed_p"},
 
  { dtpButton,     0,   0,   20, 350,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
@@ -112,7 +112,33 @@ TDataInfo TSource::tsource_d_i[48] = {
 
 
 TSource::TSource( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	PRM_INIT( type, "Type" ),
+	PRM_INIT( uu, "Amplitude" ),
+	PRM_INIT( omega, "Frequency" ),
+	PRM_INIT( cc, "C" ),
+	// --- U chaos
+	PRM_INIT(   use_u_ch, "use U chaos" ),
+	PRM_INIT(    u_ch_v0, "vU min" ),
+	PRM_INIT(    u_ch_vm, "vU max" ),
+	PRM_INIT(    u_ch_t0, "tU min" ),
+	PRM_INIT(    u_ch_tm, "tU max" ),
+	PRM_INIT(     seed_u, "U seed" ),
+	PRM_INIT( seedType_u, "U seed type" ),
+	PRM_INIT( addBaseSeed_u, "U add base seed" ),
+	// --- Phi chaos
+	PRM_INIT(   use_f_ch, "use Phi chaos" ),
+	PRM_INIT(    f_ch_v0, "vF min" ),
+	PRM_INIT(    f_ch_vm, "vF max" ),
+	PRM_INIT(    f_ch_t0, "tF min" ),
+	PRM_INIT(    f_ch_tm, "rF max" ),
+	PRM_INIT(     seed_p, "F seed" ),
+	PRM_INIT( seedType_p, "F seed type" ),
+	PRM_INIT( addBaseSeed_p, "F add base to seed" ),
+        // unused
+	PRM_INIT( phi_shift, "unused" ),
+	PRM_INIT( use_noise, "unused" ),
+	PRM_INIT( noise, "unused" )
 {
   int i;
   type = use_noise = use_u_ch = use_f_ch = 0;
@@ -150,6 +176,36 @@ TSource::TSource( TDataSet* aparent )
   // from TMiso
   ptrs[44] = links;
   ptrs[45] = &vis_x; ptrs[46] = &vis_y;
+
+  PRMI(type).setDescr( "Source type" );
+  PRMI(type).setElems( tsource_list_type );
+  PRMI(uu).setDescr( "Amplitude of signal (or pulse max)" );
+  PRMI(omega).setDescr( "Frequency of source (or pulse width)" );
+  PRMI(cc).setDescr( "Constant base" );
+  // --- U chaos
+  PRMI(use_u_ch).setDescr( "Use amplitude perturbations" );
+  PRMI(u_ch_v0).setDescr( "Minimum value of amplitule factor" );
+  PRMI(u_ch_vm).setDescr( "Maximum value of amplitule factor" );
+  PRMI(u_ch_t0).setDescr( "Minimum time of change" );
+  PRMI(u_ch_t0).setMinMax( 1e-20, 1e20 );
+  PRMI(u_ch_tm).setDescr( "Maximum time of change" );
+  PRMI(u_ch_tm).setMinMax( 1e-20, 1e20 );
+  PRMI(seed_u).setDescr( "Random Generator seed" );
+  PRMI(seedType_u).setDescr( "When to seed" );
+  PRMI(seedType_u).setElems( tsource_list_seedType );
+  PRMI(addBaseSeed_u).setDescr( "Add seed from base(model)" );
+  // --- Phi chaos
+  PRMI(use_f_ch).setDescr( "Use phase perturbations" );
+  PRMI(f_ch_v0).setDescr( "Minimum value of phase factor" );
+  PRMI(f_ch_vm).setDescr( "Maximum value of phase factor" );
+  PRMI(f_ch_t0).setDescr( "Minimum time of change" );
+  PRMI(f_ch_t0).setMinMax( 1e-20, 1e20 );
+  PRMI(f_ch_tm).setDescr( "Maximum time of change" );
+  PRMI(f_ch_tm).setMinMax( 1e-20, 1e20 );
+  PRMI(seed_p).setDescr( "Random Generator seed" );
+  PRMI(seedType_p).setDescr( "When to seed" );
+  PRMI(seedType_p).setElems( tsource_list_seedType );
+  PRMI(addBaseSeed_p).setDescr( "Add seed from base(model)" );
 }
 
 TSource::~TSource()

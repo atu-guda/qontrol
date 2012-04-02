@@ -20,6 +20,13 @@
 #include "tmodel.h"
 #include "trandtrigg.h"
 
+static const char* const trandtrigg_list_seedType = 
+     "Every run\n"          // 0
+     "Start of 1d-loop\n"   // 1 
+     "Start of 2d-loop\n"   // 2
+     "As model"             // 3
+;
+
 const char* TRandTrigg::helpstr = "<H1>TRandTrigg</H1>\n"
  "Random - deterministic trigger: <br>\n"
  "it sense change or level of input signal u[0],<br>\n"
@@ -49,12 +56,7 @@ TDataInfo TRandTrigg::trandtrigg_d_i[22] = {
 
  { dtpLabel,      0,   0,   30, 180,  50,  20, 0,  0.0, 0.0, 0, 0, "l_seed",   "", "seed"},
  { dtpInt,        0,   0,   20, 200, 120,  20, 0,  1.0, 0.0, 0, 0, "seed", "seed", ""}, // 20
- { dtpInt, dtpsList,   4,  160, 200, 150,  20, efNoRunChange,  0.0, 0.0, 0, 0, "seedType", "Seed at",
-     "Every run\n"          // 0
-     "Start of 1d-loop\n"   // 1 
-     "Start of 2d-loop\n"   // 2
-     "As model"             // 3
- },
+ { dtpInt, dtpsList,   4,  160, 200, 150,  20, efNoRunChange,  0.0, 0.0, 0, 0, "seedType", "Seed at", trandtrigg_list_seedType },
  { dtpInt,dtpsSwitch,  0,  330, 200, 150,  20, efNoRunChange,  0.0, 0.0, 0, 0, "addBaseSeed",   "", "addBaseSeed"},
  
  { dtpButton,     0,   0,   20, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
@@ -69,7 +71,16 @@ TDataInfo TRandTrigg::trandtrigg_d_i[22] = {
 
 
 TRandTrigg::TRandTrigg( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	 PRM_INIT( prob, "Probability" ), 
+	 PRM_INIT( nforce, "Forced every N" ),
+	 PRM_INIT( useLevel, "Use Level to trigg" ),
+	 PRM_INIT( useForce, "Use u[1] to force trigg"),
+	 PRM_INIT( useLock, "Use u[2] to lock"),
+	 PRM_INIT( useZero, "Use 0 as negative output"),
+	 PRM_INIT( seed, "Seed"),
+	 PRM_INIT( seedType, "Seed at"),
+	 PRM_INIT( addBaseSeed, "add Base to Seed")
 {
   int i;
   prob = 0.5; u_old = 0; nforce = 2;
@@ -89,6 +100,17 @@ TRandTrigg::TRandTrigg( TDataSet* aparent )
   // from TMiso 
   ptrs[18] = links;
   ptrs[19] = &vis_x; ptrs[20] = &vis_y;
+
+  PRMI(prob).setDescr( "Probability of spontatious flip " ); 
+  PRMI(nforce).setDescr( "Forced every N changes" );
+  PRMI(useLevel).setDescr( "Use Level to trigger, not +- pulse" );
+  PRMI(useForce).setDescr( "Use u[1] to force flip");
+  PRMI(useLock).setDescr( "Use u[2] to lock");
+  PRMI(useZero).setDescr( "Use 0 as negative output, not -1");
+  PRMI(seed).setDescr( "Random generator seed");
+  PRMI(seedType).setDescr( "Specifies, when to seed");
+  PRMI(seedType).setElems( trandtrigg_list_seedType );
+  PRMI(addBaseSeed).setDescr( "add Base (model) value to Seed");
 }
 
 TRandTrigg::~TRandTrigg()

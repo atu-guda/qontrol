@@ -61,23 +61,50 @@ class TSource : public TMiso  {
    virtual int startLoop( int acnx, int acny );
  protected:
    /** type of input and misc flags */
-   int type, use_noise, use_u_ch, use_f_ch;
-   /** coefficients on input and shift */
-   double uu, omega, cc, phi_shift, noise;
-   /** chaos coeffs */
-   double u_ch_v0, u_ch_vm, u_ch_t0, u_ch_tm,
-          f_ch_v0, f_ch_vm, f_ch_t0, f_ch_tm;
-   /** triggers */
-   int was_pulse;
+   PRM_LIST( type, efNoRunChange );
+   /** Amplitude */
+   PRM_DOUBLE( uu, 0 );
+   /** Frequency */
+   PRM_DOUBLE( omega, 0 );
+   /** constant shift */
+   PRM_DOUBLE( cc, 0 );
+
+   // ----------- U chaos ----------------------
+   PRM_SWITCH( use_u_ch, efNoRunChange );
+   PRM_DOUBLE(  u_ch_v0, efNoRunChange );
+   PRM_DOUBLE(  u_ch_vm, efNoRunChange );
+   PRM_DOUBLE(  u_ch_t0, efNoRunChange );
+   PRM_DOUBLE(  u_ch_tm, efNoRunChange );
+   PRM_INT(      seed_u, efNoRunChange );
+   PRM_LIST( seedType_u, efNoRunChange );
+   PRM_SWITCH( addBaseSeed_u, efNoRunChange );
+   
+   // ----------- Phi chaos ----------------------
+   PRM_SWITCH( use_f_ch,efNoRunChange );
+   PRM_DOUBLE( f_ch_v0, efNoRunChange );
+   PRM_DOUBLE( f_ch_vm, efNoRunChange );
+   PRM_DOUBLE( f_ch_t0, efNoRunChange );
+   PRM_DOUBLE( f_ch_tm, efNoRunChange );
+   PRM_INT( seed_p, efNoRunChange );
+   PRM_LIST( seedType_p, efNoRunChange );
+   PRM_SWITCH( addBaseSeed_p, efNoRunChange );
+   
+   // some unused params
+   PRM_DOUBLE( phi_shift, efInner );
+   PRM_SWITCH( use_noise, efInner ); // unused
+   PRM_DOUBLE( noise, efInner ); // unused
+
    /** chaos current values */
    double u_ch_vs, u_ch_ve, u_ch_ts, u_ch_te, u_ch_k,
           f_ch_vs, f_ch_ve, f_ch_ts, f_ch_te, f_ch_k;
-   /** chaos random generators params */
-   int seed_u, seed_p, sseed_u, sseed_p, bseed_u, bseed_p,
-       seedType_u, seedType_p, eff_seedType_u, eff_seedType_p, 
-       addBaseSeed_u, addBaseSeed_p;
+   int sseed_u, sseed_p, bseed_u, bseed_p,
+       eff_seedType_u, eff_seedType_p;
+   
+   
    /** generator structures from GSL */
    gsl_rng *rng_u, *rng_p;
+   /** triggers */
+   int was_pulse;
    /** values to store some model vars */	  
    double tt;
    /** data descriptors -- with base class elements */

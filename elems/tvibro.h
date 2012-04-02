@@ -55,10 +55,12 @@ class TVibro : public TMiso  {
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
-   /** parametrs of element: damping and natural frequency */
-   double c0, Omega;
+   /** damping */
+   PRM_DOUBLE( c0, 0 );
+   /** natural frequency */
+   PRM_DOUBLE( Omega, 0 );
    /** name of return force element */
-   QString rfe;
+   PRM_STRING( rfe, efNoRunChange );
    /** flag for start(1,2,0) and elnu of rfe */
    int isStart, rfe_elnu;
    /** old values and misc */

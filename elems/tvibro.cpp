@@ -52,7 +52,10 @@ TDataInfo TVibro::tvibro_d_i[16] = {
 
 
 TVibro::TVibro( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	 PRM_INIT( c0, "c_0" ),
+	 PRM_INIT( Omega, "\\Omega" ),
+	 PRM_INIT( rfe, "Return force element" )
 {
   int i;
   Omega = 1.2; c0 = 0.4; 
@@ -69,6 +72,10 @@ TVibro::TVibro( TDataSet* aparent )
   // from TMiso 
   ptrs[12] = links;
   ptrs[13] = &vis_x; ptrs[14] = &vis_y;
+
+  PRMI(c0).setDescr( "Damping coeficient" );
+  PRMI(Omega).setDescr( "Natural frequency if c_0=0 and empty rfe" );
+  PRMI(rfe).setDescr( "Name of return force element (rfe)" );
 }
 
 TVibro::~TVibro()

@@ -55,13 +55,28 @@ class TExtrLatch : public TMiso  {
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
-   /** types of extremym and output, runtime flags */
-   int type, useLocal, useFirst, outT, useReset, wasExtr, isStart;
-   /** start time and fuzzy level for local extr */
-   double tStart, fuzzy;
+   /** type of extremum */
+   PRM_LIST( type, efNoRunChange );
+   PRM_SWITCH( useLocal, efNoRunChange );
+   PRM_SWITCH( useFirst, efNoRunChange );
+   PRM_SWITCH( outT, efNoRunChange );
+   PRM_SWITCH( useReset, efNoRunChange );
+   PRM_INT( wasExtr, efInner );
+   PRM_INT( isStart, efInner );
+   /** start time */
+   PRM_DOUBLE( tStart, efNoRunChange );
+   /** fuzzy level for local extr */
+   PRM_DOUBLE( fuzzy, efNoRunChange );
    /** holders for extr levels and old values */
-   double u_max, t_max, u_min, t_min, u_abs, t_abs, u_ex, t_ex, 
-          u_old, u_old2, t_old;
+   PRM_DOUBLE( u_max, efInner );
+   PRM_DOUBLE( t_max, efInner );
+   PRM_DOUBLE( u_min, efInner );
+   PRM_DOUBLE( t_min, efInner );
+   PRM_DOUBLE( u_abs, efInner );
+   PRM_DOUBLE( t_abs, efInner );
+   PRM_DOUBLE( u_ex,  efInner );
+   PRM_DOUBLE( t_ex,  efInner );
+   double  u_old, u_old2, t_old;
    /** data descriptors -- with base class elements */ 
    static TDataInfo textrlatch_d_i[20];
    /** class decription */

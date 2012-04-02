@@ -59,7 +59,24 @@ TDataInfo TExtrLatch::textrlatch_d_i[20] = {
 };
 
 TExtrLatch::TExtrLatch( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	 PRM_INIT( type, "Type" ),
+	 PRM_INIT( useLocal, "Local extr." ),
+	 PRM_INIT( useFirst, "Only first extr." ),
+	 PRM_INIT( outT, "Output T" ),
+	 PRM_INIT( useReset, "Use u[1] as reset" ),
+	 PRM_INIT( wasExtr, "wasExtr" ),
+	 PRM_INIT( isStart, "isStart" ),
+	 PRM_INIT( tStart, "Time start" ),
+	 PRM_INIT( fuzzy, "Fuzzu level" ),
+	 PRM_INIT( u_max, "u_max" ),
+	 PRM_INIT( t_max, "t_max" ),
+	 PRM_INIT( u_min, "u_min" ),
+	 PRM_INIT( t_min, "t_min" ),
+	 PRM_INIT( u_abs, "u_abs" ),
+	 PRM_INIT( t_abs, "t_abs" ),
+	 PRM_INIT( u_ex,  "u_ex" ),
+	 PRM_INIT( t_ex,  "t_ex" )
 {
   int i;
   type = 0; useLocal = useFirst = outT = useReset = 0; tStart = fuzzy = 0;
@@ -77,6 +94,24 @@ TExtrLatch::TExtrLatch( TDataSet* aparent )
   // from TMiso 
   ptrs[16] = links;
   ptrs[17] = &vis_x; ptrs[18] = &vis_y;
+  PRMI(type).setDescr( "Type" );
+  PRMI(type).setElems( "Max\nMin\nMax||\nAverage\nAmplitude" );
+  PRMI(useLocal).setDescr( "Catch local extremums" );
+  PRMI(useFirst).setDescr( "Catch only first local extremum" );
+  PRMI(outT).setDescr( "Output time of catched extremum, not value" );
+  PRMI(useReset).setDescr( "Use u[1] as reset signal" );
+  PRMI(wasExtr).setDescr( "flag: extremum detexted" );
+  PRMI(isStart).setDescr( "isStart" );
+  PRMI(tStart).setDescr( "Time start" );
+  PRMI(fuzzy).setDescr( "Fuzzu level for local extremum catcher" );
+  PRMI(u_max).setDescr( "u_max" );
+  PRMI(t_max).setDescr( "t_max" );
+  PRMI(u_min).setDescr( "u_min" );
+  PRMI(t_min).setDescr( "t_min" );
+  PRMI(u_abs).setDescr( "u_abs" );
+  PRMI(t_abs).setDescr( "t_abs" );
+  PRMI(u_ex).setDescr(  "u_ex" );
+  PRMI(t_ex).setDescr(  "t_ex" );
 }
 
 TExtrLatch::~TExtrLatch()

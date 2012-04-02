@@ -50,11 +50,12 @@ TDataInfo TOutputAny::toutputany_d_i[13] = {
 
 
 TOutputAny::TOutputAny( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	 PRM_INIT( name, "Sink name" ),
+	 PRM_INIT( useEnable, "u[1] is Enable" )
 {
   int i;
   type = -1; 
-  // name = QString(); 
   useEnable = 0; ne = -1; pel = 0;
   d_i = toutputany_d_i;
   initHash();
@@ -66,6 +67,9 @@ TOutputAny::TOutputAny( TDataSet* aparent )
   // from TMiso 
   ptrs[9] = links;
   ptrs[10] = &vis_x; ptrs[11] = &vis_y;
+
+  PRMI(name).setDescr( "Name of sink to ouput" ); // TODO: checial field
+  PRMI(useEnable).setDescr( "Use u[1] as enable" );
 }
 
 TOutputAny::~TOutputAny()

@@ -52,7 +52,9 @@ TDataInfo TSwitch::tswitch_d_i[14] = {
 
 
 TSwitch::TSwitch( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	PRM_INIT( level1, "Level 1" ),
+	PRM_INIT( level2, "Level 2" )
 {
   int i;
   level1 = 1; level2 = 2;
@@ -66,6 +68,9 @@ TSwitch::TSwitch( TDataSet* aparent )
   // from TMiso 
   ptrs[10] = links;
   ptrs[11] = &vis_x; ptrs[12] = &vis_y;
+
+  PRMI(level1).setDescr( "Level to switch u[0]->u[1]" );
+  PRMI(level2).setDescr( "Level to switch u[1]->u[2]" );
 }
 
 TSwitch::~TSwitch()

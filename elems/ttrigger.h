@@ -53,12 +53,30 @@ class TTrigger : public TMiso  {
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
-   /** type of trigger, current state */
-   int type, cst;
-   /** levels of 0 and 1(for shmidt), autoreset time, elapsed time */
-   double level0, level1, t0, et, u2_old;
-   /** different flags */
-   int useInit1, useEnable, usePulse, useMinus, useT0;
+   /** type of trigger */
+   PRM_LIST( type, efNoRunChange );
+   /**  current state */
+   PRM_INT( cst, efInner );
+   /** level of 0  */ 
+   PRM_DOUBLE( level0, 0 );
+   /** level of 1 (shmidt) */
+   PRM_DOUBLE( level1, 0 );
+   /** autoreset time */
+   PRM_DOUBLE( t0, 0 );
+   /** elapsed time */
+   PRM_DOUBLE( et, efInner );
+   /** old u[2] value */
+   double u2_old;
+   /** set to 1 on start */
+   PRM_SWITCH( useInit1, efNoRunChange );
+   /** use u[3] as enable */
+   PRM_SWITCH( useEnable, efNoRunChange );
+   /** pulse output */
+   PRM_SWITCH( usePulse, efNoRunChange );
+   /** use -1 as negative output */
+   PRM_SWITCH( useMinus, efNoRunChange );
+   /** autoreset after t0 */
+   PRM_SWITCH( useT0, efNoRunChange );
    /** data descriptors -- with base class elements */ 
    static TDataInfo ttrigger_d_i[23];
    /** class decription */

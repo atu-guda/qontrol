@@ -48,7 +48,9 @@ TDataInfo TDelay::tdelay_d_i[14] = {
 
 
 TDelay::TDelay( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	PRM_INIT( mdelay, "Max. delay" ),
+	PRM_INIT( cdelay, "Current delay" )
 {
   int i;
   mdelay = 1.5; cdelay = 1; v1 = v2 = u00 = 0; buf = 0; 
@@ -62,6 +64,8 @@ TDelay::TDelay( TDataSet* aparent )
   // from TMiso
   ptrs[10] = links;
   ptrs[11] = &vis_x; ptrs[12] = &vis_y;
+  PRMI(mdelay).setDescr( "Maximum delay" );
+  PRMI(cdelay).setDescr( "Current delay" );
 }
 
 TDelay::~TDelay()

@@ -59,7 +59,17 @@ TDataInfo TCriterion::tcriterion_d_i[23] = {
 
 
 TCriterion::TCriterion( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	 PRM_INIT( type, "Type" ),
+	 PRM_INIT( a, "a" ),
+	 PRM_INIT( b, "b" ),
+	 PRM_INIT( t0, "t0" ),
+	 PRM_INIT( useA, "u[3] is a" ),
+	 PRM_INIT( useT0, "t0" ),
+	 PRM_INIT( useEnable, "u[2] is Enable" ),
+	 PRM_INIT( useLock, "Lock" ),
+	 PRM_INIT( usePulse, "" ),
+	 PRM_INIT( st, "Pulse Output" )
 {
   int i;
   a = 0.5; b = 1.0; type = 0; t0 = 0; 
@@ -76,6 +86,17 @@ TCriterion::TCriterion( TDataSet* aparent )
   // from TMiso 
   ptrs[19] = links;
   ptrs[20] = &vis_x; ptrs[21] = &vis_y;
+  PRMI(type).setDescr( "Type of criterion" );
+  PRMI(type).setElems( "|x|<a\n|x|>a\nx<a\nx>a\na<x<b" );
+  PRMI(a).setDescr( "level 'a'" );
+  PRMI(b).setDescr( "level 'b'" );
+  PRMI(t0).setDescr( "Start time" );
+  PRMI(useA).setDescr( "Use u[3] as 'a' value" );
+  PRMI(useT0).setDescr( "Dont work before given time (t0)" );
+  PRMI(useEnable).setDescr( "Use u[2] signal as Enable" );
+  PRMI(useLock).setDescr( "Local after first fount" );
+  PRMI(usePulse).setDescr( "output in pulse +1, 0, -1" );
+  PRMI(st).setDescr( "current state" );
 }
 
 TCriterion::~TCriterion()

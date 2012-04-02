@@ -54,7 +54,11 @@ class TLinear : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** coefficients on input and shift */
-   double a[4], b;
+   PRM_DOUBLE( a0, 0 );
+   PRM_DOUBLE( a1, 0 );
+   PRM_DOUBLE( a2, 0 );
+   PRM_DOUBLE( a3, 0 );
+   PRM_DOUBLE( b, 0 );
    /** data descriptors -- with base class elements */ 
    static TDataInfo tlinear_d_i[20];
    /** class decription */

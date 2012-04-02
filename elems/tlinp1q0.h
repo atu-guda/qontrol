@@ -62,10 +62,14 @@ class TLinP1Q0 : public TMiso  {
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
-   /** coefficient near f(x), near u(t), old value of x  */
-   double a, ku, x_old;
+   /** coefficient near f(x) */
+   PRM_DOUBLE( a, 0 );
+   /** coefficient near u(t)  */
+   PRM_DOUBLE( ku, 0 );
    /** name of element to compute f(x) */
-   QString fx;
+   PRM_STRING( fx, efNoRunChange );
+   /** old value of x  */
+   double x_old;
    /** element # */
    int elnu_fx;
    /** data descriptors -- with base class elements */ 

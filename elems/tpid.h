@@ -56,9 +56,13 @@ class TPid : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** coefficients  */
-   double kd2, kd1, kp, ki1, ki2;
+   PRM_DOUBLE( kd2, 0 );
+   PRM_DOUBLE( kd1, 0 );
+   PRM_DOUBLE( kp, 0 );
+   PRM_DOUBLE( ki1, 0 );
+   PRM_DOUBLE( ki2, 0 );
    /** should output be devided to t */
-   int aver;
+   PRM_SWITCH( aver, efNoRunChange );
    /** accumulators and old values */
    double vi1, vi2, u_old, u_old2, tdt2;
    /** flag for special handling initial steps */
