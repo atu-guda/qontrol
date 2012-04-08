@@ -66,11 +66,15 @@ class HolderData : public QObject {
   void setFlags( int a_flags ) { flags = a_flags; };
   int getFlags() const { return flags; };
   void setMinMax( double a_min, double a_max ) { v_min = a_min; v_max = a_max; };
+  double getMin() const { return v_min; }
+  double getMax() const { return v_max; }
   void setVisName( const QString &av_name ) { vis_name = av_name; };
   const QString& getVisName() const { return vis_name; };
   void setDescr( const QString &a_descr ) { descr = a_descr; };
   const QString& getDescr() const { return descr; };
   void setParm( const QString &name, const QString &value );
+  void setProps( const QString &a_prop );
+  const QString& getProps() const { return props; };
   QString getParm( const QString &name ) const;
   virtual bool set( const QVariant & x ) = 0;
   virtual QVariant get() const = 0;
@@ -87,6 +91,7 @@ class HolderData : public QObject {
   void *ptr;
   QString vis_name; //* user visible name, default = obj_name
   QString descr;    //* short description
+  QString props;    //* properties for edit widgets...
   QSSMap parms;
 };
 

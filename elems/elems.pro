@@ -1,5 +1,5 @@
 TEMPLATE = lib
-
+QMAKE_CXXFLAGS += -std=c++11
 
 CONFIG += release qt warn_on staticlib thread 
 #CONFIG += debug qt warn_on staticlib thread 

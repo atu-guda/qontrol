@@ -143,7 +143,7 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   PRMI(oct_3).setElems( och_type );
   PRMI(oct_4).setElems( och_type );
   PRMI(oct_5).setElems( och_type );
-  PRMI(long_descr).setParm("EDIT","MLINE");
+  PRMI(long_descr).setProps("STRING,MLINE");
 }/*}}}1*/
 
 TModel::~TModel()/*{{{1*/

@@ -31,6 +31,7 @@
 #include "qdoubletable.h"
 #include "qrunview.h"
 #include "qplotview.h"
+#include "datawidget.h"
 
 
 QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
@@ -681,6 +682,14 @@ void QMo2View::testElm1()
 
 void QMo2View::testElm2()
 {
+  if( ! checkState( selCheck ) )
+    return;	  
+  TMiso *ob = model->getMiso( sel );
+  if( ob == 0 )
+    return;
+  DataDialog *dia = new DataDialog( *ob, this );
+  dia->exec();
+  delete dia;
 }
 
 

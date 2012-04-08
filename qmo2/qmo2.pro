@@ -1,6 +1,7 @@
 TEMPLATE = app
 TARGET = qmo2x
 CONFIG += release warn_on qt thread 
+QMAKE_CXXFLAGS += -std=c++11
 #CONFIG += debug warn_on qt thread 
 
 RESOURCES = qmo2x.qrc
@@ -29,7 +30,8 @@ SOURCES += \
   qstructview.cpp \
   rootdata.cpp \
   tmiso.cpp \
-  tmodel.cpp
+  tmodel.cpp \
+  datawidget.cpp
 HEADERS += \
   datacont.h \
   dataset.h \
@@ -51,6 +53,7 @@ HEADERS += \
   qstructview.h \
   rootdata.h \
   tmiso.h \
-  tmodel.h 
+  tmodel.h \ 
+  datawidget.h \
 
 

@@ -101,6 +101,11 @@ void HolderData::setParm( const QString &name, const QString &value )
   parms[name] = value;
 }
 
+void HolderData::setProps( const QString &a_prop )
+{
+  props = a_prop;
+}
+
 QString HolderData::getParm( const QString &name ) const
 {
   if( parms.contains( name ) )
@@ -119,6 +124,7 @@ HolderInt::HolderInt( int *p, const QString &obj_name,
     val = new int; *val = (int)(v_min); dyn = 1;
   }
   ptr = val; tp=QVariant::Int; old_tp = dtpInt; old_subtp = dtpsInt;
+  props = "INT,SIMPLE";
   post_set();
 }
 
@@ -166,6 +172,7 @@ HolderSwitch::HolderSwitch( int *p, const QString &obj_name,
           :HolderInt( p, obj_name, v_name, a_parent, a_flags )
 {
   old_subtp = dtpsSwitch;
+  props = "INT,SWITCH";
   post_set();
 }
 
@@ -188,6 +195,7 @@ HolderList::HolderList( int *p, const QString &obj_name,
 {
   old_subtp = dtpsList;
   v_min = v_max = 0;
+  props = "INT,LIST";
   post_set();
 }
 
@@ -216,6 +224,7 @@ HolderDouble::HolderDouble( double *p, const QString &obj_name,
     val = new double; *val = v_min; dyn = 1;
   }
   post_set();
+  props = "DOUBLE,SIMPLE";
   ptr = val; tp=QVariant::Double; old_tp = dtpDouble;
 }
 
@@ -269,6 +278,7 @@ HolderString::HolderString( QString *p, const QString &obj_name,
     val = new QString; dyn = 1;
   }
   post_set();
+  props = "STRING,SIMPLE";
   ptr = val; tp=QVariant::String; old_tp = dtpString;
 }
 
@@ -319,6 +329,7 @@ HolderColor::HolderColor( QColor *p, const QString &obj_name,
     val = new QColor( Qt::red ); dyn = 1;
   }
   post_set();
+  props = "COLOR,INT";
   ptr = val; tp=QVariant::Color; old_tp = dtpInt; old_subtp = dtpsColor;
 }
 
@@ -377,6 +388,7 @@ HolderObj::HolderObj( TDataSet *p, const QString &obj_name,
   post_set();
   ptr = obj; tp=QVariant::UserType; old_tp = dtpObj; 
   old_subtp = obj->getClassId();
+  props = "OBJ";
   obj->setObjectName( QString("_real_") + obj_name );
   //qDebug( "*** HolderObj::HolderObj obj = %p obj_name=%s !",
   //    obj, obj_name.toLocal8Bit().constData() );
