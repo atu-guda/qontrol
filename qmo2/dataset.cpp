@@ -205,7 +205,7 @@ HolderList::~HolderList()
 }
 
 
-void HolderList::setElems( const QString &els )
+void HolderData::setElems( const QString &els )
 {
   parms["list_elems"] = els;
   elems = els.split("\n");

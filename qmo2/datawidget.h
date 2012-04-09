@@ -116,6 +116,35 @@ class IntSpinDataWidget: public DataWidget {
   QSpinBox *sb;
 };
 
+class SwitchDataWidget: public DataWidget {
+ public:
+  SwitchDataWidget( HolderData &h, QWidget *parent = 0 );
+  virtual bool set();
+  virtual bool get() const;
+  static DataWidget* create( HolderData &h, QWidget *parent  );
+  virtual QSize	minimumSizeHint() const;
+  virtual QSize	sizeHint() const;
+ protected:
+  static int reg();
+  static int registered;
+  QCheckBox *cb;
+};
+
+
+class ListDataWidget: public DataWidget {
+ public:
+  ListDataWidget( HolderData &h, QWidget *parent = 0 );
+  virtual bool set();
+  virtual bool get() const;
+  static DataWidget* create( HolderData &h, QWidget *parent  );
+  virtual QSize	minimumSizeHint() const;
+  virtual QSize	sizeHint() const;
+ protected:
+  static int reg();
+  static int registered;
+  QComboBox *cb;
+};
+
 class DoubleDataWidget: public DataWidget {
  public:
   DoubleDataWidget( HolderData &h, QWidget *parent = 0 );

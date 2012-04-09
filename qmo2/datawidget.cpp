@@ -273,6 +273,106 @@ QSize IntSpinDataWidget::sizeHint() const
 
 
 
+// ------------------- SwitchDataWidget ---------------------------
+int SwitchDataWidget::registered = SwitchDataWidget::reg();
+
+SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
+  : DataWidget( h, parent ),
+  cb( new QCheckBox( this ) )
+{
+  if( h.getFlags() & ( efRO | efRODial ) ) {
+    cb->setDisabled( true );
+  }
+  
+}
+
+bool SwitchDataWidget::set()
+{
+  cb->setChecked(  ho.get().toBool() ); 
+  return true;
+}
+
+bool SwitchDataWidget::get() const
+{
+  QVariant v = (int)cb->isChecked();
+  ho.set( v );
+  return true;
+}
+
+DataWidget* SwitchDataWidget::create( HolderData &h, QWidget *parent  )
+{
+  return new SwitchDataWidget( h, parent );
+}
+
+int SwitchDataWidget::reg()
+{
+  static DataWidgetProp p { create, "INT,SWITCH" };
+  return FactoryDataWidget::theFactory().registerWidgetType( "SwitchDataWidget", p );
+}
+
+QSize SwitchDataWidget::minimumSizeHint() const
+{
+  return cb->minimumSizeHint();
+}
+
+
+QSize SwitchDataWidget::sizeHint() const
+{
+  return cb->sizeHint();
+}
+
+
+// ------------------- ListDataWidget ---------------------------
+int ListDataWidget::registered = ListDataWidget::reg();
+
+ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
+  : DataWidget( h, parent ),
+  cb( new QComboBox( this ) )
+{
+  if( h.getFlags() & ( efRO | efRODial ) ) {
+    cb->setDisabled( true );
+  }
+  cb->addItems( ho.getElems() );
+  
+}
+
+bool ListDataWidget::set()
+{
+  cb->setCurrentIndex( ho.get().toInt() ); 
+  return true;
+}
+
+bool ListDataWidget::get() const
+{
+  QVariant v = cb->currentIndex();
+  ho.set( v );
+  return true;
+}
+
+DataWidget* ListDataWidget::create( HolderData &h, QWidget *parent  )
+{
+  return new ListDataWidget( h, parent );
+}
+
+int ListDataWidget::reg()
+{
+  static DataWidgetProp p { create, "INT,LIST" };
+  return FactoryDataWidget::theFactory().registerWidgetType( "ListDataWidget", p );
+}
+
+QSize ListDataWidget::minimumSizeHint() const
+{
+  return cb->minimumSizeHint();
+}
+
+
+QSize ListDataWidget::sizeHint() const
+{
+  return cb->sizeHint();
+}
+
+
+
 // ------------------- DoubleDataWidget ---------------------------
 int DoubleDataWidget::registered = DoubleDataWidget::reg();
 

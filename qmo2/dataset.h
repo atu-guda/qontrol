@@ -76,6 +76,8 @@ class HolderData : public QObject {
   void setProps( const QString &a_prop );
   const QString& getProps() const { return props; };
   QString getParm( const QString &name ) const;
+  void setElems( const QString &els ); 
+  const QStringList& getElems() const { return elems; }; 
   virtual bool set( const QVariant & x ) = 0;
   virtual QVariant get() const = 0;
   virtual void post_set() = 0;
@@ -92,6 +94,7 @@ class HolderData : public QObject {
   QString vis_name; //* user visible name, default = obj_name
   QString descr;    //* short description
   QString props;    //* properties for edit widgets...
+  QStringList elems;
   QSSMap parms;
 };
 
@@ -147,9 +150,7 @@ class HolderList : public HolderInt {
      const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0);
   virtual ~HolderList();
   // virtual void post_set();
-  virtual void setElems( const QString &els ); 
  private:
-  QStringList elems;
 };
 
 #define PRM_LIST( name, flags ) \

@@ -39,7 +39,7 @@ typedef void *pvoid;
 #define IMAX (numeric_limits<int>::max())
 #define UMIN (numeric_limits<unsigned int>::min())
 #define UMAX (numeric_limits<unsigned int>::max())
-#define DMIN (numeric_limits<double>::min())
+#define DMIN (numeric_limits<double>::lowest())
 #define DMAX (numeric_limits<double>::max())
  
 enum _DATA_TYPES {
