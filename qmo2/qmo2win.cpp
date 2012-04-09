@@ -72,7 +72,7 @@ QMo2Win::~QMo2Win()
   qmo2win = 0;
 }
 
-void QMo2Win::initDirs()
+void QMo2Win::initDirs() // TODO: remove or rewrite
 {
   QString app = QString::fromLocal8Bit( "share/" PACKAGE );
   QString sep = QString::fromLocal8Bit( "/" );
@@ -185,7 +185,7 @@ void QMo2Win::initIface()
   // ==== Edit group
  
   act_undo = new QAction( "&Undo", this );
-  act_open->setShortcuts( QKeySequence::Undo );
+  act_undo->setShortcuts( QKeySequence::Undo );
   act_undo->setWhatsThis( tr("Undo last action") );
   connect( act_undo, SIGNAL( activated() ), this, SLOT( slotEditUndo() ) );
  
@@ -1079,6 +1079,10 @@ void QMo2Win::slotTest(void)
   ostr += findRes("build.dat");
   ostr += "\nenv: "; 
   ostr += findRes("env.dat");
+  ostr += "\nDMIN: " + QString::number( DMIN );
+  ostr += " DMAX: "  + QString::number( DMAX );
+  ostr += "\niDMIN: " + QString::number( (int)(DMIN) );
+  ostr += " iDMAX: "  + QString::number( (int)(DMAX) );
   QMessageBox::information( this, tr( "Test" ), ostr, QMessageBox::Ok );
   statusBar()->showMessage( tr( "Ready." ) );
 }

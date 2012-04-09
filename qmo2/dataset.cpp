@@ -150,7 +150,9 @@ QVariant HolderInt::get() const
 
 void HolderInt::post_set()
 {
-  *val = qBound( (int)(v_min), *val, (int)(v_max) );
+  int imin = ( v_min < (double)(IMIN) ) ? IMIN : (int)(v_min);
+  int imax = ( v_max > (double)(IMAX) ) ? IMAX : (int)(v_max);
+  *val = qBound( imin, *val, imax );
 }
 
 QString HolderInt::toString() const
@@ -161,8 +163,12 @@ QString HolderInt::toString() const
 bool HolderInt::fromString( const QString &s )
 {
   bool ok;
-  *val = s.toInt( &ok, 0 ); // 0 = auto base
-  post_set();
+  int v;
+  v = s.toInt( &ok, 0 ); // 0 = auto base
+  if( ok ) {
+    *val = v;
+    post_set();
+  }
   return ok;
 }
 
@@ -261,8 +267,12 @@ QString HolderDouble::toString() const
 bool HolderDouble::fromString( const QString &s )
 {
   bool ok;
-  *val = s.toDouble( &ok ); 
-  post_set();
+  double v;
+  v = s.toDouble( &ok ); 
+  if( ok ) {
+    *val = v;
+    post_set();
+  }
   return ok;
 }
 

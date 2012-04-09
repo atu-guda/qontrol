@@ -175,6 +175,7 @@ TMiso::TMiso( TDataSet* aparent )
   model = 0;
   initHash();
   ptrs[0] = links;
+  PRMI(ord).setMinMax( 0, IMAX );
   PRMI(descr).setMinMax( 0, 128 ); // TODO: define
 
 }
