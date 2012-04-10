@@ -707,7 +707,10 @@ int DataDialog::createWidgets()
     }
     
     dwm[name] = w;
-    lay2->addWidget( new QLabel( visName, ce ), nw, 0 );
+    w->setWhatsThis( ho->getDescr() );
+    QLabel *la = new QLabel( visName, ce );
+    la->setWhatsThis( name );
+    lay2->addWidget( la, nw, 0 );
     lay2->addWidget( w, nw, 1 );
     lay2->addWidget( new QLabel( wtp, ce ), nw, 2 );
     ++nw;
