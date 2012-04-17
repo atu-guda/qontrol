@@ -94,6 +94,7 @@ THyst::THyst( TDataSet* aparent )
   PRMI(type).setDescr( "Type of hysteresis" );
   PRMI(type).setElems( thyst_list );
   PRMI(x0).setDescr( "x0 - width if hysteresis" );
+  PRMI(x0).setMinMax( 0, DMAX );
   PRMI(alpha).setDescr( "\\alpha - slope of hysteresis" );
   PRMI(a).setDescr( "Output scale" );
   PRMI(b).setDescr( "Output shift" );

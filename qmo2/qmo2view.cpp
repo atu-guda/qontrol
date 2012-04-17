@@ -273,7 +273,10 @@ void QMo2View::newElm()
     ci = root->classInfoByNum( i );
     if( ci == 0 ) continue;
     if( root->isHisParent( ci->id, CLASS_ID_TMiso, 0 ) ) {
-      cb->addItem( ci->className );
+      QString iconName = QString( ":icons/elm_" )
+	+ QString( (ci->className) ).toLower() 
+	+ ".png";
+      cb->addItem( QIcon(iconName), ci->className );
     };
   };
   lay->addWidget( cb, 3, 0, 1, 2, Qt::AlignTop );
@@ -700,7 +703,6 @@ void QMo2View::newOut()
   int idx, rc;
   const TDataInfo *di;
   QString onameq, enameq;
-  const char *outname, *elmname;
   QDialog *dia; QPushButton *bt_ok, *bt_can;
   QLineEdit *oname_ed, *ename_ed; QLabel *lab1, *lab2;
   QGridLayout *lay;
@@ -753,15 +755,24 @@ void QMo2View::newOut()
   rc = dia->exec();
   if( rc == QDialog::Accepted ) {
     onameq = oname_ed->text(); enameq = ename_ed->text();
-    outname = onameq.toLatin1(); elmname = enameq.toLatin1();
-    if( isGoodName( outname ) ) {
-      model->insOut( outname, elmname );
+    
+    if( isGoodName( onameq.toLatin1().constData() ) ) {
+      int irc = model->insOut( onameq.toLatin1().constData(), 
+                               enameq.toLatin1().constData() );
+      if( irc  ) {
+	QMessageBox::warning( this, "Error", 
+	   QString("Fail to add Output: ") + onameq, 
+	   QMessageBox::Ok, QMessageBox::NoButton );
+      }
       emit viewChanged();
+    } else {
+      QMessageBox::warning( this, "Error", 
+         QString("Bad output name: ") + onameq, 
+	 QMessageBox::Ok, QMessageBox::NoButton );
     };
   };
   delete dia;
 }
-
 
 void QMo2View::delOut()
 {

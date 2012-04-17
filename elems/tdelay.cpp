@@ -65,7 +65,9 @@ TDelay::TDelay( TDataSet* aparent )
   ptrs[10] = links;
   ptrs[11] = &vis_x; ptrs[12] = &vis_y;
   PRMI(mdelay).setDescr( "Maximum delay" );
+  PRMI(mdelay).setMinMax( 0, 1e10 );
   PRMI(cdelay).setDescr( "Current delay" );
+  PRMI(cdelay).setMinMax( 0, 1e10 );
 }
 
 TDelay::~TDelay()
