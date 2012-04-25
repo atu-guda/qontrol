@@ -756,8 +756,9 @@ void QMo2View::newOut()
   if( rc == QDialog::Accepted ) {
     onameq = oname_ed->text(); enameq = ename_ed->text();
     
+    // TODO: all must be QString
     if( isGoodName( onameq.toLatin1().constData() ) ) {
-      int irc = model->insOut( onameq.toLatin1().constData(), 
+      int irc = model->insOut( onameq.toLatin1().constData(), // and HERE!
                                enameq.toLatin1().constData() );
       if( irc  ) {
 	QMessageBox::warning( this, "Error", 
@@ -817,7 +818,7 @@ void QMo2View::editOut()
   };
 }
 
-void QMo2View::showOutData()
+void QMo2View::showOutData() // TODO: special dialog (+ for many rows)
 {
   QDialog *dia;
   DoubleTableModel *dmod;
@@ -840,7 +841,7 @@ void QMo2View::showOutData()
 
   // calculate statistical data
   double s = 0, s2 = 0, ave = 0, ave2 = 0, disp = 0, msq = 0, x;
-  double vmin = numeric_limits<double>::max(), vmax = numeric_limits<double>::min();
+  double vmin = DMAX, vmax = DMIN;
   for( int i=0; i<gi.row; i++ ) {
     x =  gi.dat[0][i];
     s += x; s2 += x * x;
@@ -887,7 +888,6 @@ void QMo2View::showOutData()
 
 void QMo2View::exportOut()
 {
-  const char *fn;
   QString fnq;
   TOutArr *arr;
   if( ! checkState( doneCheck ) )
@@ -899,8 +899,7 @@ void QMo2View::exportOut()
       "Data files (*.txt *.dat *.csv);;All files (*)" );
   if( fnq.isEmpty() )
     return;
-  fn = fnq.toLatin1();
-  arr->dump( fn, ' ' );
+  arr->dump( fnq.toLocal8Bit().constData(), ' ' ); // TODO: QString
 }
 
 
@@ -911,7 +910,6 @@ void QMo2View::newGraph()
   int no;
   QString grnameq, aname;
   bool ok;
-  const char *grname;
   if( ! checkState( validCheck ) )
     return;	
   no = model->getNGraph();
@@ -920,9 +918,8 @@ void QMo2View::newGraph()
       "Enter name of new Graph:", QLineEdit::Normal, 
       grnameq, &ok );
   if( ok ) {
-    grname = aname.toLatin1();
-    if( isGoodName( grname ) ) {
-      model->insGraph( grname );
+    if( isGoodName( aname.toLatin1().constData() ) ) { // TODO: QString
+      model->insGraph( aname.toLatin1().constData() );
       emit viewChanged();
     };
   };
