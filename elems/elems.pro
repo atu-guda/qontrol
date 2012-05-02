@@ -29,6 +29,7 @@ SOURCES += \
   tlinp1q0.cpp \
   tlogic.cpp \
   tlorenz.cpp \
+  trossler.cpp \
   tmultipl.cpp \
   toutarr.cpp \
   toutputany.cpp \
@@ -62,6 +63,7 @@ HEADERS += \
   tlinp1q0.h \
   tlogic.h \
   tlorenz.h \
+  trossler.h \
   tmultipl.h \
   toutarr.h \
   toutputany.h \

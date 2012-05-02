@@ -82,10 +82,14 @@ TGraph::TGraph( TDataSet* apar )
        PRM_INIT( y5color, "y5 color" )
 {
   int i;
-  bgcolor = 0x000060;
+  bgcolor = QColor( 0,0,0x60 );
   title =  "title";
-  y0color = 0xFFFFFF; y1color = 0xFFFF00; y2color = 0xFF0000;
-  y3color = 0x00FF00; y4color = 0x0000FF; y5color = 0xFF00FF;
+  y0color = QColor(255,255,255); 
+  y1color = QColor(255,255,0);
+  y2color = QColor(255,0,0);
+  y3color = QColor(0,255,0);
+  y4color = QColor(0,0,255);
+  y5color = QColor(255,0,255);
   d_i = tgraph_d_i;
   initHash();
   for( i=0; i<nelm; i++ ) {

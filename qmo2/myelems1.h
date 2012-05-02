@@ -28,5 +28,6 @@
 #include <ttrigger.h>
 #include <tvibro.h>
 #include <tlorenz.h>
+#include <trossler.h>
 #include <tfriction.h>
 

@@ -144,10 +144,9 @@ bool QMo2Doc::openDocument(const QString &filename, const char * /*format */)
   int i, n, k;
   char buf[MAX_INPUTLEN];
   const TDataInfo *inf;
-  const char *fn = filename.toLocal8Bit().constData();
   ifstream is;
   errno = 0;
-  is.open( fn );
+  is.open( filename.toLocal8Bit().constData() );
   if( ! is.good() ) {
     QMessageBox::critical( 0, "openDocument Error:",
        QString("Fail to open file: ") + filename + QString(" :\n") +
@@ -202,14 +201,12 @@ bool QMo2Doc::openDocument(const QString &filename, const char * /*format */)
 bool QMo2Doc::saveDocument(const QString &filename, const char * /*format */)
 {
   int k;
-  const char *fn = filename.toLocal8Bit().constData();
-  qDebug("debug: QMo2Doc::saveDocument: file %s: ", fn );
   ofstream os;
   if( rootdata == 0 )
     return false;
 
   errno = 0;
-  os.open( fn );
+  os.open( filename.toLocal8Bit().constData() );
   if( ! os.good() ) {
     QMessageBox::critical( 0, "saveDocument Error",
         QString("Fail to open for write file: ") + filename +
@@ -344,6 +341,7 @@ void QMo2Doc::fillRoot(void)
   rootdata->regClass( TLogic::getStaticClassInfo() );
   rootdata->regClass( TRand::getStaticClassInfo() );
   rootdata->regClass( TLorenz::getStaticClassInfo() );
+  rootdata->regClass( TRossler::getStaticClassInfo() );
   rootdata->regClass( TCounter::getStaticClassInfo() );
   rootdata->regClass( TCorrAnalysis::getStaticClassInfo() );
   rootdata->regClass( TFourier::getStaticClassInfo() );
