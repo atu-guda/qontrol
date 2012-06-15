@@ -605,7 +605,13 @@ int TDataSet::getDataII( int ni, int *da, int allowConv )
   if( ni >= nelm || ni < 0 ) return -1;
   tp = d_i[ni].tp;
   if( tp == dtpInt ) {
-    *da = *((int*)(ptrs[ni])); 
+    if( d_i[ni].subtp != dtpsColor ) {
+      *da = *((int*)(ptrs[ni])); 
+      return 0;
+    }
+    // color require special handling
+    v = ((QColor*)(ptrs[ni]))->rgb();
+    *da = v;
     return 0;
   };
   if( ! allowConv ) return -2;

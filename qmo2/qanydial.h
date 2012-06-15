@@ -18,6 +18,7 @@
 #ifndef QANYDIALOG_H
 #define QANYDIALOG_H
 
+#include <vector>
 #include <QDialog>
 
 class QComboBox;
@@ -54,7 +55,7 @@ class QAnyDialog : public QDialog  {
   void showHelp(void);
  protected: 
   TDataSet *ds;
-  QWidget **elms;
+  std::vector<QWidget *> elms;
 };
 
 #endif

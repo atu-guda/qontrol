@@ -24,15 +24,15 @@
 #include "qanydial.h"
 
 QAnyDialog::QAnyDialog( TDataSet *ads, QWidget *parent ) 
-           : QDialog( parent )
+           : QDialog( parent ),
+	     elms( 128, static_cast<QWidget*>(nullptr) ) // default 128 elems 0 - none obj
 {
-  elms = 0; ds = ads; 
+  ds = ads; 
   initDialog();
 }
 
 QAnyDialog::~QAnyDialog()
 {
-  delete[] elms;
 }
 
 void  QAnyDialog::initDialog(void)
@@ -45,7 +45,7 @@ void  QAnyDialog::initDialog(void)
   QString qs;
   char oname[MAX_INPUTLEN];
   ne = ds->getN(); end = 0;
-  elms = new QWidget* [ne+2];
+  elms.assign( ne+2, static_cast<QWidget*>(nullptr) );
   const TDataInfo *di;
   for( i=0; i<ne && (!end); i++ ) {
     di = ds->getDataInfo( i );
@@ -174,7 +174,12 @@ int QAnyDialog::exec_trans(void)
        case dtpEnd: break;
        case dtpInt:
             k = ds->getDataII( i, &iv, 1 );
-            if( k != 0 ) continue;
+            if( k != 0 ) 
+	    {
+	      qDebug( "dbg: QAnyDialog::exec_trans: name: %s subTp: %d k: %d value: %08X",
+		di->name, di->subtp, k, iv );
+	      continue;
+	    }
             switch( di->subtp ) {
 	      case dtpsInt:
                    qs.setNum( iv );
@@ -190,7 +195,7 @@ int QAnyDialog::exec_trans(void)
                    ((QComboBox*)(elms[i]))->setEnabled( ena );
 	           break;
 	      case dtpsColor:
-	           ((QColorBtn*)(elms[i]))->setColor( iv );
+	           ((QColorBtn*)(elms[i]))->setColor( QColor::fromRgb( iv ) );
 	           ((QColorBtn*)(elms[i]))->setEnabled( ena );
 	           break;
 	    };

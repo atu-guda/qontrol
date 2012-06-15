@@ -37,7 +37,7 @@ TDataInfo TGraph::tgraph_d_i[28] = {
  { dtpStr,        0,  80,   20,  30, 160,  20, 0,  0.0, 0.0, 0, 0, "title", "title for graph", ""},
  { dtpLabel,      0,   0,   20,  60, 100,  20, 0,  0.0, 0.0, 0, 0, "l_x",   "",   "X values"},
  { dtpStr,        0,  MAX_NAMELEN,   20,  80, 100,  20, 0,  0.0, 0.0, 0, 0, "xname",   "Name of x output", ""},
- { dtpLabel,      0,   0,   20, 210, 100,  20, 0,  0.0, 0.0, 0, 0, "l_y0",   "",   "Y0 values"},
+ { dtpLabel,      0,   0,   20, 110, 100,  20, 0,  0.0, 0.0, 0, 0, "l_y0",   "",   "Y0 values"},
  { dtpStr,        0,  MAX_NAMELEN,   20, 130, 100,  20, 0,  0.0, 0.0, 0, 0, "y0name",   "Name of y0 output", ""},
  { dtpLabel,      0,   0,   20, 150, 100,  20, 0,  0.0, 0.0, 0, 0, "l_y1",   "",   "Y1/Z0 values"},
  { dtpStr,        0,  MAX_NAMELEN,   20, 170, 100,  20, 0,  0.0, 0.0, 0, 0, "y1name",   "Name of y1 output", ""},
@@ -82,14 +82,14 @@ TGraph::TGraph( TDataSet* apar )
        PRM_INIT( y5color, "y5 color" )
 {
   int i;
-  bgcolor = QColor( 0,0,0x60 );
+  bgcolor = QColor::fromRgb( 0,0,0x60 );
   title =  "title";
-  y0color = QColor(255,255,255); 
-  y1color = QColor(255,255,0);
-  y2color = QColor(255,0,0);
-  y3color = QColor(0,255,0);
-  y4color = QColor(0,0,255);
-  y5color = QColor(255,0,255);
+  y0color = QColor::fromRgb(255,255,255); 
+  y1color = QColor::fromRgb(255,255,0);
+  y2color = QColor::fromRgb(255,0,0);
+  y3color = QColor::fromRgb(0,255,0);
+  y4color = QColor::fromRgb(0,0,255);
+  y5color = QColor::fromRgb(255,0,255);
   d_i = tgraph_d_i;
   initHash();
   for( i=0; i<nelm; i++ ) {
