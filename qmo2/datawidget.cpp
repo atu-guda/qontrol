@@ -504,7 +504,7 @@ bool ColorDataWidget::set()
 
 bool ColorDataWidget::get() const
 {
-  QVariant v = cb->color();
+  QVariant v = (cb->color()).rgba();
   ho.set( v );
   return true;
 }
@@ -622,6 +622,12 @@ bool FactoryDataWidget::unregisterWidgetType( const QString &wname )
 DataDialog::DataDialog( TDataSet &a_ds, QWidget *parent )
   : QDialog( parent ), ds( a_ds) 
 {
+  QString s = QString::fromLocal8Bit( ds.getClassName() );
+  s += ' ';
+  char nm[MAX_INPUTLEN];
+  ds.getFullName( nm );
+  s += QString::fromLocal8Bit( nm );
+  setWindowTitle( s );
   createWidgets();
   getAll();
   

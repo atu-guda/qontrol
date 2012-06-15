@@ -67,6 +67,7 @@ TInputAny::TInputAny( TDataSet* aparent )
   ptrs[9] = &vis_x; ptrs[10] = &vis_y;
 
   PRMI(name).setDescr( "Name of element to get values" );
+  PRMI(name).setMinMax( 0, 80 );
   // TODO: PRMI(name).setXXX: type is element/output name
 }
 

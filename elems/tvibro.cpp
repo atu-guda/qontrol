@@ -76,6 +76,7 @@ TVibro::TVibro( TDataSet* aparent )
   PRMI(c0).setDescr( "Damping coeficient" );
   PRMI(Omega).setDescr( "Natural frequency if c_0=0 and empty rfe" );
   PRMI(rfe).setDescr( "Name of return force element (rfe)" );
+  PRMI(rfe).setMinMax( 0, MAX_NAMELEN );
 }
 
 TVibro::~TVibro()

@@ -763,10 +763,19 @@ int TDataSet::setDataII( int ni, int da, int allowConv )
   };
   if( ni >= nelm || ni < 0  ) return -1;
   tp = d_i[ni].tp;
+  
   if( tp == dtpInt ) {
-    *(static_cast<int*>(ptrs[ni])) = da;
-    modified |= 1; return 0;
+    if( d_i[ni].subtp != dtpsColor ) {
+      *(static_cast<int*>(ptrs[ni])) = da;
+      modified |= 1; 
+      return 0;
+    }
+    // color require special handling
+    ((QColor*)(ptrs[ni]))->setRgb( da );
+    modified |= 1; 
+    return 0;
   };
+
   if( tp == dtpDbl ) {
     *(static_cast<double*>(ptrs[ni])) = da;
     modified |= 1; return 0;

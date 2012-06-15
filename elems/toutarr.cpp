@@ -91,8 +91,11 @@ TOutArr::TOutArr( TDataSet* apar )
   ptrs[16] = &n; ptrs[17] = &ny;
 
   PRMI(type).setDescr( "Type of array: 0:simple, 1:parm1, 2:parm2, 3:special " );
+  PRMI(type).setElems( toutarr_list );
   PRMI(name).setDescr( "Name of element to use" );
+  PRMI(name).setMinMax( 0, MAX_NAMELEN );
   PRMI(label).setDescr( "Label of data" );
+  PRMI(label).setMinMax( 0, MAX_LABELLEN );
   PRMI(ny).setDescr( "size of x=const block in 2-d arrays " );
   PRMI(nq).setDescr( "each n-th data collect. def=1" );
   PRMI(nq).setMinMax( 1, 1e6 );

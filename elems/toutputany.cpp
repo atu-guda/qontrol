@@ -68,7 +68,8 @@ TOutputAny::TOutputAny( TDataSet* aparent )
   ptrs[9] = links;
   ptrs[10] = &vis_x; ptrs[11] = &vis_y;
 
-  PRMI(name).setDescr( "Name of sink to ouput" ); // TODO: checial field
+  PRMI(name).setDescr( "Name of sink to output" ); // TODO: checial field
+  PRMI(name).setMinMax( 0, 80 );
   PRMI(useEnable).setDescr( "Use u[1] as enable" );
 }
 

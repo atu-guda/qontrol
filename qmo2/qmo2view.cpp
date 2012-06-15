@@ -691,8 +691,14 @@ void QMo2View::testElm2()
   if( ob == 0 )
     return;
   DataDialog *dia = new DataDialog( *ob, this );
-  dia->exec();
+  int rc = dia->exec();
   delete dia;
+  
+  if( rc == QDialog::Accepted ) {
+    model->reset();
+    model->setModified();
+  };
+  emit viewChanged();
 }
 
 
@@ -817,6 +823,28 @@ void QMo2View::editOut()
     emit viewChanged();
   };
 }
+
+void QMo2View::editOut2()
+{
+  TOutArr *arr;
+  int rc;
+  if( ! checkState( validCheck ) )
+    return;	
+
+  if( level < 0 || level >= model->getNOutArr() )
+    return;
+  arr = model->getOutArr( level );
+  if( arr == 0 )
+    return;
+  DataDialog *dia = new DataDialog( *arr, this );
+  rc = dia->exec();
+  delete dia;
+  if( rc == QDialog::Accepted ) {
+    model->reset(); model->setModified();
+    emit viewChanged();
+  };
+}
+
 
 void QMo2View::showOutData() // TODO: special dialog (+ for many rows)
 {
@@ -967,6 +995,27 @@ void QMo2View::editGraph()
     model->reset(); model->setModified();
     emit viewChanged();
   };
+}
+
+void QMo2View::editGraph2()
+{
+  if( ! checkState( validCheck ) )
+    return;	
+  if( level < 0 || level >= model->getNGraph() )
+    return;
+  TGraph *gra = model->getGraph( level );
+  if( gra == 0 )
+    return;
+  
+  DataDialog *dia = new DataDialog( *gra, this );
+  int rc = dia->exec();
+  delete dia;
+  
+  if( rc == QDialog::Accepted ) {
+    model->reset();
+    model->setModified();
+  };
+  emit viewChanged();
 }
 
 void QMo2View::showGraph()
@@ -1170,6 +1219,20 @@ void QMo2View::showVars()
   dia->exec();
   delete dia;
 }
+
+void QMo2View::editModel2()
+{
+  if( ! checkState( validCheck ) )
+    return;	
+
+  DataDialog *dia = new DataDialog( *model, this );
+  int rc = dia->exec();
+  if( rc == QDialog::Accepted ) {
+    model->reset();
+    emit viewChanged();
+  };
+}
+
 
 // ==== run related
 

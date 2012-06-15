@@ -86,6 +86,7 @@ TLinP1Q0::TLinP1Q0( TDataSet* aparent )
   PRMI(a).setDescr( "Frequency in dx/dt = a*f(ku*u(t)-x)" );
   PRMI(ku).setDescr( "Amplification " );
   PRMI(fx).setDescr( "Function f(x) element name" );
+  PRMI(fx).setMinMax( 0, MAX_NAMELEN );
   // TODO: element name or DROP it!
 }
 
