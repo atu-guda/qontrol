@@ -120,7 +120,7 @@ void HolderData::setElems( const QString &els )
   v_max = elems.size() - 1;
 }
 
-const char* HolderData::getType() const // = 0;
+const QString HolderData::getType() const // = 0;
 {
   return "None";
 }
@@ -184,7 +184,7 @@ bool HolderInt::fromString( const QString &s )
   return ok;
 }
 
-const char* HolderInt::getType() const
+const QString HolderInt::getType() const
 {
   return "int";
 }
@@ -210,7 +210,7 @@ void HolderSwitch::post_set()
   *val = (*val) ? 1 : 0;
 }
 
-const char* HolderSwitch::getType() const
+const QString HolderSwitch::getType() const
 {
   return "switch";
 }
@@ -233,7 +233,7 @@ HolderList::~HolderList()
 }
 
 
-const char* HolderList::getType() const
+const QString HolderList::getType() const
 {
   return "list";
 }
@@ -297,7 +297,7 @@ bool HolderDouble::fromString( const QString &s )
   return ok;
 }
 
-const char* HolderDouble::getType() const
+const QString HolderDouble::getType() const
 {
   return "double";
 }
@@ -354,7 +354,7 @@ bool HolderString::fromString( const QString &s )
   return true;
 }
 
-const char* HolderString::getType() const
+const QString HolderString::getType() const
 {
   return "string";
 }
@@ -413,7 +413,7 @@ bool HolderColor::fromString( const QString &s )
   return true;
 }
 
-const char* HolderColor::getType() const
+const QString HolderColor::getType() const
 {
   return "color";
 }
@@ -472,9 +472,9 @@ bool HolderObj::fromString( const QString &s )
   return obj->fromString( s );
 }
 
-const char* HolderObj::getType() const
+const QString HolderObj::getType() const
 {
-  return "obj";
+  return L8B( obj->getClassName() );
 }
 
 
