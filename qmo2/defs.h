@@ -41,6 +41,8 @@ typedef void *pvoid;
 #define UMAX (numeric_limits<unsigned int>::max())
 #define DMIN (numeric_limits<double>::lowest())
 #define DMAX (numeric_limits<double>::max())
+
+#define L8B QString::fromLocal8Bit
  
 enum _DATA_TYPES {
    dtpEnd = 0, dtpUndef = 0, 

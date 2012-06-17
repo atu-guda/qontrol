@@ -59,7 +59,7 @@ class HolderData : public QObject {
   HolderData( const QString &obj_name, const QString &v_name = QString(), 
               QObject *a_parent = 0, int a_flags = 0 );
   virtual ~HolderData() {}; // place to delete auto data
-  void* getPtr() const { return ptr; } ; // horror here !!!
+  // void* getPtr() const { return ptr; } ; // horror here !!!
   QVariant::Type getTp() const { return tp; };
   int getOldTp() const { return old_tp; };
   int getOldSubTp() const { return old_subtp; };
@@ -83,6 +83,7 @@ class HolderData : public QObject {
   virtual void post_set() = 0;
   virtual QString toString() const = 0;
   virtual bool fromString( const QString &s ) = 0;
+  virtual const char* getType() const = 0;
   // TODO: to/from XML
   // TODO: metadata in/out
  protected:
@@ -117,6 +118,7 @@ class HolderInt : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
+  virtual const char* getType() const;
  protected:
   int *val;
 };
@@ -134,6 +136,7 @@ class HolderSwitch : public HolderInt {
      const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0);
   virtual ~HolderSwitch();
   virtual void post_set();
+  virtual const char* getType() const;
 };
 
 #define PRM_SWITCH( name, flags ) \
@@ -150,6 +153,7 @@ class HolderList : public HolderInt {
      const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0);
   virtual ~HolderList();
   // virtual void post_set();
+  virtual const char* getType() const;
  private:
 };
 
@@ -171,6 +175,7 @@ class HolderDouble : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
+  virtual const char* getType() const;
  protected:
   double *val;
 };
@@ -192,6 +197,7 @@ class HolderString : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
+  virtual const char* getType() const;
  protected:
   QString *val;
 };
@@ -213,6 +219,7 @@ class HolderColor : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
+  virtual const char* getType() const;
  protected:
   QColor *val;
 };
@@ -234,6 +241,7 @@ class HolderObj : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
+  virtual const char* getType() const;
  protected:
   TDataSet *obj;
 };

@@ -113,6 +113,18 @@ QString HolderData::getParm( const QString &name ) const
   return QString();
 }
 
+void HolderData::setElems( const QString &els )
+{
+  parms["list_elems"] = els;
+  elems = els.split("\n");
+  v_max = elems.size() - 1;
+}
+
+const char* HolderData::getType() const // = 0;
+{
+  return "None";
+}
+
 // ---------------- HolderInt ---------
 
 HolderInt::HolderInt( int *p, const QString &obj_name, 
@@ -172,6 +184,11 @@ bool HolderInt::fromString( const QString &s )
   return ok;
 }
 
+const char* HolderInt::getType() const
+{
+  return "int";
+}
+
 // ---------------- HolderSwitch ---------
 HolderSwitch::HolderSwitch( int *p, const QString &obj_name, 
                       const QString &v_name, QObject *a_parent, int a_flags )
@@ -193,6 +210,11 @@ void HolderSwitch::post_set()
   *val = (*val) ? 1 : 0;
 }
 
+const char* HolderSwitch::getType() const
+{
+  return "switch";
+}
+
 
 // ---------------- HolderList ---------
 HolderList::HolderList( int *p, const QString &obj_name, 
@@ -211,12 +233,11 @@ HolderList::~HolderList()
 }
 
 
-void HolderData::setElems( const QString &els )
+const char* HolderList::getType() const
 {
-  parms["list_elems"] = els;
-  elems = els.split("\n");
-  v_max = elems.size() - 1;
+  return "list";
 }
+
 
 
 // ---------------- HolderDouble ---------
@@ -276,6 +297,11 @@ bool HolderDouble::fromString( const QString &s )
   return ok;
 }
 
+const char* HolderDouble::getType() const
+{
+  return "double";
+}
+
 
 // ---------------- HolderString ---------
 
@@ -326,6 +352,11 @@ bool HolderString::fromString( const QString &s )
   *val = s; 
   post_set();
   return true;
+}
+
+const char* HolderString::getType() const
+{
+  return "string";
 }
 
 // ---------------- HolderColor ---------
@@ -382,6 +413,11 @@ bool HolderColor::fromString( const QString &s )
   return true;
 }
 
+const char* HolderColor::getType() const
+{
+  return "color";
+}
+
 
 // ---------------- HolderObj ---------
 
@@ -434,6 +470,11 @@ QString HolderObj::toString() const
 bool HolderObj::fromString( const QString &s )
 {
   return obj->fromString( s );
+}
+
+const char* HolderObj::getType() const
+{
+  return "obj";
 }
 
 
