@@ -6,6 +6,7 @@
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
+#include <QStringBuilder>
 #include "datawidget.h"
 
 DataWidget::DataWidget( HolderData &h, QWidget *parent )
@@ -622,11 +623,9 @@ bool FactoryDataWidget::unregisterWidgetType( const QString &wname )
 DataDialog::DataDialog( TDataSet &a_ds, QWidget *parent )
   : QDialog( parent ), ds( a_ds) 
 {
-  QString s = L8B( ds.getClassName() );
-  s += ' ';
   char nm[MAX_INPUTLEN];
   ds.getFullName( nm );
-  s += L8B( nm );
+  QString s = L8B( ds.getClassName() )  %  ' '  %  L8B( nm );
   setWindowTitle( s );
   createWidgets();
   getAll();
@@ -670,14 +669,15 @@ void DataDialog::accept()
 
 int DataDialog::createWidgets()
 {
-  int nw = 0;
+  int nr = 0, nc = 0, nr_max = 0, nr_block = 0;
+  int was_block = 0, was_col = 0;
   QVBoxLayout *lay1 = new QVBoxLayout;
   
   QWidget *ce = new QWidget( this );
   QScrollArea *sa = new QScrollArea( this );
   sa->setWidget( ce );
   lay1->addWidget( sa );
-  ce->setMinimumSize( 40, 50 );
+  ce->setMinimumSize( 50, 50 );
 
   QDialogButtonBox *bBox = 
     new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, 
@@ -701,12 +701,28 @@ int DataDialog::createWidgets()
       continue; // but how?
     if( ho->getFlags() & efNoDial )
       continue;
+
+    if( ho->getParm("sep") == "col" || was_col ) {
+      nr = nr_block; ++nc; 
+    }
+
+    if( ho->getParm("sep") == "block" || was_block) {
+      QFrame *fr = new QFrame( ce );
+      fr->setFrameStyle( QFrame::HLine );
+
+      lay2->addWidget( fr, nr_max, 0, 1, 4 );
+      ++nr_max;
+      nr = nr_max;
+      nr_block = nr_max; nr = nr_block; nc = 0;
+    }
+
     QString name = ho->objectName();
     QString visName = ho->getVisName();
     int lev;
-    QString wtp = FactoryDataWidget::theFactory().findForHolder( *ho, &lev );
-    wtp += '_';
-    wtp += QString::number( lev );
+    QString wtp = 
+      " ( " % QString::number( ho->getMin() ) % " ; " % QString::number( ho->getMax() ) % " ) " 
+      % FactoryDataWidget::theFactory().findForHolder( *ho, &lev )
+      % '_'   % QString::number( lev ) % ' ' %  ho->getProps() ;
     w = FactoryDataWidget::theFactory().createDataWidget( *ho, ce );
     if( !w ) {
       qDebug( "not found edit widget for object %s", name.toLocal8Bit().constData() );
@@ -717,10 +733,20 @@ int DataDialog::createWidgets()
     w->setWhatsThis( ho->getDescr() );
     QLabel *la = new QLabel( visName, ce );
     la->setWhatsThis( ho->getType() + " " + name + " (" + wtp + ")" );
-    lay2->addWidget( la, nw, 0 );
-    lay2->addWidget( w, nw, 1 );
-    // lay2->addWidget( new QLabel( wtp, ce ), nw, 2 );
-    ++nw;
+    lay2->addWidget( la, nr, nc*2 );
+    lay2->addWidget(  w, nr, nc*2+1 );
+    // lay2->addWidget( new QLabel( wtp, ce ), nr, 2 );
+    ++nr;
+    if( nr > nr_max )
+      nr_max = nr;
+    
+    was_col = was_block = 0;
+    if( ho->getParm("sep") == "colend" ||  nr >= 40 ) {
+      was_col = 1;
+    }
+    if( ho->getParm("sep") == "blockend" ) {
+      was_block = 1;
+    }
   }
 
   setLayout( lay1 );
@@ -729,5 +755,5 @@ int DataDialog::createWidgets()
   
   ce->setMinimumSize( sz2 );
 
-  return nw;
+  return nr;
 }

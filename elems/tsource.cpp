@@ -184,6 +184,7 @@ TSource::TSource( TDataSet* aparent )
   PRMI(cc).setDescr( "Constant base" );
   // --- U chaos
   PRMI(use_u_ch).setDescr( "Use amplitude perturbations" );
+  PRMI(use_u_ch).setParm( "sep", "col" );
   PRMI(u_ch_v0).setDescr( "Minimum value of amplitule factor" );
   PRMI(u_ch_vm).setDescr( "Maximum value of amplitule factor" );
   PRMI(u_ch_t0).setDescr( "Minimum time of change" );
@@ -196,6 +197,7 @@ TSource::TSource( TDataSet* aparent )
   PRMI(addBaseSeed_u).setDescr( "Add seed from base(model)" );
   // --- Phi chaos
   PRMI(use_f_ch).setDescr( "Use phase perturbations" );
+  PRMI(use_f_ch).setParm( "sep", "col" );
   PRMI(f_ch_v0).setDescr( "Minimum value of phase factor" );
   PRMI(f_ch_vm).setDescr( "Maximum value of phase factor" );
   PRMI(f_ch_t0).setDescr( "Minimum time of change" );

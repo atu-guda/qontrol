@@ -105,6 +105,7 @@ TGraph::TGraph( TDataSet* apar )
 
   PRMI(title).setDescr( "Plot title" );
   PRMI(title).setMinMax( 0, MAX_LABELLEN );
+  PRMI(title).setParm( "sep", "blockend" );
   PRMI(xname).setDescr( "X name" );
   PRMI(xname).setMinMax( 0, MAX_NAMELEN );
   PRMI(y0name).setDescr( "Name of y0 output" );
@@ -119,6 +120,7 @@ TGraph::TGraph( TDataSet* apar )
   PRMI(y4name).setMinMax( 0, MAX_NAMELEN );
   PRMI(y5name).setDescr( "Name of y5 output" );
   PRMI(y5name).setMinMax( 0, MAX_NAMELEN );
+  PRMI(y5name).setParm( "sep", "colend" );
   PRMI(bgcolor).setDescr( "Background color" );
   PRMI(y0color).setDescr( "color of y0 data" );
   PRMI(y1color).setDescr( "color of y1 data" );

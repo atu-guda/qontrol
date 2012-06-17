@@ -111,13 +111,20 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   PRMI(tt).setDescr( "Full Run Time" );
   PRMI(nn).setMinMax(1,100000000);
   PRMI(nn).setDescr( "Number of steps in one run" );
+  PRMI(nn).setParm( "sep", "col" );
   PRMI(nl1).setMinMax(1,10000);
   PRMI(nl1).setDescr( "Number of inner parametric loops iterations" );
+  PRMI(nl1).setParm( "sep", "block" );
   PRMI(nl2).setMinMax(1,10000);
   PRMI(nl2).setDescr( "Number of outer parametric loops iterations" );
+  PRMI(nl2).setParm( "sep", "col" );
   PRMI(n_steps).setMinMax(1,100000);
   PRMI(n_steps).setDescr( "number of steps per i/o action " );
+  PRMI(n_steps).setParm( "sep", "col" );
   PRMI(use_sync).setDescr( "flag for real and model time syncronization " );
+  PRMI(use_sync).setParm( "sep", "col" );
+  
+  PRMI(prm0s).setParm( "sep", "block" );
   PRMI(prm0s).setDescr( "Initial prm0 value" );
   PRMI(prm1s).setDescr( "Initial prm1 value" );
   PRMI(prm2s).setDescr( "Initial prm2 value" );
@@ -130,6 +137,8 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   PRMI(seed).setDescr( "Seed for random generator" );
   PRMI(seedType).setDescr( "type of seeding: 0 - every run... " );
   PRMI(seedType).setElems( "Every Run\nStart 1d loop\nStart 2d loop" );
+
+  PRMI(ic_mouse).setParm( "sep", "col" );
   static const char *och_type = 
     "None\nCross1\nCross2\nCross3\n"
     "Vbar0\nVbar1\nVbar2\nVbar3\n"
@@ -137,6 +146,7 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
     "LED0\nLED1\nLED2\nLED3\n"
     "Sound0\nSound1\n"
     "Aux0\nAux1";
+  PRMI(oct_0).setParm( "sep", "col" );
   PRMI(oct_0).setElems( och_type );
   PRMI(oct_1).setElems( och_type );
   PRMI(oct_2).setElems( och_type );
@@ -144,6 +154,7 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   PRMI(oct_4).setElems( och_type );
   PRMI(oct_5).setElems( och_type );
   PRMI(long_descr).setProps("STRING,MLINE");
+  PRMI(long_descr).setParm( "sep", "block" );
 }/*}}}1*/
 
 TModel::~TModel()/*{{{1*/

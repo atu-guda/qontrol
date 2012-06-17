@@ -196,6 +196,7 @@ HolderSwitch::HolderSwitch( int *p, const QString &obj_name,
 {
   old_subtp = dtpsSwitch;
   props = "INT,SWITCH";
+  v_min = 0; v_max = 1;
   post_set();
 }
 

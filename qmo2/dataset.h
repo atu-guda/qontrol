@@ -73,9 +73,9 @@ class HolderData : public QObject {
   void setDescr( const QString &a_descr ) { descr = a_descr; };
   const QString& getDescr() const { return descr; };
   void setParm( const QString &name, const QString &value );
+  QString getParm( const QString &name ) const;
   void setProps( const QString &a_prop );
   const QString& getProps() const { return props; };
-  QString getParm( const QString &name ) const;
   void setElems( const QString &els ); 
   const QStringList& getElems() const { return elems; }; 
   virtual bool set( const QVariant & x ) = 0;
