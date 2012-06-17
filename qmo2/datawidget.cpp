@@ -705,7 +705,10 @@ int DataDialog::createWidgets()
     QString visName = ho->getVisName();
     int lev;
     QString wtp = FactoryDataWidget::theFactory().findForHolder( *ho, &lev );
+    wtp += '_';
     wtp += QString::number( lev );
+    wtp += ' ';
+    wtp += QVariant::typeToName( ho->getTp() );
     w = FactoryDataWidget::theFactory().createDataWidget( *ho, ce );
     if( !w ) {
       qDebug( "not found edit widget for object %s", name.toLocal8Bit().constData() );
@@ -715,10 +718,10 @@ int DataDialog::createWidgets()
     dwm[name] = w;
     w->setWhatsThis( ho->getDescr() );
     QLabel *la = new QLabel( visName, ce );
-    la->setWhatsThis( name );
+    la->setWhatsThis( name + " (" + wtp + ")" );
     lay2->addWidget( la, nw, 0 );
     lay2->addWidget( w, nw, 1 );
-    lay2->addWidget( new QLabel( wtp, ce ), nw, 2 );
+    // lay2->addWidget( new QLabel( wtp, ce ), nw, 2 );
     ++nw;
   }
 

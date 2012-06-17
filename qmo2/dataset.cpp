@@ -605,12 +605,11 @@ int TDataSet::getDataII( int ni, int *da, int allowConv )
   if( ni >= nelm || ni < 0 ) return -1;
   tp = d_i[ni].tp;
   if( tp == dtpInt ) {
-    if( d_i[ni].subtp != dtpsColor ) {
-      *da = *((int*)(ptrs[ni])); 
-      return 0;
+    if( d_i[ni].subtp == dtpsColor ) {// color require special handling
+      v = ((QColor*)(ptrs[ni]))->rgb();
+    } else {
+      v = *((int*)(ptrs[ni])); 
     }
-    // color require special handling
-    v = ((QColor*)(ptrs[ni]))->rgb();
     *da = v;
     return 0;
   };
@@ -765,13 +764,11 @@ int TDataSet::setDataII( int ni, int da, int allowConv )
   tp = d_i[ni].tp;
   
   if( tp == dtpInt ) {
-    if( d_i[ni].subtp != dtpsColor ) {
+    if( d_i[ni].subtp == dtpsColor ) {// color require special handling
+      ((QColor*)(ptrs[ni]))->setRgb( da );
+    } else {
       *(static_cast<int*>(ptrs[ni])) = da;
-      modified |= 1; 
-      return 0;
     }
-    // color require special handling
-    ((QColor*)(ptrs[ni]))->setRgb( da );
     modified |= 1; 
     return 0;
   };
@@ -1000,7 +997,12 @@ int TDataSet::saveData( int ni, ostream *os ) const
   };
   switch( d_i[ni].tp ) {
     case dtpEnd: return -1;
-    case dtpInt: iv = *((int*)(ptrs[ni]));
+    case dtpInt: 
+	  if( d_i[ni].subtp == dtpsColor ) {
+            iv = ((QColor*)(ptrs[ni]))->rgb();
+	  } else {
+	    iv = *((int*)(ptrs[ni]));
+	  }
           *os << d_i[ni].name << '=' << iv; break;
     case dtpDou: dv = *((double*)(ptrs[ni]));
           *os << d_i[ni].name << '=' << dv; break;

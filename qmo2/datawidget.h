@@ -28,6 +28,7 @@ class DataWidget : public QWidget {
   DataWidget( HolderData &d, QWidget *parent = 0 );
   virtual bool set() = 0;
   virtual bool get() const = 0;
+  QVariant::Type getTp() const { return ho.getTp(); }
   static DataWidget* create( HolderData & /*ho*/, QWidget * /*parent*/ )
     { return 0;};
   // virtual void fix() = 0;
