@@ -178,6 +178,7 @@ TMiso::TMiso( TDataSet* aparent )
   PRMI(ord).setMinMax( 0, IMAX );
   //PRMI(ord).setParm( "sep", "colend" );
   PRMI(descr).setMinMax( 0, 128 ); // TODO: define
+  PRMI(descr).setParm( "ncol", "2" ); 
   // PRMI(descr).setParm( "sep", "colend" );
   PRMI(links).setParm( "sep", "blockend" );
 

@@ -40,10 +40,10 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
        :TDataContainer( aparent ), 
         PRM_INIT( tt, "T (tt)" ),
 	PRM_INIT( nn, "N (nn)" ),
+	PRM_INIT( use_sync, "Sync RT" ),
 	PRM_INIT( nl1, "N1" ),
 	PRM_INIT( nl2, "N2" ),
 	PRM_INIT( n_steps, "N steps" ),
-	PRM_INIT( use_sync, "Sync RT" ),
 	PRM_INIT( prm0s, "param. 0" ),
 	PRM_INIT( prm1s, "param. 1" ),
 	PRM_INIT( prm2s, "param. 2" ),
@@ -112,6 +112,8 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   PRMI(nn).setMinMax(1,100000000);
   PRMI(nn).setDescr( "Number of steps in one run" );
   PRMI(nn).setParm( "sep", "col" );
+  PRMI(use_sync).setDescr( "flag for real and model time syncronization " );
+  PRMI(use_sync).setParm( "sep", "col" );
   PRMI(nl1).setMinMax(1,10000);
   PRMI(nl1).setDescr( "Number of inner parametric loops iterations" );
   PRMI(nl1).setParm( "sep", "block" );
@@ -121,8 +123,6 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   PRMI(n_steps).setMinMax(1,100000);
   PRMI(n_steps).setDescr( "number of steps per i/o action " );
   PRMI(n_steps).setParm( "sep", "col" );
-  PRMI(use_sync).setDescr( "flag for real and model time syncronization " );
-  PRMI(use_sync).setParm( "sep", "col" );
   
   PRMI(prm0s).setParm( "sep", "block" );
   PRMI(prm0s).setDescr( "Initial prm0 value" );
@@ -154,7 +154,9 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   PRMI(oct_4).setElems( och_type );
   PRMI(oct_5).setElems( och_type );
   PRMI(long_descr).setProps("STRING,MLINE");
+  PRMI(long_descr).setDescr("Model description");
   PRMI(long_descr).setParm( "sep", "block" );
+  PRMI(long_descr).setParm( "ncol", "-1" );
 }/*}}}1*/
 
 TModel::~TModel()/*{{{1*/

@@ -68,8 +68,8 @@ TCriterion::TCriterion( TDataSet* aparent )
 	 PRM_INIT( useT0, "t0" ),
 	 PRM_INIT( useEnable, "u[2] is Enable" ),
 	 PRM_INIT( useLock, "Lock" ),
-	 PRM_INIT( usePulse, "" ),
-	 PRM_INIT( st, "Pulse Output" )
+	 PRM_INIT( usePulse, "Pulse Output" ),
+	 PRM_INIT( st, "state" )
 {
   int i;
   a = 0.5; b = 1.0; type = 0; t0 = 0; 
@@ -92,10 +92,11 @@ TCriterion::TCriterion( TDataSet* aparent )
   PRMI(b).setDescr( "level 'b'" );
   PRMI(t0).setDescr( "Start time" );
   PRMI(useA).setDescr( "Use u[3] as 'a' value" );
+  PRMI(useA).setParm( "sep", "col" );
   PRMI(useT0).setDescr( "Dont work before given time (t0)" );
   PRMI(useEnable).setDescr( "Use u[2] signal as Enable" );
-  PRMI(useLock).setDescr( "Local after first fount" );
-  PRMI(usePulse).setDescr( "output in pulse +1, 0, -1" );
+  PRMI(useLock).setDescr( "Lock after first front" );
+  PRMI(usePulse).setDescr( "output is pulse +1, 0, -1" );
   PRMI(st).setDescr( "current state" );
 }
 

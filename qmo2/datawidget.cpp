@@ -10,8 +10,9 @@
 #include "datawidget.h"
 
 DataWidget::DataWidget( HolderData &h, QWidget *parent )
-  : QWidget( parent ), ho( h )
+  : QFrame( parent ), ho( h )
 {
+  // setFrameStyle( QFrame::Panel | QFrame::Sunken );
 }
 
 // -------------  DummyDataWidget ----------------
@@ -26,7 +27,7 @@ DummyDataWidget::DummyDataWidget( HolderData &h, QWidget *parent )
 
 bool DummyDataWidget::set()
 {
-  lbl->setText( ho.toString() );
+  lbl->setText( ho.toString().left(20) );
   return true;
 }
 
@@ -74,7 +75,12 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
   if( ! mask.isEmpty() ) {
     le->setInputMask( mask );
   }
+  QHBoxLayout *lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( le, 1 );
+  setLayout( lay );
   // TODO: r/o, size, mask ....
+  setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred ); // TODO: check?
 }
 
 bool StringDataWidget::set()
@@ -108,7 +114,8 @@ QSize StringDataWidget::minimumSizeHint() const
 
 QSize StringDataWidget::sizeHint() const
 {
-  return le->sizeHint();
+  // return le->sizeHint();
+  return QSize( 220, 20 );
 }
 
 
@@ -125,6 +132,12 @@ StringMLDataWidget::StringMLDataWidget( HolderData &h, QWidget *parent )
   }
   // setMaxLength( h.getMax() ); ???
   // TODO: min size
+  te->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred );
+  QHBoxLayout *lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( te, 1 );
+  setLayout( lay );
+  setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred );
 }
 
 bool StringMLDataWidget::set()
@@ -146,7 +159,7 @@ DataWidget* StringMLDataWidget::create( HolderData &h, QWidget *parent  )
 
 int StringMLDataWidget::reg()
 {
-  static DataWidgetProp p { create, "STRING,ML" };
+  static DataWidgetProp p { create, "STRING,MLINE" };
   return FactoryDataWidget::theFactory().registerWidgetType( "StringMLDataWidget", p );
 }
 
@@ -174,6 +187,10 @@ IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent )
     le->setReadOnly( true );
   }
   le->setValidator( new QIntValidator( h.getMin(), h.getMax(), le ) );
+  QHBoxLayout *lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( le, 1 );
+  setLayout( lay );
   // TODO: r/o
 }
 
@@ -234,6 +251,11 @@ IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent )
   if( ok ) {
     sb->setSingleStep( step );
   }
+
+  QHBoxLayout *lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( sb, 1 );
+  setLayout( lay );
   
 }
 
@@ -285,6 +307,10 @@ SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
     cb->setDisabled( true );
   }
   
+  QHBoxLayout *lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( cb, 1 );
+  setLayout( lay );
 }
 
 bool SwitchDataWidget::set()
@@ -335,6 +361,10 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
   }
   cb->addItems( ho.getElems() );
   
+  QHBoxLayout *lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( cb, 1 );
+  setLayout( lay );
 }
 
 bool ListDataWidget::set()
@@ -387,6 +417,11 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
   le->setValidator( new QDoubleValidator( h.getMin(), h.getMax(), 12, le ) );
   //setNotation( ScientificNotation );  // is by default
   // TODO: notation, precision
+  
+  QHBoxLayout *lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( le, 1 );
+  setLayout( lay );
 }
 
 bool DoubleDataWidget::set()
@@ -447,6 +482,10 @@ DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent )
     sb->setSingleStep( step );
   }
   
+  QHBoxLayout *lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( sb, 1 );
+  setLayout( lay );
 }
 
 bool DoubleSpinDataWidget::set()
@@ -495,6 +534,12 @@ ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     cb->setDisabled( true ); // TODO: real read-only
   }
+  cb->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Expanding );
+  
+  QHBoxLayout *lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( cb, 1 );
+  setLayout( lay );
 }
 
 bool ColorDataWidget::set()
@@ -673,21 +718,8 @@ int DataDialog::createWidgets()
   int was_block = 0, was_col = 0;
   QVBoxLayout *lay1 = new QVBoxLayout;
   
-  QWidget *ce = new QWidget( this );
-  QScrollArea *sa = new QScrollArea( this );
-  sa->setWidget( ce );
-  lay1->addWidget( sa );
-  ce->setMinimumSize( 50, 50 );
-
-  QDialogButtonBox *bBox = 
-    new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, 
-	Qt::Horizontal, this );
-  connect(bBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(bBox, SIGNAL(rejected()), this, SLOT(reject()));
-  lay1->addWidget( bBox );
-  
-  QGridLayout *lay2 = new QGridLayout( ce );
-  ce->setLayout( lay2 );
+  QGridLayout *lay2 = new QGridLayout;
+  lay1->addLayout( lay2 );
 
   DataWidget *w;
   QObjectList childs = ds.children();
@@ -702,15 +734,22 @@ int DataDialog::createWidgets()
     if( ho->getFlags() & efNoDial )
       continue;
 
+    int ncol = 1; // number of columns per widget
+    QString ncol_str = ho->getParm("ncol");
+    if( ! ncol_str.isEmpty() ) {
+      ncol = ncol_str.toInt();
+      ncol = qBound( -1, ncol, 20 );
+    }
+    
     if( ho->getParm("sep") == "col" || was_col ) {
       nr = nr_block; ++nc; 
     }
 
     if( ho->getParm("sep") == "block" || was_block) {
-      QFrame *fr = new QFrame( ce );
+      QFrame *fr = new QFrame( this );
       fr->setFrameStyle( QFrame::HLine );
 
-      lay2->addWidget( fr, nr_max, 0, 1, 4 );
+      lay2->addWidget( fr, nr_max, 0, 1, -1 );
       ++nr_max;
       nr = nr_max;
       nr_block = nr_max; nr = nr_block; nc = 0;
@@ -718,12 +757,14 @@ int DataDialog::createWidgets()
 
     QString name = ho->objectName();
     QString visName = ho->getVisName();
+    qDebug( "DBG: createWidgets %s at (%d,%d+%d)", 
+	    qPrintable(name), nr, nc, ncol  );
     int lev;
     QString wtp = 
       " ( " % QString::number( ho->getMin() ) % " ; " % QString::number( ho->getMax() ) % " ) " 
       % FactoryDataWidget::theFactory().findForHolder( *ho, &lev )
       % '_'   % QString::number( lev ) % ' ' %  ho->getProps() ;
-    w = FactoryDataWidget::theFactory().createDataWidget( *ho, ce );
+    w = FactoryDataWidget::theFactory().createDataWidget( *ho, this );
     if( !w ) {
       qDebug( "not found edit widget for object %s", name.toLocal8Bit().constData() );
       continue;
@@ -731,11 +772,10 @@ int DataDialog::createWidgets()
     
     dwm[name] = w;
     w->setWhatsThis( ho->getDescr() );
-    QLabel *la = new QLabel( visName, ce );
+    QLabel *la = new QLabel( visName, this );
     la->setWhatsThis( ho->getType() + " " + name + " (" + wtp + ")" );
     lay2->addWidget( la, nr, nc*2 );
-    lay2->addWidget(  w, nr, nc*2+1 );
-    // lay2->addWidget( new QLabel( wtp, ce ), nr, 2 );
+    lay2->addWidget( w, nr, nc*2+1, 1, ncol );
     ++nr;
     if( nr > nr_max )
       nr_max = nr;
@@ -747,13 +787,22 @@ int DataDialog::createWidgets()
     if( ho->getParm("sep") == "blockend" ) {
       was_block = 1;
     }
-  }
+  } // -------------- end item looo
+
+  // final line and buttons
+  QFrame *frb = new QFrame( this );
+  frb->setFrameStyle( QFrame::HLine );
+  lay1->addWidget( frb );
+
+  QDialogButtonBox *bBox = 
+    new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, 
+	Qt::Horizontal, this );
+  connect(bBox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(bBox, SIGNAL(rejected()), this, SLOT(reject()));
+  lay1->addWidget( bBox );
 
   setLayout( lay1 );
 
-  QSize sz2 = lay2->sizeHint();
-  
-  ce->setMinimumSize( sz2 );
-
   return nr;
 }
+

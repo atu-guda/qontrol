@@ -163,14 +163,14 @@ class TModel : public TDataContainer  {
   PRM_DOUBLE( tt, efNoRunChange );
   /** number of inner loop iterations */
   PRM_INT( nn, efNoRunChange );
+  /** flag for real and model time syncronization */
+  PRM_SWITCH( use_sync, efNoRunChange );
   /** number of inner parametric loops iterations */
   PRM_INT( nl1, efNoRunChange );
   /** number of outer parametric loops iterations */
   PRM_INT( nl2, efNoRunChange );
   /** number of steps per i/o action */
   PRM_INT( n_steps, efNoRunChange );
-  /** flag for real and model time syncronization */
-  PRM_SWITCH( use_sync, efNoRunChange );
   /** Initial parametrs values */
   PRM_DOUBLE( prm0s, efNoRunChange );
   PRM_DOUBLE( prm1s, efNoRunChange );

@@ -68,7 +68,7 @@ TAdjGen::TAdjGen( TDataSet* aparent )
 	PRM_INIT( useLock, "Use u[2] as Lock" ),
 	PRM_INIT( outStrobe, "Output Strobe" ),
 	PRM_INIT( useZero, "use 0 as negative out" ),
-	PRM_INIT( useSignStrobe, "Signed ttrobe" ),
+	PRM_INIT( useSignStrobe, "Signed strobe" ),
 	PRM_INIT( usePlusStrobe, "Only + strobe" ),
 	PRM_INIT( useF, "input is F, not omega" ),
 	PRM_INIT( currOut, "current output" ),
@@ -103,7 +103,9 @@ TAdjGen::TAdjGen( TDataSet* aparent )
   ptrs[23] = links;
   ptrs[24] = &vis_x; ptrs[25] = &vis_y;
 
+  PRMI(type).setDescr( "Type of generator" );
   PRMI(type).setElems( "Default\nMAI\nDual(u0,u3)" );
+  PRMI(useF).setParm( "sep", "col" );
 
 }
 

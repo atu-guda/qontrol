@@ -21,9 +21,8 @@ class DataWidget;
 
 
 /** Abstract class for any widgets for data editing in DataDialog...
- * Must be used as co-parent with QWidget 
  * */
-class DataWidget : public QWidget {
+class DataWidget : public QFrame {
  public: 
   DataWidget( HolderData &d, QWidget *parent = 0 );
   virtual bool set() = 0;
@@ -228,7 +227,6 @@ class DataDialog : public QDialog {
    TDataSet &ds;
    DaWiMap dwm;
 };
-
 
 #endif  // _DATAWIDGET_H
 

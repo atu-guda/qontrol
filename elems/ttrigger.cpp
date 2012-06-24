@@ -104,6 +104,7 @@ TTrigger::TTrigger( TDataSet* aparent )
   PRMI(level1).setDescr("Level of '1' signal (sor shmidt)");
   PRMI(t0).setDescr("Time of autoreset (if enabled))");
   PRMI(useInit1).setDescr("Set triggers value to 1 of start");
+  PRMI(useInit1).setParm( "sep", "col" );
   PRMI(useEnable).setDescr("Use u[3] as enable signal");
   PRMI(usePulse).setDescr("Output is pulse, no level");
   PRMI(useMinus).setDescr("Drop pulse is negative, not 0");

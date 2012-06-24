@@ -122,11 +122,12 @@ TIntegrator::TIntegrator( TDataSet* aparent )
   PRMI(vmax).setDescr( "Limit ma value" );
   PRMI(v).setDescr( "Current value" );
   PRMI(useMin).setDescr( "use Min value" );
+  PRMI(useMin).setParm( "sep", "col" );
   PRMI(useMax).setDescr( "use Max value" );
   PRMI(useReset).setDescr( "[u1] is Reset" );
   PRMI(useBase).setDescr( "u[3] is Base" );
   PRMI(useAdd).setDescr( "use Base" );
-  PRMI(useDis).setDescr( "use Disacharge" );
+  PRMI(useDis).setDescr( "use Discharge" );
   PRMI(useHold).setDescr( "Hold" );
   PRMI(useAver).setDescr( "Calc Average" );
   PRMI(useSqIn).setDescr( "x^2 on input " );
