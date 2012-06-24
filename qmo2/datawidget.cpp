@@ -8,6 +8,7 @@
 
 #include <QStringBuilder>
 #include "datawidget.h"
+#include "qmo2win.h"
 
 DataWidget::DataWidget( HolderData &h, QWidget *parent )
   : QFrame( parent ), ho( h )
@@ -712,6 +713,55 @@ void DataDialog::accept()
   QDialog::accept();
 }
 
+void DataDialog::checkData()
+{
+  // TODO: 
+}
+
+void DataDialog::showHelp()
+{
+  QString cl_name = L8B( ds.getClassName() );
+  if( cl_name.isEmpty() )
+    return showSimpleHelp();
+  QString resname = L8B( "elems/" );
+  resname += cl_name;
+  resname += L8B( "/index.html" );
+  QString helpfile = QMo2Win::qmo2win->findRes( resname );
+  // TODO: rich browser here or in next function
+  //if( helpfile.isEmpty() )  
+  //  return showSimpleHelp();
+  return showSimpleHelp();
+}
+
+
+void DataDialog::showSimpleHelp(void)
+{
+  QDialog *dia;
+  QTextBrowser *brow;
+  QPushButton *bt_ok;
+  QGridLayout *lay;
+  const char *help;
+  if( (help = ds.getHelp()) == 0 )
+    return;
+  dia = new QDialog( this );
+  dia->resize( 500, 480 );
+  dia->setWindowTitle( PACKAGE ": Help on element" );
+  
+  lay = new QGridLayout;
+  
+  brow = new QTextBrowser( this );
+  brow->insertHtml( help );
+  lay->addWidget( brow, 0, 0 );
+
+  bt_ok = new QPushButton( "&Ok", dia );
+  lay->addWidget( bt_ok, 1, 0 );
+  dia->setLayout( lay );
+
+  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
+  dia->exec();
+  delete dia;
+
+}
 int DataDialog::createWidgets()
 {
   int nr = 0, nc = 0, nr_max = 0, nr_block = 0;
@@ -757,8 +807,9 @@ int DataDialog::createWidgets()
 
     QString name = ho->objectName();
     QString visName = ho->getVisName();
-    qDebug( "DBG: createWidgets %s at (%d,%d+%d)", 
-	    qPrintable(name), nr, nc, ncol  );
+    //qDebug( "DBG: createWidgets %s at (%d,%d+%d)", 
+    //	    qPrintable(name), nr, nc, ncol  );
+
     int lev;
     QString wtp = 
       " ( " % QString::number( ho->getMin() ) % " ; " % QString::number( ho->getMax() ) % " ) " 
@@ -766,7 +817,7 @@ int DataDialog::createWidgets()
       % '_'   % QString::number( lev ) % ' ' %  ho->getProps() ;
     w = FactoryDataWidget::theFactory().createDataWidget( *ho, this );
     if( !w ) {
-      qDebug( "not found edit widget for object %s", name.toLocal8Bit().constData() );
+      qDebug( "not found edit widget for object %s", qPrintable(name) );
       continue;
     }
     
@@ -794,12 +845,23 @@ int DataDialog::createWidgets()
   frb->setFrameStyle( QFrame::HLine );
   lay1->addWidget( frb );
 
-  QDialogButtonBox *bBox = 
-    new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, 
-	Qt::Horizontal, this );
-  connect(bBox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(bBox, SIGNAL(rejected()), this, SLOT(reject()));
-  lay1->addWidget( bBox );
+  QHBoxLayout *lay_btn = new QHBoxLayout;
+  QPushButton *btn_ok = new QPushButton( QIcon::fromTheme("dialog-ok"),"Ok" );
+  btn_ok->setDefault( true );
+  connect(btn_ok, SIGNAL(clicked()), this, SLOT(accept()));
+  lay_btn->addWidget( btn_ok );
+  // 
+  QPushButton *btn_cancel = new QPushButton( QIcon::fromTheme("dialog-cancel"), "Cancel" );
+  connect(btn_cancel, SIGNAL(clicked()), this, SLOT(reject()));
+  lay_btn->addWidget( btn_cancel );
+  QPushButton *btn_check = new QPushButton( "Check?" );
+  connect(btn_check, SIGNAL(clicked()), this, SLOT(checkData())); // TODO:
+  lay_btn->addWidget( btn_check );
+  QPushButton *btn_help = new QPushButton( QIcon::fromTheme("help-contents"), "Help" );
+   connect(btn_help, SIGNAL(clicked()), this, SLOT(showHelp()));
+  lay_btn->addWidget( btn_help );
+  lay1->addLayout( lay_btn );
+
 
   setLayout( lay1 );
 

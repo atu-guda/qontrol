@@ -216,14 +216,18 @@ class FactoryDataWidget {
 typedef QMap<QString,DataWidget*> DaWiMap;
 
 class DataDialog : public QDialog {
+  Q_OBJECT
   public:
    DataDialog( TDataSet &a_ds, QWidget *parent = 0 );
    int getAll();
    int setAll();
   public slots:
    virtual void accept();
+   void showHelp();
+   void checkData();
   protected: 
    virtual int createWidgets();
+   void showSimpleHelp();
    TDataSet &ds;
    DaWiMap dwm;
 };
