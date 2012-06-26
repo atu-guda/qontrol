@@ -88,11 +88,14 @@ HolderData::HolderData( const QString &obj_name,
            :QObject( a_parent ), old_tp(0), old_subtp(0), 
 	    dyn(0), flags(a_flags),
 	    v_min(DMIN), v_max(DMAX),
-	    tp(QVariant::Invalid), ptr(0), vis_name(v_name), descr()
+	    tp(QVariant::Invalid), ptr(0)
 {
   setObjectName( obj_name );
-  if( vis_name.isNull() )  {
-    vis_name = obj_name;
+
+  if( v_name.isNull() )  {
+    setParm( "vis_name", obj_name );
+  } else {
+    setParm( "vis_name", v_name );
   }
 }
 
@@ -101,16 +104,43 @@ void HolderData::setParm( const QString &name, const QString &value )
   parms[name] = value;
 }
 
-void HolderData::setProps( const QString &a_prop )
-{
-  props = a_prop;
-}
 
 QString HolderData::getParm( const QString &name ) const
 {
   if( parms.contains( name ) )
     return parms[name];
   return QString();
+}
+
+// tmp: to remove, use only set/getParm
+void HolderData::setVisName( const QString &av_name ) 
+{ 
+  setParm( "vis_name", av_name );
+}
+
+QString HolderData::getVisName() const 
+{
+  return getParm( "vis_name" );
+}
+
+void HolderData::setDescr( const QString &a_descr ) 
+{
+  setParm( "descr", a_descr );
+}
+
+QString HolderData::getDescr() const 
+{
+  return getParm( "descr" );
+}
+
+void HolderData::setProps( const QString &a_prop )
+{
+  setParm( "props", a_prop );
+}
+
+QString HolderData::getProps() const
+{
+  return getParm( "props" );
 }
 
 void HolderData::setElems( const QString &els )
@@ -136,7 +166,7 @@ HolderInt::HolderInt( int *p, const QString &obj_name,
     val = new int; *val = (int)(v_min); dyn = 1;
   }
   ptr = val; tp=QVariant::Int; old_tp = dtpInt; old_subtp = dtpsInt;
-  props = "INT,SIMPLE";
+  setParm( "props", "INT,SIMPLE" );
   post_set();
 }
 
@@ -195,7 +225,7 @@ HolderSwitch::HolderSwitch( int *p, const QString &obj_name,
           :HolderInt( p, obj_name, v_name, a_parent, a_flags )
 {
   old_subtp = dtpsSwitch;
-  props = "INT,SWITCH";
+  setParm( "props", "INT,SWITCH" );
   v_min = 0; v_max = 1;
   post_set();
 }
@@ -224,7 +254,7 @@ HolderList::HolderList( int *p, const QString &obj_name,
 {
   old_subtp = dtpsList;
   v_min = v_max = 0;
-  props = "INT,LIST";
+  setParm( "props", "INT,LIST" );
   post_set();
 }
 
@@ -252,7 +282,7 @@ HolderDouble::HolderDouble( double *p, const QString &obj_name,
     val = new double; *val = v_min; dyn = 1;
   }
   post_set();
-  props = "DOUBLE,SIMPLE";
+  setParm( "props", "DOUBLE,SIMPLE" );
   ptr = val; tp=QVariant::Double; old_tp = dtpDouble;
 }
 
@@ -315,7 +345,7 @@ HolderString::HolderString( QString *p, const QString &obj_name,
     val = new QString; dyn = 1;
   }
   post_set();
-  props = "STRING,SIMPLE";
+  setParm( "props", "STRING,SIMPLE" );
   ptr = val; tp=QVariant::String; old_tp = dtpString;
 }
 
@@ -371,7 +401,7 @@ HolderColor::HolderColor( QColor *p, const QString &obj_name,
     val = new QColor( Qt::red ); dyn = 1;
   }
   post_set();
-  props = "COLOR,INT";
+  setParm( "props", "COLOR,INT" );
   ptr = val; tp=QVariant::Color; old_tp = dtpInt; old_subtp = dtpsColor;
 }
 
@@ -435,7 +465,7 @@ HolderObj::HolderObj( TDataSet *p, const QString &obj_name,
   post_set();
   ptr = obj; tp=QVariant::UserType; old_tp = dtpObj; 
   old_subtp = obj->getClassId();
-  props = "OBJ";
+  setParm( "props", "OBJ" );
   obj->setObjectName( QString("_real_") + obj_name );
   //qDebug( "*** HolderObj::HolderObj obj = %p obj_name=%s !",
   //    obj, obj_name.toLocal8Bit().constData() );
@@ -1306,8 +1336,8 @@ QString TDataSet::toString() const
   QObjectList childs = children();
 
   
-  for( QObjectList::iterator o = childs.begin(); o != childs.end(); ++o ) {
-    QObject *xo = *o;
+  for( auto o : childs ) {
+    QObject *xo = o;
     if( ! xo->inherits("HolderData" )) {
       continue;
     }
@@ -1341,15 +1371,16 @@ void TDataSet::dumpStruct() const
   // new part
   QObjectList childs = children();
   int i = 0;
-  for( QObjectList::iterator o = childs.begin(); o != childs.end(); ++o,++i ) {
-    QObject *xo = *o;
+  for( auto o : childs ) {
+    QObject *xo = o;
     qDebug( "*# [%d] (%p) %s %s ", 
-	i, xo, xo->metaObject()->className(), xo->objectName().toLocal8Bit().constData() );
+	i, xo, xo->metaObject()->className(), qPrintable(xo->objectName()) );
     if( ! xo->inherits("HolderData" )) {
       continue;
     }
     HolderData *ho = qobject_cast<HolderData*>(xo);
-    qDebug( "*#    = %s", ho->toString().toLocal8Bit().constData() );
+    qDebug( "*#    = %s", qPrintable( ho->toString() ) );
+    ++i;
   }
   qDebug( "*%d END", dump_lev );
   --dump_lev;

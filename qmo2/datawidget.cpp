@@ -597,20 +597,20 @@ QString FactoryDataWidget::findForHolder( const HolderData &ho, int *lev ) const
 {
   static QString name;
   int max_good = IMIN;
-  QStringList ho_p_list = ho.getProps().split(",");
-  DwPropMap::const_iterator i;
-  for( i = propMap.begin(); i!= propMap.end(); ++i ) {
+  QStringList ho_p_list = ho.getParm("props").split(",");
+  // DwPropMap::const_iterator i;
+  for( auto i = propMap.begin(); i!= propMap.end(); ++i ) {
     int good = 0;
     QStringList w_p_list = QString( i.value().eprop ).split(",");
 
-    for( int i=0; i<ho_p_list.size(); ++i ) {
-      if( w_p_list.contains( ho_p_list.at(i) ) ) {
+    for( int j=0; j<ho_p_list.size(); ++j ) {
+      if( w_p_list.contains( ho_p_list.at(j) ) ) {
 	good += 10;
       }
     }
 
-    for( int i=0; i<w_p_list.size(); ++i ) {
-      if( ! ho_p_list.contains( w_p_list.at(i) ) ) {
+    for( int j=0; j<w_p_list.size(); ++j ) {
+      if( ! ho_p_list.contains( w_p_list.at(j) ) ) {
 	good -= 2;
       }
     }
@@ -681,10 +681,8 @@ DataDialog::DataDialog( TDataSet &a_ds, QWidget *parent )
 int DataDialog::getAll()
 {
   int ng = 0;
-  DataWidget *w;
 
-  for(DaWiMap::const_iterator i = dwm.begin(); i != dwm.end(); ++i  ) {
-    w = i.value();
+  for( auto w : dwm  ) {
     w->set();
     ++ng;
   }
@@ -695,16 +693,13 @@ int DataDialog::getAll()
 int DataDialog::setAll()
 {
   int ns = 0;
-  DataWidget *w;
 
-  for(DaWiMap::const_iterator i = dwm.begin(); i != dwm.end(); ++i  ) {
-    w = i.value();
+  for( auto w : dwm ) {
     w->get();
     ++ns;
   }
 
   return ns;
-
 }
 
 void DataDialog::accept()
@@ -773,8 +768,9 @@ int DataDialog::createWidgets()
 
   DataWidget *w;
   QObjectList childs = ds.children();
-  for( QObjectList::iterator o = childs.begin(); o != childs.end(); ++o ) {
-    QObject *xo = *o;
+  // for( QObjectList::iterator o = childs.begin(); o != childs.end(); ++o ) {
+  for( auto o :  childs ) {
+    QObject *xo = o;
     if( ! xo->inherits("HolderData" )) {
       continue;
     }
@@ -806,7 +802,7 @@ int DataDialog::createWidgets()
     }
 
     QString name = ho->objectName();
-    QString visName = ho->getVisName();
+    QString visName = ho->getParm( "vis_name" );
     //qDebug( "DBG: createWidgets %s at (%d,%d+%d)", 
     //	    qPrintable(name), nr, nc, ncol  );
 
@@ -814,7 +810,7 @@ int DataDialog::createWidgets()
     QString wtp = 
       " ( " % QString::number( ho->getMin() ) % " ; " % QString::number( ho->getMax() ) % " ) " 
       % FactoryDataWidget::theFactory().findForHolder( *ho, &lev )
-      % '_'   % QString::number( lev ) % ' ' %  ho->getProps() ;
+      % '_'   % QString::number( lev ) % ' ' %  ho->getParm( "props" ) ;
     w = FactoryDataWidget::theFactory().createDataWidget( *ho, this );
     if( !w ) {
       qDebug( "not found edit widget for object %s", qPrintable(name) );
@@ -822,7 +818,7 @@ int DataDialog::createWidgets()
     }
     
     dwm[name] = w;
-    w->setWhatsThis( ho->getDescr() );
+    w->setWhatsThis( ho->getParm("descr") );
     QLabel *la = new QLabel( visName, this );
     la->setWhatsThis( ho->getType() + " " + name + " (" + wtp + ")" );
     lay2->addWidget( la, nr, nc*2 );

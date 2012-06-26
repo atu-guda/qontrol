@@ -68,14 +68,15 @@ class HolderData : public QObject {
   void setMinMax( double a_min, double a_max ) { v_min = a_min; v_max = a_max; };
   double getMin() const { return v_min; }
   double getMax() const { return v_max; }
-  void setVisName( const QString &av_name ) { vis_name = av_name; };
-  const QString& getVisName() const { return vis_name; };
-  void setDescr( const QString &a_descr ) { descr = a_descr; };
-  const QString& getDescr() const { return descr; };
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
+  // tmp: to remove, use only set/getParm
+  void setVisName( const QString &av_name );
+  QString getVisName() const;
+  void setDescr( const QString &a_descr );
+  QString getDescr() const;
   void setProps( const QString &a_prop );
-  const QString& getProps() const { return props; };
+  QString getProps() const ;
   void setElems( const QString &els ); 
   const QStringList& getElems() const { return elems; }; 
   virtual bool set( const QVariant & x ) = 0;
@@ -92,11 +93,11 @@ class HolderData : public QObject {
   double v_min, v_max; // double as most common type, v_max = max_len
   QVariant::Type tp;
   void *ptr;
-  QString vis_name; //* user visible name, default = obj_name
-  QString descr;    //* short description
-  QString props;    //* properties for edit widgets...
   QStringList elems;
   QSSMap parms;
+  // test for auto params inclusion
+  constexpr static const char* xxx_test1 = "Test1";
+  const char* const xxx_test2[4] = { "T2", R"(nice\nstring)", "T2e", nullptr };
 };
 
 #define PRM_INIT( name, descr ) \
