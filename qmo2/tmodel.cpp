@@ -38,7 +38,7 @@ TClassInfo TModel::class_info = {
 
 TModel::TModel( TDataSet* aparent )/*{{{1*/
        :TDataContainer( aparent ), 
-        PRM_INIT( tt, "T (tt)" ),
+        // PRM_INIT( tt, "T (tt)" ),
 	PRM_INIT( nn, "N (nn)" ),
 	PRM_INIT( use_sync, "Sync RT" ),
 	PRM_INIT( nl1, "N1" ),

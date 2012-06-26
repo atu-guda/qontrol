@@ -160,7 +160,7 @@ class TModel : public TDataContainer  {
  protected:
   // =============== iface objects ==============================
   /** total model time, starts with 0 each inner loop */ 
-  PRM_DOUBLE( tt, efNoRunChange );
+  PRM_DOUBLE1( tt, efNoRunChange, "T", "Full Run Time", "" );
   /** number of inner loop iterations */
   PRM_INT( nn, efNoRunChange );
   /** flag for real and model time syncronization */

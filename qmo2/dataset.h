@@ -57,7 +57,9 @@ class HolderData : public QObject {
   Q_OBJECT
  public: 
   HolderData( const QString &obj_name, const QString &v_name = QString(), 
-              QObject *a_parent = 0, int a_flags = 0 );
+              QObject *a_parent = 0, int a_flags = 0,
+	      const QString &a_descr = QString(), 
+	      const QString &a_extra = QString() );
   virtual ~HolderData() {}; // place to delete auto data
   // void* getPtr() const { return ptr; } ; // horror here !!!
   QVariant::Type getTp() const { return tp; };
@@ -112,7 +114,9 @@ class HolderInt : public HolderData {
   Q_OBJECT
  public: 
   HolderInt( int *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0 );
+    const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+    const QString &a_descr = QString(),
+    const QString &a_extra  = QString() );
   virtual ~HolderInt();
   virtual bool set( const QVariant & x );
   virtual QVariant get() const;
@@ -129,12 +133,18 @@ class HolderInt : public HolderData {
  HolderInt __HO_##name ; \
  static const int __PRM_FLAGS_##name = flags ; 
 
+#define PRM_INT1( name, flags, vname, descr, extra ) \
+ int name; \
+ HolderInt __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
+
 /** Holder of int values as Switch */
 class HolderSwitch : public HolderInt {
   Q_OBJECT
  public: 
   HolderSwitch( int *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0);
+    const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+    const QString &a_descr = QString(),
+    const QString &a_extra  = QString() );
   virtual ~HolderSwitch();
   virtual void post_set();
   virtual const QString getType() const;
@@ -145,13 +155,19 @@ class HolderSwitch : public HolderInt {
  HolderSwitch __HO_##name ; \
  static const int __PRM_FLAGS_##name = flags ; 
 
+#define PRM_SWITCH1( name, flags, vname, descr, extra ) \
+ int name; \
+ HolderString __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
+
 
 /** Holder of int values as List (ComboBox) */
 class HolderList : public HolderInt {
   Q_OBJECT
  public: 
   HolderList( int *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0);
+     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+     const QString &a_descr = QString(),
+     const QString &a_extra  = QString(), const QString &a_elems = QString() );
   virtual ~HolderList();
   // virtual void post_set();
   virtual const QString getType() const;
@@ -164,12 +180,19 @@ class HolderList : public HolderInt {
  static const int __PRM_FLAGS_##name = flags ; 
 
 
+// TODO: elems
+#define PRM_LIST1( name, flags, vname, descr, extra, elems ) \
+ int name; \
+ HolderList __HO_##name ={ & name, #name, vname, this, flags, descr, extra, elems }; 
+
 /** Holder of double values */
 class HolderDouble : public HolderData {
   Q_OBJECT
  public: 
   HolderDouble( double *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0);
+     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+     const QString &a_descr = QString(),
+     const QString &a_extra  = QString() );
   virtual ~HolderDouble();
   virtual bool set( const QVariant & x );
   virtual QVariant get() const;
@@ -186,12 +209,20 @@ class HolderDouble : public HolderData {
  HolderDouble __HO_##name ; \
  static const int __PRM_FLAGS_##name = flags ; 
 
+#define PRM_DOUBLE1( name, flags, vname, descr, extra ) \
+ double name; \
+ HolderDouble __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
+ 
+ 
+
 /** Holder of QString values */
 class HolderString : public HolderData {
   Q_OBJECT
  public: 
   HolderString( QString *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0);
+     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+     const QString &a_descr = QString(),
+     const QString &a_extra  = QString() );
   virtual ~HolderString();
   virtual bool set( const QVariant & x );
   virtual QVariant get() const;
@@ -208,12 +239,18 @@ class HolderString : public HolderData {
  HolderString __HO_##name ; \
  static const int __PRM_FLAGS_##name = flags ; 
 
+#define PRM_STRING1( name, flags, vname, descr, extra ) \
+ QString name; \
+ HolderString __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
+
 /** Holder of QColor values */
 class HolderColor : public HolderData {
   Q_OBJECT
  public: 
   HolderColor( QColor *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0);
+     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+     const QString &a_descr = QString(),
+     const QString &a_extra  = QString() );
   virtual ~HolderColor();
   virtual bool set( const QVariant & x );
   virtual QVariant get() const;
@@ -230,12 +267,18 @@ class HolderColor : public HolderData {
  HolderColor __HO_##name ; \
  static const int __PRM_FLAGS_##name = flags ; 
 
+#define PRM_COLOR1( name, flags, vname, descr, extra ) \
+ QColor name; \
+ HolderColor __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
+
 /** Holder of objects ??? TODO: ?? combine with TDataSet? or proxy */
 class HolderObj : public HolderData {
   Q_OBJECT
  public: 
   HolderObj( TDataSet *p, const QString &obj_name,  // NO autocreate !
-     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0);
+    const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+    const QString &a_descr = QString(),
+    const QString &a_extra  = QString() );
   virtual ~HolderObj();
   virtual bool set( const QVariant & x );
   virtual QVariant get() const;
@@ -251,6 +294,9 @@ class HolderObj : public HolderData {
  HolderObj __HO_##name ; \
  static const int __PRM_FLAGS_##name = flags ; 
 
+
+#define PRM_OBJ1( name, flags, vname, descr, extra ) \
+ HolderObj __HO_##name ={ name, #name, vname, this, flags, descr, extra  } ; 
 
 // ----===============************** OLD part ----------------------------
 

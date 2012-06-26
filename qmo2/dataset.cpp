@@ -84,7 +84,9 @@ int TDataInfo::save( ostream *os ) const
 // ---------------- HolderData .... ----------------------
 
 HolderData::HolderData( const QString &obj_name, 
-                        const QString &v_name, QObject *a_parent, int a_flags)
+              const QString &v_name, QObject *a_parent, int a_flags,
+	      const QString &a_descr,
+	      const QString &a_extra )
            :QObject( a_parent ), old_tp(0), old_subtp(0), 
 	    dyn(0), flags(a_flags),
 	    v_min(DMIN), v_max(DMAX),
@@ -97,6 +99,8 @@ HolderData::HolderData( const QString &obj_name,
   } else {
     setParm( "vis_name", v_name );
   }
+  setParm( "descr", a_descr );
+  setParm( "extra", a_extra ); // TODO: separate
 }
 
 void HolderData::setParm( const QString &name, const QString &value )
@@ -158,8 +162,10 @@ const QString HolderData::getType() const // = 0;
 // ---------------- HolderInt ---------
 
 HolderInt::HolderInt( int *p, const QString &obj_name, 
-                      const QString &v_name, QObject *a_parent, int a_flags )
-          :HolderData( obj_name, v_name, a_parent, a_flags ),
+              const QString &v_name, QObject *a_parent, int a_flags,
+	      const QString &a_descr,
+	      const QString &a_extra )
+          :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
 	   val(p)
 {
   if( !val ) {
@@ -221,8 +227,10 @@ const QString HolderInt::getType() const
 
 // ---------------- HolderSwitch ---------
 HolderSwitch::HolderSwitch( int *p, const QString &obj_name, 
-                      const QString &v_name, QObject *a_parent, int a_flags )
-          :HolderInt( p, obj_name, v_name, a_parent, a_flags )
+              const QString &v_name, QObject *a_parent, int a_flags,
+	      const QString &a_descr,
+	      const QString &a_extra )
+          :HolderInt( p, obj_name, v_name, a_parent, a_flags, a_descr, a_extra )
 {
   old_subtp = dtpsSwitch;
   setParm( "props", "INT,SWITCH" );
@@ -249,11 +257,14 @@ const QString HolderSwitch::getType() const
 
 // ---------------- HolderList ---------
 HolderList::HolderList( int *p, const QString &obj_name, 
-                      const QString &v_name, QObject *a_parent, int a_flags )
-          :HolderInt( p, obj_name, v_name, a_parent, a_flags )
+     const QString &v_name, QObject *a_parent, int a_flags,
+     const QString &a_descr,
+     const QString &a_extra,  const QString &a_elems  )
+   :HolderInt( p, obj_name, v_name, a_parent, a_flags, a_descr, a_extra )
 {
   old_subtp = dtpsList;
   v_min = v_max = 0;
+  setElems( a_elems );
   setParm( "props", "INT,LIST" );
   post_set();
 }
@@ -274,8 +285,10 @@ const QString HolderList::getType() const
 // ---------------- HolderDouble ---------
 
 HolderDouble::HolderDouble( double *p, const QString &obj_name,
-                    const QString &v_name,  QObject *a_parent, int a_flags )
-          :HolderData( obj_name, v_name, a_parent, a_flags ),
+              const QString &v_name,  QObject *a_parent, int a_flags,
+	      const QString &a_descr,
+	      const QString &a_extra )
+          :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
 	   val(p)
 {
   if( !val ) {
@@ -337,8 +350,10 @@ const QString HolderDouble::getType() const
 // ---------------- HolderString ---------
 
 HolderString::HolderString( QString *p, const QString &obj_name,
-                  const QString &v_name,  QObject *a_parent, int a_flags )
-          :HolderData( obj_name, v_name, a_parent, a_flags ),
+              const QString &v_name,  QObject *a_parent, int a_flags,
+	      const QString &a_descr,
+	      const QString &a_extra )
+          :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
 	   val(p)
 {
   if( !val ) {
@@ -393,8 +408,10 @@ const QString HolderString::getType() const
 // ---------------- HolderColor ---------
 
 HolderColor::HolderColor( QColor *p, const QString &obj_name,
-                  const QString &v_name,  QObject *a_parent, int a_flags )
-          :HolderData( obj_name, v_name, a_parent, a_flags ),
+              const QString &v_name,  QObject *a_parent, int a_flags,
+	      const QString &a_descr,
+	      const QString &a_extra )
+          :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
 	   val(p)
 {
   if( !val ) {
@@ -453,22 +470,22 @@ const QString HolderColor::getType() const
 // ---------------- HolderObj ---------
 
 HolderObj::HolderObj( TDataSet *p, const QString &obj_name,
-                 const QString &v_name,  QObject *a_parent, int a_flags )
-          :HolderData( obj_name, v_name, a_parent, a_flags ),
+              const QString &v_name,  QObject *a_parent, int a_flags,
+	      const QString &a_descr,
+	      const QString &a_extra )
+          :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
 	   obj(p)
 {
   // no create? what to do if p == 0 ?
   if( !p ) {
     qDebug( "*** HolderObj::HolderObj p = 0 obj_name=%s !",
-	obj_name.toLocal8Bit().constData() );
+	qPrintable( obj_name ) );
   }
   post_set();
   ptr = obj; tp=QVariant::UserType; old_tp = dtpObj; 
   old_subtp = obj->getClassId();
   setParm( "props", "OBJ" );
   obj->setObjectName( QString("_real_") + obj_name );
-  //qDebug( "*** HolderObj::HolderObj obj = %p obj_name=%s !",
-  //    obj, obj_name.toLocal8Bit().constData() );
 }
 
 HolderObj::~HolderObj()
