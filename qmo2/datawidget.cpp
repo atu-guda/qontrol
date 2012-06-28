@@ -738,14 +738,34 @@ void DataDialog::showSimpleHelp(void)
   const char *help;
   if( (help = ds.getHelp()) == 0 )
     return;
+  QString help_str( "<p><a name=\"help_head\"></a> </p><hr/>\n" );
+
+  help_str += help; 
+  help_str += "<hr/>\n"; 
+
+  QObjectList childs = ds.children();
+  for( auto o :  childs ) {
+    QObject *xo = o;
+    if( ! xo->inherits("HolderData" )) {
+      continue;
+    }
+    HolderData *ho = qobject_cast<HolderData*>(xo);
+    if( !ho )
+      continue; // but how?
+    help_str += "<p>" % ho->getType() 
+      % " <b> " % ho->objectName() % " </b>; // "
+      % ho->getParm("descr")  % " ("
+      % ho->getParm("vis_name") % ")</p>\n";
+  }
+
   dia = new QDialog( this );
-  dia->resize( 500, 480 );
+  dia->setMinimumSize( 500, 480 );
   dia->setWindowTitle( PACKAGE ": Help on element" );
   
   lay = new QGridLayout;
   
   brow = new QTextBrowser( this );
-  brow->insertHtml( help );
+  brow->insertHtml( help_str );
   lay->addWidget( brow, 0, 0 );
 
   bt_ok = new QPushButton( "&Ok", dia );
@@ -753,6 +773,7 @@ void DataDialog::showSimpleHelp(void)
   dia->setLayout( lay );
 
   connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
+  brow->scrollToAnchor( "help_head" );
   dia->exec();
   delete dia;
 
