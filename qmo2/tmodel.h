@@ -160,80 +160,93 @@ class TModel : public TDataContainer  {
  protected:
   // =============== iface objects ==============================
   /** total model time, starts with 0 each inner loop */ 
-  PRM_DOUBLE1( tt, efNoRunChange, "T", "Full Run Time", "" );
+  PRM_DOUBLE1( tt, efNoRunChange, "T", "Full Run Time", "min=0\nmax=1e300" );
   /** number of inner loop iterations */
-  PRM_INT( nn, efNoRunChange );
+  PRM_INT1( nn, efNoRunChange, "N", "Number of steps in one run", 
+      "min=1\nmax=200000000\nsep=col"  );
   /** flag for real and model time syncronization */
-  PRM_SWITCH( use_sync, efNoRunChange );
+  PRM_SWITCH1( use_sync, efNoRunChange, "Sync RT", 
+      "flag for real and model time syncronization ", "sep=col" );
   /** number of inner parametric loops iterations */
-  PRM_INT( nl1, efNoRunChange );
+  PRM_INT1( nl1, efNoRunChange, "N1",
+       "Number of inner parametric loops iterations", 
+       "min=1\nmax=10000\nsep=block" );
   /** number of outer parametric loops iterations */
-  PRM_INT( nl2, efNoRunChange );
+  PRM_INT1( nl2, efNoRunChange, "N2",
+       "Number of outer parametric loops iterations",
+       "min=1\nmax=10000\nsep=col" );
   /** number of steps per i/o action */
-  PRM_INT( n_steps, efNoRunChange );
+  PRM_INT1( n_steps, efNoRunChange, "N steps",
+      "number of steps per i/o action ",
+      "min=1\nmax=100000\nsep=col" );
   /** Initial parametrs values */
-  PRM_DOUBLE( prm0s, efNoRunChange );
-  PRM_DOUBLE( prm1s, efNoRunChange );
-  PRM_DOUBLE( prm2s, efNoRunChange );
-  PRM_DOUBLE( prm3s, efNoRunChange );
-  /** Parameter 0 delta */
-  PRM_DOUBLE( prm0d, efNoRunChange );
-  /** Parameter 1 delta */
-  PRM_DOUBLE( prm1d, efNoRunChange );
-  /** Reserved for future */
-  PRM_DOUBLE( xval1, 0 );
-  PRM_DOUBLE( xval2, 0 );
-  /** random generator seed */
-  PRM_INT( seed, efNoRunChange );
-  /** use same seed for each iteration -- obsoleted by seedType */
-  PRM_INT( useSameSeed, efNoDial | efRO );
+  PRM_DOUBLE1( prm0s, efNoRunChange, "param. 0", "Initial prm0 value", "sep=block" );
+  PRM_DOUBLE1( prm1s, efNoRunChange, "param. 1", "Initial prm1 value", "" );
+  PRM_DOUBLE1( prm2s, efNoRunChange, "param. 2", "Initial prm2 value", ""  );
+  PRM_DOUBLE1( prm3s, efNoRunChange, "param. 3", "Initial prm3 value", ""  );
+  PRM_DOUBLE1( prm0d, efNoRunChange, "prm0+=", "Parameter 0 delta", "" );
+  PRM_DOUBLE1( prm1d, efNoRunChange, "prm1+=", "Parameter 1 delta", "" );
+  PRM_DOUBLE1( xval1, 0, "xval1", "Reserved 1", "" );
+  PRM_DOUBLE1( xval2, 0, "xval2", "Reserved 2", "" );
+  PRM_INT1( seed, efNoRunChange, "Seed", "Seed for random generator" , "min=-1" );
+  PRM_INT1( useSameSeed, efNoDial | efRO, "use Same Seed", "", "" ); // OBSOLETE
   /** type of seeding: 0 - every run, 1 - every 1d loop .. obj: 3 - as model */
-  PRM_LIST( seedType, efNoRunChange );
+  PRM_LIST1( seedType, efNoRunChange, "Seed type",
+      "type of seeding: 0 - every run... ", "",
+      "Every Run\nStart 1d loop\nStart 2d loop" );
   // -------- input channels indexes -------
   /** input from mouse (x,y,btn1,btn2,btn3) abs(x,y) <= 1, 0 - center */
-  PRM_INT( ic_mouse, efNoRunChange );
+  PRM_INT1( ic_mouse, efNoRunChange, "Mouse idx", "Mouse input index", "sep=col" );
   /** input from joystick (x,y,btn) abs(x,y) <= 1, 0 - center */
-  PRM_INT( ic_joy, efNoRunChange );
+  PRM_INT1( ic_joy, efNoRunChange, "Joystick idx", "Joystick input index", "" );
   /** input from soundcard (lert,right) */
-  PRM_INT( ic_sound, efNoRunChange );
+  PRM_INT1( ic_sound, efNoRunChange, "Sound idx", "Soundcard input index", "" );
   /** input from keyboard (left,right,top,bottom,space,enter) */
-  PRM_INT( ic_key, efNoRunChange );
+  PRM_INT1( ic_key, efNoRunChange, "Keyboard idx", "Keyboard input index", "" );
   /** input from unknown device, up to 20 values */
-  PRM_INT( ic_aux, efNoRunChange );
+  PRM_INT1( ic_aux, efNoRunChange, "AUX idx", "Unknown input index", "" );
   // -------- output channels indexes -------
   /** indexes for output */
-  PRM_INT( oc_0, efNoRunChange );
-  PRM_INT( oc_1, efNoRunChange );
-  PRM_INT( oc_2, efNoRunChange );
-  PRM_INT( oc_3, efNoRunChange );
-  PRM_INT( oc_4, efNoRunChange );
-  PRM_INT( oc_5, efNoRunChange );
+  PRM_INT1( oc_0, efNoRunChange, "Out idx 0", "Output index 0", "" );
+  PRM_INT1( oc_1, efNoRunChange, "Out idx 1", "Output index 1", ""  );
+  PRM_INT1( oc_2, efNoRunChange, "Out idx 2", "Output index 2", ""  );
+  PRM_INT1( oc_3, efNoRunChange, "Out idx 3", "Output index 3", ""  );
+  PRM_INT1( oc_4, efNoRunChange, "Out idx 4", "Output index 4", ""  );
+  PRM_INT1( oc_5, efNoRunChange, "Out idx 5", "Output index 5", ""  );
   /** types of output 1-3=cross, 4-7=vbar, 8-11=gbar, 12-15=leds, 16,17=sound */
-  PRM_LIST( oct_0, efNoRunChange );
-  PRM_LIST( oct_1, efNoRunChange );
-  PRM_LIST( oct_2, efNoRunChange );
-  PRM_LIST( oct_3, efNoRunChange );
-  PRM_LIST( oct_4, efNoRunChange );
-  PRM_LIST( oct_5, efNoRunChange );
+  const char *const och_type_str = 
+    "None\nCross1\nCross2\nCross3\n"
+    "Vbar0\nVbar1\nVbar2\nVbar3\n"
+    "Gbar0\nGbar1\nGbar2\nGbar3\n"
+    "LED0\nLED1\nLED2\nLED3\n"
+    "Sound0\nSound1\n"
+    "Aux0\nAux1";
+  PRM_LIST1( oct_0, efNoRunChange, "Out Type 0", "Output Type 0", "sep=col", och_type_str );
+  PRM_LIST1( oct_1, efNoRunChange, "Out Type 1", "Output Type 1", "", och_type_str  );
+  PRM_LIST1( oct_2, efNoRunChange, "Out Type 2", "Output Type 2", "", och_type_str );
+  PRM_LIST1( oct_3, efNoRunChange, "Out Type 3", "Output Type 3", "", och_type_str );
+  PRM_LIST1( oct_4, efNoRunChange, "Out Type 4", "Output Type 4", "", och_type_str );
+  PRM_LIST1( oct_5, efNoRunChange, "Out Type 5", "Output Type 5", "", och_type_str );
   // ---------------------------------------
   /** long description */
-  PRM_STRING( long_descr, 0 );
+  PRM_STRING1( long_descr, 0, "Description", "Model description", 
+      "props=STRING,MLINE\nncol=-1\nsep=block");
   // ======================= invisible vars ======================
   /** loops counters */
-  PRM_INT( ii, efInner );
-  PRM_INT( il1, efInner );
-  PRM_INT( il2, efInner );
+  PRM_INT1( ii, efInner,  "ii", "Inner index", "" );
+  PRM_INT1( il1, efInner, "il1", "Param 0 index", "" );
+  PRM_INT1( il2, efInner, "il2", "Param 1 index", "" );
   /** current time and time step, real time */ 
-  PRM_DOUBLE( t, efInner );
-  PRM_DOUBLE( tdt, efInner );
-  PRM_DOUBLE( rtime, efInner );
+  PRM_DOUBLE1( t, efInner, "time", "model time", "" );
+  PRM_DOUBLE1( tdt, efInner, "\\tau", "time step", "" );
+  PRM_DOUBLE1( rtime, efInner, "rtime", "real world time", "" );
   /** parametrs */
-  PRM_DOUBLE( prm0, efInner );
-  PRM_DOUBLE( prm1, efInner );
-  PRM_DOUBLE( prm2, efInner );
-  PRM_DOUBLE( prm3, efInner );
+  PRM_DOUBLE1( prm0, efInner, "prm0", "Current prm0 value", "" );
+  PRM_DOUBLE1( prm1, efInner, "prm1", "Current prm1 value", "" );
+  PRM_DOUBLE1( prm2, efInner, "prm2", "Current prm2 value", "" );
+  PRM_DOUBLE1( prm3, efInner, "prm3", "Current prm3 value", "" );
   /** signature to check from plot painters, etc... */
-  PRM_INT( sgnt, efInner );
+  PRM_INT1( sgnt, efInner, "sgnt", "signature to check", "" );
 
   /** total number of loops */
   int n_tot;

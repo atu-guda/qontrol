@@ -101,11 +101,17 @@ HolderData::HolderData( const QString &obj_name,
   }
   setParm( "descr", a_descr );
   setParm( "extra", a_extra ); // TODO: separate
+  extraToParm();
 }
 
 void HolderData::setParm( const QString &name, const QString &value )
 {
   parms[name] = value;
+  if( name == "min" ) { // may be not used - only string?
+    v_min = value.toDouble();
+  } else if ( name == "max" ) {
+    v_max = value.toDouble();
+  }
 }
 
 
@@ -147,6 +153,25 @@ QString HolderData::getProps() const
   return getParm( "props" );
 }
 
+void HolderData::extraToParm()
+{
+  QRegExp re( "^([_a-zA-Z][_a-zA-Z0-9]*)\\s*=\\s*(\\S+)$" );
+  QStringList el = getParm("extra").split("\n");
+  for( QString &s : el ) {
+    if( s.isEmpty() ) {
+      continue;
+    }
+
+    if( re.indexIn( s ) != -1 ) {
+      QString nm  = re.cap(1);
+      QString val = re.cap(2);
+      setParm( nm, val );
+    } else {
+      qDebug( "warn: bad extra string part: \"%s\"", qPrintable( s ) );
+    }
+  }
+}
+
 void HolderData::setElems( const QString &els )
 {
   parms["list_elems"] = els;
@@ -172,7 +197,9 @@ HolderInt::HolderInt( int *p, const QString &obj_name,
     val = new int; *val = (int)(v_min); dyn = 1;
   }
   ptr = val; tp=QVariant::Int; old_tp = dtpInt; old_subtp = dtpsInt;
-  setParm( "props", "INT,SIMPLE" );
+  if( getParm("props").isEmpty() ) {
+    setParm( "props", "INT,SIMPLE" );
+  }
   post_set();
 }
 
@@ -233,7 +260,9 @@ HolderSwitch::HolderSwitch( int *p, const QString &obj_name,
           :HolderInt( p, obj_name, v_name, a_parent, a_flags, a_descr, a_extra )
 {
   old_subtp = dtpsSwitch;
-  setParm( "props", "INT,SWITCH" );
+  if( getParm("props") == "INT,SIMPLE" ) {
+    setParm( "props", "INT,SWITCH" );
+  }
   v_min = 0; v_max = 1;
   post_set();
 }
@@ -265,7 +294,9 @@ HolderList::HolderList( int *p, const QString &obj_name,
   old_subtp = dtpsList;
   v_min = v_max = 0;
   setElems( a_elems );
-  setParm( "props", "INT,LIST" );
+  if( getParm("props") == "INT,SIMPLE" ) {
+    setParm( "props", "INT,LIST" );
+  }
   post_set();
 }
 
@@ -295,7 +326,9 @@ HolderDouble::HolderDouble( double *p, const QString &obj_name,
     val = new double; *val = v_min; dyn = 1;
   }
   post_set();
-  setParm( "props", "DOUBLE,SIMPLE" );
+  if( getParm("props").isEmpty() ) {
+    setParm( "props", "DOUBLE,SIMPLE" );
+  }
   ptr = val; tp=QVariant::Double; old_tp = dtpDouble;
 }
 
@@ -360,7 +393,9 @@ HolderString::HolderString( QString *p, const QString &obj_name,
     val = new QString; dyn = 1;
   }
   post_set();
-  setParm( "props", "STRING,SIMPLE" );
+  if( getParm("props").isEmpty() ) {
+    setParm( "props", "STRING,SIMPLE" );
+  }
   ptr = val; tp=QVariant::String; old_tp = dtpString;
 }
 
@@ -418,7 +453,9 @@ HolderColor::HolderColor( QColor *p, const QString &obj_name,
     val = new QColor( Qt::red ); dyn = 1;
   }
   post_set();
-  setParm( "props", "COLOR,INT" );
+  if( getParm("props").isEmpty() ) {
+    setParm( "props", "COLOR,INT" );
+  }
   ptr = val; tp=QVariant::Color; old_tp = dtpInt; old_subtp = dtpsColor;
 }
 
@@ -484,7 +521,9 @@ HolderObj::HolderObj( TDataSet *p, const QString &obj_name,
   post_set();
   ptr = obj; tp=QVariant::UserType; old_tp = dtpObj; 
   old_subtp = obj->getClassId();
-  setParm( "props", "OBJ" );
+  if( getParm("props").isEmpty() ) {
+    setParm( "props", "OBJ" );
+  }
   obj->setObjectName( QString("_real_") + obj_name );
 }
 

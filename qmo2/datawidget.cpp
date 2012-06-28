@@ -595,10 +595,10 @@ FactoryDataWidget& FactoryDataWidget::theFactory()
 
 QString FactoryDataWidget::findForHolder( const HolderData &ho, int *lev ) const
 {
-  static QString name;
+  QString name;
   int max_good = IMIN;
   QStringList ho_p_list = ho.getParm("props").split(",");
-  // DwPropMap::const_iterator i;
+
   for( auto i = propMap.begin(); i!= propMap.end(); ++i ) {
     int good = 0;
     QStringList w_p_list = QString( i.value().eprop ).split(",");
@@ -806,7 +806,7 @@ int DataDialog::createWidgets()
     //qDebug( "DBG: createWidgets %s at (%d,%d+%d)", 
     //	    qPrintable(name), nr, nc, ncol  );
 
-    int lev;
+    int lev = 0;
     QString wtp = 
       " ( " % QString::number( ho->getMin() ) % " ; " % QString::number( ho->getMax() ) % " ) " 
       % FactoryDataWidget::theFactory().findForHolder( *ho, &lev )

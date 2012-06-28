@@ -38,57 +38,11 @@ TClassInfo TModel::class_info = {
 
 TModel::TModel( TDataSet* aparent )/*{{{1*/
        :TDataContainer( aparent ), 
-        // PRM_INIT( tt, "T (tt)" ),
-	PRM_INIT( nn, "N (nn)" ),
-	PRM_INIT( use_sync, "Sync RT" ),
-	PRM_INIT( nl1, "N1" ),
-	PRM_INIT( nl2, "N2" ),
-	PRM_INIT( n_steps, "N steps" ),
-	PRM_INIT( prm0s, "param. 0" ),
-	PRM_INIT( prm1s, "param. 1" ),
-	PRM_INIT( prm2s, "param. 2" ),
-	PRM_INIT( prm3s, "param. 3" ),
-	PRM_INIT( prm0d, "prm0+=" ),
-	PRM_INIT( prm1d, "prm1+=" ),
-	PRM_INIT( xval1, "xval1" ),
-	PRM_INIT( xval2, "xval2" ),
-	PRM_INIT( seed,  "Seed" ),
-	PRM_INIT( useSameSeed, "useSameSeed: dead" ),
-	PRM_INIT( seedType, "Seed type" ),
-	PRM_INIT( ic_mouse, "Mouse in index" ),
-	PRM_INIT( ic_joy, "Joy in index-"  ),
-	PRM_INIT( ic_sound,"Sound in index-"  ),
-	PRM_INIT( ic_key,"Keyboard in index"  ),
-	PRM_INIT( ic_aux,"AUX in index-"  ),
-	PRM_INIT( oc_0, "Out idx 0" ),
-	PRM_INIT( oc_1, "Out idx 1" ),
-	PRM_INIT( oc_2, "Out idx 2" ),
-	PRM_INIT( oc_3, "Out idx 3" ),
-	PRM_INIT( oc_4, "Out idx 4" ),
-	PRM_INIT( oc_5, "Out idx 5" ),
-	PRM_INIT( oct_0, "Out Type 0" ),
-	PRM_INIT( oct_1, "Out Type 1" ),
-	PRM_INIT( oct_2, "Out Type 2" ),
-	PRM_INIT( oct_3, "Out Type 3" ),
-	PRM_INIT( oct_4, "Out Type 4" ),
-	PRM_INIT( oct_5, "Out Type 5" ),
-	PRM_INIT( long_descr, "Description" ),
-	PRM_INIT( ii, "ii" ),
-	PRM_INIT( il1, "il1" ),
-	PRM_INIT( il2, "l12" ),
-	PRM_INIT( t, "t" ),
-	PRM_INIT( tdt, "tdt(\\tau)" ),
-	PRM_INIT( rtime, "real time" ),
-	PRM_INIT( prm0, "prm0" ),
-	PRM_INIT( prm1, "prm1" ),
-	PRM_INIT( prm2, "prm2" ),
-	PRM_INIT( prm3, "prm3" ),
-	PRM_INIT( sgnt, "sgnt" ),
          vars( MODEL_NVAR, 0 ),
 	 outs( RESERVED_OUTS, 0 )
 {
   n_el = n_out = n_graph = 0; end_loop = 0;
-  tt = 100; nn = n_tot= 100000; nl1 = 1; nl2 = 1; n_steps=100; use_sync = 0;
+  tt = 100; nn = n_tot= 100000; nl1 = 1; nl2 = 1; n_steps=1000; use_sync = 0;
   prm0s = prm1s = prm2s = prm3s = 0.1; 
   prm0d = prm1d = 0.01; xval1 = xval2 = 0;
   seed = 117; useSameSeed = 1; seedType = 0;
@@ -107,56 +61,7 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   inps.reserve( ELM_RES ); pinps.reserve( ELM_RES ); 
   pnames.reserve( ELM_RES ); pflags.reserve( ELM_RES );
   fillCommon();
-  PRMI(tt).setMinMax(0,DMAX);
-  PRMI(tt).setDescr( "Full Run Time" );
-  PRMI(nn).setMinMax(1,100000000);
-  PRMI(nn).setDescr( "Number of steps in one run" );
-  PRMI(nn).setParm( "sep", "col" );
-  PRMI(use_sync).setDescr( "flag for real and model time syncronization " );
-  PRMI(use_sync).setParm( "sep", "col" );
-  PRMI(nl1).setMinMax(1,10000);
-  PRMI(nl1).setDescr( "Number of inner parametric loops iterations" );
-  PRMI(nl1).setParm( "sep", "block" );
-  PRMI(nl2).setMinMax(1,10000);
-  PRMI(nl2).setDescr( "Number of outer parametric loops iterations" );
-  PRMI(nl2).setParm( "sep", "col" );
-  PRMI(n_steps).setMinMax(1,100000);
-  PRMI(n_steps).setDescr( "number of steps per i/o action " );
-  PRMI(n_steps).setParm( "sep", "col" );
   
-  PRMI(prm0s).setParm( "sep", "block" );
-  PRMI(prm0s).setDescr( "Initial prm0 value" );
-  PRMI(prm1s).setDescr( "Initial prm1 value" );
-  PRMI(prm2s).setDescr( "Initial prm2 value" );
-  PRMI(prm3s).setDescr( "Initial prm3 value" );
-  PRMI(prm0d).setDescr( "Parameter 0 delta " );
-  PRMI(prm1d).setDescr( "Parameter 1 delta" );
-  PRMI(xval1).setDescr( "Reserved 1" );
-  PRMI(xval2).setDescr( "Reserved 2" );
-  PRMI(seed).setMinMax( -1, IMAX );
-  PRMI(seed).setDescr( "Seed for random generator" );
-  PRMI(seedType).setDescr( "type of seeding: 0 - every run... " );
-  PRMI(seedType).setElems( "Every Run\nStart 1d loop\nStart 2d loop" );
-
-  PRMI(ic_mouse).setParm( "sep", "col" );
-  static const char *och_type = 
-    "None\nCross1\nCross2\nCross3\n"
-    "Vbar0\nVbar1\nVbar2\nVbar3\n"
-    "Gbar0\nGbar1\nGbar2\nGbar3\n"
-    "LED0\nLED1\nLED2\nLED3\n"
-    "Sound0\nSound1\n"
-    "Aux0\nAux1";
-  PRMI(oct_0).setParm( "sep", "col" );
-  PRMI(oct_0).setElems( och_type );
-  PRMI(oct_1).setElems( och_type );
-  PRMI(oct_2).setElems( och_type );
-  PRMI(oct_3).setElems( och_type );
-  PRMI(oct_4).setElems( och_type );
-  PRMI(oct_5).setElems( och_type );
-  PRMI(long_descr).setProps("STRING,MLINE");
-  PRMI(long_descr).setDescr("Model description");
-  PRMI(long_descr).setParm( "sep", "block" );
-  PRMI(long_descr).setParm( "ncol", "-1" );
 }/*}}}1*/
 
 TModel::~TModel()/*{{{1*/

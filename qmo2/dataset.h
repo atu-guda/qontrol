@@ -72,6 +72,7 @@ class HolderData : public QObject {
   double getMax() const { return v_max; }
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
+  void extraToParm();
   // tmp: to remove, use only set/getParm
   void setVisName( const QString &av_name );
   QString getVisName() const;
@@ -157,7 +158,7 @@ class HolderSwitch : public HolderInt {
 
 #define PRM_SWITCH1( name, flags, vname, descr, extra ) \
  int name; \
- HolderString __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
+ HolderSwitch __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
 
 
 /** Holder of int values as List (ComboBox) */
