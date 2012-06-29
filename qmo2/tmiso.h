@@ -55,37 +55,31 @@ class TElmLink : public TDataSet { //@ c,{},(380,320),"Object links"
    virtual const char* getHelp(void) const;
  protected:
    /** names of elements, which outputs will be used as inputs */
-   PRM_STRING( inps0, efNoRunChange );
-   PRM_STRING( inps1, efNoRunChange );
-   PRM_STRING( inps2, efNoRunChange );
-   PRM_STRING( inps3, efNoRunChange );
-   /** flag: no autotomatic processing */
-   PRM_SWITCH( noauto, efNoRunChange );
-   /** flag: locked state: x = u[0] */
-   PRM_SWITCH( locked, efNoRunChange );
-   /** flag: call f(u,t) only first time */
-   PRM_SWITCH( onlyFirst, efNoRunChange ); 
-   /** flag: call f(u,t) only last time */
-   PRM_SWITCH( onlyLast, efNoRunChange ); 
-   /** flag: flip left-right element icon */
-   PRM_SWITCH( flip, efNoRunChange );
-   /** flag: dont show icon */
-   PRM_SWITCH( noIcon, efNoRunChange );
+   PRM_STRING1( inps0, efNoRunChange, "Input 0", "Name of source for input 0", "max=32" );
+   PRM_STRING1( inps1, efNoRunChange, "Input 1", "Name of source for input 1", "max=32" );
+   PRM_STRING1( inps2, efNoRunChange, "Input 2", "Name of source for input 2", "max=32" );
+   PRM_STRING1( inps3, efNoRunChange, "Input 3", "Name of source for input 3", "max=32" );
+   PRM_SWITCH1( noauto, efNoRunChange, "No Auto", "Exclude this object from automatic processing", "sep=col" );
+   PRM_SWITCH1( locked, efNoRunChange, "Locked", "Bypass u[0] to output", ""  );
+   PRM_SWITCH1( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", ""); 
+   PRM_SWITCH1( onlyLast, efNoRunChange , "only Last", "Process element only at last iteration", ""); 
+   PRM_SWITCH1( flip, efNoRunChange, "flip image", "flip left-right element icon", "");
+   PRM_SWITCH1( noIcon, efNoRunChange, "no Icon", "don't show element icon", "");
    /** names of elms, which outputs will be used as parm inputs */
-   PRM_STRING( pinps0, efNoRunChange );
-   PRM_STRING( pinps1, efNoRunChange );
-   PRM_STRING( pinps2, efNoRunChange );
-   PRM_STRING( pinps3, efNoRunChange );
+   PRM_STRING1( pinps0, efNoRunChange, "Parm. input 0", "Name of source for parametric input 0", "max=32\nsep=block"  );
+   PRM_STRING1( pinps1, efNoRunChange, "Parm. input 1", "Name of source for parametric input 1", "max=32"  );
+   PRM_STRING1( pinps2, efNoRunChange, "Parm. input 2", "Name of source for parametric input 2", "max=32"  );
+   PRM_STRING1( pinps3, efNoRunChange, "Parm. input 3", "Name of source for parametric input 3", "max=32"  );
    /** names of inner params, to be modifyed */ 
-   PRM_STRING( pnames0, efNoRunChange );
-   PRM_STRING( pnames1, efNoRunChange );
-   PRM_STRING( pnames2, efNoRunChange );
-   PRM_STRING( pnames3, efNoRunChange );
+   PRM_STRING1( pnames0, efNoRunChange, "Parm. name 0", "Name of inner parameter 0", "max=32\nsep=col" );
+   PRM_STRING1( pnames1, efNoRunChange, "Parm. name 1", "Name of inner parameter 1", "max=32"  );
+   PRM_STRING1( pnames2, efNoRunChange, "Parm. name 2", "Name of inner parameter 2", "max=32"  );
+   PRM_STRING1( pnames3, efNoRunChange, "Parm. name 3", "Name of inner parameter 3", "max=32"  );
    /** inner flags for params: 1-only start of loop, ..? */
-   PRM_SWITCH( pflags0, efNoRunChange );
-   PRM_SWITCH( pflags1, efNoRunChange );
-   PRM_SWITCH( pflags2, efNoRunChange );
-   PRM_SWITCH( pflags3, efNoRunChange );
+   PRM_SWITCH1( pflags0, efNoRunChange, "only First 0", "Change param 0 only at start", "sep=col" );
+   PRM_SWITCH1( pflags1, efNoRunChange, "only First 1", "Change param 1 only at start", ""  );
+   PRM_SWITCH1( pflags2, efNoRunChange, "only First 2", "Change param 2 only at start", ""  );
+   PRM_SWITCH1( pflags3, efNoRunChange, "only First 3", "Change param 3 only at start", ""  );
    /** data descriptors */ 
    static TDataInfo telmlink_d_i[40];
    /** class decription */

@@ -77,29 +77,7 @@ TDataInfo TElmLink::telmlink_d_i[40] = {
 
 
 TElmLink::TElmLink( TDataSet* apar )
-         :TDataSet( apar ),
-	  PRM_INIT( inps0, "Input 0" ),
-	  PRM_INIT( inps1, "Input 0" ),
-	  PRM_INIT( inps2, "Input 0" ),
-	  PRM_INIT( inps3, "Input 0" ),
-	  PRM_INIT( noauto, "No Auto" ),
-	  PRM_INIT( locked, "Locked" ),
-	  PRM_INIT( onlyFirst, "only First" ),
-	  PRM_INIT( onlyLast, "only Last" ),
-	  PRM_INIT( flip, "flip image" ),
-	  PRM_INIT( noIcon, "no Icon" ),
-	  PRM_INIT( pinps0,  "Parm. input 0" ),
-	  PRM_INIT( pinps1,  "Parm. input 1" ),
-	  PRM_INIT( pinps2,  "Parm. input 2" ),
-	  PRM_INIT( pinps3,  "Parm. input 3" ),
-	  PRM_INIT( pnames0, "Parm. name 0" ),
-	  PRM_INIT( pnames1, "Parm. name 1" ),
-	  PRM_INIT( pnames2, "Parm. name 2" ),
-	  PRM_INIT( pnames3, "Parm. name 3" ),
-	  PRM_INIT( pflags0, "only First 0" ),
-	  PRM_INIT( pflags1, "only First 1" ),
-	  PRM_INIT( pflags2, "only First 2" ),
-	  PRM_INIT( pflags3, "only First 3" )
+         :TDataSet( apar )
 {
   int i;
   noauto = locked = onlyFirst = onlyLast = flip = noIcon = 0;

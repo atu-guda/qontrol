@@ -580,6 +580,72 @@ QSize ColorDataWidget::sizeHint() const
 
 
 
+// ------------------- ObjDataWidget ---------------------------
+int ObjDataWidget::registered = ObjDataWidget::reg();
+
+ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
+  : DataWidget( h, parent ),
+   pb( new QPushButton( this ) )
+{
+  if( h.getFlags() & ( efRO | efRODial ) ) {
+    pb->setDisabled( true ); // TODO: real read-only
+  }
+  pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
+  pb->setText( ho.objectName() );
+  connect( pb, SIGNAL(clicked()), this, SLOT(edit()) );
+  
+  QHBoxLayout *lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( pb, 1 );
+  setLayout( lay );
+}
+
+bool ObjDataWidget::set()
+{
+  // TODO:
+  return true;
+}
+
+bool ObjDataWidget::get() const
+{
+  // TODO:
+  // QVariant v = (cb->color()).rgba();
+  // ho.set( v );
+  return true;
+}
+
+void ObjDataWidget::edit()
+{
+  HolderObj *hobj = qobject_cast<HolderObj*>(&ho);
+  QDialog *dia = new DataDialog( *(hobj->getObj()),  this );
+
+  dia->exec();
+}
+
+DataWidget* ObjDataWidget::create( HolderData &h, QWidget *parent  )
+{
+  return new ObjDataWidget( h, parent );
+}
+
+int ObjDataWidget::reg()
+{
+  static DataWidgetProp p { create, "OBJ" };
+  return FactoryDataWidget::theFactory().registerWidgetType( "ObjDataWidget", p );
+}
+
+QSize ObjDataWidget::minimumSizeHint() const
+{
+  return pb->minimumSizeHint();
+}
+
+
+QSize ObjDataWidget::sizeHint() const
+{
+  return pb->sizeHint();
+}
+
+
+
 // ==================== FactoryDataWidget ====================
 
 FactoryDataWidget::FactoryDataWidget()

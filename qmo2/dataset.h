@@ -287,6 +287,7 @@ class HolderObj : public HolderData {
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
   virtual const QString getType() const;
+  TDataSet* getObj() { return obj; } // XXX: may be horror here!!
  protected:
   TDataSet *obj;
 };

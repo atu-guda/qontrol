@@ -396,6 +396,12 @@ HolderString::HolderString( QString *p, const QString &obj_name,
   if( getParm("props").isEmpty() ) {
     setParm( "props", "STRING,SIMPLE" );
   }
+  if( v_min < 0 ) {
+    v_min = 0;
+  }
+  if( v_max > 100000 ) {
+    v_max = 100000;
+  }
   ptr = val; tp=QVariant::String; old_tp = dtpString;
 }
 

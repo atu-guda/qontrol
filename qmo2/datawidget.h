@@ -189,6 +189,24 @@ class ColorDataWidget: public DataWidget {
   QColorBtn *cb;
 };
 
+
+class ObjDataWidget: public DataWidget {
+  Q_OBJECT
+ public:
+  ObjDataWidget( HolderData &h, QWidget *parent = 0 );
+  virtual bool set();
+  virtual bool get() const;
+  static DataWidget* create( HolderData &h, QWidget *parent  );
+  virtual QSize	minimumSizeHint() const;
+  virtual QSize	sizeHint() const;
+ protected slots:
+   void edit();
+ protected:
+  static int reg();
+  static int registered;
+  QPushButton *pb;
+};
+
 // --------------------------- Factory ----------------------
 
 
