@@ -214,6 +214,9 @@ class HolderDouble : public HolderData {
  double name; \
  HolderDouble __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
  
+
+#define PRM_DOUBLEx( ptr, name, flags, vname, descr, extra ) \
+ HolderDouble __HO_##name ={  ptr, #name, vname, this, flags, descr, extra  } ; 
  
 
 /** Holder of QString values */
