@@ -90,7 +90,7 @@ void QGraphView::mousePressEvent( QMouseEvent *me )
   int h, w, nh, graph_nu, n_graph, x, y, old_level;
   QMenu *menu;
   TGraph *gra;
-  const char *graname = "?bad?";
+  QString graname( "?bad?" );
   if( model == 0 ) return;
   h = height(); 
   w = width(); 
@@ -107,8 +107,8 @@ void QGraphView::mousePressEvent( QMouseEvent *me )
     mainview->changeLevel( graph_nu );
     gra = model->getGraph( graph_nu );
     if( gra != 0 ) {
-      graname = gra->getName();
-      if( graname == 0 || graname[0] == 0 )
+      graname = gra->objectName();
+      if( graname.isEmpty() )
         graname = "?unknown?";
     };
   };

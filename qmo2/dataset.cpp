@@ -100,7 +100,7 @@ HolderData::HolderData( const QString &obj_name,
     setParm( "vis_name", v_name );
   }
   setParm( "descr", a_descr );
-  setParm( "extra", a_extra ); // TODO: separate
+  setParm( "extra", a_extra );
   extraToParm();
 }
 
@@ -446,6 +446,93 @@ const QString HolderString::getType() const
   return "string";
 }
 
+// ---------------- HolderStringArr ---------
+
+HolderStringArr::HolderStringArr( QString *p, int an, const QString &obj_name,
+              const QString &v_name,  QObject *a_parent, int a_flags,
+	      const QString &a_descr,
+	      const QString &a_extra )
+          :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
+	   n(an), val(p)
+{
+  if( n < 1 )
+    n = 1;
+  if( !val ) {
+    val = new QString [n]; dyn = 1;
+  }
+  post_set();
+  if( getParm("props").isEmpty() ) {
+    setParm( "props", "STRINGARR" );
+  }
+  if( v_min < 0 ) {
+    v_min = 0;
+  }
+  if( v_max > 100000 ) {
+    v_max = 100000;
+  }
+  ptr = val; tp=QVariant::StringList; old_tp = dtpStringArr;
+}
+
+HolderStringArr::~HolderStringArr()
+{
+  if( dyn )
+    delete[] val;
+  val = 0; ptr = val; dyn = 0; n = 0;
+}
+
+bool HolderStringArr::set( const QVariant & x )
+{
+  QStringList sl = x.toStringList();
+  for( int i=0; i<n; ++i ) {
+    val[i] = sl[i];
+  }
+  post_set();
+  return true;
+}
+
+QVariant HolderStringArr::get() const
+{
+  QStringList sl;
+  for( int i=0; i<n; ++i ) {
+    sl << val[i];
+  }
+  return QVariant( sl );
+}
+
+void HolderStringArr::post_set()
+{
+  for( int i=0; i<n; ++i ) {
+    val[i].truncate( (int)(v_max) );
+  }
+}
+
+QString HolderStringArr::toString() const
+{
+  QString s;
+  for( int i=0; i<n; ++i ) {
+    QString t = val[i];
+    t.replace( "\\", "\\\\" );
+    t.replace( "\"", "\\\"" );
+    s += "\"" + t + "\",";
+  }
+  return s;
+}
+
+bool HolderStringArr::fromString( const QString &s )
+{
+  QStringList sl = s.split("\",\""); // TODO: overbad!
+  for( int i=0; i<n; ++i ) {
+    val[i] = sl[i];
+  }
+  post_set();
+  return true;
+}
+
+const QString HolderStringArr::getType() const
+{
+  return "string[]";
+}
+
 // ---------------- HolderColor ---------
 
 HolderColor::HolderColor( QColor *p, const QString &obj_name,
@@ -625,12 +712,12 @@ const TClassInfo* TDataSet::getClassInfo(void) const
   return &class_info;
 }
 
-const char* TDataSet::getName(void) const
-{
-  if( parent == 0 )
-    return "";
-  return parent->getChildName( this );    
-}
+//const char* TDataSet::getName(void) const
+//{
+//  if( parent == 0 )
+//    return "";
+//  return parent->getChildName( this );    
+//}
 
 const char* TDataSet::getChildName( const TDataSet* child ) const
 {
@@ -642,37 +729,24 @@ const char* TDataSet::getChildName( const TDataSet* child ) const
   return 0;
 }
 
-int TDataSet::getFullName( char *dst ) const
+QString TDataSet::getFullName() const
 {
-  const TDataSet *cob, *th;
-  const char *s;
-  char tmp[MAX_INPUTLEN];
-  int i, j, k, ne, l, pt[256];
-  if( dst == 0 ) return -2;
-  dst[0] = tmp[0] = 0;
-  cob = parent; th = this; ne = 0; pt[0] = 0;
-  while( cob != 0 && ne < 128 ) {
-    s = cob->getChildName( th );
-    if( s == 0 ) return -1;
-    strncat( tmp, s, MAX_INPUTLEN-1 );
-    strncat( tmp, ".", MAX_INPUTLEN-1 );
-    l = strlen( tmp ); ne++; pt[ne] = l;
-    th = cob; cob = cob->parent;
+  const TDataSet *cob;
+  QString res = objectName();
+  QString tn;
+  cob = parent; // TODO? is first dot need 
+  while( cob != 0 ) {
+    tn = cob->objectName();
+    tn += '.';
+    res.prepend( tn );
+    cob = cob->parent;
   };
-  k = 0;
-  for( i=ne-1; i>=0; i-- ) {
-    for( j=pt[i]; j<pt[i+1]-1; j++ ) {
-      dst[k++] = tmp[j];
-    };
-    if( i > 0 )
-      dst[k++] = '.';
-  };
-  dst[k] = 0;
-  return 0;
+  return res;
 }
 
 TDataSet* TDataSet::create( TDataSet* apar )
 {
+  qDebug( "warn: pure TDataSet created" );
   return new TDataSet( apar );
 }
 
@@ -1425,7 +1499,7 @@ void TDataSet::dumpStruct() const
   static int dump_lev = -1;
   ++dump_lev;
   qDebug( "*%d struct of %s %s nelm=%d this=%p", 
-         dump_lev, getClassName(), getName(), nelm, this );
+         dump_lev, getClassName(), qPrintable(objectName()), nelm, this );
   for( int i=0; i<nelm; ++i ) {
     qDebug( "** [%d] %s %d.%d = %p", 
 	i, d_i[i].name, d_i[i].tp, d_i[i].subtp, ptrs[i] );

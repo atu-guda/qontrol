@@ -98,9 +98,9 @@ class HolderData : public QObject {
   void *ptr;
   QStringList elems;
   QSSMap parms;
-  // test for auto params inclusion
-  constexpr static const char* xxx_test1 = "Test1";
-  const char* const xxx_test2[4] = { "T2", R"(nice\nstring)", "T2e", nullptr };
+  // test for auto params inclusion TODO: remove!!!
+  // constexpr static const char* xxx_test1 = "Test1";
+  // const char* const xxx_test2[4] = { "T2", R"(nice\nstring)", "T2e", nullptr };
 };
 
 #define PRM_INIT( name, descr ) \
@@ -244,6 +244,31 @@ class HolderString : public HolderData {
  QString name; \
  HolderString __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
 
+/** Holder of QString fixed arrays */
+class HolderStringArr : public HolderData {
+  Q_OBJECT
+ public: 
+  HolderStringArr( QString *p, int an, const QString &obj_name,  // if p==0 - autocreate 
+     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+     const QString &a_descr = QString(),
+     const QString &a_extra  = QString() );
+  virtual ~HolderStringArr();
+  virtual bool set( const QVariant & x );
+  virtual QVariant get() const;
+  virtual void post_set();
+  virtual QString toString() const;
+  virtual bool fromString( const QString &s );
+  virtual const QString getType() const;
+ protected:
+  int n;
+  QString *val;
+};
+
+#define PRM_STRINGARR( name, n, flags, vname, descr, extra ) \
+ QString name[n]; \
+ HolderStringArr __HO_##name ={  & name, n, #name, vname, this, flags, descr, extra  } ; 
+
+
 /** Holder of QColor values */
 class HolderColor : public HolderData {
   Q_OBJECT
@@ -353,13 +378,10 @@ class TDataSet : public QObject {
    virtual int getClassId(void) const ;
    /** class name - for check & human purpose */
    virtual const char* getClassName(void) const;
-   /** return obj name, or "" if no parent, or 0 -- parent don't know it */
-   virtual const char* getName(void) const;
    /** return child name, or 0 -- parent don't know it */
    virtual const char* getChildName( const TDataSet* child ) const;
-   /** fills dst with full name[MAX_INPUTLEN] of object: aaa.bbb.cc 
-     * @returns: 0 -- ok -1 --bad */
-   virtual int getFullName( char *dst ) const;
+   /** fills dst with full name[MAX_INPUTLEN] of object: aaa.bbb.cc  */
+   QString getFullName() const;
    /** returns ptr to help string */
    virtual const char* getHelp(void) const;
    /** return state */

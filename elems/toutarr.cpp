@@ -205,7 +205,8 @@ int TOutArr::fillGraphInfo( GraphInfo *gi ) const
     return -1;
   gi->row = gi->col = 0; gi->title[0] = 0; gi->ny = 1;
   for( i=0; i<7; i++ ) gi->label[i][0] = 0;
-  strncat( gi->title, getName(), sizeof( gi->title )-1 );
+  strncat( gi->title, qPrintable( objectName() ), 
+           sizeof( gi->title )-1 ); // TODO: real QString
   strncat( gi->label[0], label.toLocal8Bit().constData(), sizeof( gi->label[0] )-1 );
   if( arr == 0  ||  n < 1 )
     return -2;

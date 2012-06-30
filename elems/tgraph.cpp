@@ -171,7 +171,8 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
     return -1;
   gi->row = gi->col = 0; gi->ny = 1; gi->title[0] = 0; 
   for( i=0; i<7; i++ ) gi->label[i][0] = 0;
-  strncat( gi->title, getName(), sizeof( gi->title )-1 );
+  strncat( gi->title, qPrintable( objectName()), 
+           sizeof( gi->title )-1 ); // TODO: real QString in GraphInfo
   if( parent == 0 || parent->getClassId() != CLASS_ID_TModel 
       || parent->getState() < stateDone )
     return -10;

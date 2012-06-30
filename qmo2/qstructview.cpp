@@ -18,7 +18,6 @@
 #include <QtGui>
 
 #include "miscfun.h"
-#include "qanydial.h"
 #include "qstructview.h"
 #include "qplotview.h"
 #include "qdoubletable.h"
@@ -176,7 +175,7 @@ void QStructView::drawAll( QPainter &p )
   for( elnu=0; elnu<n_el; elnu++ ) {
     ob = model->getMiso( elnu );
     if( ob == 0 ) continue;
-    ob_name =  QString::fromLocal8Bit( ob->getName() );
+    ob_name =  ob->objectName();
     line_busy = 0; ob_x = ob_y = -1; ob_ord = -1;
     ob_lock = ob_noauto = ob_first = ob_last = ob_flip = ob_noIcon = 0;
     ob->getDataSI( "vis_x", &ob_x, 0 ); ob->getDataSI( "vis_y", &ob_y, 0 );
@@ -389,7 +388,7 @@ void QStructView::mousePressEvent( QMouseEvent *me )
   int h, w, nh, nw, ex, ey, x, y, elnu;
   QMenu *menu;
   TMiso *ob = 0;
-  const char *elmname = "?bad?";
+  QString elmname( "?bad?" );
   double outval;
   QString title;
   h = height(); w = width(); nh = h / grid_sz - 1; nw = w / grid_sz - 1;
@@ -401,8 +400,8 @@ void QStructView::mousePressEvent( QMouseEvent *me )
     if( elnu >=0 ) {
       ob = model->getMiso( elnu );
       if( ob != 0 ) {
-	elmname = ob->getName();
-	if( elmname == 0 || elmname[0] == 0 )
+	elmname = ob->objectName();
+	if( elmname.isEmpty() )
 	  elmname = "?unknown?";
       };
       title = elmname;

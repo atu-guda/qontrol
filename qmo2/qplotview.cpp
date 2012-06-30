@@ -23,7 +23,6 @@
 
 #include "miscfun.h"
 #include "dataset.h"
-#include "qanydial.h"
 #include "toutarr.h"
 #include "tgraph.h"
 #include "qcolorbtn.h"

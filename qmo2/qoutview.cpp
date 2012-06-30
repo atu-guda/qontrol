@@ -100,7 +100,7 @@ void QOutView::mousePressEvent( QMouseEvent *me )
   int h, nh, out_nu, n_out, x, y, nn, old_level;
   QMenu *menu;
   TOutArr *arr;
-  const char *outname = "?bad?";
+  QString outname( "?bad?" );
   QString elmname;
   QString title;
   if( model == 0 ) return;
@@ -113,15 +113,15 @@ void QOutView::mousePressEvent( QMouseEvent *me )
   title = "??bad??";
   arr = model->getOutArr( out_nu );
   if( arr != 0 ) {
-    outname = arr->getName();
+    outname = arr->objectName();
     arr->getDataSS( "name", &elmname, MAX_NAMELEN, 0 );
-    if( outname == 0 || outname[0] == 0 )
+    if( outname.isEmpty() )
       outname = "?unknown?";
     nn = -1;
     arr->getDataSI( "n", &nn, 1 );
-    title = QString(outname)
-            + QString( "[" ) +QString::number(nn) + QString("]")
-            + QString(" -> " ) + elmname;
+    title = outname
+            % QString( "[" ) % QString::number(nn) % QString("]")
+            % QString(" -> " ) % elmname;
   };
   old_level = mainview->getLevel();
   mainview->changeLevel( out_nu );

@@ -486,6 +486,7 @@ ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent )
   
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
   lay->addWidget( cb, 1 );
   setLayout( lay );
 }
@@ -662,9 +663,7 @@ bool FactoryDataWidget::unregisterWidgetType( const QString &wname )
 DataDialog::DataDialog( TDataSet &a_ds, QWidget *parent )
   : QDialog( parent ), ds( a_ds) 
 {
-  char nm[MAX_INPUTLEN];
-  ds.getFullName( nm );
-  QString s = L8B( ds.getClassName() )  %  ' '  %  L8B( nm );
+  QString s = L8B( ds.getClassName() )  %  ' ' %  ds.getFullName();
   setWindowTitle( s );
   createWidgets();
   getAll();

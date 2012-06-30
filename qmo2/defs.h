@@ -49,6 +49,9 @@ enum _DATA_TYPES {
    dtpInt = 1, dtpLong = 1,
    dtpDouble = 2, dtpDbl = 2, dtpDou = 2,
    dtpString = 3, dtpStr = 3,
+   dtpStringArr = 4,
+   dtpIntArr = 5,
+   dtpDoubleArr = 6,
    dtpObj = 10, // subtp -- CLASS_ID_... 
    dtpFun = 11, // function with uniform args (TData?) TODO
    dtpFunPure = 12, // ordinary function, don't use in UI

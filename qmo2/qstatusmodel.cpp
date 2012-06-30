@@ -97,7 +97,7 @@ void QStatusModel::update()
     mod = model->getModified();
     l_mod->setText( modChar[mod] );
     if( ob != 0 ) {
-      ob_nm_tp = QString::fromLocal8Bit( ob->getName() );
+      ob_nm_tp = ob->objectName();
       ob_nm_tp += "  (" + QString::fromLocal8Bit( ob->getClassName() ) + ")";
       l_name->setText( ob_nm_tp );
       ob->getDataSS( "descr", &ob_descr, 120, 0 );

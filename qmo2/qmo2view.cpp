@@ -27,7 +27,6 @@
 #include "qoutview.h"
 #include "qgraphview.h"
 #include "qstatusmodel.h"
-#include "qanydial.h"
 #include "qdoubletable.h"
 #include "qrunview.h"
 #include "qplotview.h"
@@ -336,11 +335,11 @@ void QMo2View::delElm()
   if( ob == 0 )
     return;
   
-  const char *oname = ob->getName();
+  QString oname = ob->objectName();
 
   k = QMessageBox::information( this, PACKAGE " delete confirmation",
        QString("Do you really want to delete element ") 
-        + QString(oname) + QString(" ?"),
+        + oname + QString(" ?"),
        "&Yes", "&No", "&Help", 0, 1 );
   if( k == 0 ) {
     model->reset();
@@ -354,43 +353,42 @@ void QMo2View::delElm()
 
 void QMo2View::editElm()
 {
-  QAnyDialog *adi;
-  TMiso *ob;
-  int rc;	
   if( ! checkState( selCheck ) )
     return;	  
-
-  ob = model->getMiso( sel );
+  TMiso *ob = model->getMiso( sel );
   if( ob == 0 )
     return;
-  adi = new QAnyDialog( ob, this );
-  rc = adi->exec_trans();
+  DataDialog *dia = new DataDialog( *ob, this );
+  int rc = dia->exec();
+  delete dia;
+  
   if( rc == QDialog::Accepted ) {
     model->reset();
     model->setModified();
   };
   emit viewChanged();
-  delete adi;
 }
 
 void QMo2View::linkElm()
 {
-  QAnyDialog *adi;
-  TMiso *ob;
   TElmLink *el;
   int rc;
   if( ! checkState( selCheck ) )
     return;	  
 
-  ob = model->getMiso( sel );
+  TMiso *ob = model->getMiso( sel );
   if( ob == 0 )
     return;
 
   el = static_cast<TElmLink*>( ob->getObj( "links" ) );
-  if( el == 0 ) return ;
-  adi = new QAnyDialog( el, this );
-  rc = adi->exec_trans();
-  delete adi;
+  if( el == 0 ) {
+    qDebug( "ERR: fail to find links for object %s", 
+	qPrintable( ob->getFullName() ) );
+    return ;
+  }
+  DataDialog *dia = new DataDialog( *el, this );
+  rc = dia->exec();
+  delete dia;
   if( rc == QDialog::Accepted ) {
     model->reset(); model->setModified();
     emit viewChanged();
@@ -402,7 +400,7 @@ void QMo2View::qlinkElm()
   TMiso *ob, *toob;
   TElmLink *el;
   int k;
-  const char *toname;
+  QString toname;
   QString oldlink;
   char lnkname[MAX_NAMELEN];
   if( ! checkState( linkToCheck ) )
@@ -411,7 +409,7 @@ void QMo2View::qlinkElm()
   ob = model->getMiso( sel ); toob = model->getMiso( mark );
   if( ob == 0 || toob == 0 )
     return;
-  toname = toob->getName();
+  toname = toob->objectName();
 
   el = static_cast<TElmLink*>( ob->getObj( "links" ) );
   if( el == 0 ) return;
@@ -420,8 +418,7 @@ void QMo2View::qlinkElm()
   k = el->getDataSS( lnkname, &oldlink, MAX_NAMELEN, 0 );
   if( k != 0 )
     return;
-  QString t = QString::fromLocal8Bit(toname);
-  k = el->setDataSS( lnkname, &t, 0 );
+  k = el->setDataSS( lnkname, &toname, 0 );
   model->reset(); model->setModified();
   emit viewChanged();
 }
@@ -432,7 +429,7 @@ void QMo2View::qplinkElm()
   TMiso *ob, *toob;
   TElmLink *el;
   int k;
-  const char *toname;
+  QString toname;
   QString oldlink[MAX_NAMELEN];
   char lnkname[MAX_NAMELEN];
   if( ! checkState( linkToCheck ) )
@@ -441,7 +438,7 @@ void QMo2View::qplinkElm()
   ob = model->getMiso( sel ); toob = model->getMiso( mark );
   if( ob == 0 || toob == 0 )
     return;
-  toname = toob->getName();
+  toname = toob->objectName();
 
   el = static_cast<TElmLink*>( ob->getObj( "links" ) );
   if( el == 0 ) return;
@@ -450,8 +447,7 @@ void QMo2View::qplinkElm()
   k = el->getDataSS( lnkname, oldlink, MAX_NAMELEN, 0 );
   if( k != 0 || oldlink[0] != 0 )
     return;
-  QString t = QString::fromLocal8Bit( toname );
-  k = el->setDataSS( lnkname, &t, 0 );
+  k = el->setDataSS( lnkname, &toname, 0 );
   model->reset(); model->setModified();
   emit viewChanged();
 }
@@ -562,7 +558,7 @@ void QMo2View::infoElm()
     return;
   nelm = ob->getN();
   dia = new QDialog( this );
-  dia->setWindowTitle( QString( PACKAGE ": Structure of ") + ob->getName() );
+  dia->setWindowTitle( QString( PACKAGE ": Structure of ") + ob->objectName() );
 
   lay = new QVBoxLayout();
 
@@ -690,15 +686,7 @@ void QMo2View::testElm2()
   TMiso *ob = model->getMiso( sel );
   if( ob == 0 )
     return;
-  DataDialog *dia = new DataDialog( *ob, this );
-  int rc = dia->exec();
-  delete dia;
-  
-  if( rc == QDialog::Accepted ) {
-    model->reset();
-    model->setModified();
-  };
-  emit viewChanged();
+  return;
 }
 
 
@@ -793,7 +781,7 @@ void QMo2View::delOut()
     return;
   k = QMessageBox::information( this, PACKAGE " delete confirmation",
       QString("Do you really want to delete output array \"" )
-       +QString( arr->getName() ) + QString( "\" ?" ),
+       + arr->objectName() + QString( "\" ?" ),
       "&Yes", "&No", "&Help", 0, 1 );
   if( k == 0 ) {
     model->delOut( level );
@@ -804,7 +792,6 @@ void QMo2View::delOut()
 
 void QMo2View::editOut()
 {
-  QAnyDialog *adi;
   TOutArr *arr;
   int rc;
   if( ! checkState( validCheck ) )
@@ -815,9 +802,9 @@ void QMo2View::editOut()
   arr = model->getOutArr( level );
   if( arr == 0 )
     return;
-  adi = new QAnyDialog( arr, this );
-  rc = adi->exec_trans();
-  delete adi;
+  DataDialog *dia = new DataDialog( *arr, this );
+  rc = dia->exec();
+  delete dia;
   if( rc == QDialog::Accepted ) {
     model->reset(); model->setModified();
     emit viewChanged();
@@ -966,7 +953,7 @@ void QMo2View::delGraph()
     return;
   k = QMessageBox::information( this, PACKAGE " delete confirmation",
       QString("Do you really want to delete graph description \"")
-       + QString( gra->getName() ) + QString("\" ?") ,
+       + gra->objectName() + QString("\" ?") ,
       "&Yes", "&No", "&Help", 0, 1 );
   if( k == 0 ) {
     model->delGraph( level );
@@ -977,7 +964,6 @@ void QMo2View::delGraph()
 
 void QMo2View::editGraph()
 {
-  QAnyDialog *adi;
   TGraph *gra;
   int rc;
   if( ! checkState( validCheck ) )
@@ -988,9 +974,9 @@ void QMo2View::editGraph()
   gra = model->getGraph( level );
   if( gra == 0 )
     return;
-  adi = new QAnyDialog( gra, this );
-  rc = adi->exec_trans();
-  delete adi;
+  DataDialog *dia = new DataDialog( *gra, this );
+  rc = dia->exec();
+  delete dia;
   if( rc == QDialog::Accepted ) {
     model->reset(); model->setModified();
     emit viewChanged();
@@ -1032,7 +1018,7 @@ void QMo2View::showGraph()
   if( gra == 0 )
     return;
   plotWnd = new QMainWindow( this );
-  plotWnd->setWindowTitle( QString( PACKAGE ": Plot ") + QString(gra->getName()) );
+  plotWnd->setWindowTitle( QString( PACKAGE ": Plot ") + gra->objectName() );
   pv = new QPlotView( doc, gra, plotWnd );
   plotWnd->setCentralWidget( pv );
   pv->setFocus();
@@ -1173,13 +1159,12 @@ void QMo2View::gnuplotGraph()
 
 void QMo2View::editModel()
 {
-  QAnyDialog *adi;
   int rc;
   if( ! checkState( validCheck ) )
     return;	
 
-  adi = new QAnyDialog( model, this );
-  rc = adi->exec_trans();
+  DataDialog *dia = new DataDialog( *model, this );
+  rc = dia->exec();
   if( rc == QDialog::Accepted ) {
     model->reset();
     emit viewChanged();
@@ -1222,15 +1207,7 @@ void QMo2View::showVars()
 
 void QMo2View::editModel2()
 {
-  if( ! checkState( validCheck ) )
-    return;	
-
-  DataDialog *dia = new DataDialog( *model, this );
-  int rc = dia->exec();
-  if( rc == QDialog::Accepted ) {
-    model->reset();
-    emit viewChanged();
-  };
+  editModel();
 }
 
 
