@@ -11,9 +11,23 @@
 #include "qmo2win.h"
 
 DataWidget::DataWidget( HolderData &h, QWidget *parent )
-  : QFrame( parent ), ho( h )
+  : QFrame( parent ), ho( h ), main_w(0),
+    lbl( new QLabel( ho.getParm("vis_name"), this) )
 {
+  lbl->setWhatsThis( ho.getType() + " " + ho.objectName() );
+  lbl->setMinimumWidth( 30 ); // TODO: from font
   // setFrameStyle( QFrame::Panel | QFrame::Sunken );
+}
+
+QSize DataWidget::minimumSizeHint() const
+{
+  return  main_w->minimumSizeHint() + QSize( lbl->minimumSizeHint().width(), 0 );
+}
+
+
+QSize DataWidget::sizeHint() const
+{
+  return  main_w->sizeHint() + QSize( lbl->sizeHint().width(), 0 );
 }
 
 // -------------  DummyDataWidget ----------------
@@ -22,13 +36,17 @@ int DummyDataWidget::registered = DummyDataWidget::reg();
 
 DummyDataWidget::DummyDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
-  lbl( new QLabel( this ) )
+  lbl_d( new QLabel( this ) )
 {
+  QHBoxLayout *lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
+  lay->addWidget( lbl_d );
 }
 
 bool DummyDataWidget::set()
 {
-  lbl->setText( ho.toString().left(20) );
+  lbl_d->setText( ho.toString().left(20) );
   return true;
 }
 
@@ -49,17 +67,6 @@ int DummyDataWidget::reg()
   return FactoryDataWidget::theFactory().registerWidgetType( "DummyDataWidget", p );
 }
 
-QSize DummyDataWidget::minimumSizeHint() const
-{
-  return lbl->minimumSizeHint();
-}
-
-
-QSize DummyDataWidget::sizeHint() const
-{
-  return lbl->sizeHint();
-}
-
 
 // ------------------- StringDataWidget ---------------------------
 int StringDataWidget::registered = StringDataWidget::reg();
@@ -68,6 +75,7 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
   le( new QLineEdit( this ) )
 {
+  main_w = le;
   if( h.getFlags() & ( efRO | efRODial ) ) {
     le->setReadOnly( true );
   }
@@ -78,6 +86,7 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
   }
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
   lay->addWidget( le, 1 );
   setLayout( lay );
   // TODO: r/o, size, mask ....
@@ -107,19 +116,6 @@ int StringDataWidget::reg()
   return FactoryDataWidget::theFactory().registerWidgetType( "StringDataWidget", p );
 }
 
-QSize StringDataWidget::minimumSizeHint() const
-{
-  return le->minimumSizeHint();
-}
-
-
-QSize StringDataWidget::sizeHint() const
-{
-  // return le->sizeHint();
-  return QSize( 220, 20 );
-}
-
-
 
 // ------------------- StringMLDataWidget ---------------------------
 int StringMLDataWidget::registered = StringMLDataWidget::reg();
@@ -128,14 +124,16 @@ StringMLDataWidget::StringMLDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
   te( new QTextEdit( this ) )
 {
+  main_w = te;
   if( h.getFlags() & ( efRO | efRODial ) ) {
     te->setReadOnly( true );
   }
   // setMaxLength( h.getMax() ); ???
   // TODO: min size
   te->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred );
-  QHBoxLayout *lay =  new QHBoxLayout( this );
+  QVBoxLayout *lay =  new QVBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
   lay->addWidget( te, 1 );
   setLayout( lay );
   setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred );
@@ -166,13 +164,13 @@ int StringMLDataWidget::reg()
 
 QSize StringMLDataWidget::minimumSizeHint() const
 {
-  return te->minimumSizeHint();
+  return te->minimumSizeHint() + QSize( 0, lbl->minimumSizeHint().height() );
 }
 
 
 QSize StringMLDataWidget::sizeHint() const
 {
-  return te->sizeHint();
+  return te->sizeHint() + QSize( 0, lbl->sizeHint().height() );
 }
 
 
@@ -184,12 +182,14 @@ IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
   le( new QLineEdit( this ) )
 {
+  main_w = le;
   if( h.getFlags() & ( efRO | efRODial ) ) {
     le->setReadOnly( true );
   }
   le->setValidator( new QIntValidator( h.getMin(), h.getMax(), le ) );
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
   lay->addWidget( le, 1 );
   setLayout( lay );
   // TODO: r/o
@@ -220,17 +220,6 @@ int IntDataWidget::reg()
   return FactoryDataWidget::theFactory().registerWidgetType( "IntDataWidget", p );
 }
 
-QSize IntDataWidget::minimumSizeHint() const
-{
-  return le->minimumSizeHint();
-}
-
-
-QSize IntDataWidget::sizeHint() const
-{
-  return le->sizeHint();
-}
-
 
 // ------------------- IntSpinDataWidget ---------------------------
 int IntSpinDataWidget::registered = IntSpinDataWidget::reg();
@@ -239,6 +228,7 @@ IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
   sb( new QSpinBox( this ) )
 {
+  main_w = sb;
   if( h.getFlags() & ( efRO | efRODial ) ) {
     sb->setReadOnly( true );
   }
@@ -255,6 +245,7 @@ IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent )
 
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
   lay->addWidget( sb, 1 );
   setLayout( lay );
   
@@ -284,17 +275,6 @@ int IntSpinDataWidget::reg()
   return FactoryDataWidget::theFactory().registerWidgetType( "IntSpinDataWidget", p );
 }
 
-QSize IntSpinDataWidget::minimumSizeHint() const
-{
-  return sb->minimumSizeHint();
-}
-
-
-QSize IntSpinDataWidget::sizeHint() const
-{
-  return sb->sizeHint();
-}
-
 
 
 // ------------------- SwitchDataWidget ---------------------------
@@ -302,14 +282,17 @@ int SwitchDataWidget::registered = SwitchDataWidget::reg();
 
 SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
-  cb( new QCheckBox( this ) )
+  cb( new QCheckBox( ho.getParm("vis_name"), this ) )
 {
+  main_w = cb;
   if( h.getFlags() & ( efRO | efRODial ) ) {
     cb->setDisabled( true );
   }
   
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
+  // lay->addWidget( lbl ); // not for this widget
+  lbl->hide();
   lay->addWidget( cb, 1 );
   setLayout( lay );
 }
@@ -338,17 +321,6 @@ int SwitchDataWidget::reg()
   return FactoryDataWidget::theFactory().registerWidgetType( "SwitchDataWidget", p );
 }
 
-QSize SwitchDataWidget::minimumSizeHint() const
-{
-  return cb->minimumSizeHint();
-}
-
-
-QSize SwitchDataWidget::sizeHint() const
-{
-  return cb->sizeHint();
-}
-
 
 // ------------------- ListDataWidget ---------------------------
 int ListDataWidget::registered = ListDataWidget::reg();
@@ -357,6 +329,7 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
   cb( new QComboBox( this ) )
 {
+  main_w = cb;
   if( h.getFlags() & ( efRO | efRODial ) ) {
     cb->setDisabled( true );
   }
@@ -364,6 +337,7 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
   
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
   lay->addWidget( cb, 1 );
   setLayout( lay );
 }
@@ -392,17 +366,6 @@ int ListDataWidget::reg()
   return FactoryDataWidget::theFactory().registerWidgetType( "ListDataWidget", p );
 }
 
-QSize ListDataWidget::minimumSizeHint() const
-{
-  return cb->minimumSizeHint();
-}
-
-
-QSize ListDataWidget::sizeHint() const
-{
-  return cb->sizeHint();
-}
-
 
 
 // ------------------- DoubleDataWidget ---------------------------
@@ -412,6 +375,7 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
   le( new QLineEdit ( this ) )
 {
+  main_w = le;
   if( h.getFlags() & ( efRO | efRODial ) ) {
     le->setReadOnly( true );
   }
@@ -421,7 +385,8 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
   
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
-  lay->addWidget( le, 1 );
+  lay->addWidget( lbl );
+  lay->addWidget( le );
   setLayout( lay );
 }
 
@@ -450,17 +415,6 @@ int DoubleDataWidget::reg()
   return FactoryDataWidget::theFactory().registerWidgetType( "DoubleDataWidget", p );
 }
 
-QSize DoubleDataWidget::minimumSizeHint() const
-{
-  return le->minimumSizeHint();
-}
-
-
-QSize DoubleDataWidget::sizeHint() const
-{
-  return le->sizeHint();
-}
-
 
 // ------------------- DoubleSpinDataWidget ---------------------------
 int DoubleSpinDataWidget::registered = DoubleSpinDataWidget::reg();
@@ -469,6 +423,7 @@ DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
    sb( new QDoubleSpinBox( this ) )
 {
+  main_w = sb;
   if( h.getFlags() & ( efRO | efRODial ) ) {
     sb->setReadOnly( true );
   }
@@ -485,6 +440,7 @@ DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent )
   
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
   lay->addWidget( sb, 1 );
   setLayout( lay );
 }
@@ -513,16 +469,6 @@ int DoubleSpinDataWidget::reg()
   return FactoryDataWidget::theFactory().registerWidgetType( "DoubleSpinDataWidget", p );
 }
 
-QSize DoubleSpinDataWidget::minimumSizeHint() const
-{
-  return sb->minimumSizeHint();
-}
-
-
-QSize DoubleSpinDataWidget::sizeHint() const
-{
-  return sb->sizeHint();
-}
 
 
 // ------------------- ColorDataWidget ---------------------------
@@ -532,6 +478,7 @@ ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
    cb( new QColorBtn( this ) )
 {
+  main_w = cb;
   if( h.getFlags() & ( efRO | efRODial ) ) {
     cb->setDisabled( true ); // TODO: real read-only
   }
@@ -567,17 +514,6 @@ int ColorDataWidget::reg()
   return FactoryDataWidget::theFactory().registerWidgetType( "ColorDataWidget", p );
 }
 
-QSize ColorDataWidget::minimumSizeHint() const
-{
-  return cb->minimumSizeHint();
-}
-
-
-QSize ColorDataWidget::sizeHint() const
-{
-  return cb->sizeHint();
-}
-
 
 
 // ------------------- ObjDataWidget ---------------------------
@@ -587,6 +523,7 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
    pb( new QPushButton( this ) )
 {
+  main_w = pb;
   if( h.getFlags() & ( efRO | efRODial ) ) {
     pb->setDisabled( true ); // TODO: real read-only
   }
@@ -596,6 +533,7 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
   
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
   lay->addWidget( pb, 1 );
   setLayout( lay );
 }
@@ -631,17 +569,6 @@ int ObjDataWidget::reg()
 {
   static DataWidgetProp p { create, "OBJ" };
   return FactoryDataWidget::theFactory().registerWidgetType( "ObjDataWidget", p );
-}
-
-QSize ObjDataWidget::minimumSizeHint() const
-{
-  return pb->minimumSizeHint();
-}
-
-
-QSize ObjDataWidget::sizeHint() const
-{
-  return pb->sizeHint();
 }
 
 
@@ -889,7 +816,7 @@ int DataDialog::createWidgets()
     }
 
     QString name = ho->objectName();
-    QString visName = ho->getParm( "vis_name" );
+    // QString visName = ho->getParm( "vis_name" );
     //qDebug( "DBG: createWidgets %s at (%d,%d+%d)", 
     //	    qPrintable(name), nr, nc, ncol  );
 
@@ -906,10 +833,10 @@ int DataDialog::createWidgets()
     
     dwm[name] = w;
     w->setWhatsThis( ho->getParm("descr") );
-    QLabel *la = new QLabel( visName, this );
-    la->setWhatsThis( ho->getType() + " " + name + " (" + wtp + ")" );
-    lay2->addWidget( la, nr, nc*2 );
-    lay2->addWidget( w, nr, nc*2+1, 1, ncol );
+    // QLabel *la = new QLabel( visName, this );
+    // la->setWhatsThis( ho->getType() + " " + name + " (" + wtp + ")" );
+    // lay2->addWidget( la, nr, nc*2 );
+    lay2->addWidget( w, nr, nc, 1, ncol );
     ++nr;
     if( nr > nr_max )
       nr_max = nr;

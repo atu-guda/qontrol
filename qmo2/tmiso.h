@@ -63,7 +63,7 @@ class TElmLink : public TDataSet { //@ c,{},(380,320),"Object links"
    PRM_SWITCH1( locked, efNoRunChange, "Locked", "Bypass u[0] to output", ""  );
    PRM_SWITCH1( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", ""); 
    PRM_SWITCH1( onlyLast, efNoRunChange , "only Last", "Process element only at last iteration", ""); 
-   PRM_SWITCH1( flip, efNoRunChange, "flip image", "flip left-right element icon", "");
+   PRM_SWITCH1( flip, efNoRunChange, "flip image", "flip left-right element icon", "sep=col");
    PRM_SWITCH1( noIcon, efNoRunChange, "no Icon", "don't show element icon", "");
    /** names of elms, which outputs will be used as parm inputs */
    PRM_STRING1( pinps0, efNoRunChange, "Parm. input 0", "Name of source for parametric input 0", "max=32\nsep=block"  );

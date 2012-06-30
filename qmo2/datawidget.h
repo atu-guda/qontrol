@@ -25,6 +25,8 @@ class DataWidget;
 class DataWidget : public QFrame {
  public: 
   DataWidget( HolderData &d, QWidget *parent = 0 );
+  virtual QSize	minimumSizeHint() const;
+  virtual QSize	sizeHint() const;
   virtual bool set() = 0;
   virtual bool get() const = 0;
   QVariant::Type getTp() const { return ho.getTp(); }
@@ -34,6 +36,8 @@ class DataWidget : public QFrame {
   // virtual bool check() = 0;
  protected:
   HolderData &ho;
+  QWidget *main_w;
+  QLabel *lbl;
 };
 
 /** properties of DataWidget */
@@ -50,12 +54,10 @@ class DummyDataWidget:  public DataWidget {
   virtual bool set();
   virtual bool get() const;
   static DataWidget* create( HolderData &h, QWidget *parent );
-  virtual QSize	minimumSizeHint() const;
-  virtual QSize	sizeHint() const;
  protected:
   static int reg();
   static int registered;
-  QLabel *lbl;
+  QLabel *lbl_d;
 };
 
 
@@ -65,8 +67,6 @@ class StringDataWidget:  public DataWidget {
   virtual bool set();
   virtual bool get() const;
   static DataWidget* create( HolderData &h, QWidget *parent  );
-  virtual QSize	minimumSizeHint() const;
-  virtual QSize	sizeHint() const;
  protected:
   static int reg();
   static int registered;
@@ -94,8 +94,6 @@ class IntDataWidget: public DataWidget {
   virtual bool set();
   virtual bool get() const;
   static DataWidget* create( HolderData &h, QWidget *parent  );
-  virtual QSize	minimumSizeHint() const;
-  virtual QSize	sizeHint() const;
  protected:
   static int reg();
   static int registered;
@@ -108,8 +106,6 @@ class IntSpinDataWidget: public DataWidget {
   virtual bool set();
   virtual bool get() const;
   static DataWidget* create( HolderData &h, QWidget *parent  );
-  virtual QSize	minimumSizeHint() const;
-  virtual QSize	sizeHint() const;
  protected:
   static int reg();
   static int registered;
@@ -122,8 +118,6 @@ class SwitchDataWidget: public DataWidget {
   virtual bool set();
   virtual bool get() const;
   static DataWidget* create( HolderData &h, QWidget *parent  );
-  virtual QSize	minimumSizeHint() const;
-  virtual QSize	sizeHint() const;
  protected:
   static int reg();
   static int registered;
@@ -137,8 +131,6 @@ class ListDataWidget: public DataWidget {
   virtual bool set();
   virtual bool get() const;
   static DataWidget* create( HolderData &h, QWidget *parent  );
-  virtual QSize	minimumSizeHint() const;
-  virtual QSize	sizeHint() const;
  protected:
   static int reg();
   static int registered;
@@ -151,8 +143,6 @@ class DoubleDataWidget: public DataWidget {
   virtual bool set();
   virtual bool get() const;
   static DataWidget* create( HolderData &h, QWidget *parent  );
-  virtual QSize	minimumSizeHint() const;
-  virtual QSize	sizeHint() const;
  protected:
   static int reg();
   static int registered;
@@ -166,8 +156,6 @@ class DoubleSpinDataWidget: public DataWidget {
   virtual bool set();
   virtual bool get() const;
   static DataWidget* create( HolderData &h, QWidget *parent  );
-  virtual QSize	minimumSizeHint() const;
-  virtual QSize	sizeHint() const;
  protected:
   static int reg();
   static int registered;
@@ -181,8 +169,6 @@ class ColorDataWidget: public DataWidget {
   virtual bool set();
   virtual bool get() const;
   static DataWidget* create( HolderData &h, QWidget *parent  );
-  virtual QSize	minimumSizeHint() const;
-  virtual QSize	sizeHint() const;
  protected:
   static int reg();
   static int registered;
@@ -197,8 +183,6 @@ class ObjDataWidget: public DataWidget {
   virtual bool set();
   virtual bool get() const;
   static DataWidget* create( HolderData &h, QWidget *parent  );
-  virtual QSize	minimumSizeHint() const;
-  virtual QSize	sizeHint() const;
  protected slots:
    void edit();
  protected:
