@@ -69,23 +69,74 @@ class TCorrAnalysis : public TMiso  {
 
    /* ============= data members ================== */
    /** type of data collection, flags */
-   int type, useCalc, useReset, useFill;
+   PRM_LIST1( type, efNoRunChange, "Type", "Collection type", "", "All\nt0<t<t1\nu2>0\narrays" );
+   PRM_SWITCH1( useCalc,  efNoRunChange, "Calc on u[3]", "Use u3>0 as signal to calc", "" );
+   PRM_SWITCH1( useReset, efNoRunChange, "Reset on u[3]", "Use u3<0 as signal to reset", "" );
+   PRM_SWITCH1( useFill,  efNoRunChange, "Fill arrays", "Fill output array", "" );
    /** time start / stop values */
-   double t0, t1;
+   PRM_DOUBLE1( t0, efNoRunChange, "t0", "Time to start on given type", "min=0" );
+   PRM_DOUBLE1( t1, efNoRunChange, "t1", "Time to stop on given type", "min=0" );
    /** Names of input arrays if type=UseArrays */
-   QString x_in, y_in;
+   PRM_STRING1( x_in, efNoRunChange, "in x[]", "name of input x array", "" );
+   PRM_STRING1( y_in, efNoRunChange, "in y[]", "name of input y array", "" );
    /** indexes of output values to be stored to model */
-   int out_a, out_b, out_corr, out_ok;
+   PRM_INT1( out_a, efNoRunChange, "a idx", "Index to store 'a' value", "sep=col" );
+   PRM_INT1( out_b, efNoRunChange, "b idx", "Index to store 'b' value", "" );
+   PRM_INT1( out_corr, efNoRunChange, "corr idx", "Index to store 'corr' value", "" );
+   PRM_INT1( out_ok, efNoRunChange, "ok idx", "Index to store 'ok' value", "" );
    /** names of output arrays */
-   QString x_oname, y_oname, c_oname;
+   PRM_STRING1( x_oname, efNoRunChange, "out x name", "name of output x array", "sep=col" );
+   PRM_STRING1( y_oname, efNoRunChange, "out y name", "name of output y array", "" );
+   PRM_STRING1( c_oname, efNoRunChange, "compare name", "name of array to compare with", "" );
    /** main output source */
-   int mainOutput;
+   PRM_LIST1( mainOutput, efNoRunChange, "Main outout", "What value will be main output", "",
+       "summ(x)\n"      //  0
+       "summ(x^2)\n"    //  1
+       "summ(y)\n"      //  2
+       "summ(y^2)\n"    //  3 
+       "summ(xy)\n"     //  4
+       "a\n"            //  5
+       "b\n"            //  6
+       "corr\n"         //  7
+       "cov\n"          //  8
+       "disp(x)\n"      //  9
+       "dips(y)\n"      // 10
+       "sigma(x)\n"     // 11
+       "sigma(y)\n"     // 12
+       "aver(x)\n"      // 13
+       "aver(y)\n"      // 14
+       "aver(x^2)\n"    // 15
+       "aver(y^2)"      // 16
+   );
    /** current loop # and number of collected data,  ok state - calculated */
-   int ii, n, ok, nc;
+   PRM_INT1( ii, efInner, "ii", "current loop number", "" );
+   PRM_INT1( n, efInner, "n", "number of collected data", "" );
+   PRM_INT1( ok, efInner, "ok", "ok state", "" );
+   PRM_INT1( nc, efInner, "nc", "nc?", "" );
    /** collectors, out values */
-   double s_x, s_x2, s_y, s_y2, s_xy, a, b, corr, cov, 
-          dis_x, dis_y, sigma_x, sigma_y, ave_x, ave_y, ave_x2, ave_y2,
-	  cmp_ms, cmp_max, cmp_min, cmp_ampl, cmp_tmin, cmp_tmax;
+   PRM_DOUBLE1( s_x, efInner, "s_x", "sum(x)", "" );
+   PRM_DOUBLE1( s_x2, efInner, "s_x2", "sum(x^2)", "" );
+   PRM_DOUBLE1( s_y, efInner, "s_y", "sum(y)", "" );
+   PRM_DOUBLE1( s_y2, efInner, "s_y2", "sum(x^2)", "" );
+   PRM_DOUBLE1( s_xy, efInner, "s_xy", "sum(x*y)", "" );
+   PRM_DOUBLE1( a, efInner, "a", "a coefficient", "" );
+   PRM_DOUBLE1( b, efInner, "b", "b coefficient", "" );
+   PRM_DOUBLE1( corr, efInner, "corr", "coefficient of correlation", "" );
+   PRM_DOUBLE1( cov, efInner, "cov", "coefficient of covariation", "" );
+   PRM_DOUBLE1( dis_x, efInner, "dis_x", "x dispersion", "" );
+   PRM_DOUBLE1( dis_y, efInner, "dis_y", "y dispersion", "" );
+   PRM_DOUBLE1( sigma_x, efInner, "sigma_x", "sigma(x)", "" );
+   PRM_DOUBLE1( sigma_y, efInner, "sigma_y", "sigma(y)", "" );
+   PRM_DOUBLE1( ave_x, efInner, "aver_x", "aver(x)", "" );
+   PRM_DOUBLE1( ave_y, efInner, "aver_y", "aver(y)", "" );
+   PRM_DOUBLE1( ave_x2, efInner, "aver_x2", "aver(x^2)", "" );
+   PRM_DOUBLE1( ave_y2, efInner, "aver_y2", "aver(y^2)", "" );
+   PRM_DOUBLE1( cmp_ms, efInner, "cmp_ms", "comparison mean square", "" );
+   PRM_DOUBLE1( cmp_max, efInner, "cmp_max", "max error", "" );
+   PRM_DOUBLE1( cmp_min, efInner, "cmp_min", "min error", "" );
+   PRM_DOUBLE1( cmp_ampl, efInner, "cmp_ampl", "error amplitude", "" );
+   PRM_DOUBLE1( cmp_tmin, efInner, "cmp_tmin", "time(min error)", "" );
+   PRM_DOUBLE1( cmp_tmax, efInner, "cmp_tmax", "time(max error)", "" );
    /** pointerrs for output source */
    const double *out_source[20];
    /** data descriptors -- with base class elements */ 
