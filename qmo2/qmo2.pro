@@ -1,3 +1,4 @@
+QT += core gui xml
 TEMPLATE = app
 TARGET = qmo2x
 CONFIG += release warn_on qt thread 

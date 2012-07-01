@@ -74,7 +74,7 @@ int saveStr1( ostream *os, const char *s );
 int deQuoteString( const char *src, char *dst, int maxlen );
 /** converts good part of src to pritable form, returns n of used chars */
 int quoteTo( const char *src, char *dst, int ml );
-/** converts QChar to QString quote-aware replesentation */
+/** converts QChar to QString quote-aware representation */
 QString quoteChar( QChar c );
 /** converts QString to xxxx \t \n \\ \" \xFF  representation w/o " "*/ 
 QString quoteString( const QString &s );

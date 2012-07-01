@@ -149,6 +149,11 @@ void QMo2Win::initIface()
   act_open->setWhatsThis( tr("Click this button to open a model file." ) );
   connect( act_open, SIGNAL( activated() ), this, SLOT( slotFileOpen() ) );
 
+  act_openxml = new QAction( QIcon::fromTheme("document-open"), "Open XML model", this );
+  // act_openxml->setShortcuts( QKeySequence::Open );
+  act_openxml->setWhatsThis( tr("Click this button to open a XML model file." ) );
+  connect( act_openxml, SIGNAL( activated() ), this, SLOT( slotFileOpenXML() ) );
+
   act_close = new QAction( "&Close", this );
   act_close->setWhatsThis( tr("Close active window") );
   connect( act_close, SIGNAL( activated() ), this, SLOT( slotFileClose() ) );
@@ -159,11 +164,21 @@ void QMo2Win::initIface()
                   "editing. You will be prompted for a file name." ) );
   connect( act_save, SIGNAL( activated() ), this, SLOT( slotFileSave() ) );
 
+  act_savexml = new QAction( QIcon::fromTheme("document-save"), "Save XML model",  this );
+  // act_savexml->setShortcuts( QKeySequence::Save );
+  act_savexml->setWhatsThis( tr("Click this button to save the XML model file you are "
+                  "editing. You will be prompted for a file name." ) );
+  connect( act_savexml, SIGNAL( activated() ), this, SLOT( slotFileSaveXML() ) );
+
   act_saveas = new QAction( "Save &As", this );
   act_saveas->setWhatsThis( tr("Save current model with another filename") );
   connect( act_saveas, SIGNAL( activated() ), this, SLOT( slotFileSaveAs() ) );
 
-  act_print = new QAction( "&Print", this );
+  act_savexmlas = new QAction(QIcon::fromTheme("document-save-as"), "Save XML As", this );
+  act_savexmlas->setWhatsThis( tr("Save current XML model with another filename") );
+  connect( act_savexmlas, SIGNAL( activated() ), this, SLOT( slotFileSaveXMLAs() ) );
+
+  act_print = new QAction(  QIcon::fromTheme("document-print"), "&Print", this );
   act_print->setShortcuts( QKeySequence::Print );
   act_print->setWhatsThis( tr("Print current model") );
   connect( act_print, SIGNAL( activated() ), this, SLOT( slotFilePrint() ) );
@@ -177,31 +192,31 @@ void QMo2Win::initIface()
   connect( act_savesett, SIGNAL( activated() ), this, SLOT( slotFileSaveSett() ) );
 
 
-  act_quit = new QAction( QIcon( ":icons/exit.png" ), "&Quit", this );
+  act_quit = new QAction(  QIcon::fromTheme("application-exit"), "&Quit", this );
   act_quit->setShortcuts( QKeySequence::Quit );
   act_quit->setWhatsThis( tr("Click this button to quit application.") );
   connect( act_quit, SIGNAL( activated() ), this, SLOT( slotFileQuit() ) );
 
   // ==== Edit group
  
-  act_undo = new QAction( "&Undo", this );
+  act_undo = new QAction( QIcon::fromTheme("edit-undo"), "&Undo", this );
   act_undo->setShortcuts( QKeySequence::Undo );
-  act_undo->setWhatsThis( tr("Undo last action") );
+  act_undo->setWhatsThis( tr("Undo last action") + " EMPTY" );
   connect( act_undo, SIGNAL( activated() ), this, SLOT( slotEditUndo() ) );
  
-  act_cut = new QAction( "Cut", this );
+  act_cut = new QAction(  QIcon::fromTheme("edit-cut"),"Cut", this );
   act_cut->setShortcuts( QKeySequence::Cut );
-  act_cut->setWhatsThis( tr("Cut selected") );
+  act_cut->setWhatsThis( tr("Cut selected")  + " EMPTY" );
   connect( act_cut, SIGNAL( activated() ), this, SLOT( slotEditCut() ) );
  
-  act_copy = new QAction( "Copy", this );
+  act_copy = new QAction( QIcon::fromTheme("edit-copy"), "Copy", this );
   act_copy->setShortcuts( QKeySequence::Copy );
-  act_copy->setWhatsThis( tr("Copy selected") );
+  act_copy->setWhatsThis( tr("Copy selected") + " EMPTY" );
   connect( act_copy, SIGNAL( activated() ), this, SLOT( slotEditCopy() ) );
  
-  act_paste= new QAction( "Paste", this );
+  act_paste= new QAction( QIcon::fromTheme("edit-paste"), "Paste", this );
   act_paste->setShortcuts( QKeySequence::Paste );
-  act_paste->setWhatsThis( tr("Paste selected") );
+  act_paste->setWhatsThis( tr("Paste selected") + " EMPTY" );
   connect( act_paste, SIGNAL( activated() ), this, SLOT( slotEditPaste() ) );
 
   // ==== Element group
@@ -405,7 +420,7 @@ void QMo2Win::initIface()
 
   // ==== window group
 
-  act_winClose = new QAction( "Cl&ose Window", this);
+  act_winClose = new QAction( QIcon::fromTheme("window-close"), "Cl&ose Window", this);
   act_winClose->setWhatsThis( tr("Close this window") );
   connect( act_winClose, SIGNAL( activated() ), this, SLOT( slotWindowClose()) );
 
@@ -427,7 +442,7 @@ void QMo2Win::initIface()
 
   // ==== help group
 
-  act_helpabout = new QAction( "&About", this );
+  act_helpabout = new QAction( QIcon::fromTheme("help-about"), "&About", this );
   // act_helpabout->setWhatsThis( tr("") );
   connect( act_helpabout, SIGNAL( activated() ), this, SLOT( slotHelpAbout()) );
 
@@ -455,6 +470,10 @@ void QMo2Win::initIface()
   pFileMenu->addSeparator();
   pFileMenu->addAction( act_save );
   pFileMenu->addAction( act_saveas );
+  pFileMenu->addSeparator();
+  pFileMenu->addAction( act_openxml );
+  pFileMenu->addAction( act_savexml );
+  pFileMenu->addAction( act_savexmlas );
   pFileMenu->addSeparator();
   pFileMenu->addAction( act_print );
   pFileMenu->addSeparator();
@@ -574,6 +593,9 @@ void QMo2Win::initIface()
   fileToolbar->addAction( act_save );
     fileToolbar->addSeparator();
   fileToolbar->addAction( act_test );
+    fileToolbar->addSeparator();
+  fileToolbar->addAction( act_openxml );
+  fileToolbar->addAction( act_savexml );
   
   elmToolbar = addToolBar( tr("Element") );
   elmToolbar->addAction( act_newelm );
@@ -617,6 +639,8 @@ void QMo2Win::enableActions( bool ena, int id_ )
        act_close->setEnabled( ena );
        act_save->setEnabled( ena );
        act_saveas->setEnabled( ena );
+       act_savexml->setEnabled( ena );
+       act_savexmlas->setEnabled( ena );
        act_print->setEnabled( ena );
        // TODO: implement this
        act_undo->setEnabled( false );
@@ -784,10 +808,55 @@ void QMo2Win::slotFileOpen()
   statusBar()->showMessage( rc ? tr( "Ready." ) : tr( "Fail" ) );
 }
 
+void QMo2Win::slotFileOpenXML()
+{
+  statusBar()->showMessage( tr( "Opening XML model file..." ) );
+  QString fileName = 
+    QFileDialog::getOpenFileName( this, tr("Open model file"),
+	"", "Model XML files (*.qol);;All files(*)" );
+  if ( fileName.isEmpty() ) {
+     statusBar()->showMessage( tr( "Open canceled." ) );
+     updateActions();
+     return;
+  };
+
+  // find existing
+  QMdiSubWindow *existing = findMdiChild(fileName);
+  if( existing ) {
+    mdiArea->setActiveSubWindow(existing);
+    statusBar()->showMessage( tr( "Already opened." ) );
+    updateActions();
+    return;
+  }
+
+  bool rc = doFileOpenXML( fileName );
+  
+  statusBar()->showMessage( rc ? tr( "Ready." ) : tr( "Fail" ) );
+}
+
+
 bool QMo2Win::doFileOpen( const QString &fn )
 {
   QMo2Doc* doc = new QMo2Doc();
   if( ! doc->openDocument( fn ) ) {
+    QMessageBox::critical( this, tr("Error !"), 
+			   tr("Could not read file !" ) + fn );
+    delete doc;
+    updateActions();
+    statusBar()->showMessage( tr( "Open Failed." ) );
+    return false;
+  };
+  
+  QMo2View *cw = createChild( doc );
+  cw->show();
+  updateActions();
+  return true;
+}
+
+bool QMo2Win::doFileOpenXML( const QString &fn )
+{
+  QMo2Doc* doc = new QMo2Doc();
+  if( ! doc->openDocumentXML( fn ) ) {
     QMessageBox::critical( this, tr("Error !"), 
 			   tr("Could not read file !" ) + fn );
     delete doc;
@@ -820,13 +889,31 @@ void QMo2Win::slotFileSave()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
+void QMo2Win::slotFileSaveXML()
+{
+  statusBar()->showMessage( tr( "Saving XML model file...") );	
+  QMo2View* m =  activeMdiChild();
+  if( m ) {
+    QMo2Doc* doc = m->getDocument();
+    if( doc->nonamed() ) {
+      slotFileSaveXMLAs();
+    } else {
+      if( ! doc->saveDocumentXML( doc->pathName() ) )
+         QMessageBox::critical( this, 
+	   tr("I/O Error !"), tr("Could not save the current document !" ) );
+    };	 
+  };
+  updateActions();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
 void QMo2Win::slotFileSaveAs()
 {
   statusBar()->showMessage( tr ( "Saving model file under new filename..." ) );
   QMo2View* m =  activeMdiChild();
   if( !m ) {
     QMessageBox::critical ( this, 
-      tr("Critical error!"), tr("Fail to find active windown wlhile saving file!") );
+      tr("Critical error!"), tr("Fail to find active window while saving file!") );
   }
   QString fn = QFileDialog::getSaveFileName( this, tr("Save File"),
       QString::null, "Model files (*.mo2);;All files(*)" );
@@ -848,6 +935,45 @@ void QMo2Win::slotFileSaveAs()
     }
     QMo2Doc* doc = m->getDocument();
     if( ! doc->saveDocument( fn ) ) {
+       QMessageBox::critical ( this, 
+	   tr("I/O Error !"), tr("Could not save the current model file!") );
+       return;
+    };
+    doc->changedViewList();
+    m->setWindowTitle( doc->title() );
+  };
+  updateActions();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+void QMo2Win::slotFileSaveXMLAs()
+{
+  statusBar()->showMessage( tr ( "Saving XML model file under new filename..." ) );
+  QMo2View* m =  activeMdiChild();
+  if( !m ) {
+    QMessageBox::critical ( this, 
+      tr("Critical error!"), tr("Fail to find active window while saving file!") );
+  }
+  QString fn = QFileDialog::getSaveFileName( this, tr("Save XML model"),
+      QString::null, "Model XML files (*.qol);;All files(*)" );
+
+  if ( !fn.isEmpty() ) {
+    QFileInfo fi( fn );
+    QString pfn = fi.fileName();
+    if( ! pfn.contains('.') )
+      fn += ".qol";
+    fi.setFile( fn );
+    if( fi.exists () && 
+	QMessageBox::Yes != 
+	QMessageBox::question( this, "Confirm overwrite", 
+	  QString("File %1 already exists.\nOverwrite?").arg(fn),
+	  QMessageBox::Yes, QMessageBox::No ) ) 
+    {
+       statusBar()->showMessage( tr( "Ready." ) );
+       return;
+    }
+    QMo2Doc* doc = m->getDocument();
+    if( ! doc->saveDocumentXML( fn ) ) {
        QMessageBox::critical ( this, 
 	   tr("I/O Error !"), tr("Could not save the current model file!") );
        return;

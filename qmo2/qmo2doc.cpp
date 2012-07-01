@@ -139,7 +139,7 @@ bool QMo2Doc::newDocument()
   return true;
 }
 
-bool QMo2Doc::openDocument(const QString &filename, const char * /*format */)
+bool QMo2Doc::openDocument(const QString &filename )
 {
   int i, n, k;
   char buf[MAX_INPUTLEN];
@@ -198,7 +198,13 @@ bool QMo2Doc::openDocument(const QString &filename, const char * /*format */)
   return true;
 }
 
-bool QMo2Doc::saveDocument(const QString &filename, const char * /*format */)
+bool QMo2Doc::openDocumentXML(const QString &filename )
+{
+  return false; // FOR now
+}
+
+
+bool QMo2Doc::saveDocument(const QString &filename )
 {
   int k;
   ofstream os;
@@ -228,6 +234,11 @@ bool QMo2Doc::saveDocument(const QString &filename, const char * /*format */)
     return false;
   };
   return true;
+}
+
+bool QMo2Doc::saveDocumentXML( const QString &filename )
+{
+  return false; // for now
 }
 
 void QMo2Doc::deleteContents()

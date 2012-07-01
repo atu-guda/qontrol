@@ -75,10 +75,14 @@ class QMo2Doc : public QObject
   void deleteContents();
   /** initializes the document generally */
   bool newDocument();
-  /** loads the document by filename and format and emits the updateViews() signal */
-  bool openDocument( const QString &filename, const char *format = 0 );
-  /** saves the document under filename and format.*/	
-  bool saveDocument( const QString &filename, const char *format = 0 );
+  /** loads the document by filename */
+  bool openDocument( const QString &filename );
+  /** loads the XML model document by filename  */
+  bool openDocumentXML( const QString &filename );
+  /** saves the document under filename */	
+  bool saveDocument( const QString &filename );
+  /** saves the XML model document under filename */	
+  bool saveDocumentXML( const QString &filename );
   /** sets the path to the file connected with the document */
   void setPathName( const QString &name );
   /** returns the pathname of the current document file*/
