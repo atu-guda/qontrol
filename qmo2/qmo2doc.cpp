@@ -20,6 +20,7 @@
 #include <iostream>
 // include files for Qt
 #include <QtGui>
+#include <QtXml>
 
 // application specific includes
 #include "qmo2doc.h"
@@ -31,10 +32,12 @@
 using namespace std;
 
 QMo2Doc::QMo2Doc()
+  : modified(false), m_title("?unknown"), m_filename(), 
+    pViewList( new  QList<QMo2View> ),
+    rootdata(nullptr), model(nullptr), is_nonamed(true),
+    loaded_as_old(true)
 {
-  pViewList = new QList<QMo2View>;
   //pViewList->setAutoDelete( false );
-  rootdata = 0; model = 0; is_nonamed = true;
 }
 
 QMo2Doc::~QMo2Doc()
@@ -136,6 +139,7 @@ bool QMo2Doc::newDocument()
   model = static_cast<TModel*>( rootdata->getObj( "model" ) );
   qDebug( "debug: QMo2Doc::newDocument: rootdata: %p model: %p", rootdata, model );
   modified = false; is_nonamed = true;
+  loaded_as_old = true; // TODO: change to false when new model be created by default
   return true;
 }
 
@@ -192,7 +196,7 @@ bool QMo2Doc::openDocument(const QString &filename )
     return false;
   };
   qDebug( "debug: QMo2Doc::openDocument:(2) rootdata: %p model: %p", rootdata, model );
-  modified = false; is_nonamed = false;
+  modified = false; is_nonamed = false; loaded_as_old = true;
   m_filename = filename;
   m_title = QFileInfo(filename).fileName();
   return true;
@@ -200,6 +204,34 @@ bool QMo2Doc::openDocument(const QString &filename )
 
 bool QMo2Doc::openDocumentXML(const QString &filename )
 {
+  QFile file( filename );
+  if( !file.open( QFile::ReadOnly) ) {
+    QMessageBox::warning(QMo2Win::qmo2win, tr( PACKAGE ),
+                         tr("Cannot read file %1:\n%2.")
+                         .arg(filename)
+                         .arg(file.errorString()));
+    return false;
+  }
+  QTextStream in( &file );
+  QString textData = in.readAll();
+
+  QString errstr;
+  QDomDocument dd;
+  int err_line, err_column;
+
+  if( ! dd.setContent( textData, false, &errstr, &err_line, &err_column ) ) {
+    QMessageBox::warning(QMo2Win::qmo2win, tr( PACKAGE ),
+                         tr("Cannot parse file %1:\n%2\nLine %3 column %4.")
+                         .arg(filename)
+                         .arg(errstr).arg(err_line).arg(err_column) );
+    m_filename = "";
+    return false;
+  }
+  m_filename = filename;
+  loaded_as_old = false;
+  
+  // TODO: real actions
+
   return false; // FOR now
 }
 
@@ -210,6 +242,13 @@ bool QMo2Doc::saveDocument(const QString &filename )
   ofstream os;
   if( rootdata == 0 )
     return false;
+
+  if( ! loaded_as_old ) {
+    QMessageBox::critical( 0, "saveDocument Error",
+        QString("New format used fo this model. Cannot save os old 'mo2' file."),
+	QMessageBox::Ok, QMessageBox::NoButton,  QMessageBox::NoButton );
+    return false;
+  }
 
   errno = 0;
   os.open( filename.toLocal8Bit().constData() );
@@ -238,7 +277,98 @@ bool QMo2Doc::saveDocument(const QString &filename )
 
 bool QMo2Doc::saveDocumentXML( const QString &filename )
 {
-  return false; // for now
+  if( rootdata == 0 )
+    return false;
+  
+  QFile file( filename );
+  if ( ! file.open( QFile::WriteOnly )) {
+    QMessageBox::warning( QMo2Win::qmo2win, tr(PACKAGE),
+                         tr("Cannot write file %1:\n%2.")
+                         .arg(filename)
+                         .arg(file.errorString()));
+    return false;
+  }
+  QTextStream out(&file);
+  out.setCodec("UTF-8");
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+
+  QString textData;
+  if( loaded_as_old ) {
+    textData = makeXMLold();
+  } else {
+    textData = makeXML();
+  }
+  out << textData;
+
+  QApplication::restoreOverrideCursor();
+  // modified = false; // TODO: set to false when XML be a main format
+  m_filename = filename;
+  m_title = QFileInfo(filename).fileName();
+  is_nonamed = false;
+
+  return true; // for now
+}
+
+QString QMo2Doc::makeXMLold() const
+{
+  if( ! rootdata || ! model )
+    return QString();
+
+  QDomDocument dd("QontrolLabML");
+  QDomNode pre_node = dd.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
+  dd.insertBefore( pre_node, dd.firstChild() );
+
+  QDomElement dd_root = dd.createElement("QontrolLabML");
+  dd.appendChild( dd_root );
+  
+  // defaults
+  QDomElement defs = dd.createElement("defaults");
+
+  QDomElement def_model = dd.createElement( "def_model" );
+  QDomText def_model_name = dd.createTextNode( "main" );
+  def_model.appendChild( def_model_name );
+  defs.appendChild( def_model );
+
+  QDomElement def_exp = dd.createElement( "def_exp" );
+  QDomText def_exp_name = dd.createTextNode( "run1" );
+  def_exp.appendChild( def_exp_name );
+  defs.appendChild( def_exp );
+  
+  // Experiments
+  QDomElement exps = dd.createElement("experimemts");
+  dd_root.appendChild( exps );
+
+  QDomElement exp1 = dd.createElement("experimemt");
+  exps.appendChild(exp1);
+  exp1.setAttribute( "name", "run1");
+  // TODO: data from model
+  QDomText te1a = dd.createTextNode("run1 data will be here");
+  exp1.appendChild(te1a);
+
+  QDomElement schems = dd.createElement("schems");
+  dd_root.appendChild( schems );
+  
+  QDomElement sch1 = dd.createElement("sch");
+  sch1.setAttribute( "name", "main");
+  // TODO: data from model
+  schems.appendChild(sch1);
+  
+  dd_root.appendChild( defs );
+  
+  
+  return dd.toString();
+}
+
+QString QMo2Doc::makeXML() const
+{
+  if( ! rootdata )
+    return QString();
+  
+  QDomDocument dd("QontrolLabML");
+  QDomNode pre_node = dd.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
+  dd.insertBefore( pre_node, dd.firstChild() );
+  // TODO: real work
+  return dd.toString();
 }
 
 void QMo2Doc::deleteContents()
