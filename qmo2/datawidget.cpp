@@ -14,7 +14,7 @@ DataWidget::DataWidget( HolderData &h, QWidget *parent )
   : QFrame( parent ), ho( h ), main_w(0),
     lbl( new QLabel( ho.getParm("vis_name"), this) )
 {
-  lbl->setWhatsThis( ho.getType() + " " + ho.objectName() );
+  lbl->setWhatsThis( ho.getType() + " " + ho.targetName() );
   lbl->setMinimumWidth( 30 ); // TODO: from font
   // setFrameStyle( QFrame::Panel | QFrame::Sunken );
 }
@@ -529,7 +529,7 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
     pb->setDisabled( true ); // TODO: real read-only
   }
   pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
-  pb->setText( ho.objectName() );
+  pb->setText( ho.targetName() );
   connect( pb, SIGNAL(clicked()), this, SLOT(edit()) );
   
   QHBoxLayout *lay =  new QHBoxLayout( this );
@@ -745,7 +745,7 @@ void DataDialog::showSimpleHelp(void)
     if( !ho )
       continue; // but how?
     help_str += "<p>" % ho->getType() 
-      % " <b> " % ho->objectName() % " </b>; // "
+      % " <b> " % ho->targetName() % " </b>; // "
       % ho->getParm("descr")  % " ("
       % ho->getParm("vis_name") % ")</p>\n";
   }
@@ -781,7 +781,7 @@ int DataDialog::createWidgets()
 
   DataWidget *w;
   QObjectList childs = ds.children();
-  // for( QObjectList::iterator o = childs.begin(); o != childs.end(); ++o ) {
+  
   for( auto o :  childs ) {
     QObject *xo = o;
     if( ! xo->inherits("HolderData" )) {
@@ -814,7 +814,7 @@ int DataDialog::createWidgets()
       nr_block = nr_max; nr = nr_block; nc = 0;
     }
 
-    QString name = ho->objectName();
+    QString name = ho->targetName();
     // QString visName = ho->getParm( "vis_name" );
     //qDebug( "DBG: createWidgets %s at (%d,%d+%d)", 
     //	    qPrintable(name), nr, nc, ncol  );

@@ -301,15 +301,15 @@ void QMo2View::newElm()
   if( rc != QDialog::Accepted )
     return;
   oord = oordq.toInt();
-  if( ! isGoodName( onameq.toLocal8Bit().constData() )  ) {
+  if( ! isGoodName( qPrintable(onameq) )  ) {
     qDebug( "error: QMo2View::newElm(): bad object name: <%s>", 
-	   onameq.toLocal8Bit().constData() );
+	   qPrintable(onameq) );
     return;
   }
-  i = root->findClass( cnmq.toLocal8Bit().constData() );
+  i = root->findClass( qPrintable(cnmq) );
   if( i < 1 ) {
     qDebug( "error: QMo2View::newElm(): class <%s> not found", 
-	cnmq.toLocal8Bit().constData() );
+	qPrintable(cnmq) );
     return;
   }
   ci = root->classInfoByNum( i );
@@ -317,7 +317,7 @@ void QMo2View::newElm()
   di.max_len = 0; di.dlg_x = di.dlg_y = di.dlg_w = di.dlg_h = 0;
   di.hval = di.dyna = 0; di.flags = 0; di.v_min = di.v_max = 0;
   di.name[0] = 0;
-  strncat( di.name, onameq.toLocal8Bit().constData(), MAX_NAMELEN-1 );
+  strncat( di.name, qPrintable(onameq), MAX_NAMELEN-1 );
   di.descr = ""; 
   di.listdata = "";
   model->insElem( &di, oord, sel_x, sel_y) ; // reset() implied
@@ -751,9 +751,8 @@ void QMo2View::newOut()
     onameq = oname_ed->text(); enameq = ename_ed->text();
     
     // TODO: all must be QString
-    if( isGoodName( onameq.toLatin1().constData() ) ) {
-      int irc = model->insOut( onameq.toLatin1().constData(), // and HERE!
-                               enameq.toLatin1().constData() );
+    if( isGoodName( qPrintable(onameq) ) ) {
+      int irc = model->insOut( qPrintable(onameq), qPrintable(enameq) );
       if( irc  ) {
 	QMessageBox::warning( this, "Error", 
 	   QString("Fail to add Output: ") + onameq, 
@@ -813,23 +812,7 @@ void QMo2View::editOut()
 
 void QMo2View::editOut2()
 {
-  TOutArr *arr;
-  int rc;
-  if( ! checkState( validCheck ) )
-    return;	
-
-  if( level < 0 || level >= model->getNOutArr() )
-    return;
-  arr = model->getOutArr( level );
-  if( arr == 0 )
-    return;
-  DataDialog *dia = new DataDialog( *arr, this );
-  rc = dia->exec();
-  delete dia;
-  if( rc == QDialog::Accepted ) {
-    model->reset(); model->setModified();
-    emit viewChanged();
-  };
+  editOut(); // moved to mainstream
 }
 
 
@@ -877,15 +860,15 @@ void QMo2View::showOutData() // TODO: special dialog (+ for many rows)
   dtv->setModel( dmod );
   lay->addWidget( dtv, 0, 0 );
 
-  sinf = QString( "n= " ) + QString::number( gi.row );
-  sinf += QString( "; \nave= " ) + QString::number( ave ); 
-  sinf += QString( "; \nave2= " ) + QString::number( ave2 ); 
-  sinf += QString( "; \nsum= " ) + QString::number( s ); 
-  sinf += QString( "; \nsum2= " ) + QString::number( s2 ); 
-  sinf += QString( ";\nD= " ) + QString::number( disp ); 
-  sinf += QString( "; \nsigm= " ) + QString::number( msq ); 
-  sinf += QString( "; \nmin= " ) + QString::number( vmin ); 
-  sinf += QString( "; \nmax= " ) + QString::number( vmax ); 
+  sinf = QString( "n= " ) % QString::number( gi.row )
+       % QString( "; \nave= " ) % QString::number( ave )
+       % QString( "; \nave2= " ) % QString::number( ave2 ) 
+       % QString( "; \nsum= " ) % QString::number( s )
+       % QString( "; \nsum2= " ) % QString::number( s2 )
+       % QString( ";\nD= " ) % QString::number( disp )
+       % QString( "; \nsigm= " ) % QString::number( msq )
+       % QString( "; \nmin= " ) % QString::number( vmin )
+       % QString( "; \nmax= " ) % QString::number( vmax ); 
   lab = new QLabel( sinf, dia );
   lab->setTextInteractionFlags( Qt::TextSelectableByMouse 
        | Qt::TextSelectableByKeyboard);
@@ -914,7 +897,7 @@ void QMo2View::exportOut()
       "Data files (*.txt *.dat *.csv);;All files (*)" );
   if( fnq.isEmpty() )
     return;
-  arr->dump( fnq.toLocal8Bit().constData(), ' ' ); // TODO: QString
+  arr->dump( qPrintable(fnq), ' ' ); // TODO: QString
 }
 
 
@@ -933,8 +916,8 @@ void QMo2View::newGraph()
       "Enter name of new Graph:", QLineEdit::Normal, 
       grnameq, &ok );
   if( ok ) {
-    if( isGoodName( aname.toLatin1().constData() ) ) { // TODO: QString
-      model->insGraph( aname.toLatin1().constData() );
+    if( isGoodName( qPrintable(aname)) ) { // TODO: QString
+      model->insGraph( qPrintable(aname) );
       emit viewChanged();
     };
   };
@@ -985,23 +968,7 @@ void QMo2View::editGraph()
 
 void QMo2View::editGraph2()
 {
-  if( ! checkState( validCheck ) )
-    return;	
-  if( level < 0 || level >= model->getNGraph() )
-    return;
-  TGraph *gra = model->getGraph( level );
-  if( gra == 0 )
-    return;
-  
-  DataDialog *dia = new DataDialog( *gra, this );
-  int rc = dia->exec();
-  delete dia;
-  
-  if( rc == QDialog::Accepted ) {
-    model->reset();
-    model->setModified();
-  };
-  emit viewChanged();
+  return editGraph(); // new in upstream
 }
 
 void QMo2View::showGraph()

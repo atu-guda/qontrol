@@ -16,6 +16,7 @@
 #include <QStringList>
 #include <QVariant>
 #include <QMap>
+#include <QtXml>
 typedef QMap<QString,QString> QSSMap;
 
 #include "defs.h"
@@ -41,7 +42,7 @@ struct TClassInfo {
   /** uniq class id; 0 -- end of list */
   int id;
   /** class name */
-  char className[MAX_NAMELEN];
+  const char *className;
   /** ptr to static fun for creating instanses */
   PFDataSet creator;
   /** ptr to parents TClassInfo or 0 for TDataSet */
@@ -73,6 +74,7 @@ class HolderData : public QObject {
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
   void extraToParm();
+  const QString& targetName() const { return target_name; };
   // tmp: to remove, use only set/getParm
   void setVisName( const QString &av_name );
   QString getVisName() const;
@@ -88,6 +90,7 @@ class HolderData : public QObject {
   virtual QString toString() const = 0;
   virtual bool fromString( const QString &s ) = 0;
   virtual const QString getType() const = 0;
+  virtual QDomElement toDom( QDomDocument &dd ) const;
   // TODO: to/from XML
   // TODO: metadata in/out
  protected:
@@ -96,6 +99,7 @@ class HolderData : public QObject {
   double v_min, v_max; // double as most common type, v_max = max_len
   QVariant::Type tp;
   void *ptr;
+  QString target_name;
   QStringList elems;
   QSSMap parms;
   // test for auto params inclusion TODO: remove!!!
@@ -316,6 +320,7 @@ class HolderObj : public HolderData {
   virtual bool fromString( const QString &s );
   virtual const QString getType() const;
   TDataSet* getObj() { return obj; } // XXX: may be horror here!!
+  virtual QDomElement toDom( QDomDocument &dd ) const;
  protected:
   TDataSet *obj;
 };
@@ -376,7 +381,7 @@ class TDataSet : public QObject {
    /** creator */
    static TDataSet* create( TDataSet *apar );
    /** request for creating object - done by TRootData .. */
-   virtual TDataSet* createObj( int id, TDataSet *apar );
+   virtual TDataSet* createObj( int id, const QString &nm, TDataSet *apar );
    /** class id */
    virtual int getClassId(void) const ;
    /** class name - for check & human purpose */
@@ -458,6 +463,7 @@ class TDataSet : public QObject {
    virtual QString toString() const;
    virtual bool fromString( const QString &s );
    void dumpStruct() const;
+   QDomElement toDom( QDomDocument &dd ) const;
  protected:
    /** count nelm, fills hval in d_i  */
    int initHash(void);

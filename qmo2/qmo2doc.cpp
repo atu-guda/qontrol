@@ -150,7 +150,7 @@ bool QMo2Doc::openDocument(const QString &filename )
   const TDataInfo *inf;
   ifstream is;
   errno = 0;
-  is.open( filename.toLocal8Bit().constData() );
+  is.open( qPrintable( filename ) );
   if( ! is.good() ) {
     QMessageBox::critical( 0, "openDocument Error:",
        QString("Fail to open file: ") + filename + QString(" :\n") +
@@ -320,40 +320,44 @@ QString QMo2Doc::makeXMLold() const
 
   QDomElement dd_root = dd.createElement("QontrolLabML");
   dd.appendChild( dd_root );
+
+  QDomElement de = rootdata->toDom( dd );
+  // QDomElement de = model->toDom( dd );
+  dd_root.appendChild( de );
   
   // defaults
-  QDomElement defs = dd.createElement("defaults");
+  //QDomElement defs = dd.createElement("defaults");
 
-  QDomElement def_model = dd.createElement( "def_model" );
-  QDomText def_model_name = dd.createTextNode( "main" );
-  def_model.appendChild( def_model_name );
-  defs.appendChild( def_model );
+  //QDomElement def_model = dd.createElement( "def_model" );
+  //QDomText def_model_name = dd.createTextNode( "main" );
+  //def_model.appendChild( def_model_name );
+  //defs.appendChild( def_model );
 
-  QDomElement def_exp = dd.createElement( "def_exp" );
-  QDomText def_exp_name = dd.createTextNode( "run1" );
-  def_exp.appendChild( def_exp_name );
-  defs.appendChild( def_exp );
+  //QDomElement def_exp = dd.createElement( "def_exp" );
+  //QDomText def_exp_name = dd.createTextNode( "run1" );
+  //def_exp.appendChild( def_exp_name );
+  //defs.appendChild( def_exp );
   
   // Experiments
-  QDomElement exps = dd.createElement("experimemts");
-  dd_root.appendChild( exps );
+  //QDomElement exps = dd.createElement("experimemts");
+  //dd_root.appendChild( exps );
 
-  QDomElement exp1 = dd.createElement("experimemt");
-  exps.appendChild(exp1);
-  exp1.setAttribute( "name", "run1");
+  //QDomElement exp1 = dd.createElement("experimemt");
+  //exps.appendChild(exp1);
+  //exp1.setAttribute( "name", "run1");
   // TODO: data from model
-  QDomText te1a = dd.createTextNode("run1 data will be here");
-  exp1.appendChild(te1a);
+  //QDomText te1a = dd.createTextNode("run1 data will be here");
+  //exp1.appendChild(te1a);
 
-  QDomElement schems = dd.createElement("schems");
-  dd_root.appendChild( schems );
+  //QDomElement schems = dd.createElement("schems");
+  //dd_root.appendChild( schems );
   
-  QDomElement sch1 = dd.createElement("sch");
-  sch1.setAttribute( "name", "main");
+  //QDomElement sch1 = dd.createElement("sch");
+  //sch1.setAttribute( "name", "main");
   // TODO: data from model
-  schems.appendChild(sch1);
+  //schems.appendChild(sch1);
   
-  dd_root.appendChild( defs );
+  //dd_root.appendChild( defs );
   
   
   return dd.toString();

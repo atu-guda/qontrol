@@ -90,9 +90,9 @@ HolderData::HolderData( const QString &obj_name,
            :QObject( a_parent ), old_tp(0), old_subtp(0), 
 	    dyn(0), flags(a_flags),
 	    v_min(DMIN), v_max(DMAX),
-	    tp(QVariant::Invalid), ptr(0)
+	    tp(QVariant::Invalid), ptr(0), target_name( obj_name )
 {
-  setObjectName( obj_name );
+  setObjectName( "_HO_" + obj_name );
 
   if( v_name.isNull() )  {
     setParm( "vis_name", obj_name );
@@ -182,6 +182,19 @@ void HolderData::setElems( const QString &els )
 const QString HolderData::getType() const // = 0;
 {
   return "None";
+}
+
+QDomElement HolderData::toDom( QDomDocument &dd ) const
+{
+  QDomElement de = dd.createElement( "param" );
+  de.setAttribute( "name", targetName() );
+  if( dyn ) {
+    de.setAttribute( "dyn", "1" );
+    de.setAttribute( "otype", getType() );
+  }
+  QDomText tn = dd.createTextNode( toString() );
+  de.appendChild( tn );
+  return de;
 }
 
 // ---------------- HolderInt ---------
@@ -617,7 +630,7 @@ HolderObj::HolderObj( TDataSet *p, const QString &obj_name,
   if( getParm("props").isEmpty() ) {
     setParm( "props", "OBJ" );
   }
-  obj->setObjectName( QString("_real_") + obj_name );
+  obj->setObjectName( obj_name );
 }
 
 HolderObj::~HolderObj()
@@ -655,6 +668,11 @@ bool HolderObj::fromString( const QString &s )
 const QString HolderObj::getType() const
 {
   return L8B( obj->getClassName() );
+}
+
+QDomElement HolderObj::toDom( QDomDocument &dd ) const
+{
+  return obj->toDom( dd );
 }
 
 
@@ -750,13 +768,24 @@ TDataSet* TDataSet::create( TDataSet* apar )
   return new TDataSet( apar );
 }
 
-TDataSet* TDataSet::createObj( int id, TDataSet* apar )
+// TODO: totaly rewrite!
+TDataSet* TDataSet::createObj( int id, const QString &nm, TDataSet* apar )
 {
-  if( id == getClassId() )  // same object type
-    return create( apar );
-  if( parent == 0 )         // no parent - no creating
+  TDataSet *ob;
+  if( id == getClassId() )  { // same object type
+    ob = create( apar );
+  } else if ( parent == 0 ) { // no parent - no creating
     return 0;
-  return parent->createObj( id, apar );
+  } else {
+    ob =  parent->createObj( id, nm, apar );
+  }
+  if( ! ob ) 
+    return nullptr;
+  
+  // name is set by holder
+  /*HolderObj *ho = */ new HolderObj( ob, nm, nm, apar, 0, "", "" );
+
+  return ob;
 }
 
 const char *TDataSet::getHelp(void) const
@@ -1344,20 +1373,19 @@ int TDataSet::add_obj( const TDataInfo* dai )
   if( k >= 0 ) return -1; // name busy
   if( !isValidType( dai->tp, dai->subtp ) )
     return -1;	  
-  switch( dai->tp ) {
+  switch( dai->tp ) { // TODO: holders
     case dtpInt: sob = new int;     break;
     case dtpDou: sob = new double;  break;
-    case dtpStr: j = dai->max_len;
+    case dtpStr: j = dai->max_len; // TODO: horror here! QString
             if( j < 1 ) return -1;
             sob = cob = new char[j+2];
 	    cob[0] = 0;  break;
-    case dtpObj: ob = createObj( dai->subtp, this );
+    case dtpObj: ob = createObj( dai->subtp, L8B(dai->name), this );
             if( ob == 0 ) {
               fprintf( stderr, "TDataSet::add_obj: fail to create: %s %d\n",
                        dai->name, dai->subtp );
               return -1;
             };
-            ob->setObjectName( QString::fromLocal8Bit(dai->name) );
             sob = ob;
             break;
     case dtpDial: case dtpLabel: case dtpGroup: sob = 0; break;
@@ -1398,7 +1426,15 @@ int TDataSet::del_obj( int n_ptrs )
     case dtpStr: s_ob = (char*)ptrs[n_ptrs];
                  delete[] s_ob; break;
     case dtpObj: ob = static_cast<TDataSet*>( ptrs[n_ptrs] );
-                 delete ob; break;
+		 QString ho_name = "_HO_" + ob->objectName();
+                 delete ob; 
+		 HolderObj* hob = findChild<HolderObj*>(ho_name);
+		 if( hob ) {
+		   delete hob;
+		 } else {
+		   qDebug( "WARN: fail to fild to del holder %s", qPrintable(ho_name) );
+		 }
+		 break;
   };
   ptrs[n_ptrs] = 0;
   //delete[] d_i[n_ptrs].descr;
@@ -1480,9 +1516,9 @@ QString TDataSet::toString() const
     HolderData *ho = qobject_cast<HolderData*>(xo);
     buf += QString( lev*2, QChar(' ') ); // for indent (human view). Is needed?
     if( ho->inherits( "HolderObj" ) ) {
-      buf += xo->objectName() + " = {\n" + ho->toString() + "}\n"; 
+      buf += ho->targetName() + " = {\n" + ho->toString() + "}\n"; 
     } else {
-      buf += xo->objectName() + " = \"" + quoteString( ho->toString() ) + "\"\n"; 
+      buf += ho->targetName() + " = \"" + quoteString( ho->toString() ) + "\"\n"; 
     }
   }
   --lev;
@@ -1492,6 +1528,40 @@ QString TDataSet::toString() const
 bool TDataSet::fromString( const QString & /*s*/ )
 {
   return false; // TODO;
+}
+
+QDomElement TDataSet::toDom( QDomDocument &dd ) const
+{
+  QDomElement de = dd.createElement( "obj" );
+  de.setAttribute( "name", objectName() );
+  de.setAttribute( "otype", getClassName() );
+  
+  QObjectList childs = children();
+  for( auto o :  childs ) {
+    QObject *xo = o;
+    qDebug( "debug: TDataSet::toDom type: %s name: %s",
+	qPrintable( xo->metaObject()->className() ),
+	qPrintable( xo->objectName() )
+    );
+    if( xo->inherits("HolderData" )) {
+      HolderData *ho = qobject_cast<HolderData*>(xo);
+      if( !ho )
+	continue; // but how?
+      if( ho->getFlags() & efNoSave )
+	continue;
+      QDomElement cde = ho->toDom( dd );
+      de.appendChild( cde );
+    }
+
+    // TODO: drop this! add/remove holder with object
+    if( xo->inherits("TDataSet" )) {
+      TDataSet *ob = qobject_cast<TDataSet*>(xo);
+      QDomElement cde = ob->toDom( dd );
+      de.appendChild( cde );
+    }
+  }
+  
+  return de;
 }
 
 void TDataSet::dumpStruct() const

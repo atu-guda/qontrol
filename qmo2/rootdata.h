@@ -26,7 +26,7 @@ class TRootData : public TDataContainer {
    /** creator */
    static TDataSet* create( TDataSet* apar );
    /** real creating object by it's id */
-   virtual TDataSet* createObj( int id, TDataSet* apar );
+   virtual TDataSet* createObj( int id, const QString &nm, TDataSet* apar );
    /** class id */
    virtual int getClassId(void) const;
    /** class name - for check & human purpose */

@@ -14,6 +14,7 @@ LIBS += -L ../elems -lelems -lgsl -lgslcblas -lm
 SOURCES += \
   datacont.cpp \
   dataset.cpp \
+  elemfact.cpp \
   main.cpp \
   miscfun.cpp \
   mo2settdlg.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
   datacont.h \
   dataset.h \
   defs.h \
+  elemfact.h \
   miscfun.h \
   mo2settdlg.h \
   myelems1.h \

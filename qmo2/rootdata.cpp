@@ -63,16 +63,19 @@ const char *TRootData::getHelp(void) const
 
 
 
-TDataSet* TRootData::createObj( int id, TDataSet* apar ) 
+TDataSet* TRootData::createObj( int id, const QString &nm, TDataSet* apar ) 
 {
   int n;
   PFDataSet f;
   TDataSet* ob;
   n = findClass( id );
-  if( n < 0 ) return 0;  // no class found
+  if( n < 0 ) 
+    return 0;  // no class found
   f = cl_info[n].creator;
-  if( f == 0 ) return 0;
+  if( f == 0 ) 
+    return 0;
   ob = (*f)( apar );
+  ob->setObjectName( nm );
   return ob;
 }
 
@@ -87,8 +90,7 @@ int TRootData::regClass( const TClassInfo *ci )
   j = findClass( ci->className );
   if( j >= 0 ) return -1; // name busy
   cl_info[n_reg].id = ci->id;
-  strncpy( cl_info[n_reg].className, ci->className, MAX_NAMELEN );
-  cl_info[n_reg].className[MAX_NAMELEN-1] = 0;
+  cl_info[n_reg].className = ci->className;
   cl_info[n_reg].creator = ci->creator;
   cl_info[n_reg].parent_class = ci->parent_class;
   cl_info[n_reg].helpstr = ci->helpstr;
