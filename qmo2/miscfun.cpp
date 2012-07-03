@@ -492,6 +492,17 @@ int isGoodName( const QString &s )
   return 1;
 }
 
+QString flags2str( int fl ) {
+  static const char *lbl[7] = { "MR", "NRC", "ND", "ROD", "NS", "RO" , "?1" };
+  QString s = "";
+  for( int j=0; j<7; j++ ) {
+    if( fl & ( 1 << j ) ) {
+      s += lbl[j]; s += ",";
+    };
+  };
+  return s;
+}
+
 double thetta( double x )
 {
   return ( x>0 ) ? 1 : 0;

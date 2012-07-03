@@ -105,9 +105,10 @@ const char** TOutputAny::getIcon(void) const
 
 int TOutputAny::preRun( int run_tp, int an, int anx, int any, double adt )
 {
-  int i, k, l, rc;
+  int k, l, rc;
   char fname[MAX_NAMELEN], rname[MAX_INPUTLEN], tname[MAX_INPUTLEN];
-  TDataSet* cob; const TDataInfo *di;
+  TDataSet *cob, *nob;
+  lastname = "";
   rc = TMiso::preRun( run_tp, an, anx, any, adt );
   type = -1; ne = -1; pel = 0;
   l = name.size();
@@ -121,18 +122,23 @@ int TOutputAny::preRun( int run_tp, int an, int anx, int any, double adt )
   strncat( tname, name.toLocal8Bit().constData(), MAX_INPUTLEN-1 );
   while( 1 ) {
     k = splitName( tname, fname, rname );
-    if( k < 0 )  return 0;  // bad name
-    i = cob->getDataIdx( fname );
-    if( i < 0 )   // no such name
-	return 0;
+    if( k < 0 )  
+      return 0;  // bad name
+    nob = static_cast<TDataSet*>( cob->getObj( fname ) ); // danger, check !!!!
+    if( !nob ) {  // no such name 
+      qDebug( "DBG: %s: not found fname: \"%s\" ", __FUNCTION__, fname );
+      return 0;
+    }
     if( k == 1 ) { // only left part of name w/o '.'
-      pel = cob; ne = i; type = 0; break;
+      pel = cob; lastname = L8B(fname); type = 0; break;
     } else {  // both component of name: aa.bb.cc -> aa  bb.cc
-      di = cob->getDataInfo( i );
-      if( di->tp != dtpObj ) 
+      // TODO: FIXME: real check!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      // di = cob->getDataInfo( i );
+      //if( di->tp != dtpObj ) 
+      // return 0;
+      cob = nob;
+      if( cob == 0 ) 
 	return 0;
-      cob = static_cast<TDataSet*>( cob->getObj( i ) );
-      if( cob == 0 ) return 0;
       tname[0] = 0; strncat( tname, rname, sizeof(tname)-1 );
     };
   };

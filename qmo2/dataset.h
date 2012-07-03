@@ -24,6 +24,7 @@ typedef QMap<QString,QString> QSSMap;
 #define MAX_LISTLEN  256
 #define CLASS_ID_TDataSet 1
 
+
 using namespace std;
 
 class QColor;
@@ -70,7 +71,7 @@ class HolderData : public QObject {
 	      const QString &a_descr = QString(), 
 	      const QString &a_extra = QString() );
   virtual ~HolderData() {}; // place to delete auto data
-  // void* getPtr() const { return ptr; } ; // horror here !!!
+  void* getPtr() const { return ptr; } ; // horror here !!!
   QVariant::Type getTp() const { return tp; };
   int getOldTp() const { return old_tp; };
   int getOldSubTp() const { return old_subtp; };
@@ -390,14 +391,12 @@ class TDataSet : public QObject {
    static TDataSet* create( TDataSet *apar );
    /** request for creating object - to be obsoleted */
    virtual TDataSet* createObj( int id, const QString &nm, TDataSet *apar );
-   /** new way to create objects. nonvirtual? */
+   /** new way to create objects */
    TDataSet* createObj( const QString &cl_name, const QString &nm, TDataSet* apar );
-   /** class id */
+   /** class id  - for compat */
    virtual int getClassId(void) const ;
    /** class name - for check & human purpose */
    const char* getClassName(void) const;
-   /** return child name, or 0 -- parent don't know it */
-   virtual const char* getChildName( const TDataSet* child ) const;
    /** fills dst with full name[MAX_INPUTLEN] of object: aaa.bbb.cc  */
    QString getFullName() const;
    /** returns ptr to help string */
@@ -410,10 +409,10 @@ class TDataSet : public QObject {
    void setModified(void) { modified |= 1; };
    /** return nelm */
    virtual int getN(void) const;
-   /** return ptr to elem by idx */
-   virtual void* getObj( int ni );
    /** return ptr to elem by name */
    virtual void* getObj( const char *ename );   
+   /** find holder for object */
+   HolderData* getHolder( const QString &oname );
    /** return element description or 0 */
    virtual const TDataInfo* getDataInfo( int ni ) const;
    /** data index or -1 if not found  */
@@ -451,8 +450,10 @@ class TDataSet : public QObject {
    virtual int saveDatas( ostream *os );
    /** load data to all elements */
    virtual int loadDatas( istream *is );
-   /** add new object and it's description */
-   virtual int add_obj( const TDataInfo *dai );
+   /** add new object and it's description (old) */
+   virtual void* add_obj( const TDataInfo *dai );
+   /** add new object and it's description (new)*/
+   virtual void* add_obj( const QString &cl_name, const QString &ob_name );
    /** delete given object by num in ptrs */
    virtual int del_obj( int n_ptrs );
    /** is given type of subelement valid for this object */
@@ -474,6 +475,7 @@ class TDataSet : public QObject {
    virtual bool fromString( const QString &s );
    void dumpStruct() const;
    QDomElement toDom( QDomDocument &dd ) const;
+   void check_guard() const;
  protected:
    /** count nelm, fills hval in d_i  */
    int initHash(void);
@@ -482,6 +484,9 @@ class TDataSet : public QObject {
    /** parse & assing one elem. returns: 0-ok 1-comment 2-end; <0-error */
    int processElem( istream *is );
  protected:
+   /** guard value */
+   int guard;
+   static const int guard_val = 7442428;
    /** parent may be 0 */
    TDataSet *parent;
    /** current number of elements */
@@ -523,6 +528,7 @@ class ElemFactory {
    bool unregisterElemType( const QString &a_type );
    QStringList allTypeNames() const { return str_class.keys() ; };
    const TClassInfo* getInfo( const QString &a_type ) const;
+   const TClassInfo* getInfo( int t_id ) const;
 
   private:
    ElemFactory();

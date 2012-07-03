@@ -544,11 +544,9 @@ TGraph* TModel::getGraph( int gra_nu )/*{{{1*/
 int TModel::insElem( const TDataInfo *cdi, int aord, int avis_x, int avis_y )/*{{{1*/
 {
   TMiso *ob;
-  int k;
   reset();
-  k = add_obj( cdi );
-  ob = static_cast<TMiso*>( ptrs[nelm-1] );
-  if( k != 0 || ob == 0 || ob->isChildOf( "TMiso" ) == 0 ) 
+  ob = static_cast<TMiso*>( add_obj( cdi ) );
+  if( ob == 0 || ob->isChildOf( "TMiso" ) == 0 ) 
     return -1;
   ob->setDataSI( "ord", aord, 0 );
   ob->setDataSI( "vis_x", avis_x, 0 );  ob->setDataSI( "vis_y", avis_y, 0 );
@@ -560,15 +558,12 @@ int TModel::insElem( const TDataInfo *cdi, int aord, int avis_x, int avis_y )/*{
 int TModel::insOut( const char *outname, const char *objname )/*{{{1*/
 {
   TOutArr *ob;
-  int k;
   static TDataInfo odi = 
    { dtpObj, CLASS_ID_TOutArr, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0, 
 	   "", "", "" };
   reset();
   odi.name[0] = 0; strncat( odi.name, outname, MAX_NAMELEN-1 );
-  k = add_obj( &odi );
-  if( k != 0 ) return k;
-  ob = static_cast<TOutArr*>( ptrs[nelm-1] );
+  ob = static_cast<TOutArr*>( add_obj( &odi ) );
   if( ob == 0 || ob->isChildOf( "TOutArr" ) == 0 ) 
     return -1;
   QString t_objname( objname ); // TODO drop
@@ -591,15 +586,12 @@ int TModel::insOut( const char *outname, const char *objname )/*{{{1*/
 int TModel::insGraph( const char *gname )/*{{{1*/
 {
   TGraph *ob;
-  int k;
   static TDataInfo gdi = 
    { dtpObj, CLASS_ID_TGraph, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0, 
 	   "", "", "" };
   reset();
   gdi.name[0] = 0; strncat( gdi.name, gname, MAX_NAMELEN-1 );
-  k = add_obj( &gdi );
-  if( k != 0 ) return -1;
-  ob = static_cast<TGraph*>( ptrs[nelm-1] );
+  ob = static_cast<TGraph*>( add_obj( &gdi ) );
   if( ob == 0 || ob->isChildOf( "TGraph" ) == 0 ) 
     return -1;
   linkNames(); 
@@ -746,9 +738,10 @@ int TModel::linkNames(void)/*{{{1*/
     inps.push_back( li_el()  );    pinps.push_back( li_el()  );
     pnames.push_back( li_el()  );  pflags.push_back( li_el()  );
     ob = static_cast<TMiso*>(ptrs[v_el[i]]);
-    k = ob->getDataIdx( "links" );
-    if( k < 0 ) continue;
-    lob = static_cast<TElmLink*>(ob->getObj( k )); maxli = maxlp = 0;
+    lob = static_cast<TElmLink*>(ob->getObj( "links" )); 
+    if( !lob ) 
+      continue;
+    maxli = maxlp = 0;
     ob_lock = ob_noauto = 0; k = 0;
     lob->getDataSI( "locked", &ob_lock, 0 );
     lob->getDataSI( "noauto", &ob_noauto, 0 );

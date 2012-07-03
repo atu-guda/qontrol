@@ -544,77 +544,56 @@ void QMo2View::moveElm()
 void QMo2View::infoElm()
 {
   TMiso *ob; 
-  const TDataInfo *di;
-  int i, j, nelm, ibuf;
   QString cbuf;
-  double dbuf;
   QDialog *dia; 
   QPushButton *bt_ok;
   QVBoxLayout *lay;
   QTableWidget *tv;
   QString qs;
-  static const char *lbl[7] = { "MR", "NRC", "ND", "ROD", "NS", "RO" , "?1" };
   if( ! checkState( selCheck ) )
     return;	  
   ob = model->getMiso( sel );
   if( ob == 0 )
     return;
-  nelm = ob->getN();
+  
   dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": Structure of ") + ob->objectName() );
 
   lay = new QVBoxLayout();
 
-  tv = new QTableWidget( nelm, 5, dia );
+  tv = new QTableWidget( 100, 6, dia );
   QStringList hlabels;
-  hlabels << "Name" << "Type" << "Value" << "Descr" << "Flags";
+  hlabels << "Name" << "Type" << "Value" << "Descr" << "Target"<< "Flags";
   tv->setHorizontalHeaderLabels( hlabels );
-  QTableWidgetItem *it;
+  
+  QObjectList childs = ob->children();
+  
+  int i = 0;
+  for( auto o :  childs ) {
+    QObject *ob = o;
+    tv->setItem( i, 0, new  QTableWidgetItem( ob->objectName() ) ); 
+    if( ob->inherits("TDataSet" ) ) {
+      TDataSet *ds = qobject_cast<TDataSet*>(ob);
+      tv->setItem( i, 1, new QTableWidgetItem(ds->getClassName()) );
+      tv->setItem( i, 2, new QTableWidgetItem( ds->toString() ) );
+    } else if( ob->inherits("HolderData" ) ) {
+      HolderData *ho = qobject_cast<HolderData*>(ob);
+      tv->setItem( i, 1, new QTableWidgetItem(ho->getType() ) );
+      tv->setItem( i, 2, new QTableWidgetItem(ho->toString() ) );
+      tv->setItem( i, 3, new QTableWidgetItem(ho->getParm("vis_name") + " \"" 
+	            + ho->getParm("descr" ) + "\"" ) );
+      tv->setItem( i, 4, new QTableWidgetItem( ho->targetName() ) );
+      tv->setItem( i, 5, new QTableWidgetItem( flags2str(ho->getFlags()) ) );
 
-  for( i=0; i<nelm; ++i ) {
-    di = ob->getDataInfo( i );
-    if( di == 0 ) continue;
-    
-    it = new QTableWidgetItem( di->name );
-    tv->setItem( i, 0, it ); 
-    it = new QTableWidgetItem( QString::fromLocal8Bit(di->descr) );
-    tv->setItem( i, 3, it ); 
+    } else { // unknown
+      tv->setItem( i, 1, new QTableWidgetItem("???unknown???" ) );
+      tv->setItem( i, 2, new QTableWidgetItem(ob->metaObject()->className() ) );
+    }
+    ++i;
+  }
 
-    qs = "";
-    for( j=0; j<7; j++ ) {
-      if( di->flags & ( 1 << j ) ) {
-	qs += lbl[j]; qs += ",";
-      };
-    };
-    it = new QTableWidgetItem( qs );
-    tv->setItem( i, 4, it ); 
 
-    ibuf = 0; dbuf = 0; cbuf = "";
-    QString t_s, v_s;
-    switch( di->tp ) {
-      case dtpInt: ob->getDataII( i, &ibuf, 0 );
-		   t_s = QString("i/") + QString::number( di->subtp ); 
-	           v_s = QString::number(ibuf);
-		   break;
-      case dtpDbl: ob->getDataID( i, &dbuf, 0 );
-	           t_s = QString("d/") + QString::number( di->subtp );
-	           v_s = QString::number(dbuf);
-		   break;
-      case dtpStr: ob->getDataIS( i, &cbuf, 4096, 0 ); // TODO drop limit
-	           t_s = QString("s/") + QString::number( di->max_len );
-	           v_s = cbuf;
-		   break;
-      default: 
-	           t_s = QString("X/") + QString::number( di->tp );
-		   t_s += QString("/");
-		   t_s += QString::number( di->subtp );
-	           v_s = QString::fromLocal8Bit( di->listdata );
-    };
-    it = new QTableWidgetItem( t_s );
-    tv->setItem( i, 1, it ); 
-    it = new QTableWidgetItem( v_s );
-    tv->setItem( i, 2, it ); 
-  };
+  
   lay->addWidget( tv );
 
   bt_ok = new QPushButton( tr("Done"), dia);
@@ -623,7 +602,7 @@ void QMo2View::infoElm()
   dia->setLayout( lay );
 
   connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
-  dia->resize( 600, 300 );
+  // dia->resize( 600, 300 );
   dia->exec();
   delete dia;
   emit viewChanged();

@@ -104,3 +104,13 @@ const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
   return i.value();
 }
 
+const TClassInfo* ElemFactory::getInfo( int t_id ) const
+{
+  MapIdClass::const_iterator i = id_class.find( t_id );
+  if( i == id_class.end() ) {
+    qDebug( "ERR: create: fail to find class id %d", t_id ); 
+    return 0;
+  }
+  return getInfo( i.value() );
+}
+

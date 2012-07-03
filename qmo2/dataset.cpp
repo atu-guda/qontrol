@@ -621,10 +621,10 @@ HolderObj::HolderObj( TDataSet *p, const QString &obj_name,
 {
   // no create? what to do if p == 0 ?
   if( !p ) {
-    qDebug( "*** HolderObj::HolderObj p = 0 obj_name=%s !",
+    qDebug( "ERR: *** HolderObj::HolderObj p = 0 obj_name=%s !",
 	qPrintable( obj_name ) );
   }
-  post_set();
+  // post_set();
   ptr = obj; tp=QVariant::UserType; old_tp = dtpObj; 
   old_subtp = obj->getClassId();
   if( getParm("props").isEmpty() ) {
@@ -692,6 +692,7 @@ const char* TDataSet::helpstr =
 TDataSet::TDataSet( TDataSet* aparent )
          :QObject( aparent )
 {
+ guard = guard_val;
  parent = aparent;
  nelm = 0; allow_add = 0; d_i_alloc = 0; state = stateGood; modified = 0;
  ptrs.reserve( 64 ); // good value for simple objects
@@ -728,23 +729,6 @@ const char* TDataSet::getClassName(void) const
 const TClassInfo* TDataSet::getClassInfo(void) const
 {
   return &class_info;
-}
-
-//const char* TDataSet::getName(void) const
-//{
-//  if( parent == 0 )
-//    return "";
-//  return parent->getChildName( this );    
-//}
-
-const char* TDataSet::getChildName( const TDataSet* child ) const
-{
-  int i;
-  for( i=0; i<nelm; i++ ) {
-    if( static_cast<const void*>(child) == ptrs[i] )
-      return d_i[i].name;
-  };
-  return 0;
 }
 
 QString TDataSet::getFullName() const
@@ -803,20 +787,28 @@ int TDataSet::getN(void) const
   return nelm;
 }
 
-void* TDataSet::getObj( int ni )
-{
-  if( ni < 0 || ni >= nelm )
-    return 0;
-  return ptrs[ni];
-}
-
 void* TDataSet::getObj( const char *ename )
 {
-  int ni;
-  ni = getDataIdx( ename );
-  if( ni < 0 || ni >= nelm )
-    return 0;
-  return ptrs[ni];
+  HolderData *ho = getHolder( ename );
+  if( !ho ) {
+    qDebug( "ERR: TDataSet::getObj: not found element %s", ename );
+  } 
+  return ho->getPtr();
+  //int ni;
+  //ni = getDataIdx( ename );
+  //if( ni < 0 || ni >= nelm )
+  //  return 0;
+  //return ptrs[ni];
+}
+
+HolderData* TDataSet::getHolder( const QString &oname )
+{
+  QString ho_name = "_HO_" + oname; 
+  HolderData *ho = findChild<HolderData*>(ho_name);
+  //if( !ho ) {
+  //  qDebug( "ERR: TDataSet::getHolder: not found holder for %s", qPrintable(oname) );
+  //} 
+  return ho;
 }
 
 const TDataInfo* TDataSet::getDataInfo( int ni ) const
@@ -1166,6 +1158,7 @@ int TDataSet::setDataSD( const char *nm, double da, int allowConv )
 
 int TDataSet::checkData( int /* ni */ )
 {
+  check_guard();
   return 0;
 }
 
@@ -1351,11 +1344,17 @@ int TDataSet::processElem( istream *is )
               str, j );
       return -10;
     };
-    j = add_obj( &inf );
-    if( j != 0 ) {
+    // j = add_obj( &inf );
+    const TClassInfo *ci = ElemFactory::theFactory().getInfo( inf.subtp ) ;
+    if( ! ci ) {
+      qDebug( "ERR:  :fail find class for type %d", inf.subtp );
+      return -15;
+
+    }
+    
+    if( ! add_obj( L8B(ci->className), L8B(inf.name) ) ) {
       fprintf( stderr, "TDataSet::processElem: fail to create %s\n",
                inf.name );
-      // delete[] inf.descr; delete[] inf.listdata;
       return -14;
     };  
     return ltpStruct;
@@ -1363,38 +1362,41 @@ int TDataSet::processElem( istream *is )
   return 0;
 }
 
-int TDataSet::add_obj( const TDataInfo* dai )
+void* TDataSet::add_obj( const TDataInfo* dai )
 {
   int j, k;
   TDataSet* ob;
   void *sob; char *cob;
   if( !allow_add || !d_i_alloc )
-    return -1;
+    return nullptr;
   if( nelm >= MAX_DATAELEM )
-    return -1;
+    return nullptr;
   if( dai == 0 )
-    return -1;
+    return nullptr;
   k = getDataIdx( dai->name );
-  if( k >= 0 ) return -1; // name busy
+  if( k >= 0 ) // name busy
+    return nullptr; 
+
   if( !isValidType( dai->tp, dai->subtp ) )
-    return -1;	  
+    return nullptr;	  
   switch( dai->tp ) { // TODO: holders
     case dtpInt: sob = new int;     break;
     case dtpDou: sob = new double;  break;
     case dtpStr: j = dai->max_len; // TODO: horror here! QString
-            if( j < 1 ) return -1;
+            if( j < 1 ) 
+	      return nullptr;
             sob = cob = new char[j+2];
 	    cob[0] = 0;  break;
     case dtpObj: ob = createObj( dai->subtp, L8B(dai->name), this ); // TODO: use new
             if( ob == 0 ) {
               fprintf( stderr, "TDataSet::add_obj: fail to create: %s %d\n",
                        dai->name, dai->subtp );
-              return -1;
+              return nullptr;
             };
             sob = ob;
             break;
     case dtpDial: case dtpLabel: case dtpGroup: sob = 0; break;
-    default: return -1;  // unknown object type
+    default: return nullptr;  // unknown object type
   };
   if( int(ptrs.size()) <= nelm )
     ptrs.push_back(0);
@@ -1412,7 +1414,43 @@ int TDataSet::add_obj( const TDataInfo* dai )
   d_i[nelm].hval = hashVal( d_i[nelm].name );
   nelm++;
   d_i[nelm].tp = dtpEnd; ptrs[nelm]=0;
-  return 0;
+  return sob;
+}
+
+void* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
+{
+  if( !allow_add )
+    return nullptr;
+  if( getHolder( ob_name ) != nullptr ) {
+    qDebug( "ERR: TDataSet::add_obj: name \"%s\" exist!", qPrintable(ob_name) );
+    return nullptr;
+  }
+  // TODO: no simple types for now!
+  TDataSet *ob = ElemFactory::theFactory().createElem( cl_name, ob_name, this );
+  if( !ob ) {
+    return nullptr;
+  }
+  ob->check_guard();
+  const TClassInfo *cl = ElemFactory::theFactory().getInfo( cl_name );
+  
+  // TODO: KILL! legacy part // most values is fake!
+  ptrs.push_back(0);
+  ptrs[nelm] = ob;
+  d_i[nelm].tp = dtpObj; 
+  d_i[nelm].subtp = cl->id;
+  d_i[nelm].max_len = 0;
+  d_i[nelm].dlg_x = 0; d_i[nelm].dlg_y = 0;
+  d_i[nelm].dlg_w = 0; d_i[nelm].dlg_h = 0;
+  d_i[nelm].v_min = 0; d_i[nelm].v_max = 0;
+  d_i[nelm].dyna = 1; d_i[nelm].flags = 0;
+  d_i[nelm].name[0] = 0;
+  strncat( d_i[nelm].name, qPrintable(ob_name), MAX_NAMELEN-1 );
+  d_i[nelm].descr = "";
+  d_i[nelm].listdata = "";
+  d_i[nelm].hval = hashVal( d_i[nelm].name );
+  nelm++;
+  d_i[nelm].tp = dtpEnd; ptrs[nelm]=0;
+  return ob;
 }
 
 int TDataSet::del_obj( int n_ptrs )
@@ -1459,6 +1497,7 @@ int TDataSet::isValidType( int /* a_tp*/, int /* a_subtp */ ) const
 
 int TDataSet::isChildOf( const char *cname )
 {
+  check_guard();
   const TClassInfo *ci, *pci;
   int l;
   l = strlen( cname );
@@ -1476,6 +1515,7 @@ int TDataSet::isChildOf( const char *cname )
 
 int TDataSet::isChildOf( int cid )
 {
+  check_guard();
   const TClassInfo *ci, *pci;
   if( cid == getClassId() )
     return 1;
@@ -1491,21 +1531,25 @@ int TDataSet::isChildOf( int cid )
 // FIXME: implement 
 bool TDataSet::set( const QVariant & x )
 {
+  check_guard();
   return fromString( x.toString() );
 }
 
 QVariant TDataSet::get() const
 {
+  check_guard();
   return QVariant( this->toString() );// TODO:
 }
 
 void TDataSet::post_set()
 {
+  check_guard();
 // TODO:
 }
 
 QString TDataSet::toString() const
 {
+  check_guard();
   static int lev = -1; 
   ++lev;
   QString buf;
@@ -1559,14 +1603,22 @@ QDomElement TDataSet::toDom( QDomDocument &dd ) const
     }
 
     // TODO: drop this! add/remove holder with object
-    if( xo->inherits("TDataSet" )) {
-      TDataSet *ob = qobject_cast<TDataSet*>(xo);
-      QDomElement cde = ob->toDom( dd );
-      de.appendChild( cde );
-    }
+    //if( xo->inherits("TDataSet" )) {
+    //  TDataSet *ob = qobject_cast<TDataSet*>(xo);
+    //  QDomElement cde = ob->toDom( dd );
+    //  de.appendChild( cde );
+    //}
   }
   
   return de;
+}
+
+void TDataSet::check_guard() const
+{
+  if( guard != guard_val )  {
+    qDebug( "Guard value!!!");
+    abort();
+  }
 }
 
 void TDataSet::dumpStruct() const
@@ -1580,6 +1632,7 @@ void TDataSet::dumpStruct() const
 	i, d_i[i].name, d_i[i].tp, d_i[i].subtp, ptrs[i] );
   }
   // new part
+  qDebug( "----- new part --" );
   QObjectList childs = children();
   int i = 0;
   for( auto o : childs ) {

@@ -61,6 +61,8 @@ class TOutputAny : public TMiso  {
    int ne;
    /** pointer to element  */
    TDataSet *pel;
+   /** name of last subelement xx.xx.xxx.lastname */
+   QString lastname;
    /** data descriptors -- with base class elements */ 
    static TDataInfo toutputany_d_i[13];
    /** class decription */

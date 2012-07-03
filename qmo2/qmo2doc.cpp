@@ -123,21 +123,30 @@ const QString &QMo2Doc::title() const
 
 bool QMo2Doc::newDocument()
 {
-  int k;
-  static const TDataInfo model_inf = {
-    dtpObj, CLASS_ID_TModel, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0, "model",  
-    "main model", "" 
-  };
+  //static const TDataInfo model_inf = {
+  //  dtpObj, CLASS_ID_TModel, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0, "model",  
+  //  "main model", "" 
+  //};
   // QMessageBox::critical( 0, "Debug", "QMo2Doc::newDocument", 0,0,0 );
+  qDebug( "DBG: QMo2Doc::newDocument() point 0 rootdata=%p", rootdata );
   rootdata = new TRootData( 0 );
+  qDebug( "DBG: QMo2Doc::newDocument() point 1 rootdata=%p", rootdata );
   fillRoot();
-  k = rootdata->add_obj( &model_inf );
-  if( k != 0 )
-  QMessageBox::critical( 0, "QMo2Doc::newDocument", 
-    QString("Fail to insert model to root: ") 
-    + QString::number(k), 0,0,0 );
+  // k = rootdata->add_obj( &model_inf );
+  qDebug( "DBG: QMo2Doc::newDocument() point 2 rootdata=%p", rootdata );
+  void *xmodel = rootdata->add_obj( "TModel", "model" );
+  qDebug( "DBG: QMo2Doc::newDocument() point 3 rootdata=%p", rootdata );
+  if( !xmodel ) {
+    QMessageBox::critical( 0, "QMo2Doc::newDocument", 
+      QString("Fail to insert model to root: "), 0,0,0 );
+    return false;
+  }
+
+  qDebug( "DBG: QMo2Doc::newDocument() point 4 rootdata=%p", rootdata );
   model = static_cast<TModel*>( rootdata->getObj( "model" ) );
-  qDebug( "debug: QMo2Doc::newDocument: rootdata: %p model: %p", rootdata, model );
+  qDebug( "debug: QMo2Doc::newDocument: point 5 rootdata: %p model: %p xmodel: %p", 
+      rootdata, model, xmodel );
+  rootdata->dumpStruct();
   modified = false; is_nonamed = true;
   loaded_as_old = true; // TODO: change to false when new model be created by default
   return true;
@@ -145,9 +154,8 @@ bool QMo2Doc::newDocument()
 
 bool QMo2Doc::openDocument(const QString &filename )
 {
-  int i, n, k;
+  int k;
   char buf[MAX_INPUTLEN];
-  const TDataInfo *inf;
   ifstream is;
   errno = 0;
   is.open( qPrintable( filename ) );
@@ -180,14 +188,7 @@ bool QMo2Doc::openDocument(const QString &filename )
        QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
     return false;
   };
-  n = rootdata->getN();
-  for( i=0; i<n; i++ ) {
-    inf = rootdata->getDataInfo( i );
-    if( inf->tp == dtpObj && inf->subtp == CLASS_ID_TModel ) {
-      model = static_cast<TModel*> (rootdata->getObj( i ));
-      break;
-    };
-  };
+  model = static_cast<TModel*> (rootdata->getObj( "model" )); // TODO many models
   if( model == 0 ) {
     delete rootdata; rootdata = 0; model = 0; 
     QMessageBox::critical( 0, "openDocument Error:",
