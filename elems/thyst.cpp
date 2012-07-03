@@ -39,7 +39,7 @@ const char* THyst::helpstr = "<H1>THyst</H1>\n"
 
 TClassInfo THyst::class_info = {
   CLASS_ID_THyst, "THyst", THyst::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo THyst::thyst_d_i[20] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

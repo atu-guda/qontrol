@@ -38,7 +38,7 @@ const char* TRandTrigg::helpstr = "<H1>TRandTrigg</H1>\n"
 
 TClassInfo TRandTrigg::class_info = {
   CLASS_ID_TRandTrigg, "TRandTrigg", TRandTrigg::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TRandTrigg::trandtrigg_d_i[22] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

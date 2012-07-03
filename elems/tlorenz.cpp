@@ -37,7 +37,7 @@ const char* TLorenz::helpstr = "<H1>TLorenz</H1>\n"
 
 TClassInfo TLorenz::class_info = {
   CLASS_ID_TLorenz, "TLorenz", TLorenz::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 static const int IPARM = efNoRunChange;
 static const int XPARM = efNoDial | efNoSave ;

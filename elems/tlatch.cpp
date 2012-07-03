@@ -33,7 +33,7 @@ const char* TLatch::helpstr = "<H1>TLatch</H1>\n"
  
 TClassInfo TLatch::class_info = {
   CLASS_ID_TLatch, "TLatch", TLatch::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TLatch::tlatch_d_i[19] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

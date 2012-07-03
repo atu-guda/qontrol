@@ -54,7 +54,7 @@ static const char* const trand_list_seedType =
 
 TClassInfo TRand::class_info = {
   CLASS_ID_TRand, "TRand", TRand::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TRand::trand_d_i[31] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

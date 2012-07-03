@@ -27,7 +27,7 @@ const char* TCounter::helpstr = "<H1>TCounter</H1>\n"
 
 TClassInfo TCounter::class_info = {
   CLASS_ID_TCounter, "TCounter", TCounter::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TCounter::tcounter_d_i[16] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

@@ -34,7 +34,7 @@ static const int RESERVED_OUTS = 1024;
 
 TClassInfo TModel::class_info = {
  CLASS_ID_TModel, "TModel", TModel::create,
- &TDataContainer::class_info, helpstr };
+ &TDataContainer::class_info, helpstr, clpSpecial | clpContainer };
 
 TModel::TModel( TDataSet* aparent )/*{{{1*/
        :TDataContainer( aparent ), 

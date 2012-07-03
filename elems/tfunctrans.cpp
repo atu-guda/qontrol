@@ -48,7 +48,7 @@ const char* TFuncTrans::helpstr = "<H1>TFuncTrans</H1>\n"
 
 TClassInfo TFuncTrans::class_info = {
   CLASS_ID_TFuncTrans, "TFuncTrans", TFuncTrans::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem | clpPure };
 
 TDataInfo TFuncTrans::tfunctrans_d_i[26] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

@@ -48,7 +48,7 @@ static const char* const tfuncmisc_list =
 
 TClassInfo TFuncMisc::class_info = {
   CLASS_ID_TFuncMisc, "TFuncMisc", TFuncMisc::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem | clpPure };
 
 TDataInfo TFuncMisc::tfuncmisc_d_i[26] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

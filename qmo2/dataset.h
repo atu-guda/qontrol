@@ -34,6 +34,12 @@ typedef PTDataSet (*PFDataSet)( PTDataSet aparent );
 class   TRootData;
 class   TDataContainer;
 
+/** properties of class -- bitfield */
+enum ClassProps {
+  clpElem = 1,  clpPure = 2, clpContainer = 4,
+  clpSpecial = 8
+};
+
 /** describes class and it's creator
   used for class registration (my be many classes for one array of structs)
   TRootData must handle it
@@ -45,10 +51,12 @@ struct TClassInfo {
   const char *className;
   /** ptr to static fun for creating instanses */
   PFDataSet creator;
-  /** ptr to parents TClassInfo or 0 for TDataSet */
+  /** ptr to parents TClassInfo or 0 for TDataSet TODO: drop use QMetaObject*/
   const TClassInfo* parent_class;
   /** ptr to help string */
   const char *helpstr;
+  /** properties of class (not ClassProps, as use | ) */
+  int props;
 };
 
 // -------------------------- HOLDERS ------------------------------------

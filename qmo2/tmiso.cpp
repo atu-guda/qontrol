@@ -28,7 +28,7 @@ const char* TElmLink::helpstr = "<H1>TElmLink</H1> \n"
 
 TClassInfo TElmLink::class_info = {
  CLASS_ID_TElmLink, "TElmLink", TElmLink::create,
- &TDataSet::class_info, helpstr };
+ &TDataSet::class_info, helpstr, clpSpecial };
 
 TDataInfo TElmLink::telmlink_d_i[40] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
@@ -131,7 +131,7 @@ const char* TMiso::helpstr = "<H1>TMiso</H1>\n"
 
 TClassInfo TMiso::class_info = {
  CLASS_ID_TMiso, "TMiso", TMiso::create,
- &TDataSet::class_info, helpstr };
+ &TDataSet::class_info, helpstr, clpSpecial };
 
 TDataInfo TMiso::tmiso_d_i[2] = {
  { dtpObj, CLASS_ID_TElmLink,   0,   0, 0, 0, 0, 0,  0.0, 0.0, 0, 0, "link",  "", "Object links"},

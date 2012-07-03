@@ -29,7 +29,7 @@ const char* TInputAny::helpstr = "<H1>TInputAny</H1>\n"
 
 TClassInfo TInputAny::class_info = {
   CLASS_ID_TInputAny, "TInputAny", TInputAny::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TInputAny::tinputany_d_i[12] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

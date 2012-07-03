@@ -24,7 +24,7 @@ const char* TMultipl::helpstr = "<H1>TMultipl</H1>\n"
 
 TClassInfo TMultipl::class_info = {
   CLASS_ID_TMultipl, "TMultipl", TMultipl::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem | clpPure };
 
 TDataInfo TMultipl::tmultipl_d_i[16] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

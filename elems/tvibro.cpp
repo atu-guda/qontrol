@@ -27,7 +27,7 @@ const char* TVibro::helpstr = "<H1>TVibro</H1>\n"
 
 TClassInfo TVibro::class_info = {
   CLASS_ID_TVibro, "TVibro", TVibro::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TVibro::tvibro_d_i[16] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

@@ -26,7 +26,7 @@ const char* TDelay::helpstr = "<H1>TDelay</H1>\n"
 
 TClassInfo TDelay::class_info = {
   CLASS_ID_TDelay, "TDelay", TDelay::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TDelay::tdelay_d_i[14] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

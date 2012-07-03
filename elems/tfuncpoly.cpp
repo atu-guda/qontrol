@@ -42,7 +42,7 @@ const char* TFuncPoly::helpstr = "<H1>TFuncPoly</H1>\n"
 
 TClassInfo TFuncPoly::class_info = {
   CLASS_ID_TFuncPoly, "TFuncPoly", TFuncPoly::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem | clpPure };
 
 TDataInfo TFuncPoly::tfuncpoly_d_i[26] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

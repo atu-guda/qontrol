@@ -29,7 +29,7 @@ const char* TOutputAny::helpstr = "<H1>TOutputAny</H1>\n"
 
 TClassInfo TOutputAny::class_info = {
   CLASS_ID_TOutputAny, "TOutputAny", TOutputAny::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TOutputAny::toutputany_d_i[13] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

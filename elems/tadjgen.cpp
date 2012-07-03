@@ -26,7 +26,7 @@ const char* TAdjGen::helpstr = "<H1>TAdjGen</H1>\n"
 
 TClassInfo TAdjGen::class_info = {
   CLASS_ID_TAdjGen, "TAdjGen", TAdjGen::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TAdjGen::tadjgen_d_i[27] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

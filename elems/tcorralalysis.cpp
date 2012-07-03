@@ -27,7 +27,7 @@ const char* TCorrAnalysis::helpstr = "<H1>TCorrAnalysis</H1>\n"
 
 TClassInfo TCorrAnalysis::class_info = {
   CLASS_ID_TCorrAnalysis, "TCorrAnalysis", TCorrAnalysis::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TCorrAnalysis::tcorranalysis_d_i[64] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

@@ -35,7 +35,7 @@ const char* TOutArr::helpstr = "<H1>TOutArr</H1>\n"
 
 TClassInfo TOutArr::class_info = {
  CLASS_ID_TOutArr, "TOutArr", TOutArr::create,
- &TDataSet::class_info, helpstr };
+ &TDataSet::class_info, helpstr, clpSpecial };
 
 TDataInfo TOutArr::toutarr_d_i[19] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

@@ -28,7 +28,7 @@ const char* TCriterion::helpstr = "<H1>TCriterion</H1>\n"
 
 TClassInfo TCriterion::class_info = {
   CLASS_ID_TCriterion, "TCriterion", TCriterion::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TCriterion::tcriterion_d_i[23] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

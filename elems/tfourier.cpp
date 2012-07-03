@@ -26,7 +26,7 @@ const char* TFourier::helpstr = "<H1>TFourier</H1>\n"
 
 TClassInfo TFourier::class_info = {
   CLASS_ID_TFourier, "TFourier", TFourier::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TFourier::tfourier_d_i[50] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

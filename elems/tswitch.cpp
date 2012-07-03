@@ -29,7 +29,7 @@ const char* TSwitch::helpstr = "<H1>TSwitch</H1>\n"
 
 TClassInfo TSwitch::class_info = {
   CLASS_ID_TSwitch, "TSwitch", TSwitch::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem | clpPure };
 
 TDataInfo TSwitch::tswitch_d_i[14] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

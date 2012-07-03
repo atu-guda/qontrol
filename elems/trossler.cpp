@@ -37,7 +37,7 @@ const char* TRossler::helpstr = "<H1>TRossler</H1>\n"
 
 TClassInfo TRossler::class_info = {
   CLASS_ID_TRossler, "TRossler", TRossler::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 static const int IPARM = efNoRunChange;
 static const int XPARM = efNoDial | efNoSave ;

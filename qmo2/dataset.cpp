@@ -679,7 +679,7 @@ QDomElement HolderObj::toDom( QDomDocument &dd ) const
 // ---------------- TDataSet ------------------------
 
 TClassInfo TDataSet::class_info = 
- {  CLASS_ID_TDataSet, "TDataSet",  TDataSet::create, 0, helpstr };
+ {  CLASS_ID_TDataSet, "TDataSet",  TDataSet::create, 0, helpstr, 0 };
 
 TDataInfo TDataSet::dataset_d_i[1] = {
  { dtpEnd, 0, 0, 0, 0, 0, 0, 0, 0.0, -1.0, 0, 0 , "", "", "" }

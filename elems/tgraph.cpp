@@ -28,7 +28,7 @@ const char* TGraph::helpstr = "<H1>TGraph</H1>\n"
 
 TClassInfo TGraph::class_info = {
  CLASS_ID_TGraph, "TGraph", TGraph::create,
- &TDataSet::class_info, helpstr };
+ &TDataSet::class_info, helpstr, clpSpecial };
 
 TDataInfo TGraph::tgraph_d_i[28] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

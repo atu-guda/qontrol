@@ -24,7 +24,7 @@ const char* TPid::helpstr = "<H1>TPid</H1>\n"
 
 TClassInfo TPid::class_info = {
   CLASS_ID_TPid, "TPid", TPid::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TPid::tpid_d_i[21] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

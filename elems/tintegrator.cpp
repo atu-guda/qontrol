@@ -36,7 +36,7 @@ const char* TIntegrator::helpstr = "<H1>TIntegrator</H1>\n"
 
 TClassInfo TIntegrator::class_info = {
   CLASS_ID_TIntegrator, "TIntegrator", TIntegrator::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TIntegrator::tintegrator_d_i[29] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

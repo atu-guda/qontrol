@@ -35,7 +35,7 @@ const char* TLinP1Q0::helpstr = "<H1>TLinP1Q0</H1>\n"
 
 TClassInfo TLinP1Q0::class_info = {
   CLASS_ID_TLinP1Q0, "TLinP1Q0", TLinP1Q0::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TLinP1Q0::tlinp1q0_d_i[17] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

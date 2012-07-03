@@ -24,7 +24,7 @@ const char* TLinear::helpstr = "<H1>TLinear</H1>\n"
 
 TClassInfo TLinear::class_info = {
   CLASS_ID_TLinear, "TLinear", TLinear::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem | clpPure };
 
 TDataInfo TLinear::tlinear_d_i[20] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

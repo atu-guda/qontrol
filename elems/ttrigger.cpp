@@ -27,7 +27,7 @@ const char* TTrigger::helpstr = "<H1>TTrigger</H1>\n"
 
 TClassInfo TTrigger::class_info = {
   CLASS_ID_TTrigger, "TTrigger", TTrigger::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TTrigger::ttrigger_d_i[23] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

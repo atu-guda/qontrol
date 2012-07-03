@@ -50,7 +50,7 @@ const char* TSource::helpstr = "<H1>TSource</H1>\n"
 
 TClassInfo TSource::class_info = {
   CLASS_ID_TSource, "TSource", TSource::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem };
 
 TDataInfo TSource::tsource_d_i[48] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d

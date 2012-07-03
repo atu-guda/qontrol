@@ -38,7 +38,7 @@ const char* TLogic::helpstr = "<H1>TLogic</H1>\n"
 
 TClassInfo TLogic::class_info = {
   CLASS_ID_TLogic, "TLogic", TLogic::create,
-  &TMiso::class_info, helpstr };
+  &TMiso::class_info, helpstr, clpElem | clpPure };
 
 TDataInfo TLogic::tlogic_d_i[20] = {
 // tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
