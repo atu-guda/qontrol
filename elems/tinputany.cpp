@@ -85,10 +85,6 @@ int TInputAny::getClassId(void) const
   return CLASS_ID_TInputAny;
 }
 
-const char* TInputAny::getClassName(void) const 
-{
-  return "TInputAny";
-}
 
 const TClassInfo* TInputAny::getClassInfo(void) const
 {

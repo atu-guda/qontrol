@@ -121,10 +121,6 @@ int TFriction::getClassId(void) const
   return CLASS_ID_TFriction;
 }
 
-const char* TFriction::getClassName(void) const 
-{
-  return "TFriction";
-}
 
 const TClassInfo* TFriction::getClassInfo(void) const
 {

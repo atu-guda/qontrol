@@ -90,6 +90,7 @@ int strlen0( const char *s );
 char* strndup( const char *s, int maxlen );
 /** checks if name syntax correct aaa_bbb2 */
 int isGoodName( const char *s );
+int isGoodName( const QString &s );
 
 /** signum function y = -1:0:1 */
 double sign( double x );

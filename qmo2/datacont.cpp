@@ -40,11 +40,6 @@ int TDataContainer::getClassId(void) const
   return CLASS_ID_TDataContainer; 
 }
 
-const char* TDataContainer::getClassName(void) const
-{ 
-  return "TDataContainer"; 
-}
-
 const TClassInfo* TDataContainer::getClassInfo(void) const
 {
   return &class_info;

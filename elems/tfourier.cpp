@@ -131,10 +131,6 @@ int TFourier::getClassId(void) const
   return CLASS_ID_TFourier;
 }
 
-const char* TFourier::getClassName(void) const 
-{
-  return "TFourier";
-}
 
 const TClassInfo* TFourier::getClassInfo(void) const
 {

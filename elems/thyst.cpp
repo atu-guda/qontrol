@@ -116,11 +116,6 @@ int THyst::getClassId(void) const
   return CLASS_ID_THyst;
 }
 
-const char* THyst::getClassName(void) const 
-{
-  return "THyst";
-}
-
 const TClassInfo* THyst::getClassInfo(void) const
 {
   return &class_info;

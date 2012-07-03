@@ -132,10 +132,6 @@ int TFuncTrans::getClassId(void) const
   return CLASS_ID_TFuncTrans;
 }
 
-const char* TFuncTrans::getClassName(void) const 
-{
-  return "TFuncTrans";
-}
 
 const TClassInfo* TFuncTrans::getClassInfo(void) const
 {

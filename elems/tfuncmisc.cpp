@@ -132,10 +132,6 @@ int TFuncMisc::getClassId(void) const
   return CLASS_ID_TFuncMisc;
 }
 
-const char* TFuncMisc::getClassName(void) const 
-{
-  return "TFuncMisc";
-}
 
 const TClassInfo* TFuncMisc::getClassInfo(void) const
 {

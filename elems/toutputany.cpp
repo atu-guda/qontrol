@@ -87,10 +87,6 @@ int TOutputAny::getClassId(void) const
   return CLASS_ID_TOutputAny;
 }
 
-const char* TOutputAny::getClassName(void) const 
-{
-  return "TOutputAny";
-}
 
 const TClassInfo* TOutputAny::getClassInfo(void) const
 {

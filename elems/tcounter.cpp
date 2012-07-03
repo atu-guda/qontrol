@@ -93,10 +93,6 @@ int TCounter::getClassId(void) const
   return CLASS_ID_TCounter;
 }
 
-const char* TCounter::getClassName(void) const 
-{
-  return "TCounter";
-}
 
 const TClassInfo* TCounter::getClassInfo(void) const
 {

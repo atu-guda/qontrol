@@ -125,11 +125,6 @@ int TTrigger::getClassId(void) const
   return CLASS_ID_TTrigger;
 }
 
-const char* TTrigger::getClassName(void) const 
-{
-  return "TTrigger";
-}
-
 const TClassInfo* TTrigger::getClassInfo(void) const
 {
   return &class_info;

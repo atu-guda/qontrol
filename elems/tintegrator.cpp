@@ -148,11 +148,6 @@ int TIntegrator::getClassId(void) const
   return CLASS_ID_TIntegrator;
 }
 
-const char* TIntegrator::getClassName(void) const 
-{
-  return "TIntegrator";
-}
-
 const TClassInfo* TIntegrator::getClassInfo(void) const
 {
   return &class_info;

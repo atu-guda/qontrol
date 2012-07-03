@@ -18,6 +18,7 @@
 #include "../config.h"
 
 #include <QString>
+#include <QRegExp>
 
 #include "miscfun.h"
 
@@ -478,6 +479,16 @@ int isGoodName( const char *s )
     if( !isCharType( s[i], ctpName, i==0 ) )
       return 0;
   };
+  return 1;
+}
+
+int isGoodName( const QString &s )
+{
+  if( s.size() >= MAX_NAMELEN ) // TODO: legacy, remove it
+    return 0;
+  QRegExp re( "^[_a-zA-Z]+[_0-9A-Za-z]*$" );
+  if( re.indexIn( s ) == -1 )
+    return 0;
   return 1;
 }
 

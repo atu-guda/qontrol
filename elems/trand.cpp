@@ -169,11 +169,6 @@ int TRand::getClassId(void) const
   return CLASS_ID_TRand;
 }
 
-const char* TRand::getClassName(void) const 
-{
-  return "TRand";
-}
-
 const TClassInfo* TRand::getClassInfo(void) const
 {
   return &class_info;

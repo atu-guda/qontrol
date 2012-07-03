@@ -129,7 +129,7 @@ int QMo2View::checkState( CheckType ctp )
   QString msg;
   int state;
   if( model == 0 || root == 0 ) {
-    QMessageBox::warning( this, "Error", "Model or root don't exist!",
+    QMessageBox::critical( this, "Error", "Model or root don't exist!",
 	QMessageBox::Ok, QMessageBox::NoButton	);
     return 0; 
   };
@@ -302,16 +302,18 @@ void QMo2View::newElm()
   if( rc != QDialog::Accepted )
     return;
   oord = oordq.toInt();
-  if( ! isGoodName( qPrintable(onameq) )  ) {
-    qDebug( "error: QMo2View::newElm(): bad object name: <%s>", 
-	   qPrintable(onameq) );
+  if( ! isGoodName( onameq )  ) {
+    QMessageBox::critical( this, "Error", 
+       QString("Fail to add Elem: bad object name \"") + onameq + "\"", 
+       QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
   
   ci = ElemFactory::theFactory().getInfo( cnmq );
   if( ! ci ) {
-    qDebug( "error: QMo2View::newElm(): class <%s> not found", 
-	qPrintable(cnmq) );
+    QMessageBox::critical( this, "Error", 
+       QString("Fail to add Elem: class \"") + cnmq + "\" not found", 
+       QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
   di.tp = dtpObj; di.subtp = ci->id;
@@ -752,16 +754,16 @@ void QMo2View::newOut()
     onameq = oname_ed->text(); enameq = ename_ed->text();
     
     // TODO: all must be QString
-    if( isGoodName( qPrintable(onameq) ) ) {
+    if( isGoodName( onameq ) ) {
       int irc = model->insOut( qPrintable(onameq), qPrintable(enameq) );
       if( irc  ) {
-	QMessageBox::warning( this, "Error", 
+	QMessageBox::critical( this, "Error", 
 	   QString("Fail to add Output: ") + onameq, 
 	   QMessageBox::Ok, QMessageBox::NoButton );
       }
       emit viewChanged();
     } else {
-      QMessageBox::warning( this, "Error", 
+      QMessageBox::critical( this, "Error", 
          QString("Bad output name: ") + onameq, 
 	 QMessageBox::Ok, QMessageBox::NoButton );
     };
@@ -917,10 +919,13 @@ void QMo2View::newGraph()
       "Enter name of new Graph:", QLineEdit::Normal, 
       grnameq, &ok );
   if( ok ) {
-    if( isGoodName( qPrintable(aname)) ) { // TODO: QString
-      model->insGraph( qPrintable(aname) );
-      emit viewChanged();
-    };
+    if( ! isGoodName( aname ) ) { 
+      QMessageBox::critical( this, "Error", 
+         QString("Bad graph name: \"") + aname + "\"", 
+	 QMessageBox::Ok, QMessageBox::NoButton );
+    }
+    model->insGraph( qPrintable(aname) );// TODO: QString
+    emit viewChanged();
   };
 }
 

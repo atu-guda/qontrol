@@ -87,11 +87,6 @@ int TSwitch::getClassId(void) const
   return CLASS_ID_TSwitch;
 }
 
-const char* TSwitch::getClassName(void) const 
-{
-  return "TSwitch";
-}
-
 const TClassInfo* TSwitch::getClassInfo(void) const
 {
   return &class_info;

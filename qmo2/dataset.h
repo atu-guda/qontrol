@@ -388,12 +388,14 @@ class TDataSet : public QObject {
    virtual ~TDataSet();
    /** creator */
    static TDataSet* create( TDataSet *apar );
-   /** request for creating object - done by TRootData .. */
+   /** request for creating object - to be obsoleted */
    virtual TDataSet* createObj( int id, const QString &nm, TDataSet *apar );
+   /** new way to create objects. nonvirtual? */
+   TDataSet* createObj( const QString &cl_name, const QString &nm, TDataSet* apar );
    /** class id */
    virtual int getClassId(void) const ;
    /** class name - for check & human purpose */
-   virtual const char* getClassName(void) const;
+   const char* getClassName(void) const;
    /** return child name, or 0 -- parent don't know it */
    virtual const char* getChildName( const TDataSet* child ) const;
    /** fills dst with full name[MAX_INPUTLEN] of object: aaa.bbb.cc  */

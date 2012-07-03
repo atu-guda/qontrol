@@ -109,11 +109,6 @@ int TElmLink::getClassId(void) const
   return CLASS_ID_TElmLink;
 }
 
-const char* TElmLink::getClassName(void) const 
-{
-  return "TElmLink";
-}
-
 const TClassInfo* TElmLink::getClassInfo(void) const
 {
   return &class_info;
@@ -176,11 +171,6 @@ TDataSet* TMiso::create( TDataSet* /* apar */ )
 int TMiso::getClassId(void) const 
 {
   return CLASS_ID_TMiso;
-}
-
-const char* TMiso::getClassName(void) const 
-{
-  return "TMiso";
 }
 
 const TClassInfo* TMiso::getClassInfo(void) const

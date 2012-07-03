@@ -126,10 +126,6 @@ int TFuncPoly::getClassId(void) const
   return CLASS_ID_TFuncPoly;
 }
 
-const char* TFuncPoly::getClassName(void) const 
-{
-  return "TFuncPoly";
-}
 
 const TClassInfo* TFuncPoly::getClassInfo(void) const
 {

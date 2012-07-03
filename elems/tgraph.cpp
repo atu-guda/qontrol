@@ -145,10 +145,6 @@ int TGraph::getClassId(void) const
   return CLASS_ID_TGraph;
 }
 
-const char* TGraph::getClassName(void) const 
-{
-  return "TGraph";
-}
 
 const TClassInfo* TGraph::getClassInfo(void) const
 {

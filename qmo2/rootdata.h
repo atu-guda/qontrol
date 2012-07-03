@@ -29,8 +29,6 @@ class TRootData : public TDataContainer {
    virtual TDataSet* createObj( int id, const QString &nm, TDataSet* apar );
    /** class id */
    virtual int getClassId(void) const;
-   /** class name - for check & human purpose */
-   virtual const char* getClassName(void) const;
    /** for registering */
    virtual int regClass( const TClassInfo *c_i );
   /** finds class by it's name */

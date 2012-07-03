@@ -128,10 +128,6 @@ int TExtrLatch::getClassId(void) const
   return CLASS_ID_TExtrLatch;
 }
 
-const char* TExtrLatch::getClassName(void) const 
-{
-  return "TExtrLatch";
-}
 
 const TClassInfo* TExtrLatch::getClassInfo(void) const
 {

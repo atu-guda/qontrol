@@ -101,10 +101,6 @@ int TLatch::getClassId(void) const
   return CLASS_ID_TLatch;
 }
 
-const char* TLatch::getClassName(void) const 
-{
-  return "TLatch";
-}
 
 const TClassInfo* TLatch::getClassInfo(void) const
 {

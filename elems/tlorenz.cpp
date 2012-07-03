@@ -132,10 +132,6 @@ int TLorenz::getClassId(void) const
   return CLASS_ID_TLorenz;
 }
 
-const char* TLorenz::getClassName(void) const
-{
-  return "TLorenz";
-}
 
 const TClassInfo* TLorenz::getClassInfo(void) const
 {

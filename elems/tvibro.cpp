@@ -93,11 +93,6 @@ int TVibro::getClassId(void) const
   return CLASS_ID_TVibro;
 }
 
-const char* TVibro::getClassName(void) const 
-{
-  return "TVibro";
-}
-
 const TClassInfo* TVibro::getClassInfo(void) const
 {
   return &class_info;

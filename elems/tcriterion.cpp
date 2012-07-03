@@ -114,10 +114,6 @@ int TCriterion::getClassId(void) const
   return CLASS_ID_TCriterion;
 }
 
-const char* TCriterion::getClassName(void) const 
-{
-  return "TCriterion";
-}
 
 const TClassInfo* TCriterion::getClassInfo(void) const
 {

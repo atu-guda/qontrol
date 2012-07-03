@@ -132,11 +132,6 @@ int TRossler::getClassId(void) const
   return CLASS_ID_TRossler;
 }
 
-const char* TRossler::getClassName(void) const
-{
-  return "TRossler";
-}
-
 const TClassInfo* TRossler::getClassInfo(void) const
 {
   return &class_info;

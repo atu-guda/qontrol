@@ -232,11 +232,6 @@ int TSource::getClassId(void) const
   return CLASS_ID_TSource;
 }
 
-const char* TSource::getClassName(void) const
-{
-  return "TSource";
-}
-
 const TClassInfo* TSource::getClassInfo(void) const
 {
   return &class_info;

@@ -196,11 +196,6 @@ int TCorrAnalysis::getClassId(void) const
   return CLASS_ID_TCorrAnalysis;
 }
 
-const char* TCorrAnalysis::getClassName(void) const 
-{
-  return "TCorrAnalysis";
-}
-
 const TClassInfo* TCorrAnalysis::getClassInfo(void) const
 {
   return &class_info;

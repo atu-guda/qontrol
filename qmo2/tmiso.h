@@ -44,8 +44,6 @@ class TElmLink : public TDataSet { //@ c,{},(380,320),"Object links"
    static TDataSet* create( TDataSet *apar );
    /** class id */
    virtual int getClassId(void) const ;
-   /** class name - for check & human purpose */
-   virtual const char* getClassName(void) const;
    /** return ptr to static class_info, must be implemented in each class */
    virtual const TClassInfo* getClassInfo(void) const;
    /** return ptr to static class_info, static version */
@@ -137,8 +135,6 @@ class TMiso : public TDataSet  {
    static TDataSet* create( TDataSet *apar );
    /** class id */
    virtual int getClassId(void) const = 0;
-   /** class name - for check and human purpose */
-   virtual const char* getClassName(void) const = 0;
    /** return ptr to static class_info, must be implemented in each class */
    virtual const TClassInfo* getClassInfo(void) const = 0;
    /** return ptr to static class_info, static version */

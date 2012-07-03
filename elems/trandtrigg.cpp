@@ -131,10 +131,6 @@ int TRandTrigg::getClassId(void) const
   return CLASS_ID_TRandTrigg;
 }
 
-const char* TRandTrigg::getClassName(void) const 
-{
-  return "TRandTrigg";
-}
 
 const TClassInfo* TRandTrigg::getClassInfo(void) const
 {

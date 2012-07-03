@@ -123,10 +123,6 @@ int TAdjGen::getClassId(void) const
   return CLASS_ID_TAdjGen;
 }
 
-const char* TAdjGen::getClassName(void) const 
-{
-  return "TAdjGen";
-}
 
 const TClassInfo* TAdjGen::getClassInfo(void) const
 {

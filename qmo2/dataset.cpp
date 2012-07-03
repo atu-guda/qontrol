@@ -722,7 +722,7 @@ int TDataSet::getClassId(void) const
 
 const char* TDataSet::getClassName(void) const 
 { 
-  return "TDataSet"; 
+  return metaObject()->className();
 }
 
 const TClassInfo* TDataSet::getClassInfo(void) const
@@ -768,25 +768,30 @@ TDataSet* TDataSet::create( TDataSet* apar )
   return new TDataSet( apar );
 }
 
-// TODO: totaly rewrite!
+// TODO: remove it - use by class name (see next fun)
 TDataSet* TDataSet::createObj( int id, const QString &nm, TDataSet* apar )
 {
-  TDataSet *ob;
-  if( id == getClassId() )  { // same object type
-    ob = create( apar );
-  } else if ( parent == 0 ) { // no parent - no creating
-    return 0;
-  } else {
-    ob =  parent->createObj( id, nm, apar );
-  }
-  if( ! ob ) 
+  TDataSet *ob = ElemFactory::theFactory().createElem( id, nm, apar );
+  if( !ob ) {
+    qDebug("Fail to create obj \"%s\" class id %d",
+	qPrintable(nm), id );
     return nullptr;
-  
-  // name is set by holder
-  /*HolderObj *ho = */ new HolderObj( ob, nm, nm, apar, 0, "", "" );
-
+  }
   return ob;
 }
+
+TDataSet* TDataSet::createObj( const QString &cl_name, 
+      const QString &nm, TDataSet* apar )
+{
+  TDataSet *ob = ElemFactory::theFactory().createElem( cl_name, nm, apar );
+  if( !ob ) {
+    qDebug("Fail to create obj \"%s\" class  \"%s\"",
+	qPrintable(nm), qPrintable(cl_name) );
+    return nullptr;
+  }
+  return ob;
+}
+
 
 const char *TDataSet::getHelp(void) const
 {
@@ -1380,7 +1385,7 @@ int TDataSet::add_obj( const TDataInfo* dai )
             if( j < 1 ) return -1;
             sob = cob = new char[j+2];
 	    cob[0] = 0;  break;
-    case dtpObj: ob = createObj( dai->subtp, L8B(dai->name), this );
+    case dtpObj: ob = createObj( dai->subtp, L8B(dai->name), this ); // TODO: use new
             if( ob == 0 ) {
               fprintf( stderr, "TDataSet::add_obj: fail to create: %s %d\n",
                        dai->name, dai->subtp );

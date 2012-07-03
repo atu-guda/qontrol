@@ -123,10 +123,6 @@ int TOutArr::getClassId(void) const
   return CLASS_ID_TOutArr;
 }
 
-const char* TOutArr::getClassName(void) const 
-{
-  return "TOutArr";
-}
 
 const TClassInfo* TOutArr::getClassInfo(void) const
 {

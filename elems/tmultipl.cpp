@@ -90,10 +90,6 @@ int TMultipl::getClassId(void) const
   return CLASS_ID_TMultipl;
 }
 
-const char* TMultipl::getClassName(void) const 
-{
-  return "TMultipl";
-}
 
 const TClassInfo* TMultipl::getClassInfo(void) const
 {

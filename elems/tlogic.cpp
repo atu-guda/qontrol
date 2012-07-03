@@ -118,10 +118,6 @@ int TLogic::getClassId(void) const
   return CLASS_ID_TLogic;
 }
 
-const char* TLogic::getClassName(void) const 
-{
-  return "TLogic";
-}
 
 const TClassInfo* TLogic::getClassInfo(void) const
 {

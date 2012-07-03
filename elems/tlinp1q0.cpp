@@ -104,10 +104,6 @@ int TLinP1Q0::getClassId(void) const
   return CLASS_ID_TLinP1Q0;
 }
 
-const char* TLinP1Q0::getClassName(void) const 
-{
-  return "TLinP1Q0";
-}
 
 const TClassInfo* TLinP1Q0::getClassInfo(void) const
 {

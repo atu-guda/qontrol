@@ -144,11 +144,6 @@ int TSourceLin::getClassId(void) const
   return CLASS_ID_TSourceLin;
 }
 
-const char* TSourceLin::getClassName(void) const
-{
-  return "TSourceLin";
-}
-
 const TClassInfo* TSourceLin::getClassInfo(void) const
 {
   return &class_info;

@@ -51,8 +51,6 @@ class TModel : public TDataContainer  {
   static TDataSet* create( TDataSet* apar );
   /** class id */
   virtual int getClassId(void) const ;
-  /** class name - for check & human purpose */
-  virtual const char* getClassName(void) const;
   /** return ptr to static class_info, must be implemented in each class */
   virtual const TClassInfo* getClassInfo(void) const;
   /** return ptr to static class_info, static version */

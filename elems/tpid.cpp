@@ -98,10 +98,6 @@ int TPid::getClassId(void) const
   return CLASS_ID_TPid;
 }
 
-const char* TPid::getClassName(void) const 
-{
-  return "TPid";
-}
 
 const TClassInfo* TPid::getClassInfo(void) const
 {

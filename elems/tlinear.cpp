@@ -94,10 +94,6 @@ int TLinear::getClassId(void) const
   return CLASS_ID_TLinear;
 }
 
-const char* TLinear::getClassName(void) const 
-{
-  return "TLinear";
-}
 
 const TClassInfo* TLinear::getClassInfo(void) const
 {

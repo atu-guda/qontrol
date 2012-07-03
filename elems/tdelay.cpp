@@ -85,10 +85,6 @@ int TDelay::getClassId(void) const
   return CLASS_ID_TDelay;
 }
 
-const char* TDelay::getClassName(void) const
-{
-  return "TDelay";
-}
 
 const TClassInfo* TDelay::getClassInfo(void) const
 {

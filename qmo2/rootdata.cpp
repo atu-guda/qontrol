@@ -41,11 +41,6 @@ int TRootData::getClassId(void) const
   return CLASS_ID_TRootData; 
 }
 
-const char* TRootData::getClassName(void) const
-{ 
-  return "TRootData"; 
-}
-
 const TClassInfo* TRootData::getClassInfo(void) const
 {
   return &class_info;
