@@ -237,7 +237,7 @@ void QMo2View::newElm()
   QGridLayout *lay;
 
   const TClassInfo *ci;
-  int i, nc, rc, oord;
+  int rc, oord;
   QString cnmq, onameq, oordq;
   if( !checkState( noselCheck ) )
     return;
@@ -267,16 +267,17 @@ void QMo2View::newElm()
   lay->addWidget( la, 2, 0 );
 
   cb = new QComboBox( seld );
-  nc = root->getNClasses( -1,  0 );
-  for( i=0; i<nc; i++ ) {
-    ci = root->classInfoByNum( i );
-    if( ci == 0 ) continue;
-    if( root->isHisParent( ci->id, CLASS_ID_TMiso, 0 ) ) {
-      QString iconName = QString( ":icons/elm_" )
-	+ QString( (ci->className) ).toLower() 
-	+ ".png";
-      cb->addItem( QIcon(iconName), ci->className );
-    };
+  QStringList cl_names = ElemFactory::theFactory().allTypeNames();
+  for( QString cname : cl_names ) {
+    ci = ElemFactory::theFactory().getInfo( cname );
+    if( ci == 0 ) 
+      continue;
+    if( ! ( ci->props & clpElem ) )
+      continue;
+    QString iconName = QString( ":icons/elm_" )
+      + cname.toLower() 
+      + ".png";
+    cb->addItem( QIcon(iconName), cname );
   };
   lay->addWidget( cb, 3, 0, 1, 2, Qt::AlignTop );
   lay->setRowMinimumHeight ( 3, 200 );
@@ -306,13 +307,13 @@ void QMo2View::newElm()
 	   qPrintable(onameq) );
     return;
   }
-  i = root->findClass( qPrintable(cnmq) );
-  if( i < 1 ) {
+  
+  ci = ElemFactory::theFactory().getInfo( cnmq );
+  if( ! ci ) {
     qDebug( "error: QMo2View::newElm(): class <%s> not found", 
 	qPrintable(cnmq) );
     return;
   }
-  ci = root->classInfoByNum( i );
   di.tp = dtpObj; di.subtp = ci->id;
   di.max_len = 0; di.dlg_x = di.dlg_y = di.dlg_w = di.dlg_h = 0;
   di.hval = di.dyna = 0; di.flags = 0; di.v_min = di.v_max = 0;
