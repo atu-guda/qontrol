@@ -216,6 +216,14 @@ double TTrigger::f( const double* u, double t )
 }
 
 
+int TTrigger::registered = reg();
+
+int TTrigger::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TTrigger::icon[] = {
 /* width height num_colors chars_per_pixel */

@@ -182,6 +182,14 @@ const TClassInfo* TRootData::classInfoByNum( int n ) const
   return &cl_info[n];
 }
 
+int TRootData::registered = reg();
+
+int TRootData::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 // end of rootdata.cpp
 
 

@@ -255,6 +255,14 @@ int TExtrLatch::startLoop( int acnx, int acny )
   return rc;
 }
 
+int TExtrLatch::registered = reg();
+
+int TExtrLatch::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TExtrLatch::icon[] = {
 /* width height num_colors chars_per_pixel */

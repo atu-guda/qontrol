@@ -414,6 +414,14 @@ int TSource::startLoop( int acnx, int acny )
   return rc;
 }
 
+int TSource::registered = reg();
+
+int TSource::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TSource::icon[] = {
 /* width height num_colors chars_per_pixel */

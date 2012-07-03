@@ -180,6 +180,14 @@ double TFuncMisc::f( const double* u, double /* t */ )
   return v; 
 }
 
+int TFuncMisc::registered = reg();
+
+int TFuncMisc::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TFuncMisc::icon[] = {
 "32 32 5 1",

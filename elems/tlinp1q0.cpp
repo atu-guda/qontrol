@@ -154,6 +154,14 @@ double TLinP1Q0::f( const double* u, double t )
   return x;
 }
 
+int TLinP1Q0::registered = reg();
+
+int TLinP1Q0::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TLinP1Q0::icon[] = {
 /* width height num_colors chars_per_pixel */

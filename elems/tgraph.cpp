@@ -241,3 +241,11 @@ int TGraph::gnuPlot( int otp, const char *fn, const char *atitle,
   return k;
 }
 
+
+int TGraph::registered = reg();
+
+int TGraph::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+

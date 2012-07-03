@@ -104,6 +104,9 @@ class TFourier : public TMiso  {
    static const char* helpstr;
    /** icon */
    static const char* icon[];
+   /** autoregister */
+   static int registered;
+   static int reg();
 };
 
 #endif

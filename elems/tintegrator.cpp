@@ -227,6 +227,14 @@ double TIntegrator::f( const double* u, double /* t */ )
   return v_ret;
 }
 
+int TIntegrator::registered = reg();
+
+int TIntegrator::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TIntegrator::icon[] = {
 /* width height num_colors chars_per_pixel */

@@ -307,6 +307,14 @@ void TFourier::initVars(void)
   if( n_en >= model_nn ) n_en = model_nn-1;
 }
 
+int TFourier::registered = reg();
+
+int TFourier::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TFourier::icon[] = {
 /* width height num_colors chars_per_pixel */

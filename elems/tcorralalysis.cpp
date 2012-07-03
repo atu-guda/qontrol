@@ -420,6 +420,14 @@ void TCorrAnalysis::putModelVars()
     model->setVar( out_ok, ok );
 }
 
+int TCorrAnalysis::registered = reg();
+
+int TCorrAnalysis::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TCorrAnalysis::icon[] = {
 /* width height num_colors chars_per_pixel */

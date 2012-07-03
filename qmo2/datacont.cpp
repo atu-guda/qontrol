@@ -61,4 +61,10 @@ const char *TDataContainer::getHelp(void) const
   return helpstr;
 }
 
+int TDataContainer::registered = reg();
+
+int TDataContainer::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
 

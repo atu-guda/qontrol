@@ -219,6 +219,14 @@ double TRandTrigg::f( const double* u, double /* t */ )
   return ( currOut ) ? 1 : ( useZero ? 0 : -1 );
 }
 
+int TRandTrigg::registered = reg();
+
+int TRandTrigg::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TRandTrigg::icon[] = {
 /* width height num_colors chars_per_pixel */

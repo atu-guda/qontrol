@@ -504,6 +504,34 @@ class TDataSet : public QObject {
    static const char* helpstr; 
 };
 
+// ---------------------------------------------------------------------
+
+/** creator of TDataSet childs by name or id (legacy)
+ * */
+class ElemFactory {
+ typedef QMap<QString,const TClassInfo*> MapStrClass;
+ typedef QMap<int,QString> MapIdClass;
+  public:
+   static ElemFactory& theFactory();
+   TDataSet* createElem( const QString &a_type, 
+       const QString &ob_name, TDataSet *parent  ) const;
+   TDataSet* createElem( int t_id, 
+       const QString &ob_name, TDataSet *parent  ) const; // legacy
+   bool registerElemType( const TClassInfo *cl_info );
+   bool unregisterElemType( const QString &a_type );
+   QStringList allTypeNames() const { return str_class.keys() ; };
+   const TClassInfo* getInfo( const QString &a_type ) const;
+
+  private:
+   ElemFactory();
+   ElemFactory( const ElemFactory& r ) = delete;
+   ElemFactory& operator=( const ElemFactory& r ) = delete;
+
+   MapStrClass str_class;
+   MapIdClass  id_class;
+};
+
+
 #endif  // _DATASET_H
 
 

@@ -94,6 +94,9 @@ class TRandTrigg : public TMiso  {
    int bseed;
    /** generator structure from GSL */
    gsl_rng *rng;
+   /** autoregister */
+   static int registered;
+   static int reg();
 };
 
 #endif

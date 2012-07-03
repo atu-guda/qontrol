@@ -257,6 +257,14 @@ double TRand::f( const double*  u, double  /*t*/  )
   return old_val; 
 }
 
+int TRand::registered = reg();
+
+int TRand::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TRand::icon[] = {
 "32 32 5 1",

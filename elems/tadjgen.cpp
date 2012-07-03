@@ -212,6 +212,14 @@ double TAdjGen::f( const double* u, double /* t */ )
   return ( useSignStrobe ) ? v : 1;
 }
 
+int TAdjGen::registered = reg();
+
+int TAdjGen::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TAdjGen::icon[] = {
 /* width height num_colors chars_per_pixel */

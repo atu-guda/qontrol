@@ -1366,5 +1366,13 @@ int TModel::saveDatas( ostream *os )/*{{{1*/
   return i;
 }/*}}}1*/
 
+int TModel::registered = reg();
+
+int TModel::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 // end of tmodel.cpp
 

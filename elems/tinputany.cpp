@@ -152,6 +152,14 @@ double TInputAny::f( const double* /* u */, double /* t */ )
   return v;
 }
 
+int TInputAny::registered = reg();
+
+int TInputAny::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TInputAny::icon[] = {
 /* width height num_colors chars_per_pixel */

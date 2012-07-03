@@ -37,7 +37,6 @@ HEADERS += \
   datacont.h \
   dataset.h \
   defs.h \
-  elemfact.h \
   miscfun.h \
   mo2settdlg.h \
   myelems1.h \

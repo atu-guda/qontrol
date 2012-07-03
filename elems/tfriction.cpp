@@ -186,6 +186,14 @@ double TFriction::f( const double* u, double /* t */ )
   return x;
 }
 
+int TFriction::registered = reg();
+
+int TFriction::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TFriction::icon[] = {
 /* width height num_colors chars_per_pixel */

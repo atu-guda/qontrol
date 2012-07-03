@@ -162,6 +162,14 @@ double TPid::f( const double* u, double t )
   return v; 
 }
 
+int TPid::registered = reg();
+
+int TPid::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TPid::icon[] = {
 /* width height num_colors chars_per_pixel */

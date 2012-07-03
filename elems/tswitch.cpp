@@ -115,6 +115,14 @@ double TSwitch::f( const double* u, double /* t */ )
   return v;
 }
 
+int TSwitch::registered = reg();
+
+int TSwitch::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TSwitch::icon[] = {
 /* width height num_colors chars_per_pixel */

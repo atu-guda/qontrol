@@ -172,6 +172,14 @@ double TFuncPoly::f( const double* u, double /* t */ )
   return v; 
 }
 
+int TFuncPoly::registered = reg();
+
+int TFuncPoly::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TFuncPoly::icon[] = {
 "32 32 5 1",

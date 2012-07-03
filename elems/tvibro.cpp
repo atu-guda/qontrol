@@ -168,6 +168,14 @@ double TVibro::f( const double* u, double t )
   return x;
 }
 
+int TVibro::registered = reg();
+
+int TVibro::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TVibro::icon[] = {
 /* width height num_colors chars_per_pixel */

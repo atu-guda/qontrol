@@ -43,6 +43,10 @@ class TDataContainer : public TDataSet  {
   static TClassInfo class_info; 
   /** static help str */
   static const char *helpstr;
+  /** autoregister */
+  static int registered;
+  static int reg();
+  
 };
 
 #endif // _DATACONT_H

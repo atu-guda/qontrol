@@ -181,6 +181,14 @@ int TLorenz::startLoop( int acnx, int acny )
   return rc;
 }
 
+int TLorenz::registered = reg();
+
+int TLorenz::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TLorenz::icon[] = {
 /* width height num_colors chars_per_pixel */

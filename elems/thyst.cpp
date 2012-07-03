@@ -190,6 +190,14 @@ int THyst::setDataID( int ni, double da, int allowConv )
   return k;
 }
 
+int THyst::registered = reg();
+
+int THyst::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* THyst::icon[] = {
 "32 32 3 1",

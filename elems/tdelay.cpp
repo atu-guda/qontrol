@@ -160,6 +160,14 @@ int TDelay::setDataID( int ni, double da, int allowConv  )
   return k;
 }
 
+int TDelay::registered = reg();
+
+int TDelay::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TDelay::icon[] = {
 /* width height num_colors chars_per_pixel */

@@ -146,6 +146,14 @@ double TCounter::f( const double* u, double /* t */ )
   return v;
 }
 
+int TCounter::registered = reg();
+
+int TCounter::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TCounter::icon[] = {
 /* width height num_colors chars_per_pixel */

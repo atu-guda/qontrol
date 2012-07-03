@@ -203,6 +203,14 @@ void TSourceLin::recalc(void)
 }
 
 
+int TSourceLin::registered = reg();
+
+int TSourceLin::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TSourceLin::icon[] = {
 /* width height num_colors chars_per_pixel */

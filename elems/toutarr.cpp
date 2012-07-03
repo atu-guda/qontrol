@@ -257,6 +257,14 @@ int TOutArr::setDataSD( const char *nm, double da, int allowConv )
   return 0;
 }
 
+int TOutArr::registered = reg();
+
+int TOutArr::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 
 // end of toutarr.cpp
 

@@ -177,6 +177,14 @@ double TCriterion::f( const double* u, double t )
   return rv;
 }
 
+int TCriterion::registered = reg();
+
+int TCriterion::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TCriterion::icon[] = {
 /* width height num_colors chars_per_pixel */

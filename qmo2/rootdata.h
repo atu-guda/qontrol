@@ -63,6 +63,9 @@ class TRootData : public TDataContainer {
    static TClassInfo class_info;
    /** help str */
    static const char* helpstr;
+  /** autoregister */
+  static int registered;
+  static int reg();
 };
 typedef TRootData* PTRootData;
 

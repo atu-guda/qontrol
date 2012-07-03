@@ -182,6 +182,14 @@ double TFuncTrans::f( const double* u, double /* t */ )
   return v; 
 }
 
+int TFuncTrans::registered = reg();
+
+int TFuncTrans::reg()
+{
+  return ElemFactory::theFactory().registerElemType( &class_info  );
+}
+
+
 /* XPM */
 const char* TFuncTrans::icon[] = {
 "32 32 5 1",
