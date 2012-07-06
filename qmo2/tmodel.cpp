@@ -541,11 +541,12 @@ TGraph* TModel::getGraph( int gra_nu )/*{{{1*/
   return static_cast<TGraph*>(ptrs[v_graph[gra_nu]]);
 }/*}}}1*/
 
-int TModel::insElem( const TDataInfo *cdi, int aord, int avis_x, int avis_y )/*{{{1*/
+int TModel::insElem( const QString &cl_name, const QString &ob_name,
+                     int aord, int avis_x, int avis_y )/*{{{1*/
 {
   TMiso *ob;
   reset();
-  ob = static_cast<TMiso*>( add_obj( cdi ) );
+  ob = static_cast<TMiso*>( add_obj( cl_name, ob_name ) );
   if( ob == 0 || ob->isChildOf( "TMiso" ) == 0 ) 
     return -1;
   ob->setDataSI( "ord", aord, 0 );
@@ -555,43 +556,31 @@ int TModel::insElem( const TDataInfo *cdi, int aord, int avis_x, int avis_y )/*{
   return 0;
 }/*}}}1*/
 
-int TModel::insOut( const char *outname, const char *objname )/*{{{1*/
+int TModel::insOut( const QString &outname, const QString &objname )/*{{{1*/
 {
   TOutArr *ob;
-  static TDataInfo odi = 
-   { dtpObj, CLASS_ID_TOutArr, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0, 
-	   "", "", "" };
   reset();
-  odi.name[0] = 0; strncat( odi.name, outname, MAX_NAMELEN-1 );
-  ob = static_cast<TOutArr*>( add_obj( &odi ) );
+  ob = static_cast<TOutArr*>( add_obj( "TOutArr", outname ) );
   if( ob == 0 || ob->isChildOf( "TOutArr" ) == 0 ) 
     return -1;
-  QString t_objname( objname ); // TODO drop
-  ob->setDataSS( "name", &t_objname, 0 );
+  ob->setDataSS( "name", &objname, 0 );
   
-  if( strncmp( outname, "out_", 4 ) == 0 
-      && outname[4] != 0 &&
-      isGoodName(outname+4) ) 
-  {
-    QString t( outname+4 );
-    ob->setDataSS( "label", &t, 0 );
-  } else {
-    ob->setDataSS( "label", &t_objname, 0 );
-  }
+  QString lbl = objname;
+  if( lbl.left(4) == "out_" )
+    lbl.remove(0,4);
+
+  ob->setDataSS( "label", &lbl, 0 );
+  
   linkNames(); 
   modified |= 1;
   return 0;
 }/*}}}1*/
 
-int TModel::insGraph( const char *gname )/*{{{1*/
+int TModel::insGraph( const QString &gname )/*{{{1*/
 {
   TGraph *ob;
-  static TDataInfo gdi = 
-   { dtpObj, CLASS_ID_TGraph, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0, 
-	   "", "", "" };
   reset();
-  gdi.name[0] = 0; strncat( gdi.name, gname, MAX_NAMELEN-1 );
-  ob = static_cast<TGraph*>( add_obj( &gdi ) );
+  ob = static_cast<TGraph*>( add_obj( "TGraph", gname ) );
   if( ob == 0 || ob->isChildOf( "TGraph" ) == 0 ) 
     return -1;
   linkNames(); 

@@ -26,6 +26,13 @@ struct GraphInfo;
 
 #define CLASS_ID_TOutArr 600
 
+static const char* const toutarr_list = 
+  "Simple\n" // 0
+  "Parm 1\n" // 1
+  "Parm 2\n" // 2
+  "Special"  // 3
+;
+
 /** Collector of data during simulation.
   * Depend on type, collect data from single loop, parm loop 1 & 2.
   * @author atu
@@ -49,10 +56,6 @@ class TOutArr : public TDataSet  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** redefined from TDataSet to access array data as '#123' */
-   virtual int getDataSD( const char *nm, double *da, int allowConv );
-   /** redefined from TDataSet to access array data as '#123' */
-   virtual int setDataSD( const char *nm, double da, int allowConv );
    /** access to array value */
    virtual const double* getArray(void);
    /** request to allocate array */
@@ -69,29 +72,30 @@ class TOutArr : public TDataSet  {
    int fillGraphInfo( GraphInfo *gi ) const;
  protected:
    /** type of array: 0:simple, 1:parm1, 2:parm2, 3:special */
-   PRM_LIST( type, efNoRunChange );
+   PRM_LIST1( type, efNoRunChange, "Type", 
+       "Type of array: 0:simple, 1:parm1, 2:parm2, 3:special", "", toutarr_list );
    /** name of element to use */
-   PRM_STRING( name, efNoRunChange );
+   PRM_STRING1( name, efNoRunChange, "Source", "Name of element to use", "max=32" );
    /** label of data */
-   PRM_STRING( label, 0 );
+   PRM_STRING1( label, efNoRunChange, "Label", "Label of data", "max=32" );
    /** size of x=const block in 2-d arrays */
-   PRM_INT( ny, efInner );
+   PRM_INT1( ny, efInner, "ny","size of x=const block in 2-d arrays", ""  );
    /** each n-th data collect. def=1 */
-   PRM_INT( nq, efNoRunChange );
+   PRM_INT1( nq, efNoRunChange, "Every n", "each n-th data collect. def=1", "min=0\nmax=1e6" );
    /** latch value of counter */
-   PRM_INT( lnq, efNoRunChange );
+   PRM_INT1( lnq, efNoRunChange, "Catch at n=", "latch value of counter", "min=0\nmax=1e6" );
    /** current value of counter(0..nq-1) */
-   PRM_INT( cnq, efInner );
+   PRM_INT1( cnq, efInner, "Current n", "current value of counter(0..nq-1)", "" );
    /** min value */
-   PRM_DOUBLE( dmin, efInner );
+   PRM_DOUBLE1( dmin, efInner, "min", "min value", "" );
    /** max value */
-   PRM_DOUBLE( dmax, efInner );
+   PRM_DOUBLE1( dmax, efInner, "max", "max value", "" );
    /** array size */
-   PRM_INT( arrsize, efInner );
+   PRM_INT1( arrsize, efInner, "full size", "Full array size", "" );
    /** current number of datas */
-   PRM_INT( n, efInner );
+   PRM_INT1( n, efInner, "current size", "Current number of datas", "" );
    /** data storage TODO: vector */
-   double *arr;
+   vector<double> arr;
    /** data descriptors */ 
    static TDataInfo toutarr_d_i[19]; 
    /** class decription */

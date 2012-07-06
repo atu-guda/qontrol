@@ -20,12 +20,6 @@
 #include "miscfun.h"
 #include "toutarr.h"
 
-static const char* const toutarr_list = 
-  "Simple\n" // 0
-  "Parm 1\n" // 1
-  "Parm 2\n" // 2
-  "Special"  // 3
-;
 
 const char* TOutArr::helpstr = "<H1>TOutArr</H1>\n"
  "Collector of output during simulation.\n"
@@ -62,23 +56,11 @@ TDataInfo TOutArr::toutarr_d_i[19] = {
 
 
 TOutArr::TOutArr( TDataSet* apar )
-        :TDataSet( apar ),
-       PRM_INIT( type, "Type" ),
-       PRM_INIT( name, "Element name" ),
-       PRM_INIT( label, "Label" ),
-       PRM_INIT( ny, "ny" ),
-       PRM_INIT( nq, "Every n" ),
-       PRM_INIT( lnq, "Catch at n=" ),
-       PRM_INIT( cnq, "Current n" ),
-       PRM_INIT( dmin, "min" ),
-       PRM_INIT( dmax, "max" ),
-       PRM_INIT( arrsize, "full size" ),
-       PRM_INIT( n, "current size" )
+        :TDataSet( apar )
 {
   int i;
   arrsize = 0; dmin = 0; dmax = 1; n = ny = 0; nq = 1; cnq = lnq = 0;
   type = 0; // name[0] = 0; label[0] = 0;
-  arr = 0;
   d_i = toutarr_d_i;
   initHash();
   for( i=0; i<nelm; i++ ) {
@@ -89,28 +71,11 @@ TOutArr::TOutArr( TDataSet* apar )
   ptrs[9] = &lnq;
   ptrs[13] = &arrsize; ptrs[14] = &dmin; ptrs[15] = &dmax; 
   ptrs[16] = &n; ptrs[17] = &ny;
-
-  PRMI(type).setDescr( "Type of array: 0:simple, 1:parm1, 2:parm2, 3:special " );
-  PRMI(type).setElems( toutarr_list );
-  PRMI(name).setDescr( "Name of element to use" );
-  PRMI(name).setMinMax( 0, MAX_NAMELEN );
-  PRMI(label).setDescr( "Label of data" );
-  PRMI(label).setMinMax( 0, MAX_LABELLEN );
-  PRMI(ny).setDescr( "size of x=const block in 2-d arrays " );
-  PRMI(nq).setDescr( "each n-th data collect. def=1" );
-  PRMI(nq).setMinMax( 1, 1e6 );
-  PRMI(lnq).setDescr( "latch value of counter " );
-  PRMI(lnq).setMinMax( 0, 1e6 );
-  PRMI(cnq).setDescr( "current value of counter(0..nq-1)" );
-  PRMI(dmin).setDescr( "min value" );
-  PRMI(dmax).setDescr( "max value" );
-  PRMI(arrsize).setDescr( "Full array size" );
-  PRMI(n).setDescr( "Current number of datas" );
 }
 
 TOutArr::~TOutArr()
 {
-  delete[] arr; arr = 0; n = ny = 0;
+  n = ny = 0;
 }
 
 TDataSet* TOutArr::create( TDataSet* apar )
@@ -136,35 +101,33 @@ const char *TOutArr::getHelp(void) const
 
 const double* TOutArr::getArray(void)
 {
-  return arr;
+  return &arr[0];
 }
 
 int TOutArr::alloc( int sz, int a_ny )
 {
-  if( arr != 0 && sz == arrsize ) {
+  if( sz == arrsize ) {
     n = 0; dmin = 0; dmax = 1; state = 2;
     return 0;
   };
-  delete[] arr;
   ny = a_ny;
   if( sz < 1 ) sz = 1; 
   if( ny < 1 ) ny = 1;
-  arr = new double[sz+2];
+  arr.resize( sz ); 
   arrsize = sz; n = 0; dmin = 0; dmax = 1; cnq = 0;
-  if( arr != 0 ) state = 2;
   return 0;
 }
 
 int TOutArr::free(void)
 {
-  delete[] arr; arr = 0;
+  // no real delete
   arrsize = 0;  n = 0; state = 1;
   return 0;
 }
 
 int TOutArr::reset( int level )
 {
-  if( arr != 0 && level >= type ) {
+  if( level >= type ) {
     n = 0; dmin = 0; dmax = 1; state = 2;
   };
   return 0;
@@ -173,7 +136,7 @@ int TOutArr::reset( int level )
 
 int TOutArr::push_val( double v, int level )
 {
-  if( arr == 0 || n >= arrsize )
+  if( n >= arrsize )
     return -1;
   if( level < type )
     return 0;
@@ -204,10 +167,10 @@ int TOutArr::fillGraphInfo( GraphInfo *gi ) const
   strncat( gi->title, qPrintable( objectName() ), 
            sizeof( gi->title )-1 ); // TODO: real QString
   strncat( gi->label[0], label.toLocal8Bit().constData(), sizeof( gi->label[0] )-1 );
-  if( arr == 0  ||  n < 1 )
+  if( n < 1 )
     return -2;
   gi->row = n; gi->col = 1; gi->ny = ny;
-  gi->dat[0] = arr;
+  gi->dat[0] = &arr[0];
   return 0;
 }  
 
@@ -220,37 +183,6 @@ int TOutArr::dump( const char *fn, char delim )
     return k;
   k = dumpDatas( fn, &gi, delim );
   return k;
-}
-
-int TOutArr::getDataSD( const char *nm, double *da, int allowConv )
-{
-  int k;
-  if( nm[0] != '#' )
-    return TDataSet::getDataSD( nm, da, allowConv );
-  // if( strlen( nm ) < 2 )
-  //   return -1;
-  k = atoi( nm+1 );
-  if( arr == 0 || k<0 || k>=n )
-    return -1;
-  *da = arr[k];
-  return 0;
-}
-
-int TOutArr::setDataSD( const char *nm, double da, int allowConv )
-{
-  int k;
-  double v;
-  if( nm[0] != '#' ) // not special case like "#213"
-    return TDataSet::setDataSD( nm, da, allowConv );
-  // if( strlen( nm ) < 2 ) **** safe not to check: atoi("") == 0
-  //  return -1;
-  k = atoi( nm+1 );
-  if( arr == 0 || k<0 || k>=n )
-    return -1;
-  v = arr[k] = da;
-  if( v > dmax ) dmax = v;
-  if( v < dmin ) dmin = v;
-  return 0;
 }
 
 int TOutArr::registered = reg();

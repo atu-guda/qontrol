@@ -229,11 +229,11 @@ void QMo2View::changeLevel( int lev )
 
 void QMo2View::newElm()
 {
-  TDataInfo di;
   QDialog *seld; 
-  QComboBox *cb; QLabel *la;
+  QLabel *la;
   QPushButton *bt_ok, *bt_can;
   QLineEdit *oname_ed, *oord_ed;
+  QListWidget *lw;
   QGridLayout *lay;
 
   const TClassInfo *ci;
@@ -266,7 +266,7 @@ void QMo2View::newElm()
   la = new QLabel( "Type", seld );
   lay->addWidget( la, 2, 0 );
 
-  cb = new QComboBox( seld );
+  lw = new QListWidget( seld );
   QStringList cl_names = ElemFactory::theFactory().allTypeNames();
   for( QString cname : cl_names ) {
     ci = ElemFactory::theFactory().getInfo( cname );
@@ -277,10 +277,12 @@ void QMo2View::newElm()
     QString iconName = QString( ":icons/elm_" )
       + cname.toLower() 
       + ".png";
-    cb->addItem( QIcon(iconName), cname );
+    lw->addItem( new QListWidgetItem( QIcon(iconName), cname ) );
   };
-  lay->addWidget( cb, 3, 0, 1, 2, Qt::AlignTop );
-  lay->setRowMinimumHeight ( 3, 200 );
+  lw->setViewMode( QListView::IconMode );
+  // lw->setUniformItemSizes( true );
+  lw->setResizeMode ( QListView::Adjust );
+  lay->addWidget( lw, 3, 0, 1, 2 );
 
   bt_ok = new QPushButton( "Ok", seld );
   bt_ok->setText( "Ok" ); bt_ok->setDefault( true );
@@ -292,14 +294,17 @@ void QMo2View::newElm()
   lay->addWidget( bt_can, 5, 1 );
   connect( bt_can, SIGNAL(clicked()), seld, SLOT(reject() ) );
 
+  seld->resize( 600, 400 );
+
   rc = seld->exec();
   if( rc == QDialog::Accepted ) {
-    cnmq = cb->currentText();
+    if( lw->currentItem() ) 
+      cnmq = lw->currentItem()->text();
     onameq = oname_ed->text(); 
     oordq = oord_ed->text(); 
   }; 
   delete seld;
-  if( rc != QDialog::Accepted )
+  if( rc != QDialog::Accepted || cnmq.isEmpty() )
     return;
   oord = oordq.toInt();
   if( ! isGoodName( onameq )  ) {
@@ -316,14 +321,7 @@ void QMo2View::newElm()
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
-  di.tp = dtpObj; di.subtp = ci->id;
-  di.max_len = 0; di.dlg_x = di.dlg_y = di.dlg_w = di.dlg_h = 0;
-  di.hval = di.dyna = 0; di.flags = 0; di.v_min = di.v_max = 0;
-  di.name[0] = 0;
-  strncat( di.name, qPrintable(onameq), MAX_NAMELEN-1 );
-  di.descr = ""; 
-  di.listdata = "";
-  model->insElem( &di, oord, sel_x, sel_y) ; // reset() implied
+  model->insElem( cnmq, onameq, oord, sel_x, sel_y) ; // reset() implied
   changeSel( 0, 0, 1 ); // update sel
   editElm();
 }
@@ -341,9 +339,9 @@ void QMo2View::delElm()
   QString oname = ob->objectName();
 
   k = QMessageBox::information( this, PACKAGE " delete confirmation",
-       QString("Do you really want to delete element ") 
-        + oname + QString(" ?"),
-       "&Yes", "&No", "&Help", 0, 1 );
+       QString("Do you really want to delete element \"") 
+        + oname + QString("\" ?"),
+       "&Yes", "&No", "Help", 0, 1 );
   if( k == 0 ) {
     model->reset();
     model->delElem( sel );
@@ -903,7 +901,7 @@ void QMo2View::newGraph()
          QString("Bad graph name: \"") + aname + "\"", 
 	 QMessageBox::Ok, QMessageBox::NoButton );
     }
-    model->insGraph( qPrintable(aname) );// TODO: QString
+    model->insGraph( aname );
     emit viewChanged();
   };
 }

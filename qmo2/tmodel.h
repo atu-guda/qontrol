@@ -96,11 +96,12 @@ class TModel : public TDataContainer  {
   /** returns ptr to TGraph gra_nu */
   virtual TGraph* getGraph( int gra_nu );
   /** inserts active element @returns: <0 - bad, >0= index in ptrs[] */
-  virtual int insElem( const TDataInfo* cdi, int aord, int avis_x, int avis_y );
+  virtual int insElem( const QString &cl_name, const QString &ob_name,  
+                       int aord, int avis_x, int avis_y );
   /** inserts new out array @returns: <0 - bad, >0= index in ptrs[] */
-  virtual int insOut( const char *outname, const char *objname );
+  virtual int insOut( const  QString &outname, const QString &objname );
   /** inserts new graph @returns: <0 - bad, >0= index in ptrs[] */
-  virtual int insGraph( const char *gname );
+  virtual int insGraph( const QString &gname );
   /** delete active element by name 0 = sucess */
   virtual int delElem( const char *ename );
   /** delete active element by elnu 0 = sucess */

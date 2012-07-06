@@ -794,11 +794,6 @@ void* TDataSet::getObj( const char *ename )
     qDebug( "ERR: TDataSet::getObj: not found element %s", ename );
   } 
   return ho->getPtr();
-  //int ni;
-  //ni = getDataIdx( ename );
-  //if( ni < 0 || ni >= nelm )
-  //  return 0;
-  //return ptrs[ni];
 }
 
 HolderData* TDataSet::getHolder( const QString &oname )
