@@ -9,7 +9,7 @@ RESOURCES = qmo2x.qrc
 
 INCLUDEPATH += .. ../elems 
 
-LIBS += -L ../elems -lelems -lgsl -lgslcblas -lm
+LIBS += -lgsl -lgslcblas -lm
 
 SOURCES += \
   datacont.cpp \
@@ -32,7 +32,40 @@ SOURCES += \
   rootdata.cpp \
   tmiso.cpp \
   tmodel.cpp \
-  datawidget.cpp
+  datawidget.cpp \
+  ../elems/tadjgen.cpp \
+  ../elems/tcorralalysis.cpp \
+  ../elems/tcounter.cpp \
+  ../elems/tcriterion.cpp \
+  ../elems/tdelay.cpp \
+  ../elems/textrlatch.cpp \
+  ../elems/tfourier.cpp \
+  ../elems/tfriction.cpp \
+  ../elems/tfuncmisc.cpp \
+  ../elems/tfuncpoly.cpp \
+  ../elems/tfunctrans.cpp \
+  ../elems/tgraph.cpp \
+  ../elems/thyst.cpp \
+  ../elems/tinputany.cpp \
+  ../elems/tintegrator.cpp \
+  ../elems/tlatch.cpp \
+  ../elems/tlinear.cpp \
+  ../elems/tlinp1q0.cpp \
+  ../elems/tlogic.cpp \
+  ../elems/tlorenz.cpp \
+  ../elems/trossler.cpp \
+  ../elems/tmultipl.cpp \
+  ../elems/toutarr.cpp \
+  ../elems/toutputany.cpp \
+  ../elems/tpid.cpp \
+  ../elems/trand.cpp \
+  ../elems/trandtrigg.cpp \
+  ../elems/tsource.cpp \
+  ../elems/tsourcelin.cpp \
+  ../elems/tswitch.cpp \
+  ../elems/ttrigger.cpp \
+  ../elems/tvibro.cpp 
+
 HEADERS += \
   datacont.h \
   dataset.h \
@@ -55,5 +88,37 @@ HEADERS += \
   tmiso.h \
   tmodel.h \ 
   datawidget.h \
+  ../elems/tadjgen.h \
+  ../elems/tcorralalysis.h \
+  ../elems/tcounter.h \
+  ../elems/tcriterion.h \
+  ../elems/tdelay.h \
+  ../elems/textrlatch.h \
+  ../elems/tfourier.h \
+  ../elems/tfriction.h \
+  ../elems/tfuncmisc.h \
+  ../elems/tfuncpoly.h \
+  ../elems/tfunctrans.h \
+  ../elems/tgraph.h \
+  ../elems/thyst.h \
+  ../elems/tinputany.h \
+  ../elems/tintegrator.h \
+  ../elems/tlatch.h \
+  ../elems/tlinear.h \
+  ../elems/tlinp1q0.h \
+  ../elems/tlogic.h \
+  ../elems/tlorenz.h \
+  ../elems/trossler.h \
+  ../elems/tmultipl.h \
+  ../elems/toutarr.h \
+  ../elems/toutputany.h \
+  ../elems/tpid.h \
+  ../elems/trand.h \
+  ../elems/trandtrigg.h \
+  ../elems/tsource.h \
+  ../elems/tsourcelin.h \
+  ../elems/tswitch.h \
+  ../elems/ttrigger.h \
+  ../elems/tvibro.h
 
 
