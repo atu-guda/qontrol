@@ -60,8 +60,8 @@ QSize QStructView::getElemsBound() const
       ob = model->getMiso( elnu );
       if( ob == 0 ) continue;
       x = y = 0;
-      ob->getDataSI( "vis_x", &x, 0 );
-      ob->getDataSI( "vis_y", &y, 0 );
+      ob->getData( "vis_x", &x );
+      ob->getData( "vis_y", &y );
       if( x > mx ) mx = x;
       if( y > my ) my = y;
     };
@@ -178,14 +178,15 @@ void QStructView::drawAll( QPainter &p )
     ob_name =  ob->objectName();
     line_busy = 0; ob_x = ob_y = -1; ob_ord = -1;
     ob_lock = ob_noauto = ob_first = ob_last = ob_flip = ob_noIcon = 0;
-    ob->getDataSI( "vis_x", &ob_x, 0 ); ob->getDataSI( "vis_y", &ob_y, 0 );
-    ob->getDataSI( "ord", &ob_ord, 0 );
-    ob->getDataSI( "links.locked", &ob_lock, 0 );
-    ob->getDataSI( "links.noauto", &ob_noauto, 0 );
-    ob->getDataSI( "links.onlyFirst", &ob_first, 0 );
-    ob->getDataSI( "links.onlyLast", &ob_last, 0 );
-    ob->getDataSI( "links.flip", &ob_flip, 0 );
-    ob->getDataSI( "links.noIcon", &ob_noIcon, 0 );
+    ob->getData( "vis_x", &ob_x ); 
+    ob->getData( "vis_y", &ob_y );
+    ob->getData( "ord", &ob_ord );
+    ob->getData( "links.locked", &ob_lock );
+    ob->getData( "links.noauto", &ob_noauto );
+    ob->getData( "links.onlyFirst", &ob_first );
+    ob->getData( "links.onlyLast", &ob_last );
+    ob->getData( "links.flip", &ob_flip );
+    ob->getData( "links.noIcon", &ob_noIcon );
     if( ob_x < 0 || ob_x >=MODEL_MX || ob_y < 0 || ob_y >= MODEL_MY )
       continue;
     // set real object icon origin
@@ -349,13 +350,13 @@ void QStructView::drawAll( QPainter &p )
     if( arr == 0 ) continue;
     ob_descr = ""; out_tp = -1;
     arr->getDataSS( "name", &ob_descr, 96, 0 );
-    arr->getDataSI( "type", &out_tp, 0 );
+    arr->getData( "type", &out_tp );
     elnu = model->oname2elnu( ob_descr.toLocal8Bit().constData() );
     if( elnu < 0 ) continue;
     ob = model->getMiso( elnu );
     if( ob == 0 ) continue;
     ob_x = ob_y = -1;
-    ob->getDataSI( "vis_x", &ob_x, 0 ); ob->getDataSI( "vis_y", &ob_y, 0 );
+    ob->getData( "vis_x", &ob_x ); ob->getData( "vis_y", &ob_y );
     if( ob_x < 0 || ob_x >=MODEL_MX || ob_y < 0 || ob_y >= MODEL_MY )
       continue;
     switch( out_tp ) {

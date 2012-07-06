@@ -93,5 +93,9 @@ enum _LOOP_TYPES {
 
 const char* getStateString( int stat_num );
 
+#define RE_NAME "^[_a-zA-Z]+[_0-9A-Za-z]*$"
+// not good, allowing "a..b", buf fast
+#define RE_FULLNAME  "^([_a-zA-Z]+[_0-9A-Za-z]*)\\.([_a-zA-Z]+[_0-9A-Za-z.]*)$"
+
 #endif // _DEFS_H
 

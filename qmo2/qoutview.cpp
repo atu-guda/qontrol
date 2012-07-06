@@ -65,7 +65,7 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
     arr->getDataSS( "name", &elmname, MAX_NAMELEN, 0 );
     elnu = model->oname2elnu( elmname.toLocal8Bit().constData() );
     out_type = -1;
-    arr->getDataSI( "type", &out_type, 1 );
+    arr->getData( "type", &out_type );
     switch( out_type ) {
       case 0: p.setBrush( Qt::white ); break;
       case 1: p.setBrush( Qt::green ); break;
@@ -118,7 +118,7 @@ void QOutView::mousePressEvent( QMouseEvent *me )
     if( outname.isEmpty() )
       outname = "?unknown?";
     nn = -1;
-    arr->getDataSI( "n", &nn, 1 );
+    arr->getData( "n", &nn );
     title = outname
             % QString( "[" ) % QString::number(nn) % QString("]")
             % QString(" -> " ) % elmname;

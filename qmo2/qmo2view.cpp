@@ -201,8 +201,8 @@ void QMo2View::changeSel( int x, int y, int rel )
 	    ob = model->getMiso( elnu );
 	    if( ob == 0 )
 	      break;
-	    ob->getDataSI( "vis_x", &sel_x, 0 ); 
-	    ob->getDataSI( "vis_y", &sel_y, 0 );
+	    ob->getData( "vis_x", &sel_x ); 
+	    ob->getData( "vis_y", &sel_y );
 	    break;
     default: break;
   };
@@ -495,7 +495,7 @@ void QMo2View::lockElm()
   if( ob == 0 )
     return;
   
-  ob->getDataSI( "links.locked", &lck, 0 );
+  ob->getData( "links.locked", &lck );
   lck = !lck;
   ob->setDataSI( "links.locked", lck, 0 );
   
@@ -515,7 +515,7 @@ void QMo2View::ordElm()
   if( ob == 0 )
     return;
   old_ord = -1;
-  ob->getDataSI( "ord", &old_ord, 0 );
+  ob->getData( "ord", &old_ord );
   new_ord = QInputDialog::getInt(this, "New element order", 
       "Input new element order", 
       old_ord, 0, 2147483647, 1, &ok );

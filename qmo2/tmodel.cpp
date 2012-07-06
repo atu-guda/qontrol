@@ -310,7 +310,7 @@ void TModel::allocOutArrs( int tp )/*{{{1*/
     arr = getOutArr( out_nu );
     if( arr == 0 ) continue;
     out_tp = -1;
-    arr->getDataSI( "type", &out_tp, 0 );
+    arr->getData( "type", &out_tp );
     if( out_tp < 0 || out_tp > tp )
       continue;
     switch( out_tp ) {
@@ -491,8 +491,8 @@ int TModel::xy2elnu( int avis_x, int avis_y )/*{{{1*/
     ob = static_cast<TMiso*>(ptrs[v_el[i]]);
     if( ob == 0 ) continue;
     ox = oy = -1;
-    ob->getDataSI( "vis_x", &ox, 0 );
-    ob->getDataSI( "vis_y", &oy, 0 );
+    ob->getData( "vis_x", &ox );
+    ob->getData( "vis_y", &oy );
     if( ox == avis_x && oy == avis_y ) 
       return i;
   };	  
@@ -659,7 +659,7 @@ int TModel::newOrder( int elnu, int new_ord )/*{{{1*/
     return -1;
   ob = static_cast<TMiso*>(ptrs[v_el[elnu]]);
   ob->setDataSI( "ord", new_ord, 0 );
-  ob->getDataSI( "ord", &k, 0 );
+  ob->getData( "ord", &k );
   v_ord[elnu] = k;
   linkNames();
   modified |= 1;
@@ -680,7 +680,7 @@ int TModel::moveElem( int elnu, int newx, int newy )/*{{{1*/
     cx = cy = -2;
     ob1 = getMiso( i );
     if( ob1 == 0 ) continue;
-    ob1->getDataSI( "vis_x", &cx, 0 ); ob1->getDataSI( "vis_y", &cy, 0 );
+    ob1->getData( "vis_x", &cx ); ob1->getData( "vis_y", &cy );
     if( newx == cx && newy == cy ) return -1;
   };  
   ob->setDataSI( "vis_x", newx, 0 );
@@ -709,7 +709,7 @@ int TModel::linkNames(void)/*{{{1*/
     if( ob == 0 ) continue;
     if( ob->isChildOf( "TMiso" )) {
       v_el.push_back( i ); oord = -1;
-      ob->getDataSI( "ord", &oord, 0 );
+      ob->getData( "ord", &oord );
       v_ord.push_back( oord );
       n_el++; continue;
     };
@@ -732,19 +732,21 @@ int TModel::linkNames(void)/*{{{1*/
       continue;
     maxli = maxlp = 0;
     ob_lock = ob_noauto = 0; k = 0;
-    lob->getDataSI( "locked", &ob_lock, 0 );
-    lob->getDataSI( "noauto", &ob_noauto, 0 );
-    lob->getDataSI( "onlyFirst", &ob_first, 0 );
-    lob->getDataSI( "onlyLast", &ob_last, 0 );
-    if( ob_lock )  k |= 1; if( ob_noauto ) k |= 2;
-    if( ob_first ) k |= 4; if( ob_last ) k |= 8;
+    lob->getData( "locked", &ob_lock );
+    lob->getData( "noauto", &ob_noauto );
+    lob->getData( "onlyFirst", &ob_first );
+    lob->getData( "onlyLast", &ob_last );
+    if( ob_lock )  k |= 1; 
+    if( ob_noauto ) k |= 2;
+    if( ob_first ) k |= 4; 
+    if( ob_last ) k |= 8;
     v_flg.push_back( k );
     for( j=0; j<4; j++ ) {
       lname = "";  pname = ""; nname = "";
       lob->getDataSS( i_names[j], &lname, MAX_NAMELEN, 0 );
       lob->getDataSS( p_names[j], &pname, MAX_NAMELEN, 0 );
       lob->getDataSS( n_names[j], &nname, MAX_NAMELEN, 0  );
-      lob->getDataSI( f_names[j], &flg, 0 );
+      lob->getData( f_names[j], &flg );
       if( lname[0] == 0 || ( iin = oname2elnu( lname.toLocal8Bit().constData() ) ) == -1 ) {
 	inps[i].l[j] = -1;
       } else {
@@ -769,7 +771,7 @@ int TModel::linkNames(void)/*{{{1*/
     if( arr == 0 ) { v_oute.push_back(-1); v_outt.push_back(-1); };
     oname = ""; out_tp = -1;
     arr->getDataSS( "name", &oname, MAX_NAMELEN, 0 );
-    arr->getDataSI( "type", &out_tp, 0 );
+    arr->getData( "type", &out_tp );
     elnu = oname2elnu( oname.toLocal8Bit().constData() );
     v_oute.push_back( elnu ); v_outt.push_back( out_tp );
   };
@@ -825,8 +827,8 @@ int TModel::getLinkInfos( int elnu, LinkInfo *li )/*{{{1*/
       ob = getMiso( l_elnu );
       if( ob == 0 ) continue;
       vx = vy = -1; flip = 0;
-      ob->getDataSI( "vis_x", &vx, 0 ); ob->getDataSI( "vis_y", &vy, 0 );
-      ob->getDataSI( "links.flip", &flip, 0 ); 
+      ob->getData( "vis_x", &vx ); ob->getData( "vis_y", &vy );
+      ob->getData( "links.flip", &flip ); 
       if( vx < 0 || vy < 0 ) continue;
       li[i].ltype = LinkElm; li[i].elnu = l_elnu;
       li[i].x = vx; li[i].y = vy; li[i].eflip = flip;
@@ -843,8 +845,8 @@ int TModel::getLinkInfos( int elnu, LinkInfo *li )/*{{{1*/
       ob = getMiso( l_elnu );
       if( ob == 0 ) continue;
       vx = vy = -1;
-      ob->getDataSI( "vis_x", &vx, 0 ); ob->getDataSI( "vis_y", &vy, 0 );
-      ob->getDataSI( "links.flip", &flip, 0 ); 
+      ob->getData( "vis_x", &vx ); ob->getData( "vis_y", &vy );
+      ob->getData( "links.flip", &flip ); 
       if( vx < 0 || vy < 0 ) continue;
       li[i+4].ltype = LinkElm; li[i+4].elnu = l_elnu;
       li[i+4].x = vx; li[i+4].y = vy; li[i+4].eflip = flip;

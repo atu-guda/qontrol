@@ -418,14 +418,14 @@ int readMlStr( istream *is, QString* buf, int ml, const char *delim )
   return 0;
 }
 
-/** splits string like aa.b.cc.d to first="aa" and next="b.cc.d"
-    max sizes: name,next: MAX_INPUTLEN; first: MAX_NAMELEN
+/** splits string like aa.b.cc.d to first="aa" and rest="b.cc.d"
+    max sizes: name,rest: MAX_INPUTLEN; first: MAX_NAMELEN
     @returns: 0 -- both parts, 1 -- only first, -1 -- bad line  */
-int splitName( const char *name, char *first, char *next )
+int splitName( const char *name, char *first, char *rest )
 {
   char c;
   int i, l, j;
-  first[0] = next[0] = 0; 
+  first[0] = rest[0] = 0; 
   l = strlen0( name );
   if( l < 1 || l >= MAX_INPUTLEN ) return -1;
   i = 0;
@@ -442,12 +442,27 @@ int splitName( const char *name, char *first, char *next )
   j = 0; i++;
   while( (c=name[i]) != 0 && i<l ) {
     if( (! isCharType( c, ctpName, (j==0) ? 1 : 0 )) && c != '.' )
-       { first[0] = 0; next[0] = 0; return -1; };
-    next[j++] = c;
+       { first[0] = 0; rest[0] = 0; return -1; };
+    rest[j++] = c;
     i++;
   };
-  next[j] = 0;
+  rest[j] = 0;
   return 0;
+}
+
+int splitName( const QString &name, QString &first, QString &rest )
+{
+  QRegExp re( RE_NAME );
+  if( re.indexIn( name ) != -1 ) {
+    first = name; rest = "";
+    return 1;
+  }
+  QRegExp ref( RE_FULLNAME );
+  if( ref.indexIn( name ) != -1 ) {
+    first = ref.cap(1); rest = ref.cap(2);
+    return 0;
+  }
+  return -1;
 }
 
 int strlen0( const char *s )
@@ -486,7 +501,7 @@ int isGoodName( const QString &s )
 {
   if( s.size() >= MAX_NAMELEN ) // TODO: legacy, remove it
     return 0;
-  QRegExp re( "^[_a-zA-Z]+[_0-9A-Za-z]*$" );
+  QRegExp re( RE_NAME );
   if( re.indexIn( s ) == -1 )
     return 0;
   return 1;

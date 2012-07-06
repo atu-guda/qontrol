@@ -80,10 +80,11 @@ QString quoteChar( QChar c );
 QString quoteString( const QString &s );
 /** reads multiline string up to delim, but no more then ml char with 0 */
 int readMlStr( istream *is, QString* buf, int ml, const char *delim );
-/** splits string like aa.b.cc.d to first="aa" and next="b.cc.d"
+/** splits string like aa.b.cc.d to first="aa" and rest="b.cc.d"
     max sizes: name,next: MAX_INPUTLEN; first: MAX_NAMELEN
     @returns: 0 -- both parts, 1 -- only first, -1 -- bad line  */
-int splitName( const char *name, char *first, char *next );
+int splitName( const char *name, char *first, char *rest );
+int splitName( const QString &name, QString &first, QString &rest );
 /** safe strlen -- returns 0 if s == 0 */
 int strlen0( const char *s );
 /** safe and limited strdup -- if s == 0 alloc "", alloc no more than given */

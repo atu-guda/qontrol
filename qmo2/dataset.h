@@ -430,6 +430,11 @@ class TDataSet : public QObject {
    virtual int getDataIS( int ni, QString *da, int maxlen, int allowConv );
    /** read string data from element by name, convert if need and allowed */
    virtual int getDataSS( const char *nm, QString *da, int maxlen, int allowConv );
+   /** new functions to read datas */
+   int getData( const QString &nm, int *da );
+   int getData( const QString &nm, double *da );
+   int getData( const QString &nm, QString &da );
+   int getData( const QString &nm, QVariant &da );
 
    /** store integer data to element by number, convert if need */
    virtual int setDataII( int ni, int da, int allowConv );

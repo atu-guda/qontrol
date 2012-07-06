@@ -248,10 +248,10 @@ class TModel : public TDataContainer  {
   /** signature to check from plot painters, etc... */
   PRM_INT1( sgnt, efInner, "sgnt", "signature to check", "" );
 
-  /** total number of loops */
-  int n_tot;
+  /** total number of iterations */
+  PRM_INT1( n_tot, efInner, "n_tot", "total number of iterations", "" );
   /** total counter */
-  int i_tot;
+  PRM_INT1( i_tot, efInner, "i_tot", "total counter", "" );
   /** run type */
   int run_type;
   /** effective number of loop on prm0 */

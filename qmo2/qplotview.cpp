@@ -111,7 +111,7 @@ void QPlotView::drawAll( QPainter &p )
   root = doc->getRoot(); model = doc->getModel();
   currSgnt = -2;
   if( model != 0 )
-    model->getDataSI( "sgnt", &currSgnt, 0 );
+    model->getData( "sgnt", &currSgnt );
   if( currSgnt != modelSign ) {
     ng = 0; 
     if( currSgnt != -2 ) modelSign = currSgnt;
@@ -595,8 +595,8 @@ void QPlotView::initArrs(void)
   };
   adr = arr->getArray();
   out_tp = -1; out_nn = -1; out_ny = 1;
-  arr->getDataSI( "type", &out_tp, 0 ); 
-  arr->getDataSI( "n", &out_nn, 0 ); arr->getDataSI( "ny", &out_ny, 0 );
+  arr->getData( "type", &out_tp ); 
+  arr->getData( "n", &out_nn ); arr->getData( "ny", &out_ny );
   if( out_ny < 1 ) out_ny = 1;
   ny = out_ny;
   if( adr == 0 || out_tp < 0 || out_nn < 2 ) { 
@@ -626,9 +626,9 @@ void QPlotView::initArrs(void)
     if( arr == 0 ) continue;
     adr = arr->getArray();
     out_tp = -1; out_nn = -1; out_ny = -1;
-    arr->getDataSI( "type", &out_tp, 0 );
-    arr->getDataSI( "n", &out_nn, 0 );
-    arr->getDataSI( "ny", &out_ny, 0 );
+    arr->getData( "type", &out_tp );
+    arr->getData( "n", &out_nn );
+    arr->getData( "ny", &out_ny );
     if( adr == 0 || /*out_tp != tp ||*/ out_nn != nn || out_ny != ny ) 
       continue;
     datay[ng] = adr;
@@ -922,12 +922,12 @@ void QPlotView::setStartColors(void)
   yLabel[0] = "y0"; yLabel[1] = "y1"; yLabel[2] = "y2";
   yLabel[3] = "y3"; yLabel[4] = "y4"; yLabel[5] = "y5";
   if( gra != 0 ) {
-    gra->getDataSI( "bgcolor", &c, 1 );
+    gra->getData( "bgcolor", &c );
     bgColor = QRgb( c );
     strcpy( yname, "y0color" );
     for( i=0; i<6; i++ ) {
       yname[1] = char( '0' + i );
-      gra->getDataSI( yname, &c, MAX_NAMELEN );
+      gra->getData( yname, &c );
       plotColor[i] = QRgb( c );
     };
   } else {

@@ -979,6 +979,41 @@ int TDataSet::getDataSS( const char *nm, QString *da, int maxlen, int allowConv 
   return k;
 }
 
+int TDataSet::getData( const QString &nm, int *da )
+{
+  if( !da || nm.isEmpty() )
+    return 0;
+  QString first, rest;
+  int nm_type = splitName( nm, first, rest );
+  if( nm_type == -1 ) {
+    qDebug( "TDataSet::getData(int): bad target name \"%s\"",
+	qPrintable( nm ) );
+    return 0;
+  }
+  
+  HolderData *ho = getHolder( first );
+  if( !ho ) {
+    qDebug( "TDataSet::getData(int): fail to find name \"%s\"",
+	qPrintable( first ) );
+    return 0;
+  }
+  if( nm_type == 1 ) { // first only 
+    *da = ho->get().toInt();
+    return 1;
+  }
+
+  // both part of name exists   TODO:  dont use oldTt!
+  if( ho->getTp() != QVariant::UserType || ho->getOldTp() != dtpObj ) {
+    qDebug( "TDataSet::getData(int): compound name required \"%s\"",
+	qPrintable( first ) );
+    return 0;
+  }
+  
+  TDataSet* ds= static_cast<TDataSet*>( ho->getPtr() );
+  return ds->getData( rest, da );
+
+}
+
 int TDataSet::setDataII( int ni, int da, int allowConv )
 {
   int tp;

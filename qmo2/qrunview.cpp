@@ -74,7 +74,7 @@ void QRunView::slotStartRun()
     state = stateBad;
     return;
   };
-  model->getDataSI( "n_tot", &n_tot, 0 );
+  model->getData( "n_tot", &n_tot );
   if( use_sync )
     setMouseTracking(1);
   s_time = get_real_time();
@@ -101,7 +101,7 @@ void QRunView::slotRunNext(void)
   m_state = model->getState();
   switch( m_state ) {
     case stateRun: 
-      model->getDataSI( "i_tot", &i_tot, 0 );
+      model->getData( "i_tot", &i_tot );
       if( i_tot >= n_tot ) {
 	model->stopRun(0);
 	state = model->getState();
@@ -161,8 +161,8 @@ void QRunView::drawAll( QPainter &p )
   else
     rt = 0;
   model->getDataSD( "t", &t, 0 );
-  model->getDataSI( "il1", &il1, 0 );
-  model->getDataSI( "il2", &il2, 0 );
+  model->getData( "il1", &il1 );
+  model->getData( "il2", &il2 );
   s.sprintf( "%5s  tp: %d t: %012.3f; m: [% .2f; % .2f]; rt: %7.2f  i: %7d (%3d:%3d);", 
       getStateString(state), run_type, t, mouse_x, mouse_y, rt, 
       i_tot, il1, il2  );
@@ -369,26 +369,26 @@ void QRunView::vis2phys( int ix, int iy, double *x, double *y )
 
 void QRunView::getModelData(void)
 {
-  model->getDataSI( "n_tot", &n_tot, 0 );
-  model->getDataSI( "n_steps", &n_steps, 0 );
-  model->getDataSI( "use_sync", &use_sync, 0 );
-  model->getDataSI( "ic_mouse", &ic_mouse, 0 );
-  model->getDataSI( "ic_key", &ic_key, 0 );
-  model->getDataSI( "ic_joy", &ic_joy, 0 );
-  model->getDataSI( "ic_sound", &ic_sound, 0 );
-  model->getDataSI( "ic_aux", &ic_aux, 0 );
-  model->getDataSI( "oc_0", oc, 0 );
-  model->getDataSI( "oc_1", oc+1, 0 );
-  model->getDataSI( "oc_2", oc+2, 0 );
-  model->getDataSI( "oc_3", oc+3, 0 );
-  model->getDataSI( "oc_4", oc+4, 0 );
-  model->getDataSI( "oc_5", oc+5, 0 );
-  model->getDataSI( "oct_0", oct, 0 );
-  model->getDataSI( "oct_1", oct+1, 0 );
-  model->getDataSI( "oct_2", oct+2, 0 );
-  model->getDataSI( "oct_3", oct+3, 0 );
-  model->getDataSI( "oct_4", oct+4, 0 );
-  model->getDataSI( "oct_5", oct+5, 0 );
+  model->getData( "n_tot", &n_tot );
+  model->getData( "n_steps", &n_steps );
+  model->getData( "use_sync", &use_sync );
+  model->getData( "ic_mouse", &ic_mouse );
+  model->getData( "ic_key", &ic_key );
+  model->getData( "ic_joy", &ic_joy );
+  model->getData( "ic_sound", &ic_sound );
+  model->getData( "ic_aux", &ic_aux );
+  model->getData( "oc_0", oc );
+  model->getData( "oc_1", oc+1 );
+  model->getData( "oc_2", oc+2 );
+  model->getData( "oc_3", oc+3 );
+  model->getData( "oc_4", oc+4 );
+  model->getData( "oc_5", oc+5 );
+  model->getData( "oct_0", oct );
+  model->getData( "oct_1", oct+1 );
+  model->getData( "oct_2", oct+2 );
+  model->getData( "oct_3", oct+3 );
+  model->getData( "oct_4", oct+4 );
+  model->getData( "oct_5", oct+5 );
   data = model->getVars();
   state = model->getState();
   s_h = use_sync ? 520 : 40;
