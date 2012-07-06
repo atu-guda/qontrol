@@ -193,11 +193,11 @@ int TRand::preRun( int run_tp, int an, int anx, int any, double adt )
   rng = gsl_rng_alloc( t );
   eff_seedType = seedType;
   if( seedType == 3 ) { // as model 
-    model->getDataSI( "seedType", &eff_seedType, 0 ); 
+    model->getData( "seedType", &eff_seedType ); 
   };
   bseed = 0;
   if( addBaseSeed ) {
-    model->getDataSI( "seed", &bseed, 0 );
+    model->getData( "seed", &bseed );
   };
   return rc;
 }

@@ -181,12 +181,14 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
   if( arr == 0 ) return -1;
   out_nn = -1; ny = -1;
   dat = arr->getArray(); 
-  arr->getDataSI( "n", &out_nn, 0 );
-  arr->getDataSI( "ny", &ny, 0 );
+  arr->getData( "n", &out_nn );
+  arr->getData( "ny", &ny );
   if( dat == 0 || out_nn < 1 || ny < 0 ) return -1;
   row = out_nn; gi->dat[0] = dat;
-  arr->getDataSS( "label", &label, MAX_LABELLEN, 1 );
-  if( label[0] == 0 ) { label = "x"; };
+  arr->getData( "label", label );
+  if( label.isEmpty() ) {
+    label = "x"; 
+  };
   strncat( gi->label[0], label.toLocal8Bit().constData(), MAX_LABELLEN-1 );
   col = 1; // unlike show, x and y[] in single index
   const QString* ynms[] = { &y0name, &y1name, &y2name, &y3name, &y4name, &y5name }; // TODO: replace
@@ -196,12 +198,15 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
     arr = model->getOutArr(  out_nu );
     if( arr == 0 ) continue;
     out_nn = -1;
-    dat = arr->getArray(); arr->getDataSI( "n", &out_nn, 0 );
+    dat = arr->getArray(); 
+    arr->getData( "n", &out_nn );
     if( dat == 0 || out_nn != row ) continue;
     gi->dat[col] = dat;
     label = "";
-    arr->getDataSS( "label", &label, MAX_LABELLEN, 1 );
-    if( label[0] == 0 ) { label = "y"; };
+    arr->getData( "label", label );
+    if( label.isEmpty() ) { 
+      label = "y"; 
+    };
     strncat( gi->label[col], label.toLocal8Bit().constData(), MAX_LABELLEN-1 );
     col++;
   };

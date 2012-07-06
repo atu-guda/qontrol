@@ -322,11 +322,11 @@ int TSource::preRun( int run_tp, int an, int anx, int any, double atdt )
     rng_u = gsl_rng_alloc( t );
     eff_seedType_u = seedType_u;
     if( seedType_u == 3 ) { // as model 
-      model->getDataSI( "seedType", &eff_seedType_u, 0 ); 
+      model->getData( "seedType", &eff_seedType_u ); 
     };
     bseed_u = 0;
     if( addBaseSeed_u ) {
-      model->getDataSI( "seed", &bseed_u, 0 );
+      model->getData( "seed", &bseed_u );
     };
   };
   // Phi
@@ -334,11 +334,11 @@ int TSource::preRun( int run_tp, int an, int anx, int any, double atdt )
     rng_p = gsl_rng_alloc( t );
     eff_seedType_p = seedType_p;
     if( seedType_p == 3 ) { // as model 
-      model->getDataSI( "seedType", &eff_seedType_p, 0 ); 
+      model->getData( "seedType", &eff_seedType_p ); 
     };
     bseed_p = 0;
     if( addBaseSeed_p ) {
-      model->getDataSI( "seed", &bseed_p, 0 );
+      model->getData( "seed", &bseed_p );
     };
   };
 

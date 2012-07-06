@@ -160,7 +160,7 @@ void QRunView::drawAll( QPainter &p )
     rt = get_real_time() - s_time;
   else
     rt = 0;
-  model->getDataSD( "t", &t, 0 );
+  model->getData( "t", &t );
   model->getData( "il1", &il1 );
   model->getData( "il2", &il2 );
   s.sprintf( "%5s  tp: %d t: %012.3f; m: [% .2f; % .2f]; rt: %7.2f  i: %7d (%3d:%3d);", 

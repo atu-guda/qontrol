@@ -575,13 +575,13 @@ void QPlotView::initArrs(void)
     return;
   };
 
-  gra->getDataSS( "xname", &outname, MAX_NAMELEN, 0 );
-  if( !isGoodName( outname.toLocal8Bit().constData() ) ) { 
+  gra->getData( "xname", outname );
+  if( !isGoodName( outname ) ) { 
     initFakeArrs(); 
     errstr = "Not found X array";
     return; 
   };
-  out_nu = model->outname2out_nu( outname.toLocal8Bit().constData() );
+  out_nu = model->outname2out_nu( qPrintable(outname) );
   if( out_nu < 0 ) { 
     initFakeArrs(); 
     errstr = "Fail to convert X array name to array index";
@@ -605,22 +605,23 @@ void QPlotView::initArrs(void)
     return; 
   };
   vmin = 0; vmax = 1; datax = adr;
-  arr->getDataSD( "dmin", &vmin, 0 ); arr->getDataSD( "dmax", &vmax, 0 );
+  arr->getData( "dmin", &vmin ); 
+  arr->getData( "dmax", &vmax );
   if( vmin >= vmax ) vmax = vmin + 1;
   tp = out_tp; ++tp; --tp; // TODO: fake
   nn = out_nn;
   realMinX = plotMinX = vmin; realMaxX = plotMaxX = vmax;
-  arr->getDataSS( "label", &buf, MAX_NAMELEN, 1 );
+  arr->getData( "label", buf );
   if( buf.size() < 1 ) { buf = "x"; };
   xLabel = buf;
-  for( i=0; i<6; i++ ) {
+  for( i=0; i<6; i++ ) { // TODO: 6 is number of plots
     start_from = 0;
     if( ny > 1 ) start_from = 1; // skip y in autoscale for 3D-like plot
     buf = "y0name"; buf[1] = char( '0' + i );
     outname = "";
-    gra->getDataSS( buf.toLocal8Bit().constData(), &outname, MAX_NAMELEN, 0 );
-    if( !isGoodName( outname.toLocal8Bit().constData() ) ) continue;
-    out_nu = model->outname2out_nu( outname.toLocal8Bit().constData() );
+    gra->getData( buf, outname );
+    if( !isGoodName( outname ) ) continue;
+    out_nu = model->outname2out_nu( qPrintable(outname) );
     if( out_nu < 0 ) continue;
     arr = model->getOutArr( out_nu );
     if( arr == 0 ) continue;
@@ -633,9 +634,9 @@ void QPlotView::initArrs(void)
       continue;
     datay[ng] = adr;
     if( i >= start_from ) {
-      k = arr->getDataSD( "dmin", &vmin, 0 );
-      k += arr->getDataSD( "dmax", &vmax, 0 );
-      if( k == 0 ) {
+      k = arr->getData( "dmin", &vmin );
+      k += arr->getData( "dmax", &vmax );
+      if( k == 2 ) {
 	if( ng <= start_from ) {
 	  realMinY = vmin; realMaxY = vmax;
 	} else {
@@ -647,10 +648,9 @@ void QPlotView::initArrs(void)
       };
     };
     buf = "";
-    arr->getDataSS( "label", &buf, MAX_NAMELEN, 1 );
+    arr->getData( "label", buf );
     if( buf.size() < 1 ) {
-      buf = "y0";
-      buf[1] = char( '0' + i );
+      buf = "y" + QString::number(i);
     };
     yLabel[ng] = buf;
     ng++;
@@ -941,7 +941,7 @@ void QPlotView::setStartColors(void)
   };
 }
 
-void QPlotView::setScale(void)
+void QPlotView::setScale(void) // TODO: object
 {
   QDialog *dia;
   QGroupBox *grp_x, *grp_y, *grp_m;

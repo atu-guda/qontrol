@@ -100,7 +100,7 @@ void QStatusModel::update()
       ob_nm_tp = ob->objectName();
       ob_nm_tp += "  (" + QString::fromLocal8Bit( ob->getClassName() ) + ")";
       l_name->setText( ob_nm_tp );
-      ob->getDataSS( "descr", &ob_descr, 120, 0 );
+      ob->getData( "descr", ob_descr );
       l_desc->setText( ob_descr );
       if( stat > 1 ) {
         val = model->xout( sel );

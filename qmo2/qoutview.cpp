@@ -61,9 +61,8 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
   for( out_nu=0; out_nu < n_out && out_nu < nh; out_nu++ ) {
     arr = model->getOutArr( out_nu );
     if( arr == 0 ) continue;
-    elmname = "";
-    arr->getDataSS( "name", &elmname, MAX_NAMELEN, 0 );
-    elnu = model->oname2elnu( elmname.toLocal8Bit().constData() );
+    arr->getData( "name", elmname );
+    elnu = model->oname2elnu( qPrintable(elmname) );
     out_type = -1;
     arr->getData( "type", &out_type );
     switch( out_type ) {
@@ -114,7 +113,7 @@ void QOutView::mousePressEvent( QMouseEvent *me )
   arr = model->getOutArr( out_nu );
   if( arr != 0 ) {
     outname = arr->objectName();
-    arr->getDataSS( "name", &elmname, MAX_NAMELEN, 0 );
+    arr->getData( "name", elmname );
     if( outname.isEmpty() )
       outname = "?unknown?";
     nn = -1;

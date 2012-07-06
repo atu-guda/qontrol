@@ -549,8 +549,9 @@ int TModel::insElem( const QString &cl_name, const QString &ob_name,
   ob = static_cast<TMiso*>( add_obj( cl_name, ob_name ) );
   if( ob == 0 || ob->isChildOf( "TMiso" ) == 0 ) 
     return -1;
-  ob->setDataSI( "ord", aord, 0 );
-  ob->setDataSI( "vis_x", avis_x, 0 );  ob->setDataSI( "vis_y", avis_y, 0 );
+  ob->setData( "ord", aord );
+  ob->setData( "vis_x", avis_x );  
+  ob->setData( "vis_y", avis_y );
   linkNames();
   modified |= 1;
   return 0;
@@ -563,13 +564,13 @@ int TModel::insOut( const QString &outname, const QString &objname )/*{{{1*/
   ob = static_cast<TOutArr*>( add_obj( "TOutArr", outname ) );
   if( ob == 0 || ob->isChildOf( "TOutArr" ) == 0 ) 
     return -1;
-  ob->setDataSS( "name", &objname, 0 );
+  ob->setData( "name", objname );
   
   QString lbl = objname;
   if( lbl.left(4) == "out_" )
     lbl.remove(0,4);
 
-  ob->setDataSS( "label", &lbl, 0 );
+  ob->setData( "label", lbl );
   
   linkNames(); 
   modified |= 1;
@@ -658,7 +659,7 @@ int TModel::newOrder( int elnu, int new_ord )/*{{{1*/
   if( k >= 0 )
     return -1;
   ob = static_cast<TMiso*>(ptrs[v_el[elnu]]);
-  ob->setDataSI( "ord", new_ord, 0 );
+  ob->setData( "ord", new_ord );
   ob->getData( "ord", &k );
   v_ord[elnu] = k;
   linkNames();
@@ -683,8 +684,8 @@ int TModel::moveElem( int elnu, int newx, int newy )/*{{{1*/
     ob1->getData( "vis_x", &cx ); ob1->getData( "vis_y", &cy );
     if( newx == cx && newy == cy ) return -1;
   };  
-  ob->setDataSI( "vis_x", newx, 0 );
-  ob->setDataSI( "vis_y", newy, 0 );
+  ob->setData( "vis_x", newx );
+  ob->setData( "vis_y", newy );
   return 0;
 }/*}}}1*/
 
@@ -743,11 +744,11 @@ int TModel::linkNames(void)/*{{{1*/
     v_flg.push_back( k );
     for( j=0; j<4; j++ ) {
       lname = "";  pname = ""; nname = "";
-      lob->getDataSS( i_names[j], &lname, MAX_NAMELEN, 0 );
-      lob->getDataSS( p_names[j], &pname, MAX_NAMELEN, 0 );
-      lob->getDataSS( n_names[j], &nname, MAX_NAMELEN, 0  );
+      lob->getData( i_names[j], lname );
+      lob->getData( p_names[j], pname );
+      lob->getData( n_names[j], nname );
       lob->getData( f_names[j], &flg );
-      if( lname[0] == 0 || ( iin = oname2elnu( lname.toLocal8Bit().constData() ) ) == -1 ) {
+      if( lname[0] == 0 || ( iin = oname2elnu( qPrintable(lname) ) ) == -1 ) {
 	inps[i].l[j] = -1;
       } else {
         inps[i].l[j] = iin;
@@ -770,7 +771,7 @@ int TModel::linkNames(void)/*{{{1*/
     arr = getOutArr( out_nu );
     if( arr == 0 ) { v_oute.push_back(-1); v_outt.push_back(-1); };
     oname = ""; out_tp = -1;
-    arr->getDataSS( "name", &oname, MAX_NAMELEN, 0 );
+    arr->getData( "name", oname );
     arr->getData( "type", &out_tp );
     elnu = oname2elnu( oname.toLocal8Bit().constData() );
     v_oute.push_back( elnu ); v_outt.push_back( out_tp );

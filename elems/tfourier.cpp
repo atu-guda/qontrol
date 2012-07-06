@@ -236,7 +236,7 @@ int TFourier::endLoop(void)
   if( arrx == 0 || arry == 0 ) return rc;
   xdat = arrx->getArray();
   nx = -1;
-  arrx->getDataSI( "n", &nx, 0 );
+  arrx->getData( "n", &nx );
   if( xdat == 0 || nx < 2 ) return rc;
   arry->alloc( nx, 1 ); 
   for( i=0; i<nx; i++ ) {
@@ -287,7 +287,7 @@ void TFourier::initVars(void)
   tp = 2 * M_PI / omega; 
   np = int( tp / tdt );
   tt = 1; // safe value
-  model->getDataSD( "tt", &tt, 0 );
+  model->getData( "tt", &tt );
   t_st = 0; t_en = tt;
   if( t0 > 0 && t0 < tt-tp ) 
     t_st = t0;

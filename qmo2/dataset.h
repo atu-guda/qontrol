@@ -410,7 +410,7 @@ class TDataSet : public QObject {
    /** return nelm */
    virtual int getN(void) const;
    /** return ptr to elem by name */
-   virtual void* getObj( const char *ename );   
+   virtual void* getObj( const QString &ename );   
    /** find holder for object */
    HolderData* getHolder( const QString &oname );
    /** return element description or 0 */
@@ -431,10 +431,10 @@ class TDataSet : public QObject {
    /** read string data from element by name, convert if need and allowed */
    virtual int getDataSS( const char *nm, QString *da, int maxlen, int allowConv );
    /** new functions to read datas */
+   int getData( const QString &nm, QVariant &da );
    int getData( const QString &nm, int *da );
    int getData( const QString &nm, double *da );
    int getData( const QString &nm, QString &da );
-   int getData( const QString &nm, QVariant &da );
 
    /** store integer data to element by number, convert if need */
    virtual int setDataII( int ni, int da, int allowConv );
@@ -448,6 +448,8 @@ class TDataSet : public QObject {
    virtual int setDataIS( int ni, const QString *da, int allowConv );
    /** store string data to element by name, convert if need */
    virtual int setDataSS( const char *nm, const QString *da, int allowConv );
+   /** new function to store datas: single: auto convert to QVariant */
+   int setData( const QString &nm, const QVariant &da );
    
    /** corrects data, if ni==-1 -- all elements -- now empty, see setData */
    virtual int checkData( int ni );

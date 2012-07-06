@@ -349,7 +349,7 @@ void QStructView::drawAll( QPainter &p )
     arr = model->getOutArr( out_nu );
     if( arr == 0 ) continue;
     ob_descr = ""; out_tp = -1;
-    arr->getDataSS( "name", &ob_descr, 96, 0 );
+    arr->getData( "name", ob_descr );
     arr->getData( "type", &out_tp );
     elnu = model->oname2elnu( ob_descr.toLocal8Bit().constData() );
     if( elnu < 0 ) continue;

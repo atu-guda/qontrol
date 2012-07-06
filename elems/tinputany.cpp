@@ -104,7 +104,7 @@ const char** TInputAny::getIcon(void) const
 int TInputAny::preRun( int run_tp, int an, int anx, int any, double adt )
 {
   int k, l, rc;
-  char fname[MAX_NAMELEN], rname[MAX_INPUTLEN], tname[MAX_INPUTLEN];
+  QString fname, rname, tname;
   TDataSet *cob, *nob;
   lastname = "";
   rc = TMiso::preRun( run_tp, an, anx, any, adt );
@@ -116,19 +116,20 @@ int TInputAny::preRun( int run_tp, int an, int anx, int any, double adt )
     ne = atoi( name.toLocal8Bit().constData() + 1 );
     return 0;
   };
-  cob = parent; tname[0] = 0; 
-  strncat( tname, name.toLocal8Bit().constData(), MAX_INPUTLEN-1 );
+  cob = parent;
+  tname = name;
   while( 1 ) {
     k = splitName( tname, fname, rname );
     if( k < 0 )  
       return 0;  // bad name
-    nob = static_cast<TDataSet*>( cob->getObj( fname ) ); // danger, check !!!!
+    nob = static_cast<TDataSet*>( cob->getObj( qPrintable(fname) ) ); // danger, check !!!!
     if( !nob ) {  // no such name 
-      qDebug( "DBG: %s: not found fname: \"%s\" ", __FUNCTION__, fname );
+      qDebug( "DBG: %s: not found fname: \"%s\" ", 
+	      __FUNCTION__, qPrintable(fname) );
       return 0;
     }
     if( k == 1 ) { // only left part of name w/o '.'
-      pel = cob; lastname = L8B(fname); type = 0; break;
+      pel = cob; lastname = fname; type = 0; break;
     } else {  // both component of name: aa.bb.cc -> aa  bb.cc
       // TODO: FIXME: real check!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       // di = cob->getDataInfo( i );
@@ -137,7 +138,7 @@ int TInputAny::preRun( int run_tp, int an, int anx, int any, double adt )
       cob = nob;
       if( cob == 0 ) 
 	return 0;
-      tname[0] = 0; strncat( tname, rname, sizeof(tname)-1 );
+      tname = rname;
     };
   };
   return rc;
@@ -147,7 +148,7 @@ double TInputAny::f( const double* /* u */, double /* t */ )
 {
   double v;
   switch( type ) {
-    case 0: pel->getDataSD( qPrintable(lastname), &v, 1 ); break;
+    case 0: pel->getData( lastname, &v ); break;
     case 1: model->getVar( ne ); break;
     default: v = 0;
   };

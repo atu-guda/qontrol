@@ -399,11 +399,9 @@ void QMo2View::linkElm()
 void QMo2View::qlinkElm()
 {
   TMiso *ob, *toob;
-  TElmLink *el;
   int k;
   QString toname;
   QString oldlink;
-  char lnkname[MAX_NAMELEN];
   if( ! checkState( linkToCheck ) )
     return;	  
 
@@ -412,14 +410,12 @@ void QMo2View::qlinkElm()
     return;
   toname = toob->objectName();
 
-  el = static_cast<TElmLink*>( ob->getObj( "links" ) );
-  if( el == 0 ) return;
-  strcpy( lnkname, "inps0" );
-  lnkname[4] = char( '0' + level );
-  k = el->getDataSS( lnkname, &oldlink, MAX_NAMELEN, 0 );
-  if( k != 0 )
+  QString lnkname( "links.inps" );
+  lnkname += QString::number( level );
+  k = ob->getData( lnkname, oldlink );
+  if( !k )
     return;
-  k = el->setDataSS( lnkname, &toname, 0 );
+  k = ob->setData( lnkname, toname );
   model->reset(); model->setModified();
   emit viewChanged();
 }
@@ -428,27 +424,22 @@ void QMo2View::qlinkElm()
 void QMo2View::qplinkElm()
 {
   TMiso *ob, *toob;
-  TElmLink *el;
   int k;
-  QString toname;
-  QString oldlink[MAX_NAMELEN];
-  char lnkname[MAX_NAMELEN];
+  QString oldlink;
   if( ! checkState( linkToCheck ) )
     return;	  
 
   ob = model->getMiso( sel ); toob = model->getMiso( mark );
   if( ob == 0 || toob == 0 )
     return;
-  toname = toob->objectName();
+  QString toname = toob->objectName();
 
-  el = static_cast<TElmLink*>( ob->getObj( "links" ) );
-  if( el == 0 ) return;
-  strcpy( lnkname, "pinps0" );
-  lnkname[5] = char( '0' + level );
-  k = el->getDataSS( lnkname, oldlink, MAX_NAMELEN, 0 );
-  if( k != 0 || oldlink[0] != 0 )
+  QString lnkname( "links.pinps" );
+  lnkname += QString::number( level );
+  k = ob->getData( lnkname, oldlink );
+  if( !k  || ! oldlink.isEmpty() )
     return;
-  k = el->setDataSS( lnkname, &toname, 0 );
+  k = ob->setData( lnkname, toname );
   model->reset(); model->setModified();
   emit viewChanged();
 }
@@ -456,9 +447,7 @@ void QMo2View::qplinkElm()
 void QMo2View::unlinkElm()
 {
   TMiso *ob;
-  TElmLink *el;
   int k;
-  char lnkname[MAX_NAMELEN];
   if( ! checkState( linkToCheck ) )
     return;	  
   
@@ -466,20 +455,16 @@ void QMo2View::unlinkElm()
   if( ob == 0 )
     return;
 
-  el = static_cast<TElmLink*>( ob->getObj( "links" ) );
-  if( el == 0 ) 
-    return;
-
-  strcpy( lnkname, "inps0" );
-  QString t("");
+  QString lnkname;
+  QString none("");
   for( k=0; k<4; k++ ) {
-    lnkname[4] = char( '0' + k );
-    el->setDataSS( lnkname, &t, 0 );
+    lnkname = "links.inps" + QString::number(k);
+    ob->setData( lnkname, none );
   };
-  strcpy( lnkname, "pinps0" );
+
   for( k=0; k<4; k++ ) {
-    lnkname[5] = char( '0' + k );
-    el->setDataSS( lnkname, &t, 0 );
+    lnkname = "links.pinps" + QString::number(k);
+    ob->setData( lnkname, none );
   };
   model->reset(); model->setModified();
   emit viewChanged();
@@ -497,7 +482,7 @@ void QMo2View::lockElm()
   
   ob->getData( "links.locked", &lck );
   lck = !lck;
-  ob->setDataSI( "links.locked", lck, 0 );
+  ob->setData( "links.locked", lck );
   
   model->reset();
   model->setModified();

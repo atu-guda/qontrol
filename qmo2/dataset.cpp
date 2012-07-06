@@ -787,11 +787,12 @@ int TDataSet::getN(void) const
   return nelm;
 }
 
-void* TDataSet::getObj( const char *ename )
+void* TDataSet::getObj( const QString &ename )
 {
   HolderData *ho = getHolder( ename );
   if( !ho ) {
-    qDebug( "ERR: TDataSet::getObj: not found element %s", ename );
+    qDebug( "ERR: TDataSet::getObj: not found element \"%s\"",
+	qPrintable(ename) );
   } 
   return ho->getPtr();
 }
@@ -979,40 +980,76 @@ int TDataSet::getDataSS( const char *nm, QString *da, int maxlen, int allowConv 
   return k;
 }
 
-int TDataSet::getData( const QString &nm, int *da )
+int TDataSet::getData( const QString &nm, QVariant &da )
 {
-  if( !da || nm.isEmpty() )
+  if( nm.isEmpty() )
     return 0;
   QString first, rest;
   int nm_type = splitName( nm, first, rest );
   if( nm_type == -1 ) {
-    qDebug( "TDataSet::getData(int): bad target name \"%s\"",
+    qDebug( "TDataSet::getData(Variant): bad target name \"%s\"",
 	qPrintable( nm ) );
     return 0;
   }
   
   HolderData *ho = getHolder( first );
   if( !ho ) {
-    qDebug( "TDataSet::getData(int): fail to find name \"%s\"",
+    qDebug( "TDataSet::getData(Variant): fail to find name \"%s\"",
 	qPrintable( first ) );
     return 0;
   }
   if( nm_type == 1 ) { // first only 
-    *da = ho->get().toInt();
+    da = ho->get();
     return 1;
   }
 
   // both part of name exists   TODO:  dont use oldTt!
   if( ho->getTp() != QVariant::UserType || ho->getOldTp() != dtpObj ) {
-    qDebug( "TDataSet::getData(int): compound name required \"%s\"",
+    qDebug( "TDataSet::getData(Variant): compound name required \"%s\"",
 	qPrintable( first ) );
     return 0;
   }
   
   TDataSet* ds= static_cast<TDataSet*>( ho->getPtr() );
   return ds->getData( rest, da );
-
 }
+
+
+int TDataSet::getData( const QString &nm, int *da )
+{
+  if( !da )
+    return 0;
+  QVariant vda;
+  int rc = getData( nm, vda );
+  if( rc == 0 )
+    return 0;
+  *da = vda.toInt();
+  return 1;
+}
+
+int TDataSet::getData( const QString &nm, double *da )
+{
+  if( !da )
+    return 0;
+  QVariant vda;
+  int rc = getData( nm, vda );
+  if( rc == 0 )
+    return 0;
+  *da = vda.toDouble();
+  return 1;
+}
+
+
+int TDataSet::getData( const QString &nm, QString &da )
+{
+  QVariant vda;
+  int rc = getData( nm, vda );
+  if( rc == 0 )
+    return 0;
+  da = vda.toString();
+  return 1;
+}
+
 
 int TDataSet::setDataII( int ni, int da, int allowConv )
 {
@@ -1183,6 +1220,39 @@ int TDataSet::setDataSD( const char *nm, double da, int allowConv )
   if( k == 0 ) // parent assumed modified if any of it's child modified.
     modified |= 1;
   return k;
+}
+
+int TDataSet::setData( const QString &nm, const QVariant &da )
+{
+  if( nm.isEmpty() )
+    return 0;
+  QString first, rest;
+  int nm_type = splitName( nm, first, rest );
+  if( nm_type == -1 ) {
+    qDebug( "TDataSet::setData(Variant): bad target name \"%s\"",
+	qPrintable( nm ) );
+    return 0;
+  }
+  
+  HolderData *ho = getHolder( first );
+  if( !ho ) {
+    qDebug( "TDataSet::setData(Variant): fail to find name \"%s\"",
+	qPrintable( first ) );
+    return 0;
+  }
+  if( nm_type == 1 ) { // first only 
+    return ho->set( da );
+  }
+
+  // both part of name exists   TODO:  dont use oldTt!
+  if( ho->getTp() != QVariant::UserType || ho->getOldTp() != dtpObj ) {
+    qDebug( "TDataSet::setData(Variant): compound name required \"%s\"",
+	qPrintable( first ) );
+    return 0;
+  }
+  
+  TDataSet* ds= static_cast<TDataSet*>( ho->getPtr() );
+  return ds->setData( rest, da );
 }
 
 

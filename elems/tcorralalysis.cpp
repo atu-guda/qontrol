@@ -247,7 +247,7 @@ int TCorrAnalysis::endLoop(void)
   if( arrx == 0 ) 
     return rc;
   nx = nx_c = 0;
-  arrx->getDataSI( "n", &nx, 0 );
+  arrx->getData( "n", &nx );
   xdat = arrx->getArray();
   if( xdat == 0 || nx < 2 ) 
     return rc;
@@ -255,7 +255,7 @@ int TCorrAnalysis::endLoop(void)
   arrc = model->getOutArr( arrcn );  cdat = 0;
   if( arrc != 0 ) {
     cdat = arrc->getArray();
-    arrc->getDataSI( "n", &nx_c, 0 );
+    arrc->getData( "n", &nx_c );
   };
   if( cdat != 0 && nx_c == nx )
     do_cmp = 1;
@@ -333,7 +333,7 @@ int TCorrAnalysis::getDataFromArrays()
   int arrxn = model->outname2out_nu( x_in.toLocal8Bit().constData() );
   TOutArr *arrx = model->getOutArr( arrxn );
   if( arrx != 0 ) {
-    arrx->getDataSI( "n", &nx, 0 );
+    arrx->getData( "n", &nx );
     xdat = arrx->getArray();
   } else {
     xdat = 0; nx = 0;
@@ -344,7 +344,7 @@ int TCorrAnalysis::getDataFromArrays()
   int arryn = model->outname2out_nu( y_in.toLocal8Bit().constData() );
   TOutArr *arry = model->getOutArr( arryn );
   if( arry != 0 ) {
-    arry->getDataSI( "n", &ny, 0 );
+    arry->getData( "n", &ny );
     ydat = arry->getArray();
   } else {
     ydat = 0; ny = 0;

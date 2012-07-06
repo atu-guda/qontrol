@@ -68,16 +68,16 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
     p.drawRect( 14, 10 + graph_nu * grid_sz, 10, 10 );
     p.drawText( grid_sz+1, 18 + graph_nu*grid_sz, QString::number( graph_nu ) );
     if( level != graph_nu ) continue;
-    gra->getDataSS( "xname", &out_name, MAX_NAMELEN, 0 );
-    out_nu = model->outname2out_nu( out_name.toLocal8Bit().constData() );
+    gra->getData( "xname", out_name );
+    out_nu = model->outname2out_nu( qPrintable(out_name) );
     if( out_nu >= 0 ) {
       p.drawLine( 0, grid_sz + out_nu*grid_sz, 12, grid_sz + graph_nu*grid_sz );
     };
     p.setPen( Qt::yellow );
     for( i=0; i<6; i++ ) {
       yname[1] = char( '0' + i );
-      gra->getDataSS( yname.toLocal8Bit().constData(), &out_name, MAX_NAMELEN, 0 );
-      out_nu = model->outname2out_nu( out_name.toLocal8Bit().constData() );
+      gra->getData( yname, out_name );
+      out_nu = model->outname2out_nu( qPrintable(out_name) );
       if( out_nu >= 0 ) {
 	p.drawLine( 0, grid_sz + out_nu*grid_sz, 12, grid_sz + graph_nu*grid_sz );
       };
