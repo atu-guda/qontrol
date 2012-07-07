@@ -719,13 +719,7 @@ bool HolderObj::fromString( const QString &s )
 
 bool HolderObj::toOldStream( std::ostream &os ) const
 {
-  // save FAKE info -- try  not to save
-  // os << "@ -- datainfo for " << qPrintable( targetName() ) << "; \n";
-  // os << "@ 10 " << old_subtp << " 0 0 0 0 0 0 0 0\n";
-  // os << "@ " << qPrintable( targetName() ) << "\n";
-  // os << "@ \n";
-  // os << "@ \n";
-  
+  // name=1000(Type). 1000 is old subtp
   os << qPrintable( targetName() ) << '=' << old_subtp
       << '(' << obj->getClassName() << ")\n";
   obj->saveDatasOld( os );
@@ -1330,20 +1324,6 @@ int TDataSet::checkData( int /* ni */ )
 }
 
 
-int TDataSet::saveDatas( ostream *os )
-{
-  int i;
-  *os << getClassId() << '(' << getClassName() << ")={\n";
-  // some debug? values
-  *os << "%!d n=" << nelm << "; allow_add=" << allow_add << '\n';
-  for( i=0; i<nelm; i++ ) {
-     saveData( i, os );
-  };
-  *os << "}; -- end of " << getClassName();
-  modified = 0;
-  return 0;
-}
-
 int TDataSet::saveDatasOld( ostream &os )
 {
   os << getClassId() << '(' << getClassName() << ")={\n";
@@ -1409,48 +1389,6 @@ int TDataSet::initHash(void)
    return 0;
 }
 
-int TDataSet::saveData( int ni, ostream *os ) const
-{
-  TDataSet* ob;
-  int k, iv;
-  double dv;
-  const QString *sv;
-  if( ni >= nelm || ni < 0 ) return -1;
-  if( d_i[ni].flags & ( efNoSave | efStatic ) ) return 0;
-  if( d_i[ni].dyna ) {  // was created dynamycaly - save info
-       *os << "@ -- datainfo for " << d_i[ni].name << "; \n";
-       d_i[ni].save( os );
-  };
-  switch( d_i[ni].tp ) {
-    case dtpEnd: return -1;
-    case dtpInt: 
-	  if( d_i[ni].subtp == dtpsColor ) {
-            iv = ((QColor*)(ptrs[ni]))->rgb();
-	  } else {
-	    iv = *((int*)(ptrs[ni]));
-	  }
-          *os << d_i[ni].name << '=' << iv; break;
-    case dtpDou: dv = *((double*)(ptrs[ni]));
-          *os << d_i[ni].name << '=' << dv; break;
-    case dtpStr: sv = (const QString*)(ptrs[ni]);
-          *os << d_i[ni].name << '=';
-          saveStr( os, sv->toLocal8Bit().constData() ); break;
-    case dtpFun: *os << "# func: " << d_i[ni].name; break;
-    case dtpFunPure: *os << "# func pure: " << d_i[ni].name; break;
-    case dtpObj: ob = static_cast<TDataSet*>( ptrs[ni] );
-          if( ob == 0 ) return -1;
-          if( ob->getClassId() != d_i[ni].subtp ) return -1;
-          *os << d_i[ni].name << '=' << d_i[ni].subtp
-              << '(' << ob->getClassName() << ")\n";
-          k = ob->saveDatas( os );
-          if( k ) return k;
-          break;
-    case dtpDial: case dtpLabel: case dtpGroup: return 0; // dialog elements
-    default: return -1;
-  };
-  *os << " ; \n";
-  return 0;
-}
 
 int TDataSet::processElem( istream *is )
 {

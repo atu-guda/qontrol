@@ -26,8 +26,6 @@
 #include "qmo2doc.h"
 #include "qmo2win.h"
 #include "qmo2view.h"
-// elements TODO: delete all this:  load so
-#include "myelems1.h"
 
 using namespace std;
 
@@ -123,17 +121,12 @@ const QString &QMo2Doc::title() const
 
 bool QMo2Doc::newDocument()
 {
-  //static const TDataInfo model_inf = {
-  //  dtpObj, CLASS_ID_TModel, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0, "model",  
-  //  "main model", "" 
-  //};
   // QMessageBox::critical( 0, "Debug", "QMo2Doc::newDocument", 0,0,0 );
   qDebug( "DBG: QMo2Doc::newDocument() point 0 rootdata=%p", rootdata );
   rootdata = new TRootData( 0 );
   qDebug( "DBG: QMo2Doc::newDocument() point 1 rootdata=%p", rootdata );
   rootdata->setObjectName( "root" );
-  fillRoot();
-  // k = rootdata->add_obj( &model_inf );
+  // fillRoot();
   qDebug( "DBG: QMo2Doc::newDocument() point 2 rootdata=%p", rootdata );
   void *xmodel = rootdata->add_obj( "TModel", "model" );
   qDebug( "DBG: QMo2Doc::newDocument() point 3 rootdata=%p", rootdata );
@@ -178,7 +171,7 @@ bool QMo2Doc::openDocument(const QString &filename )
     delete rootdata;
   rootdata = new TRootData( 0 );
   rootdata->setObjectName( "root" );
-  fillRoot();
+  // fillRoot();
   model = 0;
   k = rootdata->loadDatas( &is );
   is.close();
@@ -459,41 +452,6 @@ void QMo2Doc::fillRoot(void)
     return;
   }
   // TODO: must be loaded from ld.so selected by config file
-  rootdata->regClass( TModel::getStaticClassInfo() );
-  rootdata->regClass( TOutArr::getStaticClassInfo() );
-  rootdata->regClass( TGraph::getStaticClassInfo() );
-  rootdata->regClass( TElmLink::getStaticClassInfo() );
-  rootdata->regClass( TMiso::getStaticClassInfo() );
-  rootdata->regClass( TLinear::getStaticClassInfo() );
-  rootdata->regClass( TSource::getStaticClassInfo() );
-  rootdata->regClass( TSourceLin::getStaticClassInfo() );
-  rootdata->regClass( TMultipl::getStaticClassInfo() );
-  rootdata->regClass( TPid::getStaticClassInfo() );
-  rootdata->regClass( THyst::getStaticClassInfo() );
-  rootdata->regClass( TFuncPoly::getStaticClassInfo() );
-  rootdata->regClass( TFuncTrans::getStaticClassInfo() );
-  rootdata->regClass( TFuncMisc::getStaticClassInfo() );
-  rootdata->regClass( TDelay::getStaticClassInfo() );
-  rootdata->regClass( TExtrLatch::getStaticClassInfo() );
-  rootdata->regClass( TVibro::getStaticClassInfo() );
-  rootdata->regClass( TFriction::getStaticClassInfo() );
-  rootdata->regClass( TAdjGen::getStaticClassInfo() );
-  rootdata->regClass( TRandTrigg::getStaticClassInfo() );
-  rootdata->regClass( TIntegrator::getStaticClassInfo() );
-  rootdata->regClass( TLinP1Q0::getStaticClassInfo() );
-  rootdata->regClass( TInputAny::getStaticClassInfo() );
-  rootdata->regClass( TOutputAny::getStaticClassInfo() );
-  rootdata->regClass( TCriterion::getStaticClassInfo() );
-  rootdata->regClass( TLatch::getStaticClassInfo() );
-  rootdata->regClass( TSwitch::getStaticClassInfo() );
-  rootdata->regClass( TTrigger::getStaticClassInfo() );
-  rootdata->regClass( TLogic::getStaticClassInfo() );
-  rootdata->regClass( TRand::getStaticClassInfo() );
-  rootdata->regClass( TLorenz::getStaticClassInfo() );
-  rootdata->regClass( TRossler::getStaticClassInfo() );
-  rootdata->regClass( TCounter::getStaticClassInfo() );
-  rootdata->regClass( TCorrAnalysis::getStaticClassInfo() );
-  rootdata->regClass( TFourier::getStaticClassInfo() );
 }
 
 // end of qmo2doc.cpp

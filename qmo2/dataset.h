@@ -466,7 +466,6 @@ class TDataSet : public QObject {
    /** corrects data, if ni==-1 -- all elements -- now empty, see setData */
    virtual int checkData( int ni );
    /** save header, all elements and trail to stream */
-   virtual int saveDatas( std::ostream *os );
    virtual int saveDatasOld( std::ostream &os );
    /** load data to all elements */
    virtual int loadDatas( std::istream *is );
@@ -499,8 +498,6 @@ class TDataSet : public QObject {
  protected:
    /** count nelm, fills hval in d_i  */
    int initHash(void);
-   /**  save one element */
-   int saveData( int ni, std::ostream *os ) const;
    /** parse & assing one elem. returns: 0-ok 1-comment 2-end; <0-error */
    int processElem( std::istream *is );
  protected:

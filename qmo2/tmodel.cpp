@@ -1315,37 +1315,6 @@ const char *TModel::getHelp(void) const/*{{{1*/
   return helpstr;
 }/*}}}1*/
 
-int TModel::saveDatas( ostream *os )/*{{{1*/
-{
-  int i;
-  // for debug: list elements and links TODO: must depend on debug level
-  *os << "%!m model: n_el= " << n_el << " n_out= " << n_out 
-      << " n_graph = " << n_graph << "\n%!m  elems:\n";
-  for( i=0; i<n_el; i++ ) {
-    *os << "%!m e " << i << '[' << v_el[i] << "] " << v_ord[i] << ' '
-        << v_flg[i] << '\n';
-  };
-  for( i=0; i<n_el; i++ ) {
-    *os << "%!m   i" << i << ' ' << inps[i].maxl << ": "
-        << inps[i].l[0] << ' ' << inps[i].l[1] << ' '
-        << inps[i].l[2] << ' ' << inps[i].l[3] << ' '
-        << '\n';
-    *os << "%!m   p" << i << ' '  << pinps[i].maxl << ' '
-        << pinps[i].l[0] << ' ' << pinps[i].l[1] << ' '
-        << pinps[i].l[2] << ' ' << pinps[i].l[3] << " | "
-        << pnames[i].l[0] << ' ' << pnames[i].l[1] << ' '
-        << pnames[i].l[2] << ' ' << pnames[i].l[3] << ' '
-        << '\n';
-  };
-  *os << "%!m -- outs:\n";
-  for( i=0; i<n_out; i++ ) {
-    *os << "%!m o " << i << '[' << v_out[i] << ']' << ' '
-        << v_oute[i] << ' ' << v_outt[i] << '\n';
-  };
-  i = TDataContainer::saveDatas( os );
-  // *os << "\n# end of TModel\n";
-  return i;
-}/*}}}1*/
 
 int TModel::registered = reg();
 

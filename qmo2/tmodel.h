@@ -131,8 +131,6 @@ class TModel : public TDataContainer  {
   
   /** reimplemented from TDataSet to ensure all data filled and linked */
   virtual int checkData( int i );
-  /** reimplemented from TDataSet for debug purpose */
-  virtual int saveDatas( std::ostream *os );
   
  protected:
   /** sorts {v_el,v_ord} on v_ord */
