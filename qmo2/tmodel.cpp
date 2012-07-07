@@ -1003,7 +1003,7 @@ void TModel::fillCommon(void)/*{{{1*/
   // - enter xval1
   d_i[i].tp = dtpDbl; d_i[i].dlg_x = 220; d_i[i].dlg_y = 130;
   d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "xval" ); d_i[i].descr = "xval1";
+  strcpy( d_i[i].name, "xval1" ); d_i[i].descr = "xval1";
   i++; ptrs.push_back( &xval1 );
   // - label xval2 
   d_i[i].tp = dtpLabel; d_i[i].dlg_x = 330; d_i[i].dlg_y = 110;

@@ -95,7 +95,7 @@ class TOutArr : public TDataSet  {
    /** current number of datas */
    PRM_INT1( n, efInner, "current size", "Current number of datas", "" );
    /** data storage TODO: vector */
-   vector<double> arr;
+   std::vector<double> arr;
    /** data descriptors */ 
    static TDataInfo toutarr_d_i[19]; 
    /** class decription */

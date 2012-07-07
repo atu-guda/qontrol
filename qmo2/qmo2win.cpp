@@ -25,6 +25,7 @@
 #include "qmo2win.h"
 #include "mo2settdlg.h"
 
+using namespace std;
 
 QMo2Win* QMo2Win::qmo2win = 0;
 

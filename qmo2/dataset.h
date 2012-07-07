@@ -25,8 +25,6 @@ typedef QMap<QString,QString> QSSMap;
 #define CLASS_ID_TDataSet 1
 
 
-using namespace std;
-
 class QColor;
 class   TDataSet;
 typedef TDataSet* PTDataSet;
@@ -98,7 +96,9 @@ class HolderData : public QObject {
   virtual void post_set() = 0;
   virtual QString toString() const = 0;
   virtual bool fromString( const QString &s ) = 0;
-  virtual const QString getType() const = 0;
+  virtual QString getType() const = 0;
+  virtual bool toOldStream( std::ostream &os ) const = 0;
+  // virtual bool fromOldStream( std::istream *os ) const = 0;
   virtual QDomElement toDom( QDomDocument &dd ) const;
   // TODO: to/from XML
   // TODO: metadata in/out
@@ -137,7 +137,9 @@ class HolderInt : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
-  virtual const QString getType() const;
+  virtual bool toOldStream( std::ostream &os ) const;
+  // virtual bool fromOldStream( std::istream *os ) const;
+  virtual QString getType() const;
  protected:
   int *val;
 };
@@ -161,7 +163,7 @@ class HolderSwitch : public HolderInt {
     const QString &a_extra  = QString() );
   virtual ~HolderSwitch();
   virtual void post_set();
-  virtual const QString getType() const;
+  virtual QString getType() const;
 };
 
 #define PRM_SWITCH( name, flags ) \
@@ -184,7 +186,7 @@ class HolderList : public HolderInt {
      const QString &a_extra  = QString(), const QString &a_elems = QString() );
   virtual ~HolderList();
   // virtual void post_set();
-  virtual const QString getType() const;
+  virtual QString getType() const;
  private:
 };
 
@@ -213,7 +215,9 @@ class HolderDouble : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
-  virtual const QString getType() const;
+  virtual bool toOldStream( std::ostream &os ) const;
+  // virtual bool fromOldStream( std::istream *os ) const;
+  virtual QString getType() const;
  protected:
   double *val;
 };
@@ -246,7 +250,9 @@ class HolderString : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
-  virtual const QString getType() const;
+  virtual bool toOldStream( std::ostream &os ) const;
+  // virtual bool fromOldStream( std::istream *os ) const;
+  virtual QString getType() const;
  protected:
   QString *val;
 };
@@ -274,7 +280,9 @@ class HolderStringArr : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
-  virtual const QString getType() const;
+  virtual bool toOldStream( std::ostream &os ) const;
+  // virtual bool fromOldStream( std::istream *os ) const;
+  virtual QString getType() const;
  protected:
   int n;
   QString *val;
@@ -299,7 +307,9 @@ class HolderColor : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
-  virtual const QString getType() const;
+  virtual bool toOldStream( std::ostream &os ) const;
+  // virtual bool fromOldStream( std::istream *os ) const;
+  virtual QString getType() const;
  protected:
   QColor *val;
 };
@@ -327,7 +337,9 @@ class HolderObj : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
-  virtual const QString getType() const;
+  virtual bool toOldStream( std::ostream &os ) const;
+  // virtual bool fromOldStream( std::istream *os ) const;
+  virtual QString getType() const;
   TDataSet* getObj() { return obj; } // XXX: may be horror here!!
   virtual QDomElement toDom( QDomDocument &dd ) const;
  protected:
@@ -370,10 +382,10 @@ struct TDataInfo {
   /** string of list(1.2) elements \n  - delimiter   */
   const char* listdata;
   /** read from stream */
-  int read( istream *is );
+  int read( std::istream *is );
   /** save to stream -- simple format one value -- one line.
       Using simple strict syntax: @ val1 val2 ...  or @ "val" */
-  int save( ostream *os ) const;
+  int save( std::ostream *os ) const;
 };
 
 typedef TDataInfo *PTDataInfo;
@@ -409,10 +421,10 @@ class TDataSet : public QObject {
    void setModified(void) { modified |= 1; };
    /** return nelm */
    virtual int getN(void) const;
-   /** return ptr to elem by name */
+   /** return ptr to elem by name -- HORROR! TODO make protected? */
    virtual void* getObj( const QString &ename );   
    /** find holder for object */
-   HolderData* getHolder( const QString &oname );
+   HolderData* getHolder( const QString &oname ) const;
    /** return element description or 0 */
    virtual const TDataInfo* getDataInfo( int ni ) const;
    /** data index or -1 if not found  */
@@ -431,10 +443,10 @@ class TDataSet : public QObject {
    /** read string data from element by name, convert if need and allowed */
    virtual int getDataSS( const char *nm, QString *da, int maxlen, int allowConv );
    /** new functions to read datas */
-   int getData( const QString &nm, QVariant &da );
-   int getData( const QString &nm, int *da );
-   int getData( const QString &nm, double *da );
-   int getData( const QString &nm, QString &da );
+   int getData( const QString &nm, QVariant &da ) const;
+   int getData( const QString &nm, int *da ) const;
+   int getData( const QString &nm, double *da ) const;
+   int getData( const QString &nm, QString &da ) const;
 
    /** store integer data to element by number, convert if need */
    virtual int setDataII( int ni, int da, int allowConv );
@@ -454,9 +466,10 @@ class TDataSet : public QObject {
    /** corrects data, if ni==-1 -- all elements -- now empty, see setData */
    virtual int checkData( int ni );
    /** save header, all elements and trail to stream */
-   virtual int saveDatas( ostream *os );
+   virtual int saveDatas( std::ostream *os );
+   virtual int saveDatasOld( std::ostream &os );
    /** load data to all elements */
-   virtual int loadDatas( istream *is );
+   virtual int loadDatas( std::istream *is );
    /** add new object and it's description (old) */
    virtual void* add_obj( const TDataInfo *dai );
    /** add new object and it's description (new)*/
@@ -487,9 +500,9 @@ class TDataSet : public QObject {
    /** count nelm, fills hval in d_i  */
    int initHash(void);
    /**  save one element */
-   int saveData( int ni, ostream *os ) const;
+   int saveData( int ni, std::ostream *os ) const;
    /** parse & assing one elem. returns: 0-ok 1-comment 2-end; <0-error */
-   int processElem( istream *is );
+   int processElem( std::istream *is );
  protected:
    /** guard value */
    int guard;
@@ -507,7 +520,7 @@ class TDataSet : public QObject {
    /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
    int modified;
    /** pointers to real data - filled by constructor or loadData if need */
-   vector<pvoid> ptrs;
+   std::vector<pvoid> ptrs;
    /** common ptr to data descriptions */
    TDataInfo *d_i;
    /** each class have own data descriptors */

@@ -47,9 +47,16 @@ int TDataInfo::read( istream *is )
       case 0: j = sscanf( str, "%d %d %d %d %d %d %d %d %lf %lf",
                 &tp, &subtp, &max_len, &dlg_x, &dlg_y, &dlg_w, &dlg_h,
                 &flags, &v_min, &v_max );
+	      if( j != 10 ) {
+		qDebug( "ERR: TDataInfo::read(0): j=%d str=\"%s\"", j, str );
+	      }
               k = ( j != 10 );  break;
       case 1: j = sscanf( str, "%32s" , name );
-              k =  j != 1; break;
+	      if( j != 1 ) {
+		qDebug( "ERR: TDataInfo::read(1): j=%d", j );
+	      }
+              k =  (j != 1); 
+	      break;
       case 2: k = 0; break;
       case 3: k = 0; break;
       default: fprintf( stderr, "Too many input lines (%d):TDataInfo::read", 
@@ -59,6 +66,7 @@ int TDataInfo::read( istream *is )
     nline++;
     if( nline >= 4 ) break;
     if( k ) { 
+      qDebug( "ERR: TDataInfo::read(end): k=%d nline=%d", k, nline );
       return -3;
     };   
   };
@@ -179,7 +187,7 @@ void HolderData::setElems( const QString &els )
   v_max = elems.size() - 1;
 }
 
-const QString HolderData::getType() const // = 0;
+QString HolderData::getType() const // = 0;
 {
   return "None";
 }
@@ -195,6 +203,12 @@ QDomElement HolderData::toDom( QDomDocument &dd ) const
   QDomText tn = dd.createTextNode( toString() );
   de.appendChild( tn );
   return de;
+}
+
+bool HolderData::toOldStream( std::ostream &os ) const // = 0
+{
+  os << qPrintable( targetName() ) << "=";
+  return true;
 }
 
 // ---------------- HolderInt ---------
@@ -260,7 +274,15 @@ bool HolderInt::fromString( const QString &s )
   return ok;
 }
 
-const QString HolderInt::getType() const
+bool HolderInt::toOldStream( std::ostream &os ) const
+{
+  HolderData::toOldStream( os );
+  os << (*val) << " ; \n";
+  return true;
+}
+
+
+QString HolderInt::getType() const
 {
   return "int";
 }
@@ -291,7 +313,7 @@ void HolderSwitch::post_set()
   *val = (*val) ? 1 : 0;
 }
 
-const QString HolderSwitch::getType() const
+QString HolderSwitch::getType() const
 {
   return "switch";
 }
@@ -319,7 +341,7 @@ HolderList::~HolderList()
 }
 
 
-const QString HolderList::getType() const
+QString HolderList::getType() const
 {
   return "list";
 }
@@ -387,7 +409,15 @@ bool HolderDouble::fromString( const QString &s )
   return ok;
 }
 
-const QString HolderDouble::getType() const
+bool HolderDouble::toOldStream( std::ostream &os ) const
+{
+  HolderData::toOldStream( os );
+  os << (*val) << " ; \n";
+  return true;
+}
+
+
+QString HolderDouble::getType() const
 {
   return "double";
 }
@@ -454,7 +484,15 @@ bool HolderString::fromString( const QString &s )
   return true;
 }
 
-const QString HolderString::getType() const
+bool HolderString::toOldStream( std::ostream &os ) const
+{
+  HolderData::toOldStream( os );
+  saveStr( &os, qPrintable(*val) ); 
+  os << " ; \n";
+  return true;
+}
+
+QString HolderString::getType() const
 {
   return "string";
 }
@@ -541,7 +579,14 @@ bool HolderStringArr::fromString( const QString &s )
   return true;
 }
 
-const QString HolderStringArr::getType() const
+bool HolderStringArr::toOldStream( std::ostream &os ) const
+{
+  HolderData::toOldStream( os );
+  os <<  "?????;\n"; // TODO: !!!!
+  return false;
+}
+
+QString HolderStringArr::getType() const
 {
   return "string[]";
 }
@@ -604,7 +649,14 @@ bool HolderColor::fromString( const QString &s )
   return true;
 }
 
-const QString HolderColor::getType() const
+bool HolderColor::toOldStream( std::ostream &os ) const
+{
+  HolderData::toOldStream( os );
+  os <<  (  (int)(val->rgba())  ) << " ; \n";
+  return true;
+}
+
+QString HolderColor::getType() const
 {
   return "color";
 }
@@ -665,7 +717,22 @@ bool HolderObj::fromString( const QString &s )
   return obj->fromString( s );
 }
 
-const QString HolderObj::getType() const
+bool HolderObj::toOldStream( std::ostream &os ) const
+{
+  // save FAKE info -- try  not to save
+  // os << "@ -- datainfo for " << qPrintable( targetName() ) << "; \n";
+  // os << "@ 10 " << old_subtp << " 0 0 0 0 0 0 0 0\n";
+  // os << "@ " << qPrintable( targetName() ) << "\n";
+  // os << "@ \n";
+  // os << "@ \n";
+  
+  os << qPrintable( targetName() ) << '=' << old_subtp
+      << '(' << obj->getClassName() << ")\n";
+  obj->saveDatasOld( os );
+  return true; 
+}
+
+QString HolderObj::getType() const
 {
   return L8B( obj->getClassName() );
 }
@@ -797,7 +864,7 @@ void* TDataSet::getObj( const QString &ename )
   return ho->getPtr();
 }
 
-HolderData* TDataSet::getHolder( const QString &oname )
+HolderData* TDataSet::getHolder( const QString &oname ) const
 {
   QString ho_name = "_HO_" + oname; 
   HolderData *ho = findChild<HolderData*>(ho_name);
@@ -814,7 +881,7 @@ const TDataInfo* TDataSet::getDataInfo( int ni ) const
   return &d_i[ni];
 }
 
-// TODO: use real hash or map !!!
+// TODO: use real hash or map !!! TODO: DROP at all!
 int TDataSet::getDataIdx( const char *nm ) const
 {
   int i, hv;
@@ -980,7 +1047,7 @@ int TDataSet::getDataSS( const char *nm, QString *da, int maxlen, int allowConv 
   return k;
 }
 
-int TDataSet::getData( const QString &nm, QVariant &da )
+int TDataSet::getData( const QString &nm, QVariant &da ) const
 {
   if( nm.isEmpty() )
     return 0;
@@ -1015,7 +1082,7 @@ int TDataSet::getData( const QString &nm, QVariant &da )
 }
 
 
-int TDataSet::getData( const QString &nm, int *da )
+int TDataSet::getData( const QString &nm, int *da ) const
 {
   if( !da )
     return 0;
@@ -1027,7 +1094,7 @@ int TDataSet::getData( const QString &nm, int *da )
   return 1;
 }
 
-int TDataSet::getData( const QString &nm, double *da )
+int TDataSet::getData( const QString &nm, double *da ) const
 {
   if( !da )
     return 0;
@@ -1040,7 +1107,7 @@ int TDataSet::getData( const QString &nm, double *da )
 }
 
 
-int TDataSet::getData( const QString &nm, QString &da )
+int TDataSet::getData( const QString &nm, QString &da ) const
 {
   QVariant vda;
   int rc = getData( nm, vda );
@@ -1277,6 +1344,30 @@ int TDataSet::saveDatas( ostream *os )
   return 0;
 }
 
+int TDataSet::saveDatasOld( ostream &os )
+{
+  os << getClassId() << '(' << getClassName() << ")={\n";
+  // some debug? values
+  os << "%!d n=" << nelm << "; allow_add=" << allow_add << '\n';
+  
+  QObjectList childs = children();
+  
+  for( auto o : childs ) {
+    QObject *xo = o;
+    if( ! xo->inherits("HolderData" )) {
+      continue;
+    }
+    HolderData *ho = qobject_cast<HolderData*>(xo);
+    if( ho->getFlags() & ( efNoSave | efStatic ) )
+      continue;
+    ho->toOldStream( os );
+  }
+  
+  os << "}; -- end of " << getClassName() << " ; \n";
+  modified = 0;
+  return 0;
+}
+
 int TDataSet::loadDatas( istream *is )
 {
   int k, r_id;
@@ -1377,14 +1468,42 @@ int TDataSet::processElem( istream *is )
   if( k == ltpEnd )
     return k;
   if( k == ltpUnk ) {
-    fprintf( stderr, "TDataSet::processElem: unknown line:\n%s\n", str );
+    qDebug( "WARN: TDataSet::processElem: unknown line:\"%s\"", str );
     return k;
   };
   if( k == ltpComment ) return ltpComment;
-  if( k == ltpVal ) {
+  
+  if( k == ltpVal ) {  // name=value
+    
+    HolderData *ho = getHolder( nm );
+    if( !ho ) { // name not found
+      qDebug( "dbg: TDataSet::processElem: unknown name:\"%s\"=\"%s\" in %s %s;",
+	     nm, qPrintable(val), 
+	     getClassName(), qPrintable(objectName()));
+      if( ! allow_add ) {
+        return ltpComment;
+      }
+      QRegExp re_objtype( "\\d+\\(([a-zA-Z0-9_]+)\\)" );
+      if( re_objtype.indexIn( QString( val ) ) == -1 ) {
+	qDebug( "ERR: TDataSet::processElem: bad object type string:\"%s\"=\"%s\"",
+	       nm, qPrintable(val) );
+	return ltpComment;
+      }
+      QString cl_name = re_objtype.cap(1);
+      if( ! add_obj( cl_name, nm ) ) {
+	qDebug( "ERR: TDataSet::processElem: fail to create obj %s %s ",
+	       qPrintable(cl_name), nm );
+	return ltpComment;
+      }
+      ho = getHolder( nm );
+      qDebug( "dbg: TDataSet::processElem: created %s %s ;",
+	     qPrintable(cl_name), nm );
+    }
+
     j = getDataIdx( nm );
     if( j < 0 ) {
-      fprintf( stderr, "TDataSet::processElem: unknown name:\n%s\n", nm );
+      qDebug( "ERR: TDataSet::processElem: unknown old name: \"%s\" in %s %s ;",
+	  nm, getClassName(), qPrintable(objectName()) );
       return ltpComment;
     };
     tp = d_i[j].tp;
@@ -1435,29 +1554,9 @@ int TDataSet::processElem( istream *is )
     return ltpValStart;
   };
   
-  if( k == ltpStruct ) {        // structure def comment -- first line empty
-    if( !allow_add || !d_i_alloc ) 
-      return -12; 
-    j = inf.read( is );         // here allocated descr, listdata
-    if( j ) {
-      fprintf( stderr, "TDataSet::processElem: fail to read structure:\n %s %d\n",
-              str, j );
-      return -10;
-    };
-    // j = add_obj( &inf );
-    const TClassInfo *ci = ElemFactory::theFactory().getInfo( inf.subtp ) ;
-    if( ! ci ) {
-      qDebug( "ERR:  :fail find class for type %d", inf.subtp );
-      return -15;
-
-    }
-    
-    if( ! add_obj( L8B(ci->className), L8B(inf.name) ) ) {
-      fprintf( stderr, "TDataSet::processElem: fail to create %s\n",
-               inf.name );
-      return -14;
-    };  
-    return ltpStruct;
+  if( k == ltpStruct ) { // structure def comment -- first line empty
+    // ignore @- lines now
+    return ltpComment;
   };
   return 0;
 }
@@ -1575,7 +1674,7 @@ int TDataSet::del_obj( int n_ptrs )
 		 if( hob ) {
 		   delete hob;
 		 } else {
-		   qDebug( "WARN: fail to fild to del holder %s", qPrintable(ho_name) );
+		   qDebug( "WARN: fail to find to del holder %s", qPrintable(ho_name) );
 		 }
 		 break;
   };

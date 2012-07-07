@@ -131,6 +131,7 @@ bool QMo2Doc::newDocument()
   qDebug( "DBG: QMo2Doc::newDocument() point 0 rootdata=%p", rootdata );
   rootdata = new TRootData( 0 );
   qDebug( "DBG: QMo2Doc::newDocument() point 1 rootdata=%p", rootdata );
+  rootdata->setObjectName( "root" );
   fillRoot();
   // k = rootdata->add_obj( &model_inf );
   qDebug( "DBG: QMo2Doc::newDocument() point 2 rootdata=%p", rootdata );
@@ -176,6 +177,7 @@ bool QMo2Doc::openDocument(const QString &filename )
   if( rootdata != 0 )
     delete rootdata;
   rootdata = new TRootData( 0 );
+  rootdata->setObjectName( "root" );
   fillRoot();
   model = 0;
   k = rootdata->loadDatas( &is );
@@ -261,7 +263,8 @@ bool QMo2Doc::saveDocument(const QString &filename )
     return false;
   };
   os << FILE_SIGN << '\n';
-  k = rootdata->saveDatas( &os );
+  // k = rootdata->saveDatas( &os );
+  k = rootdata->saveDatasOld( os );
   os.close();
   if( k == 0 ) {
     modified = false;

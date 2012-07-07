@@ -132,7 +132,7 @@ class TModel : public TDataContainer  {
   /** reimplemented from TDataSet to ensure all data filled and linked */
   virtual int checkData( int i );
   /** reimplemented from TDataSet for debug purpose */
-  virtual int saveDatas( ostream *os );
+  virtual int saveDatas( std::ostream *os );
   
  protected:
   /** sorts {v_el,v_ord} on v_ord */
@@ -269,31 +269,31 @@ class TModel : public TDataContainer  {
   /** real start time */
   double start_time;
   /** vector of indexes active elements in ptrs[], my be sorted on ord */
-  vector<int> v_el;
+  std::vector<int> v_el;
   /** vector indexes of outputs */
-  vector<int> v_out;
+  std::vector<int> v_out;
   /** vector elnu for outputs */
-  vector<int> v_oute;
+  std::vector<int> v_oute;
   /** vector types of outputs */
-  vector<int> v_outt;
+  std::vector<int> v_outt;
   /** vector indexes of graph */
-  vector<int> v_graph;
+  std::vector<int> v_graph;
   /** vector of elems orders */
-  vector<int> v_ord;
+  std::vector<int> v_ord;
   /** vector of elems flags: 1 - locked,  2 - noauto */
-  vector<int> v_flg;
+  std::vector<int> v_flg;
   /** vector of input indexes  */
-  vector<li_el> inps;
+  std::vector<li_el> inps;
   /** vector of param. input indexes *[4] */
-  vector<li_el> pinps;
+  std::vector<li_el> pinps;
   /** vector of param input name indexes *[4] */
-  vector<li_el> pnames;
+  std::vector<li_el> pnames;
   /** vector of param input flags */
-  vector<li_el> pflags;
+  std::vector<li_el> pflags;
   /** general purpose vars[MODEL_NVAR] */
-  vector<double> vars;
+  std::vector<double> vars;
   /** array of element outputs --runtime sz=n_el */
-  vector<double> outs;
+  std::vector<double> outs;
   /** class decription */
   static TClassInfo class_info;
   /** help str */

@@ -36,7 +36,7 @@ class TRootData : public TDataContainer {
   /** finds class by it's ID */
   int findClass( int a_id ) const;
   /** in addition to TDataSet save as comments %!c all known classes */
-  virtual int saveDatas( ostream *os );
+  virtual int saveDatas( std::ostream *os );
   /** return ptr to static class_info, must be implemented in each class */
   virtual const TClassInfo* getClassInfo(void) const;
   /** return ptr to static class_info, static version */

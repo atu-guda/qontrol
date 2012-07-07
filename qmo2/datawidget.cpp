@@ -10,6 +10,8 @@
 #include "datawidget.h"
 #include "qmo2win.h"
 
+using namespace std;
+
 DataWidget::DataWidget( HolderData &h, QWidget *parent )
   : QFrame( parent ), ho( h ), main_w(0),
     lbl( new QLabel( ho.getParm("vis_name"), this) )
