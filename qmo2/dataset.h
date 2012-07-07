@@ -469,8 +469,6 @@ class TDataSet : public QObject {
    virtual int saveDatasOld( std::ostream &os );
    /** load data to all elements */
    virtual int loadDatas( std::istream *is );
-   /** add new object and it's description (old) */
-   virtual void* add_obj( const TDataInfo *dai );
    /** add new object and it's description (new)*/
    virtual void* add_obj( const QString &cl_name, const QString &ob_name );
    /** delete given object by num in ptrs */

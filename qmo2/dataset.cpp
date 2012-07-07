@@ -1392,8 +1392,7 @@ int TDataSet::initHash(void)
 
 int TDataSet::processElem( istream *is )
 {
-  int i, j, k, l, tp, iv;
-  double dv;
+  int i, k, l;
   TDataSet* ob;
   QString val, delim, tbuf;
   char nm[MAX_NAMELEN];
@@ -1415,9 +1414,9 @@ int TDataSet::processElem( istream *is )
     
     HolderData *ho = getHolder( nm );
     if( !ho ) { // name not found
-      qDebug( "dbg: TDataSet::processElem: unknown name:\"%s\"=\"%s\" in %s %s;",
-	     nm, qPrintable(val), 
-	     getClassName(), qPrintable(objectName()));
+      //qDebug( "dbg: TDataSet::processElem: unknown name:\"%s\"=\"%s\" in %s %s;",
+      //     nm, qPrintable(val), 
+      //     getClassName(), qPrintable(objectName()));
       if( ! allow_add ) {
         return ltpComment;
       }
@@ -1434,61 +1433,52 @@ int TDataSet::processElem( istream *is )
 	return ltpComment;
       }
       ho = getHolder( nm );
-      qDebug( "dbg: TDataSet::processElem: created %s %s ;",
-	     qPrintable(cl_name), nm );
+      //qDebug( "dbg: TDataSet::processElem: created %s %s ;",
+      //       qPrintable(cl_name), nm );
+    }
+    
+    if( ho->getOldTp() != dtpObj ) { // simple object, TODO: dont use old
+      ho->set( val );
+      return ltpVal;
     }
 
-    j = getDataIdx( nm );
-    if( j < 0 ) {
-      qDebug( "ERR: TDataSet::processElem: unknown old name: \"%s\" in %s %s ;",
-	  nm, getClassName(), qPrintable(objectName()) );
-      return ltpComment;
-    };
-    tp = d_i[j].tp;
-    // atu: debug
-    //fprintf( stderr, "TDataSet::processElem: reading %s.%s[%d](%d.%d)\n" ,
-    //         getName(), nm, j, tp, d_i[j].subtp  );
-    switch( tp ) {
-      case dtpEnd:
-             fprintf( stderr, "TDataSet::processElem: end datainfos?\n" );
-             return -4;         // must not happend
-      case dtpInt:
-             iv = val.toInt();
-             setDataII( j, iv, 1 ); break;
-      case dtpDou:
-             dv =  val.toDouble();      // double
-             setDataID( j, dv, 1 ); break;
-      case dtpStr:
-             setDataIS( j, &val, 1 );  break;
-      case dtpFun:      return ltpComment;  // for funcs -- can't be read
-      case dtpFunPure:  return ltpComment;  // ==
-      case dtpObj:
-             ob = static_cast<TDataSet*> (ptrs[j]);
-	     if( ob == 0 ) {
-	       fprintf( stderr, "TDataSet::processElem: empty ptrs[%d]\n", j );
-	       dumpStruct();
-	       abort();
-	       return -7;
-	     };
-	     k = ob->loadDatas( is );
-             break;
-      case dtpDial: case dtpLabel: case dtpGroup: return ltpComment;
-      default:
-             fprintf( stderr, "TDataSet::processElem: bad type %d\n", tp );
-             return -5;   // undefined type
-    };
+    // object
+    HolderObj *hob = qobject_cast<HolderObj*>(ho);
+    ob = hob->getObj();
+    if( !ob ) {
+      qDebug( "dbg: TDataSet::processElem: fail to find obj \"%s\";", nm );
+      dumpStruct();
+      abort();
+      return -7;
+    }
+    ob->loadDatas( is );
     return ltpVal;
   };
   
   if( k == ltpValStart ) {  // multi-line string value
-    j = getDataIdx( nm );
-    if( j < 0 ) return -3;
-    tp = d_i[j].tp;
-    if( tp != dtpStr ) return -4; // ???? != ????
     delim = val;
-    i = readMlStr( is, &tbuf, d_i[j].max_len, delim.toLocal8Bit().constData() );
-    if( i ) { return -8; };
-    setDataIS( j, &tbuf, 1 );
+    qDebug( "dbg: TDataSet::processElem: ltpValStart :\"%s\" in %s %s; val= \"%s\"",
+	   nm, getClassName(), qPrintable(objectName()), qPrintable(delim));
+    HolderData *ho = getHolder( nm );
+    if( ! ho ) {
+      qDebug( "dbg: TDataSet::processElem: unknown longstr name:\"%s\" in %s %s;",
+	     nm, getClassName(), qPrintable(objectName()));
+      return -3;
+    }
+    if( ho->getOldTp() != dtpStr )  {
+      qDebug( "dbg: TDataSet::processElem: bad type longstr \"%s\"  in %s %s;",
+	     nm, getClassName(), qPrintable(objectName()));
+      return -4; 
+    }
+    i = readMlStr( is, &tbuf, ho->getMax(), qPrintable(delim) );
+    qDebug( "dbg: TDataSet::processElem: readed long str i=%d \"%s\";",
+	     i, qPrintable(tbuf) );
+    if( i ) { 
+      qDebug( "dbg: TDataSet::processElem: fail to read long str \"%s\"  in %s %s;",
+	     nm, getClassName(), qPrintable(objectName()));
+      return -8; 
+    };
+    ho->set( QString(tbuf) );
     return ltpValStart;
   };
   
@@ -1499,60 +1489,6 @@ int TDataSet::processElem( istream *is )
   return 0;
 }
 
-void* TDataSet::add_obj( const TDataInfo* dai )
-{
-  int j, k;
-  TDataSet* ob;
-  void *sob; char *cob;
-  if( !allow_add || !d_i_alloc )
-    return nullptr;
-  if( nelm >= MAX_DATAELEM )
-    return nullptr;
-  if( dai == 0 )
-    return nullptr;
-  k = getDataIdx( dai->name );
-  if( k >= 0 ) // name busy
-    return nullptr; 
-
-  if( !isValidType( dai->tp, dai->subtp ) )
-    return nullptr;	  
-  switch( dai->tp ) { // TODO: holders
-    case dtpInt: sob = new int;     break;
-    case dtpDou: sob = new double;  break;
-    case dtpStr: j = dai->max_len; // TODO: horror here! QString
-            if( j < 1 ) 
-	      return nullptr;
-            sob = cob = new char[j+2];
-	    cob[0] = 0;  break;
-    case dtpObj: ob = createObj( dai->subtp, L8B(dai->name), this ); // TODO: use new
-            if( ob == 0 ) {
-              fprintf( stderr, "TDataSet::add_obj: fail to create: %s %d\n",
-                       dai->name, dai->subtp );
-              return nullptr;
-            };
-            sob = ob;
-            break;
-    case dtpDial: case dtpLabel: case dtpGroup: sob = 0; break;
-    default: return nullptr;  // unknown object type
-  };
-  if( int(ptrs.size()) <= nelm )
-    ptrs.push_back(0);
-  ptrs[nelm] = sob;
-  d_i[nelm].tp = dai->tp; d_i[nelm].subtp = dai->subtp;
-  d_i[nelm].max_len = dai->max_len;
-  d_i[nelm].dlg_x = dai->dlg_x; d_i[nelm].dlg_y = dai->dlg_y;
-  d_i[nelm].dlg_w = dai->dlg_w; d_i[nelm].dlg_h = dai->dlg_h;
-  d_i[nelm].v_min = dai->v_min; d_i[nelm].v_max = dai->v_max;
-  d_i[nelm].dyna = 1; d_i[nelm].flags = dai->flags;
-  d_i[nelm].name[0] = 0;
-  strncat( d_i[nelm].name, dai->name, MAX_NAMELEN-1 );
-  d_i[nelm].descr = dai->descr;
-  d_i[nelm].listdata = dai->listdata;
-  d_i[nelm].hval = hashVal( d_i[nelm].name );
-  nelm++;
-  d_i[nelm].tp = dtpEnd; ptrs[nelm]=0;
-  return sob;
-}
 
 void* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
 {

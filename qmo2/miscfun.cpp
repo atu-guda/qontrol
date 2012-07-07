@@ -104,8 +104,9 @@ int typeOfLine( const char *s, int maxlen, int *ival, char *v1, QString *v2  )
         if( k != 0 ) return ltpUnk;
 	l1 = strlen0( buf2 );
 	if( ival != 0 ) *ival = l1;
-	if( *v2 != 0 && l1 < maxlen ) 
-	  *v2 = QString::fromLocal8Bit( buf2 ); 
+	if( v2 != 0 && l1 < maxlen ) {
+	  *v2 = L8B( buf2 ); 
+	}
         return ltpStr;
       }; 	
     };
@@ -405,6 +406,7 @@ int readMlStr( istream *is, QString* buf, int ml, const char *delim )
   lt = strlen0( delim );
   if( lt < 1  ||  ml < 1 ) return -1;
   l = 0; *buf = QString();
+  int nl = 0;
   while( 1 ) {
     is->getline( bi, MAX_INPUTLEN );
     if( ! is->good() ) return -1;
@@ -413,7 +415,9 @@ int readMlStr( istream *is, QString* buf, int ml, const char *delim )
     if( k == ltpComment ) continue;
     if( k != ltpStr ) return -1;
     if( l+j >= ml ) return -1;
-    *buf += bq ; l += j;
+    *buf += bq; 
+    l += j;
+    ++nl;
   };
   return 0;
 }
