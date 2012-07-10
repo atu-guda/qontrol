@@ -813,17 +813,6 @@ TDataSet* TDataSet::create( TDataSet* apar )
   return new TDataSet( apar );
 }
 
-// TODO: remove it - use by class name (see next fun)
-TDataSet* TDataSet::createObj( int id, const QString &nm, TDataSet* apar )
-{
-  TDataSet *ob = ElemFactory::theFactory().createElem( id, nm, apar );
-  if( !ob ) {
-    qDebug("Fail to create obj \"%s\" class id %d",
-	qPrintable(nm), id );
-    return nullptr;
-  }
-  return ob;
-}
 
 TDataSet* TDataSet::createObj( const QString &cl_name, 
       const QString &nm, TDataSet* apar )
@@ -1323,6 +1312,50 @@ int TDataSet::checkData( int /* ni */ )
   return 0;
 }
 
+const double* TDataSet::getDoublePtr( const QString &nm ) const
+{
+  if( nm.isEmpty() )
+    return 0;
+  QString nmf = nm, first, rest;
+  
+  if( nm[0] == ':' ) { // handle old ':name' from TModel
+    nmf.remove( 0, 1 );
+  }
+
+  int nm_type = splitName( nmf, first, rest );
+  if( nm_type == -1 ) {
+    qDebug( "TDataSet::setDoublePtr: bad target name \"%s\"",
+	qPrintable( nmf ) );
+    return 0;
+  }
+
+  HolderData *ho = getHolder( first );
+  
+  if( !ho ) {
+    qDebug( "TDataSet::getDoublePtr: fail to find name \"%s\"",
+	qPrintable( first ) );
+    return 0;
+  }
+  
+  if( nm_type == 1 ) { // first only
+    if( ho->getOldTp() == dtpObj ) {
+      HolderObj *hob= qobject_cast<HolderObj*>(ho);
+      return hob->getObj()->getDoublePtr( "out0" );
+    }
+    if( ho->getOldTp() == dtpDouble ) {
+      return static_cast<const double*>( ho->getPtr() );
+    }
+    return 0;
+  }
+
+  // both part of name exists
+  if( ho->getOldTp() != dtpObj ) {
+    return 0;
+  }
+  HolderObj *hob= qobject_cast<HolderObj*>(ho);
+  return hob->getObj()->getDoublePtr( rest );
+  
+}
 
 int TDataSet::saveDatasOld( ostream &os )
 {
@@ -1446,7 +1479,7 @@ int TDataSet::processElem( istream *is )
     HolderObj *hob = qobject_cast<HolderObj*>(ho);
     ob = hob->getObj();
     if( !ob ) {
-      qDebug( "dbg: TDataSet::processElem: fail to find obj \"%s\";", nm );
+      qDebug( "ERR: TDataSet::processElem: fail to find obj \"%s\";", nm );
       dumpStruct();
       abort();
       return -7;
@@ -1457,24 +1490,24 @@ int TDataSet::processElem( istream *is )
   
   if( k == ltpValStart ) {  // multi-line string value
     delim = val;
-    qDebug( "dbg: TDataSet::processElem: ltpValStart :\"%s\" in %s %s; val= \"%s\"",
-	   nm, getClassName(), qPrintable(objectName()), qPrintable(delim));
+    //qDebug( "dbg: TDataSet::processElem: ltpValStart :\"%s\" in %s %s; val= \"%s\"",
+    //	   nm, getClassName(), qPrintable(objectName()), qPrintable(delim));
     HolderData *ho = getHolder( nm );
     if( ! ho ) {
-      qDebug( "dbg: TDataSet::processElem: unknown longstr name:\"%s\" in %s %s;",
+      qDebug( "ERR: TDataSet::processElem: unknown longstr name:\"%s\" in %s %s;",
 	     nm, getClassName(), qPrintable(objectName()));
       return -3;
     }
     if( ho->getOldTp() != dtpStr )  {
-      qDebug( "dbg: TDataSet::processElem: bad type longstr \"%s\"  in %s %s;",
+      qDebug( "ERR: TDataSet::processElem: bad type longstr \"%s\"  in %s %s;",
 	     nm, getClassName(), qPrintable(objectName()));
       return -4; 
     }
     i = readMlStr( is, &tbuf, ho->getMax(), qPrintable(delim) );
-    qDebug( "dbg: TDataSet::processElem: readed long str i=%d \"%s\";",
-	     i, qPrintable(tbuf) );
+    //qDebug( "dbg: TDataSet::processElem: readed long str i=%d \"%s\";",
+    //	     i, qPrintable(tbuf) );
     if( i ) { 
-      qDebug( "dbg: TDataSet::processElem: fail to read long str \"%s\"  in %s %s;",
+      qDebug( "ERR: TDataSet::processElem: fail to read long str \"%s\"  in %s %s;",
 	     nm, getClassName(), qPrintable(objectName()));
       return -8; 
     };

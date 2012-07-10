@@ -158,17 +158,6 @@ double TLorenz::f( const double*  u , double /*t*/ )
   return x; 
 }
 
-int TLorenz::preRun( int run_tp, int an, int anx, int any, double atdt )
-{
-  int rc =  TMiso::preRun( run_tp, an, anx, any, atdt );
-  return rc;
-}
-
-int TLorenz::postRun( int good )
-{
-  return TMiso::postRun( good );
-}
-
 
 int TLorenz::startLoop( int acnx, int acny )
 {

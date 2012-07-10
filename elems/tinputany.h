@@ -53,15 +53,12 @@ class TInputAny : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** name of source */
-   PRM_STRING( name, efNoRunChange );
-   /** type of input: -1:bad, 0:object, 1-vars., index of input  */
-   int type; 
-   /** index of modev vars, former - general index */
-   int ne;
-   /** pointer to element  */
-   TDataSet *pel;
-   /** name of last subelement xx.xx.xxx.lastname */
-   QString lastname;
+   PRM_STRING1( name, efNoRunChange, "Name", 
+       "Name of element (and may be parameter) to get values", "max=80");
+   /** fake source */
+   double fake_so;
+   /** pointer to source */
+   const double *so;
    /** data descriptors -- with base class elements */ 
    static TDataInfo tinputany_d_i[12];
    /** class decription */

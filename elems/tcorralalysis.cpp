@@ -211,12 +211,6 @@ const char** TCorrAnalysis::getIcon(void) const
   return icon;
 }
 
-int TCorrAnalysis::preRun( int run_tp, int an, int anx, int any, double adt )
-{
-  int rc = TMiso::preRun( run_tp, an, anx, any, adt );
-  return rc;
-}
-
 void TCorrAnalysis::reset_data()
 {
   ok = n = ii = nc = 0;

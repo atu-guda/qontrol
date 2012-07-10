@@ -157,18 +157,6 @@ double TRossler::f( const double*  u , double /*t*/ )
   return x; 
 }
 
-int TRossler::preRun( int run_tp, int an, int anx, int any, double atdt )
-{
-  int rc =  TMiso::preRun( run_tp, an, anx, any, atdt );
-  return rc;
-}
-
-int TRossler::postRun( int good )
-{
-  return TMiso::postRun( good );
-}
-
-
 int TRossler::startLoop( int acnx, int acny )
 {
   int rc = TMiso::startLoop( acnx, acny );

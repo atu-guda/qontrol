@@ -46,8 +46,6 @@ class TCorrAnalysis : public TMiso  {
    virtual const char* getHelp(void) const;
    /** return icon */
    virtual const char** getIcon(void) const;      
-   /** reimplemented from TMiso to set counters */
-   virtual int preRun( int run_tp, int an, int anx, int any, double adt );
    /** reimplemented from TMiso to reset summators */
    virtual int startLoop( int acnx, int acny );
    /** reimplemented from TMiso to fill out arrays */

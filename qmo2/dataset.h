@@ -401,15 +401,13 @@ class TDataSet : public QObject {
    virtual ~TDataSet();
    /** creator */
    static TDataSet* create( TDataSet *apar );
-   /** request for creating object - to be obsoleted */
-   virtual TDataSet* createObj( int id, const QString &nm, TDataSet *apar );
    /** new way to create objects */
    TDataSet* createObj( const QString &cl_name, const QString &nm, TDataSet* apar );
    /** class id  - for compat */
    virtual int getClassId(void) const ;
    /** class name - for check & human purpose */
    const char* getClassName(void) const;
-   /** fills dst with full name[MAX_INPUTLEN] of object: aaa.bbb.cc  */
+   /** fills dst with full name of object: .aaa.bbb.cc  */
    QString getFullName() const;
    /** returns ptr to help string */
    virtual const char* getHelp(void) const;
@@ -422,7 +420,10 @@ class TDataSet : public QObject {
    /** return nelm */
    virtual int getN(void) const;
    /** return ptr to elem by name -- HORROR! TODO make protected? */
+   // use only by QMo2Doc while cheating/loading 
    virtual void* getObj( const QString &ename );   
+   // /** return ptr to Object elem by name  */
+   // virtual const TDataSet* getObjPtr( const QString &nm ) const;
    /** find holder for object */
    HolderData* getHolder( const QString &oname ) const;
    /** return element description or 0 */
@@ -493,6 +494,14 @@ class TDataSet : public QObject {
    void dumpStruct() const;
    QDomElement toDom( QDomDocument &dd ) const;
    void check_guard() const;
+   // special part - TODO: remove or ifdef in separate lib
+   /** returns pointer to given parameter, checking if valid 
+    * valid names:
+    * elmname = elmname.out0 
+    * elmname.parmname 
+    * :parmname - only local param? 
+    * parmname - try new, w/o ':' */
+   virtual const double* getDoublePtr( const QString &nm ) const;
  protected:
    /** count nelm, fills hval in d_i  */
    int initHash(void);

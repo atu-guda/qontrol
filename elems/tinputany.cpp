@@ -50,11 +50,9 @@ TDataInfo TInputAny::tinputany_d_i[12] = {
 
 TInputAny::TInputAny( TDataSet* aparent )
         :TMiso( aparent ),
-	PRM_INIT( name, "Name" )
+	fake_so(0), so( &fake_so )
 {
   int i;
-  type = -1; 
-  ne = -1; pel = 0;
   d_i = tinputany_d_i;
   initHash();
   for( i=0; i<nelm; i++ ) {
@@ -66,9 +64,6 @@ TInputAny::TInputAny( TDataSet* aparent )
   ptrs[8] = links;
   ptrs[9] = &vis_x; ptrs[10] = &vis_y;
 
-  PRMI(name).setDescr( "Name of element to get values" );
-  PRMI(name).setMinMax( 0, 80 );
-  // TODO: PRMI(name).setXXX: type is element/output name
 }
 
 TInputAny::~TInputAny()
@@ -103,56 +98,34 @@ const char** TInputAny::getIcon(void) const
 
 int TInputAny::preRun( int run_tp, int an, int anx, int any, double adt )
 {
-  int k, l, rc;
-  QString fname, rname, tname;
-  TDataSet *cob, *nob;
-  lastname = "";
+  int rc;
   rc = TMiso::preRun( run_tp, an, anx, any, adt );
-  type = -1; ne = -1; pel = 0;
-  l = name.size();
-  if( l < 2 ) return 0; // smallest: '#0'
+  
+  so = &fake_so;
+  if( name.isEmpty() ) {
+    return rc;
+  }
+
   if( name[0] == '#' ) { // access to model vars by number
-    type = 1; 
-    ne = atoi( name.toLocal8Bit().constData() + 1 );
-    return 0;
+    QString nname = name;
+    nname.remove( 0, 1 );
+    int ne = nname.toInt();
+    so = model->getVars() + ne;
+    return rc;
   };
-  cob = parent;
-  tname = name;
-  while( 1 ) {
-    k = splitName( tname, fname, rname );
-    if( k < 0 )  
-      return 0;  // bad name
-    nob = static_cast<TDataSet*>( cob->getObj( qPrintable(fname) ) ); // danger, check !!!!
-    if( !nob ) {  // no such name 
-      qDebug( "DBG: %s: not found fname: \"%s\" ", 
-	      __FUNCTION__, qPrintable(fname) );
-      return 0;
-    }
-    if( k == 1 ) { // only left part of name w/o '.'
-      pel = cob; lastname = fname; type = 0; break;
-    } else {  // both component of name: aa.bb.cc -> aa  bb.cc
-      // TODO: FIXME: real check!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      // di = cob->getDataInfo( i );
-      //if( di->tp != dtpObj ) 
-      // return 0;
-      cob = nob;
-      if( cob == 0 ) 
-	return 0;
-      tname = rname;
-    };
-  };
+
+  so = parent->getDoublePtr( name ); 
+  if( !so ) {
+    so = &fake_so; 
+    qDebug( "WARN: TInputAny::preRun: fail to find source name \"%s\"",
+             qPrintable(name) );
+  }
   return rc;
 }
 
 double TInputAny::f( const double* /* u */, double /* t */ )
 {
-  double v;
-  switch( type ) {
-    case 0: pel->getData( lastname, &v ); break;
-    case 1: model->getVar( ne ); break;
-    default: v = 0;
-  };
-  return v;
+  return *so;
 }
 
 int TInputAny::registered = reg();
