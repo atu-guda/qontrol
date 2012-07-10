@@ -114,9 +114,9 @@ double TDelay::f( const double* u, double t )
   return v1 * a1 + v2 * a2;
 }
 
-int TDelay::preRun( int run_tp, int an, int anx, int any, double atdt )
+int TDelay::do_preRun( int /*run_tp*/, int /*an*/,
+                       int /*anx*/, int /*any*/, double /*atdt*/ )
 {
-  TMiso::preRun( run_tp, an, anx, any, atdt );
   imd = int( mdelay / tdt );
   buf = new TCircBuf( imd );
   return 0;

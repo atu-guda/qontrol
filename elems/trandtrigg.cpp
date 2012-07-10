@@ -147,9 +147,9 @@ const char** TRandTrigg::getIcon(void) const
   return icon;
 }
 
-int TRandTrigg::preRun( int run_tp, int an, int anx, int any, double adt )
+int TRandTrigg::do_preRun( int /*run_tp*/, int /*an*/, 
+                           int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  int rc = TMiso::preRun( run_tp, an, anx, any, adt );
   const gsl_rng_type *t = gsl_rng_default;
   rng = gsl_rng_alloc( t );
   eff_seedType = seedType;
@@ -160,7 +160,7 @@ int TRandTrigg::preRun( int run_tp, int an, int anx, int any, double adt )
   if( addBaseSeed ) {
     model->getData( "seed", &bseed );
   };
-  return rc;
+  return 0;
 }
 
 int TRandTrigg::postRun( int good )

@@ -103,13 +103,14 @@ const char** TOutputAny::getIcon(void) const
   return icon;
 }
 
-int TOutputAny::preRun( int run_tp, int an, int anx, int any, double adt )
+// TODO: fix! NO: remove this object!
+int TOutputAny::do_preRun( int /*run_tp*/, int /*an*/, 
+                           int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  int k, l, rc;
+  int k, l;
   char fname[MAX_NAMELEN], rname[MAX_INPUTLEN], tname[MAX_INPUTLEN];
   TDataSet *cob, *nob;
   lastname = "";
-  rc = TMiso::preRun( run_tp, an, anx, any, adt );
   type = -1; ne = -1; pel = 0;
   l = name.size();
   if( l < 2 ) return 0; // smallest: '#0'
@@ -142,7 +143,7 @@ int TOutputAny::preRun( int run_tp, int an, int anx, int any, double adt )
       tname[0] = 0; strncat( tname, rname, sizeof(tname)-1 );
     };
   };
-  return rc;
+  return 0;
 }
 
 double TOutputAny::f( const double* u, double /* t */ )

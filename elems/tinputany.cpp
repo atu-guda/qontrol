@@ -96,14 +96,12 @@ const char** TInputAny::getIcon(void) const
   return icon;
 }
 
-int TInputAny::preRun( int run_tp, int an, int anx, int any, double adt )
+int TInputAny::do_preRun( int /*run_tp*/, int /*an*/, 
+                          int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  int rc;
-  rc = TMiso::preRun( run_tp, an, anx, any, adt );
-  
   so = &fake_so;
-  if( name.isEmpty() ) {
-    return rc;
+  if( name.isEmpty() ) { // empty name is good: fake source
+    return 0;
   }
 
   if( name[0] == '#' ) { // access to model vars by number
@@ -111,7 +109,7 @@ int TInputAny::preRun( int run_tp, int an, int anx, int any, double adt )
     nname.remove( 0, 1 );
     int ne = nname.toInt();
     so = model->getVars() + ne;
-    return rc;
+    return 0;
   };
 
   so = parent->getDoublePtr( name ); 
@@ -120,7 +118,7 @@ int TInputAny::preRun( int run_tp, int an, int anx, int any, double adt )
     qDebug( "WARN: TInputAny::preRun: fail to find source name \"%s\"",
              qPrintable(name) );
   }
-  return rc;
+  return 0;
 }
 
 double TInputAny::f( const double* /* u */, double /* t */ )

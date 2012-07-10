@@ -49,8 +49,6 @@ class TRand : public TMiso  {
    virtual const char* getHelp(void) const;
    /** return icon */
    virtual const char** getIcon(void) const;      
-   /** reimplemented from TMiso to create generator */
-   virtual int preRun( int run_tp, int an, int anx, int any, double adt );
    /** reimplemented from TMiso to delete generator */
    virtual int postRun( int good );
    /** reimplemented from TMiso to init generator and variables */
@@ -58,6 +56,8 @@ class TRand : public TMiso  {
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
+   /** reimplemented from TMiso to create generator */
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** type of distribution */
    PRM_LIST( type, efNoRunChange );
    /** time of const output value, if <=0 -- chacge every tick */

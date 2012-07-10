@@ -161,8 +161,9 @@ class TMiso : public TDataSet  {
     * \param anx number of inner param loop 
     * \param any number of outer param loop 
     * \param adt time step  - will be a \b tdt in elememt
+    * non-virtual: adjusted by do_preRun
     * */
-   virtual int preRun( int run_tp, int an, int anx, int any, double adt );
+   int preRun( int run_tp, int an, int anx, int any, double adt );
    /** will be called after all actions -- good place for deallocs */
    virtual int postRun( int good );
    /** called before each inner param loop. */
@@ -170,6 +171,8 @@ class TMiso : public TDataSet  {
    /** will be called after each inner loop  */
    virtual int endLoop(void);
  protected:
+   /** place of customization of preRun, return: 0 = Ok */
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** order, in which elements will be used and holder */
    PRM_INT( ord, efRODial | efNoRunChange );
    /** description on element */

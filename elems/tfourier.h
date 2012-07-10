@@ -47,8 +47,6 @@ class TFourier : public TMiso  {
    virtual const char* getHelp(void) const;
    /** return icon */
    virtual const char** getIcon(void) const;      
-   /** reimplemented from TMiso to alloc buffers */
-   virtual int preRun( int run_tp, int an, int anx, int any, double adt );
    /** reimplemented from TMiso to free buffers */
    virtual int postRun( int good );
    /** reimplemented from TMiso to init summators  */
@@ -59,6 +57,8 @@ class TFourier : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    void initVars(void);
+   /** reimplemented from TMiso to alloc buffers */
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
  protected:
    /** period parameters  */
    PRM_DOUBLE1( omega, efNoRunChange, "\\omega", "base frequency", "min=1e-3" );
@@ -93,7 +93,7 @@ class TFourier : public TMiso  {
    PRM_DOUBLE1( s_x2, efInner, "s_x2", "Input power", "" );
    int nper, n_st, n_en, ii;
    /** arrays for summators */
-   double *aa, *bb, *am;
+   std::vector<double> aa, bb, am;
    /** data descriptors -- with base class elements */ 
    static TDataInfo tfourier_d_i[50];
    /** class decription */

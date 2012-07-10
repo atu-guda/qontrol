@@ -114,9 +114,9 @@ const char** TPid::getIcon(void) const
   return icon;
 }
 
-int TPid::preRun( int run_tp, int an, int anx, int any, double adt )
+int TPid::do_preRun( int /*run_tp*/, int /*an*/, 
+                     int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  TMiso::preRun( run_tp, an, anx, any, adt );
   if( tdt < 1e-100 ) 
     return 1;
   tdt2 = tdt * tdt;

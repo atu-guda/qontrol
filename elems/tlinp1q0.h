@@ -53,13 +53,13 @@ class TLinP1Q0 : public TMiso  {
    virtual const char* getHelp(void) const;
    /** return icon */
    virtual const char** getIcon(void) const;      
-   /** reimplemented from TMiso to set fx_elnu */
-   virtual int preRun( int run_tp, int an, int anx, int any, double adt );
    /** reimplemented from TMiso to init state */
    virtual int startLoop( int acnx, int acny );
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
+   /** reimplemented from TMiso to set fx_elnu */
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** coefficient near f(x) */
    PRM_DOUBLE( a, 0 );
    /** coefficient near u(t)  */

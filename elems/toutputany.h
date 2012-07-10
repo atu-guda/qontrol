@@ -46,11 +46,11 @@ class TOutputAny : public TMiso  {
    virtual const char* getHelp(void) const;
    /** return icon */
    virtual const char** getIcon(void) const;      
-   /** reimplemented from TMiso to set source */
-   virtual int preRun( int run_tp, int an, int anx, int any, double adt );
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
+   /** reimplemented from TMiso to set source */
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** name of source */
    PRM_STRING( name, efNoRunChange );
    /** enabler = u[1]  */

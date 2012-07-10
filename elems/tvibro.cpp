@@ -108,12 +108,12 @@ const char** TVibro::getIcon(void) const
   return icon;
 }
 
-int TVibro::preRun( int run_tp, int an, int anx, int any, double adt )
+int TVibro::do_preRun( int /*run_tp*/, int /*an*/, 
+                       int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  int rc = TMiso::preRun( run_tp, an, anx, any, adt );
   tdt2 = tdt * tdt; rfe_elnu = -1;
   rfe_elnu = model->oname2elnu( rfe.toLocal8Bit().constData() );
-  return rc;
+  return 0;
 }
 
 int TVibro::startLoop( int acnx, int acny )

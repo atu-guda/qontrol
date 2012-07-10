@@ -313,9 +313,9 @@ double TSource::f( const double* /* u */, double t )
   return v; 
 }
 
-int TSource::preRun( int run_tp, int an, int anx, int any, double atdt )
+int TSource::do_preRun( int /*run_tp*/, int /*an*/, 
+                     int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  int rc =  TMiso::preRun( run_tp, an, anx, any, atdt );
   const gsl_rng_type *t = gsl_rng_default;
   // U
   if( use_u_ch ) {
@@ -342,7 +342,7 @@ int TSource::preRun( int run_tp, int an, int anx, int any, double atdt )
     };
   };
 
-  return rc;
+  return 0;
 }
 
 int TSource::postRun( int good )

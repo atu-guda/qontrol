@@ -93,7 +93,6 @@ TFourier::TFourier( TDataSet* aparent )
   ng = 3; useOptim = 1; useFill = 0;
   out_a = out_b = out_am = out_om = -1;
   s_x2 = a0 = a1 = b1 = ampl = ampl1 = phi = qpow = qpow1 = 0;
-  aa = bb = am = 0; 
   d_i = tfourier_d_i;
   initHash();
   for( i=0; i<nelm; i++ ) {
@@ -117,8 +116,6 @@ TFourier::TFourier( TDataSet* aparent )
 
 TFourier::~TFourier()
 {
-  delete[] aa; delete[] bb; delete[] am;
-  aa = bb = am = 0;
 }
 
 TDataSet* TFourier::create( TDataSet* apar )
@@ -147,18 +144,15 @@ const char** TFourier::getIcon(void) const
   return icon;
 }
 
-int TFourier::preRun( int run_tp, int an, int anx, int any, double adt )
+int TFourier::do_preRun( int /*run_tp*/, int /*an*/, 
+                         int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  int rc = TMiso::preRun( run_tp, an, anx, any, adt );
-  aa = new double[ ng+2 ];  bb = new double[ ng+2 ];
-  am = new double[ ng+2 ];
-  return rc;
+  aa.resize( ng+2 );  bb.resize( ng+2 );  am.resize( ng+2 );
+  return 0;
 }
 
 int TFourier::postRun( int good )
 {
-  delete[] aa; delete[] bb; delete[] am;
-  aa = bb = am = 0;
   TMiso::postRun( good );
   return 0;
 }
@@ -168,7 +162,7 @@ int TFourier::startLoop( int acnx, int acny )
   int i;
   int rc = TMiso::startLoop( acnx, acny );
   for( i=0; i<=ng; i++ )
-    aa[i] = bb[i] = am[i] = 0;
+  aa[i] = bb[i] = am[i] = 0;
   s_x2 = a0 = a1 = b1 = ampl = ampl1 = phi = qpow = qpow1 = 0;
   ii = 0; n_st = 0; n_en = model_nn;
   initVars();

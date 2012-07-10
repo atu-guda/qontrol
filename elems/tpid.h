@@ -46,13 +46,13 @@ class TPid : public TMiso  {
    virtual const char* getHelp(void) const;
    /** return icon */
    virtual const char** getIcon(void) const;      
-   /** will be called before any action -- good place for allocs */
-   virtual int preRun( int run_tp, int an, int anx, int any, double adt );
    /** reimplemented from TMiso to reset integrators and diffs */
    virtual int startLoop( int acnx, int acny );
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
+   /** will be called before any action -- good place for allocs */
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** coefficients  */
    PRM_DOUBLE( kd2, 0 );
    PRM_DOUBLE( kd1, 0 );

@@ -120,12 +120,12 @@ const char** TLinP1Q0::getIcon(void) const
   return icon;
 }
 
-int TLinP1Q0::preRun( int run_tp, int an, int anx, int any, double adt )
+int TLinP1Q0::do_preRun( int /*run_tp*/, int /*an*/, 
+                         int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  int rc = TMiso::preRun( run_tp, an, anx, any, adt );
   elnu_fx = -1;
   elnu_fx = model->oname2elnu( fx.toLocal8Bit().constData() );
-  return rc;
+  return 0;
 }
 
 int TLinP1Q0::startLoop( int acnx, int acny )

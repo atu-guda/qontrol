@@ -54,11 +54,11 @@ class TDelay : public TMiso  {
    virtual double f( const double *u, double t );
    /** reimplemented from TDataSet handle current delay limit */
    virtual int setDataID( int ni, double da, int allowConv );
-   /** calc values & alloc buf */
-   virtual int preRun( int run_tp, int an, int anx, int any, double adt );
    /** deallocates buf */
    virtual int postRun( int good );
  protected:
+   /** calc values & alloc buf */
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** max delay */
    PRM_DOUBLE( mdelay, efNoRunChange );
    /** current delay */

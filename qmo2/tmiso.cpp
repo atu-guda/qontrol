@@ -188,12 +188,18 @@ double TMiso::f( const double* /* u */, double /* t */ )
   return 0;
 }
 
-int TMiso::preRun( int /* run_tp */, int an, 
-                   int /* anx */, int /* any */, double adt )
+int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
 {
   tdt = adt; model_nn = an; 
   model = static_cast<TModel*>(parent); 
+  if( do_preRun( run_tp, an, anx, any, adt ) != 0 )
+    return 1;
   return (state > 0 ) ? 0 : 1;
+}
+
+int TMiso::do_preRun( int run_tp, int an, int anx, int any, double adt )
+{
+  return 0;
 }
 
 int TMiso::postRun( int good )

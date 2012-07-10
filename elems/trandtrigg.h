@@ -48,8 +48,6 @@ class TRandTrigg : public TMiso  {
    virtual const char* getHelp(void) const;
    /** return icon */
    virtual const char** getIcon(void) const;      
-   /** reimplemented from TMiso to init random generator */
-   virtual int preRun( int run_tp, int an, int anx, int any, double adt );
    /** reimplemented from TMiso to drop random generator */
    virtual int postRun( int good );
    /** reimplemented from TMiso to set start values */
@@ -57,6 +55,8 @@ class TRandTrigg : public TMiso  {
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
+   /** reimplemented from TMiso to init random generator */
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** Probability of spontatious flip  */
    PRM_DOUBLE( prob, 0 ); 
    /** Forced every */

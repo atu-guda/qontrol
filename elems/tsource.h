@@ -51,13 +51,13 @@ class TSource : public TMiso  {
    virtual const char** getIcon(void) const;
    /** main computation function */
    virtual double f( const double *u, double t );
-   /** will be called before any action -- good place for allocs */
-   virtual int preRun( int run_tp, int an, int anx, int any, double adt );
    /** reimplemented to delete rnds */
    virtual int postRun( int good );
    /** called before each inner param loop. Unused param - -1 */
    virtual int startLoop( int acnx, int acny );
  protected:
+   /** will be called before any action -- good place for allocs */
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** type of input and misc flags */
    PRM_LIST( type, efNoRunChange );
    /** Amplitude */
