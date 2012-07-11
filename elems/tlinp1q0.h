@@ -58,18 +58,17 @@ class TLinP1Q0 : public TMiso  {
    /** main computation function */
    virtual double f( const double *u, double t );
  protected:
-   /** reimplemented from TMiso to set fx_elnu */
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** coefficient near f(x) */
-   PRM_DOUBLE( a, 0 );
+   PRM_DOUBLE1( a, 0, "a", "a in dx/dt = a*f(ku*u(t)-x)", "" );
    /** coefficient near u(t)  */
-   PRM_DOUBLE( ku, 0 );
+   PRM_DOUBLE1( ku, 0, "k_u",  "Amplification", "" );
    /** name of element to compute f(x) */
-   PRM_STRING( fx, efNoRunChange );
+   PRM_STRING1( fx, efNoRunChange | efNoDial, "old f(x) elem", "unused", "max=128" );
+   /** Use u[1] as f(x) */
+   PRM_SWITCH1( use_u1, efNoRunChange, "u[1] is f()", 
+        "Use u[1] as source of f()", "" );
    /** old value of x  */
    double x_old;
-   /** element # */
-   int elnu_fx;
    /** data descriptors -- with base class elements */ 
    static TDataInfo tlinp1q0_d_i[17];
    /** class decription */

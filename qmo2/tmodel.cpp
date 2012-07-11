@@ -53,6 +53,11 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   rtime = t = 0; tdt = tt / nn; 
   prm0 = prm1 = prm2 = prm3 = 0; start_time = 0; 
   prm0s = prm1s = 0.1; prm0d = prm1d = 0.01; sgnt = -3;
+  sqrt2 = sqrt(2.0);
+  sqrt1_2 = sqrt(0.5);
+  one = 1.0;
+  PI = M_PI;
+  E = M_E;
   const int ELM_RES = 64; const int OUT_RES = 32;
   v_el.reserve( ELM_RES ); v_ord.reserve( ELM_RES ); v_flg.reserve( ELM_RES );
   v_out.reserve( OUT_RES ); v_oute.reserve( OUT_RES ); 
@@ -68,17 +73,6 @@ TModel::~TModel()/*{{{1*/
 {
 }/*}}}1*/
 
-
-double TModel::runOneElem( int elnu, const double *u, double t )/*{{{1*/
-{
-  TMiso *ob;
-  double v;
-  ob = getMiso( elnu );
-  if( ob == 0 ) return 0;
-  v = ob->f( u, t );
-  outs[elnu] = v;
-  return v;
-}/*}}}1*/
 
 int TModel::startRun( int type )/*{{{1*/
 {
@@ -207,13 +201,7 @@ int TModel::runOneLoop(void)/*{{{1*/
        if( cm == 0 )
 	  modified |= 2;
      };
-     // skip locked and noauto
-     if( curr_flg & 2 ) continue;  // noauto
-     if( curr_flg & 1 ) { // locked
-       outs[elnu] = u[0];
-       continue;
-     };
-     outs[elnu] = cur_el->f( u, t );  // <==================== main action
+     outs[elnu] = cur_el->fun( u, t );  // <==================== main action
   };  // end element loop;
   for( out_nu=0; out_nu<n_out; out_nu++ ) { // fill out arrays(0)
     arr = getOutArr( out_nu );

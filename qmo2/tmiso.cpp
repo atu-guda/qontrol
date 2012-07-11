@@ -135,12 +135,12 @@ TDataInfo TMiso::tmiso_d_i[2] = {
 
 TMiso::TMiso( TDataSet* aparent )
       :TDataSet( aparent ),
-       PRM_INIT( ord,   "order" ), 
-       PRM_INIT( descr, "description" ),
-       PRM_INIT( vis_x, "visual x" ), 
-       PRM_INIT( vis_y, "visual_y" ),
+       out0_init(0), out0(0),
        links( new TElmLink( this ) ),
-       POBJ_INIT( links, "object Links" )
+       fake_so(0), fake_prm(0),
+       in_so{ &fake_so, &fake_so, &fake_so, &fake_so },
+       inp_so{ &fake_so, &fake_so, &fake_so, &fake_so },
+       inp_prm{ &fake_prm, &fake_prm, &fake_prm, &fake_prm }
 {
   d_i = tmiso_d_i;
   ord = -1; 
@@ -148,13 +148,6 @@ TMiso::TMiso( TDataSet* aparent )
   model = 0;
   initHash();
   ptrs[0] = links;
-  PRMI(ord).setMinMax( 0, IMAX );
-  //PRMI(ord).setParm( "sep", "colend" );
-  PRMI(descr).setMinMax( 0, 128 ); // TODO: define
-  PRMI(descr).setParm( "ncol", "2" ); 
-  // PRMI(descr).setParm( "sep", "colend" );
-  PRMI(links).setParm( "sep", "blockend" );
-
 }
 
 TMiso::~TMiso()
@@ -166,6 +159,15 @@ TDataSet* TMiso::create( TDataSet* /* apar */ )
 {
   // return new TMiso( apar );
   return 0; // cannot create abstract object
+}
+
+double TMiso::fun( const double *u, double t )
+{
+  if( links->noauto ) 
+    return out0;
+  if( links->locked ) 
+    return out0 = *in_so[0];
+  return out0 = f( u, t );
 }
 
 int TMiso::getClassId(void) const 
@@ -192,13 +194,41 @@ int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
 {
   tdt = adt; model_nn = an; 
   model = static_cast<TModel*>(parent); 
-  if( do_preRun( run_tp, an, anx, any, adt ) != 0 )
-    return 1;
+  fillLinks();
+  int rc =  do_preRun( run_tp, an, anx, any, adt );
+  if( rc != 0 )
+    return rc;
   return (state > 0 ) ? 0 : 1;
 }
 
-int TMiso::do_preRun( int run_tp, int an, int anx, int any, double adt )
+int TMiso::do_preRun( int /*run_tp*/, int /*an*/, int /*anx*/,
+                      int /*any*/, double /*adt*/ )
 {
+  return 0;
+}
+
+int TMiso::fillLinks()
+{
+  const double *p;
+  QString iname, soname;
+  for( int i=0; i<4; ++i ) {
+    in_so[i] = &fake_so;
+    iname = "inps" + QString::number(i);
+    links->getData( iname, soname );
+    p = parent->getDoublePtr( soname );
+    if( p ) {
+      in_so[i] = p;
+    }
+  }
+  for( int i=0; i<4; ++i ) {
+    inp_so[i] = &fake_so;
+    iname = "pinps" + QString::number(i);
+    links->getData( iname, soname );
+    p = parent->getDoublePtr( soname );
+    if( p ) {
+      inp_so[i] = p;
+    }
+  }
   return 0;
 }
 
@@ -212,6 +242,7 @@ int TMiso::postRun( int good )
 int TMiso::startLoop( int /* acnx */, int /* acny */ )
 {
   state = stateRun;
+  out0 = out0_init;
   return 0;
 }
 

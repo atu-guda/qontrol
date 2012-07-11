@@ -53,12 +53,7 @@ TDataInfo TLinear::tlinear_d_i[20] = {
 
 
 TLinear::TLinear( TDataSet* aparent )
-        :TMiso( aparent ),
-	 PRM_INIT( a0, "a0" ),
-	 PRM_INIT( a1, "a1" ),
-	 PRM_INIT( a2, "a2" ),
-	 PRM_INIT( a3, "a3" ),
-	 PRM_INIT(  b, "b" )
+        :TMiso( aparent )
 {
   int i;
   a0 = 1; a1 = -1; a2 = a3 = 0; b = 0;
@@ -73,11 +68,6 @@ TLinear::TLinear( TDataSet* aparent )
   // from TMiso 
   ptrs[16] = links;
   ptrs[17] = &vis_x; ptrs[18] = &vis_y;
-  PRMI(a0).setDescr( "factor for input 0" );
-  PRMI(a1).setDescr( "factor for input 1" );
-  PRMI(a2).setDescr( "factor for input 2" );
-  PRMI(a3).setDescr( "factor for input 3" );
-  PRMI(b).setDescr( "Static shift" );
 }
 
 TLinear::~TLinear()
@@ -110,9 +100,9 @@ const char** TLinear::getIcon(void) const
   return icon;
 }
 
-double TLinear::f( const double* u, double /* t */ )
+double TLinear::f( const double* /*u*/, double /* t */ )
 {
-  return u[0]*a0 + u[1]*a1 + u[2]*a2 + u[3]*a3 + b;
+  return *in_so[0]*a0 + *in_so[1]*a1 + *in_so[2]*a2 + *in_so[3]*a3 + b;
 }
 
 int TLinear::registered = reg();

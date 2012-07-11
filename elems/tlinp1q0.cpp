@@ -60,15 +60,11 @@ TDataInfo TLinP1Q0::tlinp1q0_d_i[17] = {
 
 
 TLinP1Q0::TLinP1Q0( TDataSet* aparent )
-        :TMiso( aparent ),
-	PRM_INIT( a, "a" ),
-	PRM_INIT( ku, "k_u" ),
-	PRM_INIT( fx, "elem name" )
+        :TMiso( aparent )
 {
   int i;
   a = 1.0;  ku = 1.0; 
-  // fx = QString(); 
-  elnu_fx = -1;
+  use_u1 = 0;
   x_old = 0;
   d_i = tlinp1q0_d_i;
   initHash();
@@ -83,11 +79,6 @@ TLinP1Q0::TLinP1Q0( TDataSet* aparent )
   ptrs[13] = links;
   ptrs[14] = &vis_x; ptrs[15] = &vis_y;
 
-  PRMI(a).setDescr( "Frequency in dx/dt = a*f(ku*u(t)-x)" );
-  PRMI(ku).setDescr( "Amplification " );
-  PRMI(fx).setDescr( "Function f(x) element name" );
-  PRMI(fx).setMinMax( 0, MAX_NAMELEN );
-  // TODO: element name or DROP it!
 }
 
 TLinP1Q0::~TLinP1Q0()
@@ -120,13 +111,6 @@ const char** TLinP1Q0::getIcon(void) const
   return icon;
 }
 
-int TLinP1Q0::do_preRun( int /*run_tp*/, int /*an*/, 
-                         int /*anx*/, int /*any*/, double /*adt*/ )
-{
-  elnu_fx = -1;
-  elnu_fx = model->oname2elnu( fx.toLocal8Bit().constData() );
-  return 0;
-}
 
 int TLinP1Q0::startLoop( int acnx, int acny )
 {
@@ -135,12 +119,11 @@ int TLinP1Q0::startLoop( int acnx, int acny )
   return rc;
 }
 
-double TLinP1Q0::f( const double* u, double t )
+double TLinP1Q0::f( const double* u, double /*t*/ )
 {
-  double x, f, uu[4];
-  if( elnu_fx >= 0 ) {
-    uu[0] = x_old; uu[1] = uu[2] = uu[3] = 0;
-    f = model->runOneElem( elnu_fx, uu, t );
+  double x, f;
+  if( use_u1 ) {
+    f = u[1];
   } else {
     f = x_old;
   };

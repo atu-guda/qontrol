@@ -21,7 +21,7 @@
 const char* TVibro::helpstr = "<H1>TVibro</H1>\n"
  "Vibrational element <b> d2x/dt^2 + c0*dx/dt + Omega^2*f(x) = u</b>: <br>\n"
  "Parameters <b>c0</b> and <b>Omega</b> can be changed at any time.<br>\n"
- "<b>rfe</b> - name of element, which must input <b>x</b> as parm[0]. <br>\n"
+ "<b>rfe</b> - NONE! name of element, which must input <b>x</b> as parm[0]. <br>\n"
  "If output of element depend of it's state, it must be flagged as '<b>noauto</b>'" 
  "If this name empty or bad, assumed <b>f(x) = x</b>.";
 
@@ -52,15 +52,12 @@ TDataInfo TVibro::tvibro_d_i[16] = {
 
 
 TVibro::TVibro( TDataSet* aparent )
-        :TMiso( aparent ),
-	 PRM_INIT( c0, "c_0" ),
-	 PRM_INIT( Omega, "\\Omega" ),
-	 PRM_INIT( rfe, "Return force element" )
+        :TMiso( aparent )
 {
   int i;
   Omega = 1.2; c0 = 0.4; 
   // rfe = QString(); 
-  rfe_elnu = -1;
+  use_u1 = 0;
   isStart = 1; tdt2 = 1; u_old = f_old = x_old = x_old2 = 0;
   d_i = tvibro_d_i;
   initHash();
@@ -72,11 +69,6 @@ TVibro::TVibro( TDataSet* aparent )
   // from TMiso 
   ptrs[12] = links;
   ptrs[13] = &vis_x; ptrs[14] = &vis_y;
-
-  PRMI(c0).setDescr( "Damping coeficient" );
-  PRMI(Omega).setDescr( "Natural frequency if c_0=0 and empty rfe" );
-  PRMI(rfe).setDescr( "Name of return force element (rfe)" );
-  PRMI(rfe).setMinMax( 0, MAX_NAMELEN );
 }
 
 TVibro::~TVibro()
@@ -111,8 +103,7 @@ const char** TVibro::getIcon(void) const
 int TVibro::do_preRun( int /*run_tp*/, int /*an*/, 
                        int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  tdt2 = tdt * tdt; rfe_elnu = -1;
-  rfe_elnu = model->oname2elnu( rfe.toLocal8Bit().constData() );
+  tdt2 = tdt * tdt;
   return 0;
 }
 
@@ -124,14 +115,13 @@ int TVibro::startLoop( int acnx, int acny )
   return rc;
 }
 
-double TVibro::f( const double* u, double t )
+double TVibro::f( const double* u, double /*t*/ )
 {
-  double x, ctau, uu[4];
+  double x, ctau;
   if( isStart == 1 ) {  // first step
     isStart = 2; x = 0;
-    if( rfe_elnu > 0 ) {
-      uu[0] = x; uu[1] = uu[2] = uu[3] = 0;
-      f_old = model->runOneElem( rfe_elnu, uu, t );
+    if( use_u1 ) {
+      f_old = u[1];
     } else {
       f_old = x;
     };
@@ -140,9 +130,8 @@ double TVibro::f( const double* u, double t )
   };
   if( isStart == 2 ) {  // second step
     isStart = 0; x = x_old + 0.5 * tdt2 * u_old;
-    if( rfe_elnu > 0 ) {
-      uu[0] = x; uu[1] = uu[2] = uu[3] = 0;
-      f_old = model->runOneElem( rfe_elnu, uu, t );
+    if( use_u1 ) {
+      f_old = u[1];
     } else {
       f_old = x;
     };
@@ -153,9 +142,8 @@ double TVibro::f( const double* u, double t )
   ctau = tdt * c0 / 2; // c0 can be changed at any time, so here
   x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * (u_old - Omega * Omega *f_old) ) 
     / ( 1 + ctau );
-  if( rfe_elnu > 0 ) {
-    uu[0] = x; uu[1] = uu[2] = uu[3] = 0;
-    f_old = model->runOneElem( rfe_elnu, uu, t );
+  if( use_u1 ) {
+    f_old = u[1];
   } else {
     f_old = x;
   };

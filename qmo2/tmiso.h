@@ -34,7 +34,7 @@ class TModel;
  * aux class for get/set TMiso links and flags 
 */
 
-class TElmLink : public TDataSet { //@ c,{},(380,320),"Object links"
+class TElmLink : public TDataSet {
   Q_OBJECT
  friend class TMiso;
  public:
@@ -145,13 +145,15 @@ class TMiso : public TDataSet  {
    /** return icon */
    virtual const char** getIcon(void) const;
 
-   /** main computation function 
+   /** main computation function TODO: must be protected
     * 
     * \param u array of input signals, for now 4 elems in it
     * \param t current time
     * \return output value of element
     * */
    virtual double f( const double *u, double t ) = 0;
+   /** external computation function + in/out */
+   double fun( const double *u, double t );
    
    /** will be called before any action -- good place for allocs 
     *
@@ -173,13 +175,26 @@ class TMiso : public TDataSet  {
  protected:
    /** place of customization of preRun, return: 0 = Ok */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
-   /** order, in which elements will be used and holder */
-   PRM_INT( ord, efRODial | efNoRunChange );
+   /** fill links to sources */
+   int fillLinks();
    /** description on element */
-   PRM_STRING( descr, efNoRunChange );
+   PRM_STRING1( descr, efNoRunChange, "description", 
+       "Object description", "max=128\nncol=-1");
+   /** order, in which elements will be used and holder */
+   PRM_INT1( ord, efRODial | efNoRunChange, "Order", 
+       "Order, in which element will be processed", "min=0\nsep=block" );
    /** visual coordinates */
-   PRM_INT( vis_x, efNoDial | efNoRunChange );
-   PRM_INT( vis_y, efNoDial | efNoRunChange );
+   PRM_INT1( vis_x, efRODial | efNoRunChange, "Visual x", 
+       "X-coordinate of element in scheme", "min=0\nmax=64\nsep=col" );
+   PRM_INT1( vis_y, efRODial | efNoRunChange, "Visual y", 
+       "Y-coordinate of element in scheme", "min=0\nmax=64" );
+   PRM_DOUBLE1( out0_init, efNoRunChange, "Init output", 
+       "Initial value of output", "sep=col" );
+   PRM_DOUBLE1( out0, efInner, "Output", 
+       "Main output", "" );
+   /** pointer to link data */
+   TElmLink *links;
+   PRM_OBJ1( links, 0, "object links", "Object links description", "sep=blockend" );
    /** time step -- setted by preRun */
    double tdt; 
    /** number of iteration per loop -- setted by PreRun */
@@ -187,9 +202,16 @@ class TMiso : public TDataSet  {
    /** pointer to model-owner of this element, same as parent only 
     * between preRun -- postRun, elseware-0 */
    TModel *model;
-   /** pointer to link data */
-   TElmLink *links;
-   PRM_OBJ( links, 0 );
+   /** fake source */
+   double fake_so;
+   /** fake param target */
+   double fake_prm;
+   /** pointers to inputs */
+   const double* in_so[4];
+   /** pointers to param inputs */
+   const double* inp_so[4];
+   /** pointers to params */
+   double* inp_prm[4];
    /** data descriptors -- empty -- never be used */ 
    static TDataInfo tmiso_d_i[2];
    /** class decription */

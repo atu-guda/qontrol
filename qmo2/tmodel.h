@@ -64,8 +64,6 @@ class TModel : public TDataContainer  {
   virtual int nextSteps( int csteps );
   /** terminates run: 0 - normal, 1.. - break */
   virtual int stopRun( int reason );
-  /** call f() for single element */
-  double runOneElem( int elnu, const double *u, double t );
   /** gets input value by number >=0 -- elems, <0 -special */
   virtual double xout( int inu );
   /** gets input value by name. Some names may not have int num, but correct. */
@@ -245,6 +243,12 @@ class TModel : public TDataContainer  {
   PRM_DOUBLE1( prm3, efInner, "prm3", "Current prm3 value", "" );
   /** signature to check from plot painters, etc... */
   PRM_INT1( sgnt, efInner, "sgnt", "signature to check", "" );
+  /** constants: todo: separate object */
+  PRM_DOUBLE1( sqrt2, efInner, "sqrt(2)", "\\sqrt{2}", "" );
+  PRM_DOUBLE1( sqrt1_2, efInner, "sqrt(1/2)", "\\sqrt{1/2}", "" );
+  PRM_DOUBLE1( one, efInner, "1", "1", "" );
+  PRM_DOUBLE1( PI, efInner, "\\Pi", "M_PI", "" );
+  PRM_DOUBLE1( E, efInner, "e", "base of natural logarifm", "" );
 
   /** total number of iterations */
   PRM_INT1( n_tot, efInner, "n_tot", "total number of iterations", "" );

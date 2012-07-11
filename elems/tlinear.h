@@ -52,11 +52,11 @@ class TLinear : public TMiso  {
    virtual double f( const double *u, double t );
  protected:
    /** coefficients on input and shift */
-   PRM_DOUBLE( a0, 0 );
-   PRM_DOUBLE( a1, 0 );
-   PRM_DOUBLE( a2, 0 );
-   PRM_DOUBLE( a3, 0 );
-   PRM_DOUBLE( b, 0 );
+   PRM_DOUBLE1( a0, 0, "a0", "factor in input 0", "" );
+   PRM_DOUBLE1( a1, 0, "a1", "factor in input 1", "" );
+   PRM_DOUBLE1( a2, 0, "a2", "factor in input 2", "sep=col" );
+   PRM_DOUBLE1( a3, 0, "a3", "factor in input 3", "" );
+   PRM_DOUBLE1( b,  0, "b", "static shift", "sep=col" );
    /** data descriptors -- with base class elements */ 
    static TDataInfo tlinear_d_i[20];
    /** class decription */
