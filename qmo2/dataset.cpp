@@ -850,11 +850,18 @@ void* TDataSet::getObj( const QString &ename )
 HolderData* TDataSet::getHolder( const QString &oname ) const
 {
   QString ho_name = "_HO_" + oname; 
-  HolderData *ho = findChild<HolderData*>(ho_name);
-  //if( !ho ) {
-  //  qDebug( "ERR: TDataSet::getHolder: not found holder for %s", qPrintable(oname) );
-  //} 
-  return ho;
+  HolderData* ret;
+  for(QObject* child : children() ) {  // FIXME: bad, use map?
+    ret = qobject_cast<HolderData*>( child );
+    if( !ret )
+      continue;
+    if( child->objectName() == ho_name ) {
+      return ret;
+    }
+  }
+
+  // HolderData *ho = findChild<HolderData*>(ho_name); BAD: recursive
+  return nullptr;
 }
 
 const TDataInfo* TDataSet::getDataInfo( int ni ) const
@@ -1435,8 +1442,11 @@ int TDataSet::processElem( istream *is )
   is->getline( str, MAX_INPUTLEN );
   if( is->fail() ) return -1;
   k = typeOfLine( str, MAX_INPUTLEN, &l, nm, &val );
-  if( k == ltpEnd )
+  if( k == ltpEnd ) {
+    //qDebug( "dbg: TDataSet::processElem: ltpEnd in %s:\"%s\"", 
+    //  qPrintable(getFullName()), str );
     return k;
+  }
   if( k == ltpUnk ) {
     qDebug( "WARN: TDataSet::processElem: unknown line:\"%s\"", str );
     return k;
@@ -1447,9 +1457,9 @@ int TDataSet::processElem( istream *is )
     
     HolderData *ho = getHolder( nm );
     if( !ho ) { // name not found
-      //qDebug( "dbg: TDataSet::processElem: unknown name:\"%s\"=\"%s\" in %s %s;",
-      //     nm, qPrintable(val), 
-      //     getClassName(), qPrintable(objectName()));
+      qDebug( "dbg: TDataSet::processElem: unknown name:\"%s\"=\"%s\" in %s %s;",
+           nm, qPrintable(val), 
+           getClassName(), qPrintable( getFullName() ) );
       if( ! allow_add ) {
         return ltpComment;
       }
@@ -1466,11 +1476,16 @@ int TDataSet::processElem( istream *is )
 	return ltpComment;
       }
       ho = getHolder( nm );
-      //qDebug( "dbg: TDataSet::processElem: created %s %s ;",
-      //       qPrintable(cl_name), nm );
+      qDebug( "dbg: TDataSet::processElem: created %s %s ;",
+             qPrintable(cl_name), nm );
+    } else {
+      qDebug( "dbg: TDataSet::processElem: exists %s type %s in %s;",
+             nm, qPrintable(ho->getType()), qPrintable( getFullName() ) );
     }
     
     if( ho->getOldTp() != dtpObj ) { // simple object, TODO: dont use old
+      //qDebug( "dbg: TDataSet::processElem: simple object %s.%s = \"%s\" ;",
+      //        qPrintable( getFullName() ), nm, qPrintable(val) );
       ho->set( val );
       return ltpVal;
     }
@@ -1528,7 +1543,8 @@ void* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
   if( !allow_add )
     return nullptr;
   if( getHolder( ob_name ) != nullptr ) {
-    qDebug( "ERR: TDataSet::add_obj: name \"%s\" exist!", qPrintable(ob_name) );
+    qDebug( "ERR: TDataSet::add_obj: name \"%s\" exist int %s!",
+	qPrintable(ob_name), qPrintable( getFullName() ) );
     return nullptr;
   }
   // TODO: no simple types for now!

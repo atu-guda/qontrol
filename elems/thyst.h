@@ -22,6 +22,14 @@
 
 #define CLASS_ID_THyst 1011
 
+static const char* const thyst_list = 
+     "s+alpha*d\n"     // 0
+     "alpha*d\n"       // 1
+     "Thetta(d)\n"     // 2 
+     "sign(d)\n"       // 3 
+     "tanh(alpha*d)\n" // 4
+     "tanh(s+alpha*d)"; // 5
+
 /**basic hysteresis simulation
   *@author atu
   */
@@ -47,27 +55,25 @@ class THyst : public TMiso  {
    virtual const char** getIcon(void) const;      
    /** main computation function */
    virtual double f( const double *u, double t );
-   /** reimplemented from TDataSet to handle dynamical coeff */
-   virtual int setDataID( int ni, double da, int allowConv );
    /** reimplemented from TMiso to set init state */
    virtual int startLoop( int acnx, int acny );
  protected:
    void fixState(void);
  protected:
    /** type of hysteresis */
-   PRM_LIST( type, efNoRunChange );
+   PRM_LIST1( type, efNoRunChange, "Type",  "Type of hysteresis", "", thyst_list );
    /** width of hysteresis  */
-   PRM_DOUBLE( x0, 0 );
+   PRM_DOUBLE1( x0, 0, "x_0",  "x0 - width if hysteresis", "min=0" );
    /** slope of hysteresis  */
-   PRM_DOUBLE( alpha, 0 );
+   PRM_DOUBLE1( alpha, 0, "\\alpha", "Hysteresis slope", ""  );
    /** output scale */
-   PRM_DOUBLE( a, 0 );
+   PRM_DOUBLE1( a, 0, "a scale", "output scale", "" );
    /** output shift */
-   PRM_DOUBLE( b, 0 );
+   PRM_DOUBLE1( b, 0, "b shift", "output shift", ""  );
    /** state d */
-   PRM_DOUBLE( d, efInner );
-   /** state d */
-   PRM_DOUBLE( s, efInner );
+   PRM_DOUBLE1( d, efInner, "d", "inner state 'd'", "" );
+   /** state s */
+   PRM_DOUBLE1( s, efInner, "s", "inner state 's'", "" );
    /** data descriptors -- with base class elements */ 
    static TDataInfo thyst_d_i[20];
    /** class decription */

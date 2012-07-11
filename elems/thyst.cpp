@@ -21,14 +21,6 @@
 
 using namespace std;
 
-static const char* const thyst_list = 
-     "s+alpha*d\n"     // 0
-     "alpha*d\n"       // 1
-     "Thetta(d)\n"     // 2 
-     "sign(d)\n"       // 3 
-     "tanh(alpha*d)\n" // 4
-     "tanh(s+alpha*d)" // 5
-;
 
 const char* THyst::helpstr = "<H1>THyst</H1>\n"
  "Can simulate some simple models of hysteresis: <br>\n"
@@ -68,14 +60,7 @@ TDataInfo THyst::thyst_d_i[20] = {
 
 
 THyst::THyst( TDataSet* aparent )
-        :TMiso( aparent ),
-	PRM_INIT( type, "Type" ),
-	PRM_INIT( x0, "x0" ),
-	PRM_INIT( alpha, "\\alpha" ),
-	PRM_INIT( a, "a scale" ),
-	PRM_INIT( b, " shift" ),
-	PRM_INIT( d, "d" ),
-	PRM_INIT( s, "s" )
+        :TMiso( aparent )
 {
   int i;
   type = 0; x0 = 1; alpha = 0.2; a = 1; b = 0; s = d = 0;
@@ -91,15 +76,6 @@ THyst::THyst( TDataSet* aparent )
   ptrs[16] = links;
   ptrs[17] = &vis_x; ptrs[18] = &vis_y;
   
-  PRMI(type).setDescr( "Type of hysteresis" );
-  PRMI(type).setElems( thyst_list );
-  PRMI(x0).setDescr( "x0 - width if hysteresis" );
-  PRMI(x0).setMinMax( 0, DMAX );
-  PRMI(alpha).setDescr( "\\alpha - slope of hysteresis" );
-  PRMI(a).setDescr( "Output scale" );
-  PRMI(b).setDescr( "Output shift" );
-  PRMI(d).setDescr( "d" );
-  PRMI(s).setDescr( "s" );
 }
 
 THyst::~THyst()
@@ -134,6 +110,7 @@ const char** THyst::getIcon(void) const
 double THyst::f( const double* u, double /* t */ )
 {
   double ud, ts , v, u_old;
+  fixState(); // TODO: only if params changed
   // atu test
   u_old = d + s;
   // 
@@ -174,15 +151,6 @@ int THyst::startLoop( int acnx, int acny )
   int rc = TMiso::startLoop( acnx, acny );
   s = d = 0;
   return rc;
-}
-
-int THyst::setDataID( int ni, double da, int allowConv )
-{
-  int k;
-  k = TDataSet::setDataID( ni, da, allowConv );
-  if( k == 0 && ( ni == 6 || ni == 8 ) )
-    fixState();
-  return k;
 }
 
 int THyst::registered = reg();
