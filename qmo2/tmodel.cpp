@@ -201,7 +201,7 @@ int TModel::runOneLoop(void)/*{{{1*/
   };  // end element loop;
   for( out_nu=0; out_nu<n_out; out_nu++ ) { // fill out arrays(0)
     arr = getOutArr( out_nu );
-    arr->push_val( xout( v_oute[out_nu] ), out_level );
+    arr->take_val( out_level );
   };
   t += tdt; ii++;
   return 0;

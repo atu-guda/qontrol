@@ -56,7 +56,8 @@ TDataInfo TOutArr::toutarr_d_i[19] = {
 
 
 TOutArr::TOutArr( TDataSet* apar )
-        :TDataSet( apar )
+        :TDataSet( apar ), 
+	 fake_so(0), so( &fake_so ) 
 {
   int i;
   arrsize = 0; dmin = 0; dmax = 1; n = ny = 0; nq = 1; cnq = lnq = 0;
@@ -115,6 +116,9 @@ int TOutArr::alloc( int sz, int a_ny )
   if( ny < 1 ) ny = 1;
   arr.resize( sz ); 
   arrsize = sz; n = 0; dmin = 0; dmax = 1; cnq = 0;
+  so = parent->getDoublePtr( name );
+  if( !so )
+    so = &fake_so;
   return 0;
 }
 
@@ -136,6 +140,29 @@ int TOutArr::reset( int level )
 
 int TOutArr::push_val( double v, int level )
 {
+  if( n >= arrsize )
+    return -1;
+  if( level < type )
+    return 0;
+  if( cnq == lnq ) {
+    if( n == 0 ) {
+     dmin = dmax = v;
+    } else {
+      if( v > dmax ) dmax = v;
+      if( v < dmin ) dmin = v;
+    };  
+    arr[n] = v;  
+    n++; 
+  };
+  cnq++; 
+  if( cnq >= nq ) 
+    cnq = 0;
+  return n;
+}
+
+int TOutArr::take_val( int level )
+{
+  double v = *so;
   if( n >= arrsize )
     return -1;
   if( level < type )

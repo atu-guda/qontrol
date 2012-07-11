@@ -66,6 +66,8 @@ class TOutArr : public TDataSet  {
    virtual int reset( int level);
    /** push next value. pushed only if level >= type */
    virtual int push_val( double v, int level );
+   /** get and push next value. pushed only if level >= type */
+   virtual int take_val( int level );
    /** dumps data to file */
    int dump( const char *fn, char delim = ' ' );
    /** fills fields in GraphInfo structure */
@@ -96,6 +98,10 @@ class TOutArr : public TDataSet  {
    PRM_INT1( n, efInner, "current size", "Current number of datas", "" );
    /** data storage TODO: vector */
    std::vector<double> arr;
+   /** fake source */
+   double fake_so;
+   /** ptr to source */
+   const double *so;
    /** data descriptors */ 
    static TDataInfo toutarr_d_i[19]; 
    /** class decription */
