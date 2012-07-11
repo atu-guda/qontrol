@@ -161,13 +161,13 @@ TDataSet* TMiso::create( TDataSet* /* apar */ )
   return 0; // cannot create abstract object
 }
 
-double TMiso::fun( const double *u, double t )
+double TMiso::fun( double t )
 {
   if( links->noauto ) 
     return out0;
   if( links->locked ) 
     return out0 = *in_so[0];
-  return out0 = f( u, t );
+  return out0 = f( t );
 }
 
 int TMiso::getClassId(void) const 
@@ -185,7 +185,7 @@ const char *TMiso::getHelp(void) const
   return helpstr;
 }
 
-double TMiso::f( const double* /* u */, double /* t */ )
+double TMiso::f( double /* t */ )
 {
   return 0;
 }

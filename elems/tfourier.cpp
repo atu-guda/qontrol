@@ -242,16 +242,17 @@ int TFourier::endLoop(void)
   return rc;
 }
 
-double TFourier::f( const double* u, double t )
+double TFourier::f( double t )
 {
   int i;
   double av;
   if( ii < n_st || ii > n_en ) { ii++; return ampl1; };
+  double xx = *in_so[0];
   for( i=0; i<=ng; i++ ) {
-    aa[i] += u[0] * cos( i * omega * t );
-    bb[i] += u[0] * sin( i * omega * t );
+    aa[i] += xx * cos( i * omega * t );
+    bb[i] += xx * sin( i * omega * t );
   };
-  s_x2 += u[0] * u[0];
+  s_x2 += xx * xx;
   if( ii == n_en ) {
     aa[0] /= nn; bb[0] = 0; am[0] = fabs( aa[0] ); ampl = am[0] * am[0];
     for( i=1; i<=ng; i++ ) {

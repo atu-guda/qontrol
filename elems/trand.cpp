@@ -229,7 +229,7 @@ int TRand::startLoop( int acnx, int acny )
   return k;
 }
 
-double TRand::f( const double*  u, double  /*t*/  )
+double TRand::f( double  /*t*/  )
 {
   double v, du;
   if( sp_time >= tau || tau <=0  ) {
@@ -247,7 +247,7 @@ double TRand::f( const double*  u, double  /*t*/  )
     };
     old_val = zval + ampl * v;
   };
-  du = u[0] - old_in; old_in = u[0];
+  du = *in_so[0] - old_in; old_in = *in_so[0];
   sp_time += du;
   return old_val; 
 }

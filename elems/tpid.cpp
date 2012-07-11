@@ -131,30 +131,30 @@ int TPid::startLoop( int acnx, int acny )
   return rc;
 }
 
-double TPid::f( const double* u, double t )
+double TPid::f( double t )
 {
   double v, d1, d2;
   v = 0;
   if( start == 1 ) {
-    start = 2; u_old = u[0]; vi1 += u[0] * tdt; vi2 += vi1 * tdt;
-    v = kp * u[0] + ki1 * vi1 + ki2 * vi2;
+    start = 2; u_old = *in_so[0]; vi1 += *in_so[0] * tdt; vi2 += vi1 * tdt;
+    v = kp * *in_so[0] + ki1 * vi1 + ki2 * vi2;
     return v;
   };
   if( start == 2 ) {
-    start = 0; d1 = ( u[0] - u_old ) / tdt;
-    vi1 += u[0] * tdt; vi2 += vi1 * tdt;
-    u_old2 = u_old; u_old = u[0];
-    v = kd1 * d1 + kp * u[0] + ki1 * vi1 + ki2 * vi2;
+    start = 0; d1 = ( *in_so[0] - u_old ) / tdt;
+    vi1 += *in_so[0] * tdt; vi2 += vi1 * tdt;
+    u_old2 = u_old; u_old = *in_so[0];
+    v = kd1 * d1 + kp * *in_so[0] + ki1 * vi1 + ki2 * vi2;
     return v;
   };
-  d1 = ( u[0] - u_old ) / tdt;
-  d2 = ( u[0] - 2*u_old + u_old2 ) / tdt2;
-  vi1 += u[0] * tdt;
+  d1 = ( *in_so[0] - u_old ) / tdt;
+  d2 = ( *in_so[0] - 2*u_old + u_old2 ) / tdt2;
+  vi1 += *in_so[0] * tdt;
   vi2 += vi1 * tdt;
-  v = kd2 * d2 + kd1 * d1 + kp * u[0] + ki1 * vi1 + ki2 * vi2;
+  v = kd2 * d2 + kd1 * d1 + kp * *in_so[0] + ki1 * vi1 + ki2 * vi2;
   if( aver )
     v /= t;
-  u_old2 = u_old; u_old = u[0];
+  u_old2 = u_old; u_old = *in_so[0];
   return v; 
 }
 

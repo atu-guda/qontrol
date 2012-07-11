@@ -159,7 +159,7 @@ const char** TSourceLin::getIcon(void) const
   return icon;
 }
 
-double TSourceLin::f( const double* /* u */, double t )
+double TSourceLin::f( double t )
 {
   double tr, v;
   tr = t - t_start;

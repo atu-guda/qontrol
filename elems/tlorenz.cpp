@@ -148,12 +148,12 @@ const char** TLorenz::getIcon(void) const
   return icon;
 }
 
-double TLorenz::f( const double*  u , double /*t*/ )
+double TLorenz::f( double /*t*/ )
 {
   double xn, yn, zn;
-  xn = x + tdt * ( sigma * (y-x) ) + u[0];
-  yn = y + tdt * ( x * (r-z) - y ) + u[1];
-  zn = z + tdt * ( x*y - b*z )     + u[2];
+  xn = x + tdt * ( sigma * (y-x) ) + *in_so[0];
+  yn = y + tdt * ( x * (r-z) - y ) + *in_so[1];
+  zn = z + tdt * ( x*y - b*z )     + *in_so[2];
   x = xn; y = yn; z = zn;
   return x; 
 }

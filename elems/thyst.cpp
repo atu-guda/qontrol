@@ -107,14 +107,14 @@ const char** THyst::getIcon(void) const
   return icon;
 }
 
-double THyst::f( const double* u, double /* t */ )
+double THyst::f( double /* t */ )
 {
   double ud, ts , v, u_old;
   fixState(); // TODO: only if params changed
   // atu test
   u_old = d + s;
   // 
-  ud = u[0] - u_old; 
+  ud = *in_so[0] - u_old; 
   ts = s + ud;
   if( ts >= x0 ) { 
     s = x0;  d += ts - x0;  

@@ -119,16 +119,16 @@ int TLinP1Q0::startLoop( int acnx, int acny )
   return rc;
 }
 
-double TLinP1Q0::f( const double* u, double /*t*/ )
+double TLinP1Q0::f( double /*t*/ )
 {
   double x, f;
   if( use_u1 ) {
-    f = u[1];
+    f = *in_so[1];
   } else {
     f = x_old;
   };
   // TODO: check this for stability
-  x = x_old + a * tdt * ( ku * u[0] - f );
+  x = x_old + a * tdt * ( ku * *in_so[0] - f );
   x_old = x;
   return x;
 }

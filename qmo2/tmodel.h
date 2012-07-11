@@ -58,6 +58,8 @@ class TModel : public TDataContainer  {
       { return &class_info; };
   /** returns help string */
   virtual const char* getHelp(void) const;
+  /** reimplemented from TDataSet to provide access to '#nvar' */
+  virtual const double* getDoublePtr( const QString &nm ) const;
   /** prepare to run */
   virtual int startRun( int type );
   /** run csteps next steps */

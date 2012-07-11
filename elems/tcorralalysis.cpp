@@ -287,18 +287,18 @@ int TCorrAnalysis::endLoop(void)
 }
 
 
-double TCorrAnalysis::f( const double* u, double t )
+double TCorrAnalysis::f( double t )
 {
   int add;
-  double x = u[0], y = u[1];
+  double x = *in_so[0], y = *in_so[1];
   ii++;
-  if( useReset && u[3] < 0.1 /* sic: < */ ) {
+  if( useReset && *in_so[3] < 0.1 /* sic: < */ ) {
     reset_data();
   };
   switch( type ) {
     case 0: add = 1; break;
     case 1: add = ( t >= t0 ) && ( t <= t1 ); break;
-    case 2: add = ( u[2] > 0.1 ); break;
+    case 2: add = ( *in_so[2] > 0.1 ); break;
     case 3: add = 0; // dont add, use arrays
     default: add = 0;
   };
@@ -307,7 +307,7 @@ double TCorrAnalysis::f( const double* u, double t )
     s_xy += x * y; 
     n++;
   };
-  if( ( ii >= model_nn-1 || ( useCalc && u[3] > 0.1 ))   ) {
+  if( ( ii >= model_nn-1 || ( useCalc && *in_so[3] > 0.1 ))   ) {
     if( type >= 3 )
       getDataFromArrays();
     calc();

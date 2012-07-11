@@ -115,27 +115,27 @@ int TVibro::startLoop( int acnx, int acny )
   return rc;
 }
 
-double TVibro::f( const double* u, double /*t*/ )
+double TVibro::f( double /*t*/ )
 {
   double x, ctau;
   if( isStart == 1 ) {  // first step
     isStart = 2; x = 0;
     if( use_u1 ) {
-      f_old = u[1];
+      f_old = *in_so[1];
     } else {
       f_old = x;
     };
-    u_old = u[0];
+    u_old = *in_so[0];
     return x;
   };
   if( isStart == 2 ) {  // second step
     isStart = 0; x = x_old + 0.5 * tdt2 * u_old;
     if( use_u1 ) {
-      f_old = u[1];
+      f_old = *in_so[1];
     } else {
       f_old = x;
     };
-    u_old = u[0]; x_old2 = x_old; x_old = x;
+    u_old = *in_so[0]; x_old2 = x_old; x_old = x;
     return x;
   };
   // all other steps
@@ -143,11 +143,11 @@ double TVibro::f( const double* u, double /*t*/ )
   x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * (u_old - Omega * Omega *f_old) ) 
     / ( 1 + ctau );
   if( use_u1 ) {
-    f_old = u[1];
+    f_old = *in_so[1];
   } else {
     f_old = x;
   };
-  u_old = u[0]; x_old2 = x_old; x_old = x;
+  u_old = *in_so[0]; x_old2 = x_old; x_old = x;
   return x;
 }
 

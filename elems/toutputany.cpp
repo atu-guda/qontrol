@@ -146,16 +146,16 @@ int TOutputAny::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-double TOutputAny::f( const double* u, double /* t */ )
+double TOutputAny::f( double /* t */ )
 {
-  if( useEnable && u[1] < 0.1 )
-    return u[0];
+  if( useEnable && *in_so[1] < 0.1 )
+    return *in_so[0];
   switch( type ) {
-    case 0: pel->setDataID( ne, u[0], 1 ); break;
-    case 1: model->setVar( ne, u[0] ); break;
+    // case 0: pel->setDataID( ne, *in_so[0], 1 ); break; TODO: drop at all
+    case 1: model->setVar( ne, *in_so[0] ); break;
     default: ;
   };
-  return u[0];
+  return *in_so[0];
 }
 
 int TOutputAny::registered = reg();

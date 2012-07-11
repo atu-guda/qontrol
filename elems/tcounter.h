@@ -50,7 +50,7 @@ class TCounter : public TMiso  {
    /** reimplemented from TMiso to reset counter */
    virtual int startLoop( int acnx, int acny );
    /** main computation function */
-   virtual double f( const double *u, double t );
+   virtual double f( double t );
  protected:
    /** type of output from counter */
    PRM_LIST( type, efNoRunChange );

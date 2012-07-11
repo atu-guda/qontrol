@@ -147,12 +147,12 @@ const char** TRossler::getIcon(void) const
   return icon;
 }
 
-double TRossler::f( const double*  u , double /*t*/ )
+double TRossler::f( double /*t*/ )
 {
   double xn, yn, zn;
-  xn = x + tdt * ( -y - z )      + u[0];
-  yn = y + tdt * ( x  + a*y )    + u[1];
-  zn = z + tdt * ( b + z*(x-c) ) + u[2];
+  xn = x + tdt * ( -y - z )      + *in_so[0];
+  yn = y + tdt * ( x  + a*y )    + *in_so[1];
+  zn = z + tdt * ( b + z*(x-c) ) + *in_so[2];
   x = xn; y = yn; z = zn;
   return x; 
 }

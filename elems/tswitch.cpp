@@ -103,10 +103,10 @@ const char** TSwitch::getIcon(void) const
 }
 
 
-double TSwitch::f( const double* u, double /* t */ )
+double TSwitch::f( double /* t */ )
 {
   double v;
-  v = ( u[3] < level1 ) ? u[0] : ( ( u[3]>level2 ) ? u[2] : u[1] );
+  v = ( *in_so[3] < level1 ) ? *in_so[0] : ( ( *in_so[3]>level2 ) ? *in_so[2] : *in_so[1] );
   return v;
 }
 

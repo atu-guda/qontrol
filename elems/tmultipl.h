@@ -47,7 +47,7 @@ class TMultipl : public TMiso  {
    /** return icon */
    virtual const char** getIcon(void) const;      
    /** main computation function */
-   virtual double f( const double *u, double t );
+   virtual double f( double t );
  protected:
    /** shitches -- is this input on */
    PRM_SWITCH( on0, 0 );

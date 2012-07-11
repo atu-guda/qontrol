@@ -100,7 +100,7 @@ const char** TLinear::getIcon(void) const
   return icon;
 }
 
-double TLinear::f( const double* /*u*/, double /* t */ )
+double TLinear::f( double /* t */ )
 {
   return *in_so[0]*a0 + *in_so[1]*a1 + *in_so[2]*a2 + *in_so[3]*a3 + b;
 }

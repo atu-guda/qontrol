@@ -151,9 +151,9 @@ class TMiso : public TDataSet  {
     * \param t current time
     * \return output value of element
     * */
-   virtual double f( const double *u, double t ) = 0;
+   virtual double f( double t ) = 0;
    /** external computation function + in/out */
-   double fun( const double *u, double t );
+   double fun( double t );
    
    /** will be called before any action -- good place for allocs 
     *

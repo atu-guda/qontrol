@@ -49,7 +49,7 @@ class TFuncPoly : public TMiso  {
    // /** reimplemented from TMiso to ... */
    // virtual int startLoop( int acnx, int acny );
    /** main computation function */
-   virtual double f( const double *u, double t );
+   virtual double f( double t );
  protected:
    /** type of function */
    PRM_LIST( type, 0 );

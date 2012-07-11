@@ -49,7 +49,7 @@ class TLinear : public TMiso  {
    // /** reimplemented from TMiso to ... */
    // virtual int startLoop( int acnx, int acny );
    /** main computation function */
-   virtual double f( const double *u, double t );
+   virtual double f( double t );
  protected:
    /** coefficients on input and shift */
    PRM_DOUBLE1( a0, 0, "a0", "factor in input 0", "" );

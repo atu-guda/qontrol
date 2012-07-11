@@ -51,7 +51,7 @@ class TCorrAnalysis : public TMiso  {
    /** reimplemented from TMiso to fill out arrays */
    virtual int endLoop(void);
    /** main computation function */
-   virtual double f( const double *u, double t );
+   virtual double f( double t );
  protected:
    /* ============= function members ================== */
    /** resets collocted and computed data */

@@ -134,11 +134,11 @@ const char** TLogic::getIcon(void) const
   return icon;
 }
 
-double TLogic::f( const double* u, double /* t */ )
+double TLogic::f( double /* t */ )
 {
   int i, iu[4], ou;
   for( i=0; i<4; i++ ) {
-    iu[i] = ( u[i] > level );
+    iu[i] = ( *in_so[i] > level );
   };
   if( useNInp0 ) iu[0] = ! iu[0];
   if( useNInp1 ) iu[1] = ! iu[1];

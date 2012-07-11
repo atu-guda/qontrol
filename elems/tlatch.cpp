@@ -124,11 +124,11 @@ int TLatch::startLoop( int acnx, int acny )
   return rc;
 }
 
-double TLatch::f( const double* u, double t )
+double TLatch::f( double t )
 {
   double dv, bv; 
   int ok;
-  dv = u[1] - u_old; u_old = u[1];
+  dv = *in_so[1] - u_old; u_old = *in_so[1];
   if( wasLatch == -1 ) { 
     dv = 0; wasLatch = 0; // first step
   }; 
@@ -136,7 +136,7 @@ double TLatch::f( const double* u, double t )
   switch( type ) {
     case 0: if( t >= t0 ) {
               if( wasLatch ) break;
-	      wasLatch = 1; v = bv + u[0];
+	      wasLatch = 1; v = bv + *in_so[0];
 	    };
             break;
     case 1: if( useFirst && (wasLatch > 0) ) 
@@ -144,10 +144,10 @@ double TLatch::f( const double* u, double t )
             if( usePulse ) {
 	      ok = ( dv > 0.5 );
 	    } else {
-	      ok = ( u[1] > 0.1 );
+	      ok = ( *in_so[1] > 0.1 );
 	    };
 	    if( ok ) { 
-	      wasLatch = 1; v = bv + u[0];
+	      wasLatch = 1; v = bv + *in_so[0];
 	    };
 	    break;
     default: ;

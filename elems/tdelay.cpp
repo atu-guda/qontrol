@@ -101,13 +101,22 @@ const char** TDelay::getIcon(void) const
   return icon;
 }
 
-double TDelay::f( const double* u, double t )
+double TDelay::f( double t )
 {
   double a1, a2;
   if( buf == 0 ) return 0;
+  
+  // TODO: add check for param change
+  if( mdelay < cdelay ) 
+    cdelay = mdelay;
+  double v = cdelay / tdt;
+  icd = int( v );
+  v2 = v - icd; v1 = 1.0 - v2;
+  
+  //
   if( t < 1.3 * tdt )
-    u00 = u[0];
-  buf->add( u[0] );
+    u00 = *in_so[0];
+  buf->add( *in_so[0] );
   a1 = (*buf)[icd]; a2 = (*buf)[icd+1];
   if( t < cdelay )
     return u00;
@@ -140,21 +149,6 @@ int TDelay::startLoop( int acnx, int acny )
   return rc;
 }
 
-int TDelay::setDataID( int ni, double da, int allowConv  )
-{
-  int k; double v;
-  k = TMiso::setDataID( ni, da, allowConv );
-  if( k == 0 && ( ni == 4 || ni == 6 ) ) {
-    if( mdelay < cdelay ) 
-      cdelay = mdelay;
-    if( buf != 0 ) {
-      v = cdelay / tdt;
-      icd = int( v );
-      v2 = v - icd; v1 = 1.0 - v2;
-    };
-  };
-  return k;
-}
 
 int TDelay::registered = reg();
 

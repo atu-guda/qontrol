@@ -148,15 +148,15 @@ const char** TFuncTrans::getIcon(void) const
   return icon;
 }
 
-double TFuncTrans::f( const double* u, double /* t */ )
+double TFuncTrans::f( double /* t */ )
 {
   double v, y, by, tm;
-  y = u[0] - u[1] - x0; by = y * b;
+  y = *in_so[0] - *in_so[1] - x0; by = y * b;
   switch( type ) {
     case 0:   v = a * sin( by ); break;
     case 1:   v = a * sign( sin( by ) + c ); break;
     case 2:   v = a * tanh( by ); break;
-    case 3:   v = a * atan2( u[0], u[1] ); break;
+    case 3:   v = a * atan2( *in_so[0], *in_so[1] ); break;
     case 4:   v = a * exp( by ); break;
     case 5:   v = a * exp( -by * y ); break;
     case 6:   v = a * waveWave( by ); break;

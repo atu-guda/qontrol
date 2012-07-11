@@ -47,7 +47,7 @@ class TLogic : public TMiso  {
    /** return icon */
    virtual const char** getIcon(void) const;      
    /** main computation function */
-   virtual double f( const double *u, double t );
+   virtual double f( double t );
  protected:
    /** type of logic element */
    PRM_LIST( type, efNoRunChange );

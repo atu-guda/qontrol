@@ -54,7 +54,7 @@ class TRand : public TMiso  {
    /** reimplemented from TMiso to init generator and variables */
    virtual int startLoop( int acnx, int acny );
    /** main computation function */
-   virtual double f( const double *u, double t );
+   virtual double f( double t );
  protected:
    /** reimplemented from TMiso to create generator */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );

@@ -49,7 +49,7 @@ class TTrigger : public TMiso  {
    /** reimplemented from TMiso to init state */
    virtual int startLoop( int acnx, int acny );
    /** main computation function */
-   virtual double f( const double *u, double t );
+   virtual double f( double t );
  protected:
    /** type of trigger */
    PRM_LIST( type, efNoRunChange );

@@ -146,12 +146,12 @@ int TFriction::startLoop( int acnx, int acny )
   return rc;
 }
 
-double TFriction::f( const double* u, double /* t */ )
+double TFriction::f( double /* t */ )
 {
   double f, x, f_fv, f_fd, cf_mx;
-  double fx = u[0];
+  double fx = *in_so[0];
   if( useMf )
-    cf_mx = u[1];
+    cf_mx = *in_so[1];
   else
     cf_mx = f_mx;
 

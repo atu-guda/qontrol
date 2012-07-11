@@ -117,12 +117,12 @@ int TCounter::startLoop( int acnx, int acny )
   return rc;
 }
 
-double TCounter::f( const double* u, double /* t */ )
+double TCounter::f( double /* t */ )
 {
   double v, du;
   int tick;
-  du = u[0] - u_old; u_old  = u[0]; tick = 0;
-  if( useReset && u[1] > 0.1 ) {
+  du = *in_so[0] - u_old; u_old  = *in_so[0]; tick = 0;
+  if( useReset && *in_so[1] > 0.1 ) {
     cn = flip = 0; 
   } else {
     if( du > 0.1 ) {

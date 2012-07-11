@@ -121,7 +121,7 @@ int TInputAny::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-double TInputAny::f( const double* /* u */, double /* t */ )
+double TInputAny::f( double /* t */ )
 {
   return *so;
 }

@@ -191,20 +191,20 @@ int TRandTrigg::startLoop( int acnx, int acny )
 }
 
 
-double TRandTrigg::f( const double* u, double /* t */ )
+double TRandTrigg::f( double /* t */ )
 {
   double du, rv;
-  du = u[0] - u_old; u_old = u[0];
+  du = *in_so[0] - u_old; u_old = *in_so[0];
   if( ns == -1 ) { du = 0; ns = 0; };
-  if( useForce && u[1] > 0.1 ) {
+  if( useForce && *in_so[1] > 0.1 ) {
     ns = 0; currOut = !currOut;
     return ( currOut ) ? 1 : ( useZero ? 0 : -1 );
   };
-  if( useLock && u[2] > 0.1 ) {
+  if( useLock && *in_so[2] > 0.1 ) {
     // ns++;
     return ( currOut ) ? 1 : ( useZero ? 0 : -1 );
   };
-  if( ( useLevel && u[0] > 0.1 ) || ( !useLevel && fabs(du) > 0.5 ) ) {
+  if( ( useLevel && *in_so[0] > 0.1 ) || ( !useLevel && fabs(du) > 0.5 ) ) {
     rv = gsl_ran_flat( rng, 0, 1 ); 
     if( rv <= prob || nforce <= 1 || ns >= nforce-1 ) {
       ns = 0; currOut = !currOut;

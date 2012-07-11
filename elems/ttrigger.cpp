@@ -147,18 +147,18 @@ int TTrigger::startLoop( int acnx, int acny )
   return rc;
 }
 
-double TTrigger::f( const double* u, double t )
+double TTrigger::f( double t )
 {
   int i, ui[4], sw, act;
   double du;
   if( t > tdt/2 ) {
-    du = u[2] - u2_old;
+    du = *in_so[2] - u2_old;
   } else {
     du = 0;
   };
-  u2_old = u[2];
+  u2_old = *in_so[2];
   for( i=0; i<4; i++ )
-    ui[i] = ( u[i]>level1 );
+    ui[i] = ( *in_so[i]>level1 );
   if( useEnable && ui[3] < 1 ) {
     if( usePulse ) return 0;
     if( cst ) return 1;
@@ -175,8 +175,8 @@ double TTrigger::f( const double* u, double t )
   if( sw == 0 ) {
     switch( type ) {
       case 0: break;
-      case 1: if( u[2] > level1 ) { sw = 1; break; };
-	      if( u[2] < level0 ) { sw = -1; break; };
+      case 1: if( *in_so[2] > level1 ) { sw = 1; break; };
+	      if( *in_so[2] < level0 ) { sw = -1; break; };
 	      break;
       case 2: if( du > 0.5 ) sw = 2; 
 	      break;  

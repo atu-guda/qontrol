@@ -48,7 +48,7 @@ class TSourceLin : public TMiso  {
    /** return icon */
    virtual const char** getIcon(void) const;
    /** main computation function */
-   virtual double f( const double *u, double t );
+   virtual double f( double t );
    /** called before each inner param loop. Unused param - -1 */
    virtual int startLoop( int acnx, int acny );
    /** recalculate slopes and numbers */

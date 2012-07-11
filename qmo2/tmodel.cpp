@@ -115,8 +115,7 @@ int TModel::nextSteps( int csteps )/*{{{1*/
       if( il1 == 0 ) { // start prm0 loop
 	resetOutArrs( 1 );
       };
-      // if( useSameSeed && seed != -1 )
-      //   srand( seed );
+      
       resetOutArrs( 0 );
       start_time = get_real_time(); rtime = t = 0;
       // set start param
@@ -168,7 +167,7 @@ int TModel::stopRun( int reason )/*{{{1*/
 int TModel::runOneLoop(void)/*{{{1*/
 {
   int k, out_nu, elnu, cm, out_level;
-  double u[4], pval;
+  double pval;
   unsigned long wait_ms;
   TMiso *cur_el; TOutArr *arr;
   rtime = get_real_time() - start_time;
@@ -188,10 +187,7 @@ int TModel::runOneLoop(void)/*{{{1*/
      int curr_flg = v_flg[elnu];
      if( (curr_flg &  4 ) && ( ii != 0 ) ) continue; // only first
      if( (curr_flg &  8 ) && ( ii != nn-1 ) ) continue; // only last 
-     u[0] = u[1] = u[2] = u[3] = 0; // fill u[]
-     for( k=0; k<inps[elnu].maxl; k++ ) {
-       u[k] = xout( inps[elnu].l[k] );
-     };
+     
      for( k=0; k<pinps[elnu].maxl; k++ ) { // set parametrs if need
        if( pinps[elnu].l[k] == -1 || pnames[elnu].l[k] == -1 )
 	  continue;
@@ -201,7 +197,7 @@ int TModel::runOneLoop(void)/*{{{1*/
        if( cm == 0 )
 	  modified |= 2;
      };
-     outs[elnu] = cur_el->fun( u, t );  // <==================== main action
+     outs[elnu] = cur_el->fun( t );  // <==================== main action
   };  // end element loop;
   for( out_nu=0; out_nu<n_out; out_nu++ ) { // fill out arrays(0)
     arr = getOutArr( out_nu );
@@ -1303,6 +1299,18 @@ const char *TModel::getHelp(void) const/*{{{1*/
   return helpstr;
 }/*}}}1*/
 
+const double* TModel::getDoublePtr( const QString &nm ) const
+{
+  static const double fake_so = 0;
+  if( nm[0] != '#' )
+    return TDataSet::getDoublePtr( nm );
+  QString nn = nm;
+  nn.remove( 0, 1 );
+  int n = nn.toInt();
+  if( n < 0 || n >= MODEL_NVAR )
+    return &fake_so;
+  return &( vars[n] );
+}
 
 int TModel::registered = reg();
 

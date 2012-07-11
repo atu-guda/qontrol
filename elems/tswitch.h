@@ -47,7 +47,7 @@ class TSwitch : public TMiso  {
    /** return icon */
    virtual const char** getIcon(void) const;      
    /** main computation function */
-   virtual double f( const double *u, double t );
+   virtual double f( double t );
  protected:
    /** levels  */
    PRM_DOUBLE( level1, 0 );

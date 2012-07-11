@@ -142,24 +142,26 @@ const char** TFuncPoly::getIcon(void) const
   return icon;
 }
 
-double TFuncPoly::f( const double* u, double /* t */ )
+double TFuncPoly::f( double /* t */ )
 {
   double v, y, y2, t1, t2;
-  y = u[0] - u[1] - x0; y2 = y*y;
+  y = *in_so[0] - *in_so[1] - x0; y2 = y*y;
   switch( type ) {
     case 0: v = a * y; break;
     case 1: v = a * y2 + b * y; break;
     case 2: v = a * y2 * y + b * y2 + c * y; break;
-    case 3: v = a * u[0]*u[0] + b * u[0]*u[1] + c * u[1]*u[1]; break;
+    case 3: v = a * *in_so[0]* *in_so[0] + b * *in_so[0]* *in_so[1] 
+	      + c * *in_so[1]* *in_so[1]; break;
     case 4: v = ( y > 0 ) ? a * sqrt( y ) : 0; break;
-    case 5: v = hypot( a*u[0], b*u[1] ); break;
-    case 6: v = a*u[0]*u[0] + b*u[1]*u[1] + c*u[2]*u[2] + d*u[3]*u[3]; break;
+    case 5: v = hypot( a* *in_so[0], b* *in_so[1] ); break;
+    case 6: v = a* *in_so[0]* *in_so[0] + b* *in_so[1]* *in_so[1] 
+	      + c* *in_so[2]* *in_so[2] + d* *in_so[3]* *in_so[3]; break;
     case 7: t1 = b*b - y2; t1 *= t1; 
 	    v = 1 / sqrt( t1 + a * a *y2 ); break;
-    case 8: t1 = ( 1- u[0] ); t1 *= t1; t2 = ( u[1] - u[0]*u[0] ); t2 *= t2;
+    case 8: t1 = ( 1- *in_so[0] ); t1 *= t1; t2 = ( *in_so[1] - *in_so[0]* *in_so[0] ); t2 *= t2;
 	    v = a * t2 + b * t1; break;
-    case 9: t1 = u[0]*u[0] + u[1]*u[1] - 1; t1 *= t1;
-	    v = 1 - exp( -a * ( t1 - b*u[0] -c*u[1]) ); break;
+    case 9: t1 = *in_so[0]* *in_so[0] + *in_so[1]* *in_so[1] - 1; t1 *= t1;
+	    v = 1 - exp( -a * ( t1 - b* *in_so[0] -c* *in_so[1]) ); break;
     case 10: v = a * ( 1 + b*y ) ; break;
     case 11: v = a * ( b * y + c * fabs(y) ) ; break;
     default: v = 0;

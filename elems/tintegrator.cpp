@@ -172,17 +172,17 @@ int TIntegrator::startLoop( int acnx, int acny )
 }
 
 
-double TIntegrator::f( const double* u, double /* t */ )
+double TIntegrator::f( double /* t */ )
 {
   double v_ret, base = 0, in;
-  if( useBase ) base = u[3];
+  if( useBase ) base = *in_so[3];
   if( useAdd )  base += s_val;
   if( useSqIn )
-    in = u[0] * u[0];
+    in = *in_so[0] * *in_so[0];
   else
-    in = u[0];
+    in = *in_so[0];
 
-  if( useReset && u[1] > 0.1 ) {
+  if( useReset && *in_so[1] > 0.1 ) {
     t_rst = 0;
   };
 

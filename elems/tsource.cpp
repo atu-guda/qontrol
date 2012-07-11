@@ -247,7 +247,7 @@ const char** TSource::getIcon(void) const
   return icon;
 }
 
-double TSource::f( const double* /* u */, double t )
+double TSource::f( double t )
 {
   double v ,omet, uu_s, omet_s, lt, u_ch, f_ch, phi, phi_0;
   int n;

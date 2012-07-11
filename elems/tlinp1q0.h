@@ -56,7 +56,7 @@ class TLinP1Q0 : public TMiso  {
    /** reimplemented from TMiso to init state */
    virtual int startLoop( int acnx, int acny );
    /** main computation function */
-   virtual double f( const double *u, double t );
+   virtual double f( double t );
  protected:
    /** coefficient near f(x) */
    PRM_DOUBLE1( a, 0, "a", "a in dx/dt = a*f(ku*u(t)-x)", "" );

@@ -54,7 +54,7 @@ class TFourier : public TMiso  {
    /** reimplemented from TMiso to complete analysis and fill out arrays */
    virtual int endLoop(void);
    /** main computation function */
-   virtual double f( const double *u, double t );
+   virtual double f( double t );
  protected:
    void initVars(void);
    /** reimplemented from TMiso to alloc buffers */

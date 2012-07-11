@@ -137,21 +137,21 @@ int TCriterion::startLoop( int acnx, int acny )
   return rc;
 }
 
-double TCriterion::f( const double* u, double t )
+double TCriterion::f( double t )
 {
   int ok, rv; 
   double aa, x;
   if( useT0 && t < t0 ) return 0;
-  x = u[0] - u[1];
+  x = *in_so[0] - *in_so[1];
   if( useLock && st > 0 )
     return usePulse ? 0 : 1;
-  if( useEnable && u[2] < 0.1 ) {
+  if( useEnable && *in_so[2] < 0.1 ) {
     if( !st ) return 0;
     return usePulse ? 0 : 1;
   };
   aa = a;
   if( useA )
-    aa = u[3];
+    aa = *in_so[3];
   switch( type ) {
     case 0: ok = ( fabs( x ) < aa ); break;
     case 1: ok = ( fabs( x ) > aa ); break;

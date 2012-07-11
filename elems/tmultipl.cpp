@@ -106,17 +106,17 @@ const char** TMultipl::getIcon(void) const
   return icon;
 }
 
-double TMultipl::f( const double* u, double /* t */ )
+double TMultipl::f( double /* t */ )
 {
   double v = a; 
   if( on0 )
-    v *= u[0];
+    v *= *in_so[0];
   if( on1 )
-    v *= u[1];
+    v *= *in_so[1];
   if( on2 )
-    v *= u[2];
+    v *= *in_so[2];
   if( on3 )
-    v *= u[3];
+    v *= *in_so[3];
   return v; 
 }
 

@@ -51,9 +51,7 @@ class TDelay : public TMiso  {
    /** reimplemented from TMiso to reset array */
    virtual int startLoop( int acnx, int acny );
    /** main computation function */
-   virtual double f( const double *u, double t );
-   /** reimplemented from TDataSet handle current delay limit */
-   virtual int setDataID( int ni, double da, int allowConv );
+   virtual double f( double t );
    /** deallocates buf */
    virtual int postRun( int good );
  protected:
