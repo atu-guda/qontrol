@@ -105,39 +105,26 @@ int TModel::startRun( int type )/*{{{1*/
 
 int TModel::nextSteps( int csteps )/*{{{1*/
 {
-  int i, k, elnu, cm, rc;
-  double pval;
-  TMiso *cur_el;
-  if( csteps < 1 ) csteps = 1;  
+  int i, rc;
+  if( csteps < 1 ) 
+    csteps = 1;  
+
   for( i=0; i < csteps && i_tot < n_tot && end_loop == 0; i++, i_tot++ ) {
     prm0 = prm0s + il1 * prm0d; prm1 = prm1s + il2 * prm1d;
     if( ii == 0 ) {    // --------------------- start inner loop --
       if( il1 == 0 ) { // start prm0 loop
 	resetOutArrs( 1 );
       };
-      
+
       resetOutArrs( 0 );
       start_time = get_real_time(); rtime = t = 0;
       // set start param
-      for( elnu=0; elnu<n_el; elnu++ ) {
-       cur_el = getMiso( elnu );
-       for( k=0; k<pinps[elnu].maxl; k++ ) {
-	 if( pinps[elnu].l[k] == -1 || pnames[elnu].l[k] == -1 )
-	    continue;
-	 if( ! ( pflags[elnu].l[k] & 1 ) ) 
-	   continue;
-	 pval = xout( pinps[elnu].l[k] );
-	 cm = cur_el->setDataID( pnames[elnu].l[k], pval, 1 );
-	 if( cm == 0 )
-	   modified |= 2;
-       };
-      };
       allStartLoop( il1, il2 );
-    };
+    };// end start inner loop
 
     rc = runOneLoop();
     if( rc == 1 )
-      return 0;    // wait for real time
+      return 0;    
 
     if( ii >= nn ) {
       allEndLoop();
@@ -166,8 +153,7 @@ int TModel::stopRun( int reason )/*{{{1*/
   
 int TModel::runOneLoop(void)/*{{{1*/
 {
-  int k, out_nu, elnu, cm, out_level;
-  double pval;
+  int out_nu, elnu, out_level;
   unsigned long wait_ms;
   TMiso *cur_el; TOutArr *arr;
   rtime = get_real_time() - start_time;
@@ -188,15 +174,6 @@ int TModel::runOneLoop(void)/*{{{1*/
      if( (curr_flg &  4 ) && ( ii != 0 ) ) continue; // only first
      if( (curr_flg &  8 ) && ( ii != nn-1 ) ) continue; // only last 
      
-     for( k=0; k<pinps[elnu].maxl; k++ ) { // set parametrs if need
-       if( pinps[elnu].l[k] == -1 || pnames[elnu].l[k] == -1 )
-	  continue;
-       if( pflags[elnu].l[k] & 1 ) continue; // skip 'only first'
-       pval = xout( pinps[elnu].l[k] );
-       cm = cur_el->setDataID( pnames[elnu].l[k], pval, 1 );
-       if( cm == 0 )
-	  modified |= 2;
-     };
      outs[elnu] = cur_el->fun( t );  // <==================== main action
   };  // end element loop;
   for( out_nu=0; out_nu<n_out; out_nu++ ) { // fill out arrays(0)

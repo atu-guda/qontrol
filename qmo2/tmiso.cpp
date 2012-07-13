@@ -140,7 +140,9 @@ TMiso::TMiso( TDataSet* aparent )
        fake_so(0), fake_prm(0),
        in_so{ &fake_so, &fake_so, &fake_so, &fake_so },
        inp_so{ &fake_so, &fake_so, &fake_so, &fake_so },
-       inp_prm{ &fake_prm, &fake_prm, &fake_prm, &fake_prm }
+       inp_prm{ &fake_prm, &fake_prm, &fake_prm, &fake_prm },
+       prm_flg { -1, -1, -1, -1 },
+       max_prm(0), prm_mod(0)
 {
   d_i = tmiso_d_i;
   ord = -1; 
@@ -163,11 +165,17 @@ TDataSet* TMiso::create( TDataSet* /* apar */ )
 
 double TMiso::fun( double t )
 {
+  int v;
   if( links->noauto ) 
     return out0;
   if( links->locked ) 
     return out0 = *in_so[0];
-  return out0 = f( t );
+  
+  modifyPrms();
+
+  v = out0 = f( t );
+  prm_mod = 0;
+  return v;
 }
 
 int TMiso::getClassId(void) const 
@@ -210,7 +218,10 @@ int TMiso::do_preRun( int /*run_tp*/, int /*an*/, int /*anx*/,
 int TMiso::fillLinks()
 {
   const double *p;
-  QString iname, soname;
+  double *pp;
+  QString iname, pname, soname, sopname;
+  
+  // ordinary input links
   for( int i=0; i<4; ++i ) {
     in_so[i] = &fake_so;
     iname = "inps" + QString::number(i);
@@ -220,16 +231,59 @@ int TMiso::fillLinks()
       in_so[i] = p;
     }
   }
+
+  // parametric input links
+  max_prm = 0;
+  int flg, onlyFirstPrm;
   for( int i=0; i<4; ++i ) {
     inp_so[i] = &fake_so;
+    inp_prm[i] = &fake_prm;
+    prm_flg[i] = -1;
+    onlyFirstPrm = 0;
     iname = "pinps" + QString::number(i);
+    pname = "pnames" + QString::number(i);
     links->getData( iname, soname );
+    links->getData( pname, sopname );
     p = parent->getDoublePtr( soname );
-    if( p ) {
+    pp = getDoublePrmPtr( sopname, &flg );
+    links->getData( "pflags" + QString::number(i), &onlyFirstPrm );
+    if( flg & efNoRunChange ) // force only-first if param cannot be changed in RT
+      onlyFirstPrm = 1;
+    if( onlyFirstPrm ) 
+      flg |= efOnlyFirst; 
+
+    if( p && pp && ! ( flg & efRO )) {
       inp_so[i] = p;
+      inp_prm[i] = pp;
+      prm_flg[i] = flg;
+      max_prm = i+1;
     }
   }
   return 0;
+}
+
+int TMiso::modifyPrmsPre()
+{
+  for( int i=0; i<max_prm; ++i ) {
+    if( prm_flg[i] == -1  || ! ( prm_flg[i] & efOnlyFirst )  ) { 
+      continue; 
+    }
+    *inp_prm[i] = *inp_so[i];
+    ++prm_mod;
+  }
+  return prm_mod;
+}
+
+int TMiso::modifyPrms()
+{
+  for( int i=0; i<max_prm; ++i ) {
+    if( prm_flg[i] == -1 || ( prm_flg[i] & efOnlyFirst ) ) {
+      continue; 
+    }
+    *inp_prm[i] = *inp_so[i];
+    ++prm_mod;
+  }
+  return prm_mod;
 }
 
 int TMiso::postRun( int good )
@@ -243,6 +297,8 @@ int TMiso::startLoop( int /* acnx */, int /* acny */ )
 {
   state = stateRun;
   out0 = out0_init;
+  modifyPrmsPre();
+  prm_mod = 0;
   return 0;
 }
 

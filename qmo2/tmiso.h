@@ -177,6 +177,12 @@ class TMiso : public TDataSet  {
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** fill links to sources */
    int fillLinks();
+   /** proceed parameters modification before first iteration 
+    * returns number of modified params */
+   int modifyPrmsPre();
+   /** proceed parameters modification in every iteration before fun()
+    * returns number of modified params */
+   int modifyPrms();
    /** description on element */
    PRM_STRING1( descr, efNoRunChange, "description", 
        "Object description", "max=128\nncol=-1");
@@ -212,6 +218,12 @@ class TMiso : public TDataSet  {
    const double* inp_so[4];
    /** pointers to params */
    double* inp_prm[4];
+   /** target param flags */
+   int prm_flg[4];
+   /** maximum (index+1) in parameters - may be gaps */
+   int max_prm;
+   /** parameters modified during run flag */
+   int prm_mod;
    /** data descriptors -- empty -- never be used */ 
    static TDataInfo tmiso_d_i[2];
    /** class decription */

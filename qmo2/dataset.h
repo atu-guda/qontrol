@@ -503,6 +503,9 @@ class TDataSet : public QObject {
     * parmname - try new, w/o ':' */
    virtual const double* getDoublePtr( const QString &nm ) const;
  protected:
+   /** gets pointer to parameter, near to getDoublePrmPtr 
+    * for param mod only - no descend  */
+   double* getDoublePrmPtr( const QString &nm, int *flg );
    /** count nelm, fills hval in d_i  */
    int initHash(void);
    /** parse & assing one elem. returns: 0-ok 1-comment 2-end; <0-error */

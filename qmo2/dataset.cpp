@@ -1364,6 +1364,28 @@ const double* TDataSet::getDoublePtr( const QString &nm ) const
   
 }
 
+double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg )
+{
+  if( nm.isEmpty() )
+    return 0;
+  
+  HolderData *ho = getHolder( nm );
+  
+  if( !ho ) {
+    qDebug( "TDataSet::getDoublePrmPtr: fail to find name \"%s\"",
+	qPrintable( nm ) );
+    return 0;
+  }
+  
+  if( ho->getOldTp() == dtpDouble ) {
+    if( flg )
+      *flg = ho->getFlags();
+    return static_cast<double*>( ho->getPtr() );
+  }
+  
+  return 0;
+}
+
 int TDataSet::saveDatasOld( ostream &os )
 {
   os << getClassId() << '(' << getClassName() << ")={\n";
