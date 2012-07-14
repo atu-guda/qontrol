@@ -130,6 +130,11 @@ QString HolderData::getParm( const QString &name ) const
   return QString();
 }
 
+bool HolderData::isObject( const QString & /*cl_name*/  ) const
+{
+  return false;
+}
+
 // tmp: to remove, use only set/getParm
 void HolderData::setVisName( const QString &av_name ) 
 { 
@@ -692,6 +697,19 @@ HolderObj::~HolderObj()
   obj = 0; ptr = 0;
 }
 
+bool HolderObj::isObject( const QString &cl_name  ) const
+{
+  if( cl_name.isEmpty() ) // any object
+    return true;
+  const QMetaObject *mob = obj->metaObject();
+  while( mob ) {
+    if( cl_name == mob->className() )
+      return true;
+    mob = mob->superClass(); 
+  }
+  return false;
+}
+
 bool HolderObj::set( const QVariant & x )
 {
   return obj->set( x );
@@ -847,6 +865,7 @@ void* TDataSet::getObj( const QString &ename )
   return ho->getPtr();
 }
 
+
 HolderData* TDataSet::getHolder( const QString &oname ) const
 {
   QString ho_name = "_HO_" + oname; 
@@ -903,8 +922,8 @@ int TDataSet::getData( const QString &nm, QVariant &da ) const
     return 1;
   }
 
-  // both part of name exists   TODO:  dont use oldTt!
-  if( ho->getTp() != QVariant::UserType || ho->getOldTp() != dtpObj ) {
+  // both part of name exists
+  if( ho->getTp() != QVariant::UserType || ! ho->isObject() ) {
     qDebug( "TDataSet::getData(Variant): compound name required \"%s\"",
 	qPrintable( first ) );
     return 0;
@@ -973,8 +992,8 @@ int TDataSet::setData( const QString &nm, const QVariant &da )
     return ho->set( da );
   }
 
-  // both part of name exists   TODO:  dont use oldTt!
-  if( ho->getTp() != QVariant::UserType || ho->getOldTp() != dtpObj ) {
+  // both part of name exists
+  if( ho->getTp() != QVariant::UserType || ! ho->isObject() ) {
     qDebug( "TDataSet::setData(Variant): compound name required \"%s\"",
 	qPrintable( first ) );
     return 0;
@@ -1017,7 +1036,7 @@ const double* TDataSet::getDoublePtr( const QString &nm ) const
   }
   
   if( nm_type == 1 ) { // first only
-    if( ho->getOldTp() == dtpObj ) {
+    if( ho->isObject() ) {
       HolderObj *hob= qobject_cast<HolderObj*>(ho);
       return hob->getObj()->getDoublePtr( "out0" );
     }
@@ -1028,7 +1047,7 @@ const double* TDataSet::getDoublePtr( const QString &nm ) const
   }
 
   // both part of name exists
-  if( ho->getOldTp() != dtpObj ) {
+  if( ! ho->isObject() ) {
     return 0;
   }
   HolderObj *hob= qobject_cast<HolderObj*>(ho);
@@ -1177,7 +1196,7 @@ int TDataSet::processElem( istream *is )
       //       nm, qPrintable(ho->getType()), qPrintable( getFullName() ) );
     }
     
-    if( ho->getOldTp() != dtpObj ) { // simple object, TODO: dont use old
+    if( !ho->isObject() ) { // simple object
       //qDebug( "dbg: TDataSet::processElem: simple object %s.%s = \"%s\" ;",
       //        qPrintable( getFullName() ), nm, qPrintable(val) );
       ho->set( val );

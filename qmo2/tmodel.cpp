@@ -460,6 +460,29 @@ int TModel::xy2elnu( int avis_x, int avis_y )/*{{{1*/
   return -1;
 }/*}}}1*/
 
+TMiso* TModel::xy2Miso( int avis_x, int avis_y ) const/*{{{1*/
+{
+  int  ox, oy;
+  TMiso *ob;
+  HolderObj *hob;
+  for(QObject* child : children() ) {  
+    hob = qobject_cast<HolderObj*>( child );
+    if( !hob )
+      continue;
+    if( ! hob->isObject( "TMiso" ) )
+      continue;
+    ob = qobject_cast<TMiso*>( hob->getObj() );
+    if( ! ob )
+      continue;
+    ox = oy = -1;
+    ob->getData( "vis_x", &ox );
+    ob->getData( "vis_y", &oy );
+    if( ox == avis_x && oy == avis_y ) 
+      return ob;
+  }
+  return nullptr;
+}/*}}}1*/
+
 int TModel::getNMiso(void) const/*{{{1*/
 {
   return n_el;

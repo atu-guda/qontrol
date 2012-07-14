@@ -83,6 +83,8 @@ class TModel : public TDataContainer  {
   virtual int ord2elnu( int aord ) const;
   /** visual coords -> TMiso number. @returns: <0 - not found, >=0 -- elnu */
   virtual int xy2elnu( int avis_x, int avis_y ); /* must be const. but.. */
+  /** visual coords -> TMiso @returns: nullptr - not found */
+  TMiso* xy2Miso( int avis_x, int avis_y ) const; 
   /** returns number of TMiso ( max value of elnu + 1 ) */
   virtual int getNMiso(void) const;
   /** returns ptr to TMiso by elnu */

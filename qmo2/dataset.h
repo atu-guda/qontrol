@@ -73,6 +73,8 @@ class HolderData : public QObject {
   QVariant::Type getTp() const { return tp; };
   int getOldTp() const { return old_tp; };
   int getOldSubTp() const { return old_subtp; };
+  /** is holded value is object of given type or child */
+  virtual bool isObject( const QString &cl_name = QString() ) const;
   void setFlags( int a_flags ) { flags = a_flags; };
   int getFlags() const { return flags; };
   void setMinMax( double a_min, double a_max ) { v_min = a_min; v_max = a_max; };
@@ -332,6 +334,7 @@ class HolderObj : public HolderData {
     const QString &a_descr = QString(),
     const QString &a_extra  = QString() );
   virtual ~HolderObj();
+  virtual bool isObject( const QString &cl_name = QString() ) const;
   virtual bool set( const QVariant & x );
   virtual QVariant get() const;
   virtual void post_set();

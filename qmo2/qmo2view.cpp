@@ -40,7 +40,8 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   QSize p_size = parent->size();
   root = doc->getRoot();
   model = doc->getModel();
-  sel = mark = -1; sel_x = sel_y = 0; level = 0;
+  sel = mark = -1; sel_x = sel_y = 0; level = 0; 
+  selObj = nullptr; markObj = nullptr;
 
   setAttribute(Qt::WA_DeleteOnClose);
   
@@ -136,17 +137,17 @@ int QMo2View::checkState( CheckType ctp )
   switch( ctp ) {
     case validCheck: break;
     case selCheck: 
-		     if( sel < 0 ) 
+		     if( !selObj ) 
 		       msg = "You must select object to do this"; 
 		     break;
     case linkToCheck:
-		     if( sel < 0 || mark < 0 || level < 0  || level >=4 )
+		     if( !selObj || !markObj || level < 0  || level >=4 )
 		       msg = "You need selected and marked objects to link";
 		     break;
-    case noselCheck: if( sel >= 0 )
+    case noselCheck: if( selObj != nullptr )
 		       msg = "You heed empty sell to do this";
 		     break;
-    case moveCheck: if( sel >= 0 || mark < 0 )
+    case moveCheck: if( selObj != nullptr || !markObj )
 		      msg = "You need marked object and empty cell to move";
 		    break;
     case doneCheck:
@@ -190,6 +191,7 @@ void QMo2View::changeSel( int x, int y, int rel )
 {
   int elnu;
   TMiso *ob;
+  selObj = nullptr;
   switch( rel ) {
     case 0: sel_x = x; sel_y = y; break;
     case 1: sel_x += x; sel_y += y; break;
@@ -211,6 +213,10 @@ void QMo2View::changeSel( int x, int y, int rel )
   if( sel_x < 0 ) sel_x = 0; 
   if( sel_y < 0 ) sel_y = 0;
   sel = model->xy2elnu( sel_x, sel_y );
+  ob = model->xy2Miso( sel_x, sel_y );
+  if( ob ) {
+    selObj = ob;
+  }
   QPoint seco = sview->getSelCoords();
   scrollArea->ensureVisible( seco.x(), seco.y() );
   emit viewChanged();
@@ -332,11 +338,7 @@ void QMo2View::delElm()
   if( ! checkState( selCheck ) )
     return;	  
   
-  TMiso *ob = model->getMiso( sel );
-  if( ob == 0 )
-    return;
-  
-  QString oname = ob->objectName();
+  QString oname = selObj->objectName();
 
   k = QMessageBox::information( this, PACKAGE " delete confirmation",
        QString("Do you really want to delete element \"") 
@@ -347,7 +349,8 @@ void QMo2View::delElm()
     model->delElem( sel );
     if( sel == mark )
       mark = -1;
-    sel = model->xy2elnu( sel_x, sel_y );
+
+    changeSel( 0, 0, 1 ); // update sel
     emit viewChanged();
   };
 }
@@ -356,10 +359,7 @@ void QMo2View::editElm()
 {
   if( ! checkState( selCheck ) )
     return;	  
-  TMiso *ob = model->getMiso( sel );
-  if( ob == 0 )
-    return;
-  DataDialog *dia = new DataDialog( *ob, this );
+  DataDialog *dia = new DataDialog( *selObj, this );
   int rc = dia->exec();
   delete dia;
   
@@ -377,14 +377,10 @@ void QMo2View::linkElm()
   if( ! checkState( selCheck ) )
     return;	  
 
-  TMiso *ob = model->getMiso( sel );
-  if( ob == 0 )
-    return;
-
-  el = static_cast<TElmLink*>( ob->getObj( "links" ) );
+  el = static_cast<TElmLink*>( selObj->getObj( "links" ) );
   if( el == 0 ) {
     qDebug( "ERR: fail to find links for object %s", 
-	qPrintable( ob->getFullName() ) );
+	qPrintable( selObj->getFullName() ) );
     return ;
   }
   DataDialog *dia = new DataDialog( *el, this );
@@ -398,24 +394,24 @@ void QMo2View::linkElm()
 
 void QMo2View::qlinkElm()
 {
-  TMiso *ob, *toob;
+  TMiso *toob;
   int k;
   QString toname;
   QString oldlink;
   if( ! checkState( linkToCheck ) )
     return;	  
 
-  ob = model->getMiso( sel ); toob = model->getMiso( mark );
-  if( ob == 0 || toob == 0 )
+  toob = model->getMiso( mark );
+  if( selObj == nullptr || toob == nullptr )
     return;
   toname = toob->objectName();
 
   QString lnkname( "links.inps" );
   lnkname += QString::number( level );
-  k = ob->getData( lnkname, oldlink );
+  k = selObj->getData( lnkname, oldlink );
   if( !k )
     return;
-  k = ob->setData( lnkname, toname );
+  k = selObj->setData( lnkname, toname );
   model->reset(); model->setModified();
   emit viewChanged();
 }
@@ -423,48 +419,43 @@ void QMo2View::qlinkElm()
 
 void QMo2View::qplinkElm()
 {
-  TMiso *ob, *toob;
+  TMiso *toob;
   int k;
   QString oldlink;
   if( ! checkState( linkToCheck ) )
     return;	  
 
-  ob = model->getMiso( sel ); toob = model->getMiso( mark );
-  if( ob == 0 || toob == 0 )
+  toob = model->getMiso( mark );
+  if( !selObj || !toob  )
     return;
   QString toname = toob->objectName();
 
   QString lnkname( "links.pinps" );
   lnkname += QString::number( level );
-  k = ob->getData( lnkname, oldlink );
+  k = selObj->getData( lnkname, oldlink );
   if( !k  || ! oldlink.isEmpty() )
     return;
-  k = ob->setData( lnkname, toname );
+  k = selObj->setData( lnkname, toname );
   model->reset(); model->setModified();
   emit viewChanged();
 }
 
 void QMo2View::unlinkElm()
 {
-  TMiso *ob;
   int k;
   if( ! checkState( linkToCheck ) )
     return;	  
   
-  ob = model->getMiso( sel );
-  if( ob == 0 )
-    return;
-
   QString lnkname;
   QString none("");
   for( k=0; k<4; k++ ) {
     lnkname = "links.inps" + QString::number(k);
-    ob->setData( lnkname, none );
+    selObj->setData( lnkname, none );
   };
 
   for( k=0; k<4; k++ ) {
     lnkname = "links.pinps" + QString::number(k);
-    ob->setData( lnkname, none );
+    selObj->setData( lnkname, none );
   };
   model->reset(); model->setModified();
   emit viewChanged();
@@ -472,17 +463,13 @@ void QMo2View::unlinkElm()
 
 void QMo2View::lockElm()
 {
-  TMiso *ob;
   int lck;	
   if( ! checkState( selCheck ) )
     return;	  
-  ob = model->getMiso( sel );
-  if( ob == 0 )
-    return;
   
-  ob->getData( "links.locked", &lck );
+  selObj->getData( "links.locked", &lck );
   lck = !lck;
-  ob->setData( "links.locked", lck );
+  selObj->setData( "links.locked", lck );
   
   model->reset();
   model->setModified();
@@ -491,16 +478,12 @@ void QMo2View::lockElm()
 
 void QMo2View::ordElm()
 {
-  TMiso *ob;
   bool ok;
   int new_ord, old_ord;	
   if( ! checkState( selCheck ) )
     return;	  
-  ob = model->getMiso( sel );
-  if( ob == 0 )
-    return;
   old_ord = -1;
-  ob->getData( "ord", &old_ord );
+  selObj->getData( "ord", &old_ord );
   new_ord = QInputDialog::getInt(this, "New element order", 
       "Input new element order", 
       old_ord, 0, 2147483647, 1, &ok );
@@ -513,6 +496,7 @@ void QMo2View::ordElm()
 void QMo2View::markElm()
 {
   mark = sel;
+  markObj = selObj;
   emit viewChanged();
 }
 
@@ -526,7 +510,6 @@ void QMo2View::moveElm()
 
 void QMo2View::infoElm()
 {
-  TMiso *ob; 
   QString cbuf;
   QDialog *dia; 
   QPushButton *bt_ok;
@@ -535,12 +518,9 @@ void QMo2View::infoElm()
   QString qs;
   if( ! checkState( selCheck ) )
     return;	  
-  ob = model->getMiso( sel );
-  if( ob == 0 )
-    return;
   
   dia = new QDialog( this );
-  dia->setWindowTitle( QString( PACKAGE ": Structure of ") + ob->objectName() );
+  dia->setWindowTitle( QString( PACKAGE ": Structure of ") + selObj->objectName() );
 
   lay = new QVBoxLayout();
 
@@ -549,7 +529,7 @@ void QMo2View::infoElm()
   hlabels << "Name" << "Type" << "Value" << "Descr" << "Target"<< "Flags";
   tv->setHorizontalHeaderLabels( hlabels );
   
-  QObjectList childs = ob->children();
+  QObjectList childs = selObj->children();
   
   int i = 0;
   for( auto o :  childs ) {
@@ -597,18 +577,15 @@ void QMo2View::testElm1()
   QString buf;
   if( ! checkState( selCheck ) )
     return;	  
-  TMiso *ob = model->getMiso( sel );
-  if( ob == 0 )
-    return;
-  nelm = ob->getN();
+  nelm = selObj->getN();
   
   QDialog *dia = new QDialog( this );
-  dia->setWindowTitle( QString( PACKAGE ": test1 ") + ob->objectName() );
+  dia->setWindowTitle( QString( PACKAGE ": test1 ") + selObj->objectName() );
   
-  buf = ob->toString();
+  buf = selObj->toString();
   buf += "# nelm= " + QString::number( nelm ) + "\n";
 
-  //QObjectList childs = ob->children();
+  //QObjectList childs = selObj->children();
   //for( QObjectList::iterator o = childs.begin(); o != childs.end(); ++o ) {
   //  QObject *xo = *o;
   //  buf += QString(xo->metaObject()->className()) + " " + xo->objectName();
@@ -648,8 +625,7 @@ void QMo2View::testElm2()
 {
   if( ! checkState( selCheck ) )
     return;	  
-  TMiso *ob = model->getMiso( sel );
-  if( ob == 0 )
+  if( selObj == 0 )
     return;
   return;
 }
@@ -660,7 +636,6 @@ void QMo2View::testElm2()
 void QMo2View::newOut()
 {
   int rc;
-  TMiso *el;
   QString onameq, enameq;
   QDialog *dia; QPushButton *bt_ok, *bt_can;
   QLineEdit *oname_ed, *ename_ed; QLabel *lab1, *lab2;
@@ -668,9 +643,9 @@ void QMo2View::newOut()
   if( ! checkState( validCheck ) )
     return;
   
-  if( sel >=0 && (el = model->getMiso( sel )) != nullptr )
+  if( selObj  )
   {
-    enameq = el->objectName();
+    enameq = selObj->objectName();
     onameq = QString("out_") + QString(enameq);
   } else {
     enameq = ":t";

@@ -33,6 +33,8 @@ class TModel;
 class QStatusModel;
 class QScrollArea;
 
+class TMiso;
+
 /**
  * This class provides an base for QMo2Doc view.
  */
@@ -152,6 +154,12 @@ class QMo2View : public QWidget
    TModel *model;
    TRootData *root;
    int sel, sel_x, sel_y, mark, level;
+   /** prt to selected object or nullptr */
+   TMiso *selObj;
+   /** prt to marked object or nullptr */
+   TMiso *markObj;
+   /** name of marked element */
+   QString markName;
    /** help string */
    static const char helpstr[];
 };
