@@ -66,10 +66,6 @@ class TModel : public TDataContainer  {
   virtual int nextSteps( int csteps );
   /** terminates run: 0 - normal, 1.. - break */
   virtual int stopRun( int reason );
-  /** gets input value by number >=0 -- elems, <0 -special */
-  virtual double xout( int inu );
-  /** gets input value by name. Some names may not have int num, but correct. */
-  virtual double xout( const char *iname );
   /** function to call from elem.f() to signal something */
   virtual int fback( int code, int aord, const char *tdescr );
   

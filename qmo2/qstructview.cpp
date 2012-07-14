@@ -386,31 +386,28 @@ void QStructView::drawAll( QPainter &p )
 
 void QStructView::mousePressEvent( QMouseEvent *me )
 {
-  int h, w, nh, nw, ex, ey, x, y, elnu;
+  int h, w, nh, nw, ex, ey, x, y;
   QMenu *menu;
   TMiso *ob = 0;
   QString elmname( "?bad?" );
-  double outval;
+  double outval = 0;
   QString title;
   h = height(); w = width(); nh = h / grid_sz - 1; nw = w / grid_sz - 1;
   x = me->x(); y = me->y(); 
   ex = ( x - lm ) / grid_sz; ey = ( y - tm ) / grid_sz;
   if( ex >= 0 && ex <= nw && ey >=0 && ey <= nh ) {
     mainview->changeSel( ex, ey, 0 );
-    elnu = model->xy2elnu( ex, ey );
-    if( elnu >=0 ) {
-      ob = model->getMiso( elnu );
-      if( ob != 0 ) {
-	elmname = ob->objectName();
-	if( elmname.isEmpty() )
-	  elmname = "?unknown?";
-      };
-      title = elmname;
-      if( model->getState() > 1 ) {
-	outval = model->xout( elnu );
-	title += QString( "(" ) + QString::number( outval ) + QString( ")" );
-      }
+    ob = model->xy2Miso( ex, ey );
+    if( ob ) {
+      elmname = ob->objectName();
+      ob->getData( "out0", &outval );
+      if( elmname.isEmpty() )
+	elmname = "?unknown?";
     };
+    title = elmname;
+    if( model->getState() > 1 ) {
+      title += QString( "(" ) + QString::number( outval ) + QString( ")" );
+    }
     switch( me->button() ) {
       case Qt::LeftButton:  break;
       case Qt::RightButton:  

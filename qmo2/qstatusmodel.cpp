@@ -77,7 +77,7 @@ void QStatusModel::update()
 {
   static const char* modChar[] = { " ", "+", "#", "*", "?", "." };
   QString ob_descr, ob_nm_tp;
-  int mod, stat, sel;
+  int mod, stat;
   TModel *model;
   TMiso *ob;
   double val;
@@ -86,9 +86,7 @@ void QStatusModel::update()
   l_name->setText( "." );  l_desc->setText( "." );  l_val->setText( "" );
   model = mainview->getModel();
   if( model != 0 ) {
-    sel = mainview->getSel();
-    ob = model->getMiso( sel );
-    s_nums.sprintf( "%d[%d;%d] %d", sel, 
+    s_nums.sprintf( "[%d;%d] %d",
 	            mainview->getSelX(), mainview->getSelY(), 
 	           model->getNMiso() );
     l_nums->setText( s_nums );
@@ -96,14 +94,15 @@ void QStatusModel::update()
     l_stat->setText( getStateString( stat ) );
     mod = model->getModified();
     l_mod->setText( modChar[mod] );
+    ob = mainview->getSelObj();
     if( ob != 0 ) {
-      ob_nm_tp = ob->objectName();
-      ob_nm_tp += "  (" + QString::fromLocal8Bit( ob->getClassName() ) + ")";
+      ob_nm_tp = ob->objectName()
+               % "  (" % L8B( ob->getClassName() ) % ")";
       l_name->setText( ob_nm_tp );
       ob->getData( "descr", ob_descr );
       l_desc->setText( ob_descr );
       if( stat > 1 ) {
-        val = model->xout( sel );
+	ob->getData( "out0", &val );
         l_val->setText( QString::number( val, 'g', 12 ) );
       };
     };

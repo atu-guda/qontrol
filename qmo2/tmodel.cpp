@@ -314,50 +314,6 @@ double* TModel::getVars(void)/*{{{1*/
   return &(vars[0]); // TODO: const vector<double>&
 }/*}}}1*/
 
-double TModel::xout( int inu )/*{{{1*/
-{
-  int k;
-  if( inu >= n_el )
-    return 0;
-  if( inu >= 0 )
-    return outs[inu];
-  if( inu > -10 ) return 0; // bad or no access by number
-  switch( inu ) {
-   case -10: return t;
-   case -11: return tdt;
-   case -12: return prm0;
-   case -13: return prm1;	    
-   case -14: return prm2;
-   case -15: return prm3;
-   case -16: return nn;	    
-   case -17: return nl1;	    
-   case -18: return nl2;	    
-   case -19: return ii;	    
-   case -20: return il1;	    
-   case -21: return il2;
-   case -22: return tt;
-   case -23: return M_SQRT2;
-   case -24: return M_SQRT1_2;
-   case -25: return 1;
-   case -26: return M_PI;
-   case -27: return M_E;
-   case -28: return rtime;
-  };
-  k = -100-inu;
-  if( k >=0 && k < MODEL_NVAR ) 
-    return vars[ k ];
-  return 0;
-}/*}}}1*/
-
-double TModel::xout( const char *iname )/*{{{1*/
-{
-  int i;
-  i = oname2elnu( iname );
-  if( i != -3  &&  i != -4 )
-    return xout( i );
-  return 0;
-}/*}}}1*/
-
 int TModel::oname2elnu( const char *iname ) const/*{{{1*/
 {
   int i, j, l, idx;

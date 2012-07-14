@@ -136,6 +136,8 @@ class QMo2View : public QWidget
    int getSelY(void) const { return sel_y; };
    /** returns number of selected element or -1 if none */
    int getSel(void) const { return sel; };
+   /** returns ptr to selected element or nullptr if none */
+   TMiso* getSelObj(void) const { return selObj; };
    /** returns number of marked element or -1 if none */
    int getMark(void) const { return mark; };
    /** returns level for aux objects selection */
