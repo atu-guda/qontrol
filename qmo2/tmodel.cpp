@@ -530,6 +530,8 @@ int TModel::insOut( const QString &outname, const QString &objname )/*{{{1*/
   QString lbl = objname;
   if( lbl.left(4) == "out_" )
     lbl.remove(0,4);
+  if( lbl.left(1) == ":" )
+    lbl.remove(0,1);
 
   ob->setData( "label", lbl );
   

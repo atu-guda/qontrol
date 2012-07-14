@@ -659,8 +659,8 @@ void QMo2View::testElm2()
 
 void QMo2View::newOut()
 {
-  int idx, rc;
-  const TDataInfo *di;
+  int rc;
+  TMiso *el;
   QString onameq, enameq;
   QDialog *dia; QPushButton *bt_ok, *bt_can;
   QLineEdit *oname_ed, *ename_ed; QLabel *lab1, *lab2;
@@ -668,10 +668,9 @@ void QMo2View::newOut()
   if( ! checkState( validCheck ) )
     return;
   
-  if( sel >=0 && (idx = model->elnu2idx( sel )) >=0
-      && (di = model->getDataInfo( idx )) != 0 )
+  if( sel >=0 && (el = model->getMiso( sel )) != nullptr )
   {
-    enameq = di->name;
+    enameq = el->objectName();
     onameq = QString("out_") + QString(enameq);
   } else {
     enameq = ":t";

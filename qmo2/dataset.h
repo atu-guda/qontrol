@@ -426,41 +426,15 @@ class TDataSet : public QObject {
    // virtual const TDataSet* getObjPtr( const QString &nm ) const;
    /** find holder for object */
    HolderData* getHolder( const QString &oname ) const;
-   /** return element description or 0 */
-   virtual const TDataInfo* getDataInfo( int ni ) const;
    /** data index or -1 if not found  */
    virtual int getDataIdx( const char *nm ) const;
 
-   /** read integer data from element by index, convert if need and allowed */
-   virtual int getDataII( int ni, int *da, int allowConv );
-   /** read integer data from element by name, convert if need and allowed */
-   virtual int getDataSI( const char *nm, int *da, int allowConv );
-   /** read double data from element by index, convert if need and allowed */
-   virtual int getDataID( int ni, double *da, int allowConv );
-   /** read double data from element by name, convert if need and allowed */
-   virtual int getDataSD( const char *nm, double *da, int allowConv );
-   /** read string data from element by index, convert if need and allowed */
-   virtual int getDataIS( int ni, QString *da, int maxlen, int allowConv );
-   /** read string data from element by name, convert if need and allowed */
-   virtual int getDataSS( const char *nm, QString *da, int maxlen, int allowConv );
    /** new functions to read datas */
    int getData( const QString &nm, QVariant &da ) const;
    int getData( const QString &nm, int *da ) const;
    int getData( const QString &nm, double *da ) const;
    int getData( const QString &nm, QString &da ) const;
 
-   /** store integer data to element by number, convert if need */
-   virtual int setDataII( int ni, int da, int allowConv );
-   /** store integer data to element by name, convert if need */
-   virtual int setDataSI( const char *nm, int da, int allowConv );
-   /** store double data to element by number, convert if need */
-   virtual int setDataID( int ni, double da, int allowConv );
-   /** store double data to element by name, convert if need */
-   virtual int setDataSD( const char *nm, double da, int allowConv );
-   /** store string data to element by number, convert if need */
-   virtual int setDataIS( int ni, const QString *da, int allowConv );
-   /** store string data to element by name, convert if need */
-   virtual int setDataSS( const char *nm, const QString *da, int allowConv );
    /** new function to store datas: single: auto convert to QVariant */
    int setData( const QString &nm, const QVariant &da );
    
