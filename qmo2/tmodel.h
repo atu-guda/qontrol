@@ -238,11 +238,11 @@ class TModel : public TDataContainer  {
   /** signature to check from plot painters, etc... */
   PRM_INT1( sgnt, efInner, "sgnt", "signature to check", "" );
   /** constants: todo: separate object */
-  PRM_DOUBLE1( sqrt2, efInner, "sqrt(2)", "\\sqrt{2}", "" );
-  PRM_DOUBLE1( sqrt1_2, efInner, "sqrt(1/2)", "\\sqrt{1/2}", "" );
+  PRM_DOUBLE1( m_sqrt2, efInner, "sqrt(2)", "\\sqrt{2}", "" );
+  PRM_DOUBLE1( m_sqrt1_2, efInner, "sqrt(1/2)", "\\sqrt{1/2}", "" );
   PRM_DOUBLE1( one, efInner, "1", "1", "" );
-  PRM_DOUBLE1( PI, efInner, "\\Pi", "M_PI", "" );
-  PRM_DOUBLE1( E, efInner, "e", "base of natural logarifm", "" );
+  PRM_DOUBLE1( m_PI, efInner, "\\Pi", "M_PI", "" );
+  PRM_DOUBLE1( m_E, efInner, "e", "base of natural logarifm", "" );
 
   /** total number of iterations */
   PRM_INT1( n_tot, efInner, "n_tot", "total number of iterations", "" );

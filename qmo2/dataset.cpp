@@ -1069,8 +1069,8 @@ int TDataSet::processElem( istream *is )
   if( is->fail() ) return -1;
   k = typeOfLine( str, MAX_INPUTLEN, &l, nm, &val );
   if( k == ltpEnd ) {
-    //qDebug( "dbg: TDataSet::processElem: ltpEnd in %s:\"%s\"", 
-    //  qPrintable(getFullName()), str );
+    qDebug( "dbg: TDataSet::processElem: ltpEnd in %s:\"%s\"", 
+      qPrintable(getFullName()), str );
     return k;
   }
   if( k == ltpUnk ) {
@@ -1083,9 +1083,9 @@ int TDataSet::processElem( istream *is )
     
     HolderData *ho = getHolder( nm );
     if( !ho ) { // name not found
-      //qDebug( "dbg: TDataSet::processElem: unknown name:\"%s\"=\"%s\" in %s %s;",
-      //     nm, qPrintable(val), 
-      //     getClassName(), qPrintable( getFullName() ) );
+      qDebug( "dbg: TDataSet::processElem: unknown name:\"%s\"=\"%s\" in %s %s;",
+           nm, qPrintable(val), 
+           getClassName(), qPrintable( getFullName() ) );
       if( ! allow_add ) {
         return ltpComment;
       }
@@ -1102,8 +1102,8 @@ int TDataSet::processElem( istream *is )
 	return ltpComment;
       }
       ho = getHolder( nm );
-      //qDebug( "dbg: TDataSet::processElem: created %s %s ;",
-      //       qPrintable(cl_name), nm );
+      qDebug( "dbg: TDataSet::processElem: created %s %s ;",
+             qPrintable(cl_name), nm );
     } else {
       //qDebug( "dbg: TDataSet::processElem: exists %s type %s in %s;",
       //       nm, qPrintable(ho->getType()), qPrintable( getFullName() ) );

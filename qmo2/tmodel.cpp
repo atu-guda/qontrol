@@ -52,11 +52,11 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   rtime = t = 0; tdt = tt / nn; 
   prm0 = prm1 = prm2 = prm3 = 0; start_time = 0; 
   prm0s = prm1s = 0.1; prm0d = prm1d = 0.01; sgnt = -3;
-  sqrt2 = sqrt(2.0);
-  sqrt1_2 = sqrt(0.5);
+  m_sqrt2 = sqrt(2.0);
+  m_sqrt1_2 = sqrt(0.5);
   one = 1.0;
-  PI = M_PI;
-  E = M_E;
+  m_PI = M_PI;
+  m_E = M_E;
   const int ELM_RES = 64; const int OUT_RES = 32;
   v_el.reserve( ELM_RES ); v_ord.reserve( ELM_RES ); v_flg.reserve( ELM_RES );
   v_out.reserve( OUT_RES ); 
