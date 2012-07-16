@@ -223,12 +223,64 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
     m_filename = "";
     return false;
   }
-  m_filename = filename;
-  loaded_as_old = false;
+  QDomElement domroot = dd.documentElement();
+  QDomElement obj_root;
   
-  // TODO: real actions
+  QDomNode cnode = domroot.firstChild();
+  
+  while( ! cnode.isNull() ) {
+    if ( cnode.isElement()) {
+      QDomElement ee = cnode.toElement();
+      QString elname = ee.attribute( "name" );
+      QString tagname = ee.tagName();
+      qDebug( "Element tagname: \"%s\" name: \"%s\"",  
+	  qPrintable(tagname), qPrintable(elname) );
+      if( elname == "root" || tagname == "obj" ) {
+	obj_root = ee;
+	break;
+      }
+      QMessageBox::critical( QMo2Win::qmo2win, tr( PACKAGE ),
+	  tr("Bad first element: %1 %2 ").arg(tagname).arg(elname) );
+      return false;
+    }
+    cnode = cnode.nextSibling();
+  }
 
-  return false; // FOR now
+  m_filename = filename;
+
+  if( rootdata != 0 )
+    delete rootdata;
+  rootdata = new TRootData( 0 );
+  rootdata->setObjectName( "root" );
+
+  model = 0;
+  bool read_ok = rootdata->fromDom( obj_root, errstr );
+  if( ! read_ok ) {
+    QMessageBox::critical( 0, "openDocument Error:",
+       QString("Fail parse file: ") + filename + " : " + errstr,
+       QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
+    return false;
+  }
+  
+  model = static_cast<TModel*> (rootdata->getObj( "model", "TModel" )); 
+  if( model ) {
+    loaded_as_old = true; 
+  } else if ( (model = static_cast<TModel*>(rootdata->getObj( "schems.main", "TModel" ))) != nullptr ) {
+    loaded_as_old = false;
+    // and many more actions
+  } else {
+    delete rootdata; rootdata = 0; model = 0; 
+    QMessageBox::critical( 0, "openDocument Error:",
+       QString("Fail to detect model in file: ") + filename,
+       QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
+    return false;
+  };
+  model->reset();
+  m_filename = filename;
+  m_title = QFileInfo(filename).fileName();
+  is_nonamed = false;
+
+  return true; 
 }
 
 
@@ -241,7 +293,7 @@ bool QMo2Doc::saveDocument(const QString &filename )
 
   if( ! loaded_as_old ) {
     QMessageBox::critical( 0, "saveDocument Error",
-        QString("New format used fo this model. Cannot save os old 'mo2' file."),
+        QString("New format used fo this model. Cannot save as old 'mo2' file."),
 	QMessageBox::Ok, QMessageBox::NoButton,  QMessageBox::NoButton );
     return false;
   }
@@ -290,11 +342,7 @@ bool QMo2Doc::saveDocumentXML( const QString &filename )
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
   QString textData;
-  if( loaded_as_old ) {
-    textData = makeXMLold();
-  } else {
-    textData = makeXML();
-  }
+  textData = makeXML();
   out << textData;
 
   QApplication::restoreOverrideCursor();
@@ -306,9 +354,9 @@ bool QMo2Doc::saveDocumentXML( const QString &filename )
   return true; // for now
 }
 
-QString QMo2Doc::makeXMLold() const
+QString QMo2Doc::makeXML() const
 {
-  if( ! rootdata || ! model )
+  if( ! rootdata  )
     return QString();
 
   QDomDocument dd("QontrolLabML");
@@ -318,59 +366,14 @@ QString QMo2Doc::makeXMLold() const
   QDomElement dd_root = dd.createElement("QontrolLabML");
   dd.appendChild( dd_root );
 
-  QDomElement de = rootdata->toDom( dd );
-  // QDomElement de = model->toDom( dd );
-  dd_root.appendChild( de );
-  
-  // defaults
-  //QDomElement defs = dd.createElement("defaults");
-
-  //QDomElement def_model = dd.createElement( "def_model" );
-  //QDomText def_model_name = dd.createTextNode( "main" );
-  //def_model.appendChild( def_model_name );
-  //defs.appendChild( def_model );
-
-  //QDomElement def_exp = dd.createElement( "def_exp" );
-  //QDomText def_exp_name = dd.createTextNode( "run1" );
-  //def_exp.appendChild( def_exp_name );
-  //defs.appendChild( def_exp );
-  
-  // Experiments
-  //QDomElement exps = dd.createElement("experimemts");
-  //dd_root.appendChild( exps );
-
-  //QDomElement exp1 = dd.createElement("experimemt");
-  //exps.appendChild(exp1);
-  //exp1.setAttribute( "name", "run1");
-  // TODO: data from model
-  //QDomText te1a = dd.createTextNode("run1 data will be here");
-  //exp1.appendChild(te1a);
-
-  //QDomElement schems = dd.createElement("schems");
-  //dd_root.appendChild( schems );
-  
-  //QDomElement sch1 = dd.createElement("sch");
-  //sch1.setAttribute( "name", "main");
-  // TODO: data from model
-  //schems.appendChild(sch1);
-  
-  //dd_root.appendChild( defs );
-  
+  if( rootdata ) { 
+    QDomElement de = rootdata->toDom( dd );
+    dd_root.appendChild( de );
+  }
   
   return dd.toString();
 }
 
-QString QMo2Doc::makeXML() const
-{
-  if( ! rootdata )
-    return QString();
-  
-  QDomDocument dd("QontrolLabML");
-  QDomNode pre_node = dd.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
-  dd.insertBefore( pre_node, dd.firstChild() );
-  // TODO: real work
-  return dd.toString();
-}
 
 void QMo2Doc::deleteContents()
 {

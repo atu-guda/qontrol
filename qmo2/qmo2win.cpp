@@ -964,15 +964,7 @@ void QMo2Win::slotFileSaveXMLAs()
     if( ! pfn.contains('.') )
       fn += ".qol";
     fi.setFile( fn );
-    if( fi.exists () && 
-	QMessageBox::Yes != 
-	QMessageBox::question( this, "Confirm overwrite", 
-	  QString("File %1 already exists.\nOverwrite?").arg(fn),
-	  QMessageBox::Yes, QMessageBox::No ) ) 
-    {
-       statusBar()->showMessage( tr( "Ready." ) );
-       return;
-    }
+    
     QMo2Doc* doc = m->getDocument();
     if( ! doc->saveDocumentXML( fn ) ) {
        QMessageBox::critical ( this, 

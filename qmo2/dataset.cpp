@@ -781,8 +781,10 @@ TDataSet* TDataSet::getObj( const QString &ename, const QString &cl_name )
     return nullptr;
   }
   if( ! ho->isObject( cl_name ) ){
-    qDebug( "ERR: TDataSet::getObj: element \"%s\" has type \"%s\", need \"%s\"",
-	qPrintable(ename), qPrintable(ho->getType()), qPrintable(cl_name) );
+    qDebug( "ERR: TDataSet::getObj: element \"%s\" in %s "
+	    "has type \"%s\", need \"%s\"",
+	qPrintable(ename), qPrintable(getFullName()),
+	qPrintable(ho->getType()), qPrintable(cl_name) );
     return nullptr;
   }
   HolderObj *hob = qobject_cast<HolderObj*>(ho);
@@ -1277,10 +1279,10 @@ QDomElement TDataSet::toDom( QDomDocument &dd ) const
   QObjectList childs = children();
   for( auto o :  childs ) {
     QObject *xo = o;
-    qDebug( "debug: TDataSet::toDom type: %s name: %s",
-	qPrintable( xo->metaObject()->className() ),
-	qPrintable( xo->objectName() )
-    );
+    //qDebug( "debug: TDataSet::toDom type: %s name: %s",
+    // 	qPrintable( xo->metaObject()->className() ),
+    // 	qPrintable( xo->objectName() )
+    //);
     if( xo->inherits("HolderData" )) {
       HolderData *ho = qobject_cast<HolderData*>(xo);
       if( !ho )
@@ -1294,6 +1296,87 @@ QDomElement TDataSet::toDom( QDomDocument &dd ) const
   }
   
   return de;
+}
+
+static QString getDomText( QDomNode &p )
+{
+  QString r;
+  for( QDomNode no = p.firstChild(); !no.isNull() ; no = no.nextSibling() ) {
+    if ( ! no.isText() ) 
+      continue;
+    QDomText t = no.toText();
+    r += t.data();
+  }
+  return r;
+}
+
+bool TDataSet::fromDom( QDomElement &de, QString &errstr )
+{
+  for( QDomNode no = de.firstChild(); !no.isNull() ; no = no.nextSibling() ) {
+    
+    if ( ! no.isElement() ) 
+      continue;
+    
+    QDomElement ee = no.toElement();
+    QString elname = ee.attribute( "name" );
+    QString tagname = ee.tagName();
+    //qDebug( "dbg: TDataSet::fromDom: obj: %s tag: \"%s\" name: \"%s\"",  
+    //  qPrintable(getFullName()), qPrintable(tagname), qPrintable(elname) );
+    
+    if( tagname == "obj" ) {  // ------------------------------- object
+      QString cl_name = ee.attribute("otype");
+      HolderData *ho = getHolder( elname );
+      if( ho && ! ho->isObject() ) {
+        errstr = QString("TDataSet::fromDom: elem: \"%1\" is not a element: \"%2\"")
+	         .arg(elname).arg(tagname); 
+	return false;
+      }
+      if( !ho ) { // name not found
+	if( ! allow_add ) {
+	  qDebug( "WARN: TDataSet::fromDom: creating disallowed in: \"%s\"",
+		   qPrintable( objectName() ) );
+	  continue;
+	}
+	if( ! add_obj( cl_name, elname ) ) {
+	  errstr = QString("TDataSet::fromDom: fail to create obj %1 %2 ")
+		   .arg(cl_name).arg(elname); 
+	  return false;
+	}
+      }
+      ho = getHolder( elname );
+      if( !ho || !ho->isObject( cl_name ) ) {
+	errstr = QString("TDataSet::fromDom: fail to find created obj %1 %2 ")
+		 .arg(cl_name).arg(elname); 
+	return false;
+      }
+      HolderObj *hob = qobject_cast<HolderObj*>(ho);
+      TDataSet *ob = hob->getObj();
+      if( ! ob->fromDom( ee, errstr ) ) {
+	return false;
+      }
+    
+    } else if( tagname == "param" ) {  // ---------------- simple param
+      HolderData *ho = getHolder( elname );
+      if( !ho ) {       //  TODO: create param dyn, if allowed
+	qDebug( "WARN: TDataSet::fromDom: unknown param: \"%s\"",
+		 qPrintable(elname) );
+	continue;
+      }
+      if( ho->isObject() ) {
+	errstr = QString("TDataSet::fromDom: param %1 is a element type %2 ")
+		 .arg(elname).arg(ho->getType()); 
+	return false;
+      }
+      ho->set( getDomText(ee) );
+
+    } else { // ----------- unknown element
+      errstr = QString("TDataSet::fromDom: bad element %1 %2 ")
+	       .arg(tagname).arg(elname); 
+      return false;
+    }
+  }
+
+  return true;
 }
 
 void TDataSet::check_guard() const

@@ -438,6 +438,7 @@ class TDataSet : public QObject {
    virtual bool fromString( const QString &s );
    void dumpStruct() const;
    QDomElement toDom( QDomDocument &dd ) const;
+   bool fromDom( QDomElement &de, QString &errstr );
    void check_guard() const;
    // special part - TODO: remove or ifdef in separate lib
    /** returns pointer to given parameter, checking if valid 

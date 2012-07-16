@@ -87,9 +87,7 @@ class QMo2Doc : public QObject
   void setPathName( const QString &name );
   /** returns the pathname of the current document file*/
   const QString& pathName() const;
-  /** create XML representation from old model */
-  QString makeXMLold() const;
-  /** create XML representation from new model */
+  /** create XML representation */
   QString makeXML() const;
 
   /** sets the filename of the document */
