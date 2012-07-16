@@ -26,31 +26,6 @@ TClassInfo TPid::class_info = {
   CLASS_ID_TPid, "TPid", TPid::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TPid::tpid_d_i[21] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 440, 300, 0,  0.0, 0.0, 0, 0, "pid_dial", "", "Dialog for TPid"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  40,  50,  20, 0,  0.0, 0.0, 0, 0, "l_kd2",   "", "kd2"},
- { dtpDou,        0,   0,   20,  60, 120,  20, 0,  -1e300, 1e300, 0, 0, "kd2", "d/dt^2", ""},
- { dtpLabel,      0,   0,   30, 100,  50,  20, 0,  0.0, 0.0, 0, 0, "l_kd1",   "", "kd1"},
- { dtpDou,        0,   0,   20, 120, 120,  20, 0,  -1e300, 1e300, 0, 0, "kd1", "d/dt", ""},
- { dtpLabel,      0,   0,  170,  40,  50,  20, 0,  0.0, 0.0, 0, 0, "l_kp",   "", "kp"},
- { dtpDou,        0,   0,  160,  60, 120,  20, 0,  -1e300, 1e300, 0, 0, "kp", "*x", ""},
- { dtpLabel,      0,   0,  310,  40,  50,  20, 0,  0.0, 0.0, 0, 0, "l_ki1",   "", "ki1"},
- { dtpDou,        0,   0,  300,  60, 120,  20, 0,  -1e300, 1e300, 0, 0, "ki1", "ki1", ""},
- { dtpLabel,      0,   0,  310, 100,  50,  20, 0,  0.0, 0.0, 0, 0, "l_ki2",   "", "ki2"},
- { dtpDou,        0,   0,  300, 120, 120,  20, 0,  -1e300, 1e300, 0, 0, "ki2", "ki2", ""},
- { dtpInt,   dtpsSw,   0,  160, 120, 120,  20, 2,  0.0, 0.0, 0, 0, "aver", "flag /T", "Average"},
- { dtpButton,     0,   0,   20, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
 
 TPid::TPid( TDataSet* aparent )
         :TMiso( aparent ),
@@ -61,20 +36,8 @@ TPid::TPid( TDataSet* aparent )
 	PRM_INIT( ki2,  "k_i2" ),
 	PRM_INIT( aver, "Average" )
 {
-  int i;
   kd2 = kd1 = ki2 = ki1 = 0; kp = 1; aver = 0;
   tdt2 = 1; vi1 = vi2 = u_old = u_old2 = 0;
-  d_i = tpid_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &kd2; ptrs[6] = &kd1; ptrs[8] = &kp;
-  ptrs[10] = &ki1; ptrs[12] = &ki2; ptrs[13] = &aver;
-  // from TMiso 
-  ptrs[17] = links;
-  ptrs[18] = &vis_x; ptrs[19] = &vis_y;
 
   PRMI(kd2).setDescr(  "Coefficient in second derivation" );
   PRMI(kd1).setDescr(  "Coefficient in first derivation" );

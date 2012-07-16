@@ -56,8 +56,6 @@ class TMultipl : public TMiso  {
    PRM_SWITCH( on3, 0 );
    /** common coefficient */
    PRM_DOUBLE( a, 0 );
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tmultipl_d_i[16];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

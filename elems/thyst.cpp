@@ -33,49 +33,11 @@ TClassInfo THyst::class_info = {
   CLASS_ID_THyst, "THyst", THyst::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo THyst::thyst_d_i[20] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 380, 300, 0,  0.0, 0.0, 0, 0, "hyst_dial", "", "Dialog for THyst"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",   ""},
- { dtpLabel,      0,   0,   30,  40,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type", "", "Type"},
- { dtpInt, dtpsList,   6,   20,  60, 140,  20, 2,  0.0, 0.0, 0, 0, "type", "Hysteresis type", thyst_list },
- { dtpLabel,      0,   0,  190,  40,  50,  20, 0,  0.0, 0.0, 0, 0, "l_x0", "", "x0"},
- { dtpDou,        0,   0,  180,  60, 100,  20, 0,  0.0, 1e300, 0, 0, "x0", "Hyst. width", ""},
- { dtpLabel,      0,   0,  190,  90,  50,  20, 0,  0.0, 0.0, 0, 0, "l_alpha", "", "alpha"},
- { dtpDou,        0,   0,  180, 110, 100,  20, 0,  -1e300, 1e300, 0, 0, "alpha", "Slope", ""},
- { dtpLabel,      0,   0,  190, 140,  50,  20, 0,  0.0, 0.0, 0, 0, "l_a", "", "a"},
- { dtpDou,        0,   0,  180, 160, 100,  20, 0,  -1e300, 1e300, 0, 0, "a", "a", ""},
- { dtpLabel,      0,   0,  190, 190,  50,  20, 0,  0.0, 0.0, 0, 0, "l_b", "", "b"},
- { dtpDou,        0,   0,  180, 210, 100,  20, 0,  -1e300, 1e300, 0, 0, "b", "b", ""},
- { dtpButton,     0,   0,   20, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
-
 
 THyst::THyst( TDataSet* aparent )
         :TMiso( aparent )
 {
-  int i;
   type = 0; x0 = 1; alpha = 0.2; a = 1; b = 0; s = d = 0;
-  d_i = thyst_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &type; ptrs[6] = &x0; ptrs[8] = &alpha;
-  ptrs[10] = &a; ptrs[12] = &b;
-  // from TMiso 
-  ptrs[16] = links;
-  ptrs[17] = &vis_x; ptrs[18] = &vis_y;
-  
 }
 
 THyst::~THyst()

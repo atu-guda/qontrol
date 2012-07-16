@@ -41,31 +41,6 @@ TClassInfo TFriction::class_info = {
   CLASS_ID_TFriction, "TFriction", TFriction::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TFriction::tfriction_d_i[20] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 380, 350, 0,  0.0, 0.0, 0, 0, "friction_dial", "", "Dialog for TFriction"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,  130,  50, 110,  20, 0,  0.0, 0.0, 0, 0, "l_mass", "", "mass"},
- { dtpDou,        0,   0,  120,  70, 120,  20, 0,  0.0, 1e300, 0, 0, "mass", "Body mass", ""},
- { dtpLabel,      0,   0,  130, 100, 110,  20, 0,  0.0, 0.0, 0, 0, "l_f_mx", "", "f_mx"},
- { dtpDou,        0,   0,  120, 120, 120,  20, 0,  0.0,-1.0, 0, 0, "f_mx", "Maximum dry friction force", ""},
- { dtpLabel,      0,   0,  130, 150, 110,  20, 0,  0.0, 0.0, 0, 0, "l_kf_mx", "", "kf_mx"},
- { dtpDou,        0,   0,  120, 170, 120,  20, 0,  0.0,-1.0, 0, 0, "kf_mx", "Start coeff", ""},
- { dtpLabel,      0,   0,  130, 200, 110,  20, 0,  0.0, 0.0, 0, 0, "l_kvf", "", "kvf"},
- { dtpDou,        0,   0,  120, 220, 120,  20, 0,  0.0, 1e300, 0, 0, "kfv", "Friction coeff", ""},
- { dtpInt,   dtpsSw,   0,  120, 250, 150,  20, 0,  0.0, 0.0, 0, 0, "useMf", "use u[1] of f_mx", "use u[1] of f_mx"},
- { dtpDou,        0,   0,    0,   0,   0,   0, efNoDial | efRO,  0.0, 0.0, 0, 0, "v", "Speed", ""},
- { dtpButton,     0,   0,   20, 290,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 290,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 290,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
-
 
 TFriction::TFriction( TDataSet* aparent )
         :TMiso( aparent ),
@@ -78,22 +53,9 @@ TFriction::TFriction( TDataSet* aparent )
    PRM_INIT( Ff, "Ff" ),
    PRM_INIT( bodyState, "State" )
 {
-  int i;
   mass = 1; f_mx = 0.4; kf_mx = 0; kfv = 0.01; useMf = 0;
   v = v_old = x_old = Ff = 0;
   bodyState = 0;
-  d_i = tfriction_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &mass; ptrs[6] = &f_mx; ptrs[8] = &kf_mx;
-  ptrs[10] = &kfv; ptrs[11] = &useMf;
-  ptrs[12] = &v;
-  // from TMiso 
-  ptrs[16] = links;
-  ptrs[17] = &vis_x; ptrs[18] = &vis_y;
   
   PRMI(mass).setDescr( "Mody mass" );
   PRMI(mass).setMinMax( 0, DMAX );

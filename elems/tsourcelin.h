@@ -115,8 +115,6 @@ class TSourceLin : public TMiso  {
    int n_lin, curr_lin;
    /** start time of current line */
    double t_start;
-   /** data descriptors -- with base classe elements */
-   static TDataInfo tsourcelin_d_i[61];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

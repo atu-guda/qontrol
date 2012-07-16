@@ -35,28 +35,6 @@ TClassInfo TLatch::class_info = {
   CLASS_ID_TLatch, "TLatch", TLatch::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TLatch::tlatch_d_i[19] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 380, 300, 0,  0.0, 0.0, 0, 0, "dial", "", "Dialog for TLatch"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  60,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type", "", "Type"},
- { dtpInt, dtpsList,   2,   20,  80, 120,  20, 2,  0.0, 0.0, 0, 0, "type", "", tlatch_list },
- { dtpLabel,      0,   0,   30, 120,  50,  20, 0,  0.0, 0.0, 0, 0, "l_t0", "", "t0"},
- { dtpDou,        0,   0,   20, 140, 120,  20, 2,  0.0, 1e300, 0, 0, "t0", "t0", ""},
- { dtpLabel,      0,   0,   30, 180, 100,  20, 0,  0.0, 0.0, 0, 0, "l_v_st", "", "Start value"},
- { dtpDou,        0,   0,   20, 200, 120,  20, 2,  -1e300, 1e300, 0, 0, "v_st", "start value", ""},
- { dtpInt,   dtpsSw,   0,  180,  50, 150,  20, 2,  0.0, 0.0, 0, 0, "usePulse", "", "use Pulse"},
- { dtpInt,   dtpsSw,   0,  180,  80, 150,  20, 2,  0.0, 0.0, 0, 0, "useFirst", "", "only First"},
- { dtpInt,   dtpsSw,   0,  180, 110, 150,  20, 2,  0.0, 0.0, 0, 0, "useAdd", "", "Add to value"},
- { dtpButton,     0,   0,   20, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
 
 TLatch::TLatch( TDataSet* aparent )
         :TMiso( aparent ),
@@ -65,20 +43,8 @@ TLatch::TLatch( TDataSet* aparent )
 	 PRM_INIT( v_st, "Start value" ),
 	 PRM_INIT( v, "v" )
 {
-  int i;
   t0 = u_old = 0; type = 0; usePulse = useFirst = useAdd = 0; wasLatch = -1;
   v = v_st = 0;
-  d_i = tlatch_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &type; ptrs[6] = &t0; ptrs[8] = &v_st;
-  ptrs[9] = &usePulse; ptrs[10] = &useFirst; ptrs[11] = &useAdd;
-  // from TMiso 
-  ptrs[15] = links;
-  ptrs[16] = &vis_x; ptrs[17] = &vis_y;
 
   PRMI(type).setDescr( "Type" );
   PRMI(type).setElems( tlatch_list );

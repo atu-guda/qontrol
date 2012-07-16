@@ -29,46 +29,13 @@ TClassInfo TVibro::class_info = {
   CLASS_ID_TVibro, "TVibro", TVibro::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TVibro::tvibro_d_i[16] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 380, 300, 0,  0.0, 0.0, 0, 0, "vibro_dial", "", "Dialog for TVibro"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_c0", "", "c0"},
- { dtpDou,        0,   0,   20,  70, 120,  20, 0,  0.0, 1e300, 0, 0, "c0", "Damping coeff", ""},
- { dtpLabel,      0,   0,  210,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_Omega", "", "Omega"},
- { dtpDou,        0,   0,  200,  70, 120,  20, 0,  -1e300, 1e300, 0, 0, "Omega", "Natural frequency", ""},
- { dtpLabel,      0,   0,   50, 130, 250,  20, 0,  0.0, 0.0, 0, 0, "l_rfe", "", "Return force element name"},
- { dtpStr,        0,  MAX_NAMELEN,   60, 150, 250,  20, 2,  0.0, 0.0, 0, 0, "rfe", "Return force element", ""},
- { dtpButton,     0,   0,   20, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
-
 
 TVibro::TVibro( TDataSet* aparent )
         :TMiso( aparent )
 {
-  int i;
   Omega = 1.2; c0 = 0.4; 
-  // rfe = QString(); 
   use_u1 = 0;
   isStart = 1; tdt2 = 1; u_old = f_old = x_old = x_old2 = 0;
-  d_i = tvibro_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &c0; ptrs[6] = &Omega; ptrs[8] = &rfe;
-  // from TMiso 
-  ptrs[12] = links;
-  ptrs[13] = &vis_x; ptrs[14] = &vis_y;
 }
 
 TVibro::~TVibro()

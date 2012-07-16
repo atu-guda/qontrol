@@ -40,30 +40,6 @@ TClassInfo TLogic::class_info = {
   CLASS_ID_TLogic, "TLogic", TLogic::create,
   &TMiso::class_info, helpstr, clpElem | clpPure };
 
-TDataInfo TLogic::tlogic_d_i[20] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 380, 310, 0,  0.0, 0.0, 0, 0, "Zzz", "", "Dialog for TLogic"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  40,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type",   "", "Type"},
- { dtpInt, dtpsList,   6,   20,  60, 120,  20, 2,  0.0, 0.0, 0, 0, "type", "type", tlogic_list },
- { dtpLabel,      0,   0,   30,  90, 100,  20, 0,  0.0, 0.0, 0, 0, "l_level", "", "Level of 1"},
- { dtpDou,        0,   0,   20, 110, 120,  20, 0,  -1e300, 1e300, 0, 0, "level", "level of 1", ""},
- { dtpInt,   dtpsSw,   0,   20, 140, 160,  20, 0,  0.0, 0.0, 0, 0, "useNInp0", "", "Inverse u[0]"},
- { dtpInt,   dtpsSw,   0,   20, 170, 160,  20, 0,  0.0, 0.0, 0, 0, "useNInp1", "", "Inverse u[1]"},
- { dtpInt,   dtpsSw,   0,   20, 200, 160,  20, 0,  0.0, 0.0, 0, 0, "useNInp2", "", "Inverse u[2]"},
- { dtpInt,   dtpsSw,   0,   20, 230, 160,  20, 0,  0.0, 0.0, 0, 0, "useNInp3", "", "Inverse u[3]"},
- { dtpInt,   dtpsSw,   0,  180,  60, 160,  20, 0,  0.0, 0.0, 0, 0, "useNOut", "", "Inverse output"},
- { dtpInt,   dtpsSw,   0,  180,  90, 160,  20, 0,  0.0, 0.0, 0, 0, "useMinus", "", "Use -1 as neg. out"},
- { dtpButton,     0,   0,   20, 260,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 260,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 260,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
 
 TLogic::TLogic( TDataSet* aparent )
         :TMiso( aparent ),
@@ -76,22 +52,8 @@ TLogic::TLogic( TDataSet* aparent )
 	PRM_INIT( useNOut,  "Inverse output" ),
 	PRM_INIT( useMinus, "Negative out" )
 {
-  int i;
   level = 0.1; type = 1; useNInp0 = useNInp1 = useNInp2 = useNInp3 = 0;
   useNOut = useMinus = 0;
-  d_i = tlogic_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &type; ptrs[6] = &level; 
-  ptrs[7] = &useNInp0; ptrs[8] = &useNInp1;  
-  ptrs[9] = &useNInp2;  ptrs[10] = &useNInp3;  
-  ptrs[11] = &useNOut; ptrs[12] = &useMinus;
-  // from TMiso 
-  ptrs[16] = links;
-  ptrs[17] = &vis_x; ptrs[18] = &vis_y;
 
   PRMI(type).setDescr( "Type of logic" );
   PRMI(type).setElems( tlogic_list );

@@ -40,35 +40,6 @@ TClassInfo TRandTrigg::class_info = {
   CLASS_ID_TRandTrigg, "TRandTrigg", TRandTrigg::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TRandTrigg::trandtrigg_d_i[22] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 450, 300, 0,  0.0, 0.0, 0, 0, "rt_dial", "", "Dialog for TRandTrigg"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  50, 100,  20, 0,  0.0, 0.0, 0, 0, "l_prob", "", "Probability"},
- { dtpDou,        0,   0,   20,  70, 120,  20, 0,  0.0, 2.0, 0, 0, "prob", "Probability", ""},
- { dtpLabel,      0,   0,   30, 100, 100,  20, 0,  0.0, 0.0, 0, 0, "l_nforce", "", "Forced every N"},
- { dtpInt,        0,   0,   20, 120, 120,  20, 2,  0.0, 0.0, 0, 0, "nforce", "Forced tigg N", ""},
- { dtpInt,   dtpsSw,   0,  180,  50, 170,  20, 2,  0.0, 0.0, 0, 0, "useLevel", "", "Use Level to trigg"},
- { dtpInt,   dtpsSw,   0,  180,  80, 170,  20, 2,  0.0, 0.0, 0, 0, "useForce", "", "Use u[1] to force trigg"},
- { dtpInt,   dtpsSw,   0,  180, 110, 170,  20, 2,  0.0, 0.0, 0, 0, "useLock", "", "Use u[2] to lock"},
- { dtpInt,   dtpsSw,   0,  180, 140, 170,  20, 2,  0.0, 0.0, 0, 0, "useZero", "", "Use 0 as negative output"},
-
- { dtpLabel,      0,   0,   30, 180,  50,  20, 0,  0.0, 0.0, 0, 0, "l_seed",   "", "seed"},
- { dtpInt,        0,   0,   20, 200, 120,  20, 0,  1.0, 0.0, 0, 0, "seed", "seed", ""}, // 20
- { dtpInt, dtpsList,   4,  160, 200, 150,  20, efNoRunChange,  0.0, 0.0, 0, 0, "seedType", "Seed at", trandtrigg_list_seedType },
- { dtpInt,dtpsSwitch,  0,  330, 200, 150,  20, efNoRunChange,  0.0, 0.0, 0, 0, "addBaseSeed",   "", "addBaseSeed"},
- 
- { dtpButton,     0,   0,   20, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  170, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  320, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
-
 
 TRandTrigg::TRandTrigg( TDataSet* aparent )
         :TMiso( aparent ),
@@ -82,24 +53,11 @@ TRandTrigg::TRandTrigg( TDataSet* aparent )
 	 PRM_INIT( seedType, "Seed at"),
 	 PRM_INIT( addBaseSeed, "add Base to Seed")
 {
-  int i;
   prob = 0.5; u_old = 0; nforce = 2;
   useLevel = useForce = useLock = useZero = 0; ns = -1;
   seed = 9561 + (time(0) & 0x1AFFF );
   seedType = 3; addBaseSeed = 1;
   rng = 0;
-  d_i = trandtrigg_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &prob; ptrs[6] = &nforce; ptrs[7] = &useLevel;
-  ptrs[8] = &useForce; ptrs[9] = &useLock; ptrs[10] = &useZero;
-  ptrs[12] = &seed; ptrs[13] = &seedType; ptrs[14] = &addBaseSeed;
-  // from TMiso 
-  ptrs[18] = links;
-  ptrs[19] = &vis_x; ptrs[20] = &vis_y;
 
   PRMI(prob).setDescr( "Probability of spontatious flip " ); 
   PRMI(nforce).setDescr( "Forced every N changes" );

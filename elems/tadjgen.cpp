@@ -28,38 +28,6 @@ TClassInfo TAdjGen::class_info = {
   CLASS_ID_TAdjGen, "TAdjGen", TAdjGen::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TAdjGen::tadjgen_d_i[27] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 380, 360, 0,  0.0, 0.0, 0, 0, "adjgen_dial", "", "Dialog for TAdjGen"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type",   "", "Type"},
- { dtpInt, dtpsList,   3,   20,  70, 120,  20, 2,  0.0, 0.0, 0, 0, "type", "type", "Default\nIllich\nDual(u0,u3)"},
- { dtpInt,   dtpsSw,   0,  150,  70, 200,  20, 2,  0.0, 0.0, 0, 0, "useReset", "", "Use u[1] as Reset"},
- { dtpInt,   dtpsSw,   0,  150, 100, 200,  20, 2,  0.0, 0.0, 0, 0, "useLock", "", "Use u[2] as Lock"},
- { dtpInt,   dtpsSw,   0,  150, 130, 200,  20, 2,  0.0, 0.0, 0, 0, "outStrobe", "", "Output Strobe"},
- { dtpInt,   dtpsSw,   0,  150, 160, 200,  20, 2,  0.0, 0.0, 0, 0, "useSignStrobe", "", "Signed strobe"},
- { dtpInt,   dtpsSw,   0,  150, 190, 200,  20, 2,  0.0, 0.0, 0, 0, "usePlusStrobe", "", "Only \x22+\x22 strobe"},
- { dtpInt,   dtpsSw,   0,  150, 220, 200,  20, 2,  0.0, 0.0, 0, 0, "useZero", "", "use 0 as negative out"},
- { dtpInt,   dtpsSw,   0,  150, 250, 200,  20, 2,  0.0, 0.0, 0, 0, "useF", "", "input is F, not omega"},
- { dtpLabel,      0,   0,   30, 100, 100,  20, 0,  0.0, 0.0, 0, 0, "l_omega_0",   "", "\\omega_0"},
- { dtpDou,        0,   0,   20, 120, 110,  20, 0,  0.0, 1e300, 0, 0, "omega_0", "omega_0", ""},
- { dtpLabel,      0,   0,   30, 150, 100,  20, 0,  0.0, 0.0, 0, 0, "k_omega",   "", "k_\\omega"},
- { dtpDou,        0,   0,   20, 170, 110,  20, 0,  0.0, 1e300, 0, 0, "k_omega", "k_omega", ""},
- { dtpButton,     0,   0,   20, 300,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 300,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 300,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpInt,        0,   0,    0,   0,   0,   0,52,  0.0, 0.0, 0, 0, "tick", "", "1 means generator ticks now"},
- { dtpDou,        0,   0,    0,   0,   0,   0,52,  -1e300, 1e300, 0, 0, "ig", "ig", ""},
- { dtpDou,        0,   0,    0,   0,   0,   0,52,  -1e300, 1e300, 0, 0, "ig2", "ig2", ""},
- { dtpDou,        0,   0,    0,   0,   0,   0,52,  -1e300, 1e300, 0, 0, "ctt", "ctt", ""},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
-
 
 TAdjGen::TAdjGen( TDataSet* aparent )
         :TMiso( aparent ),
@@ -79,29 +47,10 @@ TAdjGen::TAdjGen( TDataSet* aparent )
 	PRM_INIT( ig, "ig" ),
 	PRM_INIT( ig2, "ig2" )
 {
-  int i;
   type = useReset = useLock = outStrobe = useZero 
        = useSignStrobe = usePlusStrobe = useF = 0; 
   omega_0 = 1.2; k_omega = 1.0;
   ctt = ig = ig2 = 0; currOut = 0; tick = 0;
-  d_i = tadjgen_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &type; ptrs[5] = &useReset; ptrs[6] = &useLock;
-  ptrs[7] = &outStrobe; ptrs[8] = &useSignStrobe; ptrs[9] = &usePlusStrobe; 
-  ptrs[10] = &useZero;
-  ptrs[11] = &useF;
-  ptrs[13] = &omega_0;
-  ptrs[15] = &k_omega;
-
-  ptrs[19] = &tick;
-  ptrs[20] = &ig; ptrs[21] = &ig2; ptrs[22] = &ctt;
-  // from TMiso 
-  ptrs[23] = links;
-  ptrs[24] = &vis_x; ptrs[25] = &vis_y;
 
   PRMI(type).setDescr( "Type of generator" );
   PRMI(type).setElems( "Default\nMAI\nDual(u0,u3)" );

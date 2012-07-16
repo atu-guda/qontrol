@@ -71,8 +71,6 @@ class TAdjGen : public TMiso  {
    PRM_DOUBLE( ctt, efInner );
    PRM_DOUBLE( ig, efInner );
    PRM_DOUBLE( ig2, efInner );
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tadjgen_d_i[27];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

@@ -102,8 +102,6 @@ class TOutArr : public TDataSet  {
    double fake_so;
    /** ptr to source */
    const double *so;
-   /** data descriptors */ 
-   static TDataInfo toutarr_d_i[19]; 
    /** class decription */
    static TClassInfo class_info;       
    /** help str */

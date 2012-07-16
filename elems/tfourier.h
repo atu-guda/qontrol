@@ -94,8 +94,6 @@ class TFourier : public TMiso  {
    int nper, n_st, n_en, ii;
    /** arrays for summators */
    std::vector<double> aa, bb, am;
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tfourier_d_i[50];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

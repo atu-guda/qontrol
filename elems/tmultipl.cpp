@@ -26,27 +26,6 @@ TClassInfo TMultipl::class_info = {
   CLASS_ID_TMultipl, "TMultipl", TMultipl::create,
   &TMiso::class_info, helpstr, clpElem | clpPure };
 
-TDataInfo TMultipl::tmultipl_d_i[16] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 380, 200, 0,  0.0, 0.0, 0, 0, "Multiplicator", "", "Dialog for TMultipl"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description", ""},
- { dtpInt,   dtpsSw,   0,   20,  40, 120,  20, 0,  0.0, 0.0, 0, 0, "on0", "On #0", "Use input 0"},
- { dtpInt,   dtpsSw,   0,   20,  70, 120,  20, 0,  0.0, 0.0, 0, 0, "on1", "On #0", "Use input 1"},
- { dtpInt,   dtpsSw,   0,   20, 100, 120,  20, 0,  0.0, 0.0, 0, 0, "on2", "On #0", "Use input 2"},
- { dtpInt,   dtpsSw,   0,   20, 130, 120,  20, 0,  0.0, 0.0, 0, 0, "on3", "On #0", "Use input 3"},
- { dtpLabel,      0,   0,  160,  60, 120,  20, 0,  0.0, 0.0, 0, 0, "la", "", "a="},
- { dtpDou,        0,   0,  160,  90, 120,  20, 0,  -1e300, 1e300, 0, 0, "a", "a",""},
- { dtpButton,     0,   0,   20, 160,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 160,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 160,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "", "Object links" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
-
 
 TMultipl::TMultipl( TDataSet* aparent )
         :TMiso( aparent ),
@@ -56,19 +35,8 @@ TMultipl::TMultipl( TDataSet* aparent )
 	 PRM_INIT( on3, "On 3" ),
 	 PRM_INIT( a,    "a" )
 {
-  int i;
   on0 = on1 = 1; on2 = on3 = 0; a = 1;
-  d_i = tmultipl_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[3] = &on0; ptrs[4] = &on1; ptrs[5] = &on2; ptrs[6] = &on3; 
-  ptrs[8] = &a; 
-  // from TMiso 
-  ptrs[12] = links;
-  ptrs[13] = &vis_x; ptrs[14] = &vis_y;
+  
   PRMI(on0).setDescr( "Use input 0" );
   PRMI(on1).setDescr( "Use input 1" );
   PRMI(on2).setDescr( "Use input 2" );

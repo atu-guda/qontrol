@@ -31,47 +31,13 @@ TClassInfo TOutArr::class_info = {
  CLASS_ID_TOutArr, "TOutArr", TOutArr::create,
  &TDataSet::class_info, helpstr, clpSpecial };
 
-TDataInfo TOutArr::toutarr_d_i[19] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 440, 200, 0,  0.0, 0.0, 0, 0, "OutArr",  "",   "Output array"},
- { dtpInt, dtpsList,   4,   20,  30, 110,  20, 2,  0.0, 0.0, 0, 0, "type",   "output type", toutarr_list },
- { dtpLabel,      0,   0,   20,  60, 120,  20, 0,  0.0, 0.0, 0, 0, "l_oname",   "",   "Output elem. name"},
- { dtpStr,        0,  MAX_NAMELEN,   20,  80, 110,  20, 2,  0.0, 0.0, 0, 0, "name",   "Name of elem wrom which putput stored",   ""},
- { dtpLabel,      0,   0,   20, 110, 120,  20, 0,  0.0, 0.0, 0, 0, "l_label", "",   "Output Label"},
- { dtpStr,        0,  MAX_LABELLEN,   20, 130, 110,  20, 2,  0.0, 0.0, 0, 0, "label",   "Output label for graph", ""},
- { dtpLabel,      0,   0,  150,  10, 160,  20, 0,  0.0, 0.0, 0, 0, "l_nq", "", "Collect every N tick"},
- { dtpInt,        0,   0,  150,  30, 100,  20, 2,  1.0, 1e5, 0, 0, "nq",   "Collect every N tick", ""},
- { dtpLabel,      0,   0,  150,  60, 160,  20, 0,  0.0, 0.0, 0, 0, "l_lnq", "", "Latch counter value"},
- { dtpInt,        0,   0,  150,  80, 100,  20, 2,  0.0, 1e5, 0, 0, "lnq",   "Latch counter value", ""},
- { dtpButton,     0,   0,  340,  20,  80,  30, 0,  0.0, 0.0, 0, 0, "btn_ok",   "",   "OK"},
- { dtpButton,     1,   0,  340,  60,  80,  30, 0,  0.0, 0.0, 0, 0, "btn_can",   "",   "Cancel"},
- { dtpButton,     2,   0,  340, 100,  80,  30, 0,  0.0, 0.0, 0, 0, "btn_help",   "",   "Help"}, 
- { dtpInt,        0,   0,    0,   0,   0,   0, 52,  0.0, 0.0, 0, 0, "arrsize",   "Array size", ""},
- { dtpDbl,        0,   0,    0,   0,   0,   0, 52,  0.0, 0.0, 0, 0, "dmin",   "Min value", ""},
- { dtpDbl,        0,   0,    0,   0,   0,   0, 52,  0.0, 0.0, 0, 0, "dmax",   "Max value", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 52,  0.0, 0.0, 0, 0, "n", "Fill size", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 52,  0.0, 0.0, 0, 0, "ny", "y-size for 3D", ""},
- { dtpEnd, 0, 0, 0, 0, 0, 0, 0, 0.0, -1.0, 0, 0 , "", "", "" }
-};
-
 
 TOutArr::TOutArr( TDataSet* apar )
         :TDataSet( apar ), 
 	 fake_so(0), so( &fake_so ) 
 {
-  int i;
   arrsize = 0; dmin = 0; dmax = 1; n = ny = 0; nq = 1; cnq = lnq = 0;
   type = 0; // name[0] = 0; label[0] = 0;
-  d_i = toutarr_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &type; ptrs[3] = &name; ptrs[5] = &label;
-  ptrs[7] = &nq;
-  ptrs[9] = &lnq;
-  ptrs[13] = &arrsize; ptrs[14] = &dmin; ptrs[15] = &dmax; 
-  ptrs[16] = &n; ptrs[17] = &ny;
 }
 
 TOutArr::~TOutArr()

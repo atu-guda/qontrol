@@ -63,8 +63,6 @@ class TCounter : public TMiso  {
    int flip;
    /** old value of input */
    double u_old;
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tcounter_d_i[16];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

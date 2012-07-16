@@ -65,8 +65,6 @@ class TPid : public TMiso  {
    double vi1, vi2, u_old, u_old2, tdt2;
    /** flag for special handling initial steps */
    int start;
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tpid_d_i[21];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

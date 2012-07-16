@@ -29,27 +29,6 @@ TClassInfo TCounter::class_info = {
   CLASS_ID_TCounter, "TCounter", TCounter::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TCounter::tcounter_d_i[16] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 380, 300, 0,  0.0, 0.0, 0, 0, "dial", "", "Dialog for TCounter"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type", "", "Output"},
- { dtpInt, dtpsList,   4,   20,  70, 120,  20, 2,  0.0, 0.0, 0, 0, "type", "type", "level\npulse+\npulse+-\nn"},
- { dtpLabel,      0,   0,   30,  90,  50,  20, 0,  0.0, 0.0, 0, 0, "l_n", "", "n"},
- { dtpInt,        0,   0,   20, 110, 100,  20, 2,  1.0, 1e9, 0, 0, "n", "n", ""},
- { dtpInt,   dtpsSw,   0,  170,  70, 150,  20, 2,  0.0, 0.0, 0, 0, "useReset", "", "Use u[1] as reset"},
- { dtpButton,     0,   0,   20, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpInt,        0,   0,    0,   0,   0,   0, 52, 0.0, 0.0, 0, 0, "cn", "Current n", ""},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,  0, 0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
-
 
 TCounter::TCounter( TDataSet* aparent )
         :TMiso( aparent ),
@@ -58,25 +37,12 @@ TCounter::TCounter( TDataSet* aparent )
 	 PRM_INIT( cn, "cn" ),
 	 PRM_INIT( useReset, "use Reset" )
 {
-  int i;
   cn = type = useReset = flip = 0; u_old = 9e300; n = 2;
-  d_i = tcounter_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &type; ptrs[6] = &n; ptrs[7] = &useReset;
-  ptrs[11] = &cn;
-  // from TMiso 
-  ptrs[12] = links;
-  ptrs[13] = &vis_x; ptrs[14] = &vis_y;
   PRMI(type).setDescr( "Type of counters output" );
   PRMI(type).setElems( "level\npulse+\npulse+-\nn" );
   PRMI(n).setDescr( "Number to count" );
   PRMI(cn).setDescr( "Current counter value" );
   PRMI(useReset).setDescr( "Use u[1] as Reset signal" );
-
 }
 
 TCounter::~TCounter()

@@ -58,6 +58,14 @@ struct TClassInfo {
   int props;
 };
 
+/** types of link - moved from tmiso.h */
+enum ltype_t {
+  LinkNone = 0, // not linked
+  LinkElm,      // linked to element 
+  LinkSpec,     // linked to special name, like ':prm1', ':t'
+  LinkBad       // link target not found
+};
+
 // -------------------------- HOLDERS ------------------------------------
 
 /** Abstract holder for simple data types */
@@ -71,6 +79,7 @@ class HolderData : public QObject {
   virtual ~HolderData() {}; // place to delete auto data
   void* getPtr() const { return ptr; } ; // horror here !!!
   QVariant::Type getTp() const { return tp; };
+  int isDyn() const { return dyn; };
   int getOldTp() const { return old_tp; };
   int getOldSubTp() const { return old_subtp; };
   /** is holded value is object of given type or child */
@@ -357,43 +366,6 @@ class HolderObj : public HolderData {
 #define PRM_OBJ1( name, flags, vname, descr, extra ) \
  HolderObj __HO_##name ={ name, #name, vname, this, flags, descr, extra  } ; 
 
-// ----===============************** OLD part ----------------------------
-
-/** describes each element of class
-*/
-struct TDataInfo {
-  /** type: dtpXXX: 0-End; 1-Int; 2-Dou; 3-Str;.... 10-Obj, 11-Fun ... */
-  int tp;           
-  /** subtype(dtpsXXX): int: 0-Int; 1-Switch; 2-list;...  */
-  int subtp;      
-  /** max length for string, num of choices for list */
-  int max_len;
-  /** coords for dialog  */
-  int dlg_x, dlg_y, dlg_w, dlg_h; 
-  /** flags: efMustRead, efNoRunChange, efNoDial */
-  int flags;     
-  /**  max & min values for int and double values if min<=max */
-  double v_min, v_max;
-  /** hash value for name - filled by TSetData::initHash  */
-  int hval;
-  /** flag: created dynamicaly, not static element */
-  int dyna;
-  /**  name for access & i/o operations */
-  char name[MAX_NAMELEN];
-  /** description of element; - for help ?? and label string  */
-  const char* descr;
-  /** string of list(1.2) elements \n  - delimiter   */
-  const char* listdata;
-  /** read from stream */
-  int read( std::istream *is );
-  /** save to stream -- simple format one value -- one line.
-      Using simple strict syntax: @ val1 val2 ...  or @ "val" */
-  int save( std::ostream *os ) const;
-};
-
-typedef TDataInfo *PTDataInfo;
-typedef const TDataInfo *CPTDataInfo;
-
 /** base class for all objects */
 class TDataSet : public QObject {
   Q_OBJECT
@@ -422,15 +394,13 @@ class TDataSet : public QObject {
    void setModified(void) { modified |= 1; };
    /** return nelm */
    virtual int getN(void) const;
-   /** return ptr to elem by name -- HORROR! TODO make protected? */
-   // use only by QMo2Doc while cheating/loading 
-   virtual void* getObj( const QString &ename );   
+   /** return ptr to elem by name */
+   // use only by QMo2Doc while creating/loading 
+   TDataSet* getObj( const QString &ename, const QString &cl_name = QString() );   
    // /** return ptr to Object elem by name  */
    // virtual const TDataSet* getObjPtr( const QString &nm ) const;
    /** find holder for object */
    HolderData* getHolder( const QString &oname ) const;
-   /** data index or -1 if not found  */
-   virtual int getDataIdx( const char *nm ) const;
 
    /** new functions to read datas */
    int getData( const QString &nm, QVariant &da ) const;
@@ -450,7 +420,7 @@ class TDataSet : public QObject {
    /** add new object and it's description (new)*/
    virtual void* add_obj( const QString &cl_name, const QString &ob_name );
    /** delete given object by num in ptrs */
-   virtual int del_obj( int n_ptrs );
+   int del_obj( const QString &ob_name );
    /** is given type of subelement valid for this object */
    virtual int isValidType( int a_tp, int a_subtp ) const;
    /** return ptr to static class_info, must be implemented in each class */
@@ -459,9 +429,7 @@ class TDataSet : public QObject {
    static const TClassInfo* getStaticClassInfo(void)
       { return &class_info; };
    /** is this class child of given or the same by name */
-   virtual int isChildOf( const char *cname );
-   /** is this class child of given or the same by index */
-   virtual int isChildOf( int cid );
+   bool isChildOf( const QString &cname );
    /** new part - iface a-la Holder FIXME: implement it */
    virtual bool set( const QVariant & x );
    virtual QVariant get() const;
@@ -477,14 +445,14 @@ class TDataSet : public QObject {
     * elmname = elmname.out0 
     * elmname.parmname 
     * :parmname - only local param? 
-    * parmname - try new, w/o ':' */
-   virtual const double* getDoublePtr( const QString &nm ) const;
+    * parmname - try new, w/o ':' 
+    * lt - ptr: store link type, 
+    * lev - level of recursion, not for user */
+   virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = 0, int lev = 0 ) const;
  protected:
    /** gets pointer to parameter, near to getDoublePrmPtr 
     * for param mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
-   /** count nelm, fills hval in d_i  */
-   int initHash(void);
    /** parse & assing one elem. returns: 0-ok 1-comment 2-end; <0-error */
    int processElem( std::istream *is );
  protected:
@@ -499,16 +467,8 @@ class TDataSet : public QObject {
    int state; 
    /** allowing object add /remove for some classes */
    int allow_add;
-   /** flag: was d_i dynamicaly allocaled */
-   int d_i_alloc;
    /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
    int modified;
-   /** pointers to real data - filled by constructor or loadData if need */
-   std::vector<pvoid> ptrs;
-   /** common ptr to data descriptions */
-   TDataInfo *d_i;
-   /** each class have own data descriptors */
-   static TDataInfo dataset_d_i[1]; 
    /** class decription */
    static TClassInfo class_info;
    /** help string */
@@ -526,8 +486,6 @@ class ElemFactory {
    static ElemFactory& theFactory();
    TDataSet* createElem( const QString &a_type, 
        const QString &ob_name, TDataSet *parent  ) const;
-   TDataSet* createElem( int t_id, 
-       const QString &ob_name, TDataSet *parent  ) const; // legacy
    bool registerElemType( const TClassInfo *cl_info );
    bool unregisterElemType( const QString &a_type );
    QStringList allTypeNames() const { return str_class.keys() ; };

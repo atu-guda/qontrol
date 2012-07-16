@@ -28,42 +28,14 @@ TClassInfo TDelay::class_info = {
   CLASS_ID_TDelay, "TDelay", TDelay::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TDelay::tdelay_d_i[14] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial, 0, 0, 0, 0, 480, 320, 0, 0.0, 0.0, 0, 0, "dia_delay", "", "Dialog for TDelay" },
- { dtpInt, 0, 0, 20, 10, 60, 20, 8, 0.0, 0.0, 0, 0, "ord", "Order", "" }, 
- { dtpStr, 0, 60, 100, 10, 380, 20, 2, 0.0, 0.0, 0, 0, "descr", "Description", "" },
- { dtpLabel, 0, 0, 30, 50, 100, 20, 0, 0.0, 0.0, 0, 0, "l_mdelay", "", "Max delay" }, 
- { dtpDbl, 0, 0, 30, 70, 100, 20, 0, 0.0, 1e4, 2, 0, "mdelay", "Max. delay", "" }, 
- { dtpLabel, 0, 0, 160, 50, 90, 20, 0, 0.0, 0.0, 0, 0, "l_cdelay", "", "Delay" },
- { dtpDbl, 0, 0, 150, 70, 100, 20, 0, 0.0, 1e4, 0, 0, "cdelay", "Delay", "" },
- { dtpButton,     0,   0,   20, 200,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 200,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  250, 200,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
 
 TDelay::TDelay( TDataSet* aparent )
         :TMiso( aparent ),
 	PRM_INIT( mdelay, "Max. delay" ),
 	PRM_INIT( cdelay, "Current delay" )
 {
-  int i;
   mdelay = 1.5; cdelay = 1; v1 = v2 = u00 = 0; buf = 0; 
-  d_i = tdelay_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr; 
-  ptrs[4] = &mdelay;  ptrs[6] = &cdelay;
-  // from TMiso
-  ptrs[10] = links;
-  ptrs[11] = &vis_x; ptrs[12] = &vis_y;
+  
   PRMI(mdelay).setDescr( "Maximum delay" );
   PRMI(mdelay).setMinMax( 0, 1e10 );
   PRMI(cdelay).setDescr( "Current delay" );

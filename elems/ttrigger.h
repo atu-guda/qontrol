@@ -75,8 +75,6 @@ class TTrigger : public TMiso  {
    PRM_SWITCH( useMinus, efNoRunChange );
    /** autoreset after t0 */
    PRM_SWITCH( useT0, efNoRunChange );
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo ttrigger_d_i[23];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

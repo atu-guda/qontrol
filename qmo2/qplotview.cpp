@@ -581,7 +581,7 @@ void QPlotView::initArrs(void)
     errstr = "Not found X array";
     return; 
   };
-  out_nu = model->outname2out_nu( qPrintable(outname) );
+  out_nu = model->outname2out_nu( outname );
   if( out_nu < 0 ) { 
     initFakeArrs(); 
     errstr = "Fail to convert X array name to array index";
@@ -621,7 +621,7 @@ void QPlotView::initArrs(void)
     outname = "";
     gra->getData( buf, outname );
     if( !isGoodName( outname ) ) continue;
-    out_nu = model->outname2out_nu( qPrintable(outname) );
+    out_nu = model->outname2out_nu( outname );
     if( out_nu < 0 ) continue;
     arr = model->getOutArr( out_nu );
     if( arr == 0 ) continue;

@@ -105,8 +105,6 @@ class TSource : public TMiso  {
    int was_pulse;
    /** values to store some model vars */	  
    double tt;
-   /** data descriptors -- with base class elements */
-   static TDataInfo tsource_d_i[48];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

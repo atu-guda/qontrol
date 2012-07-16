@@ -75,8 +75,6 @@ class TExtrLatch : public TMiso  {
    PRM_DOUBLE( u_ex,  efInner );
    PRM_DOUBLE( t_ex,  efInner );
    double  u_old, u_old2, t_old;
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo textrlatch_d_i[20];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

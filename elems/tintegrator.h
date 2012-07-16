@@ -72,8 +72,6 @@ class TIntegrator : public TMiso  {
    double v_old;
    double t_rst;
 
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tintegrator_d_i[29];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

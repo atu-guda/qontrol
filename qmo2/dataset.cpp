@@ -18,75 +18,6 @@
 
 using namespace std;
 
-// ---------------- TDataInfo -----------------------
-
-// new really neeed only name type, and subtype -- all other fake
-int TDataInfo::read( istream *is )
-{
-  int k, l, j, nline;
-  char str[MAX_INPUTLEN];
-  tp = subtp = 0; dlg_x = dlg_y = dlg_w = dlg_h = 0;
-  v_max = 0; v_min = 1; // no limits
-  flags = 0;
-  name[0] = 0;
-  descr = listdata = "";
-  
-  nline = 0;  // must consist of 4 lines of data (don't realy)
-  while( 1 ) {
-    is->getline( str, MAX_INPUTLEN );
-    if( is->eof() || is->fail() )  
-      return -1; 
-    l = strlen( str );
-    if( l < 1 ) continue;
-    k = typeOfLine( str, 0, 0, 0, 0 );
-    if( k == ltpComment ) continue;  // ordinary comment;
-    if( k != ltpStruct )             // only @ -start strings;
-       return -2;
-    str[0] = ' ';
-    switch( nline ) {
-      case 0: j = sscanf( str, "%d %d %d %d %d %d %d %d %lf %lf",
-                &tp, &subtp, &max_len, &dlg_x, &dlg_y, &dlg_w, &dlg_h,
-                &flags, &v_min, &v_max );
-	      if( j != 10 ) {
-		qDebug( "ERR: TDataInfo::read(0): j=%d str=\"%s\"", j, str );
-	      }
-              k = ( j != 10 );  break;
-      case 1: j = sscanf( str, "%32s" , name );
-	      if( j != 1 ) {
-		qDebug( "ERR: TDataInfo::read(1): j=%d", j );
-	      }
-              k =  (j != 1); 
-	      break;
-      case 2: k = 0; break;
-      case 3: k = 0; break;
-      default: fprintf( stderr, "Too many input lines (%d):TDataInfo::read", 
-		        nline );
-	       return -7;
-    };
-    nline++;
-    if( nline >= 4 ) break;
-    if( k ) { 
-      qDebug( "ERR: TDataInfo::read(end): k=%d nline=%d", k, nline );
-      return -3;
-    };   
-  };
-  if( tp < 0 || !isGoodName(name) ) {
-    return -1;
-  };
-  hval = hashVal( name );
-  dyna = 1;
-  return 0;
-}
-
-int TDataInfo::save( ostream *os ) const
-{
-  *os << "@ " << tp << ' ' << subtp << ' ' << max_len << ' '
-      << dlg_x << ' ' << dlg_y << ' ' << dlg_w << ' ' << dlg_h << ' '
-      << flags << ' ' << v_min << ' ' << v_max << '\n';
-  *os << "@ " << name << '\n';
-  *os << "@ \n@ \n";
-  return 0;
-}
 
 // ================================================================
 // ---------------- HolderData .... ----------------------
@@ -183,6 +114,8 @@ void HolderData::extraToParm()
       qDebug( "warn: bad extra string part: \"%s\"", qPrintable( s ) );
     }
   }
+  if( getParm("dyn") == "1" )
+    dyn = 1;
 }
 
 void HolderData::setElems( const QString &els )
@@ -760,9 +693,6 @@ QDomElement HolderObj::toDom( QDomDocument &dd ) const
 TClassInfo TDataSet::class_info = 
  {  CLASS_ID_TDataSet, "TDataSet",  TDataSet::create, 0, helpstr, 0 };
 
-TDataInfo TDataSet::dataset_d_i[1] = {
- { dtpEnd, 0, 0, 0, 0, 0, 0, 0, 0.0, -1.0, 0, 0 , "", "", "" }
-};
 
 const char* TDataSet::helpstr = 
  "<H1>TDataSet</H1>\nThis is a base element for all other elements\n"
@@ -773,26 +703,13 @@ TDataSet::TDataSet( TDataSet* aparent )
 {
  guard = guard_val;
  parent = aparent;
- nelm = 0; allow_add = 0; d_i_alloc = 0; state = stateGood; modified = 0;
- ptrs.reserve( 64 ); // good value for simple objects
- d_i = dataset_d_i;
- initHash();
+ nelm = 0; allow_add = 0; state = stateGood; modified = 0;
 }
 
 TDataSet::~TDataSet()
 {
-  int i;
-  TDataSet* ob;
-  for( i=0; i<nelm; i++ ) {
-    if( d_i[i].dyna == 0 && d_i[i].tp != dtpObj ) continue;
-    ob = static_cast<TDataSet*>( ptrs[i] ); 
-    delete ob;
-    ptrs[i] = 0;
-  };
+  // deletion is dont by holders dtors
   nelm = 0; state = stateBad;
-  if( d_i_alloc ) {
-    delete d_i; d_i = 0;
-  };
 }
 
 int TDataSet::getClassId(void) const 
@@ -855,14 +772,23 @@ int TDataSet::getN(void) const
   return nelm;
 }
 
-void* TDataSet::getObj( const QString &ename )
+TDataSet* TDataSet::getObj( const QString &ename, const QString &cl_name )
 {
   HolderData *ho = getHolder( ename );
   if( !ho ) {
     qDebug( "ERR: TDataSet::getObj: not found element \"%s\"",
 	qPrintable(ename) );
-  } 
-  return ho->getPtr();
+    return nullptr;
+  }
+  if( ! ho->isObject( cl_name ) ){
+    qDebug( "ERR: TDataSet::getObj: element \"%s\" has type \"%s\", need \"%s\"",
+	qPrintable(ename), qPrintable(ho->getType()), qPrintable(cl_name) );
+    return nullptr;
+  }
+  HolderObj *hob = qobject_cast<HolderObj*>(ho);
+  if( !hob )
+    return nullptr; // unlikely
+  return hob->getObj();
 }
 
 
@@ -884,19 +810,6 @@ HolderData* TDataSet::getHolder( const QString &oname ) const
 }
 
 
-// TODO: use real hash or map !!! TODO: DROP at all!
-int TDataSet::getDataIdx( const char *nm ) const
-{
-  int i, hv;
-  hv = hashVal( nm );
-  for( i=0; i<nelm; i++ ) {
-    if( hv == d_i[i].hval ) {
-      if( strcmp( d_i[i].name, nm ) == 0 )
-        return i;
-    };
-  };
-  return -1;
-}
 
 
 int TDataSet::getData( const QString &nm, QVariant &da ) const
@@ -1010,10 +923,13 @@ int TDataSet::checkData( int /* ni */ )
   return 0;
 }
 
-const double* TDataSet::getDoublePtr( const QString &nm ) const
+const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) const
 {
-  if( nm.isEmpty() )
+  if( nm.isEmpty() ) {
+    if( lt )
+      *lt = LinkNone;
     return 0;
+  }
   QString nmf = nm, first, rest;
   
   if( nm[0] == ':' ) { // handle old ':name' from TModel
@@ -1022,6 +938,8 @@ const double* TDataSet::getDoublePtr( const QString &nm ) const
 
   int nm_type = splitName( nmf, first, rest );
   if( nm_type == -1 ) {
+    if( lt )
+      *lt = LinkBad;
     qDebug( "TDataSet::setDoublePtr: bad target name \"%s\"",
 	qPrintable( nmf ) );
     return 0;
@@ -1030,6 +948,8 @@ const double* TDataSet::getDoublePtr( const QString &nm ) const
   HolderData *ho = getHolder( first );
   
   if( !ho ) {
+    if( lt )
+      *lt = LinkBad;
     qDebug( "TDataSet::getDoublePtr: fail to find name \"%s\"",
 	qPrintable( first ) );
     return 0;
@@ -1038,9 +958,12 @@ const double* TDataSet::getDoublePtr( const QString &nm ) const
   if( nm_type == 1 ) { // first only
     if( ho->isObject() ) {
       HolderObj *hob= qobject_cast<HolderObj*>(ho);
-      return hob->getObj()->getDoublePtr( "out0" );
+      return hob->getObj()->getDoublePtr( "out0", lt, lev+1 );
     }
     if( ho->getOldTp() == dtpDouble ) {
+      if( lt ) {
+	*lt = ( lev == 1 ) ? LinkElm : LinkSpec;
+      }
       return static_cast<const double*>( ho->getPtr() );
     }
     return 0;
@@ -1048,10 +971,12 @@ const double* TDataSet::getDoublePtr( const QString &nm ) const
 
   // both part of name exists
   if( ! ho->isObject() ) {
+    if( lt )
+      *lt = LinkBad;
     return 0;
   }
   HolderObj *hob= qobject_cast<HolderObj*>(ho);
-  return hob->getObj()->getDoublePtr( rest );
+  return hob->getObj()->getDoublePtr( rest, lt, lev+1 );
   
 }
 
@@ -1130,18 +1055,6 @@ int TDataSet::loadDatas( istream *is )
 }
 
 // protected:
-int TDataSet::initHash(void)
-{
-   int i, hv;
-   nelm = 0; 
-   for( nelm=0; nelm < MAX_DATAELEM && d_i[nelm].tp !=0; nelm++ ) { /*NOP */} ;
-   for( i=0; i<nelm; i++ ) {
-     hv = hashVal( d_i[i].name );
-     d_i[i].hval = hv;
-   };
-   return 0;
-}
-
 
 int TDataSet::processElem( istream *is )
 {
@@ -1150,8 +1063,6 @@ int TDataSet::processElem( istream *is )
   QString val, delim, tbuf;
   char nm[MAX_NAMELEN];
   char str[MAX_INPUTLEN];
-  TDataInfo inf;
-  inf.descr = inf.listdata = 0; // safe values 
   is->getline( str, MAX_INPUTLEN );
   if( is->fail() ) return -1;
   k = typeOfLine( str, MAX_INPUTLEN, &l, nm, &val );
@@ -1256,7 +1167,7 @@ void* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
   if( !allow_add )
     return nullptr;
   if( getHolder( ob_name ) != nullptr ) {
-    qDebug( "ERR: TDataSet::add_obj: name \"%s\" exist int %s!",
+    qDebug( "ERR: TDataSet::add_obj: name \"%s\" exist in %s!",
 	qPrintable(ob_name), qPrintable( getFullName() ) );
     return nullptr;
   }
@@ -1266,102 +1177,45 @@ void* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
     return nullptr;
   }
   ob->check_guard();
-  const TClassInfo *cl = ElemFactory::theFactory().getInfo( cl_name );
+  // const TClassInfo *cl = ElemFactory::theFactory().getInfo( cl_name );
   
-  // TODO: KILL! legacy part // most values is fake!
-  ptrs.push_back(0);
-  ptrs[nelm] = ob;
-  d_i[nelm].tp = dtpObj; 
-  d_i[nelm].subtp = cl->id;
-  d_i[nelm].max_len = 0;
-  d_i[nelm].dlg_x = 0; d_i[nelm].dlg_y = 0;
-  d_i[nelm].dlg_w = 0; d_i[nelm].dlg_h = 0;
-  d_i[nelm].v_min = 0; d_i[nelm].v_max = 0;
-  d_i[nelm].dyna = 1; d_i[nelm].flags = 0;
-  d_i[nelm].name[0] = 0;
-  strncat( d_i[nelm].name, qPrintable(ob_name), MAX_NAMELEN-1 );
-  d_i[nelm].descr = "";
-  d_i[nelm].listdata = "";
-  d_i[nelm].hval = hashVal( d_i[nelm].name );
-  nelm++;
-  d_i[nelm].tp = dtpEnd; ptrs[nelm]=0;
   return ob;
 }
 
-int TDataSet::del_obj( int n_ptrs )
+int TDataSet::del_obj( const QString &ob_name )
 {
-  int i, *i_ob;
-  double *d_ob; char *s_ob;
-  TDataSet* ob;
-  if( !allow_add || !d_i_alloc
-       || n_ptrs >= nelm || n_ptrs < 0 ) return -1;
-  if( d_i[n_ptrs].dyna == 0 ) return -2;
-  switch( d_i[n_ptrs].tp ) {
-    case dtpInt: i_ob = (int*)ptrs[n_ptrs];
-                 delete i_ob; break;
-    case dtpDbl: d_ob = (double*)ptrs[n_ptrs];
-                 delete d_ob; break;
-    case dtpStr: s_ob = (char*)ptrs[n_ptrs];
-                 delete[] s_ob; break;
-    case dtpObj: ob = static_cast<TDataSet*>( ptrs[n_ptrs] );
-		 QString ho_name = "_HO_" + ob->objectName();
-                 delete ob; 
-		 HolderObj* hob = findChild<HolderObj*>(ho_name);
-		 if( hob ) {
-		   delete hob;
-		 } else {
-		   qDebug( "WARN: fail to find to del holder %s", qPrintable(ho_name) );
-		 }
-		 break;
-  };
-  ptrs[n_ptrs] = 0;
-  //delete[] d_i[n_ptrs].descr;
-  //delete[] d_i[n_ptrs].listdata;
-  for( i=n_ptrs; i<nelm-1; i++ ) {
-    ptrs[i] = ptrs[i+1];
-    d_i[i] = d_i[i+1];
-  };
-  ptrs[nelm] = 0; d_i[nelm].tp = dtpEnd; nelm--;
-  return 0;
+  HolderData *ho = getHolder( ob_name );
+  if( !ho ) {
+    qDebug( "TDataSet::del_obj: not found element \"%s\"", qPrintable( ob_name ) );
+    return 0;
+  }
+  if( ! ho->isDyn() ) {
+    qDebug( "TDataSet::del_obj: obj \"%s\" is not created dynamicaly",
+	    qPrintable( ob_name ) );
+    return 0;
+  }
+  delete ho; // auto remove object and from parets lists
+  return 1;
 }
+
 
 int TDataSet::isValidType( int /* a_tp*/, int /* a_subtp */ ) const
 {
   return 1;
 }
 
-int TDataSet::isChildOf( const char *cname )
+bool TDataSet::isChildOf( const QString &cname )
 {
   check_guard();
-  const TClassInfo *ci, *pci;
-  int l;
-  l = strlen( cname );
-  if( l < 1 || l >=MAX_NAMELEN ) return 0;
-  if( strcmp( getClassName(), cname ) == 0 )
-    return 1;
-  ci = getClassInfo();    
-  while( (pci = ci->parent_class) != 0 ) {
-    if( strcmp( pci->className, cname ) == 0 )
-      return 1;
-    ci = pci;
-  };
-  return 0;
+  const QMetaObject *mob = metaObject();
+  while( mob ) {
+    if( cname == mob->className() )
+      return true;
+    mob = mob->superClass(); 
+  }
+  return false;
 }
 
-int TDataSet::isChildOf( int cid )
-{
-  check_guard();
-  const TClassInfo *ci, *pci;
-  if( cid == getClassId() )
-    return 1;
-  ci = getClassInfo();        
-  while( (pci = ci->parent_class) != 0 ) {
-    if( pci->id == cid )
-      return 1;
-    ci = pci;
-  };
-  return 0;
-}
 
 // FIXME: implement 
 bool TDataSet::set( const QVariant & x )
@@ -1437,12 +1291,6 @@ QDomElement TDataSet::toDom( QDomDocument &dd ) const
       de.appendChild( cde );
     }
 
-    // TODO: drop this! add/remove holder with object
-    //if( xo->inherits("TDataSet" )) {
-    //  TDataSet *ob = qobject_cast<TDataSet*>(xo);
-    //  QDomElement cde = ob->toDom( dd );
-    //  de.appendChild( cde );
-    //}
   }
   
   return de;
@@ -1462,12 +1310,7 @@ void TDataSet::dumpStruct() const
   ++dump_lev;
   qDebug( "*%d struct of %s %s nelm=%d this=%p", 
          dump_lev, getClassName(), qPrintable(objectName()), nelm, this );
-  for( int i=0; i<nelm; ++i ) {
-    qDebug( "** [%d] %s %d.%d = %p", 
-	i, d_i[i].name, d_i[i].tp, d_i[i].subtp, ptrs[i] );
-  }
   // new part
-  qDebug( "----- new part --" );
   QObjectList childs = children();
   int i = 0;
   for( auto o : childs ) {

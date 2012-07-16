@@ -134,8 +134,7 @@ void QStructView::drawAll( QPainter &p )
   int li_dst_xs, li_src_xs, li_dst_xa;
   int s_ord, s_grid, s_names, s_icons;
   LinkInfo li[8];
-  QString ob_descr;
-  QString qs, ob_name;
+  QString qs, ob_name, target_name;
   TMiso *ob;
   TOutArr *arr;
   Mo2Settings *psett;
@@ -348,10 +347,10 @@ void QStructView::drawAll( QPainter &p )
   for( out_nu=0; out_nu < n_out; out_nu++ ) {
     arr = model->getOutArr( out_nu );
     if( arr == 0 ) continue;
-    ob_descr = ""; out_tp = -1;
-    arr->getData( "name", ob_descr );
+    target_name = ""; out_tp = -1;
+    arr->getData( "name", target_name );
     arr->getData( "type", &out_tp );
-    elnu = model->oname2elnu( ob_descr.toLocal8Bit().constData() );
+    elnu = model->oname2elnu( target_name );
     if( elnu < 0 ) continue;
     ob = model->getMiso( elnu );
     if( ob == 0 ) continue;

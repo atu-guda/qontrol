@@ -78,8 +78,6 @@ class TElmLink : public TDataSet {
    PRM_SWITCH1( pflags1, efNoRunChange, "only First 1", "Change param 1 only at start", ""  );
    PRM_SWITCH1( pflags2, efNoRunChange, "only First 2", "Change param 2 only at start", ""  );
    PRM_SWITCH1( pflags3, efNoRunChange, "only First 3", "Change param 3 only at start", ""  );
-   /** data descriptors */ 
-   static TDataInfo telmlink_d_i[40];
    /** class decription */
    static TClassInfo class_info;
    /** help str */
@@ -89,14 +87,6 @@ typedef TElmLink* PTElmLink;
 typedef const TElmLink* CPTElmLink;
 
 // ------------------------- LinkInfo ----------------------------
-
-/** types of link */
-enum ltype_t {
-  LinkNone = 0, // not linked
-  LinkElm,      // linked to element 
-  LinkSpec,     // linked to special name, like ':prm1', ':t'
-  LinkBad       // link target not found
-};
 
 /** 
  * \struct LinkInfo tmiso.h
@@ -224,8 +214,6 @@ class TMiso : public TDataSet  {
    int max_prm;
    /** parameters modified during run flag */
    int prm_mod;
-   /** data descriptors -- empty -- never be used */ 
-   static TDataInfo tmiso_d_i[2];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

@@ -31,43 +31,13 @@ TClassInfo TSwitch::class_info = {
   CLASS_ID_TSwitch, "TSwitch", TSwitch::create,
   &TMiso::class_info, helpstr, clpElem | clpPure };
 
-TDataInfo TSwitch::tswitch_d_i[14] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 380, 200, 0,  0.0, 0.0, 0, 0, "dial", "", "Dialog for TSwitch"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_level1", "", "level 1"},
- { dtpDou,        0,   0,   20,  70, 120,  20, 0,  -1e300, 1e300, 0, 0, "level1", "level1", ""},
- { dtpLabel,      0,   0,   30, 100,  50,  20, 0,  0.0, 0.0, 0, 0, "l_level2", "", "level 2"},
- { dtpDou,        0,   0,   20, 120, 120,  20, 0,  -1e300, 1e300, 0, 0, "level2", "level2", ""},
- { dtpButton,     0,   0,   20, 160,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 160,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 160,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
-
 
 TSwitch::TSwitch( TDataSet* aparent )
         :TMiso( aparent ),
 	PRM_INIT( level1, "Level 1" ),
 	PRM_INIT( level2, "Level 2" )
 {
-  int i;
   level1 = 1; level2 = 2;
-  d_i = tswitch_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &level1; ptrs[6] = &level2;
-  // from TMiso 
-  ptrs[10] = links;
-  ptrs[11] = &vis_x; ptrs[12] = &vis_y;
 
   PRMI(level1).setDescr( "Level to switch u[0]->u[1]" );
   PRMI(level2).setDescr( "Level to switch u[1]->u[2]" );

@@ -63,8 +63,6 @@ class TLatch : public TMiso  {
    double u_old;
    /** flags, state */
    int usePulse, useFirst, useAdd, wasLatch;
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tlatch_d_i[19];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

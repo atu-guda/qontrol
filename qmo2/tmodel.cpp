@@ -38,10 +38,9 @@ TClassInfo TModel::class_info = {
 
 TModel::TModel( TDataSet* aparent )/*{{{1*/
        :TDataContainer( aparent ), 
-         vars( MODEL_NVAR, 0 ),
-	 outs( RESERVED_OUTS, 0 )
+         vars( MODEL_NVAR, 0 )
 {
-  n_el = n_out = n_graph = 0; end_loop = 0;
+  end_loop = 0;
   tt = 100; nn = n_tot= 100000; nl1 = 1; nl2 = 1; n_steps=1000; use_sync = 0;
   prm0s = prm1s = prm2s = prm3s = 0.1; 
   prm0d = prm1d = 0.01; xval1 = xval2 = 0;
@@ -60,11 +59,9 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   E = M_E;
   const int ELM_RES = 64; const int OUT_RES = 32;
   v_el.reserve( ELM_RES ); v_ord.reserve( ELM_RES ); v_flg.reserve( ELM_RES );
-  v_out.reserve( OUT_RES ); v_oute.reserve( OUT_RES ); 
+  v_out.reserve( OUT_RES ); 
   v_outt.reserve( OUT_RES );
   v_graph.reserve( 16 );
-  inps.reserve( ELM_RES ); pinps.reserve( ELM_RES ); 
-  pnames.reserve( ELM_RES ); pflags.reserve( ELM_RES );
   fillCommon();
   
 }/*}}}1*/
@@ -153,9 +150,8 @@ int TModel::stopRun( int reason )/*{{{1*/
   
 int TModel::runOneLoop(void)/*{{{1*/
 {
-  int out_nu, elnu, out_level;
+  int out_level;
   unsigned long wait_ms;
-  TMiso *cur_el; TOutArr *arr;
   rtime = get_real_time() - start_time;
   if( use_sync ) {
      if( t > rtime ) {
@@ -168,16 +164,19 @@ int TModel::runOneLoop(void)/*{{{1*/
   if( ii == nn-1 ) {
     out_level = run_type;
   };
-  for( elnu=0; elnu<n_el && end_loop == 0; elnu++ ) {
-     cur_el = static_cast<TMiso*> ( ptrs[ v_el[elnu] ]);
+
+  int elnu = 0;
+  for( TMiso* cur_el : v_el ) {
+    if( end_loop )
+      break;
      int curr_flg = v_flg[elnu];
      if( (curr_flg &  4 ) && ( ii != 0 ) ) continue; // only first
      if( (curr_flg &  8 ) && ( ii != nn-1 ) ) continue; // only last 
      
-     outs[elnu] = cur_el->fun( t );  // <==================== main action
+     cur_el->fun( t );  // <============ main action TODO: from ^ to fun
+     ++elnu;
   };  // end element loop;
-  for( out_nu=0; out_nu<n_out; out_nu++ ) { // fill out arrays(0)
-    arr = getOutArr( out_nu );
+  for( TOutArr* arr : v_out ) { 
     arr->take_val( out_level );
   };
   t += tdt; ii++;
@@ -186,17 +185,11 @@ int TModel::runOneLoop(void)/*{{{1*/
 
 int TModel::preRun( int run_tp, int anx, int any )/*{{{1*/
 {
-  int elnu, rc;
-  TMiso *ob;
+  int rc;
   tdt = tt / nn;
-  if( outs.size() < (unsigned)n_el ) {
-    outs.resize( n_el * 2 , 0 );
-  } 
-  outs.assign( outs.size(), 0 );
   
   state = stateRun;
-  for( elnu=0; elnu<n_el; elnu++ ) {
-    ob = getMiso( elnu );
+  for( TMiso *ob : v_el ) {
     if( ob != 0 ) {
       rc = ob->preRun( run_tp, nn, anx, any, tdt );
       if( rc != 0 )
@@ -208,10 +201,8 @@ int TModel::preRun( int run_tp, int anx, int any )/*{{{1*/
 
 int TModel::postRun(void)/*{{{1*/
 {
-  int elnu, cm = 0;
-  TMiso *ob;
-  for( elnu=0; elnu<n_el; elnu++ ) {
-    ob = getMiso( elnu );
+  int cm = 0;
+  for( TMiso *ob : v_el ) {
     if( ob != 0 ) {
       ob->postRun( end_loop );
       cm |= ob->getModified();
@@ -224,11 +215,9 @@ int TModel::postRun(void)/*{{{1*/
 
 int TModel::reset(void)/*{{{1*/
 {
-  int i;
-  TOutArr *arr;
-  for( i=0; i<n_out; i++ ) {
-    arr = getOutArr( i );
-    if( arr == 0 ) continue; // never be!
+  for( TOutArr *arr : v_out ) {
+    if( arr == 0 ) 
+      continue; // never be!
     arr->free();
   };
   linkNames();
@@ -238,11 +227,10 @@ int TModel::reset(void)/*{{{1*/
 
 int TModel::allStartLoop( int acnx, int acny )/*{{{1*/
 {
-  int elnu, rc;
-  TMiso *ob;
-  for( elnu=0; elnu<n_el; elnu++ ) {
-    ob = getMiso( elnu );
-    if( ob == 0 ) continue;
+  int rc;
+  for( TMiso *ob : v_el ) {
+    if( ob == 0 ) 
+      continue;
     rc = ob->startLoop( acnx, acny );
     if( rc != 0 )
       return rc;
@@ -252,24 +240,21 @@ int TModel::allStartLoop( int acnx, int acny )/*{{{1*/
 
 void TModel::allEndLoop(void)/*{{{1*/
 {
-  int elnu;
-  TMiso *ob;
-  for( elnu=0; elnu<n_el; elnu++ ) {
-    ob = getMiso( elnu );
-    if( ob == 0 ) continue;
+  for( TMiso *ob : v_el ) {
+    if( ob == nullptr ) 
+      continue;
     ob->endLoop();
   };
 }/*}}}1*/
 
 void TModel::allocOutArrs( int tp )/*{{{1*/
 {
-  int out_nu, out_tp;
-  TOutArr *arr;
+  int out_tp;
   if( tp < 0 || tp > 2 )
     return;
-  for( out_nu=0; out_nu < n_out; out_nu++ ) { // alloc output array
-    arr = getOutArr( out_nu );
-    if( arr == 0 ) continue;
+  for( TOutArr *arr: v_out ) { // alloc output array
+    if( !arr ) 
+      continue;
     out_tp = -1;
     arr->getData( "type", &out_tp );
     if( out_tp < 0 || out_tp > tp )
@@ -285,11 +270,9 @@ void TModel::allocOutArrs( int tp )/*{{{1*/
 
 void TModel::resetOutArrs( int level )/*{{{1*/
 {
-  int out_nu;
-  TOutArr *arr;
-  for( out_nu=0; out_nu < n_out; out_nu++ ) { 
-    arr = getOutArr( out_nu );
-    if( arr == 0 ) continue;
+  for( TOutArr *arr : v_out ) { 
+    if( !arr ) 
+      continue;
     arr->reset( level );
   };
 }/*}}}1*/
@@ -314,78 +297,50 @@ double* TModel::getVars(void)/*{{{1*/
   return &(vars[0]); // TODO: const vector<double>&
 }/*}}}1*/
 
-int TModel::oname2elnu( const char *iname ) const/*{{{1*/
+int TModel::oname2elnu( const QString &iname ) const/*{{{1*/
 {
-  int i, j, l, idx;
-  static const char *spc_names[19] =  {
-   "t", "tdt", "prm0", "prm1", "prm2", "prm3", 
-   "nn", "nl1", "nl2", "ii", "il1", "il2", "T" , "sqrt2", "sqrt1_2",
-   "one", "PI", "E", "rtime"
-  };	  
-  l = strlen( iname );
-  if( l < 1 || l >= MAX_INPUTLEN ) return -2; // bad name
-  if( iname[0] == ':' ) {  // TModel special nums
-    for( i=0; i<19; i++ ) {
-      if( strcmp( spc_names[i], iname+1 ) == 0 )  // TODO: hash names ?
-        return -10-i;
-    };
+  ltype_t lt;
+  const double *dp;
+  if( iname.isEmpty() )
+    return -1;
+  dp = getDoublePtr( iname, &lt );
+  if( !dp || lt == LinkBad )
     return -2;
+  if( lt == LinkSpec ) {  
+    return -12; 
   };  
-  if( iname[0] == '.' ) {  // name relative to TModel
-    return -4;
-  };	  
-  if( iname[0] == '/' ) {  // from root -- not handled as number
-     return -3;
-  };
-  if( iname[0] == '#' ) {  // access to vars[]
-    j = atoi( iname+1 );
-    if( j < 0 || j >= MODEL_NVAR )
-      return -2;
-    return (-100-j);
-  };
-  idx = getDataIdx( iname );
-  if( idx < 0 )
-    return -2;
-  for( i=0; i<n_el; i++ ) {
-    if( v_el[i] == idx )
+
+  int i = 0;
+  for( TMiso *ob : v_el ) {
+    if( ob->objectName() == iname )
       return i;
+    ++i;
+  };
+  return -2;
+}/*}}}1*/
+
+int TModel::outname2out_nu( const QString &iname ) const/*{{{1*/
+{
+  int i = 0;
+  for( TOutArr *arr : v_out ) {
+    if( arr && arr->objectName() == iname )
+      return i;
+    ++i;
   };
   return -1;
 }/*}}}1*/
 
-int TModel::outname2out_nu( const char *iname ) const/*{{{1*/
-{
-  int i, l, idx;
-  l = strlen0( iname );
-  if( l < 1 || l >= MAX_INPUTLEN ) return -1; // bad name
-  idx = getDataIdx( iname );
-  if( idx < 0 )
-    return -1;
-  for( i=0; i<n_out; i++ ) {
-    if( v_out[i] == idx )
-      return i;
-  };
-  return -1;
-}/*}}}1*/
-
-int TModel::elnu2idx( int elnu ) const/*{{{1*/
-{
-  if( elnu < 0 || elnu >= n_el )
-    return -1;
-  return v_el[elnu];
-}/*}}}1*/
 
 int TModel::ord2elnu( int aord ) const/*{{{1*/
 {
-  int i;
-  for( i=0; i<n_el; i++ ) {
+  for( unsigned i=0; i<v_ord.size(); i++ ) {
     if( v_ord[i] == aord )
       return i;
   };	  
   return -1;
 }/*}}}1*/
 
-int TModel::fback( int code, int /* aord */, const char* /* tdescr */ )/*{{{1*/
+int TModel::fback( int code, int /* aord */, const QString & /* tdescr */ )/*{{{1*/
 {
   if( code ) {
     end_loop = code;
@@ -400,18 +355,18 @@ int TModel::checkData( int n )/*{{{1*/
   return TDataContainer::checkData( n );
 }/*}}}1*/
 
-int TModel::xy2elnu( int avis_x, int avis_y )/*{{{1*/
+int TModel::xy2elnu( int avis_x, int avis_y )/*{{{1*/ // TODO: todel
 {
-  int i, ox, oy;
-  TMiso *ob;
-  for( i=0; i<n_el; i++ ) {
-    ob = static_cast<TMiso*>(ptrs[v_el[i]]);
-    if( ob == 0 ) continue;
+  int i = 0, ox, oy;
+  for( TMiso *ob : v_el ) {
+    if( ob == 0 ) 
+      continue;
     ox = oy = -1;
     ob->getData( "vis_x", &ox );
     ob->getData( "vis_y", &oy );
     if( ox == avis_x && oy == avis_y ) 
       return i;
+    ++i;
   };	  
   return -1;
 }/*}}}1*/
@@ -419,16 +374,8 @@ int TModel::xy2elnu( int avis_x, int avis_y )/*{{{1*/
 TMiso* TModel::xy2Miso( int avis_x, int avis_y ) const/*{{{1*/
 {
   int  ox, oy;
-  TMiso *ob;
-  HolderObj *hob;
-  for(QObject* child : children() ) {  
-    hob = qobject_cast<HolderObj*>( child );
-    if( !hob )
-      continue;
-    if( ! hob->isObject( "TMiso" ) )
-      continue;
-    ob = qobject_cast<TMiso*>( hob->getObj() );
-    if( ! ob )
+  for( TMiso *ob : v_el ) {
+    if( !ob )
       continue;
     ox = oy = -1;
     ob->getData( "vis_x", &ox );
@@ -441,70 +388,61 @@ TMiso* TModel::xy2Miso( int avis_x, int avis_y ) const/*{{{1*/
 
 int TModel::getNMiso(void) const/*{{{1*/
 {
-  return n_el;
+  return v_el.size();
 }/*}}}1*/
 
 TMiso* TModel::getMiso( int elnu )/*{{{1*/
 {
-  if( elnu < 0 || elnu >= n_el )
-    return 0;
-  return static_cast<TMiso*> ( ptrs[ v_el[elnu] ]);
+  if( elnu < 0 || elnu >= (int)v_el.size() )
+    return nullptr;
+  return v_el[elnu];
 }/*}}}1*/
 
 int TModel::getNOutArr(void) const/*{{{1*/
 {
-  return n_out;
+  return v_out.size();
 }/*}}}1*/
 
 TOutArr* TModel::getOutArr( int out_nu )/*{{{1*/
 {
-  int k;
-  if( out_nu < 0 || out_nu >= n_out )
-    return 0;
-  k = v_out[out_nu];
-  if( k < 0 || k >= nelm )
-    return 0;
-  if( d_i[k].tp != dtpObj || d_i[k].subtp != CLASS_ID_TOutArr )
-    return 0;
-  return static_cast<TOutArr*>(ptrs[ k ]);
+  if( out_nu < 0 || out_nu >= (int)v_out.size() )
+    return nullptr;
+  return v_out[out_nu];
 }/*}}}1*/
 
 int TModel::getNGraph(void) const/*{{{1*/
 {
-  return n_graph;
+  return v_graph.size();
 }/*}}}1*/
 
 TGraph* TModel::getGraph( int gra_nu )/*{{{1*/
 {
-  if( gra_nu < 0 || gra_nu >= n_graph )
-    return 0;
-  return static_cast<TGraph*>(ptrs[v_graph[gra_nu]]);
+  if( gra_nu < 0 || gra_nu >= (int)v_graph.size() )
+    return nullptr;
+  return v_graph[gra_nu];
 }/*}}}1*/
 
 int TModel::insElem( const QString &cl_name, const QString &ob_name,
                      int aord, int avis_x, int avis_y )/*{{{1*/
 {
   TMiso *ob;
-  reset();
   ob = static_cast<TMiso*>( add_obj( cl_name, ob_name ) );
   if( ob == 0 || ob->isChildOf( "TMiso" ) == 0 ) 
     return -1;
   ob->setData( "ord", aord );
   ob->setData( "vis_x", avis_x );  
   ob->setData( "vis_y", avis_y );
-  linkNames();
+  reset();
   modified |= 1;
   return 0;
 }/*}}}1*/
 
 int TModel::insOut( const QString &outname, const QString &objname )/*{{{1*/
 {
-  TOutArr *ob;
-  reset();
-  ob = static_cast<TOutArr*>( add_obj( "TOutArr", outname ) );
-  if( ob == 0 || ob->isChildOf( "TOutArr" ) == 0 ) 
+  TOutArr *arr = static_cast<TOutArr*>( add_obj( "TOutArr", outname ) );
+  if( !arr || arr->isChildOf( "TOutArr" ) == 0 ) 
     return -1;
-  ob->setData( "name", objname );
+  arr->setData( "name", objname );
   
   QString lbl = objname;
   if( lbl.left(4) == "out_" )
@@ -512,59 +450,46 @@ int TModel::insOut( const QString &outname, const QString &objname )/*{{{1*/
   if( lbl.left(1) == ":" )
     lbl.remove(0,1);
 
-  ob->setData( "label", lbl );
+  arr->setData( "label", lbl );
   
-  linkNames(); 
+  reset();
   modified |= 1;
   return 0;
 }/*}}}1*/
 
 int TModel::insGraph( const QString &gname )/*{{{1*/
 {
-  TGraph *ob;
-  reset();
-  ob = static_cast<TGraph*>( add_obj( "TGraph", gname ) );
-  if( ob == 0 || ob->isChildOf( "TGraph" ) == 0 ) 
+  TGraph *gra = static_cast<TGraph*>( add_obj( "TGraph", gname ) );
+  if( !gra || gra->isChildOf( "TGraph" ) == 0 ) 
     return -1;
-  linkNames(); 
+  reset();
   modified |= 1;
   return 0;
 }/*}}}1*/
 
-int TModel::delElem( const char *ename )/*{{{1*/
+int TModel::delElem( const QString &ename )/*{{{1*/
 {
-  int ne, k;
-  reset();
-  ne = oname2elnu( ename );
-  if( ne < 0 )
-    return -1;
-  k = del_obj( v_el[ne] );
-  linkNames();
-  modified |= 1;
-  return k;
-}/*}}}1*/
-
-int TModel::delElem( int elnu )/*{{{1*/
-{
-  int k;
-  reset();
-  if( elnu < 0 || elnu >= n_el )
-    return -1;
-  k = del_obj( v_el[elnu] );
-  linkNames();
-  modified |= 1;
-  return k;
+  TMiso *ob = qobject_cast<TMiso*>(getObj( ename, "TMiso" ));
+  if( !ob ) {
+    qDebug( "TModel::delElem: fail to find TMiso \"%s\"", qPrintable(ename) );
+    return 0;
+  }
+  int rc = del_obj( ename );
+  if( rc ) {
+    reset();
+    modified |= 1;
+  }
+  return rc;
 }/*}}}1*/
 
 
 int TModel::delOut( int out_nu )/*{{{1*/
 {
   int k;
-  reset();
-  if( out_nu < 0 || out_nu >= n_out )
+  if( out_nu < 0 || out_nu >= (int)v_out.size() )
     return -1;
-  k = del_obj( v_out[out_nu] );
-  linkNames();
+  k = del_obj( v_out[out_nu]->objectName() );
+  reset();
   modified |= 1;
   return k;
 }/*}}}1*/
@@ -572,54 +497,39 @@ int TModel::delOut( int out_nu )/*{{{1*/
 int TModel::delGraph( int gr_nu )/*{{{1*/
 {
   int k;
-  if( gr_nu < 0 || gr_nu >= n_graph )
+  if( gr_nu < 0 || gr_nu >= (int)v_graph.size() )
     return -1;
+  k = del_obj( v_graph[gr_nu]->objectName() );
   reset();
-  k = del_obj( v_graph[gr_nu] );
-  linkNames();
   modified |= 1;
   return k;
 }/*}}}1*/
 
-int TModel::newOrder( const char *name, int new_ord )/*{{{1*/
+int TModel::newOrder( const QString &name, int new_ord )/*{{{1*/
 {
-  int elnu;
-  elnu = oname2elnu( name );
-  if( elnu < 0 || elnu >= n_el )
+  TMiso *ob = qobject_cast<TMiso*>( getObj( name, "TMiso" ) );
+  if( !ob )
     return -1;
-  return newOrder( elnu, new_ord );
-}/*}}}1*/
-
-int TModel::newOrder( int elnu, int new_ord )/*{{{1*/
-{
-  int k;
-  TMiso *ob;
-  reset();
-  if( elnu < 0 || elnu >= n_el )
-    return -1;
-  k = ord2elnu( new_ord );
+  int k = ord2elnu( new_ord );
   if( k >= 0 )
     return -1;
-  ob = static_cast<TMiso*>(ptrs[v_el[elnu]]);
   ob->setData( "ord", new_ord );
   ob->getData( "ord", &k );
-  v_ord[elnu] = k;
-  linkNames();
+  reset();
   modified |= 1;
   return ( k == new_ord ) ? 0 : -1;
 }/*}}}1*/
 
 int TModel::moveElem( int elnu, int newx, int newy )/*{{{1*/
 {
-  int i, cx, cy;
+  int cx, cy;
   TMiso *ob, *ob1;
-  reset();
   if( newx < 0 || newy < 0 )
     return -1;
   ob = getMiso( elnu );
   if( ob == 0 ) return -1;
-  for( i=0; i<n_el; i++ ) {
-    if( i == elnu ) continue;
+  for( unsigned i=0; i<v_el.size(); i++ ) {
+    if( (int)i == elnu ) continue;
     cx = cy = -2;
     ob1 = getMiso( i );
     if( ob1 == 0 ) continue;
@@ -628,52 +538,60 @@ int TModel::moveElem( int elnu, int newx, int newy )/*{{{1*/
   };  
   ob->setData( "vis_x", newx );
   ob->setData( "vis_y", newy );
+  reset();
   return 0;
 }/*}}}1*/
 
 int TModel::linkNames(void)/*{{{1*/
 {
-  int i, j, k, maxli, maxlp, oord, iin, ipa, ipn, flg,
-      elnu, ob_lock, ob_noauto, ob_first, ob_last, out_tp, out_nu;
-  static const char* i_names[] = {"inps0","inps1","inps2","inps3"};
-  static const char* p_names[] = {"pinps0","pinps1","pinps2","pinps3"};
-  static const char* n_names[] = {"pnames0","pnames1","pnames2","pnames3"};
-  static const char* f_names[] = {"pflags0","pflags1","pflags2","pflags3"};
+  int i, k, oord,
+      ob_lock, ob_noauto, ob_first, ob_last, out_tp;
   QString lname, pname, nname, oname;
-  TDataSet* ob; TElmLink* lob; TOutArr *arr;
-  n_el = n_out = n_graph = 0;    
+  TElmLink* lob;
   v_el.clear(); v_ord.clear(); v_flg.clear();
-  v_out.clear(); v_oute.clear(); v_outt.clear();
+  v_out.clear(); v_outt.clear();
   v_graph.clear();
-  inps.clear(); pinps.clear(); pnames.clear(); pflags.clear();
-  for( i=0; i<nelm; i++ ) { // find elements of given types
-    if( d_i[i].tp != dtpObj ) continue;
-    ob = static_cast<TDataSet*> (ptrs[i]);
-    if( ob == 0 ) continue;
-    if( ob->isChildOf( "TMiso" )) {
-      v_el.push_back( i ); oord = -1;
-      ob->getData( "ord", &oord );
-      v_ord.push_back( oord );
-      n_el++; continue;
-    };
-    if( ob->isChildOf( "TOutArr" )) {
-      v_out.push_back( i );
-      n_out++; continue;
-    };
-    if( ob->isChildOf( "TGraph" )) {
-      v_graph.push_back( i );
-      n_graph++; continue;
-    };
-  }; // end of elems counter
-  sortOrd();
-  for( i=0; i<n_el; i++ ) { // fill link indexes
-    inps.push_back( li_el()  );    pinps.push_back( li_el()  );
-    pnames.push_back( li_el()  );  pflags.push_back( li_el()  );
-    ob = static_cast<TMiso*>(ptrs[v_el[i]]);
-    lob = static_cast<TElmLink*>(ob->getObj( "links" )); 
-    if( !lob ) 
+  
+  HolderData* ho; HolderObj *hob;      
+  for( QObject* child : children() ) { // find elements of given types: TODO:
+    ho = qobject_cast<HolderData*>( child );
+    if( !ho || !ho->isObject()  )
       continue;
-    maxli = maxlp = 0;
+    hob = qobject_cast<HolderObj*>(ho);
+    if( !hob )
+      continue;
+    TDataSet* ds = hob->getObj();
+    
+    if( ds->isChildOf( "TMiso" )) {
+      v_el.push_back( qobject_cast<TMiso*>(ds) );
+      oord = -1;
+      ds->getData( "ord", &oord );
+      v_ord.push_back( oord );
+      continue;
+    };
+    if( ds->isChildOf( "TOutArr" )) {
+      v_out.push_back( qobject_cast<TOutArr*>(ds) );
+      continue;
+    };
+    if( ds->isChildOf( "TGraph" )) {
+      v_graph.push_back( qobject_cast<TGraph*>(ds) );
+      continue;
+    };
+
+  }
+
+  sortOrd();
+  i = 0;
+  for( TMiso *ob : v_el ) { // fill link indexes
+    if( !ob ) {
+      ++i; 
+      continue;
+    }
+    lob = static_cast<TElmLink*>(ob->getObj( "links", "TElmLink" )); 
+    if( !lob ) {
+      ++i;
+      continue;
+    }
     ob_lock = ob_noauto = 0; k = 0;
     lob->getData( "locked", &ob_lock );
     lob->getData( "noauto", &ob_noauto );
@@ -684,39 +602,18 @@ int TModel::linkNames(void)/*{{{1*/
     if( ob_first ) k |= 4; 
     if( ob_last ) k |= 8;
     v_flg.push_back( k );
-    for( j=0; j<4; j++ ) {
-      lname = "";  pname = ""; nname = "";
-      lob->getData( i_names[j], lname );
-      lob->getData( p_names[j], pname );
-      lob->getData( n_names[j], nname );
-      lob->getData( f_names[j], &flg );
-      if( lname[0] == 0 || ( iin = oname2elnu( qPrintable(lname) ) ) == -1 ) {
-	inps[i].l[j] = -1;
-      } else {
-        inps[i].l[j] = iin;
-        maxli = j+1;
-      };
-      if( pname[0] == 0 || ( ipa = oname2elnu( pname.toLocal8Bit().constData() ) ) == -1 ||
-			   ( ipn = ob->getDataIdx( nname.toLocal8Bit().constData() )) < 0 ) {
-	pinps[i].l[j] = -1; pnames[i].l[j] = -1;
-      } else {
-        pinps[i].l[j] = ipa;
-        pnames[i].l[j] = ipn;
-	pflags[i].l[j] = flg;
-	maxlp = j+1;
-      };
-    };
-    inps[i].maxl = maxli;   pinps[i].maxl = maxlp;
+    ++i;
   };
+
   // fill outs elnus and types
-  for( out_nu=0; out_nu<n_out; out_nu++ ) {
-    arr = getOutArr( out_nu );
-    if( arr == 0 ) { v_oute.push_back(-1); v_outt.push_back(-1); };
+  for( TOutArr *arr : v_out ) {
+    if( arr == 0 ) { // FIXME
+      v_outt.push_back(-1); 
+      continue;
+    }; 
     oname = ""; out_tp = -1;
-    arr->getData( "name", oname );
     arr->getData( "type", &out_tp );
-    elnu = oname2elnu( oname.toLocal8Bit().constData() );
-    v_oute.push_back( elnu ); v_outt.push_back( out_tp );
+    v_outt.push_back( out_tp );
   };
   return 0;
 }/*}}}1*/
@@ -724,15 +621,16 @@ int TModel::linkNames(void)/*{{{1*/
 void TModel::sortOrd(void)/*{{{1*/
 {
   int i, n, en, t;
-  if( n_el < 2 )
+  TMiso *tob;
+  if( v_el.size() < 2 )
     return;
-  en = 0; n = n_el;
+  en = 0; n = v_el.size();
   while( en == 0 ) { // simple bubble sort TODO: use STL sort
      en = 1;
      for( i=0; i<n-1; i++ ) {
         if( v_ord[i] > v_ord[i+1] ) {
-          t = v_ord[i]; v_ord[i] = v_ord[i+1]; v_ord[i+1] = t;
-          t = v_el[i];  v_el[i] = v_el[i+1];   v_el[i+1] = t;
+          t = v_ord[i];   v_ord[i] = v_ord[i+1]; v_ord[i+1] = t;
+          tob = v_el[i];  v_el[i] = v_el[i+1];   v_el[i+1] = tob;
           en = 0;
         };
      };
@@ -754,486 +652,72 @@ int TModel::hintOrd(void) const/*{{{1*/
 int TModel::getLinkInfos( int elnu, LinkInfo *li )/*{{{1*/
 {
   int i, l_elnu, vx, vy, flip;
-  TMiso *ob;
-  if( li == 0 )
+  QString lnk;
+  if( !li )
     return -1;
   for( i=0; i<8; i++ ) {  // reset all fields to default
     li[i].reset();
   };
-  if( elnu < 0 || elnu >= n_el )
+  TMiso *to_ob = getMiso( elnu );
+  if( !to_ob )
     return -1;
-  for( i=0; i<inps[elnu].maxl && i<4; i++ ) {  // inputs
-    l_elnu = inps[elnu].l[i];
-    if( l_elnu == -1 || l_elnu >= n_el ) 
+  
+  for( i=0; i<4; ++i ) {  // inputs
+    if( ! to_ob->getData( "links.inps" + QString::number(i), lnk ) )
       continue;
-    if( l_elnu >= 0 ) { // real input
-      ob = getMiso( l_elnu );
-      if( ob == 0 ) continue;
-      vx = vy = -1; flip = 0;
-      ob->getData( "vis_x", &vx ); ob->getData( "vis_y", &vy );
-      ob->getData( "links.flip", &flip ); 
-      if( vx < 0 || vy < 0 ) continue;
-      li[i].ltype = LinkElm; li[i].elnu = l_elnu;
-      li[i].x = vx; li[i].y = vy; li[i].eflip = flip;
-    } else {  // special input or error;
-      li[i].ltype = (l_elnu<-9) ? LinkSpec : LinkBad; li[i].elnu = l_elnu;
-    };    
+    l_elnu = oname2elnu( lnk );
+    li[i].elnu = l_elnu;
+    switch( l_elnu ) {
+      case -1: continue;
+      case -2:  li[i].ltype = LinkBad; continue;
+      case -12: li[i].ltype = LinkSpec; continue;
+    }
+    if( l_elnu < 0 ) // should not happen
+      continue;
+    
+    TMiso *ob = getMiso( l_elnu );
+    if( !ob ) 
+      continue;
+    vx = vy = -1; flip = 0;
+    ob->getData( "vis_x", &vx ); ob->getData( "vis_y", &vy );
+    ob->getData( "links.flip", &flip ); 
+    if( vx < 0 || vy < 0 ) 
+      continue;
+    li[i].ltype = LinkElm;
+    li[i].x = vx; li[i].y = vy; li[i].eflip = flip;
   };
 
-  for( i=0; i<pinps[elnu].maxl && i<4; i++ ) {  // parm inputs
-    l_elnu = pinps[elnu].l[i];
-    if( l_elnu == -1 || l_elnu >= n_el ) 
+  for( i=0; i<4; i++ ) {  // parm inputs
+    int pi = i+4;
+    if( ! to_ob->getData( "links.pinps" + QString::number(i), lnk ) )
       continue;
-    if( l_elnu >= 0 ) { // real parm input
-      ob = getMiso( l_elnu );
-      if( ob == 0 ) continue;
-      vx = vy = -1;
-      ob->getData( "vis_x", &vx ); ob->getData( "vis_y", &vy );
-      ob->getData( "links.flip", &flip ); 
-      if( vx < 0 || vy < 0 ) continue;
-      li[i+4].ltype = LinkElm; li[i+4].elnu = l_elnu;
-      li[i+4].x = vx; li[i+4].y = vy; li[i+4].eflip = flip;
-      li[i+4].pflags = pflags[elnu].l[i];
-    } else {  // special input or error;
-      li[i+4].ltype = (l_elnu<-9) ? LinkSpec : LinkBad; li[i+4].elnu = l_elnu;
-    };    
+    l_elnu = oname2elnu( lnk );
+    li[pi].elnu = l_elnu;
+    switch( l_elnu ) {
+      case -1: continue;
+      case -2:  li[pi].ltype = LinkBad; continue;
+      case -12: li[pi].ltype = LinkSpec; continue;
+    }
+    if( l_elnu < 0 ) // should not happen
+      continue;
+    
+    TMiso *ob = getMiso( l_elnu );
+    if( !ob ) 
+      continue;
+    vx = vy = -1; flip = 0;
+    ob->getData( "vis_x", &vx ); ob->getData( "vis_y", &vy );
+    ob->getData( "links.flip", &flip ); 
+    if( vx < 0 || vy < 0 ) 
+      continue;
+    li[pi].ltype = LinkElm;
+    li[pi].x = vx; li[pi].y = vy; li[pi].eflip = flip;
   };
   return 0;
 
 }/*}}}1*/
 
-void TModel::fillCommon(void)/*{{{1*/
+void TModel::fillCommon(void)/*{{{1*/ // TODO: del at all
 {
-  int i = 0;
-  if( d_i ==0 || nelm != 0 ) return;
-  ptrs.clear();
-  memset( d_i, 0, sizeof(TDataInfo) * MAX_DATAELEM );
-  // - dialog
-  d_i[i].tp = dtpDial; 
-  d_i[i].dlg_w = 620; d_i[i].dlg_h=470;
-  strcpy( d_i[i].name, "modeldlg" ); d_i[i].listdata = "Model parameters";
-  i++; ptrs.push_back( 0 );
-  // - label tt
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 30; d_i[i].dlg_y = 10;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_tt" ); d_i[i].listdata = "T";
-  i++; ptrs.push_back( 0 );
-  // - enter tt 
-  d_i[i].tp = dtpDbl; d_i[i].dlg_x = 20; d_i[i].dlg_y = 30;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "tt" ); d_i[i].descr = "Time";
-  i++; ptrs.push_back( &tt );
-  // - label nn
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 130; d_i[i].dlg_y = 10;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_nn" ); d_i[i].listdata = "N";
-  i++; ptrs.push_back( 0 );
-  // - enter nn
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 120; d_i[i].dlg_y = 30;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  d_i[i].v_max = 100000000;
-  strcpy( d_i[i].name, "nn" ); d_i[i].descr = "number of steps";
-  i++; ptrs.push_back( &nn );
-  // - label nl1
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 230; d_i[i].dlg_y = 10;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_nl1" ); d_i[i].listdata = "N1 (prm0)";
-  i++; ptrs.push_back( 0 );
-  // - enter nl1
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 220; d_i[i].dlg_y = 30;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  d_i[i].v_max = 10000;
-  strcpy( d_i[i].name, "nl1" ); d_i[i].descr = "Loops number on parm 0";
-  i++; ptrs.push_back( &nl1 );
-  // - label nl2
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 330; d_i[i].dlg_y = 10;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_nl1" ); d_i[i].listdata = "N2 (prm1)";
-  i++; ptrs.push_back( 0 );
-  // - enter nl2
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 320; d_i[i].dlg_y = 30;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  d_i[i].v_max = 10000;
-  strcpy( d_i[i].name, "nl2" ); d_i[i].descr = "Loops number on parm 1";
-  i++; ptrs.push_back( &nl2 );
-  // - label n_steps 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 430; d_i[i].dlg_y = 10;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_n_steps" ); d_i[i].listdata = "N steps";
-  i++; ptrs.push_back( 0 );
-  // - enter n_steps
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 420; d_i[i].dlg_y = 30;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  d_i[i].v_max = 10000;
-  strcpy( d_i[i].name, "n_steps" ); 
-  d_i[i].listdata = "Loops of steps per i/o";
-  i++; ptrs.push_back( &n_steps );
-  // - switch use_sync
-  d_i[i].tp = dtpInt; d_i[i].subtp = dtpsSwitch; 
-  d_i[i].dlg_x = 510; d_i[i].dlg_y = 30;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "use_sync" ); 
-  d_i[i].listdata = "Sync time";
-  i++; ptrs.push_back( &use_sync );
-  // ------------------------- line ------------------------------
-  // - label prm0s
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 30; d_i[i].dlg_y = 60;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_prm0s" ); d_i[i].listdata = "prm 0";
-  i++; ptrs.push_back( 0 );
-  // - enter prm0s 
-  d_i[i].tp = dtpDbl; d_i[i].dlg_x = 20; d_i[i].dlg_y = 80;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "prm0s" ); d_i[i].descr = "Parametr 0 start";
-  i++; ptrs.push_back( &prm0s );
-  // - label prm1s
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 130; d_i[i].dlg_y = 60;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_prm1s" ); d_i[i].listdata = "prm 1";
-  i++; ptrs.push_back( 0 );
-  // - enter prm1s 
-  d_i[i].tp = dtpDbl; d_i[i].dlg_x = 120; d_i[i].dlg_y = 80;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "prm1s" ); d_i[i].descr = "Parametr 1 start";
-  i++; ptrs.push_back( &prm1s );
-  // - label prm2s
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 230; d_i[i].dlg_y = 60;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_prm2s" ); d_i[i].listdata = "prm 2";
-  i++; ptrs.push_back( 0 );
-  // - enter prm2s 
-  d_i[i].tp = dtpDbl; d_i[i].dlg_x = 220; d_i[i].dlg_y = 80;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "prm2s" ); d_i[i].descr = "Parametr 2";
-  i++; ptrs.push_back( &prm2s );
-  // - label prm3s
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 330; d_i[i].dlg_y = 60;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_prm3s" ); d_i[i].listdata = "prm 3";
-  i++; ptrs.push_back( 0 );
-  // - enter prm3s
-  d_i[i].tp = dtpDbl; d_i[i].dlg_x = 320; d_i[i].dlg_y = 80;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "prm3s" ); d_i[i].descr = "Parametr 3";
-  i++; ptrs.push_back( &prm3s );
-  // ------------------------------ line --------------------------
-  // - label prm0d
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 30; d_i[i].dlg_y = 110;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_prm0d" ); d_i[i].listdata = "d_prm0";
-  i++; ptrs.push_back( 0 );
-  // - enter prm0d
-  d_i[i].tp = dtpDbl; d_i[i].dlg_x = 20; d_i[i].dlg_y = 130;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "prm0d" ); d_i[i].descr = "Parametr 0 delta";
-  i++; ptrs.push_back( &prm0d );
-  // - label prm1d
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 130; d_i[i].dlg_y = 110;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_prm1d" ); d_i[i].listdata = "d_prm1";
-  i++; ptrs.push_back( 0 );
-  // 23- enter prm1d
-  d_i[i].tp = dtpDbl; d_i[i].dlg_x = 120; d_i[i].dlg_y = 130;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "prm1d" ); d_i[i].descr = "Parametr 1 delta";
-  i++; ptrs.push_back( &prm1d );
-  // - label xval1 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 230; d_i[i].dlg_y = 110;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_xval1" ); d_i[i].listdata = "xval1";
-  i++; ptrs.push_back( 0 );
-  // - enter xval1
-  d_i[i].tp = dtpDbl; d_i[i].dlg_x = 220; d_i[i].dlg_y = 130;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "xval1" ); d_i[i].descr = "xval1";
-  i++; ptrs.push_back( &xval1 );
-  // - label xval2 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 330; d_i[i].dlg_y = 110;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_xval2" ); d_i[i].listdata = "xval2";
-  i++; ptrs.push_back( 0 );
-  // 27- enter xval2
-  d_i[i].tp = dtpDbl; d_i[i].dlg_x = 320; d_i[i].dlg_y = 130;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "xval2" ); d_i[i].descr = "xval2";
-  i++; ptrs.push_back( &xval2 );
-  // - label seed 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 430; d_i[i].dlg_y = 110;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_seed" ); d_i[i].listdata = "Seed";
-  i++; ptrs.push_back( 0 );
-  // - enter seed 
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 420; d_i[i].dlg_y = 130;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  d_i[i].v_min = -1;
-  d_i[i].v_max = 0x7FFFFFFF;
-  strcpy( d_i[i].name, "seed" ); d_i[i].descr = "Random seed";
-  i++; ptrs.push_back( &seed );
-  // - switch: useSameSeed -- obsoleted
-  d_i[i].tp = dtpInt; d_i[i].subtp = dtpsSw; d_i[i].flags = efNoDial | efRO;
-  // d_i[i].dlg_x = 510; d_i[i].dlg_y = 130;
-  // d_i[i].dlg_w = 100; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "useSameSeed" ); d_i[i].descr = "";
-  d_i[i].listdata = "Same seed";
-  i++; ptrs.push_back( &useSameSeed );
-  // list: seed type
-  d_i[i].tp = dtpInt; d_i[i].subtp = dtpsList;
-  d_i[i].dlg_x = 510; d_i[i].dlg_y = 130;
-  d_i[i].dlg_w = 100; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "seedType" ); d_i[i].descr = "Seeding type";
-  d_i[i].max_len = 3;
-  d_i[i].listdata = "Every Run\nStart 1d loop\nStart 2d loop\n";
-  i++; ptrs.push_back( &seedType );
-  
-  // ------------------------- line ------------------------------
-  // - group inputs 
-  d_i[i].tp = dtpGroup; d_i[i].dlg_x = 16; d_i[i].dlg_y = 160;
-  d_i[i].dlg_w = 588; d_i[i].dlg_h = 70;
-  strcpy( d_i[i].name, "grp_ic" ); d_i[i].listdata = "Input indexes";
-  i++; ptrs.push_back( 0 );
-  
-  // - label ic_mouse 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 30; d_i[i].dlg_y = 180;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_ic_mouse" ); d_i[i].listdata = "Mouse";
-  i++; ptrs.push_back( 0 );
-  // - enter ic_mouse
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 20; d_i[i].dlg_y = 200;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "ic_mouse" ); d_i[i].descr = "Mouse channel";
-  i++; ptrs.push_back( &ic_mouse );
-  // - label ic_joy 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 130; d_i[i].dlg_y = 180;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_ic_joy" ); d_i[i].listdata = "Joystick";
-  i++; ptrs.push_back( 0 );
-  // - enter ic_joy
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 120; d_i[i].dlg_y = 200;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "ic_joy" ); d_i[i].descr = "Joystick channel";
-  i++; ptrs.push_back( &ic_joy );
-  // - label ic_sound 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 230; d_i[i].dlg_y = 180;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_ic_sound" ); d_i[i].listdata = "sound";
-  i++; ptrs.push_back( 0 );
-  // - enter ic_sound
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 220; d_i[i].dlg_y = 200;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "ic_sound" ); d_i[i].descr = "sound channel";
-  i++; ptrs.push_back( &ic_sound );
-  // - label ic_key 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 330; d_i[i].dlg_y = 180;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_ic_key" ); d_i[i].listdata = "keyboard";
-  i++; ptrs.push_back( 0 );
-  // - enter ic_key
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 320; d_i[i].dlg_y = 200;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "ic_key" ); d_i[i].descr = "key channel";
-  i++; ptrs.push_back( &ic_key );
-  // - label ic_aux 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 430; d_i[i].dlg_y = 180;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_ic_aux" ); d_i[i].listdata = "aux";
-  i++; ptrs.push_back( 0 );
-  // - enter ic_aux
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 420; d_i[i].dlg_y = 200;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "ic_aux" ); d_i[i].descr = "aux channel";
-  i++; ptrs.push_back( &ic_aux );
-  // ------------------------- line ------------------------------
-  // - group outputs 
-  d_i[i].tp = dtpGroup; d_i[i].dlg_x = 16; d_i[i].dlg_y = 236;
-  d_i[i].dlg_w = 588; d_i[i].dlg_h = 90;
-  strcpy( d_i[i].name, "grp_ic" ); d_i[i].listdata = "Outputs";
-  i++; ptrs.push_back( 0 );
-  
-  // - label oc_0 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 30; d_i[i].dlg_y = 250;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_oc_0" ); d_i[i].listdata = "0";
-  i++; ptrs.push_back( 0 );
-  // - enter oc_0
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 20; d_i[i].dlg_y = 270;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "oc_0" ); d_i[i].descr = "Channel 0";
-  i++; ptrs.push_back( &oc_0 );
-  // - label oc_1 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 130; d_i[i].dlg_y = 250;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_oc_1" ); d_i[i].listdata = "1";
-  i++; ptrs.push_back( 0 );
-  // - enter oc_1
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 120; d_i[i].dlg_y = 270;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "oc_1" ); d_i[i].descr = "Channel 1";
-  i++; ptrs.push_back( &oc_1 );
-  // - label oc_2 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 250; d_i[i].dlg_y = 250;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_oc_2" ); d_i[i].listdata = "2";
-  i++; ptrs.push_back( 0 );
-  // - enter oc_2
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 220; d_i[i].dlg_y = 270;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "oc_2" ); d_i[i].descr = "Channel 2";
-  i++; ptrs.push_back( &oc_2 );
-  // - label oc_3 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 330; d_i[i].dlg_y = 250;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_oc_3" ); d_i[i].listdata = "3";
-  i++; ptrs.push_back( 0 );
-  // - enter oc_3
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 320; d_i[i].dlg_y = 270;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "oc_3" ); d_i[i].descr = "Channel 3";
-  i++; ptrs.push_back( &oc_3 );
-  // - label oc_4 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 430; d_i[i].dlg_y = 250;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_oc_4" ); d_i[i].listdata = "4";
-  i++; ptrs.push_back( 0 );
-  // - enter oc_4
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 420; d_i[i].dlg_y = 270;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "oc_4" ); d_i[i].descr = "Channel 4";
-  i++; ptrs.push_back( &oc_4 );
-  // - label oc_5 
-  d_i[i].tp = dtpLabel; d_i[i].dlg_x = 530; d_i[i].dlg_y = 250;
-  d_i[i].dlg_w = 70; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "l_oc_5" ); d_i[i].listdata = "5";
-  i++; ptrs.push_back( 0 );
-  // - enter oc_5
-  d_i[i].tp = dtpInt; d_i[i].dlg_x = 520; d_i[i].dlg_y = 270;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "oc_5" ); d_i[i].descr = "Channel 5";
-  i++; ptrs.push_back( &oc_5 );
-  // ------------------------- line ------------------------------
-  static const char *och_type = 
-    "None\nCross1\nCross2\nCross3\n"
-    "Vbar0\nVbar1\nVbar2\nVbar3\n"
-    "Gbar0\nGbar1\nGbar2\nGbar3\n"
-    "LED0\nLED1\nLED2\nLED3\n"
-    "Sound0\nSound1\n"
-    "Aux0\nAux1";
-  // - list oct_0
-  d_i[i].tp = dtpInt; d_i[i].subtp = dtpsList; d_i[i].max_len = 20; 
-  d_i[i].dlg_x = 20; d_i[i].dlg_y = 296;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "oct_0" ); 
-  d_i[i].listdata = och_type;  d_i[i].descr = "Channel 0";
-  i++; ptrs.push_back( &oct_0 );
-  // - list oct_1
-  d_i[i].tp = dtpInt; d_i[i].subtp = dtpsList; d_i[i].max_len = 20; 
-  d_i[i].dlg_x = 120; d_i[i].dlg_y = 296;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "oct_1" ); 
-  d_i[i].listdata = och_type;  d_i[i].descr = "Channel 1";
-  i++; ptrs.push_back( &oct_1 );
-  // - list oct_2
-  d_i[i].tp = dtpInt; d_i[i].subtp = dtpsList; d_i[i].max_len = 20; 
-  d_i[i].dlg_x = 220; d_i[i].dlg_y = 296;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "oct_2" ); 
-  d_i[i].listdata = och_type;  d_i[i].descr = "Channel 2";
-  i++; ptrs.push_back( &oct_2 );
-  // - list oct_3
-  d_i[i].tp = dtpInt; d_i[i].subtp = dtpsList; d_i[i].max_len = 20; 
-  d_i[i].dlg_x = 320; d_i[i].dlg_y = 296;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "oct_3" ); 
-  d_i[i].listdata = och_type;  d_i[i].descr = "Channel 3";
-  i++; ptrs.push_back( &oct_3 );
-  // - list oct_4
-  d_i[i].tp = dtpInt; d_i[i].subtp = dtpsList; d_i[i].max_len = 20; 
-  d_i[i].dlg_x = 420; d_i[i].dlg_y = 296;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "oct_4" ); 
-  d_i[i].listdata = och_type;  d_i[i].descr = "Channel 4";
-  i++; ptrs.push_back( &oct_4 );
-  // - list oct_5
-  d_i[i].tp = dtpInt; d_i[i].subtp = dtpsList; d_i[i].max_len = 20; 
-  d_i[i].dlg_x = 520; d_i[i].dlg_y = 296;
-  d_i[i].dlg_w = 80; d_i[i].dlg_h = 20;
-  strcpy( d_i[i].name, "oct_5" ); 
-  d_i[i].listdata = och_type;  d_i[i].descr = "Channel 5";
-  i++; ptrs.push_back( &oct_5 );
-  // ------------------------- line ------------------------------
-  // - long_descr
-  d_i[i].tp = dtpStr; d_i[i].subtp = dtpsMline; d_i[i].max_len = 1024;
-  strcpy( d_i[i].name, "long_descr" );
-  d_i[i].dlg_x = 20;  d_i[i].dlg_y = 330;
-  d_i[i].dlg_w = 580; d_i[i].dlg_h = 90;
-  i++; ptrs.push_back( &long_descr );
-  
-  // ------------------------- line ------------------------------
-  // -- button Ok
-  d_i[i].tp = dtpButton; d_i[i].subtp = 0;
-  d_i[i].dlg_x = 20; d_i[i].dlg_y = 430;
-  d_i[i].dlg_w = 100; d_i[i].dlg_h = 30;
-  strcpy( d_i[i].name, "btn_ok" ); d_i[i].listdata = "Ok";
-  i++; ptrs.push_back( 0 );
-  // -- button Cancel
-  d_i[i].tp = dtpButton; d_i[i].subtp = 1; 
-  d_i[i].dlg_x = 250; d_i[i].dlg_y = 430;
-  d_i[i].dlg_w = 100; d_i[i].dlg_h = 30;
-  strcpy( d_i[i].name, "btn_can" ); d_i[i].listdata = "Cancel";
-  i++; ptrs.push_back( 0 );
-  // -- button Help 
-  d_i[i].tp = dtpButton; d_i[i].subtp = 2; 
-  d_i[i].dlg_x = 500; d_i[i].dlg_y = 430;
-  d_i[i].dlg_w = 100; d_i[i].dlg_h = 30;
-  strcpy( d_i[i].name, "btn_help" ); d_i[i].listdata = "Help";
-  i++; ptrs.push_back( 0 );
-  // ============================== end dialog ========================
-  // - hide ii 
-  d_i[i].tp = dtpInt; d_i[i].flags = efRO | efNoDial | efNoSave;
-  strcpy( d_i[i].name, "ii" ); 
-  i++; ptrs.push_back( &ii );
-  // - hide il1 
-  d_i[i].tp = dtpInt; d_i[i].flags = efRO | efNoDial | efNoSave;
-  strcpy( d_i[i].name, "il1" ); 
-  i++; ptrs.push_back( &il1 );
-  // - hide il2 
-  d_i[i].tp = dtpInt; d_i[i].flags = efRO | efNoDial | efNoSave;
-  strcpy( d_i[i].name, "il2" ); 
-  i++; ptrs.push_back( &il2 );
-  // - hide n_tot; 
-  d_i[i].tp = dtpInt; d_i[i].flags = efRO | efNoDial | efNoSave;
-  strcpy( d_i[i].name, "n_tot" ); 
-  i++; ptrs.push_back( &n_tot );
-  // - hide i_tot; 
-  d_i[i].tp = dtpInt; d_i[i].flags = efRO | efNoDial | efNoSave;
-  strcpy( d_i[i].name, "i_tot" ); 
-  i++; ptrs.push_back( &i_tot );
-  // - hide prm0 
-  d_i[i].tp = dtpDbl; d_i[i].flags = efNoDial | efNoSave;
-  strcpy( d_i[i].name, "prm0" ); 
-  i++; ptrs.push_back( &prm0 );
-  // - hide prm1 
-  d_i[i].tp = dtpDbl; d_i[i].flags = efNoDial | efNoSave;
-  strcpy( d_i[i].name, "prm1" ); 
-  i++; ptrs.push_back( &prm1 );
-  // - hide t 
-  d_i[i].tp = dtpDbl; d_i[i].flags = efRO | efNoDial | efNoSave;
-  strcpy( d_i[i].name, "t" ); 
-  i++; ptrs.push_back( &t );
-  // - hide tdt 
-  d_i[i].tp = dtpDbl; d_i[i].flags = efRO | efNoDial | efNoSave;
-  strcpy( d_i[i].name, "dt" ); 
-  i++; ptrs.push_back( &tdt );
-  // - hide rtime 
-  d_i[i].tp = dtpDbl; d_i[i].flags = efRO | efNoDial | efNoSave;
-  strcpy( d_i[i].name, "rtime" ); 
-  i++; ptrs.push_back( &rtime );
-  // - hide sgnt
-  d_i[i].tp = dtpInt; d_i[i].flags = efRO | efNoDial | efNoSave;
-  strcpy( d_i[i].name, "sgnt" );
-  i++; ptrs.push_back( &sgnt );
-  // - end
-  d_i[i].tp = dtpEnd;
-  initHash();
 }/*}}}1*/
 
 TDataSet* TModel::create( TDataSet* apar ) // static/*{{{1*/
@@ -1257,16 +741,22 @@ const char *TModel::getHelp(void) const/*{{{1*/
   return helpstr;
 }/*}}}1*/
 
-const double* TModel::getDoublePtr( const QString &nm ) const
+const double* TModel::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) const
 {
   static const double fake_so = 0;
-  if( nm[0] != '#' )
-    return TDataSet::getDoublePtr( nm );
+  if( nm[0] != '#' ) {
+    return TDataSet::getDoublePtr( nm, lt, lev );
+  }
   QString nn = nm;
   nn.remove( 0, 1 );
   int n = nn.toInt();
-  if( n < 0 || n >= MODEL_NVAR )
+  if( n < 0 || n >= MODEL_NVAR ) {
+    if( lt )
+      *lt = LinkBad;
     return &fake_so;
+  }
+  if( lt )
+    *lt = LinkSpec;
   return &( vars[n] );
 }
 

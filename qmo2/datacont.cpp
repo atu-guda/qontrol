@@ -22,13 +22,7 @@ TDataContainer::TDataContainer( TDataSet *aparent )
                :TDataSet( aparent )
 {
   allow_add = 1; 
-  ptrs.reserve(512); // must be good for containers
-  d_i = new TDataInfo[MAX_DATAELEM];
-  d_i_alloc = 1;
-  d_i[0].tp = dtpEnd; d_i[0].descr = d_i[0].listdata = 0;
-  ptrs.push_back( 0 );
   state = 1;
-  initHash(); // realy not need for this class ?
 }
 
 TDataContainer::~TDataContainer()

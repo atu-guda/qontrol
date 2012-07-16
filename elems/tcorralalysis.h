@@ -135,8 +135,6 @@ class TCorrAnalysis : public TMiso  {
    PRM_DOUBLE1( cmp_tmax, efInner, "cmp_tmax", "time(max error)", "" );
    /** pointerrs for output source */
    const double *out_source[20];
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tcorranalysis_d_i[64];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

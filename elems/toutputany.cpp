@@ -31,42 +31,14 @@ TClassInfo TOutputAny::class_info = {
   CLASS_ID_TOutputAny, "TOutputAny", TOutputAny::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TOutputAny::toutputany_d_i[13] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 380, 300, 0,  0.0, 0.0, 0, 0, "Zzz", "", "Dialog for TOutputAny"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   60,  50, 180,  20, 0,  0.0, 0.0, 0, 0, "l_name", "", "Name of output source"},
- { dtpStr,        0,  80,   20,  70, 280,  20, 2,  0.0, 0.0, 0, 0, "name", "name", ""},
- { dtpInt,   dtpsSw,   0,   20, 150, 180,  20, 2,  0.0, 0.0, 0, 0, "useEnable", "", "Use u[1] as enable"},
- { dtpButton,     0,   0,   20, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
 
 TOutputAny::TOutputAny( TDataSet* aparent )
         :TMiso( aparent ),
 	 PRM_INIT( name, "Sink name" ),
 	 PRM_INIT( useEnable, "u[1] is Enable" )
 {
-  int i;
   type = -1; 
   useEnable = 0; ne = -1; pel = 0;
-  d_i = toutputany_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &name; ptrs[5] = &useEnable;
-  // from TMiso 
-  ptrs[9] = links;
-  ptrs[10] = &vis_x; ptrs[11] = &vis_y;
 
   PRMI(name).setDescr( "Name of sink to output" ); // TODO: checial field
   PRMI(name).setMinMax( 0, 80 );

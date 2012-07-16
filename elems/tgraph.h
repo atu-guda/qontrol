@@ -78,8 +78,6 @@ class TGraph : public TDataSet  {
    PRM_COLOR( y5color, 0 );
    // TODO: legend
  
-   /** data descriptors */ 
-   static TDataInfo tgraph_d_i[28]; 
    /** class decription */
    static TClassInfo class_info;       
    /** help str */

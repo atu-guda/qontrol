@@ -345,10 +345,11 @@ void QMo2View::delElm()
         + oname + QString("\" ?"),
        "&Yes", "&No", "Help", 0, 1 );
   if( k == 0 ) {
-    model->reset();
-    model->delElem( sel );
-    if( sel == mark )
+    model->delElem( oname );
+    if( sel == mark ) {
       mark = -1;
+      markObj = nullptr;
+    }
 
     changeSel( 0, 0, 1 ); // update sel
     emit viewChanged();
@@ -394,17 +395,15 @@ void QMo2View::linkElm()
 
 void QMo2View::qlinkElm()
 {
-  TMiso *toob;
   int k;
   QString toname;
   QString oldlink;
   if( ! checkState( linkToCheck ) )
     return;	  
 
-  toob = model->getMiso( mark );
-  if( selObj == nullptr || toob == nullptr )
+  if( !selObj || !markObj )
     return;
-  toname = toob->objectName();
+  toname = markObj->objectName();
 
   QString lnkname( "links.inps" );
   lnkname += QString::number( level );
@@ -419,16 +418,14 @@ void QMo2View::qlinkElm()
 
 void QMo2View::qplinkElm()
 {
-  TMiso *toob;
   int k;
   QString oldlink;
   if( ! checkState( linkToCheck ) )
     return;	  
 
-  toob = model->getMiso( mark );
-  if( !selObj || !toob  )
+  if( !selObj || !markObj  )
     return;
-  QString toname = toob->objectName();
+  QString toname = markObj->objectName();
 
   QString lnkname( "links.pinps" );
   lnkname += QString::number( level );
@@ -486,9 +483,9 @@ void QMo2View::ordElm()
   selObj->getData( "ord", &old_ord );
   new_ord = QInputDialog::getInt(this, "New element order", 
       "Input new element order", 
-      old_ord, 0, 2147483647, 1, &ok );
+      old_ord, 0, IMAX, 1, &ok );
   if( ok ) {
-    model->newOrder( sel, new_ord ); // reset implied
+    model->newOrder( selObj->objectName(), new_ord ); // reset implied
     emit viewChanged();
   }; 
 }
@@ -520,7 +517,7 @@ void QMo2View::infoElm()
     return;	  
   
   dia = new QDialog( this );
-  dia->setWindowTitle( QString( PACKAGE ": Structure of ") + selObj->objectName() );
+  dia->setWindowTitle( QString( PACKAGE ": Structure of ") + selObj->getFullName() );
 
   lay = new QVBoxLayout();
 
@@ -988,7 +985,7 @@ void QMo2View::exportGraphData()
       "Data files (*.txt *.dat *.csv);;All files (*)" );
   if( fnq.isEmpty() )
     return;
-  fn = fnq.toLatin1();
+  fn = fnq.toLocal8Bit();
   gra->dump( fn, ' ' );
 }
 

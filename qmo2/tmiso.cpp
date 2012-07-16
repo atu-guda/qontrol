@@ -30,73 +30,12 @@ TClassInfo TElmLink::class_info = {
  CLASS_ID_TElmLink, "TElmLink", TElmLink::create,
  &TDataSet::class_info, helpstr, clpSpecial };
 
-TDataInfo TElmLink::telmlink_d_i[40] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 410, 410, 0,  0.0, 0.0, 0, 0, "links_dial", "", "Object links"},
- { dtpGroup,      0,   0,   10,  10, 180, 140, 0,  0.0, 0.0, 0, 0, "grp_i", "", "Inputs"},
- { dtpLabel,      0,   0,   30,  30,  30,  20, 0,  0.0, 0.0, 0, 0, "li0", "", "0"},
- { dtpStr,        0,  32,   60,  30, 100,  20, 2,  0.0, 0.0, 0, 0, "inps0", "Input 0", ""},
- { dtpLabel,      0,   0,   30,  60,  30,  20, 0,  0.0, 0.0, 0, 0, "li1", "", "1"},
- { dtpStr,        0,  32,   60,  60, 100,  20, 2,  0.0, 0.0, 0, 0, "inps1", "Input 1", ""},
- { dtpLabel,      0,   0,   30,  90,  30,  20, 0,  0.0, 0.0, 0, 0, "li2", "", "2"},
- { dtpStr,        0,  32,   60,  90, 100,  20, 2,  0.0, 0.0, 0, 0, "inps2", "Input 2", ""},
- { dtpLabel,      0,   0,   30, 120,  30,  20, 0,  0.0, 0.0, 0, 0, "li3", "", "3"},
- { dtpStr,        0,  32,   60, 120, 100,  20, 2,  0.0, 0.0, 0, 0, "inps3", "Input 3", ""},
- { dtpInt,   dtpsSw,   0,  200,  30,  80,  20, 2,  0.0, 0.0, 0, 0, "noauto", "No auto processing", "No auto"},
- { dtpInt,   dtpsSw,   0,  200,  60,  80,  20, 2,  0.0, 0.0, 0, 0, "locked", "Locked element", "Lock"},
- { dtpInt,   dtpsSw,   0,  200,  90,  80,  20, 2,  0.0, 0.0, 0, 0, "onlyFirst", "run only first time", "only First"},
- { dtpInt,   dtpsSw,   0,  200, 120,  80,  20, 2,  0.0, 0.0, 0, 0, "onlyLast", "run only last time", "only Last"},
- { dtpInt,   dtpsSw,   0,  200, 150,  80,  20, 2,  0.0, 0.0, 0, 0, "flip", "flip element icon", "flip"},
- { dtpInt,   dtpsSw,   0,  200, 180,  80,  20, 2,  0.0, 0.0, 0, 0, "noIcon", "dont show element icon, only frame", "no Icon"},
- 
- { dtpGroup,      0,   0,   10, 200, 380, 160, 0,  0.0, 0.0, 0, 0, "grp_p",  "", "Parmetric inputs"},
- { dtpLabel,      0,   0,   20, 240,  20,  20, 0,  0.0, 0.0, 0, 0, "lpi0", "", "0"},
- { dtpStr,        0,  32,   40, 240, 100,  20, 2,  0.0, 0.0, 0, 0, "pinps0", "Parm 0", ""},
- { dtpLabel,      0,   0,   20, 270,  20,  20, 0,  0.0, 0.0, 0, 0, "lpi1", "", "1"},
- { dtpStr,        0,  32,   40, 270, 100,  20, 2,  0.0, 0.0, 0, 0, "pinps1", "Parm 1", ""},
- { dtpLabel,      0,   0,   20, 300,  20,  20, 0,  0.0, 0.0, 0, 0, "lpi2", "", "2"},
- { dtpStr,        0,  32,   40, 300, 100,  20, 2,  0.0, 0.0, 0, 0, "pinps2", "Parm 2", ""},
- { dtpLabel,      0,   0,   20, 330,  20,  20, 0,  0.0, 0.0, 0, 0, "lpi3", "", "3"},
- { dtpStr,        0,  32,   40, 330, 100,  20, 2,  0.0, 0.0, 0, 0, "pinps3", "Parm 3", ""},
- { dtpStr,        0,  32,  160, 240, 100,  20, 2,  0.0, 0.0, 0, 0, "pnames0", "Name 0", ""},
- { dtpStr,        0,  32,  160, 270, 100,  20, 2,  0.0, 0.0, 0, 0, "pnames1", "Name 1", ""},
- { dtpStr,        0,  32,  160, 300, 100,  20, 2,  0.0, 0.0, 0, 0, "pnames2", "Name 2", ""},
- { dtpStr,        0,  32,  160, 330, 100,  20, 2,  0.0, 0.0, 0, 0, "pnames3", "Name 3", ""},
- { dtpInt,   dtpsSw,   0,  280, 240,  80,  20, 2,  0.0, 0.0, 0, 0, "pflags0", "flag 0", ""},
- { dtpInt,   dtpsSw,   0,  280, 270,  80,  20, 2,  0.0, 0.0, 0, 0, "pflags1", "flag 1", ""},
- { dtpInt,   dtpsSw,   0,  280, 300,  80,  20, 2,  0.0, 0.0, 0, 0, "pflags2", "flag 2", ""},
- { dtpInt,   dtpsSw,   0,  280, 330,  80,  20, 2,  0.0, 0.0, 0, 0, "pflags3", "flag 3", ""},
- { dtpLabel,      0,   0,   40, 220, 100,  20, 0,  0.0, 0.0, 0, 0, "l1", "", "Out Name"},
- { dtpLabel,      0,   0,  160, 220, 100,  20, 0,  0.0, 0.0, 0, 0, "l2", "", "Param. name"},
- { dtpLabel,      0,   0,  280, 220, 100,  20, 0,  0.0, 0.0, 0, 0, "l3", "", "First only"},
- { dtpButton,     0,   0,   20, 370,  70,  26, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  160, 370,  70,  26, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  300, 370,  70,  26, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpEnd, 0, 0, 0, 0, 0, 0, 0, 0.0, -1.0, 0, 0 , "", "", "" }
-};
-
 
 TElmLink::TElmLink( TDataSet* apar )
          :TDataSet( apar )
 {
-  int i;
   noauto = locked = onlyFirst = onlyLast = flip = noIcon = 0;
   pflags0 = pflags1 = pflags2 = pflags3 = 0;
-  d_i = telmlink_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[3] =  &inps0;   ptrs[5] = &inps1; ptrs[7] = &inps2; ptrs[9] = &inps3;
-  ptrs[10] = &noauto;  ptrs[11] = &locked;
-  ptrs[12] = &onlyFirst; ptrs[13] = &onlyLast;
-  ptrs[14] = &flip;    ptrs[15] = &noIcon;
-  ptrs[18] = &pinps0;  ptrs[20] = &pinps1; 
-  ptrs[22] = &pinps2;  ptrs[24] = &pinps3;
-  ptrs[25] = &pnames0; ptrs[26] = &pnames1; 
-  ptrs[27] = &pnames2; ptrs[28] = &pnames3;
-  ptrs[29] = &pflags0; ptrs[30] = &pflags1;
-  ptrs[31] = &pflags2; ptrs[32] = &pflags3;
 }
 
 TDataSet* TElmLink::create( TDataSet* apar )
@@ -128,10 +67,6 @@ TClassInfo TMiso::class_info = {
  CLASS_ID_TMiso, "TMiso", TMiso::create,
  &TDataSet::class_info, helpstr, clpSpecial };
 
-TDataInfo TMiso::tmiso_d_i[2] = {
- { dtpObj, CLASS_ID_TElmLink,   0,   0, 0, 0, 0, 0,  0.0, 0.0, 0, 0, "link",  "", "Object links"},
- { dtpEnd, 0, 0, 0, 0, 0, 0, 0, 0.0, -1.0, 0, 0 , "", "", "" }
-};
 
 TMiso::TMiso( TDataSet* aparent )
       :TDataSet( aparent ),
@@ -144,12 +79,9 @@ TMiso::TMiso( TDataSet* aparent )
        prm_flg { -1, -1, -1, -1 },
        max_prm(0), prm_mod(0)
 {
-  d_i = tmiso_d_i;
   ord = -1; 
   vis_x = vis_y = 0; tdt = 0; model_nn = 0; 
   model = 0;
-  initHash();
-  ptrs[0] = links;
 }
 
 TMiso::~TMiso()

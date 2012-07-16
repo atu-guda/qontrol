@@ -56,40 +56,6 @@ TClassInfo TRand::class_info = {
   CLASS_ID_TRand, "TRand", TRand::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TRand::trand_d_i[31] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 420, 450, 0,  0.0, 0.0, 0, 0, "rand_dial", "", "Dialog for TRand"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type", "", "Type"},
- { dtpInt, dtpsList,   6,   20,  70, 220,  20, 2,  0.0, 0.0, 0, 0, "type", "dist type", trand_list_type },
- { dtpLabel,      0,   0,   30, 130, 100,  20, 0,  0.0, 0.0, 0, 0, "l_tau",   "", "tau"}, //5
- { dtpDou,        0,   0,   20, 150, 120,  20, 0,  -1e300, 1e300, 0, 0, "tau", "tau", ""},
- { dtpLabel,      0,   0,   30, 180, 100,  20, 0,  0.0, 0.0, 0, 0, "l_sigma",   "", "sigma"},
- { dtpDou,        0,   0,   20, 200, 120,  20, 0,  -1e300, 1e300, 0, 0, "sigma", "sigma", ""},
- { dtpLabel,      0,   0,   30, 230, 100,  20, 0,  0.0, 0.0, 0, 0, "l_ampl",   "", "ampl"},
- { dtpDou,        0,   0,   20, 250, 120,  20, 0,  -1e300, 1e300, 0, 0, "ampl", "ampl", ""}, //10
- { dtpLabel,      0,   0,   30, 280, 100,  20, 0,  0.0, 0.0, 0, 0, "l_zval",   "", "zval"},
- { dtpDou,        0,   0,   20, 300, 120,  20, 0,  -1e300, 1e300, 0, 0, "zval", "zval", ""},
- { dtpLabel,      0,   0,  270, 130,  50,  20, 0,  0.0, 0.0, 0, 0, "l_a",   "", "a"},
- { dtpDou,        0,   0,  260, 150, 120,  20, 0,  -1e300, 1e300, 0, 0, "a", "a", ""},
- { dtpLabel,      0,   0,  270, 180,  50,  20, 0,  0.0, 0.0, 0, 0, "l_b",   "", "b"},
- { dtpDou,        0,   0,  260, 200, 120,  20, 0,  -1e300, 1e300, 0, 0, "b", "b", ""},
- { dtpLabel,      0,   0,  270, 230,  50,  20, 0,  0.0, 0.0, 0, 0, "l_c",   "", "c"},
- { dtpDou,        0,   0,  260, 250, 120,  20, 0,  -1e300, 1e300, 0, 0, "c", "c", ""},
- { dtpLabel,      0,   0,  270, 280,  50,  20, 0,  0.0, 0.0, 0, 0, "l_seed",   "", "seed"},
- { dtpInt,        0,   0,  260, 300, 120,  20, 0,  1.0, 0.0, 0, 0, "seed", "seed", ""}, // 20
- { dtpInt,dtpsSwitch,  0,   20, 330, 150,  20, efNoDial | efRO,  0.0, 0.0, 0, 0, "useSameSeed",   "", "useSameSeed"},
- { dtpInt, dtpsList,   4,   20, 330, 150,  20, efNoRunChange,  0.0, 0.0, 0, 0, "seedType", "Seed at", trand_list_seedType },
- { dtpInt,dtpsSwitch,  0,  260, 330, 150,  20, efNoRunChange,  0.0, 0.0, 0, 0, "addBaseSeed",   "", "addBaseSeed"},
- { dtpButton,     0,   0,   20, 400,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"}, // 22
- { dtpButton,     1,   0,  140, 400,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 400,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
 
 TRand::TRand( TDataSet* aparent )
         :TMiso( aparent ),
@@ -106,7 +72,6 @@ TRand::TRand( TDataSet* aparent )
 	 PRM_INIT( seedType, "Seed type" ),
 	 PRM_INIT( addBaseSeed, "Add base" )
 {
-  int i;
   type = 0;
   tau = 0.05; ampl = 1; zval = 0;
   sigma = a = b = c = 1;
@@ -115,25 +80,6 @@ TRand::TRand( TDataSet* aparent )
   seedType = 3; addBaseSeed = 1;
   old_val = 0; sp_time = 1e300; old_in = 0; sseed = 0; bseed = 0;
   rng = 0;
-  d_i = trand_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &type; 
-  ptrs[6] = &tau; 
-  ptrs[8] = &sigma; 
-  ptrs[10] = &ampl; 
-  ptrs[12] = &zval; 
-  ptrs[14] = &a;  ptrs[16] = &b; ptrs[18] = &c; 
-  ptrs[20] = &seed; 
-  ptrs[21] = &useSameSeed;
-  ptrs[22] = &seedType;
-  ptrs[23] = &addBaseSeed;
-  // from TMiso 
-  ptrs[27] = links;
-  ptrs[28] = &vis_x; ptrs[29] = &vis_y;
 
   PRMI(type).setDescr( "Type of distribution" );
   PRMI(type).setElems( trand_list_type );

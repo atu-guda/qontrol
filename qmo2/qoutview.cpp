@@ -62,7 +62,7 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
     arr = model->getOutArr( out_nu );
     if( arr == 0 ) continue;
     arr->getData( "name", elmname );
-    elnu = model->oname2elnu( qPrintable(elmname) );
+    elnu = model->oname2elnu( elmname );
     out_type = -1;
     arr->getData( "type", &out_type );
     switch( out_type ) {

@@ -30,38 +30,6 @@ TClassInfo TGraph::class_info = {
  CLASS_ID_TGraph, "TGraph", TGraph::create,
  &TDataSet::class_info, helpstr, clpSpecial };
 
-TDataInfo TGraph::tgraph_d_i[28] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 300, 370, 0,  0.0, 0.0, 0, 0, "Graph",  "",   "Graph description"},
- { dtpLabel,      0,   0,   20,  10, 100,  20, 0,  0.0, 0.0, 0, 0, "l_title", "",   "title"},
- { dtpStr,        0,  80,   20,  30, 160,  20, 0,  0.0, 0.0, 0, 0, "title", "title for graph", ""},
- { dtpLabel,      0,   0,   20,  60, 100,  20, 0,  0.0, 0.0, 0, 0, "l_x",   "",   "X values"},
- { dtpStr,        0,  MAX_NAMELEN,   20,  80, 100,  20, 0,  0.0, 0.0, 0, 0, "xname",   "Name of x output", ""},
- { dtpLabel,      0,   0,   20, 110, 100,  20, 0,  0.0, 0.0, 0, 0, "l_y0",   "",   "Y0 values"},
- { dtpStr,        0,  MAX_NAMELEN,   20, 130, 100,  20, 0,  0.0, 0.0, 0, 0, "y0name",   "Name of y0 output", ""},
- { dtpLabel,      0,   0,   20, 150, 100,  20, 0,  0.0, 0.0, 0, 0, "l_y1",   "",   "Y1/Z0 values"},
- { dtpStr,        0,  MAX_NAMELEN,   20, 170, 100,  20, 0,  0.0, 0.0, 0, 0, "y1name",   "Name of y1 output", ""},
- { dtpLabel,      0,   0,   20, 190, 100,  20, 0,  0.0, 0.0, 0, 0, "l_y2",   "",   "Y2 values"},
- { dtpStr,        0,  MAX_NAMELEN,   20, 210, 100,  20, 0,  0.0, 0.0, 0, 0, "y2name",   "Name of y2 output", ""},
- { dtpLabel,      0,   0,   20, 230, 100,  20, 0,  0.0, 0.0, 0, 0, "l_y3",   "",   "Y3 values"},
- { dtpStr,        0,  MAX_NAMELEN,   20, 250, 100,  20, 0,  0.0, 0.0, 0, 0, "y3name",   "Name of y3 output", ""},
- { dtpLabel,      0,   0,   20, 270, 100,  20, 0,  0.0, 0.0, 0, 0, "l_y4",   "",   "Y4 values"},
- { dtpStr,        0,  MAX_NAMELEN,   20, 290, 100,  20, 0,  0.0, 0.0, 0, 0, "y4name",   "Name of y4 output", ""},
- { dtpLabel,      0,   0,   20, 310, 100,  20, 0,  0.0, 0.0, 0, 0, "l_y5",   "",   "Y5 values"},
- { dtpStr,        0,  MAX_NAMELEN,   20, 330, 100,  20, 0,  0.0, 0.0, 0, 0, "y5name",   "Name of y5 output", ""},
- { dtpInt,dtpsColor,   0,  130,  80,  50,  20, 0,  0.0, 0.0, 0, 0, "bgcolor",   "Background color", ""},
- { dtpInt,dtpsColor,   0,  130, 130,  50,  20, 0,  0.0, 0.0, 0, 0, "y0color",   "Y0 color", ""},
- { dtpInt,dtpsColor,   0,  130, 170,  50,  20, 0,  0.0, 0.0, 0, 0, "y1color",   "Y1 color", ""},
- { dtpInt,dtpsColor,   0,  130, 210,  50,  20, 0,  0.0, 0.0, 0, 0, "y2color",   "Y2 color", ""},
- { dtpInt,dtpsColor,   0,  130, 250,  50,  20, 0,  0.0, 0.0, 0, 0, "y3color",   "Y3 color", ""},
- { dtpInt,dtpsColor,   0,  130, 290,  50,  20, 0,  0.0, 0.0, 0, 0, "y4color",   "Y4 color", ""},
- { dtpInt,dtpsColor,   0,  130, 330,  50,  20, 0,  0.0, 0.0, 0, 0, "y5color",   "Y5 color", ""},
- { dtpButton,     0,   0,  200,  20,  80,  30, 0,  0.0, 0.0, 0, 0, "btn_ok",   "",   "OK"},
- { dtpButton,     1,   0,  200,  70,  80,  30, 0,  0.0, 0.0, 0, 0, "btn_can",   "",   "Cancel"},
- { dtpButton,     2,   0,  200, 120,  80,  30, 0,  0.0, 0.0, 0, 0, "btn_help",   "",   "Help"}, 
- { dtpEnd, 0, 0, 0, 0, 0, 0, 0, 0.0, -1.0, 0, 0 , "", "", "" }
-};
-
 
 TGraph::TGraph( TDataSet* apar )
        :TDataSet( apar ),
@@ -81,7 +49,6 @@ TGraph::TGraph( TDataSet* apar )
        PRM_INIT( y4color, "y4 color" ),
        PRM_INIT( y5color, "y5 color" )
 {
-  int i;
   bgcolor = QColor::fromRgb( 0,0,0x60 );
   title =  "title";
   y0color = QColor::fromRgb(255,255,255); 
@@ -90,18 +57,6 @@ TGraph::TGraph( TDataSet* apar )
   y3color = QColor::fromRgb(0,255,0);
   y4color = QColor::fromRgb(0,0,255);
   y5color = QColor::fromRgb(255,0,255);
-  d_i = tgraph_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[2]  = &title; 
-  ptrs[4]  = &xname; 
-  ptrs[6]  = &y0name;   ptrs[8]  = &y1name;   ptrs[10] = &y2name; 
-  ptrs[12] = &y3name;   ptrs[14] = &y4name;   ptrs[16] = &y5name; 
-  ptrs[17] = &bgcolor;   
-  ptrs[18] = &y0color; ptrs[19] = &y1color;  ptrs[20] = &y2color; 
-  ptrs[21] = &y3color; ptrs[22] = &y4color;  ptrs[23] = &y5color;
 
   PRMI(title).setDescr( "Plot title" );
   PRMI(title).setMinMax( 0, MAX_LABELLEN );

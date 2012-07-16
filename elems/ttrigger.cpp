@@ -29,38 +29,6 @@ TClassInfo TTrigger::class_info = {
   CLASS_ID_TTrigger, "TTrigger", TTrigger::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TTrigger::ttrigger_d_i[23] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 380, 300, 0,  0.0, 0.0, 0, 0, "trigg_dia", "", "Dialog for TTrigger"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type",   "", "Type"},
- { dtpInt, dtpsList,   5,   20,  70, 120,  20, 2,  0.0, 0.0, 0, 0, "type", "type", 
-   "RS"               // 0
-   "\nShmitt(u2)\n"   // 1
-   "CountRise(u2)\n"  // 2
-   "CountDown(u2)\n"  // 3
-   "CountLevel(u2)"}, // 4 
- { dtpLabel,      0,   0,   30,  90,  50,  20, 0,  0.0, 0.0, 0, 0, "l_level0", "", "Level of 0"},
- { dtpDou,        0,   0,   20, 110, 120,  20, 0,  -1e300, 1e300, 0, 0, "level0", "0 - level", ""},
- { dtpLabel,      0,   0,   30, 140,  50,  20, 0,  0.0, 0.0, 0, 0, "l_level1", "", "Level of 1"},
- { dtpDou,        0,   0,   20, 160, 120,  20, 0,  -1e300, 1e300, 0, 0, "level1", "1 - level", ""},
- { dtpLabel,      0,   0,   30, 190,  50,  20, 0,  0.0, 0.0, 0, 0, "l_t0", "", "t0 - autoreset"},
- { dtpDou,        0,   0,   20, 210, 120,  20, 0,  0.0, 1e300, 0, 0, "t0", "autoreset time", ""},
- { dtpInt,   dtpsSw,   0,  180,  50, 150,  20, 2,  0.0, 0.0, 0, 0, "useInit1", "", "Set to 1 on start"},
- { dtpInt,   dtpsSw,   0,  180,  70, 150,  20, 2,  0.0, 0.0, 0, 0, "useEnable", "", "Use u3 as enable"},
- { dtpInt,   dtpsSw,   0,  180,  90, 150,  20, 2,  0.0, 0.0, 0, 0, "usePulse", "", "Pulse output"},
- { dtpInt,   dtpsSw,   0,  180, 110, 150,  20, 2,  0.0, 0.0, 0, 0, "useMinus", "", "Use -1 as neg. out"},
- { dtpInt,   dtpsSw,   0,  180, 130, 150,  20, 2,  0.0, 0.0, 0, 0, "useT0", "", "Autoreset after t0"},
- { dtpButton,     0,   0,   20, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
 
 TTrigger::TTrigger( TDataSet* aparent )
         :TMiso( aparent ),
@@ -77,21 +45,9 @@ TTrigger::TTrigger( TDataSet* aparent )
 	PRM_INIT( useT0, "Autoreset (t0)" )
 
 {
-  int i;
   type = 0; level0 = 0.1; level1 = 0.5; t0 = 2; et = 0; u2_old = 0;
   useInit1 = useEnable = usePulse = useMinus = useT0 = 0;
-  d_i = ttrigger_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &type; ptrs[6] = &level0; ptrs[8] = &level1;  ptrs[10] = &t0; 
-  ptrs[11] = &useInit1; ptrs[12] = &useEnable; ptrs[13] = &usePulse; 
-  ptrs[14] = &useMinus; ptrs[15] = &useT0; 
-  // from TMiso 
-  ptrs[19] = links;
-  ptrs[20] = &vis_x; ptrs[21] = &vis_y;
+  
   PRMI(type).setDescr("Type of trigger");
   PRMI(type).setElems(
    "RS\n"             // 0

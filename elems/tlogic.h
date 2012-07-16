@@ -60,8 +60,6 @@ class TLogic : public TMiso  {
    PRM_SWITCH( useNInp3, efNoRunChange );
    PRM_SWITCH( useNOut, efNoRunChange );
    PRM_SWITCH( useMinus, efNoRunChange );
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tlogic_d_i[20];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

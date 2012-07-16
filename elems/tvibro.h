@@ -67,8 +67,6 @@ class TVibro : public TMiso  {
    int isStart;
    /** old values and misc */
    double u_old, f_old, x_old, x_old2, tdt2;
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tvibro_d_i[16];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

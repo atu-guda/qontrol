@@ -65,8 +65,6 @@ class TCriterion : public TMiso  {
    PRM_SWITCH( useLock, efNoRunChange );
    PRM_SWITCH( usePulse, efNoRunChange );
    PRM_INT( st, efInner );
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tcriterion_d_i[23];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

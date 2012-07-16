@@ -61,8 +61,6 @@ class TFuncPoly : public TMiso  {
    PRM_DOUBLE( e, 0 );
    PRM_DOUBLE( g, 0 );
    PRM_DOUBLE( x0, 0 );
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tfuncpoly_d_i[26];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

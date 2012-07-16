@@ -34,29 +34,6 @@ TClassInfo TExtrLatch::class_info = {
   CLASS_ID_TExtrLatch, "TExtrLatch", TExtrLatch::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TExtrLatch::textrlatch_d_i[20] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 380, 300, 0,  0.0, 0.0, 0, 0, "ExtrLatchDlg", "", "Dialog for TExtrLatch"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  50,  50,  20, 0,  0.0, 0.0, 0, 0, "l_type",   "", "Type"},
- { dtpInt, dtpsList,   5,   20,  70, 120,  20, 0,  0.0, 0.0, 0, 0, "type", "Extr. type", "Max\nMin\nMax||\nAverage\nAmplitude" },
- { dtpInt,   dtpsSw,   0,   20, 100, 120,  20, 2,  0.0, 0.0, 0, 0, "useFirst", "Only first extremun", "&First only"},
- { dtpInt,   dtpsSw,   0,   20, 130, 120,  20, 2,  0.0, 0.0, 0, 0, "useLocal", "Latch local extremums", "&Local"},
- { dtpInt,   dtpsSw,   0,   20, 160, 120,  20, 2,  0.0, 0.0, 0, 0, "outT", "Output time of extremum", "out &T"},
- { dtpInt,   dtpsSw,   0,   20, 190, 120,  20, 2,  0.0, 0.0, 0, 0, "useReset", "Reset if u[1] strobe", "Reset on u[1]"},
- { dtpLabel,      0,   0,  180,  50, 100,  20, 0,  0.0, 0.0, 0, 0, "l_tStart", "", "start Time"},
- { dtpDou,        0,   0,  180,  70, 120,  20, 2,  0.0, 1e300, 0, 0, "tStart", "start Time", ""},
- { dtpLabel,      0,   0,  180, 110, 100,  20, 0,  0.0, 0.0, 0, 0, "l_fuzzy", "", "fuzzy level"},
- { dtpDou,        0,   0,  180, 130, 120,  20, 0,  0.0, 1e300, 0, 0, "fuzzy", "fuzzy level for local extremums", ""},
- { dtpButton,     0,   0,   20, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 240,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
 
 TExtrLatch::TExtrLatch( TDataSet* aparent )
         :TMiso( aparent ),
@@ -78,22 +55,9 @@ TExtrLatch::TExtrLatch( TDataSet* aparent )
 	 PRM_INIT( u_ex,  "u_ex" ),
 	 PRM_INIT( t_ex,  "t_ex" )
 {
-  int i;
   type = 0; useLocal = useFirst = outT = useReset = 0; tStart = fuzzy = 0;
   u_min = u_max = t_min = t_max = 0; isStart = wasExtr = 0; 
-  d_i = textrlatch_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &type; ptrs[5] = &useFirst; ptrs[6] = &useLocal;
-  ptrs[7] = &outT; 
-  ptrs[8] = &useReset; 
-  ptrs[10] = &tStart; ptrs[12] = &fuzzy;
-  // from TMiso 
-  ptrs[16] = links;
-  ptrs[17] = &vis_x; ptrs[18] = &vis_y;
+  
   PRMI(type).setDescr( "Type" );
   PRMI(type).setElems( "Max\nMin\nMax||\nAverage\nAmplitude" );
   PRMI(useLocal).setDescr( "Catch local extremums" );

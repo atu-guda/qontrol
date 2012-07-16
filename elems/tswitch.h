@@ -52,8 +52,6 @@ class TSwitch : public TMiso  {
    /** levels  */
    PRM_DOUBLE( level1, 0 );
    PRM_DOUBLE( level2, 0 );
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tswitch_d_i[14];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

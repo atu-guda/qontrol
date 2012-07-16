@@ -74,8 +74,6 @@ class THyst : public TMiso  {
    PRM_DOUBLE1( d, efInner, "d", "inner state 'd'", "" );
    /** state s */
    PRM_DOUBLE1( s, efInner, "s", "inner state 's'", "" );
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo thyst_d_i[20];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

@@ -69,8 +69,6 @@ class TDelay : public TMiso  {
    int imd, icd;
    /** data container */
    TCircBuf *buf;
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tdelay_d_i[14];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

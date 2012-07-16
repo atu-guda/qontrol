@@ -24,7 +24,6 @@ TRootData::TRootData( TDataSet* apar )
           :TDataContainer( apar )
 {
   allow_add = 1; 
-  initHash();
 }
 
 TRootData::~TRootData()

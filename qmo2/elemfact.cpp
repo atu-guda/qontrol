@@ -46,21 +46,10 @@ TDataSet* ElemFactory::createElem( const QString &a_type,
   
   TDataSet *ob =  i.value()->creator( parent );
   //  create holder for it (auto set name and owner)
-  new HolderObj( ob, ob_name, ob_name, parent, 0, "", "" );
+  new HolderObj( ob, ob_name, ob_name, parent, 0, "", "dyn=1" );
   return ob;
 }
 
-// legacy 
-TDataSet* ElemFactory::createElem( int t_id, 
-    const QString &ob_name, TDataSet *parent  ) const
-{
-  MapIdClass::const_iterator i = id_class.find( t_id );
-  if( i == id_class.end() ) {
-    qDebug( "ERR: create: fail to find class id %d", t_id ); 
-    return 0;
-  }
-  return createElem( i.value(), ob_name, parent );
-}
 
 bool ElemFactory::registerElemType( const TClassInfo *cl_info )
 {

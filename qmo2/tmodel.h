@@ -59,7 +59,7 @@ class TModel : public TDataContainer  {
   /** returns help string */
   virtual const char* getHelp(void) const;
   /** reimplemented from TDataSet to provide access to '#nvar' */
-  virtual const double* getDoublePtr( const QString &nm ) const;
+  virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = 0, int lev = 0 ) const;
   /** prepare to run */
   virtual int startRun( int type );
   /** run csteps next steps */
@@ -67,14 +67,12 @@ class TModel : public TDataContainer  {
   /** terminates run: 0 - normal, 1.. - break */
   virtual int stopRun( int reason );
   /** function to call from elem.f() to signal something */
-  virtual int fback( int code, int aord, const char *tdescr );
+  virtual int fback( int code, int aord, const QString &tdescr );
   
   /** converts name of output to it's elnu, if possible; none=-1;bad=-2 ... */
-  virtual int oname2elnu( const char *iname ) const;
+  virtual int oname2elnu( const QString &iname ) const;
   /** converts name output array to it's out_nu, bad=-1 ... */
-  virtual int  outname2out_nu( const char *iname ) const;
-  /** converts elnu to index in ptr or -1 if bad */
-  virtual int elnu2idx( int elnu ) const;
+  virtual int  outname2out_nu( const QString &iname ) const;
   /** converts order of element to it's position in v_el */
   virtual int ord2elnu( int aord ) const;
   /** visual coords -> TMiso number. @returns: <0 - not found, >=0 -- elnu */
@@ -100,10 +98,8 @@ class TModel : public TDataContainer  {
   virtual int insOut( const  QString &outname, const QString &objname );
   /** inserts new graph @returns: <0 - bad, >0= index in ptrs[] */
   virtual int insGraph( const QString &gname );
-  /** delete active element by name 0 = sucess */
-  virtual int delElem( const char *ename );
-  /** delete active element by elnu 0 = sucess */
-  virtual int delElem( int elnu );
+  /** delete active element by name !0 = sucess */
+  virtual int delElem( const QString &ename );
   /** moves element to new position if free */
   int moveElem( int elnu, int newx, int newy );
   /** delete outs by out index 0 = sucess */
@@ -111,9 +107,7 @@ class TModel : public TDataContainer  {
   /** delete graph by graph index 0 = sucess */
   virtual int delGraph( int gr_nu );
   /** new order of element ny name */
-  virtual int newOrder( const char *name, int new_ord );
-  /** new order of element ny elnu */
-  virtual int newOrder( int elnu, int new_ord );
+  virtual int newOrder( const QString &name, int new_ord );
   /** suggest order value for new element */
   virtual int hintOrd(void) const;
   /** fills (8=2*4) array of LinkInfo structures for link visualization ... */
@@ -262,40 +256,22 @@ class TModel : public TDataContainer  {
   int n2_eff;
   /** end loop flag: to be set by fback() */
   int end_loop;
-  /** number of active elements */
-  int n_el;
-  /** number of outputs */
-  int n_out;
-  /** number of graphs */
-  int n_graph;
   /** real start time */
   double start_time;
-  /** vector of indexes active elements in ptrs[], my be sorted on ord */
-  std::vector<int> v_el;
+  /** vector of ptrs to active elements, my be sorted on ord */
+  std::vector<TMiso*> v_el;
   /** vector indexes of outputs */
-  std::vector<int> v_out;
-  /** vector elnu for outputs */
-  std::vector<int> v_oute;
+  std::vector<TOutArr*> v_out;
   /** vector types of outputs */
   std::vector<int> v_outt;
   /** vector indexes of graph */
-  std::vector<int> v_graph;
+  std::vector<TGraph*> v_graph;
   /** vector of elems orders */
   std::vector<int> v_ord;
   /** vector of elems flags: 1 - locked,  2 - noauto */
   std::vector<int> v_flg;
-  /** vector of input indexes  */
-  std::vector<li_el> inps;
-  /** vector of param. input indexes *[4] */
-  std::vector<li_el> pinps;
-  /** vector of param input name indexes *[4] */
-  std::vector<li_el> pnames;
-  /** vector of param input flags */
-  std::vector<li_el> pflags;
   /** general purpose vars[MODEL_NVAR] */
   std::vector<double> vars;
-  /** array of element outputs --runtime sz=n_el */
-  std::vector<double> outs;
   /** class decription */
   static TClassInfo class_info;
   /** help str */

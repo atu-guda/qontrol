@@ -69,7 +69,7 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
     p.drawText( grid_sz+1, 18 + graph_nu*grid_sz, QString::number( graph_nu ) );
     if( level != graph_nu ) continue;
     gra->getData( "xname", out_name );
-    out_nu = model->outname2out_nu( qPrintable(out_name) );
+    out_nu = model->outname2out_nu( out_name );
     if( out_nu >= 0 ) {
       p.drawLine( 0, grid_sz + out_nu*grid_sz, 12, grid_sz + graph_nu*grid_sz );
     };
@@ -77,7 +77,7 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
     for( i=0; i<6; i++ ) {
       yname[1] = char( '0' + i );
       gra->getData( yname, out_name );
-      out_nu = model->outname2out_nu( qPrintable(out_name) );
+      out_nu = model->outname2out_nu( out_name );
       if( out_nu >= 0 ) {
 	p.drawLine( 0, grid_sz + out_nu*grid_sz, 12, grid_sz + graph_nu*grid_sz );
       };

@@ -137,7 +137,7 @@ bool QMo2Doc::newDocument()
   }
 
   qDebug( "DBG: QMo2Doc::newDocument() point 4 rootdata=%p", rootdata );
-  model = static_cast<TModel*>( rootdata->getObj( "model" ) );
+  model = qobject_cast<TModel*>( rootdata->getObj( "model", "TModel" ) );
   qDebug( "debug: QMo2Doc::newDocument: point 5 rootdata: %p model: %p xmodel: %p", 
       rootdata, model, xmodel );
   rootdata->dumpStruct();

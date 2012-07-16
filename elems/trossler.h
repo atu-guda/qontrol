@@ -65,8 +65,6 @@ class TRossler : public TMiso  {
    PRM_DOUBLE( z, efInner );
    /** values to store some model vars */	  
    double tt;
-   /** data descriptors -- with base class elements */
-   static TDataInfo trossler_d_i[25]; 
    /** class decription */
    static TClassInfo class_info;
    /** help str */

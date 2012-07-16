@@ -22,7 +22,6 @@
 class TDataContainer : public TDataSet  {
   Q_OBJECT
  public:
-  /** allocates d_i for each instance */
   explicit TDataContainer( TDataSet* aparent );
   virtual ~TDataContainer();
   /** class id */

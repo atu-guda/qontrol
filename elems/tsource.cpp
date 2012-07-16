@@ -52,64 +52,6 @@ TClassInfo TSource::class_info = {
   CLASS_ID_TSource, "TSource", TSource::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TSource::tsource_d_i[48] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial, 0, 0, 0, 0, 600, 400, 0, 0.0, 0.0, 0, 0, "dia", "", "" },
- { dtpInt, 0, 0, 20, 10, 60, 20, 8, 0.0, 0.0, 0, 0, "ord", "Order", "" }, 
- { dtpStr, 0, 60, 100, 10, 380, 20, 2, 0.0, 0.0, 0, 0, "descr", "Description", "" },
- { dtpLabel, 0, 0, 20, 40, 50, 20, 0, 0.0, 0.0, 0, 0, "l_type", "", "Type" }, 
- { dtpInt, dtpsList, 12, 20, 60, 210, 20, 2, 0.0, 0.0, 0, 0, "type", "Type", tsource_list_type },
- { dtpLabel, 0, 0, 250, 40, 90, 20, 0, 0.0, 0.0, 0, 0, "l_uu", "no", "U" }, 
- { dtpDbl, 0, 0, 240, 60, 100, 20, 0, 0.0, -1.0, 0, 0, "uu", "Amplitude", "" }, 
- { dtpLabel, 0, 0, 360, 40, 100, 20, 0, 0.0, 0.0, 0, 0, "l_omega", "", "omega (o)  | tau" },
- { dtpDbl, 0, 0, 360, 60, 100, 20, 0, 1e-50, 1e50, 0, 0, "omega", "Omega", "" },
- { dtpLabel, 0, 0, 490, 40, 60, 20, 0, 0.0, 0.0, 0, 0, "l_cc", "no", "+C" }, 
- { dtpDbl, 0, 0, 480, 60, 100, 20, 0, 0.0, -1.0, 0, 0, "cc", "Const", "" }, 
- { dtpInt, dtpsSw, 0, 240, 90, 100, 20, efNoDial | efNoSave, 0.0, 0.0, 0, 0, "use_noise", "", "Use Noise" },
- { dtpDbl, 0, 0, 360, 90, 100, 20, efNoDial | efNoSave, 0.0, -1.0, 0, 0, "noise", "Noise", "" }, 
- // U-chaos group
- { dtpGroup, 0, 0, 20, 120, 560, 105, 0, 0.0, 0.0, 0, 0, "grp_u_ch", "no", "U chaos" },
- { dtpInt, dtpsSw, 0, 30, 160, 50, 20, 2, 0.0, 0.0, 0, 0, "use_u_ch", "", "Use" },
- { dtpLabel, 0, 0, 100, 150, 50, 20, 0, 0.0, 0.0, 0, 0, "l_chu_v", "", "Value" }, 
- { dtpLabel, 0, 0, 100, 180, 50, 20, 0, 0.0, 0.0, 0, 0, "l_chu_t", "", "Time" }, 
- { dtpLabel, 0, 0, 160, 130, 50, 20, 0, 0.0, 0.0, 0, 0, "l_chu_min", "", "Min" }, 
- { dtpLabel, 0, 0, 280, 130, 50, 20, 0, 0.0, 0.0, 0, 0, "l_chu_max", "", "Max" }, 
- { dtpDbl, 0, 0, 150, 150, 100, 20, 2, 0.0, -1.0, 0, 0, "u_ch_v0", "U_ch_v0", "" },
- { dtpDbl, 0, 0, 270, 150, 100, 20, 2, 0.0, -1.0, 0, 0, "u_ch_vm", "U_ch_vm", "" },
- { dtpDbl, 0, 0, 150, 180, 100, 20, 2, 1e-20, 1e10, 0, 0, "u_ch_t0", "U_ch_t0", "" },
- { dtpDbl, 0, 0, 270, 180, 100, 20, 2, 1e-20, 1e10, 0, 0, "u_ch_tm", "", "" },
- // rnd_u
- { dtpLabel,      0,   0,  400, 130,  50,  20, 0,  0.0, 0.0, 0, 0, "l_seed_u",   "", "seed"},
- { dtpInt,        0,   0,  390, 150,  80,  20, 0,  1.0, 0.0, 0, 0, "seed_u", "seed_u", ""},
- { dtpInt, dtpsList,   4,  390, 180, 100,  20, efNoRunChange,  0.0, 0.0, 0, 0, "seedType_u", "Seed at", tsource_list_seedType },
- { dtpInt,dtpsSwitch,  0,  390, 200, 100,  20, efNoRunChange,  0.0, 0.0, 0, 0, "addBaseSeed_u",   "", "addBaseSeed_u"},
-
- // Phi-chaos group
- { dtpGroup, 0, 0, 20, 230, 560, 105, 0, 0.0, 0.0, 0, 0, "grp_f_ch", "", "Phi chaos" },
- { dtpInt, dtpsSw, 0, 30, 270, 50, 20, 2, 0.0, 0.0, 0, 0, "use_f_ch", "", "Use" },
- { dtpLabel, 0, 0, 100, 260, 50, 20, 0, 0.0, 0.0, 0, 0, "l_chf_v", "", "Value" }, 
- { dtpLabel, 0, 0, 100, 290, 50, 20, 0, 0.0, 0.0, 0, 0, "l_chf_t", "", "Time" }, 
- { dtpLabel, 0, 0, 160, 240, 80, 20, 0, 0.0, 0.0, 0, 0, "l_chf_min", "", "Min" }, 
- { dtpLabel, 0, 0, 280, 240, 70, 20, 0, 0.0, 0.0, 0, 0, "l_chf_max", "", "Max" }, 
- { dtpDbl, 0, 0, 150, 260, 100, 20, 2, 0.0, -1.0, 0, 0, "f_ch_v0", "F_Ch_v0", "" },
- { dtpDbl, 0, 0, 270, 260, 100, 20, 2, 0.0, -1.0, 0, 0, "f_ch_vm", "F_ch_vm", "" },
- { dtpDbl, 0, 0, 150, 290, 100, 20, 2, 1e-20,   1e10, 0, 0, "f_ch_t0", "F_ch_t0", "" },
- { dtpDbl, 0, 0, 270, 290, 100, 20, 2, 1e-20,   1e10, 0, 0, "f_ch_tm", "F_ch_tm", "" },
- // rnd_p
- { dtpLabel,      0,   0,  400, 240,  50,  20, 0,  0.0, 0.0, 0, 0, "l_seed_p",   "", "seed"},
- { dtpInt,        0,   0,  390, 260,  80,  20, 0,  1.0, 0.0, 0, 0, "seed_p", "seed_p", ""},
- { dtpInt, dtpsList,   4,  390, 290, 100,  20, efNoRunChange,  0.0, 0.0, 0, 0, "seedType_p", "Seed at", tsource_list_seedType },
- { dtpInt,dtpsSwitch,  0,  390, 310, 100,  20, efNoRunChange,  0.0, 0.0, 0, 0, "addBaseSeed_p",   "", "addBaseSeed_p"},
-
- { dtpButton,     0,   0,   20, 350,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  250, 350,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  490, 350,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
 
 TSource::TSource( TDataSet* aparent )
         :TMiso( aparent ),
@@ -140,7 +82,6 @@ TSource::TSource( TDataSet* aparent )
 	PRM_INIT( use_noise, "unused" ),
 	PRM_INIT( noise, "unused" )
 {
-  int i;
   type = use_noise = use_u_ch = use_f_ch = 0;
   uu = 1; omega = 0.7; cc = phi_shift = 0; noise = 0.01;
   u_ch_v0 = 0.5; u_ch_vm = 1.5; u_ch_t0 = 2; u_ch_tm = 10;
@@ -155,27 +96,6 @@ TSource::TSource( TDataSet* aparent )
   seedType_p = 3; addBaseSeed_p = 1;
   rng_p = 0;
 
-  d_i = tsource_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr; 
-  ptrs[4] = &type;  ptrs[6] = &uu; ptrs[8] = &omega;  ptrs[10] = &cc; 
-  ptrs[11] = &use_noise; ptrs[12] = &noise; 
-  // U chaos
-  ptrs[14] = &use_u_ch;  ptrs[19] = &u_ch_v0; ptrs[20] = &u_ch_vm; 
-  ptrs[21] = &u_ch_t0;  ptrs[22] = &u_ch_tm; 
-   // U chaos rnd
-  ptrs[24] = &seed_u; ptrs[25] = &seedType_u; ptrs[26] = &addBaseSeed_u;
-  // Phi chaos
-  ptrs[28] = &use_f_ch; ptrs[33] = &f_ch_v0; 
-  ptrs[34] = &f_ch_vm; ptrs[35] = &f_ch_t0; ptrs[36] = &f_ch_tm;
-   // Phi chaos rnd
-  ptrs[38] = &seed_p; ptrs[39] = &seedType_p; ptrs[40] = &addBaseSeed_p;
-  // from TMiso
-  ptrs[44] = links;
-  ptrs[45] = &vis_x; ptrs[46] = &vis_y;
 
   PRMI(type).setDescr( "Source type" );
   PRMI(type).setElems( tsource_list_type );

@@ -38,40 +38,6 @@ TClassInfo TIntegrator::class_info = {
   CLASS_ID_TIntegrator, "TIntegrator", TIntegrator::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TIntegrator::tintegrator_d_i[29] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 400, 410, 0,  0.0, 0.0, 0, 0, "int_dial", "", "Dialog for TIntegrator"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,   30,  40,  50,  20, 0,  0.0, 0.0, 0, 0, "l_ki", "", "Ki"},
- { dtpDou,        0,   0,   20,  60, 120,  20, 0,  -1e300, 1e300, 0, 0, "ki", "ki", ""},
- { dtpLabel,      0,   0,   30,  90, 100,  20, 0,  0.0, 0.0, 0, 0, "l_lim",   "", "Limits:"},
- { dtpInt,   dtpsSw,   0,   20, 110,  50,  20, 0,  0.0, 0.0, 0, 0, "useMin", "useMin", "Min:"},
- { dtpDou,        0,   0,   90, 110, 100,  20, 0,  -1e300, 1e300, 0, 0, "vmin", "min value", ""},
- { dtpInt,   dtpsSw,   0,   20, 130,  50,  20, 0,  0.0, 0.0, 0, 0, "useMax", "useMax", "Max:"},
- { dtpDou,        0,   0,   90, 130, 100,  20, 0,  -1e300, 1e300, 0, 0, "vmax", "max value", ""},
- { dtpLabel,      0,   0,   30, 160, 100,  20, 0,  0.0, 0.0, 0, 0, "l_s_val", "", "Start value"},
- { dtpDou,        0,   0,   20, 180, 100,  20, 2,  -1e300, 1e300, 0, 0, "s_val", "Start value", ""},
- { dtpInt,   dtpsSw,   0,  220,  50, 150,  20, 2,  0.0, 0.0, 0, 0, "useReset", "use reset", "Use u[1] as Reset"},
- { dtpInt,   dtpsSw,   0,  220,  80, 150,  20, 2,  0.0, 0.0, 0, 0, "useBase", "use base", "Use u[3] as base"},
- { dtpInt,   dtpsSw,   0,  220, 110, 150,  20, 2,  0.0, 0.0, 0, 0, "useAdd", "add start to base", "Add start to base"},
- { dtpInt,   dtpsSw,   0,  220, 140, 150,  20, 0,  0.0, 0.0, 0, 0, "useDis", "use discarge", "Use discharge"},
- { dtpLabel,      0,   0,  230, 160, 100,  20, 0,  0.0, 0.0, 0, 0, "l_dis", "", "Discharge coeff."},
- { dtpDou,        0,   0,  220, 180, 100,  20, 0,  0.0, 1e300, 0, 0, "dis", "Discharge coeff", ""},
- { dtpInt,   dtpsSw,   0,  220, 210, 150,  20, 0,  0.0, 0.0, 0, 0, "useHold", "", "Hold value 1-step"},
- { dtpInt,   dtpsSw,   0,  220, 240, 150,  20, 0,  0.0, 0.0, 0, 0, "useAver", "", "calculate Average"},
- { dtpInt,   dtpsSw,   0,  220, 270, 150,  20, 0,  0.0, 0.0, 0, 0, "useSqIn", "", "calculete in^2"},
- { dtpInt,   dtpsSw,   0,  220, 300, 150,  20, 0,  0.0, 0.0, 0, 0, "useSqrOut", "", "calculate sqrt(out)"},
- { dtpButton,     0,   0,   20, 360,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  150, 360,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  280, 360,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
-
 
 TIntegrator::TIntegrator( TDataSet* aparent )
         :TMiso( aparent ),
@@ -92,28 +58,9 @@ TIntegrator::TIntegrator( TDataSet* aparent )
 	 PRM_INIT( useSqIn, "x^2 on input " ),
 	 PRM_INIT( useSqrOut, "sqrt of output" )
 {
-  int i;
   ki = 1; vmin = -1000;  vmax = 1000; s_val = 0; dis = 1e-3; t_rst = 0;
   useMin = useMax = useReset = useBase = useAdd = useDis 
          = useAver = useHold = useSqIn = useSqrOut = 0;
-  d_i = tintegrator_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[4] = &ki;  ptrs[6] = &useMin; ptrs[7] = &vmin;
-  ptrs[8] = &useMax; ptrs[9] = &vmax;
-  ptrs[11] = &s_val; ptrs[12] = &useReset; ptrs[13] = &useBase;
-  ptrs[14] = &useAdd; ptrs[15] = &useDis;
-  ptrs[17] = &dis;
-  ptrs[18] = &useHold;
-  ptrs[19] = &useAver;
-  ptrs[20] = &useSqIn;
-  ptrs[21] = &useSqrOut;
-  // from TMiso 
-  ptrs[25] = links;
-  ptrs[26] = &vis_x; ptrs[27] = &vis_y;
 
   PRMI(ki).setDescr( "Factor before integral" );
   PRMI(s_val).setDescr( "Start value" );

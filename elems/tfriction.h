@@ -69,8 +69,6 @@ class TFriction : public TMiso  {
    PRM_INT( bodyState, efInner );
    /** old values and misc */
    double v_old, x_old;
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tfriction_d_i[20];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

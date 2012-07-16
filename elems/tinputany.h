@@ -59,8 +59,6 @@ class TInputAny : public TMiso  {
    double fake_so;
    /** pointer to source */
    const double *so;
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tinputany_d_i[12];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

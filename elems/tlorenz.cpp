@@ -42,39 +42,6 @@ TClassInfo TLorenz::class_info = {
 static const int IPARM = efNoRunChange;
 static const int XPARM = efNoDial | efNoSave ;
 
-TDataInfo TLorenz::tlorenz_d_i[25] = {
-// tp   subtp  l    dx dy   dw  dh fl  min  max hv dyn name        descr  list_d
- { dtpDial, 0, 0,   0,  0, 600,300, 0, 0.0, 0.0, 0, 0, "dia", "", "" },
- { dtpInt,  0, 0,  20, 10,  60, 20, 8, 0.0, 0.0, 0, 0, "ord", "Order", "" }, 
- { dtpStr,  0,60, 100, 10, 380, 20, 2, 0.0, 0.0, 0, 0, "descr", "Description", "" },
-// system params [3-8]
- { dtpLabel,0, 0,  20, 40,  90, 20, 0, 0.0, 0.0, 0, 0, "l_sigma", "", "\\sigma" }, 
- { dtpDbl,  0, 0,  20, 60, 100, 20, 0, 0.0, -1., 0, 0, "sigma", "\\sigma", "" }, 
- { dtpLabel,0, 0,  20, 90, 100, 20, 0, 0.0, 0.0, 0, 0, "l_r", "", "r" },
- { dtpDbl,  0, 0,  20,110, 100, 20, 0, 0.0, -1., 0, 0, "r", "r", "" },
- { dtpLabel,0, 0,  20,140, 100, 20, 0, 0.0, 0.0, 0, 0, "l_b", "", "b" },
- { dtpDbl,  0, 0,  20,160, 100, 20, 0, 0.0, -1., 0, 0, "b", "b", "" },
-// initial values [9-14]
- { dtpLabel,0, 0, 200, 40,  90, 20, 0, 0.0, 0.0, 0, 0, "l_x_0", "", "x_0" }, 
- { dtpDbl,  0, 0, 200, 60, 100, 20, IPARM, 0.0, -1., 0, 0, "x_0", "x_0", "" }, 
- { dtpLabel,0, 0, 200, 90,  90, 20, 0, 0.0, 0.0, 0, 0, "l_y_0", "", "y_0" }, 
- { dtpDbl,  0, 0, 200,110, 100, 20, IPARM, 0.0, -1., 0, 0, "y_0", "y_0", "" }, 
- { dtpLabel,0, 0, 200,140,  90, 20, 0, 0.0, 0.0, 0, 0, "l_z_0", "", "z_0" }, 
- { dtpDbl,  0, 0, 200,160, 100, 20, IPARM, 0.0, -1., 0, 0, "z_0", "z_0", "" }, 
-// variables [15-17]
- { dtpDbl,  0, 0, 160, 60, 100, 20, XPARM, 0.0, -1., 0, 0, "x", "x", "" }, 
- { dtpDbl,  0, 0, 160, 60, 100, 20, XPARM, 0.0, -1., 0, 0, "y", "y", "" }, 
- { dtpDbl,  0, 0, 160, 60, 100, 20, XPARM, 0.0, -1., 0, 0, "z", "z", "" }, 
-// buttons [18-24]
- { dtpButton,     0,   0,   20, 250,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  250, 250,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  490, 250,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
 
 TLorenz::TLorenz( TDataSet* aparent )
         :TMiso( aparent ),
@@ -88,24 +55,9 @@ TLorenz::TLorenz( TDataSet* aparent )
 	PRM_INIT( y, "y" ),
 	PRM_INIT( z, "z" )
 {
-  int i;
   sigma = 10.0; r = 28.0; b = 8.0/3.0; // Well-known Lorenz params
   x_0 = 3.05; y_0 = 1.58; z_0 = 16.62; 
   x = y = z = 0;
-
-  d_i = tlorenz_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr; 
-
-  ptrs[4] = &sigma;  ptrs[6] = &r;     ptrs[8] = &b;  
-  ptrs[10] = &x_0;   ptrs[12] = &y_0;  ptrs[14] = &z_0; 
-  ptrs[15] = &x;     ptrs[16] = &y;    ptrs[17] = &z; 
-  // from TMiso
-  ptrs[21] = links;
-  ptrs[22] = &vis_x; ptrs[23] = &vis_y;
 
   PRMI(sigma).setDescr( "\\sigma" );
   PRMI(r).setDescr( "r" );

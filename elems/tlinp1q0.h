@@ -69,8 +69,6 @@ class TLinP1Q0 : public TMiso  {
         "Use u[1] as source of f()", "" );
    /** old value of x  */
    double x_old;
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo tlinp1q0_d_i[17];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

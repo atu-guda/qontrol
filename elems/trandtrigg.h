@@ -76,8 +76,6 @@ class TRandTrigg : public TMiso  {
    /** old value */
    double u_old; 
    
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo trandtrigg_d_i[22];
    /** class decription */
    static TClassInfo class_info;
    /** help str */

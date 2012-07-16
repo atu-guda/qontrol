@@ -37,48 +37,13 @@ TClassInfo TLinP1Q0::class_info = {
   CLASS_ID_TLinP1Q0, "TLinP1Q0", TLinP1Q0::create,
   &TMiso::class_info, helpstr, clpElem };
 
-TDataInfo TLinP1Q0::tlinp1q0_d_i[17] = {
-// tp      subtp       l    dx   dy   dw   dh  fl  min  max hv dy  name        descr  list_d
- { dtpDial,       0,   0,    0,   0, 380, 350, 0,  0.0, 0.0, 0, 0, "ldp1q0_dia", "", "Dialog for TLinP1Q0"},
- { dtpInt,        0,   0,   10,  10,  70,  20, 8,  0.0, 1e6, 0, 0, "ord", "order", ""},
- { dtpStr,        0,  60,   90,  10, 280,  20, 0,  0.0, 0.0, 0, 0, "descr", "Object description",""},
- { dtpLabel,      0,   0,  100,  70, 150,  20, 0,  0.0, 0.0, 0, 0, "l_eqn",   "", "<B>dx/dt = a*f(ku*u(t)-x)</B>"},
- { dtpLabel,      0,   0,   40, 110,  50,  20, 0,  0.0, 0.0, 0, 0, "l_a", "", "a"},
- { dtpDou,        0,   0,   30, 130, 120,  20, 0,  -1e300, 1e300, 0, 0, "a", "a", ""},
- { dtpLabel,      0,   0,   40, 160,  50,  20, 0,  0.0, 0.0, 0, 0, "l_ku", "", "ku"},
- { dtpDou,        0,   0,   30, 180, 120,  20, 0,  -1e300, 1e300, 0, 0, "ku", "ku", ""},
- { dtpLabel,      0,   0,  190, 110, 150,  20, 0,  0.0, 0.0, 0, 0, "l_fx", "", "Function f(x) element"},
- { dtpStr,        0,  32,  190, 130, 150,  20, 0,  0.0, 0.0, 0, 0, "fx", "f(x) name", ""},
- { dtpButton,     0,   0,   20, 290,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_ok", "", "OK"},
- { dtpButton,     1,   0,  140, 290,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_can", "", "Cancel"},
- { dtpButton,     2,   0,  260, 290,  90,  30, 0,  0.0, 0.0, 0, 0, "btn_help", "", "Help"},
- { dtpObj, CLASS_ID_TElmLink,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "links", "Object links", "" },
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_x", "X coord in scheme", ""},
- { dtpInt,        0,   0,    0,   0,   0,   0, 6,  0.0, 0.0, 0, 0, "vis_y", "Y coord in scheme", ""},
- { dtpEnd,        0,   0,    0,   0,   0,   0, 0, 0.0, 0.0, 0, 0, "", "", "" }
-};
-
 
 TLinP1Q0::TLinP1Q0( TDataSet* aparent )
         :TMiso( aparent )
 {
-  int i;
   a = 1.0;  ku = 1.0; 
   use_u1 = 0;
   x_old = 0;
-  d_i = tlinp1q0_d_i;
-  initHash();
-  for( i=0; i<nelm; i++ ) {
-    ptrs.push_back( 0 );
-  };
-  ptrs[1] = &ord; ptrs[2] = &descr;  // from TMiso
-  ptrs[5] = &a; 
-  ptrs[7] = &ku; 
-  ptrs[9] = &fx;
-  // from TMiso 
-  ptrs[13] = links;
-  ptrs[14] = &vis_x; ptrs[15] = &vis_y;
-
 }
 
 TLinP1Q0::~TLinP1Q0()

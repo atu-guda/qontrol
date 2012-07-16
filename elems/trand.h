@@ -79,8 +79,6 @@ class TRand : public TMiso  {
    PRM_LIST( seedType, efNoRunChange );
    /** flag: add base seed to element seed */
    PRM_SWITCH( addBaseSeed, efNoRunChange );
-   /** data descriptors -- with base class elements */ 
-   static TDataInfo trand_d_i[31];
    /** class decription */
    static TClassInfo class_info;
    /** help str */
