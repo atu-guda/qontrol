@@ -89,8 +89,6 @@ class QMo2Win : public QMainWindow
     QString findRes( const QString &res );
     /** returns pointer to settings object */
     Mo2Settings* getSettings() { return &sett; };
-    /** reads new file: to use from slot and commanline */
-    bool doFileOpen( const QString &fn );
     /** reads new XML file: to use from slot and commanline */
     bool doFileOpenXML( const QString &fn );
 
@@ -119,16 +117,10 @@ class QMo2Win : public QMainWindow
 
     /** generate a new document in the actual view */
     void slotFileNew();
-    /** open a document */
-    void slotFileOpen();
     /** open a XML document */
     void slotFileOpenXML();
-    /** save a document */
-    void slotFileSave();
     /** save a document as XML */
     void slotFileSaveXML();
-    /** save a document under a different filename*/
-    void slotFileSaveAs();
     /** save a document as XML under a different filename*/
     void slotFileSaveXMLAs();
     /** close the actual file */
@@ -268,8 +260,8 @@ class QMo2Win : public QMainWindow
     QToolBar *elmToolbar;
 
     /** actions */
-    QAction *act_new, *act_open, *act_openxml, *act_close, 
-	    *act_save, *act_savexml, *act_saveas,  *act_savexmlas,
+    QAction *act_new, *act_openxml, *act_close, 
+	    *act_savexml, *act_savexmlas,
             *act_print, *act_settings, *act_savesett, *act_quit,
 	    *act_undo, *act_cut, *act_copy, *act_paste,
 	    // elm

@@ -143,11 +143,6 @@ QDomElement HolderData::toDom( QDomDocument &dd ) const
   return de;
 }
 
-bool HolderData::toOldStream( std::ostream &os ) const // = 0
-{
-  os << qPrintable( targetName() ) << "=";
-  return true;
-}
 
 // ---------------- HolderInt ---------
 
@@ -210,13 +205,6 @@ bool HolderInt::fromString( const QString &s )
     post_set();
   }
   return ok;
-}
-
-bool HolderInt::toOldStream( std::ostream &os ) const
-{
-  HolderData::toOldStream( os );
-  os << (*val) << " ; \n";
-  return true;
 }
 
 
@@ -347,13 +335,6 @@ bool HolderDouble::fromString( const QString &s )
   return ok;
 }
 
-bool HolderDouble::toOldStream( std::ostream &os ) const
-{
-  HolderData::toOldStream( os );
-  os << (*val) << " ; \n";
-  return true;
-}
-
 
 QString HolderDouble::getType() const
 {
@@ -422,13 +403,6 @@ bool HolderString::fromString( const QString &s )
   return true;
 }
 
-bool HolderString::toOldStream( std::ostream &os ) const
-{
-  HolderData::toOldStream( os );
-  saveStr( &os, qPrintable(*val) ); 
-  os << " ; \n";
-  return true;
-}
 
 QString HolderString::getType() const
 {
@@ -517,12 +491,6 @@ bool HolderStringArr::fromString( const QString &s )
   return true;
 }
 
-bool HolderStringArr::toOldStream( std::ostream &os ) const
-{
-  HolderData::toOldStream( os );
-  os <<  "?????;\n"; // TODO: !!!!
-  return false;
-}
 
 QString HolderStringArr::getType() const
 {
@@ -587,12 +555,6 @@ bool HolderColor::fromString( const QString &s )
   return true;
 }
 
-bool HolderColor::toOldStream( std::ostream &os ) const
-{
-  HolderData::toOldStream( os );
-  os <<  (  (int)(val->rgba())  ) << " ; \n";
-  return true;
-}
 
 QString HolderColor::getType() const
 {
@@ -666,15 +628,6 @@ QString HolderObj::toString() const
 bool HolderObj::fromString( const QString &s )
 {
   return obj->fromString( s );
-}
-
-bool HolderObj::toOldStream( std::ostream &os ) const
-{
-  // name=1000(Type). 1000 is old subtp
-  os << qPrintable( targetName() ) << '=' << old_subtp
-      << '(' << obj->getClassName() << ")\n";
-  obj->saveDatasOld( os );
-  return true; 
 }
 
 QString HolderObj::getType() const
@@ -1004,165 +957,6 @@ double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg )
   return 0;
 }
 
-int TDataSet::saveDatasOld( ostream &os )
-{
-  os << getClassId() << '(' << getClassName() << ")={\n";
-  // some debug? values
-  os << "%!d n=" << nelm << "; allow_add=" << allow_add << '\n';
-  
-  QObjectList childs = children();
-  
-  for( auto o : childs ) {
-    QObject *xo = o;
-    if( ! xo->inherits("HolderData" )) {
-      continue;
-    }
-    HolderData *ho = qobject_cast<HolderData*>(xo);
-    if( ho->getFlags() & ( efNoSave | efStatic ) )
-      continue;
-    ho->toOldStream( os );
-  }
-  
-  os << "}; -- end of " << getClassName() << " ; \n";
-  modified = 0;
-  return 0;
-}
-
-int TDataSet::loadDatas( istream *is )
-{
-  int k, r_id;
-  //const char *mcn;
-  char str[MAX_INPUTLEN], nm[MAX_NAMELEN];
-  //mcn = getClassName(); //lm = strlen( mcn );
-  while( 1 ) {                           // find: id(ClassName)={
-    is->getline( str, MAX_INPUTLEN );  
-    if( !is->good() ) return -1;
-    k = typeOfLine( str, MAX_INPUTLEN, &r_id, nm, 0 );
-    if( k == ltpComment ) continue;
-    if( k != ltpStart ) return -2;
-    break;
-  };    
-  if( r_id != getClassId() ) return -3;  // not my class ??
-  // atu: debug:
-  //fprintf( stderr, "TDataSet::loadDatas: reading object %d(%s)\n",
-  //         r_id, nm );
-  
-  k = ltpComment; 
-  while( k > 0 && k != ltpEnd ) {
-    k = processElem( is );
-  };    
-  checkData(-1);
-  state = 1; modified = 0;
-  return 0;
-}
-
-// protected:
-
-int TDataSet::processElem( istream *is )
-{
-  int i, k, l;
-  TDataSet* ob;
-  QString val, delim, tbuf;
-  char nm[MAX_NAMELEN];
-  char str[MAX_INPUTLEN];
-  is->getline( str, MAX_INPUTLEN );
-  if( is->fail() ) return -1;
-  k = typeOfLine( str, MAX_INPUTLEN, &l, nm, &val );
-  if( k == ltpEnd ) {
-    qDebug( "dbg: TDataSet::processElem: ltpEnd in %s:\"%s\"", 
-      qPrintable(getFullName()), str );
-    return k;
-  }
-  if( k == ltpUnk ) {
-    qDebug( "WARN: TDataSet::processElem: unknown line:\"%s\"", str );
-    return k;
-  };
-  if( k == ltpComment ) return ltpComment;
-  
-  if( k == ltpVal ) {  // name=value
-    
-    HolderData *ho = getHolder( nm );
-    if( !ho ) { // name not found
-      qDebug( "dbg: TDataSet::processElem: unknown name:\"%s\"=\"%s\" in %s %s;",
-           nm, qPrintable(val), 
-           getClassName(), qPrintable( getFullName() ) );
-      if( ! allow_add ) {
-        return ltpComment;
-      }
-      QRegExp re_objtype( "\\d+\\(([a-zA-Z0-9_]+)\\)" );
-      if( re_objtype.indexIn( QString( val ) ) == -1 ) {
-	qDebug( "ERR: TDataSet::processElem: bad object type string:\"%s\"=\"%s\"",
-	       nm, qPrintable(val) );
-	return ltpComment;
-      }
-      QString cl_name = re_objtype.cap(1);
-      if( ! add_obj( cl_name, nm ) ) {
-	qDebug( "ERR: TDataSet::processElem: fail to create obj %s %s ",
-	       qPrintable(cl_name), nm );
-	return ltpComment;
-      }
-      ho = getHolder( nm );
-      qDebug( "dbg: TDataSet::processElem: created %s %s ;",
-             qPrintable(cl_name), nm );
-    } else {
-      //qDebug( "dbg: TDataSet::processElem: exists %s type %s in %s;",
-      //       nm, qPrintable(ho->getType()), qPrintable( getFullName() ) );
-    }
-    
-    if( !ho->isObject() ) { // simple object
-      //qDebug( "dbg: TDataSet::processElem: simple object %s.%s = \"%s\" ;",
-      //        qPrintable( getFullName() ), nm, qPrintable(val) );
-      ho->set( val );
-      return ltpVal;
-    }
-
-    // object
-    HolderObj *hob = qobject_cast<HolderObj*>(ho);
-    ob = hob->getObj();
-    if( !ob ) {
-      qDebug( "ERR: TDataSet::processElem: fail to find obj \"%s\";", nm );
-      dumpStruct();
-      abort();
-      return -7;
-    }
-    ob->loadDatas( is );
-    return ltpVal;
-  };
-  
-  if( k == ltpValStart ) {  // multi-line string value
-    delim = val;
-    //qDebug( "dbg: TDataSet::processElem: ltpValStart :\"%s\" in %s %s; val= \"%s\"",
-    //	   nm, getClassName(), qPrintable(objectName()), qPrintable(delim));
-    HolderData *ho = getHolder( nm );
-    if( ! ho ) {
-      qDebug( "ERR: TDataSet::processElem: unknown longstr name:\"%s\" in %s %s;",
-	     nm, getClassName(), qPrintable(objectName()));
-      return -3;
-    }
-    if( ho->getOldTp() != dtpStr )  {
-      qDebug( "ERR: TDataSet::processElem: bad type longstr \"%s\"  in %s %s;",
-	     nm, getClassName(), qPrintable(objectName()));
-      return -4; 
-    }
-    i = readMlStr( is, &tbuf, ho->getMax(), qPrintable(delim) );
-    //qDebug( "dbg: TDataSet::processElem: readed long str i=%d \"%s\";",
-    //	     i, qPrintable(tbuf) );
-    if( i ) { 
-      qDebug( "ERR: TDataSet::processElem: fail to read long str \"%s\"  in %s %s;",
-	     nm, getClassName(), qPrintable(objectName()));
-      return -8; 
-    };
-    ho->set( QString(tbuf) );
-    return ltpValStart;
-  };
-  
-  if( k == ltpStruct ) { // structure def comment -- first line empty
-    // ignore @- lines now
-    return ltpComment;
-  };
-  return 0;
-}
-
 
 void* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
 {
@@ -1196,7 +990,7 @@ int TDataSet::del_obj( const QString &ob_name )
 	    qPrintable( ob_name ) );
     return 0;
   }
-  delete ho; // auto remove object and from parets lists
+  delete ho; // auto remove object and from parent lists
   return 1;
 }
 

@@ -108,11 +108,7 @@ class HolderData : public QObject {
   virtual QString toString() const = 0;
   virtual bool fromString( const QString &s ) = 0;
   virtual QString getType() const = 0;
-  virtual bool toOldStream( std::ostream &os ) const = 0;
-  // virtual bool fromOldStream( std::istream *os ) const = 0;
   virtual QDomElement toDom( QDomDocument &dd ) const;
-  // TODO: to/from XML
-  // TODO: metadata in/out
  protected:
   int old_tp, old_subtp, dyn;
   int flags; //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
@@ -148,8 +144,6 @@ class HolderInt : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
-  virtual bool toOldStream( std::ostream &os ) const;
-  // virtual bool fromOldStream( std::istream *os ) const;
   virtual QString getType() const;
  protected:
   int *val;
@@ -226,8 +220,6 @@ class HolderDouble : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
-  virtual bool toOldStream( std::ostream &os ) const;
-  // virtual bool fromOldStream( std::istream *os ) const;
   virtual QString getType() const;
  protected:
   double *val;
@@ -261,8 +253,6 @@ class HolderString : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
-  virtual bool toOldStream( std::ostream &os ) const;
-  // virtual bool fromOldStream( std::istream *os ) const;
   virtual QString getType() const;
  protected:
   QString *val;
@@ -291,8 +281,6 @@ class HolderStringArr : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
-  virtual bool toOldStream( std::ostream &os ) const;
-  // virtual bool fromOldStream( std::istream *os ) const;
   virtual QString getType() const;
  protected:
   int n;
@@ -318,8 +306,6 @@ class HolderColor : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
-  virtual bool toOldStream( std::ostream &os ) const;
-  // virtual bool fromOldStream( std::istream *os ) const;
   virtual QString getType() const;
  protected:
   QColor *val;
@@ -349,8 +335,6 @@ class HolderObj : public HolderData {
   virtual void post_set();
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
-  virtual bool toOldStream( std::ostream &os ) const;
-  // virtual bool fromOldStream( std::istream *os ) const;
   virtual QString getType() const;
   TDataSet* getObj() { return obj; } // XXX: may be horror here!!
   virtual QDomElement toDom( QDomDocument &dd ) const;
@@ -387,11 +371,13 @@ class TDataSet : public QObject {
    /** returns ptr to help string */
    virtual const char* getHelp(void) const;
    /** return state */
-   virtual int getState(void) const { return state; };
+   virtual int getState() const { return state; };
    /** returns modified flag */
-   int getModified(void) const { return modified; };
+   int getModified() const { return modified; };
    /** set modified flag */
-   void setModified(void) { modified |= 1; };
+   void setModified() { modified |= 1; };
+   /** drop modified flag */
+   void setUnModified() { modified = 0; };
    /** return nelm */
    virtual int getN(void) const;
    /** return ptr to elem by name */
@@ -413,10 +399,6 @@ class TDataSet : public QObject {
    
    /** corrects data, if ni==-1 -- all elements -- now empty, see setData */
    virtual int checkData( int ni );
-   /** save header, all elements and trail to stream */
-   virtual int saveDatasOld( std::ostream &os );
-   /** load data to all elements */
-   virtual int loadDatas( std::istream *is );
    /** add new object and it's description (new)*/
    virtual void* add_obj( const QString &cl_name, const QString &ob_name );
    /** delete given object by num in ptrs */
@@ -454,8 +436,6 @@ class TDataSet : public QObject {
    /** gets pointer to parameter, near to getDoublePrmPtr 
     * for param mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
-   /** parse & assing one elem. returns: 0-ok 1-comment 2-end; <0-error */
-   int processElem( std::istream *is );
  protected:
    /** guard value */
    int guard;
