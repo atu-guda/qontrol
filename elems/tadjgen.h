@@ -72,6 +72,8 @@ class TAdjGen : public TMiso  {
    PRM_DOUBLE1( ctt, efInner, "ctt", "Accumulator 0", "" );
    PRM_DOUBLE1( ig, efInner,  "ig",  "Accumulator 1", "" );
    PRM_DOUBLE1( ig2, efInner, "ig2", "Accumulator 2", "" );
+   /** real tick: exported to double tick */
+   int real_tick;
    /** class decription */
    static TClassInfo class_info;
    /** help str */

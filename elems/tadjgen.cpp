@@ -35,8 +35,8 @@ TAdjGen::TAdjGen( TDataSet* aparent )
   type = useReset = useLock = outStrobe = useZero 
        = useSignStrobe = usePlusStrobe = useF = 0; 
   omega_0 = 1.2; k_omega = 1.0;
-  ctt = ig = ig2 = 0; currOut = 0; tick = 0;
-
+  ctt = ig = ig2 = 0; currOut = 0; real_tick = 0;
+  tick = 0;
 }
 
 TAdjGen::~TAdjGen()
@@ -72,7 +72,7 @@ const char** TAdjGen::getIcon(void) const
 int TAdjGen::startLoop( int acnx, int acny )
 {
   int rc = TMiso::startLoop( acnx, acny );
-  ctt = ig = ig2 = 0; currOut = 0; tick = 0;
+  ctt = ig = ig2 = 0; currOut = 0; real_tick = 0; tick = 0;
   return rc;
 }
 
@@ -85,43 +85,44 @@ double TAdjGen::f( double /* t */ )
     om  = omega_0 * ( 1 + om*k_omega );
     om2 = omega_0 * ( 1 + om2*k_omega );
   };
-  tick = 0;
+  real_tick = 0; tick = 0;
   switch( type ) {
     case 0: ig += om * tdt;                 // Pi=int_0^T(om*dt);
 	    if( useReset && *in_so[1] > 0.01 ) {
-	      tick = 1; break;
+	      real_tick = 1; break;
 	    };
 	    if( useLock && *in_so[2] > 0.01 ) break;
             if( ig > M_PI ) {
-	      tick = 1;
+	      real_tick = 1;
             };
             break;
     case 1: if( om < 1.0e-100 ) om = 1.0e-50; 
             ctt += tdt; ff = 1.0 / om;  df = tdt * ff;
             ig += df * M_PI;
 	    if( useReset && *in_so[1] > 0.01 ) {
-	      tick = 1; break;
+	      real_tick = 1; break;
 	    }; 
 	    if( useLock && *in_so[2] > 0.01 ) break;
             if( ctt*ctt > ig ) {
-	      tick = 1;
+	      real_tick = 1;
             };
             break;
     case 2: ig += om * tdt; ig2 += om2 * tdt;      // dual
 	    g1 = ( ig  > M_PI );
 	    g2 = ( ig2 > M_PI );
 	    if( useReset && *in_so[1] > 0.01 ) {
-	      tick = 1; break;
+	      real_tick = 1; break;
 	    };
 	    if( useLock && *in_so[2] > 0.01 ) break;
             if( g1 && g2 ) {
-	      tick = 1;
+	      real_tick = 1;
             };
 	    diff_out = g1 - g2;
             break;
     default: v = 0;
   };
-  if( tick ) {
+  tick = real_tick;
+  if( real_tick ) {
     ctt = ig = ig2 = 0;
     currOut = !currOut;
   };
@@ -131,7 +132,7 @@ double TAdjGen::f( double /* t */ )
   v = currOut ? 1.0 : ( useZero ? 0.0 : -1.0 );
   if( !outStrobe )
     return v;
-  if( !tick ) 
+  if( !real_tick ) 
     return 0;
   if( usePlusStrobe && v < 1 )
     return 0;
