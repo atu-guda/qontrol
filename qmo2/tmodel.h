@@ -268,8 +268,6 @@ class TModel : public TDataContainer  {
   std::vector<TGraph*> v_graph;
   /** vector of elems orders */
   std::vector<int> v_ord;
-  /** vector of elems flags: 1 - locked,  2 - noauto */
-  std::vector<int> v_flg;
   /** general purpose vars[MODEL_NVAR] */
   std::vector<double> vars;
   /** class decription */

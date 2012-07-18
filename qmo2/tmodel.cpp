@@ -58,7 +58,7 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   m_PI = M_PI;
   m_E = M_E;
   const int ELM_RES = 64; const int OUT_RES = 32;
-  v_el.reserve( ELM_RES ); v_ord.reserve( ELM_RES ); v_flg.reserve( ELM_RES );
+  v_el.reserve( ELM_RES ); v_ord.reserve( ELM_RES );
   v_out.reserve( OUT_RES ); 
   v_outt.reserve( OUT_RES );
   v_graph.reserve( 16 );
@@ -160,8 +160,12 @@ int TModel::runOneLoop(void)/*{{{1*/
        // return 1;
      };
   };  
+  IterType itype = IterMid;
   out_level = 0;
-  if( ii == nn-1 ) {
+  if( ii == 0 ) {
+    itype = IterFirst;
+  } else if( ii == nn-1 ) {
+    itype = IterLast;
     out_level = run_type;
   };
 
@@ -169,11 +173,8 @@ int TModel::runOneLoop(void)/*{{{1*/
   for( TMiso* cur_el : v_el ) {
     if( end_loop )
       break;
-     int curr_flg = v_flg[elnu];
-     if( (curr_flg &  4 ) && ( ii != 0 ) ) continue; // only first
-     if( (curr_flg &  8 ) && ( ii != nn-1 ) ) continue; // only last 
      
-     cur_el->fun( t );  // <============ main action TODO: from ^ to fun
+     cur_el->fun( t, itype );  // <============ main action TODO: from ^ to fun
      ++elnu;
   };  // end element loop;
   for( TOutArr* arr : v_out ) { 
@@ -544,11 +545,9 @@ int TModel::moveElem( int elnu, int newx, int newy )/*{{{1*/
 
 int TModel::linkNames(void)/*{{{1*/
 {
-  int i, k, oord,
-      ob_lock, ob_noauto, ob_first, ob_last, out_tp;
+  int oord, out_tp;
   QString lname, pname, nname, oname;
-  TElmLink* lob;
-  v_el.clear(); v_ord.clear(); v_flg.clear();
+  v_el.clear(); v_ord.clear();
   v_out.clear(); v_outt.clear();
   v_graph.clear();
   
@@ -581,29 +580,6 @@ int TModel::linkNames(void)/*{{{1*/
   }
 
   sortOrd();
-  i = 0;
-  for( TMiso *ob : v_el ) { // fill link indexes
-    if( !ob ) {
-      ++i; 
-      continue;
-    }
-    lob = static_cast<TElmLink*>(ob->getObj( "links", "TElmLink" )); 
-    if( !lob ) {
-      ++i;
-      continue;
-    }
-    ob_lock = ob_noauto = 0; k = 0;
-    lob->getData( "locked", &ob_lock );
-    lob->getData( "noauto", &ob_noauto );
-    lob->getData( "onlyFirst", &ob_first );
-    lob->getData( "onlyLast", &ob_last );
-    if( ob_lock )  k |= 1; 
-    if( ob_noauto ) k |= 2;
-    if( ob_first ) k |= 4; 
-    if( ob_last ) k |= 8;
-    v_flg.push_back( k );
-    ++i;
-  };
 
   // fill outs elnus and types
   for( TOutArr *arr : v_out ) {

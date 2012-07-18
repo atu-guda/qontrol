@@ -13,13 +13,8 @@
 
 /* General constants */
 #define MAX_NAMELEN   32
-#define MAX_INPUTLEN 256
+#define MAX_INPUTLEN 4096
 #define MAX_LABELLEN 128
-
-/* TDataSet limits. used as alloc size in TDataContainer */
-#define MAX_DATAELEM 1024
-/* maximum class types */
-#define MAX_CLASSES 512
 
 /* Model constants */
 

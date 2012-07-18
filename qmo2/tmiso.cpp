@@ -95,13 +95,17 @@ TDataSet* TMiso::create( TDataSet* /* apar */ )
   return 0; // cannot create abstract object
 }
 
-double TMiso::fun( double t )
+double TMiso::fun( double t, IterType itype )
 {
   int v;
   if( links->noauto ) 
     return out0;
   if( links->locked ) 
     return out0 = *in_so[0];
+  if( links->onlyFirst && itype != IterFirst )
+    return out0;
+  if( links->onlyLast && itype != IterLast )
+    return out0;
   
   modifyPrms();
 

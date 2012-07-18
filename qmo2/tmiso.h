@@ -28,6 +28,13 @@
 #define CLASS_ID_TElmLink 999
 #define CLASS_ID_TMiso 1000
 
+/** iteration type */
+enum IterType {
+  IterMid = 0,     // not-first and not-last iteration
+  IterFirst = 1,   // first iteration in i inner loop
+  IterLast = 2     // last iteration in inner loop
+};
+
 class TModel;
 
 /** \class TElmLink  
@@ -143,7 +150,7 @@ class TMiso : public TDataSet  {
     * */
    virtual double f( double t ) = 0;
    /** external computation function + in/out */
-   double fun( double t );
+   double fun( double t, IterType itype );
    
    /** will be called before any action -- good place for allocs 
     *

@@ -1170,19 +1170,18 @@ void QMo2Win::slotStatusHelpMsg(const QString &text)
 
 void QMo2Win::slotTest(void)
 {
-  static const char *loc_test = 
-    "áâ÷çäåöúéëìíîïðòóôõæèãþûýùÿøüàñ:"
-    "ÁÂ×ÇÄÅÖÚÉËÌÍÎÏÐÒÓÔÕÆÈÃÞÛÝÙßØÜÀÑ:¦¶§·¤´£³ ";
+  static const char *loc_test = "" 
+    "ÐÐ‘Ð’Ð“Ð”Ð•Ð–Ð—Ð˜ÐšÐ›ÐœÐÐžÐŸÐ Ð¡Ð¢Ð£Ð¤Ð¥Ð¦Ð§Ð¨Ð©Ð«ÐªÐ¬Ð­Ð®Ð¯:"
+    "Ð°Ð±Ð²Ð³Ð´ÐµÐ¶Ð·Ð¸ÐºÐ»Ð¼Ð½Ð¾Ð¿Ñ€ÑÑ‚ÑƒÑ„Ñ…Ñ†Ñ‡ÑˆÑ‰Ñ‹ÑŠÑŒÑÑŽÑ:Ñ–Ð†Ñ—Ð‡Ñ”Ð„Ñ‘ÐÒÒ‘."
+  ;
   QString ostr( "Test called\n" );
   statusBar()->showMessage( tr( "Test something..." ) );
   ostr += QString::fromLocal8Bit( loc_test ) + "(Local8bit)\n" ;
   ostr += QString::fromAscii( loc_test ) + "(Ascii)\n";
-  ostr += loc_test;
-  ostr += "(simple)\n";
-  for( unsigned ccode=0x0380; ccode < 0x0400; ++ccode )  {
+  for( unsigned ccode=0x0390; ccode < 0x0400; ++ccode )  {
     ostr += QChar( ccode );
     if( (ccode & 0x1F) == 0x1F ) 
-      ostr += QChar('\n');
+      ostr += " <:> " + QString::number(ccode,16) + "\n";
   }
   ostr += "\n";
 
