@@ -783,6 +783,9 @@ int DataDialog::createWidgets()
 
   DataWidget *w;
   QObjectList childs = ds.children();
+
+  // FIXME part of tmp workaround for displaing Elems in model
+  bool is_model = ds.isChildOf( "TModel" );
   
   for( auto o :  childs ) {
     QObject *xo = o;
@@ -794,6 +797,15 @@ int DataDialog::createWidgets()
       continue; // but how?
     if( ho->getFlags() & efNoDial )
       continue;
+
+    // second part of TMP workaround (FIXME)
+    if( is_model && ho->isObject() ) {
+      HolderObj *hob = qobject_cast<HolderObj*>(ho);
+      TDataSet *ob = hob->getObj();
+      if( ob->isChildOf("TMiso")  ||  ob->isChildOf("TOutArr") || ob->isChildOf("TGraph") ) {
+	continue;
+      }
+    }
 
     int ncol = 1; // number of columns per widget
     QString ncol_str = ho->getParm("ncol");
@@ -817,15 +829,7 @@ int DataDialog::createWidgets()
     }
 
     QString name = ho->targetName();
-    // QString visName = ho->getParm( "vis_name" );
-    //qDebug( "DBG: createWidgets %s at (%d,%d+%d)", 
-    //	    qPrintable(name), nr, nc, ncol  );
 
-    int lev = 0;
-    QString wtp = 
-      " ( " % QString::number( ho->getMin() ) % " ; " % QString::number( ho->getMax() ) % " ) " 
-      % FactoryDataWidget::theFactory().findForHolder( *ho, &lev )
-      % '_'   % QString::number( lev ) % ' ' %  ho->getParm( "props" ) ;
     w = FactoryDataWidget::theFactory().createDataWidget( *ho, this );
     if( !w ) {
       qDebug( "not found edit widget for object %s", qPrintable(name) );
@@ -834,9 +838,6 @@ int DataDialog::createWidgets()
     
     dwm[name] = w;
     w->setWhatsThis( ho->getParm("descr") );
-    // QLabel *la = new QLabel( visName, this );
-    // la->setWhatsThis( ho->getType() + " " + name + " (" + wtp + ")" );
-    // lay2->addWidget( la, nr, nc*2 );
     lay2->addWidget( w, nr, nc, 1, ncol );
     ++nr;
     if( nr > nr_max )
