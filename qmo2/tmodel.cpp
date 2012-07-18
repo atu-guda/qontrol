@@ -215,12 +215,12 @@ int TModel::postRun(void)/*{{{1*/
 
 int TModel::reset(void)/*{{{1*/
 {
+  linkNames();
   for( TOutArr *arr : v_out ) {
     if( arr == 0 ) 
       continue; // never be!
     arr->free();
   };
-  linkNames();
   state = stateGood; run_type = -1; sgnt = int( time(0) );
   return 0;
 }/*}}}1*/
