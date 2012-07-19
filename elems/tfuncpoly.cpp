@@ -79,11 +79,6 @@ TDataSet* TFuncPoly::create( TDataSet* apar )
   return new TFuncPoly( apar );
 }
 
-int TFuncPoly::getClassId(void) const 
-{
-  return CLASS_ID_TFuncPoly;
-}
-
 
 const TClassInfo* TFuncPoly::getClassInfo(void) const
 {

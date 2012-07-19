@@ -95,11 +95,6 @@ TDataSet* TGraph::create( TDataSet* apar )
   return new TGraph( apar );
 }
 
-int TGraph::getClassId(void) const 
-{
-  return CLASS_ID_TGraph;
-}
-
 
 const TClassInfo* TGraph::getClassInfo(void) const
 {
@@ -124,7 +119,7 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
   for( i=0; i<7; i++ ) gi->label[i][0] = 0;
   strncat( gi->title, qPrintable( objectName()), 
            sizeof( gi->title )-1 ); // TODO: real QString in GraphInfo
-  if( parent == 0 || parent->getClassId() != CLASS_ID_TModel 
+  if( parent == 0 || ! parent->isChildOf("TModel") 
       || parent->getState() < stateDone )
     return -10;
   

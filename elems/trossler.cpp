@@ -79,11 +79,6 @@ TDataSet* TRossler::create( TDataSet* apar )
   return new TRossler( apar );
 }
 
-int TRossler::getClassId(void) const
-{
-  return CLASS_ID_TRossler;
-}
-
 const TClassInfo* TRossler::getClassInfo(void) const
 {
   return &class_info;

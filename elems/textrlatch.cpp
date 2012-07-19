@@ -87,11 +87,6 @@ TDataSet* TExtrLatch::create( TDataSet* apar )
   return new TExtrLatch( apar );
 }
 
-int TExtrLatch::getClassId(void) const 
-{
-  return CLASS_ID_TExtrLatch;
-}
-
 
 const TClassInfo* TExtrLatch::getClassInfo(void) const
 {

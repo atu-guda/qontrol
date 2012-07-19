@@ -54,11 +54,6 @@ TDataSet* TCounter::create( TDataSet* apar )
   return new TCounter( apar );
 }
 
-int TCounter::getClassId(void) const 
-{
-  return CLASS_ID_TCounter;
-}
-
 
 const TClassInfo* TCounter::getClassInfo(void) const
 {

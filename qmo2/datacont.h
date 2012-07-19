@@ -24,8 +24,6 @@ class TDataContainer : public TDataSet  {
  public:
   explicit TDataContainer( TDataSet* aparent );
   virtual ~TDataContainer();
-  /** class id */
-  virtual int getClassId(void) const;
   /** creates instance */
   static TDataSet* create( TDataSet* apar );
   /** return ptr to static class_info, must be implemented in each class */

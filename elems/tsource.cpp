@@ -147,11 +147,6 @@ TDataSet* TSource::create( TDataSet* apar )
   return new TSource( apar );
 }
 
-int TSource::getClassId(void) const
-{
-  return CLASS_ID_TSource;
-}
-
 const TClassInfo* TSource::getClassInfo(void) const
 {
   return &class_info;

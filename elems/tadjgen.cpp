@@ -48,11 +48,6 @@ TDataSet* TAdjGen::create( TDataSet* apar )
   return new TAdjGen( apar );
 }
 
-int TAdjGen::getClassId(void) const 
-{
-  return CLASS_ID_TAdjGen;
-}
-
 
 const TClassInfo* TAdjGen::getClassInfo(void) const
 {

@@ -26,7 +26,7 @@ HolderData::HolderData( const QString &obj_name,
               const QString &v_name, QObject *a_parent, int a_flags,
 	      const QString &a_descr,
 	      const QString &a_extra )
-           :QObject( a_parent ), old_tp(0), old_subtp(0), 
+           :QObject( a_parent ), old_tp(0),
 	    dyn(0), flags(a_flags),
 	    v_min(DMIN), v_max(DMAX),
 	    tp(QVariant::Invalid), ptr(0), target_name( obj_name )
@@ -156,7 +156,7 @@ HolderInt::HolderInt( int *p, const QString &obj_name,
   if( !val ) {
     val = new int; *val = (int)(v_min); dyn = 1;
   }
-  ptr = val; tp=QVariant::Int; old_tp = dtpInt; old_subtp = dtpsInt;
+  ptr = val; tp=QVariant::Int; old_tp = dtpInt;
   if( getParm("props").isEmpty() ) {
     setParm( "props", "INT,SIMPLE" );
   }
@@ -220,7 +220,6 @@ HolderSwitch::HolderSwitch( int *p, const QString &obj_name,
 	      const QString &a_extra )
           :HolderInt( p, obj_name, v_name, a_parent, a_flags, a_descr, a_extra )
 {
-  old_subtp = dtpsSwitch;
   if( getParm("props") == "INT,SIMPLE" ) {
     setParm( "props", "INT,SWITCH" );
   }
@@ -252,7 +251,6 @@ HolderList::HolderList( int *p, const QString &obj_name,
      const QString &a_extra,  const QString &a_elems  )
    :HolderInt( p, obj_name, v_name, a_parent, a_flags, a_descr, a_extra )
 {
-  old_subtp = dtpsList;
   v_min = v_max = 0;
   setElems( a_elems );
   if( getParm("props") == "INT,SIMPLE" ) {
@@ -513,7 +511,7 @@ HolderColor::HolderColor( QColor *p, const QString &obj_name,
   if( getParm("props").isEmpty() ) {
     setParm( "props", "COLOR,INT" );
   }
-  ptr = val; tp=QVariant::Color; old_tp = dtpInt; old_subtp = dtpsColor;
+  ptr = val; tp=QVariant::Color; old_tp = dtpInt;
 }
 
 HolderColor::~HolderColor()
@@ -578,7 +576,6 @@ HolderObj::HolderObj( TDataSet *p, const QString &obj_name,
   }
   // post_set();
   ptr = obj; tp=QVariant::UserType; old_tp = dtpObj; 
-  old_subtp = obj->getClassId();
   if( getParm("props").isEmpty() ) {
     setParm( "props", "OBJ" );
   }
@@ -656,18 +653,13 @@ TDataSet::TDataSet( TDataSet* aparent )
 {
  guard = guard_val;
  parent = aparent;
- nelm = 0; allow_add = 0; state = stateGood; modified = 0;
+ allow_add = 0; state = stateGood; modified = 0;
 }
 
 TDataSet::~TDataSet()
 {
-  // deletion is dont by holders dtors
-  nelm = 0; state = stateBad;
-}
-
-int TDataSet::getClassId(void) const 
-{ 
-  return CLASS_ID_TDataSet; 
+  // deletion is done by holders dtors
+  state = stateBad;
 }
 
 const char* TDataSet::getClassName(void) const 
@@ -720,10 +712,6 @@ const char *TDataSet::getHelp(void) const
   return helpstr;
 }
 
-int TDataSet::getN(void) const
-{
-  return nelm;
-}
 
 TDataSet* TDataSet::getObj( const QString &ename, const QString &cl_name )
 {
@@ -1185,8 +1173,8 @@ void TDataSet::dumpStruct() const
 {
   static int dump_lev = -1;
   ++dump_lev;
-  qDebug( "*%d struct of %s %s nelm=%d this=%p", 
-         dump_lev, getClassName(), qPrintable(objectName()), nelm, this );
+  qDebug( "*%d struct of %s %s this=%p", 
+         dump_lev, getClassName(), qPrintable(objectName()), this );
   // new part
   QObjectList childs = children();
   int i = 0;

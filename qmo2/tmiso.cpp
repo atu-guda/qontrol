@@ -43,11 +43,6 @@ TDataSet* TElmLink::create( TDataSet* apar )
   return new TElmLink( apar );
 }
 
-int TElmLink::getClassId(void) const 
-{
-  return CLASS_ID_TElmLink;
-}
-
 const TClassInfo* TElmLink::getClassInfo(void) const
 {
   return &class_info;
@@ -112,11 +107,6 @@ double TMiso::fun( double t, IterType itype )
   v = out0 = f( t );
   prm_mod = 0;
   return v;
-}
-
-int TMiso::getClassId(void) const 
-{
-  return CLASS_ID_TMiso;
 }
 
 const TClassInfo* TMiso::getClassInfo(void) const

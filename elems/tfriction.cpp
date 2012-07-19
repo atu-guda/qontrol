@@ -78,11 +78,6 @@ TDataSet* TFriction::create( TDataSet* apar )
   return new TFriction( apar );
 }
 
-int TFriction::getClassId(void) const 
-{
-  return CLASS_ID_TFriction;
-}
-
 
 const TClassInfo* TFriction::getClassInfo(void) const
 {

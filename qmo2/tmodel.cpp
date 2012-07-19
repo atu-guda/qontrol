@@ -701,11 +701,6 @@ TDataSet* TModel::create( TDataSet* apar ) // static/*{{{1*/
    return new TModel( apar );
 }/*}}}1*/
 
-int TModel::getClassId(void) const/*{{{1*/
-{
-   return CLASS_ID_TModel;
-}/*}}}1*/
-
 
 const TClassInfo* TModel::getClassInfo(void) const/*{{{1*/
 {

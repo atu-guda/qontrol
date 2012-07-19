@@ -85,11 +85,6 @@ TDataSet* TFuncMisc::create( TDataSet* apar )
   return new TFuncMisc( apar );
 }
 
-int TFuncMisc::getClassId(void) const 
-{
-  return CLASS_ID_TFuncMisc;
-}
-
 
 const TClassInfo* TFuncMisc::getClassInfo(void) const
 {

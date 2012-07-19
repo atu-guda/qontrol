@@ -35,8 +35,6 @@ class TRossler : public TMiso  {
    virtual ~TRossler();
    /** creator */
    static TDataSet* create( TDataSet* apar );
-   /** class id */
-   virtual int getClassId(void) const ;
    /** return ptr to static class_info, must be implemented in each class */
    virtual const TClassInfo* getClassInfo(void) const;
    /** return ptr to static class_info, static version */

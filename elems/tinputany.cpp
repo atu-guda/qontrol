@@ -47,11 +47,6 @@ TDataSet* TInputAny::create( TDataSet* apar )
   return new TInputAny( apar );
 }
 
-int TInputAny::getClassId(void) const 
-{
-  return CLASS_ID_TInputAny;
-}
-
 
 const TClassInfo* TInputAny::getClassInfo(void) const
 {

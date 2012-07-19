@@ -30,11 +30,6 @@ TRootData::~TRootData()
 {
 }
 
-int TRootData::getClassId(void) const 
-{
-  return CLASS_ID_TRootData; 
-}
-
 const TClassInfo* TRootData::getClassInfo(void) const
 {
   return &class_info;

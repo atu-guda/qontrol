@@ -570,17 +570,14 @@ void QMo2View::infoElm()
 
 void QMo2View::testElm1()
 {
-  int nelm;
   QString buf;
   if( ! checkState( selCheck ) )
     return;	  
-  nelm = selObj->getN();
   
   QDialog *dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": test1 ") + selObj->objectName() );
   
   buf = selObj->toString();
-  buf += "# nelm= " + QString::number( nelm ) + "\n";
 
   //QObjectList childs = selObj->children();
   //for( QObjectList::iterator o = childs.begin(); o != childs.end(); ++o ) {

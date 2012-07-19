@@ -85,11 +85,6 @@ TDataSet* TFuncTrans::create( TDataSet* apar )
   return new TFuncTrans( apar );
 }
 
-int TFuncTrans::getClassId(void) const 
-{
-  return CLASS_ID_TFuncTrans;
-}
-
 
 const TClassInfo* TFuncTrans::getClassInfo(void) const
 {

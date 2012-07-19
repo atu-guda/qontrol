@@ -40,8 +40,6 @@ class TGraph : public TDataSet  {
    /** creator */
    static TDataSet* create( TDataSet *apar );
    /** class id */
-   virtual int getClassId(void) const ;
-   /** returns help string */
    virtual const char* getHelp(void) const;
    /** return ptr to static class_info, nust be implemented in each class */
    virtual const TClassInfo* getClassInfo(void) const;

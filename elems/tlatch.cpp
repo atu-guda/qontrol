@@ -62,11 +62,6 @@ TDataSet* TLatch::create( TDataSet* apar )
   return new TLatch( apar );
 }
 
-int TLatch::getClassId(void) const 
-{
-  return CLASS_ID_TLatch;
-}
-
 
 const TClassInfo* TLatch::getClassInfo(void) const
 {

@@ -29,11 +29,6 @@ TDataContainer::~TDataContainer()
 {
 }
 
-int TDataContainer::getClassId(void) const 
-{ 
-  return CLASS_ID_TDataContainer; 
-}
-
 const TClassInfo* TDataContainer::getClassInfo(void) const
 {
   return &class_info;

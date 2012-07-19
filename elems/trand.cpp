@@ -110,11 +110,6 @@ TDataSet* TRand::create( TDataSet* apar )
   return new TRand( apar );
 }
 
-int TRand::getClassId(void) const 
-{
-  return CLASS_ID_TRand;
-}
-
 const TClassInfo* TRand::getClassInfo(void) const
 {
   return &class_info;

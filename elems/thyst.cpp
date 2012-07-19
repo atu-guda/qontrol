@@ -49,11 +49,6 @@ TDataSet* THyst::create( TDataSet* apar )
   return new THyst( apar );
 }
 
-int THyst::getClassId(void) const 
-{
-  return CLASS_ID_THyst;
-}
-
 const TClassInfo* THyst::getClassInfo(void) const
 {
   return &class_info;

@@ -42,11 +42,6 @@ TDataSet* TLinear::create( TDataSet* apar )
   return new TLinear( apar );
 }
 
-int TLinear::getClassId(void) const 
-{
-  return CLASS_ID_TLinear;
-}
-
 
 const TClassInfo* TLinear::getClassInfo(void) const
 {

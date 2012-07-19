@@ -53,11 +53,6 @@ TDataSet* TMultipl::create( TDataSet* apar )
   return new TMultipl( apar );
 }
 
-int TMultipl::getClassId(void) const 
-{
-  return CLASS_ID_TMultipl;
-}
-
 
 const TClassInfo* TMultipl::getClassInfo(void) const
 {

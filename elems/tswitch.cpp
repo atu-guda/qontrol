@@ -52,11 +52,6 @@ TDataSet* TSwitch::create( TDataSet* apar )
   return new TSwitch( apar );
 }
 
-int TSwitch::getClassId(void) const 
-{
-  return CLASS_ID_TSwitch;
-}
-
 const TClassInfo* TSwitch::getClassInfo(void) const
 {
   return &class_info;

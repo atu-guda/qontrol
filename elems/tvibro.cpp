@@ -47,11 +47,6 @@ TDataSet* TVibro::create( TDataSet* apar )
   return new TVibro( apar );
 }
 
-int TVibro::getClassId(void) const 
-{
-  return CLASS_ID_TVibro;
-}
-
 const TClassInfo* TVibro::getClassInfo(void) const
 {
   return &class_info;

@@ -52,11 +52,6 @@ TDataSet* TDelay::create( TDataSet* apar )
   return new TDelay( apar );
 }
 
-int TDelay::getClassId(void) const
-{
-  return CLASS_ID_TDelay;
-}
-
 
 const TClassInfo* TDelay::getClassInfo(void) const
 {

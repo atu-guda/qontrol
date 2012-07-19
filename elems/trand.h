@@ -38,8 +38,6 @@ class TRand : public TMiso  {
    virtual ~TRand();
    /** creator */
    static TDataSet* create( TDataSet* apar );
-   /** class id */
-   virtual int getClassId(void) const ;
    /** return ptr to static class_info */
    virtual const TClassInfo* getClassInfo(void) const;
    /** return ptr to static class_info, static version */

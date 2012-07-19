@@ -56,11 +56,6 @@ TDataSet* TPid::create( TDataSet* apar )
   return new TPid( apar );
 }
 
-int TPid::getClassId(void) const 
-{
-  return CLASS_ID_TPid;
-}
-
 
 const TClassInfo* TPid::getClassInfo(void) const
 {

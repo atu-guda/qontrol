@@ -48,11 +48,6 @@ TDataSet* TFourier::create( TDataSet* apar )
   return new TFourier( apar );
 }
 
-int TFourier::getClassId(void) const 
-{
-  return CLASS_ID_TFourier;
-}
-
 
 const TClassInfo* TFourier::getClassInfo(void) const
 {

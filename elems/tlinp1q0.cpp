@@ -55,11 +55,6 @@ TDataSet* TLinP1Q0::create( TDataSet* apar )
   return new TLinP1Q0( apar );
 }
 
-int TLinP1Q0::getClassId(void) const 
-{
-  return CLASS_ID_TLinP1Q0;
-}
-
 
 const TClassInfo* TLinP1Q0::getClassInfo(void) const
 {

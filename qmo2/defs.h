@@ -68,7 +68,7 @@ enum _DATA_STYPES {
 };
 
 enum _ELEM_FLAGS {
-  efMustRead = 1, efNoRunChange = 2,         /* MR, NRC */ 
+  efMustRead = 1, efNoRunChange = 2, efNRC = efNoRunChange,  /* MR, NRC */ 
   efNoDial = 4, efRODial = 8,                /* ND, ROD */
   efNoSave = 16, efRO = 32, efStatic = 64,   /* NS, RO, - */
   efInner = efNoDial | efNoSave | efRO,

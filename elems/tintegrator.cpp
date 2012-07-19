@@ -90,11 +90,6 @@ TDataSet* TIntegrator::create( TDataSet* apar )
   return new TIntegrator( apar );
 }
 
-int TIntegrator::getClassId(void) const 
-{
-  return CLASS_ID_TIntegrator;
-}
-
 const TClassInfo* TIntegrator::getClassInfo(void) const
 {
   return &class_info;

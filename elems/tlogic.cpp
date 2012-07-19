@@ -75,11 +75,6 @@ TDataSet* TLogic::create( TDataSet* apar )
   return new TLogic( apar );
 }
 
-int TLogic::getClassId(void) const 
-{
-  return CLASS_ID_TLogic;
-}
-
 
 const TClassInfo* TLogic::getClassInfo(void) const
 {

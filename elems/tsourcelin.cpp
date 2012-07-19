@@ -55,11 +55,6 @@ TDataSet* TSourceLin::create( TDataSet* apar )
   return new TSourceLin( apar );
 }
 
-int TSourceLin::getClassId(void) const
-{
-  return CLASS_ID_TSourceLin;
-}
-
 const TClassInfo* TSourceLin::getClassInfo(void) const
 {
   return &class_info;

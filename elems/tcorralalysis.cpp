@@ -69,11 +69,6 @@ TDataSet* TCorrAnalysis::create( TDataSet* apar )
   return new TCorrAnalysis( apar );
 }
 
-int TCorrAnalysis::getClassId(void) const 
-{
-  return CLASS_ID_TCorrAnalysis;
-}
-
 const TClassInfo* TCorrAnalysis::getClassInfo(void) const
 {
   return &class_info;

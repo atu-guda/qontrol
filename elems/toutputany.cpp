@@ -54,11 +54,6 @@ TDataSet* TOutputAny::create( TDataSet* apar )
   return new TOutputAny( apar );
 }
 
-int TOutputAny::getClassId(void) const 
-{
-  return CLASS_ID_TOutputAny;
-}
-
 
 const TClassInfo* TOutputAny::getClassInfo(void) const
 {

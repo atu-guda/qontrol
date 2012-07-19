@@ -84,11 +84,6 @@ TDataSet* TRandTrigg::create( TDataSet* apar )
   return new TRandTrigg( apar );
 }
 
-int TRandTrigg::getClassId(void) const 
-{
-  return CLASS_ID_TRandTrigg;
-}
-
 
 const TClassInfo* TRandTrigg::getClassInfo(void) const
 {

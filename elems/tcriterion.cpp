@@ -70,11 +70,6 @@ TDataSet* TCriterion::create( TDataSet* apar )
   return new TCriterion( apar );
 }
 
-int TCriterion::getClassId(void) const 
-{
-  return CLASS_ID_TCriterion;
-}
-
 
 const TClassInfo* TCriterion::getClassInfo(void) const
 {

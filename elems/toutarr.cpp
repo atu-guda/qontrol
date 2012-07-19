@@ -50,11 +50,6 @@ TDataSet* TOutArr::create( TDataSet* apar )
   return new TOutArr( apar );
 }
 
-int TOutArr::getClassId(void) const 
-{
-  return CLASS_ID_TOutArr;
-}
-
 
 const TClassInfo* TOutArr::getClassInfo(void) const
 {

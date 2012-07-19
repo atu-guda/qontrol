@@ -79,11 +79,6 @@ TDataSet* TLorenz::create( TDataSet* apar )
   return new TLorenz( apar );
 }
 
-int TLorenz::getClassId(void) const
-{
-  return CLASS_ID_TLorenz;
-}
-
 
 const TClassInfo* TLorenz::getClassInfo(void) const
 {

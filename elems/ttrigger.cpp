@@ -76,11 +76,6 @@ TDataSet* TTrigger::create( TDataSet* apar )
   return new TTrigger( apar );
 }
 
-int TTrigger::getClassId(void) const 
-{
-  return CLASS_ID_TTrigger;
-}
-
 const TClassInfo* TTrigger::getClassInfo(void) const
 {
   return &class_info;

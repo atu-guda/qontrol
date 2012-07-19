@@ -81,7 +81,6 @@ class HolderData : public QObject {
   QVariant::Type getTp() const { return tp; };
   int isDyn() const { return dyn; };
   int getOldTp() const { return old_tp; };
-  int getOldSubTp() const { return old_subtp; };
   /** is holded value is object of given type or child */
   virtual bool isObject( const QString &cl_name = QString() ) const;
   void setFlags( int a_flags ) { flags = a_flags; };
@@ -110,7 +109,7 @@ class HolderData : public QObject {
   virtual QString getType() const = 0;
   virtual QDomElement toDom( QDomDocument &dd ) const;
  protected:
-  int old_tp, old_subtp, dyn;
+  int old_tp, dyn;
   int flags; //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
   double v_min, v_max; // double as most common type, v_max = max_len
   QVariant::Type tp;
@@ -362,8 +361,6 @@ class TDataSet : public QObject {
    static TDataSet* create( TDataSet *apar );
    /** new way to create objects */
    TDataSet* createObj( const QString &cl_name, const QString &nm, TDataSet* apar );
-   /** class id  - for compat */
-   virtual int getClassId(void) const ;
    /** class name - for check & human purpose */
    const char* getClassName(void) const;
    /** fills dst with full name of object: .aaa.bbb.cc  */
@@ -378,8 +375,6 @@ class TDataSet : public QObject {
    void setModified() { modified |= 1; };
    /** drop modified flag */
    void setUnModified() { modified = 0; };
-   /** return nelm */
-   virtual int getN(void) const;
    /** return ptr to elem by name */
    // use only by QMo2Doc while creating/loading 
    TDataSet* getObj( const QString &ename, const QString &cl_name = QString() );   
@@ -442,8 +437,6 @@ class TDataSet : public QObject {
    static const int guard_val = 7442428;
    /** parent may be 0 */
    TDataSet *parent;
-   /** current number of elements */
-   int nelm;  
    /** state: 0-bad, 1-constructed, 2-run; */
    int state; 
    /** allowing object add /remove for some classes */

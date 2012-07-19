@@ -49,8 +49,6 @@ class TElmLink : public TDataSet {
    explicit TElmLink( TDataSet *apar );
    /** creator */
    static TDataSet* create( TDataSet *apar );
-   /** class id */
-   virtual int getClassId(void) const ;
    /** return ptr to static class_info, must be implemented in each class */
    virtual const TClassInfo* getClassInfo(void) const;
    /** return ptr to static class_info, static version */
@@ -130,8 +128,6 @@ class TMiso : public TDataSet  {
    virtual ~TMiso();
    /** creator */
    static TDataSet* create( TDataSet *apar );
-   /** class id */
-   virtual int getClassId(void) const = 0;
    /** return ptr to static class_info, must be implemented in each class */
    virtual const TClassInfo* getClassInfo(void) const = 0;
    /** return ptr to static class_info, static version */
