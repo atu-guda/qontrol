@@ -6,8 +6,6 @@
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
-#include <cstring>
-#include <iostream>
 #include "rootdata.h"
 using namespace std;
 

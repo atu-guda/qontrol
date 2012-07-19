@@ -30,6 +30,7 @@
 #include "qmo2doc.h"
 #include "qmo2view.h"
 
+#include "datawidget.h"
 #include "qplotview.h"
 
 using namespace std;
@@ -39,15 +40,14 @@ QPlotView::QPlotView( QMo2Doc *adoc, TGraph *agra, QWidget *parent )
 {
   int i;
   doc = adoc; gra = agra;
+  scd = static_cast<ScaleData*>( gra->getObj( "scd", "ScaleData" ) );
+  if( !scd )
+    scd = new ScaleData( gra ); // ???
+  
   datax = 0; plpbuf = 0;
   for( i=0; i<6; i++ ) { datay[i] = 0; plotOn[i] = 1; plp[i] = 0; };
-  nxGrid = nyGrid = 10; nxTick = nyTick = 1;
-  asX = asY = gsX = gsY = 1; modelSign = -1; devTp = 0;
-  logX = logScaleX = logY = logScaleY = zeroX = centerX = zeroY = centerY = 0;
-  realMinX = realMinY = plotMinX = plotMinY = 0;
-  realMaxX = realMaxY = plotMaxX = plotMaxY = 1;
+  modelSign = -1; devTp = 0;
   plotMinLX = plotMinLY = 0;
-  leftMar = 0.1; topMar = 0.02; rightMar = 0.1; bottomMar = 0.1; maxErr = 0.5;
   pix_h = 450; pix_w = 550; 
   leg_sz = 30; 
   sel_g = -1; min_sel_g = -1; max_sel_g = -1;
@@ -142,13 +142,13 @@ void QPlotView::drawGrid( QPainter &p )
 {
   int i, j, ix, iy;
   double vx, vy, lvx, lvy;
-  if( nxGrid > 0 ) {
-    for( i=0; i<=nxGrid; i++ ) {  // vertical
-      if( logX && logScaleX ) {
-	vx = pow( 10, plotMinLX + i*(log10(plotMaxX)-plotMinLX) / nxGrid );
+  if( scd->gridX > 0 ) {
+    for( i=0; i<=scd->gridX; i++ ) {  // vertical
+      if( scd->logX && scd->logScaleX ) {
+	vx = pow( 10, plotMinLX + i*(log10(scd->plotMaxX)-plotMinLX) / scd->gridX );
 	lvx = log10( vx );
       } else {
-	vx = plotMinX + ( plotMaxX - plotMinX ) * i / nxGrid; lvx = vx;
+	vx = scd->plotMinX + ( scd->plotMaxX - scd->plotMinX ) * i / scd->gridX; lvx = vx;
       };
       phys2vis( vx, 0, &ix, 0 );
       p.setPen( QPen( gridColor, 0 /*linew*/) );
@@ -158,13 +158,13 @@ void QPlotView::drawGrid( QPainter &p )
                 QString::number( lvx ) );
     };
   };
-  if( nyGrid > 0 ) {
-  for( j=0; j<=nyGrid; j++ ) {  // horizontal
-      if( logY && logScaleY ) {
-	vy = pow( 10, plotMinLY + j*(log10(plotMaxY)-plotMinLY) / nyGrid );
+  if( scd->gridY > 0 ) {
+  for( j=0; j<=scd->gridY; j++ ) {  // horizontal
+      if( scd->logY && scd->logScaleY ) {
+	vy = pow( 10, plotMinLY + j*(log10(scd->plotMaxY)-plotMinLY) / scd->gridY );
 	lvy = log10( vy );
       } else {
-	vy = plotMinY + ( plotMaxY - plotMinY ) * j / nyGrid; lvy = vy;
+	vy = scd->plotMinY + ( scd->plotMaxY - scd->plotMinY ) * j / scd->gridY; lvy = vy;
       };
       phys2vis( 0, vy, 0, &iy );
       p.setPen( QPen( gridColor, 0 /*linew*/ ) );
@@ -175,25 +175,25 @@ void QPlotView::drawGrid( QPainter &p )
     };
   };
   // -------- draw ticks
-  if( nxGrid > 0  &&  nxTick > 0  &&  nxTick < 10 ) {
-    j = nxGrid * (nxTick + 1);
+  if( scd->gridX > 0  &&  scd->tickX > 0  &&  scd->tickX < 10 ) {
+    j = scd->gridX * (scd->tickX + 1);
     for( i=0; i<j; i++ ) {
-      if( logX && logScaleX ) {
-	vx = pow( 10, plotMinLX + i*(log10(plotMaxX)-plotMinLX) / j );
+      if( scd->logX && scd->logScaleX ) {
+	vx = pow( 10, plotMinLX + i*(log10(scd->plotMaxX)-plotMinLX) / j );
       } else {
-	vx = plotMinX + ( plotMaxX - plotMinX ) * i / j;
+	vx = scd->plotMinX + ( scd->plotMaxX - scd->plotMinX ) * i / j;
       };
       phys2vis( vx, 0, &ix, 0 );
       p.drawLine( ix, pix_y0, ix, pix_y0-3 );
     };
   };
-  if( nyGrid > 0  &&  nyTick > 0  &&  nyTick < 10 ) {
-    j = nyGrid * (nyTick + 1);
+  if( scd->gridY > 0  &&  scd->tickY > 0  &&  scd->tickY < 10 ) {
+    j = scd->gridY * (scd->tickY + 1);
     for( i=0; i<j; i++ ) {
-      if( logY && logScaleY ) {
-	vy = pow( 10, plotMinLY + i*(log10(plotMaxY)-plotMinLY) / j );
+      if( scd->logY && scd->logScaleY ) {
+	vy = pow( 10, plotMinLY + i*(log10(scd->plotMaxY)-plotMinLY) / j );
       } else {
-	vy = plotMinY + ( plotMaxY - plotMinY ) * i / j;
+	vy = scd->plotMinY + ( scd->plotMaxY - scd->plotMinY ) * i / j;
       };
       phys2vis( 0, vy, 0, &iy );
       p.drawLine( pix_x0, iy, pix_x0 + 3, iy );
@@ -209,8 +209,8 @@ void QPlotView::drawAxes( QPainter &p )
   p.setPen( QPen( scaleColor, linew+1 ) ); // ------ draw axis
   p.drawLine( pix_x0, pix_y0, pix_x0 + pix_x, pix_y0 );
   p.drawLine( pix_x0, pix_y0, pix_x0, pix_y0 - pix_y );
-  if( ref_x >= plotMinX && ref_y >= plotMinY && // draw reference point
-      ref_x <= plotMaxX && ref_y <= plotMaxY ) {
+  if( ref_x >= scd->plotMinX && ref_y >= scd->plotMinY && // draw reference point
+      ref_x <= scd->plotMaxX && ref_y <= scd->plotMaxY ) {
     phys2vis( ref_x, ref_y, &ix, &iy );
     p.setPen( QPen( scaleColor, linew ) );
     p.drawLine( pix_x0 - 5, iy, pix_x0 + pix_x , iy );
@@ -325,7 +325,7 @@ void QPlotView::drawPlots( QPainter &p )
 	path.moveTo( ix, iy ); 
       } else {
 	if( ( plp[sel_g][i] & 1 ) || qual == 1 ) {
-	  if( maxErr > 0 ) {
+	  if( scd->maxErr > 0 ) {
 	    path.lineTo( ix, iy );
 	  } else {
 	    p.drawPoint( ix, iy );
@@ -387,8 +387,8 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
   btnShift = (( st & Qt::ShiftModifier ) != 0 );
   btnCtrl = (( st & Qt::ControlModifier ) != 0 );
   if( btnShift ) {
-    dvx = ( plotMaxX - plotMinX ) / 20;
-    dvy = ( plotMaxY - plotMinY ) / 20;
+    dvx = ( scd->plotMaxX - scd->plotMinX ) / 20;
+    dvy = ( scd->plotMaxY - scd->plotMinY ) / 20;
     di = nn / 50;
   } else {
     dvx = 1 / kx; dvy = 1 / ky; di = 1;
@@ -405,27 +405,29 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
          break;
     case Qt::Key_S:
 	 if( btnShift ){
-	   asX = gsX = asY = gsY = 1;
-	   zeroX = centerX = logX = zeroY = centerY = logY = 0;
+	   scd->autoScX = scd->goodScX = scd->autoScY = scd->goodScY = 1;
+	   scd->zeroX = scd->centerX = scd->logX = scd->zeroY = scd->centerY = scd->logY = 0;
 	   need_rescale = 1;
 	 } else {
 	   setScale();
 	 };  
 	 break;
     case Qt::Key_Plus:
-	 asX = asY = 0;
-	 adx = ( plotMaxX - plotMinX ) / 4;
-         ady = ( plotMaxY - plotMinY ) / 4;
-	 plotMinX = tool_x - adx; plotMaxX = tool_x + adx;
-         plotMinY = tool_y - ady; plotMaxY = tool_y + ady;
+	 scd->autoScX = scd->autoScY = 0;
+	 adx = ( scd->plotMaxX - scd->plotMinX ) / 4;
+         ady = ( scd->plotMaxY - scd->plotMinY ) / 4;
+	 scd->plotMinX = tool_x - adx; 
+	 scd->plotMaxX = tool_x + adx;
+         scd->plotMinY = tool_y - ady; 
+	 scd->plotMaxY = tool_y + ady;
 	 need_rescale = 1;
 	 break;
     case Qt::Key_Minus:
-	 asX = asY = 0;
-	 adx = plotMaxX - plotMinX;
-         ady = plotMaxY - plotMinY;
-	 plotMinX = tool_x - adx; plotMaxX = tool_x + adx;
-         plotMinY = tool_y - ady; plotMaxY = tool_y + ady;
+	 scd->autoScX = scd->autoScY = 0;
+	 adx = scd->plotMaxX - scd->plotMinX;
+         ady = scd->plotMaxY - scd->plotMinY;
+	 scd->plotMinX = tool_x - adx; scd->plotMaxX = tool_x + adx;
+         scd->plotMinY = tool_y - ady; scd->plotMaxY = tool_y + ady;
 	 need_rescale = 1;
 	 break;
     case Qt::Key_C:
@@ -436,7 +438,7 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
 	 break;
     case Qt::Key_M:
 	 if( btnCtrl ) {
-	   ref_x = logX; ref_y = logY;
+	   ref_x = scd->logX; ref_y = scd->logY;
 	 } else {
 	   ref_x = tool_x; ref_y = tool_y;
 	 };
@@ -454,13 +456,13 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
     case Qt::Key_Left:
 	 if( sel_idx < 0 ) {
 	   if( btnCtrl ) {
-	     asX = 0; 
-	     adx = ( plotMaxX - plotMinX ) / (( nxGrid > 0 ) ? nxGrid : 10);
-	     plotMinX += adx; plotMaxX += adx;
+	     scd->autoScX = 0; 
+	     adx = ( scd->plotMaxX - scd->plotMinX ) / (( scd->gridX > 0 ) ? scd->gridX : 10);
+	     scd->plotMinX += adx; scd->plotMaxX += adx;
 	     need_rescale = 1;
 	   } else {
 	     tool_x -= dvx;
-	     if( tool_x < plotMinX ) tool_x = plotMinX;
+	     if( tool_x < scd->plotMinX ) tool_x = scd->plotMinX;
 	   };  
 	 } else {
 	   sel_idx -= di; if( sel_idx < 0 ) sel_idx = 0;
@@ -470,13 +472,13 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
     case Qt::Key_Right:
 	 if( sel_idx < 0 ) {
 	   if( btnCtrl ) {
-	     asX = 0; 
-	     adx = ( plotMaxX - plotMinX ) / (( nxGrid > 0 ) ? nxGrid : 10);
-	     plotMinX -= adx; plotMaxX -= adx;
+	     scd->autoScX = 0; 
+	     adx = ( scd->plotMaxX - scd->plotMinX ) / (( scd->gridX > 0 ) ? scd->gridX : 10);
+	     scd->plotMinX -= adx; scd->plotMaxX -= adx;
 	     need_rescale = 1;
 	   } else {
 	     tool_x += dvx;
-	     if( tool_x > plotMaxX ) tool_x = plotMaxX;
+	     if( tool_x > scd->plotMaxX ) tool_x = scd->plotMaxX;
 	   };  
 	 } else {
 	   sel_idx += di; if( sel_idx >= nn ) sel_idx = nn - 1;
@@ -486,13 +488,13 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
     case Qt::Key_Up:
 	 if( sel_idx < 0 ) {
 	   if( btnCtrl ) {
-	     asY = 0; 
-	     ady = ( plotMaxY - plotMinY ) / (( nyGrid > 0 ) ? nyGrid : 10);
-	     plotMinY -= ady; plotMaxY -= ady;
+	     scd->autoScY = 0; 
+	     ady = ( scd->plotMaxY - scd->plotMinY ) / (( scd->gridY > 0 ) ? scd->gridY : 10);
+	     scd->plotMinY -= ady; scd->plotMaxY -= ady;
 	     need_rescale = 1;
 	   } else {
 	     tool_y += dvy;
-	     if( tool_y > plotMaxY ) tool_y = plotMaxY;
+	     if( tool_y > scd->plotMaxY ) tool_y = scd->plotMaxY;
 	   };
 	 } else {
 	   if( btnShift )
@@ -505,13 +507,13 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
     case Qt::Key_Down:
 	 if( sel_idx < 0 ) {
 	   if( btnCtrl ) {
-	     asY = 0; 
-	     ady = ( plotMaxY - plotMinY ) / (( nyGrid > 0 ) ? nyGrid : 10);
-	     plotMinY += ady; plotMaxY += ady;
+	     scd->autoScY = 0; 
+	     ady = ( scd->plotMaxY - scd->plotMinY ) / (( scd->gridY > 0 ) ? scd->gridY : 10);
+	     scd->plotMinY += ady; scd->plotMaxY += ady;
 	     need_rescale = 1;
 	   } else {
 	     tool_y -= dvy;
-	     if( tool_y < plotMinY ) tool_y = plotMinY;
+	     if( tool_y < scd->plotMinY ) tool_y = scd->plotMinY;
 	   };
 	 } else {
 	   if( btnShift )
@@ -551,7 +553,7 @@ void QPlotView::initFakeArrs(void)
   static const double fakex[] = { 0, 1, 2, 3 };
   static const double fakey[] = { 0.5, 5.5, 1.3, 0.2 };
   ng = 1; nn = 4; datax = fakex; datay[0] = fakey;
-  realMinX = 0; realMaxX = 3; realMinY = 0.2; realMaxY = 5.5;
+  scd->realMinX = 0; scd->realMaxX = 3; scd->realMinY = 0.2; scd->realMaxY = 5.5;
   calcScale();
 }
 
@@ -610,7 +612,7 @@ void QPlotView::initArrs(void)
   if( vmin >= vmax ) vmax = vmin + 1;
   tp = out_tp; ++tp; --tp; // TODO: fake
   nn = out_nn;
-  realMinX = plotMinX = vmin; realMaxX = plotMaxX = vmax;
+  scd->realMinX = scd->plotMinX = vmin; scd->realMaxX = scd->plotMaxX = vmax;
   arr->getData( "label", buf );
   if( buf.size() < 1 ) { buf = "x"; };
   xLabel = buf;
@@ -638,12 +640,12 @@ void QPlotView::initArrs(void)
       k += arr->getData( "dmax", &vmax );
       if( k == 2 ) {
 	if( ng <= start_from ) {
-	  realMinY = vmin; realMaxY = vmax;
+	  scd->realMinY = vmin; scd->realMaxY = vmax;
 	} else {
-	  if( realMinY > vmin )
-	    realMinY = vmin;
-	  if( realMaxY < vmax )
-	    realMaxY = vmax;
+	  if( scd->realMinY > vmin )
+	    scd->realMinY = vmin;
+	  if( scd->realMaxY < vmax )
+	    scd->realMaxY = vmax;
 	};
       };
     };
@@ -655,7 +657,7 @@ void QPlotView::initArrs(void)
     yLabel[ng] = buf;
     ng++;
   };
-  tool_x = ref_x = realMinX; tool_y = ref_y = realMinY;
+  tool_x = ref_x = scd->realMinX; tool_y = ref_y = scd->realMinY;
   sel_g = -1; sel_idx = -1;
   if( ny > 1 ) { // 3d
     if( ng > 1 ) { // enough data
@@ -679,17 +681,17 @@ void QPlotView::initArrs(void)
 void QPlotView::phys2vis( double x, double y, double *idx, double *idy )
 {
   if( idx != 0 ) {
-    if( logX ) {
+    if( scd->logX ) {
       *idx = pix_x0 + ( log10(x) - plotMinLX ) * kx;
     } else { 
-      *idx = pix_x0 + ( x - plotMinX ) * kx;
+      *idx = pix_x0 + ( x - scd->plotMinX ) * kx;
     };
   };
   if( idy != 0 ) {
-    if( logY ) {
+    if( scd->logY ) {
       *idy =  pix_y0 - ( log10(y) - plotMinLY ) * ky;
     } else {
-      *idy = pix_y0 - ( y - plotMinY ) * ky;
+      *idy = pix_y0 - ( y - scd->plotMinY ) * ky;
     };
   };
 }
@@ -709,17 +711,17 @@ void QPlotView::phys2vis( double x, double y, int *ix, int *iy )
 void QPlotView::vis2phys( int ix, int iy, double *x, double *y )
 {
   if( x != 0 ) {
-    if( logX ) {
-      *x = pow( 10 , log10(plotMinX) + (( ix - pix_x0 ) / kx) );
+    if( scd->logX ) {
+      *x = pow( 10 , log10(scd->plotMinX) + (( ix - pix_x0 ) / kx) );
     } else {
-      *x = plotMinX + ( ix - pix_x0 ) / kx;
+      *x = scd->plotMinX + ( ix - pix_x0 ) / kx;
     };
   };
   if( y != 0 ) {
-    if( logY ) {
-      *y = pow( 10, log10(plotMinY) + (( pix_y0 - iy) / ky) );
+    if( scd->logY ) {
+      *y = pow( 10, log10(scd->plotMinY) + (( pix_y0 - iy) / ky) );
     } else {
-      *y = plotMinY + ( pix_y0 - iy ) / ky;
+      *y = scd->plotMinY + ( pix_y0 - iy ) / ky;
     };
   };
 }
@@ -801,7 +803,7 @@ void QPlotView::calcPlp(void)
 	};
       };
       // check max
-      if( mcr < fabs( maxErr ) ) { 
+      if( mcr < fabs( scd->maxErr ) ) { 
 	for( i=cnc; i<r; i++ )
 	  plp[j][i] = 0x80;
       } else {
@@ -817,15 +819,15 @@ void QPlotView::calcScale(void)
 {
   double dlt, k1, k2, imin, imax, t;
   int ki;
-  if( leftMar + rightMar > 0.6 ) {
-    leftMar = 0.1; rightMar = 0.02;
+  if( scd->leftMar + scd->rightMar > 0.6 ) {
+    scd->leftMar = 0.1; scd->rightMar = 0.02;
   };
-  if( topMar + bottomMar > 0.6 ) {
-    topMar = bottomMar = 0.05;
+  if( scd->topMar + scd->bottomMar > 0.6 ) {
+    scd->topMar = scd->bottomMar = 0.05;
   };
   pix_w = width(); pix_h = height();
-  pix_l = int( pix_w * leftMar );  pix_r = int( pix_w * rightMar );
-  pix_t = int( pix_h * topMar );  pix_b = int( pix_h * bottomMar );
+  pix_l = int( pix_w * scd->leftMar ); pix_r = int( pix_w * scd->rightMar );
+  pix_t = int( pix_h * scd->topMar );  pix_b = int( pix_h * scd->bottomMar );
   pix_x = pix_w - pix_l - pix_r; 
   pix_y = pix_h - pix_t - pix_b;
   pix_x0 = pix_l; pix_y0 = pix_t + pix_y;
@@ -833,12 +835,12 @@ void QPlotView::calcScale(void)
 
   if( ng < 1 ) return;
 
-  if( asX ) { // autoscale x
-     imin = realMinX;  imax = realMaxX;
+  if( scd->autoScX ) { // autoscale x
+     imin = scd->realMinX;  imax = scd->realMaxX;
      if( imin > imax ) { t = imin;  imin = imax;  imax = t; } ;
      if( imin == imax ) { imin -= 0.5;  imax += 0.5; };
-     if( zeroX  && ( imin > 0 ) ) imin = 0;
-     if( gsX ) { // good scale x
+     if( scd->zeroX  && ( imin > 0 ) ) imin = 0;
+     if( scd->goodScX ) { // good scale x
            dlt = imax - imin;  k1 = log10( dlt * 0.98 );
            ki = (int) floor( k1 );  k1 = pow( 10.0, ki );
            k2 = 0.1 * dlt / k1;
@@ -847,21 +849,21 @@ void QPlotView::calcScale(void)
            imin = k1 * floor( imin / k1 );
            imax = imin + k1 * 10;
      };
-     if( centerX ) { 
+     if( scd->centerX ) { 
          if( imin + imax > 0 )  imin = -imax;
          else imax = -imin;
      };
-     plotMinX = imin;  plotMaxX = imax;
+     scd->plotMinX = imin;  scd->plotMaxX = imax;
   };
-  if( plotMinX <= 0 || realMinX <= 0 )
-    logX = 0;
+  if( scd->plotMinX <= 0 || scd->realMinX <= 0 )
+    scd->logX = 0;
   
-  if( asY ) { // autoscale y
-     imin = realMinY;  imax = realMaxY;
+  if( scd->autoScY ) { // autoscale y
+     imin = scd->realMinY;  imax = scd->realMaxY;
      if( imin > imax ) { t = imin;  imin = imax;  imax = t; } ;
      if( imin == imax ) { imin -= 0.5;  imax += 0.5; };
-     if( zeroY  && ( imin > 0 ) ) imin = 0;
-     if( gsY ) { // good scale y
+     if( scd->zeroY  && ( imin > 0 ) ) imin = 0;
+     if( scd->goodScY ) { // good scale y
            dlt = imax - imin;  k1 = log10( dlt * 0.98 );
            ki = (int) floor( k1 );  k1 = pow( 10.0, ki );
            k2 = 0.1 * dlt / k1;
@@ -870,29 +872,29 @@ void QPlotView::calcScale(void)
            imin = k1 * floor( imin / k1 );
            imax = imin + k1 * 10;
      };
-     if( centerY ) { 
+     if( scd->centerY ) { 
          if( imin + imax > 0 )  imin = -imax;
          else imax = -imin;
      };
-     plotMinY = imin;  plotMaxY = imax;
+     scd->plotMinY = imin;  scd->plotMaxY = imax;
   };
-  if( fabs( plotMinX - plotMaxX ) < 1e-200 )
-    plotMaxX += 0.1;
-  if( fabs( plotMinY - plotMaxY ) < 1e-200 )
-    plotMaxY += 0.1;
-  if( plotMinY <= 0 || realMinY <= 0 )
-    logY = 0;
-  if( logX ) {
-    plotMinLX = log10( plotMinX );
-    kx = pix_x / ( log10( plotMaxX ) - plotMinLX );
+  if( fabs( scd->plotMinX - scd->plotMaxX ) < 1e-200 )
+    scd->plotMaxX += 0.1;
+  if( fabs( scd->plotMinY - scd->plotMaxY ) < 1e-200 )
+    scd->plotMaxY += 0.1;
+  if( scd->plotMinY <= 0 || scd->realMinY <= 0 )
+    scd->logY = 0;
+  if( scd->logX ) {
+    plotMinLX = log10( scd->plotMinX );
+    kx = pix_x / ( log10( scd->plotMaxX ) - plotMinLX );
   } else { 
-    kx = pix_x / ( plotMaxX - plotMinX );
+    kx = pix_x / ( scd->plotMaxX - scd->plotMinX );
   };
-  if( logY ) {
-    plotMinLY = log10( plotMinY );
-    ky = pix_y / ( log10( plotMaxY ) - plotMinLY );
+  if( scd->logY ) {
+    plotMinLY = log10( scd->plotMinY );
+    ky = pix_y / ( log10( scd->plotMaxY ) - plotMinLY );
   } else {
-    ky = pix_y / ( plotMaxY - plotMinY );
+    ky = pix_y / ( scd->plotMaxY - scd->plotMinY );
   };
   calcPlp();
 }
@@ -915,7 +917,6 @@ void QPlotView::setPrintColors(void)
 void QPlotView::setStartColors(void)
 {
   int i, c;
-  char yname[MAX_NAMELEN];
   scaleColor = Qt::white; labelColor = scaleColor;
   gridColor = QColor( 128, 128, 128 );
   xLabel = "x";
@@ -924,10 +925,8 @@ void QPlotView::setStartColors(void)
   if( gra != 0 ) {
     gra->getData( "bgcolor", &c );
     bgColor = QRgb( c );
-    strcpy( yname, "y0color" );
     for( i=0; i<6; i++ ) {
-      yname[1] = char( '0' + i );
-      gra->getData( yname, &c );
+      gra->getData( "y" + QString::number(i) + "color", &c );
       plotColor[i] = QRgb( c );
     };
   } else {
@@ -941,204 +940,16 @@ void QPlotView::setStartColors(void)
   };
 }
 
-void QPlotView::setScale(void) // TODO: object
+void QPlotView::setScale()
 {
-  QDialog *dia;
-  QGroupBox *grp_x, *grp_y, *grp_m;
-  QLabel *lab;
-  QLineEdit *ed_rix, *ed_pix, *ed_rax, *ed_pax, *ed_grix, *ed_tix,
-            *ed_riy, *ed_piy, *ed_ray, *ed_pay, *ed_griy, *ed_tiy,
-	    *ed_ml,  *ed_mt,  *ed_mr, *ed_mb, *ed_font, *ed_maxErr;
-  QCheckBox *cb_asx, *cb_agx, *cb_zerox, *cb_centerx, *cb_logx, *cb_logsx,
-            *cb_asy, *cb_agy, *cb_zeroy, *cb_centery, *cb_logy, *cb_logsy;    
-  QPushButton *bt_ok, *bt_can; 
-  QString qs; int rc;
-  calcScale();
-  dia = new QDialog( this );
-  dia->resize( 450, 450 ); // TODO: layouts or anydialog
-  dia->setWindowTitle( PACKAGE ": Plot scales" );
-  // x group
-  grp_x = new QGroupBox( dia );
-  grp_x->setGeometry( 20, 10, 200, 250 );
-  grp_x->setTitle( "X" );
-  lab= new QLabel( "Min", dia );
-  lab->setGeometry( 30, 40, 30, 20 );
-  ed_rix= new QLineEdit( dia );
-  ed_rix->setGeometry( 60, 40, 70, 20 );
-  ed_rix->setEnabled( false );  ed_rix->setMaxLength( 12 );
-  lab= new QLabel( "Real", dia );
-  lab->setGeometry( 80, 20, 40, 20 );
-  lab= new QLabel( "Plot", dia );
-  lab->setGeometry( 160, 20, 30, 20 );
-  ed_pix= new QLineEdit( dia );
-  ed_pix->setGeometry( 140, 40, 70, 20 );  ed_pix->setMaxLength( 12 );
-  lab= new QLabel( "Max", dia );
-  lab->setGeometry( 30, 70, 30, 20 );
-  ed_rax= new QLineEdit( dia );
-  ed_rax->setGeometry( 60, 70, 70, 20 );
-  ed_rax->setEnabled( false );  ed_rax->setMaxLength( 12 );
-  ed_pax= new QLineEdit( "asX", dia );
-  ed_pax->setGeometry( 140, 70, 70, 20 );
-  cb_asx= new QCheckBox( "AutoScale", dia );
-  cb_asx->setGeometry( 30, 100, 100, 20 );
-  cb_agx= new QCheckBox( "Best Fit", dia );
-  cb_agx->setGeometry( 30, 120, 100, 20 );
-  cb_zerox = new QCheckBox( "Zero", dia );
-  cb_zerox->setGeometry( 30, 140, 100, 20 );
-  cb_centerx= new QCheckBox( "Center", dia );
-  cb_centerx->setGeometry( 30, 160, 100, 20 );
-  cb_logx= new QCheckBox( "Log", dia );
-  cb_logx->setGeometry( 30, 180, 100, 20 );
-  cb_logsx= new QCheckBox( "Log. scale", dia );
-  cb_logsx->setGeometry( 30, 200, 100, 20 );
-  lab= new QLabel( "Grid/Tick", dia );
-  lab->setGeometry( 140, 100, 70, 20 );
-  ed_grix= new QLineEdit( dia );
-  ed_grix->setGeometry( 120, 120, 40, 20 );  ed_grix->setMaxLength( 3 );
-  ed_tix= new QLineEdit( dia );
-  ed_tix->setGeometry( 170, 120, 40, 20 );  ed_tix->setMaxLength( 2 );
+  DataDialog *dia = new DataDialog( *scd, this );
 
-  // y group
-  grp_y= new QGroupBox( "Y", dia );
-  grp_y->setGeometry( 230, 10, 200, 250 );
-  lab= new QLabel( "Min", dia );
-  lab->setGeometry( 240, 40, 30, 20 );
-  ed_riy= new QLineEdit( dia );
-  ed_riy->setGeometry( 270, 40, 70, 20 );
-  ed_riy->setEnabled( false );  ed_riy->setMaxLength( 12 );
-  lab= new QLabel( "Real", dia );
-  lab->setGeometry( 290, 20, 40, 20 );
-  lab= new QLabel( "Plot", dia );
-  lab->setGeometry( 370, 20, 30, 20 );
-  ed_piy= new QLineEdit( dia );
-  ed_piy->setGeometry( 350, 40, 70, 20 );  ed_piy->setMaxLength( 12 );
-  lab= new QLabel( "Max", dia );
-  lab->setGeometry( 240, 70, 30, 20 );
-  ed_ray= new QLineEdit( dia );
-  ed_ray->setGeometry( 270, 70, 70, 20 );
-  ed_ray->setEnabled( false );  ed_ray->setMaxLength( 12 );
-  ed_pay= new QLineEdit( dia );
-  ed_pay->setGeometry( 350, 70, 70, 20 );  ed_pay->setMaxLength( 12 );
-  cb_asy= new QCheckBox( dia );
-  cb_asy->setGeometry( 240, 100, 100, 20 );  cb_asy->setText( "AutoScale" );
-  cb_agy= new QCheckBox( dia );
-  cb_agy->setGeometry( 240, 120, 100, 20 );  cb_agy->setText( "Best Fit" );
-  cb_zeroy = new QCheckBox( dia );
-  cb_zeroy->setGeometry( 240, 140, 100, 20 ); cb_zeroy->setText( "Zero" );
-  cb_centery= new QCheckBox( dia );
-  cb_centery->setGeometry( 240, 160, 100, 20 ); cb_centery->setText( "Center" );
-  cb_logy= new QCheckBox( dia );
-  cb_logy->setGeometry( 240, 180, 100, 20 ); cb_logy->setText( "Logariphmic" );
-  cb_logsy= new QCheckBox( dia );
-  cb_logsy->setGeometry( 240, 200, 100, 20 ); cb_logsy->setText( "Log. scale" );
-  lab= new QLabel( dia );
-  lab->setGeometry( 350, 100, 70, 20 );  lab->setText( "Grid/Tick" );
-  ed_griy= new QLineEdit( dia );
-  ed_griy->setGeometry( 330, 120, 40, 20 ); ed_griy->setMaxLength( 3 );
-  ed_tiy= new QLineEdit( dia );
-  ed_tiy->setGeometry( 380, 120, 40, 20 );  ed_tiy->setMaxLength( 2 );
-  
-  // margins group 
-  grp_m= new QGroupBox( dia );
-  grp_m->setGeometry( 20, 270, 410, 50 ); grp_m->setTitle( "Margins %" );
-  lab= new QLabel( dia );
-  lab->setGeometry( 30, 290, 30, 20 );  lab->setText( "Left" );
-  ed_ml= new QLineEdit( dia );
-  ed_ml->setGeometry( 60, 290, 50, 20 );  ed_ml->setMaxLength( 4 );
-  lab= new QLabel( dia );
-  lab->setGeometry( 120, 290, 40, 20 );  lab->setText( "Top" );
-  ed_mt= new QLineEdit( dia );
-  ed_mt->setGeometry( 150, 290, 50, 20 );  ed_mt->setMaxLength( 4 );
-  lab= new QLabel( dia );
-  lab->setGeometry( 220, 290, 40, 20 );  lab->setText( "Right" );
-  ed_mr= new QLineEdit( dia );
-  ed_mr->setGeometry( 260, 290, 50, 20 );  ed_mr->setMaxLength( 4 );
-  lab= new QLabel( dia );
-  lab->setGeometry( 320, 290, 40, 20 );  lab->setText( "Bottom" );
-  ed_mb= new QLineEdit( dia );
-  ed_mb->setGeometry( 360, 290, 50, 20 );  ed_mb->setMaxLength( 4 );
-  
-  lab= new QLabel( dia );
-  lab->setGeometry( 30, 330, 100, 20 ); lab->setText( "Font" );
-  ed_font = new QLineEdit( dia );
-  ed_font->setGeometry( 20, 350, 120, 20 ); ed_font->setMaxLength( 30 );
-  lab= new QLabel( dia );
-  lab->setGeometry( 160, 330, 120, 20 ); lab->setText( "Max plot err" );
-  ed_maxErr = new QLineEdit( dia );
-  ed_maxErr->setGeometry( 160, 350, 80, 20 ); ed_maxErr->setMaxLength( 8 );
-
-  bt_ok= new QPushButton( dia );
-  bt_ok->setGeometry( 90, 410, 100, 30 );
-  bt_ok->setText( "&Ok" );
-  bt_ok->setDefault( true );
-  bt_can= new QPushButton( dia );
-  bt_can->setGeometry( 260, 410, 100, 30 );
-  bt_can->setText( "Cancel" );
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept() ) );
-  connect( bt_can, SIGNAL(clicked()), dia, SLOT(reject() ) );
-  ed_rix->setText( QString::number( realMinX ) );
-  ed_rax->setText( QString::number( realMaxX ) );
-  ed_pix->setText( QString::number( plotMinX ) );
-  ed_pax->setText( QString::number( plotMaxX ) );
-  ed_grix->setText( QString::number( nxGrid ) );
-  ed_tix->setText( QString::number( nxTick ) );
-  cb_asx->setChecked( asX );
-  cb_agx->setChecked( gsX );
-  cb_zerox->setChecked( zeroX );
-  cb_centerx->setChecked( centerX );
-  cb_logx->setChecked( logX );
-  cb_logsx->setChecked( logScaleX );
-  ed_riy->setText( QString::number( realMinY ) );
-  ed_ray->setText( QString::number( realMaxY ) );
-  ed_piy->setText( QString::number( plotMinY ) );
-  ed_pay->setText( QString::number( plotMaxY ) );
-  ed_griy->setText( QString::number( nyGrid ) );
-  ed_tiy->setText( QString::number( nyTick ) );
-  cb_asy->setChecked( asY );
-  cb_agy->setChecked( gsY );
-  cb_zeroy->setChecked( zeroY );
-  cb_centery->setChecked( centerY );
-  cb_logy->setChecked( logY );
-  cb_logsy->setChecked( logScaleY );
-  ed_ml->setText( QString::number( leftMar ) );
-  ed_mt->setText( QString::number( topMar ) );
-  ed_mr->setText( QString::number( rightMar ) );
-  ed_mb->setText( QString::number( bottomMar ) );
-  ed_font->setText( fontfam );
-  ed_maxErr->setText( QString::number( maxErr ) );
-
-  rc = dia->exec();
-  if( rc == QDialog::Accepted ) {
-    plotMinX = (ed_pix->text()).toDouble();
-    plotMaxX = (ed_pax->text()).toDouble();
-    asX = cb_asx->isChecked();
-    gsX = cb_agx->isChecked();
-    zeroX = cb_zerox->isChecked();
-    centerX = cb_centerx->isChecked();
-    logX = cb_logx->isChecked();
-    logScaleX = cb_logsx->isChecked();
-    nxGrid = (ed_grix->text()).toInt();
-    nxTick = (ed_tix->text()).toInt();
-    plotMinY = (ed_piy->text()).toDouble(); // y
-    plotMaxY = (ed_pay->text()).toDouble();
-    asY = cb_asy->isChecked();
-    gsY = cb_agy->isChecked();
-    zeroY = cb_zeroy->isChecked();
-    centerY = cb_centery->isChecked();
-    logY = cb_logy->isChecked();
-    logScaleY = cb_logsy->isChecked();
-    nyGrid = (ed_griy->text()).toInt();
-    nyTick = (ed_tiy->text()).toInt();
-    leftMar = (ed_ml->text()).toDouble(); // margins
-    topMar = (ed_mt->text()).toDouble(); 
-    rightMar = (ed_mr->text()).toDouble(); 
-    bottomMar = (ed_mb->text()).toDouble();
-    fontfam = ed_font->text();
-    maxErr = (ed_maxErr->text()).toDouble();
-  }; 
+  int rc = dia->exec();
   delete dia;
-  need_rescale = 1;
-  update();
+  if( rc == QDialog::Accepted ) {
+    need_rescale = 1;
+    update();
+  }; 
 }
 
 void QPlotView::setColors(void)
@@ -1206,14 +1017,14 @@ void QPlotView::dataInfo(void)
   toolk = 0; tooldx = tool_x - ref_x; tooldy = tool_y - ref_y;
   r = euRange( tooldx, tooldy  );
   phi = atan2( tooldy, tooldx );
-  qs = QString( "Tool: (" ) + QString::number( tool_x ) + "; " 
-     + QString::number( tool_y ) + " ) [" 
-     + QString::number( sel_idx ) + "];\n";
-  qs += QString( "Ref: (" ) + QString::number( ref_x ) + "; " 
-     + QString::number( ref_y ) + " );\n";
-  qs += QString( "Tool-Ref: (" ) + QString::number( tooldx ) + "; " 
-     + QString::number( tooldy ) + " );\n";
-  qs += QString("R = " ) + QString::number( r ) + "; k = ";
+  qs = QString( "Tool: (" ) % QString::number( tool_x ) % "; " 
+     % QString::number( tool_y ) % " ) [" 
+     % QString::number( sel_idx ) % "];\n"
+     % QString( "Ref: (" ) % QString::number( ref_x ) % "; " 
+     % QString::number( ref_y ) % " );\n"
+     % QString( "Tool-Ref: (" ) % QString::number( tooldx ) % "; " 
+     % QString::number( tooldy ) % " );\n"
+     % QString("R = " ) % QString::number( r ) + "; k = ";
   if( tooldx != 0 ) {
     toolk = tooldy / tooldx;
     qs += QString::number( toolk );
@@ -1228,29 +1039,29 @@ void QPlotView::dataInfo(void)
   lg_toolk = 0; lg_tooldx = lg_tx - lg_rx; lg_tooldy = lg_ty - lg_ry;
   lg_r = euRange( lg_tooldx, lg_tooldy  );
   lg_phi = atan2( lg_tooldy, lg_tooldx );
-  qs += QString( "Tool: (" ) + QString::number( lg_tx ) + "; " 
-     + QString::number( lg_ty) + " );\n"; 
-  qs += QString( "Ref: (" ) + QString::number( lg_rx ) + "; " 
-     + QString::number( lg_ry ) + " );\n";
-  qs += QString( "Tool-Ref: (" ) + QString::number( lg_tooldx ) + "; " 
-     + QString::number( lg_tooldy ) + " );\n";
-  qs += QString("R = " ) + QString::number( lg_r ) + "; k = ";
+  QString qs1 = QString( "Tool: (" ) % QString::number( lg_tx ) % "; " 
+     % QString::number( lg_ty) % " );\n"
+     % QString( "Ref: (" ) % QString::number( lg_rx ) % "; " 
+     % QString::number( lg_ry ) % " );\n"
+     % QString( "Tool-Ref: (" ) % QString::number( lg_tooldx ) % "; " 
+     % QString::number( lg_tooldy ) % " );\n"
+     % QString("R = " ) % QString::number( lg_r ) % "; k = ";
   if( lg_tooldx != 0 ) {
     lg_toolk = lg_tooldy / lg_tooldx;
-    qs += QString::number( lg_toolk );
+    qs1 += QString::number( lg_toolk );
   } else {
-    qs += "inf";
+    qs1 += "inf";
   };    
-  qs += "; Phi = " + QString::number( lg_phi ) + ";\n";
+  qs1 += "; Phi = " + QString::number( lg_phi ) + ";\n";
 
-  qs += "--- Data info: ---\n\n"; 
+  qs1 += "--- Data info: ---\n\n"; 
 
-  qs += "Points (nn): " + QString::number( nn ) + 
+  qs1 += "Points (nn): " + QString::number( nn ) + 
         ";\n Graphs (ng): " + QString::number( ng ) +
         "; Y-dim  (ny): " + QString::number( ny ) + 
         ";\n";
  
-  QMessageBox::information( this, "Data info", qs );
+  QMessageBox::information( this, "Data info", qs + qs1);
 }
 
 void QPlotView::moveTool(void)

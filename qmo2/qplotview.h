@@ -21,6 +21,7 @@
 #include <QString>
 #include <QWidget>
 #include <QColor>
+#include <scaledata.h>
 
 class QResizeEvent;
 class QMo2Doc; class TRootData; class TModel;
@@ -99,17 +100,12 @@ class QPlotView : public QWidget  {
     TModel *model;
     /** ptr to graph descritions */
     TGraph *gra;
+    /** ptr scale descrition */
+    ScaleData *scd;
     /** colors elements (dia) */
     QColor bgColor, scaleColor, gridColor, labelColor, plotColor[6];
-    /** margins in % (dia), maximum error in plot */
-    double leftMar, topMar, rightMar, bottomMar, maxErr;
-    /** axis values (dia) */
-    int nxGrid, nxTick, nyGrid, nyTick, 
-        asX, gsX, zeroX, centerX, logX, logScaleX,
-        asY, gsY, zeroY, centerY, logY, logScaleY;
     /** data maxmins and setup values (+-dia)*/
-    double realMinX, realMaxX, realMinY, realMaxY,
-           plotMinX, plotMaxX, plotMinY, plotMaxY, plotMinLX, plotMinLY;
+    double plotMinLX, plotMinLY;
     /** labels text */
     QString xLabel, yLabel[6];
     /** pointers to real data: set by initArrs() */

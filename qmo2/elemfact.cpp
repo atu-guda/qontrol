@@ -60,13 +60,9 @@ bool ElemFactory::registerElemType( const TClassInfo *cl_info )
     qDebug( "ERR: reg: class %s already exists", qPrintable( cl_name ) ); 
     return false;
   }
-  if( id_class.contains( cl_info->id ) ) {
-    qDebug( "ERR: reg: class %s id %d already exists", 
-	   qPrintable( cl_name ), cl_info->id ); 
-    return false;
-  }
   str_class.insert( cl_name, cl_info );
-  id_class.insert( cl_info->id, cl_name );
+  //qDebug( "dbg:  ElemFactory::registerElemType: registered \"%s\" %d",
+  //    cl_info->className, cl_info->props ); 
   return true;
 }
 
@@ -77,9 +73,7 @@ bool ElemFactory::unregisterElemType( const QString &a_type )
     qDebug( "ERR: unr: fail to find class %s", qPrintable( a_type ) ); 
     return 0;
   }
-  int cl_id = i.value()->id;
   str_class.erase( i );
-  id_class.erase( id_class.find( cl_id ) );
   return true;
 }
 
@@ -93,13 +87,4 @@ const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
   return i.value();
 }
 
-const TClassInfo* ElemFactory::getInfo( int t_id ) const
-{
-  MapIdClass::const_iterator i = id_class.find( t_id );
-  if( i == id_class.end() ) {
-    qDebug( "ERR: create: fail to find class id %d", t_id ); 
-    return 0;
-  }
-  return getInfo( i.value() );
-}
 

@@ -455,7 +455,6 @@ class TDataSet : public QObject {
  * */
 class ElemFactory {
  typedef QMap<QString,const TClassInfo*> MapStrClass;
- typedef QMap<int,QString> MapIdClass;
   public:
    static ElemFactory& theFactory();
    TDataSet* createElem( const QString &a_type, 
@@ -464,7 +463,6 @@ class ElemFactory {
    bool unregisterElemType( const QString &a_type );
    QStringList allTypeNames() const { return str_class.keys() ; };
    const TClassInfo* getInfo( const QString &a_type ) const;
-   const TClassInfo* getInfo( int t_id ) const;
 
   private:
    ElemFactory();
@@ -472,7 +470,6 @@ class ElemFactory {
    ElemFactory& operator=( const ElemFactory& r ) = delete;
 
    MapStrClass str_class;
-   MapIdClass  id_class;
 };
 
 

@@ -33,21 +33,7 @@ TClassInfo TGraph::class_info = {
 
 TGraph::TGraph( TDataSet* apar )
        :TDataSet( apar ),
-       PRM_INIT( title, "Title" ),
-       PRM_INIT( xname, "X name" ),
-       PRM_INIT( y0name, "y0 name" ),
-       PRM_INIT( y1name, "y1 name" ),
-       PRM_INIT( y2name, "y2 name" ),
-       PRM_INIT( y3name, "y3 name" ),
-       PRM_INIT( y4name, "y4 name" ),
-       PRM_INIT( y5name, "y5 name" ),
-       PRM_INIT( bgcolor, "BG color" ),
-       PRM_INIT( y0color, "y0 color" ),
-       PRM_INIT( y1color, "y1 color" ),
-       PRM_INIT( y2color, "y2 color" ),
-       PRM_INIT( y3color, "y3 color" ),
-       PRM_INIT( y4color, "y4 color" ),
-       PRM_INIT( y5color, "y5 color" )
+       scd( new ScaleData( this ) )
 {
   bgcolor = QColor::fromRgb( 0,0,0x60 );
   title =  "title";
@@ -57,32 +43,6 @@ TGraph::TGraph( TDataSet* apar )
   y3color = QColor::fromRgb(0,255,0);
   y4color = QColor::fromRgb(0,0,255);
   y5color = QColor::fromRgb(255,0,255);
-
-  PRMI(title).setDescr( "Plot title" );
-  PRMI(title).setMinMax( 0, MAX_LABELLEN );
-  PRMI(title).setParm( "sep", "blockend" );
-  PRMI(xname).setDescr( "X name" );
-  PRMI(xname).setMinMax( 0, MAX_NAMELEN );
-  PRMI(y0name).setDescr( "Name of y0 output" );
-  PRMI(y0name).setMinMax( 0, MAX_NAMELEN );
-  PRMI(y1name).setDescr( "Name of y1 output" );
-  PRMI(y1name).setMinMax( 0, MAX_NAMELEN );
-  PRMI(y2name).setDescr( "Name of y2 output" );
-  PRMI(y2name).setMinMax( 0, MAX_NAMELEN );
-  PRMI(y3name).setDescr( "Name of y3 output" );
-  PRMI(y3name).setMinMax( 0, MAX_NAMELEN );
-  PRMI(y4name).setDescr( "Name of y4 output" );
-  PRMI(y4name).setMinMax( 0, MAX_NAMELEN );
-  PRMI(y5name).setDescr( "Name of y5 output" );
-  PRMI(y5name).setMinMax( 0, MAX_NAMELEN );
-  PRMI(y5name).setParm( "sep", "colend" );
-  PRMI(bgcolor).setDescr( "Background color" );
-  PRMI(y0color).setDescr( "color of y0 data" );
-  PRMI(y1color).setDescr( "color of y1 data" );
-  PRMI(y2color).setDescr( "color of y2 data" );
-  PRMI(y3color).setDescr( "color of y3 data" );
-  PRMI(y4color).setDescr( "color of y4 data" );
-  PRMI(y5color).setDescr( "color of y5 data" );
 }
 
 TGraph::~TGraph()
