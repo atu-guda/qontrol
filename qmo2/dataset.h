@@ -26,12 +26,14 @@ typedef QMap<QString,QString> QSSMap;
 
 
 class QColor;
+class HolderData;
 class   TDataSet;
 typedef TDataSet* PTDataSet;
 typedef const TDataSet* CPTDataSet;
 typedef PTDataSet (*PFDataSet)( PTDataSet aparent );
-class   TRootData;
 class   TDataContainer;
+typedef QMap<QString,HolderData*> QSHoMap;
+typedef QVector<HolderData*> QHoVect;
 
 /** properties of class -- bitfield */
 enum ClassProps {
@@ -40,8 +42,7 @@ enum ClassProps {
 };
 
 /** describes class and it's creator
-  used for class registration (my be many classes for one array of structs)
-  TRootData must handle it
+  used for class registration
 */
 struct TClassInfo {
   /** uniq class id; 0 -- end of list */
@@ -73,10 +74,10 @@ class HolderData : public QObject {
   Q_OBJECT
  public: 
   HolderData( const QString &obj_name, const QString &v_name = QString(), 
-              QObject *a_parent = 0, int a_flags = 0,
+              TDataSet *a_parent = 0, int a_flags = 0,
 	      const QString &a_descr = QString(), 
 	      const QString &a_extra = QString() );
-  virtual ~HolderData() {}; // place to delete auto data
+  virtual ~HolderData();
   void* getPtr() const { return ptr; } ; // horror here !!!
   QVariant::Type getTp() const { return tp; };
   int isDyn() const { return dyn; };
@@ -114,6 +115,7 @@ class HolderData : public QObject {
   double v_min, v_max; // double as most common type, v_max = max_len
   QVariant::Type tp;
   void *ptr;
+  TDataSet *par;
   QString target_name;
   QStringList elems;
   QSSMap parms;
@@ -134,7 +136,7 @@ class HolderInt : public HolderData {
   Q_OBJECT
  public: 
   HolderInt( int *p, const QString &obj_name,  // if p==0 - autocreate 
-    const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+    const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
     const QString &a_descr = QString(),
     const QString &a_extra  = QString() );
   virtual ~HolderInt();
@@ -162,7 +164,7 @@ class HolderSwitch : public HolderInt {
   Q_OBJECT
  public: 
   HolderSwitch( int *p, const QString &obj_name,  // if p==0 - autocreate 
-    const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+    const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
     const QString &a_descr = QString(),
     const QString &a_extra  = QString() );
   virtual ~HolderSwitch();
@@ -185,7 +187,7 @@ class HolderList : public HolderInt {
   Q_OBJECT
  public: 
   HolderList( int *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+     const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
      const QString &a_descr = QString(),
      const QString &a_extra  = QString(), const QString &a_elems = QString() );
   virtual ~HolderList();
@@ -210,7 +212,7 @@ class HolderDouble : public HolderData {
   Q_OBJECT
  public: 
   HolderDouble( double *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+     const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
      const QString &a_descr = QString(),
      const QString &a_extra  = QString() );
   virtual ~HolderDouble();
@@ -243,7 +245,7 @@ class HolderString : public HolderData {
   Q_OBJECT
  public: 
   HolderString( QString *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+     const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
      const QString &a_descr = QString(),
      const QString &a_extra  = QString() );
   virtual ~HolderString();
@@ -271,7 +273,7 @@ class HolderStringArr : public HolderData {
   Q_OBJECT
  public: 
   HolderStringArr( QString *p, int an, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+     const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
      const QString &a_descr = QString(),
      const QString &a_extra  = QString() );
   virtual ~HolderStringArr();
@@ -296,7 +298,7 @@ class HolderColor : public HolderData {
   Q_OBJECT
  public: 
   HolderColor( QColor *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+     const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
      const QString &a_descr = QString(),
      const QString &a_extra  = QString() );
   virtual ~HolderColor();
@@ -324,7 +326,7 @@ class HolderObj : public HolderData {
   Q_OBJECT
  public: 
   HolderObj( TDataSet *p, const QString &obj_name,  // NO autocreate !
-    const QString &v_name = QString(), QObject *a_parent = 0, int a_flags = 0,
+    const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
     const QString &a_descr = QString(),
     const QString &a_extra  = QString() );
   virtual ~HolderObj();
@@ -352,6 +354,7 @@ class HolderObj : public HolderData {
 /** base class for all objects */
 class TDataSet : public QObject {
   Q_OBJECT
+   friend class HolderData;
  public:
    /** default constructor */
    explicit TDataSet( TDataSet *aparent );
@@ -365,6 +368,16 @@ class TDataSet : public QObject {
    const char* getClassName(void) const;
    /** fills dst with full name of object: .aaa.bbb.cc  */
    QString getFullName() const;
+   /** return number of registerd elems = number of holders */
+   int getNumObj() const;
+   /** returns list of registerd elems names - not holders */
+   QStringList elemNames() const;
+   /** returns list of holders */
+   QVector<HolderData*> holders() const;
+   /** returns holder by number - for QModel... */
+   HolderData* getHolder( int i ) const;
+   /** find holder for object by name */
+   HolderData* getHolder( const QString &oname ) const;
    /** returns ptr to help string */
    virtual const char* getHelp(void) const;
    /** return state */
@@ -380,8 +393,6 @@ class TDataSet : public QObject {
    TDataSet* getObj( const QString &ename, const QString &cl_name = QString() );   
    // /** return ptr to Object elem by name  */
    // virtual const TDataSet* getObjPtr( const QString &nm ) const;
-   /** find holder for object */
-   HolderData* getHolder( const QString &oname ) const;
 
    /** new functions to read datas */
    int getData( const QString &nm, QVariant &da ) const;
@@ -431,10 +442,18 @@ class TDataSet : public QObject {
    /** gets pointer to parameter, near to getDoublePrmPtr 
     * for param mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
+   /** register new holder */
+   bool registerHolder( HolderData *ho );
+   /** unregister holder */
+   bool unregisterHolder( HolderData *ho );
  protected:
    /** guard value */
    int guard;
    static const int guard_val = 7442428;
+   /** map of holders* */
+   QSHoMap ho_map;
+   /** QVector of holders* */
+   QHoVect ho_vect;
    /** parent may be 0 */
    TDataSet *parent;
    /** state: 0-bad, 1-constructed, 2-run; */

@@ -43,27 +43,41 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   sel = mark = -1; sel_x = sel_y = 0; level = 0; 
   selObj = nullptr; markObj = nullptr;
 
-  setAttribute(Qt::WA_DeleteOnClose);
-  
-  QGridLayout *grLay = new QGridLayout;
+  QVBoxLayout *vlay = new QVBoxLayout( this );
 
-  scrollArea = new QScrollArea( this );
-  sview = new QStructView( doc, this, this );
+  QWidget *left_part = new QWidget( this );
+
+  setAttribute(Qt::WA_DeleteOnClose);
+
+  QSplitter *split = new QSplitter( this );
+  
+  QGridLayout *grLay = new QGridLayout( left_part );
+
+  scrollArea = new QScrollArea( left_part );
+  sview = new QStructView( doc, this, left_part );
   scrollArea->setWidget( sview );
   scrollArea->setLineWidth( 2 );
   scrollArea->setMidLineWidth( 2 );
   scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
-  oview = new QOutView( doc, this, this );
-  gview = new QGraphView( doc, this, this );
+  oview = new QOutView( doc, this, left_part );
+  gview = new QGraphView( doc, this, left_part );
   
   stam = new QStatusModel( this, this );
+
+  treeView = new QTreeView( this );
 
   grLay->addWidget( scrollArea, 0, 0 );
   grLay->addWidget( oview, 0, 1 );
   grLay->addWidget( gview, 0, 2 );
-  grLay->addWidget( stam, 1, 0, 1, 3 );
 
-  setLayout( grLay );
+  left_part->setLayout( grLay );
+
+  split->addWidget( left_part );
+  split->addWidget( treeView );
+
+  vlay->addWidget( split );
+  vlay->addWidget( stam );
+  setLayout( vlay );
   
   QSize s_size ( sview->getElemsBound() );
   s_size += QSize( 2 * oview->width() + gview->width(), 0 );

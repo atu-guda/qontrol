@@ -17,7 +17,7 @@ DataWidget::DataWidget( HolderData &h, QWidget *parent )
     lbl( new QLabel( ho.getParm("vis_name"), this) )
 {
   lbl->setWhatsThis( ho.getType() + " " + ho.targetName() );
-  lbl->setMinimumWidth( 30 ); // TODO: from font
+  lbl->setMinimumWidth( 50 ); // TODO: from font
   // setFrameStyle( QFrame::Panel | QFrame::Sunken );
 }
 
@@ -737,13 +737,7 @@ void DataDialog::showSimpleHelp(void)
   help_str += help; 
   help_str += "<hr/>\n"; 
 
-  QObjectList childs = ds.children();
-  for( auto o :  childs ) {
-    QObject *xo = o;
-    if( ! xo->inherits("HolderData" )) {
-      continue;
-    }
-    HolderData *ho = qobject_cast<HolderData*>(xo);
+  for( HolderData *ho : ds.holders() ) {
     if( !ho )
       continue; // but how?
     help_str += "<p>" % ho->getType() 
@@ -782,17 +776,11 @@ int DataDialog::createWidgets()
   lay1->addLayout( lay2 );
 
   DataWidget *w;
-  QObjectList childs = ds.children();
 
   // FIXME part of tmp workaround for displaing Elems in model
   bool is_model = ds.isChildOf( "TModel" );
   
-  for( auto o :  childs ) {
-    QObject *xo = o;
-    if( ! xo->inherits("HolderData" )) {
-      continue;
-    }
-    HolderData *ho = qobject_cast<HolderData*>(xo);
+  for( HolderData *ho :  ds.holders() ) {
     if( !ho )
       continue; // but how?
     if( ho->getFlags() & efNoDial )

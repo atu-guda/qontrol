@@ -76,6 +76,10 @@ QSize QStructView::getElemsBound() const
   return pas;
 }  
 
+QSize QStructView::sizeHint() const
+{
+  return getElemsBound();
+}
 
 QPoint QStructView::getSelCoords() const
 {

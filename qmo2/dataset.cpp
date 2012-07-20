@@ -23,15 +23,17 @@ using namespace std;
 // ---------------- HolderData .... ----------------------
 
 HolderData::HolderData( const QString &obj_name, 
-              const QString &v_name, QObject *a_parent, int a_flags,
+              const QString &v_name, TDataSet *a_parent, int a_flags,
 	      const QString &a_descr,
 	      const QString &a_extra )
            :QObject( a_parent ), old_tp(0),
 	    dyn(0), flags(a_flags),
 	    v_min(DMIN), v_max(DMAX),
-	    tp(QVariant::Invalid), ptr(0), target_name( obj_name )
+	    tp(QVariant::Invalid), ptr(0), par(a_parent), 
+	    target_name( obj_name )
 {
   setObjectName( "_HO_" + obj_name );
+  par->registerHolder( this );
 
   if( v_name.isNull() )  {
     setParm( "vis_name", obj_name );
@@ -41,6 +43,11 @@ HolderData::HolderData( const QString &obj_name,
   setParm( "descr", a_descr );
   setParm( "extra", a_extra );
   extraToParm();
+}
+
+HolderData::~HolderData()
+{
+  par->unregisterHolder( this );
 }
 
 void HolderData::setParm( const QString &name, const QString &value )
@@ -147,7 +154,7 @@ QDomElement HolderData::toDom( QDomDocument &dd ) const
 // ---------------- HolderInt ---------
 
 HolderInt::HolderInt( int *p, const QString &obj_name, 
-              const QString &v_name, QObject *a_parent, int a_flags,
+              const QString &v_name, TDataSet *a_parent, int a_flags,
 	      const QString &a_descr,
 	      const QString &a_extra )
           :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
@@ -215,7 +222,7 @@ QString HolderInt::getType() const
 
 // ---------------- HolderSwitch ---------
 HolderSwitch::HolderSwitch( int *p, const QString &obj_name, 
-              const QString &v_name, QObject *a_parent, int a_flags,
+              const QString &v_name, TDataSet *a_parent, int a_flags,
 	      const QString &a_descr,
 	      const QString &a_extra )
           :HolderInt( p, obj_name, v_name, a_parent, a_flags, a_descr, a_extra )
@@ -246,7 +253,7 @@ QString HolderSwitch::getType() const
 
 // ---------------- HolderList ---------
 HolderList::HolderList( int *p, const QString &obj_name, 
-     const QString &v_name, QObject *a_parent, int a_flags,
+     const QString &v_name, TDataSet *a_parent, int a_flags,
      const QString &a_descr,
      const QString &a_extra,  const QString &a_elems  )
    :HolderInt( p, obj_name, v_name, a_parent, a_flags, a_descr, a_extra )
@@ -275,7 +282,7 @@ QString HolderList::getType() const
 // ---------------- HolderDouble ---------
 
 HolderDouble::HolderDouble( double *p, const QString &obj_name,
-              const QString &v_name,  QObject *a_parent, int a_flags,
+              const QString &v_name,  TDataSet *a_parent, int a_flags,
 	      const QString &a_descr,
 	      const QString &a_extra )
           :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
@@ -343,7 +350,7 @@ QString HolderDouble::getType() const
 // ---------------- HolderString ---------
 
 HolderString::HolderString( QString *p, const QString &obj_name,
-              const QString &v_name,  QObject *a_parent, int a_flags,
+              const QString &v_name,  TDataSet *a_parent, int a_flags,
 	      const QString &a_descr,
 	      const QString &a_extra )
           :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
@@ -410,7 +417,7 @@ QString HolderString::getType() const
 // ---------------- HolderStringArr ---------
 
 HolderStringArr::HolderStringArr( QString *p, int an, const QString &obj_name,
-              const QString &v_name,  QObject *a_parent, int a_flags,
+              const QString &v_name,  TDataSet *a_parent, int a_flags,
 	      const QString &a_descr,
 	      const QString &a_extra )
           :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
@@ -498,7 +505,7 @@ QString HolderStringArr::getType() const
 // ---------------- HolderColor ---------
 
 HolderColor::HolderColor( QColor *p, const QString &obj_name,
-              const QString &v_name,  QObject *a_parent, int a_flags,
+              const QString &v_name,  TDataSet *a_parent, int a_flags,
 	      const QString &a_descr,
 	      const QString &a_extra )
           :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
@@ -563,7 +570,7 @@ QString HolderColor::getType() const
 // ---------------- HolderObj ---------
 
 HolderObj::HolderObj( TDataSet *p, const QString &obj_name,
-              const QString &v_name,  QObject *a_parent, int a_flags,
+              const QString &v_name,  TDataSet *a_parent, int a_flags,
 	      const QString &a_descr,
 	      const QString &a_extra )
           :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
@@ -687,6 +694,75 @@ QString TDataSet::getFullName() const
   return res;
 }
 
+int TDataSet::getNumObj() const
+{
+  return ho_vect.size();
+}
+
+QStringList TDataSet::elemNames() const
+{
+  return ho_map.keys();
+}
+
+QVector<HolderData*> TDataSet::holders() const
+{
+  return ho_vect;
+}
+
+HolderData* TDataSet::getHolder( int i ) const
+{
+  if( i < 0 || i >= ho_vect.size() ) {
+    qDebug( "ERR: TDataSet::getHolder(int i): %s i=%d out of range",
+	qPrintable( getFullName() ), i );
+    return nullptr;
+  }
+  return ho_vect[i];
+}
+
+HolderData* TDataSet::getHolder( const QString &oname ) const
+{
+  auto i = ho_map.find( oname );
+  if( i == ho_map.end() )
+    return nullptr;
+  return i.value();
+}
+
+bool TDataSet::registerHolder( HolderData *ho )
+{
+  if( !ho )
+    return false;
+  if( ho_map.contains( ho->targetName() ) ) {
+    qDebug( "ERR: TDataSet::registerHolder: fail to add %s to %s: exists",
+            qPrintable( ho->targetName() ), qPrintable( getFullName() ) );
+    return false;
+  }
+  ho_map.insert( ho->targetName(), ho );
+  ho_vect.push_back( ho );
+  return true;
+}
+
+bool TDataSet::unregisterHolder( HolderData *ho )
+{
+  if( !ho )
+    return false;
+  auto iter = ho_map.find( ho->targetName() );
+  if( iter == ho_map.end() ) {
+    qDebug( "ERR: TDataSet::unregisterHolder: fail to find %s in %s",
+            qPrintable( ho->targetName() ), qPrintable( getFullName() ) );
+    return false;
+  }
+  ho_map.erase( iter );
+
+  auto i2 = find( ho_vect.begin(), ho_vect.end(), ho );
+  if( i2 == ho_vect.end() ) {
+    qDebug( "ERR: TDataSet::unregisterHolder: fail to ptr to find %s in %s",
+            qPrintable( ho->targetName() ), qPrintable( getFullName() ) );
+    return false;
+  }
+  ho_vect.erase( i2 );
+  return true;
+}
+
 TDataSet* TDataSet::create( TDataSet* apar )
 {
   qDebug( "warn: pure TDataSet created" );
@@ -733,26 +809,6 @@ TDataSet* TDataSet::getObj( const QString &ename, const QString &cl_name )
     return nullptr; // unlikely
   return hob->getObj();
 }
-
-
-HolderData* TDataSet::getHolder( const QString &oname ) const
-{
-  QString ho_name = "_HO_" + oname; 
-  HolderData* ret;
-  for(QObject* child : children() ) {  // FIXME: bad, use map?
-    ret = qobject_cast<HolderData*>( child );
-    if( !ret )
-      continue;
-    if( child->objectName() == ho_name ) {
-      return ret;
-    }
-  }
-
-  // HolderData *ho = findChild<HolderData*>(ho_name); BAD: recursive
-  return nullptr;
-}
-
-
 
 
 int TDataSet::getData( const QString &nm, QVariant &da ) const
@@ -1027,15 +1083,8 @@ QString TDataSet::toString() const
   ++lev;
   QString buf;
   buf.reserve(4096); // TODO ?
-  QObjectList childs = children();
-
   
-  for( auto o : childs ) {
-    QObject *xo = o;
-    if( ! xo->inherits("HolderData" )) {
-      continue;
-    }
-    HolderData *ho = qobject_cast<HolderData*>(xo);
+  for( HolderData *ho : ho_vect ) {
     buf += QString( lev*2, QChar(' ') ); // for indent (human view). Is needed?
     if( ho->inherits( "HolderObj" ) ) {
       buf += ho->targetName() + " = {\n" + ho->toString() + "}\n"; 
@@ -1058,23 +1107,13 @@ QDomElement TDataSet::toDom( QDomDocument &dd ) const
   de.setAttribute( "name", objectName() );
   de.setAttribute( "otype", getClassName() );
   
-  QObjectList childs = children();
-  for( auto o :  childs ) {
-    QObject *xo = o;
-    //qDebug( "debug: TDataSet::toDom type: %s name: %s",
-    // 	qPrintable( xo->metaObject()->className() ),
-    // 	qPrintable( xo->objectName() )
-    //);
-    if( xo->inherits("HolderData" )) {
-      HolderData *ho = qobject_cast<HolderData*>(xo);
-      if( !ho )
-	continue; // but how?
-      if( ho->getFlags() & efNoSave )
-	continue;
-      QDomElement cde = ho->toDom( dd );
-      de.appendChild( cde );
-    }
-
+  for( HolderData *ho : ho_vect ) {
+    if( !ho )
+      continue; // but how?
+    if( ho->getFlags() & efNoSave )
+      continue;
+    QDomElement cde = ho->toDom( dd );
+    de.appendChild( cde );
   }
   
   return de;

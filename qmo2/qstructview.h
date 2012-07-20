@@ -47,6 +47,7 @@ class QStructView : public QWidget  {
    int getGridSize() const { return grid_sz; };
    /** bound of all elements in model */
    QSize getElemsBound() const;
+   virtual QSize sizeHint () const;
    /** gets coordinates on selected element */
    QPoint getSelCoords() const;
  public slots:

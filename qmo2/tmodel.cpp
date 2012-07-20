@@ -551,12 +551,10 @@ int TModel::linkNames(void)/*{{{1*/
   v_out.clear(); v_outt.clear();
   v_graph.clear();
   
-  HolderData* ho; HolderObj *hob;      
-  for( QObject* child : children() ) { // find elements of given types: TODO:
-    ho = qobject_cast<HolderData*>( child );
+  for( HolderData *ho : holders() ) { // find elements of given types: TODO:
     if( !ho || !ho->isObject()  )
       continue;
-    hob = qobject_cast<HolderObj*>(ho);
+    HolderObj *hob = qobject_cast<HolderObj*>(ho);
     if( !hob )
       continue;
     TDataSet* ds = hob->getObj();

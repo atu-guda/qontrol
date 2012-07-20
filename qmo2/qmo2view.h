@@ -32,6 +32,7 @@ class TRootData;
 class TModel;
 class QStatusModel;
 class QScrollArea;
+class QTreeView;
 
 class TMiso;
 
@@ -152,6 +153,7 @@ class QMo2View : public QWidget
    QOutView *oview;
    QGraphView *gview;
    QStatusModel *stam;
+   QTreeView *treeView;
    QMo2Doc *doc;
    TModel *model;
    TRootData *root;
