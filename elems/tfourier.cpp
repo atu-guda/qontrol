@@ -96,7 +96,7 @@ int TFourier::endLoop(void)
   const double *xdat;
   double v, vx;
   rc = TMiso::endLoop();
-  if( parent == 0 ) return rc;
+  if( !par ) return rc;
   if( out_a >= 0 ) { // ------- fill model vars 
     for( i=0; i<=ng; i++ ) 
       model->setVar( out_a + i, aa[i]);

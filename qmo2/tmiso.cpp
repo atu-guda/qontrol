@@ -127,7 +127,7 @@ double TMiso::f( double /* t */ )
 int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
 {
   tdt = adt; model_nn = an; 
-  model = static_cast<TModel*>(parent); 
+  model = static_cast<TModel*>(par); 
   fillLinks();
   int rc =  do_preRun( run_tp, an, anx, any, adt );
   if( rc != 0 )
@@ -152,7 +152,7 @@ int TMiso::fillLinks()
     in_so[i] = &fake_so;
     iname = "inps" + QString::number(i);
     links->getData( iname, soname );
-    p = parent->getDoublePtr( soname );
+    p = par->getDoublePtr( soname );
     if( p ) {
       in_so[i] = p;
     }
@@ -170,7 +170,7 @@ int TMiso::fillLinks()
     pname = "pnames" + QString::number(i);
     links->getData( iname, soname );
     links->getData( pname, sopname );
-    p = parent->getDoublePtr( soname );
+    p = par->getDoublePtr( soname );
     pp = getDoublePrmPtr( sopname, &flg );
     links->getData( "pflags" + QString::number(i), &onlyFirstPrm );
     if( flg & efNoRunChange ) // force only-first if param cannot be changed in RT

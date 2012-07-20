@@ -79,13 +79,13 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
   for( i=0; i<7; i++ ) gi->label[i][0] = 0;
   strncat( gi->title, qPrintable( objectName()), 
            sizeof( gi->title )-1 ); // TODO: real QString in GraphInfo
-  if( parent == 0 || ! parent->isChildOf("TModel") 
-      || parent->getState() < stateDone )
+  if( !par || ! par->isChildOf("TModel") 
+      || par->getState() < stateDone )
     return -10;
   
-  TModel *model = static_cast<TModel*>(parent);
+  TModel *model = static_cast<TModel*>(par);
   // x-data
-  out_nu = model->outname2out_nu( xname.toLocal8Bit().constData() );
+  out_nu = model->outname2out_nu( xname );
   if( out_nu < 0 ) return -1;
   arr = model->getOutArr( out_nu );
   if( arr == 0 ) return -1;
@@ -103,7 +103,7 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
   col = 1; // unlike show, x and y[] in single index
   const QString* ynms[] = { &y0name, &y1name, &y2name, &y3name, &y4name, &y5name }; // TODO: replace
   for( i=0; i<6; i++ ) {
-    out_nu = model->outname2out_nu( ynms[i]->toLocal8Bit().constData() );
+    out_nu = model->outname2out_nu( *ynms[i] );
     if( out_nu < 0 ) continue;
     arr = model->getOutArr(  out_nu );
     if( arr == 0 ) continue;

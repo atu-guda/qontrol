@@ -31,6 +31,7 @@
 #include "qrunview.h"
 #include "qplotview.h"
 #include "datawidget.h"
+#include "holdermodel.h"
 
 
 QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
@@ -40,6 +41,7 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   QSize p_size = parent->size();
   root = doc->getRoot();
   model = doc->getModel();
+  ho_mo = new HolderModel( root, this );
   sel = mark = -1; sel_x = sel_y = 0; level = 0; 
   selObj = nullptr; markObj = nullptr;
 
@@ -65,6 +67,7 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   stam = new QStatusModel( this, this );
 
   treeView = new QTreeView( this );
+  treeView->setModel( ho_mo );
 
   grLay->addWidget( scrollArea, 0, 0 );
   grLay->addWidget( oview, 0, 1 );
@@ -198,6 +201,8 @@ void QMo2View::updateViews()
   oview->update();
   gview->update();
   stam->update();
+  treeView->reset();
+  treeView->update();
 }  
 
 

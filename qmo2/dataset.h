@@ -93,6 +93,7 @@ class HolderData : public QObject {
   QString getParm( const QString &name ) const;
   void extraToParm();
   const QString& targetName() const { return target_name; };
+  TDataSet* getParent() const { return par; }
   // tmp: to remove, use only set/getParm
   void setVisName( const QString &av_name );
   QString getVisName() const;
@@ -355,6 +356,7 @@ class HolderObj : public HolderData {
 class TDataSet : public QObject {
   Q_OBJECT
    friend class HolderData;
+   friend class HolderObj;
  public:
    /** default constructor */
    explicit TDataSet( TDataSet *aparent );
@@ -366,6 +368,10 @@ class TDataSet : public QObject {
    TDataSet* createObj( const QString &cl_name, const QString &nm, TDataSet* apar );
    /** class name - for check & human purpose */
    const char* getClassName(void) const;
+   /** parent as TDataSet, not QObject */
+   TDataSet* getParent() { return par; }
+   /** return ptr to parents holder to me or 0 */
+   HolderObj* myHolder() const { return holderOfMe; }
    /** fills dst with full name of object: .aaa.bbb.cc  */
    QString getFullName() const;
    /** return number of registerd elems = number of holders */
@@ -378,6 +384,8 @@ class TDataSet : public QObject {
    HolderData* getHolder( int i ) const;
    /** find holder for object by name */
    HolderData* getHolder( const QString &oname ) const;
+   /** index of holder, if my, -1 - if not */
+   int indexOfHolder( HolderData *ho ) const;
    /** returns ptr to help string */
    virtual const char* getHelp(void) const;
    /** return state */
@@ -455,7 +463,9 @@ class TDataSet : public QObject {
    /** QVector of holders* */
    QHoVect ho_vect;
    /** parent may be 0 */
-   TDataSet *parent;
+   TDataSet *par;
+   /** Holder in parent to me. May be 0. */
+   HolderObj *holderOfMe;
    /** state: 0-bad, 1-constructed, 2-run; */
    int state; 
    /** allowing object add /remove for some classes */

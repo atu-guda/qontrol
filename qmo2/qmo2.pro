@@ -15,6 +15,7 @@ SOURCES += \
   datacont.cpp \
   dataset.cpp \
   elemfact.cpp \
+  holdermodel.cpp \
   main.cpp \
   miscfun.cpp \
   mo2settdlg.cpp \
@@ -71,6 +72,7 @@ HEADERS += \
   datacont.h \
   dataset.h \
   defs.h \
+  holdermodel.h \
   miscfun.h \
   mo2settdlg.h \
   myelems1.h \

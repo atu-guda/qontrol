@@ -86,7 +86,7 @@ int TOutputAny::do_preRun( int /*run_tp*/, int /*an*/,
     ne = atoi( name.toLocal8Bit().constData() + 1 );
     return 0;
   };
-  cob = parent; tname[0] = 0; 
+  cob = par; tname[0] = 0; 
   strncat( tname, name.toLocal8Bit().constData(), MAX_INPUTLEN-1 );
   while( 1 ) {
     k = splitName( tname, fname, rname );

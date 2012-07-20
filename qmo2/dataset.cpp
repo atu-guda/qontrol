@@ -587,6 +587,7 @@ HolderObj::HolderObj( TDataSet *p, const QString &obj_name,
     setParm( "props", "OBJ" );
   }
   obj->setObjectName( obj_name );
+  obj->holderOfMe = this;
 }
 
 HolderObj::~HolderObj()
@@ -656,11 +657,10 @@ const char* TDataSet::helpstr =
  "Never to be used directly";
 
 TDataSet::TDataSet( TDataSet* aparent )
-         :QObject( aparent )
+         :QObject( aparent ),
+	  guard(guard_val), par(aparent), holderOfMe(nullptr),
+	  state(stateGood), modified(0)
 {
- guard = guard_val;
- parent = aparent;
- allow_add = 0; state = stateGood; modified = 0;
 }
 
 TDataSet::~TDataSet()
@@ -684,12 +684,12 @@ QString TDataSet::getFullName() const
   const TDataSet *cob;
   QString res = objectName();
   QString tn;
-  cob = parent; // TODO? is first dot need 
+  cob = par; // TODO? is first dot need 
   while( cob != 0 ) {
     tn = cob->objectName();
     tn += '.';
     res.prepend( tn );
-    cob = cob->parent;
+    cob = cob->par;
   };
   return res;
 }
@@ -725,6 +725,11 @@ HolderData* TDataSet::getHolder( const QString &oname ) const
   if( i == ho_map.end() )
     return nullptr;
   return i.value();
+}
+
+int TDataSet::indexOfHolder( HolderData *ho ) const
+{
+  return ho_vect.indexOf( ho );
 }
 
 bool TDataSet::registerHolder( HolderData *ho )

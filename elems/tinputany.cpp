@@ -79,7 +79,7 @@ int TInputAny::do_preRun( int /*run_tp*/, int /*an*/,
     return 0;
   };
 
-  so = parent->getDoublePtr( name ); 
+  so = par->getDoublePtr( name ); 
   if( !so ) {
     so = &fake_so; 
     qDebug( "WARN: TInputAny::preRun: fail to find source name \"%s\"",

@@ -34,6 +34,7 @@ class QStatusModel;
 class QScrollArea;
 class QTreeView;
 
+class HolderModel;
 class TMiso;
 
 /**
@@ -155,8 +156,9 @@ class QMo2View : public QWidget
    QStatusModel *stam;
    QTreeView *treeView;
    QMo2Doc *doc;
-   TModel *model;
    TRootData *root;
+   TModel *model;
+   HolderModel *ho_mo;
    int sel, sel_x, sel_y, mark, level;
    /** prt to selected object or nullptr */
    TMiso *selObj;

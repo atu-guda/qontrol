@@ -107,9 +107,9 @@ int TCorrAnalysis::endLoop(void)
   cmp_ms = cmp_min = cmp_max = cmp_ampl = cmp_tmin = cmp_tmax = se2 = 0; 
   do_cmp = do_fill = 0;
   rc = TMiso::endLoop();
-  if( parent == 0 )
+  if( ! par )
     return rc;
-  arrxn = model->outname2out_nu( x_oname.toLocal8Bit().constData() );
+  arrxn = model->outname2out_nu( x_oname );
   arrx = model->getOutArr( arrxn );
   if( arrx == 0 ) 
     return rc;
@@ -118,7 +118,7 @@ int TCorrAnalysis::endLoop(void)
   xdat = arrx->getArray();
   if( xdat == 0 || nx < 2 ) 
     return rc;
-  arrcn = model->outname2out_nu( c_oname.toLocal8Bit().constData() );
+  arrcn = model->outname2out_nu( c_oname );
   arrc = model->getOutArr( arrcn );  cdat = 0;
   if( arrc != 0 ) {
     cdat = arrc->getArray();
@@ -127,7 +127,7 @@ int TCorrAnalysis::endLoop(void)
   if( cdat != 0 && nx_c == nx )
     do_cmp = 1;
   if( useFill ) {
-    arryn = model->outname2out_nu( y_oname.toLocal8Bit().constData() );
+    arryn = model->outname2out_nu( y_oname );
     arry = model->getOutArr( arryn );
     if( arry != 0 ) {
       arry->alloc( nx, 1 );
@@ -197,7 +197,7 @@ int TCorrAnalysis::getDataFromArrays()
   
   reset_data();
   // get x array
-  int arrxn = model->outname2out_nu( x_in.toLocal8Bit().constData() );
+  int arrxn = model->outname2out_nu( x_in );
   TOutArr *arrx = model->getOutArr( arrxn );
   if( arrx != 0 ) {
     arrx->getData( "n", &nx );
@@ -208,7 +208,7 @@ int TCorrAnalysis::getDataFromArrays()
     // cerr << __PRETTY_FUNCTION__ << ": fail to find x: " << x_in << '\n';
   };
   // get x array
-  int arryn = model->outname2out_nu( y_in.toLocal8Bit().constData() );
+  int arryn = model->outname2out_nu( y_in );
   TOutArr *arry = model->getOutArr( arryn );
   if( arry != 0 ) {
     arry->getData( "n", &ny );
