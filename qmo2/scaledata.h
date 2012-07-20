@@ -52,11 +52,9 @@ class ScaleData : public TDataSet
    // margins
    PRM_DOUBLE1( leftMar,  efNRC, "Left Margin %", "Value of plot left margin in %", "sep=block" );
    PRM_DOUBLE1(  topMar,  efNRC, "Top Margin %", "Value of plot top margin in %", "" );
-   PRM_DOUBLE1(rightMar,  efNRC, "Top Margin %", "Value of plot right margin in %", "" );
+   PRM_DOUBLE1(rightMar,  efNRC, "Right Margin %", "Value of plot right margin in %", "sep=col" );
    PRM_DOUBLE1(bottomMar, efNRC, "Bottom Margin %", "Value of plot bottom margin in %", "" );
-   PRM_DOUBLE1(  maxErr,  efNRC, "Max Err", "Maximum plot error in pixels", "sep=col" );
-   // font: TODO: Holder for it
-   PRM_STRING1( fontName, efNRC, "Font", "Font face for labels...", "max=20" );
+   PRM_DOUBLE1(  maxErr,  efNRC, "Max Err", "Maximum plot error in pixels", "" );
   protected: 
    /** class decription */
    static TClassInfo class_info;

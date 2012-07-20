@@ -55,7 +55,6 @@ QPlotView::QPlotView( QMo2Doc *adoc, TGraph *agra, QWidget *parent )
   tool_x = tool_y = ref_x = ref_y = 0;
   ng = 0; nn = 0; ny = 0;
   errstr = 0;
-  fontfam = "helvetica";
   setStartColors();
   // setBackgroundMode( Qt::NoBackground );
   setFocusPolicy( Qt::StrongFocus );
@@ -255,17 +254,17 @@ void QPlotView::drawAxes( QPainter &p )
   if( tooldx != 0) 
     toolk = tooldy / tooldx;
   qs = QString("(") 
-    + QString::number( tool_x, 'g', 4 ) + QString("; " )
-    + QString::number( tool_y, 'g', 4 ) + QString(") [" )
-    + QString::number( sel_idx ) + QString("]; ref= (" )
-    + QString::number( ref_x, 'g', 4 ) + QString("; " ) 
-    + QString::number( ref_y, 'g', 4 ) + QString(") dlt = (" ) 
-    + QString::number( tooldx, 'g', 4 ) + QString("; " ) 
-    + QString::number( tooldy, 'g', 4 ) + QString(") R = " ) 
-    + QString::number( euRange( tooldx, tooldy  ), 'g', 4 ) 
-    + QString(" ; f = " ) 
-    + QString::number( atan2( tooldy, tooldx ), 'g', 4 ) 
-    + QString(" ; k = " ) + QString::number( toolk, 'g', 4 );
+    % QString::number( tool_x, 'g', 4 ) + QString("; " )
+    % QString::number( tool_y, 'g', 4 ) + QString(") [" )
+    % QString::number( sel_idx ) + QString("]; ref= (" )
+    % QString::number( ref_x, 'g', 4 ) + QString("; " ) 
+    % QString::number( ref_y, 'g', 4 ) + QString(") dlt = (" ) 
+    % QString::number( tooldx, 'g', 4 ) + QString("; " ) 
+    % QString::number( tooldy, 'g', 4 ) + QString(") R = " ) 
+    % QString::number( euRange( tooldx, tooldy  ), 'g', 4 ) 
+    % QString(" ; f = " ) 
+    % QString::number( atan2( tooldy, tooldx ), 'g', 4 ) 
+    % QString(" ; k = " ) + QString::number( toolk, 'g', 4 );
   if( ny > 1 && sel_idx >= 0 ) {
     qs += QString( "; y= " ) + QString::number( datay[0][sel_idx], 'g', 4 );
   };
@@ -954,23 +953,21 @@ void QPlotView::setScale()
 
 void QPlotView::setColors(void)
 {
-  int i, rc;
-  QDialog *dia; QLabel *la;
-  QPushButton *bt_ok, *bt_can;
-  QColorBtn* colbtns[10]; 
+  int i;
   static const char *labels[10] = {
     "Background", "Scale", "Grid", "Labels", 
     "Line0", "Line1", "Line2", "Line3", "Line4", "Line5"
   };
-  dia = new QDialog( this );  
-  dia->resize( 250, 320 );
+  
+  QDialog *dia = new QDialog( this );  
   dia->setWindowTitle( PACKAGE ": Plot Colors" );
+  QGridLayout *lay = new QGridLayout( dia );
+  QColorBtn* colbtns[10]; 
+  QLabel *la;
   for( i=0; i<10; i++ ) {
-    la = new QLabel( dia );
-    la->setGeometry( 100, 10+i*20, 130, 20 );
-    la->setText( labels[i] );
+    la = new QLabel( labels[i], dia );
+    lay->addWidget( la, i, 0 );
     colbtns[i] = new QColorBtn( dia );
-    colbtns[i]->setGeometry( 60, 10+i*20, 30, 20 );
     if( i >= 4 ) {
       colbtns[i]->setColor( plotColor[i-4] );
     } else {
@@ -981,17 +978,16 @@ void QPlotView::setColors(void)
 	case 3: colbtns[i]->setColor( labelColor ); break;
       };
     };
+    lay->addWidget( colbtns[i], i, 1 );
   };
-  bt_ok = new QPushButton( dia );
-  bt_ok->setGeometry( 10, 280, 100, 30 );
-  bt_ok->setText( "&Ok" );
-  bt_can = new QPushButton( dia );
-  bt_can->setGeometry( 120, 280, 100, 30 );
-  bt_can->setText( "&Cancel" );
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
-  connect( bt_can, SIGNAL(clicked()), dia, SLOT(reject()) );
+  
+  QDialogButtonBox *bbox 
+    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  lay->addWidget( bbox, i, 0, 1, 2 );
+  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
+  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
 
-  rc = dia->exec();
+  int rc = dia->exec();
   if( rc == QDialog::Accepted ) {
     bgColor = colbtns[0]->color();
     scaleColor = colbtns[1]->color();
@@ -1066,43 +1062,36 @@ void QPlotView::dataInfo(void)
 
 void QPlotView::moveTool(void)
 {
-  int rc;
-  QDialog *dia; QLabel *la;
-  QPushButton *bt_ok, *bt_can;
-  QLineEdit *toolx_ed, *tooly_ed;
-  QString qs;
-  dia = new QDialog( this );
-  dia->resize( 230, 160 );
+  QDialog *dia = new QDialog( this );
   dia->setWindowTitle( "Move tool to point: " );
-  la = new QLabel( dia );
-  la->setGeometry( 60, 10, 100, 20 );
-  la->setText( "X" );
-  toolx_ed = new QLineEdit( dia );
-  toolx_ed->setGeometry( 50, 30, 120, 20 );
-  qs = QString::number( tool_x );
-  toolx_ed->setText( qs );
-  la = new QLabel( dia );
-  la->setGeometry( 60, 60, 100, 20 );
-  la->setText( "Y" );
-  tooly_ed = new QLineEdit( dia );
-  tooly_ed->setGeometry( 50, 80, 120, 20 );
-  qs = QString::number( tool_y );
-  tooly_ed->setText( qs );
-  bt_ok = new QPushButton( dia );
-  bt_ok->setGeometry( 10, 110, 100, 30 );
-  bt_ok->setText( "&Ok" );
-  bt_can = new QPushButton( dia );
-  bt_can->setGeometry( 120, 110, 100, 30 );
-  bt_can->setText( "&Cancel" );
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
-  connect( bt_can, SIGNAL(clicked()), dia, SLOT(reject()) );
+  QGridLayout *lay = new QGridLayout( dia );
+  
+  QLineEdit *toolx_ed = new QLineEdit( dia );
+  toolx_ed->setValidator( new QDoubleValidator() );
+  toolx_ed->setText( QString::number( tool_x ) );
+  lay->addWidget( toolx_ed, 0, 1 );
+  QLineEdit *tooly_ed = new QLineEdit( dia );
+  tooly_ed->setValidator( new QDoubleValidator() );
+  tooly_ed->setText( QString::number( tool_y ) );
+  lay->addWidget( tooly_ed, 1, 1 );
+  
+  QLabel *la_x = new QLabel( "the &X value", dia );
+  la_x->setBuddy( toolx_ed );
+  lay->addWidget( la_x, 0, 0 );
+  QLabel *la_y = new QLabel( "the &Y value", dia );
+  la_y->setBuddy( tooly_ed );
+  lay->addWidget( la_y, 1, 0 );
 
-  rc = dia->exec();
+  QDialogButtonBox *bbox 
+    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  lay->addWidget( bbox, 2, 0, 1, 2 );
+  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
+  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
+
+  int rc = dia->exec();
   if( rc == QDialog::Accepted ) {
-    qs = toolx_ed->text();
-    tool_x = qs.toDouble();
-    qs = tooly_ed->text();
-    tool_y = qs.toDouble();
+    tool_x = toolx_ed->text().toDouble();
+    tool_y = tooly_ed->text().toDouble();
   };
   delete dia;
 }

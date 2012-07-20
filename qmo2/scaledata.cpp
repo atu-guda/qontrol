@@ -29,7 +29,6 @@ ScaleData::ScaleData( TDataSet* apar )
   autoScY = goodScY = 1;  logY = logScaleY =  zeroY = centerY = 0;
   gridY = 10; tickY = 1,
   leftMar = 0.1; topMar = 0.02; rightMar = 0.1; bottomMar = 0.1; maxErr = 0.5;
-  fontName = "Sans";
 }
 
 ScaleData::~ScaleData()

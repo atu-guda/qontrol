@@ -129,8 +129,6 @@ class QPlotView : public QWidget  {
     int min_sel_g, max_sel_g;
     /** measure tool and reference points coords */
     double tool_x, tool_y, ref_x, ref_y;
-    /** family name of labels font */
-    QString fontfam;
     /** error string */
     const char *errstr;
     /** help string */
