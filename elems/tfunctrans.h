@@ -20,6 +20,25 @@
 
 #include <tmiso.h>
 
+static const char* const tfunctrans_list = 
+     "a*sin(b*y)+g\n"                // 0
+     "a*sign(sin(b*y)+c)+g\n"        // 1 
+     "a*tanh(by)+g\n"                // 2
+     "a*atan2(u0,u1(x))+g\n"         // 3
+     "a*exp(b*y)+g\n"                // 4
+     "a*exp(-b*y^2)+g\n"             // 5
+     "a*Wave(b*y)+g\n"               // 6
+     "a*Mhat(b*y)+g\n"               // 7
+     "a*ln(b*y)+g\n"                 // 8
+     "a*y*exp(-b*y)+g\n"             // 9
+     "a*y*exp(-b*y^2)+g\n"           // 10
+     "a*sin^2(b*y)+g\n"              // 11
+     "a*cos(b*y)+g\n"                // 12
+     "a*cos^2(b*y)+g\n"              // 13
+     "a*tan(b*y)+g\n"                // 14
+     "a*exp(-b*y*y)*(1-c*sin^2(dy))+g\n" // 15
+     "a*(1-exp(-b*y*y))*(1-c*sin^2(dy))+g" // 16
+;
 
 #define CLASS_ID_TFuncTrans 1006
 
@@ -51,15 +70,15 @@ class TFuncTrans : public TMiso  {
    virtual double f( double t );
  protected:
    /** type of function */
-   PRM_LIST( type, 0 );
+   PRM_LIST1( type, 0, "Type", "Function type", "", tfunctrans_list );
    /** coefficients and shift */
-   PRM_DOUBLE( a, 0 );
-   PRM_DOUBLE( b, 0 );
-   PRM_DOUBLE( c, 0 );
-   PRM_DOUBLE( d, 0 );
-   PRM_DOUBLE( e, 0 );
-   PRM_DOUBLE( g, 0 );
-   PRM_DOUBLE( x0, 0 );
+   PRM_DOUBLE1( a,  0, "a", "Parameter a", "sep=col" );
+   PRM_DOUBLE1( b,  0, "b", "Parameter b", "" );
+   PRM_DOUBLE1( c,  0, "c", "Parameter c", "" );
+   PRM_DOUBLE1( d,  0, "d", "Parameter d", "sep=col" );
+   PRM_DOUBLE1( e,  0, "e", "Parameter e", "" );
+   PRM_DOUBLE1( g,  0, "g", "Parameter g", "" );
+   PRM_DOUBLE1( x0, 0, "x0", "Input shift: y = u[0] - u[1] - x0;", "" );
    /** class decription */
    static TClassInfo class_info;
    /** help str */

@@ -21,31 +21,9 @@
 #include "tmodel.h"
 #include "tsource.h"
 
-static const char* const tsource_list_type = 
-             "U*sin(o*t)\n"           // 0
-             "U*sign(sin(o*t))\n"     // 1
-             "U*t/T*sin(o*t)\n"       // 2
-             "U*t/T*sign(sin(o*t))\n" // 3
-             "Dirac(t-tau)\n"         // 4
-             "U*Thetta(t-tau)\n"      // 5
-             "U*t/T\n"                // 6
-             "saw(t,tau) /|/|/| \n"   // 7
-             "saw2(t.tau) /\\/\\ \n"  // 8
-             "Chaos Wave(Phi)\n"      // 9
-             "U*triangle(o*t)\n"      // 10
-             "Phase"                 // 11
-;
-
-static const char* const tsource_list_seedType = 
-     "Every run\n"          // 0
-     "Start of 1d-loop\n"   // 1 
-     "Start of 2d-loop\n"   // 2
-     "As model"             // 3
-;
-
 const char* TSource::helpstr = "<H1>TSource</H1>\n"
  "Source of different kind of signals: <br>\n"
- "Have N parameters: <b>type, U, omega, noise .. b</b>,"
+ "Have N parameters: <b>type, U, omega, .. b</b>,"
  "each can be changed at any time ??.";
 
 TClassInfo TSource::class_info = {
@@ -54,36 +32,10 @@ TClassInfo TSource::class_info = {
 
 
 TSource::TSource( TDataSet* aparent )
-        :TMiso( aparent ),
-	PRM_INIT( type, "Type" ),
-	PRM_INIT( uu, "Amplitude" ),
-	PRM_INIT( omega, "Frequency" ),
-	PRM_INIT( cc, "C" ),
-	// --- U chaos
-	PRM_INIT(   use_u_ch, "use U chaos" ),
-	PRM_INIT(    u_ch_v0, "vU min" ),
-	PRM_INIT(    u_ch_vm, "vU max" ),
-	PRM_INIT(    u_ch_t0, "tU min" ),
-	PRM_INIT(    u_ch_tm, "tU max" ),
-	PRM_INIT(     seed_u, "U seed" ),
-	PRM_INIT( seedType_u, "U seed type" ),
-	PRM_INIT( addBaseSeed_u, "U add base seed" ),
-	// --- Phi chaos
-	PRM_INIT(   use_f_ch, "use Phi chaos" ),
-	PRM_INIT(    f_ch_v0, "vF min" ),
-	PRM_INIT(    f_ch_vm, "vF max" ),
-	PRM_INIT(    f_ch_t0, "tF min" ),
-	PRM_INIT(    f_ch_tm, "rF max" ),
-	PRM_INIT(     seed_p, "F seed" ),
-	PRM_INIT( seedType_p, "F seed type" ),
-	PRM_INIT( addBaseSeed_p, "F add base to seed" ),
-        // unused
-	PRM_INIT( phi_shift, "unused" ),
-	PRM_INIT( use_noise, "unused" ),
-	PRM_INIT( noise, "unused" )
+        :TMiso( aparent )
 {
-  type = use_noise = use_u_ch = use_f_ch = 0;
-  uu = 1; omega = 0.7; cc = phi_shift = 0; noise = 0.01;
+  type = use_u_ch = use_f_ch = 0;
+  uu = 1; omega = 0.7; cc = 0;
   u_ch_v0 = 0.5; u_ch_vm = 1.5; u_ch_t0 = 2; u_ch_tm = 10;
   f_ch_v0 = -0.2; f_ch_vm = 0.2; f_ch_t0 = 2; f_ch_tm = 10;
   was_pulse = 0;
@@ -95,39 +47,6 @@ TSource::TSource( TDataSet* aparent )
   seed_p = seed_p + (time(0) & 0xFFF7 );
   seedType_p = 3; addBaseSeed_p = 1;
   rng_p = 0;
-
-
-  PRMI(type).setDescr( "Source type" );
-  PRMI(type).setElems( tsource_list_type );
-  PRMI(uu).setDescr( "Amplitude of signal (or pulse max)" );
-  PRMI(omega).setDescr( "Frequency of source (or pulse width)" );
-  PRMI(cc).setDescr( "Constant base" );
-  // --- U chaos
-  PRMI(use_u_ch).setDescr( "Use amplitude perturbations" );
-  PRMI(use_u_ch).setParm( "sep", "col" );
-  PRMI(u_ch_v0).setDescr( "Minimum value of amplitule factor" );
-  PRMI(u_ch_vm).setDescr( "Maximum value of amplitule factor" );
-  PRMI(u_ch_t0).setDescr( "Minimum time of change" );
-  PRMI(u_ch_t0).setMinMax( 1e-20, 1e20 );
-  PRMI(u_ch_tm).setDescr( "Maximum time of change" );
-  PRMI(u_ch_tm).setMinMax( 1e-20, 1e20 );
-  PRMI(seed_u).setDescr( "Random Generator seed" );
-  PRMI(seedType_u).setDescr( "When to seed" );
-  PRMI(seedType_u).setElems( tsource_list_seedType );
-  PRMI(addBaseSeed_u).setDescr( "Add seed from base(model)" );
-  // --- Phi chaos
-  PRMI(use_f_ch).setDescr( "Use phase perturbations" );
-  PRMI(use_f_ch).setParm( "sep", "col" );
-  PRMI(f_ch_v0).setDescr( "Minimum value of phase factor" );
-  PRMI(f_ch_vm).setDescr( "Maximum value of phase factor" );
-  PRMI(f_ch_t0).setDescr( "Minimum time of change" );
-  PRMI(f_ch_t0).setMinMax( 1e-20, 1e20 );
-  PRMI(f_ch_tm).setDescr( "Maximum time of change" );
-  PRMI(f_ch_tm).setMinMax( 1e-20, 1e20 );
-  PRMI(seed_p).setDescr( "Random Generator seed" );
-  PRMI(seedType_p).setDescr( "When to seed" );
-  PRMI(seedType_p).setElems( tsource_list_seedType );
-  PRMI(addBaseSeed_p).setDescr( "Add seed from base(model)" );
 }
 
 TSource::~TSource()

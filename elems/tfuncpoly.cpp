@@ -15,23 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h>
+#include <cmath>
 #include "tfuncpoly.h"
 
-static const char* const tfuncpoly_list = 
-     "a*y+g\n"                                 // 0
-     "a*y^2+b*y+g\n"                           // 1 
-     "a*y^3+b*y^2+c*y+g\n"                     // 2
-     "a*u0^2+b*u0*u1+c*u1^2+g\n"               // 3
-     "a*sqrt(y)+g\n"                           // 4
-     "hypot(a*u0,b*u1)+g\n"                    // 5
-     "a*u0^2+..+d*u3^2+g\n"                    // 6
-     "Vibro Ampl(omega); A=c0 B=Ome\n"         // 7
-     "a*(u1-u0^2)^2+b*(1-u0)^2\n"              // 8
-     "1-exp(-a*((u0^2+u1^2-1)^2-b*u0-c*u1))\n" // 9
-     "a*(1+b*y)+g\n"                           // 10
-     "a*(b*y+c*abs(y))+g"                      // 11
-;
+using namespace std;
 
 const char* TFuncPoly::helpstr = "<H1>TFuncPoly</H1>\n"
  "Polinomial functions: <br>\n"
@@ -46,28 +33,10 @@ TClassInfo TFuncPoly::class_info = {
 
 
 TFuncPoly::TFuncPoly( TDataSet* aparent )
-        :TMiso( aparent ),
-	PRM_INIT( type, "Type" ),
-	PRM_INIT( a,  "a" ),
-	PRM_INIT( b,  "b" ),
-	PRM_INIT( c,  "c" ),
-	PRM_INIT( d,  "d" ),
-	PRM_INIT( e,  "e" ),
-	PRM_INIT( g,  "g" ),
-	PRM_INIT( x0, "x0" )
+        :TMiso( aparent )
 {
   type = 0;
   a = b = 1; c = d = e = g = x0 = 0; 
-
-  PRMI(type).setDescr( "Functon type" );
-  PRMI(type).setElems( tfuncpoly_list );
-  PRMI(a).setDescr(  "Coefficient a" );
-  PRMI(b).setDescr(  "Coefficient b" );
-  PRMI(c).setDescr(  "Coefficient c" );
-  PRMI(d).setDescr(  "Coefficient d" );
-  PRMI(e).setDescr(  "Coefficient e" );
-  PRMI(g).setDescr(  "Coefficient g" );
-  PRMI(x0).setDescr( "Input shift: y = u[0] - u[1] - x0;" );
 }
 
 TFuncPoly::~TFuncPoly()

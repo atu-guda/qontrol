@@ -56,9 +56,9 @@ class TDelay : public TMiso  {
    /** calc values & alloc buf */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** max delay */
-   PRM_DOUBLE( mdelay, efNoRunChange );
+   PRM_DOUBLE1( mdelay, efNRC, "Max. delay", "Maximum delay", "min=0\nmax=1e20");
    /** current delay */
-   PRM_DOUBLE( cdelay, 0 );
+   PRM_DOUBLE1( cdelay, 0, "Cur. delay", "Current delay", "min=0\nmax=1e20" );
 
    double v1;
    double v2;

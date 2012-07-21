@@ -15,29 +15,12 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h>
+#include <cmath>
 #include "miscfun.h"
 #include "tfunctrans.h"
 
-static const char* const tfunctrans_list = 
-     "a*sin(b*y)+g\n"                // 0
-     "a*sign(sin(b*y)+c)+g\n"        // 1 
-     "a*tanh(by)+g\n"                // 2
-     "a*atan2(u0,u1(x))+g\n"         // 3
-     "a*exp(b*y)+g\n"                // 4
-     "a*exp(-b*y^2)+g\n"             // 5
-     "a*Wave(b*y)+g\n"               // 6
-     "a*Mhat(b*y)+g\n"               // 7
-     "a*ln(b*y)+g\n"                 // 8
-     "a*y*exp(-b*y)+g\n"             // 9
-     "a*y*exp(-b*y^2)+g\n"           // 10
-     "a*sin^2(b*y)+g\n"              // 11
-     "a*cos(b*y)+g\n"                // 12
-     "a*cos^2(b*y)+g\n"              // 13
-     "a*tan(b*y)+g\n"                // 14
-     "a*exp(-b*y*y)*(1-c*sin^2(dy))+g\n" // 15
-     "a*(1-exp(-b*y*y))*(1-c*sin^2(dy))+g" // 16
-;
+using namespace std;
+
 
 const char* TFuncTrans::helpstr = "<H1>TFuncTrans</H1>\n"
  "Harmonic-alike functions: <br>\n"
@@ -52,28 +35,10 @@ TClassInfo TFuncTrans::class_info = {
 
 
 TFuncTrans::TFuncTrans( TDataSet* aparent )
-        :TMiso( aparent ),
-	PRM_INIT( type, "Type" ),
-	PRM_INIT( a,  "a" ),
-	PRM_INIT( b,  "b" ),
-	PRM_INIT( c,  "c" ),
-	PRM_INIT( d,  "d" ),
-	PRM_INIT( e,  "e" ),
-	PRM_INIT( g,  "g" ),
-	PRM_INIT( x0, "x0" )
+        :TMiso( aparent )
 {
   type = 0;
   a = b = 1; c = d = e = g = x0 = 0; 
-
-  PRMI(type).setDescr( "Functon type" );
-  PRMI(type).setElems( tfunctrans_list );
-  PRMI(a).setDescr(  "Coefficient a" );
-  PRMI(b).setDescr(  "Coefficient b" );
-  PRMI(c).setDescr(  "Coefficient c" );
-  PRMI(d).setDescr(  "Coefficient d" );
-  PRMI(e).setDescr(  "Coefficient e" );
-  PRMI(g).setDescr(  "Coefficient g" );
-  PRMI(x0).setDescr( "Input shift: y = u[0] - u[1] - x0;" );
 }
 
 TFuncTrans::~TFuncTrans()

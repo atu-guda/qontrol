@@ -26,25 +26,6 @@ const char* TFuncMisc::helpstr = "<H1>TFuncMisc</H1>\n"
  "Integer parameter <b>type</b> selects type of function.<br>\n"
  "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n";
 
-static const char* const tfuncmisc_list = 
-     "a*deadLine(y,b)+g\n"           // 0
-     "a*limitLine(y,b)+g\n"          // 1 
-     "a*deadLimitLine(y,b,c,d)+g\n"  // 2
-     "a*sign(y)+g\n"                 // 3
-     "a*Thetta(y)+g\n"               // 4
-     "a*diod(y)+g\n"                 // 5
-     "a*threeState(y,b)+g\n"         // 6
-     "a*triangle(y,b)+g\n"           // 7
-     "a*rectLine(y,b,c)+g\n"         // 8
-     "((y>0)?a:b)*y+g\n"             // 9
-     "a*u0/(u1+b)+g\n"  	     // 10
-     "a*int(y*b)+g\n" 		     // 11
-     "a*frac(y*b)+g\n" 		     // 12
-     "a*asin(abs(sin(y*b)))+g\n"     // 13
-     "a*erf(y*b)+g\n"                // 14
-     "a*min(u0,u1)+g\n"              // 15
-     "a*max(u0,u1)+g"                // 16
-;
 
 TClassInfo TFuncMisc::class_info = {
   CLASS_ID_TFuncMisc, "TFuncMisc", TFuncMisc::create,
@@ -52,28 +33,10 @@ TClassInfo TFuncMisc::class_info = {
 
 
 TFuncMisc::TFuncMisc( TDataSet* aparent )
-        :TMiso( aparent ),
-	PRM_INIT( type, "Type" ),
-	PRM_INIT( a,  "a" ),
-	PRM_INIT( b,  "b" ),
-	PRM_INIT( c,  "c" ),
-	PRM_INIT( d,  "d" ),
-	PRM_INIT( e,  "e" ),
-	PRM_INIT( g,  "g" ),
-	PRM_INIT( x0, "x0" )
+        :TMiso( aparent )
 {
   type = 0;
   a = b = 1; c = d = e = g = x0 = 0; 
-
-  PRMI(type).setDescr( "Functon type" );
-  PRMI(type).setElems( tfuncmisc_list );
-  PRMI(a).setDescr(  "Coefficient a" );
-  PRMI(b).setDescr(  "Coefficient b" );
-  PRMI(c).setDescr(  "Coefficient c" );
-  PRMI(d).setDescr(  "Coefficient d" );
-  PRMI(e).setDescr(  "Coefficient e" );
-  PRMI(g).setDescr(  "Coefficient g" );
-  PRMI(x0).setDescr( "Input shift: y = u[0] - u[1] - x0;" );
 }
 
 TFuncMisc::~TFuncMisc()

@@ -15,11 +15,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <time.h>
-#include <math.h> 
+#include <ctime>
+#include <cmath> 
 #include "miscfun.h" 
 #include "tmodel.h"
 #include "tlorenz.h"
+
+using namespace std;
 
 const char* TLorenz::helpstr = "<H1>TLorenz</H1>\n"
  "Simulator element for Lorenz system <br>\n"
@@ -39,35 +41,13 @@ TClassInfo TLorenz::class_info = {
   CLASS_ID_TLorenz, "TLorenz", TLorenz::create,
   &TMiso::class_info, helpstr, clpElem };
 
-static const int IPARM = efNoRunChange;
-static const int XPARM = efNoDial | efNoSave ;
-
 
 TLorenz::TLorenz( TDataSet* aparent )
-        :TMiso( aparent ),
-	PRM_INIT( sigma, "\\sigma" ),
-	PRM_INIT( r, "r" ),
-	PRM_INIT( b, "b" ),
-	PRM_INIT( x_0, "x_0" ),
-	PRM_INIT( y_0, "y_0" ),
-	PRM_INIT( z_0, "z_0" ),
-	PRM_INIT( x, "x" ),
-	PRM_INIT( y, "y" ),
-	PRM_INIT( z, "z" )
+        :TMiso( aparent )
 {
   sigma = 10.0; r = 28.0; b = 8.0/3.0; // Well-known Lorenz params
   x_0 = 3.05; y_0 = 1.58; z_0 = 16.62; 
   x = y = z = 0;
-
-  PRMI(sigma).setDescr( "\\sigma" );
-  PRMI(r).setDescr( "r" );
-  PRMI(b).setDescr( "b" );
-  PRMI(x_0).setDescr( "Initial value of x" );
-  PRMI(y_0).setDescr( "Initial value of y_0" );
-  PRMI(z_0).setDescr( "Initial value of z" );
-  PRMI(x).setDescr( "x" );
-  PRMI(y).setDescr( "y" );
-  PRMI(z).setDescr( "z" );
 }
 
 TLorenz::~TLorenz()

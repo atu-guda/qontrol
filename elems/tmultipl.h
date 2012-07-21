@@ -48,12 +48,12 @@ class TMultipl : public TMiso  {
    virtual double f( double t );
  protected:
    /** shitches -- is this input on */
-   PRM_SWITCH( on0, 0 );
-   PRM_SWITCH( on1, 0 );
-   PRM_SWITCH( on2, 0 );
-   PRM_SWITCH( on3, 0 );
+   PRM_SWITCH1( on0, 0, "On 0", "Use input 0", "" );
+   PRM_SWITCH1( on1, 0, "On 1", "Use input 1", "" );
+   PRM_SWITCH1( on2, 0, "On 2", "Use input 2", "" );
+   PRM_SWITCH1( on3, 0, "On 3", "Use input 3", "" );
    /** common coefficient */
-   PRM_DOUBLE( a, 0 );
+   PRM_DOUBLE1( a,    0, "a", "Common factor", "sep=col" );
    /** class decription */
    static TClassInfo class_info;
    /** help str */

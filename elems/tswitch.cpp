@@ -33,14 +33,9 @@ TClassInfo TSwitch::class_info = {
 
 
 TSwitch::TSwitch( TDataSet* aparent )
-        :TMiso( aparent ),
-	PRM_INIT( level1, "Level 1" ),
-	PRM_INIT( level2, "Level 2" )
+        :TMiso( aparent )
 {
   level1 = 1; level2 = 2;
-
-  PRMI(level1).setDescr( "Level to switch u[0]->u[1]" );
-  PRMI(level2).setDescr( "Level to switch u[1]->u[2]" );
 }
 
 TSwitch::~TSwitch()

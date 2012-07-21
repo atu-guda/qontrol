@@ -48,8 +48,8 @@ class TSwitch : public TMiso  {
    virtual double f( double t );
  protected:
    /** levels  */
-   PRM_DOUBLE( level1, 0 );
-   PRM_DOUBLE( level2, 0 );
+   PRM_DOUBLE1( level1, 0, "Level 1", "Level to switch from u[0] to u[1]", "" );
+   PRM_DOUBLE1( level2, 0, "Level 2", "Level to switch from u[1] to u[2]", "" );
    /** class decription */
    static TClassInfo class_info;
    /** help str */

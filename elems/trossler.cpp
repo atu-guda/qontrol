@@ -44,30 +44,11 @@ static const int XPARM = efNoDial | efNoSave ;
 
 
 TRossler::TRossler( TDataSet* aparent )
-        :TMiso( aparent ),
-	PRM_INIT( a, "a" ),
-	PRM_INIT( b, "b" ),
-	PRM_INIT( c, "c" ),
-	PRM_INIT( x_0, "x_0" ),
-	PRM_INIT( y_0, "y_0" ),
-	PRM_INIT( z_0, "z_0" ),
-	PRM_INIT( x, "x" ),
-	PRM_INIT( y, "y" ),
-	PRM_INIT( z, "z" )
+        :TMiso( aparent )
 {
   a = 0.25; b = 1.0; c = 5.58; 
   x_0 = 0.1; y_0 = 0.0; z_0 = 0.0; 
   x = y = z = 0;
-
-  PRMI(a).setDescr( "a" );
-  PRMI(b).setDescr( "b" );
-  PRMI(c).setDescr( "c" );
-  PRMI(x_0).setDescr( "Initial value of x" );
-  PRMI(y_0).setDescr( "Initial value of y_0" );
-  PRMI(z_0).setDescr( "Initial value of z" );
-  PRMI(x).setDescr( "x" );
-  PRMI(y).setDescr( "y" );
-  PRMI(z).setDescr( "z" );
 }
 
 TRossler::~TRossler()

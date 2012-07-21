@@ -43,30 +43,11 @@ TClassInfo TFriction::class_info = {
 
 
 TFriction::TFriction( TDataSet* aparent )
-        :TMiso( aparent ),
-   PRM_INIT( mass, "Mass" ),
-   PRM_INIT( f_mx, "Max Ff" ),
-   PRM_INIT( kf_mx, "k_Ff" ),
-   PRM_INIT( kfv, "k_fv" ),
-   PRM_INIT( useMf, "u[1] is f_mx" ),
-   PRM_INIT( v, "v" ),
-   PRM_INIT( Ff, "Ff" ),
-   PRM_INIT( bodyState, "State" )
+        :TMiso( aparent )
 {
   mass = 1; f_mx = 0.4; kf_mx = 0; kfv = 0.01; useMf = 0;
   v = v_old = x_old = Ff = 0;
   bodyState = 0;
-  
-  PRMI(mass).setDescr( "Mody mass" );
-  PRMI(mass).setMinMax( 0, DMAX );
-  PRMI(f_mx).setDescr( "Max dry friction force (if constant) f_mx" );
-  PRMI(f_mx).setMinMax( 0, DMAX );
-  PRMI(kf_mx).setDescr( "Start force addition coefficient" );
-  PRMI(kfv).setDescr( "Viscous friction coeff" );
-  PRMI(useMf).setDescr( "Use u[1] as maximum friction force" );
-  PRMI(v).setDescr( "current speed" );
-  PRMI(Ff).setDescr( "current friction force" );
-  PRMI(bodyState).setDescr( "State: 0=Sleep, 1=Run" );
 }
 
 TFriction::~TFriction()

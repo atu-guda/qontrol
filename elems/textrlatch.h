@@ -52,26 +52,27 @@ class TExtrLatch : public TMiso  {
    virtual double f( double t );
  protected:
    /** type of extremum */
-   PRM_LIST( type, efNoRunChange );
-   PRM_SWITCH( useLocal, efNoRunChange );
-   PRM_SWITCH( useFirst, efNoRunChange );
-   PRM_SWITCH( outT, efNoRunChange );
-   PRM_SWITCH( useReset, efNoRunChange );
-   PRM_INT( wasExtr, efInner );
-   PRM_INT( isStart, efInner );
+   PRM_LIST1( type, efNRC, "Type", "Type of catching extremum", "",
+       "Max\nMin\nMax||\nAverage\nAmplitude" );
+   PRM_SWITCH1( useLocal, efNRC, "Local extr", "Catch local extremums", "sep=col" );
+   PRM_SWITCH1( useFirst, efNRC, "Only first", "Catch only first local extremum", "");
+   PRM_SWITCH1( outT, efNRC, "Output T", "Output time of catched extremum, not value", "" );
+   PRM_SWITCH1( useReset, efNRC, " u[1] - reset", "Use u[1] as reset signal", "" );
+   PRM_INT1( wasExtr, efInner,  "wasExtr", "flag: extremum detected", "" );
+   PRM_INT1( isStart, efInner, "isStart", "Was start", "");
    /** start time */
-   PRM_DOUBLE( tStart, efNoRunChange );
+   PRM_DOUBLE1( tStart, efNRC, "Time start", "Time start", "sep=col");
    /** fuzzy level for local extr */
-   PRM_DOUBLE( fuzzy, efNoRunChange );
+   PRM_DOUBLE1( fuzzy, efNRC, "Fuzzy level", "Fuzzu level for local extremum catcher", "" );
    /** holders for extr levels and old values */
-   PRM_DOUBLE( u_max, efInner );
-   PRM_DOUBLE( t_max, efInner );
-   PRM_DOUBLE( u_min, efInner );
-   PRM_DOUBLE( t_min, efInner );
-   PRM_DOUBLE( u_abs, efInner );
-   PRM_DOUBLE( t_abs, efInner );
-   PRM_DOUBLE( u_ex,  efInner );
-   PRM_DOUBLE( t_ex,  efInner );
+   PRM_DOUBLE1( u_max, efInner, "u_max", "u_max", "");
+   PRM_DOUBLE1( t_max, efInner, "t_max", "t_max", "");
+   PRM_DOUBLE1( u_min, efInner, "u_min", "u_min", "");
+   PRM_DOUBLE1( t_min, efInner, "t_min", "t_min", "");
+   PRM_DOUBLE1( u_abs, efInner, "u_abs", "u_abs", "");
+   PRM_DOUBLE1( t_abs, efInner, "t_abs", "t_abs", "");
+   PRM_DOUBLE1( u_ex,  efInner, "u_ex",  "u_ex" , "");
+   PRM_DOUBLE1( t_ex,  efInner, "t_ex",  "t_ex" , "");
    double  u_old, u_old2, t_old;
    /** class decription */
    static TClassInfo class_info;

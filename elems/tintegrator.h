@@ -50,23 +50,23 @@ class TIntegrator : public TMiso  {
    /** main computation function */
    virtual double f( double t );
  protected:
-   PRM_DOUBLE( ki, 0 );
-   PRM_DOUBLE( s_val, 0 );
-   PRM_DOUBLE( dis, 0 );
-   PRM_DOUBLE( vmin, 0 );
-   PRM_DOUBLE( vmax, 0 );
-   PRM_DOUBLE( v, efInner );
+   PRM_DOUBLE1( ki, 0, "k_i",  "Factor before integral", "" );
+   PRM_DOUBLE1( s_val, 0, "Start", "Start value", "" );
+   PRM_DOUBLE1( dis, 0, "Disc coeff", "Discharde coeff (if enabled)", "" );
+   PRM_DOUBLE1( vmin, 0, "Min limit", "Limit min value", "" );
+   PRM_DOUBLE1( vmax, 0, "Max limit", "Limit max value", "" );
+   PRM_DOUBLE1( v, efInner, "v", "Current value", "" );
    /** flags */
-   PRM_SWITCH( useMin, efNoRunChange );
-   PRM_SWITCH( useMax, efNoRunChange );
-   PRM_SWITCH( useReset, efNoRunChange );
-   PRM_SWITCH( useBase, efNoRunChange );
-   PRM_SWITCH( useAdd, efNoRunChange );
-   PRM_SWITCH( useDis, efNoRunChange );
-   PRM_SWITCH( useHold, efNoRunChange );
-   PRM_SWITCH( useAver, efNoRunChange );
-   PRM_SWITCH( useSqIn, efNoRunChange );
-   PRM_SWITCH( useSqrOut, efNoRunChange );
+   PRM_SWITCH1( useMin,   efNRC, "use Min value", "limit output to minimum value", "sep=col" );
+   PRM_SWITCH1( useMax,   efNRC, "use Max value", "limit output to maximum value", "" );
+   PRM_SWITCH1( useReset, efNRC, "u[1] is Reset", "Use u[1] as Reset signal", "" );
+   PRM_SWITCH1( useBase,  efNRC, "u[3] is Base",  "Use u[3] as base signal", "" );
+   PRM_SWITCH1( useAdd,   efNRC, "add base", "Add base to level", "" );
+   PRM_SWITCH1( useDis,   efNRC, "use Discharge", "Use discharge coefficient", "sep=col" );
+   PRM_SWITCH1( useHold,  efNRC, "Hold", "Hold output 1 tick after reset", "" );
+   PRM_SWITCH1( useAver,  efNRC, "Calc Aver", "Calculate average value", "" );
+   PRM_SWITCH1( useSqIn,  efNRC, "x^2 on input", "Calculate square on input", "");
+   PRM_SWITCH1( useSqrOut,efNRC, "sqrt on output", "Calculate square root on output", "");
    double v_old;
    double t_rst;
 

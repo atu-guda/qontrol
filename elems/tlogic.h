@@ -20,6 +20,15 @@
 
 #include <tmiso.h>
 
+static const char* const tlogic_list = 
+ "AND\n"  // 0 
+ "OR\n"   // 1
+ "XOR\n"  // 2
+ "u[0]\n" // 3
+ "0\n"    // 4
+ "1"      // 5
+;
+
 #define CLASS_ID_TLogic 1013
 
 /**simple logical operation: AND, OR, XOR
@@ -48,16 +57,16 @@ class TLogic : public TMiso  {
    virtual double f( double t );
  protected:
    /** type of logic element */
-   PRM_LIST( type, efNoRunChange );
+   PRM_LIST1( type, efNRC, "Type", "Type of logic", "", tlogic_list );
    /** level of 1  */
-   PRM_DOUBLE( level, 0 );
+   PRM_DOUBLE1( level, 0, "level of 1", "Minimal level of '1' signal on input", "" );
    /** misc flags */
-   PRM_SWITCH( useNInp0, efNoRunChange );
-   PRM_SWITCH( useNInp1, efNoRunChange );
-   PRM_SWITCH( useNInp2, efNoRunChange );
-   PRM_SWITCH( useNInp3, efNoRunChange );
-   PRM_SWITCH( useNOut, efNoRunChange );
-   PRM_SWITCH( useMinus, efNoRunChange );
+   PRM_SWITCH1( useNInp0, efNRC, "Inverse u[0]", "Inverse input u[0]", "sep=col" );
+   PRM_SWITCH1( useNInp1, efNRC, "Inverse u[1]", "Inverse input u[1]", ""  );
+   PRM_SWITCH1( useNInp2, efNRC, "Inverse u[2]", "Inverse input u[2]", ""  );
+   PRM_SWITCH1( useNInp3, efNRC, "Inverse u[3]", "Inverse input u[3]", ""  );
+   PRM_SWITCH1( useNOut, efNRC,  "Inverse out" , "Inverse input output", "sep=col"  );
+   PRM_SWITCH1( useMinus, efNRC, "Negative out", "Negative output is -1, not 0", "" );
    /** class decription */
    static TClassInfo class_info;
    /** help str */

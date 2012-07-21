@@ -22,6 +22,14 @@
 
 #define CLASS_ID_TTrigger 1012
 
+static const char *ttrigger_list = 
+   "RS\n"             // 0
+   "Shmitt(u2)\n"     // 1
+   "CountRise(u2)\n"  // 2
+   "CountDown(u2)\n"  // 3
+   "CountLevel(u2)"   // 4 
+;
+
 /**different kinds if triggers
   *@author atu
   */
@@ -50,29 +58,29 @@ class TTrigger : public TMiso  {
    virtual double f( double t );
  protected:
    /** type of trigger */
-   PRM_LIST( type, efNoRunChange );
+   PRM_LIST1( type, efNRC, "Type", "Type of trigger", "", ttrigger_list );
    /**  current state */
-   PRM_INT( cst, efInner );
+   PRM_INT1( cst, efInner, "state", "current state", "" );
    /** level of 0  */ 
-   PRM_DOUBLE( level0, 0 );
+   PRM_DOUBLE1( level0, 0, "Level of 0", "Level of '0' signal", "" );
    /** level of 1 (shmidt) */
-   PRM_DOUBLE( level1, 0 );
+   PRM_DOUBLE1( level1, 0, "Level of 1", "Level of '1' signal (sor shmidt)", ""  );
    /** autoreset time */
-   PRM_DOUBLE( t0, 0 );
+   PRM_DOUBLE1( t0, 0, "t0", "Autoreset time (if enabled)", "" );
    /** elapsed time */
-   PRM_DOUBLE( et, efInner );
+   PRM_DOUBLE1( et, efInner, "et", "Elapsed time", "" );
+   /** set to 1 on start */
+   PRM_SWITCH1( useInit1, efNRC, "Set on start", "Set triggers value to 1 of start", "sep=col" );
+   /** use u[3] as enable */
+   PRM_SWITCH1( useEnable, efNRC, "u3 is enable", "Use u[3] as enable signal", "" );
+   /** pulse output */
+   PRM_SWITCH1( usePulse, efNRC, "Pulse output",  "Output is pulse, no level", "sep=col" );
+   /** use -1 as negative output */
+   PRM_SWITCH1( useMinus, efNRC, "Negative pulse", "Drop pulse is negative, not 0", "" );
+   /** autoreset after t0 */
+   PRM_SWITCH1( useT0, efNRC, "Autoreset (t0)", "Use autoreset after t0 time elapsed", "");
    /** old u[2] value */
    double u2_old;
-   /** set to 1 on start */
-   PRM_SWITCH( useInit1, efNoRunChange );
-   /** use u[3] as enable */
-   PRM_SWITCH( useEnable, efNoRunChange );
-   /** pulse output */
-   PRM_SWITCH( usePulse, efNoRunChange );
-   /** use -1 as negative output */
-   PRM_SWITCH( useMinus, efNoRunChange );
-   /** autoreset after t0 */
-   PRM_SWITCH( useT0, efNoRunChange );
    /** class decription */
    static TClassInfo class_info;
    /** help str */

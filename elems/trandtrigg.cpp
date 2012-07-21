@@ -20,12 +20,6 @@
 #include "tmodel.h"
 #include "trandtrigg.h"
 
-static const char* const trandtrigg_list_seedType = 
-     "Every run\n"          // 0
-     "Start of 1d-loop\n"   // 1 
-     "Start of 2d-loop\n"   // 2
-     "As model"             // 3
-;
 
 const char* TRandTrigg::helpstr = "<H1>TRandTrigg</H1>\n"
  "Random - deterministic trigger: <br>\n"
@@ -42,33 +36,13 @@ TClassInfo TRandTrigg::class_info = {
 
 
 TRandTrigg::TRandTrigg( TDataSet* aparent )
-        :TMiso( aparent ),
-	 PRM_INIT( prob, "Probability" ), 
-	 PRM_INIT( nforce, "Forced every N" ),
-	 PRM_INIT( useLevel, "Use Level to trigg" ),
-	 PRM_INIT( useForce, "Use u[1] to force trigg"),
-	 PRM_INIT( useLock, "Use u[2] to lock"),
-	 PRM_INIT( useZero, "Use 0 as negative output"),
-	 PRM_INIT( seed, "Seed"),
-	 PRM_INIT( seedType, "Seed at"),
-	 PRM_INIT( addBaseSeed, "add Base to Seed")
+        :TMiso( aparent )
 {
   prob = 0.5; u_old = 0; nforce = 2;
   useLevel = useForce = useLock = useZero = 0; ns = -1;
   seed = 9561 + (time(0) & 0x1AFFF );
   seedType = 3; addBaseSeed = 1;
   rng = 0;
-
-  PRMI(prob).setDescr( "Probability of spontatious flip " ); 
-  PRMI(nforce).setDescr( "Forced every N changes" );
-  PRMI(useLevel).setDescr( "Use Level to trigger, not +- pulse" );
-  PRMI(useForce).setDescr( "Use u[1] to force flip");
-  PRMI(useLock).setDescr( "Use u[2] to lock");
-  PRMI(useZero).setDescr( "Use 0 as negative output, not -1");
-  PRMI(seed).setDescr( "Random generator seed");
-  PRMI(seedType).setDescr( "Specifies, when to seed");
-  PRMI(seedType).setElems( trandtrigg_list_seedType );
-  PRMI(addBaseSeed).setDescr( "add Base (model) value to Seed");
 }
 
 TRandTrigg::~TRandTrigg()

@@ -67,7 +67,9 @@ const char** THyst::getIcon(void) const
 double THyst::f( double /* t */ )
 {
   double ud, ts , v, u_old;
-  fixState(); // TODO: only if params changed
+  if( prm_mod ) {
+    fixState(); 
+  }
   // atu test
   u_old = d + s;
   // 

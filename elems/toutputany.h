@@ -50,9 +50,9 @@ class TOutputAny : public TMiso  {
    /** reimplemented from TMiso to set source */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** name of source */
-   PRM_STRING( name, efNoRunChange );
+   PRM_STRING1( name, efNRC, "Sink name", "Name of sink to output", "ncol=2\nmax=80" );
    /** enabler = u[1]  */
-   PRM_SWITCH( useEnable, 0 );
+   PRM_SWITCH1( useEnable, 0,  "u[1] is Enable", "Use u[1] as enable", "");
    /** type of output: -1:bad, 0:object, 1-vars.  */
    int type;
    /** idx of sink */

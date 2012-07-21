@@ -30,16 +30,9 @@ TClassInfo TDelay::class_info = {
 
 
 TDelay::TDelay( TDataSet* aparent )
-        :TMiso( aparent ),
-	PRM_INIT( mdelay, "Max. delay" ),
-	PRM_INIT( cdelay, "Current delay" )
+        :TMiso( aparent )
 {
   mdelay = 1.5; cdelay = 1; v1 = v2 = u00 = 0; buf = 0; 
-  
-  PRMI(mdelay).setDescr( "Maximum delay" );
-  PRMI(mdelay).setMinMax( 0, 1e10 );
-  PRMI(cdelay).setDescr( "Current delay" );
-  PRMI(cdelay).setMinMax( 0, 1e10 );
 }
 
 TDelay::~TDelay()
@@ -73,12 +66,13 @@ double TDelay::f( double t )
   double a1, a2;
   if( buf == 0 ) return 0;
   
-  // TODO: add check for param change
-  if( mdelay < cdelay ) 
-    cdelay = mdelay;
-  double v = cdelay / tdt;
-  icd = int( v );
-  v2 = v - icd; v1 = 1.0 - v2;
+  if( prm_mod ) {
+    if( mdelay < cdelay ) 
+      cdelay = mdelay;
+    double v = cdelay / tdt;
+    icd = int( v );
+    v2 = v - icd; v1 = 1.0 - v2;
+  }
   
   //
   if( t < 1.3 * tdt )

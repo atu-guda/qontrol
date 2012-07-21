@@ -15,9 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h> 
+#include <cmath> 
 #include "miscfun.h" 
 #include "tsourcelin.h"
+
+using namespace std;
 
 const char* TSourceLin::helpstr = "<H1>TSourceLin</H1>\n"
  "Source of signal, which consist of some linear segments. \n"

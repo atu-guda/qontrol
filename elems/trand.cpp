@@ -36,21 +36,6 @@ const char* TRand::helpstr = "<H1>TRand</H1>\n"
  "Input is u[0], <b>not time</b>. If need time, link first input to 't'.<br>\n"
 ;
 
-static const char* const trand_list_type = 
-     "flat(-sigma,sigma)\n"       // 0
-     "gaussian(sigma)\n"          // 1 
-     "gaussian_tail(a,sigma)\n"   // 2
-     "exponential(sigma)\n"       // 3
-     "laplace(a)\n"               // 4
-     "exppow(a,b)"                // 5
-;
-
-static const char* const trand_list_seedType = 
-     "Every run\n"          // 0
-     "Start of 1d-loop\n"   // 1 
-     "Start of 2d-loop\n"   // 2
-     "As model"             // 3
-;
 
 TClassInfo TRand::class_info = {
   CLASS_ID_TRand, "TRand", TRand::create,
@@ -58,43 +43,15 @@ TClassInfo TRand::class_info = {
 
 
 TRand::TRand( TDataSet* aparent )
-        :TMiso( aparent ),
-	 PRM_INIT( type, "Type" ),
-	 PRM_INIT( tau, "tau" ),
-	 PRM_INIT( ampl, "Amplitude" ),
-	 PRM_INIT( zval, "Base value" ),
-	 PRM_INIT( sigma, "\\sigma" ),
-	 PRM_INIT( a, "a" ),
-	 PRM_INIT( b, "b" ),
-	 PRM_INIT( c, "c" ),
-	 PRM_INIT( seed, "Seed" ),
-	 PRM_INIT( useSameSeed, "Same seed" ),
-	 PRM_INIT( seedType, "Seed type" ),
-	 PRM_INIT( addBaseSeed, "Add base" )
+        :TMiso( aparent )
 {
   type = 0;
   tau = 0.05; ampl = 1; zval = 0;
   sigma = a = b = c = 1;
-  useSameSeed = 0; 
   seed = 2942 + ( time(0) & 0x07FF );
   seedType = 3; addBaseSeed = 1;
   old_val = 0; sp_time = 1e300; old_in = 0; sseed = 0; bseed = 0;
   rng = 0;
-
-  PRMI(type).setDescr( "Type of distribution" );
-  PRMI(type).setElems( trand_list_type );
-  PRMI(tau).setDescr( "time of const output value, if <=0 -- change every tick " );
-  PRMI(ampl).setDescr( "Amplitude of output" );
-  PRMI(zval).setDescr( "Zero value of output " );
-  PRMI(sigma).setDescr( "\\sigma" );
-  PRMI(a).setDescr( "a" );
-  PRMI(b).setDescr( "b" );
-  PRMI(c).setDescr( "c" );
-  PRMI(seed).setDescr( "Seed value for generator" );
-  PRMI(useSameSeed).setDescr( "Obsoleted" );
-  PRMI(seedType).setDescr( "0 - every run 1- 1d loop .. 3-by model " );
-  PRMI(seedType).setElems( trand_list_seedType );
-  PRMI(addBaseSeed).setDescr( "Add base seed to element seed " );
 }
 
 TRand::~TRand()

@@ -50,21 +50,21 @@ class TFriction : public TMiso  {
    virtual double f( double t );
  protected:
    /** Parameter: mody mass */
-   PRM_DOUBLE( mass, 0 );
+   PRM_DOUBLE1( mass, 0, "Mass", "Body mass", "min=1e-30" );
    /** Parameter: max dry friction force (if constant)  */
-   PRM_DOUBLE( f_mx, 0 );
+   PRM_DOUBLE1( f_mx, 0, "Max Ff",  "Max dry friction force (if constant) f_mx", "min=0" );
    /** Parameter: start force addition coeff */
-   PRM_DOUBLE( kf_mx, 0 );
+   PRM_DOUBLE1( kf_mx, 0, "k_Ff", "Start force addition coefficient", "sep=col" );
    /** Parameter: viscous friction coeff */
-   PRM_DOUBLE( kfv, 0 );
+   PRM_DOUBLE1( kfv, 0, "k_fv", "Viscous friction coeff", "");
    /** Switch: use u[1] as max dry friction force */
-   PRM_SWITCH( useMf, efNoRunChange );
+   PRM_SWITCH1( useMf, efNRC, "u[1] is f_mx", "Use u[1] as maximum friction force", "sep=col"  );
    /** Current speed */
-   PRM_DOUBLE( v, efInner );
+   PRM_DOUBLE1( v, efInner, "v", "current speed", "" );
    /** Current friction force */
-   PRM_DOUBLE( Ff, efInner );
+   PRM_DOUBLE1( Ff, efInner, "Ff", "current friction force", "" );
    /** state of mass: 0 -- sleep, 1 -- moving */
-   PRM_INT( bodyState, efInner );
+   PRM_INT1( bodyState, efInner, "State", "State: 0=Sleep, 1=Run", ""  );
    /** old values and misc */
    double v_old, x_old;
    /** class decription */

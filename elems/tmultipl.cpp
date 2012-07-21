@@ -28,20 +28,9 @@ TClassInfo TMultipl::class_info = {
 
 
 TMultipl::TMultipl( TDataSet* aparent )
-        :TMiso( aparent ),
-	 PRM_INIT( on0, "On 0" ),
-	 PRM_INIT( on1, "On 1" ),
-	 PRM_INIT( on2, "On 2" ),
-	 PRM_INIT( on3, "On 3" ),
-	 PRM_INIT( a,    "a" )
+        :TMiso( aparent )
 {
   on0 = on1 = 1; on2 = on3 = 0; a = 1;
-  
-  PRMI(on0).setDescr( "Use input 0" );
-  PRMI(on1).setDescr( "Use input 1" );
-  PRMI(on2).setDescr( "Use input 2" );
-  PRMI(on3).setDescr( "Use input 3" );
-  PRMI(a).setDescr( "Common factor" );
 }
 
 TMultipl::~TMultipl()

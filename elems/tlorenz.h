@@ -50,17 +50,17 @@ class TLorenz : public TMiso  {
    virtual int startLoop( int acnx, int acny );
  protected:
    /** main system parameters */
-   PRM_DOUBLE( sigma, 0 );
-   PRM_DOUBLE( r, 0 );
-   PRM_DOUBLE( b, 0 );
+   PRM_DOUBLE1( sigma, 0, "\\sigma", "\\sigma parameter", "" );
+   PRM_DOUBLE1( r, 0, "r", "r parameter", "" );
+   PRM_DOUBLE1( b, 0, "b", "b parameter", "" );
    /** start x, y, x values */
-   PRM_DOUBLE( x_0, efNoRunChange );
-   PRM_DOUBLE( y_0, efNoRunChange );
-   PRM_DOUBLE( z_0, efNoRunChange );
-   /** variable of state */
-   PRM_DOUBLE( x, efInner );
-   PRM_DOUBLE( y, efInner );
-   PRM_DOUBLE( z, efInner );
+   PRM_DOUBLE1( x_0, efNRC, "x_0", "Initial value of x", "sep=col" );
+   PRM_DOUBLE1( y_0, efNRC, "y_0", "Initial value of y", "" );
+   PRM_DOUBLE1( z_0, efNRC, "z_0", "Initial value of z", "" );
+   /** state variables */
+   PRM_DOUBLE1( x, efInner, "x", "x current value", "" );
+   PRM_DOUBLE1( y, efInner, "y", "y current value", ""  );
+   PRM_DOUBLE1( z, efInner, "z", "z current value", ""  );
    /** values to store some model vars */	  
    double tt;
    /** class decription */

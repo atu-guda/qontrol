@@ -52,13 +52,13 @@ class TPid : public TMiso  {
    /** will be called before any action -- good place for allocs */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** coefficients  */
-   PRM_DOUBLE( kd2, 0 );
-   PRM_DOUBLE( kd1, 0 );
-   PRM_DOUBLE( kp, 0 );
-   PRM_DOUBLE( ki1, 0 );
-   PRM_DOUBLE( ki2, 0 );
+   PRM_DOUBLE1( kd2, 0, "k_d2", "Coefficient in second derivation", "");
+   PRM_DOUBLE1( kd1, 0, "k_d1", "Coefficient in first derivation" , "");
+   PRM_DOUBLE1( kp,  0, "k_p" , "Coefficient in proportional part", "sep=col");
+   PRM_DOUBLE1( ki1, 0, "k_i1", "Coefficient in first intergator" , "sep=col");
+   PRM_DOUBLE1( ki2, 0, "k_i2", "Coefficient in second intergator", "");
    /** should output be devided to t */
-   PRM_SWITCH( aver, efNoRunChange );
+   PRM_SWITCH1( aver, efNRC, "Average", "Calculate average value", "sep=col" );
    /** accumulators and old values */
    double vi1, vi2, u_old, u_old2, tdt2;
    /** flag for special handling initial steps */

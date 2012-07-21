@@ -1,6 +1,5 @@
-Stored plot properties.
 More plot types (dot...). Qwtplot?
-Tree View.
+Tree View. -- rethink??
 Hide startLoop - like fun,f
 New hier
 TDataSet::toText -- really to XML, => cut,copy,paste
@@ -24,7 +23,7 @@ more flexible TOutArr
 Distributions analysis + plot
 rename,cut,copy,paste+rename (clipboard textual or bin)
 vector icons (language) (may be dynamic)
-Hue on elements
+Hue of elements
 Label of element (or/and floating labels on structure view)
 Labels on plot view (fixed, attached to some points)
 Report with macros

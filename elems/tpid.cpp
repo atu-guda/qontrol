@@ -28,23 +28,10 @@ TClassInfo TPid::class_info = {
 
 
 TPid::TPid( TDataSet* aparent )
-        :TMiso( aparent ),
-	PRM_INIT( kd2,  "k_d2" ),
-	PRM_INIT( kd1,  "k_d1" ),
-	PRM_INIT( kp,   "k_p" ),
-	PRM_INIT( ki1,  "k_i1" ),
-	PRM_INIT( ki2,  "k_i2" ),
-	PRM_INIT( aver, "Average" )
+        :TMiso( aparent )
 {
   kd2 = kd1 = ki2 = ki1 = 0; kp = 1; aver = 0;
   tdt2 = 1; vi1 = vi2 = u_old = u_old2 = 0;
-
-  PRMI(kd2).setDescr(  "Coefficient in second derivation" );
-  PRMI(kd1).setDescr(  "Coefficient in first derivation" );
-  PRMI(kp).setDescr(   "Coefficient in proportional part" );
-  PRMI(ki1).setDescr(  "Coefficient in first intergator" );
-  PRMI(ki2).setDescr(  "Coefficient in second intergator" );
-  PRMI(aver).setDescr( "Average" );
 }
 
 TPid::~TPid()

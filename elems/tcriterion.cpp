@@ -32,33 +32,10 @@ TClassInfo TCriterion::class_info = {
 
 
 TCriterion::TCriterion( TDataSet* aparent )
-        :TMiso( aparent ),
-	 PRM_INIT( type, "Type" ),
-	 PRM_INIT( a, "a" ),
-	 PRM_INIT( b, "b" ),
-	 PRM_INIT( t0, "t0" ),
-	 PRM_INIT( useA, "u[3] is a" ),
-	 PRM_INIT( useT0, "t0" ),
-	 PRM_INIT( useEnable, "u[2] is Enable" ),
-	 PRM_INIT( useLock, "Lock" ),
-	 PRM_INIT( usePulse, "Pulse Output" ),
-	 PRM_INIT( st, "state" )
+        :TMiso( aparent )
 {
   a = 0.5; b = 1.0; type = 0; t0 = 0; 
   useA = useT0 = useEnable = useLock = usePulse = 0;
-  
-  PRMI(type).setDescr( "Type of criterion" );
-  PRMI(type).setElems( "|x|<a\n|x|>a\nx<a\nx>a\na<x<b" );
-  PRMI(a).setDescr( "level 'a'" );
-  PRMI(b).setDescr( "level 'b'" );
-  PRMI(t0).setDescr( "Start time" );
-  PRMI(useA).setDescr( "Use u[3] as 'a' value" );
-  PRMI(useA).setParm( "sep", "col" );
-  PRMI(useT0).setDescr( "Dont work before given time (t0)" );
-  PRMI(useEnable).setDescr( "Use u[2] signal as Enable" );
-  PRMI(useLock).setDescr( "Lock after first front" );
-  PRMI(usePulse).setDescr( "output is pulse +1, 0, -1" );
-  PRMI(st).setDescr( "current state" );
 }
 
 TCriterion::~TCriterion()

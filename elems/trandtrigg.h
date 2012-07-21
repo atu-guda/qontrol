@@ -24,6 +24,13 @@
 
 #define CLASS_ID_TRandTrigg 1018
 
+static const char* const trandtrigg_list_seedType = 
+     "Every run\n"          // 0
+     "Start of 1d-loop\n"   // 1 
+     "Start of 2d-loop\n"   // 2
+     "As model"             // 3
+;
+
 /**random - deterministic trigger
   *@author atu
   */
@@ -56,20 +63,25 @@ class TRandTrigg : public TMiso  {
    /** reimplemented from TMiso to init random generator */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** Probability of spontatious flip  */
-   PRM_DOUBLE( prob, 0 ); 
+   PRM_DOUBLE1( prob, 0, "Probability", "Probability of spontatious flip",""); 
    /** Forced every */
-   PRM_INT( nforce, 0 /* ??? */ );
+   PRM_INT1( nforce, 0, "Forced every N", "Forced every N changes", "" );
    /* flags */
-   PRM_SWITCH( useLevel, efNoRunChange );
-   PRM_SWITCH( useForce, efNoRunChange );
-   PRM_SWITCH( useLock, efNoRunChange );
-   PRM_SWITCH( useZero, efNoRunChange );
+   PRM_SWITCH1( useLevel, efNRC, "Use Level to trigg", 
+       "Use Level to trigger, not +- pulse", "sep=col" );
+   PRM_SWITCH1( useForce, efNRC, "u[1] - force", "Use u[1] to force flip", "" );
+   PRM_SWITCH1( useLock,  efNRC, "u[2] - lock", "Use u[2] to lock", "" );
+   PRM_SWITCH1( useZero,  efNRC, "0 = neg. output", 
+       "Use 0 as negative output, not -1", "");
    /** seed value for generator */
-   PRM_INT( seed, efNoRunChange );
+   PRM_INT1( seed, efNRC, "Seed", "Random generator seed", "sep=col" );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
-   PRM_LIST( seedType, efNoRunChange );
+   PRM_LIST1( seedType, efNRC, "Seed at", "Specifies, when to seed", "", 
+       trandtrigg_list_seedType );
    /** flag: add base seed to element seed */
-   PRM_SWITCH( addBaseSeed, efNoRunChange );
+   PRM_SWITCH1( addBaseSeed, efNRC, "add Base to Seed", 
+       "add Base (model) value to Seed", "" );
+
    int ns, currOut;
    /** old value */
    double u_old; 

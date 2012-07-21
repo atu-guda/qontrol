@@ -17,7 +17,6 @@
 
 #include "tlatch.h"
 
-static const char* const tlatch_list = "Time\nSignal u[1]";
 
 const char* TLatch::helpstr = "<H1>TLatch</H1>\n"
  "Latch: can latch (or add) input value u[0], depend on <b>type</b>: <br>\n"
@@ -37,20 +36,10 @@ TClassInfo TLatch::class_info = {
 
 
 TLatch::TLatch( TDataSet* aparent )
-        :TMiso( aparent ),
-	 PRM_INIT( type, "Type" ),
-	 PRM_INIT( t0, "Time" ),
-	 PRM_INIT( v_st, "Start value" ),
-	 PRM_INIT( v, "v" )
+        :TMiso( aparent )
 {
   t0 = u_old = 0; type = 0; usePulse = useFirst = useAdd = 0; wasLatch = -1;
   v = v_st = 0;
-
-  PRMI(type).setDescr( "Type" );
-  PRMI(type).setElems( tlatch_list );
-  PRMI(t0).setDescr( "Time" );
-  PRMI(v_st).setDescr( "Start value" );
-  PRMI(v).setDescr( "v" );
 }
 
 TLatch::~TLatch()

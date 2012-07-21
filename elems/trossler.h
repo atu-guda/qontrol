@@ -50,17 +50,17 @@ class TRossler : public TMiso  {
    virtual int startLoop( int acnx, int acny );
  protected:
    /** main system parameters */
-   PRM_DOUBLE( a, 0 );
-   PRM_DOUBLE( b, 0 );
-   PRM_DOUBLE( c, 0 );
+   PRM_DOUBLE1( a, 0, "a", "Parameter a", "" );
+   PRM_DOUBLE1( b, 0, "b", "Parameter b", "" );
+   PRM_DOUBLE1( c, 0, "c", "Parameter c", "" );
    /** start x, y, x values */
-   PRM_DOUBLE( x_0, efNoRunChange );
-   PRM_DOUBLE( y_0, efNoRunChange );
-   PRM_DOUBLE( z_0, efNoRunChange );
+   PRM_DOUBLE1( x_0, efNRC, "x_0", "Initial x value", "sep=col" );
+   PRM_DOUBLE1( y_0, efNRC, "y_0", "Initial y value", "" );
+   PRM_DOUBLE1( z_0, efNRC, "z_0", "Initial z value", "" );
    /** variable of state */
-   PRM_DOUBLE( x, efInner );
-   PRM_DOUBLE( y, efInner );
-   PRM_DOUBLE( z, efInner );
+   PRM_DOUBLE1( x, efInner, "x", "x value", "" );
+   PRM_DOUBLE1( y, efInner, "y", "y value", "" );
+   PRM_DOUBLE1( z, efInner, "z", "z value", "" );
    /** values to store some model vars */	  
    double tt;
    /** class decription */

@@ -51,13 +51,14 @@ class TCounter : public TMiso  {
    virtual double f( double t );
  protected:
    /** type of output from counter */
-   PRM_LIST( type, efNoRunChange );
+   PRM_LIST1( type, efNRC, "Type", "Type of counters output", "", 
+       "level\npulse+\npulse+-\nn" );
    //* n of counts */
-   PRM_INT( n, efNoRunChange );
+   PRM_INT1( n, efNRC, "n", "Number to count", "sep=col" );
    //* current counter */
-   PRM_INT( cn, efInner );
+   PRM_INT1( cn, efInner, "cn", "Current counter value", "" );
    /** use u[1] as reset */
-   PRM_SWITCH( useReset, 0 );
+   PRM_SWITCH1( useReset, 0, "u[1] is Reset", "Use u[1] as Reset signal", "" );
    int flip;
    /** old value of input */
    double u_old;

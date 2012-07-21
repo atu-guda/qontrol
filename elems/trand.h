@@ -22,6 +22,21 @@
 #include <gsl/gsl_randist.h>
 #include <tmiso.h>
 
+static const char* const trand_list_type = 
+     "flat(-sigma,sigma)\n"       // 0
+     "gaussian(sigma)\n"          // 1 
+     "gaussian_tail(a,sigma)\n"   // 2
+     "exponential(sigma)\n"       // 3
+     "laplace(a)\n"               // 4
+     "exppow(a,b)"                // 5
+;
+
+static const char* const trand_list_seedType = 
+     "Every run\n"          // 0
+     "Start of 1d-loop\n"   // 1 
+     "Start of 2d-loop\n"   // 2
+     "As model"             // 3
+;
 
 #define CLASS_ID_TRand 1025
 
@@ -57,26 +72,25 @@ class TRand : public TMiso  {
    /** reimplemented from TMiso to create generator */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** type of distribution */
-   PRM_LIST( type, efNoRunChange );
+   PRM_LIST1( type, efNRC, "Type", "Distribution type", "", trand_list_type );
    /** time of const output value, if <=0 -- chacge every tick */
-   PRM_DOUBLE( tau, efNoRunChange );
+   PRM_DOUBLE1( tau, efNRC, "\\tau", "time of const output value, if <=0 -- change every tick ", "" );
    /** amplitude of output */
-   PRM_DOUBLE( ampl, 0 );
+   PRM_DOUBLE1( ampl, 0, "Amplitude", "Amplitude scale of output", "" );
    /** zero value of output */
-   PRM_DOUBLE( zval, 0 );
+   PRM_DOUBLE1( zval, 0, "Base value", "Zero value of output ", "" );
    /** coefficients of distribution */
-   PRM_DOUBLE( sigma, 0 );
-   PRM_DOUBLE( a, 0 );
-   PRM_DOUBLE( b, 0 );
-   PRM_DOUBLE( c, 0 );
+   PRM_DOUBLE1( sigma, 0, "\\sigma", "\\sigma value of distrinution", "sep=col" );
+   PRM_DOUBLE1( a, 0, "a", "Parameter a", "" );
+   PRM_DOUBLE1( b, 0, "b", "Parameter b", "" );
+   PRM_DOUBLE1( c, 0, "c", "Parameter c", "" );
    /** seed value for generator */
-   PRM_INT( seed, efNoRunChange );
-   /** use same seed every loop -- obsoleted by seedType */
-   PRM_SWITCH( useSameSeed, efInner );
+   PRM_INT1( seed, efNRC, "Seed", "Seed value for generator", "sep=col" );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
-   PRM_LIST( seedType, efNoRunChange );
+   PRM_LIST1( seedType, efNRC, "Seed type", "0 - every run 1- 1d loop .. 3-by model ", "",
+       trand_list_seedType );
    /** flag: add base seed to element seed */
-   PRM_SWITCH( addBaseSeed, efNoRunChange );
+   PRM_SWITCH1( addBaseSeed, efNRC, "Add base", "Add base seed to element seed ", "" );
    /** class decription */
    static TClassInfo class_info;
    /** help str */

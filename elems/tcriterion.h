@@ -51,18 +51,19 @@ class TCriterion : public TMiso  {
    virtual double f( double t );
  protected:
    /** type of criterion */
-   PRM_LIST( type, efNoRunChange );
+   PRM_LIST1( type, efNRC, "Type", "Type of criterion", "",  
+       "|x|<a\n|x|>a\nx<a\nx>a\na<x<b"  );
    /** coefficients  */
-   PRM_DOUBLE( a, 0 );
-   PRM_DOUBLE( b, 0 );
-   PRM_DOUBLE( t0, 0 );
+   PRM_DOUBLE1( a, 0, "a", "level 'a'", "" );
+   PRM_DOUBLE1( b, 0, "b", "level 'b'", "" );
+   PRM_DOUBLE1( t0, 0, "t0",  "Start time", "" );
    /** flags and state */
-   PRM_SWITCH( useA, efNoRunChange );
-   PRM_SWITCH( useT0, efNoRunChange );
-   PRM_SWITCH( useEnable, efNoRunChange );
-   PRM_SWITCH( useLock, efNoRunChange );
-   PRM_SWITCH( usePulse, efNoRunChange );
-   PRM_INT( st, efInner );
+   PRM_SWITCH1( useA, efNRC, "u[3] is a", "Use u[3] as 'a' value", "sep=col" );
+   PRM_SWITCH1( useT0, efNRC, "t0", "Dont work before given time (t0)", "" );
+   PRM_SWITCH1( useEnable, efNRC, "u[2] is Enable", "Use u[2] signal as Enable", "" );
+   PRM_SWITCH1( useLock, efNRC, "Lock", "Lock after first front", "sep=col" );
+   PRM_SWITCH1( usePulse, efNRC, "Pulse Output", "output is pulse +1, 0, -1", "" );
+   PRM_INT1( st, efInner, "state", "current state", "");
    /** class decription */
    static TClassInfo class_info;
    /** help str */

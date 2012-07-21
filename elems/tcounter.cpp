@@ -31,18 +31,9 @@ TClassInfo TCounter::class_info = {
 
 
 TCounter::TCounter( TDataSet* aparent )
-        :TMiso( aparent ),
-	 PRM_INIT( type, "Type" ),
-	 PRM_INIT( n, "n" ),
-	 PRM_INIT( cn, "cn" ),
-	 PRM_INIT( useReset, "use Reset" )
+        :TMiso( aparent )
 {
   cn = type = useReset = flip = 0; u_old = 9e300; n = 2;
-  PRMI(type).setDescr( "Type of counters output" );
-  PRMI(type).setElems( "level\npulse+\npulse+-\nn" );
-  PRMI(n).setDescr( "Number to count" );
-  PRMI(cn).setDescr( "Current counter value" );
-  PRMI(useReset).setDescr( "Use u[1] as Reset signal" );
 }
 
 TCounter::~TCounter()

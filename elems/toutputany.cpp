@@ -22,6 +22,7 @@
 #include "toutputany.h"
 
 const char* TOutputAny::helpstr = "<H1>TOutputAny</H1>\n"
+ "<h2>Obsoleted element, use only out out to model vars (obsoleted too)</h2>\n"
  "Puts signal to given target: <br>\n"
  "1-st form: #12 - put models var #12 <br>\n"
  "2-nd form: name relative to model: source.u <br>\n"
@@ -33,16 +34,10 @@ TClassInfo TOutputAny::class_info = {
 
 
 TOutputAny::TOutputAny( TDataSet* aparent )
-        :TMiso( aparent ),
-	 PRM_INIT( name, "Sink name" ),
-	 PRM_INIT( useEnable, "u[1] is Enable" )
+        :TMiso( aparent )
 {
   type = -1; 
   useEnable = 0; ne = -1; pel = 0;
-
-  PRMI(name).setDescr( "Name of sink to output" ); // TODO: checial field
-  PRMI(name).setMinMax( 0, 80 );
-  PRMI(useEnable).setDescr( "Use u[1] as enable" );
 }
 
 TOutputAny::~TOutputAny()
@@ -74,9 +69,7 @@ const char** TOutputAny::getIcon(void) const
 int TOutputAny::do_preRun( int /*run_tp*/, int /*an*/, 
                            int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  int k, l;
-  char fname[MAX_NAMELEN], rname[MAX_INPUTLEN], tname[MAX_INPUTLEN];
-  TDataSet *cob, *nob;
+  int l;
   lastname = "";
   type = -1; ne = -1; pel = 0;
   l = name.size();
@@ -86,30 +79,7 @@ int TOutputAny::do_preRun( int /*run_tp*/, int /*an*/,
     ne = atoi( name.toLocal8Bit().constData() + 1 );
     return 0;
   };
-  cob = par; tname[0] = 0; 
-  strncat( tname, name.toLocal8Bit().constData(), MAX_INPUTLEN-1 );
-  while( 1 ) {
-    k = splitName( tname, fname, rname );
-    if( k < 0 )  
-      return 0;  // bad name
-    nob = static_cast<TDataSet*>( cob->getObj( fname ) ); // danger, check !!!!
-    if( !nob ) {  // no such name 
-      qDebug( "DBG: %s: not found fname: \"%s\" ", __FUNCTION__, fname );
-      return 0;
-    }
-    if( k == 1 ) { // only left part of name w/o '.'
-      pel = cob; lastname = L8B(fname); type = 0; break;
-    } else {  // both component of name: aa.bb.cc -> aa  bb.cc
-      // TODO: FIXME: real check!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      // di = cob->getDataInfo( i );
-      //if( di->tp != dtpObj ) 
-      // return 0;
-      cob = nob;
-      if( cob == 0 ) 
-	return 0;
-      tname[0] = 0; strncat( tname, rname, sizeof(tname)-1 );
-    };
-  };
+  // all output dropped
   return 0;
 }
 

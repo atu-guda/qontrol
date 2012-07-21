@@ -50,13 +50,13 @@ class TLatch : public TMiso  {
    virtual double f( double t );
  protected:
    /** type of */
-   PRM_LIST( type, efNoRunChange );
+   PRM_LIST1( type, efNRC, "Type", "Latch type", "", "Time\nSignal u[1]");
    /** time to latch */
-   PRM_DOUBLE( t0, efNoRunChange );
+   PRM_DOUBLE1( t0, efNRC, "Time", "Time to latch" , "sep=col" );
    /** start value */
-   PRM_DOUBLE( v_st, efNoRunChange );
+   PRM_DOUBLE1( v_st, efNRC, "Start val", "Start value", "" );
    /** current value */
-   PRM_DOUBLE( v, efInner );
+   PRM_DOUBLE1( v, efInner, "v", "Current value", "" );
    /** old input  */
    double u_old;
    /** flags, state */

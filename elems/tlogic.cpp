@@ -17,15 +17,6 @@
 
 #include "tlogic.h"
 
-static const char* const tlogic_list = 
- "AND\n"  // 0 
- "OR\n"   // 1
- "XOR\n"  // 2
- "u[0]\n" // 3
- "0\n"    // 4
- "1"      // 5
-;
-
 const char* TLogic::helpstr = "<H1>TLogic</H1>\n"
  "Simple logic element: <br>\n"
  "Parameters: <br>\n"
@@ -42,28 +33,10 @@ TClassInfo TLogic::class_info = {
 
 
 TLogic::TLogic( TDataSet* aparent )
-        :TMiso( aparent ),
-	PRM_INIT( type, "Type" ),
-	PRM_INIT( level, "level of 1" ),
-	PRM_INIT( useNInp0, "Inverse u[0]" ),
-	PRM_INIT( useNInp1, "Inverse u[1]" ),
-	PRM_INIT( useNInp2, "Inverse u[2]" ),
-	PRM_INIT( useNInp3, "Inverse u[3]" ),
-	PRM_INIT( useNOut,  "Inverse output" ),
-	PRM_INIT( useMinus, "Negative out" )
+        :TMiso( aparent )
 {
   level = 0.1; type = 1; useNInp0 = useNInp1 = useNInp2 = useNInp3 = 0;
   useNOut = useMinus = 0;
-
-  PRMI(type).setDescr( "Type of logic" );
-  PRMI(type).setElems( tlogic_list );
-  PRMI(level).setDescr( "Minimal level of '1' signal on input" );
-  PRMI(useNInp0).setDescr( "Inverse input u[0]" );
-  PRMI(useNInp1).setDescr( "Inverse input u[1]" );
-  PRMI(useNInp2).setDescr( "Inverse input u[2]" );
-  PRMI(useNInp3).setDescr( "Inverse input u[3]" );
-  PRMI(useNOut).setDescr(  "Inverse output" );
-  PRMI(useMinus).setDescr( "Negative output is -1, not 0" );
 }
 
 TLogic::~TLogic()
