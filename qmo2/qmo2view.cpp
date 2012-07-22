@@ -257,7 +257,6 @@ void QMo2View::newElm()
 {
   QDialog *seld; 
   QLabel *la;
-  QPushButton *bt_ok, *bt_can;
   QLineEdit *oname_ed, *oord_ed;
   QListWidget *lw;
   QGridLayout *lay;
@@ -309,17 +308,12 @@ void QMo2View::newElm()
   // lw->setUniformItemSizes( true );
   lw->setResizeMode ( QListView::Adjust );
   lay->addWidget( lw, 3, 0, 1, 2 );
-
-  bt_ok = new QPushButton( "Ok", seld );
-  bt_ok->setText( "Ok" ); bt_ok->setDefault( true );
-  lay->addWidget( bt_ok, 5, 0 );
-  seld->setLayout( lay );
-
-  connect( bt_ok, SIGNAL(clicked()), seld, SLOT(accept() ) );
-  bt_can = new QPushButton( "Cancel", seld );
-  lay->addWidget( bt_can, 5, 1 );
-  connect( bt_can, SIGNAL(clicked()), seld, SLOT(reject() ) );
-
+  
+  QDialogButtonBox *bbox 
+    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  lay->addWidget( bbox, 5, 0, 1, 2 );
+  connect(bbox, SIGNAL(accepted()), seld, SLOT(accept()));
+  connect(bbox, SIGNAL(rejected()), seld, SLOT(reject()));
   seld->resize( 600, 400 );
 
   rc = seld->exec();
@@ -758,7 +752,7 @@ void QMo2View::newOut()
 {
   int rc;
   QString onameq, enameq;
-  QDialog *dia; QPushButton *bt_ok, *bt_can;
+  QDialog *dia;
   QLineEdit *oname_ed, *ename_ed; QLabel *lab1, *lab2;
   QGridLayout *lay;
   if( ! checkState( validCheck ) )
@@ -793,18 +787,12 @@ void QMo2View::newOut()
   ename_ed->setMaxLength( MAX_NAMELEN-1 );
   ename_ed->setText( enameq );
   lay->addWidget( ename_ed, 1, 1 );
-
-
-  bt_ok = new QPushButton( "Ok", dia );
-  bt_ok->setDefault( true );
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept() ) );
-  lay->addWidget( bt_ok, 2, 0 );
-
-
-  bt_can = new QPushButton( "Cancel", dia );
-  connect( bt_can, SIGNAL(clicked()), dia, SLOT(reject() ) );
-  lay->addWidget( bt_can, 2, 1 );
-  dia->setLayout( lay );
+  
+  QDialogButtonBox *bbox 
+    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  lay->addWidget( bbox, 2, 0, 1, 2 );
+  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
+  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
 
   rc = dia->exec();
   if( rc == QDialog::Accepted ) {
@@ -1118,7 +1106,7 @@ void QMo2View::gnuplotGraph()
   TGraph *gra;
   QDialog *dia;
   QLabel *lb1, *lb2, *lb3; QLineEdit *ed_pgm, *ed_dat, *ed_eps;
-  QCheckBox *sw_x11; QPushButton *bt_ok, *bt_can;
+  QCheckBox *sw_x11;
   QGridLayout *lay; 
   QString f_pgm, f_dat, f_eps, cdir;
   int l, rc, use_x11;
@@ -1165,16 +1153,13 @@ void QMo2View::gnuplotGraph()
   ed_pgm = new QLineEdit( dia );
   ed_pgm->setText( f_pgm );
   lay->addWidget( ed_pgm, 6, 0, 1, 2 );
-
-  bt_ok = new QPushButton( "&Ok", dia );
-  bt_ok->setDefault( true );
-  lay->addWidget( bt_ok, 7, 0 );
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept() ) );
-
-  bt_can = new QPushButton( "Cancel", dia );
-  lay->addWidget( bt_can, 7, 1 );
-  connect( bt_can, SIGNAL(clicked()), dia, SLOT(reject() ) );
   
+  QDialogButtonBox *bbox 
+    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  lay->addWidget( bbox, 7, 0, 1, 2 );
+  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
+  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
+
   rc = dia->exec();
   if( rc == QDialog::Accepted ) {
     f_pgm = ed_pgm->text(); f_eps = ed_eps->text(); 

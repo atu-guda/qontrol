@@ -1,7 +1,4 @@
-#include <QPushButton>
-#include <QCheckBox>
-#include <QFontDialog>
-#include <QGridLayout>
+#include <QtGui>
 
 #include "mo2settdlg.h"
 
@@ -29,18 +26,15 @@ Mo2SettDlg::Mo2SettDlg( Mo2Settings &se,  QWidget* parent )
   chkMaximize = new QCheckBox( tr( "Ma&ximize at start" ), this );
   chkMaximize->setChecked(ts.showmax);
   lay->addWidget( chkMaximize, 0, 1 );
+  
+  QDialogButtonBox *bbox 
+    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  lay->addWidget( bbox, 4, 0, 1, 2 );
+  connect(bbox, SIGNAL(accepted()), this, SLOT(accept()));
+  connect(bbox, SIGNAL(rejected()), this, SLOT(reject()));
 
-  btnOK = new QPushButton( tr( "&OK" ), this );
-  btnOK->setDefault( TRUE );
-  lay->addWidget( btnOK, 4, 0 );
-
-  btnCancel = new QPushButton( tr( "Cancel" ), this );
-  lay->addWidget( btnCancel, 4, 1 );
   setLayout( lay );
 
-  // signals and slots connections
-  connect( btnOK, SIGNAL( clicked() ), this, SLOT( accept() ) );
-  connect( btnCancel, SIGNAL( clicked() ), this, SLOT( reject() ) );
   connect( btnMainFont, SIGNAL( clicked() ), this, SLOT( mainFontSlot() ) );
   connect( btnSmallFont, SIGNAL( clicked() ), this, SLOT( smallFontSlot() ) );
   connect( btnPlotFont, SIGNAL( clicked() ), this, SLOT( mainFontSlot() ) );
