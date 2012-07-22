@@ -55,9 +55,9 @@ class TRandTrigg : public TMiso  {
    virtual int postRun( int good );
    /** reimplemented from TMiso to set start values */
    virtual int startLoop( int acnx, int acny );
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
    /** reimplemented from TMiso to init random generator */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** Probability of spontatious flip  */

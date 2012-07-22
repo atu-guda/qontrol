@@ -42,10 +42,10 @@ class TMultipl : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
-   /** shitches -- is this input on */
+   /** switches -- is this input on */
    PRM_SWITCH1( on0, 0, "On 0", "Use input 0", "" );
    PRM_SWITCH1( on1, 0, "On 1", "Use input 1", "" );
    PRM_SWITCH1( on2, 0, "On 2", "Use input 2", "" );

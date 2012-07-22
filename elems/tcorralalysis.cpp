@@ -96,7 +96,7 @@ int TCorrAnalysis::startLoop( int acnx, int acny )
 int TCorrAnalysis::endLoop(void)
 {
   double yy, e, se2;
-  int arrxn, arryn, arrcn, j, nx, nx_c, rc, do_cmp, do_fill;
+  int j, nx, nx_c, rc, do_cmp, do_fill;
   const double *xdat, *cdat;
   TOutArr *arrx, *arry = 0, *arrc;
   cmp_ms = cmp_min = cmp_max = cmp_ampl = cmp_tmin = cmp_tmax = se2 = 0; 
@@ -104,27 +104,25 @@ int TCorrAnalysis::endLoop(void)
   rc = TMiso::endLoop();
   if( ! par )
     return rc;
-  arrxn = model->outname2out_nu( x_oname );
-  arrx = model->getOutArr( arrxn );
-  if( arrx == 0 ) 
+  arrx = model->getOutArr( x_oname );
+  if( !arrx ) 
     return rc;
   nx = nx_c = 0;
   arrx->getData( "n", &nx );
   xdat = arrx->getArray();
   if( xdat == 0 || nx < 2 ) 
     return rc;
-  arrcn = model->outname2out_nu( c_oname );
-  arrc = model->getOutArr( arrcn );  cdat = 0;
-  if( arrc != 0 ) {
+  cdat = 0;
+  arrc = model->getOutArr( c_oname );  
+  if( arrc ) {
     cdat = arrc->getArray();
     arrc->getData( "n", &nx_c );
   };
   if( cdat != 0 && nx_c == nx )
     do_cmp = 1;
   if( useFill ) {
-    arryn = model->outname2out_nu( y_oname );
-    arry = model->getOutArr( arryn );
-    if( arry != 0 ) {
+    arry = model->getOutArr( y_oname );
+    if( arry ) {
       arry->alloc( nx, 1 );
       do_fill = 1;
     };
@@ -192,9 +190,8 @@ int TCorrAnalysis::getDataFromArrays()
   
   reset_data();
   // get x array
-  int arrxn = model->outname2out_nu( x_in );
-  TOutArr *arrx = model->getOutArr( arrxn );
-  if( arrx != 0 ) {
+  TOutArr *arrx = model->getOutArr( x_in );
+  if( arrx ) {
     arrx->getData( "n", &nx );
     xdat = arrx->getArray();
   } else {
@@ -203,9 +200,8 @@ int TCorrAnalysis::getDataFromArrays()
     // cerr << __PRETTY_FUNCTION__ << ": fail to find x: " << x_in << '\n';
   };
   // get x array
-  int arryn = model->outname2out_nu( y_in );
-  TOutArr *arry = model->getOutArr( arryn );
-  if( arry != 0 ) {
+  TOutArr *arry = model->getOutArr( y_in );
+  if( arry ) {
     arry->getData( "n", &ny );
     ydat = arry->getArray();
   } else {

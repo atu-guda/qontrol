@@ -42,11 +42,11 @@ class TRossler : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** main computation function */
-   virtual double f( double t );
    /** called before each inner param loop. Unused param - -1 */
    virtual int startLoop( int acnx, int acny );
  protected:
+   /** main computation function */
+   virtual double f( double t );
    /** main system parameters */
    PRM_DOUBLE1( a, 0, "a", "Parameter a", "" );
    PRM_DOUBLE1( b, 0, "b", "Parameter b", "" );

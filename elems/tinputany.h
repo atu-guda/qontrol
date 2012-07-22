@@ -43,9 +43,9 @@ class TInputAny : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
    /** reimplemented from TMiso to set source */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** name of source */

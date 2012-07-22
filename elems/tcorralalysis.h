@@ -46,9 +46,9 @@ class TCorrAnalysis : public TMiso  {
    virtual int startLoop( int acnx, int acny );
    /** reimplemented from TMiso to fill out arrays */
    virtual int endLoop(void);
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
    /* ============= function members ================== */
    /** resets collocted and computed data */
    void reset_data();

@@ -69,7 +69,7 @@ const char *TGraph::getHelp(void) const
 
 int TGraph::fillGraphInfo( GraphInfo *gi ) const
 {
-  int i, row, col, ny, out_nn, out_nu;
+  int i, row, col, ny, out_nn;
   TOutArr *arr;
   const double *dat;
   QString label;
@@ -85,10 +85,9 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
   
   TModel *model = static_cast<TModel*>(par);
   // x-data
-  out_nu = model->outname2out_nu( xname );
-  if( out_nu < 0 ) return -1;
-  arr = model->getOutArr( out_nu );
-  if( arr == 0 ) return -1;
+  arr = model->getOutArr( xname );
+  if( !arr ) 
+    return -1;
   out_nn = -1; ny = -1;
   dat = arr->getArray(); 
   arr->getData( "n", &out_nn );
@@ -103,10 +102,9 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
   col = 1; // unlike show, x and y[] in single index
   const QString* ynms[] = { &y0name, &y1name, &y2name, &y3name, &y4name, &y5name }; // TODO: replace
   for( i=0; i<6; i++ ) {
-    out_nu = model->outname2out_nu( *ynms[i] );
-    if( out_nu < 0 ) continue;
-    arr = model->getOutArr(  out_nu );
-    if( arr == 0 ) continue;
+    arr = model->getOutArr( *ynms[i] );
+    if( !arr ) 
+      continue;
     out_nn = -1;
     dat = arr->getArray(); 
     arr->getData( "n", &out_nn );

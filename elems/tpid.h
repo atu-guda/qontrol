@@ -44,9 +44,9 @@ class TPid : public TMiso  {
    virtual const char* getHelp(void) const;
    /** reimplemented from TMiso to reset integrators and diffs */
    virtual int startLoop( int acnx, int acny );
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
    /** will be called before any action -- good place for allocs */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** coefficients  */

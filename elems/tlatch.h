@@ -44,9 +44,9 @@ class TLatch : public TMiso  {
    virtual const char* getHelp(void) const;
    /** reimplemented from TMiso to init state */
    virtual int startLoop( int acnx, int acny );
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
    /** type of */
    PRM_LIST1( type, efNRC, "Type", "Latch type", "", "Time\nSignal u[1]");
    /** time to latch */

@@ -42,11 +42,9 @@ class TLinear : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   // /** reimplemented from TMiso to ... */
-   // virtual int startLoop( int acnx, int acny );
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
    /** coefficients on input and shift */
    PRM_DOUBLE1( a0, 0, "a0", "factor in input 0", "" );
    PRM_DOUBLE1( a1, 0, "a1", "factor in input 1", "" );

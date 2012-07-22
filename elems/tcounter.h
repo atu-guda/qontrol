@@ -45,9 +45,9 @@ class TCounter : public TMiso  {
    virtual const char* getHelp(void) const;
    /** reimplemented from TMiso to reset counter */
    virtual int startLoop( int acnx, int acny );
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
    /** type of output from counter */
    PRM_LIST1( type, efNRC, "Type", "Type of counters output", "", 
        "level\npulse+\npulse+-\nn" );

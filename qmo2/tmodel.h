@@ -84,7 +84,9 @@ class TModel : public TDataContainer  {
   /** returns number of TOutArr */
   virtual int getNOutArr(void) const;
   /** returns ptr to TOutArr by out_nu */
-  virtual TOutArr* getOutArr( int out_nu );
+  TOutArr* getOutArr( int out_nu );
+  /** returns ptr to TOutArr by name */
+  TOutArr* getOutArr( const QString &oname );
   /** returns number of TGraph */
   virtual int getNGraph(void) const;
   /** returns ptr to TGraph gra_nu */

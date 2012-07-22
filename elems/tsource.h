@@ -67,13 +67,13 @@ class TSource : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** main computation function */
-   virtual double f( double t );
    /** reimplemented to delete rnds */
    virtual int postRun( int good );
    /** called before each inner param loop. Unused param - -1 */
    virtual int startLoop( int acnx, int acny );
  protected:
+   /** main computation function */
+   virtual double f( double t );
    /** will be called before any action -- good place for allocs */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** type of input and misc flags */

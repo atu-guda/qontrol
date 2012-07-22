@@ -51,9 +51,9 @@ class TLogic : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
    /** type of logic element */
    PRM_LIST1( type, efNRC, "Type", "Type of logic", "", tlogic_list );
    /** level of 1  */

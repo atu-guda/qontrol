@@ -136,13 +136,6 @@ class TMiso : public TDataSet  {
    /** returns help string */
    virtual const char* getHelp(void) const;
 
-   /** main computation function TODO: must be protected
-    * 
-    * \param u array of input signals, for now 4 elems in it
-    * \param t current time
-    * \return output value of element
-    * */
-   virtual double f( double t ) = 0;
    /** external computation function + in/out */
    double fun( double t, IterType itype );
    
@@ -164,6 +157,11 @@ class TMiso : public TDataSet  {
    /** will be called after each inner loop  */
    virtual int endLoop(void);
  protected:
+   /** main computation function
+    * \param t current time
+    * \return output value of element
+    * */
+   virtual double f( double t ) = 0;
    /** place of customization of preRun, return: 0 = Ok */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** fill links to sources */

@@ -43,15 +43,13 @@ class TFourier : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to free buffers */
-   virtual int postRun( int good );
    /** reimplemented from TMiso to init summators  */
    virtual int startLoop( int acnx, int acny );
    /** reimplemented from TMiso to complete analysis and fill out arrays */
    virtual int endLoop(void);
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
    void initVars(void);
    /** reimplemented from TMiso to alloc buffers */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );

@@ -46,11 +46,11 @@ class TDelay : public TMiso  {
    virtual const char* getHelp(void) const;
    /** reimplemented from TMiso to reset array */
    virtual int startLoop( int acnx, int acny );
-   /** main computation function */
-   virtual double f( double t );
    /** deallocates buf */
    virtual int postRun( int good );
  protected:
+   /** main computation function */
+   virtual double f( double t );
    /** calc values & alloc buf */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** max delay */

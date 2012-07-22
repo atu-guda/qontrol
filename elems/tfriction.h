@@ -44,9 +44,9 @@ class TFriction : public TMiso  {
    virtual const char* getHelp(void) const;
    /** reimplemented from TMiso to init state */
    virtual int startLoop( int acnx, int acny );
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
    /** Parameter: mody mass */
    PRM_DOUBLE1( mass, 0, "Mass", "Body mass", "min=1e-30" );
    /** Parameter: max dry friction force (if constant)  */

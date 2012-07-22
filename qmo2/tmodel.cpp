@@ -411,6 +411,15 @@ TOutArr* TModel::getOutArr( int out_nu )/*{{{1*/
   return v_out[out_nu];
 }/*}}}1*/
 
+TOutArr* TModel::getOutArr( const QString &oname )/*{{{1*/
+{
+  TOutArr *arr = qobject_cast<TOutArr*>(getObj( oname, "TOutArr" ));
+  if( !arr ) {
+    qDebug( "TModel::getOutArr: fail to find TOutArr \"%s\"", qPrintable(oname) );
+  }
+  return arr;
+}/*}}}1*/
+
 int TModel::getNGraph(void) const/*{{{1*/
 {
   return v_graph.size();

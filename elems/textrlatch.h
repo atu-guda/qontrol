@@ -46,9 +46,9 @@ class TExtrLatch : public TMiso  {
    virtual const char* getHelp(void) const;
    /** reimplemented from TMiso to reset */
    virtual int startLoop( int acnx, int acny );
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
    /** type of extremum */
    PRM_LIST1( type, efNRC, "Type", "Type of catching extremum", "",
        "Max\nMin\nMax||\nAverage\nAmplitude" );

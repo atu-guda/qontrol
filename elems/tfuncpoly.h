@@ -58,11 +58,9 @@ class TFuncPoly : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   // /** reimplemented from TMiso to ... */
-   // virtual int startLoop( int acnx, int acny );
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
    /** type of function */
    PRM_LIST1( type, 0, "Type", "Function type", "", tfuncpoly_list );
    /** coefficients and shift */

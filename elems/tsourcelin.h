@@ -43,13 +43,13 @@ class TSourceLin : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** main computation function */
-   virtual double f( double t );
    /** called before each inner param loop. Unused param - -1 */
    virtual int startLoop( int acnx, int acny );
    /** recalculate slopes and numbers */
    void recalc(void);
  protected:
+   /** main computation function */
+   virtual double f( double t );
    /** times of lines, <=0 - end */
    double t_int[16];
    PRM_DOUBLEx( t_int+0,  t_int_0, efNoRunChange, "t_int[0]",  "Time 0 ", "min=0" );

@@ -66,12 +66,6 @@ int TFourier::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-int TFourier::postRun( int good )
-{
-  TMiso::postRun( good );
-  return 0;
-}
-
 int TFourier::startLoop( int acnx, int acny )
 {
   int i;
@@ -86,7 +80,7 @@ int TFourier::startLoop( int acnx, int acny )
 
 int TFourier::endLoop(void)
 {
-  int i, j, arrxn, arryn, arran, arrbn, arramn, arromn, nx, rc;
+  int i, j, nx, rc;
   TOutArr *arra, *arrb, *arram, *arrom, *arrx, *arry;
   const double *xdat;
   double v, vx;
@@ -108,41 +102,35 @@ int TFourier::endLoop(void)
     for( i=0; i<=ng; i++ ) 
       model->setVar( out_om + i, omega * i );
   };
-  arran = model->outname2out_nu( a_oname.toLocal8Bit().constData() );// ---- fill a,b,am output arrays
-  arra = model->getOutArr( arran );
-  if( arra != 0 ) {
+  arra = model->getOutArr( a_oname );// ---- fill a,b,am output arrays
+  if( arra ) {
     arra->alloc( ng+1, 1 );
     for( i=0; i<=ng; i++ )
       arra->push_val( aa[i], 10000 ); // ignore level
   };
-  arrbn = model->outname2out_nu( b_oname.toLocal8Bit().constData() );
-  arrb = model->getOutArr( arrbn );
-  if( arrb != 0 ) {
+  arrb = model->getOutArr( b_oname );
+  if( arrb ) {
     arrb->alloc( ng+1, 1 );
     for( i=0; i<=ng; i++ )
       arrb->push_val( bb[i], 10000 ); // ignore level
   };
-  arramn = model->outname2out_nu( am_oname.toLocal8Bit().constData() );
-  arram = model->getOutArr( arramn );
-  if( arram != 0 ) {
+  arram = model->getOutArr( am_oname );
+  if( arram ) {
     arram->alloc( ng+1, 1 );
     for( i=0; i<=ng; i++ )
       arram->push_val( am[i], 10000 ); // ignore level
   };
-  arromn = model->outname2out_nu( om_oname.toLocal8Bit().constData() );
-  arrom = model->getOutArr( arromn );
-  if( arrom != 0 ) {
+  arrom = model->getOutArr( om_oname );
+  if( arrom ) {
     arrom->alloc( ng+1, 1 );
     for( i=0; i<=ng; i++ )
       arrom->push_val( omega * i, 10000 ); // ignore level
   };
 
   if( ! useFill ) return rc;
-  arrxn = model->outname2out_nu( x_oname.toLocal8Bit().constData() ); // -- fill compare out array
-  arryn = model->outname2out_nu( y_oname.toLocal8Bit().constData() );
-  arrx = model->getOutArr( arrxn );
-  arry = model->getOutArr( arryn );
-  if( arrx == 0 || arry == 0 ) return rc;
+  arrx = model->getOutArr( x_oname ); // -- fill compare out array
+  arry = model->getOutArr( y_oname );
+  if( !arrx || !arry ) return rc;
   xdat = arrx->getArray();
   nx = -1;
   arrx->getData( "n", &nx );
