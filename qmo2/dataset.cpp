@@ -6,11 +6,6 @@
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
-#include <cstdlib>
-#include <cctype>
-#include <cstring>
-#include <vector>
-#include <cstdio>
 #include <limits>
 #include <QColor>
 #include "miscfun.h"
@@ -71,37 +66,6 @@ QString HolderData::getParm( const QString &name ) const
 bool HolderData::isObject( const QString & /*cl_name*/  ) const
 {
   return false;
-}
-
-// tmp: to remove, use only set/getParm
-void HolderData::setVisName( const QString &av_name ) 
-{ 
-  setParm( "vis_name", av_name );
-}
-
-QString HolderData::getVisName() const 
-{
-  return getParm( "vis_name" );
-}
-
-void HolderData::setDescr( const QString &a_descr ) 
-{
-  setParm( "descr", a_descr );
-}
-
-QString HolderData::getDescr() const 
-{
-  return getParm( "descr" );
-}
-
-void HolderData::setProps( const QString &a_prop )
-{
-  setParm( "props", a_prop );
-}
-
-QString HolderData::getProps() const
-{
-  return getParm( "props" );
 }
 
 void HolderData::extraToParm()
@@ -1044,7 +1008,7 @@ int TDataSet::del_obj( const QString &ob_name )
 }
 
 
-int TDataSet::isValidType( int /* a_tp*/, int /* a_subtp */ ) const
+int TDataSet::isValidType(  const QString & /*cl_name*/  ) const
 {
   return 1;
 }

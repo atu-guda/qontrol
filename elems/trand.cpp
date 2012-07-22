@@ -95,7 +95,7 @@ int TRand::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-int TRand::do_postRun( int good )
+int TRand::do_postRun( int /*good*/ )
 {
   if( rng ) {
     gsl_rng_free( rng );

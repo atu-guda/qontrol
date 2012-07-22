@@ -9,8 +9,6 @@
 #ifndef _DATASET_H
 #define _DATASET_H
 
-#include <iosfwd>
-#include <vector>
 #include <QObject>
 #include <QString>
 #include <QStringList>
@@ -86,7 +84,6 @@ class HolderData : public QObject {
   virtual bool isObject( const QString &cl_name = QString() ) const;
   void setFlags( int a_flags ) { flags = a_flags; };
   int getFlags() const { return flags; };
-  void setMinMax( double a_min, double a_max ) { v_min = a_min; v_max = a_max; };
   double getMin() const { return v_min; }
   double getMax() const { return v_max; }
   void setParm( const QString &name, const QString &value );
@@ -94,13 +91,6 @@ class HolderData : public QObject {
   void extraToParm();
   const QString& targetName() const { return target_name; };
   TDataSet* getParent() const { return par; }
-  // tmp: to remove, use only set/getParm
-  void setVisName( const QString &av_name );
-  QString getVisName() const;
-  void setDescr( const QString &a_descr );
-  QString getDescr() const;
-  void setProps( const QString &a_prop );
-  QString getProps() const ;
   void setElems( const QString &els ); 
   const QStringList& getElems() const { return elems; }; 
   virtual bool set( const QVariant & x ) = 0;
@@ -120,9 +110,6 @@ class HolderData : public QObject {
   QString target_name;
   QStringList elems;
   QSSMap parms;
-  // test for auto params inclusion TODO: remove!!!
-  // constexpr static const char* xxx_test1 = "Test1";
-  // const char* const xxx_test2[4] = { "T2", R"(nice\nstring)", "T2e", nullptr };
 };
 
 #define PRM_INIT( name, descr ) \
@@ -151,11 +138,6 @@ class HolderInt : public HolderData {
   int *val;
 };
 
-#define PRM_INT( name, flags ) \
- int name; \
- HolderInt __HO_##name ; \
- static const int __PRM_FLAGS_##name = flags ; 
-
 #define PRM_INT1( name, flags, vname, descr, extra ) \
  int name; \
  HolderInt __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
@@ -172,11 +154,6 @@ class HolderSwitch : public HolderInt {
   virtual void post_set();
   virtual QString getType() const;
 };
-
-#define PRM_SWITCH( name, flags ) \
- int name; \
- HolderSwitch __HO_##name ; \
- static const int __PRM_FLAGS_##name = flags ; 
 
 #define PRM_SWITCH1( name, flags, vname, descr, extra ) \
  int name; \
@@ -197,13 +174,7 @@ class HolderList : public HolderInt {
  private:
 };
 
-#define PRM_LIST( name, flags ) \
- int name; \
- HolderList __HO_##name ; \
- static const int __PRM_FLAGS_##name = flags ; 
 
-
-// TODO: elems
 #define PRM_LIST1( name, flags, vname, descr, extra, elems ) \
  int name; \
  HolderList __HO_##name ={ & name, #name, vname, this, flags, descr, extra, elems }; 
@@ -227,16 +198,11 @@ class HolderDouble : public HolderData {
   double *val;
 };
 
-#define PRM_DOUBLE( name, flags ) \
- double name; \
- HolderDouble __HO_##name ; \
- static const int __PRM_FLAGS_##name = flags ; 
-
 #define PRM_DOUBLE1( name, flags, vname, descr, extra ) \
  double name; \
  HolderDouble __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
  
-
+// to make alias to existent
 #define PRM_DOUBLEx( ptr, name, flags, vname, descr, extra ) \
  HolderDouble __HO_##name ={  ptr, #name, vname, this, flags, descr, extra  } ; 
  
@@ -259,11 +225,6 @@ class HolderString : public HolderData {
  protected:
   QString *val;
 };
-
-#define PRM_STRING( name, flags ) \
- QString name; \
- HolderString __HO_##name ; \
- static const int __PRM_FLAGS_##name = flags ; 
 
 #define PRM_STRING1( name, flags, vname, descr, extra ) \
  QString name; \
@@ -313,16 +274,11 @@ class HolderColor : public HolderData {
   QColor *val;
 };
 
-#define PRM_COLOR( name, flags ) \
- QColor name; \
- HolderColor __HO_##name ; \
- static const int __PRM_FLAGS_##name = flags ; 
-
 #define PRM_COLOR1( name, flags, vname, descr, extra ) \
  QColor name; \
  HolderColor __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
 
-/** Holder of objects ??? TODO: ?? combine with TDataSet? or proxy */
+/** Holder of objects */
 class HolderObj : public HolderData {
   Q_OBJECT
  public: 
@@ -344,13 +300,11 @@ class HolderObj : public HolderData {
   TDataSet *obj;
 };
 
-#define PRM_OBJ( name, flags ) \
- HolderObj __HO_##name ; \
- static const int __PRM_FLAGS_##name = flags ; 
-
 
 #define PRM_OBJ1( name, flags, vname, descr, extra ) \
  HolderObj __HO_##name ={ name, #name, vname, this, flags, descr, extra  } ; 
+
+// ####################################################################
 
 /** base class for all objects */
 class TDataSet : public QObject {
@@ -368,7 +322,7 @@ class TDataSet : public QObject {
    TDataSet* createObj( const QString &cl_name, const QString &nm, TDataSet* apar );
    /** class name - for check & human purpose */
    const char* getClassName(void) const;
-   /** parent as TDataSet, not QObject */
+   /** parent is TDataSet, not QObject */
    TDataSet* getParent() { return par; }
    /** return ptr to parents holder to me or 0 */
    HolderObj* myHolder() const { return holderOfMe; }
@@ -418,7 +372,7 @@ class TDataSet : public QObject {
    /** delete given object by num in ptrs */
    int del_obj( const QString &ob_name );
    /** is given type of subelement valid for this object */
-   virtual int isValidType( int a_tp, int a_subtp ) const;
+   virtual int isValidType( const QString &cl_name ) const;
    /** return ptr to static class_info, must be implemented in each class */
    virtual const TClassInfo* getClassInfo(void) const;
    /** return ptr to static class_info, static version */
@@ -430,7 +384,9 @@ class TDataSet : public QObject {
    virtual bool set( const QVariant & x );
    virtual QVariant get() const;
    virtual void post_set();
+   // to XML representation
    virtual QString toString() const;
+   // from XML representation
    virtual bool fromString( const QString &s );
    void dumpStruct() const;
    QDomElement toDom( QDomDocument &dd ) const;
@@ -496,6 +452,7 @@ class ElemFactory {
   private:
    ElemFactory();
    ElemFactory( const ElemFactory& r ) = delete;
+   ElemFactory( const ElemFactory &&r ) = delete;
    ElemFactory& operator=( const ElemFactory& r ) = delete;
 
    MapStrClass str_class;

@@ -413,6 +413,8 @@ TOutArr* TModel::getOutArr( int out_nu )/*{{{1*/
 
 TOutArr* TModel::getOutArr( const QString &oname )/*{{{1*/
 {
+  if( oname.isEmpty() )
+    return nullptr;
   TOutArr *arr = qobject_cast<TOutArr*>(getObj( oname, "TOutArr" ));
   if( !arr ) {
     qDebug( "TModel::getOutArr: fail to find TOutArr \"%s\"", qPrintable(oname) );

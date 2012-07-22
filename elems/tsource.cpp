@@ -174,7 +174,7 @@ int TSource::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-int TSource::do_postRun( int good )
+int TSource::do_postRun( int /*good*/ )
 {
   if( rng_u ) {
     gsl_rng_free( rng_u );

@@ -61,6 +61,7 @@ const char *TCriterion::getHelp(void) const
 int TCriterion::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   st = 0;
+  return 0;
 }
 
 double TCriterion::f( double t )

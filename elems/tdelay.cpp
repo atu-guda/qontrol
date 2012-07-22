@@ -87,7 +87,7 @@ int TDelay::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-int TDelay::do_postRun( int good )
+int TDelay::do_postRun( int /*good*/ )
 {
   delete buf; buf = 0;
   return 0;

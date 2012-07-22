@@ -38,8 +38,7 @@ TDataSet* ElemFactory::createElem( const QString &a_type,
     return 0;
   }
   // check parent for name
-  QObject *no = parent->findChild<QObject*>(ob_name);
-  if( no != nullptr ) {
+  if( parent->getHolder(ob_name) ) {
     qDebug( "ERR: create: name %s exists in parent", qPrintable( ob_name ) ); 
     return 0;
   }
