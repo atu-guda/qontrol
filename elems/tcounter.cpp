@@ -56,11 +56,6 @@ const char *TCounter::getHelp(void) const
   return helpstr;
 }
 
-const char** TCounter::getIcon(void) const
-{
-  return icon;
-}
-
 
 int TCounter::startLoop( int acnx, int acny )
 {
@@ -100,63 +95,6 @@ int TCounter::reg()
 {
   return ElemFactory::theFactory().registerElemType( &class_info  );
 }
-
-
-/* XPM */
-const char* TCounter::icon[] = {
-/* width height num_colors chars_per_pixel */
-"    32    32       16            1",
-/* colors */
-"` c #000000",
-". c #800000",
-"# c #008000",
-"a c #808000",
-"b c #000080",
-"c c #800080",
-"d c #008080",
-"e c #808080",
-"f c #c0c0c0",
-"g c #ff0000",
-"h c #00ff00",
-"i c #ffff00",
-"j c #0000ff",
-"k c #ff00ff",
-"l c #00ffff",
-"m c #ffffff",
-/* pixels */
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjijiiijjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjiijjjijjjj",
-"jjjjjjjjjjjjjjjjjjjjjjijjjjijjjj",
-"jjjjjjjjjjjjjjjjjjjjjjijjjjijjjj",
-"jjjjjjjjjjjjjjjjjjjjjjijjjjijjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjiijjjjjiijjjjiijjjjjjjjjjjj",
-"jjjjjiijjjjjiijjjjiijjjjjjjjjjjj",
-"jjjjjiijjjjjiijjjjiijjjjjjjjjjjj",
-"jjjjjiijjjjjiijjjjiijjjjjjjjjjjj",
-"jjjjjiijjjjjiijjjjiijjjjjjjjjjjj",
-"jjjjjiijjjjjiijjjjiijjjjjjjjjjjj",
-"jjiiiiiiiiiiiiiiiiiiiiiiiiiiijjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjgggggggggggjjj",
-"jjjjjjjjjjjjjjjjjjgggggggggggjjj",
-"jjjjjjjjjjjjjjjjjjggjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjggjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjggjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjggjjjjjjjjjjjj",
-"jjggggggggggggggggggjjjjjjjjjjjj",
-"jjggggggggggggggggggjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-};
 
 
 // end of tcounter.cpp

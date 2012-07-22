@@ -53,11 +53,6 @@ const char *TLinear::getHelp(void) const
   return helpstr;
 }
 
-const char** TLinear::getIcon(void) const
-{
-  return icon;
-}
-
 double TLinear::f( double /* t */ )
 {
   return *in_so[0]*a0 + *in_so[1]*a1 + *in_so[2]*a2 + *in_so[3]*a3 + b;
@@ -71,60 +66,5 @@ int TLinear::reg()
 }
 
 
-/* XPM */
-const char* TLinear::icon[] = {
-/* width height num_colors chars_per_pixel */
-"    32    32       16            1",
-/* colors */
-"` c #000000",
-". c #800000",
-"# c #008000",
-"a c #808000",
-"b c #000080",
-"c c #800080",
-"d c #008080",
-"e c #c0c0c0",
-"f c #808080",
-"g c #ff0000",
-"h c #00ff00",
-"i c #ffff00",
-"j c #0000ff",
-"k c #ff00ff",
-"l c #00ffff",
-"m c #ffffff",
-/* pixels */
-"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-"eeeeeeeeeeee`eeeeeeeeeeeeeeeeeee",
-"eeeeeeeeeeee`eeeeeeeeeeeeeeeeeee",
-"eeeeeeeeeeee`eeeeeeeeeeeeeeeeeee",
-"eeeeeeeeeeee`eeeeeeeeeeeeeeeeeee",
-"eeeeeeeeeeee`eeeeeeeeeeeeeeeeeee",
-"eeeeeeeeee``````eeeeeeeeeeeeeeee",
-"eeeeeeee``eeeeee``eeeeeeeeeeeeee",
-"eeeeeee`eeeeeeeeee`eeeeeeeeeeeee",
-"eeeeee```eeeeeeee```eeeeeeeeeeee",
-"eeeee`e```eeeeee```e`eeeeeeeeeee",
-"eeeee`ee```eeee```ee`eeeeeeeeeee",
-"eeee`eeee```ee```eeee`eeeeeeeeee",
-"eeee`eeeee``````eeeee`ee``eeeeee",
-"eeee`eeeeee````eeeeee`eeee``eeee",
-"`````eeeeee````eeeeee````````eee",
-"eeee`eeeee``````eeeee`eeee``eeee",
-"eeee`eeee````````eeee`ee``eeeeee",
-"eeeee`ee``````````ee`eeeeeeeeeee",
-"eeeee`e````````````e`eeeeeeeeeee",
-"eeeeee``````````````eeeeeeeeeeee",
-"eeeeeee````````````eeeeeeeeeeeee",
-"eeeeeeee``````````eeeeeeeeeeeeee",
-"eeeeeeeeee``````eeeeeeeeeeeeeeee",
-"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-};
-
+// end of tlinear.cpp
 

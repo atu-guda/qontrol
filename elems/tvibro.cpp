@@ -57,11 +57,6 @@ const char *TVibro::getHelp(void) const
   return helpstr;
 }
 
-const char** TVibro::getIcon(void) const
-{
-  return icon;
-}
-
 int TVibro::do_preRun( int /*run_tp*/, int /*an*/, 
                        int /*anx*/, int /*any*/, double /*adt*/ )
 {
@@ -119,64 +114,6 @@ int TVibro::reg()
 {
   return ElemFactory::theFactory().registerElemType( &class_info  );
 }
-
-
-/* XPM */
-const char* TVibro::icon[] = {
-/* width height num_colors chars_per_pixel */
-"    32    32       16            1",
-/* colors */
-"` c #000000",
-". c #800000",
-"# c #008000",
-"a c #808000",
-"b c #000080",
-"c c #800080",
-"d c #008080",
-"e c #808080",
-"f c #c0c0c0",
-"g c #ff0000",
-"h c #00ff00",
-"i c #ffff00",
-"j c #0000ff",
-"k c #ff00ff",
-"l c #00ffff",
-"m c #ffffff",
-/* pixels */
-"jjjjjjjjjjjjjjjjjjjjjjjjjjbbbbbb",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjbbbbbb",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjbbbbbb",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjbbbbbb",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjbbbbbb",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjbbbbbb",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjbbbbbb",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjbbbbbb",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjbbbbbb",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjbbbbbb",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjbbbbbb",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjbbbbbb",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjbbbbbb",
-"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-"bbbbbbbbbbbbbbbbbbhhhhhhhhhhhhbb",
-"bbbbbibbbbbbibbbbbbb#bblbbbbbhbb",
-"bbbbiibbbbbbibbbbbb#bb#bb#blbhbb",
-"bbbbibibbbbibibbbbblbbgggbbbbhbb",
-"bbbibbibbbbibibbbbbb#gggggb#bhbb",
-"bbbibbibbbbibibbbbbbgggggggblhbb",
-"biibbbibbbibbibbbiiigggggggbbhbb",
-"bbbbbbbibbibbbibbibbgggggggbbhbb",
-"bbbbbbbibibbbbibibbbbgggggbbbhbb",
-"bbbbbbbibibbbbibibb#bbgggbblbhbb",
-"bbbbbbbibibbbbibibbbbbbbbbbb#hbb",
-"bbbbbbbbibbbbbbibbbbl#bbb#bbbhbb",
-"bbbbbbbbibbbbbbibbbhhhhhhhhhhhbb",
-"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-};
-
 
 // end of tvibro.cpp
 

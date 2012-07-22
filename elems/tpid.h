@@ -42,8 +42,6 @@ class TPid : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** return icon */
-   virtual const char** getIcon(void) const;      
    /** reimplemented from TMiso to reset integrators and diffs */
    virtual int startLoop( int acnx, int acny );
    /** main computation function */
@@ -67,8 +65,6 @@ class TPid : public TMiso  {
    static TClassInfo class_info;
    /** help str */
    static const char* helpstr;
-   /** icon */
-   static const char* icon[];
    /** autoregister */
    static int registered;
    static int reg();

@@ -54,11 +54,6 @@ const char *TPid::getHelp(void) const
   return helpstr;
 }
 
-const char** TPid::getIcon(void) const
-{
-  return icon;
-}
-
 int TPid::do_preRun( int /*run_tp*/, int /*an*/, 
                      int /*anx*/, int /*any*/, double /*adt*/ )
 {
@@ -110,62 +105,6 @@ int TPid::reg()
   return ElemFactory::theFactory().registerElemType( &class_info  );
 }
 
-
-/* XPM */
-const char* TPid::icon[] = {
-/* width height num_colors chars_per_pixel */
-"    32    32       16            1",
-/* colors */
-"` c #000000",
-". c #800000",
-"# c #008000",
-"a c #808000",
-"b c #000080",
-"c c #800080",
-"d c #008080",
-"e c #808080",
-"f c #c0c0c0",
-"g c #ff0000",
-"h c #00ff00",
-"i c #ffff00",
-"j c #0000ff",
-"k c #ff00ff",
-"l c #00ffff",
-"m c #ffffff",
-/* pixels */
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllggggllllllllllllllllllllll",
-"lllllgggggglllllllllllllllllllll",
-"llllggllllggllllllllllllllllllll",
-"llllggllllggllggggggggggggglllll",
-"llllggllllglllggggggggggggglllll",
-"lllllggllllllllggllllllllgllllll",
-"lllllggllllllllgggllllllggllllll",
-"llllllggglllllllggllllllglllllll",
-"lllllllgglllllllgggllllgglllllll",
-"lllllllggllllllllggllllgglllllll",
-"llllllllgglllllllgggllggllllllll",
-"llllllllggllllllllggllggllllllll",
-"lllllllllgglllllllggggglllllllll",
-"lllllllllggllllllllgggglllllllll",
-"lllllllllggllllllllgggllllllllll",
-"lllllllllgglllllllllggllllllllll",
-"lllllglllgglllllllllllllllllllll",
-"llllgglllgglllllllllllllllllllll",
-"llllgggllgglllllllllllllllllllll",
-"lllllgggggllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll"
-};
 
 // end of tpid.cpp
 

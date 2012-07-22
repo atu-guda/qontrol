@@ -201,8 +201,11 @@ void QStructView::drawAll( QPainter &p )
       p.setPen( QPen(Qt::black,2) );  p.setBrush( Qt::NoBrush );
       p.drawRect( ob_gx, ob_gy, 32, 32 );
     } else {
-      QPixmap pix( ob->getIcon() );
-      p.drawPixmap( ob_gx, ob_gy, pix, 0, 0, grid_sz, grid_sz );
+      QString iconName = QString( ":icons/elm_" )
+	+ QString(ob->getClassName()).toLower() 
+	+ ".png";
+      QIcon el_ico(iconName);
+      el_ico.paint( &p, ob_gx, ob_gy, grid_sz-8, grid_sz-8 );
     };
     p.setPen( Qt::black );  p.setBrush( Qt::red );
 

@@ -59,11 +59,6 @@ const char *TLogic::getHelp(void) const
   return helpstr;
 }
 
-const char** TLogic::getIcon(void) const
-{
-  return icon;
-}
-
 double TLogic::f( double /* t */ )
 {
   int i, iu[4], ou;
@@ -102,53 +97,6 @@ int TLogic::reg()
 {
   return ElemFactory::theFactory().registerElemType( &class_info  );
 }
-
-
-/* XPM */
-const char* TLogic::icon[] = {
-/* width height num_colors chars_per_pixel */
-"32 32 8 1",
-"c c #808080",
-"b c #000000",
-"a c #0000ff",
-"g c #00ff00",
-"m c #ff00ff",
-". c #dcdcdc",
-"# c #ff0000",
-"y c #ffff00",
-"................................",
-"................................",
-"................................",
-"................................",
-"................................",
-"................................",
-"................................",
-"................................",
-"................................",
-"......bbbbbbbbbbbbbbbbbbbbb.....",
-"......bbbbbbbbbbbbbbbbbbbbb.....",
-"......bb.................bb.....",
-"......bb.........aa......bb.....",
-"......bb.........aa......bb.....",
-".bbbbbbb.........aa......bb.....",
-"......bb.........aa......bb.....",
-"......bb.........aa......bb.....",
-"......bb.........aa....a.bb.....",
-".bbbbbbb.........aaaaaaa.bb.....",
-"......bb.........aaaaaaa.bbbbbb.",
-"......bb.................bbbbbb.",
-"......bb.................bb.....",
-".bbbbbbb.................bb.....",
-"......bb.................bb.....",
-"......bb.................bb.....",
-"......bb.................bb.....",
-".bbbbbbb.................bb.....",
-"......bb.................bb.....",
-"......bb.................bb.....",
-"......bbbbbbbbbbbbbbbbbbbbb.....",
-"......bbbbbbbbbbbbbbbbbbbbb.....",
-"................................"
-};
 
 
 // end of tlogic.cpp

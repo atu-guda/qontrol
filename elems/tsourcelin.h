@@ -43,8 +43,6 @@ class TSourceLin : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** return icon */
-   virtual const char** getIcon(void) const;
    /** main computation function */
    virtual double f( double t );
    /** called before each inner param loop. Unused param - -1 */
@@ -117,8 +115,6 @@ class TSourceLin : public TMiso  {
    static TClassInfo class_info;
    /** help str */
    static const char* helpstr;
-   /** icon */
-   static const char* icon[];
    /** autoregister */
    static int registered;
    static int reg();

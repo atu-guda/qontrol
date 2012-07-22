@@ -60,8 +60,6 @@ class TRand : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** return icon */
-   virtual const char** getIcon(void) const;      
    /** reimplemented from TMiso to delete generator */
    virtual int postRun( int good );
    /** reimplemented from TMiso to init generator and variables */
@@ -95,8 +93,6 @@ class TRand : public TMiso  {
    static TClassInfo class_info;
    /** help str */
    static const char* helpstr;
-   /** icon */
-   static const char* icon[];
    // @ iface end 
    /** time (may not be time) after previos value change */
    double sp_time;

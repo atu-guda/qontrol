@@ -60,11 +60,6 @@ const char *TOutputAny::getHelp(void) const
   return helpstr;
 }
 
-const char** TOutputAny::getIcon(void) const
-{
-  return icon;
-}
-
 // TODO: fix! NO: remove this object!
 int TOutputAny::do_preRun( int /*run_tp*/, int /*an*/, 
                            int /*anx*/, int /*any*/, double /*adt*/ )
@@ -102,62 +97,6 @@ int TOutputAny::reg()
   return ElemFactory::theFactory().registerElemType( &class_info  );
 }
 
-
-/* XPM */
-const char* TOutputAny::icon[] = {
-/* width height num_colors chars_per_pixel */
-"    32    32       16            1",
-/* colors */
-"` c #000000",
-". c #800000",
-"# c #008000",
-"a c #808000",
-"b c #000080",
-"c c #800080",
-"d c #008080",
-"e c #808080",
-"f c #c0c0c0",
-"g c #ff0000",
-"h c #00ff00",
-"i c #ffff00",
-"j c #0000ff",
-"k c #ff00ff",
-"l c #00ffff",
-"m c #ffffff",
-/* pixels */
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjmmmmmmmmmmmmmmmmmmmmmmmijjjjjj",
-"jjiiiiiiiiiiiiiiiiiiiiiiiiajjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjiiiajjjjj",
-"jjjjjjjjjjjjjjjjjjjjjiiiiiiijjjj",
-"jjjjjjjjjjjjjjjjjjjjjjiiiiiaajjj",
-"jjjjjjjjjjjjjjjjjjjjjjjiiiaajjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjiaajjjjj",
-"jjjjjjjjjjjjhhhhhhhhhhhhhhhhhjjj",
-"jjjjjjjjjjjjhhhhhhhhhhhhhhhhh#jj",
-"jjjjjjjjjjjjhhhhhhhhhhhhhhhhh#jj",
-"jjjjjjjjjjjjhhhhhhhhhhhhhhhhh#jj",
-"jjjjjjjjjjjjhhhhhhhhhhhhhhhhh#jj",
-"jjjjjjjjjjjjhhhhhhhhhhhhhhhhh#jj",
-"jjjjjjjjjjjjj#################jj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-};
 
 // end of toutputany.cpp
 

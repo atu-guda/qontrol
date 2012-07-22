@@ -76,11 +76,6 @@ const char *TSource::getHelp(void) const
   return helpstr;
 }
 
-const char** TSource::getIcon(void) const
-{
-  return icon;
-}
-
 double TSource::f( double t )
 {
   double v ,omet, uu_s, omet_s, lt, u_ch, f_ch, phi, phi_0;
@@ -250,62 +245,6 @@ int TSource::reg()
   return ElemFactory::theFactory().registerElemType( &class_info  );
 }
 
-
-/* XPM */
-const char* TSource::icon[] = {
-/* width height num_colors chars_per_pixel */
-"    32    32       16            1",
-/* colors */
-"` c #000000",
-". c #800000",
-"# c #008000",
-"a c #808000",
-"b c #000080",
-"c c #800080",
-"d c #408080",
-"e c #808080",
-"f c #c0c0c0",
-"g c #ff0000",
-"h c #00ff00",
-"i c #ffff00",
-"j c #0000ff",
-"k c #ff00ff",
-"l c #00ffff",
-"m c #ffffff",
-/* pixels */
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"lllllllllllllllgllllllllllllllll",
-"llllllllllllllglglllllllllllllll",
-"lllllllllllllglllgllllllllllllll",
-"llllllllllllglllllglllllllllllll",
-"llllgggggggglllllllgggggggglllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llgglllllllllgggglllllllllllllll",
-"llggglllllllggggggglllllllllllll",
-"llllgglllllgglllllgllllillllllll",
-"lllllgglllggllllllllllliilllllll",
-"llllllggggglllllllllllliiillllll",
-"lllllllgglllllllllllllliiiilllll",
-"llllllllllllllllllllllliiiiillll",
-"liiiiiiiiiiiiiiiiiiiiiiiiiiiilll",
-"liiiiiiiiiiiiiiiiiiiiiiiiiiiiill",
-"liiiiiiiiiiiiiiiiiiiiiiiiiiiilll",
-"llllllllllllllllllllllliiiiillll",
-"llllllllllllllllllllllliiiilllll",
-"llllllllllllllllllllllliiillllll",
-"llllllllllllllllllllllliilllllll",
-"lllllllllllllllllllllllillllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll",
-"llllllllllllllllllllllllllllllll"
-};
 
 // end of tsource.cpp
 

@@ -57,12 +57,6 @@ const char *TSwitch::getHelp(void) const
   return helpstr;
 }
 
-const char** TSwitch::getIcon(void) const
-{
-  return icon;
-}
-
-
 double TSwitch::f( double /* t */ )
 {
   double v;
@@ -76,63 +70,6 @@ int TSwitch::reg()
 {
   return ElemFactory::theFactory().registerElemType( &class_info  );
 }
-
-
-/* XPM */
-const char* TSwitch::icon[] = {
-/* width height num_colors chars_per_pixel */
-"    32    32       16            1",
-/* colors */
-"` c #000000",
-". c #800000",
-"# c #008000",
-"a c #808000",
-"b c #000080",
-"c c #800080",
-"d c #008080",
-"e c #808080",
-"f c #c0c0c0",
-"g c #ff0000",
-"h c #00ff00",
-"i c #ffff00",
-"j c #0000ff",
-"k c #ff00ff",
-"l c #00ffff",
-"m c #ffffff",
-/* pixels */
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjhjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjhjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjhjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjhjjjjjjjjjjjjjjj",
-"jiiiiiiiijjjjjjjhjjjjjjjjjjjjjjj",
-"jiiiiiiiijjjjjjjhjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjhjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjhhhhhjjjjjjjjjjjjj",
-"jjjjjjjjjjgjjjjhhhjjjjjjjjjjjjjj",
-"jjjjjjjjjggjjjjjhjjjjjjjjiiijjjj",
-"jiiiiiijggggggggggggggggggiiiiij",
-"jiiiiiijggggggggggggggggggiiiiij",
-"jjjjjjjjjggjjjjjjjjjjjjjjiiijjjj",
-"jjjjjjjjjjgjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jiiiiiiiijjjjjjjjjjjjjjjjjjjjjjj",
-"jiiiiiiiijjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj",
-"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
-};
 
 
 // end of tswitch.cpp

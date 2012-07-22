@@ -51,8 +51,6 @@ class TRandTrigg : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** return icon */
-   virtual const char** getIcon(void) const;      
    /** reimplemented from TMiso to drop random generator */
    virtual int postRun( int good );
    /** reimplemented from TMiso to set start values */
@@ -90,8 +88,6 @@ class TRandTrigg : public TMiso  {
    static TClassInfo class_info;
    /** help str */
    static const char* helpstr;
-   /** icon */
-   static const char* icon[];
    /** start value of seed */
    int sseed;
    /** effective value of seedType */
