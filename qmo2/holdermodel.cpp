@@ -35,10 +35,20 @@ QVariant HolderModel::data( const QModelIndex &index, int role ) const
     return QVariant();
 
   if( index.column() == 0 ) {
-    return ho->targetName() + " " +  ho->getType();
+    QString r = ho->targetName() + " " +  ho->getType();
+    if( ho->isDyn() )
+      r += '.';
+    return r;
   }
   if( ho->isObject() ) {
-    return "*";
+    HolderObj *hob = qobject_cast<HolderObj*>(ho);
+    if( !hob )
+      return "??";
+    TDataSet *ob = hob->getObj();
+    if( !ob )
+      return "???";
+    return QString("*_") + QString::number( hob->getObj()->getNumObj() ) 
+       + ":" + QString::number( hob->getObj()->getAllowAdd() );
   }
   return ho->get();
 }

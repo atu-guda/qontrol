@@ -164,8 +164,8 @@ void QRunView::drawAll( QPainter &p )
   model->getData( "il1", &il1 );
   model->getData( "il2", &il2 );
   s.sprintf( "%5s  tp: %d t: %012.3f; m: [% .2f; % .2f]; rt: %7.2f  i: %7d (%3d:%3d);", 
-      getStateString(state), run_type, t, mouse_x, mouse_y, rt, 
-      i_tot, il1, il2  );
+    getStateString(state), run_type, t, mouse_x, mouse_y, rt, 
+    i_tot, il1, il2  );
   p.drawText( 10, 14, s );
   if( use_sync ) {
     drawVbar( p );

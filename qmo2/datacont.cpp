@@ -21,7 +21,7 @@ TClassInfo TDataContainer::class_info =
 TDataContainer::TDataContainer( TDataSet *aparent )
                :TDataSet( aparent )
 {
-  allow_add = 1; 
+  allow_add = 3; // obj and params
   state = 1;
 }
 

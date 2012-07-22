@@ -330,6 +330,8 @@ class TDataSet : public QObject {
    QString getFullName() const;
    /** return number of registerd elems = number of holders */
    int getNumObj() const;
+   /** return flags of allow adding */
+   int getAllowAdd() const { return allow_add; };
    /** returns list of registerd elems names - not holders */
    QStringList elemNames() const;
    /** returns list of holders */
@@ -424,7 +426,7 @@ class TDataSet : public QObject {
    HolderObj *holderOfMe;
    /** state: 0-bad, 1-constructed, 2-run; */
    int state; 
-   /** allowing object add /remove for some classes */
+   /** allowing object add /remove for some classes 1-add obj, 2-add params */
    int allow_add;
    /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
    int modified;

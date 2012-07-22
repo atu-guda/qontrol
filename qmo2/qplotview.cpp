@@ -558,7 +558,7 @@ void QPlotView::initFakeArrs(void)
 
 void QPlotView::initArrs(void)
 {
-  int i, k, tp, out_nu, out_tp, out_nn, out_ny, start_from;
+  int i, k, tp, out_tp, out_nn, out_ny, start_from;
   double vmin, vmax;
   QString outname, buf;
   TOutArr *arr;
@@ -582,18 +582,14 @@ void QPlotView::initArrs(void)
     errstr = "Not found X array";
     return; 
   };
-  out_nu = model->outname2out_nu( outname );
-  if( out_nu < 0 ) { 
-    initFakeArrs(); 
-    errstr = "Fail to convert X array name to array index";
-    return; 
-  };
-  arr = model->getOutArr( out_nu );
+  
+  arr = model->getOutArr( outname );
   if( arr == 0 ) { 
     initFakeArrs(); 
     errstr = "Fail to get X array object";
     return; 
   };
+
   adr = arr->getArray();
   out_tp = -1; out_nn = -1; out_ny = 1;
   arr->getData( "type", &out_tp ); 
@@ -617,15 +613,15 @@ void QPlotView::initArrs(void)
   xLabel = buf;
   for( i=0; i<6; i++ ) { // TODO: 6 is number of plots
     start_from = 0;
-    if( ny > 1 ) start_from = 1; // skip y in autoscale for 3D-like plot
-    buf = "y0name"; buf[1] = char( '0' + i );
+    if( ny > 1 ) 
+      start_from = 1; // skip y in autoscale for 3D-like plot
+    buf = "y" + QString::number(i) + "name";
     outname = "";
     gra->getData( buf, outname );
     if( !isGoodName( outname ) ) continue;
-    out_nu = model->outname2out_nu( outname );
-    if( out_nu < 0 ) continue;
-    arr = model->getOutArr( out_nu );
-    if( arr == 0 ) continue;
+    arr = model->getOutArr( outname );
+    if( !arr ) 
+      continue;
     adr = arr->getArray();
     out_tp = -1; out_nn = -1; out_ny = -1;
     arr->getData( "type", &out_tp );

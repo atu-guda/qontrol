@@ -21,7 +21,7 @@ TClassInfo TRootData::class_info =
 TRootData::TRootData( TDataSet* apar )
           :TDataContainer( apar )
 {
-  allow_add = 1; 
+  allow_add = 3;  // obj(1) and params(2)
 }
 
 TRootData::~TRootData()

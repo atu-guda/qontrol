@@ -795,25 +795,24 @@ void QMo2View::newOut()
   connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
 
   rc = dia->exec();
-  if( rc == QDialog::Accepted ) {
-    onameq = oname_ed->text(); enameq = ename_ed->text();
-    
-    // TODO: all must be QString
-    if( isGoodName( onameq ) ) {
-      int irc = model->insOut( qPrintable(onameq), qPrintable(enameq) );
-      if( irc  ) {
-	QMessageBox::critical( this, "Error", 
-	   QString("Fail to add Output: ") + onameq, 
-	   QMessageBox::Ok, QMessageBox::NoButton );
-      }
-      emit viewChanged();
-    } else {
-      QMessageBox::critical( this, "Error", 
-         QString("Bad output name: ") + onameq, 
-	 QMessageBox::Ok, QMessageBox::NoButton );
-    };
-  };
+  onameq = oname_ed->text(); enameq = ename_ed->text();
   delete dia;
+  if( rc != QDialog::Accepted ) 
+    return;
+    
+  if( isGoodName( onameq ) ) {
+    int irc = model->insOut( onameq, enameq );
+    if( irc  ) {
+      QMessageBox::critical( this, "Error", 
+	 QString("Fail to add Output: ") + onameq, 
+	 QMessageBox::Ok, QMessageBox::NoButton );
+    }
+    emit viewChanged();
+    return;
+  }
+  QMessageBox::critical( this, "Error", 
+     QString("Bad output name: ") + onameq, 
+     QMessageBox::Ok, QMessageBox::NoButton );
 }
 
 void QMo2View::delOut()
