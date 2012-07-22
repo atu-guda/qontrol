@@ -60,11 +60,10 @@ const char *TAdjGen::getHelp(void) const
 }
 
 
-int TAdjGen::startLoop( int acnx, int acny )
+int TAdjGen::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   ctt = ig = ig2 = 0; currOut = 0; real_tick = 0; tick = 0;
-  return rc;
+  return 0;
 }
 
 double TAdjGen::f( double /* t */ )

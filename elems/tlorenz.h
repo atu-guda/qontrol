@@ -42,11 +42,12 @@ class TLorenz : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** called before each inner param loop. Unused param - -1 */
-   virtual int startLoop( int acnx, int acny );
  protected:
    /** main computation function */
    virtual double f( double t );
+   /** called before each inner param loop. Unused param - -1 */
+   virtual int do_startLoop( int acnx, int acny );
+   
    /** main system parameters */
    PRM_DOUBLE1( sigma, 0, "\\sigma", "\\sigma parameter", "" );
    PRM_DOUBLE1( r, 0, "r", "r parameter", "" );

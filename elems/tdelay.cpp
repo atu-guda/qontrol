@@ -37,7 +37,7 @@ TDelay::TDelay( TDataSet* aparent )
 
 TDelay::~TDelay()
 {
-  delete buf; buf = 0; // in case of postRun missing
+  delete buf; buf = 0; // in case of do_postRun missing
 }
 
 TDataSet* TDelay::create( TDataSet* apar )
@@ -87,22 +87,20 @@ int TDelay::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-int TDelay::postRun( int good )
+int TDelay::do_postRun( int good )
 {
   delete buf; buf = 0;
-  TMiso::postRun( good );
   return 0;
 }
 
-int TDelay::startLoop( int acnx, int acny )
+int TDelay::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   double v;
-  int rc = TMiso::startLoop( acnx, acny );
   buf->reset(); u00 = 0; 
   v = cdelay / tdt;
   icd = int( v );
   v2 = v - icd; v1 = 1.0 - v2;
-  return rc;
+  return 0;
 }
 
 

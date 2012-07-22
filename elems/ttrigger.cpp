@@ -57,11 +57,10 @@ const char *TTrigger::getHelp(void) const
   return helpstr;
 }
 
-int TTrigger::startLoop( int acnx, int acny )
+int TTrigger::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   cst = useInit1; u2_old = et = 0;
-  return rc;
+  return 0;
 }
 
 double TTrigger::f( double t )

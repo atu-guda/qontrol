@@ -85,18 +85,17 @@ int TRandTrigg::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-int TRandTrigg::postRun( int good )
+int TRandTrigg::do_postRun( int /*good*/ )
 {
   if( rng ) {
     gsl_rng_free( rng );
     rng = 0;
-  };
-  return TMiso::postRun( good );
+  }
+  return 0;
 }
 
-int TRandTrigg::startLoop( int acnx, int acny )
+int TRandTrigg::do_startLoop( int acnx, int acny )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   ns = -1; u_old = 0; currOut = 0;
   if( (eff_seedType == 0) ||                // need to seed now
       (eff_seedType == 1 && acnx == 0 ) ||
@@ -109,7 +108,7 @@ int TRandTrigg::startLoop( int acnx, int acny )
     }
     gsl_rng_set( rng, sseed );
   };
-  return rc;
+  return 0;
 }
 
 

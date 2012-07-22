@@ -63,12 +63,11 @@ int TPid::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-int TPid::startLoop( int acnx, int acny )
+int TPid::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   vi1 = vi2 = u_old = u_old2 = 0;
   start = 1;
-  return rc;
+  return 0;
 }
 
 double TPid::f( double t )

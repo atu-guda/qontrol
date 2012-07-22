@@ -174,7 +174,7 @@ int TSource::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-int TSource::postRun( int good )
+int TSource::do_postRun( int good )
 {
   if( rng_u ) {
     gsl_rng_free( rng_u );
@@ -184,13 +184,12 @@ int TSource::postRun( int good )
     gsl_rng_free( rng_p );
     rng_p = 0;
   };
-  return TMiso::postRun( good );
+  return 0;
 }
 
 
-int TSource::startLoop( int acnx, int acny )
+int TSource::do_startLoop( int acnx, int acny )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   was_pulse = 0;
   tt = model_nn * tdt;
   // U rnd init
@@ -235,7 +234,7 @@ int TSource::startLoop( int acnx, int acny )
     f_ch_k = ( f_ch_ve - f_ch_vs ) / ( f_ch_te - f_ch_ts );
   };
 
-  return rc;
+  return 0;
 }
 
 int TSource::registered = reg();

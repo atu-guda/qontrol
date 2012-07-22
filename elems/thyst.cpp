@@ -100,11 +100,10 @@ void THyst::fixState(void)
     { d += s + x0;  s = -x0; };
 }
 
-int THyst::startLoop( int acnx, int acny )
+int THyst::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   s = d = 0;
-  return rc;
+  return 0;
 }
 
 int THyst::registered = reg();

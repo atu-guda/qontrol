@@ -49,11 +49,11 @@ class THyst : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to set init state */
-   virtual int startLoop( int acnx, int acny );
  protected:
    /** main computation function */
    virtual double f( double t );
+   /** reimplemented from TMiso to set init state */
+   virtual int do_startLoop( int acnx, int acny );
    void fixState(void);
  protected:
    /** type of hysteresis */

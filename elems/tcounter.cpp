@@ -57,11 +57,10 @@ const char *TCounter::getHelp(void) const
 }
 
 
-int TCounter::startLoop( int acnx, int acny )
+int TCounter::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   cn = flip = 0; u_old = 9e300;
-  return rc;
+  return 0;
 }
 
 double TCounter::f( double /* t */ )

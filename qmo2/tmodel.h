@@ -91,8 +91,8 @@ class TModel : public TDataContainer  {
   virtual int getNGraph(void) const;
   /** returns ptr to TGraph gra_nu */
   virtual TGraph* getGraph( int gra_nu );
-  /** inserts active element @returns: <0 - bad, >0= index in ptrs[] */
-  virtual int insElem( const QString &cl_name, const QString &ob_name,  
+  /** inserts active element @returns: nulltpr - bad  elese -ptr to inserted element */
+  TMiso* insElem( const QString &cl_name, const QString &ob_name,  
                        int aord, int avis_x, int avis_y );
   /** inserts new out array @returns: <0 - bad, >0= index in ptrs[] */
   virtual int insOut( const  QString &outname, const QString &objname );

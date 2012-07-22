@@ -62,11 +62,10 @@ const char *TLatch::getHelp(void) const
   return helpstr;
 }
 
-int TLatch::startLoop( int acnx, int acny )
+int TLatch::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   v = v_st; u_old = 0;  wasLatch = -1;
-  return rc;
+  return 0;
 }
 
 double TLatch::f( double t )

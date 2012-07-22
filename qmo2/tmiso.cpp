@@ -86,7 +86,6 @@ TMiso::~TMiso()
 
 TDataSet* TMiso::create( TDataSet* /* apar */ )
 {
-  // return new TMiso( apar );
   return 0; // cannot create abstract object
 }
 
@@ -214,23 +213,39 @@ int TMiso::modifyPrms()
 
 int TMiso::postRun( int good )
 {
+  do_postRun( good );
   state = good ? stateDone : stateGood;
   model = 0;
   return 0;
 }
 
-int TMiso::startLoop( int /* acnx */, int /* acny */ )
+int TMiso::do_postRun( int good )
+{
+  return 0;
+}
+
+int TMiso::startLoop( int acnx, int acny )
 {
   state = stateRun;
   out0 = out0_init;
   modifyPrmsPre();
   prm_mod = 0;
+  return do_startLoop( acnx, acny );
+}
+
+int TMiso::do_startLoop( int /* acnx */, int /* acny */ )
+{
   return 0;
 }
 
-int TMiso::endLoop(void)
+int TMiso::endLoop()
 {
   state = stateGood;
+  return do_endLoop();
+}
+
+int TMiso::do_endLoop()
+{
   return 0;
 }
 

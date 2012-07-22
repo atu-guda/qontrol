@@ -81,11 +81,10 @@ double TLorenz::f( double /*t*/ )
 }
 
 
-int TLorenz::startLoop( int acnx, int acny )
+int TLorenz::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   x = x_0; y = y_0 ; z = z_0;
-  return rc;
+  return 0;
 }
 
 int TLorenz::registered = reg();

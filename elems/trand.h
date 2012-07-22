@@ -60,15 +60,16 @@ class TRand : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to delete generator */
-   virtual int postRun( int good );
-   /** reimplemented from TMiso to init generator and variables */
-   virtual int startLoop( int acnx, int acny );
  protected:
    /** main computation function */
    virtual double f( double t );
    /** reimplemented from TMiso to create generator */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   /** reimplemented from TMiso to delete generator */
+   virtual int do_postRun( int good );
+   /** reimplemented from TMiso to init generator and variables */
+   virtual int do_startLoop( int acnx, int acny );
+   
    /** type of distribution */
    PRM_LIST1( type, efNRC, "Type", "Distribution type", "", trand_list_type );
    /** time of const output value, if <=0 -- chacge every tick */

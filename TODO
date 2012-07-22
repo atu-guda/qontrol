@@ -1,12 +1,15 @@
+create simple types
+gsl_* envelop
+TCircBuf + TDelay re*
+TFourier, TCorrAnal - remove output to TModel vars: can be user directly
 More plot types (dot...). Qwtplot?
-Tree View. -- rethink??
 Hide startLoop - like fun,f
 New hier
-TDataSet::toText -- really to XML, => cut,copy,paste
-Rename action (+on paste)
-Auto create GET/SET function for my datas, create Qt properties - scripts.
+Rename action
+Auto create GET/SET function for my datas, create Qt properties - scripts. ?
 
 
+Tree View. -- rethink??
 
 migrate to qontrol
 

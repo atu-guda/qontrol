@@ -42,13 +42,14 @@ class TPid : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to reset integrators and diffs */
-   virtual int startLoop( int acnx, int acny );
  protected:
    /** main computation function */
    virtual double f( double t );
    /** will be called before any action -- good place for allocs */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   /** reimplemented from TMiso to reset integrators and diffs */
+   virtual int do_startLoop( int acnx, int acny );
+   
    /** coefficients  */
    PRM_DOUBLE1( kd2, 0, "k_d2", "Coefficient in second derivation", "");
    PRM_DOUBLE1( kd1, 0, "k_d1", "Coefficient in first derivation" , "");

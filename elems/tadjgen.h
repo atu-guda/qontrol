@@ -43,11 +43,12 @@ class TAdjGen : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to reset */
-   virtual int startLoop( int acnx, int acny );
  protected:
    /** main computation function */
    virtual double f( double t );
+   /** reimplemented from TMiso to reset */
+   virtual int do_startLoop( int acnx, int acny );
+   
    /** type of averaging, */
    PRM_LIST1( type, efNoRunChange, "Type", "Type of generator", "", 
        "Default\nMAI\nDual(u0,u3)" );

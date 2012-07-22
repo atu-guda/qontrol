@@ -51,15 +51,16 @@ class TRandTrigg : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to drop random generator */
-   virtual int postRun( int good );
-   /** reimplemented from TMiso to set start values */
-   virtual int startLoop( int acnx, int acny );
  protected:
    /** main computation function */
    virtual double f( double t );
    /** reimplemented from TMiso to init random generator */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   /** reimplemented from TMiso to drop random generator */
+   virtual int do_postRun( int good );
+   /** reimplemented from TMiso to set start values */
+   virtual int do_startLoop( int acnx, int acny );
+   
    /** Probability of spontatious flip  */
    PRM_DOUBLE1( prob, 0, "Probability", "Probability of spontatious flip",""); 
    /** Forced every */

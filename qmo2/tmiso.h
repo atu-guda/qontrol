@@ -150,12 +150,12 @@ class TMiso : public TDataSet  {
     * non-virtual: adjusted by do_preRun
     * */
    int preRun( int run_tp, int an, int anx, int any, double adt );
-   /** will be called after all actions -- good place for deallocs */
-   virtual int postRun( int good );
-   /** called before each inner param loop. */
-   virtual int startLoop( int acnx, int acny );
-   /** will be called after each inner loop  */
-   virtual int endLoop(void);
+   /** will be called after all actions adn call do_postRun */
+   int postRun( int good );
+   /** called before each inner param loop and call do_startLoop */
+   int startLoop( int acnx, int acny );
+   /** will be called after each inner loop and call do_endLoop */
+   int endLoop(void);
  protected:
    /** main computation function
     * \param t current time
@@ -164,6 +164,12 @@ class TMiso : public TDataSet  {
    virtual double f( double t ) = 0;
    /** place of customization of preRun, return: 0 = Ok */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   /** will be called after all actions from posrtRun  -- good place for deallocs */
+   virtual int do_postRun( int good );
+   /** called before each inner param loop from startLoop */
+   virtual int do_startLoop( int acnx, int acny );
+   /** will be called after each inner loop: called frop endLoop */
+   virtual int do_endLoop(void);
    /** fill links to sources */
    int fillLinks();
    /** proceed parameters modification before first iteration 

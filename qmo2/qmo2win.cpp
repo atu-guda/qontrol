@@ -623,9 +623,9 @@ void QMo2Win::enableActions( bool ena, int id_ )
        act_print->setEnabled( ena );
        // TODO: implement this
        act_undo->setEnabled( false );
-       act_cut->setEnabled( false );
-       act_copy->setEnabled( false );
-       act_paste->setEnabled( false );
+       act_cut->setEnabled( ena );
+       act_copy->setEnabled( ena );
+       act_paste->setEnabled( ena );
        // elm
        act_newelm->setEnabled( ena );
        act_delelm->setEnabled( ena );
@@ -918,30 +918,27 @@ void QMo2Win::slotEditUndo()
 void QMo2Win::slotEditCut()
 {
   statusBar()->showMessage( tr( "Cutting selection..." ) );	
-//  QMo2View* m = (QMo2View*) pWorkspace->activeWindow();
-//  if ( m )
-//    m->cut();	
+  QMo2View* m = activeMdiChild();
+  if ( m )
+    m->cutElm();
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
 void QMo2Win::slotEditCopy()
 {
   statusBar()->showMessage( tr( "Copying selection to clipboard..." ) );
-
-//  QMo2View* m = (QMo2View*) pWorkspace->activeWindow();
-//  if ( m )
-//    m->copy();
+  QMo2View* m = activeMdiChild();
+  if ( m )
+    m->copyElm();
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
 void QMo2Win::slotEditPaste()
 {
   statusBar()->showMessage( tr( "Inserting clipboard contents..." ) );
-	
-//  QMo2View* m = (QMo2View*) pWorkspace->activeWindow();
-//  if ( m )
-//    m->paste();
-
+  QMo2View* m = activeMdiChild();
+  if ( m )
+    m->pasteElm();
   statusBar()->showMessage( tr( "Ready." ) );
 }
 

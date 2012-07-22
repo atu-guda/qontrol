@@ -43,11 +43,12 @@ class TIntegrator : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to init state */
-   virtual int startLoop( int acnx, int acny );
  protected:
    /** main computation function */
    virtual double f( double t );
+   /** reimplemented from TMiso to init state */
+   virtual int do_startLoop( int acnx, int acny );
+
    PRM_DOUBLE1( ki, 0, "k_i",  "Factor before integral", "" );
    PRM_DOUBLE1( s_val, 0, "Start", "Start value", "" );
    PRM_DOUBLE1( dis, 0, "Disc coeff", "Discharde coeff (if enabled)", "" );

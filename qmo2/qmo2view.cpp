@@ -23,6 +23,7 @@
 #include "miscfun.h"
 #include "qmo2view.h"
 #include "qmo2doc.h"
+#include "qmo2win.h"
 #include "qstructview.h"
 #include "qoutview.h"
 #include "qgraphview.h"
@@ -346,7 +347,13 @@ void QMo2View::newElm()
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
-  model->insElem( cnmq, onameq, oord, sel_x, sel_y) ; // reset() implied
+  TMiso *ob = model->insElem( cnmq, onameq, oord, sel_x, sel_y) ; // reset() implied
+  if( !ob  ) {
+    QMessageBox::critical( this, "Error", 
+       QString("Fail to add Elem: ") + cnmq + " " + onameq, 
+       QMessageBox::Ok, QMessageBox::NoButton );
+    return;
+  }
   changeSel( 0, 0, 1 ); // update sel
   editElm();
 }
@@ -598,20 +605,6 @@ void QMo2View::testElm1()
   
   buf = selObj->toString();
 
-  //QObjectList childs = selObj->children();
-  //for( QObjectList::iterator o = childs.begin(); o != childs.end(); ++o ) {
-  //  QObject *xo = *o;
-  //  buf += QString(xo->metaObject()->className()) + " " + xo->objectName();
-  //  if( ! xo->inherits("HolderData" )) {
-  //    buf += " -\n";
-  //    continue;
-  //  }
-  //  HolderData *ho = qobject_cast<HolderData*>(xo);
-  //  buf += QString("=\"") + ho->toString() + "\"";
-  //
-  //  buf += " \n";
-  //}
-
 
   QVBoxLayout *lay = new QVBoxLayout();
 
@@ -643,6 +636,121 @@ void QMo2View::testElm2()
   return;
 }
 
+void QMo2View::cutElm()
+{
+  copyElm();
+  delElm();
+}
+
+void QMo2View::copyElm()
+{
+  if( !selObj )
+    return;
+  QString s = selObj->toString();
+  QClipboard *clp = QApplication::clipboard();
+  if( clp ) {
+    clp->setText( s );
+  }
+}
+
+void QMo2View::pasteElm()
+{
+  if( selObj )
+    return;
+  QClipboard *clp = QApplication::clipboard();
+  if( !clp )
+    return;
+  QString s = clp->text();
+  int err_line, err_column;
+  QString errstr;
+  QDomDocument x_dd;
+  if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
+    QMessageBox::warning(QMo2Win::qmo2win, tr( PACKAGE ),
+                         tr("Cannot parse clipboard string:\n%2\nLine %3 column %4.")
+                         .arg(errstr).arg(err_line).arg(err_column) );
+    return;
+  }
+  QDomElement ee = x_dd.documentElement();
+  
+  QString tagname = ee.tagName();
+  if( tagname != "obj" ) {
+    QMessageBox::warning(QMo2Win::qmo2win, tr( PACKAGE ),
+                 tr("element tag is not 'obj':  %2")
+                         .arg( tagname ) );
+    return;
+  }
+  
+  QString eltype = ee.attribute( "otype" );
+  QString elname = ee.attribute( "name" );
+  QString elname_base = elname;
+  int suff_n = 1;
+  while( model->getHolder( elname ) && suff_n < 50 ) { // guess good name
+    elname = elname_base + "_" + QString::number( suff_n );
+    suff_n++;
+    if( suff_n > 20 ) {
+      elname += "_x";
+    }
+  }
+  
+  int oord = model->hintOrd();
+  
+  QDialog *dia = new QDialog( this );
+  QGridLayout *lay = new QGridLayout( dia );
+
+  QLabel *la_name = new QLabel( "&Name", dia );
+  lay->addWidget( la_name, 0, 0 );
+
+  QLineEdit *oname_ed = new QLineEdit( dia );
+  oname_ed->setText( elname );
+  oname_ed->setFocus();
+  lay->addWidget( oname_ed, 1, 0  );
+
+  QLabel *la_ord = new QLabel( "&Order", dia );
+  lay->addWidget( la_ord, 0, 1 );
+
+  QLineEdit *oord_ed = new QLineEdit( dia );
+  oord_ed->setText( QString::number(oord) );
+  lay->addWidget( oord_ed, 1, 1 );
+  
+  QDialogButtonBox *bbox 
+    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  lay->addWidget( bbox, 2, 0, 1, 2 );
+  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
+  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
+
+  int rc = dia->exec();
+  if( rc != QDialog::Accepted ) {
+    return;
+  }; 
+  elname = oname_ed->text(); 
+  oord = oord_ed->text().toInt();
+  delete dia;
+  
+  if( ! isGoodName( elname )  ) {
+    QMessageBox::critical( this, "Error", 
+       QString("Fail to add Elem: bad object name \"") + elname + "\"", 
+       QMessageBox::Ok, QMessageBox::NoButton );
+    return;
+  }
+
+  TMiso *ob = model->insElem( eltype, elname, oord, sel_x, sel_y) ; // reset() implied
+  if( !ob  ) {
+    QMessageBox::critical( this, "Error", 
+       QString("Fail to add Elem: ") + eltype + " " + elname, 
+       QMessageBox::Ok, QMessageBox::NoButton );
+    return;
+  }
+  if( !ob->fromDom( ee, errstr ) ) {
+    QMessageBox::warning(QMo2Win::qmo2win, tr( PACKAGE ),
+                 tr("fail to set params:  %1")
+                         .arg( errstr ) );
+  }
+  ob->setData( "vis_x", sel_x );
+  ob->setData( "vis_y", sel_y );
+  ob->setData( "ord", oord );
+  changeSel( 0, 0, 1 ); // update sel
+  
+}
 
 // ==== outs related 
 

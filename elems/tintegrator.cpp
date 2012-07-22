@@ -69,11 +69,10 @@ const char *TIntegrator::getHelp(void) const
 }
 
 
-int TIntegrator::startLoop( int acnx, int acny )
+int TIntegrator::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   v_old = v = s_val; t_rst = 0;
-  return rc;
+  return 0;
 }
 
 

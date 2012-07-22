@@ -66,11 +66,10 @@ const char *TLinP1Q0::getHelp(void) const
   return helpstr;
 }
 
-int TLinP1Q0::startLoop( int acnx, int acny )
+int TLinP1Q0::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   x_old = 0;
-  return rc;
+  return 0;
 }
 
 double TLinP1Q0::f( double /*t*/ )

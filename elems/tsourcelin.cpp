@@ -82,12 +82,11 @@ double TSourceLin::f( double t )
 }
 
 
-int TSourceLin::startLoop( int acnx, int acny )
+int TSourceLin::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   recalc();
   t_start = 0; curr_lin = 0;
-  return rc;
+  return 0;
 }
 
 void TSourceLin::recalc(void)

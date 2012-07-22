@@ -50,11 +50,12 @@ class TTrigger : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to init state */
-   virtual int startLoop( int acnx, int acny );
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
+   /** reimplemented from TMiso to init state */
+   virtual int do_startLoop( int acnx, int acny );
+   
    /** type of trigger */
    PRM_LIST1( type, efNRC, "Type", "Type of trigger", "", ttrigger_list );
    /**  current state */

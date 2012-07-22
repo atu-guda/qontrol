@@ -94,6 +94,9 @@ class QMo2View : public QWidget
    void infoElm();
    void testElm1();
    void testElm2();
+   void cutElm();
+   void copyElm();
+   void pasteElm();
    
    // outs related
    void newOut();

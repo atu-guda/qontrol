@@ -43,16 +43,16 @@ class TFourier : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to init summators  */
-   virtual int startLoop( int acnx, int acny );
-   /** reimplemented from TMiso to complete analysis and fill out arrays */
-   virtual int endLoop(void);
  protected:
    /** main computation function */
    virtual double f( double t );
    void initVars(void);
    /** reimplemented from TMiso to alloc buffers */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   /** reimplemented from TMiso to init summators  */
+   virtual int do_startLoop( int acnx, int acny );
+   /** reimplemented from TMiso to complete analysis and fill out arrays */
+   virtual int do_endLoop(void);
  protected:
    /** period parameters  */
    PRM_DOUBLE1( omega, efNoRunChange, "\\omega", "base frequency", "min=1e-3" );

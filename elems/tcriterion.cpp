@@ -58,11 +58,9 @@ const char *TCriterion::getHelp(void) const
   return helpstr;
 }
 
-int TCriterion::startLoop( int acnx, int acny )
+int TCriterion::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   st = 0;
-  return rc;
 }
 
 double TCriterion::f( double t )

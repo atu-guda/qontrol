@@ -42,13 +42,14 @@ class TVibro : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to init state */
-   virtual int startLoop( int acnx, int acny );
+ protected:
    /** main computation function */
    virtual double f( double t );
- protected:
+   /** reimplemented from TMiso to init state */
+   virtual int do_startLoop( int acnx, int acny );
    /** will be called before any action -- good place for allocs */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   
    /** damping */
    PRM_DOUBLE1( c0, 0, "c_0", "Damping coeficient", "" );
    /** natural frequency */

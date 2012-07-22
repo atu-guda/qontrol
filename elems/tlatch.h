@@ -42,11 +42,12 @@ class TLatch : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to init state */
-   virtual int startLoop( int acnx, int acny );
  protected:
    /** main computation function */
    virtual double f( double t );
+   /** reimplemented from TMiso to init state */
+   virtual int do_startLoop( int acnx, int acny );
+   
    /** type of */
    PRM_LIST1( type, efNRC, "Type", "Latch type", "", "Time\nSignal u[1]");
    /** time to latch */

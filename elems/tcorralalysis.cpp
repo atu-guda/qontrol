@@ -87,31 +87,30 @@ void TCorrAnalysis::reset_data()
   ave_x = ave_y = ave_x2 = ave_y2 = 0;
 }
 
-int TCorrAnalysis::startLoop( int acnx, int acny )
+int TCorrAnalysis::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   reset_data();
-  return TMiso::startLoop( acnx, acny );
+  return 0;
 }
 
-int TCorrAnalysis::endLoop(void)
+int TCorrAnalysis::do_endLoop()
 {
   double yy, e, se2;
-  int j, nx, nx_c, rc, do_cmp, do_fill;
+  int j, nx, nx_c, do_cmp, do_fill;
   const double *xdat, *cdat;
   TOutArr *arrx, *arry = 0, *arrc;
   cmp_ms = cmp_min = cmp_max = cmp_ampl = cmp_tmin = cmp_tmax = se2 = 0; 
   do_cmp = do_fill = 0;
-  rc = TMiso::endLoop();
   if( ! par )
-    return rc;
+    return 1;
   arrx = model->getOutArr( x_oname );
   if( !arrx ) 
-    return rc;
+    return 1;
   nx = nx_c = 0;
   arrx->getData( "n", &nx );
   xdat = arrx->getArray();
   if( xdat == 0 || nx < 2 ) 
-    return rc;
+    return 1;
   cdat = 0;
   arrc = model->getOutArr( c_oname );  
   if( arrc ) {
@@ -128,7 +127,7 @@ int TCorrAnalysis::endLoop(void)
     };
   };
   if( do_fill == 0 && do_cmp == 0 )
-    return rc;
+    return 1;
 
   for( j=0; j<nx; j++ ) {
     yy = a * xdat[j] + b;
@@ -149,7 +148,7 @@ int TCorrAnalysis::endLoop(void)
     cmp_ms = sqrt( se2 / nx );
     cmp_ampl = 0.5 * ( cmp_max - cmp_min );
   };
-  return rc; 
+  return 0; 
 }
 
 

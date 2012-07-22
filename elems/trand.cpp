@@ -95,18 +95,17 @@ int TRand::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-int TRand::postRun( int good )
+int TRand::do_postRun( int good )
 {
   if( rng ) {
     gsl_rng_free( rng );
     rng = 0;
   };
-  return TMiso::postRun( good );
+  return 0;
 }
 
-int TRand::startLoop( int acnx, int acny )
+int TRand::do_startLoop( int acnx, int acny )
 {
-  int k = TMiso::startLoop( acnx, acny );
   old_val = 0; sp_time = 1e300; old_in = 0;
   if( (eff_seedType == 0) ||                // need to seed now
       (eff_seedType == 1 && acnx == 0 ) ||
@@ -119,7 +118,7 @@ int TRand::startLoop( int acnx, int acny )
     }
     gsl_rng_set( rng, sseed );
   };
-  return k;
+  return 0;
 }
 
 double TRand::f( double  /*t*/  )

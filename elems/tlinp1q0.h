@@ -49,11 +49,12 @@ class TLinP1Q0 : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to init state */
-   virtual int startLoop( int acnx, int acny );
  protected:
    /** main computation function */
    virtual double f( double t );
+   /** reimplemented from TMiso to init state */
+   virtual int do_startLoop( int acnx, int acny );
+   
    /** coefficient near f(x) */
    PRM_DOUBLE1( a, 0, "a", "a in dx/dt = a*f(ku*u(t)-x)", "" );
    /** coefficient near u(t)  */

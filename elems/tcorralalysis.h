@@ -42,13 +42,13 @@ class TCorrAnalysis : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to reset summators */
-   virtual int startLoop( int acnx, int acny );
-   /** reimplemented from TMiso to fill out arrays */
-   virtual int endLoop(void);
  protected:
    /** main computation function */
    virtual double f( double t );
+   /** reimplemented from TMiso to reset summators */
+   virtual int do_startLoop( int acnx, int acny );
+   /** reimplemented from TMiso to fill out arrays */
+   virtual int do_endLoop();
    /* ============= function members ================== */
    /** resets collocted and computed data */
    void reset_data();

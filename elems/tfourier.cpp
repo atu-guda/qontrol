@@ -66,26 +66,23 @@ int TFourier::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-int TFourier::startLoop( int acnx, int acny )
+int TFourier::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int i;
-  int rc = TMiso::startLoop( acnx, acny );
-  for( i=0; i<=ng; i++ )
-  aa[i] = bb[i] = am[i] = 0;
+  for( int i=0; i<=ng; i++ )
+    aa[i] = bb[i] = am[i] = 0;
   s_x2 = a0 = a1 = b1 = ampl = ampl1 = phi = qpow = qpow1 = 0;
   ii = 0; n_st = 0; n_en = model_nn;
   initVars();
-  return rc;
+  return 0;
 }
 
-int TFourier::endLoop(void)
+int TFourier::do_endLoop()
 {
-  int i, j, nx, rc;
+  int i, j, nx;
   TOutArr *arra, *arrb, *arram, *arrom, *arrx, *arry;
   const double *xdat;
   double v, vx;
-  rc = TMiso::endLoop();
-  if( !par ) return rc;
+  
   if( out_a >= 0 ) { // ------- fill model vars 
     for( i=0; i<=ng; i++ ) 
       model->setVar( out_a + i, aa[i]);
@@ -127,14 +124,17 @@ int TFourier::endLoop(void)
       arrom->push_val( omega * i, 10000 ); // ignore level
   };
 
-  if( ! useFill ) return rc;
+  if( ! useFill ) 
+    return 0;
   arrx = model->getOutArr( x_oname ); // -- fill compare out array
   arry = model->getOutArr( y_oname );
-  if( !arrx || !arry ) return rc;
+  if( !arrx || !arry ) 
+    return 1;
   xdat = arrx->getArray();
   nx = -1;
   arrx->getData( "n", &nx );
-  if( xdat == 0 || nx < 2 ) return rc;
+  if( xdat == 0 || nx < 2 ) 
+    return 1;
   arry->alloc( nx, 1 ); 
   for( i=0; i<nx; i++ ) {
     v = 0; vx = omega * xdat[i];
@@ -142,7 +142,7 @@ int TFourier::endLoop(void)
       v += aa[j] * cos( j * vx ) +  bb[j] * sin( j * vx );
     arry->push_val( v, 10000 ); // ignore level
   };
-  return rc;
+  return 0;
 }
 
 double TFourier::f( double t )

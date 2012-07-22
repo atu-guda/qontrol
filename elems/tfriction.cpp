@@ -71,12 +71,11 @@ const char *TFriction::getHelp(void) const
 }
 
 
-int TFriction::startLoop( int acnx, int acny )
+int TFriction::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   x_old = v = v_old = Ff = 0;
   bodyState = 0;
-  return rc;
+  return 0;
 }
 
 double TFriction::f( double /* t */ )

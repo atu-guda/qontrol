@@ -43,11 +43,12 @@ class TCounter : public TMiso  {
       { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
-   /** reimplemented from TMiso to reset counter */
-   virtual int startLoop( int acnx, int acny );
  protected:
    /** main computation function */
    virtual double f( double t );
+   /** reimplemented from TMiso to reset counter */
+   virtual int do_startLoop( int acnx, int acny );
+   
    /** type of output from counter */
    PRM_LIST1( type, efNRC, "Type", "Type of counters output", "", 
        "level\npulse+\npulse+-\nn" );

@@ -1084,26 +1084,30 @@ void TDataSet::post_set()
 QString TDataSet::toString() const
 {
   check_guard();
-  static int lev = -1; 
-  ++lev;
   QString buf;
   buf.reserve(4096); // TODO ?
+  QTextStream tstr( &buf, QIODevice::WriteOnly );
+  QDomDocument dd_tmp;
+  QDomElement el_tmp = dd_tmp.createElement("tmp_xxx");
+  QDomElement dom = toDom( dd_tmp );
+  dom.save( tstr, 4 );
   
-  for( HolderData *ho : ho_vect ) {
-    buf += QString( lev*2, QChar(' ') ); // for indent (human view). Is needed?
-    if( ho->inherits( "HolderObj" ) ) {
-      buf += ho->targetName() + " = {\n" + ho->toString() + "}\n"; 
-    } else {
-      buf += ho->targetName() + " = \"" + quoteString( ho->toString() ) + "\"\n"; 
-    }
-  }
-  --lev;
   return buf; 
 }
 
-bool TDataSet::fromString( const QString & /*s*/ )
+bool TDataSet::fromString( const QString &s )
 {
-  return false; // TODO;
+  QString errstr;
+  int err_line, err_column;
+  QDomDocument x_dd;
+  if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
+    qDebug( "ERR: TDataSet::fromString: fail to parse str: line %d col %d", 
+	err_line, err_column );
+    return false; 
+  }
+  QDomElement domroot = x_dd.documentElement();
+
+  return fromDom( domroot, errstr ); 
 }
 
 QDomElement TDataSet::toDom( QDomDocument &dd ) const

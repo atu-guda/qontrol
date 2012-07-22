@@ -64,12 +64,11 @@ int TVibro::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-int TVibro::startLoop( int acnx, int acny )
+int TVibro::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  int rc = TMiso::startLoop( acnx, acny );
   x_old = x_old2 = u_old = f_old = 0;
   isStart = 1;
-  return rc;
+  return 0;
 }
 
 double TVibro::f( double /*t*/ )

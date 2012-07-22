@@ -432,19 +432,19 @@ TGraph* TModel::getGraph( int gra_nu )/*{{{1*/
   return v_graph[gra_nu];
 }/*}}}1*/
 
-int TModel::insElem( const QString &cl_name, const QString &ob_name,
+TMiso* TModel::insElem( const QString &cl_name, const QString &ob_name,
                      int aord, int avis_x, int avis_y )/*{{{1*/
 {
   TMiso *ob;
   ob = static_cast<TMiso*>( add_obj( cl_name, ob_name ) );
-  if( ob == 0 || ob->isChildOf( "TMiso" ) == 0 ) 
-    return -1;
+  if( !ob || ob->isChildOf( "TMiso" ) == 0 ) 
+    return nullptr;
   ob->setData( "ord", aord );
   ob->setData( "vis_x", avis_x );  
   ob->setData( "vis_y", avis_y );
   reset();
   modified |= 1;
-  return 0;
+  return ob;
 }/*}}}1*/
 
 int TModel::insOut( const QString &outname, const QString &objname )/*{{{1*/
