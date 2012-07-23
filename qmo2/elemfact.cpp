@@ -34,13 +34,16 @@ TDataSet* ElemFactory::createElem( const QString &a_type,
 {
   MapStrClass::const_iterator i = str_class.find( a_type );
   if( i == str_class.end() ) {
-    qDebug( "ERR: create: fail to find class %s", qPrintable( a_type ) ); 
-    return 0;
+    qDebug( "WARN: ElemFactory::createElem: "
+	     "fail to find class \"%s\"", qPrintable( a_type ) ); 
+    return nullptr;
   }
   // check parent for name
   if( parent->getHolder(ob_name) ) {
-    qDebug( "ERR: create: name %s exists in parent", qPrintable( ob_name ) ); 
-    return 0;
+    qDebug( "WARN: ElemFactory::createElem: "
+	     "name \"%s\" exists in parent \"%s\"", 
+	     qPrintable( ob_name ), qPrintable(parent->getFullName()) );
+    return nullptr;
   }
   
   TDataSet *ob =  i.value()->creator( parent );
@@ -49,6 +52,26 @@ TDataSet* ElemFactory::createElem( const QString &a_type,
   return ob;
 }
 
+HolderData* ElemFactory::createParam( const QString &a_type, 
+       const QString &ob_name, TDataSet *parent  ) const
+{
+  MapStrHolder::const_iterator i = str_holder.find( a_type );
+  if( i == str_holder.end() ) {
+    qDebug( "WARN: ElemFactory::createParam: "
+	     "fail to find type \"%s\"", qPrintable( a_type ) ); 
+    return nullptr;
+  }
+  // check parent for name
+  if( parent->getHolder(ob_name) ) {
+    qDebug( "WARN: ElemFactory::createParam: "
+	     "name \"%s\" exists in parent %s", 
+	     qPrintable( ob_name ), qPrintable(parent->getFullName()) );
+    return nullptr;
+  }
+  
+  HolderData *ho = i.value()->creator( ob_name, ob_name, parent, 0, "", "dyn=1" );
+  return ho;
+}
 
 bool ElemFactory::registerElemType( const TClassInfo *cl_info )
 {
@@ -73,6 +96,20 @@ bool ElemFactory::unregisterElemType( const QString &a_type )
     return 0;
   }
   str_class.erase( i );
+  return true;
+}
+
+bool ElemFactory::registerSimpleType( const HolderInfo *ho_info )
+{
+  if( ! ho_info )
+    return false;
+  QString tp_name = L8B( ho_info->name );
+  if( str_holder.contains( tp_name ) ) {
+    qDebug( "WARN: ElemFactory::registerSimpleType:"
+	    " type \"%s\" already exists", ho_info->name ); 
+    return false;
+  }
+  str_holder.insert( tp_name, ho_info );
   return true;
 }
 

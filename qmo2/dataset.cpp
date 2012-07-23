@@ -115,7 +115,12 @@ QDomElement HolderData::toDom( QDomDocument &dd ) const
 }
 
 
+
 // ---------------- HolderInt ---------
+HolderInfo HolderInt::holder_info = {
+  "int", HolderInt::createPlus
+};
+
 
 HolderInt::HolderInt( int *p, const QString &obj_name, 
               const QString &v_name, TDataSet *a_parent, int a_flags,
@@ -139,6 +144,14 @@ HolderInt::~HolderInt()
   if( dyn )
     delete val;
   val = 0; ptr = 0; dyn = 0;
+}
+
+HolderData* HolderInt::createPlus( const QString &obj_name, 
+         const QString &v_name, TDataSet *a_parent, int a_flags,
+	 const QString &a_descr, const QString &a_extra )
+{
+  return new HolderInt( 0, obj_name, v_name, a_parent, a_flags, 
+                        a_descr, a_extra );
 }
 
 bool HolderInt::set( const QVariant & x )
@@ -184,7 +197,19 @@ QString HolderInt::getType() const
   return "int";
 }
 
+int HolderInt::registered = reg();
+
+int HolderInt::reg()
+{
+  return ElemFactory::theFactory().registerSimpleType( &holder_info  );
+}
+
+
 // ---------------- HolderSwitch ---------
+HolderInfo HolderSwitch::holder_info = {
+  "switch", HolderSwitch::createPlus
+};
+
 HolderSwitch::HolderSwitch( int *p, const QString &obj_name, 
               const QString &v_name, TDataSet *a_parent, int a_flags,
 	      const QString &a_descr,
@@ -203,6 +228,14 @@ HolderSwitch::~HolderSwitch()
   // NOP
 }
 
+HolderData* HolderSwitch::createPlus( const QString &obj_name, 
+         const QString &v_name, TDataSet *a_parent, int a_flags,
+	 const QString &a_descr, const QString &a_extra )
+{
+  return new HolderSwitch( 0, obj_name, v_name, a_parent, a_flags, 
+                           a_descr, a_extra );
+}
+
 
 void HolderSwitch::post_set()
 {
@@ -214,8 +247,20 @@ QString HolderSwitch::getType() const
   return "switch";
 }
 
+int HolderSwitch::registered = reg();
+
+int HolderSwitch::reg()
+{
+  return ElemFactory::theFactory().registerSimpleType( &holder_info  );
+}
+
+
 
 // ---------------- HolderList ---------
+HolderInfo HolderList::holder_info = {
+  "list", HolderList::createPlus
+};
+
 HolderList::HolderList( int *p, const QString &obj_name, 
      const QString &v_name, TDataSet *a_parent, int a_flags,
      const QString &a_descr,
@@ -235,6 +280,15 @@ HolderList::~HolderList()
   // NOP
 }
 
+// FIXME: not to create dynamicaly: where to create list elems
+HolderData* HolderList::createPlus( const QString &obj_name, 
+         const QString &v_name, TDataSet *a_parent, int a_flags,
+	 const QString &a_descr, const QString &a_extra )
+{
+  return new HolderList( 0, obj_name, v_name, a_parent, a_flags, a_descr, 
+      a_extra, "First\nSecond\nThird\nFourth\nFifth"); // fake list
+}
+
 
 QString HolderList::getType() const
 {
@@ -242,8 +296,19 @@ QString HolderList::getType() const
 }
 
 
+int HolderList::registered = reg();
+
+int HolderList::reg()
+{
+  return ElemFactory::theFactory().registerSimpleType( &holder_info  );
+}
+
+
 
 // ---------------- HolderDouble ---------
+HolderInfo HolderDouble::holder_info = {
+  "double", HolderDouble::createPlus
+};
 
 HolderDouble::HolderDouble( double *p, const QString &obj_name,
               const QString &v_name,  TDataSet *a_parent, int a_flags,
@@ -267,6 +332,14 @@ HolderDouble::~HolderDouble()
   if( dyn )
     delete val;
   val = 0; ptr = val; dyn = 0;
+}
+
+HolderData* HolderDouble::createPlus( const QString &obj_name, 
+         const QString &v_name, TDataSet *a_parent, int a_flags,
+	 const QString &a_descr, const QString &a_extra )
+{
+  return new HolderDouble( 0, obj_name, v_name, a_parent, a_flags, 
+                           a_descr, a_extra);
 }
 
 bool HolderDouble::set( const QVariant & x )
@@ -311,7 +384,18 @@ QString HolderDouble::getType() const
 }
 
 
+int HolderDouble::registered = reg();
+
+int HolderDouble::reg()
+{
+  return ElemFactory::theFactory().registerSimpleType( &holder_info  );
+}
+
+
 // ---------------- HolderString ---------
+HolderInfo HolderString::holder_info = {
+  "string", HolderString::createPlus
+};
 
 HolderString::HolderString( QString *p, const QString &obj_name,
               const QString &v_name,  TDataSet *a_parent, int a_flags,
@@ -341,6 +425,14 @@ HolderString::~HolderString()
   if( dyn )
     delete val;
   val = 0; ptr = val; dyn = 0;
+}
+
+HolderData* HolderString::createPlus( const QString &obj_name, 
+         const QString &v_name, TDataSet *a_parent, int a_flags,
+	 const QString &a_descr, const QString &a_extra )
+{
+  return new HolderString( 0, obj_name, v_name, a_parent, a_flags,
+                           a_descr, a_extra);
 }
 
 bool HolderString::set( const QVariant & x )
@@ -378,95 +470,18 @@ QString HolderString::getType() const
   return "string";
 }
 
-// ---------------- HolderStringArr ---------
+int HolderString::registered = reg();
 
-HolderStringArr::HolderStringArr( QString *p, int an, const QString &obj_name,
-              const QString &v_name,  TDataSet *a_parent, int a_flags,
-	      const QString &a_descr,
-	      const QString &a_extra )
-          :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
-	   n(an), val(p)
+int HolderString::reg()
 {
-  if( n < 1 )
-    n = 1;
-  if( !val ) {
-    val = new QString [n]; dyn = 1;
-  }
-  post_set();
-  if( getParm("props").isEmpty() ) {
-    setParm( "props", "STRINGARR" );
-  }
-  if( v_min < 0 ) {
-    v_min = 0;
-  }
-  if( v_max > 100000 ) {
-    v_max = 100000;
-  }
-  ptr = val; tp=QVariant::StringList; old_tp = dtpStringArr;
+  return ElemFactory::theFactory().registerSimpleType( &holder_info  );
 }
 
-HolderStringArr::~HolderStringArr()
-{
-  if( dyn )
-    delete[] val;
-  val = 0; ptr = val; dyn = 0; n = 0;
-}
-
-bool HolderStringArr::set( const QVariant & x )
-{
-  QStringList sl = x.toStringList();
-  for( int i=0; i<n; ++i ) {
-    val[i] = sl[i];
-  }
-  post_set();
-  return true;
-}
-
-QVariant HolderStringArr::get() const
-{
-  QStringList sl;
-  for( int i=0; i<n; ++i ) {
-    sl << val[i];
-  }
-  return QVariant( sl );
-}
-
-void HolderStringArr::post_set()
-{
-  for( int i=0; i<n; ++i ) {
-    val[i].truncate( (int)(v_max) );
-  }
-}
-
-QString HolderStringArr::toString() const
-{
-  QString s;
-  for( int i=0; i<n; ++i ) {
-    QString t = val[i];
-    t.replace( "\\", "\\\\" );
-    t.replace( "\"", "\\\"" );
-    s += "\"" + t + "\",";
-  }
-  return s;
-}
-
-bool HolderStringArr::fromString( const QString &s )
-{
-  QStringList sl = s.split("\",\""); // TODO: overbad!
-  for( int i=0; i<n; ++i ) {
-    val[i] = sl[i];
-  }
-  post_set();
-  return true;
-}
-
-
-QString HolderStringArr::getType() const
-{
-  return "string[]";
-}
 
 // ---------------- HolderColor ---------
+HolderInfo HolderColor::holder_info = {
+  "color", HolderColor::createPlus
+};
 
 HolderColor::HolderColor( QColor *p, const QString &obj_name,
               const QString &v_name,  TDataSet *a_parent, int a_flags,
@@ -491,6 +506,15 @@ HolderColor::~HolderColor()
     delete val;
   val = 0; ptr = val;
 }
+
+HolderData* HolderColor::createPlus( const QString &obj_name, 
+         const QString &v_name, TDataSet *a_parent, int a_flags,
+	 const QString &a_descr, const QString &a_extra )
+{
+  return new HolderColor( 0, obj_name, v_name, a_parent, a_flags,
+                           a_descr, a_extra);
+}
+
 
 bool HolderColor::set( const QVariant & x )
 {
@@ -528,6 +552,14 @@ bool HolderColor::fromString( const QString &s )
 QString HolderColor::getType() const
 {
   return "color";
+}
+
+
+int HolderColor::registered = reg();
+
+int HolderColor::reg()
+{
+  return ElemFactory::theFactory().registerSimpleType( &holder_info  );
 }
 
 
@@ -971,16 +1003,15 @@ double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg )
 }
 
 
-void* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
+TDataSet* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
 {
-  if( !allow_add )
+  if( ! ( allow_add & allowObject ) )
     return nullptr;
   if( getHolder( ob_name ) != nullptr ) {
     qDebug( "ERR: TDataSet::add_obj: name \"%s\" exist in %s!",
 	qPrintable(ob_name), qPrintable( getFullName() ) );
     return nullptr;
   }
-  // TODO: no simple types for now!
   TDataSet *ob = ElemFactory::theFactory().createElem( cl_name, ob_name, this );
   if( !ob ) {
     return nullptr;
@@ -1007,6 +1038,23 @@ int TDataSet::del_obj( const QString &ob_name )
   return 1;
 }
 
+HolderData* TDataSet::add_param( const QString &tp_name, const QString &ob_name )
+{
+  if( ! ( allow_add & allowParam ) )
+    return nullptr;
+  if( getHolder( ob_name ) ) {
+    qDebug( "ERR: TDataSet::add_param: name \"%s\" exist in %s!",
+	qPrintable(ob_name), qPrintable( getFullName() ) );
+    return nullptr;
+  }
+  HolderData *ho = ElemFactory::theFactory().createParam( tp_name, ob_name, this );
+  if( !ho ) {
+    return nullptr;
+  }
+  return ho;
+}
+
+
 
 int TDataSet::isValidType(  const QString & /*cl_name*/  ) const
 {
@@ -1026,7 +1074,6 @@ bool TDataSet::isChildOf( const QString &cname )
 }
 
 
-// FIXME: implement 
 bool TDataSet::set( const QVariant & x )
 {
   check_guard();
@@ -1036,7 +1083,7 @@ bool TDataSet::set( const QVariant & x )
 QVariant TDataSet::get() const
 {
   check_guard();
-  return QVariant( this->toString() );// TODO:
+  return QVariant( this->toString() );
 }
 
 void TDataSet::post_set()
@@ -1126,7 +1173,7 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
 	return false;
       }
       if( !ho ) { // name not found
-	if( ! allow_add ) {
+	if( ! ( allow_add & allowObject) ) {
 	  qDebug( "WARN: TDataSet::fromDom: creating disallowed in: \"%s\"",
 		   qPrintable( objectName() ) );
 	  continue;
@@ -1150,16 +1197,27 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
       }
     
     } else if( tagname == "param" ) {  // ---------------- simple param
+      QString tp_name = ee.attribute("otype");
       HolderData *ho = getHolder( elname );
-      if( !ho ) {       //  TODO: create param dyn, if allowed
-	qDebug( "WARN: TDataSet::fromDom: unknown param: \"%s\"",
-		 qPrintable(elname) );
-	continue;
-      }
-      if( ho->isObject() ) {
+      if( ho && ho->isObject() ) {
 	errstr = QString("TDataSet::fromDom: param %1 is a element type %2 ")
 		 .arg(elname).arg(ho->getType()); 
 	return false;
+      }
+      if( !ho ) {
+	qDebug( "WARN: TDataSet::fromDom: unknown param: \"%s\"",
+		 qPrintable(elname) );
+	if( ! ( allow_add & allowParam ) ) {
+	  qDebug( "WARN: TDataSet::fromDom: creating param disallowed in: \"%s\"",
+		   qPrintable( objectName() ) );
+	  continue;
+	}
+	ho =  add_param( tp_name, elname );
+	if( !ho  ) {
+	  errstr = QString("TDataSet::fromDom: fail to create param %1 %2 ")
+		   .arg(tp_name).arg(elname); 
+	  return false;
+	}
       }
       ho->set( getDomText(ee) );
 

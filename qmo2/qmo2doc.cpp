@@ -126,17 +126,10 @@ bool QMo2Doc::newDocument()
   }
   rootdata = new TRootData( 0 );
   rootdata->setObjectName( "root" );
-  if( ! rootdata->add_obj( "TModel", "model" ) ) {
-    QMessageBox::critical( 0, "QMo2Doc::newDocument", 
-      QString("Fail to insert model to root: "), 0,0,0 );
-    return false;
-  }
-
-  // TODO: create complex model
-  model = qobject_cast<TModel*>(rootdata->getObj( "model", "TModel" ));
+  model = qobject_cast<TModel*>(rootdata->add_obj( "TModel", "model" ));
   if( !model ) {
     QMessageBox::critical( 0, "QMo2Doc::newDocument", 
-      QString("Fail to find model in root: "), 0,0,0 );
+      QString("Fail to insert model to root: "), 0,0,0 );
     return false;
   }
 

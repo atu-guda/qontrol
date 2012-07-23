@@ -438,7 +438,7 @@ TMiso* TModel::insElem( const QString &cl_name, const QString &ob_name,
                      int aord, int avis_x, int avis_y )/*{{{1*/
 {
   TMiso *ob;
-  ob = static_cast<TMiso*>( add_obj( cl_name, ob_name ) );
+  ob = qobject_cast<TMiso*>( add_obj( cl_name, ob_name ) );
   if( !ob || ob->isChildOf( "TMiso" ) == 0 ) 
     return nullptr;
   ob->setData( "ord", aord );
@@ -451,7 +451,7 @@ TMiso* TModel::insElem( const QString &cl_name, const QString &ob_name,
 
 int TModel::insOut( const QString &outname, const QString &objname )/*{{{1*/
 {
-  TOutArr *arr = static_cast<TOutArr*>( add_obj( "TOutArr", outname ) );
+  TOutArr *arr = qobject_cast<TOutArr*>( add_obj( "TOutArr", outname ) );
   if( !arr || arr->isChildOf( "TOutArr" ) == 0 ) 
     return -1;
   arr->setData( "name", objname );
@@ -471,7 +471,7 @@ int TModel::insOut( const QString &outname, const QString &objname )/*{{{1*/
 
 int TModel::insGraph( const QString &gname )/*{{{1*/
 {
-  TGraph *gra = static_cast<TGraph*>( add_obj( "TGraph", gname ) );
+  TGraph *gra = qobject_cast<TGraph*>( add_obj( "TGraph", gname ) );
   if( !gra || gra->isChildOf( "TGraph" ) == 0 ) 
     return -1;
   reset();

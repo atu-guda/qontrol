@@ -43,7 +43,7 @@ enum ClassProps {
   used for class registration
 */
 struct TClassInfo {
-  /** uniq class id; 0 -- end of list */
+  /** uniq class id; -- TODO: obsoleted */
   int id;
   /** class name */
   const char *className;
@@ -64,6 +64,22 @@ enum ltype_t {
   LinkSpec,     // linked to special name, like ':prm1', ':t'
   LinkBad       // link target not found
 };
+
+enum allow_type {
+  allowObject = 1,
+  allowParam = 2
+};
+
+typedef HolderData* (*PFHolderData)( const QString &obj_name, const QString &v_name, 
+              TDataSet *a_parent, int a_flags, const QString &a_descr, 
+	      const QString &a_extra);
+
+/** structure to create Holders dynamicaly whith simple targets */
+struct HolderInfo {
+  const char *name; // name of type, to holder itself (or "obj"?)
+  PFHolderData creator;
+};
+
 
 // -------------------------- HOLDERS ------------------------------------
 
@@ -128,6 +144,9 @@ class HolderInt : public HolderData {
     const QString &a_descr = QString(),
     const QString &a_extra  = QString() );
   virtual ~HolderInt();
+  static HolderData* createPlus( const QString &obj_name, 
+         const QString &v_name, TDataSet *a_parent, int a_flags,
+	 const QString &a_descr, const QString &a_extra);
   virtual bool set( const QVariant & x );
   virtual QVariant get() const;
   virtual void post_set();
@@ -136,6 +155,10 @@ class HolderInt : public HolderData {
   virtual QString getType() const;
  protected:
   int *val;
+  /** holder decription + autoregister */
+  static HolderInfo holder_info;
+  static int registered;
+  static int reg();
 };
 
 #define PRM_INT1( name, flags, vname, descr, extra ) \
@@ -151,8 +174,16 @@ class HolderSwitch : public HolderInt {
     const QString &a_descr = QString(),
     const QString &a_extra  = QString() );
   virtual ~HolderSwitch();
+  static HolderData* createPlus( const QString &obj_name, 
+         const QString &v_name, TDataSet *a_parent, int a_flags,
+	 const QString &a_descr, const QString &a_extra);
   virtual void post_set();
   virtual QString getType() const;
+ protected: 
+  /** holder decription + autoregister */
+  static HolderInfo holder_info;
+  static int registered;
+  static int reg();
 };
 
 #define PRM_SWITCH1( name, flags, vname, descr, extra ) \
@@ -169,9 +200,16 @@ class HolderList : public HolderInt {
      const QString &a_descr = QString(),
      const QString &a_extra  = QString(), const QString &a_elems = QString() );
   virtual ~HolderList();
+  static HolderData* createPlus( const QString &obj_name, 
+         const QString &v_name, TDataSet *a_parent, int a_flags,
+	 const QString &a_descr, const QString &a_extra);
   // virtual void post_set();
   virtual QString getType() const;
- private:
+ protected: 
+  /** holder decription + autoregister */
+  static HolderInfo holder_info;
+  static int registered;
+  static int reg();
 };
 
 
@@ -188,6 +226,9 @@ class HolderDouble : public HolderData {
      const QString &a_descr = QString(),
      const QString &a_extra  = QString() );
   virtual ~HolderDouble();
+  static HolderData* createPlus( const QString &obj_name, 
+         const QString &v_name, TDataSet *a_parent, int a_flags,
+	 const QString &a_descr, const QString &a_extra);
   virtual bool set( const QVariant & x );
   virtual QVariant get() const;
   virtual void post_set();
@@ -196,6 +237,10 @@ class HolderDouble : public HolderData {
   virtual QString getType() const;
  protected:
   double *val;
+  /** holder decription + autoregister */
+  static HolderInfo holder_info;
+  static int registered;
+  static int reg();
 };
 
 #define PRM_DOUBLE1( name, flags, vname, descr, extra ) \
@@ -216,6 +261,9 @@ class HolderString : public HolderData {
      const QString &a_descr = QString(),
      const QString &a_extra  = QString() );
   virtual ~HolderString();
+  static HolderData* createPlus( const QString &obj_name, 
+         const QString &v_name, TDataSet *a_parent, int a_flags,
+	 const QString &a_descr, const QString &a_extra);
   virtual bool set( const QVariant & x );
   virtual QVariant get() const;
   virtual void post_set();
@@ -224,35 +272,16 @@ class HolderString : public HolderData {
   virtual QString getType() const;
  protected:
   QString *val;
+  /** holder decription + autoregister */
+  static HolderInfo holder_info;
+  static int registered;
+  static int reg();
 };
 
 #define PRM_STRING1( name, flags, vname, descr, extra ) \
  QString name; \
  HolderString __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
 
-/** Holder of QString fixed arrays */
-class HolderStringArr : public HolderData {
-  Q_OBJECT
- public: 
-  HolderStringArr( QString *p, int an, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
-     const QString &a_descr = QString(),
-     const QString &a_extra  = QString() );
-  virtual ~HolderStringArr();
-  virtual bool set( const QVariant & x );
-  virtual QVariant get() const;
-  virtual void post_set();
-  virtual QString toString() const;
-  virtual bool fromString( const QString &s );
-  virtual QString getType() const;
- protected:
-  int n;
-  QString *val;
-};
-
-#define PRM_STRINGARR( name, n, flags, vname, descr, extra ) \
- QString name[n]; \
- HolderStringArr __HO_##name ={  & name, n, #name, vname, this, flags, descr, extra  } ; 
 
 
 /** Holder of QColor values */
@@ -264,6 +293,9 @@ class HolderColor : public HolderData {
      const QString &a_descr = QString(),
      const QString &a_extra  = QString() );
   virtual ~HolderColor();
+  static HolderData* createPlus( const QString &obj_name, 
+         const QString &v_name, TDataSet *a_parent, int a_flags,
+	 const QString &a_descr, const QString &a_extra);
   virtual bool set( const QVariant & x );
   virtual QVariant get() const;
   virtual void post_set();
@@ -271,6 +303,10 @@ class HolderColor : public HolderData {
   virtual bool fromString( const QString &s );
   virtual QString getType() const;
  protected:
+  /** holder decription + autoregister */
+  static HolderInfo holder_info;
+  static int registered;
+  static int reg();
   QColor *val;
 };
 
@@ -298,6 +334,10 @@ class HolderObj : public HolderData {
   virtual QDomElement toDom( QDomDocument &dd ) const;
  protected:
   TDataSet *obj;
+  /** TODO??? holder decription + autoregister */
+  //static HolderInfo holder_info;
+  //static int registered;
+  //static int reg();
 };
 
 
@@ -370,8 +410,10 @@ class TDataSet : public QObject {
    /** corrects data, if ni==-1 -- all elements -- now empty, see setData */
    virtual int checkData( int ni );
    /** add new object and it's description (new)*/
-   virtual void* add_obj( const QString &cl_name, const QString &ob_name );
-   /** delete given object by num in ptrs */
+   virtual TDataSet* add_obj( const QString &cl_name, const QString &ob_name );
+   /** add new param and it's description */
+   virtual HolderData* add_param( const QString &tp_name, const QString &ob_name );
+   /** delete given object by name */
    int del_obj( const QString &ob_name );
    /** is given type of subelement valid for this object */
    virtual int isValidType( const QString &cl_name ) const;
@@ -442,13 +484,18 @@ class TDataSet : public QObject {
  * */
 class ElemFactory {
  typedef QMap<QString,const TClassInfo*> MapStrClass;
+ typedef QMap<QString,const HolderInfo*> MapStrHolder;
   public:
    static ElemFactory& theFactory();
    TDataSet* createElem( const QString &a_type, 
        const QString &ob_name, TDataSet *parent  ) const;
-   bool registerElemType( const TClassInfo *cl_info );
+   HolderData* createParam( const QString &a_type, 
+       const QString &ob_name, TDataSet *parent  ) const;
+   bool registerElemType( const TClassInfo *cl_inf );
    bool unregisterElemType( const QString &a_type );
+   bool registerSimpleType( const HolderInfo *ho_inf );
    QStringList allTypeNames() const { return str_class.keys() ; };
+   QStringList allParamTypes() const { return str_holder.keys() ; };
    const TClassInfo* getInfo( const QString &a_type ) const;
 
   private:
@@ -458,6 +505,7 @@ class ElemFactory {
    ElemFactory& operator=( const ElemFactory& r ) = delete;
 
    MapStrClass str_class;
+   MapStrHolder str_holder;
 };
 
 
