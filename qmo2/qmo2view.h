@@ -136,17 +136,17 @@ class QMo2View : public QWidget
    /** returns document model */
    TModel* getModel(void);
    /** returns x-coordinate for selected cell */
-   int getSelX(void) const { return sel_x; };
+   int getSelX(void) const { return sel_x; }
    /** returns y-coordinate for selected cell */
-   int getSelY(void) const { return sel_y; };
+   int getSelY(void) const { return sel_y; }
    /** returns number of selected element or -1 if none */
-   int getSel(void) const { return sel; };
+   int getSel(void) const { return sel; }
    /** returns ptr to selected element or nullptr if none */
-   TMiso* getSelObj(void) const { return selObj; };
+   TMiso* getSelObj(void) const { return selObj; }
    /** returns number of marked element or -1 if none */
-   int getMark(void) const { return mark; };
+   int getMark(void) const { return mark; }
    /** returns level for aux objects selection */
-   int getLevel(void) const { return level; };
+   int getLevel(void) const { return level; }
  protected:
    virtual void closeEvent( QCloseEvent* );
    virtual void resizeEvent( QResizeEvent* );

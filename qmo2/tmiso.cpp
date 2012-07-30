@@ -36,6 +36,7 @@ TElmLink::TElmLink( TDataSet* apar )
 {
   noauto = locked = onlyFirst = onlyLast = flip = noIcon = 0;
   pflags0 = pflags1 = pflags2 = pflags3 = 0;
+  allow_add = 0;
 }
 
 TDataSet* TElmLink::create( TDataSet* apar )
@@ -77,6 +78,7 @@ TMiso::TMiso( TDataSet* aparent )
   ord = -1; 
   vis_x = vis_y = 0; tdt = 0; model_nn = 0; 
   model = 0;
+  allow_add = 0;
 }
 
 TMiso::~TMiso()

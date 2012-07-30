@@ -31,7 +31,7 @@ class DataWidget : public QFrame {
   virtual bool get() const = 0;
   QVariant::Type getTp() const { return ho.getTp(); }
   static DataWidget* create( HolderData & /*ho*/, QWidget * /*parent*/ )
-    { return 0;};
+    { return 0;}
   // virtual void fix() = 0;
   // virtual bool check() = 0;
  protected:
@@ -227,6 +227,10 @@ class DataDialog : public QDialog {
    virtual void accept();
    void showHelp();
    void checkData();
+   void addParam();
+   void addObj();
+   void delParam();
+   void delObj();
   protected: 
    virtual int createWidgets();
    void showSimpleHelp();

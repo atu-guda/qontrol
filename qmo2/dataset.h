@@ -92,23 +92,23 @@ class HolderData : public QObject {
 	      const QString &a_descr = QString(), 
 	      const QString &a_extra = QString() );
   virtual ~HolderData();
-  void* getPtr() const { return ptr; } ; // horror here !!!
-  QVariant::Type getTp() const { return tp; };
-  int isDyn() const { return dyn; };
-  int getOldTp() const { return old_tp; };
+  void* getPtr() const { return ptr; }  // horror here !!!
+  QVariant::Type getTp() const { return tp; }
+  int isDyn() const { return dyn; }
+  int getOldTp() const { return old_tp; }
   /** is holded value is object of given type or child */
   virtual bool isObject( const QString &cl_name = QString() ) const;
-  void setFlags( int a_flags ) { flags = a_flags; };
-  int getFlags() const { return flags; };
+  void setFlags( int a_flags ) { flags = a_flags; }
+  int getFlags() const { return flags; }
   double getMin() const { return v_min; }
   double getMax() const { return v_max; }
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
   void extraToParm();
-  const QString& targetName() const { return target_name; };
+  const QString& targetName() const { return target_name; }
   TDataSet* getParent() const { return par; }
   void setElems( const QString &els ); 
-  const QStringList& getElems() const { return elems; }; 
+  const QStringList& getElems() const { return elems; }
   virtual bool set( const QVariant & x ) = 0;
   virtual QVariant get() const = 0;
   virtual void post_set() = 0;
@@ -371,7 +371,7 @@ class TDataSet : public QObject {
    /** return number of registerd elems = number of holders */
    int getNumObj() const;
    /** return flags of allow adding */
-   int getAllowAdd() const { return allow_add; };
+   int getAllowAdd() const { return allow_add; }
    /** returns list of registerd elems names - not holders */
    QStringList elemNames() const;
    /** returns list of holders */
@@ -385,13 +385,13 @@ class TDataSet : public QObject {
    /** returns ptr to help string */
    virtual const char* getHelp(void) const;
    /** return state */
-   virtual int getState() const { return state; };
+   virtual int getState() const { return state; }
    /** returns modified flag */
-   int getModified() const { return modified; };
+   int getModified() const { return modified; }
    /** set modified flag */
-   void setModified() { modified |= 1; };
+   void setModified() { modified |= 1; }
    /** drop modified flag */
-   void setUnModified() { modified = 0; };
+   void setUnModified() { modified = 0; }
    /** return ptr to elem by name */
    // use only by QMo2Doc while creating/loading 
    TDataSet* getObj( const QString &ename, const QString &cl_name = QString() );   
@@ -421,7 +421,7 @@ class TDataSet : public QObject {
    virtual const TClassInfo* getClassInfo(void) const;
    /** return ptr to static class_info, static version */
    static const TClassInfo* getStaticClassInfo(void)
-      { return &class_info; };
+      { return &class_info; }
    /** is this class child of given or the same by name */
    bool isChildOf( const QString &cname );
    /** new part - iface a-la Holder FIXME: implement it */
@@ -494,8 +494,8 @@ class ElemFactory {
    bool registerElemType( const TClassInfo *cl_inf );
    bool unregisterElemType( const QString &a_type );
    bool registerSimpleType( const HolderInfo *ho_inf );
-   QStringList allTypeNames() const { return str_class.keys() ; };
-   QStringList allParamTypes() const { return str_holder.keys() ; };
+   QStringList allTypeNames() const { return str_class.keys(); }
+   QStringList allParamTypes() const { return str_holder.keys(); }
    const TClassInfo* getInfo( const QString &a_type ) const;
 
   private:

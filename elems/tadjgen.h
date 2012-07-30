@@ -40,7 +40,7 @@ class TAdjGen : public TMiso  {
    virtual const TClassInfo* getClassInfo(void) const;
    /** return ptr to static class_info, static version */
    static const TClassInfo* getStaticClassInfo(void)
-      { return &class_info; };
+      { return &class_info; }
    /** returns help string */
    virtual const char* getHelp(void) const;
  protected:

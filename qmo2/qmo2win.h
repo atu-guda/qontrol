@@ -84,11 +84,11 @@ class QMo2Win : public QMainWindow
     /** enables/disables menu entries/toolbar items */
     void enableActions( bool ena, int id_ );
     /** returns apps printer */
-    QPrinter* getPrinter(void) { return printer; };
+    QPrinter* getPrinter(void) { return printer; }
     /** finds resource file among resource dirs */
     QString findRes( const QString &res );
     /** returns pointer to settings object */
-    Mo2Settings* getSettings() { return &sett; };
+    Mo2Settings* getSettings() { return &sett; }
     /** reads new XML file: to use from slot and commanline */
     bool doFileOpenXML( const QString &fn );
 

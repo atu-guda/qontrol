@@ -67,7 +67,7 @@ class QMo2Doc : public QObject
   bool canCloseFrame( QMo2View* pFrame );
   /** sets the modified flag for the document after a modifying action 
       on the view connected to the document. */
-  void setModified( bool _m = true ){ modified=_m; };
+  void setModified( bool _m = true ){ modified=_m; }
   /** returns if the document is modified or not. Use this to determine 
       if your document needs saving by the user on closing.*/
   bool isModified() const; // { return modified; };
@@ -97,7 +97,7 @@ class QMo2Doc : public QObject
   /** fills rootdata reg infos */
   void fillRoot(void);
   /** returns nonamed status */
-  bool nonamed(void) const { return is_nonamed; };
+  bool nonamed(void) const { return is_nonamed; }
       
  public slots:
    /** calls repaint() on all views connected to the document object and 

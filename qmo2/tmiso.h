@@ -132,7 +132,7 @@ class TMiso : public TDataSet  {
    virtual const TClassInfo* getClassInfo(void) const = 0;
    /** return ptr to static class_info, static version */
    static const TClassInfo* getStaticClassInfo(void)
-      { return &class_info; };
+      { return &class_info; }
    /** returns help string */
    virtual const char* getHelp(void) const;
 

@@ -7,8 +7,10 @@
  ***************************************************************************/
 
 #include <QStringBuilder>
+#include "miscfun.h"
 #include "datawidget.h"
 #include "qmo2win.h"
+#include "addelemdia.h"
 
 using namespace std;
 
@@ -766,6 +768,116 @@ void DataDialog::showSimpleHelp(void)
   delete dia;
 
 }
+
+void DataDialog::addParam()
+{
+  QStringList ptypes = ElemFactory::theFactory().allParamTypes();
+  QDialog *dia = new QDialog( this );
+  QGridLayout *lay = new QGridLayout( dia );
+  
+  QLabel *lbl_type = new QLabel( "Type", dia );
+  lay->addWidget( lbl_type, 0, 0 );
+  QListWidget *lw = new QListWidget( dia );
+  for( QString ptype : ptypes ) {
+    QListWidgetItem *lwi = new QListWidgetItem( ptype );
+    lw->addItem( lwi );
+    if( ptype == "double" ) {
+      lw->setCurrentItem( lwi );
+    }
+  }
+  lay->addWidget( lw, 1, 0, 3, 1 );
+  
+  QLabel *lbl_name = new QLabel( "Name", dia );
+  lay->addWidget( lbl_name, 0, 1 );
+  QLineEdit *ed_name = new QLineEdit( this );
+  ed_name->setValidator( new QRegExpValidator( QRegExp(RE_NAME), this ) );
+  lay->addWidget( ed_name, 1, 1 );
+  
+  QLabel *lbl_val = new QLabel( "Value", dia );
+  lay->addWidget( lbl_val, 2, 1 );
+  QLineEdit *ed_val = new QLineEdit( this );
+  lay->addWidget( ed_val, 3, 1 );
+  
+  QLabel *lbl_descr = new QLabel( "Description", dia );
+  lay->addWidget( lbl_descr, 4, 1 );
+  QLineEdit *ed_descr = new QLineEdit( this );
+  lay->addWidget( ed_descr, 5, 1 );
+  
+  QDialogButtonBox *bbox 
+    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dia );
+  lay->addWidget( bbox, 6, 0, 1, 2 );
+  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
+  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
+
+  int rc = dia->exec();
+  QString nm = ed_name->text();
+  QString val = ed_val->text();
+  QString descr = ed_descr->text();
+  QString ptype;
+  if( lw->currentItem() ) 
+    ptype = lw->currentItem()->text();
+  delete dia;
+  if( rc != QDialog::Accepted || nm.isEmpty() || ptype.isEmpty() ) {
+    return;
+  }
+  HolderData *ho = ds.add_param( ptype, nm );
+  if( !ho ) {
+    QMessageBox::critical( this, "Error", 
+       QString("Fail to add parameter: ") + ptype + " " + nm, 
+       QMessageBox::Ok, QMessageBox::NoButton );
+    return;
+  }
+  ho->setParm( "descr", descr );
+  ho->fromString( val );
+  // todo: recreate widgets
+}
+
+void DataDialog::addObj()
+{
+  addElemInfo aei;
+  aei.name = QString("obj_") + QString::number( ds.getNumObj() ) ;
+  aei.order = 0;
+  AddElemDialog *dia = new AddElemDialog( &aei, 0, this );
+
+  int rc = dia->exec();
+  delete dia; dia = 0;
+  if( rc != QDialog::Accepted ) {
+    return;
+  }; 
+  if( rc != QDialog::Accepted || aei.type.isEmpty() )
+    return;
+  if( ! isGoodName( aei.name )  ) {
+    QMessageBox::critical( this, "Error", 
+       QString("Fail to add Elem: bad object name \"") + aei.name + "\"", 
+       QMessageBox::Ok, QMessageBox::NoButton );
+    return;
+  }
+  
+  const TClassInfo *ci = ElemFactory::theFactory().getInfo( aei.type );
+  if( !ci ) {
+    QMessageBox::critical( this, "Error", 
+       QString("Fail to add Elem: class \"") + aei.type + "\" not found", 
+       QMessageBox::Ok, QMessageBox::NoButton );
+    return;
+  }
+  TDataSet *ob = ds.add_obj( aei.type, aei.name );
+  if( !ob  ) {
+    QMessageBox::critical( this, "Error", 
+       QString("Fail to add Elem: ") + aei.type + " " + aei.name, 
+       QMessageBox::Ok, QMessageBox::NoButton );
+    return;
+  }
+  // recreate iface
+}
+
+void DataDialog::delParam()
+{
+}
+
+void DataDialog::delObj()
+{
+}
+
 int DataDialog::createWidgets()
 {
   int nr = 0, nc = 0, nr_max = 0, nr_block = 0;
@@ -845,6 +957,30 @@ int DataDialog::createWidgets()
   frb->setFrameStyle( QFrame::HLine );
   lay1->addWidget( frb );
 
+  QHBoxLayout *lay_btn2 = new QHBoxLayout;
+  // TODO: only if allowed (or enable only if)
+  QPushButton *btn_addParam = new QPushButton( "Add param" );
+  connect(btn_addParam, SIGNAL(clicked()), this, SLOT(addParam()));
+  lay_btn2->addWidget( btn_addParam );
+  if( ! (ds.getAllowAdd() & allowParam ) ) 
+    btn_addParam->setEnabled( false );
+  QPushButton *btn_addObj = new QPushButton( "Add object" );
+  connect(btn_addObj, SIGNAL(clicked()), this, SLOT(addObj()));
+  lay_btn2->addWidget( btn_addObj );
+  if( ! (ds.getAllowAdd() & allowObject ) ) 
+    btn_addObj->setEnabled( false );
+  QPushButton *btn_delParam = new QPushButton( "Delete param" );
+  connect(btn_delParam, SIGNAL(clicked()), this, SLOT(delParam()));
+  lay_btn2->addWidget( btn_delParam );
+  if( ! (ds.getAllowAdd() & allowParam ) )  // TODO: + check list
+    btn_delParam->setEnabled( false );
+  QPushButton *btn_delObj = new QPushButton( "Delete object" );
+  connect(btn_delObj, SIGNAL(clicked()), this, SLOT(delObj()));
+  lay_btn2->addWidget( btn_delObj );
+  if( ! (ds.getAllowAdd() & allowObject ) ) 
+    btn_delObj->setEnabled( false );
+  lay1->addLayout( lay_btn2 );
+
   QHBoxLayout *lay_btn = new QHBoxLayout;
   QPushButton *btn_ok = new QPushButton( QIcon::fromTheme("dialog-ok"),"Ok" );
   btn_ok->setDefault( true );
@@ -861,7 +997,6 @@ int DataDialog::createWidgets()
    connect(btn_help, SIGNAL(clicked()), this, SLOT(showHelp()));
   lay_btn->addWidget( btn_help );
   lay1->addLayout( lay_btn );
-
 
   setLayout( lay1 );
 

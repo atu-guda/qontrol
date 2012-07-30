@@ -33,6 +33,7 @@
 #include "qplotview.h"
 #include "datawidget.h"
 #include "holdermodel.h"
+#include "addelemdia.h"
 
 
 QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
@@ -255,96 +256,39 @@ void QMo2View::changeLevel( int lev )
 
 void QMo2View::newElm()
 {
-  QDialog *seld; 
-  QLabel *la;
-  QLineEdit *oname_ed, *oord_ed;
-  QListWidget *lw;
-  QGridLayout *lay;
-
-  const TClassInfo *ci;
-  int rc, oord;
-  QString cnmq, onameq, oordq;
   if( !checkState( noselCheck ) )
     return;
 
-  seld = new QDialog( this );
+  addElemInfo aei;
+  aei.name = QString("obj_") + QString::number( model->getNMiso() ) ;
+  aei.order = model->hintOrd();
+  AddElemDialog *dia = new AddElemDialog( &aei, clpElem, this );
 
-  lay = new QGridLayout( seld );
-
-  la = new QLabel( "Name", seld );
-  lay->addWidget( la, 0, 0 );
-
-  oname_ed = new QLineEdit( seld );
-  oname_ed->setText( QString("obj_")
-      + QString::number( model->getNMiso() ) );
-  oname_ed->setFocus();
-  lay->addWidget( oname_ed, 1, 0  );
-
-  la = new QLabel( "Order", seld );
-  lay->addWidget( la, 0, 1 );
-
-  oord = model->hintOrd();
-  oord_ed = new QLineEdit( seld );
-  oord_ed->setText( QString::number(oord) );
-  lay->addWidget( oord_ed, 1, 1 );
-
-  la = new QLabel( "Type", seld );
-  lay->addWidget( la, 2, 0 );
-
-  lw = new QListWidget( seld );
-  QStringList cl_names = ElemFactory::theFactory().allTypeNames();
-  for( QString cname : cl_names ) {
-    ci = ElemFactory::theFactory().getInfo( cname );
-    if( ci == 0 ) 
-      continue;
-    if( ! ( ci->props & clpElem ) )
-      continue;
-    QString iconName = QString( ":icons/elm_" )
-      + cname.toLower() 
-      + ".png";
-    lw->addItem( new QListWidgetItem( QIcon(iconName), cname ) );
-  };
-  lw->setViewMode( QListView::IconMode );
-  // lw->setUniformItemSizes( true );
-  lw->setResizeMode ( QListView::Adjust );
-  lay->addWidget( lw, 3, 0, 1, 2 );
-  
-  QDialogButtonBox *bbox 
-    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  lay->addWidget( bbox, 5, 0, 1, 2 );
-  connect(bbox, SIGNAL(accepted()), seld, SLOT(accept()));
-  connect(bbox, SIGNAL(rejected()), seld, SLOT(reject()));
-  seld->resize( 600, 400 );
-
-  rc = seld->exec();
-  if( rc == QDialog::Accepted ) {
-    if( lw->currentItem() ) 
-      cnmq = lw->currentItem()->text();
-    onameq = oname_ed->text(); 
-    oordq = oord_ed->text(); 
+  int rc = dia->exec();
+  delete dia; dia = 0;
+  if( rc != QDialog::Accepted ) {
+    return;
   }; 
-  delete seld;
-  if( rc != QDialog::Accepted || cnmq.isEmpty() )
+  if( rc != QDialog::Accepted || aei.type.isEmpty() )
     return;
-  oord = oordq.toInt();
-  if( ! isGoodName( onameq )  ) {
+  if( ! isGoodName( aei.name )  ) {
     QMessageBox::critical( this, "Error", 
-       QString("Fail to add Elem: bad object name \"") + onameq + "\"", 
+       QString("Fail to add Elem: bad object name \"") + aei.name + "\"", 
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
   
-  ci = ElemFactory::theFactory().getInfo( cnmq );
-  if( ! ci ) {
+  const TClassInfo *ci = ElemFactory::theFactory().getInfo( aei.type );
+  if( !ci ) {
     QMessageBox::critical( this, "Error", 
-       QString("Fail to add Elem: class \"") + cnmq + "\" not found", 
+       QString("Fail to add Elem: class \"") + aei.type + "\" not found", 
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
-  TMiso *ob = model->insElem( cnmq, onameq, oord, sel_x, sel_y) ; // reset() implied
+  TMiso *ob = model->insElem( aei.type, aei.name, aei.order, sel_x, sel_y );
   if( !ob  ) {
     QMessageBox::critical( this, "Error", 
-       QString("Fail to add Elem: ") + cnmq + " " + onameq, 
+       QString("Fail to add Elem: ") + aei.type + " " + aei.name, 
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }

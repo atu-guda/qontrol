@@ -12,6 +12,7 @@ INCLUDEPATH += .. ../elems
 LIBS += -lgsl -lgslcblas -lm
 
 SOURCES += \
+  addelemdia.cpp \
   datacont.cpp \
   dataset.cpp \
   elemfact.cpp \
@@ -69,6 +70,7 @@ SOURCES += \
   ../elems/tvibro.cpp 
 
 HEADERS += \
+  addelemdia.h \
   datacont.h \
   dataset.h \
   defs.h \

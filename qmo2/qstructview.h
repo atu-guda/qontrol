@@ -44,7 +44,7 @@ class QStructView : public QWidget  {
    /** print contents */
    void printAll();
    /** grid size */
-   int getGridSize() const { return grid_sz; };
+   int getGridSize() const { return grid_sz; }
    /** bound of all elements in model */
    QSize getElemsBound() const;
    virtual QSize sizeHint () const;
