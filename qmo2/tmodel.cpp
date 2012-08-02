@@ -173,7 +173,7 @@ int TModel::runOneLoop(void)/*{{{1*/
     if( end_loop )
       break;
      
-     cur_el->fun( t, itype );  // <============ main action TODO: from ^ to fun
+     cur_el->fun( t, itype );  // <============ main action
      ++elnu;
   };  // end element loop;
   for( TOutArr* arr : v_out ) { 

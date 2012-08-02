@@ -196,7 +196,6 @@ IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent )
   lay->addWidget( lbl );
   lay->addWidget( le, 1 );
   setLayout( lay );
-  // TODO: r/o
 }
 
 bool IntDataWidget::set()
@@ -383,9 +382,14 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     le->setReadOnly( true );
   }
-  le->setValidator( new QDoubleValidator( h.getMin(), h.getMax(), 12, le ) );
-  //setNotation( ScientificNotation );  // is by default
-  // TODO: notation, precision
+  
+  int decimals = 12;
+  QString sdec =  h.getParm("decimals" );
+  if( ! sdec.isEmpty() ) {
+    decimals = sdec.toInt();
+  }
+  
+  le->setValidator( new QDoubleValidator( h.getMin(), h.getMax(), decimals, le ) );
   
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
@@ -1000,7 +1004,7 @@ int DataDialog::createWidgets()
   lay1->addWidget( frb );
 
   QHBoxLayout *lay_btn2 = new QHBoxLayout;
-  // TODO: only if allowed (or enable only if)
+  
   QPushButton *btn_addParam = new QPushButton( "Add param" );
   connect(btn_addParam, SIGNAL(clicked()), this, SLOT(addParam()));
   lay_btn2->addWidget( btn_addParam );

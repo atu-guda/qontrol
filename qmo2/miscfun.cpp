@@ -8,7 +8,6 @@
 
 #include <fstream>
 #include <iomanip>
-#include <cctype>
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
@@ -35,15 +34,6 @@ const char* getStateString( int stat_num )
 }
       
 
-int hashVal( const char* astr )
-{
-  int i, v, c;
-  v = 0;
-  for( i=0; (c=int(astr[i])) != 0; i++ ) {
-    v += 17*c + c*c*c*3;
-  };
-  return v;
-}
 
 double get_real_time(void)
 {
@@ -53,406 +43,6 @@ double get_real_time(void)
   t = (double)( tv.tv_sec ) + 1e-6 * (double)( tv.tv_usec );
   return t;
 }  
-
-int isCharType( int c, int ctp, int start )
-{
-  const char *s;
-  switch( ctp ) {
-    case ctpSpace: s = index( _space_chars, c );
-                   return ( s == 0 ) ? 0 : 1;
-    case ctpName:  if( start ) s = index( _name_chars1, c );
-                         else s = index( _name_chars, c );
-		   return ( s == 0 ) ? 0 : 1;	 
-    case ctpOneChar: if( c & 0x80 ) return 1;
-                     if( c < ' ' || c == '\\' || c == '"' || c == 127 ) 
-		           return 0;
-		     return 1;
-    case ctpTwoChar: s = index( _twochar_chars, c );		        
-                     if ( s == 0 ) return 0;
-		     return 1 + int(  s - _twochar_chars );
-  };
-  return 0;
-}
-
-int typeOfLine( const char *s, int maxlen, int *ival, char *v1, QString *v2  )
-{
-  int i, j, k, l, l1, was_bs, id;
-  char buf1[MAX_NAMELEN], buf2[MAX_INPUTLEN];
-  char *eptr;
-  l = strlen0( s );
-  char c;
-  if( l < 1 || l >= MAX_INPUTLEN ) return ltpComment;
-  // skip leading spaces & tabs
-  i = 0;
-  while( i<l && isspace( s[i] ) ) i++;
-  c = s[i];
-  if( i >= l-1 ) return ltpComment;
-  switch( c ) {
-    case '@': return ltpStruct;  // structure definition comment
-    case '}': return ltpEnd;     // end of object
-    case '#': case ';': case '%': case '!': case '*': return ltpComment;
-  };
-  
-  if( c == '"' ) {   // may be multi-line string
-    was_bs = 0;
-    for( j=i+1; j<l; j++ ) {
-      c = s[j];
-      if( was_bs ) { was_bs = 0; continue; }; // skip char after '\'
-      if( c == '\\' ) { was_bs = 1; continue;  };
-      if( c == '"' ) {
-        k = deQuoteString( s+i, buf2, MAX_INPUTLEN ); 
-        if( k != 0 ) return ltpUnk;
-	l1 = strlen0( buf2 );
-	if( ival != 0 ) *ival = l1;
-	if( v2 != 0 && l1 < maxlen ) {
-	  *v2 = L8B( buf2 ); 
-	}
-        return ltpStr;
-      }; 	
-    };
-    return ltpUnk;
-  };
-  
-  if( isdigit( c ) ) {   // may be object start
-    id = (int) strtol( s+i, &eptr, 10 );
-    if( eptr == s+i || eptr[0] != '(' ) return ltpUnk;
-    eptr++;
-    l1 = strlen0( eptr );
-    if( l1 < 4 ) return ltpUnk;
-    c = eptr[0];
-    if( !isCharType( c, ctpName, 1 ) ) return ltpUnk;
-    buf1[0] = eptr[0]; buf1[1] = 0; k = 1;
-    for( j=1; j<l1; j++ ) {
-      c = eptr[j];
-      if( ! isCharType( c, ctpName, 0 ) ) break;
-      if( k >= MAX_NAMELEN-1 ) return ltpUnk;
-      buf1[k++] = c; buf1[k] = 0;
-    };
-    if( c != ')' || j > l1-3 ) return ltpUnk;
-    j++;
-    while( j<l1 && isspace( eptr[j] ) ) j++;  // skip spaces
-    if( j > l1-2 || eptr[j] != '=' ) return ltpUnk;
-    j++;
-    while( j<l1 && isspace( eptr[j] ) ) j++;  // skip spaces
-    if( j > l1-1 || eptr[j] != '{' ) return ltpUnk;
-    if( ival != 0 ) *ival = id;
-    if( v1 != 0 ) { v1[0] = 0; strncat( v1, buf1, MAX_NAMELEN-1 ); };
-    return ltpStart;
-  };
-  
-  if( isCharType( c, ctpName, 1 ) ) {     // may be value
-    if( i > l-3 ) return ltpUnk;
-    k = 1; buf1[0] = c; buf1[1] = 0;
-    for( j=i+1; j<l; j++ ) {              // find name
-      c = s[j];
-      if( ! isCharType( c, ctpName, 0 ) ) break;
-      if( k >= MAX_NAMELEN-1 ) return ltpUnk;
-      buf1[k++] = c; buf1[k] = 0;
-    };
-    if( j > l-2 ) return ltpUnk;
-    i = j;
-    while( i<l && isspace( s[i] ) ) i++;    // skip spaces
-    if( i > l-2  || s[i] != '=' ) return ltpUnk;
-    i++;
-    while( i<l && isspace( s[i] ) ) i++;    // skip spaces
-    if( i > l-1 ) return ltpUnk;
-    if( s[i] == '@' ) {         // start of multi-line string
-      k = deQuoteString( s+i, buf2, MAX_INPUTLEN );
-      if( k != 0 ) return ltpUnk;
-      l1 = strlen0( buf2 );
-      if( l1 >= maxlen || l1 < 2 ) return ltpUnk;
-      if( ival != 0 ) *ival = l1-1;
-      if( v1 != 0 ) { v1[0] = 0; strncat( v1, buf1, MAX_NAMELEN-1 ); };
-      if( v2 != 0 ) { *v2 = QString::fromLocal8Bit( buf2+1 ); v2->truncate( maxlen-1 ); };
-      return ltpValStart;
-    };
-    k = deQuoteString( s+i, buf2, MAX_INPUTLEN );
-    if( k != 0 ) return ltpUnk;
-    l1 = strlen0( buf2 );
-    if( l1 >= maxlen ) return ltpUnk;
-    if( ival != 0 ) *ival = l1;
-    if( v1 != 0 ) { v1[0] = 0; strncat( v1, buf1, MAX_NAMELEN-1 ); };
-    if( v2 != 0 ) { *v2 = QString::fromLocal8Bit( buf2 ); v2->truncate( maxlen ); };
-    return ltpVal;
-  };
-  return ltpUnk;
-}
-
-
-int strQuLen( const char *s )
-{
-  int i, l, ls;
-  char c;
-  if( s == 0 )
-    return 0;
-  l = strlen0( s ); ls = 0;
-  for( i=0; i<l; i++ ) {
-    c = s[i];
-    if( isCharType( c, ctpOneChar, 0 ) ) { ls++; continue; };
-    if( isCharType( c, ctpTwoChar, 0 ) ) { ls += 2; continue; };
-    ls += 4;
-  };
-  return ls + 2;
-}
-
-int quoteString( const char *src, char *dst, int ml )
-{
-  int i, j, l, l1, k, d1, d2;
-  char c;
-  const char xdig[] = "0123456789ABCDEF???????????";
-  if( ml < 3 ) return -1;
-  l1 = strQuLen( src );
-  if( l1+3 >= ml ) return -1;
-  dst[0] = '"'; dst[1] = 0; j = 1;
-  if( l1 == 0 ) { dst[j++] = '"'; dst[j] = 0;  return 0; };
-  l = strlen0( src );
-  if( l == 0 ) { dst[j++] = '"'; dst[j] = 0;  return 0; };
-  for( i=0; i<l; i++ ) {
-    c = src[i];
-    if( isCharType( c, ctpOneChar, 0 ) ) { dst[j++] = c; continue; };
-    if( ( k = isCharType( c, ctpTwoChar, 0 ) ) ) { 
-      dst[j++] = '\\'; dst[j++] = _twochar_c2[k-1]; continue; 
-    };
-    dst[j++] = '\\'; dst[j++] = 'x'; 
-    d1 = c & 0x0F; d2 = ((unsigned char)c) >> 4;
-    dst[j++] = xdig[d2]; dst[j++] = xdig[d1];
-  };
-  dst[j++] = '"'; dst[j] = 0;
-  return 0;
-}
-
-int quoteTo( const char *src, char *dst, int ml )
-{
-  int i, j, k, l, n, d1, d2;
-  char c;
-  const char xdig[] = "0123456789ABCDEF???????????";
-  if( ml < 8 ) return -1;
-  l = strlen0( src ); j = 0;
-  dst[j++] = '"'; dst[j] = 0; n = 0;
-  for( i=0; i<l; i++ ) {
-    if( j >= ml-6 ) break;
-    c = src[i];
-    if( c == '\n' ) { dst[j++] = '\\'; dst[j++] = 'n'; n++; break; };
-    if( isCharType( c, ctpOneChar, 0 ) ) { dst[j++] = c; n++; continue; };
-    if( (k = isCharType( c, ctpTwoChar, 0 )) != 0 ) { 
-      dst[j++] = '\\'; dst[j++] = _twochar_c2[k-1];  n++; continue; 
-    };
-    dst[j++] = '\\'; dst[j++] = 'x'; 
-    d1 = c & 0x0F; d2 = ((unsigned char)c) >> 4;
-    dst[j++] = xdig[d2]; dst[j++] = xdig[d1];  n++;
-  };
-  dst[j++] = '"'; dst[j] = 0;
-  return n;
-}
-
-QString quoteChar( QChar c )
-{
-  uint code = c.unicode();
-  const char xdig[] = "0123456789ABCDEF???????????";
-  if( code >= 0x005D                         // >= ']', 
-      || (code >= 0x0023 && code <= 0x005B ) // # - [
-      || code == 0x0020 || code == 0x0021    // ' ', !
-    ) 
-    return QString(c);
-  unsigned char lc = (unsigned char)(code); // high by is zero - see above
-  if( lc == '\\' )
-    return QString("\\\\");
-  if( lc == '"' )
-    return QString("\\\"");
-  if( lc == '\n' )
-    return QString("\\n");
-  if( lc == '\t' )
-    return QString("\\t");
-  if( lc == '\r' )
-    return QString("\\r");
-  int d1 = lc & 0x0F; 
-  int d2 = ((unsigned char)lc) >> 4;
-  return QString("\\x") + xdig[d1] + xdig[d2];
-}
-
-QString quoteString( const QString &s )
-{
-  QString r, ch;
-  r.reserve( 12 + s.size() ); // semi-black magic
-  foreach( QChar c, s ) 
-    r += quoteChar( c );
-  return r;
-}
-
-int saveStr( ostream *os, const char *s )
-{
-  int l, k;
-  l = strQuLen( s );
-  if( l < MAX_INPUTLEN - MAX_NAMELEN - 32 )
-    k = saveStr0( os, s );
-  else
-    k = saveStr1( os, s );
-  return k;    
-}
-
-int saveStr0( ostream *os, const char *s )
-{
-  int l1, k;
-  char buf[MAX_INPUTLEN]; // limited length - all above be truncated
-  l1 = strQuLen( s );
-  if( l1 >= MAX_INPUTLEN - MAX_NAMELEN - 32 ) return -1;
-  k = quoteString( s, buf, MAX_INPUTLEN - MAX_NAMELEN - 32 );
-  if( k !=0 ) return k;
-  *os << buf;
-  return 0;
-}
-
-int saveStr1( ostream *os, const char *s )
-{
-  int i, k, l, ml, rnd1, rnd2;
-  char buf[MAX_INPUTLEN];
-  // char ter[MAX_INPUTLEN];
-  rnd1 = rand(); rnd2 = rand();
-  *os << "@-----" << rnd1 << "---" << rnd2 << "---cut_here-----\n";
-  i = 0; l = strlen0( s ); ml = MAX_INPUTLEN - MAX_NAMELEN - 32;
-  while( i < l ) {
-    k = quoteTo( s+i, buf, ml );
-    if( k < 1 ) return -1;
-    *os << buf << '\n';
-    i += k;
-  };
-  *os << "-----" << rnd1 << "---" << rnd2 << "---cut_here-----\n";
-  return 0;
-}
-
-
-int deQuoteString( const char *src, char *dst, int maxlen )
-{
-  int i, j, l, is_quo;
-  char c, c1, ch1, ch2;
-  dst[0] = 0;
-  if( maxlen > MAX_INPUTLEN ) maxlen = MAX_INPUTLEN;
-  l = strlen0( src );
-  if( l >= maxlen ) return -1;
-  if( l == 0 ) return 0;
-  j = -1;
-  for( i=0; i<l; i++ ) {
-    c = src[i];  
-    if( ! isCharType( c, ctpSpace, 0 ) ) {
-      j = i;
-      break;
-    };
-  };
-  if( j < 0 ) 
-    return 0;
-  is_quo = 0; i = j; j = 0;
-  if( src[i] == '"' ) { i++; is_quo = 1; };
-  if( is_quo == 0 ) {  // no quoting
-    while( (c=src[i]) != 0 ) {
-      if( j >= maxlen-2 ) { dst[j] = 0; return -2; };
-      if( isspace(c) ) break;
-      dst[j++] = c; i++;
-    };
-    dst[j] = 0;
-    return 0;
-  }; // end noquoted string 
-  while( (c=src[i]) !=0 ) {
-    if( j >= maxlen-2 ) { dst[j] = 0; return -2; };
-    if( c == '"' ) {
-      dst[j++] = 0; break;
-    };
-    if( (unsigned char)c < ' ' ) {
-      dst[j] = 0; return -3;
-    };
-    if( c == '\\' ) {
-       c1 = src[++i];
-       if( i >= maxlen-2 ) {
-         dst[j] = 0; return -2;
-       };
-       switch( c1 ) {
-         case 'r': dst[j++] = '\r'; break;
-         case 'n': dst[j++] = '\n'; break;
-         case 't': dst[j++] = '\t'; break;
-         case 'f': dst[j++] = '\f'; break;
-         case 'e': dst[j++] = '\x1B'; break;
-         case 'a': dst[j++] = '\a'; break;
-	 case 'b': dst[j++] = '\b'; break;
-	 case 'v': dst[j++] = '\v'; break;
-         case '\\': dst[j++] = '\\'; break;
-         case 'x':
-           if( i >= l-3 ) { dst[j] = 0; return -4; };
-           ch1 = src[++i]; ch2 = src[++i];
-           if( !isxdigit(ch1) || !isxdigit(ch2 ) )
-             { dst[j] = 0; return -5; };
-           ch1 = (char) toupper( ch1 );
-           ch2 = (char) toupper( ch2 );
-           if( ch1 >= 'A' ) ch1 += - 'A' + 10;
-             else           ch1 -= '0';
-           if( ch2 >= 'A' ) ch2 += - 'A' + 10;
-             else           ch2 -= '0';
-           dst[j++] = char( ch2 + (((unsigned int)ch1)<<4));
-           break;
-         default: dst[j++] = c1;
-       };
-    } else {
-      dst[j++] = c;
-    };
-    i++;
-  };
-  dst[j] = 0;
-  return 0;
-}
-
-int readMlStr( istream *is, QString* buf, int ml, const char *delim )
-{
-  int j, k, l, lt;
-  char bi[MAX_INPUTLEN];
-  QString  bq;
-  lt = strlen0( delim );
-  if( lt < 1  ||  ml < 1 ) return -1;
-  l = 0; *buf = QString();
-  int nl = 0;
-  while( 1 ) {
-    is->getline( bi, MAX_INPUTLEN );
-    if( ! is->good() ) return -1;
-    if( strncmp( delim, bi, lt ) == 0 ) break;
-    k = typeOfLine( bi, MAX_INPUTLEN, &j, 0, &bq );
-    if( k == ltpComment ) continue;
-    if( k != ltpStr ) return -1;
-    if( l+j >= ml ) return -1;
-    *buf += bq; 
-    l += j;
-    ++nl;
-  };
-  return 0;
-}
-
-/** splits string like aa.b.cc.d to first="aa" and rest="b.cc.d"
-    max sizes: name,rest: MAX_INPUTLEN; first: MAX_NAMELEN
-    @returns: 0 -- both parts, 1 -- only first, -1 -- bad line  */
-int splitName( const char *name, char *first, char *rest )
-{
-  char c;
-  int i, l, j;
-  first[0] = rest[0] = 0; 
-  l = strlen0( name );
-  if( l < 1 || l >= MAX_INPUTLEN ) return -1;
-  i = 0;
-  while( (c=name[i]) != 0 && i<l ) {
-    if( i >= MAX_NAMELEN ) { first[0] = 0; return -1; };
-    if( i>0 && c == '.' ) break;
-    if( ! isCharType( c, ctpName, (i==0) ? 1 : 0 ) )
-       { first[0] = 0; return -1; };
-    first[i++] = c;
-  };
-  first[i] = 0;
-  if( c != '.' )
-    return 1;
-  j = 0; i++;
-  while( (c=name[i]) != 0 && i<l ) {
-    if( (! isCharType( c, ctpName, (j==0) ? 1 : 0 )) && c != '.' )
-       { first[0] = 0; rest[0] = 0; return -1; };
-    rest[j++] = c;
-    i++;
-  };
-  rest[j] = 0;
-  return 0;
-}
 
 int splitName( const QString &name, QString &first, QString &rest )
 {
@@ -469,42 +59,9 @@ int splitName( const QString &name, QString &first, QString &rest )
   return -1;
 }
 
-int strlen0( const char *s )
-{
-  if( s[0] == 0 )
-    return 0;
-  return strlen( s );
-}
-
-char* strndup( const char *s, int maxlen )
-{
-  int l;
-  char *r;
-  l = strlen0( s );
-  if( l > maxlen ) l = maxlen;
-  r = new char[ l+2 ];
-  r[0] = 0;
-  strncat( r, s, maxlen );
-  return r;
-}
-
-
-int isGoodName( const char *s )
-{
-  int i, l;
-  l = strlen0( s );
-  if( l < 1 || l >= MAX_NAMELEN ) return 0;
-  for( i=0; i<l; i++ ) {
-    if( !isCharType( s[i], ctpName, i==0 ) )
-      return 0;
-  };
-  return 1;
-}
 
 int isGoodName( const QString &s )
 {
-  if( s.size() >= MAX_NAMELEN ) // TODO: legacy, remove it
-    return 0;
   QRegExp re( RE_NAME );
   if( re.indexIn( s ) == -1 )
     return 0;
@@ -544,7 +101,7 @@ double deadLine( double x, double x0 )
 
 double limitLine( double x, double x0 )
 {
-  if( x0 < 1e-100 ) // TODO: dont use magic
+  if( x0 < x0*(numeric_limits<double>::min()) ) 
     return 0;
   if( x > x0 )
     return 1;
@@ -872,15 +429,15 @@ double perpLen( double xs, double ys, double xe, double ye,
 
 // ------------- miscelanios classes -----------------------------
 
-TCircBuf::TCircBuf( int nn )
+TCircBuf::TCircBuf( int nn ) :
+  nb(nn), s(0), nf(0), ni(0), su(0),
+  d( nb + 2, 0 )
 {
-  d = new double[ nn + 2 ]; nb = nn;
   reset();
 }
 
 TCircBuf::~TCircBuf()
 {
-  delete d; d = 0;
   reset();
 }
 
@@ -918,12 +475,11 @@ int TCircBuf::getN(void)
   return nf;
 }
   
-double TCircBuf::sum( int force /* =0 */)
+double TCircBuf::sum( int force )
 {
-  int i;
   if( force ) {
     su = 0; ni = 0;
-    for( i=0; i<nf; i++ )
+    for( int i=0; i<nf; i++ )
       su += d[i];
   };
   return su;

@@ -18,8 +18,6 @@
 
 /* Model constants */
 
-#define FILE_SIGN "%*ModelConstructor 2.0"
-
 #define MODEL_MX 64
 #define MODEL_MY 64
 #define MODEL_NVAR 256

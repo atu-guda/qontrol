@@ -35,6 +35,8 @@
 #include "holdermodel.h"
 #include "addelemdia.h"
 
+using namespace std;
+
 
 QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
 : QWidget( parent ) 

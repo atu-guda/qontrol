@@ -356,7 +356,6 @@ void QMo2Doc::fillRoot(void)
     qDebug( "debug: QMo2Doc::fillRoot: rootdata in null!!" );
     return;
   }
-  // TODO: must be loaded from ld.so selected by config file
 }
 
 // end of qmo2doc.cpp
