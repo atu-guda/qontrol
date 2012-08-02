@@ -36,6 +36,7 @@ TOutArr::TOutArr( TDataSet* apar )
         :TDataSet( apar ), 
 	 fake_so(0), so( &fake_so ) 
 {
+  allow_add = 0;
   arrsize = 0; dmin = 0; dmax = 1; n = ny = 0; nq = 1; cnq = lnq = 0;
   type = 0; // name[0] = 0; label[0] = 0;
 }

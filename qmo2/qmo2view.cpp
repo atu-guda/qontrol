@@ -91,6 +91,7 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
 
   setWindowTitle( doc->title() );
 
+  connect( model, SIGNAL(sigStructChanged()), treeView, SLOT(reset()) );
   connect( this, SIGNAL(viewChanged()), this, SLOT(updateViews()) );
   connect( sview, SIGNAL(sig_changeSel(int,int,int)), this, SLOT(changeSel(int,int,int)) );
   connect( sview, SIGNAL(sig_changeLevel(int)), this, SLOT(changeLevel(int)) );
@@ -203,7 +204,7 @@ void QMo2View::updateViews()
   oview->update();
   gview->update();
   stam->update();
-  treeView->reset();
+  // treeView->reset();
   treeView->update();
 }  
 
@@ -657,12 +658,13 @@ void QMo2View::pasteElm()
   connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
 
   int rc = dia->exec();
-  if( rc != QDialog::Accepted ) {
-    return;
-  }; 
   elname = oname_ed->text(); 
   oord = oord_ed->text().toInt();
   delete dia;
+  
+  if( rc != QDialog::Accepted ) {
+    return;
+  }; 
   
   if( ! isGoodName( elname )  ) {
     QMessageBox::critical( this, "Error", 
