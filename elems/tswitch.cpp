@@ -68,7 +68,7 @@ int TSwitch::registered = reg();
 
 int TSwitch::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

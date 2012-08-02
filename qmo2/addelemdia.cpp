@@ -13,8 +13,9 @@
 using namespace std;
 
 
-AddElemDialog::AddElemDialog( addElemInfo *a_aei, int a_props, QWidget *aparent )
-  : QDialog( aparent ), aei( a_aei ), props( a_props )
+AddElemDialog::AddElemDialog( addElemInfo *a_aei, int a_props, 
+             TDataSet *a_pobj,  QWidget *aparent )
+  : QDialog( aparent ), aei( a_aei ), props( a_props ), pobj( a_pobj)
 {
   setupUi();
 }
@@ -47,12 +48,14 @@ void AddElemDialog::setupUi()
   lay->addWidget( la_type, 2, 0 );
 
   lw = new QListWidget( this );
-  QStringList cl_names = ElemFactory::theFactory().allTypeNames();
+  QStringList cl_names = EFACT.allTypeNames();
   for( QString cname : cl_names ) {
-    const TClassInfo *ci = ElemFactory::theFactory().getInfo( cname );
+    const TClassInfo *ci = EFACT.getInfo( cname );
     if( !ci ) 
       continue;
     if( props && ! ( ci->props & props ) )
+      continue;
+    if( pobj && ! pobj->isValidType( cname ) )
       continue;
     QString iconName = QString( ":icons/elm_" )
       + cname.toLower() 

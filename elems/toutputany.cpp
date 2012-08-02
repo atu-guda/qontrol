@@ -94,7 +94,7 @@ int TOutputAny::registered = reg();
 
 int TOutputAny::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

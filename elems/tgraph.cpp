@@ -155,6 +155,6 @@ int TGraph::registered = reg();
 
 int TGraph::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 

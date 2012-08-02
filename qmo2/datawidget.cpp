@@ -771,7 +771,7 @@ void DataDialog::showSimpleHelp(void)
 
 void DataDialog::addParam()
 {
-  QStringList ptypes = ElemFactory::theFactory().allParamTypes();
+  QStringList ptypes = EFACT.allParamTypes();
   QDialog *dia = new QDialog( this );
   QGridLayout *lay = new QGridLayout( dia );
   
@@ -837,7 +837,7 @@ void DataDialog::addObj()
   addElemInfo aei;
   aei.name = QString("obj_") + QString::number( ds.getNumObj() ) ;
   aei.order = 0;
-  AddElemDialog *dia = new AddElemDialog( &aei, 0, this );
+  AddElemDialog *dia = new AddElemDialog( &aei, 0, &ds, this );
 
   int rc = dia->exec();
   delete dia; dia = 0;
@@ -853,7 +853,7 @@ void DataDialog::addObj()
     return;
   }
   
-  const TClassInfo *ci = ElemFactory::theFactory().getInfo( aei.type );
+  const TClassInfo *ci = EFACT.getInfo( aei.type );
   if( !ci ) {
     QMessageBox::critical( this, "Error", 
        QString("Fail to add Elem: class \"") + aei.type + "\" not found", 
@@ -870,12 +870,54 @@ void DataDialog::addObj()
   // recreate iface
 }
 
+void DataDialog::delSome( bool is_obj )
+{
+  QStringList sl;
+  for( HolderData *ho :  ds.holders() ) {
+    if( !ho  || !ho->isDyn() )
+      continue; 
+    if( (is_obj ^ ho->isObject()) )
+      continue; 
+    sl << ho->targetName();
+  }
+  if( sl.isEmpty() )
+    return;
+  QDialog *dia = new QDialog( this );
+  QVBoxLayout *lay = new QVBoxLayout( dia );
+
+  QLabel *la = new QLabel( "Delete param", dia );
+  lay->addWidget( la );
+  
+  QListWidget *lw = new QListWidget( dia );
+  for( QString ob_name : sl ) {
+    lw->addItem( ob_name );
+  };
+  lay->addWidget( lw );
+  
+  QDialogButtonBox *bbox 
+    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  lay->addWidget( bbox );
+  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
+  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
+
+  int rc = dia->exec();
+  QString ob_name;
+  if( lw->currentItem() ) 
+    ob_name = lw->currentItem()->text();
+  delete dia;
+  if( rc != QDialog::Accepted || ob_name.isEmpty() )
+    return;
+  ds.del_obj( ob_name );
+}
+
 void DataDialog::delParam()
 {
+  delSome( false );
 }
 
 void DataDialog::delObj()
 {
+  delSome( true );
 }
 
 int DataDialog::createWidgets()

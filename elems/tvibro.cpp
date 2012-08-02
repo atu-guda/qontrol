@@ -111,7 +111,7 @@ int TVibro::registered = reg();
 
 int TVibro::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 // end of tvibro.cpp

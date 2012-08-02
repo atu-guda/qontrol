@@ -172,7 +172,7 @@ int TExtrLatch::registered = reg();
 
 int TExtrLatch::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

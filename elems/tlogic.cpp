@@ -95,7 +95,7 @@ int TLogic::registered = reg();
 
 int TLogic::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

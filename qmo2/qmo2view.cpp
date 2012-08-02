@@ -262,7 +262,7 @@ void QMo2View::newElm()
   addElemInfo aei;
   aei.name = QString("obj_") + QString::number( model->getNMiso() ) ;
   aei.order = model->hintOrd();
-  AddElemDialog *dia = new AddElemDialog( &aei, clpElem, this );
+  AddElemDialog *dia = new AddElemDialog( &aei, clpElem, model, this );
 
   int rc = dia->exec();
   delete dia; dia = 0;
@@ -278,7 +278,7 @@ void QMo2View::newElm()
     return;
   }
   
-  const TClassInfo *ci = ElemFactory::theFactory().getInfo( aei.type );
+  const TClassInfo *ci = EFACT.getInfo( aei.type );
   if( !ci ) {
     QMessageBox::critical( this, "Error", 
        QString("Fail to add Elem: class \"") + aei.type + "\" not found", 

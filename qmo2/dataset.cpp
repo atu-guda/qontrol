@@ -201,7 +201,7 @@ int HolderInt::registered = reg();
 
 int HolderInt::reg()
 {
-  return ElemFactory::theFactory().registerSimpleType( &holder_info  );
+  return EFACT.registerSimpleType( &holder_info  );
 }
 
 
@@ -251,7 +251,7 @@ int HolderSwitch::registered = reg();
 
 int HolderSwitch::reg()
 {
-  return ElemFactory::theFactory().registerSimpleType( &holder_info  );
+  return EFACT.registerSimpleType( &holder_info  );
 }
 
 
@@ -300,7 +300,7 @@ int HolderList::registered = reg();
 
 int HolderList::reg()
 {
-  return ElemFactory::theFactory().registerSimpleType( &holder_info  );
+  return EFACT.registerSimpleType( &holder_info  );
 }
 
 
@@ -388,7 +388,7 @@ int HolderDouble::registered = reg();
 
 int HolderDouble::reg()
 {
-  return ElemFactory::theFactory().registerSimpleType( &holder_info  );
+  return EFACT.registerSimpleType( &holder_info  );
 }
 
 
@@ -474,7 +474,7 @@ int HolderString::registered = reg();
 
 int HolderString::reg()
 {
-  return ElemFactory::theFactory().registerSimpleType( &holder_info  );
+  return EFACT.registerSimpleType( &holder_info  );
 }
 
 
@@ -559,7 +559,7 @@ int HolderColor::registered = reg();
 
 int HolderColor::reg()
 {
-  return ElemFactory::theFactory().registerSimpleType( &holder_info  );
+  return EFACT.registerSimpleType( &holder_info  );
 }
 
 
@@ -770,18 +770,6 @@ TDataSet* TDataSet::create( TDataSet* apar )
   return new TDataSet( apar );
 }
 
-
-TDataSet* TDataSet::createObj( const QString &cl_name, 
-      const QString &nm, TDataSet* apar )
-{
-  TDataSet *ob = ElemFactory::theFactory().createElem( cl_name, nm, apar );
-  if( !ob ) {
-    qDebug("Fail to create obj \"%s\" class  \"%s\"",
-	qPrintable(nm), qPrintable(cl_name) );
-    return nullptr;
-  }
-  return ob;
-}
 
 
 const char *TDataSet::getHelp(void) const
@@ -1012,12 +1000,17 @@ TDataSet* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
 	qPrintable(ob_name), qPrintable( getFullName() ) );
     return nullptr;
   }
-  TDataSet *ob = ElemFactory::theFactory().createElem( cl_name, ob_name, this );
+  if( ! isValidType( cl_name ) ) {
+    qDebug( "WARN: TDataSet::add_obj: type \"%s\" not allowed in %s!",
+	qPrintable(ob_name), qPrintable( getFullName() ) );
+    return nullptr;
+  }
+  TDataSet *ob = EFACT.createElem( cl_name, ob_name, this );
   if( !ob ) {
     return nullptr;
   }
   ob->check_guard();
-  // const TClassInfo *cl = ElemFactory::theFactory().getInfo( cl_name );
+  structChanged();
   
   return ob;
 }
@@ -1035,6 +1028,7 @@ int TDataSet::del_obj( const QString &ob_name )
     return 0;
   }
   delete ho; // auto remove object and from parent lists
+  structChanged();
   return 1;
 }
 
@@ -1047,10 +1041,11 @@ HolderData* TDataSet::add_param( const QString &tp_name, const QString &ob_name 
 	qPrintable(ob_name), qPrintable( getFullName() ) );
     return nullptr;
   }
-  HolderData *ho = ElemFactory::theFactory().createParam( tp_name, ob_name, this );
+  HolderData *ho = EFACT.createParam( tp_name, ob_name, this );
   if( !ho ) {
     return nullptr;
   }
+  structChanged();
   return ho;
 }
 
@@ -1227,6 +1222,7 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
       return false;
     }
   }
+  structChanged();
 
   return true;
 }
@@ -1237,6 +1233,17 @@ void TDataSet::check_guard() const
     qDebug( "Guard value!!!");
     abort();
   }
+}
+
+
+void TDataSet::structChanged()
+{
+  do_structChanged();
+  emit sigStructChanged();
+}
+
+void TDataSet::do_structChanged()
+{
 }
 
 void TDataSet::dumpStruct() const

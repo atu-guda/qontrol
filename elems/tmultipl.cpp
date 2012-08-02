@@ -71,7 +71,7 @@ int TMultipl::registered = reg();
 
 int TMultipl::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 // end of tmultipl.cpp

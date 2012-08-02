@@ -92,7 +92,7 @@ int TInputAny::registered = reg();
 
 int TInputAny::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

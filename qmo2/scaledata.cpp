@@ -55,7 +55,7 @@ int ScaleData::registered = reg();
 
 int ScaleData::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

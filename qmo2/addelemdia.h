@@ -10,6 +10,7 @@
 #define _ADDELEMDIA_H
 
 #include <QtGui>
+#include "dataset.h"
 
 struct addElemInfo {
   QString type; // class type
@@ -20,13 +21,14 @@ struct addElemInfo {
 class AddElemDialog : public QDialog {
  Q_OBJECT
   public:
-   AddElemDialog( addElemInfo *a_aei, int a_props, QWidget *aparent );
+   AddElemDialog( addElemInfo *a_aei, int a_props, TDataSet *a_pobj, QWidget *aparent );
   public slots:
    virtual void accept();
   protected:
    void setupUi();
    addElemInfo *aei;
    int props;
+   TDataSet *pobj; // parent object - to ask allowed types. my be 0
    QLineEdit *ed_name;
    QLineEdit *ed_order;
    QListWidget *lw;

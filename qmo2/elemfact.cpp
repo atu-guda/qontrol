@@ -14,7 +14,7 @@
 //int TDataSetXXX::reg()
 //{
 //  static TDataSetXXX p { create, "" };
-//  return ElemFactory::theFactory().registerElemType( p );
+//  return EFACT.registerElemType( p );
 //}
 
 
@@ -117,10 +117,27 @@ const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
 {
   MapStrClass::const_iterator i = str_class.find( a_type );
   if( i == str_class.end() ) {
-    qDebug( "ERR: getInfo: fail to find class %s", qPrintable( a_type ) ); 
-    return 0;
+    qDebug( "ERR: ElemFactory::getInfo: fail to find class \"%s\"",
+	qPrintable( a_type ) ); 
+    return nullptr;
   }
   return i.value();
 }
 
+bool ElemFactory::isChildOf( const QString &cl, const QString &par_cl )
+{
+  MapStrClass::const_iterator i = str_class.find( cl );
+  if( i == str_class.end() ) {
+    qDebug( "WARN:  ElemFactory::isChildOf: fail to find class \"%s\"",
+	qPrintable( cl ) ); 
+    return false;
+  }
+  const TClassInfo *ci = i.value();
+  while( ci ) {
+    if( par_cl == ci->className )
+      return true;
+    ci = ci->parent_class;
+  }
+  return false;
+}
 

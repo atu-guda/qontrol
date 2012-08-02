@@ -108,7 +108,7 @@ int TDelay::registered = reg();
 
 int TDelay::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

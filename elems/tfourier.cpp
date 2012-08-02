@@ -205,7 +205,7 @@ int TFourier::registered = reg();
 
 int TFourier::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

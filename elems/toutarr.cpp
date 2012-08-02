@@ -177,7 +177,7 @@ int TOutArr::registered = reg();
 
 int TOutArr::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

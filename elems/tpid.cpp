@@ -101,7 +101,7 @@ int TPid::registered = reg();
 
 int TPid::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

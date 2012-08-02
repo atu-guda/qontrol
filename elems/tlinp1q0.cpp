@@ -90,7 +90,7 @@ int TLinP1Q0::registered = reg();
 
 int TLinP1Q0::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

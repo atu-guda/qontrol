@@ -123,12 +123,14 @@ class TModel : public TDataContainer  {
   
   /** reimplemented from TDataSet to ensure all data filled and linked */
   virtual int checkData( int i );
+  /** reimplemented to allow add TMiso.. TOutArr... TGraph TODO: containers */
+  virtual int isValidType( const QString &cl_name ) const;
   
  protected:
+  /** reimplemented to real Elems, OutArr, Graphs: TODO: separate containers */
+  virtual void do_structChanged();
   /** sorts {v_el,v_ord} on v_ord */
   void sortOrd(void);
-  /** fills common part of v_i & ptrs */
-  void fillCommon(void);
   /** performs one loop */
   virtual int runOneLoop(void);
   /** fill tables & call preRun for elements */

@@ -92,7 +92,7 @@ int TCounter::registered = reg();
 
 int TCounter::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

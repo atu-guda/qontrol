@@ -62,7 +62,6 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   v_out.reserve( OUT_RES ); 
   v_outt.reserve( OUT_RES );
   v_graph.reserve( 16 );
-  fillCommon();
   
 }/*}}}1*/
 
@@ -356,6 +355,21 @@ int TModel::checkData( int n )/*{{{1*/
   return TDataContainer::checkData( n );
 }/*}}}1*/
 
+// TODO: not here: use separate containers
+int TModel::isValidType( const QString &cl_name ) const
+{
+  if( EFACT.isChildOf( cl_name, "TMiso" ) )
+    return 1;
+  if( EFACT.isChildOf( cl_name, "TOutArr" ) )
+    return 1;
+  if( EFACT.isChildOf( cl_name, "TGraph" ) )
+    return 1;
+  // tmp:
+  if( cl_name == "TDataContainer" )
+    return 1;
+  return 0;
+}
+
 int TModel::xy2elnu( int avis_x, int avis_y )/*{{{1*/ // TODO: todel
 {
   int i = 0, ox, oy;
@@ -603,6 +617,11 @@ int TModel::linkNames(void)/*{{{1*/
   return 0;
 }/*}}}1*/
 
+void TModel::do_structChanged()
+{
+  linkNames();
+}
+
 void TModel::sortOrd(void)/*{{{1*/
 {
   int i, n, en, t;
@@ -701,9 +720,6 @@ int TModel::getLinkInfos( int elnu, LinkInfo *li )/*{{{1*/
 
 }/*}}}1*/
 
-void TModel::fillCommon(void)/*{{{1*/ // TODO: del at all
-{
-}/*}}}1*/
 
 TDataSet* TModel::create( TDataSet* apar ) // static/*{{{1*/
 {
@@ -744,7 +760,7 @@ int TModel::registered = reg();
 
 int TModel::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

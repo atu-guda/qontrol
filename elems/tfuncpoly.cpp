@@ -91,7 +91,7 @@ int TFuncPoly::registered = reg();
 
 int TFuncPoly::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

@@ -62,7 +62,7 @@ int TLinear::registered = reg();
 
 int TLinear::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

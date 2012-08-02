@@ -234,6 +234,7 @@ class DataDialog : public QDialog {
   protected: 
    virtual int createWidgets();
    void showSimpleHelp();
+   void delSome( bool is_obj );
    TDataSet &ds;
    DaWiMap dwm;
 };

@@ -241,7 +241,7 @@ int TSource::registered = reg();
 
 int TSource::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

@@ -109,7 +109,7 @@ int TSourceLin::registered = reg();
 
 int TSourceLin::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

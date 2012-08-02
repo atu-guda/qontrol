@@ -140,7 +140,7 @@ int TRandTrigg::registered = reg();
 
 int TRandTrigg::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

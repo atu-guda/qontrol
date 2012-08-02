@@ -351,6 +351,8 @@ class TDataSet : public QObject {
   Q_OBJECT
    friend class HolderData;
    friend class HolderObj;
+ signals: 
+   void sigStructChanged();
  public:
    /** default constructor */
    explicit TDataSet( TDataSet *aparent );
@@ -358,13 +360,11 @@ class TDataSet : public QObject {
    virtual ~TDataSet();
    /** creator */
    static TDataSet* create( TDataSet *apar );
-   /** new way to create objects */
-   TDataSet* createObj( const QString &cl_name, const QString &nm, TDataSet* apar );
    /** class name - for check & human purpose */
    const char* getClassName(void) const;
    /** parent is TDataSet, not QObject */
    TDataSet* getParent() { return par; }
-   /** return ptr to parents holder to me or 0 */
+   /** return ptr from parent holders to me or 0 */
    HolderObj* myHolder() const { return holderOfMe; }
    /** fills dst with full name of object: .aaa.bbb.cc  */
    QString getFullName() const;
@@ -395,8 +395,6 @@ class TDataSet : public QObject {
    /** return ptr to elem by name */
    // use only by QMo2Doc while creating/loading 
    TDataSet* getObj( const QString &ename, const QString &cl_name = QString() );   
-   // /** return ptr to Object elem by name  */
-   // virtual const TDataSet* getObjPtr( const QString &nm ) const;
 
    /** new functions to read datas */
    int getData( const QString &nm, QVariant &da ) const;
@@ -424,7 +422,7 @@ class TDataSet : public QObject {
       { return &class_info; }
    /** is this class child of given or the same by name */
    bool isChildOf( const QString &cname );
-   /** new part - iface a-la Holder FIXME: implement it */
+   /** new part - iface a-la Holder */
    virtual bool set( const QVariant & x );
    virtual QVariant get() const;
    virtual void post_set();
@@ -436,6 +434,8 @@ class TDataSet : public QObject {
    QDomElement toDom( QDomDocument &dd ) const;
    bool fromDom( QDomElement &de, QString &errstr );
    void check_guard() const;
+   /** reaction to add/remove of subobjects: call do_structChanged */
+   void structChanged();
    // special part - TODO: remove or ifdef in separate lib
    /** returns pointer to given parameter, checking if valid 
     * valid names:
@@ -454,6 +454,8 @@ class TDataSet : public QObject {
    bool registerHolder( HolderData *ho );
    /** unregister holder */
    bool unregisterHolder( HolderData *ho );
+   /** do real actions after structure changed */
+   virtual void do_structChanged();
  protected:
    /** guard value */
    int guard;
@@ -497,6 +499,7 @@ class ElemFactory {
    QStringList allTypeNames() const { return str_class.keys(); }
    QStringList allParamTypes() const { return str_holder.keys(); }
    const TClassInfo* getInfo( const QString &a_type ) const;
+   bool isChildOf( const QString &cl, const QString &par_cl );
 
   private:
    ElemFactory();
@@ -508,6 +511,7 @@ class ElemFactory {
    MapStrHolder str_holder;
 };
 
+#define EFACT ElemFactory::theFactory() 
 
 #endif  // _DATASET_H
 

@@ -276,7 +276,7 @@ int TCorrAnalysis::registered = reg();
 
 int TCorrAnalysis::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

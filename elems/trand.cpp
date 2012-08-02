@@ -148,7 +148,7 @@ int TRand::registered = reg();
 
 int TRand::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 

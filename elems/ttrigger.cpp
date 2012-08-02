@@ -131,7 +131,7 @@ int TTrigger::registered = reg();
 
 int TTrigger::reg()
 {
-  return ElemFactory::theFactory().registerElemType( &class_info  );
+  return EFACT.registerElemType( &class_info  );
 }
 
 
