@@ -62,8 +62,8 @@ class TElmLink : public TDataSet {
    PRM_STRING1( inps1, efNoRunChange, "Input 1", "Name of source for input 1", "max=32" );
    PRM_STRING1( inps2, efNoRunChange, "Input 2", "Name of source for input 2", "max=32" );
    PRM_STRING1( inps3, efNoRunChange, "Input 3", "Name of source for input 3", "max=32" );
-   PRM_SWITCH1( noauto, efNoRunChange, "No Auto", "Exclude this object from automatic processing", "sep=col" );
-   PRM_SWITCH1( locked, efNoRunChange, "Locked", "Bypass u[0] to output", ""  );
+   PRM_SWITCH1( noauto, efInner, "No Auto", "Unused", "" );
+   PRM_SWITCH1( locked, efNoRunChange, "Locked", "Bypass u[0] to output", "sep=col"  );
    PRM_SWITCH1( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", ""); 
    PRM_SWITCH1( onlyLast, efNoRunChange , "only Last", "Process element only at last iteration", ""); 
    PRM_SWITCH1( flip, efNoRunChange, "flip image", "flip left-right element icon", "sep=col");

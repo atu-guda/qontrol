@@ -20,9 +20,7 @@
 const char* TVibro::helpstr = "<H1>TVibro</H1>\n"
  "Vibrational element <b> d2x/dt^2 + c0*dx/dt + Omega^2*f(x) = u</b>: <br>\n"
  "Parameters <b>c0</b> and <b>Omega</b> can be changed at any time.<br>\n"
- "<b>rfe</b> - NONE! name of element, which must input <b>x</b> as parm[0]. <br>\n"
- "If output of element depend of it's state, it must be flagged as '<b>noauto</b>'" 
- "If this name empty or bad, assumed <b>f(x) = x</b>.";
+ "<b>rfe</b> - NONE! name of element, which must input <b>x</b> as parm[0]. <br>\n";
 
 TClassInfo TVibro::class_info = {
   CLASS_ID_TVibro, "TVibro", TVibro::create,

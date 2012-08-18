@@ -130,7 +130,7 @@ void QStructView::drawAll( QPainter &p )
 {
   int i, ci, h, w, nh, nw;
   int n_el, elnu,  n_out, out_nu, out_tp, n_li, line_busy;
-  int ob_x, ob_y, ob_ord, ob_lock, ob_noauto, ob_first, ob_last;
+  int ob_x, ob_y, ob_ord, ob_lock, ob_first, ob_last;
   int ob_flip, ob_noIcon;
   int li_mid_y, li_src_x, li_src_y, li_dst_x, li_dst_y;
   int ob_gx, ob_gy, st_y, ic_sz;
@@ -180,12 +180,11 @@ void QStructView::drawAll( QPainter &p )
     if( ob == 0 ) continue;
     ob_name =  ob->objectName();
     line_busy = 0; ob_x = ob_y = -1; ob_ord = -1;
-    ob_lock = ob_noauto = ob_first = ob_last = ob_flip = ob_noIcon = 0;
+    ob_lock = ob_first = ob_last = ob_flip = ob_noIcon = 0;
     ob->getData( "vis_x", &ob_x ); 
     ob->getData( "vis_y", &ob_y );
     ob->getData( "ord", &ob_ord );
     ob->getData( "links.locked", &ob_lock );
-    ob->getData( "links.noauto", &ob_noauto );
     ob->getData( "links.onlyFirst", &ob_first );
     ob->getData( "links.onlyLast", &ob_last );
     ob->getData( "links.flip", &ob_flip );
@@ -216,8 +215,6 @@ void QStructView::drawAll( QPainter &p )
       p.drawRect( ob_gx + 4, ob_gy, 6, 6 );
     if( ob_last )
       p.drawRect( ob_gx + 20, ob_gy, 6, 6 );
-    if( ob_noauto )
-      p.drawRect( ob_gx + 30, ob_gy + 20, 6, 6 );
     
     // order mark
     if( s_ord ) {

@@ -94,8 +94,6 @@ TDataSet* TMiso::create( TDataSet* /* apar */ )
 double TMiso::fun( double t, IterType itype )
 {
   int v;
-  if( links->noauto ) 
-    return out0;
   if( links->locked ) 
     return out0 = *in_so[0];
   if( links->onlyFirst && itype != IterFirst )
