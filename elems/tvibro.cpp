@@ -15,7 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "tmodel.h"
 #include "tvibro.h"
 
 const char* TVibro::helpstr = "<H1>TVibro</H1>\n"

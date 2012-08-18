@@ -18,7 +18,6 @@
 #include <ctime>
 #include <cmath> 
 #include "miscfun.h" 
-#include "tmodel.h"
 #include "tlorenz.h"
 
 using namespace std;

@@ -18,7 +18,6 @@
 #include <cmath>
 #include <limits>
 #include "miscfun.h"
-#include "tmodel.h"
 #include "tfriction.h"
 
 using namespace std;

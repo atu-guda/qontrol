@@ -18,7 +18,6 @@
 #include <time.h>
 #include <math.h> 
 #include "miscfun.h" 
-#include "tmodel.h"
 #include "trossler.h"
 
 const char* TRossler::helpstr = "<H1>TRossler</H1>\n"

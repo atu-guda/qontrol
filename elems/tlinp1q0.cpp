@@ -15,7 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "tmodel.h"
 #include "tlinp1q0.h"
 
 const char* TLinP1Q0::helpstr = "<H1>TLinP1Q0</H1>\n"

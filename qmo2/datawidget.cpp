@@ -833,7 +833,10 @@ void DataDialog::addParam()
   }
   ho->setParm( "descr", descr );
   ho->fromString( val );
-  // todo: recreate widgets
+
+  createWidgets(); // recreate iface
+  getAll();
+  update();
 }
 
 void DataDialog::addObj()
@@ -871,7 +874,9 @@ void DataDialog::addObj()
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
-  // recreate iface
+  createWidgets(); // recreate iface
+  getAll();
+  update();
 }
 
 void DataDialog::delSome( bool is_obj )
@@ -912,6 +917,9 @@ void DataDialog::delSome( bool is_obj )
   if( rc != QDialog::Accepted || ob_name.isEmpty() )
     return;
   ds.del_obj( ob_name );
+  createWidgets();
+  getAll();
+  update();
 }
 
 void DataDialog::delParam()
@@ -928,6 +936,13 @@ int DataDialog::createWidgets()
 {
   int nr = 0, nc = 0, nr_max = 0, nr_block = 0;
   int was_block = 0, was_col = 0;
+  
+  // remove existent- if recreate need
+  for( QObject *child : children() ) {
+    delete child;
+  }
+  dwm.clear();
+
   QVBoxLayout *lay1 = new QVBoxLayout;
   
   QGridLayout *lay2 = new QGridLayout;
