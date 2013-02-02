@@ -53,14 +53,15 @@ class TVibro : public TMiso  {
    /** damping */
    PRM_DOUBLE1( c0, 0, "c_0", "Damping coeficient", "" );
    /** natural frequency */
-   PRM_DOUBLE1( Omega, 0, "\\Omega", "Natural frequency if c_0=0 and empty rfe", "" );
-   /** name of return force element: TODO: obsolete, use  */
-   PRM_STRING1( rfe, efNoRunChange | efNoDial, "RFE - NOT USED!", 
-        "Name of return force element (rfe) (NOT USED)", "max=128" );
+   PRM_DOUBLE1( Omega, 0, "\\Omega", "Natural frequency if c_0=0 and f(x)=x", "" );
+   /** Initial velosity dx/dt(0) */
+   PRM_DOUBLE1( v0, efNoRunChange, "v_0", "v(0)", "sep=col" );
    /** Use u[1] as return force element output */
    PRM_SWITCH1( use_u1, efNoRunChange, "u[1] is RF", 
         "Use u[1] as return force element output", "" );
-   /** flag for start(1,2,0) and elnu of rfe */
+   /** Curent velosity dx/dt */
+   PRM_DOUBLE1( v, efInner, "v", "v(t)", "" );
+   /** flag for start(1,2,0)  */
    int isStart;
    /** old values and misc */
    double u_old, f_old, x_old, x_old2, tdt2;

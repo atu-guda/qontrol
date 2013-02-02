@@ -19,8 +19,7 @@
 
 const char* TVibro::helpstr = "<H1>TVibro</H1>\n"
  "Vibrational element <b> d2x/dt^2 + c0*dx/dt + Omega^2*f(x) = u</b>: <br>\n"
- "Parameters <b>c0</b> and <b>Omega</b> can be changed at any time.<br>\n"
- "<b>rfe</b> - NONE! name of element, which must input <b>x</b> as parm[0]. <br>\n";
+ "Parameters <b>c0</b> and <b>Omega</b> can be changed at any time.<br>\n";
 
 TClassInfo TVibro::class_info = {
   CLASS_ID_TVibro, "TVibro", TVibro::create,
@@ -28,11 +27,10 @@ TClassInfo TVibro::class_info = {
 
 
 TVibro::TVibro( TDataSet* aparent )
-        :TMiso( aparent )
+        :TMiso( aparent ),
+	 c0(0.4), Omega(1.2), v0(0), use_u1(0), v(v0), isStart(1),
+	 u_old(0), f_old(0), x_old(out0_init), x_old2(out0_init), tdt2(1)
 {
-  Omega = 1.2; c0 = 0.4; 
-  use_u1 = 0;
-  isStart = 1; tdt2 = 1; u_old = f_old = x_old = x_old2 = 0;
 }
 
 TVibro::~TVibro()
@@ -63,44 +61,34 @@ int TVibro::do_preRun( int /*run_tp*/, int /*an*/,
 
 int TVibro::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  x_old = x_old2 = u_old = f_old = 0;
+  u_old = f_old = 0;
+  v = v0;
+  x_old = out0_init;
+  x_old2 = out0_init - v0 * tdt;
   isStart = 1;
   return 0;
 }
 
 double TVibro::f( double /*t*/ )
 {
-  double x, ctau;
+  double x, ctau = tdt * c0 / 2; // c0 can be changed at any time, so here
+  
   if( isStart == 1 ) {  // first step
-    isStart = 2; x = 0;
-    if( use_u1 ) {
-      f_old = *in_so[1];
-    } else {
-      f_old = x;
-    };
-    u_old = *in_so[0];
-    return x;
-  };
-  if( isStart == 2 ) {  // second step
-    isStart = 0; x = x_old + 0.5 * tdt2 * u_old;
-    if( use_u1 ) {
-      f_old = *in_so[1];
-    } else {
-      f_old = x;
-    };
-    u_old = *in_so[0]; x_old2 = x_old; x_old = x;
-    return x;
-  };
-  // all other steps
-  ctau = tdt * c0 / 2; // c0 can be changed at any time, so here
-  x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * (u_old - Omega * Omega *f_old) ) 
-    / ( 1 + ctau );
-  if( use_u1 ) {
-    f_old = *in_so[1];
-  } else {
-    f_old = x;
-  };
-  u_old = *in_so[0]; x_old2 = x_old; x_old = x;
+    isStart = 2; x = out0_init; v = v0;
+  } else if ( isStart == 2 ) {  // second step
+    isStart = 0; 
+    x = x_old + v0 * tdt + 0.5 * tdt2 * u_old;
+    v = v0 + u_old * tdt;
+  } else {  // all other steps
+    x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * (u_old - Omega * Omega * f_old) ) 
+      / ( 1 + ctau );
+    v = ( x - x_old2 ) / ( 2 * tdt );
+  }
+  
+  f_old = use_u1 ? *in_so[1] : x;
+  
+  u_old = *in_so[0]; 
+  x_old2 = x_old; x_old = x;
   return x;
 }
 
