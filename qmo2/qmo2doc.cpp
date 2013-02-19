@@ -64,7 +64,7 @@ void QMo2Doc::removeView( QMo2View * /*view*/ )
 }
 
 void QMo2Doc::changedViewList()
-{	
+{
   //QMo2View *w;
   /*
   if( (int)pViewList->count() == 1 ) {
@@ -73,7 +73,7 @@ void QMo2Doc::changedViewList()
   } else {
     int i;
     for( i=1, w=&(pViewList->first());  w!=0;  i++, w = &(pViewList->next()) )
-      w->setCaption( QString( m_title + ":%1" ).arg(i) );	
+      w->setCaption( QString( m_title + ":%1" ).arg(i) );
   };
   */
 }
@@ -174,14 +174,14 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
       QDomElement ee = cnode.toElement();
       QString elname = ee.attribute( "name" );
       QString tagname = ee.tagName();
-      qDebug( "Element tagname: \"%s\" name: \"%s\"",  
-	  qPrintable(tagname), qPrintable(elname) );
+      //qDebug( "Element tagname: \"%s\" name: \"%s\"",  
+      //qPrintable(tagname), qPrintable(elname) );
       if( elname == "root" || tagname == "obj" ) {
-	obj_root = ee;
-	break;
+        obj_root = ee;
+        break;
       }
       QMessageBox::critical( QMo2Win::qmo2win, tr( PACKAGE ),
-	  tr("Bad first element: %1 %2 ").arg(tagname).arg(elname) );
+        tr("Bad first element: %1 %2 ").arg(tagname).arg(elname) );
       return false;
     }
     cnode = cnode.nextSibling();
@@ -296,8 +296,8 @@ bool QMo2Doc::canCloseFrame( QMo2View* pFrame )
 	     QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel )) {
       case QMessageBox::Yes:
   	   if( is_nonamed ) {
-	     saveName = QFileDialog::getSaveFileName( QMo2Win::qmo2win , tr("Save file"), 
-		 QString::null, "Model files (*.mo2);;All files(*)" );
+             saveName = QFileDialog::getSaveFileName( QMo2Win::qmo2win, tr("Save model"),
+                 QString::null, "Model *.qol files (*.qol);;All files(*)" );
              if(saveName.isEmpty())
           	return false;
 	   } else {
@@ -321,13 +321,13 @@ bool QMo2Doc::canCloseFrame( QMo2View* pFrame )
 	   break;
       case QMessageBox::Cancel:
       default:
-           ret=false; 				
+           ret=false;
 	   break;
     }; // switch
   } else {
     ret=true;
-  }; // if(isModified())	
-		
+  }; // if(isModified())
+
   return ret;
 }
 

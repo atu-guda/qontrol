@@ -59,7 +59,7 @@ class QMo2View : public QWidget
    /** returns a pointer to the document connected to the view*/
    QMo2Doc *getDocument() const;
    /** gets called to redraw the document contents if it has been modified */
-   void update(QMo2View* pSender);
+   void update();
    // /** implement preferred size */
    // QSize sizeHint();
    /** inner size for structure view */

@@ -145,23 +145,23 @@ void QMo2Win::initIface()
   act_new->setWhatsThis( tr("Click this button to create a new model file.") );
   connect( act_new, SIGNAL( activated() ), this, SLOT( slotFileNew() ) );
 
-  act_openxml = new QAction( QIcon::fromTheme("document-open"), "Open XML model", this );
+  act_openxml = new QAction( QIcon::fromTheme("document-open"), "Open model", this );
   act_openxml->setShortcuts( QKeySequence::Open );
-  act_openxml->setWhatsThis( tr("Click this button to open a XML model file." ) );
+  act_openxml->setWhatsThis( tr("Click this button to open a model file." ) );
   connect( act_openxml, SIGNAL( activated() ), this, SLOT( slotFileOpenXML() ) );
 
   act_close = new QAction( "&Close", this );
   act_close->setWhatsThis( tr("Close active window") );
   connect( act_close, SIGNAL( activated() ), this, SLOT( slotFileClose() ) );
 
-  act_savexml = new QAction( QIcon::fromTheme("document-save"), "Save XML model",  this );
+  act_savexml = new QAction( QIcon::fromTheme("document-save"), "Save model",  this );
   act_savexml->setShortcuts( QKeySequence::Save );
-  act_savexml->setWhatsThis( tr("Click this button to save the XML model file you are "
+  act_savexml->setWhatsThis( tr("Click this button to save the model file you are "
                   "editing. You will be prompted for a file name." ) );
   connect( act_savexml, SIGNAL( activated() ), this, SLOT( slotFileSaveXML() ) );
 
-  act_savexmlas = new QAction(QIcon::fromTheme("document-save-as"), "Save XML As", this );
-  act_savexmlas->setWhatsThis( tr("Save current XML model with another filename") );
+  act_savexmlas = new QAction(QIcon::fromTheme("document-save-as"), "Save model As", this );
+  act_savexmlas->setWhatsThis( tr("Save current model with another filename") );
   connect( act_savexmlas, SIGNAL( activated() ), this, SLOT( slotFileSaveXMLAs() ) );
 
   act_print = new QAction(  QIcon::fromTheme("document-print"), "&Print", this );
@@ -821,6 +821,7 @@ void QMo2Win::slotFileSaveXML()
          QMessageBox::critical( this, 
 	   tr("I/O Error !"), tr("Could not save the current document !" ) );
     };	 
+    m->update();
   };
   updateActions();
   statusBar()->showMessage( tr( "Ready." ) );
@@ -835,8 +836,8 @@ void QMo2Win::slotFileSaveXMLAs()
     QMessageBox::critical ( this, 
       tr("Critical error!"), tr("Fail to find active window while saving file!") );
   }
-  QString fn = QFileDialog::getSaveFileName( this, tr("Save XML model"),
-      QString::null, "Model XML *.qol files (*.qol);;All files(*)" );
+  QString fn = QFileDialog::getSaveFileName( this, tr("Save model"),
+      QString::null, "Model *.qol files (*.qol);;All files(*)" );
 
   if ( !fn.isEmpty() ) {
     QFileInfo fi( fn );
@@ -981,21 +982,33 @@ void QMo2Win::slotViewStatusBar()
 void QMo2Win::slotShowOrd()
 {
   sett.showord = ! sett.showord;
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->update();
 }
 
 void QMo2Win::slotShowGrid()
 {
   sett.showgrid = ! sett.showgrid;
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->update();
 }
 
 void QMo2Win::slotShowNames()
 {
   sett.shownames = ! sett.shownames;
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->update();
 }
 
 void QMo2Win::slotShowIcons()
 {
   sett.showicons = ! sett.showicons;
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->update();
 }
 
 

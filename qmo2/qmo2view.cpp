@@ -121,10 +121,10 @@ QSize QMo2View::svSize() const
 
 
 
-void QMo2View::update( QMo2View* pSender )
+void QMo2View::update()
 {
-  if( pSender != this )
-    repaint();
+  updateViews();
+  QWidget::update();
 }
 
 void QMo2View::print()
@@ -153,7 +153,7 @@ int QMo2View::checkState( CheckType ctp )
   int state;
   if( model == 0 || root == 0 ) {
     QMessageBox::critical( this, "Error", "Model or root don't exist!",
-	QMessageBox::Ok, QMessageBox::NoButton	);
+	QMessageBox::Ok, QMessageBox::NoButton );
     return 0; 
   };
   switch( ctp ) {
@@ -183,7 +183,7 @@ int QMo2View::checkState( CheckType ctp )
   };
   if( ! msg.isEmpty() ) {
     QMessageBox::warning( this, "Warning", msg,
-	QMessageBox::Ok, QMessageBox::NoButton	);
+	QMessageBox::Ok, QMessageBox::NoButton );
     return 0;
   };
   return 1;
@@ -303,7 +303,7 @@ void QMo2View::delElm()
 {
   int k;
   if( ! checkState( selCheck ) )
-    return;	  
+    return;  
   
   QString oname = selObj->objectName();
 
@@ -326,7 +326,7 @@ void QMo2View::delElm()
 void QMo2View::editElm()
 {
   if( ! checkState( selCheck ) )
-    return;	  
+    return;  
   DataDialog *dia = new DataDialog( *selObj, this );
   int rc = dia->exec();
   delete dia;
@@ -343,12 +343,12 @@ void QMo2View::linkElm()
   TElmLink *el;
   int rc;
   if( ! checkState( selCheck ) )
-    return;	  
+    return;  
 
   el = static_cast<TElmLink*>( selObj->getObj( "links" ) );
   if( el == 0 ) {
     qDebug( "ERR: fail to find links for object %s", 
-	qPrintable( selObj->getFullName() ) );
+       qPrintable( selObj->getFullName() ) );
     return ;
   }
   DataDialog *dia = new DataDialog( *el, this );
@@ -366,7 +366,7 @@ void QMo2View::qlinkElm()
   QString toname;
   QString oldlink;
   if( ! checkState( linkToCheck ) )
-    return;	  
+    return;  
 
   if( !selObj || !markObj )
     return;
@@ -388,7 +388,7 @@ void QMo2View::qplinkElm()
   int k;
   QString oldlink;
   if( ! checkState( linkToCheck ) )
-    return;	  
+    return;  
 
   if( !selObj || !markObj  )
     return;
@@ -408,7 +408,7 @@ void QMo2View::unlinkElm()
 {
   int k;
   if( ! checkState( linkToCheck ) )
-    return;	  
+    return;  
   
   QString lnkname;
   QString none("");
@@ -427,9 +427,9 @@ void QMo2View::unlinkElm()
 
 void QMo2View::lockElm()
 {
-  int lck;	
+  int lck;
   if( ! checkState( selCheck ) )
-    return;	  
+    return;  
   
   selObj->getData( "links.locked", &lck );
   lck = !lck;
@@ -443,9 +443,9 @@ void QMo2View::lockElm()
 void QMo2View::ordElm()
 {
   bool ok;
-  int new_ord, old_ord;	
+  int new_ord, old_ord;
   if( ! checkState( selCheck ) )
-    return;	  
+    return;
   old_ord = -1;
   selObj->getData( "ord", &old_ord );
   new_ord = QInputDialog::getInt(this, "New element order", 
@@ -467,7 +467,7 @@ void QMo2View::markElm()
 void QMo2View::moveElm()
 {
   if( ! checkState( moveCheck ) )
-    return;	  
+    return;  
   model->moveElem( mark, sel_x, sel_y );
   emit viewChanged();
 }
@@ -481,7 +481,7 @@ void QMo2View::infoElm()
   QTableWidget *tv;
   QString qs;
   if( ! checkState( selCheck ) )
-    return;	  
+    return;  
   
   dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": Structure of ") + selObj->getFullName() );
@@ -539,7 +539,7 @@ void QMo2View::testElm1()
 {
   QString buf;
   if( ! checkState( selCheck ) )
-    return;	  
+    return;  
   
   QDialog *dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": test1 ") + selObj->objectName() );
@@ -571,7 +571,7 @@ void QMo2View::testElm1()
 void QMo2View::testElm2()
 {
   if( ! checkState( selCheck ) )
-    return;	  
+    return;  
   if( selObj == 0 )
     return;
   return;
@@ -767,7 +767,7 @@ void QMo2View::delOut()
 {
   int k;
   if( ! checkState( validCheck ) )
-    return;	  
+    return;  
   if( level < 0 || level >= model->getNOutArr() )
     return;
   TOutArr *arr= model->getOutArr( level );
@@ -789,7 +789,7 @@ void QMo2View::editOut()
   TOutArr *arr;
   int rc;
   if( ! checkState( validCheck ) )
-    return;	
+    return;
 
   if( level < 0 || level >= model->getNOutArr() )
     return;
@@ -819,7 +819,7 @@ void QMo2View::showOutData() // TODO: special dialog (+ for many rows)
   GraphInfo gi;
   int k;
   if( ! checkState( doneCheck ) )
-    return;	
+    return;
   arr = model->getOutArr( level );
   if( arr == 0 )
     return;
@@ -879,7 +879,7 @@ void QMo2View::exportOut()
   QString fnq;
   TOutArr *arr;
   if( ! checkState( doneCheck ) )
-    return;	
+    return;
   arr = model->getOutArr( level );
   if( arr == 0 )
     return;
@@ -899,7 +899,7 @@ void QMo2View::newGraph()
   QString grnameq, aname;
   bool ok;
   if( ! checkState( validCheck ) )
-    return;	
+    return;
   no = model->getNGraph();
   grnameq = QString("graph") + QString::number( no ); 
   aname = QInputDialog::getText( this, "Creating new Graph descriptions",
@@ -921,7 +921,7 @@ void QMo2View::delGraph()
 {
   int k;
   if( ! checkState( validCheck ) )
-    return;	
+    return;
   if( level < 0 || level >= model->getNGraph() )
     return;
   TGraph *gra = model->getGraph( level );
@@ -943,7 +943,7 @@ void QMo2View::editGraph()
   TGraph *gra;
   int rc;
   if( ! checkState( validCheck ) )
-    return;	
+    return;
 
   if( level < 0 || level >= model->getNGraph() )
     return;
@@ -966,7 +966,7 @@ void QMo2View::showGraph()
   QPlotView *pv; TGraph *gra;
   QMainWindow *plotWnd;
   if( ! checkState( doneCheck ) )
-    return;	
+    return;
   n_gra = model->getNGraph();
   if( level < 0 || level >= n_gra )
     return;
@@ -992,7 +992,7 @@ void QMo2View::showGraphData()
   TGraph *gra;
   int k;
   if( ! checkState( doneCheck ) )
-    return;	
+    return;
   gra = model->getGraph( level );
   if( gra == 0 )
     return;
@@ -1025,7 +1025,7 @@ void QMo2View::exportGraphData()
   QString fnq;
   TGraph *gra;
   if( ! checkState( doneCheck ) )
-    return;	
+    return;
   if( level < 0 || level >= model->getNGraph() )
     return;
   gra = model->getGraph( level );
@@ -1049,7 +1049,7 @@ void QMo2View::gnuplotGraph()
   QString f_pgm, f_dat, f_eps, cdir;
   int l, rc, use_x11;
   if( ! checkState( doneCheck ) )
-    return;	
+    return;
   if( level < 0 || level >= model->getNGraph() )
     return;
   gra = model->getGraph( level );
@@ -1114,12 +1114,13 @@ void QMo2View::editModel()
 {
   int rc;
   if( ! checkState( validCheck ) )
-    return;	
+    return;
 
   DataDialog *dia = new DataDialog( *model, this );
   rc = dia->exec();
   if( rc == QDialog::Accepted ) {
     model->reset();
+    model->setModified();
     emit viewChanged();
   };
 }
@@ -1134,7 +1135,7 @@ void QMo2View::showVars()
   GraphInfo gi;
   QString fnq; QPushButton *bt_ok;
   if( ! checkState( validCheck ) )
-    return;	
+    return;
   const double *vars = model->getVars();
   gi.row = MODEL_NVAR; gi.col = 1; gi.ny = gi.row;
   strcpy( gi.title, "Model vars" );
@@ -1165,7 +1166,7 @@ void QMo2View::runRun()
 {
   QRunView *rv;
   if( ! checkState( validCheck ) )
-    return;	
+    return;
   rv = new QRunView( model, 0, this );
   rv->exec();
   emit viewChanged();
@@ -1175,7 +1176,7 @@ void QMo2View::runRun()
 void QMo2View::runPrm()
 {
   if( ! checkState( validCheck ) )
-    return;	
+    return;
   QRunView *rv;
   rv = new QRunView( model, 1, this );
   rv->exec();
@@ -1186,7 +1187,7 @@ void QMo2View::runPrm()
 void QMo2View::runPrm2()
 {
   if( ! checkState( validCheck ) )
-    return;	
+    return;
   QRunView *rv;
   rv = new QRunView( model, 2, this );  // TODO remove 0
   rv->exec();
@@ -1197,7 +1198,7 @@ void QMo2View::runPrm2()
 void QMo2View::resetModel()
 {
   if( ! checkState( validCheck ) )
-    return;	
+    return;
   model->reset();
   emit viewChanged();
 }
