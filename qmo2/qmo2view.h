@@ -154,7 +154,7 @@ class QMo2View : public QWidget
    QOutView *oview;
    QGraphView *gview;
    QStatusModel *stam;
-   QTreeView *treeView;
+   // QTreeView *treeView;
    QMo2Doc *doc;
    TRootData *root;
    TModel *model;

@@ -70,8 +70,8 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   
   stam = new QStatusModel( this, this );
 
-  treeView = new QTreeView( this );
-  treeView->setModel( ho_mo );
+  //treeView = new QTreeView( this );
+  //treeView->setModel( ho_mo );
 
   grLay->addWidget( scrollArea, 0, 0 );
   grLay->addWidget( oview, 0, 1 );
@@ -80,7 +80,7 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   left_part->setLayout( grLay );
 
   split->addWidget( left_part );
-  split->addWidget( treeView );
+  // split->addWidget( treeView );
 
   vlay->addWidget( split );
   vlay->addWidget( stam );
@@ -93,7 +93,7 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
 
   setWindowTitle( doc->title() );
 
-  connect( model, SIGNAL(sigStructChanged()), treeView, SLOT(reset()) );
+  // connect( model, SIGNAL(sigStructChanged()), treeView, SLOT(reset()) );
   connect( this, SIGNAL(viewChanged()), this, SLOT(updateViews()) );
   connect( sview, SIGNAL(sig_changeSel(int,int,int)), this, SLOT(changeSel(int,int,int)) );
   connect( sview, SIGNAL(sig_changeLevel(int)), this, SLOT(changeLevel(int)) );
@@ -207,7 +207,7 @@ void QMo2View::updateViews()
   gview->update();
   stam->update();
   // treeView->reset();
-  treeView->update();
+  // treeView->update();
 }  
 
 
