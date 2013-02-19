@@ -805,11 +805,6 @@ void QMo2View::editOut()
   };
 }
 
-void QMo2View::editOut2()
-{
-  editOut(); // moved to mainstream
-}
-
 
 void QMo2View::showOutData() // TODO: special dialog (+ for many rows)
 {
@@ -964,10 +959,6 @@ void QMo2View::editGraph()
   };
 }
 
-void QMo2View::editGraph2()
-{
-  return editGraph(); // new in upstream
-}
 
 void QMo2View::showGraph()
 {
@@ -1165,11 +1156,6 @@ void QMo2View::showVars()
   connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
   dia->exec();
   delete dia;
-}
-
-void QMo2View::editModel2()
-{
-  editModel();
 }
 
 

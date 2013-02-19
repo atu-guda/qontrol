@@ -102,7 +102,6 @@ class QMo2View : public QWidget
    void newOut();
    void delOut();
    void editOut();
-   void editOut2();
    void showOutData();
    void exportOut();
   
@@ -110,7 +109,6 @@ class QMo2View : public QWidget
    void newGraph();
    void delGraph();
    void editGraph();
-   void editGraph2();
    void showGraph();
    void showGraphData();
    void exportGraphData();
@@ -119,7 +117,6 @@ class QMo2View : public QWidget
    // model related
    void editModel();
    void showVars();
-   void editModel2();
   
    // runs
    void runRun();

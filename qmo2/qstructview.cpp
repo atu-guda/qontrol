@@ -430,8 +430,6 @@ void QStructView::mousePressEvent( QMouseEvent *me )
 	      act = menu->addAction( "&Reorder" );
 	      connect( act, SIGNAL( activated() ), mainview, SLOT(ordElm() ) );
 	      menu->addSeparator();
-	      act = menu->addAction( "Edit_&2" );
-	      connect( act, SIGNAL( activated() ), mainview, SLOT(testElm2() ) );
 	    } else {
 	      act = menu->addAction( "&New" );
 	      connect( act, SIGNAL( activated() ), mainview, SLOT(newElm() ) );
@@ -447,8 +445,6 @@ void QStructView::mousePressEvent( QMouseEvent *me )
 	    connect( act, SIGNAL( activated() ), mainview, SLOT(editModel() ) );
 	    act = menu->addAction( "Print model" );
 	    connect( act, SIGNAL( activated() ), mainview, SLOT(print() ) );
-	    act = menu->addAction( "Edit model 2" );
-	    connect( act, SIGNAL( activated() ), mainview, SLOT(editModel2() ) );
 	    
 	    menu->exec( mapToGlobal(QPoint( x, y )) );
 	    delete menu;

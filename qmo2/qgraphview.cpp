@@ -132,8 +132,6 @@ void QGraphView::mousePressEvent( QMouseEvent *me )
 	   connect( act, SIGNAL( activated() ), mainview, SLOT(editGraph() ) );
 	   act = menu->addAction( "&Delete" );
 	   connect( act, SIGNAL( activated() ), mainview, SLOT(delGraph() ) );
-	   act = menu->addAction( "Edit&2" );
-	   connect( act, SIGNAL( activated() ), mainview, SLOT(editGraph2() ) );
            menu->addSeparator();
 	   act = menu->addAction( "&Show" );
 	   connect( act, SIGNAL( activated() ), mainview, SLOT(showGraph() ) );

@@ -139,8 +139,6 @@ void QOutView::mousePressEvent( QMouseEvent *me )
 	 connect( act, SIGNAL( activated() ), mainview, SLOT(editOut() ) );
 	 act = menu->addAction( "&Delete" );
 	 connect( act, SIGNAL( activated() ), mainview, SLOT(delOut() ) );
-	 act = menu->addAction( "Edit&2" );
-	 connect( act, SIGNAL( activated() ), mainview, SLOT(editOut2() ) );
          menu->addSeparator();
 	 act = menu->addAction( "D&ump" );
 	 connect( act, SIGNAL( activated() ), mainview, SLOT(exportOut() ) );
