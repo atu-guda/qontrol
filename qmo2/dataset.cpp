@@ -42,6 +42,8 @@ HolderData::HolderData( const QString &obj_name,
 
 HolderData::~HolderData()
 {
+  qDebug( "dbg: HolderData::~HolderData(): %s par: %p %s", 
+      qPrintable( objectName() ), par, qPrintable( par->objectName() )  );
   par->unregisterHolder( this );
 }
 
@@ -661,8 +663,9 @@ TDataSet::TDataSet( TDataSet* aparent )
 
 TDataSet::~TDataSet()
 {
+  qDebug( "dbg: TDataSet::~TDataSet(): %p %s", this, qPrintable( getFullName() ));
   // deletion is done by holders dtors
-  state = stateBad;
+  state = stateBad; guard = 0;
 }
 
 const char* TDataSet::getClassName(void) const 

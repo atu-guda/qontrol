@@ -40,6 +40,7 @@ QMo2Doc::QMo2Doc()
 
 QMo2Doc::~QMo2Doc()
 {
+  qDebug( "dbg: QMo2Doc::~QMo2Doc(): " );
   delete pViewList; pViewList = 0;
   delete rootdata; rootdata = 0; model = 0; // model belong to rootdata
 }

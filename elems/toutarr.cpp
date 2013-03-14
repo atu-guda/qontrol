@@ -44,6 +44,7 @@ TOutArr::TOutArr( TDataSet* apar )
 TOutArr::~TOutArr()
 {
   n = ny = 0;
+  qDebug( "dbg: TOutArr::~TOutArr(): %s", qPrintable( getFullName() ));
 }
 
 TDataSet* TOutArr::create( TDataSet* apar )

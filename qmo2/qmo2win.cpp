@@ -764,10 +764,10 @@ void QMo2Win::slotFileNew()
 
 void QMo2Win::slotFileOpenXML()
 {
-  statusBar()->showMessage( tr( "Opening XML model file..." ) );
+  statusBar()->showMessage( tr( "Opening model file..." ) );
   QString fileName = 
     QFileDialog::getOpenFileName( this, tr("Open model file"),
-	"", "Model XML *.qol files (*.qol);;All files(*)" );
+	"", "Model *.qol files (*.qol);;All files(*)" );
   if ( fileName.isEmpty() ) {
      statusBar()->showMessage( tr( "Open canceled." ) );
      updateActions();
@@ -810,7 +810,7 @@ bool QMo2Win::doFileOpenXML( const QString &fn )
 
 void QMo2Win::slotFileSaveXML()
 {
-  statusBar()->showMessage( tr( "Saving XML model file...") );	
+  statusBar()->showMessage( tr( "Saving model file...") );	
   QMo2View* m =  activeMdiChild();
   if( m ) {
     QMo2Doc* doc = m->getDocument();
@@ -830,7 +830,7 @@ void QMo2Win::slotFileSaveXML()
 
 void QMo2Win::slotFileSaveXMLAs()
 {
-  statusBar()->showMessage( tr ( "Saving XML model file under new filename..." ) );
+  statusBar()->showMessage( tr ( "Saving model file under new filename..." ) );
   QMo2View* m =  activeMdiChild();
   if( !m ) {
     QMessageBox::critical ( this, 
