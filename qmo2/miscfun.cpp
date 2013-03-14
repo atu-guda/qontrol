@@ -320,14 +320,18 @@ int dumpDatas( const char *fn, const GraphInfo *gi, char delim )
   int i, j;
   ofstream os( fn );
   if( !os.good() ) return -1;
-  os << "#";  // save sign for gnuplot input data
+  os << "#";  // save labels for gnuplot input data
   for( j=0; j<gi->col; j++ ) {  // labels row
-   os << setw( 12 ) << gi->label[j] << delim;
+   os << setw( 18 ) << gi->label[j] << delim;
   };
+  
+  int nr = gi->row, nc = gi->col;
   os << '\n';
-  for( i=0; i<gi->row; i++ ) {  // data rows
-    for( j=0; j<gi->col; j++ ) {
-      os << setw( 12 ) << gi->dat[j][i] << delim;
+  // TODO: unmagic, config
+  os.precision(12);
+  for( i=0; i<nr; i++ ) {  // data rows
+    for( j=0; j<nc; j++ ) {
+      os << setw( 18 ) << gi->dat[j][i] << delim;
     };
     os << '\n';
   };
