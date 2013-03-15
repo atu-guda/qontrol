@@ -103,6 +103,29 @@ void QPlotView::printPlot( void )
   };
 }
 
+void QPlotView::exportPlot()
+{
+  
+  QString fn = QFileDialog::getSaveFileName(this, "Save Picture", "out.png", 
+               "PNG files (*.png);;All files (*)" );
+  if( fn.isNull() ) {
+    return;
+  };
+  
+  QImage timg( pix_w, pix_h, QImage::Format_RGB32 );
+  timg.fill( 0xFF );
+  QPainter painter( &timg );
+  render( &painter );
+
+  if( ! timg.save( fn, "PNG", 50 ) ) {
+    QString err = strerror(errno);
+    QMessageBox::warning(this, "Fail to open file", 
+			 QString("Fail fo open picture file: \"%1\": %2").arg(fn).arg(err), 
+	                 QMessageBox::Ok );
+  }
+  
+}
+
 void QPlotView::drawAll( QPainter &p )
 {
   int currSgnt;
@@ -540,6 +563,9 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
 	   setPrintColors();
 	 else
 	   printPlot(); 
+	 break;
+    case Qt::Key_E: 
+	 exportPlot();
 	 break;
     default: ke->ignore();
   };
@@ -1100,6 +1126,7 @@ const char QPlotView::helpstr[] = "<b>Hot keys:</b><br>\n"
  "<b>s/S</b> - scale dialog / standard scale <br>\n"
  "<b>c/C</b> - colors dialog / initial colors <br>\n"
  "<b>p/Ctrl-P</b> - print / set default colors for print<br>\n"
+ "<b>e</b> - export image to png <br>\n"
  "<b>m/M</b> - set mark to tool / zero point <br>\n"
  "<b>g</b> - move tool to given point <br>\n"
  "<b>l/L</b> - link/Unlink to data <br>\n"

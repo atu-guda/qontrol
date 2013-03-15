@@ -51,6 +51,8 @@ class QPlotView : public QWidget  {
    void setPrintColors(void);
    /** prints plot */
    void printPlot(void);
+   /** export plot to graphics file (png) */
+   void exportPlot();
    /** moves tool to given location */
    void moveTool(void);
    /** shown help */
