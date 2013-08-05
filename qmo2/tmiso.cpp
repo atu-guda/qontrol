@@ -27,7 +27,7 @@ const char* TElmLink::helpstr = "<H1>TElmLink</H1> \n"
 
 
 TClassInfo TElmLink::class_info = {
- CLASS_ID_TElmLink, "TElmLink", TElmLink::create,
+ 0, "TElmLink", TElmLink::create, // TODO: ??? remove id
  &TDataSet::class_info, helpstr, clpSpecial };
 
 
@@ -36,7 +36,6 @@ TElmLink::TElmLink( TDataSet* apar )
 {
   noauto = locked = onlyFirst = onlyLast = flip = noIcon = 0;
   pflags0 = pflags1 = pflags2 = pflags3 = 0;
-  allow_add = 0;
 }
 
 TDataSet* TElmLink::create( TDataSet* apar )
@@ -60,25 +59,18 @@ const char* TMiso::helpstr = "<H1>TMiso</H1>\n"
  "Base class for all active elements. Never should be used.";
 
 TClassInfo TMiso::class_info = {
- CLASS_ID_TMiso, "TMiso", TMiso::create,
+ 0, "TMiso", TMiso::create, // TODO: remove id
  &TDataSet::class_info, helpstr, clpSpecial };
 
 
 TMiso::TMiso( TDataSet* aparent )
       :TDataSet( aparent ),
        out0_init(0), out0(0),
-       links( new TElmLink( this ) ),
-       fake_so(0), fake_prm(0),
-       in_so{ &fake_so, &fake_so, &fake_so, &fake_so },
-       inp_so{ &fake_so, &fake_so, &fake_so, &fake_so },
-       inp_prm{ &fake_prm, &fake_prm, &fake_prm, &fake_prm },
-       prm_flg { -1, -1, -1, -1 },
-       max_prm(0), prm_mod(0)
+       links( new TElmLink( this ) )
 {
   ord = -1; 
   vis_x = vis_y = 0; tdt = 0; model_nn = 0; 
   model = 0;
-  allow_add = 0;
 }
 
 TMiso::~TMiso()

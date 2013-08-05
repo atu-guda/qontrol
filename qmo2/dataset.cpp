@@ -22,9 +22,8 @@ HolderData::HolderData( const QString &obj_name,
 	      const QString &a_descr,
 	      const QString &a_extra )
            :QObject( a_parent ),
-	    dyn(0), flags(a_flags),
-	    v_min(DMIN), v_max(DMAX),
-	    tp(QVariant::Invalid), ptr(0), par(a_parent), 
+	    flags(a_flags),
+	    par(a_parent), 
 	    target_name( obj_name )
 {
   setObjectName( "_HO_" + obj_name );
@@ -656,8 +655,7 @@ const char* TDataSet::helpstr =
 
 TDataSet::TDataSet( TDataSet* aparent )
          :QObject( aparent ),
-	  guard(guard_val), par(aparent), holderOfMe(nullptr),
-	  state(stateGood), modified(0)
+	  par(aparent)
 {
 }
 

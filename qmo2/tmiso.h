@@ -25,9 +25,6 @@
 
 #include "dataset.h"
 
-#define CLASS_ID_TElmLink 999
-#define CLASS_ID_TMiso 1000
-
 /** iteration type */
 enum IterType {
   IterMid = 0,     // not-first and not-last iteration
@@ -122,9 +119,7 @@ struct LinkInfo {
 class TMiso : public TDataSet  { 
   Q_OBJECT
  public: 
-   /** constructor */ 
    explicit TMiso( TDataSet *aparent );
-   /** destructor */
    virtual ~TMiso();
    /** creator */
    static TDataSet* create( TDataSet *apar );
@@ -204,21 +199,21 @@ class TMiso : public TDataSet  {
     * between preRun -- postRun, elseware-0 */
    TModel *model;
    /** fake source */
-   double fake_so;
+   double fake_so = 0;
    /** fake param target */
-   double fake_prm;
+   double fake_prm = 0;
    /** pointers to inputs */
-   const double* in_so[4];
+   const double* in_so[4] = { &fake_so, &fake_so, &fake_so, &fake_so };
    /** pointers to param inputs */
-   const double* inp_so[4];
+   const double* inp_so[4] = { &fake_so, &fake_so, &fake_so, &fake_so };
    /** pointers to params */
-   double* inp_prm[4];
+   double* inp_prm[4] = { &fake_so, &fake_so, &fake_so, &fake_so };
    /** target param flags */
-   int prm_flg[4];
+   int prm_flg[4] = { -1, -1, -1, -1 };
    /** maximum (index+1) in parameters - may be gaps */
-   int max_prm;
+   int max_prm = 0;
    /** parameters modified during run flag */
-   int prm_mod;
+   int prm_mod = 0;
    /** class decription */
    static TClassInfo class_info;
    /** help str */

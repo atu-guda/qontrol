@@ -9,6 +9,7 @@
 #ifndef _DEFS_H 
 #define _DEFS_H
 
+#include <numeric>
 #include <config.h>
 
 /* General constants */
@@ -26,12 +27,12 @@
 #define OBJ_NINP 4
 #define OBJ_NPRM 4
 
-#define IMIN (numeric_limits<int>::min())
-#define IMAX (numeric_limits<int>::max())
-#define UMIN (numeric_limits<unsigned int>::min())
-#define UMAX (numeric_limits<unsigned int>::max())
-#define DMIN (numeric_limits<double>::lowest())
-#define DMAX (numeric_limits<double>::max())
+const int IMIN      { std::numeric_limits<int>::min() };
+const int IMAX      { std::numeric_limits<int>::max() };
+const unsigned UMIN { std::numeric_limits<unsigned int>::min() };
+const unsigned UMAX { std::numeric_limits<unsigned int>::max() };
+const double DMIN   { std::numeric_limits<double>::lowest() };
+const double DMAX   { std::numeric_limits<double>::max() };
 
 #define L8B QString::fromLocal8Bit
  

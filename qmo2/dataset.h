@@ -116,11 +116,12 @@ class HolderData : public QObject {
   virtual QString getType() const = 0;
   virtual QDomElement toDom( QDomDocument &dd ) const;
  protected:
-  int dyn;
+  int dyn = 0; // flag: is created dynamicaly
   int flags; //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
-  double v_min, v_max; // double as most common type, v_max = max_len
-  QVariant::Type tp;
-  void *ptr;
+  double v_min = DMIN; // double as most common type, v_max = max_len
+  double v_max = DMAX;
+  QVariant::Type tp = QVariant::Invalid;
+  void *ptr = nullptr;
   TDataSet *par;
   QString target_name;
   QStringList elems;
@@ -456,9 +457,9 @@ class TDataSet : public QObject {
    /** do real actions after structure changed */
    virtual void do_structChanged();
  protected:
-   /** guard value */
-   int guard;
+   /** guard value: debug */
    static const int guard_val = 7442428;
+   int guard = guard_val;
    /** map of holders* */
    QSHoMap ho_map;
    /** QVector of holders* */
@@ -466,13 +467,13 @@ class TDataSet : public QObject {
    /** parent may be 0 */
    TDataSet *par;
    /** Holder in parent to me. May be 0. */
-   HolderObj *holderOfMe;
+   HolderObj *holderOfMe = nullptr;
    /** state: 0-bad, 1-constructed, 2-run; */
-   int state; 
+   int state = stateGood; 
    /** allowing object add /remove for some classes 1-add obj, 2-add params */
-   int allow_add;
+   int allow_add = 0;
    /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
-   int modified;
+   int modified = 0;
    /** class decription */
    static TClassInfo class_info;
    /** help string */
