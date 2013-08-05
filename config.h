@@ -6,5 +6,5 @@
 #define PACKAGE "qmo2x"
 #define ORG "atu.atunet"
 
-#define COPYRIGHT "(c) 2000-2012 atu; under GPLv2+"
+#define COPYRIGHT "(c) 2000-2013 atu; under GPLv2+"
 

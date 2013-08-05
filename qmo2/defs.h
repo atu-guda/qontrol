@@ -26,8 +26,6 @@
 #define OBJ_NINP 4
 #define OBJ_NPRM 4
 
-typedef void *pvoid;
-
 #define IMIN (numeric_limits<int>::min())
 #define IMAX (numeric_limits<int>::max())
 #define UMIN (numeric_limits<unsigned int>::min())
@@ -88,9 +86,9 @@ enum _LOOP_TYPES {
 
 const char* getStateString( int stat_num );
 
-#define RE_NAME "^[_a-zA-Z]+[_0-9A-Za-z]*$"
+constexpr char RE_NAME[] { "^[_a-zA-Z]+[_0-9A-Za-z]*$" };
 // not good, allowing "a..b", buf fast
-#define RE_FULLNAME  "^([_a-zA-Z]+[_0-9A-Za-z]*)\\.([_a-zA-Z]+[_0-9A-Za-z.]*)$"
+constexpr char RE_FULLNAME[]  { R"(^([_a-zA-Z]+[_0-9A-Za-z]*)\.([_a-zA-Z]+[_0-9A-Za-z.]*)$)" } ;
 
 #endif // _DEFS_H
 
