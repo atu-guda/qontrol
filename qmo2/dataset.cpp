@@ -21,7 +21,7 @@ HolderData::HolderData( const QString &obj_name,
               const QString &v_name, TDataSet *a_parent, int a_flags,
 	      const QString &a_descr,
 	      const QString &a_extra )
-           :QObject( a_parent ), old_tp(0),
+           :QObject( a_parent ),
 	    dyn(0), flags(a_flags),
 	    v_min(DMIN), v_max(DMAX),
 	    tp(QVariant::Invalid), ptr(0), par(a_parent), 
@@ -134,7 +134,7 @@ HolderInt::HolderInt( int *p, const QString &obj_name,
   if( !val ) {
     val = new int; *val = (int)(v_min); dyn = 1;
   }
-  ptr = val; tp=QVariant::Int; old_tp = dtpInt;
+  ptr = val; tp=QVariant::Int;
   if( getParm("props").isEmpty() ) {
     setParm( "props", "INT,SIMPLE" );
   }
@@ -326,7 +326,7 @@ HolderDouble::HolderDouble( double *p, const QString &obj_name,
   if( getParm("props").isEmpty() ) {
     setParm( "props", "DOUBLE,SIMPLE" );
   }
-  ptr = val; tp=QVariant::Double; old_tp = dtpDouble;
+  ptr = val; tp=QVariant::Double;
 }
 
 HolderDouble::~HolderDouble()
@@ -419,7 +419,7 @@ HolderString::HolderString( QString *p, const QString &obj_name,
   if( v_max > 100000 ) {
     v_max = 100000;
   }
-  ptr = val; tp=QVariant::String; old_tp = dtpString;
+  ptr = val; tp=QVariant::String;
 }
 
 HolderString::~HolderString()
@@ -499,7 +499,7 @@ HolderColor::HolderColor( QColor *p, const QString &obj_name,
   if( getParm("props").isEmpty() ) {
     setParm( "props", "COLOR,INT" );
   }
-  ptr = val; tp=QVariant::Color; old_tp = dtpInt;
+  ptr = val; tp=QVariant::Color;
 }
 
 HolderColor::~HolderColor()
@@ -580,7 +580,7 @@ HolderObj::HolderObj( TDataSet *p, const QString &obj_name,
 	qPrintable( obj_name ) );
   }
   // post_set();
-  ptr = obj; tp=QVariant::UserType; old_tp = dtpObj; 
+  ptr = obj; tp=QVariant::UserType;
   if( getParm("props").isEmpty() ) {
     setParm( "props", "OBJ" );
   }
@@ -951,7 +951,7 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) 
       HolderObj *hob= qobject_cast<HolderObj*>(ho);
       return hob->getObj()->getDoublePtr( "out0", lt, lev+1 );
     }
-    if( ho->getOldTp() == dtpDouble ) {
+    if( ho->getTp() == QVariant::Double ) {
       if( lt ) {
 	*lt = ( lev == 1 ) ? LinkElm : LinkSpec;
       }
@@ -984,7 +984,7 @@ double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg )
     return 0;
   }
   
-  if( ho->getOldTp() == dtpDouble ) {
+  if( ho->getTp() == QVariant::Double ) {
     if( flg )
       *flg = ho->getFlags();
     return static_cast<double*>( ho->getPtr() );

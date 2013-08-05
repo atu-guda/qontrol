@@ -95,7 +95,6 @@ class HolderData : public QObject {
   void* getPtr() const { return ptr; }  // horror here !!!
   QVariant::Type getTp() const { return tp; }
   int isDyn() const { return dyn; }
-  int getOldTp() const { return old_tp; }
   /** is holded value is object of given type or child */
   virtual bool isObject( const QString &cl_name = QString() ) const;
   void setFlags( int a_flags ) { flags = a_flags; }
@@ -117,7 +116,7 @@ class HolderData : public QObject {
   virtual QString getType() const = 0;
   virtual QDomElement toDom( QDomDocument &dd ) const;
  protected:
-  int old_tp, dyn;
+  int dyn;
   int flags; //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
   double v_min, v_max; // double as most common type, v_max = max_len
   QVariant::Type tp;
