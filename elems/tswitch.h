@@ -24,8 +24,6 @@
   *@author atu
   */
 
-#define CLASS_ID_TSwitch 1022
-
 class TSwitch : public TMiso  {
   Q_OBJECT
  public:

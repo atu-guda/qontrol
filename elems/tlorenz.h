@@ -20,8 +20,6 @@
 
 #include "tmiso.h"
 
-#define CLASS_ID_TLorenz 1026
-
 /**This element simulates Loretz system
   * @author atu
   */

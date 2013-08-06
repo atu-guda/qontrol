@@ -30,7 +30,7 @@ const char* THyst::helpstr = "<H1>THyst</H1>\n"
  "Can be changed at any time: <b>x0, alpha</b>.";
 
 TClassInfo THyst::class_info = {
-  CLASS_ID_THyst, "THyst", THyst::create,
+  "THyst", THyst::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

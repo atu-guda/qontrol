@@ -20,8 +20,6 @@
 
 #include <tmiso.h>
 
-#define CLASS_ID_TFriction 1023
-
 /** Simulate of mass under external force and friction
   *@author atu
   */

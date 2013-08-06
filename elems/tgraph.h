@@ -25,8 +25,6 @@
 class GraphInfo;
 
 
-#define CLASS_ID_TGraph 700
-
 /**Description of graph
   *@author atu
   */

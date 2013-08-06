@@ -30,7 +30,7 @@ const char* TSourceLin::helpstr = "<H1>TSourceLin</H1>\n"
 ;
 
 TClassInfo TSourceLin::class_info = {
-  CLASS_ID_TSourceLin, "TSourceLin", TSourceLin::create,
+  "TSourceLin", TSourceLin::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

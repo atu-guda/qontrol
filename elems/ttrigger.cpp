@@ -26,7 +26,7 @@ const char* TTrigger::helpstr = "<H1>TTrigger</H1>\n"
  "Have 5 switches: <b>useInit1, useEnable, usePulse, useMinus, useT0</b>.";
 
 TClassInfo TTrigger::class_info = {
-  CLASS_ID_TTrigger, "TTrigger", TTrigger::create,
+  "TTrigger", TTrigger::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

@@ -22,8 +22,6 @@
 #include <gsl/gsl_randist.h>
 #include "tmiso.h"
 
-#define CLASS_ID_TSource 1002
-
 static const char* const tsource_list_type = 
              "U*sin(o*t)\n"           // 0
              "U*sign(sin(o*t))\n"     // 1

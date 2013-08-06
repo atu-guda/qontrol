@@ -33,7 +33,7 @@ const char* TLinP1Q0::helpstr = "<H1>TLinP1Q0</H1>\n"
  ;
 
 TClassInfo TLinP1Q0::class_info = {
-  CLASS_ID_TLinP1Q0, "TLinP1Q0", TLinP1Q0::create,
+  "TLinP1Q0", TLinP1Q0::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

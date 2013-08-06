@@ -20,8 +20,6 @@
 
 #include <tmiso.h>
 
-#define CLASS_ID_TPid 1004
-
 /**combines integrators, differentiators and proportional 
   *@author atu
   */

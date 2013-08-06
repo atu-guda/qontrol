@@ -30,7 +30,7 @@ const char* TFuncTrans::helpstr = "<H1>TFuncTrans</H1>\n"
  "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n";
 
 TClassInfo TFuncTrans::class_info = {
-  CLASS_ID_TFuncTrans, "TFuncTrans", TFuncTrans::create,
+  "TFuncTrans", TFuncTrans::create,
   &TMiso::class_info, helpstr, clpElem | clpPure };
 
 

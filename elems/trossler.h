@@ -20,8 +20,6 @@
 
 #include "tmiso.h"
 
-#define CLASS_ID_TRossler 1027
-
 /**This element simulates Rossler system
   * @author atu
   */

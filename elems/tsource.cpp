@@ -27,7 +27,7 @@ const char* TSource::helpstr = "<H1>TSource</H1>\n"
  "each can be changed at any time ??.";
 
 TClassInfo TSource::class_info = {
-  CLASS_ID_TSource, "TSource", TSource::create,
+  "TSource", TSource::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

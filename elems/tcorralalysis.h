@@ -20,8 +20,6 @@
 
 #include <tmiso.h>
 
-#define CLASS_ID_TCorrAnalysis 2000
-
 /**correlation analisator
   *@author atu
   */

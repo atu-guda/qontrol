@@ -37,7 +37,7 @@ const char* TFriction::helpstr = "<H1>TFriction</H1>\n"
  ;
 
 TClassInfo TFriction::class_info = {
-  CLASS_ID_TFriction, "TFriction", TFriction::create,
+  "TFriction", TFriction::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

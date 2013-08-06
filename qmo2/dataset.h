@@ -20,7 +20,6 @@ typedef QMap<QString,QString> QSSMap;
 #include "defs.h"
 #define MAX_DESCRLEN 80
 #define MAX_LISTLEN  256
-#define CLASS_ID_TDataSet 1
 
 
 class QColor;
@@ -43,8 +42,6 @@ enum ClassProps {
   used for class registration
 */
 struct TClassInfo {
-  /** uniq class id; -- TODO: obsoleted */
-  int id;
   /** class name */
   const char *className;
   /** ptr to static fun for creating instanses */

@@ -44,7 +44,7 @@ enum _DATA_TYPES {
    dtpStringArr = 4,
    dtpIntArr = 5,
    dtpDoubleArr = 6,
-   dtpObj = 10, // subtp -- CLASS_ID_... 
+   dtpObj = 10, //
    dtpFun = 11, // function with uniform args (TData?) TODO
    dtpFunPure = 12, // ordinary function, don't use in UI
    // dialog elements - not data

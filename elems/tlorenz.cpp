@@ -37,7 +37,7 @@ const char* TLorenz::helpstr = "<H1>TLorenz</H1>\n"
  "First 3 may can be changed at any time.";
 
 TClassInfo TLorenz::class_info = {
-  CLASS_ID_TLorenz, "TLorenz", TLorenz::create,
+  "TLorenz", TLorenz::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

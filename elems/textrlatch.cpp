@@ -31,7 +31,7 @@ const char* TExtrLatch::helpstr = "<H1>TExtrLatch</H1>\n"
  "";
 
 TClassInfo TExtrLatch::class_info = {
-  CLASS_ID_TExtrLatch, "TExtrLatch", TExtrLatch::create,
+  "TExtrLatch", TExtrLatch::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

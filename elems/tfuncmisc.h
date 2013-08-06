@@ -21,8 +21,6 @@
 #include <tmiso.h>
 
 
-#define CLASS_ID_TFuncMisc 1007
-
 static const char* const tfuncmisc_list = 
      "a*deadLine(y,b)+g\n"           // 0
      "a*limitLine(y,b)+g\n"          // 1 

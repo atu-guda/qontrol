@@ -26,7 +26,7 @@ const char* TCorrAnalysis::helpstr = "<H1>TCorrAnalysis</H1>\n"
  "Unstable: Information about parameters see in info.";
 
 TClassInfo TCorrAnalysis::class_info = {
-  CLASS_ID_TCorrAnalysis, "TCorrAnalysis", TCorrAnalysis::create,
+  "TCorrAnalysis", TCorrAnalysis::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

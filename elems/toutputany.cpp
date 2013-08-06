@@ -29,7 +29,7 @@ const char* TOutputAny::helpstr = "<H1>TOutputAny</H1>\n"
  "Have 1 parameter: <b>name</b>.";
 
 TClassInfo TOutputAny::class_info = {
-  CLASS_ID_TOutputAny, "TOutputAny", TOutputAny::create,
+  "TOutputAny", TOutputAny::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

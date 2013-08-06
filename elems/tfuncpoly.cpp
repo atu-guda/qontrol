@@ -28,7 +28,7 @@ const char* TFuncPoly::helpstr = "<H1>TFuncPoly</H1>\n"
  "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n";
 
 TClassInfo TFuncPoly::class_info = {
-  CLASS_ID_TFuncPoly, "TFuncPoly", TFuncPoly::create,
+  "TFuncPoly", TFuncPoly::create,
   &TMiso::class_info, helpstr, clpElem | clpPure };
 
 

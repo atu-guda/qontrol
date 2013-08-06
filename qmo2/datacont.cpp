@@ -14,7 +14,7 @@ const char* TDataContainer::helpstr = "<H1>TDataContainer</H1>\n"
  "unspecified at compile time elements";
 
 TClassInfo TDataContainer::class_info = 
- {  CLASS_ID_TDataContainer, "TDataContainer",  TDataContainer::create, 
+ {  "TDataContainer",  TDataContainer::create, 
     &TDataSet::class_info, helpstr, clpContainer };
 
 

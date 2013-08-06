@@ -34,8 +34,6 @@ struct li_el { // structure for links representation in arrays;
   }; 
 };
 
-#define CLASS_ID_TModel 500
-
 /**Contains all elements of model
   *@author atu
   */

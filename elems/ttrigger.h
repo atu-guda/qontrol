@@ -20,8 +20,6 @@
 
 #include <tmiso.h>
 
-#define CLASS_ID_TTrigger 1012
-
 static const char *ttrigger_list = 
    "RS\n"             // 0
    "Shmitt(u2)\n"     // 1

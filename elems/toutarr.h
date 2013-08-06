@@ -24,8 +24,6 @@ struct GraphInfo;
 
 // ==================== TOutArr ======================================
 
-#define CLASS_ID_TOutArr 600
-
 static const char* const toutarr_list = 
   "Simple\n" // 0
   "Parm 1\n" // 1

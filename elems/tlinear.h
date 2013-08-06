@@ -20,8 +20,6 @@
 
 #include "tmiso.h"
 
-#define CLASS_ID_TLinear 1001
-
 /** Simple element, which summing it's inputs with given coefficients
   *@author atu
   */

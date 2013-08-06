@@ -22,8 +22,6 @@
 class TCircBuf;
 
 
-#define CLASS_ID_TDelay 1008
-
 /**delays signal for given time
   *@author atu
   */

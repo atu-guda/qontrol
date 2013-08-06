@@ -22,8 +22,6 @@
 
 
 
-#define CLASS_ID_TExtrLatch 1010
-
 /**detector of extremums, average and amplitude 
   *@author atu
   */

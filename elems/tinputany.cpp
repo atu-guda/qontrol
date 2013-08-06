@@ -28,7 +28,7 @@ const char* TInputAny::helpstr = "<H1>TInputAny</H1>\n"
  "Have 1 parameter: <b>name</b>.";
 
 TClassInfo TInputAny::class_info = {
-  CLASS_ID_TInputAny, "TInputAny", TInputAny::create,
+  "TInputAny", TInputAny::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

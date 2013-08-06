@@ -23,7 +23,7 @@ const char* TMultipl::helpstr = "<H1>TMultipl</H1>\n"
  "Have 5 parameters: <b>on0 .. on3, a</b>, each can be changed at any time.";
 
 TClassInfo TMultipl::class_info = {
-  CLASS_ID_TMultipl, "TMultipl", TMultipl::create,
+  "TMultipl", TMultipl::create,
   &TMiso::class_info, helpstr, clpElem | clpPure };
 
 

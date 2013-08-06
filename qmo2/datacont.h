@@ -13,8 +13,6 @@
 
 #include "dataset.h"
 
-#define CLASS_ID_TDataContainer 3
-
 /** this class allows insertion any type of objects
   *@author atu
   */

@@ -25,7 +25,7 @@ const char* TDelay::helpstr = "<H1>TDelay</H1>\n"
  "<b>cdelay</b> - current delay, can changed at any time, but <= <b>mdelay</b>.";
 
 TClassInfo TDelay::class_info = {
-  CLASS_ID_TDelay, "TDelay", TDelay::create,
+  "TDelay", TDelay::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

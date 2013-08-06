@@ -25,8 +25,6 @@
   */
 
 
-#define CLASS_ID_TCounter 1014
-
 class TCounter : public TMiso  {
   Q_OBJECT
  public:

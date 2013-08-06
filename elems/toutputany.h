@@ -20,8 +20,6 @@
 
 #include <tmiso.h>
 
-#define CLASS_ID_TOutputAny 1101
-
 /**gets data from different source by name
   *@author atu
   */

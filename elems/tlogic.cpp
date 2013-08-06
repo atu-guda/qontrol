@@ -28,7 +28,7 @@ const char* TLogic::helpstr = "<H1>TLogic</H1>\n"
  "For AND unused inputs link to ':one' .";
 
 TClassInfo TLogic::class_info = {
-  CLASS_ID_TLogic, "TLogic", TLogic::create,
+  "TLogic", TLogic::create,
   &TMiso::class_info, helpstr, clpElem | clpPure };
 
 

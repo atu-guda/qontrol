@@ -20,8 +20,6 @@
 
 #include <tmiso.h>
 
-#define CLASS_ID_TFuncPoly 1005
-
 static const char* const tfuncpoly_list = 
      "a*y+g\n"                                 // 0
      "a*y^2+b*y+g\n"                           // 1 

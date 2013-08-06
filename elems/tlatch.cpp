@@ -31,7 +31,7 @@ const char* TLatch::helpstr = "<H1>TLatch</H1>\n"
  "- <b>useAdd</b>. - add current u[0] to value, not set.<br>\n";
  
 TClassInfo TLatch::class_info = {
-  CLASS_ID_TLatch, "TLatch", TLatch::create,
+  "TLatch", TLatch::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

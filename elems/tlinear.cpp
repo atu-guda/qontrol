@@ -23,7 +23,7 @@ const char* TLinear::helpstr = "<H1>TLinear</H1>\n"
  "Have 5 parameters: <b>a0 .. a3, b</b>, each can be changed at any time.";
 
 TClassInfo TLinear::class_info = {
-  CLASS_ID_TLinear, "TLinear", TLinear::create,
+  "TLinear", TLinear::create,
   &TMiso::class_info, helpstr, clpElem | clpPure };
 
 

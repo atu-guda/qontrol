@@ -21,8 +21,6 @@
 #include <tmiso.h>
 
 
-#define CLASS_ID_TCriterion 1019
-
 /**miscellaneous criterions
   *@author atu
   */

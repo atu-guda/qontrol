@@ -35,7 +35,7 @@ const char* TRossler::helpstr = "<H1>TRossler</H1>\n"
  "First 3 may can be changed at any time.";
 
 TClassInfo TRossler::class_info = {
-  CLASS_ID_TRossler, "TRossler", TRossler::create,
+  "TRossler", TRossler::create,
   &TMiso::class_info, helpstr, clpElem };
 
 static const int IPARM = efNoRunChange;

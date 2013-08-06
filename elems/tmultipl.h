@@ -20,8 +20,6 @@
 
 #include <tmiso.h>
 
-#define CLASS_ID_TMultipl 1003
-
 /**simple multiplicator
   *@author atu
   */

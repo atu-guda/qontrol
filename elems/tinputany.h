@@ -21,8 +21,6 @@
 #include <tmiso.h>
 
 
-#define CLASS_ID_TInputAny 1100
-
 /**gets data from different source by name
   *@author atu
   */

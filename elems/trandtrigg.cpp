@@ -31,7 +31,7 @@ const char* TRandTrigg::helpstr = "<H1>TRandTrigg</H1>\n"
  "Parameters: <b>useLevel, useForce, useLock, useZero</b>, - misc flags.";
 
 TClassInfo TRandTrigg::class_info = {
-  CLASS_ID_TRandTrigg, "TRandTrigg", TRandTrigg::create,
+  "TRandTrigg", TRandTrigg::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

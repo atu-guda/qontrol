@@ -29,8 +29,6 @@ static const char* const tlogic_list =
  "1"      // 5
 ;
 
-#define CLASS_ID_TLogic 1013
-
 /**simple logical operation: AND, OR, XOR
   *@author atu
   */

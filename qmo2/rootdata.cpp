@@ -14,7 +14,7 @@ const char* TRootData::helpstr = "<H1>TRootData</H1>\n"
 
 
 TClassInfo TRootData::class_info = 
- {  CLASS_ID_TRootData, "TRootData",  TRootData::create, 
+ {  "TRootData",  TRootData::create, 
     &TDataContainer::class_info, "", clpContainer | clpSpecial };
 
 

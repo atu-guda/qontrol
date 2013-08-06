@@ -20,8 +20,6 @@
 
 #include <tmiso.h>
 
-#define CLASS_ID_TVibro 1015
-
 /**can simulate vibrational element
   *@author atu
   */

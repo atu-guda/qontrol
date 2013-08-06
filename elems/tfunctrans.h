@@ -40,8 +40,6 @@ static const char* const tfunctrans_list =
      "a*(1-exp(-b*y*y))*(1-c*sin^2(dy))+g" // 16
 ;
 
-#define CLASS_ID_TFuncTrans 1006
-
 /**trigonometric, exponetial and wavelet functions
   *@author atu
   */

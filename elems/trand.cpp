@@ -38,7 +38,7 @@ const char* TRand::helpstr = "<H1>TRand</H1>\n"
 
 
 TClassInfo TRand::class_info = {
-  CLASS_ID_TRand, "TRand", TRand::create,
+  "TRand", TRand::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

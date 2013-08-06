@@ -25,7 +25,7 @@ const char* TAdjGen::helpstr = "<H1>TAdjGen</H1>\n"
  "None of the can be changed at run time.";
 
 TClassInfo TAdjGen::class_info = {
-  CLASS_ID_TAdjGen, "TAdjGen", TAdjGen::create,
+  "TAdjGen", TAdjGen::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

@@ -22,7 +22,7 @@ const char* TVibro::helpstr = "<H1>TVibro</H1>\n"
  "Parameters <b>c0</b> and <b>Omega</b> can be changed at any time.<br>\n";
 
 TClassInfo TVibro::class_info = {
-  CLASS_ID_TVibro, "TVibro", TVibro::create,
+  "TVibro", TVibro::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

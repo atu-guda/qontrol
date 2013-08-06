@@ -27,7 +27,7 @@ const char* TElmLink::helpstr = "<H1>TElmLink</H1> \n"
 
 
 TClassInfo TElmLink::class_info = {
- 0, "TElmLink", TElmLink::create, // TODO: ??? remove id
+ "TElmLink", TElmLink::create, 
  &TDataSet::class_info, helpstr, clpSpecial };
 
 
@@ -59,7 +59,7 @@ const char* TMiso::helpstr = "<H1>TMiso</H1>\n"
  "Base class for all active elements. Never should be used.";
 
 TClassInfo TMiso::class_info = {
- 0, "TMiso", TMiso::create, // TODO: remove id
+ "TMiso", TMiso::create, 
  &TDataSet::class_info, helpstr, clpSpecial };
 
 

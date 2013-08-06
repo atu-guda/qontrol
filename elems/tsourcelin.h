@@ -20,8 +20,6 @@
 
 #include "tmiso.h"
 
-#define CLASS_ID_TSourceLin 1024
-
 /** This element provide source, which consist of
   * linear elements.
   * @author atu

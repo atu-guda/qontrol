@@ -23,7 +23,7 @@ const char* TPid::helpstr = "<H1>TPid</H1>\n"
  "Coefficients can be changed at any time, aver - no.";
 
 TClassInfo TPid::class_info = {
-  CLASS_ID_TPid, "TPid", TPid::create,
+  "TPid", TPid::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

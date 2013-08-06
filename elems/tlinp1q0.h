@@ -20,8 +20,6 @@
 
 #include <tmiso.h>
 
-#define CLASS_ID_TLinP1Q0 1050
-
 /** simple linear diff element (aperiodic  1-st order)
   * with ability to handle nonlinear part
   * dx/dt= a * f(ku*u - x) 

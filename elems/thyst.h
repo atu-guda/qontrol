@@ -20,8 +20,6 @@
 
 #include <tmiso.h>
 
-#define CLASS_ID_THyst 1011
-
 static const char* const thyst_list = 
      "s+alpha*d\n"     // 0
      "alpha*d\n"       // 1

@@ -37,7 +37,7 @@ const char* TIntegrator::helpstr = "<H1>TIntegrator</H1>\n"
  "- <b>useMin, useMax</b> - use limits to bound value."; 
 
 TClassInfo TIntegrator::class_info = {
-  CLASS_ID_TIntegrator, "TIntegrator", TIntegrator::create,
+  "TIntegrator", TIntegrator::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

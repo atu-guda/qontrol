@@ -20,8 +20,6 @@
 
 #include <tmiso.h>
 
-#define CLASS_ID_TLatch 1020
-
 /**Remembers given value by signal
   *@author atu
   */

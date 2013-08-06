@@ -27,7 +27,7 @@ const char* TCriterion::helpstr = "<H1>TCriterion</H1>\n"
  "5 flags: <b>useA, useT0, useEnable, useLock, usePulse</b>.";
 
 TClassInfo TCriterion::class_info = {
-  CLASS_ID_TCriterion, "TCriterion", TCriterion::create,
+  "TCriterion", TCriterion::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

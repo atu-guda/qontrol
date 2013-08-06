@@ -11,8 +11,6 @@
 
 #include "dataset.h"
 
-#define CLASS_ID_ScaleData 715
-
 /** Information about scale: really struct */
 class ScaleData : public TDataSet 
 {

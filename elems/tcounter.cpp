@@ -26,7 +26,7 @@ const char* TCounter::helpstr = "<H1>TCounter</H1>\n"
  " - <b>cn</b> -- counter [0;n-1] (ro).<br>\n";
 
 TClassInfo TCounter::class_info = {
-  CLASS_ID_TCounter, "TCounter", TCounter::create,
+  "TCounter", TCounter::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

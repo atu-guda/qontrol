@@ -28,7 +28,7 @@ const char* TOutArr::helpstr = "<H1>TOutArr</H1>\n"
  "Type selects when output be collected.";
 
 TClassInfo TOutArr::class_info = {
- CLASS_ID_TOutArr, "TOutArr", TOutArr::create,
+ "TOutArr", TOutArr::create,
  &TDataSet::class_info, helpstr, clpSpecial };
 
 

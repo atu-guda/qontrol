@@ -21,8 +21,6 @@
 #include <tmiso.h>
 
 
-#define CLASS_ID_TIntegrator 1017
-
 /**realistic integrator with reset, discharge and floating base
   *@author atu
   */

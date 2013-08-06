@@ -11,8 +11,6 @@
 
 #include <datacont.h>
 
-#define CLASS_ID_TRootData 10
-
 /** class holding other classes descriptions
     so can create all registered class objects
 */

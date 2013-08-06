@@ -27,7 +27,7 @@ const char* TGraph::helpstr = "<H1>TGraph</H1>\n"
  "All outputs must be the same type";
 
 TClassInfo TGraph::class_info = {
- CLASS_ID_TGraph, "TGraph", TGraph::create,
+ "TGraph", TGraph::create,
  &TDataSet::class_info, helpstr, clpSpecial };
 
 

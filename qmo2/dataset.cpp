@@ -646,7 +646,7 @@ QDomElement HolderObj::toDom( QDomDocument &dd ) const
 // ---------------- TDataSet ------------------------
 
 TClassInfo TDataSet::class_info = 
- {  CLASS_ID_TDataSet, "TDataSet",  TDataSet::create, 0, helpstr, 0 };
+ {  "TDataSet",  TDataSet::create, 0, helpstr, 0 };
 
 
 const char* TDataSet::helpstr = 

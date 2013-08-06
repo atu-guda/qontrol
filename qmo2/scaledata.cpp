@@ -15,7 +15,7 @@ const char* ScaleData::helpstr = "<H1>ScaleData</H1>\n"
 
 
 TClassInfo ScaleData::class_info = 
- {  CLASS_ID_ScaleData, "ScaleData",  ScaleData::create, 
+ {  "ScaleData",  ScaleData::create, 
     &TDataSet::class_info, "", clpSpecial };
 
 

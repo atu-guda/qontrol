@@ -25,7 +25,7 @@ const char* TFourier::helpstr = "<H1>TFourier</H1>\n"
  "Parameters see in object info.";
 
 TClassInfo TFourier::class_info = {
-  CLASS_ID_TFourier, "TFourier", TFourier::create,
+  "TFourier", TFourier::create,
   &TMiso::class_info, helpstr, clpElem };
 
 

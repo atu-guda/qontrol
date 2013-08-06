@@ -21,8 +21,6 @@
 #include <tmiso.h>
 
 
-#define CLASS_ID_TAdjGen 1009
-
 /**Controlled on frequency generator sqare pulses
   *@author atu
   */

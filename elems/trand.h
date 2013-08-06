@@ -38,8 +38,6 @@ static const char* const trand_list_seedType =
      "As model"             // 3
 ;
 
-#define CLASS_ID_TRand 1025
-
 /** random signal generator
   *@author atu
   */

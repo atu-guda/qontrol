@@ -21,8 +21,6 @@
 #include <tmiso.h>
 
 
-#define CLASS_ID_TFourier 2010 
-
 /**performs Fourier analysis
   *@author atu
   */

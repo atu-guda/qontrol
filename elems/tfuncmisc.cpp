@@ -28,7 +28,7 @@ const char* TFuncMisc::helpstr = "<H1>TFuncMisc</H1>\n"
 
 
 TClassInfo TFuncMisc::class_info = {
-  CLASS_ID_TFuncMisc, "TFuncMisc", TFuncMisc::create,
+  "TFuncMisc", TFuncMisc::create,
   &TMiso::class_info, helpstr, clpElem | clpPure };
 
 

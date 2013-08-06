@@ -22,8 +22,6 @@
 #include <gsl/gsl_randist.h>
 #include <tmiso.h>
 
-#define CLASS_ID_TRandTrigg 1018
-
 static const char* const trandtrigg_list_seedType = 
      "Every run\n"          // 0
      "Start of 1d-loop\n"   // 1 
