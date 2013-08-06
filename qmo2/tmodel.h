@@ -20,7 +20,7 @@
 
 #include <vector>
 
-#include "../config.h"
+#include "defs.h"
 #include "datacont.h"
 #include "tmiso.h"
 #include "toutarr.h"
@@ -249,13 +249,13 @@ class TModel : public TDataContainer  {
   /** total counter */
   PRM_INT1( i_tot, efInner, "i_tot", "total counter", "" );
   /** run type */
-  int run_type;
+  int run_type = -1; // reset
   /** effective number of loop on prm0 */
-  int n1_eff;
+  int n1_eff = 0;
   /** effective number of loop on prm1 */
-  int n2_eff;
+  int n2_eff = 0;
   /** end loop flag: to be set by fback() */
-  int end_loop;
+  int end_loop = 0;
   /** real start time */
   double start_time;
   /** vector of ptrs to active elements, my be sorted on ord */

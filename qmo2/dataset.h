@@ -18,8 +18,6 @@
 typedef QMap<QString,QString> QSSMap;
 
 #include "defs.h"
-#define MAX_DESCRLEN 80
-#define MAX_LISTLEN  256
 
 
 class QColor;

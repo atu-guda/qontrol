@@ -284,7 +284,7 @@ void QPlotView::drawAxes( QPainter &p )
     % QString::number( ref_y, 'g', 4 ) + QString(") dlt = (" ) 
     % QString::number( tooldx, 'g', 4 ) + QString("; " ) 
     % QString::number( tooldy, 'g', 4 ) + QString(") R = " ) 
-    % QString::number( euRange( tooldx, tooldy  ), 'g', 4 ) 
+    % QString::number( hypot( tooldx, tooldy  ), 'g', 4 ) 
     % QString(" ; f = " ) 
     % QString::number( atan2( tooldy, tooldx ), 'g', 4 ) 
     % QString(" ; k = " ) + QString::number( toolk, 'g', 4 );
@@ -1033,7 +1033,7 @@ void QPlotView::dataInfo(void)
   QString qs;
   
   toolk = 0; tooldx = tool_x - ref_x; tooldy = tool_y - ref_y;
-  r = euRange( tooldx, tooldy  );
+  r = hypot( tooldx, tooldy  );
   phi = atan2( tooldy, tooldx );
   qs = QString( "Tool: (" ) % QString::number( tool_x ) % "; " 
      % QString::number( tool_y ) % " ) [" 
@@ -1055,7 +1055,7 @@ void QPlotView::dataInfo(void)
   lg_tx = log10( tool_x ); lg_ty = log10( tool_y );
   lg_rx = log10( ref_x ); lg_ry = log10( ref_y );
   lg_toolk = 0; lg_tooldx = lg_tx - lg_rx; lg_tooldy = lg_ty - lg_ry;
-  lg_r = euRange( lg_tooldx, lg_tooldy  );
+  lg_r = hypot( lg_tooldx, lg_tooldy  );
   lg_phi = atan2( lg_tooldy, lg_tooldx );
   QString qs1 = QString( "Tool: (" ) % QString::number( lg_tx ) % "; " 
      % QString::number( lg_ty) % " );\n"

@@ -9,12 +9,11 @@
 #ifndef _DEFS_H 
 #define _DEFS_H
 
-#include <numeric>
+#include <limits>
 #include <config.h>
 
 /* General constants */
 #define MAX_NAMELEN   32
-#define MAX_INPUTLEN 4096
 #define MAX_LABELLEN 128
 
 /* Model constants */

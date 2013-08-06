@@ -160,19 +160,6 @@ double waveMhat( double x )
 }
 
 
-/* obsoleted: use gsl random generators or TRand 
-double drand( double a )
-{
-  return ( double( rand() ) / RAND_MAX ) * a;
-}
-
-double drandc( double a )
-{
-  return (( double( rand() ) / RAND_MAX ) - 0.5 ) * a;
-}
-*/
-
-
 int  fourier( int n , double l, const double *v,
                      int m, double *a, double *b )
 {
@@ -310,10 +297,6 @@ int findGlobalMax( int n, const double *a )
 
 }
 
-double euRange( double dx, double dy )
-{
-  return sqrt( dx * dx + dy * dy );
-}
 
 int dumpDatas( const char *fn, const GraphInfo *gi, char delim )
 {
@@ -341,7 +324,7 @@ int dumpDatas( const char *fn, const GraphInfo *gi, char delim )
 
 
 
-// TODO: use structure for gnuplot options, call gnuplot
+// TODO: use structure for gnuplot options, call gnuplot, template file
 int gnuplotDatas( int otp, const GraphInfo *gi, 
      const char *fn, const char *eps_fn, const char *dat_fn )
 {

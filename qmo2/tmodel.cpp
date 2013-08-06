@@ -40,7 +40,6 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
        :TDataContainer( aparent ), 
          vars( MODEL_NVAR, 0 )
 {
-  end_loop = 0;
   tt = 100; nn = n_tot= 100000; nl1 = 1; nl2 = 1; n_steps=1000; use_sync = 0;
   prm0s = prm1s = prm2s = prm3s = 0.1; 
   prm0d = prm1d = 0.01; xval1 = xval2 = 0;
@@ -311,7 +310,7 @@ int TModel::oname2elnu( const QString &iname ) const/*{{{1*/
   };  
 
   int i = 0;
-  for( TMiso *ob : v_el ) {
+  for( const TMiso *ob : v_el ) {
     if( ob->objectName() == iname )
       return i;
     ++i;

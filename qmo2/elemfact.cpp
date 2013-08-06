@@ -126,7 +126,7 @@ const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
 
 bool ElemFactory::isChildOf( const QString &cl, const QString &par_cl )
 {
-  MapStrClass::const_iterator i = str_class.find( cl );
+  auto i = str_class.find( cl );
   if( i == str_class.end() ) {
     qDebug( "WARN:  ElemFactory::isChildOf: fail to find class \"%s\"",
 	qPrintable( cl ) ); 

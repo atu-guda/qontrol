@@ -30,26 +30,11 @@ struct GraphInfo {
   const double *dat[max_graphs];
 };
 
-// ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz
-
-const char _name_chars[] = 
-  "0123456789abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const char _name_chars1[] = 
-  "abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const char _space_chars[] = " \t\b\f";
-const char _twochar_chars[] = "\r\n\t\f\b\a\x1B\\";
-const char _twochar_c2[] = "rntfbae\\";
-
-enum { ctpSpace=0, ctpName=1, ctpOneChar=2, ctpTwoChar=3 };
-enum { ltpUnk=0, ltpComment=1, ltpStruct=2, ltpEnd=3, ltpStart=4, 
-       ltpVal=5, ltpValStart=6, ltpStr=7 };
-
 /** gets real time in seconds.ms */
 double get_real_time(void);
 
 
 /** splits string like aa.b.cc.d to first="aa" and rest="b.cc.d"
-    max sizes: name,next: MAX_INPUTLEN; first: MAX_NAMELEN
     @returns: 0 -- both parts, 1 -- only first, -1 -- bad line  */
 int splitName( const QString &name, QString &first, QString &rest );
 /** checks if name syntax correct aaa_bbb2 */
@@ -69,11 +54,7 @@ double threeStateLine( double x, double x0 );
 double waveWave( double x );
 double waveMhat( double x );
 
-/** obsoleted: random [0;a]*/
-// double drand( double a );
-/** obsoleted:  central random [-a;a] */
-// double drandc( double a );
-/** fourier tranform */
+/** fourier tranform TODO: use fft */
 int  fourier( int n , double l, const double *v,
                int m, double *a, double *b );
 /** find index with minimal fabs(a[i]-v) */
@@ -86,8 +67,6 @@ int findNearMax( int n, const double *a, int sidx );
 int findGlobalMin( int n, const double *a );
 /** find index of global maximum */
 int findGlobalMax( int n, const double *a );
-/** euclid range */
-double euRange( double dx, double dy );
 /** computes length of perpendicular from point p to line s-e */
 double perpLen( double xs, double ys, double xe, double ye, 
                 double xp, double yp );
