@@ -40,7 +40,7 @@ class DoubleTableModel : public QAbstractTableModel {
    int row, col, ny;
    QString title;
    QStringList labels;
-   std::vector<const double *> dat;
+   std::vector<const dvector *> dat;
 };
 
 #endif

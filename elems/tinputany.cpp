@@ -70,7 +70,7 @@ int TInputAny::do_preRun( int /*run_tp*/, int /*an*/,
     QString nname = name;
     nname.remove( 0, 1 );
     int ne = nname.toInt();
-    so = model->getVars() + ne;
+    so = &( (*model->getVars())[ne] );
     return 0;
   };
 

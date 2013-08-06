@@ -831,7 +831,7 @@ void QMo2View::showOutData() // TODO: special dialog (+ for many rows)
   double s = 0, s2 = 0, ave = 0, ave2 = 0, disp = 0, msq = 0, x;
   double vmin = DMAX, vmax = DMIN;
   for( int i=0; i<gi.row; i++ ) {
-    x =  gi.dat[0][i];
+    x =  (*gi.dat[0])[i];
     s += x; s2 += x * x;
     if( x < vmin ) vmin = x;
     if( x > vmax ) vmax = x;
@@ -1001,7 +1001,7 @@ void QMo2View::showGraphData()
     return;
 
   dia = new QDialog( this );
-  dia->setWindowTitle( QString("Graph data: ") + QString(gi.title) );
+  dia->setWindowTitle( QString("Graph data: ") + gi.title );
   lv = new QVBoxLayout( dia );
 
   dmod = new DoubleTableModel( &gi, dia );
@@ -1136,11 +1136,11 @@ void QMo2View::showVars()
   QString fnq; QPushButton *bt_ok;
   if( ! checkState( validCheck ) )
     return;
-  const double *vars = model->getVars();
+  dvector *vars = model->getVars();
   gi.row = MODEL_NVAR; gi.col = 1; gi.ny = gi.row;
-  strcpy( gi.title, "Model vars" );
+  gi.title = "Model vars";
   gi.dat[0] = vars;
-  strcpy( gi.label[0], "vars" );
+  gi.label[0] = "vars";
 
   dia = new QDialog( this );
   dia->setWindowTitle( QString("Model vars: ") );

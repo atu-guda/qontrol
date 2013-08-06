@@ -23,11 +23,11 @@
 DoubleTableModel::DoubleTableModel( const GraphInfo *gi, QObject *parent )
   : QAbstractTableModel( parent ), 
     row( gi->row ), col( gi->col ), ny ( gi->ny ),
-    title( QString::fromLocal8Bit( gi->title ) ),
+    title( gi->title ),
     dat( gi->row )
 {
   for( int i=0; i<max_graphs; ++i ) { 
-    labels << QString::fromLocal8Bit( gi->label[i] );
+    labels << gi->label[i];
     dat[i] = gi->dat[i];
   }
 }
@@ -48,7 +48,7 @@ QVariant DoubleTableModel::data( const QModelIndex & index, int role ) const
     return QVariant();
   if( ! index.isValid() )
     return QVariant();
-  return QVariant( dat[index.column()][index.row()] );
+  return QVariant( (*dat[index.column()])[index.row()] );
 }
 
 

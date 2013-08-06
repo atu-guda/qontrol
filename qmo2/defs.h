@@ -10,6 +10,7 @@
 #define _DEFS_H
 
 #include <limits>
+#include <vector>
 #include <config.h>
 
 /* General constants */
@@ -34,6 +35,8 @@ const double DMIN   { std::numeric_limits<double>::lowest() };
 const double DMAX   { std::numeric_limits<double>::max() };
 
 #define L8B QString::fromLocal8Bit
+
+using dvector = std::vector<double>;
  
 enum _DATA_TYPES {
    dtpEnd = 0, dtpUndef = 0, 

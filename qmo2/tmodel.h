@@ -116,8 +116,8 @@ class TModel : public TDataContainer  {
   double getVar( int n );
   /** write access to vars[] */
   void setVar( int n, double v );
-  /** access to all vars as array. Its BAD!!! */
-  double* getVars(void);
+  /** access to all vars as array. Its BAD!!!  remove! */
+  dvector* getVars(void);
   
   /** reimplemented from TDataSet to ensure all data filled and linked */
   virtual int checkData( int i );
@@ -269,7 +269,7 @@ class TModel : public TDataContainer  {
   /** vector of elems orders */
   std::vector<int> v_ord;
   /** general purpose vars[MODEL_NVAR] */
-  std::vector<double> vars;
+  dvector vars;
   /** class decription */
   static TClassInfo class_info;
   /** help str */

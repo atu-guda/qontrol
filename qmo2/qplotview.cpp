@@ -167,7 +167,7 @@ void QPlotView::drawGrid( QPainter &p )
   if( scd->gridX > 0 ) {
     for( i=0; i<=scd->gridX; i++ ) {  // vertical
       if( scd->logX && scd->logScaleX ) {
-	vx = pow( 10, plotMinLX + i*(log10(scd->plotMaxX)-plotMinLX) / scd->gridX );
+	vx = pow10( plotMinLX + i*(log10(scd->plotMaxX)-plotMinLX) / scd->gridX );
 	lvx = log10( vx );
       } else {
 	vx = scd->plotMinX + ( scd->plotMaxX - scd->plotMinX ) * i / scd->gridX; lvx = vx;
@@ -183,7 +183,7 @@ void QPlotView::drawGrid( QPainter &p )
   if( scd->gridY > 0 ) {
   for( j=0; j<=scd->gridY; j++ ) {  // horizontal
       if( scd->logY && scd->logScaleY ) {
-	vy = pow( 10, plotMinLY + j*(log10(scd->plotMaxY)-plotMinLY) / scd->gridY );
+	vy = pow10( plotMinLY + j*(log10(scd->plotMaxY)-plotMinLY) / scd->gridY );
 	lvy = log10( vy );
       } else {
 	vy = scd->plotMinY + ( scd->plotMaxY - scd->plotMinY ) * j / scd->gridY; lvy = vy;
@@ -201,7 +201,7 @@ void QPlotView::drawGrid( QPainter &p )
     j = scd->gridX * (scd->tickX + 1);
     for( i=0; i<j; i++ ) {
       if( scd->logX && scd->logScaleX ) {
-	vx = pow( 10, plotMinLX + i*(log10(scd->plotMaxX)-plotMinLX) / j );
+	vx = pow10( plotMinLX + i*(log10(scd->plotMaxX)-plotMinLX) / j );
       } else {
 	vx = scd->plotMinX + ( scd->plotMaxX - scd->plotMinX ) * i / j;
       };
@@ -213,7 +213,7 @@ void QPlotView::drawGrid( QPainter &p )
     j = scd->gridY * (scd->tickY + 1);
     for( i=0; i<j; i++ ) {
       if( scd->logY && scd->logScaleY ) {
-	vy = pow( 10, plotMinLY + i*(log10(scd->plotMaxY)-plotMinLY) / j );
+	vy = pow10( plotMinLY + i*(log10(scd->plotMaxY)-plotMinLY) / j );
       } else {
 	vy = scd->plotMinY + ( scd->plotMaxY - scd->plotMinY ) * i / j;
       };
@@ -588,7 +588,6 @@ void QPlotView::initArrs(void)
   double vmin, vmax;
   QString outname, buf;
   TOutArr *arr;
-  const double *adr;
   ng = 0; nn = 0; ny = 0;
   sel_g = -1; min_sel_g = -1; max_sel_g = -1;
   if( gra == 0 || root == 0 || model == 0 ) {
@@ -616,7 +615,7 @@ void QPlotView::initArrs(void)
     return; 
   };
 
-  adr = arr->getArray();
+  const dvector *adr = arr->getArray();
   out_tp = -1; out_nn = -1; out_ny = 1;
   arr->getData( "type", &out_tp ); 
   arr->getData( "n", &out_nn ); arr->getData( "ny", &out_ny );
@@ -627,7 +626,8 @@ void QPlotView::initArrs(void)
     errstr = "Bad or missed data in X array";
     return; 
   };
-  vmin = 0; vmax = 1; datax = adr;
+  vmin = 0; vmax = 1; 
+  datax = adr->data();
   arr->getData( "dmin", &vmin ); 
   arr->getData( "dmax", &vmax );
   if( vmin >= vmax ) vmax = vmin + 1;
@@ -655,7 +655,7 @@ void QPlotView::initArrs(void)
     arr->getData( "ny", &out_ny );
     if( adr == 0 || /*out_tp != tp ||*/ out_nn != nn || out_ny != ny ) 
       continue;
-    datay[ng] = adr;
+    datay[ng] = adr->data();
     if( i >= start_from ) {
       k = arr->getData( "dmin", &vmin );
       k += arr->getData( "dmax", &vmax );
@@ -733,14 +733,14 @@ void QPlotView::vis2phys( int ix, int iy, double *x, double *y )
 {
   if( x != 0 ) {
     if( scd->logX ) {
-      *x = pow( 10 , log10(scd->plotMinX) + (( ix - pix_x0 ) / kx) );
+      *x = pow10( log10(scd->plotMinX) + (( ix - pix_x0 ) / kx) );
     } else {
       *x = scd->plotMinX + ( ix - pix_x0 ) / kx;
     };
   };
   if( y != 0 ) {
     if( scd->logY ) {
-      *y = pow( 10, log10(scd->plotMinY) + (( pix_y0 - iy) / ky) );
+      *y = pow10( log10(scd->plotMinY) + (( pix_y0 - iy) / ky) );
     } else {
       *y = scd->plotMinY + ( pix_y0 - iy ) / ky;
     };
@@ -863,7 +863,7 @@ void QPlotView::calcScale(void)
      if( scd->zeroX  && ( imin > 0 ) ) imin = 0;
      if( scd->goodScX ) { // good scale x
            dlt = imax - imin;  k1 = log10( dlt * 0.98 );
-           ki = (int) floor( k1 );  k1 = pow( 10.0, ki );
+           ki = (int) floor( k1 );  k1 = pow10( (double)ki );
            k2 = 0.1 * dlt / k1;
            k2 = ( k2 > 0.5 ) ? 1 : ( ( k2 > 0.2 ) ? 0.5 : 0.2 ) ;
            k1 *= k2;
@@ -886,7 +886,7 @@ void QPlotView::calcScale(void)
      if( scd->zeroY  && ( imin > 0 ) ) imin = 0;
      if( scd->goodScY ) { // good scale y
            dlt = imax - imin;  k1 = log10( dlt * 0.98 );
-           ki = (int) floor( k1 );  k1 = pow( 10.0, ki );
+           ki = (int) floor( k1 );  k1 = pow10( (double)ki );
            k2 = 0.1 * dlt / k1;
            k2 = ( k2 > 0.5 ) ? 1 : ( ( k2 > 0.2 ) ? 0.5 : 0.2 ) ;
            k1 *= k2;

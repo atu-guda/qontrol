@@ -305,7 +305,7 @@ int dumpDatas( const char *fn, const GraphInfo *gi, char delim )
   if( !os.good() ) return -1;
   os << "#";  // save labels for gnuplot input data
   for( j=0; j<gi->col; j++ ) {  // labels row
-   os << setw( 18 ) << gi->label[j] << delim;
+   os << setw( 18 ) << qPrintable( gi->label[j] ) << delim;
   };
   
   int nr = gi->row, nc = gi->col;
@@ -314,7 +314,7 @@ int dumpDatas( const char *fn, const GraphInfo *gi, char delim )
   os.precision(12);
   for( i=0; i<nr; i++ ) {  // data rows
     for( j=0; j<nc; j++ ) {
-      os << setw( 18 ) << gi->dat[j][i] << delim;
+      os << setw( 18 ) << (*gi->dat[j])[i] << delim;
     };
     os << '\n';
   };
@@ -338,12 +338,12 @@ int gnuplotDatas( int otp, const GraphInfo *gi,
   os << "# vim: ft=gnuplot\n";
   os << "set terminal ";
   if( otp ) {
-    os << "postscript eps enhanced\nset output \x22" << eps_fn << "\x22\n"; 
+    os << "postscript eps enhanced\nset output \"" << eps_fn << "\"\n"; 
   } else {
     os << "x11\n";
   };
-  if( gi->title[0] == 0 ) {
-    os << "set title \x22" << gi->title << "\x22; \n";
+  if( ! gi->title.isEmpty() ) {
+    os << "set title \"" << qPrintable(gi->title) << "\"; \n";
   };
 
   if( gi->ny != 1 ) { // 3D plot
@@ -356,14 +356,14 @@ int gnuplotDatas( int otp, const GraphInfo *gi,
     os << "set hidden3d offset -1 trianglepattern 3;\n";
     os << "# set palette color rgbformulae 32,11,6 model RGB negative;\n";
     os << "# set pm3d at b;\n";
-    os << "set label 2 \x22" << gi->label[0] << "\x22 at graph 1.06,-0.1,-0.5\n";
-    os << "set label 3 \x22" << gi->label[1] << "\x22 at graph 1.06,1.06,-0.5\n";
-    os << "splot \x22" << dat_fn << "\x22 ";
+    os << "set label 2 \"" << qPrintable(gi->label[0]) << "\" at graph 1.06,-0.1,-0.5\n";
+    os << "set label 3 \"" << qPrintable(gi->label[1]) << "\" at graph 1.06,1.06,-0.5\n";
+    os << "splot \"" << dat_fn << "\" ";
     for( j=2; j<gi->col; j++ ) {
       if( j != 2 )
-	os << "  \x22\x22 ";
+	os << "  \"\" ";
       os << " using 1:2:" << j+1;
-      os << " title \x22" << gi->label[j] << "\x22 w l lt " << j-2;
+      os << " title \"" << qPrintable(gi->label[j]) << "\" w l lt " << j-2;
       if( j < gi->col-1 )
 	os << " , \\\n";
     };
@@ -371,13 +371,13 @@ int gnuplotDatas( int otp, const GraphInfo *gi,
     os << "set grid lt 2 lw 1.1;\n";
     os << "set border;\nset mxtics 2;\nset mytics 2;\n";
     os << "#set key top right Right width -14 reverse;\n";
-    os << "set label 2 \x22" << gi->label[0] << "\x22 at graph 1.02,0\n";
-    os << "plot \x22" << dat_fn << "\x22 ";
+    os << "set label 2 \"" << qPrintable(gi->label[0]) << "\" at graph 1.02,0\n";
+    os << "plot \"" << dat_fn << "\" ";
     for( j=1; j<gi->col; j++ ) {
       if( j != 1 )
-	os << "  \x22\x22 ";
+	os << "  \"\" ";
       os << " using 1:" << j+1;
-      os << " title \x22" << gi->label[j] << "\x22 w l lt " << j;
+      os << " title \"" << qPrintable(gi->label[j]) << "\" w l lt " << j;
       if( j < gi->col-1 )
 	os << " , \\\n";
     };
@@ -391,7 +391,7 @@ int gnuplotDatas( int otp, const GraphInfo *gi,
     if( gi->ny != 1  &&  (i % gi->ny) == 0 )  // 3D sblock separator
       osd << "\n";
     for( j=0; j<gi->col; j++ )
-      osd << gi->dat[j][i] << ' ';
+      osd << (*gi->dat[j])[i]  << ' ';
     osd << '\n';
   };
   osd.close();

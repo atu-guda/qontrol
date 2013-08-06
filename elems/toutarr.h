@@ -53,7 +53,7 @@ class TOutArr : public TDataSet  {
    /** returns help string */
    virtual const char* getHelp(void) const;
    /** access to array value */
-   virtual const double* getArray(void);
+   virtual const dvector* getArray(void);
    /** request to allocate array */
    virtual int alloc( int sz, int a_ny = 1 );
    /** request to dealloc array */
@@ -93,7 +93,7 @@ class TOutArr : public TDataSet  {
    /** current number of datas */
    PRM_INT1( n, efInner, "current size", "Current number of datas", "" );
    /** data storage TODO: vector */
-   std::vector<double> arr;
+   dvector arr;
    /** fake source */
    double fake_so;
    /** ptr to source */

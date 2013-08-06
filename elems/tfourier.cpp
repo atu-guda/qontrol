@@ -80,7 +80,6 @@ int TFourier::do_endLoop()
 {
   int i, j, nx;
   TOutArr *arra, *arrb, *arram, *arrom, *arrx, *arry;
-  const double *xdat;
   double v, vx;
   
   if( out_a >= 0 ) { // ------- fill model vars 
@@ -130,14 +129,14 @@ int TFourier::do_endLoop()
   arry = model->getOutArr( y_oname );
   if( !arrx || !arry ) 
     return 1;
-  xdat = arrx->getArray();
+  const dvector *xdat = arrx->getArray();
   nx = -1;
   arrx->getData( "n", &nx );
   if( xdat == 0 || nx < 2 ) 
     return 1;
   arry->alloc( nx, 1 ); 
   for( i=0; i<nx; i++ ) {
-    v = 0; vx = omega * xdat[i];
+    v = 0; vx = omega * (*xdat)[i];
     for( j=0; j<=ng; j++ )
       v += aa[j] * cos( j * vx ) +  bb[j] * sin( j * vx );
     arry->push_val( v, 10000 ); // ignore level

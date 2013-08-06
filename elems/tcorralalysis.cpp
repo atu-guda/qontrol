@@ -97,7 +97,7 @@ int TCorrAnalysis::do_endLoop()
 {
   double yy, e, se2;
   int j, nx, nx_c, do_cmp, do_fill;
-  const double *xdat, *cdat;
+  const dvector *xdat, *cdat;
   TOutArr *arrx, *arry = 0, *arrc;
   cmp_ms = cmp_min = cmp_max = cmp_ampl = cmp_tmin = cmp_tmax = se2 = 0; 
   do_cmp = do_fill = 0;
@@ -130,15 +130,15 @@ int TCorrAnalysis::do_endLoop()
     return 1;
 
   for( j=0; j<nx; j++ ) {
-    yy = a * xdat[j] + b;
+    yy = a * (*xdat)[j] + b;
     if( do_cmp ) {
-      e = cdat[j] - yy;
+      e = (*cdat)[j] - yy;
       se2 += e * e;
       if( e > cmp_max ) {
-        cmp_max = e; cmp_tmax = xdat[j]; 
+        cmp_max = e; cmp_tmax = (*xdat)[j]; 
       };
       if( e < cmp_min && j > 0 ) {
-	cmp_min = e; cmp_tmin = xdat[j];
+	cmp_min = e; cmp_tmin = (*xdat)[j];
       };
     };
     if( do_fill )
@@ -184,7 +184,7 @@ double TCorrAnalysis::f( double t )
 int TCorrAnalysis::getDataFromArrays()
 {
   double x, y;
-  const double *xdat, *ydat;
+  const dvector *xdat, *ydat;
   int nx = 0, ny = 0;
   
   reset_data();
@@ -219,9 +219,9 @@ int TCorrAnalysis::getDataFromArrays()
   x = y = 0;
   for( int i=0; i<n; i++ ) {
     if( xdat )
-      x = xdat[i];
+      x = (*xdat)[i];
     if( ydat )
-      y = ydat[i];
+      y = (*ydat)[i];
     s_x += x; s_x2 += x*x; s_y += y; s_y2 += y*y;
     s_xy += x * y;
   };

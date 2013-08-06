@@ -291,9 +291,9 @@ void TModel::setVar( int n, double v )/*{{{1*/
   vars[n] = v;
 }/*}}}1*/
 
-double* TModel::getVars(void)/*{{{1*/
+dvector* TModel::getVars(void)/*{{{1*/
 {
-  return &(vars[0]); // TODO: const vector<double>&
+  return &vars; // TODO: its bad: remove
 }/*}}}1*/
 
 int TModel::oname2elnu( const QString &iname ) const/*{{{1*/

@@ -19,6 +19,7 @@
 #ifndef QRUNVIEW_H
 #define QRUNVIEW_H
 
+#include "defs.h"
 #include <QDialog>
 
 class TModel; class TDataSet; class TMiso; 
@@ -106,22 +107,22 @@ class QRunView : public QDialog  {
     /** state of computation */
     int state;
     /** start time */
-    double s_time;
+    double s_time = 0;
     /** mouse coordinates in graph [-1;1], mouse buttons */
-    double mouse_x, mouse_y;
+    double mouse_x = 0, mouse_y = 0;
     /** mouse buttons state */
-    int mouse_l, mouse_r, mouse_m;
+    int mouse_l = 0, mouse_r = 0, mouse_m = 0;
     /** keyboard buttons state */
     int keys_state[10];
     /** input sound value [-1;1] */
-    double sound_i_left, sound_i_right;
+    double sound_i_left = 0, sound_i_right = 0;
     /** joystick values */
-    double joy_x, joy_y, joy_btn;
+    double joy_x = 0, joy_y = 0, joy_btn = 0;
     /** unknown device values */
     double auxs[20];
     // some next vars filled from TModel =========================
     /** data array of model */
-    double *data;
+    dvector *data = nullptr;
     /** total number of loops */
     int n_tot;
     /** total counter */

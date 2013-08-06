@@ -22,12 +22,13 @@ const int max_graphs = 7; // TODO: variable
  * */
 
 struct GraphInfo {
-  int row;
-  int col;
-  int ny;
-  char title[MAX_LABELLEN];
-  char label[max_graphs][MAX_LABELLEN]; 
-  const double *dat[max_graphs];
+  int row = 0;
+  int col = 0;
+  int ny = 0;
+  QString title = "";
+  QString label[max_graphs] = { "", "", "", "", "", "", "" }; 
+  const dvector *dat[max_graphs] = 
+  { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 };
 
 /** gets real time in seconds.ms */

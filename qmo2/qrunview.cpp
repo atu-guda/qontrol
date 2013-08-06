@@ -32,8 +32,7 @@ QRunView::QRunView( TModel *amodel, int atype, QWidget *parent )
           : QDialog( parent )
 {
   int i;
-  model = amodel; run_type = atype; s_time = 0;
-  data = 0; 
+  model = amodel; run_type = atype;
   s_h = 40;
   // setBackgroundMode( Qt::NoBackground );
   setCursor( Qt::CrossCursor );
@@ -41,10 +40,8 @@ QRunView::QRunView( TModel *amodel, int atype, QWidget *parent )
   connect( timer, SIGNAL(timeout()), this, SLOT(slotRunNext()) );
   model->reset();
   getModelData();
-  mouse_x = mouse_y = 0; mouse_l = mouse_r = mouse_m = 0;
-  for( i=0; i < 10; i++ ) keys_state[i] = 0;
-  sound_i_left = sound_i_right = 0;
-  joy_x = joy_y = joy_btn = 0;
+  for( i=0; i < 10; i++ ) 
+    keys_state[i] = 0;
   for( i=0; i<20; i++ ) auxs[i] = 0;
   i_tot = 0; n_tot = 1; 
   setMinimumSize( 500, s_h );
@@ -184,7 +181,7 @@ void QRunView::drawCross( QPainter &p )
   for( i=0; i<6; i++ ) {
     if( oc[i] < 0 || oct[i] < 1 || oct[i] > 3 ) 
       continue;
-    x = data[ oc[i] ]; y = data[ 1+oc[i] ];
+    x = (*data)[ oc[i] ]; y = (*data)[ 1+oc[i] ];
     if( x > 1 ) x = 1; if( x < -1 ) x = -1;
     if( y > 1 ) y = 1; if( y < -1 ) y = -1;
     phys2vis( x, y, &ix, &iy );
@@ -205,7 +202,7 @@ void QRunView::drawVbar( QPainter &p )
   for( i=0; i<6; i++ ) {
     if( oc[i] < 0 || oct[i] < 4 || oct[i] > 7 ) 
       continue;
-    x = -0.9 + (oct[i] - 4) * 0.4 ; y = data[ oc[i] ];
+    x = -0.9 + (oct[i] - 4) * 0.4 ; y = (*data)[ oc[i] ];
     if( y > 1 ) y = 1; if( y < -1 ) y = -1;
     phys2vis( x, y, &ix, &iy );
     p.fillRect( ix, c_y, 30, iy - c_y, colors[ oct[i] - 4 ]  );
@@ -221,7 +218,7 @@ void QRunView::drawGbar( QPainter &p )
   for( i=0; i<6; i++ ) {
     if( oc[i] < 0 || oct[i] < 8 || oct[i] > 11 ) 
       continue;
-    x = data[ oc[i] ];y = 0.9 - (oct[i] - 8) * 0.4 ;
+    x = (*data)[ oc[i] ];y = 0.9 - (oct[i] - 8) * 0.4 ;
     if( x > 1 ) x = 1; if( x < -1 ) x = -1;
     phys2vis( x, y, &ix, &iy );
     p.fillRect( c_x, iy, ix - c_x, 30, colors[ oct[i] - 8 ] );
@@ -235,7 +232,7 @@ void QRunView::drawLED( QPainter &p )
   for( i=0; i<6; i++ ) {
     if( oc[i] < 0 || oct[i] < 12 || oct[i] > 15 ) 
       continue;
-    x = data[ oc[i] ]; 
+    x = (*data)[ oc[i] ]; 
     p.fillRect( 50 * ( 1 + oct[i] - 12 ), g_h-19, 20, 20,
        ( x > 0.1 ) ? Qt::green : Qt::darkRed );
   };
@@ -396,49 +393,38 @@ void QRunView::getModelData(void)
 
 void QRunView::getJoyVal(void)
 {
-  if( use_sync && ic_joy >=0 && ic_joy < MODEL_NVAR - 10 ) {
-    data[ ic_joy ]      = joy_x = 0; // TODO: fill from real joystick data
-    data[ ic_joy + 1 ]  = joy_y = 0;
-    data[ ic_joy + 2 ]  = joy_btn = 0;
-  };  
+  // not now
 }
 
 void QRunView::getSoundVal(void)
 {
-  if( use_sync && ic_sound >=0 && ic_sound < MODEL_NVAR - 4 ) {
-    data[ic_sound]   = sound_i_left  = 0; // TODO: fill from real sound data
-    data[ic_sound+1] = sound_i_right = 0; 
-  };  
+  // not now
 }
 
 void QRunView::getAuxVal(void)
 {
-  int i;
-  if( use_sync && ic_aux >=0 && ic_aux < MODEL_NVAR - 24 ) {
-    for( i=0; i<20; i++ )
-      data[i+ic_aux] = auxs[i] = 0; // TODO: fill by some real device;
-  };  
+  // not now
 }
 
 void QRunView::fillVars(void)
 {
   int i;
-  if( state != stateRun || !use_sync || data == 0 )
+  if( state != stateRun || !use_sync || data == nullptr )
     return;
   if( ic_mouse >= 0 && ic_mouse < MODEL_NVAR - 10 ) {
-    data[ic_mouse]   = mouse_x; 
-    data[ic_mouse+1] = mouse_y; 
-    data[ic_mouse+2] = mouse_l; 
-    data[ic_mouse+3] = mouse_r; 
-    data[ic_mouse+4] = mouse_m; 
+    (*data)[ic_mouse]   = mouse_x; 
+    (*data)[ic_mouse+1] = mouse_y; 
+    (*data)[ic_mouse+2] = mouse_l; 
+    (*data)[ic_mouse+3] = mouse_r; 
+    (*data)[ic_mouse+4] = mouse_m; 
   };
   if( ic_key >=0 && ic_key < MODEL_NVAR - 10 ) {
     for( i=0; i<6; i++ )
-      data[ic_key+i] = double( keys_state[i] );
+      (*data)[ic_key+i] = double( keys_state[i] );
   };
-  getSoundVal();
-  getJoyVal();
-  getAuxVal();
+  // getSoundVal();
+  // getJoyVal();
+  // getAuxVal();
 }
 
 

@@ -71,17 +71,22 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
 {
   int i, row, col, ny, out_nn;
   TOutArr *arr;
-  const double *dat;
   QString label;
-  if( gi == 0 )
+  if( gi == 0 ) {
+    qDebug( "err: %s: %s", __PRETTY_FUNCTION__, "gi==0" );
     return -1;
-  gi->row = gi->col = 0; gi->ny = 1; gi->title[0] = 0; 
-  for( i=0; i<7; i++ ) gi->label[i][0] = 0;
-  strncat( gi->title, qPrintable( objectName()), 
-           sizeof( gi->title )-1 ); // TODO: real QString in GraphInfo
-  if( !par || ! par->isChildOf("TModel") 
-      || par->getState() < stateDone )
+  }
+  
+  gi->row = gi->col = 0; gi->ny = 1;
+  gi->title = objectName();
+  if( !par || ! par->isChildOf("TModel") ) {
+    qDebug( "err: %s: %s", __PRETTY_FUNCTION__, "parent in not TModel" );
     return -10;
+  }
+  if( par->getState() < stateDone ) {
+    qDebug( "err: %s: %s", __PRETTY_FUNCTION__, "State is not 'Done'" );
+    return -11;
+  }
   
   TModel *model = static_cast<TModel*>(par);
   // x-data
@@ -89,16 +94,17 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
   if( !arr ) 
     return -1;
   out_nn = -1; ny = -1;
-  dat = arr->getArray(); 
+  const dvector *dat = arr->getArray(); 
   arr->getData( "n", &out_nn );
   arr->getData( "ny", &ny );
   if( dat == 0 || out_nn < 1 || ny < 0 ) return -1;
-  row = out_nn; gi->dat[0] = dat;
+  row = out_nn; 
+  gi->dat[0] = dat;
   arr->getData( "label", label );
   if( label.isEmpty() ) {
     label = "x"; 
   };
-  strncat( gi->label[0], label.toLocal8Bit().constData(), MAX_LABELLEN-1 );
+  gi->label[0] = label;
   col = 1; // unlike show, x and y[] in single index
   const QString* ynms[] = { &y0name, &y1name, &y2name, &y3name, &y4name, &y5name }; // TODO: replace
   for( i=0; i<6; i++ ) {
@@ -115,7 +121,7 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
     if( label.isEmpty() ) { 
       label = "y"; 
     };
-    strncat( gi->label[col], label.toLocal8Bit().constData(), MAX_LABELLEN-1 );
+    gi->label[col] = label;
     col++;
   };
   gi->col = col; gi->row = row; gi->ny = ny;
@@ -143,8 +149,7 @@ int TGraph::gnuPlot( int otp, const char *fn, const char *atitle,
   if( k != 0 )
     return k;
   if( atitle != 0  && atitle[0] != 0 ) {
-    gi.title[0] = 0;
-    strncat( gi.title, atitle, sizeof( gi.title )-1 );
+    gi.title = atitle;
   };
   k = gnuplotDatas( otp, &gi, fn, eps_fn, dat_fn );
   return k;

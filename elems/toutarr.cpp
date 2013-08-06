@@ -63,9 +63,9 @@ const char *TOutArr::getHelp(void) const
   return helpstr;
 }
 
-const double* TOutArr::getArray(void)
+const dvector* TOutArr::getArray(void)
 {
-  return &arr[0];
+  return &arr;
 }
 
 int TOutArr::alloc( int sz, int a_ny )
@@ -152,15 +152,15 @@ int TOutArr::fillGraphInfo( GraphInfo *gi ) const
   int i;
   if( gi == 0 )
     return -1;
-  gi->row = gi->col = 0; gi->title[0] = 0; gi->ny = 1;
-  for( i=0; i<7; i++ ) gi->label[i][0] = 0;
-  strncat( gi->title, qPrintable( objectName() ), 
-           sizeof( gi->title )-1 ); // TODO: real QString
-  strncat( gi->label[0], label.toLocal8Bit().constData(), sizeof( gi->label[0] )-1 );
+  gi->row = gi->col = 0; gi->ny = 1;
+  for( i=0; i<7; i++ ) 
+    gi->label[i] = "";
+  gi->title = objectName();
+  gi->label[0] = label;
   if( n < 1 )
     return -2;
   gi->row = n; gi->col = 1; gi->ny = ny;
-  gi->dat[0] = &arr[0];
+  gi->dat[0] = &arr;
   return 0;
 }  
 
