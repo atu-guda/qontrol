@@ -2,7 +2,7 @@
                           holdermodel.cpp  -  HolderModel implementation
                              -------------------
     begin                : 20 Jul 2012
-    copyright            : GPL (C) 2000-2012 by atu
+    copyright            : GPL (C) 2000-2013 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

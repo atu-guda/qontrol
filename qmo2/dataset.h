@@ -2,7 +2,7 @@
                           dataset.h  -  description
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2012 by atu
+    copyright            : GPL (C) 2000-2013 by atu
     email                : atu@dmeti.dp.ua
  ***************************************************************************/
 
@@ -61,8 +61,10 @@ enum ltype_t {
 };
 
 enum allow_type {
+  allowNone = 0,
   allowObject = 1,
-  allowParam = 2
+  allowParam = 2,
+  allowBoth = 3
 };
 
 typedef HolderData* (*PFHolderData)( const QString &obj_name, const QString &v_name, 

@@ -2,8 +2,8 @@
                           toutarr.cpp  -  description
                              -------------------
     begin                : Sat Aug 5 2000
-    copyright            : (C) 2000-2012 by atu
-    email                : atu@dmeti.dp.ua
+    copyright            : (C) 2000-2013 by atu
+    email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
 /***************************************************************************

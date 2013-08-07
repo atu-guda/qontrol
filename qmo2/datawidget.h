@@ -2,7 +2,7 @@
                           datawidget.h  - widgets for DataDialog
                              -------------------
     begin                : 2012.03.27
-    copyright            : GPL (C) 2012 by atu
+    copyright            : GPL (C) 2012-2013 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

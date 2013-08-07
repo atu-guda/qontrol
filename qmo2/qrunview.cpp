@@ -2,8 +2,8 @@
                           qplotview.cpp  -  description
                              -------------------
     begin                : Sat Aug 18 2001
-    copyright            : (C) 2001-2012 by atu
-    email                : atu@dmeti.dp.ua
+    copyright            : (C) 2001-2013 by atu
+    email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
 /***************************************************************************

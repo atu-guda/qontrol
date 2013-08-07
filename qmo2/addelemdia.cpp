@@ -2,7 +2,7 @@
                           addelemdia.cpp  - widgets for DataDialog
                              -------------------
     begin                : Jul 30 2012
-    copyright            : GPL (C) 2012 by atu
+    copyright            : GPL (C) 2012-2013 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

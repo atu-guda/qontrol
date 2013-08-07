@@ -2,8 +2,8 @@
                           miscfun.h  -  description
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2012 by atu
-    email                : atu@dmeti.dp.ua
+    copyright            : GPL (C) 2000-2013 by atu
+    email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
 

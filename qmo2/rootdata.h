@@ -2,8 +2,8 @@
                           rootdata.h  -  description lcass TRootData
                              -------------------
     begin                : Thu Apr 20 16:55:07 2000
-    copyright            : GPL (C) 2000-2012 by atu
-    email                : atu@dmeti.dp.ua
+    copyright            : GPL (C) 2000-2013 by atu
+    email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
 #ifndef _ROOTDATA_H

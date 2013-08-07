@@ -2,8 +2,8 @@
                           qstatusmodel.cpp  -  description
                              -------------------
     begin                : Sat Aug 17 2002 
-    copyright            : (C) 2000-2012 by atu
-    email                : atu@dmeti.dp.ua
+    copyright            : (C) 2000-2013 by atu
+    email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
 /***************************************************************************
