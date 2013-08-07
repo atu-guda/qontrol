@@ -993,7 +993,7 @@ int DataDialog::createWidgets()
 
     w = FactoryDataWidget::theFactory().createDataWidget( *ho, this );
     if( !w ) {
-      qDebug( "not found edit widget for object %s", qPrintable(name) );
+      DBG2q( "warn: not found edit widget for object", name );
       continue;
     }
     

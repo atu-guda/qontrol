@@ -40,7 +40,7 @@ QMo2Doc::QMo2Doc()
 
 QMo2Doc::~QMo2Doc()
 {
-  qDebug( "dbg: QMo2Doc::~QMo2Doc(): " );
+  DBG1( "dbg: dtor" );
   delete pViewList; pViewList = 0;
   delete rootdata; rootdata = 0; model = 0; // model belong to rootdata
 }
@@ -175,8 +175,7 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
       QDomElement ee = cnode.toElement();
       QString elname = ee.attribute( "name" );
       QString tagname = ee.tagName();
-      //qDebug( "Element tagname: \"%s\" name: \"%s\"",  
-      //qPrintable(tagname), qPrintable(elname) );
+      //DBGx( "dbg: Element tagname: \"%s\" name: \"%s\"", qP(tagname), qP(elname) );
       if( elname == "root" || tagname == "obj" ) {
         obj_root = ee;
         break;
@@ -280,7 +279,7 @@ QString QMo2Doc::makeXML() const
 
 void QMo2Doc::deleteContents()
 {
-  qDebug( "debug: QMo2Doc::deleteContents rootdata: %p model: %p", rootdata, model );
+  DBGx( "debug: rootdata: %p model: %p", rootdata, model );
   delete rootdata; rootdata = 0; model = 0;
 }
 
@@ -354,7 +353,7 @@ bool QMo2Doc::isModified() const
 void QMo2Doc::fillRoot(void)
 {
   if( rootdata == 0 ) {
-    qDebug( "debug: QMo2Doc::fillRoot: rootdata in null!!" );
+    DBG1( "ERR: rootdata in null!!" );
     return;
   }
 }

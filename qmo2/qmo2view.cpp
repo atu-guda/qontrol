@@ -347,8 +347,7 @@ void QMo2View::linkElm()
 
   el = static_cast<TElmLink*>( selObj->getObj( "links" ) );
   if( el == 0 ) {
-    qDebug( "ERR: fail to find links for object %s", 
-       qPrintable( selObj->getFullName() ) );
+    DBG2q( "ERR: fail to find links for object", selObj->getFullName() );
     return ;
   }
   DataDialog *dia = new DataDialog( *el, this );

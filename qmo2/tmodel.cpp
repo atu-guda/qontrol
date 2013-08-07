@@ -430,7 +430,7 @@ TOutArr* TModel::getOutArr( const QString &oname )/*{{{1*/
     return nullptr;
   TOutArr *arr = qobject_cast<TOutArr*>(getObj( oname, "TOutArr" ));
   if( !arr ) {
-    qDebug( "TModel::getOutArr: fail to find TOutArr \"%s\"", qPrintable(oname) );
+    DBG2q( "warn: fail to find TOutArr", oname );
   }
   return arr;
 }/*}}}1*/
@@ -496,7 +496,7 @@ int TModel::delElem( const QString &ename )/*{{{1*/
 {
   TMiso *ob = qobject_cast<TMiso*>(getObj( ename, "TMiso" ));
   if( !ob ) {
-    qDebug( "TModel::delElem: fail to find TMiso \"%s\"", qPrintable(ename) );
+    DBG2q( "err: fail to find TMiso", ename );
     return 0;
   }
   int rc = del_obj( ename );

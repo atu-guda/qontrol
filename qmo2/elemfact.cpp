@@ -34,15 +34,13 @@ TDataSet* ElemFactory::createElem( const QString &a_type,
 {
   MapStrClass::const_iterator i = str_class.find( a_type );
   if( i == str_class.end() ) {
-    qDebug( "WARN: ElemFactory::createElem: "
-	     "fail to find class \"%s\"", qPrintable( a_type ) ); 
+    DBG2q( "WARN: fail to find class %s", a_type ); 
     return nullptr;
   }
   // check parent for name
   if( parent->getHolder(ob_name) ) {
-    qDebug( "WARN: ElemFactory::createElem: "
-	     "name \"%s\" exists in parent \"%s\"", 
-	     qPrintable( ob_name ), qPrintable(parent->getFullName()) );
+    DBGx( "WARN: name \"%s\" exists in parent \"%s\"", 
+	     qP( ob_name ), qP( parent->getFullName() ) );
     return nullptr;
   }
   
@@ -57,15 +55,13 @@ HolderData* ElemFactory::createParam( const QString &a_type,
 {
   MapStrHolder::const_iterator i = str_holder.find( a_type );
   if( i == str_holder.end() ) {
-    qDebug( "WARN: ElemFactory::createParam: "
-	     "fail to find type \"%s\"", qPrintable( a_type ) ); 
+    DBG2q( "WARN: fail to find type", a_type ); 
     return nullptr;
   }
   // check parent for name
   if( parent->getHolder(ob_name) ) {
-    qDebug( "WARN: ElemFactory::createParam: "
-	     "name \"%s\" exists in parent %s", 
-	     qPrintable( ob_name ), qPrintable(parent->getFullName()) );
+    DBGx( "WARN: name \"%s\" exists in parent %s", 
+	     qP( ob_name ), qP(parent->getFullName()) );
     return nullptr;
   }
   
@@ -79,12 +75,11 @@ bool ElemFactory::registerElemType( const TClassInfo *cl_info )
     return false;
   QString cl_name = L8B( cl_info->className );
   if( str_class.contains( cl_name ) ) {
-    qDebug( "ERR: reg: class %s already exists", qPrintable( cl_name ) ); 
+    DBG2q( "ERR: reg: class already exists", cl_name ); 
     return false;
   }
   str_class.insert( cl_name, cl_info );
-  //qDebug( "dbg:  ElemFactory::registerElemType: registered \"%s\" %d",
-  //    cl_info->className, cl_info->props ); 
+  //DBGx( "dbg:  registered \"%s\" %d", cl_info->className, cl_info->props ); 
   return true;
 }
 
@@ -92,7 +87,7 @@ bool ElemFactory::unregisterElemType( const QString &a_type )
 {
   MapStrClass::iterator i = str_class.find( a_type );
   if( i == str_class.end() ) {
-    qDebug( "ERR: unr: fail to find class %s", qPrintable( a_type ) ); 
+    DBG2q( "ERR: fail to find class", a_type ); 
     return 0;
   }
   str_class.erase( i );
@@ -105,8 +100,7 @@ bool ElemFactory::registerSimpleType( const HolderInfo *ho_info )
     return false;
   QString tp_name = L8B( ho_info->name );
   if( str_holder.contains( tp_name ) ) {
-    qDebug( "WARN: ElemFactory::registerSimpleType:"
-	    " type \"%s\" already exists", ho_info->name ); 
+    DBG2q( "WARN: type already exists", ho_info->name ); 
     return false;
   }
   str_holder.insert( tp_name, ho_info );
@@ -117,8 +111,7 @@ const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
 {
   MapStrClass::const_iterator i = str_class.find( a_type );
   if( i == str_class.end() ) {
-    qDebug( "ERR: ElemFactory::getInfo: fail to find class \"%s\"",
-	qPrintable( a_type ) ); 
+    DBG2q( "ERR: fail to find class", a_type ); 
     return nullptr;
   }
   return i.value();
@@ -128,8 +121,7 @@ bool ElemFactory::isChildOf( const QString &cl, const QString &par_cl )
 {
   auto i = str_class.find( cl );
   if( i == str_class.end() ) {
-    qDebug( "WARN:  ElemFactory::isChildOf: fail to find class \"%s\"",
-	qPrintable( cl ) ); 
+    DBG2q( "WARN:  fail to find class",	cl ); 
     return false;
   }
   const TClassInfo *ci = i.value();
