@@ -2,8 +2,8 @@
                           defs.h  -  description
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2012 by atu
-    email                : atu@dmeti.dp.ua
+    copyright            : GPL (C) 2000-2013 by atu
+    email                : atu@nmetau.edu.ua
  *************************************************************************/
 
 #ifndef _DEFS_H 
@@ -27,6 +27,15 @@
 #define OBJ_NINP 4
 #define OBJ_NPRM 4
 
+#define qP(x) qPrintable(x)
+/** interface to qDebug with more info q: qPrintable to last argubent, x - format*/
+#define DBG1(str)  qDebug("%s \n  in [ %s: %s %d ]", str, __FILE__, __PRETTY_FUNCTION__, __LINE__ )
+#define DBG1q(str)  qDebug("%s \n  in [ %s: %s %d ]", qPrintable(str), __FILE__, __PRETTY_FUNCTION__, __LINE__ )
+#define DBG2(str1,str2) qDebug("%s \"%s\"\n in [ %s: %s: %d ]", str1, str2, __FILE__, __PRETTY_FUNCTION__, __LINE__ )
+// second string is QString
+#define DBG2q(str1,str2) qDebug("%s \"%s\"\n in [ %s: %s: %d ]", str1, qPrintable(str2), __FILE__, __PRETTY_FUNCTION__, __LINE__ )
+#define DBGx(...) { qDebug(__VA_ARGS__); qDebug(" in %s: %s: %d", __FILE__, __PRETTY_FUNCTION__, __LINE__ ); }
+
 const int IMIN      { std::numeric_limits<int>::min() };
 const int IMAX      { std::numeric_limits<int>::max() };
 const unsigned UMIN { std::numeric_limits<unsigned int>::min() };
@@ -38,33 +47,6 @@ const double DMAX   { std::numeric_limits<double>::max() };
 
 using dvector = std::vector<double>;
  
-enum _DATA_TYPES {
-   dtpEnd = 0, dtpUndef = 0, 
-   dtpInt = 1, dtpLong = 1,
-   dtpDouble = 2, dtpDbl = 2, dtpDou = 2,
-   dtpString = 3, dtpStr = 3,
-   dtpStringArr = 4,
-   dtpIntArr = 5,
-   dtpDoubleArr = 6,
-   dtpObj = 10, //
-   dtpFun = 11, // function with uniform args (TData?) TODO
-   dtpFunPure = 12, // ordinary function, don't use in UI
-   // dialog elements - not data
-   dtpDial = 1000,   // dlg_x,y,w,h -- dialog geometry, listdata - header
-   dtpButton = 1001, // subtp -- action type: dtpsOK, dtpsCancel, dtpsHelp...
-   dtpLabel = 1002,  // listdata -- text of label (may be with some more?)
-   dtpGroup = 1003   // listdata -- group caption
-};
-
-enum _DATA_STYPES {
-   /* based on int */
-   dtpsInt=0, dtpsSwitch=1, dtpsSw=1, dtpsList=2, dtpsRadio=3, 
-   dtpsDate=4, dtpsTime=5, dtpsColor=7,
-   /* based on string */
-   dtpsStr=0, dtpsMline=1, dtpsBin=2, dtpsOName=3, dtpsEName=4, dtpsFName=5,
-   /* based on dtpButton */
-   dtpsOK=0, dtpsCancel=1, dtpsHelp=2, dtpsTest=3, dtpsBtn=4
-};
 
 enum _ELEM_FLAGS {
   efMustRead = 1, efNoRunChange = 2, efNRC = efNoRunChange,  /* MR, NRC */ 
