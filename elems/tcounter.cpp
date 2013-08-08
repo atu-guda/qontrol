@@ -40,22 +40,6 @@ TCounter::~TCounter()
 {
 }
 
-TDataSet* TCounter::create( TDataSet* apar )
-{
-  return new TCounter( apar );
-}
-
-
-const TClassInfo* TCounter::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TCounter::getHelp(void) const
-{
-  return helpstr;
-}
-
 
 int TCounter::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
@@ -88,12 +72,7 @@ double TCounter::f( double /* t */ )
   return v;
 }
 
-int TCounter::registered = reg();
-
-int TCounter::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TCounter)
 
 
 // end of tcounter.cpp

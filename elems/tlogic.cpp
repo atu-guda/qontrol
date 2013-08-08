@@ -43,21 +43,6 @@ TLogic::~TLogic()
 {
 }
 
-TDataSet* TLogic::create( TDataSet* apar )
-{
-  return new TLogic( apar );
-}
-
-
-const TClassInfo* TLogic::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TLogic::getHelp(void) const
-{
-  return helpstr;
-}
 
 double TLogic::f( double /* t */ )
 {
@@ -91,12 +76,7 @@ double TLogic::f( double /* t */ )
   return useMinus ? -1 : 0;
 }
 
-int TLogic::registered = reg();
-
-int TLogic::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TLogic)
 
 
 // end of tlogic.cpp

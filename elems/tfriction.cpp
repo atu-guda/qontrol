@@ -53,22 +53,6 @@ TFriction::~TFriction()
 {
 }
 
-TDataSet* TFriction::create( TDataSet* apar )
-{
-  return new TFriction( apar );
-}
-
-
-const TClassInfo* TFriction::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TFriction::getHelp(void) const
-{
-  return helpstr;
-}
-
 
 int TFriction::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
@@ -113,12 +97,7 @@ double TFriction::f( double /* t */ )
   return x;
 }
 
-int TFriction::registered = reg();
-
-int TFriction::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TFriction)
 
 
 

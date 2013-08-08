@@ -43,21 +43,6 @@ TFuncPoly::~TFuncPoly()
 {
 }
 
-TDataSet* TFuncPoly::create( TDataSet* apar )
-{
-  return new TFuncPoly( apar );
-}
-
-
-const TClassInfo* TFuncPoly::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TFuncPoly::getHelp(void) const
-{
-  return helpstr;
-}
 
 double TFuncPoly::f( double /* t */ )
 {
@@ -87,12 +72,7 @@ double TFuncPoly::f( double /* t */ )
   return v; 
 }
 
-int TFuncPoly::registered = reg();
-
-int TFuncPoly::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TFuncPoly)
 
 
 // end of tfuncpoly.cpp

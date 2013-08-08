@@ -44,20 +44,6 @@ THyst::~THyst()
 {
 }
 
-TDataSet* THyst::create( TDataSet* apar )
-{
-  return new THyst( apar );
-}
-
-const TClassInfo* THyst::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *THyst::getHelp(void) const
-{
-  return helpstr;
-}
 
 double THyst::f( double /* t */ )
 {
@@ -106,12 +92,7 @@ int THyst::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 0;
 }
 
-int THyst::registered = reg();
-
-int THyst::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(THyst)
 
 
 // end of thyst.cpp

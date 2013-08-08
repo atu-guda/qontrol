@@ -37,20 +37,6 @@ TVibro::~TVibro()
 {
 }
 
-TDataSet* TVibro::create( TDataSet* apar )
-{
-  return new TVibro( apar );
-}
-
-const TClassInfo* TVibro::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TVibro::getHelp(void) const
-{
-  return helpstr;
-}
 
 int TVibro::do_preRun( int /*run_tp*/, int /*an*/, 
                        int /*anx*/, int /*any*/, double /*adt*/ )
@@ -92,12 +78,7 @@ double TVibro::f( double /*t*/ )
   return x;
 }
 
-int TVibro::registered = reg();
-
-int TVibro::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TVibro)
 
 // end of tvibro.cpp
 

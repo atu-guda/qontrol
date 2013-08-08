@@ -61,20 +61,6 @@ TSource::~TSource()
   }
 }
 
-TDataSet* TSource::create( TDataSet* apar )
-{
-  return new TSource( apar );
-}
-
-const TClassInfo* TSource::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TSource::getHelp(void) const
-{
-  return helpstr;
-}
 
 double TSource::f( double t )
 {
@@ -237,12 +223,7 @@ int TSource::do_startLoop( int acnx, int acny )
   return 0;
 }
 
-int TSource::registered = reg();
-
-int TSource::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TSource)
 
 
 // end of tsource.cpp

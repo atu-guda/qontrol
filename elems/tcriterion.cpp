@@ -42,21 +42,6 @@ TCriterion::~TCriterion()
 {
 }
 
-TDataSet* TCriterion::create( TDataSet* apar )
-{
-  return new TCriterion( apar );
-}
-
-
-const TClassInfo* TCriterion::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TCriterion::getHelp(void) const
-{
-  return helpstr;
-}
 
 int TCriterion::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
@@ -100,12 +85,7 @@ double TCriterion::f( double t )
   return rv;
 }
 
-int TCriterion::registered = reg();
-
-int TCriterion::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TCriterion)
 
 
 // end of tcriterion.cpp

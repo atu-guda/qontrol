@@ -35,30 +35,6 @@ ScaleData::~ScaleData()
 {
 }
 
-const TClassInfo* ScaleData::getClassInfo(void) const
-{
-  return &class_info;
-}
 
-TDataSet* ScaleData::create( TDataSet* apar )
-{
-  return new ScaleData( apar );
-}
-
-const char *ScaleData::getHelp(void) const
-{
-  return helpstr;
-}
-
-
-int ScaleData::registered = reg();
-
-int ScaleData::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
-
-
-// end of scaledata.cpp
-
+DEFAULT_FUNCS_REG(ScaleData)
 

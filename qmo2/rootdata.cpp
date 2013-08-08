@@ -21,36 +21,14 @@ TClassInfo TRootData::class_info =
 TRootData::TRootData( TDataSet* apar )
           :TDataContainer( apar )
 {
-  allow_add = 3;  // obj(1) and params(2)
+  allow_add = allowObject | allowParam;
 }
 
 TRootData::~TRootData()
 {
 }
 
-const TClassInfo* TRootData::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-TDataSet* TRootData::create( TDataSet* apar )
-{
-  return new TRootData( apar );
-}
-
-const char *TRootData::getHelp(void) const
-{
-  return helpstr;
-}
-
-
-int TRootData::registered = reg();
-
-int TRootData::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
-
+DEFAULT_FUNCS_REG(TRootData)
 
 // end of rootdata.cpp
 

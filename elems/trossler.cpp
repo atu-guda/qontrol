@@ -54,20 +54,6 @@ TRossler::~TRossler()
 {
 }
 
-TDataSet* TRossler::create( TDataSet* apar )
-{
-  return new TRossler( apar );
-}
-
-const TClassInfo* TRossler::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TRossler::getHelp(void) const
-{
-  return helpstr;
-}
 
 double TRossler::f( double /*t*/ )
 {
@@ -85,12 +71,7 @@ int TRossler::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 0;
 }
 
-int TRossler::registered = reg();
-
-int TRossler::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TRossler)
 
 
 // end of trossler.cpp

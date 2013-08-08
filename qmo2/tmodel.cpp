@@ -720,21 +720,6 @@ int TModel::getLinkInfos( int elnu, LinkInfo *li )/*{{{1*/
 }/*}}}1*/
 
 
-TDataSet* TModel::create( TDataSet* apar ) // static/*{{{1*/
-{
-   return new TModel( apar );
-}/*}}}1*/
-
-
-const TClassInfo* TModel::getClassInfo(void) const/*{{{1*/
-{
-  return &class_info;
-}/*}}}1*/
-
-const char *TModel::getHelp(void) const/*{{{1*/
-{
-  return helpstr;
-}/*}}}1*/
 
 const double* TModel::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) const
 {
@@ -755,12 +740,7 @@ const double* TModel::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) co
   return &( vars[n] );
 }
 
-int TModel::registered = reg();
-
-int TModel::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TModel)
 
 
 // end of tmodel.cpp

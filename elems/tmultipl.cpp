@@ -37,21 +37,6 @@ TMultipl::~TMultipl()
 {
 }
 
-TDataSet* TMultipl::create( TDataSet* apar )
-{
-  return new TMultipl( apar );
-}
-
-
-const TClassInfo* TMultipl::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TMultipl::getHelp(void) const
-{
-  return helpstr;
-}
 
 double TMultipl::f( double /* t */ )
 {
@@ -67,12 +52,7 @@ double TMultipl::f( double /* t */ )
   return v; 
 }
 
-int TMultipl::registered = reg();
-
-int TMultipl::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TMultipl)
 
 // end of tmultipl.cpp
 

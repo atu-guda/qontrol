@@ -43,21 +43,6 @@ TFuncMisc::~TFuncMisc()
 {
 }
 
-TDataSet* TFuncMisc::create( TDataSet* apar )
-{
-  return new TFuncMisc( apar );
-}
-
-
-const TClassInfo* TFuncMisc::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TFuncMisc::getHelp(void) const
-{
-  return helpstr;
-}
 
 double TFuncMisc::f( double /* t */ )
 {
@@ -87,12 +72,7 @@ double TFuncMisc::f( double /* t */ )
   return v; 
 }
 
-int TFuncMisc::registered = reg();
-
-int TFuncMisc::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TFuncMisc)
 
 
 // end of tfuncmisc.cpp

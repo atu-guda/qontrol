@@ -42,21 +42,6 @@ TInputAny::~TInputAny()
 {
 }
 
-TDataSet* TInputAny::create( TDataSet* apar )
-{
-  return new TInputAny( apar );
-}
-
-
-const TClassInfo* TInputAny::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TInputAny::getHelp(void) const
-{
-  return helpstr;
-}
 
 int TInputAny::do_preRun( int /*run_tp*/, int /*an*/, 
                           int /*anx*/, int /*any*/, double /*adt*/ )
@@ -88,12 +73,7 @@ double TInputAny::f( double /* t */ )
   return *so;
 }
 
-int TInputAny::registered = reg();
-
-int TInputAny::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TInputAny)
 
 
 // end of tinputany.cpp

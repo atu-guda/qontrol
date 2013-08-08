@@ -42,20 +42,6 @@ TTrigger::~TTrigger()
 {
 }
 
-TDataSet* TTrigger::create( TDataSet* apar )
-{
-  return new TTrigger( apar );
-}
-
-const TClassInfo* TTrigger::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TTrigger::getHelp(void) const
-{
-  return helpstr;
-}
 
 int TTrigger::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
@@ -127,12 +113,7 @@ double TTrigger::f( double t )
 }
 
 
-int TTrigger::registered = reg();
-
-int TTrigger::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TTrigger)
 
 
 // end of ttrigger.cpp

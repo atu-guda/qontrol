@@ -45,21 +45,6 @@ TFuncTrans::~TFuncTrans()
 {
 }
 
-TDataSet* TFuncTrans::create( TDataSet* apar )
-{
-  return new TFuncTrans( apar );
-}
-
-
-const TClassInfo* TFuncTrans::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TFuncTrans::getHelp(void) const
-{
-  return helpstr;
-}
 
 double TFuncTrans::f( double /* t */ )
 {
@@ -91,12 +76,7 @@ double TFuncTrans::f( double /* t */ )
   return v; 
 }
 
-int TFuncTrans::registered = reg();
-
-int TFuncTrans::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TFuncTrans)
 
 
 // end of tfunctrans.cpp

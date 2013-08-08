@@ -52,20 +52,6 @@ TSourceLin::~TSourceLin()
 {
 }
 
-TDataSet* TSourceLin::create( TDataSet* apar )
-{
-  return new TSourceLin( apar );
-}
-
-const TClassInfo* TSourceLin::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TSourceLin::getHelp(void) const
-{
-  return helpstr;
-}
 
 double TSourceLin::f( double t )
 {
@@ -105,12 +91,7 @@ void TSourceLin::recalc(void)
 }
 
 
-int TSourceLin::registered = reg();
-
-int TSourceLin::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TSourceLin)
 
 
 // end of tsourcelin.cpp

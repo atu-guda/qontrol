@@ -46,21 +46,6 @@ TLatch::~TLatch()
 {
 }
 
-TDataSet* TLatch::create( TDataSet* apar )
-{
-  return new TLatch( apar );
-}
-
-
-const TClassInfo* TLatch::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TLatch::getHelp(void) const
-{
-  return helpstr;
-}
 
 int TLatch::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
@@ -99,12 +84,7 @@ double TLatch::f( double t )
   return v;
 }
 
-int TLatch::registered = reg();
-
-int TLatch::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TLatch)
 
 
 // end of tlatch.cpp

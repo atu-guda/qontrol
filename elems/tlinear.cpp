@@ -37,33 +37,12 @@ TLinear::~TLinear()
 {
 }
 
-TDataSet* TLinear::create( TDataSet* apar )
-{
-  return new TLinear( apar );
-}
-
-
-const TClassInfo* TLinear::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TLinear::getHelp(void) const
-{
-  return helpstr;
-}
-
 double TLinear::f( double /* t */ )
 {
   return *in_so[0]*a0 + *in_so[1]*a1 + *in_so[2]*a2 + *in_so[3]*a3 + b;
 }
 
-int TLinear::registered = reg();
-
-int TLinear::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TLinear)
 
 
 // end of tlinear.cpp

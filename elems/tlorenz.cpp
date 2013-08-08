@@ -53,22 +53,6 @@ TLorenz::~TLorenz()
 {
 }
 
-TDataSet* TLorenz::create( TDataSet* apar )
-{
-  return new TLorenz( apar );
-}
-
-
-const TClassInfo* TLorenz::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TLorenz::getHelp(void) const
-{
-  return helpstr;
-}
-
 double TLorenz::f( double /*t*/ )
 {
   double xn, yn, zn;
@@ -86,12 +70,7 @@ int TLorenz::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 0;
 }
 
-int TLorenz::registered = reg();
-
-int TLorenz::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TLorenz)
 
 
 // end of tlorenz.cpp

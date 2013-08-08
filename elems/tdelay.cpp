@@ -40,21 +40,6 @@ TDelay::~TDelay()
   delete buf; buf = 0; // in case of do_postRun missing
 }
 
-TDataSet* TDelay::create( TDataSet* apar )
-{
-  return new TDelay( apar );
-}
-
-
-const TClassInfo* TDelay::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TDelay::getHelp(void) const
-{
-  return helpstr;
-}
 
 double TDelay::f( double t )
 {
@@ -104,12 +89,7 @@ int TDelay::do_startLoop( int /*acnx*/, int /*acny*/ )
 }
 
 
-int TDelay::registered = reg();
-
-int TDelay::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TDelay)
 
 
 // end of tdelay.cpp

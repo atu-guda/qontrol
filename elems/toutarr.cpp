@@ -47,21 +47,6 @@ TOutArr::~TOutArr()
   qDebug( "dbg: TOutArr::~TOutArr(): %s", qPrintable( getFullName() ));
 }
 
-TDataSet* TOutArr::create( TDataSet* apar )
-{
-  return new TOutArr( apar );
-}
-
-
-const TClassInfo* TOutArr::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TOutArr::getHelp(void) const
-{
-  return helpstr;
-}
 
 const dvector* TOutArr::getArray(void)
 {
@@ -175,12 +160,7 @@ int TOutArr::dump( const char *fn, char delim )
   return k;
 }
 
-int TOutArr::registered = reg();
-
-int TOutArr::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TOutArr)
 
 
 

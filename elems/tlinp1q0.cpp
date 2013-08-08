@@ -49,21 +49,7 @@ TLinP1Q0::~TLinP1Q0()
 {
 }
 
-TDataSet* TLinP1Q0::create( TDataSet* apar )
-{
-  return new TLinP1Q0( apar );
-}
 
-
-const TClassInfo* TLinP1Q0::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TLinP1Q0::getHelp(void) const
-{
-  return helpstr;
-}
 
 int TLinP1Q0::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
@@ -85,12 +71,7 @@ double TLinP1Q0::f( double /*t*/ )
   return x;
 }
 
-int TLinP1Q0::registered = reg();
-
-int TLinP1Q0::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TLinP1Q0)
 
 
 // end of tlinp1q0.cpp

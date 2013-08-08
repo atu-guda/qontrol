@@ -43,21 +43,6 @@ TFourier::~TFourier()
 {
 }
 
-TDataSet* TFourier::create( TDataSet* apar )
-{
-  return new TFourier( apar );
-}
-
-
-const TClassInfo* TFourier::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TFourier::getHelp(void) const
-{
-  return helpstr;
-}
 
 int TFourier::do_preRun( int /*run_tp*/, int /*an*/, 
                          int /*anx*/, int /*any*/, double /*adt*/ )
@@ -200,12 +185,7 @@ void TFourier::initVars(void)
   if( n_en >= model_nn ) n_en = model_nn-1;
 }
 
-int TFourier::registered = reg();
-
-int TFourier::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TFourier)
 
 
 // end of tfourier.cpp

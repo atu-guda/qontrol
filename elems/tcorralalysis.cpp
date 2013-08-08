@@ -64,20 +64,6 @@ TCorrAnalysis::~TCorrAnalysis()
 {
 }
 
-TDataSet* TCorrAnalysis::create( TDataSet* apar )
-{
-  return new TCorrAnalysis( apar );
-}
-
-const TClassInfo* TCorrAnalysis::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TCorrAnalysis::getHelp(void) const
-{
-  return helpstr;
-}
 
 void TCorrAnalysis::reset_data()
 {
@@ -272,12 +258,7 @@ void TCorrAnalysis::putModelVars()
     model->setVar( out_ok, ok );
 }
 
-int TCorrAnalysis::registered = reg();
-
-int TCorrAnalysis::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TCorrAnalysis)
 
 
 // end of tcorranalysis.cpp

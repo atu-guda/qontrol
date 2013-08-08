@@ -50,21 +50,6 @@ TGraph::~TGraph()
 
 }
 
-TDataSet* TGraph::create( TDataSet* apar )
-{
-  return new TGraph( apar );
-}
-
-
-const TClassInfo* TGraph::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TGraph::getHelp(void) const
-{
-  return helpstr;
-}
 
 
 int TGraph::fillGraphInfo( GraphInfo *gi ) const
@@ -156,10 +141,5 @@ int TGraph::gnuPlot( int otp, const char *fn, const char *atitle,
 }
 
 
-int TGraph::registered = reg();
-
-int TGraph::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TGraph)
 

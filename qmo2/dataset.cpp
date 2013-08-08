@@ -198,12 +198,7 @@ QString HolderInt::getType() const
   return "int";
 }
 
-int HolderInt::registered = reg();
-
-int HolderInt::reg()
-{
-  return EFACT.registerSimpleType( &holder_info  );
-}
+REGISTER_SIMPLE_T(HolderInt)
 
 
 // ---------------- HolderSwitch ---------
@@ -248,12 +243,7 @@ QString HolderSwitch::getType() const
   return "switch";
 }
 
-int HolderSwitch::registered = reg();
-
-int HolderSwitch::reg()
-{
-  return EFACT.registerSimpleType( &holder_info  );
-}
+REGISTER_SIMPLE_T(HolderSwitch)
 
 
 
@@ -297,12 +287,7 @@ QString HolderList::getType() const
 }
 
 
-int HolderList::registered = reg();
-
-int HolderList::reg()
-{
-  return EFACT.registerSimpleType( &holder_info  );
-}
+REGISTER_SIMPLE_T(HolderList)
 
 
 
@@ -385,12 +370,7 @@ QString HolderDouble::getType() const
 }
 
 
-int HolderDouble::registered = reg();
-
-int HolderDouble::reg()
-{
-  return EFACT.registerSimpleType( &holder_info  );
-}
+REGISTER_SIMPLE_T(HolderDouble)
 
 
 // ---------------- HolderString ---------
@@ -471,12 +451,7 @@ QString HolderString::getType() const
   return "string";
 }
 
-int HolderString::registered = reg();
-
-int HolderString::reg()
-{
-  return EFACT.registerSimpleType( &holder_info  );
-}
+REGISTER_SIMPLE_T(HolderString)
 
 
 // ---------------- HolderColor ---------
@@ -555,13 +530,7 @@ QString HolderColor::getType() const
   return "color";
 }
 
-
-int HolderColor::registered = reg();
-
-int HolderColor::reg()
-{
-  return EFACT.registerSimpleType( &holder_info  );
-}
+REGISTER_SIMPLE_T(HolderColor)
 
 
 // ---------------- HolderObj ---------

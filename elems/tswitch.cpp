@@ -42,20 +42,6 @@ TSwitch::~TSwitch()
 {
 }
 
-TDataSet* TSwitch::create( TDataSet* apar )
-{
-  return new TSwitch( apar );
-}
-
-const TClassInfo* TSwitch::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TSwitch::getHelp(void) const
-{
-  return helpstr;
-}
 
 double TSwitch::f( double /* t */ )
 {
@@ -64,12 +50,7 @@ double TSwitch::f( double /* t */ )
   return v;
 }
 
-int TSwitch::registered = reg();
-
-int TSwitch::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TSwitch)
 
 
 // end of tswitch.cpp

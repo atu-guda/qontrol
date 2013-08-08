@@ -62,20 +62,6 @@ TRand::~TRand()
   };
 }
 
-TDataSet* TRand::create( TDataSet* apar )
-{
-  return new TRand( apar );
-}
-
-const TClassInfo* TRand::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TRand::getHelp(void) const
-{
-  return helpstr;
-}
 
 // =========================== meat ================================
 
@@ -144,12 +130,7 @@ double TRand::f( double  /*t*/  )
   return old_val; 
 }
 
-int TRand::registered = reg();
-
-int TRand::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TRand)
 
 
 // end of trand.cpp

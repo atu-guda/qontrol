@@ -53,20 +53,6 @@ TIntegrator::~TIntegrator()
 {
 }
 
-TDataSet* TIntegrator::create( TDataSet* apar )
-{
-  return new TIntegrator( apar );
-}
-
-const TClassInfo* TIntegrator::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TIntegrator::getHelp(void) const
-{
-  return helpstr;
-}
 
 
 int TIntegrator::do_startLoop( int /*acnx*/, int /*acny*/ )
@@ -126,12 +112,7 @@ double TIntegrator::f( double /* t */ )
   return v_ret;
 }
 
-int TIntegrator::registered = reg();
-
-int TIntegrator::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TIntegrator)
 
 
 // end of tintegrator.cpp

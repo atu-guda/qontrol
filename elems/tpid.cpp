@@ -38,21 +38,6 @@ TPid::~TPid()
 {
 }
 
-TDataSet* TPid::create( TDataSet* apar )
-{
-  return new TPid( apar );
-}
-
-
-const TClassInfo* TPid::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TPid::getHelp(void) const
-{
-  return helpstr;
-}
 
 int TPid::do_preRun( int /*run_tp*/, int /*an*/, 
                      int /*anx*/, int /*any*/, double /*adt*/ )
@@ -97,12 +82,7 @@ double TPid::f( double t )
   return v; 
 }
 
-int TPid::registered = reg();
-
-int TPid::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TPid)
 
 
 // end of tpid.cpp

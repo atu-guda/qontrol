@@ -30,6 +30,21 @@ class   TDataContainer;
 typedef QMap<QString,HolderData*> QSHoMap;
 typedef QVector<HolderData*> QHoVect;
 
+#define REGISTER_SIMPLE_T(clname) \
+ int clname::registered = reg(); \
+ int clname::reg() { return EFACT.registerSimpleType( &holder_info  ); }
+
+#define REGISTER_CLASS(clname) \
+ int clname::registered = reg(); \
+ int clname::reg() { return EFACT.registerElemType( &class_info  ); }
+
+#define DEFAULT_FUNCS(clname) \
+ TDataSet* clname::create( TDataSet* apar ) { return new clname( apar ); } \
+ const TClassInfo* clname::getClassInfo(void) const {  return &class_info; } \
+ const char *clname::getHelp(void) const {  return helpstr; }
+
+#define DEFAULT_FUNCS_REG(clname) DEFAULT_FUNCS(clname) REGISTER_CLASS(clname)
+
 /** properties of class -- bitfield */
 enum ClassProps {
   clpElem = 1,  clpPure = 2, clpContainer = 4,

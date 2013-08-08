@@ -44,21 +44,6 @@ TOutputAny::~TOutputAny()
 {
 }
 
-TDataSet* TOutputAny::create( TDataSet* apar )
-{
-  return new TOutputAny( apar );
-}
-
-
-const TClassInfo* TOutputAny::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TOutputAny::getHelp(void) const
-{
-  return helpstr;
-}
 
 // TODO: fix! NO: remove this object!
 int TOutputAny::do_preRun( int /*run_tp*/, int /*an*/, 
@@ -90,12 +75,7 @@ double TOutputAny::f( double /* t */ )
   return *in_so[0];
 }
 
-int TOutputAny::registered = reg();
-
-int TOutputAny::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TOutputAny)
 
 
 // end of toutputany.cpp

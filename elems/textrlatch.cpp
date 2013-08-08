@@ -46,21 +46,6 @@ TExtrLatch::~TExtrLatch()
 {
 }
 
-TDataSet* TExtrLatch::create( TDataSet* apar )
-{
-  return new TExtrLatch( apar );
-}
-
-
-const TClassInfo* TExtrLatch::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TExtrLatch::getHelp(void) const
-{
-  return helpstr;
-}
 
 double TExtrLatch::f( double t )
 {
@@ -168,12 +153,7 @@ int TExtrLatch::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 0;
 }
 
-int TExtrLatch::registered = reg();
-
-int TExtrLatch::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TExtrLatch)
 
 
 // end of textrlatch.cpp

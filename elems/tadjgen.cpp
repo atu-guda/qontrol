@@ -43,23 +43,6 @@ TAdjGen::~TAdjGen()
 {
 }
 
-TDataSet* TAdjGen::create( TDataSet* apar )
-{
-  return new TAdjGen( apar );
-}
-
-
-const TClassInfo* TAdjGen::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TAdjGen::getHelp(void) const
-{
-  return helpstr;
-}
-
-
 int TAdjGen::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   ctt = ig = ig2 = 0; currOut = 0; real_tick = 0; tick = 0;
@@ -129,12 +112,7 @@ double TAdjGen::f( double /* t */ )
   return ( useSignStrobe ) ? v : 1;
 }
 
-int TAdjGen::registered = reg();
-
-int TAdjGen::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TAdjGen)
 
 
 // end of tadjgen.cpp

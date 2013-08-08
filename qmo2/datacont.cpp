@@ -29,26 +29,5 @@ TDataContainer::~TDataContainer()
 {
 }
 
-const TClassInfo* TDataContainer::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-/** creates instance */
-TDataSet* TDataContainer::create( TDataSet* apar )
-{
-  return new TDataContainer( apar );
-}
-
-const char *TDataContainer::getHelp(void) const
-{
-  return helpstr;
-}
-
-int TDataContainer::registered = reg();
-
-int TDataContainer::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TDataContainer)
 

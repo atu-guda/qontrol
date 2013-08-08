@@ -53,21 +53,6 @@ TRandTrigg::~TRandTrigg()
   }
 }
 
-TDataSet* TRandTrigg::create( TDataSet* apar )
-{
-  return new TRandTrigg( apar );
-}
-
-
-const TClassInfo* TRandTrigg::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TRandTrigg::getHelp(void) const
-{
-  return helpstr;
-}
 
 int TRandTrigg::do_preRun( int /*run_tp*/, int /*an*/, 
                            int /*anx*/, int /*any*/, double /*adt*/ )
@@ -136,12 +121,7 @@ double TRandTrigg::f( double /* t */ )
   return ( currOut ) ? 1 : ( useZero ? 0 : -1 );
 }
 
-int TRandTrigg::registered = reg();
-
-int TRandTrigg::reg()
-{
-  return EFACT.registerElemType( &class_info  );
-}
+DEFAULT_FUNCS_REG(TRandTrigg)
 
 
 // end of trandtrigg.cpp
