@@ -147,8 +147,7 @@ void QPlotView::drawAll( QPainter &p )
     linew = 1;
   };
   if( ! errstr ) {
-    QFont smlf;
-    smlf.fromString( QMo2Win::qmo2win->getSettings()->plotFont );
+    const QFont & smlf = QMo2Win::qmo2win->getPlotFont();
     p.setFont( smlf );
     drawGrid( p );
     drawPlots( p );

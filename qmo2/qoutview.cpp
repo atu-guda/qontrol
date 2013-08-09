@@ -49,8 +49,7 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
   model = doc->getModel();
   if( model == 0 ) return;
   QPainter p( this );
-  QFont smlf;
-  smlf.fromString( QMo2Win::qmo2win->getSettings()->smallFont ); // TODO: global
+  const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
   p.setFont( smlf );
   QFontMetrics fm { smlf };
   ex_sz = fm.width("W") + 4;

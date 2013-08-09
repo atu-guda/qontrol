@@ -53,9 +53,7 @@ QMo2Win::QMo2Win(void)
 
   initDirs();
   // call inits to invoke all other construction parts
-  QFont mf;
-  mf.fromString( sett.mainFont );
-  QApplication::setFont( mf );
+  setFonts();
   initIface();
   initStatusBar();
   
@@ -120,6 +118,15 @@ void QMo2Win::initDirs() // TODO: remove or rewrite
   all_dirs[2] = &add_dir;    all_dirs[1] = &xbuild_dir;
   all_dirs[0] = &env_dir;    all_dirs[5] = 0;
 
+}
+
+void QMo2Win::setFonts()
+{
+  mainFont.fromString( sett.mainFont );
+  smallFont.fromString( sett.smallFont );
+  plotFont.fromString( sett.plotFont );
+  structFont.fromString( sett.structFont );
+  QApplication::setFont( mainFont );
 }
 
 QString QMo2Win::findRes( const QString &res )
@@ -886,9 +893,7 @@ void QMo2Win::slotFileSettings()
   
   Mo2SettDlg *dia = new Mo2SettDlg( sett, this );
   if ( dia->exec() == QDialog::Accepted ) {
-    QFont mf;
-    mf.fromString( sett.mainFont );
-    QApplication::setFont( mf );
+    setFonts();
   };
   
   statusBar()->showMessage( tr ( "Ready." ) );

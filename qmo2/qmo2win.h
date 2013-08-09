@@ -91,6 +91,10 @@ class QMo2Win : public QMainWindow
     Mo2Settings* getSettings() { return &sett; }
     /** reads new XML file: to use from slot and commanline */
     bool doFileOpenXML( const QString &fn );
+    const QFont& getMainFont()   const  { return mainFont; }
+    const QFont& getSmallFont()  const  { return smallFont; }
+    const QFont& getPlotFont()   const  { return plotFont; }
+    const QFont& getStructFont() const  { return structFont; }
 
   protected:
     /** overloaded for Message box on last window exit */
@@ -228,6 +232,8 @@ class QMo2Win : public QMainWindow
     void initStatusBar();
     /** fill directories where resources reside */
     void initDirs();
+    /** recreate fonts from config */
+    void setFonts();
 		
     QMdiArea *mdiArea;
     QSignalMapper *windowMapper;
@@ -238,6 +244,8 @@ class QMo2Win : public QMainWindow
     int untitledCount;
     /**  settings  */
     Mo2Settings sett;
+    /** common fonts */
+    QFont mainFont, smallFont, plotFont, structFont; 
     
     /* ------------------------ dirs ---------------------------- */
     /** directories to search resources */

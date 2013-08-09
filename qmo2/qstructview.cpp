@@ -148,9 +148,7 @@ void QStructView::drawAll( QPainter &p )
   s_grid =  psett->showgrid;
   s_names = psett->shownames;
   s_icons = psett->showicons;
-  QFont strf;
-  strf.fromString( psett->structFont );
-  //strf.fromString( psett->smallFont );
+  const QFont &strf = QMo2Win::qmo2win->getStructFont();
   p.setFont( strf );
   h = height(); w = width(); nh = 1 + h / grid_sz; nw = 1 + w / grid_sz;
   sel_x = mainview->getSelX();
@@ -342,8 +340,7 @@ void QStructView::drawAll( QPainter &p )
     }; // end param inputs loop
   }; // end loop on elems
 
-  QFont smlf;
-  smlf.fromString( psett->smallFont );
+  const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
   p.setFont( smlf );
   n_out = model->getNOutArr(); p.setPen( Qt::black );
  

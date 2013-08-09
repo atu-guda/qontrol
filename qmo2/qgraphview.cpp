@@ -42,10 +42,17 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
   TGraph *gra;
   QString out_name, yname;
   QPainter p( this );
-  QFont smlf;
-  smlf.fromString( QMo2Win::qmo2win->getSettings()->smallFont );
+  
+  const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
   p.setFont( smlf );
+  QFontMetrics fm { smlf };
+  ex_sz = fm.width("W") + 4;
+  grid_sz = ex_sz + 6;
+  fwidth = grid_sz * 3;
+  setFixedWidth( fwidth + 8 ); 
+  
   p.setPen( Qt::black );
+ 
   if( doc == 0 ) 
     return;
   model = doc->getModel();
@@ -63,10 +70,12 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
   yname = "y0name";
   for( graph_nu=0; graph_nu < n_graph ; graph_nu++ ) {
     gra = model->getGraph( graph_nu );
-    if( gra == 0 ) continue;
+    if( gra == 0 ) 
+      continue;
     p.setPen( Qt::black );
-    p.drawRect( 14, 10 + graph_nu * grid_sz, 10, 10 );
-    p.drawText( grid_sz+1, 18 + graph_nu*grid_sz, QString::number( graph_nu ) );
+    p.drawRect( 14, 10 + graph_nu * grid_sz, fwidth-10, ex_sz );
+    p.drawText( grid_sz+1, grid_sz + graph_nu*grid_sz, 
+        QString::number( graph_nu ) + ":" + gra->objectName() );
     if( level != graph_nu ) continue;
     gra->getData( "xname", out_name );
     out_nu = model->outname2out_nu( out_name );
@@ -97,7 +106,7 @@ void QGraphView::mousePressEvent( QMouseEvent *me )
   nh = h / grid_sz - 1;
   w+=nh; w-=nh; // TODO: fake
   x = me->x(); y = me->y();
-  if( x < 12 || x > 24 ) return;
+  if( x < 12 || x > fwidth ) return;
   graph_nu = ( y - 10 ) / grid_sz;
   n_graph = model->getNGraph();
   old_level = mainview->getLevel();

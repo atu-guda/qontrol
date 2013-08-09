@@ -44,7 +44,9 @@ class QGraphView : public QWidget  {
    QMo2Doc *doc;
    QMo2View *mainview;
    TModel *model;
+   int ex_sz;
    int grid_sz;
+   int fwidth;
 };
 
 #endif
