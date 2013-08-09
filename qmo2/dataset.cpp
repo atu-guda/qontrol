@@ -88,9 +88,12 @@ void HolderData::extraToParm()
 void HolderData::setElems( const QString &els )
 {
   parms["list_elems"] = els;
-  elems = els.split("\n");
+  int n_nl = els.count( '\n' );
+  if( ! els.isEmpty() ) { // "" => 0, "a" => 1, "a\nb" => 2
+    ++n_nl;
+  }
   setParm( "min", "0" );
-  setParm( "max", QString::number( elems.size()-1 ) );
+  setParm( "max", QString::number( n_nl-1 ) );
 }
 
 QString HolderData::getType() const // = 0;

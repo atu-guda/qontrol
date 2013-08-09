@@ -356,7 +356,7 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     cb->setDisabled( true );
   }
-  cb->addItems( ho.getElems() );
+  cb->addItems( ho.getParm( "list_elems" ).split("\n") );
   
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );

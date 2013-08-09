@@ -117,7 +117,6 @@ class HolderData : public QObject {
   const QString& targetName() const { return target_name; }
   TDataSet* getParent() const { return qobject_cast<TDataSet*>( parent() ); }
   void setElems( const QString &els ); 
-  const QStringList& getElems() const { return elems; }
   virtual bool set( const QVariant & x ) = 0;
   virtual QVariant get() const = 0;
   virtual void post_set() = 0;
@@ -132,7 +131,6 @@ class HolderData : public QObject {
   void *ptr = nullptr;
   TDataSet *par;
   QString target_name;
-  QStringList elems;
   QSSMap parms;
 };
 
