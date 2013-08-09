@@ -327,7 +327,7 @@ class HolderColor : public HolderData {
  HolderColor __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
 
 /** Holder of objects */
-class HolderObj : public HolderData {
+class HolderObj : public HolderData { // TODO: delete
   Q_OBJECT
  public: 
   HolderObj( TDataSet *p, const QString &obj_name,  // NO autocreate !

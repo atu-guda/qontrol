@@ -50,17 +50,27 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
   if( model == 0 ) return;
   QPainter p( this );
   QFont smlf;
-  smlf.fromString( QMo2Win::qmo2win->getSettings()->smallFont );
+  smlf.fromString( QMo2Win::qmo2win->getSettings()->smallFont ); // TODO: global
   p.setFont( smlf );
+  QFontMetrics fm { smlf };
+  ex_sz = fm.width("W") + 4;
+  grid_sz = ex_sz + 6;
+  fwidth = grid_sz * 4;// good/min number of letters in name
+  setFixedWidth( fwidth + 8 ); 
+
   p.setPen( Qt::black );
-  p.setBrush( QColor( 0,0,128 ) );
-  h = height(); w = width(); nh = 1 + h / grid_sz; 
+  p.setBrush( QColor( 80,128,255 ) );
+  h = height(); w = width(); 
+  nh = 1 + h / grid_sz; 
   p.drawRect( 0, 0, w, h );
+
   n_out = model->getNOutArr();
   level = mainview->getLevel();
+  
   for( out_nu=0; out_nu < n_out && out_nu < nh; out_nu++ ) {
     arr = model->getOutArr( out_nu );
-    if( arr == 0 ) continue;
+    if( arr == 0 ) 
+      continue;
     arr->getData( "name", elmname );
     elnu = model->oname2elnu( elmname );
     out_type = -1;
@@ -80,12 +90,16 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
       else
         p.setPen( Qt::red );
     };
-    p.drawRect( 3, 10 + out_nu*grid_sz, 10, 10 );
-    p.drawText( 5, 18 + out_nu*grid_sz, QString::number( out_nu ) );
+
+    // label
+    p.drawRect( 3, 10 + out_nu*grid_sz, fwidth, ex_sz );
+    p.drawText( 5, grid_sz + out_nu*grid_sz, 
+        QString::number( out_nu ) + ": " + elmname );
     out_st = arr->getState();
+
     if( out_st > 1 ) {
       p.setBrush( Qt::NoBrush ); p.setPen( Qt::yellow );
-      p.drawRect( 2, 9 + out_nu*grid_sz, 12, 12 );
+      p.drawRect( 2, 9 + out_nu*grid_sz, fwidth+2, ex_sz+2 );
     };
   }; // end loop on outs
   if( level >= 0 ) {
@@ -105,8 +119,8 @@ void QOutView::mousePressEvent( QMouseEvent *me )
   if( model == 0 ) return;
   h = height(); nh = h / grid_sz - 1; ++nh; --nh; // TODO: FAKE
   x = me->x(); y = me->y();
-  if( x < 2 || x > 12 ) return;
-  out_nu = ( y - 10 ) / grid_sz;
+  if( x < 2 || x > fwidth ) return;
+  out_nu = ( y - grid_sz/2 ) / grid_sz; // TODO: why 10?
   n_out = model->getNOutArr();
   if( out_nu < 0 || out_nu >= n_out ) return;
   title = "??bad??";
