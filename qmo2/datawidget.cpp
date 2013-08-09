@@ -83,7 +83,13 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     le->setReadOnly( true );
   }
-  le->setMaxLength( h.getMax() );
+
+  int v_max { IMAX };
+  QString s_max = h.getParm( "max" );
+  if( ! s_max.isEmpty() ) 
+    v_max = s_max.toInt();
+  le->setMaxLength( v_max );
+
   QString mask = h.getParm( "mask" );
   if( ! mask.isEmpty() ) {
     le->setInputMask( mask );
@@ -190,7 +196,14 @@ IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     le->setReadOnly( true );
   }
-  le->setValidator( new QIntValidator( h.getMin(), h.getMax(), le ) );
+  int v_min { IMIN }, v_max { IMAX };
+  QString s_min = h.getParm( "min" );
+  if( ! s_min.isEmpty() ) 
+    v_min = s_min.toInt();
+  QString s_max = h.getParm( "max" );
+  if( ! s_max.isEmpty() ) 
+    v_max = s_max.toInt();
+  le->setValidator( new QIntValidator( v_min, v_max, le ) );
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
@@ -235,7 +248,14 @@ IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     sb->setReadOnly( true );
   }
-  sb->setRange( h.getMin(), h.getMax() );
+  int v_min { IMIN }, v_max { IMAX };
+  QString s_min = h.getParm( "min" );
+  if( ! s_min.isEmpty() ) 
+    v_min = s_min.toInt();
+  QString s_max = h.getParm( "max" );
+  if( ! s_max.isEmpty() ) 
+    v_max = s_max.toInt();
+  sb->setRange( v_min, v_max );
   QString prefix = h.getParm( "prefix" );
   if( ! prefix.isEmpty() ) {
     sb->setPrefix( prefix );
@@ -388,8 +408,15 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
   if( ! sdec.isEmpty() ) {
     decimals = sdec.toInt();
   }
+  double v_min { DMIN }, v_max { DMAX };
+  QString s_min = h.getParm( "min" );
+  if( ! s_min.isEmpty() ) 
+    v_min = s_min.toDouble();
+  QString s_max = h.getParm( "max" );
+  if( ! s_max.isEmpty() ) 
+    v_max = s_max.toDouble();
   
-  le->setValidator( new QDoubleValidator( h.getMin(), h.getMax(), decimals, le ) );
+  le->setValidator( new QDoubleValidator( v_min, v_max, decimals, le ) );
   
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
@@ -435,7 +462,14 @@ DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     sb->setReadOnly( true );
   }
-  sb->setRange( h.getMin(), h.getMax() );
+  double v_min { DMIN }, v_max { DMAX };
+  QString s_min = h.getParm( "min" );
+  if( ! s_min.isEmpty() ) 
+    v_min = s_min.toDouble();
+  QString s_max = h.getParm( "max" );
+  if( ! s_max.isEmpty() ) 
+    v_max = s_max.toDouble();
+  sb->setRange( v_min, v_max );
   QString prefix = h.getParm( "prefix" );
   if( ! prefix.isEmpty() ) {
     sb->setPrefix( prefix );

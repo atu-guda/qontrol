@@ -26,8 +26,8 @@ HolderData::HolderData( const QString &obj_name,
 	    par(a_parent), 
 	    target_name( obj_name )
 {
-  setObjectName( "_HO_" + obj_name );
-  par->registerHolder( this );
+  setObjectName( "_HO_" + obj_name ); // TODO: w/o "_HO_"
+  a_parent->registerHolder( this );
 
   if( v_name.isNull() )  {
     setParm( "vis_name", obj_name );
@@ -49,11 +49,6 @@ HolderData::~HolderData()
 void HolderData::setParm( const QString &name, const QString &value )
 {
   parms[name] = value;
-  if( name == "min" ) { // may be not used - only string?
-    v_min = value.toDouble();
-  } else if ( name == "max" ) {
-    v_max = value.toDouble();
-  }
 }
 
 
@@ -71,7 +66,7 @@ bool HolderData::isObject( const QString & /*cl_name*/  ) const
 
 void HolderData::extraToParm()
 {
-  QRegExp re( "^([_a-zA-Z][_a-zA-Z0-9]*)\\s*=\\s*(\\S+)$" );
+  QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=\s*(\S+)$)" );
   QStringList el = getParm("extra").split("\n");
   for( QString &s : el ) {
     if( s.isEmpty() ) {
@@ -94,7 +89,8 @@ void HolderData::setElems( const QString &els )
 {
   parms["list_elems"] = els;
   elems = els.split("\n");
-  v_max = elems.size() - 1;
+  setParm( "min", "0" );
+  setParm( "max", QString::number( elems.size()-1 ) );
 }
 
 QString HolderData::getType() const // = 0;
@@ -131,7 +127,25 @@ HolderInt::HolderInt( int *p, const QString &obj_name,
 	   val(p)
 {
   if( !val ) {
-    val = new int; *val = (int)(v_min); dyn = 1;
+    val = new int; *val = 0 /* tmp bad */; dyn = 1;
+  }
+  ptr = val; tp=QVariant::Int;
+  if( getParm("props").isEmpty() ) {
+    setParm( "props", "INT,SIMPLE" );
+  }
+  post_set();
+}
+
+HolderInt::HolderInt( const QString &obj_name, int v0, 
+              const QString &v_name, TDataSet *a_parent, int a_flags,
+	      const QString &a_descr,
+	      const QString &a_extra )
+          :HolderData( obj_name, v_name, a_parent, a_flags, a_descr, a_extra ),
+           v(v0),
+	   val(nullptr) // to del
+{
+  if( !val ) {
+    val = new int; *val = v0; dyn = 1;
   }
   ptr = val; tp=QVariant::Int;
   if( getParm("props").isEmpty() ) {
@@ -170,9 +184,14 @@ QVariant HolderInt::get() const
 
 void HolderInt::post_set()
 {
-  int imin = ( v_min < (double)(IMIN) ) ? IMIN : (int)(v_min);
-  int imax = ( v_max > (double)(IMAX) ) ? IMAX : (int)(v_max);
-  *val = qBound( imin, *val, imax );
+  int v_min { IMIN }, v_max { IMAX };
+  QString s_min = getParm( "min" );
+  if( ! s_min.isEmpty() ) 
+    v_min = s_min.toInt();
+  QString s_max = getParm( "max" );
+  if( ! s_max.isEmpty() ) 
+    v_max = s_max.toInt();
+  *val = qBound( v_min, *val, v_max );
 }
 
 QString HolderInt::toString() const
@@ -215,7 +234,7 @@ HolderSwitch::HolderSwitch( int *p, const QString &obj_name,
   if( getParm("props") == "INT,SIMPLE" ) {
     setParm( "props", "INT,SWITCH" );
   }
-  v_min = 0; v_max = 1;
+  setParm("min","0"); setParm("max","1");
   post_set();
 }
 
@@ -258,7 +277,7 @@ HolderList::HolderList( int *p, const QString &obj_name,
      const QString &a_extra,  const QString &a_elems  )
    :HolderInt( p, obj_name, v_name, a_parent, a_flags, a_descr, a_extra )
 {
-  v_min = v_max = 0;
+  setParm("min","0"); setParm("max","0");
   setElems( a_elems );
   if( getParm("props") == "INT,SIMPLE" ) {
     setParm( "props", "INT,LIST" );
@@ -304,7 +323,7 @@ HolderDouble::HolderDouble( double *p, const QString &obj_name,
 	   val(p)
 {
   if( !val ) {
-    val = new double; *val = v_min; dyn = 1;
+    val = new double; *val = 0; dyn = 1;
   }
   post_set();
   if( getParm("props").isEmpty() ) {
@@ -343,6 +362,13 @@ QVariant HolderDouble::get() const
 
 void HolderDouble::post_set()
 {
+  double v_min { DMIN }, v_max { DMAX };
+  QString s_min = getParm( "min" );
+  if( ! s_min.isEmpty() ) 
+    v_min = s_min.toDouble();
+  QString s_max = getParm( "max" );
+  if( ! s_max.isEmpty() ) 
+    v_max = s_max.toDouble();
   *val = qBound( v_min, *val, v_max );
 }
 
@@ -392,12 +418,6 @@ HolderString::HolderString( QString *p, const QString &obj_name,
   if( getParm("props").isEmpty() ) {
     setParm( "props", "STRING,SIMPLE" );
   }
-  if( v_min < 0 ) {
-    v_min = 0;
-  }
-  if( v_max > 100000 ) {
-    v_max = 100000;
-  }
   ptr = val; tp=QVariant::String;
 }
 
@@ -430,7 +450,11 @@ QVariant HolderString::get() const
 
 void HolderString::post_set()
 {
-  val->truncate( (int)(v_max) );
+  int v_max { IMAX };
+  QString s_max = getParm( "max" );
+  if( ! s_max.isEmpty() ) 
+    v_max = s_max.toInt();
+  val->truncate( v_max );
 }
 
 QString HolderString::toString() const

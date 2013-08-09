@@ -111,13 +111,11 @@ class HolderData : public QObject {
   virtual bool isObject( const QString &cl_name = QString() ) const;
   void setFlags( int a_flags ) { flags = a_flags; }
   int getFlags() const { return flags; }
-  double getMin() const { return v_min; }
-  double getMax() const { return v_max; }
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
   void extraToParm();
   const QString& targetName() const { return target_name; }
-  TDataSet* getParent() const { return par; }
+  TDataSet* getParent() const { return qobject_cast<TDataSet*>( parent() ); }
   void setElems( const QString &els ); 
   const QStringList& getElems() const { return elems; }
   virtual bool set( const QVariant & x ) = 0;
@@ -130,8 +128,6 @@ class HolderData : public QObject {
  protected:
   int dyn = 0; // flag: is created dynamicaly
   int flags; //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
-  double v_min = DMIN; // double as most common type, v_max = max_len
-  double v_max = DMAX;
   QVariant::Type tp = QVariant::Invalid;
   void *ptr = nullptr;
   TDataSet *par;
@@ -140,18 +136,16 @@ class HolderData : public QObject {
   QSSMap parms;
 };
 
-#define PRM_INIT( name, descr ) \
-  __HO_##name( & name, #name, descr, this, __PRM_FLAGS_##name  )
-#define POBJ_INIT( name, descr ) \
-  __HO_##name( name, #name, descr, this, __PRM_FLAGS_##name  )
-#define PRMI( name ) __HO_##name
-
 
 /** Holder of int values */
 class HolderInt : public HolderData {
   Q_OBJECT
  public: 
-  HolderInt( int *p, const QString &obj_name,  // if p==0 - autocreate 
+  HolderInt( int *p, const QString &obj_name,  // if p==0 - autocreate (TODO: del)
+    const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
+    const QString &a_descr = QString(),
+    const QString &a_extra  = QString() );
+  HolderInt( const QString &obj_name, int v0,   // use internal 'v'
     const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
     const QString &a_descr = QString(),
     const QString &a_extra  = QString() );
@@ -165,13 +159,21 @@ class HolderInt : public HolderData {
   virtual QString toString() const;
   virtual bool fromString( const QString &s );
   virtual QString getType() const;
+  operator int() const { return v; }
+  operator int&()  { return v; }
+  const int* caddr() const { return &v; }
+  int* addr() { return &v; }
  protected:
-  int *val;
+  int v;
+  int *val; // TODO: del
   /** holder decription + autoregister */
   static HolderInfo holder_info;
   static int registered;
   static int reg();
 };
+
+#define PRM_INT( name, v0, flags, vname, descr, extra ) \
+ HolderInt name ={  #name, v0, vname, this, flags, descr, extra  } ; 
 
 #define PRM_INT1( name, flags, vname, descr, extra ) \
  int name; \

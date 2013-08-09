@@ -145,11 +145,11 @@ class TMiso : public TDataSet  {
     * non-virtual: adjusted by do_preRun
     * */
    int preRun( int run_tp, int an, int anx, int any, double adt );
-   /** will be called after all actions adn call do_postRun */
+   /** will be called after all actions -- call do_postRun */
    int postRun( int good );
-   /** called before each inner param loop and call do_startLoop */
+   /** called before each inner param loop -- call do_startLoop */
    int startLoop( int acnx, int acny );
-   /** will be called after each inner loop and call do_endLoop */
+   /** will be called after each inner loop -- call do_endLoop */
    int endLoop(void);
  protected:
    /** main computation function

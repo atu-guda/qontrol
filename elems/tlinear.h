@@ -49,6 +49,7 @@ class TLinear : public TMiso  {
    PRM_DOUBLE1( a2, 0, "a2", "factor in input 2", "sep=col" );
    PRM_DOUBLE1( a3, 0, "a3", "factor in input 3", "" );
    PRM_DOUBLE1( b,  0, "b", "static shift", "sep=col" );
+   PRM_INT( tst1, 117, 0, "test 1", "test variable", "" ); // remove me!
    /** class decription */
    static TClassInfo class_info;
    /** help str */
