@@ -11,6 +11,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QColor>
 #include <QStringList>
 #include <QVariant>
 #include <QMap>
@@ -20,52 +21,106 @@ typedef QMap<QString,QString> QSSMap;
 #include "defs.h"
 
 
-class QColor;
 class HolderData;
 class   TDataSet;
+typedef HolderData* PHolderData;
 typedef TDataSet* PTDataSet;
 typedef const TDataSet* CPTDataSet;
+typedef HolderData* (*PFHolderData)( 
+    const QString& a_name, TDataSet* a_pa, 
+    int a_flags, const QString &a_v_name, 
+    const QString& a_descr, const QString& a_extra );
 typedef PTDataSet (*PFDataSet)( PTDataSet aparent );
 class   TDataContainer;
-typedef QMap<QString,HolderData*> QSHoMap;
-typedef QVector<HolderData*> QHoVect;
-
-#define REGISTER_SIMPLE_T(clname) \
- int clname::registered = reg(); \
- int clname::reg() { return EFACT.registerSimpleType( &holder_info  ); }
-
-#define REGISTER_CLASS(clname) \
- int clname::registered = reg(); \
- int clname::reg() { return EFACT.registerElemType( &class_info  ); }
-
-#define DEFAULT_FUNCS(clname) \
- TDataSet* clname::create( TDataSet* apar ) { return new clname( apar ); } \
- const TClassInfo* clname::getClassInfo(void) const {  return &class_info; } \
- const char *clname::getHelp(void) const {  return helpstr; }
-
-#define DEFAULT_FUNCS_REG(clname) DEFAULT_FUNCS(clname) REGISTER_CLASS(clname)
+// typedef QVector<HolderData*> QHoVect;
 
 /** properties of class -- bitfield */
 enum ClassProps {
-  clpElem = 1,  clpPure = 2, clpContainer = 4,
-  clpSpecial = 8
+  clpElem = 1,      //* element of cheme
+  clpPure = 2,      //* dont know - may by for stateless or abstract
+  clpContainer = 4, //* can contain elements
+  clpSpecial = 8,   //* have special meaning for structue
+  clpData = 16      //* simple data
 };
 
+
 /** describes class and it's creator
-  used for class registration
+   used for class registration
 */
 struct TClassInfo {
   /** class name */
   const char *className;
   /** ptr to static fun for creating instanses */
-  PFDataSet creator;
-  /** ptr to parents TClassInfo or 0 for TDataSet TODO: drop use QMetaObject*/
-  const TClassInfo* parent_class;
+  PFHolderData creator;
   /** ptr to help string */
   const char *helpstr;
   /** properties of class (not ClassProps, as use | ) */
   int props;
 };
+
+//* declare common ctor
+#define DCL_CTOR(clname) \
+  clname( const QString &obj_name, TDataSet *a_parent, \
+         int a_flags = 0, const QString &a_v_name = QString(),  \
+	 const QString &a_descr = QString(), const QString &a_extra = QString() );
+
+//* and header for ctor definition
+#define CTOR(clname) \
+  clname::clname( const QString &obj_name, TDataSet *a_parent, \
+         int a_flags, const QString &a_v_name,  \
+	 const QString &a_descr, const QString &a_extra ) \
+  : HolderData( obj_name, a_parent, a_flags, a_v_name, a_descr, a_extra )
+
+//* declare creator function
+#define DCL_CREATE \
+  static HolderData* create( const QString &obj_name, TDataSet *a_parent, \
+         int a_flags = 0, const QString &v_name = QString(),  \
+	 const QString &a_descr = QString(), const QString &a_extra = QString() );
+
+//* declare common data manipulation functions
+#define DCL_STD_GETSET \
+  virtual const TClassInfo* getClassInfo() const override; \
+  virtual const char* getHelp() const override; \
+  virtual void reset_dfl() override; \
+  virtual bool set( const QVariant & x ) override; \
+  virtual QVariant get() const override; \
+  virtual void post_set() override; \
+  virtual QString toString() const override; \
+  virtual bool fromString( const QString &s ) override; \
+  virtual QString getType() const override; 
+
+// default actions in cpp file to register class in factory
+#define REGISTER_CLASS(clname) \
+ int clname::registered = reg(); \
+ int clname::reg() { return EFACT.registerElemType( &class_info  ); }
+
+// definition in cpp file of common functions
+#define DEFAULT_FUNCS(clname) \
+ HolderData* clname::create( const QString &obj_name, TDataSet *a_par, \
+         int a_flags, const QString &v_name,  \
+	 const QString &a_descr, const QString &a_extra ) \
+     { return new clname( obj_name, a_par, a_flags, v_name, a_descr, a_extra ); } \
+ const TClassInfo* clname::getClassInfo() const {  return &class_info; } \
+ const char *clname::getHelp() const {  return helpstr; }
+
+// both of above
+#define DEFAULT_FUNCS_REG(clname) DEFAULT_FUNCS(clname) REGISTER_CLASS(clname)
+
+// declarations in class: common static values
+#define DCL_DEFAULT_STATIC \
+  static TClassInfo class_info; \
+  static int registered; \
+  static int reg(); \
+  static const char* helpstr;
+
+
+// define in class common converions to target type
+// need for usage class objects os pure data
+#define STD_CONVERSIONS(targ_type) \
+  operator targ_type() const { return v; } \
+  operator targ_type&()  { return v; } \
+  const targ_type* caddr() const { return &v; } \
+  targ_type* addr() { return &v; }
 
 /** types of link - moved from tmiso.h */
 enum ltype_t {
@@ -82,16 +137,6 @@ enum allow_type {
   allowBoth = 3
 };
 
-typedef HolderData* (*PFHolderData)( const QString &obj_name, const QString &v_name, 
-              TDataSet *a_parent, int a_flags, const QString &a_descr, 
-	      const QString &a_extra);
-
-/** structure to create Holders dynamicaly whith simple targets */
-struct HolderInfo {
-  const char *name; // name of type, to holder itself (or "obj"?)
-  PFHolderData creator;
-};
-
 
 // -------------------------- HOLDERS ------------------------------------
 
@@ -99,14 +144,13 @@ struct HolderInfo {
 class HolderData : public QObject {
   Q_OBJECT
  public: 
-  HolderData( const QString &obj_name, const QString &v_name = QString(), 
-              TDataSet *a_parent = 0, int a_flags = 0,
-	      const QString &a_descr = QString(), 
-	      const QString &a_extra = QString() );
+  DCL_CTOR(HolderData);
   virtual ~HolderData();
-  void* getPtr() const { return ptr; }  // horror here !!!
+  DCL_CREATE;
   QVariant::Type getTp() const { return tp; }
   int isDyn() const { return dyn; }
+  /** returns full name of object: aaa.bbb.cc  */ // TODO: up to HolderData
+  QString getFullName() const;
   /** is holded value is object of given type or child */
   virtual bool isObject( const QString &cl_name = QString() ) const;
   void setFlags( int a_flags ) { flags = a_flags; }
@@ -114,24 +158,31 @@ class HolderData : public QObject {
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
   void extraToParm();
-  const QString& targetName() const { return target_name; }
-  TDataSet* getParent() const { return qobject_cast<TDataSet*>( parent() ); }
+  TDataSet* getParent() const { return qobject_cast<TDataSet*>( parent() ); } // OR keep par?
   void setElems( const QString &els ); 
+  // see DCL_STD_GETSET for childs
+  virtual const TClassInfo* getClassInfo() const = 0;
+  virtual const char* getHelp() const  = 0;
+  virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
   virtual bool set( const QVariant & x ) = 0;
   virtual QVariant get() const = 0;
   virtual void post_set() = 0;
   virtual QString toString() const = 0;
   virtual bool fromString( const QString &s ) = 0;
   virtual QString getType() const = 0;
+  virtual bool getData( const QString &nm, QVariant &da ) const;
+  virtual bool getData( const QString &nm, int *da ) const;
+  virtual bool getData( const QString &nm, double *da ) const;
+  virtual bool getData( const QString &nm, QString &da ) const;
+  virtual bool setData( const QString &nm, const QVariant &da );
   virtual QDomElement toDom( QDomDocument &dd ) const;
  protected:
-  int dyn = 0; // flag: is created dynamicaly
-  int flags; //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
+  int dyn = 0; //* flag: is created dynamicaly i.e. can be deleted
+  int flags;   //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
   QVariant::Type tp = QVariant::Invalid;
-  void *ptr = nullptr;
-  TDataSet *par;
-  QString target_name;
+  TDataSet *par; // keep it?
   QSSMap parms;
+  DCL_DEFAULT_STATIC;
 };
 
 
@@ -139,160 +190,98 @@ class HolderData : public QObject {
 class HolderInt : public HolderData {
   Q_OBJECT
  public: 
-  HolderInt( int *p, const QString &obj_name,  // if p==0 - autocreate (TODO: del)
-    const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
-    const QString &a_descr = QString(),
-    const QString &a_extra  = QString() );
-  HolderInt( const QString &obj_name, int v0,   // use internal 'v'
-    const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
-    const QString &a_descr = QString(),
-    const QString &a_extra  = QString() );
+  DCL_CTOR(HolderInt);
   virtual ~HolderInt();
-  static HolderData* createPlus( const QString &obj_name, 
-         const QString &v_name, TDataSet *a_parent, int a_flags,
-	 const QString &a_descr, const QString &a_extra);
-  virtual bool set( const QVariant & x );
-  virtual QVariant get() const;
-  virtual void post_set();
-  virtual QString toString() const;
-  virtual bool fromString( const QString &s );
-  virtual QString getType() const;
-  operator int() const { return v; }
-  operator int&()  { return v; }
-  const int* caddr() const { return &v; }
-  int* addr() { return &v; }
+  DCL_CREATE;
+  DCL_STD_GETSET;
+  STD_CONVERSIONS(int);
  protected:
   int v;
-  int *val; // TODO: del
-  /** holder decription + autoregister */
-  static HolderInfo holder_info;
-  static int registered;
-  static int reg();
+  DCL_DEFAULT_STATIC
 };
 
-#define PRM_INT( name, v0, flags, vname, descr, extra ) \
- HolderInt name ={  #name, v0, vname, this, flags, descr, extra  } ; 
-
-#define PRM_INT1( name, flags, vname, descr, extra ) \
- int name; \
- HolderInt __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
+#define PRM_INT( name, flags, vname, descr, extra ) \
+ HolderInt name = { #name, this, flags, vname, descr, extra  } ; 
 
 /** Holder of int values as Switch */
 class HolderSwitch : public HolderInt {
   Q_OBJECT
  public: 
-  HolderSwitch( int *p, const QString &obj_name,  // if p==0 - autocreate 
-    const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
-    const QString &a_descr = QString(),
-    const QString &a_extra  = QString() );
+  DCL_CTOR(HolderSwitch);
   virtual ~HolderSwitch();
-  static HolderData* createPlus( const QString &obj_name, 
-         const QString &v_name, TDataSet *a_parent, int a_flags,
-	 const QString &a_descr, const QString &a_extra);
-  virtual void post_set();
+  DCL_CREATE;
+  // most functions from HolderInt
+  virtual const TClassInfo* getClassInfo() const override;
+  virtual const char* getHelp() const override;
+  virtual void post_set() override;
   virtual QString getType() const;
  protected: 
-  /** holder decription + autoregister */
-  static HolderInfo holder_info;
-  static int registered;
-  static int reg();
+  DCL_DEFAULT_STATIC
 };
 
-#define PRM_SWITCH1( name, flags, vname, descr, extra ) \
- int name; \
- HolderSwitch __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
+#define PRM_SWITCH( name, flags, vname, descr, extra ) \
+ HolderSwitch name = { #name, this, flags, vname, descr, extra  } ; 
 
 
 /** Holder of int values as List (ComboBox) */
 class HolderList : public HolderInt {
   Q_OBJECT
- public: 
-  HolderList( int *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
+ public:
+  // non-standard ctor, as have elems. TODO: global enum/strings for elems
+  HolderList( const QString &obj_name, TDataSet *a_parent,
+     int a_flags = 0, const QString &v_name = QString(),
      const QString &a_descr = QString(),
      const QString &a_extra  = QString(), const QString &a_elems = QString() );
   virtual ~HolderList();
-  static HolderData* createPlus( const QString &obj_name, 
-         const QString &v_name, TDataSet *a_parent, int a_flags,
-	 const QString &a_descr, const QString &a_extra);
-  // virtual void post_set();
+  DCL_CREATE; // now bad: no info for strings
+  // most functions from HolderInt
+  virtual const TClassInfo* getClassInfo() const override;
+  virtual const char* getHelp() const override;
+  virtual void post_set() override;
   virtual QString getType() const;
  protected: 
-  /** holder decription + autoregister */
-  static HolderInfo holder_info;
-  static int registered;
-  static int reg();
+  DCL_DEFAULT_STATIC
 };
 
 
-#define PRM_LIST1( name, flags, vname, descr, extra, elems ) \
- int name; \
- HolderList __HO_##name ={ & name, #name, vname, this, flags, descr, extra, elems }; 
+#define PRM_LIST( name, flags, vname, descr, extra, elems ) \
+ HolderList name ={ #name, this, flags, vname, descr, extra, elems }; 
 
 /** Holder of double values */
 class HolderDouble : public HolderData {
   Q_OBJECT
  public: 
-  HolderDouble( double *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
-     const QString &a_descr = QString(),
-     const QString &a_extra  = QString() );
+  DCL_CTOR(HolderDouble);
   virtual ~HolderDouble();
-  static HolderData* createPlus( const QString &obj_name, 
-         const QString &v_name, TDataSet *a_parent, int a_flags,
-	 const QString &a_descr, const QString &a_extra);
-  virtual bool set( const QVariant & x );
-  virtual QVariant get() const;
-  virtual void post_set();
-  virtual QString toString() const;
-  virtual bool fromString( const QString &s );
-  virtual QString getType() const;
+  DCL_CREATE;
+  DCL_STD_GETSET;
+  STD_CONVERSIONS(double);
  protected:
-  double *val;
-  /** holder decription + autoregister */
-  static HolderInfo holder_info;
-  static int registered;
-  static int reg();
+  double v;
+  DCL_DEFAULT_STATIC
 };
 
-#define PRM_DOUBLE1( name, flags, vname, descr, extra ) \
- double name; \
- HolderDouble __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
+#define PRM_DOUBLE( name, flags, vname, descr, extra ) \
+ HolderDouble name = { #name, this, flags, vname, descr, extra  } ; 
  
-// to make alias to existent
-#define PRM_DOUBLEx( ptr, name, flags, vname, descr, extra ) \
- HolderDouble __HO_##name ={  ptr, #name, vname, this, flags, descr, extra  } ; 
  
 
 /** Holder of QString values */
 class HolderString : public HolderData {
   Q_OBJECT
  public: 
-  HolderString( QString *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
-     const QString &a_descr = QString(),
-     const QString &a_extra  = QString() );
+  DCL_CTOR(HolderString);
   virtual ~HolderString();
-  static HolderData* createPlus( const QString &obj_name, 
-         const QString &v_name, TDataSet *a_parent, int a_flags,
-	 const QString &a_descr, const QString &a_extra);
-  virtual bool set( const QVariant & x );
-  virtual QVariant get() const;
-  virtual void post_set();
-  virtual QString toString() const;
-  virtual bool fromString( const QString &s );
-  virtual QString getType() const;
+  DCL_CREATE;
+  DCL_STD_GETSET;
+  STD_CONVERSIONS(QString);
  protected:
-  QString *val;
-  /** holder decription + autoregister */
-  static HolderInfo holder_info;
-  static int registered;
-  static int reg();
+  QString v;
+  DCL_DEFAULT_STATIC;
 };
 
-#define PRM_STRING1( name, flags, vname, descr, extra ) \
- QString name; \
- HolderString __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
+#define PRM_STRING( name, flags, vname, descr, extra ) \
+ HolderString name = { #name, this, flags, vname, descr, extra  } ; 
 
 
 
@@ -300,102 +289,44 @@ class HolderString : public HolderData {
 class HolderColor : public HolderData {
   Q_OBJECT
  public: 
-  HolderColor( QColor *p, const QString &obj_name,  // if p==0 - autocreate 
-     const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
-     const QString &a_descr = QString(),
-     const QString &a_extra  = QString() );
+  DCL_CTOR(HolderColor);
   virtual ~HolderColor();
-  static HolderData* createPlus( const QString &obj_name, 
-         const QString &v_name, TDataSet *a_parent, int a_flags,
-	 const QString &a_descr, const QString &a_extra);
-  virtual bool set( const QVariant & x );
-  virtual QVariant get() const;
-  virtual void post_set();
-  virtual QString toString() const;
-  virtual bool fromString( const QString &s );
-  virtual QString getType() const;
+  DCL_CREATE;
+  DCL_STD_GETSET;
+  STD_CONVERSIONS(QColor);
  protected:
-  /** holder decription + autoregister */
-  static HolderInfo holder_info;
-  static int registered;
-  static int reg();
-  QColor *val;
+  QColor v;
+  DCL_DEFAULT_STATIC;
 };
 
-#define PRM_COLOR1( name, flags, vname, descr, extra ) \
- QColor name; \
- HolderColor __HO_##name ={  & name, #name, vname, this, flags, descr, extra  } ; 
+#define PRM_COLOR( name, flags, vname, descr, extra ) \
+ HolderColor name = { #name, this, flags, vname, descr, extra  } ; 
 
-/** Holder of objects */
-class HolderObj : public HolderData { // TODO: delete
-  Q_OBJECT
- public: 
-  HolderObj( TDataSet *p, const QString &obj_name,  // NO autocreate !
-    const QString &v_name = QString(), TDataSet *a_parent = 0, int a_flags = 0,
-    const QString &a_descr = QString(),
-    const QString &a_extra  = QString() );
-  virtual ~HolderObj();
-  virtual bool isObject( const QString &cl_name = QString() ) const;
-  virtual bool set( const QVariant & x );
-  virtual QVariant get() const;
-  virtual void post_set();
-  virtual QString toString() const;
-  virtual bool fromString( const QString &s );
-  virtual QString getType() const;
-  TDataSet* getObj() { return obj; } // XXX: may be horror here!!
-  virtual QDomElement toDom( QDomDocument &dd ) const;
- protected:
-  TDataSet *obj;
-  /** TODO??? holder decription + autoregister */
-  //static HolderInfo holder_info;
-  //static int registered;
-  //static int reg();
-};
-
-
-#define PRM_OBJ1( name, flags, vname, descr, extra ) \
- HolderObj __HO_##name ={ name, #name, vname, this, flags, descr, extra  } ; 
 
 // ####################################################################
 
-/** base class for all objects */
-class TDataSet : public QObject {
+/** base class for all non-trivial data objects */
+class TDataSet : public HolderData {
   Q_OBJECT
-   friend class HolderData;
-   friend class HolderObj;
  signals: 
    void sigStructChanged();
  public:
-   /** default constructor */
-   explicit TDataSet( TDataSet *aparent );
-   /** destructor -- deallocates all subelements */
-   virtual ~TDataSet();
-   /** creator */
-   static TDataSet* create( TDataSet *apar );
-   /** class name - for check & human purpose */
-   const char* getClassName(void) const;
-   /** parent is TDataSet, not QObject */
-   TDataSet* getParent() { return par; }
-   /** return ptr from parent holders to me or 0 */
-   HolderObj* myHolder() const { return holderOfMe; }
-   /** fills dst with full name of object: .aaa.bbb.cc  */
-   QString getFullName() const;
+   DCL_CTOR(TDataSet);
+   virtual ~TDataSet() override;
+   DCL_CREATE;
+   DCL_STD_GETSET;
    /** return number of registerd elems = number of holders */
    int getNumObj() const;
    /** return flags of allow adding */
    int getAllowAdd() const { return allow_add; }
-   /** returns list of registerd elems names - not holders */
+   /** returns list of registerd elems names */
    QStringList elemNames() const;
-   /** returns list of holders */
-   QVector<HolderData*> holders() const;
    /** returns holder by number - for QModel... */
-   HolderData* getHolder( int i ) const;
+   HolderData* getElem( int i ) const;
    /** find holder for object by name */
-   HolderData* getHolder( const QString &oname ) const;
+   HolderData* getElem( const QString &oname ) const;
    /** index of holder, if my, -1 - if not */
    int indexOfHolder( HolderData *ho ) const;
-   /** returns ptr to help string */
-   virtual const char* getHelp(void) const;
    /** return state */
    virtual int getState() const { return state; }
    /** returns modified flag */
@@ -406,42 +337,26 @@ class TDataSet : public QObject {
    void setUnModified() { modified = 0; }
    /** return ptr to elem by name */
    // use only by QMo2Doc while creating/loading 
-   TDataSet* getObj( const QString &ename, const QString &cl_name = QString() );   
+   HolderData* getObj( const QString &ename, const QString &cl_name = QString() );   
+  
+   virtual bool getData( const QString &nm, QVariant &da ) const override;
+   virtual bool getData( const QString &nm, int *da ) const override;
+   virtual bool getData( const QString &nm, double *da ) const override;
+   virtual bool getData( const QString &nm, QString &da ) const override;
+   virtual bool setData( const QString &nm, const QVariant &da ) override;
 
-   /** new functions to read datas */
-   int getData( const QString &nm, QVariant &da ) const;
-   int getData( const QString &nm, int *da ) const;
-   int getData( const QString &nm, double *da ) const;
-   int getData( const QString &nm, QString &da ) const;
-
-   /** new function to store datas: single: auto convert to QVariant */
-   int setData( const QString &nm, const QVariant &da );
-   
    /** corrects data, if ni==-1 -- all elements -- now empty, see setData */
    virtual int checkData( int ni );
    /** add new object and it's description (new)*/
-   virtual TDataSet* add_obj( const QString &cl_name, const QString &ob_name );
+   virtual HolderData* add_obj( const QString &cl_name, const QString &ob_name );
    /** add new param and it's description */
    virtual HolderData* add_param( const QString &tp_name, const QString &ob_name );
    /** delete given object by name */
    int del_obj( const QString &ob_name );
    /** is given type of subelement valid for this object */
    virtual int isValidType( const QString &cl_name ) const;
-   /** return ptr to static class_info, must be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** return ptr to static class_info, static version */
-   static const TClassInfo* getStaticClassInfo(void)
-      { return &class_info; }
    /** is this class child of given or the same by name */
    bool isChildOf( const QString &cname );
-   /** new part - iface a-la Holder */
-   virtual bool set( const QVariant & x );
-   virtual QVariant get() const;
-   virtual void post_set();
-   // to XML representation
-   virtual QString toString() const;
-   // from XML representation
-   virtual bool fromString( const QString &s );
    void dumpStruct() const;
    QDomElement toDom( QDomDocument &dd ) const;
    bool fromDom( QDomElement &de, QString &errstr );
@@ -462,34 +377,20 @@ class TDataSet : public QObject {
    /** gets pointer to parameter, near to getDoublePrmPtr 
     * for param mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
-   /** register new holder */
-   bool registerHolder( HolderData *ho );
-   /** unregister holder */
-   bool unregisterHolder( HolderData *ho );
    /** do real actions after structure changed */
    virtual void do_structChanged();
  protected:
    /** guard value: debug */
    static const int guard_val = 7442428;
    int guard = guard_val;
-   /** map of holders* */
-   QSHoMap ho_map;
-   /** QVector of holders* */
-   QHoVect ho_vect;
-   /** parent may be 0 */
-   TDataSet *par;
-   /** Holder in parent to me. May be 0. */
-   HolderObj *holderOfMe = nullptr;
    /** state: 0-bad, 1-constructed, 2-run; */
    int state = stateGood; 
    /** allowing object add /remove for some classes 1-add obj, 2-add params */
    int allow_add = 0;
    /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
    int modified = 0;
-   /** class decription */
-   static TClassInfo class_info;
    /** help string */
-   static const char* helpstr; 
+   DCL_DEFAULT_STATIC
 };
 
 // ---------------------------------------------------------------------
@@ -498,29 +399,24 @@ class TDataSet : public QObject {
  * */
 class ElemFactory {
  typedef QMap<QString,const TClassInfo*> MapStrClass;
- typedef QMap<QString,const HolderInfo*> MapStrHolder;
   public:
    static ElemFactory& theFactory();
-   TDataSet* createElem( const QString &a_type, 
-       const QString &ob_name, TDataSet *parent  ) const;
-   HolderData* createParam( const QString &a_type, 
+   HolderData* createElem( const QString &a_type, 
        const QString &ob_name, TDataSet *parent  ) const;
    bool registerElemType( const TClassInfo *cl_inf );
    bool unregisterElemType( const QString &a_type );
-   bool registerSimpleType( const HolderInfo *ho_inf );
-   QStringList allTypeNames() const { return str_class.keys(); }
-   QStringList allParamTypes() const { return str_holder.keys(); }
+   QStringList allTypeNames() const { return str_class.keys(); } // TODO: criterion
    const TClassInfo* getInfo( const QString &a_type ) const;
    bool isChildOf( const QString &cl, const QString &par_cl );
 
   private:
    ElemFactory();
    ElemFactory( const ElemFactory& r ) = delete;
-   ElemFactory( const ElemFactory &&r ) = delete;
+   ElemFactory( ElemFactory &&r ) = delete;
    ElemFactory& operator=( const ElemFactory& r ) = delete;
+   ElemFactory& operator=( ElemFactory&& r ) = delete;
 
    MapStrClass str_class;
-   MapStrHolder str_holder;
 };
 
 #define EFACT ElemFactory::theFactory() 

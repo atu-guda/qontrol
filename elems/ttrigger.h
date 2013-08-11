@@ -43,9 +43,6 @@ class TTrigger : public TMiso  {
    static TDataSet* create( TDataSet* apar );
    /** return ptr to static class_info, nust be implemented in each class */
    virtual const TClassInfo* getClassInfo(void) const;
-   /** return ptr to static class_info, static version */
-   static const TClassInfo* getStaticClassInfo(void)
-      { return &class_info; };
    /** returns help string */
    virtual const char* getHelp(void) const;
  protected:

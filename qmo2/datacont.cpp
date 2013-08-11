@@ -15,7 +15,7 @@ const char* TDataContainer::helpstr = "<H1>TDataContainer</H1>\n"
 
 TClassInfo TDataContainer::class_info = 
  {  "TDataContainer",  TDataContainer::create, 
-    &TDataSet::class_info, helpstr, clpContainer };
+    helpstr, clpContainer };
 
 
 TDataContainer::TDataContainer( TDataSet *aparent )

@@ -678,6 +678,7 @@ void QPlotView::initArrs(void)
     ng++;
   };
   tool_x = ref_x = scd->realMinX; tool_y = ref_y = scd->realMinY;
+  ref_x -= 1; // disable ref from start
   sel_g = -1; sel_idx = -1;
   if( ny > 1 ) { // 3d
     if( ng > 1 ) { // enough data

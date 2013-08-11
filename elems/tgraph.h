@@ -42,9 +42,6 @@ class TGraph : public TDataSet  {
    virtual const char* getHelp(void) const;
    /** return ptr to static class_info, nust be implemented in each class */
    virtual const TClassInfo* getClassInfo(void) const;
-   /** return ptr to static class_info, static version */
-   static const TClassInfo* getStaticClassInfo(void)
-      { return &class_info; };
    /** dumps data to file */
    int  dump( const char *fn, char delim = ' ' );
    /** dumps data to file to be used by gnuplot */

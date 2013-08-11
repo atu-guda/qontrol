@@ -49,9 +49,6 @@ class TModel : public TDataContainer  {
   static TDataSet* create( TDataSet* apar );
   /** return ptr to static class_info, must be implemented in each class */
   virtual const TClassInfo* getClassInfo(void) const;
-  /** return ptr to static class_info, static version */
-  static const TClassInfo* getStaticClassInfo(void)
-      { return &class_info; };
   /** returns help string */
   virtual const char* getHelp(void) const;
   /** reimplemented from TDataSet to provide access to '#nvar' */
