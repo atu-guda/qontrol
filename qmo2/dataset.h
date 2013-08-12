@@ -58,36 +58,47 @@ struct TClassInfo {
   int props;
 };
 
+//* arguments for std ctor and creater - full form
+#define ARGS_CTOR const QString &obj_name, TDataSet *a_parent, \
+         int a_flags = 0, const QString &a_v_name = QString(),  \
+	 const QString &a_descr = QString(), const QString &a_extra = QString() 
+
+//* arguments for std ctor and creater - short form w/o def values
+#define ARGS_CTOR_MIN const QString &obj_name, TDataSet *a_parent, \
+         int a_flags, const QString &a_v_name,  \
+	 const QString &a_descr, const QString &a_extra 
+
+//* arguments for std ctor and creater - only names
+#define ARGS_CTOR_NAMES obj_name, a_parent, \
+         a_flags, a_v_name,  \
+	 a_descr, a_extra 
+
 //* declare common ctor
 #define DCL_CTOR(clname) \
-  clname( const QString &obj_name, TDataSet *a_parent, \
-         int a_flags = 0, const QString &a_v_name = QString(),  \
-	 const QString &a_descr = QString(), const QString &a_extra = QString() );
+  clname( ARGS_CTOR );
 
-//* and header for ctor definition
-#define CTOR(clname) \
-  clname::clname( const QString &obj_name, TDataSet *a_parent, \
-         int a_flags, const QString &a_v_name,  \
-	 const QString &a_descr, const QString &a_extra ) \
-  : HolderData( obj_name, a_parent, a_flags, a_v_name, a_descr, a_extra )
+//* and header for ctor _definition_
+#define CTOR(clname,par_class) \
+  clname::clname( ARGS_CTOR_MIN ) \
+  : par_class( ARGS_CTOR_NAMES )
 
 //* declare creator function
 #define DCL_CREATE \
-  static HolderData* create( const QString &obj_name, TDataSet *a_parent, \
-         int a_flags = 0, const QString &v_name = QString(),  \
-	 const QString &a_descr = QString(), const QString &a_extra = QString() );
+  static HolderData* create( ARGS_CTOR );
+
+//* declare common info functions
+#define DCL_STD_INF \
+  virtual const TClassInfo* getClassInfo() const override; \
+  virtual const char* getHelp() const override; 
 
 //* declare common data manipulation functions
 #define DCL_STD_GETSET \
-  virtual const TClassInfo* getClassInfo() const override; \
-  virtual const char* getHelp() const override; \
   virtual void reset_dfl() override; \
   virtual bool set( const QVariant & x ) override; \
   virtual QVariant get() const override; \
   virtual void post_set() override; \
   virtual QString toString() const override; \
-  virtual bool fromString( const QString &s ) override; \
-  virtual QString getType() const override; 
+  virtual bool fromString( const QString &s ) override; 
 
 // default actions in cpp file to register class in factory
 #define REGISTER_CLASS(clname) \
@@ -96,10 +107,8 @@ struct TClassInfo {
 
 // definition in cpp file of common functions
 #define DEFAULT_FUNCS(clname) \
- HolderData* clname::create( const QString &obj_name, TDataSet *a_par, \
-         int a_flags, const QString &v_name,  \
-	 const QString &a_descr, const QString &a_extra ) \
-     { return new clname( obj_name, a_par, a_flags, v_name, a_descr, a_extra ); } \
+ HolderData* clname::create( ARGS_CTOR_MIN ) \
+     { return new clname( ARGS_CTOR_NAMES ); } \
  const TClassInfo* clname::getClassInfo() const {  return &class_info; } \
  const char *clname::getHelp() const {  return helpstr; }
 
@@ -112,6 +121,11 @@ struct TClassInfo {
   static int registered; \
   static int reg(); \
   static const char* helpstr;
+
+// standard class_info definition
+#define STD_CLASSINFO(clname,clp) \
+  TClassInfo clname::class_info =  \
+    {  #clname,  clname::create,  helpstr, clp };
 
 
 // define in class common converions to target type
@@ -160,7 +174,7 @@ class HolderData : public QObject {
   void extraToParm();
   TDataSet* getParent() const { return qobject_cast<TDataSet*>( parent() ); } // OR keep par?
   void setElems( const QString &els ); 
-  // see DCL_STD_GETSET for childs
+  // see DCL_STD_INF, DCL_STD_GETSET for childs
   virtual const TClassInfo* getClassInfo() const = 0;
   virtual const char* getHelp() const  = 0;
   virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
@@ -193,11 +207,13 @@ class HolderInt : public HolderData {
   DCL_CTOR(HolderInt);
   virtual ~HolderInt();
   DCL_CREATE;
+  DCL_STD_INF;
   DCL_STD_GETSET;
+  virtual QString getType() const override; 
   STD_CONVERSIONS(int);
  protected:
   int v;
-  DCL_DEFAULT_STATIC
+  DCL_DEFAULT_STATIC;
 };
 
 #define PRM_INT( name, flags, vname, descr, extra ) \
@@ -210,13 +226,12 @@ class HolderSwitch : public HolderInt {
   DCL_CTOR(HolderSwitch);
   virtual ~HolderSwitch();
   DCL_CREATE;
+  DCL_STD_INF;
   // most functions from HolderInt
-  virtual const TClassInfo* getClassInfo() const override;
-  virtual const char* getHelp() const override;
   virtual void post_set() override;
-  virtual QString getType() const;
+  virtual QString getType() const override;
  protected: 
-  DCL_DEFAULT_STATIC
+  DCL_DEFAULT_STATIC;
 };
 
 #define PRM_SWITCH( name, flags, vname, descr, extra ) \
@@ -234,13 +249,12 @@ class HolderList : public HolderInt {
      const QString &a_extra  = QString(), const QString &a_elems = QString() );
   virtual ~HolderList();
   DCL_CREATE; // now bad: no info for strings
+  DCL_STD_INF;
   // most functions from HolderInt
-  virtual const TClassInfo* getClassInfo() const override;
-  virtual const char* getHelp() const override;
   virtual void post_set() override;
   virtual QString getType() const;
  protected: 
-  DCL_DEFAULT_STATIC
+  DCL_DEFAULT_STATIC;
 };
 
 
@@ -254,11 +268,13 @@ class HolderDouble : public HolderData {
   DCL_CTOR(HolderDouble);
   virtual ~HolderDouble();
   DCL_CREATE;
+  DCL_STD_INF;
   DCL_STD_GETSET;
+  virtual QString getType() const override; 
   STD_CONVERSIONS(double);
  protected:
   double v;
-  DCL_DEFAULT_STATIC
+  DCL_DEFAULT_STATIC;
 };
 
 #define PRM_DOUBLE( name, flags, vname, descr, extra ) \
@@ -273,7 +289,9 @@ class HolderString : public HolderData {
   DCL_CTOR(HolderString);
   virtual ~HolderString();
   DCL_CREATE;
+  DCL_STD_INF;
   DCL_STD_GETSET;
+  virtual QString getType() const override; 
   STD_CONVERSIONS(QString);
  protected:
   QString v;
@@ -292,7 +310,9 @@ class HolderColor : public HolderData {
   DCL_CTOR(HolderColor);
   virtual ~HolderColor();
   DCL_CREATE;
+  DCL_STD_INF;
   DCL_STD_GETSET;
+  virtual QString getType() const override; 
   STD_CONVERSIONS(QColor);
  protected:
   QColor v;
@@ -314,7 +334,9 @@ class TDataSet : public HolderData {
    DCL_CTOR(TDataSet);
    virtual ~TDataSet() override;
    DCL_CREATE;
+   DCL_STD_INF;
    DCL_STD_GETSET;
+   virtual QString getType() const override; 
    /** return number of registerd elems = number of holders */
    int getNumObj() const;
    /** return flags of allow adding */
@@ -389,8 +411,7 @@ class TDataSet : public HolderData {
    int allow_add = 0;
    /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
    int modified = 0;
-   /** help string */
-   DCL_DEFAULT_STATIC
+   DCL_DEFAULT_STATIC;
 };
 
 // ---------------------------------------------------------------------

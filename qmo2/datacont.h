@@ -20,23 +20,12 @@
 class TDataContainer : public TDataSet  {
   Q_OBJECT
  public:
-  explicit TDataContainer( TDataSet* aparent );
-  virtual ~TDataContainer();
-  /** creates instance */
-  static TDataSet* create( TDataSet* apar );
-  /** return ptr to static class_info, must be implemented in each class */
-  virtual const TClassInfo* getClassInfo(void) const;
-  /** returns help string */
-  virtual const char* getHelp(void) const;
+  DCL_CTOR(TDataContainer);
+  virtual ~TDataContainer() override;
+  DCL_CREATE;
+  DCL_STD_INF;
  protected: 
-  /** class decription */
-  static TClassInfo class_info; 
-  /** static help str */
-  static const char *helpstr;
-  /** autoregister */
-  static int registered;
-  static int reg();
-  
+  DCL_DEFAULT_STATIC;
 };
 
 #endif // _DATACONT_H

@@ -13,16 +13,12 @@ const char* TDataContainer::helpstr = "<H1>TDataContainer</H1>\n"
  "Base class for all elements, which can hold \n"
  "unspecified at compile time elements";
 
-TClassInfo TDataContainer::class_info = 
- {  "TDataContainer",  TDataContainer::create, 
-    helpstr, clpContainer };
+STD_CLASSINFO( TDataContainer,clpContainer );
 
 
-TDataContainer::TDataContainer( TDataSet *aparent )
-               :TDataSet( aparent )
+CTOR(TDataContainer,TDataSet)
 {
-  allow_add = 3; // obj and params
-  state = 1;
+  allow_add = allowBoth;
 }
 
 TDataContainer::~TDataContainer()

@@ -15,10 +15,9 @@ using namespace std;
 
 // ================================================================
 // ---------------- HolderData .... ----------------------
+STD_CLASSINFO(HolderData,clpSpecial);
 
-HolderData::HolderData( const QString &obj_name, TDataSet *a_parent, 
-         int a_flags, const QString &a_v_name,
-	 const QString &a_descr, const QString &a_extra )
+HolderData::HolderData( ARGS_CTOR_MIN )
      :QObject( a_parent ),
       flags(a_flags),
       par(a_parent)
@@ -188,11 +187,9 @@ const char* HolderData::helpstr { "Abstract data holder" };
 
 
 // ---------------- HolderInt ---------
-TClassInfo HolderInt::class_info = {
-  "int", HolderInt::create, helpstr, clpData
-};
+STD_CLASSINFO(HolderInt,clpData);
 
-CTOR(HolderInt) , v(0)
+CTOR(HolderInt,HolderData) , v(0)
 {
   tp=QVariant::Int;
   if( getParm("props").isEmpty() ) {
@@ -259,20 +256,16 @@ QString HolderInt::getType() const
   return "int";
 }
 
+const char* HolderInt::helpstr { "Contains integer data" };
 
-DEFAULT_FUNCS_REG(HolderInt)
+
+DEFAULT_FUNCS_REG(HolderInt);
 
 
 // ---------------- HolderSwitch ---------
-TClassInfo HolderSwitch::class_info = {
-  "switch", HolderSwitch::create, helpstr, clpData
-};
+STD_CLASSINFO(HolderSwitch,clpData);
 
-HolderSwitch::HolderSwitch( const QString &obj_name, 
-               TDataSet *a_parent, int a_flags, const QString &a_v_name,
-	      const QString &a_descr,
-	      const QString &a_extra )
-     :HolderInt( obj_name, a_parent, a_flags, a_v_name, a_descr, a_extra )
+CTOR(HolderSwitch,HolderInt)
 {
   if( getParm("props") == "INT,SIMPLE" ) {
     setParm( "props", "INT,SWITCH" );
@@ -296,19 +289,16 @@ QString HolderSwitch::getType() const
   return "switch";
 }
 
-DEFAULT_FUNCS_REG(HolderSwitch)
+const char* HolderSwitch::helpstr { "Contains integer (bin) data - switch iface" };
+
+DEFAULT_FUNCS_REG(HolderSwitch);
 
 
 // ---------------- HolderList ---------
-TClassInfo HolderList::class_info = {
-  "list", HolderList::create, helpstr, clpData
-};
+STD_CLASSINFO(HolderList,clpData);
 
-HolderList::HolderList( const QString &obj_name, 
-     TDataSet *a_parent, int a_flags,
-     const QString &v_name, const QString &a_descr,
-     const QString &a_extra,  const QString &a_elems  )
-   :HolderInt( obj_name, a_parent, a_flags, v_name, a_descr, a_extra )
+HolderList::HolderList( ARGS_CTOR_MIN, const QString &a_elems  )
+   : HolderInt( ARGS_CTOR_NAMES )
 {
   setParm("min","0"); setParm("max","0");
   setElems( a_elems );
@@ -329,16 +319,16 @@ QString HolderList::getType() const
   return "list";
 }
 
-DEFAULT_FUNCS_REG(HolderList)
+const char* HolderList::helpstr { "Contains integer data - list iface" };
+
+DEFAULT_FUNCS_REG(HolderList);
 
 
 
 // ---------------- HolderDouble ---------
-TClassInfo HolderDouble::class_info = {
-  "double", HolderDouble::create, helpstr, clpData
-};
+STD_CLASSINFO(HolderDouble,clpData);
 
-CTOR(HolderDouble), v(0)
+CTOR(HolderDouble,HolderData), v(0)
 {
   tp=QVariant::Double;
   post_set();
@@ -350,6 +340,11 @@ CTOR(HolderDouble), v(0)
 HolderDouble::~HolderDouble()
 {
   v = 0; dyn = 0;
+}
+
+void HolderDouble::reset_dfl()
+{
+  // TODO: implement
 }
 
 
@@ -400,16 +395,15 @@ QString HolderDouble::getType() const
   return "double";
 }
 
+const char* HolderDouble::helpstr { "Contains double data" };
 
-DEFAULT_FUNCS_REG(HolderDouble)
+DEFAULT_FUNCS_REG(HolderDouble);
 
 
 // ---------------- HolderString ---------
-TClassInfo HolderString::class_info = {
-  "string", HolderString::create, helpstr, clpData
-};
+STD_CLASSINFO(HolderString,clpData);
 
-CTOR(HolderString)
+CTOR(HolderString,HolderData)
 {
   tp=QVariant::String;
   post_set();
@@ -421,6 +415,11 @@ CTOR(HolderString)
 HolderString::~HolderString()
 {
   dyn = 0;
+}
+
+void HolderString::reset_dfl()
+{
+  // TODO: implement
 }
 
 bool HolderString::set( const QVariant & x )
@@ -462,15 +461,15 @@ QString HolderString::getType() const
   return "string";
 }
 
-DEFAULT_FUNCS_REG(HolderString)
+const char* HolderString::helpstr { "Contains QString data" };
+
+DEFAULT_FUNCS_REG(HolderString);
 
 
 // ---------------- HolderColor ---------
-TClassInfo HolderColor::class_info = {
-  "color", HolderColor::create, helpstr, clpData
-};
+STD_CLASSINFO(HolderColor,clpData);
 
-CTOR(HolderColor)
+CTOR(HolderColor,HolderData)
 {
   tp=QVariant::Color;
   post_set();
@@ -481,6 +480,11 @@ CTOR(HolderColor)
 
 HolderColor::~HolderColor()
 {
+}
+
+void HolderColor::reset_dfl()
+{
+  // TODO: implement
 }
 
 
@@ -522,20 +526,20 @@ QString HolderColor::getType() const
   return "color";
 }
 
-DEFAULT_FUNCS_REG(HolderColor)
+const char* HolderColor::helpstr { "Contains QColor data" };
+
+DEFAULT_FUNCS_REG(HolderColor);
 
 
 // ---------------- TDataSet ------------------------
-
-TClassInfo TDataSet::class_info = 
- {  "TDataSet",  TDataSet::create, helpstr, clpSpecial };
+STD_CLASSINFO(TDataSet,clpSpecial);
 
 
 const char* TDataSet::helpstr = 
  "<H1>TDataSet</H1>\nThis is a base element for all other elements\n"
  "Never to be used directly";
 
-CTOR(TDataSet)
+CTOR(TDataSet,HolderData)
 {
 }
 
@@ -545,6 +549,11 @@ TDataSet::~TDataSet()
   state = stateBad; guard = 0;
 }
 
+void TDataSet::reset_dfl()
+{
+  // TODO: implement
+}
+
 
 
 QString TDataSet::getType() const
@@ -552,7 +561,7 @@ QString TDataSet::getType() const
   return metaObject()->className();
 }
 
-DEFAULT_FUNCS_REG(TDataSet)
+DEFAULT_FUNCS_REG(TDataSet);
 
 
 int TDataSet::getNumObj() const
