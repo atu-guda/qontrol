@@ -199,7 +199,7 @@ void QStructView::drawAll( QPainter &p )
       p.drawRect( ob_gx, ob_gy, 32, 32 );
     } else {
       QString iconName = QString( ":icons/elm_" )
-	+ QString(ob->getClassName()).toLower() 
+	+ QString(ob->getType()).toLower() 
 	+ ".png";
       QIcon el_ico(iconName);
       el_ico.paint( &p, ob_gx, ob_gy, grid_sz-8, grid_sz-8 );

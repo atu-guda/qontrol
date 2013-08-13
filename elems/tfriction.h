@@ -27,47 +27,34 @@
 class TFriction : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TFriction( TDataSet *aparent );
-   /** empty destructor */
-   virtual ~TFriction();
-   /** creator */
-   static TDataSet* create( TDataSet *apar );
-   /** class id */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TFriction);
+   DCL_CREATE;
+   DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** reimplemented from TMiso to init state */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int do_startLoop( int acnx, int acny ) override;
    
    /** Parameter: mody mass */
-   PRM_DOUBLE1( mass, 0, "Mass", "Body mass", "min=1e-30" );
+   PRM_DOUBLE( mass, 0, "Mass", "Body mass", "min=1e-30\ndef=1" );
    /** Parameter: max dry friction force (if constant)  */
-   PRM_DOUBLE1( f_mx, 0, "Max Ff",  "Max dry friction force (if constant) f_mx", "min=0" );
+   PRM_DOUBLE( f_mx, 0, "Max Ff",  "Max dry friction force (if constant) f_mx", "min=0" );
    /** Parameter: start force addition coeff */
-   PRM_DOUBLE1( kf_mx, 0, "k_Ff", "Start force addition coefficient", "sep=col" );
+   PRM_DOUBLE( kf_mx, 0, "k_Ff", "Start force addition coefficient", "sep=col" );
    /** Parameter: viscous friction coeff */
-   PRM_DOUBLE1( kfv, 0, "k_fv", "Viscous friction coeff", "");
+   PRM_DOUBLE( kfv, 0, "k_fv", "Viscous friction coeff", "");
    /** Switch: use u[1] as max dry friction force */
-   PRM_SWITCH1( useMf, efNRC, "u[1] is f_mx", "Use u[1] as maximum friction force", "sep=col"  );
+   PRM_SWITCH( useMf, efNRC, "u[1] is f_mx", "Use u[1] as maximum friction force", "sep=col"  );
    /** Current speed */
-   PRM_DOUBLE1( v, efInner, "v", "current speed", "" );
+   PRM_DOUBLE( v, efInner, "v", "current speed", "" );
    /** Current friction force */
-   PRM_DOUBLE1( Ff, efInner, "Ff", "current friction force", "" );
+   PRM_DOUBLE( Ff, efInner, "Ff", "current friction force", "" );
    /** state of mass: 0 -- sleep, 1 -- moving */
-   PRM_INT1( bodyState, efInner, "State", "State: 0=Sleep, 1=Run", ""  );
+   PRM_INT( bodyState, efInner, "State", "State: 0=Sleep, 1=Run", ""  );
    /** old values and misc */
    double v_old, x_old;
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

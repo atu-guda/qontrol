@@ -52,54 +52,48 @@ static const char* const tsource_list_seedType =
 class TSource : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TSource( TDataSet* aparent );
-   /** empty destructor */
-   virtual ~TSource();
-   /** creator */
-   static TDataSet* create( TDataSet* apar );
-   /** return ptr to static class_info, nust be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TSource);
+   DCL_CREATE;
+   DCL_STD_INF;
+   virtual ~TSource() override;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** will be called before any action -- good place for allocs */
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    /** reimplemented to delete rnds */
-   virtual int do_postRun( int good );
+   virtual int do_postRun( int good ) override;
    /** called before each inner param loop. Unused param - -1 */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int do_startLoop( int acnx, int acny ) override;
 
    /** type of input and misc flags */
-   PRM_LIST1( type, efNRC, "Type", "Source type", "", tsource_list_type );
+   PRM_LIST( type, efNRC, "Type", "Source type", "", tsource_list_type );
    /** Amplitude */
-   PRM_DOUBLE1( uu, 0, "Amplitude", "Amplitude of signal (or pulse max)", "" );
+   PRM_DOUBLE( uu, 0, "Amplitude", "Amplitude of signal (or pulse max)", "" );
    /** Frequency */
-   PRM_DOUBLE1( omega, 0, "Frequency", "Frequency of source (or pulse width)", "" );
+   PRM_DOUBLE( omega, 0, "Frequency", "Frequency of source (or pulse width)", "" );
    /** constant shift */
-   PRM_DOUBLE1( cc, 0, "C", "Constant base", "" );
+   PRM_DOUBLE( cc, 0, "C", "Constant base", "" );
 
    // ----------- U chaos ----------------------
-   PRM_SWITCH1( use_u_ch, efNRC, "use U chaos", "Use amplitude perturbations", "sep=col" );
-   PRM_DOUBLE1(  u_ch_v0, efNRC, "vU min"     , "Minimum value of amplitule factor", "" );
-   PRM_DOUBLE1(  u_ch_vm, efNRC, "vU max"     , "Maximum value of amplitule factor", "" );
-   PRM_DOUBLE1(  u_ch_t0, efNRC, "tU min"     , "Minimum time of change", "min=1e-20\nmax=1e20" );
-   PRM_DOUBLE1(  u_ch_tm, efNRC, "tU max"     , "Maximum time of change", "min=1e-20\nmax=1e20" );
-   PRM_INT1(      seed_u, efNRC, "U seed"     , "Random Generator seed", "" );
-   PRM_LIST1( seedType_u, efNRC, "U seed type", "When to seed", "", tsource_list_seedType );
-   PRM_SWITCH1( addBaseSeed_u, efNRC, "U add base seed", "Add seed from base(model)", "");
+   PRM_SWITCH( use_u_ch, efNRC, "use U chaos", "Use amplitude perturbations", "sep=col" );
+   PRM_DOUBLE(  u_ch_v0, efNRC, "vU min"     , "Minimum value of amplitule factor", "" );
+   PRM_DOUBLE(  u_ch_vm, efNRC, "vU max"     , "Maximum value of amplitule factor", "" );
+   PRM_DOUBLE(  u_ch_t0, efNRC, "tU min"     , "Minimum time of change", "min=1e-20\nmax=1e20" );
+   PRM_DOUBLE(  u_ch_tm, efNRC, "tU max"     , "Maximum time of change", "min=1e-20\nmax=1e20" );
+   PRM_INT(      seed_u, efNRC, "U seed"     , "Random Generator seed", "" );
+   PRM_LIST( seedType_u, efNRC, "U seed type", "When to seed", "", tsource_list_seedType );
+   PRM_SWITCH( addBaseSeed_u, efNRC, "U add base seed", "Add seed from base(model)", "");
    
    // ----------- Phi chaos ----------------------
-   PRM_SWITCH1( use_f_ch,efNRC, "use Phi chaos", "Use phase perturbations", "sep=col" );
-   PRM_DOUBLE1( f_ch_v0, efNRC, "vF min"       , "Minimum value of phase factor", "" );
-   PRM_DOUBLE1( f_ch_vm, efNRC, "vF max"       , "Maximum value of phase factor", "" );
-   PRM_DOUBLE1( f_ch_t0, efNRC, "tF min"       , "Minimum time of change", "min=1e-20\nmax=1e20" );
-   PRM_DOUBLE1( f_ch_tm, efNRC, "rF max"       , "Maximum time of change", "min=1e-20\nmax=1e20" );
-   PRM_INT1( seed_p, efNRC,     "F seed"       , "Random Generator seed", "" );
-   PRM_LIST1( seedType_p, efNRC,"F seed type"  , "When to seed", "", tsource_list_seedType);
-   PRM_SWITCH1( addBaseSeed_p, efNRC, "F add base to seed", "Add seed from base(model)", "" );
+   PRM_SWITCH( use_f_ch,efNRC, "use Phi chaos", "Use phase perturbations", "sep=col" );
+   PRM_DOUBLE( f_ch_v0, efNRC, "vF min"       , "Minimum value of phase factor", "" );
+   PRM_DOUBLE( f_ch_vm, efNRC, "vF max"       , "Maximum value of phase factor", "" );
+   PRM_DOUBLE( f_ch_t0, efNRC, "tF min"       , "Minimum time of change", "min=1e-20\nmax=1e20" );
+   PRM_DOUBLE( f_ch_tm, efNRC, "rF max"       , "Maximum time of change", "min=1e-20\nmax=1e20" );
+   PRM_INT( seed_p, efNRC,     "F seed"       , "Random Generator seed", "" );
+   PRM_LIST( seedType_p, efNRC,"F seed type"  , "When to seed", "", tsource_list_seedType);
+   PRM_SWITCH( addBaseSeed_p, efNRC, "F add base to seed", "Add seed from base(model)", "" );
    
    /** chaos current values */
    double u_ch_vs, u_ch_ve, u_ch_ts, u_ch_te, u_ch_k,
@@ -114,13 +108,8 @@ class TSource : public TMiso  {
    int was_pulse;
    /** values to store some model vars */	  
    double tt;
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

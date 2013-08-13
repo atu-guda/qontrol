@@ -28,41 +28,28 @@
 class TCounter : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TCounter( TDataSet *aparent );
-   /** empty destructor */
-   virtual ~TCounter();
-   /** creator */
-   static TDataSet* create( TDataSet *apar );
-   /** class id */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TCounter);
+   DCL_CREATE;
+   DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** reimplemented from TMiso to reset counter */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int do_startLoop( int acnx, int acny ) override;
    
    /** type of output from counter */
-   PRM_LIST1( type, efNRC, "Type", "Type of counters output", "", 
+   PRM_LIST( type, efNRC, "Type", "Type of counters output", "", 
        "level\npulse+\npulse+-\nn" );
    //* n of counts */
-   PRM_INT1( n, efNRC, "n", "Number to count", "sep=col" );
+   PRM_INT( n, efNRC, "n", "Number to count", "sep=col" );
    //* current counter */
-   PRM_INT1( cn, efInner, "cn", "Current counter value", "" );
+   PRM_INT( cn, efInner, "cn", "Current counter value", "" );
    /** use u[1] as reset */
-   PRM_SWITCH1( useReset, 0, "u[1] is Reset", "Use u[1] as Reset signal", "" );
+   PRM_SWITCH( useReset, 0, "u[1] is Reset", "Use u[1] as Reset signal", "" );
    int flip;
    /** old value of input */
    double u_old;
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   DCL_DEFAULT_STATIC;
 };
 
 

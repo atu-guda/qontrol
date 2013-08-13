@@ -36,21 +36,13 @@ const char* TFriction::helpstr = "<H1>TFriction</H1>\n"
  " Output <B> x -- </B> body coordinate. <BR>\n"
  ;
 
-TClassInfo TFriction::class_info = {
-  "TFriction", TFriction::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TFriction,clpElem);
 
-
-TFriction::TFriction( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TFriction,TMiso)
 {
   mass = 1; f_mx = 0.4; kf_mx = 0; kfv = 0.01; useMf = 0;
   v = v_old = x_old = Ff = 0;
   bodyState = 0;
-}
-
-TFriction::~TFriction()
-{
 }
 
 

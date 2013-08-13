@@ -40,6 +40,13 @@ HolderData::~HolderData()
       qP( objectName() ), par, qP( par->objectName() )  );
 }
 
+HolderData* HolderData::create( const QString &, TDataSet *, 
+         int, const QString &, const QString &, const QString & )
+{
+  DBG1( "Attempt to create abstrace class" );
+  return nullptr;
+}
+
 void HolderData::setParm( const QString &name, const QString &value )
 {
   parms[name] = value;
@@ -87,7 +94,7 @@ void HolderData::setElems( const QString &els )
     ++n_nl;
   }
   setParm( "min", "0" );
-  setParm( "max", QString::number( n_nl-1 ) );
+  setParm( "max", QSN( n_nl-1 ) );
 }
 
 QString HolderData::getType() const // = 0;
@@ -205,7 +212,12 @@ HolderInt::~HolderInt()
 
 void HolderInt::reset_dfl()
 {
-  // TODO: implement
+  v = 0;
+  QString s = getParm( "def" );
+  if( ! s.isEmpty() ) {
+    v = s.toInt();
+  }
+  post_set();
 }
 
 
@@ -236,7 +248,7 @@ void HolderInt::post_set()
 
 QString HolderInt::toString() const
 {
-  return QString::number( v );
+  return QSN( v );
 }
 
 bool HolderInt::fromString( const QString &s )
@@ -313,6 +325,11 @@ HolderList::~HolderList()
   // NOP
 }
 
+void HolderList::post_set()
+{
+  HolderInt::post_set();
+}
+
 
 QString HolderList::getType() const
 {
@@ -344,7 +361,12 @@ HolderDouble::~HolderDouble()
 
 void HolderDouble::reset_dfl()
 {
-  // TODO: implement
+  v = 0;
+  QString s = getParm( "def" );
+  if( ! s.isEmpty() ) {
+    v = s.toDouble();
+  }
+  post_set();
 }
 
 
@@ -375,7 +397,7 @@ void HolderDouble::post_set()
 
 QString HolderDouble::toString() const
 {
-  return QString::number( v, 'g', 16 ); // TODO? format
+  return QSN( v, 'g', 16 ); // TODO? format
 }
 
 bool HolderDouble::fromString( const QString &s )
@@ -419,7 +441,13 @@ HolderString::~HolderString()
 
 void HolderString::reset_dfl()
 {
-  // TODO: implement
+  QString s = getParm( "def" );
+  if( ! s.isEmpty() ) {
+    v = s;
+  } else {
+    v = "";
+  }
+  post_set();
 }
 
 bool HolderString::set( const QVariant & x )
@@ -484,7 +512,15 @@ HolderColor::~HolderColor()
 
 void HolderColor::reset_dfl()
 {
-  // TODO: implement
+  v=QColor();
+  QString s = getParm( "def" );
+  if( ! s.isEmpty() ) {
+    v = QColor( s );
+    if( ! v.isValid() ) {
+      v = QColor(s.toInt());
+    }
+  }
+  post_set();
 }
 
 
@@ -509,7 +545,7 @@ void HolderColor::post_set()
 
 QString HolderColor::toString() const
 {
-  return QString::number( (int)(v.rgba()) );
+  return QSN( (int)(v.rgba()) );
 }
 
 bool HolderColor::fromString( const QString &s )
@@ -549,9 +585,27 @@ TDataSet::~TDataSet()
   state = stateBad; guard = 0;
 }
 
+bool TDataSet::isObject( const QString & cl_name  ) const
+{
+  if( cl_name.isEmpty() )
+    return true;
+  if( isChildOf( cl_name ) )
+    return true;
+
+  return false;
+}
+
 void TDataSet::reset_dfl()
 {
-  // TODO: implement
+  for( auto c : children() ) {
+    HolderData *o = qobject_cast<HolderData*>( c );
+    if( o ) {
+      o->reset_dfl();
+    } else {
+      DBGx( "warn: non-holder element \"%s\" in \"%s\"", 
+          qP( c->objectName()), qP( objectName() ) );
+    }
+  }
 }
 
 
@@ -564,16 +618,10 @@ QString TDataSet::getType() const
 DEFAULT_FUNCS_REG(TDataSet);
 
 
-int TDataSet::getNumObj() const
-{
-  return children().size();
-}
-
 QStringList TDataSet::elemNames() const
 {
-  const QObjectList &chi = children();
   QStringList cl;
-  for( auto c : chi ) {
+  for( const auto c : children() ) {
     cl << c->objectName();
   }
   return cl;
@@ -582,6 +630,12 @@ QStringList TDataSet::elemNames() const
 HolderData* TDataSet::getElem( const QString &oname ) const
 {
   return findChild<HolderData*>(oname);
+}
+
+HolderData* TDataSet::getElem( int i ) const
+{
+  auto cs = children()[i];
+  return qobject_cast<HolderData*>(cs);
 }
 
 int TDataSet::indexOfHolder( HolderData *ho ) const
@@ -792,6 +846,7 @@ double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg ) // TODO: why no
 }
 
 
+// TODO: more args
 HolderData* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
 {
   if( ! ( allow_add & allowObject ) )
@@ -852,7 +907,7 @@ int TDataSet::isValidType(  const QString & /*cl_name*/  ) const
   return 1;
 }
 
-bool TDataSet::isChildOf( const QString &cname )
+bool TDataSet::isChildOf( const QString &cname ) const
 {
   check_guard();
   const QMetaObject *mob = metaObject();
@@ -977,12 +1032,20 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
 	}
       }
       ho = getElem( elname );
-      if( !ho || !ho->isObject( cl_name ) ) {
-	errstr = QString("TDataSet::fromDom: fail to find created obj %1 %2 ")
-		 .arg(cl_name).arg(elname); 
+      if( !ho ) {
+	errstr = QString("TDataSet::fromDom: fail to find created obj %1 %2 in %3")
+		 .arg(cl_name).arg(elname).arg( objectName() ); 
         DBG1q( errstr );
 	return false;
       }
+      if( ! ho->isObject( cl_name ) ) {
+	errstr = QString("TDataSet::fromDom: created obj %1 %2 in %3 is not given object ")
+		 .arg(cl_name).arg(elname).arg( objectName() ); 
+        DBG1q( errstr );
+        DBGx( "ei: name: \"%s\" type: \"%s\"", qP(ho->objectName()), qP(ho->getType()) );
+	return false;
+      }
+
       TDataSet *ob = qobject_cast<TDataSet*>(ho);
       if( ! ob->fromDom( ee, errstr ) ) {
 	return false;

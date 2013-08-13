@@ -27,14 +27,10 @@ const char* TOutArr::helpstr = "<H1>TOutArr</H1>\n"
  "Allowed special TModel output names like :t, #25, :parm1 \n"
  "Type selects when output be collected.";
 
-TClassInfo TOutArr::class_info = {
- "TOutArr", TOutArr::create,
- &TDataSet::class_info, helpstr, clpSpecial };
+STD_CLASSINFO(TOutArr,clpSpecial);
 
-
-TOutArr::TOutArr( TDataSet* apar )
-        :TDataSet( apar ), 
-	 fake_so(0), so( &fake_so ) 
+CTOR(TOutArr,TDataSet), 
+   fake_so(0), so( &fake_so ) 
 {
   allow_add = 0;
   arrsize = 0; dmin = 0; dmax = 1; n = ny = 0; nq = 1; cnq = lnq = 0;
@@ -141,7 +137,7 @@ int TOutArr::fillGraphInfo( GraphInfo *gi ) const
   for( i=0; i<7; i++ ) 
     gi->label[i] = "";
   gi->title = objectName();
-  gi->label[0] = label;
+  gi->label[0] = label.cval();
   if( n < 1 )
     return -2;
   gi->row = n; gi->col = 1; gi->ny = ny;

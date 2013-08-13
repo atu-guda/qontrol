@@ -36,37 +36,26 @@ static const char* const tlogic_list =
 class TLogic : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TLogic( TDataSet* aparent );
-   /** empty destructor */
-   virtual ~TLogic();
-   /** creator */
-   static TDataSet* create( TDataSet* apar );
-   /** return ptr to static class_info, nust be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TLogic);
+   DCL_CREATE;
+   DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
+
    /** type of logic element */
-   PRM_LIST1( type, efNRC, "Type", "Type of logic", "", tlogic_list );
+   PRM_LIST( type, efNRC, "Type", "Type of logic", "", tlogic_list );
    /** level of 1  */
-   PRM_DOUBLE1( level, 0, "level of 1", "Minimal level of '1' signal on input", "" );
+   PRM_DOUBLE( level, 0, "level of 1", "Minimal level of '1' signal on input", "" );
    /** misc flags */
-   PRM_SWITCH1( useNInp0, efNRC, "Inverse u[0]", "Inverse input u[0]", "sep=col" );
-   PRM_SWITCH1( useNInp1, efNRC, "Inverse u[1]", "Inverse input u[1]", ""  );
-   PRM_SWITCH1( useNInp2, efNRC, "Inverse u[2]", "Inverse input u[2]", ""  );
-   PRM_SWITCH1( useNInp3, efNRC, "Inverse u[3]", "Inverse input u[3]", ""  );
-   PRM_SWITCH1( useNOut, efNRC,  "Inverse out" , "Inverse input output", "sep=col"  );
-   PRM_SWITCH1( useMinus, efNRC, "Negative out", "Negative output is -1, not 0", "" );
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   PRM_SWITCH( useNInp0, efNRC, "Inverse u[0]", "Inverse input u[0]", "sep=col" );
+   PRM_SWITCH( useNInp1, efNRC, "Inverse u[1]", "Inverse input u[1]", ""  );
+   PRM_SWITCH( useNInp2, efNRC, "Inverse u[2]", "Inverse input u[2]", ""  );
+   PRM_SWITCH( useNInp3, efNRC, "Inverse u[3]", "Inverse input u[3]", ""  );
+   PRM_SWITCH( useNOut, efNRC,  "Inverse out" , "Inverse input output", "sep=col"  );
+   PRM_SWITCH( useMinus, efNRC, "Negative out", "Negative output is -1, not 0", "" );
+
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

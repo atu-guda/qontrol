@@ -28,35 +28,23 @@
 class TInputAny : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TInputAny( TDataSet *aparent );
-   /** empty destructor */
-   virtual ~TInputAny();
-   /** creator */
-   static TDataSet* create( TDataSet *apar );
-   /** return ptr to static class_info, nust be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TInputAny);
+   DCL_CREATE;
+   DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** reimplemented from TMiso to set source */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** name of source */
-   PRM_STRING1( name, efNoRunChange, "Name", 
+   PRM_STRING( name, efNoRunChange, "Name", 
        "Name of element (and may be parameter) to get values", "max=80");
    /** fake source */
    double fake_so;
    /** pointer to source */
    const double *so;
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

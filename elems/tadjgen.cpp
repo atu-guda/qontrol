@@ -15,7 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h>
+#include <cmath>
+using namespace std;
+
 #include "tadjgen.h"
 
 const char* TAdjGen::helpstr = "<H1>TAdjGen</H1>\n"
@@ -24,13 +26,9 @@ const char* TAdjGen::helpstr = "<H1>TAdjGen</H1>\n"
  " <b> useSignStrobe, usePlusStrobe, useF, omega_0, k_omega </b>,<br>\n"
  "None of the can be changed at run time.";
 
-TClassInfo TAdjGen::class_info = {
-  "TAdjGen", TAdjGen::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TAdjGen,clpElem );
 
-
-TAdjGen::TAdjGen( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TAdjGen,TMiso)
 {
   type = useReset = useLock = outStrobe = useZero 
        = useSignStrobe = usePlusStrobe = useF = 0; 
@@ -39,9 +37,6 @@ TAdjGen::TAdjGen( TDataSet* aparent )
   tick = 0;
 }
 
-TAdjGen::~TAdjGen()
-{
-}
 
 int TAdjGen::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
@@ -59,7 +54,7 @@ double TAdjGen::f( double /* t */ )
     om2 = omega_0 * ( 1 + om2*k_omega );
   };
   real_tick = 0; tick = 0;
-  switch( type ) {
+  switch( (int)type ) {
     case 0: ig += om * tdt;                 // Pi=int_0^T(om*dt);
 	    if( useReset && *in_so[1] > 0.01 ) {
 	      real_tick = 1; break;

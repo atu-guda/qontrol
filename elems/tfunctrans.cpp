@@ -29,20 +29,12 @@ const char* TFuncTrans::helpstr = "<H1>TFuncTrans</H1>\n"
  "Integer parameter <b>type</b> selects type of function.<br>\n"
  "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n";
 
-TClassInfo TFuncTrans::class_info = {
-  "TFuncTrans", TFuncTrans::create,
-  &TMiso::class_info, helpstr, clpElem | clpPure };
+STD_CLASSINFO(TFuncTrans,clpElem);
 
-
-TFuncTrans::TFuncTrans( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TFuncTrans,TMiso)
 {
   type = 0;
   a = b = 1; c = d = e = g = x0 = 0; 
-}
-
-TFuncTrans::~TFuncTrans()
-{
 }
 
 
@@ -50,7 +42,7 @@ double TFuncTrans::f( double /* t */ )
 {
   double v, y, by, tm;
   y = *in_so[0] - *in_so[1] - x0; by = y * b;
-  switch( type ) {
+  switch( (int)type ) {
     case 0:   v = a * sin( by ); break;
     case 1:   v = a * sign( sin( by ) + c ); break;
     case 2:   v = a * tanh( by ); break;

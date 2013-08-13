@@ -25,27 +25,18 @@ const char* TTrigger::helpstr = "<H1>TTrigger</H1>\n"
  "If enabled (<b>useT0</b>), trigger performs autoreset after <b>t0</b>.<br>\n"
  "Have 5 switches: <b>useInit1, useEnable, usePulse, useMinus, useT0</b>.";
 
-TClassInfo TTrigger::class_info = {
-  "TTrigger", TTrigger::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TTrigger,clpElem );
 
-
-TTrigger::TTrigger( TDataSet* aparent )
-        :TMiso( aparent )
-
+CTOR(TTrigger,TMiso)
 {
   type = 0; level0 = 0.1; level1 = 0.5; t0 = 2; et = 0; u2_old = 0;
   useInit1 = useEnable = usePulse = useMinus = useT0 = 0;
 }
 
-TTrigger::~TTrigger()
-{
-}
-
 
 int TTrigger::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  cst = useInit1; u2_old = et = 0;
+  cst = (int)useInit1; u2_old = et = 0;
   return 0;
 }
 
@@ -75,7 +66,7 @@ double TTrigger::f( double t )
     };
   };
   if( sw == 0 ) {
-    switch( type ) {
+    switch( (int)type ) {
       case 0: break;
       case 1: if( *in_so[2] > level1 ) { sw = 1; break; };
 	      if( *in_so[2] < level0 ) { sw = -1; break; };

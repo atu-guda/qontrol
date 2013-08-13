@@ -34,24 +34,13 @@ const char* TRossler::helpstr = "<H1>TRossler</H1>\n"
  "and 3 inital state: <b> x_0, y_0, z_0 </b>, <br>"
  "First 3 may can be changed at any time.";
 
-TClassInfo TRossler::class_info = {
-  "TRossler", TRossler::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TRossler,clpElem );
 
-static const int IPARM = efNoRunChange;
-static const int XPARM = efNoDial | efNoSave ;
-
-
-TRossler::TRossler( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TRossler,TMiso)
 {
   a = 0.25; b = 1.0; c = 5.58; 
   x_0 = 0.1; y_0 = 0.0; z_0 = 0.0; 
   x = y = z = 0;
-}
-
-TRossler::~TRossler()
-{
 }
 
 
@@ -67,7 +56,7 @@ double TRossler::f( double /*t*/ )
 
 int TRossler::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  x = x_0; y = y_0 ; z = z_0;
+  x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
   return 0;
 }
 

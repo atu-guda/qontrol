@@ -500,7 +500,7 @@ void QMo2View::infoElm()
     tv->setItem( i, 0, new  QTableWidgetItem( ob->objectName() ) ); 
     if( ob->inherits("TDataSet" ) ) {
       TDataSet *ds = qobject_cast<TDataSet*>(ob);
-      tv->setItem( i, 1, new QTableWidgetItem(ds->getClassName()) );
+      tv->setItem( i, 1, new QTableWidgetItem(ds->getType()) );
       tv->setItem( i, 2, new QTableWidgetItem( ds->toString() ) );
     } else if( ob->inherits("HolderData" ) ) {
       HolderData *ho = qobject_cast<HolderData*>(ob);
@@ -508,7 +508,7 @@ void QMo2View::infoElm()
       tv->setItem( i, 2, new QTableWidgetItem(ho->toString() ) );
       tv->setItem( i, 3, new QTableWidgetItem(ho->getParm("vis_name") + " \"" 
 	            + ho->getParm("descr" ) + "\"" ) );
-      tv->setItem( i, 4, new QTableWidgetItem( ho->targetName() ) );
+      tv->setItem( i, 4, new QTableWidgetItem( ho->objectName() ) );
       tv->setItem( i, 5, new QTableWidgetItem( flags2str(ho->getFlags()) ) );
 
     } else { // unknown
@@ -624,7 +624,7 @@ void QMo2View::pasteElm()
   QString elname = ee.attribute( "name" );
   QString elname_base = elname;
   int suff_n = 1;
-  while( model->getHolder( elname ) && suff_n < 50 ) { // guess good name
+  while( model->getElem( elname ) && suff_n < 50 ) { // guess good name
     elname = elname_base + "_" + QString::number( suff_n );
     suff_n++;
     if( suff_n > 20 ) {

@@ -24,13 +24,9 @@ const char* TDelay::helpstr = "<H1>TDelay</H1>\n"
  "Have 2 parameters: <b>mdelay</b> - maximum delay, <br>\n"
  "<b>cdelay</b> - current delay, can changed at any time, but <= <b>mdelay</b>.";
 
-TClassInfo TDelay::class_info = {
-  "TDelay", TDelay::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TDelay,clpElem );
 
-
-TDelay::TDelay( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TDelay,TMiso)
 {
   mdelay = 1.5; cdelay = 1; v1 = v2 = u00 = 0; buf = 0; 
 }
@@ -48,7 +44,7 @@ double TDelay::f( double t )
   
   if( prm_mod ) {
     if( mdelay < cdelay ) 
-      cdelay = mdelay;
+      cdelay = (double)mdelay;
     double v = cdelay / tdt;
     icd = int( v );
     v2 = v - icd; v1 = 1.0 - v2;

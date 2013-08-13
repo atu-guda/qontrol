@@ -32,25 +32,24 @@ const char* TModel::helpstr = "<H1>TModel</H1>\n"
 
 static const int RESERVED_OUTS = 1024;
 
-TClassInfo TModel::class_info = {
- "TModel", TModel::create,
- &TDataContainer::class_info, helpstr, clpSpecial | clpContainer };
+STD_CLASSINFO(TModel,clpSpecial | clpContainer);
 
-TModel::TModel( TDataSet* aparent )/*{{{1*/
-       :TDataContainer( aparent ), 
+CTOR(TModel,TDataContainer),
          vars( MODEL_NVAR, 0 )
 {
-  tt = 100; nn = n_tot= 100000; nl1 = 1; nl2 = 1; n_steps=1000; use_sync = 0;
-  prm0s = prm1s = prm2s = prm3s = 0.1; 
-  prm0d = prm1d = 0.01; xval1 = xval2 = 0;
-  seed = 117; useSameSeed = 1; seedType = 0;
-  ic_mouse = ic_joy = ic_sound = ic_key = ic_aux = -1;
-  oc_0 = oc_1 = oc_2 = oc_3 = oc_4 = oc_5 = -1;
-  oct_0 = oct_1 = oct_2 = oct_3 = oct_4 = oct_5 = 0;
-  ii = il1 = il2 = i_tot = 0;
+  //tt = 100; nn = n_tot= 100000; nl1 = 1; nl2 = 1; n_steps=1000; use_sync = 0;
+  //prm0s = prm1s = prm2s = prm3s = 0.1; 
+  //prm0d = prm1d = 0.01; xval1 = xval2 = 0;
+  //seed = 117; useSameSeed = 1; seedType = 0;
+  //ic_mouse = ic_joy = ic_sound = ic_key = ic_aux = -1;
+  //oc_0 = oc_1 = oc_2 = oc_3 = oc_4 = oc_5 = -1;
+  //oct_0 = oct_1 = oct_2 = oct_3 = oct_4 = oct_5 = 0;
+  // ii = il1 = il2 = i_tot = 0;
+  // prm0 = prm1 = prm2 = prm3 = 0; start_time = 0; 
+  // prm0s = prm1s = 0.1; prm0d = prm1d = 0.01; sgnt = -3;
+  reset_dfl();
+  
   rtime = t = 0; tdt = tt / nn; 
-  prm0 = prm1 = prm2 = prm3 = 0; start_time = 0; 
-  prm0s = prm1s = 0.1; prm0d = prm1d = 0.01; sgnt = -3;
   m_sqrt2 = sqrt(2.0);
   m_sqrt1_2 = sqrt(0.5);
   one = 1.0;
@@ -62,11 +61,11 @@ TModel::TModel( TDataSet* aparent )/*{{{1*/
   v_outt.reserve( OUT_RES );
   v_graph.reserve( 16 );
   
-}/*}}}1*/
+}
 
-TModel::~TModel()/*{{{1*/
+TModel::~TModel()
 {
-}/*}}}1*/
+}
 
 
 int TModel::startRun( int type )/*{{{1*/
@@ -83,7 +82,7 @@ int TModel::startRun( int type )/*{{{1*/
   if( run_type > 1 ) n2_eff = nl2;
   n_tot = nn * n1_eff * n2_eff; i_tot = ii = il1 = il2 = 0;
   sgnt = int( time( 0 ) );
-  prm2 = prm2s; prm3 = prm3s;
+  prm2 = (double)prm2s; prm3 = (double)prm3s;
   //if( seed != -1 )
   //  srand( seed );
   allocOutArrs( run_type );
@@ -355,8 +354,9 @@ int TModel::checkData( int n )/*{{{1*/
 }/*}}}1*/
 
 // TODO: not here: use separate containers
-int TModel::isValidType( const QString &cl_name ) const
+int TModel::isValidType( const QString & /*cl_name*/ ) const
 {
+  /*
   if( EFACT.isChildOf( cl_name, "TMiso" ) )
     return 1;
   if( EFACT.isChildOf( cl_name, "TOutArr" ) )
@@ -366,7 +366,8 @@ int TModel::isValidType( const QString &cl_name ) const
   // tmp:
   if( cl_name == "TDataContainer" )
     return 1;
-  return 0;
+  */
+  return 1;
 }
 
 int TModel::xy2elnu( int avis_x, int avis_y )/*{{{1*/ // TODO: todel
@@ -575,13 +576,13 @@ int TModel::linkNames(void)/*{{{1*/
   v_out.clear(); v_outt.clear();
   v_graph.clear();
   
-  for( HolderData *ho : holders() ) { // find elements of given types: TODO:
+  for( auto c : children() ) { // find elements of given types: TODO:
+    HolderData *ho = qobject_cast<HolderData*>(c);
     if( !ho || !ho->isObject()  )
       continue;
-    HolderObj *hob = qobject_cast<HolderObj*>(ho);
-    if( !hob )
+    TDataSet *ds = qobject_cast<TDataSet*>(ho);
+    if( !ds )
       continue;
-    TDataSet* ds = hob->getObj();
     
     if( ds->isChildOf( "TMiso" )) {
       v_el.push_back( qobject_cast<TMiso*>(ds) );

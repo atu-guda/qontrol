@@ -45,51 +45,41 @@ static const char* const trand_list_seedType =
 class TRand : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TRand( TDataSet* aparent );
-   /** destructor */
-   virtual ~TRand();
-   /** creator */
-   static TDataSet* create( TDataSet* apar );
-   /** return ptr to static class_info */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TRand);
+   DCL_CREATE;
+   DCL_STD_INF;
+   virtual ~TRand() override;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** reimplemented from TMiso to create generator */
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    /** reimplemented from TMiso to delete generator */
-   virtual int do_postRun( int good );
+   virtual int do_postRun( int good ) override;
    /** reimplemented from TMiso to init generator and variables */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int do_startLoop( int acnx, int acny ) override;
    
    /** type of distribution */
-   PRM_LIST1( type, efNRC, "Type", "Distribution type", "", trand_list_type );
+   PRM_LIST( type, efNRC, "Type", "Distribution type", "", trand_list_type );
    /** time of const output value, if <=0 -- chacge every tick */
-   PRM_DOUBLE1( tau, efNRC, "\\tau", "time of const output value, if <=0 -- change every tick ", "" );
+   PRM_DOUBLE( tau, efNRC, "\\tau", "time of const output value, if <=0 -- change every tick ", "" );
    /** amplitude of output */
-   PRM_DOUBLE1( ampl, 0, "Amplitude", "Amplitude scale of output", "" );
+   PRM_DOUBLE( ampl, 0, "Amplitude", "Amplitude scale of output", "" );
    /** zero value of output */
-   PRM_DOUBLE1( zval, 0, "Base value", "Zero value of output ", "" );
+   PRM_DOUBLE( zval, 0, "Base value", "Zero value of output ", "" );
    /** coefficients of distribution */
-   PRM_DOUBLE1( sigma, 0, "\\sigma", "\\sigma value of distrinution", "sep=col" );
-   PRM_DOUBLE1( a, 0, "a", "Parameter a", "" );
-   PRM_DOUBLE1( b, 0, "b", "Parameter b", "" );
-   PRM_DOUBLE1( c, 0, "c", "Parameter c", "" );
+   PRM_DOUBLE( sigma, 0, "\\sigma", "\\sigma value of distrinution", "sep=col" );
+   PRM_DOUBLE( a, 0, "a", "Parameter a", "" );
+   PRM_DOUBLE( b, 0, "b", "Parameter b", "" );
+   PRM_DOUBLE( c, 0, "c", "Parameter c", "" );
    /** seed value for generator */
-   PRM_INT1( seed, efNRC, "Seed", "Seed value for generator", "sep=col" );
+   PRM_INT( seed, efNRC, "Seed", "Seed value for generator", "sep=col" );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
-   PRM_LIST1( seedType, efNRC, "Seed type", "0 - every run 1- 1d loop .. 3-by model ", "",
+   PRM_LIST( seedType, efNRC, "Seed type", "0 - every run 1- 1d loop .. 3-by model ", "",
        trand_list_seedType );
    /** flag: add base seed to element seed */
-   PRM_SWITCH1( addBaseSeed, efNRC, "Add base", "Add base seed to element seed ", "" );
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   // @ iface end 
+   PRM_SWITCH( addBaseSeed, efNRC, "Add base", "Add base seed to element seed ", "" );
+   
    /** time (may not be time) after previos value change */
    double sp_time;
    /** old input (usualy time) to calc difference */
@@ -104,9 +94,8 @@ class TRand : public TMiso  {
    int bseed;
    /** generator structure from GSL */
    gsl_rng *rng;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

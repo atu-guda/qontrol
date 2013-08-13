@@ -39,16 +39,10 @@ static const char* const toutarr_list =
 class TOutArr : public TDataSet  {
   Q_OBJECT
  public:
-   /** constructor */ 
-   explicit TOutArr( TDataSet* apar );
-   /** destructor */
-   virtual ~TOutArr();
-   /** creator */
-   static TDataSet* create( TDataSet* apar );
-   /** return ptr to static class_info, nust be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TOutArr);
+   DCL_CREATE;
+   DCL_STD_INF;
+   virtual ~TOutArr() override;
    /** access to array value */
    virtual const dvector* getArray(void);
    /** request to allocate array */
@@ -67,41 +61,36 @@ class TOutArr : public TDataSet  {
    int fillGraphInfo( GraphInfo *gi ) const;
  protected:
    /** type of array: 0:simple, 1:parm1, 2:parm2, 3:special */
-   PRM_LIST1( type, efNoRunChange, "Type", 
+   PRM_LIST( type, efNoRunChange, "Type", 
        "Type of array: 0:simple, 1:parm1, 2:parm2, 3:special", "", toutarr_list );
    /** name of element to use */
-   PRM_STRING1( name, efNoRunChange, "Source", "Name of element to use", "max=32" );
+   PRM_STRING( name, efNoRunChange, "Source", "Name of element to use", "max=32" );
    /** label of data */
-   PRM_STRING1( label, efNoRunChange, "Label", "Label of data", "max=32" );
+   PRM_STRING( label, efNoRunChange, "Label", "Label of data", "max=32" );
    /** size of x=const block in 2-d arrays */
-   PRM_INT1( ny, efInner, "ny","size of x=const block in 2-d arrays", ""  );
+   PRM_INT( ny, efInner, "ny","size of x=const block in 2-d arrays", ""  );
    /** each n-th data collect. def=1 */
-   PRM_INT1( nq, efNoRunChange, "Every n", "each n-th data collect. def=1", "min=0\nmax=1e6" );
+   PRM_INT( nq, efNoRunChange, "Every n", "each n-th data collect. def=1", "min=0\nmax=1e6" );
    /** latch value of counter */
-   PRM_INT1( lnq, efNoRunChange, "Catch at n=", "latch value of counter", "min=0\nmax=1e6" );
+   PRM_INT( lnq, efNoRunChange, "Catch at n=", "latch value of counter", "min=0\nmax=1e6" );
    /** current value of counter(0..nq-1) */
-   PRM_INT1( cnq, efInner, "Current n", "current value of counter(0..nq-1)", "" );
+   PRM_INT( cnq, efInner, "Current n", "current value of counter(0..nq-1)", "" );
    /** min value */
-   PRM_DOUBLE1( dmin, efInner, "min", "min value", "" );
+   PRM_DOUBLE( dmin, efInner, "min", "min value", "" );
    /** max value */
-   PRM_DOUBLE1( dmax, efInner, "max", "max value", "" );
+   PRM_DOUBLE( dmax, efInner, "max", "max value", "" );
    /** array size */
-   PRM_INT1( arrsize, efInner, "full size", "Full array size", "" );
+   PRM_INT( arrsize, efInner, "full size", "Full array size", "" );
    /** current number of datas */
-   PRM_INT1( n, efInner, "current size", "Current number of datas", "" );
+   PRM_INT( n, efInner, "current size", "Current number of datas", "" );
    /** data storage TODO: vector */
    dvector arr;
    /** fake source */
    double fake_so;
    /** ptr to source */
    const double *so;
-   /** class decription */
-   static TClassInfo class_info;       
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   
+   DCL_DEFAULT_STATIC;
 };
 typedef TOutArr *PTOutArr;
 

@@ -97,7 +97,7 @@ void QStatusModel::update()
     ob = mainview->getSelObj();
     if( ob != 0 ) {
       ob_nm_tp = ob->objectName()
-               % "  (" % L8B( ob->getClassName() ) % ")";
+               % "  (" % ob->getType() % ")";
       l_name->setText( ob_nm_tp );
       ob->getData( "descr", ob_descr );
       l_desc->setText( ob_descr );

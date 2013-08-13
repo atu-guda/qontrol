@@ -27,33 +27,20 @@
 class TLinear : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TLinear( TDataSet *aparent );
-   /** empty destructor */
-   virtual ~TLinear();
-   /** creator */
-   static TDataSet* create( TDataSet *apar );
-   /** return ptr to static class_info, nust be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TLinear);
+   DCL_CREATE;
+   DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** coefficients on input and shift */
-   PRM_DOUBLE1( a0, 0, "a0", "factor in input 0", "" );
-   PRM_DOUBLE1( a1, 0, "a1", "factor in input 1", "" );
-   PRM_DOUBLE1( a2, 0, "a2", "factor in input 2", "sep=col" );
-   PRM_DOUBLE1( a3, 0, "a3", "factor in input 3", "" );
-   PRM_DOUBLE1( b,  0, "b", "static shift", "sep=col" );
-   PRM_INT( tst1, 117, 0, "test 1", "test variable", "" ); // remove me!
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   PRM_DOUBLE( a0, 0, "a0", "factor in input 0", "" );
+   PRM_DOUBLE( a1, 0, "a1", "factor in input 1", "" );
+   PRM_DOUBLE( a2, 0, "a2", "factor in input 2", "sep=col" );
+   PRM_DOUBLE( a3, 0, "a3", "factor in input 3", "" );
+   PRM_DOUBLE( b,  0, "b", "static shift", "sep=col" );
+
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

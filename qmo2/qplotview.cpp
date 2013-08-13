@@ -41,8 +41,10 @@ QPlotView::QPlotView( QMo2Doc *adoc, TGraph *agra, QWidget *parent )
   int i;
   doc = adoc; gra = agra;
   scd = static_cast<ScaleData*>( gra->getObj( "scd", "ScaleData" ) );
-  if( !scd )
-    scd = new ScaleData( gra ); // ???
+  if( !scd ) {
+    DBG1( "ScaleData not found, recreatind" );
+    scd = new ScaleData( "scd", gra, 0, "scale", "default scale data" ); // ???
+  }
   
   datax = 0; plpbuf = 0;
   for( i=0; i<6; i++ ) { datay[i] = 0; plotOn[i] = 1; plp[i] = 0; };

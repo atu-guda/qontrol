@@ -26,14 +26,10 @@ const char* TGraph::helpstr = "<H1>TGraph</H1>\n"
  "Define, which outputs will be used for plotting and dumping. \n"
  "All outputs must be the same type";
 
-TClassInfo TGraph::class_info = {
- "TGraph", TGraph::create,
- &TDataSet::class_info, helpstr, clpSpecial };
+STD_CLASSINFO(TGraph,clpSpecial);
 
-
-TGraph::TGraph( TDataSet* apar )
-       :TDataSet( apar ),
-       scd( new ScaleData( this ) )
+CTOR(TGraph,TDataSet) ,
+     scd( new ScaleData( "scd", this, 0, "scale", "scale data", "" ) )
 {
   bgcolor = QColor::fromRgb( 0,0,0x60 );
   title =  "title";
@@ -45,10 +41,6 @@ TGraph::TGraph( TDataSet* apar )
   y5color = QColor::fromRgb(255,0,255);
 }
 
-TGraph::~TGraph()
-{
-
-}
 
 
 
@@ -75,7 +67,7 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
   
   TModel *model = static_cast<TModel*>(par);
   // x-data
-  arr = model->getOutArr( xname );
+  arr = model->getOutArr( xname.cval() );
   if( !arr ) 
     return -1;
   out_nn = -1; ny = -1;
@@ -91,9 +83,11 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
   };
   gi->label[0] = label;
   col = 1; // unlike show, x and y[] in single index
-  const QString* ynms[] = { &y0name, &y1name, &y2name, &y3name, &y4name, &y5name }; // TODO: replace
+  QString ynms[]  = 
+    { y0name.cval(), y1name.cval(), y2name.cval(), 
+      y3name.cval(), y4name.cval(), y5name.cval() }; // TODO: replace
   for( i=0; i<6; i++ ) {
-    arr = model->getOutArr( *ynms[i] );
+    arr = model->getOutArr( ynms[i] );
     if( !arr ) 
       continue;
     out_nn = -1;
@@ -141,5 +135,5 @@ int TGraph::gnuPlot( int otp, const char *fn, const char *atitle,
 }
 
 
-DEFAULT_FUNCS_REG(TGraph)
+DEFAULT_FUNCS_REG(TGraph);
 

@@ -29,19 +29,11 @@ const char* THyst::helpstr = "<H1>THyst</H1>\n"
  " <b>a, b </b> - output scale\n"
  "Can be changed at any time: <b>x0, alpha</b>.";
 
-TClassInfo THyst::class_info = {
-  "THyst", THyst::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(THyst,clpElem);
 
-
-THyst::THyst( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(THyst,TMiso)
 {
   type = 0; x0 = 1; alpha = 0.2; a = 1; b = 0; s = d = 0;
-}
-
-THyst::~THyst()
-{
 }
 
 
@@ -57,7 +49,7 @@ double THyst::f( double /* t */ )
   ud = *in_so[0] - u_old; 
   ts = s + ud;
   if( ts >= x0 ) { 
-    s = x0;  d += ts - x0;  
+    s = (double)x0;  d += ts - x0;  
   } else { 
     if( ts <= -x0 ) { 
       s = -x0;  d += ts + x0; 
@@ -65,7 +57,7 @@ double THyst::f( double /* t */ )
       s = ts; 
     };
   };
-  switch( type ) {
+  switch( (int)type ) {
     case 0: v = s + alpha * d; break;
     case 1: v = alpha * d; break;   
     case 2: v = thetta( d ); break;
@@ -81,7 +73,7 @@ double THyst::f( double /* t */ )
 void THyst::fixState(void) 
 {
   if( s > x0 )  
-    { d += s - x0;  s = x0;  };
+    { d += s - x0;  s = (double)x0;  };
   if( s < -x0 ) 
     { d += s + x0;  s = -x0; };
 }

@@ -29,30 +29,24 @@ class TCircBuf;
 class TDelay : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TDelay( TDataSet *aparent );
-   /** empty destructor */
-   virtual ~TDelay();
-   /** creator */
-   static TDataSet* create( TDataSet *apar );
-   /** class id */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TDelay);
+   DCL_CREATE;
+   DCL_STD_INF;
+   virtual ~TDelay() override;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** calc values & alloc buf */
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    /** deallocates buf */
-   virtual int do_postRun( int good );
+   virtual int do_postRun( int good ) override;
    /** reimplemented from TMiso to reset array */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int do_startLoop( int acnx, int acny ) override;
    
    /** max delay */
-   PRM_DOUBLE1( mdelay, efNRC, "Max. delay", "Maximum delay", "min=0\nmax=1e20");
+   PRM_DOUBLE( mdelay, efNRC, "Max. delay", "Maximum delay", "min=0\nmax=1e20");
    /** current delay */
-   PRM_DOUBLE1( cdelay, 0, "Cur. delay", "Current delay", "min=0\nmax=1e20" );
+   PRM_DOUBLE( cdelay, 0, "Cur. delay", "Current delay", "min=0\nmax=1e20" );
 
    double v1;
    double v2;
@@ -61,13 +55,7 @@ class TDelay : public TMiso  {
    int imd, icd;
    /** data container */
    TCircBuf *buf;
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

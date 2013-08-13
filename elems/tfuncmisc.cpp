@@ -27,20 +27,12 @@ const char* TFuncMisc::helpstr = "<H1>TFuncMisc</H1>\n"
  "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n";
 
 
-TClassInfo TFuncMisc::class_info = {
-  "TFuncMisc", TFuncMisc::create,
-  &TMiso::class_info, helpstr, clpElem | clpPure };
+STD_CLASSINFO(TFuncMisc,clpElem);
 
-
-TFuncMisc::TFuncMisc( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TFuncMisc,TMiso)
 {
   type = 0;
   a = b = 1; c = d = e = g = x0 = 0; 
-}
-
-TFuncMisc::~TFuncMisc()
-{
 }
 
 
@@ -48,7 +40,7 @@ double TFuncMisc::f( double /* t */ )
 {
   double v, y;
   y = *in_so[0] - *in_so[1] - x0; 
-  switch( type ) {
+  switch( (int)type ) {
     case 0:  v = a * deadLine( y, b ); break;
     case 1:  v = a * limitLine( y, b ); break;
     case 2:  v = a * deadLimitLine( y, b, c, d ); break;

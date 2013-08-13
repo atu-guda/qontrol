@@ -26,13 +26,9 @@ const char* TSource::helpstr = "<H1>TSource</H1>\n"
  "Have N parameters: <b>type, U, omega, .. b</b>,"
  "each can be changed at any time ??.";
 
-TClassInfo TSource::class_info = {
-  "TSource", TSource::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TSource,clpElem);
 
-
-TSource::TSource( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TSource,TMiso)
 {
   type = use_u_ch = use_f_ch = 0;
   uu = 1; omega = 0.7; cc = 0;
@@ -92,7 +88,7 @@ double TSource::f( double t )
   uu_s = uu * u_ch; omet_s = omet + f_ch; // note u: * fi +
   phi = omet_s * M_1_PI * 0.5;
   phi_0 = fmod( phi, 1 ); // phase in range [ 0; 1 )
-  switch( type ) {
+  switch( (int)type ) {
     case 0: v = uu_s * sin( omet_s ); break;
     case 1: v = uu_s * sign( sin( omet_s ) ); break;
     case 2: v = uu_s * sin( omet_s ) * t / tt; break;

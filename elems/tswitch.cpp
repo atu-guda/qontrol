@@ -27,19 +27,11 @@ const char* TSwitch::helpstr = "<H1>TSwitch</H1>\n"
  " - <b>level2</b> -- level of u[3] to switch u[1]->u[2].<br>\n"
  "Each parameter can be changed at any time.";
 
-TClassInfo TSwitch::class_info = {
-  "TSwitch", TSwitch::create,
-  &TMiso::class_info, helpstr, clpElem | clpPure };
+STD_CLASSINFO(TSwitch,clpElem);
 
-
-TSwitch::TSwitch( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TSwitch,TMiso)
 {
   level1 = 1; level2 = 2;
-}
-
-TSwitch::~TSwitch()
-{
 }
 
 

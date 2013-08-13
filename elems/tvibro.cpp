@@ -21,19 +21,9 @@ const char* TVibro::helpstr = "<H1>TVibro</H1>\n"
  "Vibrational element <b> d2x/dt^2 + c0*dx/dt + Omega^2*f(x) = u</b>: <br>\n"
  "Parameters <b>c0</b> and <b>Omega</b> can be changed at any time.<br>\n";
 
-TClassInfo TVibro::class_info = {
-  "TVibro", TVibro::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TVibro,clpElem );
 
-
-TVibro::TVibro( TDataSet* aparent )
-        :TMiso( aparent ),
-	 c0(0.4), Omega(1.2), v0(0), use_u1(0), v(v0), isStart(1),
-	 u_old(0), f_old(0), x_old(out0_init), x_old2(out0_init), tdt2(1)
-{
-}
-
-TVibro::~TVibro()
+CTOR(TVibro,TMiso)
 {
 }
 
@@ -48,7 +38,7 @@ int TVibro::do_preRun( int /*run_tp*/, int /*an*/,
 int TVibro::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   u_old = f_old = 0;
-  v = v0;
+  v = (double)v0;
   x_old = out0_init;
   x_old2 = out0_init - v0 * tdt;
   isStart = 1;
@@ -60,7 +50,7 @@ double TVibro::f( double /*t*/ )
   double x, ctau = tdt * c0 / 2; // c0 can be changed at any time, so here
   
   if( isStart == 1 ) {  // first step
-    isStart = 2; x = out0_init; v = v0;
+    isStart = 2; x = out0_init; v = (double)v0;
   } else if ( isStart == 2 ) {  // second step
     isStart = 0; 
     x = x_old + v0 * tdt + 0.5 * tdt2 * u_old;

@@ -25,13 +25,9 @@ const char* TCorrAnalysis::helpstr = "<H1>TCorrAnalysis</H1>\n"
  "Correlational analysis for x=u0; y = u1: <br>\n"
  "Unstable: Information about parameters see in info.";
 
-TClassInfo TCorrAnalysis::class_info = {
-  "TCorrAnalysis", TCorrAnalysis::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TCorrAnalysis,clpElem );
 
-
-TCorrAnalysis::TCorrAnalysis( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TCorrAnalysis,TMiso)
 {
   type = 0; 
   ok = n = ii = nc = 0;
@@ -40,29 +36,26 @@ TCorrAnalysis::TCorrAnalysis( TDataSet* aparent )
   mainOutput = 0;
   reset_data();
   cmp_ms = cmp_min = cmp_max = cmp_ampl = cmp_tmin = cmp_tmax = 0;
-  out_source[0] = &s_x; 
-  out_source[1] = &s_x2; 
-  out_source[2] = &s_y; 
-  out_source[3] = &s_y2; 
-  out_source[4] = &s_xy; 
-  out_source[5] = &a; 
-  out_source[6] = &b; 
-  out_source[7] = &corr; 
-  out_source[8] = &cov; 
-  out_source[9] = &dis_x; 
-  out_source[10] = &dis_y; 
-  out_source[11] = &sigma_x; 
-  out_source[12] = &sigma_y; 
-  out_source[13] = &ave_x; 
-  out_source[14] = &ave_y; 
-  out_source[15] = &ave_x2; 
-  out_source[16] = &ave_y2; 
+  out_source[0]  = s_x.addr(); 
+  out_source[1]  = s_x2.addr(); 
+  out_source[2]  = s_y.addr(); 
+  out_source[3]  = s_y2.addr(); 
+  out_source[4]  = s_xy.addr(); 
+  out_source[5]  = a.addr(); 
+  out_source[6]  = b.addr(); 
+  out_source[7]  = corr.addr(); 
+  out_source[8]  = cov.addr(); 
+  out_source[9]  = dis_x.addr(); 
+  out_source[10] = dis_y.addr(); 
+  out_source[11] = sigma_x.addr(); 
+  out_source[12] = sigma_y.addr(); 
+  out_source[13] = ave_x.addr(); 
+  out_source[14] = ave_y.addr(); 
+  out_source[15] = ave_x2.addr(); 
+  out_source[16] = ave_y2.addr(); 
   out_source[17] = 0; out_source[18] = 0; out_source[19] = 0; 
 }
 
-TCorrAnalysis::~TCorrAnalysis()
-{
-}
 
 
 void TCorrAnalysis::reset_data()
@@ -89,7 +82,8 @@ int TCorrAnalysis::do_endLoop()
   do_cmp = do_fill = 0;
   if( ! par )
     return 1;
-  arrx = model->getOutArr( x_oname );
+  QString tmp = x_oname;
+  arrx = model->getOutArr( tmp );
   if( !arrx ) 
     return 1;
   nx = nx_c = 0;
@@ -98,7 +92,8 @@ int TCorrAnalysis::do_endLoop()
   if( xdat == 0 || nx < 2 ) 
     return 1;
   cdat = 0;
-  arrc = model->getOutArr( c_oname );  
+  tmp = c_oname;
+  arrc = model->getOutArr( tmp );  
   if( arrc ) {
     cdat = arrc->getArray();
     arrc->getData( "n", &nx_c );
@@ -106,7 +101,8 @@ int TCorrAnalysis::do_endLoop()
   if( cdat != 0 && nx_c == nx )
     do_cmp = 1;
   if( useFill ) {
-    arry = model->getOutArr( y_oname );
+    tmp = y_oname;
+    arry = model->getOutArr( tmp );
     if( arry ) {
       arry->alloc( nx, 1 );
       do_fill = 1;
@@ -146,7 +142,7 @@ double TCorrAnalysis::f( double t )
   if( useReset && *in_so[3] < 0.1 /* sic: < */ ) {
     reset_data();
   };
-  switch( type ) {
+  switch( (int)type ) {
     case 0: add = 1; break;
     case 1: add = ( t >= t0 ) && ( t <= t1 ); break;
     case 2: add = ( *in_so[2] > 0.1 ); break;
@@ -222,7 +218,7 @@ int TCorrAnalysis::calc()
     return 0;
   };
 
-  nc = n;
+  nc = (int)n;
     
   ave_x = s_x / n; ave_y = s_y / n;
   ave_x2 = s_x2 / n; ave_y2 = s_y2 / n;

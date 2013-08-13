@@ -25,25 +25,17 @@ const char* TCounter::helpstr = "<H1>TCounter</H1>\n"
  " - <b>useReset</b> -- use u[1] as reset counter signal;<br>\n"
  " - <b>cn</b> -- counter [0;n-1] (ro).<br>\n";
 
-TClassInfo TCounter::class_info = {
-  "TCounter", TCounter::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TCounter,clpElem );
 
-
-TCounter::TCounter( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TCounter,TMiso)
 {
-  cn = type = useReset = flip = 0; u_old = 9e300; n = 2;
-}
-
-TCounter::~TCounter()
-{
+  cn = type = useReset = flip = 0; u_old = DMAX; n = 2;
 }
 
 
 int TCounter::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  cn = flip = 0; u_old = 9e300;
+  cn = flip = 0; u_old = DMAX;
   return 0;
 }
 
@@ -62,7 +54,7 @@ double TCounter::f( double /* t */ )
       };
     };
   };
-  switch( type ) {
+  switch( (int)type ) {
     case 0: v = flip; break; // level
     case 1: v = tick; break; // pulse+
     case 2: v = tick ? ( -1 + 2*flip ) : 0; break; // pulse+-

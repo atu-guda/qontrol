@@ -22,19 +22,11 @@ const char* TLinear::helpstr = "<H1>TLinear</H1>\n"
  "<b>x = a0*u0 + a1*u1 + a2*u2 + a3*u3 + b</b><br>\n"
  "Have 5 parameters: <b>a0 .. a3, b</b>, each can be changed at any time.";
 
-TClassInfo TLinear::class_info = {
-  "TLinear", TLinear::create,
-  &TMiso::class_info, helpstr, clpElem | clpPure };
+STD_CLASSINFO(TLinear,clpElem);
 
-
-TLinear::TLinear( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TLinear,TMiso)
 {
   a0 = 1; a1 = -1; a2 = a3 = 0; b = 0;
-}
-
-TLinear::~TLinear()
-{
 }
 
 double TLinear::f( double /* t */ )

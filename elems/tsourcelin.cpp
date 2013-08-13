@@ -29,13 +29,9 @@ const char* TSourceLin::helpstr = "<H1>TSourceLin</H1>\n"
  "List terminated, in t_int &lt=; 0.\n"
 ;
 
-TClassInfo TSourceLin::class_info = {
-  "TSourceLin", TSourceLin::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TSourceLin,clpElem );
 
-
-TSourceLin::TSourceLin( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TSourceLin,TMiso)
 {
   int i;
   for( i=0; i<16; i++ ) t_int[i] = vs[i] = ve[i] = 0;
@@ -46,10 +42,6 @@ TSourceLin::TSourceLin( TDataSet* aparent )
   t_int[4] = 0; vs[4] = 0; ve[4] = 0;  // end marker
   recalc();
 
-}
-
-TSourceLin::~TSourceLin()
-{
 }
 
 

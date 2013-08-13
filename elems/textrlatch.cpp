@@ -30,20 +30,12 @@ const char* TExtrLatch::helpstr = "<H1>TExtrLatch</H1>\n"
  "-<B>fuzzy </B> - fuzzy level; <br>\n"
  "";
 
-TClassInfo TExtrLatch::class_info = {
-  "TExtrLatch", TExtrLatch::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TExtrLatch,clpElem);
 
-
-TExtrLatch::TExtrLatch( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TExtrLatch,TMiso)
 {
   type = 0; useLocal = useFirst = outT = useReset = 0; tStart = fuzzy = 0;
   u_min = u_max = t_min = t_max = 0; isStart = wasExtr = 0; 
-}
-
-TExtrLatch::~TExtrLatch()
-{
 }
 
 
@@ -71,11 +63,11 @@ double TExtrLatch::f( double t )
     isStart = 2;
     u_min = u_max = u; u_abs = ua; t_ex = t_min = t_max = t_abs = t;
     if( outT ) return t;
-    switch( type ) {
-      case 0: u_ex = u_max; break; 
-      case 1: u_ex = u_min; break;
-      case 2: u_ex = u_abs; break;
-      case 3: u_ex = u_max; break;
+    switch( (int)type ) {
+      case 0: u_ex = (double)u_max; break; 
+      case 1: u_ex = (double)u_min; break;
+      case 2: u_ex = (double)u_abs; break;
+      case 3: u_ex = (double)u_max; break;
       case 4: u_ex = 0; break;
       default: u_ex = 0;
     };
@@ -98,14 +90,14 @@ double TExtrLatch::f( double t )
     if( ua > u_abs )
       { u_abs = ua; t_abs = t; k |= 4; };
     if( k & mybits[ type ] ) {
-      switch( type ) {
-	case 0: u_ex = u_max; t_ex = t_max; break;
-	case 1: u_ex = u_min; t_ex = t_min; break;
-	case 2: u_ex = u_abs; t_ex = t_abs; break;
+      switch( (int)type ) {
+	case 0: u_ex = (double)u_max; t_ex = (double)t_max; break;
+	case 1: u_ex = (double)u_min; t_ex = (double)t_min; break;
+	case 2: u_ex = (double)u_abs; t_ex = (double)t_abs; break;
 	case 3: u_ex = 0.5 * ( u_min + u_max ); 
-		t_ex = ( t_min > t_max ) ? t_min : t_max; break;
-	case 4: u_ex = 0.5 * ( u_max - u_min );
-		t_ex = ( t_min > t_max ) ? t_min : t_max; break;
+		t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
+	case 4: u_ex = 0.5 * ( (double)u_max - (double)u_min );
+		t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
 	default: u_ex = 0; t_ex = t;
       };
     } else {
@@ -117,7 +109,7 @@ double TExtrLatch::f( double t )
     if( u < u_old && u_old >= u_old2 ) {
       u_max = u_old; t_max = t_old; k = 1;
       if( u_max > u_abs ) {
-	u_abs = u_max; t_abs = t_max; k |= 4;
+	u_abs = (double)u_max; t_abs = (double)t_max; k |= 4;
       };
     }; 
     if( u > u_old && u_old <= u_old2 ) {
@@ -127,14 +119,14 @@ double TExtrLatch::f( double t )
       };
     }; 
     if( k & mybits[ type ] ) {
-      switch( type ) {
-	case 0: u_ex = u_max; t_ex = t_max; break;
-	case 1: u_ex = u_min; t_ex = t_min; break;
-	case 2: u_ex = u_abs; t_ex = t_abs; break;
-	case 3: u_ex = 0.5 * ( u_max + u_min );
-		t_ex = ( t_min > t_max ) ? t_min : t_max; break;
-	case 4: u_ex = 0.5 * ( u_max - u_min );
-		t_ex = ( t_min > t_max ) ? t_min : t_max; break;
+      switch( (int)type ) {
+	case 0: u_ex = (double)u_max; t_ex = (double)t_max; break;
+	case 1: u_ex = (double)u_min; t_ex = (double)t_min; break;
+	case 2: u_ex = (double)u_abs; t_ex = (double)t_abs; break;
+	case 3: u_ex = 0.5 * ( (double)u_max + u_min );
+		t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
+	case 4: u_ex = 0.5 * ( (double)u_max - u_min );
+		t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
 	default: u_ex = 0; t_ex = t; break;
       };
     };

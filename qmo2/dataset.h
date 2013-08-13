@@ -134,7 +134,9 @@ struct TClassInfo {
   operator targ_type() const { return v; } \
   operator targ_type&()  { return v; } \
   const targ_type* caddr() const { return &v; } \
-  targ_type* addr() { return &v; }
+  targ_type* addr() { return &v; } \
+  targ_type operator=( targ_type a ) { return v=a; }
+
 
 /** types of link - moved from tmiso.h */
 enum ltype_t {
@@ -162,6 +164,8 @@ class HolderData : public QObject {
   virtual ~HolderData();
   DCL_CREATE;
   QVariant::Type getTp() const { return tp; }
+  /** return number of elems: none for simple data */
+  virtual int getNumObj() const { return 0; };
   int isDyn() const { return dyn; }
   /** returns full name of object: aaa.bbb.cc  */ // TODO: up to HolderData
   QString getFullName() const;
@@ -172,7 +176,7 @@ class HolderData : public QObject {
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
   void extraToParm();
-  TDataSet* getParent() const { return qobject_cast<TDataSet*>( parent() ); } // OR keep par?
+  TDataSet* getParent() const { return par; }
   void setElems( const QString &els ); 
   // see DCL_STD_INF, DCL_STD_GETSET for childs
   virtual const TClassInfo* getClassInfo() const = 0;
@@ -230,6 +234,7 @@ class HolderSwitch : public HolderInt {
   // most functions from HolderInt
   virtual void post_set() override;
   virtual QString getType() const override;
+  int operator=( int a ) { v=a; post_set(); return v; }
  protected: 
   DCL_DEFAULT_STATIC;
 };
@@ -253,6 +258,7 @@ class HolderList : public HolderInt {
   // most functions from HolderInt
   virtual void post_set() override;
   virtual QString getType() const;
+  int operator=( int a ) { v=a; post_set(); return v; }
  protected: 
   DCL_DEFAULT_STATIC;
 };
@@ -293,6 +299,7 @@ class HolderString : public HolderData {
   DCL_STD_GETSET;
   virtual QString getType() const override; 
   STD_CONVERSIONS(QString);
+  const QString& cval() const { return v; };
  protected:
   QString v;
   DCL_DEFAULT_STATIC;
@@ -337,8 +344,9 @@ class TDataSet : public HolderData {
    DCL_STD_INF;
    DCL_STD_GETSET;
    virtual QString getType() const override; 
-   /** return number of registerd elems = number of holders */
-   int getNumObj() const;
+   virtual bool isObject( const QString &cl_name = QString() ) const override;
+   /** return number of elems */
+   virtual int getNumObj() const override { return children().size(); };
    /** return flags of allow adding */
    int getAllowAdd() const { return allow_add; }
    /** returns list of registerd elems names */
@@ -357,7 +365,7 @@ class TDataSet : public HolderData {
    void setModified() { modified |= 1; }
    /** drop modified flag */
    void setUnModified() { modified = 0; }
-   /** return ptr to elem by name */
+   /** return ptr to elem by name with optional type check */
    // use only by QMo2Doc while creating/loading 
    HolderData* getObj( const QString &ename, const QString &cl_name = QString() );   
   
@@ -378,7 +386,7 @@ class TDataSet : public HolderData {
    /** is given type of subelement valid for this object */
    virtual int isValidType( const QString &cl_name ) const;
    /** is this class child of given or the same by name */
-   bool isChildOf( const QString &cname );
+   bool isChildOf( const QString &cname ) const;
    void dumpStruct() const;
    QDomElement toDom( QDomDocument &dd ) const;
    bool fromDom( QDomElement &de, QString &errstr );
@@ -422,11 +430,11 @@ class ElemFactory {
  typedef QMap<QString,const TClassInfo*> MapStrClass;
   public:
    static ElemFactory& theFactory();
-   HolderData* createElem( const QString &a_type, 
-       const QString &ob_name, TDataSet *parent  ) const;
+   HolderData* createElem( const QString &a_type, ARGS_CTOR ) const;
    bool registerElemType( const TClassInfo *cl_inf );
    bool unregisterElemType( const QString &a_type );
    QStringList allTypeNames() const { return str_class.keys(); } // TODO: criterion
+   const QStringList& allParamTypes() const { return param_names; } 
    const TClassInfo* getInfo( const QString &a_type ) const;
    bool isChildOf( const QString &cl, const QString &par_cl );
 
@@ -438,6 +446,7 @@ class ElemFactory {
    ElemFactory& operator=( ElemFactory&& r ) = delete;
 
    MapStrClass str_class;
+   QStringList param_names;
 };
 
 #define EFACT ElemFactory::theFactory() 

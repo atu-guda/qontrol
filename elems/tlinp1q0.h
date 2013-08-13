@@ -34,40 +34,28 @@
 class TLinP1Q0 : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TLinP1Q0( TDataSet *aparent );
-   /** empty destructor */
-   virtual ~TLinP1Q0();
-   /** creator */
-   static TDataSet* create( TDataSet *apar );
-   /** return ptr to static class_info, nust be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TLinP1Q0);
+   DCL_CREATE;
+   DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** reimplemented from TMiso to init state */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int do_startLoop( int acnx, int acny ) override;
    
    /** coefficient near f(x) */
-   PRM_DOUBLE1( a, 0, "a", "a in dx/dt = a*f(ku*u(t)-x)", "" );
+   PRM_DOUBLE( a, 0, "a", "a in dx/dt = a*f(ku*u(t)-x)", "def=1" );
    /** coefficient near u(t)  */
-   PRM_DOUBLE1( ku, 0, "k_u",  "Amplification", "" );
+   PRM_DOUBLE( ku, 0, "k_u",  "Amplification", "def=1" );
    /** name of element to compute f(x) */
-   PRM_STRING1( fx, efNoRunChange | efNoDial, "old f(x) elem", "unused", "max=128" );
+   PRM_STRING( fx, efNoRunChange | efNoDial, "old f(x) elem", "unused", "max=128" );
    /** Use u[1] as f(x) */
-   PRM_SWITCH1( use_u1, efNoRunChange, "u[1] is f()", 
+   PRM_SWITCH( use_u1, efNoRunChange, "u[1] is f()", 
         "Use u[1] as source of f()", "" );
    /** old value of x  */
    double x_old;
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   
+   DCL_DEFAULT_STATIC;
 };
 
 

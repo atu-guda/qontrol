@@ -37,13 +37,9 @@ const char* TRand::helpstr = "<H1>TRand</H1>\n"
 ;
 
 
-TClassInfo TRand::class_info = {
-  "TRand", TRand::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TRand,clpElem);
 
-
-TRand::TRand( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TRand,TMiso)
 {
   type = 0;
   tau = 0.05; ampl = 1; zval = 0;
@@ -114,7 +110,7 @@ double TRand::f( double  /*t*/  )
     sp_time -= tau;
     if( sp_time >= tau )
       sp_time = 0;
-    switch( type ) {
+    switch( (int)type ) {
       case 0:  v = gsl_ran_flat( rng, -sigma, sigma ); break;
       case 1:  v = gsl_ran_gaussian( rng, sigma ); break;
       case 2:  v = gsl_ran_gaussian_tail( rng, a, sigma ); break;

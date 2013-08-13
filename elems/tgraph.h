@@ -32,16 +32,9 @@ class GraphInfo;
 class TGraph : public TDataSet  {
   Q_OBJECT
  public:
-    /** constructor */ 
-   explicit TGraph( TDataSet *apar );
-   /** destructor */
-   virtual ~TGraph();
-   /** creator */
-   static TDataSet* create( TDataSet *apar );
-   /** class id */
-   virtual const char* getHelp(void) const;
-   /** return ptr to static class_info, nust be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
+   DCL_CTOR(TGraph);
+   DCL_CREATE;
+   DCL_STD_INF;
    /** dumps data to file */
    int  dump( const char *fn, char delim = ' ' );
    /** dumps data to file to be used by gnuplot */
@@ -51,36 +44,30 @@ class TGraph : public TDataSet  {
    int fillGraphInfo( GraphInfo *gi ) const;
  protected:
    /** title of graph  */
-   PRM_STRING1( title, efNRC, "Title", "Plot title", "max=128\nsep=blockend\ncol=-1" );
+   PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nsep=blockend\ncol=-1" );
    /** name of output array for x  */
-   PRM_STRING1( xname, efNRC, "X  name", "Name of source for X values", "max=64\nsep=block" );
+   PRM_STRING( xname, efNRC, "X  name", "Name of source for X values", "max=64\nsep=block" );
    /** names of output array for y[i]  */
-   PRM_STRING1( y0name, efNRC, "Y0 name", "Name of source for Y0 values", "max=64" );
-   PRM_STRING1( y1name, efNRC, "Y1 name", "Name of source for Y1 values", "max=64" );
-   PRM_STRING1( y2name, efNRC, "Y2 name", "Name of source for Y2 values", "max=64" );
-   PRM_STRING1( y3name, efNRC, "Y3 name", "Name of source for Y3 values", "max=64" );
-   PRM_STRING1( y4name, efNRC, "Y4 name", "Name of source for Y4 values", "max=64" );
-   PRM_STRING1( y5name, efNRC, "Y5 name", "Name of source for Y5 values", "max=64" );
+   PRM_STRING( y0name, efNRC, "Y0 name", "Name of source for Y0 values", "max=64" );
+   PRM_STRING( y1name, efNRC, "Y1 name", "Name of source for Y1 values", "max=64" );
+   PRM_STRING( y2name, efNRC, "Y2 name", "Name of source for Y2 values", "max=64" );
+   PRM_STRING( y3name, efNRC, "Y3 name", "Name of source for Y3 values", "max=64" );
+   PRM_STRING( y4name, efNRC, "Y4 name", "Name of source for Y4 values", "max=64" );
+   PRM_STRING( y5name, efNRC, "Y5 name", "Name of source for Y5 values", "max=64" );
    /** back color  */
-   PRM_COLOR1( bgcolor, efNRC, "BG color", "Background color", "sep=col");
+   PRM_COLOR( bgcolor, efNRC, "BG color", "Background color", "sep=col");
    /** color of lines */
-   PRM_COLOR1( y0color, efNRC, "Y0 color", "Color for Y0", "");
-   PRM_COLOR1( y1color, efNRC, "Y0 color", "Color for Y1", "");
-   PRM_COLOR1( y2color, efNRC, "Y0 color", "Color for Y2", "");
-   PRM_COLOR1( y3color, efNRC, "Y0 color", "Color for Y3", "");
-   PRM_COLOR1( y4color, efNRC, "Y0 color", "Color for Y4", "");
-   PRM_COLOR1( y5color, efNRC, "Y0 color", "Color for Y5", "");
+   PRM_COLOR( y0color, efNRC, "Y0 color", "Color for Y0", "");
+   PRM_COLOR( y1color, efNRC, "Y0 color", "Color for Y1", "");
+   PRM_COLOR( y2color, efNRC, "Y0 color", "Color for Y2", "");
+   PRM_COLOR( y3color, efNRC, "Y0 color", "Color for Y3", "");
+   PRM_COLOR( y4color, efNRC, "Y0 color", "Color for Y4", "");
+   PRM_COLOR( y5color, efNRC, "Y0 color", "Color for Y5", "");
    // TODO: legend
    ScaleData *scd;
-   PRM_OBJ1( scd, 0, "Scale data", "Information about scales", "sep=block" );
+   // PRM_OBJ( scd, 0, "Scale data", "Information about scales", "sep=block" );
  
-   /** class decription */
-   static TClassInfo class_info;       
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   DCL_DEFAULT_STATIC;
 };
 typedef TGraph *PTGraph;
 

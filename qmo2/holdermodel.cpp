@@ -34,23 +34,29 @@ QVariant HolderModel::data( const QModelIndex &index, int role ) const
   if( !ho )
     return QVariant();
 
-  if( index.column() == 0 ) {
-    QString r = ho->targetName() + " " +  ho->getType();
+  int col = index.column();
+
+  if( col == 0 ) { // label
+    QString r = ho->objectName() + " " +  ho->getType();
     if( ho->isDyn() )
       r += '.';
     return r;
   }
-  if( ho->isObject() ) {
-    HolderObj *hob = qobject_cast<HolderObj*>(ho);
-    if( !hob )
-      return "??";
-    TDataSet *ob = hob->getObj();
-    if( !ob )
-      return "???";
-    return QString("*_") + QString::number( hob->getObj()->getNumObj() ) 
-       + ":" + QString::number( hob->getObj()->getAllowAdd() );
+  
+  if( col != 1 ) { // no data - fake output
+    return QString("col: ") + QSN(col) + QString(" row: ") + QSN(index.row());
   }
-  return ho->get();
+
+  if( ! ho->isObject() ) { // simple data
+    return ho->get();
+  }
+
+  TDataSet *ob = qobject_cast<TDataSet*>(ho);
+  if( !ob )
+      return "?cast?";
+  
+  return QString("*_") + QSN( ob->getNumObj() ) 
+       + ":" + QSN( ob->getAllowAdd() );
 }
 
 //bool HolderModel::hasChildren( const QModelIndex &parent ) const
@@ -64,21 +70,21 @@ QModelIndex HolderModel::index( int row, int column,
   if( ! hasIndex(row, column, parent) )
     return QModelIndex();
 
-  TDataSet *parentItem;
-  HolderData *parentHolder;
-  HolderObj  *parentHolderObj;
+  HolderData *hop;
+  TDataSet *parentItem = ds;
 
-  if( !parent.isValid() ) {
-    parentItem = ds;
-  } else {
-    parentHolder = static_cast<HolderData*>( parent.internalPointer() );
-    if( ! parentHolder->isObject() )
+  if( parent.isValid() ) {
+    hop = static_cast<HolderData*>( parent.internalPointer() );
+    if( !hop ) {
+      DBG1( "ERR: parent.internalPointer is nullptr " );
       return QModelIndex();
-    parentHolderObj = qobject_cast<HolderObj*>(parentHolder);
-    parentItem = parentHolderObj->getObj();
+    }
+    parentItem = qobject_cast<TDataSet*>(hop);
+    if( !parentItem  || ! parentItem->isObject()  )
+      return QModelIndex();
   }
 
-  HolderData *ho = parentItem->getHolder( row );
+  HolderData *ho = parentItem->getElem( row );
   if( !ho )
     return QModelIndex();
   
@@ -92,17 +98,17 @@ QModelIndex HolderModel::parent( const QModelIndex &index ) const
 
   // FIXME: perverted (used grandparent and name)
   HolderData *ho =  static_cast<HolderData*>( index.internalPointer() );
+  if( ! ho ) {
+    DBG1( "ERR: index.internalPointer() is nullptr" );
+    return QModelIndex();
+  }
   TDataSet *cds = ho->getParent(); // not 0
   if( cds == ds )
     return QModelIndex();
   
-  HolderData *pho = cds->myHolder();
-  if( ! pho )
-    return QModelIndex();
-  
   int ho_idx = cds->indexOfHolder( ho );
 
-  return createIndex( ho_idx, 0, pho );
+  return createIndex( ho_idx, 0, cds );
 }
 
 int HolderModel::rowCount( const QModelIndex &parent ) const
@@ -111,12 +117,11 @@ int HolderModel::rowCount( const QModelIndex &parent ) const
     return ds->getNumObj();
 
   HolderData *ho = static_cast<HolderData*>( parent.internalPointer() );
-  HolderObj *hob = qobject_cast<HolderObj*>(ho);
-  if( ! hob )
+  if( ! ho ) {
+    DBG1( "ERR: parent.internalPointer() is nullptr" );
     return 0;
-
-  TDataSet *cds = hob->getObj();
-  return cds->getNumObj();
+  }
+  return ho->getNumObj();
 }
 
 

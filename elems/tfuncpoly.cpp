@@ -27,20 +27,12 @@ const char* TFuncPoly::helpstr = "<H1>TFuncPoly</H1>\n"
  "Integer parameter <b>type</b> selects type of function.<br>\n"
  "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n";
 
-TClassInfo TFuncPoly::class_info = {
-  "TFuncPoly", TFuncPoly::create,
-  &TMiso::class_info, helpstr, clpElem | clpPure };
+STD_CLASSINFO(TFuncPoly,clpElem);
 
-
-TFuncPoly::TFuncPoly( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TFuncPoly,TMiso)
 {
   type = 0;
   a = b = 1; c = d = e = g = x0 = 0; 
-}
-
-TFuncPoly::~TFuncPoly()
-{
 }
 
 
@@ -48,7 +40,7 @@ double TFuncPoly::f( double /* t */ )
 {
   double v, y, y2, t1, t2;
   y = *in_so[0] - *in_so[1] - x0; y2 = y*y;
-  switch( type ) {
+  switch( (int)type ) {
     case 0: v = a * y; break;
     case 1: v = a * y2 + b * y; break;
     case 2: v = a * y2 * y + b * y2 + c * y; break;

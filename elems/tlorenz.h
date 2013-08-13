@@ -27,43 +27,31 @@
 class TLorenz : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TLorenz( TDataSet* aparent );
-   /** empty destructor */
-   virtual ~TLorenz();
-   /** creator */
-   static TDataSet* create( TDataSet* apar );
-   /** return ptr to static class_info, must be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TLorenz);
+   DCL_CREATE;
+   DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** called before each inner param loop. Unused param - -1 */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int do_startLoop( int acnx, int acny ) override;
    
    /** main system parameters */
-   PRM_DOUBLE1( sigma, 0, "\\sigma", "\\sigma parameter", "" );
-   PRM_DOUBLE1( r, 0, "r", "r parameter", "" );
-   PRM_DOUBLE1( b, 0, "b", "b parameter", "" );
+   PRM_DOUBLE( sigma, 0, "\\sigma", "\\sigma parameter", "" );
+   PRM_DOUBLE( r, 0, "r", "r parameter", "" );
+   PRM_DOUBLE( b, 0, "b", "b parameter", "" );
    /** start x, y, x values */
-   PRM_DOUBLE1( x_0, efNRC, "x_0", "Initial value of x", "sep=col" );
-   PRM_DOUBLE1( y_0, efNRC, "y_0", "Initial value of y", "" );
-   PRM_DOUBLE1( z_0, efNRC, "z_0", "Initial value of z", "" );
+   PRM_DOUBLE( x_0, efNRC, "x_0", "Initial value of x", "sep=col" );
+   PRM_DOUBLE( y_0, efNRC, "y_0", "Initial value of y", "" );
+   PRM_DOUBLE( z_0, efNRC, "z_0", "Initial value of z", "" );
    /** state variables */
-   PRM_DOUBLE1( x, efInner, "x", "x current value", "" );
-   PRM_DOUBLE1( y, efInner, "y", "y current value", ""  );
-   PRM_DOUBLE1( z, efInner, "z", "z current value", ""  );
+   PRM_DOUBLE( x, efInner, "x", "x current value", "" );
+   PRM_DOUBLE( y, efInner, "y", "y current value", ""  );
+   PRM_DOUBLE( z, efInner, "z", "z current value", ""  );
    /** values to store some model vars */	  
    double tt;
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

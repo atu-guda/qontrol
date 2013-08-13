@@ -36,28 +36,21 @@ const char* TIntegrator::helpstr = "<H1>TIntegrator</H1>\n"
  "- <b>useSqrOut</b> - calculate sqrt(out);<br>\n"  
  "- <b>useMin, useMax</b> - use limits to bound value."; 
 
-TClassInfo TIntegrator::class_info = {
-  "TIntegrator", TIntegrator::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TIntegrator,clpElem );
 
-
-TIntegrator::TIntegrator( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TIntegrator,TMiso)
 {
   ki = 1; vmin = -1000;  vmax = 1000; s_val = 0; dis = 1e-3; t_rst = 0;
   useMin = useMax = useReset = useBase = useAdd = useDis 
          = useAver = useHold = useSqIn = useSqrOut = 0;
 }
 
-TIntegrator::~TIntegrator()
-{
-}
-
 
 
 int TIntegrator::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  v_old = v = s_val; t_rst = 0;
+  v_old = v = (double)s_val; 
+  t_rst = 0;
   return 0;
 }
 
@@ -94,9 +87,9 @@ double TIntegrator::f( double /* t */ )
       v -= tdt * ( v - base ) * dis;
     };
     if( useMin  &&  v < vmin )
-      v = vmin;
+      v = (double)vmin;
     if( useMax  &&  v > vmax )
-      v = vmax;
+      v = (double)vmax;
     v_ret = v;
     if( useAver ) {
        v_ret = v_ret  / t_rst;

@@ -28,20 +28,12 @@ const char* TOutputAny::helpstr = "<H1>TOutputAny</H1>\n"
  "2-nd form: name relative to model: source.u <br>\n"
  "Have 1 parameter: <b>name</b>.";
 
-TClassInfo TOutputAny::class_info = {
-  "TOutputAny", TOutputAny::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TOutputAny,clpElem);
 
-
-TOutputAny::TOutputAny( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TOutputAny,TMiso)
 {
   type = -1; 
   useEnable = 0; ne = -1; pel = 0;
-}
-
-TOutputAny::~TOutputAny()
-{
 }
 
 
@@ -52,11 +44,11 @@ int TOutputAny::do_preRun( int /*run_tp*/, int /*an*/,
   int l;
   lastname = "";
   type = -1; ne = -1; pel = 0;
-  l = name.size();
+  l = name.cval().size();
   if( l < 2 ) return 0; // smallest: '#0'
-  if( name[0] == '#' ) { // access to model vars by number
+  if( name.cval()[0] == '#' ) { // access to model vars by number
     type = 1; 
-    ne = atoi( name.toLocal8Bit().constData() + 1 );
+    ne = atoi( name.cval().toLocal8Bit().constData() + 1 );
     return 0;
   };
   // all output dropped

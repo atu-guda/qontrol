@@ -27,41 +27,29 @@
 class TLatch : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TLatch( TDataSet *aparent );
-   /** empty destructor */
-   virtual ~TLatch();
-   /** creator */
-   static TDataSet* create( TDataSet *apar );
-   /** return ptr to static class_info, nust be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TLatch);
+   DCL_CREATE;
+   DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** reimplemented from TMiso to init state */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int do_startLoop( int acnx, int acny ) override;
    
    /** type of */
-   PRM_LIST1( type, efNRC, "Type", "Latch type", "", "Time\nSignal u[1]");
+   PRM_LIST( type, efNRC, "Type", "Latch type", "", "Time\nSignal u[1]");
    /** time to latch */
-   PRM_DOUBLE1( t0, efNRC, "Time", "Time to latch" , "sep=col" );
+   PRM_DOUBLE( t0, efNRC, "Time", "Time to latch" , "sep=col" );
    /** start value */
-   PRM_DOUBLE1( v_st, efNRC, "Start val", "Start value", "" );
+   PRM_DOUBLE( v_st, efNRC, "Start val", "Start value", "" );
    /** current value */
-   PRM_DOUBLE1( v, efInner, "v", "Current value", "" );
+   PRM_DOUBLE( v, efInner, "v", "Current value", "" );
    /** old input  */
    double u_old;
    /** flags, state */
    int usePulse, useFirst, useAdd, wasLatch;
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

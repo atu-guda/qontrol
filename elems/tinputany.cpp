@@ -27,18 +27,10 @@ const char* TInputAny::helpstr = "<H1>TInputAny</H1>\n"
  "2-nd form: name relative to model: source.u <br>\n"
  "Have 1 parameter: <b>name</b>.";
 
-TClassInfo TInputAny::class_info = {
-  "TInputAny", TInputAny::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TInputAny,clpElem);
 
-
-TInputAny::TInputAny( TDataSet* aparent )
-        :TMiso( aparent ),
+CTOR(TInputAny,TMiso),
 	fake_so(0), so( &fake_so )
-{
-}
-
-TInputAny::~TInputAny()
 {
 }
 
@@ -47,11 +39,11 @@ int TInputAny::do_preRun( int /*run_tp*/, int /*an*/,
                           int /*anx*/, int /*any*/, double /*adt*/ )
 {
   so = &fake_so;
-  if( name.isEmpty() ) { // empty name is good: fake source
+  if( name.cval().isEmpty() ) { // empty name is good: fake source
     return 0;
   }
 
-  if( name[0] == '#' ) { // access to model vars by number
+  if( name.cval()[0] == '#' ) { // access to model vars by number
     QString nname = name;
     nname.remove( 0, 1 );
     int ne = nname.toInt();

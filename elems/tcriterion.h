@@ -28,43 +28,30 @@
 class TCriterion : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TCriterion( TDataSet *aparent );
-   /** empty destructor */
-   virtual ~TCriterion();
-   /** creator */
-   static TDataSet* create( TDataSet *apar );
-   /** class id */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TCriterion);
+   DCL_CREATE;
+   DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** reimplemented from TMiso to init state */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int do_startLoop( int acnx, int acny ) override;
    
    /** type of criterion */
-   PRM_LIST1( type, efNRC, "Type", "Type of criterion", "",  
+   PRM_LIST( type, efNRC, "Type", "Type of criterion", "",  
        "|x|<a\n|x|>a\nx<a\nx>a\na<x<b"  );
    /** coefficients  */
-   PRM_DOUBLE1( a, 0, "a", "level 'a'", "" );
-   PRM_DOUBLE1( b, 0, "b", "level 'b'", "" );
-   PRM_DOUBLE1( t0, 0, "t0",  "Start time", "" );
+   PRM_DOUBLE( a, 0, "a", "level 'a'", "" );
+   PRM_DOUBLE( b, 0, "b", "level 'b'", "" );
+   PRM_DOUBLE( t0, 0, "t0",  "Start time", "" );
    /** flags and state */
-   PRM_SWITCH1( useA, efNRC, "u[3] is a", "Use u[3] as 'a' value", "sep=col" );
-   PRM_SWITCH1( useT0, efNRC, "t0", "Dont work before given time (t0)", "" );
-   PRM_SWITCH1( useEnable, efNRC, "u[2] is Enable", "Use u[2] signal as Enable", "" );
-   PRM_SWITCH1( useLock, efNRC, "Lock", "Lock after first front", "sep=col" );
-   PRM_SWITCH1( usePulse, efNRC, "Pulse Output", "output is pulse +1, 0, -1", "" );
-   PRM_INT1( st, efInner, "state", "current state", "");
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   PRM_SWITCH( useA, efNRC, "u[3] is a", "Use u[3] as 'a' value", "sep=col" );
+   PRM_SWITCH( useT0, efNRC, "t0", "Dont work before given time (t0)", "" );
+   PRM_SWITCH( useEnable, efNRC, "u[2] is Enable", "Use u[2] signal as Enable", "" );
+   PRM_SWITCH( useLock, efNRC, "Lock", "Lock after first front", "sep=col" );
+   PRM_SWITCH( usePulse, efNRC, "Pulse Output", "output is pulse +1, 0, -1", "" );
+   PRM_INT( st, efInner, "state", "current state", "");
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

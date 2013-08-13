@@ -29,45 +29,25 @@ ElemFactory& ElemFactory::theFactory()
 }
 
 
-TDataSet* ElemFactory::createElem( const QString &a_type, 
-             const QString &ob_name, TDataSet *parent ) const
+HolderData* ElemFactory::createElem( const QString &a_type, 
+             ARGS_CTOR_MIN ) const
 {
-  MapStrClass::const_iterator i = str_class.find( a_type );
+  auto i = str_class.find( a_type );
   if( i == str_class.end() ) {
     DBG2q( "WARN: fail to find class %s", a_type ); 
     return nullptr;
   }
   // check parent for name
-  if( parent->getHolder(ob_name) ) {
+  if( a_parent->getElem(obj_name) ) {
     DBGx( "WARN: name \"%s\" exists in parent \"%s\"", 
-	     qP( ob_name ), qP( parent->getFullName() ) );
+	     qP( obj_name ), qP( a_parent->getFullName() ) );
     return nullptr;
   }
   
-  TDataSet *ob =  i.value()->creator( parent );
-  //  create holder for it (auto set name and owner)
-  new HolderObj( ob, ob_name, ob_name, parent, 0, "", "dyn=1" );
+  HolderData *ob =  (i.value()->creator)( ARGS_CTOR_NAMES );
   return ob;
 }
 
-HolderData* ElemFactory::createParam( const QString &a_type, 
-       const QString &ob_name, TDataSet *parent  ) const
-{
-  MapStrHolder::const_iterator i = str_holder.find( a_type );
-  if( i == str_holder.end() ) {
-    DBG2q( "WARN: fail to find type", a_type ); 
-    return nullptr;
-  }
-  // check parent for name
-  if( parent->getHolder(ob_name) ) {
-    DBGx( "WARN: name \"%s\" exists in parent %s", 
-	     qP( ob_name ), qP(parent->getFullName()) );
-    return nullptr;
-  }
-  
-  HolderData *ho = i.value()->creator( ob_name, ob_name, parent, 0, "", "dyn=1" );
-  return ho;
-}
 
 bool ElemFactory::registerElemType( const TClassInfo *cl_info )
 {
@@ -79,13 +59,16 @@ bool ElemFactory::registerElemType( const TClassInfo *cl_info )
     return false;
   }
   str_class.insert( cl_name, cl_info );
+  if( cl_info->props & clpData ) {
+    param_names << cl_name; 
+  }
   //DBGx( "dbg:  registered \"%s\" %d", cl_info->className, cl_info->props ); 
   return true;
 }
 
 bool ElemFactory::unregisterElemType( const QString &a_type )
 {
-  MapStrClass::iterator i = str_class.find( a_type );
+  auto i = str_class.find( a_type );
   if( i == str_class.end() ) {
     DBG2q( "ERR: fail to find class", a_type ); 
     return 0;
@@ -94,22 +77,9 @@ bool ElemFactory::unregisterElemType( const QString &a_type )
   return true;
 }
 
-bool ElemFactory::registerSimpleType( const HolderInfo *ho_info )
-{
-  if( ! ho_info )
-    return false;
-  QString tp_name = L8B( ho_info->name );
-  if( str_holder.contains( tp_name ) ) {
-    DBG2q( "WARN: type already exists", ho_info->name ); 
-    return false;
-  }
-  str_holder.insert( tp_name, ho_info );
-  return true;
-}
-
 const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
 {
-  MapStrClass::const_iterator i = str_class.find( a_type );
+  auto i = str_class.find( a_type );
   if( i == str_class.end() ) {
     DBG2q( "ERR: fail to find class", a_type ); 
     return nullptr;
@@ -117,19 +87,4 @@ const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
   return i.value();
 }
 
-bool ElemFactory::isChildOf( const QString &cl, const QString &par_cl )
-{
-  auto i = str_class.find( cl );
-  if( i == str_class.end() ) {
-    DBG2q( "WARN:  fail to find class",	cl ); 
-    return false;
-  }
-  const TClassInfo *ci = i.value();
-  while( ci ) {
-    if( par_cl == ci->className )
-      return true;
-    ci = ci->parent_class;
-  }
-  return false;
-}
 

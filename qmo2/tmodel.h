@@ -41,17 +41,12 @@ struct li_el { // structure for links representation in arrays;
 class TModel : public TDataContainer  {
   Q_OBJECT
  public:
-  /** constructor */
-  explicit TModel( TDataSet* aparent );
-  /** destructor */
-  virtual ~TModel();
-  /** creator */
-  static TDataSet* create( TDataSet* apar );
-  /** return ptr to static class_info, must be implemented in each class */
-  virtual const TClassInfo* getClassInfo(void) const;
-  /** returns help string */
-  virtual const char* getHelp(void) const;
-  /** reimplemented from TDataSet to provide access to '#nvar' */
+  DCL_CTOR(TModel);
+  virtual ~TModel() override;
+  DCL_CREATE;
+  DCL_STD_INF;
+
+  /** reimplemented from TDataSet to provide access to '#nvar' TODO: drop*/
   virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = 0, int lev = 0 ) const;
   /** prepare to run */
   virtual int startRun( int type );
@@ -146,60 +141,59 @@ class TModel : public TDataContainer  {
  protected:
   // =============== iface objects ==============================
   /** total model time, starts with 0 each inner loop */ 
-  PRM_DOUBLE1( tt, efNoRunChange, "T", "Full Run Time", "min=0\nmax=1e300" );
+  PRM_DOUBLE( tt, efNoRunChange, "T", "Full Run Time", "min=0\nmax=1e300\ndef=100" );
   /** number of inner loop iterations */
-  PRM_INT1( nn, efNoRunChange, "N", "Number of steps in one run", 
-      "min=1\nmax=200000000\nsep=col"  );
+  PRM_INT( nn, efNoRunChange, "N", "Number of steps in one run", 
+      "min=1\nmax=200000000\nsep=col\ndef=10000"  );
   /** flag for real and model time syncronization */
-  PRM_SWITCH1( use_sync, efNoRunChange, "Sync RT", 
+  PRM_SWITCH( use_sync, efNoRunChange, "Sync RT", 
       "flag for real and model time syncronization ", "sep=col" );
   /** number of inner parametric loops iterations */
-  PRM_INT1( nl1, efNoRunChange, "N1",
+  PRM_INT( nl1, efNoRunChange, "N1",
        "Number of inner parametric loops iterations", 
-       "min=1\nmax=10000\nsep=block" );
+       "min=1\nmax=10000\nsep=block\ndef=1" );
   /** number of outer parametric loops iterations */
-  PRM_INT1( nl2, efNoRunChange, "N2",
+  PRM_INT( nl2, efNoRunChange, "N2",
        "Number of outer parametric loops iterations",
-       "min=1\nmax=10000\nsep=col" );
+       "min=1\nmax=10000\nsep=col\ndef=1" );
   /** number of steps per i/o action */
-  PRM_INT1( n_steps, efNoRunChange, "N steps",
+  PRM_INT( n_steps, efNoRunChange, "N steps",
       "number of steps per i/o action ",
-      "min=1\nmax=100000\nsep=col" );
+      "min=1\nmax=100000\nsep=col\ndef=1000" );
   /** Initial parametrs values */
-  PRM_DOUBLE1( prm0s, efNoRunChange, "param. 0", "Initial prm0 value", "sep=block" );
-  PRM_DOUBLE1( prm1s, efNoRunChange, "param. 1", "Initial prm1 value", "" );
-  PRM_DOUBLE1( prm2s, efNoRunChange, "param. 2", "Initial prm2 value", ""  );
-  PRM_DOUBLE1( prm3s, efNoRunChange, "param. 3", "Initial prm3 value", ""  );
-  PRM_DOUBLE1( prm0d, efNoRunChange, "prm0+=", "Parameter 0 delta", "" );
-  PRM_DOUBLE1( prm1d, efNoRunChange, "prm1+=", "Parameter 1 delta", "" );
-  PRM_DOUBLE1( xval1, 0, "xval1", "Reserved 1", "props=DOUBLE,SPIN\nstep=0.2" );
-  PRM_DOUBLE1( xval2, 0, "xval2", "Reserved 2", "" );
-  PRM_INT1( seed, efNoRunChange, "Seed", "Seed for random generator" , "min=-1" );
-  // PRM_INT1( useSameSeed, efNoDial | efRO, "use Same Seed", "", "" ); // OBSOLETE
-  PRM_INT1( useSameSeed, efNoRunChange, "use Same Seed - no", "Unused", "props=INT,SPIN\nstep=2\nmin=-100\nmax=100" ); // OBSOLETE
+  PRM_DOUBLE( prm0s, efNoRunChange, "param. 0", "Initial prm0 value", "sep=block" );
+  PRM_DOUBLE( prm1s, efNoRunChange, "param. 1", "Initial prm1 value", "" );
+  PRM_DOUBLE( prm2s, efNoRunChange, "param. 2", "Initial prm2 value", ""  );
+  PRM_DOUBLE( prm3s, efNoRunChange, "param. 3", "Initial prm3 value", ""  );
+  PRM_DOUBLE( prm0d, efNoRunChange, "prm0+=", "Parameter 0 delta", "" );
+  PRM_DOUBLE( prm1d, efNoRunChange, "prm1+=", "Parameter 1 delta", "" );
+  PRM_DOUBLE( xval1, 0, "xval1", "Reserved 1", "props=DOUBLE,SPIN\nstep=0.2" );
+  PRM_DOUBLE( xval2, 0, "xval2", "Reserved 2", "" );
+  PRM_INT( seed, efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=117" );
+  PRM_INT( useSameSeed, efNoRunChange, "use Same Seed - no", "Unused", "props=INT,SPIN\nstep=2\nmin=-100\nmax=100" ); // TODO: OBSOLETE
   /** type of seeding: 0 - every run, 1 - every 1d loop .. obj: 3 - as model */
-  PRM_LIST1( seedType, efNoRunChange, "Seed type",
+  PRM_LIST( seedType, efNoRunChange, "Seed type",
       "type of seeding: 0 - every run... ", "",
       "Every Run\nStart 1d loop\nStart 2d loop" );
   // -------- input channels indexes -------
   /** input from mouse (x,y,btn1,btn2,btn3) abs(x,y) <= 1, 0 - center */
-  PRM_INT1( ic_mouse, efNoRunChange, "Mouse idx", "Mouse input index", "sep=col" );
+  PRM_INT( ic_mouse, efNoRunChange, "Mouse idx", "Mouse input index", "sep=col" );
   /** input from joystick (x,y,btn) abs(x,y) <= 1, 0 - center */
-  PRM_INT1( ic_joy, efNoRunChange, "Joystick idx", "Joystick input index", "" );
+  PRM_INT( ic_joy, efNoRunChange, "Joystick idx", "Joystick input index", "" );
   /** input from soundcard (lert,right) */
-  PRM_INT1( ic_sound, efNoRunChange, "Sound idx", "Soundcard input index", "" );
+  PRM_INT( ic_sound, efNoRunChange, "Sound idx", "Soundcard input index", "" );
   /** input from keyboard (left,right,top,bottom,space,enter) */
-  PRM_INT1( ic_key, efNoRunChange, "Keyboard idx", "Keyboard input index", "" );
+  PRM_INT( ic_key, efNoRunChange, "Keyboard idx", "Keyboard input index", "" );
   /** input from unknown device, up to 20 values */
-  PRM_INT1( ic_aux, efNoRunChange, "AUX idx", "Unknown input index", "" );
+  PRM_INT( ic_aux, efNoRunChange, "AUX idx", "Unknown input index", "" );
   // -------- output channels indexes -------
   /** indexes for output */
-  PRM_INT1( oc_0, efNoRunChange, "Out idx 0", "Output index 0", "" );
-  PRM_INT1( oc_1, efNoRunChange, "Out idx 1", "Output index 1", ""  );
-  PRM_INT1( oc_2, efNoRunChange, "Out idx 2", "Output index 2", ""  );
-  PRM_INT1( oc_3, efNoRunChange, "Out idx 3", "Output index 3", ""  );
-  PRM_INT1( oc_4, efNoRunChange, "Out idx 4", "Output index 4", ""  );
-  PRM_INT1( oc_5, efNoRunChange, "Out idx 5", "Output index 5", ""  );
+  PRM_INT( oc_0, efNoRunChange, "Out idx 0", "Output index 0", "" );
+  PRM_INT( oc_1, efNoRunChange, "Out idx 1", "Output index 1", ""  );
+  PRM_INT( oc_2, efNoRunChange, "Out idx 2", "Output index 2", ""  );
+  PRM_INT( oc_3, efNoRunChange, "Out idx 3", "Output index 3", ""  );
+  PRM_INT( oc_4, efNoRunChange, "Out idx 4", "Output index 4", ""  );
+  PRM_INT( oc_5, efNoRunChange, "Out idx 5", "Output index 5", ""  );
   /** types of output 1-3=cross, 4-7=vbar, 8-11=gbar, 12-15=leds, 16,17=sound */
   const char *const och_type_str = 
     "None\nCross1\nCross2\nCross3\n"
@@ -208,43 +202,43 @@ class TModel : public TDataContainer  {
     "LED0\nLED1\nLED2\nLED3\n"
     "Sound0\nSound1\n"
     "Aux0\nAux1";
-  PRM_LIST1( oct_0, efNoRunChange, "Out Type 0", "Output Type 0", "sep=col", och_type_str );
-  PRM_LIST1( oct_1, efNoRunChange, "Out Type 1", "Output Type 1", "", och_type_str  );
-  PRM_LIST1( oct_2, efNoRunChange, "Out Type 2", "Output Type 2", "", och_type_str );
-  PRM_LIST1( oct_3, efNoRunChange, "Out Type 3", "Output Type 3", "", och_type_str );
-  PRM_LIST1( oct_4, efNoRunChange, "Out Type 4", "Output Type 4", "", och_type_str );
-  PRM_LIST1( oct_5, efNoRunChange, "Out Type 5", "Output Type 5", "", och_type_str );
+  PRM_LIST( oct_0, efNoRunChange, "Out Type 0", "Output Type 0", "sep=col", och_type_str );
+  PRM_LIST( oct_1, efNoRunChange, "Out Type 1", "Output Type 1", "", och_type_str  );
+  PRM_LIST( oct_2, efNoRunChange, "Out Type 2", "Output Type 2", "", och_type_str );
+  PRM_LIST( oct_3, efNoRunChange, "Out Type 3", "Output Type 3", "", och_type_str );
+  PRM_LIST( oct_4, efNoRunChange, "Out Type 4", "Output Type 4", "", och_type_str );
+  PRM_LIST( oct_5, efNoRunChange, "Out Type 5", "Output Type 5", "", och_type_str );
   // ---------------------------------------
   /** long description */
-  PRM_STRING1( long_descr, 0, "Description", "Model description", 
+  PRM_STRING( long_descr, 0, "Description", "Model description", 
       "props=STRING,MLINE\nncol=-1\nsep=block");
   // ======================= invisible vars ======================
   /** loops counters */
-  PRM_INT1( ii, efInner,  "ii", "Inner index", "" );
-  PRM_INT1( il1, efInner, "il1", "Param 0 index", "" );
-  PRM_INT1( il2, efInner, "il2", "Param 1 index", "" );
+  PRM_INT( ii, efInner,  "ii", "Inner index", "" );
+  PRM_INT( il1, efInner, "il1", "Param 0 index", "" );
+  PRM_INT( il2, efInner, "il2", "Param 1 index", "" );
   /** current time and time step, real time */ 
-  PRM_DOUBLE1( t, efInner, "time", "model time", "" );
-  PRM_DOUBLE1( tdt, efInner, "\\tau", "time step", "" );
-  PRM_DOUBLE1( rtime, efInner, "rtime", "real world time", "" );
+  PRM_DOUBLE( t, efInner, "time", "model time", "" );
+  PRM_DOUBLE( tdt, efInner, "\\tau", "time step", "" );
+  PRM_DOUBLE( rtime, efInner, "rtime", "real world time", "" );
   /** parametrs */
-  PRM_DOUBLE1( prm0, efInner, "prm0", "Current prm0 value", "" );
-  PRM_DOUBLE1( prm1, efInner, "prm1", "Current prm1 value", "" );
-  PRM_DOUBLE1( prm2, efInner, "prm2", "Current prm2 value", "" );
-  PRM_DOUBLE1( prm3, efInner, "prm3", "Current prm3 value", "" );
+  PRM_DOUBLE( prm0, efInner, "prm0", "Current prm0 value", "" );
+  PRM_DOUBLE( prm1, efInner, "prm1", "Current prm1 value", "" );
+  PRM_DOUBLE( prm2, efInner, "prm2", "Current prm2 value", "" );
+  PRM_DOUBLE( prm3, efInner, "prm3", "Current prm3 value", "" );
   /** signature to check from plot painters, etc... */
-  PRM_INT1( sgnt, efInner, "sgnt", "signature to check", "" );
+  PRM_INT( sgnt, efInner, "sgnt", "signature to check", "" );
   /** constants: todo: separate object */
-  PRM_DOUBLE1( m_sqrt2, efInner, "sqrt(2)", "\\sqrt{2}", "" );
-  PRM_DOUBLE1( m_sqrt1_2, efInner, "sqrt(1/2)", "\\sqrt{1/2}", "" );
-  PRM_DOUBLE1( one, efInner, "1", "1", "" );
-  PRM_DOUBLE1( m_PI, efInner, "\\Pi", "M_PI", "" );
-  PRM_DOUBLE1( m_E, efInner, "e", "base of natural logarifm", "" );
+  PRM_DOUBLE( m_sqrt2, efInner, "sqrt(2)", "\\sqrt{2}", "" );
+  PRM_DOUBLE( m_sqrt1_2, efInner, "sqrt(1/2)", "\\sqrt{1/2}", "" );
+  PRM_DOUBLE( one, efInner, "1", "1", "" );
+  PRM_DOUBLE( m_PI, efInner, "\\Pi", "M_PI", "" );
+  PRM_DOUBLE( m_E, efInner, "e", "base of natural logarifm", "" );
 
   /** total number of iterations */
-  PRM_INT1( n_tot, efInner, "n_tot", "total number of iterations", "" );
+  PRM_INT( n_tot, efInner, "n_tot", "total number of iterations", "" );
   /** total counter */
-  PRM_INT1( i_tot, efInner, "i_tot", "total counter", "" );
+  PRM_INT( i_tot, efInner, "i_tot", "total counter", "" );
   /** run type */
   int run_type = -1; // reset
   /** effective number of loop on prm0 */
@@ -255,6 +249,7 @@ class TModel : public TDataContainer  {
   int end_loop = 0;
   /** real start time */
   double start_time;
+  // TODO: separated objects
   /** vector of ptrs to active elements, my be sorted on ord */
   std::vector<TMiso*> v_el;
   /** vector indexes of outputs */
@@ -267,13 +262,7 @@ class TModel : public TDataContainer  {
   std::vector<int> v_ord;
   /** general purpose vars[MODEL_NVAR] */
   dvector vars;
-  /** class decription */
-  static TClassInfo class_info;
-  /** help str */
-  static const char* helpstr;
-  /** autoregister */
-  static int registered;
-  static int reg();
+  DCL_DEFAULT_STATIC;
 
 };
 

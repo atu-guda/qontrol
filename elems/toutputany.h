@@ -27,25 +27,19 @@
 class TOutputAny : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TOutputAny( TDataSet* aparent );
-   /** empty destructor */
-   virtual ~TOutputAny();
-   /** creator */
-   static TDataSet* create( TDataSet* apar );
-   /** return ptr to static class_info, nust be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TOutputAny);
+   DCL_CREATE;
+   DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** reimplemented from TMiso to set source */
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
+
    /** name of source */
-   PRM_STRING1( name, efNRC, "Sink name", "Name of sink to output", "ncol=2\nmax=80" );
+   PRM_STRING( name, efNRC, "Sink name", "Name of sink to output", "ncol=2\nmax=80" );
    /** enabler = u[1]  */
-   PRM_SWITCH1( useEnable, 0,  "u[1] is Enable", "Use u[1] as enable", "");
+   PRM_SWITCH( useEnable, 0,  "u[1] is Enable", "Use u[1] as enable", "");
    /** type of output: -1:bad, 0:object, 1-vars.  */
    int type;
    /** idx of sink */
@@ -54,13 +48,8 @@ class TOutputAny : public TMiso  {
    TDataSet *pel;
    /** name of last subelement xx.xx.xxx.lastname */
    QString lastname;
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

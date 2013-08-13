@@ -36,54 +36,44 @@ static const char* const trandtrigg_list_seedType =
 class TRandTrigg : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit TRandTrigg( TDataSet* aparent );
-   /** empty destructor */
-   virtual ~TRandTrigg();
-   /** creator */
-   static TDataSet* create( TDataSet* apar );
-   /** return ptr to static class_info, nust be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(TRandTrigg);
+   DCL_CREATE;
+   DCL_STD_INF;
+   virtual ~TRandTrigg() override;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** reimplemented from TMiso to init random generator */
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    /** reimplemented from TMiso to drop random generator */
-   virtual int do_postRun( int good );
+   virtual int do_postRun( int good ) override;
    /** reimplemented from TMiso to set start values */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int do_startLoop( int acnx, int acny ) override;
    
    /** Probability of spontatious flip  */
-   PRM_DOUBLE1( prob, 0, "Probability", "Probability of spontatious flip",""); 
+   PRM_DOUBLE( prob, 0, "Probability", "Probability of spontatious flip",""); 
    /** Forced every */
-   PRM_INT1( nforce, 0, "Forced every N", "Forced every N changes", "" );
+   PRM_INT( nforce, 0, "Forced every N", "Forced every N changes", "" );
    /* flags */
-   PRM_SWITCH1( useLevel, efNRC, "Use Level to trigg", 
+   PRM_SWITCH( useLevel, efNRC, "Use Level to trigg", 
        "Use Level to trigger, not +- pulse", "sep=col" );
-   PRM_SWITCH1( useForce, efNRC, "u[1] - force", "Use u[1] to force flip", "" );
-   PRM_SWITCH1( useLock,  efNRC, "u[2] - lock", "Use u[2] to lock", "" );
-   PRM_SWITCH1( useZero,  efNRC, "0 = neg. output", 
+   PRM_SWITCH( useForce, efNRC, "u[1] - force", "Use u[1] to force flip", "" );
+   PRM_SWITCH( useLock,  efNRC, "u[2] - lock", "Use u[2] to lock", "" );
+   PRM_SWITCH( useZero,  efNRC, "0 = neg. output", 
        "Use 0 as negative output, not -1", "");
    /** seed value for generator */
-   PRM_INT1( seed, efNRC, "Seed", "Random generator seed", "sep=col" );
+   PRM_INT( seed, efNRC, "Seed", "Random generator seed", "sep=col" );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
-   PRM_LIST1( seedType, efNRC, "Seed at", "Specifies, when to seed", "", 
+   PRM_LIST( seedType, efNRC, "Seed at", "Specifies, when to seed", "", 
        trandtrigg_list_seedType );
    /** flag: add base seed to element seed */
-   PRM_SWITCH1( addBaseSeed, efNRC, "add Base to Seed", 
+   PRM_SWITCH( addBaseSeed, efNRC, "add Base to Seed", 
        "add Base (model) value to Seed", "" );
 
    int ns, currOut;
    /** old value */
    double u_old; 
    
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
    /** start value of seed */
    int sseed;
    /** effective value of seedType */
@@ -92,9 +82,8 @@ class TRandTrigg : public TMiso  {
    int bseed;
    /** generator structure from GSL */
    gsl_rng *rng;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

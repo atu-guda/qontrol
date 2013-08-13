@@ -42,45 +42,37 @@ class TElmLink : public TDataSet {
   Q_OBJECT
  friend class TMiso;
  public:
-   /** constructor */
-   explicit TElmLink( TDataSet *apar );
-   /** creator */
-   static TDataSet* create( TDataSet *apar );
-   /** return ptr to static class_info, must be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+  DCL_CTOR(TElmLink);
+  DCL_CREATE;
+  DCL_STD_INF;
  protected:
    /** names of elements, which outputs will be used as inputs */
-   PRM_STRING1( inps0, efNoRunChange, "Input 0", "Name of source for input 0", "max=32" );
-   PRM_STRING1( inps1, efNoRunChange, "Input 1", "Name of source for input 1", "max=32" );
-   PRM_STRING1( inps2, efNoRunChange, "Input 2", "Name of source for input 2", "max=32" );
-   PRM_STRING1( inps3, efNoRunChange, "Input 3", "Name of source for input 3", "max=32" );
-   PRM_SWITCH1( noauto, efInner, "No Auto", "Unused", "" );
-   PRM_SWITCH1( locked, efNoRunChange, "Locked", "Bypass u[0] to output", "sep=col"  );
-   PRM_SWITCH1( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", ""); 
-   PRM_SWITCH1( onlyLast, efNoRunChange , "only Last", "Process element only at last iteration", ""); 
-   PRM_SWITCH1( flip, efNoRunChange, "flip image", "flip left-right element icon", "sep=col");
-   PRM_SWITCH1( noIcon, efNoRunChange, "no Icon", "don't show element icon", "");
+   PRM_STRING( inps0, efNoRunChange, "Input 0", "Name of source for input 0", "max=32" );
+   PRM_STRING( inps1, efNoRunChange, "Input 1", "Name of source for input 1", "max=32" );
+   PRM_STRING( inps2, efNoRunChange, "Input 2", "Name of source for input 2", "max=32" );
+   PRM_STRING( inps3, efNoRunChange, "Input 3", "Name of source for input 3", "max=32" );
+   PRM_SWITCH( noauto, efInner, "No Auto", "Unused", "def=0" );
+   PRM_SWITCH( locked, efNoRunChange, "Locked", "Bypass u[0] to output", "sep=col"  );
+   PRM_SWITCH( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", ""); 
+   PRM_SWITCH( onlyLast, efNoRunChange , "only Last", "Process element only at last iteration", ""); 
+   PRM_SWITCH( flip, efNoRunChange, "flip image", "flip left-right element icon", "sep=col");
+   PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "");
    /** names of elms, which outputs will be used as parm inputs */
-   PRM_STRING1( pinps0, efNoRunChange, "Parm. input 0", "Name of source for parametric input 0", "max=32\nsep=block"  );
-   PRM_STRING1( pinps1, efNoRunChange, "Parm. input 1", "Name of source for parametric input 1", "max=32"  );
-   PRM_STRING1( pinps2, efNoRunChange, "Parm. input 2", "Name of source for parametric input 2", "max=32"  );
-   PRM_STRING1( pinps3, efNoRunChange, "Parm. input 3", "Name of source for parametric input 3", "max=32"  );
+   PRM_STRING( pinps0, efNoRunChange, "Parm. input 0", "Name of source for parametric input 0", "max=32\nsep=block"  );
+   PRM_STRING( pinps1, efNoRunChange, "Parm. input 1", "Name of source for parametric input 1", "max=32"  );
+   PRM_STRING( pinps2, efNoRunChange, "Parm. input 2", "Name of source for parametric input 2", "max=32"  );
+   PRM_STRING( pinps3, efNoRunChange, "Parm. input 3", "Name of source for parametric input 3", "max=32"  );
    /** names of inner params, to be modifyed */ 
-   PRM_STRING1( pnames0, efNoRunChange, "Parm. name 0", "Name of inner parameter 0", "max=32\nsep=col" );
-   PRM_STRING1( pnames1, efNoRunChange, "Parm. name 1", "Name of inner parameter 1", "max=32"  );
-   PRM_STRING1( pnames2, efNoRunChange, "Parm. name 2", "Name of inner parameter 2", "max=32"  );
-   PRM_STRING1( pnames3, efNoRunChange, "Parm. name 3", "Name of inner parameter 3", "max=32"  );
+   PRM_STRING( pnames0, efNoRunChange, "Parm. name 0", "Name of inner parameter 0", "max=32\nsep=col" );
+   PRM_STRING( pnames1, efNoRunChange, "Parm. name 1", "Name of inner parameter 1", "max=32"  );
+   PRM_STRING( pnames2, efNoRunChange, "Parm. name 2", "Name of inner parameter 2", "max=32"  );
+   PRM_STRING( pnames3, efNoRunChange, "Parm. name 3", "Name of inner parameter 3", "max=32"  );
    /** inner flags for params: 1-only start of loop, ..? */
-   PRM_SWITCH1( pflags0, efNoRunChange, "only First 0", "Change param 0 only at start", "sep=col" );
-   PRM_SWITCH1( pflags1, efNoRunChange, "only First 1", "Change param 1 only at start", ""  );
-   PRM_SWITCH1( pflags2, efNoRunChange, "only First 2", "Change param 2 only at start", ""  );
-   PRM_SWITCH1( pflags3, efNoRunChange, "only First 3", "Change param 3 only at start", ""  );
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr; 
+   PRM_SWITCH( pflags0, efNoRunChange, "only First 0", "Change param 0 only at start", "sep=col" );
+   PRM_SWITCH( pflags1, efNoRunChange, "only First 1", "Change param 1 only at start", ""  );
+   PRM_SWITCH( pflags2, efNoRunChange, "only First 2", "Change param 2 only at start", ""  );
+   PRM_SWITCH( pflags3, efNoRunChange, "only First 3", "Change param 3 only at start", ""  );
+   DCL_DEFAULT_STATIC;
 }; 
 typedef TElmLink* PTElmLink;
 typedef const TElmLink* CPTElmLink;
@@ -116,14 +108,10 @@ struct LinkInfo {
 class TMiso : public TDataSet  { 
   Q_OBJECT
  public: 
-   explicit TMiso( TDataSet *aparent );
+   DCL_CTOR(TMiso);
    virtual ~TMiso();
-   /** creator */
-   static TDataSet* create( TDataSet *apar );
-   /** return ptr to static class_info, must be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const = 0;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CREATE;
+   DCL_STD_INF;
 
    /** external computation function + in/out */
    double fun( double t, IterType itype );
@@ -150,7 +138,7 @@ class TMiso : public TDataSet  {
     * \param t current time
     * \return output value of element
     * */
-   virtual double f( double t ) = 0;
+   virtual double f( double t );
    /** place of customization of preRun, return: 0 = Ok */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** will be called after all actions from posrtRun  -- good place for deallocs */
@@ -168,23 +156,23 @@ class TMiso : public TDataSet  {
     * returns number of modified params */
    int modifyPrms();
    /** description on element */
-   PRM_STRING1( descr, efNoRunChange, "description", 
+   PRM_STRING( descr, efNoRunChange, "description", 
        "Object description", "max=128\nncol=-1");
    /** order, in which elements will be used and holder */
-   PRM_INT1( ord, efRODial | efNoRunChange, "Order", 
+   PRM_INT( ord, efRODial | efNoRunChange, "Order", 
        "Order, in which element will be processed", "min=0\nsep=block" );
    /** visual coordinates */
-   PRM_INT1( vis_x, efRODial | efNoRunChange, "Visual x", 
+   PRM_INT( vis_x, efRODial | efNoRunChange, "Visual x", 
        "X-coordinate of element in scheme", "min=0\nmax=64\nsep=col" );
-   PRM_INT1( vis_y, efRODial | efNoRunChange, "Visual y", 
+   PRM_INT( vis_y, efRODial | efNoRunChange, "Visual y", 
        "Y-coordinate of element in scheme", "min=0\nmax=64" );
-   PRM_DOUBLE1( out0_init, efNoRunChange, "Init output", 
+   PRM_DOUBLE( out0_init, efNoRunChange, "Init output", 
        "Initial value of output", "sep=col" );
-   PRM_DOUBLE1( out0, efInner, "Output", 
+   PRM_DOUBLE( out0, efInner, "Output", 
        "Main output", "" );
    /** pointer to link data */
    TElmLink *links;
-   PRM_OBJ1( links, 0, "object links", "Object links description", "sep=blockend" );
+   // PRM_OBJ1( links, 0, "object links", "Object links description", "sep=blockend" );
    /** time step -- setted by preRun */
    double tdt; 
    /** number of iteration per loop -- setted by PreRun */
@@ -208,10 +196,8 @@ class TMiso : public TDataSet  {
    int max_prm = 0;
    /** parameters modified during run flag */
    int prm_mod = 0;
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
+
+   DCL_DEFAULT_STATIC;
 
 }; 
 

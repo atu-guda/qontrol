@@ -12,14 +12,10 @@ using namespace std;
 const char* TRootData::helpstr = "<H1>TRootData</H1>\n"
  "Root element for all elemsnts tree";
 
-
-TClassInfo TRootData::class_info = 
- {  "TRootData",  TRootData::create, 
-    &TDataContainer::class_info, "", clpContainer | clpSpecial };
+STD_CLASSINFO(TRootData,clpContainer|clpSpecial );
 
 
-TRootData::TRootData( TDataSet* apar )
-          :TDataContainer( apar )
+CTOR(TRootData,TDataContainer)
 {
   allow_add = allowObject | allowParam;
 }

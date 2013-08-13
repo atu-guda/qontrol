@@ -27,20 +27,12 @@ const char* TLogic::helpstr = "<H1>TLogic</H1>\n"
  " - <b>useMinus</b> -- negative output == -1, not 0.  <br>\n"
  "For AND unused inputs link to ':one' .";
 
-TClassInfo TLogic::class_info = {
-  "TLogic", TLogic::create,
-  &TMiso::class_info, helpstr, clpElem | clpPure };
+STD_CLASSINFO(TLogic,clpElem);
 
-
-TLogic::TLogic( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TLogic,TMiso)
 {
   level = 0.1; type = 1; useNInp0 = useNInp1 = useNInp2 = useNInp3 = 0;
   useNOut = useMinus = 0;
-}
-
-TLogic::~TLogic()
-{
 }
 
 
@@ -55,7 +47,7 @@ double TLogic::f( double /* t */ )
   if( useNInp2 ) iu[2] = ! iu[2];
   if( useNInp3 ) iu[3] = ! iu[3];
   ou = 0;
-  switch( type ) {
+  switch( (int)type ) {
     case 0: if( iu[0] > 0 && iu[1] > 0 && iu[2] > 0 && iu[3] > 0 ) 
 	      ou = 1;
 	    break;

@@ -25,63 +25,38 @@ const char* TElmLink::helpstr = "<H1>TElmLink</H1> \n"
  "Defines signal and parametric inputs for given element. \n"
  "Each element may have up to 4 both signal and parametric inputs\n";
 
+STD_CLASSINFO( TElmLink, clpSpecial );
 
-TClassInfo TElmLink::class_info = {
- "TElmLink", TElmLink::create, 
- &TDataSet::class_info, helpstr, clpSpecial };
-
-
-TElmLink::TElmLink( TDataSet* apar )
-         :TDataSet( apar )
+CTOR(TElmLink,TDataSet)
 {
-  noauto = locked = onlyFirst = onlyLast = flip = noIcon = 0;
-  pflags0 = pflags1 = pflags2 = pflags3 = 0;
+  reset_dfl();
 }
 
-TDataSet* TElmLink::create( TDataSet* apar )
-{
-  return new TElmLink( apar );
-}
+DEFAULT_FUNCS_REG(TElmLink);
 
-const TClassInfo* TElmLink::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TElmLink::getHelp(void) const
-{
-  return helpstr;
-}
 
 // ------------------------ TMiso -------------------------------
 
 const char* TMiso::helpstr = "<H1>TMiso</H1>\n"
  "Base class for all active elements. Never should be used.";
 
-TClassInfo TMiso::class_info = {
- "TMiso", TMiso::create, 
- &TDataSet::class_info, helpstr, clpSpecial };
+STD_CLASSINFO(TMiso,clpSpecial);
 
 
-TMiso::TMiso( TDataSet* aparent )
-      :TDataSet( aparent ),
-       out0_init(0), out0(0),
-       links( new TElmLink( this ) )
+CTOR(TMiso,TDataSet) ,
+       links( new TElmLink( "links", this, 0, "links", "object links", "" ) )
 {
-  ord = -1; 
+  ord = -1;
   vis_x = vis_y = 0; tdt = 0; model_nn = 0; 
   model = 0;
 }
 
 TMiso::~TMiso()
 {
-  // delete links; --- it's part of TMiso, deleted by ~TDataSet
 }
 
-TDataSet* TMiso::create( TDataSet* /* apar */ )
-{
-  return 0; // cannot create abstract object
-}
+
+DEFAULT_FUNCS_REG(TMiso);
 
 double TMiso::fun( double t, IterType itype )
 {
@@ -100,15 +75,6 @@ double TMiso::fun( double t, IterType itype )
   return v;
 }
 
-const TClassInfo* TMiso::getClassInfo(void) const
-{
-  return &class_info;
-}
-
-const char *TMiso::getHelp(void) const
-{
-  return helpstr;
-}
 
 double TMiso::f( double /* t */ )
 {
@@ -219,7 +185,7 @@ int TMiso::do_postRun( int /*good*/ )
 int TMiso::startLoop( int acnx, int acny )
 {
   state = stateRun;
-  out0 = out0_init;
+  out0 = (double)out0_init;
   modifyPrmsPre();
   prm_mod = 0;
   return do_startLoop( acnx, acny );

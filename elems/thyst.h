@@ -34,44 +34,32 @@ static const char* const thyst_list =
 class THyst : public TMiso  {
   Q_OBJECT
  public:
-   /** constructor */
-   explicit THyst( TDataSet *aparent );
-   /** empty destructor */
-   virtual ~THyst();
-   /** creator */
-   static TDataSet* create( TDataSet *apar );
-   /** return ptr to static class_info, nust be implemented in each class */
-   virtual const TClassInfo* getClassInfo(void) const;
-   /** returns help string */
-   virtual const char* getHelp(void) const;
+   DCL_CTOR(THyst);
+   DCL_CREATE;
+   DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t );
+   virtual double f( double t ) override;
    /** reimplemented from TMiso to set init state */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int do_startLoop( int acnx, int acny ) override;
    void fixState(void);
  protected:
    /** type of hysteresis */
-   PRM_LIST1( type, efNoRunChange, "Type",  "Type of hysteresis", "", thyst_list );
+   PRM_LIST( type, efNoRunChange, "Type",  "Type of hysteresis", "", thyst_list );
    /** width of hysteresis  */
-   PRM_DOUBLE1( x0, 0, "x_0",  "x0 - width if hysteresis", "min=0\nsep=col" );
+   PRM_DOUBLE( x0, 0, "x_0",  "x0 - width if hysteresis", "min=0\nsep=col" );
    /** slope of hysteresis  */
-   PRM_DOUBLE1( alpha, 0, "\\alpha", "Hysteresis slope", ""  );
+   PRM_DOUBLE( alpha, 0, "\\alpha", "Hysteresis slope", ""  );
    /** output scale */
-   PRM_DOUBLE1( a, 0, "a scale", "output scale", "sep=col" );
+   PRM_DOUBLE( a, 0, "a scale", "output scale", "sep=col" );
    /** output shift */
-   PRM_DOUBLE1( b, 0, "b shift", "output shift", ""  );
+   PRM_DOUBLE( b, 0, "b shift", "output shift", ""  );
    /** state d */
-   PRM_DOUBLE1( d, efInner, "d", "inner state 'd'", "" );
+   PRM_DOUBLE( d, efInner, "d", "inner state 'd'", "" );
    /** state s */
-   PRM_DOUBLE1( s, efInner, "s", "inner state 's'", "" );
-   /** class decription */
-   static TClassInfo class_info;
-   /** help str */
-   static const char* helpstr;
-   /** autoregister */
-   static int registered;
-   static int reg();
+   PRM_DOUBLE( s, efInner, "s", "inner state 's'", "" );
+   
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

@@ -125,8 +125,7 @@ bool QMo2Doc::newDocument()
   if( rootdata ) {
     delete rootdata; rootdata = 0; model = 0;
   }
-  rootdata = new TRootData( 0 );
-  rootdata->setObjectName( "root" );
+  rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
   model = qobject_cast<TModel*>(rootdata->add_obj( "TModel", "model" ));
   if( !model ) {
     QMessageBox::critical( 0, "QMo2Doc::newDocument", 
@@ -191,8 +190,7 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
 
   if( rootdata != 0 )
     delete rootdata;
-  rootdata = new TRootData( 0 );
-  rootdata->setObjectName( "root" );
+  rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
 
   model = 0;
   bool read_ok = rootdata->fromDom( obj_root, errstr );

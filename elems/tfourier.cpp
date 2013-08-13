@@ -24,23 +24,15 @@ const char* TFourier::helpstr = "<H1>TFourier</H1>\n"
  "Perform Fourier analisys on input: <br>\n"
  "Parameters see in object info.";
 
-TClassInfo TFourier::class_info = {
-  "TFourier", TFourier::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TFourier,clpElem);
 
-
-TFourier::TFourier( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TFourier,TMiso)
 {
   omega = 1; t0 = 0; t1 = 1e6; tp = 2 * M_PI / omega; 
   np = n_st = n_en = ii = 0; nn = nper = 1;
   ng = 3; useOptim = 1; useFill = 0;
   out_a = out_b = out_am = out_om = -1;
   s_x2 = a0 = a1 = b1 = ampl = ampl1 = phi = qpow = qpow1 = 0;
-}
-
-TFourier::~TFourier()
-{
 }
 
 

@@ -36,21 +36,13 @@ const char* TLorenz::helpstr = "<H1>TLorenz</H1>\n"
  "and 3 inital state: <b> x_0, y_0, z_0 </b>, <br>"
  "First 3 may can be changed at any time.";
 
-TClassInfo TLorenz::class_info = {
-  "TLorenz", TLorenz::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TLorenz,clpElem );
 
-
-TLorenz::TLorenz( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TLorenz,TMiso)
 {
   sigma = 10.0; r = 28.0; b = 8.0/3.0; // Well-known Lorenz params
   x_0 = 3.05; y_0 = 1.58; z_0 = 16.62; 
   x = y = z = 0;
-}
-
-TLorenz::~TLorenz()
-{
 }
 
 double TLorenz::f( double /*t*/ )
@@ -66,7 +58,7 @@ double TLorenz::f( double /*t*/ )
 
 int TLorenz::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  x = x_0; y = y_0 ; z = z_0;
+  x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
   return 0;
 }
 

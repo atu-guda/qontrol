@@ -26,20 +26,12 @@ const char* TCriterion::helpstr = "<H1>TCriterion</H1>\n"
  "Parameter <b>t0</b> -- start time (if enabled). <br>\n"
  "5 flags: <b>useA, useT0, useEnable, useLock, usePulse</b>.";
 
-TClassInfo TCriterion::class_info = {
-  "TCriterion", TCriterion::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TCriterion,clpElem);
 
-
-TCriterion::TCriterion( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TCriterion,TMiso)
 {
   a = 0.5; b = 1.0; type = 0; t0 = 0; 
   useA = useT0 = useEnable = useLock = usePulse = 0;
-}
-
-TCriterion::~TCriterion()
-{
 }
 
 
@@ -64,7 +56,7 @@ double TCriterion::f( double t )
   aa = a;
   if( useA )
     aa = *in_so[3];
-  switch( type ) {
+  switch( (int)type ) {
     case 0: ok = ( fabs( x ) < aa ); break;
     case 1: ok = ( fabs( x ) > aa ); break;
     case 2: ok = ( x < aa ); break;

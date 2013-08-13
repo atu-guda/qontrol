@@ -22,19 +22,11 @@ const char* TMultipl::helpstr = "<H1>TMultipl</H1>\n"
  "it multimplies all enabled inputs and parametr <b>a</b>\n"
  "Have 5 parameters: <b>on0 .. on3, a</b>, each can be changed at any time.";
 
-TClassInfo TMultipl::class_info = {
-  "TMultipl", TMultipl::create,
-  &TMiso::class_info, helpstr, clpElem | clpPure };
+STD_CLASSINFO(TMultipl,clpElem);
 
-
-TMultipl::TMultipl( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TMultipl,TMiso)
 {
   on0 = on1 = 1; on2 = on3 = 0; a = 1;
-}
-
-TMultipl::~TMultipl()
-{
 }
 
 

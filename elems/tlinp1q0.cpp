@@ -32,23 +32,14 @@ const char* TLinP1Q0::helpstr = "<H1>TLinP1Q0</H1>\n"
  " x(tau) = 0.6321 * ku \n"
  ;
 
-TClassInfo TLinP1Q0::class_info = {
-  "TLinP1Q0", TLinP1Q0::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TLinP1Q0,clpElem );
 
-
-TLinP1Q0::TLinP1Q0( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TLinP1Q0,TMiso)
 {
   a = 1.0;  ku = 1.0; 
   use_u1 = 0;
   x_old = 0;
 }
-
-TLinP1Q0::~TLinP1Q0()
-{
-}
-
 
 
 int TLinP1Q0::do_startLoop( int /*acnx*/, int /*acny*/ )

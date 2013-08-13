@@ -18,7 +18,7 @@ DataWidget::DataWidget( HolderData &h, QWidget *parent )
   : QFrame( parent ), ho( h ), main_w(0),
     lbl( new QLabel( ho.getParm("vis_name"), this) )
 {
-  lbl->setWhatsThis( ho.getType() + " " + ho.targetName() );
+  lbl->setWhatsThis( ho.getType() + " " + ho.objectName() );
   lbl->setMinimumWidth( 50 ); // TODO: from font
   // setFrameStyle( QFrame::Panel | QFrame::Sunken );
 }
@@ -571,7 +571,7 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
     pb->setDisabled( true ); // TODO: real read-only
   }
   pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
-  pb->setText( ho.targetName() );
+  pb->setText( ho.objectName() );
   connect( pb, SIGNAL(clicked()), this, SLOT(edit()) );
   
   QHBoxLayout *lay =  new QHBoxLayout( this );
@@ -597,10 +597,13 @@ bool ObjDataWidget::get() const
 
 void ObjDataWidget::edit()
 {
-  HolderObj *hobj = qobject_cast<HolderObj*>(&ho);
-  QDialog *dia = new DataDialog( *(hobj->getObj()),  this );
-
-  dia->exec();
+  TDataSet *obj = qobject_cast<TDataSet*>(&ho);
+  if( obj ) {
+    QDialog *dia = new DataDialog( *obj,  this );
+    dia->exec();
+  } else {
+    DBG2q( "ERR: Fail to convert holder to TDataSet", ho.objectName() );
+  }
 }
 
 DataWidget* ObjDataWidget::create( HolderData &h, QWidget *parent  )
@@ -705,7 +708,7 @@ bool FactoryDataWidget::unregisterWidgetType( const QString &wname )
 DataDialog::DataDialog( TDataSet &a_ds, QWidget *parent )
   : QDialog( parent ), ds( a_ds) 
 {
-  QString s = L8B( ds.getClassName() )  %  ' ' %  ds.getFullName();
+  QString s = ds.getType()  %  ' ' %  ds.getFullName();
   setWindowTitle( s );
   createWidgets();
   getAll();
@@ -749,7 +752,7 @@ void DataDialog::checkData()
 
 void DataDialog::showHelp()
 {
-  QString cl_name = L8B( ds.getClassName() );
+  QString cl_name = ds.getType();
   if( cl_name.isEmpty() )
     return showSimpleHelp();
   QString resname = L8B( "elems/" );
@@ -777,11 +780,12 @@ void DataDialog::showSimpleHelp(void)
   help_str += help; 
   help_str += "<hr/>\n"; 
 
-  for( HolderData *ho : ds.holders() ) {
+  for( auto c : ds.children() ) {
+    HolderData *ho = qobject_cast<HolderData*>(c);
     if( !ho )
-      continue; // but how?
+      continue;
     help_str += "<p>" % ho->getType() 
-      % " <b> " % ho->targetName() % " </b>; // "
+      % " <b> " % ho->objectName() % " </b>; // "
       % ho->getParm("descr")  % " ("
       % ho->getParm("vis_name") % ")</p>\n";
   }
@@ -901,7 +905,7 @@ void DataDialog::addObj()
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
-  TDataSet *ob = ds.add_obj( aei.type, aei.name );
+  HolderData *ob = ds.add_obj( aei.type, aei.name );
   if( !ob  ) {
     QMessageBox::critical( this, "Error", 
        QString("Fail to add Elem: ") + aei.type + " " + aei.name, 
@@ -916,12 +920,13 @@ void DataDialog::addObj()
 void DataDialog::delSome( bool is_obj )
 {
   QStringList sl;
-  for( HolderData *ho :  ds.holders() ) {
+  for( auto c :  ds.children() ) {
+    HolderData *ho = qobject_cast<HolderData*>(c);
     if( !ho  || !ho->isDyn() )
       continue; 
     if( (is_obj ^ ho->isObject()) )
       continue; 
-    sl << ho->targetName();
+    sl << ho->objectName();
   }
   if( sl.isEmpty() )
     return;
@@ -987,16 +992,16 @@ int DataDialog::createWidgets()
   // FIXME part of tmp workaround for displaing Elems in model
   bool is_model = ds.isChildOf( "TModel" );
   
-  for( HolderData *ho :  ds.holders() ) {
+  for( auto c :  ds.children() ) {
+    HolderData *ho = qobject_cast<HolderData*>(c);
     if( !ho )
-      continue; // but how?
+      continue; 
     if( ho->getFlags() & efNoDial )
       continue;
 
     // second part of TMP workaround (FIXME)
     if( is_model && ho->isObject() ) {
-      HolderObj *hob = qobject_cast<HolderObj*>(ho);
-      TDataSet *ob = hob->getObj();
+      TDataSet *ob = qobject_cast<TDataSet*>(ho);
       if( ob->isChildOf("TMiso")  ||  ob->isChildOf("TOutArr") || ob->isChildOf("TGraph") ) {
 	continue;
       }
@@ -1023,7 +1028,7 @@ int DataDialog::createWidgets()
       nr_block = nr_max; nr = nr_block; nc = 0;
     }
 
-    QString name = ho->targetName();
+    QString name = ho->objectName();
 
     w = FactoryDataWidget::theFactory().createDataWidget( *ho, this );
     if( !w ) {

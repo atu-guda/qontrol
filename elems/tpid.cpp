@@ -22,20 +22,12 @@ const char* TPid::helpstr = "<H1>TPid</H1>\n"
  "Have 6 parameters: <b>kd2, kd1, kp, ki1, ki1, aver</b>.\n"
  "Coefficients can be changed at any time, aver - no.";
 
-TClassInfo TPid::class_info = {
-  "TPid", TPid::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TPid,clpElem );
 
-
-TPid::TPid( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TPid,TMiso)
 {
   kd2 = kd1 = ki2 = ki1 = 0; kp = 1; aver = 0;
   tdt2 = 1; vi1 = vi2 = u_old = u_old2 = 0;
-}
-
-TPid::~TPid()
-{
 }
 
 

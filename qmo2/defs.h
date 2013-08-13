@@ -44,6 +44,7 @@ const double DMIN   { std::numeric_limits<double>::lowest() };
 const double DMAX   { std::numeric_limits<double>::max() };
 
 #define L8B QString::fromLocal8Bit
+#define QSN QString::number
 
 using dvector = std::vector<double>;
  

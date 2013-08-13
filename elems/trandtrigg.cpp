@@ -30,13 +30,9 @@ const char* TRandTrigg::helpstr = "<H1>TRandTrigg</H1>\n"
  "Parametrs <b>seed, seedType, addBaseSeed </b> controls random ganerator<br>\n"
  "Parameters: <b>useLevel, useForce, useLock, useZero</b>, - misc flags.";
 
-TClassInfo TRandTrigg::class_info = {
-  "TRandTrigg", TRandTrigg::create,
-  &TMiso::class_info, helpstr, clpElem };
+STD_CLASSINFO(TRandTrigg,clpElem);
 
-
-TRandTrigg::TRandTrigg( TDataSet* aparent )
-        :TMiso( aparent )
+CTOR(TRandTrigg,TMiso)
 {
   prob = 0.5; u_old = 0; nforce = 2;
   useLevel = useForce = useLock = useZero = 0; ns = -1;
