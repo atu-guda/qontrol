@@ -25,13 +25,19 @@ DataWidget::DataWidget( HolderData &h, QWidget *parent )
 
 QSize DataWidget::minimumSizeHint() const
 {
-  return  main_w->minimumSizeHint() + QSize( lbl->minimumSizeHint().width(), 0 );
+  if( main_w )
+    return  main_w->minimumSizeHint() + QSize( lbl->minimumSizeHint().width(), 0 );
+  DBGx( "ERR: no main widget for %s %s", qP(ho.getType()), qP(ho.objectName()) );
+  return QSize( 50, 20 ); // fallback value;
 }
 
 
 QSize DataWidget::sizeHint() const
 {
-  return  main_w->sizeHint() + QSize( lbl->sizeHint().width(), 0 );
+  if( main_w )
+    return  main_w->sizeHint() + QSize( lbl->sizeHint().width(), 0 );
+  DBGx( "ERR: no main widget for %s %s", qP(ho.getType()), qP(ho.objectName()) );
+  return QSize( 50, 20 ); // fallback value;
 }
 
 // -------------  DummyDataWidget ----------------
@@ -50,7 +56,7 @@ DummyDataWidget::DummyDataWidget( HolderData &h, QWidget *parent )
 
 bool DummyDataWidget::set()
 {
-  lbl_d->setText( ho.toString().left(20) );
+  lbl_d->setText( "@ " + ho.toString().left(20) );
   return true;
 }
 

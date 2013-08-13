@@ -44,7 +44,7 @@ STD_CLASSINFO(TMiso,clpSpecial);
 
 
 CTOR(TMiso,TDataSet) ,
-       links( new TElmLink( "links", this, 0, "links", "object links", "" ) )
+       links( new TElmLink( "links", this, 0, "links", "object links", "sep=blockend" ) )
 {
   ord = -1;
   vis_x = vis_y = 0; tdt = 0; model_nn = 0; 

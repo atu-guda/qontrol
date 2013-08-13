@@ -577,6 +577,10 @@ const char* TDataSet::helpstr =
 
 CTOR(TDataSet,HolderData)
 {
+  tp=QVariant::UserType;
+  if( getParm("props").isEmpty() ) {
+    setParm( "props", "OBJ" );
+  }
 }
 
 TDataSet::~TDataSet()
@@ -682,8 +686,14 @@ bool TDataSet::getData( const QString &nm, QVariant &da ) const
   }
 
   // both part of name exists
-  if( ho->getTp() != QVariant::UserType || ! ho->isObject() ) {
-    DBG2q( "warn: compound name required ", first );
+  if( ho->getTp() != QVariant::UserType ) {
+    DBGx( "warn: compound name required (1). first: \"%s\" rest: \"%s\" tp: %d", 
+        qP(first), qP(rest), (int)(ho->getTp()) );
+    return 0;
+  }
+  if( ! ho->isObject() ) {
+    DBGx( "warn: compound name required (2). first: \"%s\" rest: \"%s\" obj \"%s\" type \"%s\"", 
+        qP(first), qP(rest), qP(ho->objectName()), qP(ho->getType()) );
     return 0;
   }
   
