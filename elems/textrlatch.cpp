@@ -34,8 +34,6 @@ STD_CLASSINFO(TExtrLatch,clpElem);
 
 CTOR(TExtrLatch,TMiso)
 {
-  type = 0; useLocal = useFirst = outT = useReset = 0; tStart = fuzzy = 0;
-  u_min = u_max = t_min = t_max = 0; isStart = wasExtr = 0; 
 }
 
 

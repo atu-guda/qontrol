@@ -43,18 +43,18 @@ class TFourier : public TMiso  {
    virtual int do_endLoop(void) override;
  protected:
    /** period parameters  */
-   PRM_DOUBLE( omega, efNoRunChange, "\\omega", "base frequency", "min=1e-3" );
+   PRM_DOUBLE( omega, efNoRunChange, "\\omega", "base frequency", "min=1e-3\ndef=1" );
    PRM_DOUBLE( t0, efNoRunChange, "t0", "Start time", "" );
-   PRM_DOUBLE( t1, efNoRunChange, "t1", "Stop  time", "" );
-   PRM_INT( ng, efNoRunChange, "N of Harm", "Number of harmonics to analize", "" );
-   PRM_SWITCH( useOptim, efNoRunChange, "Optimize", "Optimize t1 to  better FT", "" );
+   PRM_DOUBLE( t1, efNoRunChange, "t1", "Stop  time", "def=1e6" );
+   PRM_INT( ng, efNoRunChange, "N of Harm", "Number of harmonics to analize", "def=3\nmin=1" );
+   PRM_SWITCH( useOptim, efNoRunChange, "Optimize", "Optimize t1 to  better FT", "def=1" );
    PRM_SWITCH( useFill, efNoRunChange, "Fill cmp", "Fill compare array:", "" );
-   PRM_INT( np, efNoRunChange, "np", "np", "sep=col" );
-   PRM_INT( nn, efNoRunChange, "nn", "nn", "" );
-   PRM_INT( out_a, efNoRunChange, "out_a", "start index for a[i]", "min=0\nmax=1000" );
-   PRM_INT( out_b, efNoRunChange, "out_b", "start index for a[i]", "min=0\nmax=1000" );
-   PRM_INT( out_am, efNoRunChange, "out_am", "start index for A[i]", "min=0\nmax=1000" );
-   PRM_INT( out_om, efNoRunChange, "out_om", "start index for omega[i]", "min=0\nmax=1000" );
+   PRM_INT( np, efNoRunChange, "np", "np", "sep=col\ndef=1\nmin=1" );
+   PRM_INT( nn, efNoRunChange, "nn", "nn", "def=1" );
+   PRM_INT( out_a, efNoRunChange, "out_a", "start index for a[i]", "min=-1\nmax=1000\ndef=-1" );
+   PRM_INT( out_b, efNoRunChange, "out_b", "start index for a[i]", "min=-1\nmax=1000\ndef=-1" );
+   PRM_INT( out_am, efNoRunChange, "out_am", "start index for A[i]", "min=-1\nmax=1000\ndef=-1" );
+   PRM_INT( out_om, efNoRunChange, "out_om", "start index for omega[i]", "min=-1\nmax=1000\ndef=-1" );
    /** name of array to and from fill */
    PRM_STRING( x_oname, efNoRunChange, "x[] in ", "in x[] array name", "sep=col" );
    PRM_STRING( y_oname, efNoRunChange, "y[] out", "out y[] array name", "" );

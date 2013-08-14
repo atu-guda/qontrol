@@ -47,9 +47,9 @@ class TPid : public TMiso  {
    /** should output be devided to t */
    PRM_SWITCH( aver, efNRC, "Average", "Calculate average value", "sep=col" );
    /** accumulators and old values */
-   double vi1, vi2, u_old, u_old2, tdt2;
+   double vi1 = 0, vi2 = 0, u_old = 0, u_old2 = 0, tdt2 = 1;
    /** flag for special handling initial steps */
-   int start;
+   int start = 0;
    
    DCL_DEFAULT_STATIC;
 };

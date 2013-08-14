@@ -51,9 +51,9 @@ class TRandTrigg : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
    
    /** Probability of spontatious flip  */
-   PRM_DOUBLE( prob, 0, "Probability", "Probability of spontatious flip",""); 
+   PRM_DOUBLE( prob, 0, "Probability", "Probability of spontatious flip","def=0.5"); 
    /** Forced every */
-   PRM_INT( nforce, 0, "Forced every N", "Forced every N changes", "" );
+   PRM_INT( nforce, 0, "Forced every N", "Forced every N changes", "def=2" );
    /* flags */
    PRM_SWITCH( useLevel, efNRC, "Use Level to trigg", 
        "Use Level to trigger, not +- pulse", "sep=col" );
@@ -62,17 +62,17 @@ class TRandTrigg : public TMiso  {
    PRM_SWITCH( useZero,  efNRC, "0 = neg. output", 
        "Use 0 as negative output, not -1", "");
    /** seed value for generator */
-   PRM_INT( seed, efNRC, "Seed", "Random generator seed", "sep=col" );
+   PRM_INT( seed, efNRC, "Seed", "Random generator seed", "sep=col\ndef=4235" );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
-   PRM_LIST( seedType, efNRC, "Seed at", "Specifies, when to seed", "", 
+   PRM_LIST( seedType, efNRC, "Seed at", "Specifies, when to seed", "def=3", 
        trandtrigg_list_seedType );
    /** flag: add base seed to element seed */
    PRM_SWITCH( addBaseSeed, efNRC, "add Base to Seed", 
-       "add Base (model) value to Seed", "" );
+       "add Base (model) value to Seed", "def=1" );
 
-   int ns, currOut;
+   int ns = 0, currOut = 0;
    /** old value */
-   double u_old; 
+   double u_old = 0; 
    
    /** start value of seed */
    int sseed;
@@ -81,7 +81,7 @@ class TRandTrigg : public TMiso  {
    /** copy valuse of base seed */
    int bseed;
    /** generator structure from GSL */
-   gsl_rng *rng;
+   gsl_rng *rng = nullptr;
    
    DCL_DEFAULT_STATIC;
 };

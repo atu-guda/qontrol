@@ -69,43 +69,43 @@ class TSource : public TMiso  {
    /** type of input and misc flags */
    PRM_LIST( type, efNRC, "Type", "Source type", "", tsource_list_type );
    /** Amplitude */
-   PRM_DOUBLE( uu, 0, "Amplitude", "Amplitude of signal (or pulse max)", "" );
+   PRM_DOUBLE( uu, 0, "Amplitude", "Amplitude of signal (or pulse max)", "def=1" );
    /** Frequency */
-   PRM_DOUBLE( omega, 0, "Frequency", "Frequency of source (or pulse width)", "" );
+   PRM_DOUBLE( omega, 0, "Frequency", "Frequency of source (or pulse width)", "def=0.7" );
    /** constant shift */
    PRM_DOUBLE( cc, 0, "C", "Constant base", "" );
 
    // ----------- U chaos ----------------------
    PRM_SWITCH( use_u_ch, efNRC, "use U chaos", "Use amplitude perturbations", "sep=col" );
-   PRM_DOUBLE(  u_ch_v0, efNRC, "vU min"     , "Minimum value of amplitule factor", "" );
-   PRM_DOUBLE(  u_ch_vm, efNRC, "vU max"     , "Maximum value of amplitule factor", "" );
-   PRM_DOUBLE(  u_ch_t0, efNRC, "tU min"     , "Minimum time of change", "min=1e-20\nmax=1e20" );
-   PRM_DOUBLE(  u_ch_tm, efNRC, "tU max"     , "Maximum time of change", "min=1e-20\nmax=1e20" );
-   PRM_INT(      seed_u, efNRC, "U seed"     , "Random Generator seed", "" );
-   PRM_LIST( seedType_u, efNRC, "U seed type", "When to seed", "", tsource_list_seedType );
-   PRM_SWITCH( addBaseSeed_u, efNRC, "U add base seed", "Add seed from base(model)", "");
+   PRM_DOUBLE(  u_ch_v0, efNRC, "vU min"     , "Minimum value of amplitule factor", "def=0.5" );
+   PRM_DOUBLE(  u_ch_vm, efNRC, "vU max"     , "Maximum value of amplitule factor", "def=1.5" );
+   PRM_DOUBLE(  u_ch_t0, efNRC, "tU min"     , "Minimum time of change", "def=2\nmin=1e-20\nmax=1e20" );
+   PRM_DOUBLE(  u_ch_tm, efNRC, "tU max"     , "Maximum time of change", "def=10\nmin=1e-20\nmax=1e20" );
+   PRM_INT(      seed_u, efNRC, "U seed"     , "Random Generator seed", "def=54363" );
+   PRM_LIST( seedType_u, efNRC, "U seed type", "When to seed", "def=3", tsource_list_seedType );
+   PRM_SWITCH( addBaseSeed_u, efNRC, "U add base seed", "Add seed from base(model)", "def=1");
    
    // ----------- Phi chaos ----------------------
    PRM_SWITCH( use_f_ch,efNRC, "use Phi chaos", "Use phase perturbations", "sep=col" );
-   PRM_DOUBLE( f_ch_v0, efNRC, "vF min"       , "Minimum value of phase factor", "" );
-   PRM_DOUBLE( f_ch_vm, efNRC, "vF max"       , "Maximum value of phase factor", "" );
-   PRM_DOUBLE( f_ch_t0, efNRC, "tF min"       , "Minimum time of change", "min=1e-20\nmax=1e20" );
-   PRM_DOUBLE( f_ch_tm, efNRC, "rF max"       , "Maximum time of change", "min=1e-20\nmax=1e20" );
-   PRM_INT( seed_p, efNRC,     "F seed"       , "Random Generator seed", "" );
-   PRM_LIST( seedType_p, efNRC,"F seed type"  , "When to seed", "", tsource_list_seedType);
-   PRM_SWITCH( addBaseSeed_p, efNRC, "F add base to seed", "Add seed from base(model)", "" );
+   PRM_DOUBLE( f_ch_v0, efNRC, "vF min"       , "Minimum value of phase factor", "def=-0.2" );
+   PRM_DOUBLE( f_ch_vm, efNRC, "vF max"       , "Maximum value of phase factor", "def=0.2" );
+   PRM_DOUBLE( f_ch_t0, efNRC, "tF min"       , "Minimum time of change", "def=2\nmin=1e-20\nmax=1e20" );
+   PRM_DOUBLE( f_ch_tm, efNRC, "rF max"       , "Maximum time of change", "def=10\nmin=1e-20\nmax=1e20" );
+   PRM_INT( seed_p, efNRC,     "F seed"       , "Random Generator seed", "def=45117" );
+   PRM_LIST( seedType_p, efNRC,"F seed type"  , "When to seed", "def=3", tsource_list_seedType);
+   PRM_SWITCH( addBaseSeed_p, efNRC, "F add base to seed", "Add seed from base(model)", "def=1" );
    
    /** chaos current values */
-   double u_ch_vs, u_ch_ve, u_ch_ts, u_ch_te, u_ch_k,
-          f_ch_vs, f_ch_ve, f_ch_ts, f_ch_te, f_ch_k;
+   double u_ch_vs = 1, u_ch_ve = 1, u_ch_ts = 1, u_ch_te = 1, u_ch_k = 1,
+          f_ch_vs = 1, f_ch_ve = 1, f_ch_ts = 1, f_ch_te = 1, f_ch_k = 1;
    int sseed_u, sseed_p, bseed_u, bseed_p,
        eff_seedType_u, eff_seedType_p;
    
    
    /** generator structures from GSL */
-   gsl_rng *rng_u, *rng_p;
+   gsl_rng *rng_u = nullptr, *rng_p = nullptr;
    /** triggers */
-   int was_pulse;
+   int was_pulse = 0;
    /** values to store some model vars */	  
    double tt;
    

@@ -34,8 +34,6 @@ STD_CLASSINFO(TLatch,clpElem);
 
 CTOR(TLatch,TMiso)
 {
-  t0 = u_old = 0; type = 0; usePulse = useFirst = useAdd = 0; wasLatch = -1;
-  v = v_st = 0;
 }
 
 

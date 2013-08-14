@@ -49,11 +49,11 @@ class TTrigger : public TMiso  {
    /**  current state */
    PRM_INT( cst, efInner, "state", "current state", "" );
    /** level of 0  */ 
-   PRM_DOUBLE( level0, 0, "Level of 0", "Level of '0' signal", "" );
+   PRM_DOUBLE( level0, 0, "Level of 0", "Level of '0' signal", "def=0.1" );
    /** level of 1 (shmidt) */
-   PRM_DOUBLE( level1, 0, "Level of 1", "Level of '1' signal (sor shmidt)", ""  );
+   PRM_DOUBLE( level1, 0, "Level of 1", "Level of '1' signal (sor shmidt)", "def=0.5"  );
    /** autoreset time */
-   PRM_DOUBLE( t0, 0, "t0", "Autoreset time (if enabled)", "" );
+   PRM_DOUBLE( t0, 0, "t0", "Autoreset time (if enabled)", "def=2" );
    /** elapsed time */
    PRM_DOUBLE( et, efInner, "et", "Elapsed time", "" );
    /** set to 1 on start */
@@ -67,7 +67,7 @@ class TTrigger : public TMiso  {
    /** autoreset after t0 */
    PRM_SWITCH( useT0, efNRC, "Autoreset (t0)", "Use autoreset after t0 time elapsed", "");
    /** old u[2] value */
-   double u2_old;
+   double u2_old = 0;
    
    DCL_DEFAULT_STATIC;
 };

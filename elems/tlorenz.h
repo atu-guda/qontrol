@@ -37,13 +37,13 @@ class TLorenz : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
    
    /** main system parameters */
-   PRM_DOUBLE( sigma, 0, "\\sigma", "\\sigma parameter", "" );
-   PRM_DOUBLE( r, 0, "r", "r parameter", "" );
-   PRM_DOUBLE( b, 0, "b", "b parameter", "" );
+   PRM_DOUBLE( sigma, 0, "\\sigma", "\\sigma parameter", "def=10.0" );
+   PRM_DOUBLE( r, 0, "r", "r parameter", "def=28.0" );
+   PRM_DOUBLE( b, 0, "b", "b parameter", "def=2.667" );
    /** start x, y, x values */
-   PRM_DOUBLE( x_0, efNRC, "x_0", "Initial value of x", "sep=col" );
-   PRM_DOUBLE( y_0, efNRC, "y_0", "Initial value of y", "" );
-   PRM_DOUBLE( z_0, efNRC, "z_0", "Initial value of z", "" );
+   PRM_DOUBLE( x_0, efNRC, "x_0", "Initial value of x", "sep=col\ndef=3.05" );
+   PRM_DOUBLE( y_0, efNRC, "y_0", "Initial value of y", "def=1.58" );
+   PRM_DOUBLE( z_0, efNRC, "z_0", "Initial value of z", "def=16.62" );
    /** state variables */
    PRM_DOUBLE( x, efInner, "x", "x current value", "" );
    PRM_DOUBLE( y, efInner, "y", "y current value", ""  );

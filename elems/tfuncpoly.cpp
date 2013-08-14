@@ -31,8 +31,6 @@ STD_CLASSINFO(TFuncPoly,clpElem);
 
 CTOR(TFuncPoly,TMiso)
 {
-  type = 0;
-  a = b = 1; c = d = e = g = x0 = 0; 
 }
 
 

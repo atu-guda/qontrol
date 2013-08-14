@@ -44,7 +44,7 @@ class TGraph : public TDataSet  {
    int fillGraphInfo( GraphInfo *gi ) const;
  protected:
    /** title of graph  */
-   PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nsep=blockend\ncol=-1" );
+   PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nsep=blockend\ncol=-1\ndef=fig. " );
    /** name of output array for x  */
    PRM_STRING( xname, efNRC, "X  name", "Name of source for X values", "max=64\nsep=block" );
    /** names of output array for y[i]  */
@@ -55,14 +55,14 @@ class TGraph : public TDataSet  {
    PRM_STRING( y4name, efNRC, "Y4 name", "Name of source for Y4 values", "max=64" );
    PRM_STRING( y5name, efNRC, "Y5 name", "Name of source for Y5 values", "max=64" );
    /** back color  */
-   PRM_COLOR( bgcolor, efNRC, "BG color", "Background color", "sep=col");
+   PRM_COLOR( bgcolor, efNRC, "BG color", "Background color", "sep=col\ndef=#000060");
    /** color of lines */
-   PRM_COLOR( y0color, efNRC, "Y0 color", "Color for Y0", "");
-   PRM_COLOR( y1color, efNRC, "Y0 color", "Color for Y1", "");
-   PRM_COLOR( y2color, efNRC, "Y0 color", "Color for Y2", "");
-   PRM_COLOR( y3color, efNRC, "Y0 color", "Color for Y3", "");
-   PRM_COLOR( y4color, efNRC, "Y0 color", "Color for Y4", "");
-   PRM_COLOR( y5color, efNRC, "Y0 color", "Color for Y5", "");
+   PRM_COLOR( y0color, efNRC, "Y0 color", "Color for Y0", "def=white");
+   PRM_COLOR( y1color, efNRC, "Y0 color", "Color for Y1", "def=yellow");
+   PRM_COLOR( y2color, efNRC, "Y0 color", "Color for Y2", "def=#ff0000");
+   PRM_COLOR( y3color, efNRC, "Y0 color", "Color for Y3", "def=#00ff00");
+   PRM_COLOR( y4color, efNRC, "Y0 color", "Color for Y4", "def=#0000ff");
+   PRM_COLOR( y5color, efNRC, "Y0 color", "Color for Y5", "def=#ff00ff");
    // TODO: legend
    ScaleData *scd;
    // PRM_OBJ( scd, 0, "Scale data", "Information about scales", "sep=block" );

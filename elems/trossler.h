@@ -37,11 +37,11 @@ class TRossler : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
    
    /** main system parameters */
-   PRM_DOUBLE( a, 0, "a", "Parameter a", "" );
-   PRM_DOUBLE( b, 0, "b", "Parameter b", "" );
-   PRM_DOUBLE( c, 0, "c", "Parameter c", "" );
+   PRM_DOUBLE( a, 0, "a", "Parameter a", "def=0.25" );
+   PRM_DOUBLE( b, 0, "b", "Parameter b", "def=1" );
+   PRM_DOUBLE( c, 0, "c", "Parameter c", "def=5.58" );
    /** start x, y, x values */
-   PRM_DOUBLE( x_0, efNRC, "x_0", "Initial x value", "sep=col" );
+   PRM_DOUBLE( x_0, efNRC, "x_0", "Initial x value", "def=0.1\nsep=col" );
    PRM_DOUBLE( y_0, efNRC, "y_0", "Initial y value", "" );
    PRM_DOUBLE( z_0, efNRC, "z_0", "Initial z value", "" );
    /** variable of state */

@@ -31,8 +31,6 @@ STD_CLASSINFO(TLogic,clpElem);
 
 CTOR(TLogic,TMiso)
 {
-  level = 0.1; type = 1; useNInp0 = useNInp1 = useNInp2 = useNInp3 = 0;
-  useNOut = useMinus = 0;
 }
 
 

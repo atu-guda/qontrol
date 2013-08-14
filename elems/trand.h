@@ -61,31 +61,31 @@ class TRand : public TMiso  {
    
    /** type of distribution */
    PRM_LIST( type, efNRC, "Type", "Distribution type", "", trand_list_type );
-   /** time of const output value, if <=0 -- chacge every tick */
-   PRM_DOUBLE( tau, efNRC, "\\tau", "time of const output value, if <=0 -- change every tick ", "" );
+   /** time of const output value, if <=0 -- change every tick */
+   PRM_DOUBLE( tau, efNRC, "\\tau", "time of const output value, if <=0 -- change every tick ", "def=0.05" );
    /** amplitude of output */
-   PRM_DOUBLE( ampl, 0, "Amplitude", "Amplitude scale of output", "" );
+   PRM_DOUBLE( ampl, 0, "Amplitude", "Amplitude scale of output", "def=1" );
    /** zero value of output */
    PRM_DOUBLE( zval, 0, "Base value", "Zero value of output ", "" );
    /** coefficients of distribution */
-   PRM_DOUBLE( sigma, 0, "\\sigma", "\\sigma value of distrinution", "sep=col" );
-   PRM_DOUBLE( a, 0, "a", "Parameter a", "" );
-   PRM_DOUBLE( b, 0, "b", "Parameter b", "" );
-   PRM_DOUBLE( c, 0, "c", "Parameter c", "" );
+   PRM_DOUBLE( sigma, 0, "\\sigma", "\\sigma value of distrinution", "sep=col\ndef=1" );
+   PRM_DOUBLE( a, 0, "a", "Parameter a", "def=1" );
+   PRM_DOUBLE( b, 0, "b", "Parameter b", "def=1" );
+   PRM_DOUBLE( c, 0, "c", "Parameter c", "def=1" );
    /** seed value for generator */
-   PRM_INT( seed, efNRC, "Seed", "Seed value for generator", "sep=col" );
+   PRM_INT( seed, efNRC, "Seed", "Seed value for generator", "sep=col\bdef=1234" );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
-   PRM_LIST( seedType, efNRC, "Seed type", "0 - every run 1- 1d loop .. 3-by model ", "",
+   PRM_LIST( seedType, efNRC, "Seed type", "0 - every run 1- 1d loop .. 3-by model ", "def=3",
        trand_list_seedType );
    /** flag: add base seed to element seed */
-   PRM_SWITCH( addBaseSeed, efNRC, "Add base", "Add base seed to element seed ", "" );
+   PRM_SWITCH( addBaseSeed, efNRC, "Add base", "Add base seed to element seed ", "def=1" );
    
    /** time (may not be time) after previos value change */
-   double sp_time;
+   double sp_time = DMAX;
    /** old input (usualy time) to calc difference */
-   double old_in;
+   double old_in = 0;
    /** keeped const output value */
-   double old_val;
+   double old_val = 0;
    /** start value of seed */
    int sseed;
    /** effective value of seedType */

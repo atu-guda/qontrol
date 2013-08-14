@@ -47,13 +47,11 @@ class TLinP1Q0 : public TMiso  {
    PRM_DOUBLE( a, 0, "a", "a in dx/dt = a*f(ku*u(t)-x)", "def=1" );
    /** coefficient near u(t)  */
    PRM_DOUBLE( ku, 0, "k_u",  "Amplification", "def=1" );
-   /** name of element to compute f(x) */
-   PRM_STRING( fx, efNoRunChange | efNoDial, "old f(x) elem", "unused", "max=128" );
    /** Use u[1] as f(x) */
    PRM_SWITCH( use_u1, efNoRunChange, "u[1] is f()", 
-        "Use u[1] as source of f()", "" );
+        "Use u[1] as source of f()", "sep=col" );
    /** old value of x  */
-   double x_old;
+   double x_old = 0;
    
    DCL_DEFAULT_STATIC;
 };

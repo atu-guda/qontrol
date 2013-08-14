@@ -41,13 +41,8 @@ STD_CLASSINFO(TRand,clpElem);
 
 CTOR(TRand,TMiso)
 {
-  type = 0;
-  tau = 0.05; ampl = 1; zval = 0;
-  sigma = a = b = c = 1;
-  seed = 2942 + ( time(0) & 0x07FF );
-  seedType = 3; addBaseSeed = 1;
-  old_val = 0; sp_time = 1e300; old_in = 0; sseed = 0; bseed = 0;
-  rng = 0;
+  // seed = 2942 + ( time(0) & 0x07FF );
+  rng = nullptr;
 }
 
 TRand::~TRand()

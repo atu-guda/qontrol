@@ -33,7 +33,6 @@ STD_CLASSINFO(THyst,clpElem);
 
 CTOR(THyst,TMiso)
 {
-  type = 0; x0 = 1; alpha = 0.2; a = 1; b = 0; s = d = 0;
 }
 
 

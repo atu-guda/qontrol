@@ -30,11 +30,6 @@ STD_CLASSINFO(TAdjGen,clpElem );
 
 CTOR(TAdjGen,TMiso)
 {
-  type = useReset = useLock = outStrobe = useZero 
-       = useSignStrobe = usePlusStrobe = useF = 0; 
-  omega_0 = 1.2; k_omega = 1.0;
-  ctt = ig = ig2 = 0; currOut = 0; real_tick = 0;
-  tick = 0;
 }
 
 

@@ -47,11 +47,11 @@ class THyst : public TMiso  {
    /** type of hysteresis */
    PRM_LIST( type, efNoRunChange, "Type",  "Type of hysteresis", "", thyst_list );
    /** width of hysteresis  */
-   PRM_DOUBLE( x0, 0, "x_0",  "x0 - width if hysteresis", "min=0\nsep=col" );
+   PRM_DOUBLE( x0, 0, "x_0",  "x0 - width if hysteresis", "min=0\nsep=col\ndef=1" );
    /** slope of hysteresis  */
-   PRM_DOUBLE( alpha, 0, "\\alpha", "Hysteresis slope", ""  );
+   PRM_DOUBLE( alpha, 0, "\\alpha", "Hysteresis slope", "def=0.2"  );
    /** output scale */
-   PRM_DOUBLE( a, 0, "a scale", "output scale", "sep=col" );
+   PRM_DOUBLE( a, 0, "a scale", "output scale", "sep=col\ndef=1" );
    /** output shift */
    PRM_DOUBLE( b, 0, "b shift", "output shift", ""  );
    /** state d */

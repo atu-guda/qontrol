@@ -26,7 +26,6 @@ STD_CLASSINFO(TMultipl,clpElem);
 
 CTOR(TMultipl,TMiso)
 {
-  on0 = on1 = 1; on2 = on3 = 0; a = 1;
 }
 
 

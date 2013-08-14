@@ -41,14 +41,14 @@ class TCounter : public TMiso  {
    PRM_LIST( type, efNRC, "Type", "Type of counters output", "", 
        "level\npulse+\npulse+-\nn" );
    //* n of counts */
-   PRM_INT( n, efNRC, "n", "Number to count", "sep=col" );
+   PRM_INT( n, efNRC, "n", "Number to count", "sep=col\ndef=2" );
    //* current counter */
    PRM_INT( cn, efInner, "cn", "Current counter value", "" );
    /** use u[1] as reset */
    PRM_SWITCH( useReset, 0, "u[1] is Reset", "Use u[1] as Reset signal", "" );
    int flip;
    /** old value of input */
-   double u_old;
+   double u_old = DMAX;
    DCL_DEFAULT_STATIC;
 };
 

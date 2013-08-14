@@ -55,15 +55,15 @@ class TCorrAnalysis : public TMiso  {
    PRM_SWITCH( useFill,  efNoRunChange, "Fill arrays", "Fill output array", "" );
    /** time start / stop values */
    PRM_DOUBLE( t0, efNoRunChange, "t0", "Time to start on given type", "min=0" );
-   PRM_DOUBLE( t1, efNoRunChange, "t1", "Time to stop on given type", "min=0" );
+   PRM_DOUBLE( t1, efNoRunChange, "t1", "Time to stop on given type", "min=0\bdef=1000" );
    /** Names of input arrays if type=UseArrays */
    PRM_STRING( x_in, efNoRunChange, "in x[]", "name of input x array", "" );
    PRM_STRING( y_in, efNoRunChange, "in y[]", "name of input y array", "" );
    /** indexes of output values to be stored to model */
-   PRM_INT( out_a, efNoRunChange, "a idx", "Index to store 'a' value", "sep=col" );
-   PRM_INT( out_b, efNoRunChange, "b idx", "Index to store 'b' value", "" );
-   PRM_INT( out_corr, efNoRunChange, "corr idx", "Index to store 'corr' value", "" );
-   PRM_INT( out_ok, efNoRunChange, "ok idx", "Index to store 'ok' value", "" );
+   PRM_INT( out_a, efNoRunChange, "a idx", "Index to store 'a' value", "sep=col\ndef=-1" );
+   PRM_INT( out_b, efNoRunChange, "b idx", "Index to store 'b' value", "def=-1" );
+   PRM_INT( out_corr, efNoRunChange, "corr idx", "Index to store 'corr' value", "def=-1" );
+   PRM_INT( out_ok, efNoRunChange, "ok idx", "Index to store 'ok' value", "def=-1" );
    /** names of output arrays */
    PRM_STRING( x_oname, efNoRunChange, "out x name", "name of output x array", "sep=col" );
    PRM_STRING( y_oname, efNoRunChange, "out y name", "name of output y array", "" );

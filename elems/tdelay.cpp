@@ -28,7 +28,7 @@ STD_CLASSINFO(TDelay,clpElem );
 
 CTOR(TDelay,TMiso)
 {
-  mdelay = 1.5; cdelay = 1; v1 = v2 = u00 = 0; buf = 0; 
+  v1 = v2 = u00 = 0; buf = nullptr; 
 }
 
 TDelay::~TDelay()

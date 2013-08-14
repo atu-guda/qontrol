@@ -41,8 +41,8 @@ class TCriterion : public TMiso  {
    PRM_LIST( type, efNRC, "Type", "Type of criterion", "",  
        "|x|<a\n|x|>a\nx<a\nx>a\na<x<b"  );
    /** coefficients  */
-   PRM_DOUBLE( a, 0, "a", "level 'a'", "" );
-   PRM_DOUBLE( b, 0, "b", "level 'b'", "" );
+   PRM_DOUBLE( a, 0, "a", "level 'a'", "def=0.5" );
+   PRM_DOUBLE( b, 0, "b", "level 'b'", "def=1" );
    PRM_DOUBLE( t0, 0, "t0",  "Start time", "" );
    /** flags and state */
    PRM_SWITCH( useA, efNRC, "u[3] is a", "Use u[3] as 'a' value", "sep=col" );

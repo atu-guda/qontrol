@@ -44,9 +44,9 @@ class TDelay : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
    
    /** max delay */
-   PRM_DOUBLE( mdelay, efNRC, "Max. delay", "Maximum delay", "min=0\nmax=1e20");
+   PRM_DOUBLE( mdelay, efNRC, "Max. delay", "Maximum delay", "min=0\nmax=1e20\ndef=1.5");
    /** current delay */
-   PRM_DOUBLE( cdelay, 0, "Cur. delay", "Current delay", "min=0\nmax=1e20" );
+   PRM_DOUBLE( cdelay, 0, "Cur. delay", "Current delay", "min=0\nmax=1e20\ndef=1.0" );
 
    double v1;
    double v2;

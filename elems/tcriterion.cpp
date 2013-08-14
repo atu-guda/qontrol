@@ -30,8 +30,6 @@ STD_CLASSINFO(TCriterion,clpElem);
 
 CTOR(TCriterion,TMiso)
 {
-  a = 0.5; b = 1.0; type = 0; t0 = 0; 
-  useA = useT0 = useEnable = useLock = usePulse = 0;
 }
 
 

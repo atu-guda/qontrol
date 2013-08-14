@@ -34,11 +34,7 @@ STD_CLASSINFO(TRandTrigg,clpElem);
 
 CTOR(TRandTrigg,TMiso)
 {
-  prob = 0.5; u_old = 0; nforce = 2;
-  useLevel = useForce = useLock = useZero = 0; ns = -1;
-  seed = 9561 + (time(0) & 0x1AFFF );
-  seedType = 3; addBaseSeed = 1;
-  rng = 0;
+  // seed = 9561 + (time(0) & 0x1AFFF );
 }
 
 TRandTrigg::~TRandTrigg()

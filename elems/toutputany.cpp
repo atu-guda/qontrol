@@ -22,7 +22,7 @@
 #include "toutputany.h"
 
 const char* TOutputAny::helpstr = "<H1>TOutputAny</H1>\n"
- "<h2>Obsoleted element, use only out out to model vars (obsoleted too)</h2>\n"
+ "<h2>Obsoleted element, use only to out to model vars (obsoleted too)</h2>\n"
  "Puts signal to given target: <br>\n"
  "1-st form: #12 - put models var #12 <br>\n"
  "2-nd form: name relative to model: source.u <br>\n"
@@ -33,7 +33,7 @@ STD_CLASSINFO(TOutputAny,clpElem);
 CTOR(TOutputAny,TMiso)
 {
   type = -1; 
-  useEnable = 0; ne = -1; pel = 0;
+  useEnable = 0; ne = -1;
 }
 
 
@@ -43,7 +43,7 @@ int TOutputAny::do_preRun( int /*run_tp*/, int /*an*/,
 {
   int l;
   lastname = "";
-  type = -1; ne = -1; pel = 0;
+  type = -1; ne = -1;
   l = name.cval().size();
   if( l < 2 ) return 0; // smallest: '#0'
   if( name.cval()[0] == '#' ) { // access to model vars by number

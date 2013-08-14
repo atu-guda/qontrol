@@ -29,8 +29,6 @@ STD_CLASSINFO(TTrigger,clpElem );
 
 CTOR(TTrigger,TMiso)
 {
-  type = 0; level0 = 0.1; level1 = 0.5; t0 = 2; et = 0; u2_old = 0;
-  useInit1 = useEnable = usePulse = useMinus = useT0 = 0;
 }
 
 

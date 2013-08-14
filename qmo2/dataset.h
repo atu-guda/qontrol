@@ -108,7 +108,8 @@ struct TClassInfo {
 // definition in cpp file of common functions
 #define DEFAULT_FUNCS(clname) \
  HolderData* clname::create( ARGS_CTOR_MIN ) \
-     { clname *t = new clname( ARGS_CTOR_NAMES ); t->dyn=1; return t; } \
+     { clname *t = new clname( ARGS_CTOR_NAMES ); \
+       t->dyn=1; t->reset_dfl(); return t; } \
  const TClassInfo* clname::getClassInfo() const {  return &class_info; } \
  const char *clname::getHelp() const {  return helpstr; }
 

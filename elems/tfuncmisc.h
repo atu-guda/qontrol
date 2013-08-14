@@ -58,8 +58,8 @@ class TFuncMisc : public TMiso  {
    /** type of function */
    PRM_LIST( type, 0, "Type", "Function type", "", tfuncmisc_list );
    /** coefficients and shift */
-   PRM_DOUBLE( a,  0, "a", "Parameter a", "sep=col" );
-   PRM_DOUBLE( b,  0, "b", "Parameter b", "" );
+   PRM_DOUBLE( a,  0, "a", "Parameter a", "sep=col\ndef=1" );
+   PRM_DOUBLE( b,  0, "b", "Parameter b", "def=1" );
    PRM_DOUBLE( c,  0, "c", "Parameter c", "" );
    PRM_DOUBLE( d,  0, "d", "Parameter d", "sep=col" );
    PRM_DOUBLE( e,  0, "e", "Parameter e", "" );

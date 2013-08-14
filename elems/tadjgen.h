@@ -51,8 +51,8 @@ class TAdjGen : public TMiso  {
    PRM_INT( currOut, efInner, "Current out", "Current INT output", "");
    PRM_DOUBLE( tick, efInner, "Tick", "1 means generator ticks now", "" );
    /** koeff to F-omega conversion if useF */
-   PRM_DOUBLE( omega_0, 0, "\\omega_0", "Base frequency if flag 'input F' is set", "" );
-   PRM_DOUBLE( k_omega, 0, "k_\\omega", "Frequency scale if flag 'input F' is set", "");
+   PRM_DOUBLE( omega_0, 0, "\\omega_0", "Base frequency if flag 'input F' is set", "def=1.2" );
+   PRM_DOUBLE( k_omega, 0, "k_\\omega", "Frequency scale if flag 'input F' is set", "def=1");
    /**  accumulators, ... */
    PRM_DOUBLE( ctt, efInner, "ctt", "Accumulator 0", "" );
    PRM_DOUBLE( ig, efInner,  "ig",  "Accumulator 1", "" );

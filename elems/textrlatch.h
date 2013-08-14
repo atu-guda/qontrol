@@ -50,7 +50,7 @@ class TExtrLatch : public TMiso  {
    /** start time */
    PRM_DOUBLE( tStart, efNRC, "Time start", "Time start", "sep=col");
    /** fuzzy level for local extr */
-   PRM_DOUBLE( fuzzy, efNRC, "Fuzzy level", "Fuzzu level for local extremum catcher", "" );
+   PRM_DOUBLE( fuzzy, efNRC, "Fuzzy level", "Fuzzy level for local extremum catcher", "" );
    /** holders for extr levels and old values */
    PRM_DOUBLE( u_max, efInner, "u_max", "u_max", "");
    PRM_DOUBLE( t_max, efInner, "t_max", "t_max", "");
@@ -60,7 +60,7 @@ class TExtrLatch : public TMiso  {
    PRM_DOUBLE( t_abs, efInner, "t_abs", "t_abs", "");
    PRM_DOUBLE( u_ex,  efInner, "u_ex",  "u_ex" , "");
    PRM_DOUBLE( t_ex,  efInner, "t_ex",  "t_ex" , "");
-   double  u_old, u_old2, t_old;
+   double  u_old = 0, u_old2 = 0, t_old = 0;
    DCL_DEFAULT_STATIC;
 };
 

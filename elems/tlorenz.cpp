@@ -40,9 +40,6 @@ STD_CLASSINFO(TLorenz,clpElem );
 
 CTOR(TLorenz,TMiso)
 {
-  sigma = 10.0; r = 28.0; b = 8.0/3.0; // Well-known Lorenz params
-  x_0 = 3.05; y_0 = 1.58; z_0 = 16.62; 
-  x = y = z = 0;
 }
 
 double TLorenz::f( double /*t*/ )

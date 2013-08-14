@@ -30,19 +30,6 @@ STD_CLASSINFO(TSource,clpElem);
 
 CTOR(TSource,TMiso)
 {
-  type = use_u_ch = use_f_ch = 0;
-  uu = 1; omega = 0.7; cc = 0;
-  u_ch_v0 = 0.5; u_ch_vm = 1.5; u_ch_t0 = 2; u_ch_tm = 10;
-  f_ch_v0 = -0.2; f_ch_vm = 0.2; f_ch_t0 = 2; f_ch_tm = 10;
-  was_pulse = 0;
-  u_ch_vs = u_ch_ve = u_ch_ts = u_ch_te = u_ch_k 
-          = f_ch_vs = f_ch_ve = f_ch_ts = f_ch_te = f_ch_k = 1; 
-  seed_u = 17228 + (time(0) & 0x3AF7F );
-  seedType_u = 3; addBaseSeed_u = 1;
-  rng_u = 0;
-  seed_p = seed_p + (time(0) & 0xFFF7 );
-  seedType_p = 3; addBaseSeed_p = 1;
-  rng_p = 0;
 }
 
 TSource::~TSource()
@@ -160,11 +147,11 @@ int TSource::do_postRun( int /*good*/ )
 {
   if( rng_u ) {
     gsl_rng_free( rng_u );
-    rng_u = 0;
+    rng_u = nullptr;
   };
   if( rng_p ) {
     gsl_rng_free( rng_p );
-    rng_p = 0;
+    rng_p = nullptr;
   };
   return 0;
 }

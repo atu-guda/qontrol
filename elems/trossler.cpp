@@ -38,9 +38,6 @@ STD_CLASSINFO(TRossler,clpElem );
 
 CTOR(TRossler,TMiso)
 {
-  a = 0.25; b = 1.0; c = 5.58; 
-  x_0 = 0.1; y_0 = 0.0; z_0 = 0.0; 
-  x = y = z = 0;
 }
 
 

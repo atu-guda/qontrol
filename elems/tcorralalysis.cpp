@@ -29,13 +29,8 @@ STD_CLASSINFO(TCorrAnalysis,clpElem );
 
 CTOR(TCorrAnalysis,TMiso)
 {
-  type = 0; 
-  ok = n = ii = nc = 0;
-  useCalc = useReset = useFill = 0;
-  t0 = 0; t1 = 10000; out_a = out_b = out_corr = out_ok = -1;
   mainOutput = 0;
   reset_data();
-  cmp_ms = cmp_min = cmp_max = cmp_ampl = cmp_tmin = cmp_tmax = 0;
   out_source[0]  = s_x.addr(); 
   out_source[1]  = s_x2.addr(); 
   out_source[2]  = s_y.addr(); 

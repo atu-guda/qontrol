@@ -26,8 +26,6 @@ STD_CLASSINFO(TPid,clpElem );
 
 CTOR(TPid,TMiso)
 {
-  kd2 = kd1 = ki2 = ki1 = 0; kp = 1; aver = 0;
-  tdt2 = 1; vi1 = vi2 = u_old = u_old2 = 0;
 }
 
 

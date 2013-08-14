@@ -22,7 +22,7 @@
 using namespace std;
 
 const char* TSourceLin::helpstr = "<H1>TSourceLin</H1>\n"
- "Source of signal, which consist of some linear segments. \n"
+ "<b>dont work now!</b> Source of signal, which consist of some linear segments. \n"
  "Each segment have time: <B>t_inr[i]</B>, \n"
  "start value: <B>vs[i]</B>, \n"
  "end value: <B>ve[i]</B>, <BR>\n"

@@ -70,7 +70,7 @@ bool HolderData::isObject( const QString & /*cl_name*/  ) const
 
 void HolderData::extraToParm()
 {
-  QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=\s*(\S+)$)" );
+  QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=(.+)$)" );
   QStringList el = getParm("extra").split("\n");
   for( QString &s : el ) {
     if( s.isEmpty() ) {

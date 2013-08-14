@@ -39,9 +39,9 @@ class TIntegrator : public TMiso  {
 
    PRM_DOUBLE( ki, 0, "k_i",  "Factor before integral", "def=1" );
    PRM_DOUBLE( s_val, 0, "Start", "Start value", "" );
-   PRM_DOUBLE( dis, 0, "Disc coeff", "Discharde coeff (if enabled)", "" );
-   PRM_DOUBLE( vmin, 0, "Min limit", "Limit min value", "" );
-   PRM_DOUBLE( vmax, 0, "Max limit", "Limit max value", "" );
+   PRM_DOUBLE( dis, 0, "Disc coeff", "Discharde coeff (if enabled)", "def=1e-4" );
+   PRM_DOUBLE( vmin, 0, "Min limit", "Limit min value", "def=-10000" );
+   PRM_DOUBLE( vmax, 0, "Max limit", "Limit max value", "def=10000" );
    PRM_DOUBLE( v, efInner, "v", "Current value", "" );
    /** flags */
    PRM_SWITCH( useMin,   efNRC, "use Min value", "limit output to minimum value", "sep=col" );

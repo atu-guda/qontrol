@@ -29,7 +29,6 @@ STD_CLASSINFO(TCounter,clpElem );
 
 CTOR(TCounter,TMiso)
 {
-  cn = type = useReset = flip = 0; u_old = DMAX; n = 2;
 }
 
 

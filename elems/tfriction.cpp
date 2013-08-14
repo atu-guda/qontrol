@@ -40,15 +40,13 @@ STD_CLASSINFO(TFriction,clpElem);
 
 CTOR(TFriction,TMiso)
 {
-  mass = 1; f_mx = 0.4; kf_mx = 0; kfv = 0.01; useMf = 0;
-  v = v_old = x_old = Ff = 0;
-  bodyState = 0;
 }
 
 
 int TFriction::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  x_old = v = v_old = Ff = 0;
+  x_old = out0_init; 
+  v = v_old = Ff = 0;
   bodyState = 0;
   return 0;
 }

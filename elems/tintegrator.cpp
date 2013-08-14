@@ -21,35 +21,32 @@
 using namespace std;
 
 const char* TIntegrator::helpstr = "<H1>TIntegrator</H1>\n"
- "Realistic integrator: <br>\n"
+ "<p>Realistic integrator: <br>\n"
  "Can has limits, discharge, reset, floating base.<br>\n"
- "- <b>ki</b> - coefficient of integration;<br>\n"
- "- <b>s_val</b> - initial value, may be added to base;<br>\n"
- "- <b>vmin, vmax</b> - limits. Used if checked flags <b>useMin, UseMax</b>;<br>\n"
- "- <b>dis</b> - coefficient of discharge.Used if checked flag <b>useDis</b>;<br>\n"
- "- <b>useReset</b> - set value to <b>base</b> if u[1] > 0.1;<br>\n"  
- "- <b>useBase</b> - use u[3] as base for reset and discharge, def=0;<br>\n"  
- "- <b>useAdd</b> - add <b>s_val</b> to base;<br>\n"  
- "- <b>useHold</b> - on reset, hold old value this step;<br>\n"  
- "- <b>useAver</b> - calculate average value;<br>\n"  
- "- <b>useSqIn</b> - calculate u^2 before processing;<br>\n"  
- "- <b>useSqrOut</b> - calculate sqrt(out);<br>\n"  
- "- <b>useMin, useMax</b> - use limits to bound value."; 
+ "- <b>ki</b> - coefficient of integration;<br/>\n"
+ "- <b>s_val</b> - initial value, may be added to base;<br/>\n"
+ "- <b>vmin, vmax</b> - limits. Used if checked flags <b>useMin, UseMax</b>;<br/>\n"
+ "- <b>dis</b> - coefficient of discharge.Used if checked flag <b>useDis</b>;<br/>\n"
+ "- <b>useReset</b> - set value to <b>base</b> if u[1] > 0.1;<br/>\n"  
+ "- <b>useBase</b> - use u[3] as base for reset and discharge, def=0;<br/>\n"  
+ "- <b>useAdd</b> - add <b>s_val</b> to base;<br/>\n"  
+ "- <b>useHold</b> - on reset, hold old value this step;<br/>\n"  
+ "- <b>useAver</b> - calculate average value;<br/>\n"  
+ "- <b>useSqIn</b> - calculate u^2 before processing;<br/>\n"  
+ "- <b>useSqrOut</b> - calculate sqrt(out);<br/>\n"  
+ "- <b>useMin, useMax</b> - use limits to bound value.</p>"; 
 
 STD_CLASSINFO(TIntegrator,clpElem );
 
 CTOR(TIntegrator,TMiso)
 {
-  ki = 1; vmin = -1000;  vmax = 1000; s_val = 0; dis = 1e-3; t_rst = 0;
-  useMin = useMax = useReset = useBase = useAdd = useDis 
-         = useAver = useHold = useSqIn = useSqrOut = 0;
 }
 
 
 
 int TIntegrator::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  v_old = v = (double)s_val; 
+  v_old = v = (double)s_val; // TODO: what about out0_init ?
   t_rst = 0;
   return 0;
 }

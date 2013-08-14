@@ -28,11 +28,7 @@ STD_CLASSINFO(TFourier,clpElem);
 
 CTOR(TFourier,TMiso)
 {
-  omega = 1; t0 = 0; t1 = 1e6; tp = 2 * M_PI / omega; 
-  np = n_st = n_en = ii = 0; nn = nper = 1;
-  ng = 3; useOptim = 1; useFill = 0;
-  out_a = out_b = out_am = out_om = -1;
-  s_x2 = a0 = a1 = b1 = ampl = ampl1 = phi = qpow = qpow1 = 0;
+  tp = 2 * M_PI / omega; 
 }
 
 

@@ -31,14 +31,6 @@ STD_CLASSINFO(TGraph,clpSpecial);
 CTOR(TGraph,TDataSet) ,
      scd( new ScaleData( "scd", this, 0, "scale", "scale data", "" ) )
 {
-  bgcolor = QColor::fromRgb( 0,0,0x60 );
-  title =  "title";
-  y0color = QColor::fromRgb(255,255,255); 
-  y1color = QColor::fromRgb(255,255,0);
-  y2color = QColor::fromRgb(255,0,0);
-  y3color = QColor::fromRgb(0,255,0);
-  y4color = QColor::fromRgb(0,0,255);
-  y5color = QColor::fromRgb(255,0,255);
 }
 
 

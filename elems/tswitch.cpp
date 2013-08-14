@@ -31,14 +31,15 @@ STD_CLASSINFO(TSwitch,clpElem);
 
 CTOR(TSwitch,TMiso)
 {
-  level1 = 1; level2 = 2;
 }
 
 
 double TSwitch::f( double /* t */ )
 {
   double v;
-  v = ( *in_so[3] < level1 ) ? *in_so[0] : ( ( *in_so[3]>level2 ) ? *in_so[2] : *in_so[1] );
+  v = ( *in_so[3] < level1 ) ? 
+    *in_so[0] 
+    : ( ( *in_so[3]>level2 ) ? *in_so[2] : *in_so[1] );
   return v;
 }
 

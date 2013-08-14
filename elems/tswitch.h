@@ -35,8 +35,8 @@ class TSwitch : public TMiso  {
    virtual double f( double t ) override;
 
    /** levels  */
-   PRM_DOUBLE( level1, 0, "Level 1", "Level to switch from u[0] to u[1]", "" );
-   PRM_DOUBLE( level2, 0, "Level 2", "Level to switch from u[1] to u[2]", "" );
+   PRM_DOUBLE( level1, 0, "Level 1", "Level to switch from u[0] to u[1]", "def=1" );
+   PRM_DOUBLE( level2, 0, "Level 2", "Level to switch from u[1] to u[2]", "def=2" );
    
    DCL_DEFAULT_STATIC;
 };

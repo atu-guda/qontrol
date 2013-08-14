@@ -24,8 +24,6 @@ const char* TLinP1Q0::helpstr = "<H1>TLinP1Q0</H1>\n"
  "Parameter <b>a</b> -- frequency, can be changed at any time.<br>\n"
  " <b>a = 1 / tau; </B> "
  "where <B> tau </B> -- time constant.<br>\n"
- "Parametr: <b>fx</b> -- name of element, calculating f(x),"
- " if none - assumed f(x) = x. <br>\n"
  "Linear transfer function: <br>\n"
  "<B>W = ku / ( tau * p + 1 ) </B>.<br>\n"
  "If u(t) = theta(t) than x(t) = ku * ( 1 - exp(-t/tau) ), and<br>\n"
@@ -36,9 +34,6 @@ STD_CLASSINFO(TLinP1Q0,clpElem );
 
 CTOR(TLinP1Q0,TMiso)
 {
-  a = 1.0;  ku = 1.0; 
-  use_u1 = 0;
-  x_old = 0;
 }
 
 

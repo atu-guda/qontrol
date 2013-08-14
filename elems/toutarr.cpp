@@ -32,9 +32,6 @@ STD_CLASSINFO(TOutArr,clpSpecial);
 CTOR(TOutArr,TDataSet), 
    fake_so(0), so( &fake_so ) 
 {
-  allow_add = 0;
-  arrsize = 0; dmin = 0; dmax = 1; n = ny = 0; nq = 1; cnq = lnq = 0;
-  type = 0; // name[0] = 0; label[0] = 0;
 }
 
 TOutArr::~TOutArr()

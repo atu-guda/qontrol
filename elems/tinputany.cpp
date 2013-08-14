@@ -22,10 +22,11 @@
 #include "tinputany.h"
 
 const char* TInputAny::helpstr = "<H1>TInputAny</H1>\n"
- "Gets signal from given source: <br>\n"
- "1-st form: #12 - get models var #12 <br>\n"
- "2-nd form: name relative to model: source.u <br>\n"
- "Have 1 parameter: <b>name</b>.";
+ "<p><b>Obsoleted element: use direct access to named param </b></p>\n"
+ "<p>Gets signal from given source: <br/>\n"
+ "1-st form: #12 - get models var #12 <br/>\n"
+ "2-nd form: name relative to model: source.u <br/>\n"
+ "Have 1 parameter: <b>name</b>.</p>";
 
 STD_CLASSINFO(TInputAny,clpElem);
 

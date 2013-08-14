@@ -26,7 +26,6 @@ STD_CLASSINFO(TLinear,clpElem);
 
 CTOR(TLinear,TMiso)
 {
-  a0 = 1; a1 = -1; a2 = a3 = 0; b = 0;
 }
 
 double TLinear::f( double /* t */ )
