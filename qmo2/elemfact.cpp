@@ -34,7 +34,8 @@ HolderData* ElemFactory::createElem( const QString &a_type,
 {
   auto i = str_class.find( a_type );
   if( i == str_class.end() ) {
-    DBG2q( "WARN: fail to find class %s", a_type ); 
+    DBGx( "WARN: fail to find class \"%s\" for object \"%s\"", 
+          qP(a_type), qP(obj_name) ); 
     return nullptr;
   }
   // check parent for name
@@ -45,6 +46,10 @@ HolderData* ElemFactory::createElem( const QString &a_type,
   }
   
   HolderData *ob =  (i.value()->creator)( ARGS_CTOR_NAMES );
+  if( !ob ) {
+    DBGx( "err: fail to create obj \"%s\" type \"%s\"", qP(obj_name), qP(a_type) );
+    return nullptr;
+  }
   return ob;
 }
 
@@ -66,16 +71,16 @@ bool ElemFactory::registerElemType( const TClassInfo *cl_info )
   return true;
 }
 
-bool ElemFactory::unregisterElemType( const QString &a_type )
-{
-  auto i = str_class.find( a_type );
-  if( i == str_class.end() ) {
-    DBG2q( "ERR: fail to find class", a_type ); 
-    return 0;
-  }
-  str_class.erase( i );
-  return true;
-}
+//bool ElemFactory::unregisterElemType( const QString &a_type )
+//{
+//  auto i = str_class.find( a_type );
+//  if( i == str_class.end() ) {
+//    DBG2q( "ERR: fail to find class", a_type ); 
+//    return 0;
+//  }
+//  str_class.erase( i );
+//  return true;
+//}
 
 const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
 {

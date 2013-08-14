@@ -195,13 +195,15 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
   model = 0;
   bool read_ok = rootdata->fromDom( obj_root, errstr );
   if( ! read_ok ) {
+    delete rootdata;
+    rootdata = nullptr;
     QMessageBox::critical( 0, "openDocumentXml Error:",
        QString("Fail parse file: ") + filename + " : " + errstr,
        QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
     return false;
   }
   
-  model = static_cast<TModel*> (rootdata->getObj( "model", "TModel" )); 
+  model = qobject_cast<TModel*> (rootdata->getObj( "model", "TModel" )); 
   if( model ) {
     loaded_as_old = true; 
   } else if ( (model = static_cast<TModel*>(rootdata->getObj( "schems.main", "TModel" ))) != nullptr ) {

@@ -64,15 +64,15 @@ class TOutArr : public TDataSet  {
    PRM_LIST( type, efNoRunChange, "Type", 
        "Type of array: 0:simple, 1:parm1, 2:parm2, 3:special", "", toutarr_list );
    /** name of element to use */
-   PRM_STRING( name, efNoRunChange, "Source", "Name of element to use", "max=32" );
+   PRM_STRING( name, efNoRunChange, "Source", "Name of element to use", "max=64" );
    /** label of data */
    PRM_STRING( label, efNoRunChange, "Label", "Label of data", "max=32" );
    /** size of x=const block in 2-d arrays */
    PRM_INT( ny, efInner, "ny","size of x=const block in 2-d arrays", ""  );
    /** each n-th data collect. def=1 */
-   PRM_INT( nq, efNoRunChange, "Every n", "each n-th data collect. def=1", "min=0\nmax=1e6" );
+   PRM_INT( nq, efNoRunChange, "Every n", "each n-th data collect. def=1", "min=0\nmax=1000000" );
    /** latch value of counter */
-   PRM_INT( lnq, efNoRunChange, "Catch at n=", "latch value of counter", "min=0\nmax=1e6" );
+   PRM_INT( lnq, efNoRunChange, "Catch at n=", "latch value of counter", "min=0\nmax=1000000" );
    /** current value of counter(0..nq-1) */
    PRM_INT( cnq, efInner, "Current n", "current value of counter(0..nq-1)", "" );
    /** min value */

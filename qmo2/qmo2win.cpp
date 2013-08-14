@@ -18,8 +18,6 @@
 #include <cstdlib>
 #include <QtGui>
 
-// application specific includes
-#include "../config.h"
 #include "qmo2view.h"
 #include "qmo2doc.h"
 #include "qmo2win.h"
@@ -45,8 +43,8 @@ QMo2Win::QMo2Win(void)
           this, SLOT(setActiveSubWindow(QWidget*)));
 
   printer = new QPrinter;
-  printer->setPageSize( QPrinter::A4 );
-  printer->setColorMode( QPrinter::GrayScale ); 
+  // printer->setPageSize( QPrinter::A4 );
+  // printer->setColorMode( QPrinter::GrayScale ); 
   untitledCount = 0;
   /* -------- other ----------- */
   add_dir = "" ;
@@ -73,14 +71,14 @@ QMo2Win::~QMo2Win()
 
 void QMo2Win::initDirs() // TODO: remove or rewrite
 {
-  QString app = QString::fromLocal8Bit( "share/" PACKAGE );
-  QString sep = QString::fromLocal8Bit( "/" );
-  QString prefix = QString::fromLocal8Bit( "/usr" ); // TODO: from config
+  QString app = L8B( "share/" PACKAGE );
+  QString sep = L8B( "/" );
+  QString prefix = L8B( "/usr" ); // TODO: from config
   
-  xbuild_dir = QString::null;
+  xbuild_dir = QString();
   QDir d( qApp->applicationDirPath() );
   d.makeAbsolute();
-  if( d.exists( QString::fromLocal8Bit( "main.cpp" ) )  
+  if( d.exists( L8B( "main.cpp" ) )  
       && d.exists( app  ) ) {
     xbuild_dir = d.canonicalPath() + sep + app;
   };
@@ -107,7 +105,7 @@ void QMo2Win::initDirs() // TODO: remove or rewrite
   env_dir = QString::null;
   const char *evar = getenv("QMO2DIR");
   if( evar ) {
-    d.setPath( QString::fromLocal8Bit(evar) );
+    d.setPath( L8B(evar) );
     if( d.isReadable() ) {
       d.makeAbsolute();
       env_dir = d.canonicalPath();
@@ -1071,17 +1069,17 @@ void QMo2Win::slotTest(void)
   ;
   QString ostr( "Test called\n" );
   statusBar()->showMessage( tr( "Test something..." ) );
-  ostr += QString::fromLocal8Bit( loc_test ) + "(Local8bit)\n" ;
+  ostr += L8B( loc_test ) + "(Local8bit)\n" ;
   ostr += QString::fromAscii( loc_test ) + "(Ascii)\n";
   for( unsigned ccode=0x0390; ccode < 0x0400; ++ccode )  {
     ostr += QChar( ccode );
     if( (ccode & 0x1F) == 0x1F ) 
-      ostr += " <:> " + QString::number(ccode,16) + "\n";
+      ostr += " <:> " + QSN(ccode,16) + "\n";
   }
   ostr += "\n";
 
   for(int i=0; i<5; i++) {
-    ostr += QString::number(i) + ": ";
+    ostr += QSN(i) + ": ";
     ostr += *all_dirs[i] + "\n";
   };
   ostr += "local: "; 
@@ -1092,10 +1090,10 @@ void QMo2Win::slotTest(void)
   ostr += findRes("build.dat");
   ostr += "\nenv: "; 
   ostr += findRes("env.dat");
-  ostr += "\nDMIN: " + QString::number( DMIN );
-  ostr += " DMAX: "  + QString::number( DMAX );
-  ostr += "\niDMIN: " + QString::number( (int)(DMIN) );
-  ostr += " iDMAX: "  + QString::number( (int)(DMAX) );
+  ostr += "\nDMIN: " + QSN( DMIN );
+  ostr += " DMAX: "  + QSN( DMAX );
+  ostr += "\niDMIN: " + QSN( (int)(DMIN) );
+  ostr += " iDMAX: "  + QSN( (int)(DMAX) );
   QMessageBox::information( this, tr( "Test" ), ostr, QMessageBox::Ok );
   statusBar()->showMessage( tr( "Ready." ) );
 }

@@ -108,7 +108,7 @@ struct TClassInfo {
 // definition in cpp file of common functions
 #define DEFAULT_FUNCS(clname) \
  HolderData* clname::create( ARGS_CTOR_MIN ) \
-     { return new clname( ARGS_CTOR_NAMES ); } \
+     { clname *t = new clname( ARGS_CTOR_NAMES ); t->dyn=1; return t; } \
  const TClassInfo* clname::getClassInfo() const {  return &class_info; } \
  const char *clname::getHelp() const {  return helpstr; }
 
@@ -127,9 +127,14 @@ struct TClassInfo {
   TClassInfo clname::class_info =  \
     {  #clname,  clname::create,  helpstr, clp };
 
+// class_info definition under alias (for data holders HolderInt->int)
+#define STD_CLASSINFO_ALIAS(clname,clp,alias) \
+  TClassInfo clname::class_info =  \
+    {  #alias,  clname::create,  helpstr, clp };
+
 
 // define in class common converions to target type
-// need for usage class objects os pure data
+// need for usage class objects as pure data
 #define STD_CONVERSIONS(targ_type) \
   operator targ_type() const { return v; } \
   operator targ_type&()  { return v; } \
@@ -432,7 +437,7 @@ class ElemFactory {
    static ElemFactory& theFactory();
    HolderData* createElem( const QString &a_type, ARGS_CTOR ) const;
    bool registerElemType( const TClassInfo *cl_inf );
-   bool unregisterElemType( const QString &a_type );
+   // bool unregisterElemType( const QString &a_type );
    QStringList allTypeNames() const { return str_class.keys(); } // TODO: criterion
    const QStringList& allParamTypes() const { return param_names; } 
    const TClassInfo* getInfo( const QString &a_type ) const;

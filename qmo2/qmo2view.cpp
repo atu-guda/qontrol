@@ -70,12 +70,15 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   
   stam = new QStatusModel( this, this );
 
-  //treeView = new QTreeView( this );
+  // TODO: not auto
+  //QTreeView *treeView = new QTreeView( this );
   //treeView->setModel( ho_mo );
 
   grLay->addWidget( scrollArea, 0, 0 );
   grLay->addWidget( oview, 0, 1 );
   grLay->addWidget( gview, 0, 2 );
+  
+  //grLay->addWidget( treeView, 0, 2 );
 
   left_part->setLayout( grLay );
 
@@ -102,6 +105,9 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
 
 QMo2View::~QMo2View()
 {
+  DBGx( "dbg: view dtor, doc=%p", doc );
+  // TODO: FIXME: BUG: 
+  // delete doc; doc = 0;
 }
 
 QMo2Doc *QMo2View::getDocument() const
@@ -345,7 +351,7 @@ void QMo2View::linkElm()
   if( ! checkState( selCheck ) )
     return;  
 
-  el = static_cast<TElmLink*>( selObj->getObj( "links" ) );
+  el = qobject_cast<TElmLink*>( selObj->getObj( "links" ) );
   if( el == 0 ) {
     DBG2q( "ERR: fail to find links for object", selObj->getFullName() );
     return ;

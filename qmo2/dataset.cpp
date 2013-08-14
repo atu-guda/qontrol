@@ -36,7 +36,7 @@ HolderData::HolderData( ARGS_CTOR_MIN )
 
 HolderData::~HolderData()
 {
-  DBGx( "dbg: HolderData::~HolderData(): %s par: %p %s", 
+  DBGx( "dbg:  %s par: %p %s", 
       qP( objectName() ), par, qP( par->objectName() )  );
 }
 
@@ -194,7 +194,7 @@ const char* HolderData::helpstr { "Abstract data holder" };
 
 
 // ---------------- HolderInt ---------
-STD_CLASSINFO(HolderInt,clpData);
+STD_CLASSINFO_ALIAS(HolderInt,clpData,int);
 
 CTOR(HolderInt,HolderData) , v(0)
 {
@@ -275,7 +275,7 @@ DEFAULT_FUNCS_REG(HolderInt);
 
 
 // ---------------- HolderSwitch ---------
-STD_CLASSINFO(HolderSwitch,clpData);
+STD_CLASSINFO_ALIAS(HolderSwitch,clpData,switch);
 
 CTOR(HolderSwitch,HolderInt)
 {
@@ -307,7 +307,7 @@ DEFAULT_FUNCS_REG(HolderSwitch);
 
 
 // ---------------- HolderList ---------
-STD_CLASSINFO(HolderList,clpData);
+STD_CLASSINFO_ALIAS(HolderList,clpData,list);
 
 HolderList::HolderList( ARGS_CTOR_MIN, const QString &a_elems  )
    : HolderInt( ARGS_CTOR_NAMES )
@@ -343,7 +343,7 @@ DEFAULT_FUNCS_REG(HolderList);
 
 
 // ---------------- HolderDouble ---------
-STD_CLASSINFO(HolderDouble,clpData);
+STD_CLASSINFO_ALIAS(HolderDouble,clpData,double);
 
 CTOR(HolderDouble,HolderData), v(0)
 {
@@ -423,7 +423,7 @@ DEFAULT_FUNCS_REG(HolderDouble);
 
 
 // ---------------- HolderString ---------
-STD_CLASSINFO(HolderString,clpData);
+STD_CLASSINFO_ALIAS(HolderString,clpData,QString);
 
 CTOR(HolderString,HolderData)
 {
@@ -495,7 +495,7 @@ DEFAULT_FUNCS_REG(HolderString);
 
 
 // ---------------- HolderColor ---------
-STD_CLASSINFO(HolderColor,clpData);
+STD_CLASSINFO_ALIAS(HolderColor,clpData,QColor);
 
 CTOR(HolderColor,HolderData)
 {

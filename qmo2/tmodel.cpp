@@ -354,20 +354,21 @@ int TModel::checkData( int n )/*{{{1*/
 }/*}}}1*/
 
 // TODO: not here: use separate containers
-int TModel::isValidType( const QString & /*cl_name*/ ) const
+int TModel::isValidType( const QString & cl_name ) const
 {
-  /*
-  if( EFACT.isChildOf( cl_name, "TMiso" ) )
+  const TClassInfo *ci = EFACT.getInfo( cl_name );
+  if( !ci ) {
+    return 0;
+  }
+  if( ci->props | clpElem ) {
     return 1;
-  if( EFACT.isChildOf( cl_name, "TOutArr" ) )
+  }
+  // FIXME:
+  if( cl_name == "TOutArr" || cl_name == "TGraph" ) {
     return 1;
-  if( EFACT.isChildOf( cl_name, "TGraph" ) )
-    return 1;
-  // tmp:
-  if( cl_name == "TDataContainer" )
-    return 1;
-  */
-  return 1;
+  }
+  DBG2q( "warn: bad object type to insertion", cl_name );
+  return 0;
 }
 
 int TModel::xy2elnu( int avis_x, int avis_y )/*{{{1*/ // TODO: todel
@@ -453,7 +454,7 @@ TMiso* TModel::insElem( const QString &cl_name, const QString &ob_name,
 {
   TMiso *ob;
   ob = qobject_cast<TMiso*>( add_obj( cl_name, ob_name ) );
-  if( !ob || ob->isChildOf( "TMiso" ) == 0 ) 
+  if( !ob || ob->isChildOf( "TMiso" ) == 0 ) // FIXME: leak?
     return nullptr;
   ob->setData( "ord", aord );
   ob->setData( "vis_x", avis_x );  
