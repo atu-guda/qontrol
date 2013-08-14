@@ -866,13 +866,7 @@ void QMo2Win::slotFileSaveXMLAs()
 
 void QMo2Win::slotFileClose()
 {
-  statusBar()->showMessage( tr ( "Closing model file..." ) );
-  QMo2View* m =  activeMdiChild();
-  if( m ) {
-    m->close();
-  };
-  updateActions();
-  statusBar()->showMessage( tr ( "Ready." ) );
+  slotWindowClose(); // tmp for now: 1 for now
 }
 
 void QMo2Win::slotFilePrint()

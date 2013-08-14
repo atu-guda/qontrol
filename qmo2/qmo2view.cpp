@@ -106,7 +106,7 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
 QMo2View::~QMo2View()
 {
   DBGx( "dbg: view dtor, doc=%p", doc );
-  delete doc; doc = 0;
+  delete doc; doc = nullptr;
 }
 
 QMo2Doc *QMo2View::getDocument() const
