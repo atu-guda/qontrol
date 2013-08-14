@@ -162,6 +162,7 @@ class QMo2Win : public QMainWindow
     void slotMarkElm();
     void slotMoveElm();
     void slotInfoElm();
+    void slotShowTreeElm();
     void slotTestElm1();
     void slotTestElm2();
 
@@ -184,6 +185,7 @@ class QMo2Win : public QMainWindow
     // ==== model related
     void slotEditModel();
     void slotShowVars();
+    void slotShowTreeModel();
     
     // ==== run related
     void slotRunRun();
@@ -276,7 +278,7 @@ class QMo2Win : public QMainWindow
 	    *act_newelm, *act_delelm, *act_editelm, 
 	    *act_linkelm, *act_qlinkelm, *act_qplinkelm, *act_unlinkelm,
 	    *act_lockelm, *act_ordelm, *act_markelm, *act_moveelm,
-	    *act_infoelm,
+	    *act_infoelm, *act_showtreeelm,
 	    *act_testelm1, *act_testelm2,
 	    // out
 	    *act_newout, *act_delout, *act_editout,
@@ -286,7 +288,7 @@ class QMo2Win : public QMainWindow
 	    *act_showgraph, *act_showgraphdata, 
 	    *act_exportgraphdata, *act_gnuplotgraph,
 	    // model
-	    *act_editmodel, *act_showvars,
+	    *act_editmodel, *act_showvars, *act_showtreemodel,
 	    // run
 	    *act_runrun, *act_runprm, *act_runprm2, *act_reset,
 	    // iface

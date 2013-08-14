@@ -272,6 +272,10 @@ void QMo2Win::initIface()
   act_infoelm->setWhatsThis( tr("Show information about element structure") );
   connect( act_infoelm, SIGNAL( activated() ), this, SLOT( slotInfoElm() ));
  
+  act_showtreeelm = new QAction( "show element tree", this );
+  act_showtreeelm->setWhatsThis( tr("Show tree-like element structure") );
+  connect( act_showtreeelm, SIGNAL( activated() ), this, SLOT( slotShowTreeElm() ));
+ 
   act_testelm1= new QAction( "test element 1", this );
   act_testelm1->setWhatsThis( tr("Test something in element") );
   connect( act_testelm1, SIGNAL( activated() ), this, SLOT( slotTestElm1() ));
@@ -353,6 +357,10 @@ void QMo2Win::initIface()
   act_showvars->setShortcut(  Qt::SHIFT+Qt::CTRL+Qt::Key_D );
   act_showvars->setWhatsThis( tr("Show model vars field") );
   connect( act_showvars, SIGNAL( activated() ), this, SLOT( slotShowVars()));
+ 
+  act_showtreemodel = new QAction( "show model tree", this );
+  act_showtreemodel->setWhatsThis( tr("Show tree-like model structure") );
+  connect( act_showtreemodel, SIGNAL( activated() ), this, SLOT( slotShowTreeModel() ));
 
   // ====  run group
 
@@ -499,6 +507,7 @@ void QMo2Win::initIface()
   pElmMenu->addAction( act_moveelm );
   pElmMenu->addSeparator();
   pElmMenu->addAction( act_infoelm );
+  pElmMenu->addAction( act_showtreeelm );
   pElmMenu->addSeparator();
   pElmMenu->addAction( act_testelm1 );
   pElmMenu->addAction( act_testelm2 );
@@ -530,6 +539,7 @@ void QMo2Win::initIface()
   // menuBar entry pModelMenu
   pModelMenu = menuBar()->addMenu( tr("&Model") );
   pModelMenu->addAction( act_editmodel );
+  pModelMenu->addAction( act_showtreemodel );
   pModelMenu->addSeparator();
   pModelMenu->addAction( act_showvars );
   
@@ -644,6 +654,9 @@ void QMo2Win::enableActions( bool ena, int id_ )
        act_markelm->setEnabled( ena );
        act_moveelm->setEnabled( ena );
        act_infoelm->setEnabled( ena );
+       act_showtreeelm->setEnabled( ena );
+       act_testelm1->setEnabled( ena );
+       act_testelm2->setEnabled( ena );
        // out
        act_newout->setEnabled( ena );
        act_delout->setEnabled( ena );
@@ -660,6 +673,7 @@ void QMo2Win::enableActions( bool ena, int id_ )
        act_gnuplotgraph->setEnabled( ena );
        // model
        act_editmodel->setEnabled( ena );
+       act_showtreemodel->setEnabled( ena );
        act_showvars->setEnabled( ena );
        // run
        act_runrun->setEnabled( ena );
@@ -857,7 +871,6 @@ void QMo2Win::slotFileSaveXMLAs()
 	   tr("I/O Error !"), tr("Could not save the current model file!") );
        return;
     };
-    doc->changedViewList();
     m->setWindowTitle( doc->title() );
   };
   updateActions();
@@ -1246,6 +1259,16 @@ void QMo2Win::slotInfoElm()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
+void QMo2Win::slotShowTreeElm()
+{
+  statusBar()->showMessage( tr( "Show element tree..." ) );
+  
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->showTreeElm();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
 void QMo2Win::slotTestElm1()
 {
   statusBar()->showMessage( tr( "Test element 1..." ) );
@@ -1404,6 +1427,16 @@ void QMo2Win::slotShowVars()
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->showVars();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+void QMo2Win::slotShowTreeModel()
+{
+  statusBar()->showMessage( tr( "Show model tree..." ) );
+  
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->showTreeModel();
   statusBar()->showMessage( tr( "Ready." ) );
 }
 

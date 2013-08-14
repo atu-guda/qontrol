@@ -92,6 +92,7 @@ class QMo2View : public QWidget
    void markElm();
    void moveElm();
    void infoElm();
+   void showTreeElm();
    void testElm1();
    void testElm2();
    void cutElm();
@@ -117,6 +118,7 @@ class QMo2View : public QWidget
    // model related
    void editModel();
    void showVars();
+   void showTreeModel();
   
    // runs
    void runRun();

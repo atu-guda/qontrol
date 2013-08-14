@@ -105,7 +105,7 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
 
 QMo2View::~QMo2View()
 {
-  DBGx( "dbg: view dtor, doc=%p", doc );
+  // DBGx( "dbg: view dtor, doc=%p", doc );
   delete doc; doc = nullptr;
 }
 
@@ -539,6 +539,43 @@ void QMo2View::infoElm()
   emit viewChanged();
 }
 
+void QMo2View::showTreeElm()
+{
+  if( ! checkState( selCheck ) )
+    return;  
+  if( selObj == 0 )
+    return;
+  
+  HolderModel *ho_elm = new HolderModel( selObj, this );
+  
+  QDialog *dia = new QDialog( this );
+  dia->setWindowTitle( QString( PACKAGE ": Element tree: ") + selObj->objectName() );
+  
+  QVBoxLayout *lay = new QVBoxLayout();
+  
+  
+  QTreeView *treeView = new QTreeView( dia );
+  treeView->setModel( ho_elm );
+
+  // scroll is in view
+  lay->addWidget( treeView );
+
+
+  QPushButton *bt_ok = new QPushButton( tr("Done"), dia);
+  bt_ok->setDefault( true );
+  lay->addWidget( bt_ok );
+  dia->setLayout( lay );
+
+  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
+  dia->resize( 600, 400 );
+  dia->exec();
+  delete dia;
+  delete ho_elm;
+  emit viewChanged();
+  return;
+}
+
+
 void QMo2View::testElm1()
 {
   QString buf;
@@ -578,6 +615,7 @@ void QMo2View::testElm2()
     return;  
   if( selObj == 0 )
     return;
+  
   return;
 }
 
@@ -1162,6 +1200,32 @@ void QMo2View::showVars()
   dia->exec();
   delete dia;
 }
+
+void QMo2View::showTreeModel()
+{
+  QDialog *dia = new QDialog( this );
+  dia->setWindowTitle( QString( PACKAGE ": Model ") );
+  
+  QVBoxLayout *lay = new QVBoxLayout();
+  
+  QTreeView *treeView = new QTreeView( dia );
+  treeView->setModel( ho_mo );
+
+  lay->addWidget( treeView );
+
+  QPushButton *bt_ok = new QPushButton( tr("Done"), dia);
+  bt_ok->setDefault( true );
+  lay->addWidget( bt_ok );
+  dia->setLayout( lay );
+
+  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
+  dia->resize( 600, 400 );
+  dia->exec();
+  delete dia;
+  emit viewChanged();
+  return;
+}
+
 
 
 // ==== run related

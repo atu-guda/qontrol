@@ -31,72 +31,23 @@ using namespace std;
 
 QMo2Doc::QMo2Doc()
   : modified(false), m_title("?unknown"), m_filename(), 
-    pViewList( new  QList<QMo2View> ),
     rootdata(nullptr), model(nullptr), is_nonamed(true),
     loaded_as_old(true)
 {
-  //pViewList->setAutoDelete( false );
 }
 
 QMo2Doc::~QMo2Doc()
 {
-  DBG1( "dbg: dtor" );
-  delete pViewList; pViewList = 0;
+  // DBG1( "dbg: dtor" );
   delete rootdata; rootdata = 0; model = 0; // model belong to rootdata
 }
 
-void QMo2Doc::addView( QMo2View * /*view*/ )
-{
-  /* TODO: REVIVE!!!
-  pViewList->append( *view );
-  changedViewList();
-  */
-}
-
-void QMo2Doc::removeView( QMo2View * /*view*/ )
-{
-  /* TODO: REVIVE!!!
-  pViewList->remove( *view );
-  if( !pViewList->isEmpty() )
-    changedViewList();
-  else
-    deleteContents();
-  */
-}
-
-void QMo2Doc::changedViewList()
-{
-  //QMo2View *w;
-  /*
-  if( (int)pViewList->count() == 1 ) {
-    w = &(pViewList->first());
-    w->setCaption( m_title );
-  } else {
-    int i;
-    for( i=1, w=&(pViewList->first());  w!=0;  i++, w = &(pViewList->next()) )
-      w->setCaption( QString( m_title + ":%1" ).arg(i) );
-  };
-  */
-}
 
 bool QMo2Doc::isLastView() const
 {
   return true; // now the only view exist
 }
 
-
-void QMo2Doc::updateAllViews( QMo2View * /*sender*/ )
-{
-  // TODO: REVIVE!!!
-  /*
-  QMo2View *w;
-  if( pViewList == 0 ) 
-    return;
-  for( w=pViewList->first(); w!=0; w=pViewList->next() ) {
-     w->update( sender );
-  };
-  */
-}
 
 void QMo2Doc::setPathName( const QString &name )
 {

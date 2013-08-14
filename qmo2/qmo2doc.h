@@ -49,14 +49,6 @@ class QMo2Doc : public QObject
   /** Destructor for the fileclass of the application */
   ~QMo2Doc();
 
-  /** adds a view to the document which represents the document contents. Usually this is your main view. */
-  void addView( QMo2View *view );
-  /** removes a view from the list of currently connected views */
-  void removeView( QMo2View *view );
-  /** gets called if a view is removed or added */
-  void changedViewList();
-  // /* * returns the first view instance */
-  // QMo2View* firstView() const { return &(pViewList->first()); };
   /** returns true, if the requested view is the last view of the document */
   bool isLastView() const;
   /** This method gets called when the user is about to close a frame window.
@@ -100,19 +92,12 @@ class QMo2Doc : public QObject
   bool nonamed(void) const { return is_nonamed; }
       
  public slots:
-   /** calls repaint() on all views connected to the document object and 
-    * is called by the view by which the document has been changed.
-    * As this view normally repaints itself, it is excluded from the paintEvent.
-    */
-   void updateAllViews( QMo2View *sender );
  	
  private:
    /** the modified flag of the current document */
    bool modified;
    QString m_title;
    QString m_filename;
-   /** the list of the views currently connected to the document */
-   QList<QMo2View> *pViewList;	
   // atu:
  protected:
    TRootData *rootdata;
