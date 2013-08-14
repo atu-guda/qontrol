@@ -40,7 +40,7 @@ CTOR(TOutArr,TDataSet),
 TOutArr::~TOutArr()
 {
   n = ny = 0;
-  qDebug( "dbg: TOutArr::~TOutArr(): %s", qPrintable( getFullName() ));
+  // qDebug( "dbg: TOutArr::~TOutArr(): %s", qPrintable( getFullName() ));
 }
 
 

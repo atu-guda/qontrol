@@ -195,6 +195,8 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
   model = 0;
   bool read_ok = rootdata->fromDom( obj_root, errstr );
   if( ! read_ok ) {
+    QString xxx = rootdata->toString();
+    DBG1q( xxx );
     delete rootdata;
     rootdata = nullptr;
     QMessageBox::critical( 0, "openDocumentXml Error:",

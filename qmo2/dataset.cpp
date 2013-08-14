@@ -36,8 +36,11 @@ HolderData::HolderData( ARGS_CTOR_MIN )
 
 HolderData::~HolderData()
 {
+  /*
   DBGx( "dbg:  %s par: %p %s", 
-      qP( objectName() ), par, qP( par->objectName() )  );
+      qP( objectName() ), par, 
+      par ? qP( par->objectName() ) : "NONE" );
+  */
 }
 
 HolderData* HolderData::create( const QString &, TDataSet *, 
@@ -585,7 +588,7 @@ CTOR(TDataSet,HolderData)
 
 TDataSet::~TDataSet()
 {
-  DBGx( "dbg:  %p %s", this, qP( getFullName() ));
+  // DBGx( "dbg:  %p %s", this, qP( getFullName() ));
   state = stateBad; guard = 0;
 }
 
@@ -1023,6 +1026,11 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
     
     if( tagname == "obj" ) {  // ------------------------------- object
       QString cl_name = ee.attribute("otype");
+      if( cl_name.isEmpty() ) {
+        errstr = QString( "err: element \"%1\" without type" ).arg(elname);
+        DBG1q( errstr );
+	return false;
+      }
       HolderData *ho = getElem( elname );
       if( ho && ! ho->isObject() ) {
         errstr = QString("TDataSet::fromDom: elem: \"%1\" is not a element: \"%2\"")
@@ -1065,15 +1073,14 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
       QString tp_name = ee.attribute("otype");
       HolderData *ho = getElem( elname );
       if( ho && ho->isObject() ) {
-	errstr = QString("TDataSet::fromDom: param %1 is a element type %2 ")
+	errstr = QString("TDataSet::fromDom: param \"%1\" is an object type \"%2\" ")
 		 .arg(elname).arg(ho->getType()); 
         DBG1q( errstr );
 	return false;
       }
       if( !ho ) {
-	DBG2q( "WARN: unknown param:", elname );
 	if( ! ( allow_add & allowParam ) ) {
-	  DBG2q( "WARN: creating param disallowed in:", objectName() );
+	  DBGx( "WARN: creating param: \"%s\" disallowed in \"%s\"", qP(elname), qP(objectName()) );
 	  continue;
 	}
 	ho =  add_param( tp_name, elname );
