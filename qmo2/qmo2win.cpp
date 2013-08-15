@@ -378,6 +378,10 @@ void QMo2Win::initIface()
   act_runprm2->setShortcut( Qt::SHIFT+Qt::CTRL+Qt::Key_F9 );
   act_runprm2->setWhatsThis( tr("Click this button start 2D parametric run.") );
   connect( act_runprm2, SIGNAL( activated() ), this, SLOT( slotRunPrm2()) );
+ 
+  act_runscript = new QAction( "run &Script", this );
+  act_runscript->setWhatsThis( tr("Run script on model") );
+  connect( act_runscript, SIGNAL( activated() ), this, SLOT( slotRunScript() ));
 
   act_reset= new QAction( "R&eset", this );
   act_reset->setWhatsThis( tr("Reset model state.") );
@@ -550,6 +554,8 @@ void QMo2Win::initIface()
   pRunMenu->addAction( act_runprm );
   pRunMenu->addAction( act_runprm2 );
   pRunMenu->addSeparator();
+  pRunMenu->addAction( act_runscript );
+  pRunMenu->addSeparator();
   pRunMenu->addAction( act_reset );
   
   ///////////////////////////////////////////////////////////////////
@@ -679,6 +685,7 @@ void QMo2Win::enableActions( bool ena, int id_ )
        act_runrun->setEnabled( ena );
        act_runprm->setEnabled( ena );
        act_runprm2->setEnabled( ena );
+       act_runscript->setEnabled( ena );
        act_reset->setEnabled( ena );
        // win
        act_winClose->setEnabled( ena );
@@ -1440,6 +1447,7 @@ void QMo2Win::slotShowTreeModel()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
+
 void QMo2Win::slotRunRun()
 {
   statusBar()->showMessage( tr( "Running simple loop..." ) );
@@ -1477,6 +1485,16 @@ void QMo2Win::slotReset()
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->resetModel();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+void QMo2Win::slotRunScript()
+{
+  statusBar()->showMessage( tr( "Show model tree..." ) );
+  
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->runScript();
   statusBar()->showMessage( tr( "Ready." ) );
 }
 

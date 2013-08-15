@@ -30,16 +30,14 @@
 using namespace std;
 
 QMo2Doc::QMo2Doc()
-  : modified(false), m_title("?unknown"), m_filename(), 
-    rootdata(nullptr), model(nullptr), is_nonamed(true),
-    loaded_as_old(true)
 {
 }
 
 QMo2Doc::~QMo2Doc()
 {
   // DBG1( "dbg: dtor" );
-  delete rootdata; rootdata = 0; model = 0; // model belong to rootdata
+  delete rootdata; 
+  rootdata = nullptr; model = nullptr; // model belong to rootdata
 }
 
 
@@ -74,11 +72,15 @@ const QString &QMo2Doc::title() const
 bool QMo2Doc::newDocument()
 {
   if( rootdata ) {
-    delete rootdata; rootdata = 0; model = 0;
+    DBG1( "warn: non-null rootdata while creation new doc" );
+    delete rootdata; 
+    rootdata = nullptr; model = nullptr;
   }
+
   rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
   model = qobject_cast<TModel*>(rootdata->add_obj( "TModel", "model" ));
   if( !model ) {
+    delete rootdata; rootdata = nullptr; 
     QMessageBox::critical( 0, "QMo2Doc::newDocument", 
       QString("Fail to insert model to root: "), 0,0,0 );
     return false;
@@ -87,6 +89,10 @@ bool QMo2Doc::newDocument()
   // rootdata->dumpStruct();
   modified = false; is_nonamed = true;
   loaded_as_old = true; // TODO: change to false when new model be created by default
+
+  // add to engine 
+  initEngine();
+
   return true;
 }
 
@@ -139,8 +145,11 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
 
   m_filename = filename;
 
-  if( rootdata != 0 )
-    delete rootdata;
+  if( rootdata ) {
+    DBG1( "warn: non-null rootdata while opening new doc" );
+    delete rootdata; 
+    rootdata = nullptr; model = nullptr;
+  }
   rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
 
   model = 0;
@@ -173,6 +182,8 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
   m_filename = filename;
   m_title = QFileInfo(filename).fileName();
   is_nonamed = false;
+  
+  initEngine();
 
   return true; 
 }
@@ -309,6 +320,23 @@ void QMo2Doc::fillRoot(void)
     DBG1( "ERR: rootdata in null!!" );
     return;
   }
+}
+
+QString QMo2Doc::runScript( const QString& script )
+{
+   QScriptValue res = eng.evaluate( script );
+   return res.toString();
+}
+
+void QMo2Doc::initEngine()
+{
+  if( !rootdata || ! model ) {
+    DBG1( "ERR: no root or model" );
+  }
+  QScriptValue eng_root = eng.newQObject( rootdata );
+  eng.globalObject().setProperty("root", eng_root );
+  QScriptValue eng_model = eng.newQObject( model );
+  eng.globalObject().setProperty("model", eng_model );
 }
 
 // end of qmo2doc.cpp

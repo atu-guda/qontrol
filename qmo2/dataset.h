@@ -173,34 +173,36 @@ class HolderData : public QObject {
   /** return number of elems: none for simple data */
   virtual int getNumObj() const { return 0; };
   int isDyn() const { return dyn; }
-  /** returns full name of object: aaa.bbb.cc  */ // TODO: up to HolderData
-  QString getFullName() const;
   /** is holded value is object of given type or child */
   virtual bool isObject( const QString &cl_name = QString() ) const;
   void setFlags( int a_flags ) { flags = a_flags; }
   int getFlags() const { return flags; }
-  void setParm( const QString &name, const QString &value );
-  QString getParm( const QString &name ) const;
-  void extraToParm();
   TDataSet* getParent() const { return par; }
-  void setElems( const QString &els ); 
   // see DCL_STD_INF, DCL_STD_GETSET for childs
   virtual const TClassInfo* getClassInfo() const = 0;
+  virtual void post_set() = 0;
+  virtual bool getData( const QString &nm, int *da ) const;
+  virtual bool getData( const QString &nm, double *da ) const;
+  virtual bool getData( const QString &nm, QVariant &da ) const;
+  virtual bool getData( const QString &nm, QString &da ) const;
+  virtual bool setData( const QString &nm, const QVariant &da );
+  virtual QDomElement toDom( QDomDocument &dd ) const;
+ public slots: 
+  /** returns full name of object: aaa.bbb.cc  */ // TODO: up to HolderData
+  QString getFullName() const;
+  void setParm( const QString &name, const QString &value );
+  QString getParm( const QString &name ) const;
+  void setElems( const QString &els ); 
+  virtual QString getType() const = 0;
   virtual const char* getHelp() const  = 0;
   virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
   virtual bool set( const QVariant & x ) = 0;
   virtual QVariant get() const = 0;
-  virtual void post_set() = 0;
   virtual QString toString() const = 0;
   virtual bool fromString( const QString &s ) = 0;
-  virtual QString getType() const = 0;
-  virtual bool getData( const QString &nm, QVariant &da ) const;
-  virtual bool getData( const QString &nm, int *da ) const;
-  virtual bool getData( const QString &nm, double *da ) const;
-  virtual bool getData( const QString &nm, QString &da ) const;
-  virtual bool setData( const QString &nm, const QVariant &da );
-  virtual QDomElement toDom( QDomDocument &dd ) const;
  protected:
+  void extraToParm();
+
   int dyn = 0; //* flag: is created dynamicaly i.e. can be deleted
   int flags;   //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
   QVariant::Type tp = QVariant::Invalid;
@@ -387,8 +389,6 @@ class TDataSet : public HolderData {
    virtual HolderData* add_obj( const QString &cl_name, const QString &ob_name );
    /** add new param and it's description */
    virtual HolderData* add_param( const QString &tp_name, const QString &ob_name );
-   /** delete given object by name */
-   int del_obj( const QString &ob_name );
    /** is given type of subelement valid for this object */
    virtual int isValidType( const QString &cl_name ) const;
    /** is this class child of given or the same by name */
@@ -409,6 +409,11 @@ class TDataSet : public HolderData {
     * lt - ptr: store link type, 
     * lev - level of recursion, not for user */
    virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = 0, int lev = 0 ) const;
+ public slots:
+   /** create object with params as string */
+   bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
+   /** delete given object by name */
+   int del_obj( const QString &ob_name );
  protected:
    /** gets pointer to parameter, near to getDoublePrmPtr 
     * for param mod only - no descend  */

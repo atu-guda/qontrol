@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QString>
 #include <QList>
+#include <QScriptEngine>
 
 #include "dataset.h"
 #include "rootdata.h"
@@ -77,6 +78,9 @@ class QMo2Doc : public QObject
   const QString& pathName() const;
   /** create XML representation */
   QString makeXML() const;
+  /** call engine anf returns result, casted to QString */
+  QString runScript( const QString& script );
+
 
   /** sets the filename of the document */
   void setTitle( const QString &title );
@@ -84,6 +88,8 @@ class QMo2Doc : public QObject
   const QString& title() const;
   /** returns pointer to model */
   TModel *getModel(void) const;
+  /** returns ref to script engine: not const: engine can change model */
+  QScriptEngine& getEngine() { return eng; }
   /** returns ptr to rootdata */
   TRootData *getRoot(void) const;
   /** fills rootdata reg infos */
@@ -94,16 +100,17 @@ class QMo2Doc : public QObject
  public slots:
  	
  private:
+   void initEngine();
    /** the modified flag of the current document */
-   bool modified;
-   QString m_title;
+   bool modified = false;
+   QString m_title = "? unknown ";
    QString m_filename;
-  // atu:
+   QScriptEngine eng;
  protected:
-   TRootData *rootdata;
-   TModel *model;      
-   bool is_nonamed;
-   bool loaded_as_old;
+   TRootData *rootdata = nullptr;
+   TModel *model = nullptr;      
+   bool is_nonamed = true;
+   bool loaded_as_old = true;
 };
 
 #endif // QMO2DOC_H

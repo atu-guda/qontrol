@@ -881,6 +881,32 @@ HolderData* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
   return ob;
 }
 
+bool TDataSet::add_obj_param( const QString &cl_name, const QString &ob_name, 
+     const QString &params )
+{
+  HolderData *ho = add_obj( cl_name, ob_name );
+  if( ! ho )
+    return false;
+  
+  QStringList sl = params.split("\n");
+  QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=(.+)$)" );
+  
+  for( QString &s : sl ) {
+    if( s.isEmpty() ) {
+      continue;
+    }
+
+    if( re.indexIn( s ) != -1 ) {
+      QString nm  = re.cap(1);
+      QString val = re.cap(2);
+      ho->setData( nm, val );
+    } else {
+      DBGx( "warn: bad param string part: \"%s\"", qP( s ) );
+    }
+  }
+  return true;
+}
+
 int TDataSet::del_obj( const QString &ob_name )
 {
   HolderData *ho = getElem( ob_name );

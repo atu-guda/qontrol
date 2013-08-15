@@ -1226,6 +1226,39 @@ void QMo2View::showTreeModel()
   return;
 }
 
+void QMo2View::runScript()
+{
+  if( ! doc || ! root ) {
+    DBG1( "ERR: can run script w/o doc or root" );
+    return;
+  }
+
+  auto *dia = new QDialog( this );
+  dia->setWindowTitle( "Edit script" );
+  QVBoxLayout *lv = new QVBoxLayout( dia );
+
+  auto *ted = new QTextEdit( this );
+  ted->setText( scr );
+  lv->addWidget( ted );
+  
+  auto bt_ok = new QPushButton( "&Ok", dia );
+  // bt_ok->setDefault( true );
+  lv->addWidget( bt_ok );
+
+  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
+  
+  int rc = dia->exec();
+  if( rc == QDialog::Accepted ) {
+    scr = ted->toPlainText();
+  }; 
+  delete dia; dia = nullptr;
+  
+  if( ! scr.isEmpty() ) {
+    QString res = doc->runScript( scr );
+    QMessageBox::information( this, PACKAGE " script result ", res );
+  }
+}
+
 
 
 // ==== run related

@@ -186,6 +186,7 @@ class QMo2Win : public QMainWindow
     void slotEditModel();
     void slotShowVars();
     void slotShowTreeModel();
+    void slotRunScript();
     
     // ==== run related
     void slotRunRun();
@@ -290,7 +291,7 @@ class QMo2Win : public QMainWindow
 	    // model
 	    *act_editmodel, *act_showvars, *act_showtreemodel,
 	    // run
-	    *act_runrun, *act_runprm, *act_runprm2, *act_reset,
+	    *act_runrun, *act_runprm, *act_runprm2, *act_runscript, *act_reset,
 	    // iface
 	    *act_tbar, *act_sbar,
 	    *act_showord, *act_showgrid, *act_shownames, *act_showicons,

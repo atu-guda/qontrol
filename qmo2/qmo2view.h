@@ -119,6 +119,7 @@ class QMo2View : public QWidget
    void editModel();
    void showVars();
    void showTreeModel();
+   void runScript();
   
    // runs
    void runRun();
@@ -162,6 +163,7 @@ class QMo2View : public QWidget
    TModel *model;
    HolderModel *ho_mo;
    int sel, sel_x, sel_y, mark, level;
+   QString scr = "a=12;\nb=4;\nprint('From script\\n');\nprint( model );\n a*b; ";
    /** prt to selected object or nullptr */
    TMiso *selObj;
    /** prt to marked object or nullptr */
