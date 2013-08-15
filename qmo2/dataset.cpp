@@ -636,7 +636,12 @@ QStringList TDataSet::elemNames() const
 
 HolderData* TDataSet::getElem( const QString &oname ) const
 {
-  return findChild<HolderData*>(oname);
+  // bad, but Qt provide only recusive search FIXME: Qt >= 5
+  for( auto c : children() ) {
+    if( c->objectName() == oname )
+      return qobject_cast<HolderData*>( c );
+  }
+  return nullptr;
 }
 
 HolderData* TDataSet::getElem( int i ) const
@@ -864,12 +869,15 @@ HolderData* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
 {
   if( ! ( allow_add & allowObject ) )
     return nullptr;
-  if( getElem( ob_name ) != nullptr ) {
-    DBGx( "ERR: name \"%s\" exist in %s!", qP(ob_name), qP( getFullName() ) );
+  HolderData *el = getElem( ob_name );
+  if( el != nullptr ) {
+    DBGx( "ERR: name \"%s\" (%s)  exist in \"%s\"!", 
+          qP(ob_name), qP(el->getType()), qP( getFullName() ) );
     return nullptr;
   }
   if( ! isValidType( cl_name ) ) {
-    DBGx( "WARN: type \"%s\" not allowed in %s!", qP(ob_name), qP( getFullName() ) );
+    DBGx( "WARN: type \"%s\" not allowed in \"%s\"!", 
+          qP(ob_name), qP( getFullName() ) );
     return nullptr;
   }
   HolderData *ob = EFACT.createElem( cl_name, ob_name, this );
@@ -1059,8 +1067,9 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
       }
       HolderData *ho = getElem( elname );
       if( ho && ! ho->isObject() ) {
-        errstr = QString("TDataSet::fromDom: elem: \"%1\" is not a element: \"%2\"")
-	         .arg(elname).arg(tagname); 
+        errstr = QString("err: read elem failed \"%1\" is not a element: \"%2\" but \"%3\" in \"%4\"")
+	         .arg(elname).arg(tagname).arg(ho->getType()).arg( getFullName() ); 
+        DBG1q( errstr );
 	return false;
       }
       if( !ho ) { // name not found

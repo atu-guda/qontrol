@@ -37,6 +37,8 @@ SOURCES += \
   tmiso.cpp \
   tmodel.cpp \
   datawidget.cpp \
+  tgraph.cpp \
+  toutarr.cpp \
   ../elems/tadjgen.cpp \
   ../elems/tcorralalysis.cpp \
   ../elems/tcounter.cpp \
@@ -48,7 +50,6 @@ SOURCES += \
   ../elems/tfuncmisc.cpp \
   ../elems/tfuncpoly.cpp \
   ../elems/tfunctrans.cpp \
-  ../elems/tgraph.cpp \
   ../elems/thyst.cpp \
   ../elems/tinputany.cpp \
   ../elems/tintegrator.cpp \
@@ -59,7 +60,6 @@ SOURCES += \
   ../elems/tlorenz.cpp \
   ../elems/trossler.cpp \
   ../elems/tmultipl.cpp \
-  ../elems/toutarr.cpp \
   ../elems/toutputany.cpp \
   ../elems/tpid.cpp \
   ../elems/trand.cpp \
@@ -95,6 +95,8 @@ HEADERS += \
   tmiso.h \
   tmodel.h \ 
   datawidget.h \
+  tgraph.h \
+  toutarr.h \
   ../elems/tadjgen.h \
   ../elems/tcorralalysis.h \
   ../elems/tcounter.h \
@@ -106,7 +108,6 @@ HEADERS += \
   ../elems/tfuncmisc.h \
   ../elems/tfuncpoly.h \
   ../elems/tfunctrans.h \
-  ../elems/tgraph.h \
   ../elems/thyst.h \
   ../elems/tinputany.h \
   ../elems/tintegrator.h \
@@ -117,7 +118,6 @@ HEADERS += \
   ../elems/tlorenz.h \
   ../elems/trossler.h \
   ../elems/tmultipl.h \
-  ../elems/toutarr.h \
   ../elems/toutputany.h \
   ../elems/tpid.h \
   ../elems/trand.h \
