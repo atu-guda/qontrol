@@ -360,6 +360,7 @@ void QMo2Win::initIface()
   connect( act_showvars, SIGNAL( activated() ), this, SLOT( slotShowVars()));
  
   act_showtreemodel = new QAction( "show model tree", this );
+  act_showtreemodel->setShortcut( Qt::CTRL+Qt::Key_T );
   act_showtreemodel->setWhatsThis( tr("Show tree-like model structure") );
   connect( act_showtreemodel, SIGNAL( activated() ), this, SLOT( slotShowTreeModel() ));
 
@@ -380,7 +381,8 @@ void QMo2Win::initIface()
   act_runprm2->setWhatsThis( tr("Click this button start 2D parametric run.") );
   connect( act_runprm2, SIGNAL( activated() ), this, SLOT( slotRunPrm2()) );
  
-  act_runscript = new QAction( "run &Script", this );
+  act_runscript = new QAction( QIcon::fromTheme("application-x-javascript"), "run &Script", this );
+  act_runscript->setShortcut( Qt::SHIFT+Qt::Key_F9 );
   act_runscript->setWhatsThis( tr("Run script on model") );
   connect( act_runscript, SIGNAL( activated() ), this, SLOT( slotRunScript() ));
 

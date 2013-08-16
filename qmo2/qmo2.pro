@@ -67,6 +67,7 @@ SOURCES += \
   ../elems/tsource.cpp \
   ../elems/tsourcelin.cpp \
   ../elems/tswitch.cpp \
+  ../elems/tthrum.cpp \
   ../elems/ttrigger.cpp \
   ../elems/tvibro.cpp 
 
@@ -125,6 +126,7 @@ HEADERS += \
   ../elems/tsource.h \
   ../elems/tsourcelin.h \
   ../elems/tswitch.h \
+  ../elems/tthrum.h \
   ../elems/ttrigger.h \
   ../elems/tvibro.h
 

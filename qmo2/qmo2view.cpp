@@ -1250,13 +1250,11 @@ void QMo2View::runScript()
   int rc = dia->exec();
   if( rc == QDialog::Accepted ) {
     scr = ted->toPlainText();
+    QString res = doc->runScript( scr );
+    QMessageBox::information( this, PACKAGE " script result ", res );
   }; 
   delete dia; dia = nullptr;
   
-  if( ! scr.isEmpty() ) {
-    QString res = doc->runScript( scr );
-    QMessageBox::information( this, PACKAGE " script result ", res );
-  }
 }
 
 
