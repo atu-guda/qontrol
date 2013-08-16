@@ -29,7 +29,6 @@ STD_CLASSINFO( TElmLink, clpSpecial );
 
 CTOR(TElmLink,TDataSet)
 {
-  reset_dfl();
 }
 
 DEFAULT_FUNCS_REG(TElmLink);

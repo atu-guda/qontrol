@@ -72,9 +72,11 @@ enum _LOOP_TYPES {
 
 const char* getStateString( int stat_num );
 
-constexpr char RE_NAME[] { "^[_a-zA-Z]+[_0-9A-Za-z]*$" };
+constexpr char RE_NAME[] { R"!(^[_a-zA-Z][_0-9A-Za-z]*$)!" };
+constexpr char RE_NAME_IDX[] { R"!(^([_a-zA-Z][_0-9A-Za-z]*)(?:\[(\d+)\])?$)!" };
 // not good, allowing "a..b", buf fast
-constexpr char RE_FULLNAME[]  { R"(^([_a-zA-Z]+[_0-9A-Za-z]*)\.([_a-zA-Z]+[_0-9A-Za-z.]*)$)" } ;
+constexpr char RE_FULLNAME[]  
+  { R"(^([_a-zA-Z]+[_0-9A-Za-z]*)\.([_a-zA-Z]+[_0-9A-Za-z.]*(?:\[(\d+)\])?)$)" } ;
 
 #endif // _DEFS_H
 

@@ -44,19 +44,22 @@ double get_real_time(void)
   return t;
 }  
 
-int splitName( const QString &name, QString &first, QString &rest )
+NameType splitName( const QString &name, QString &first, QString &rest, int &idx )
 {
-  QRegExp re( RE_NAME );
+  QRegExp re( RE_NAME_IDX );
   if( re.indexIn( name ) != -1 ) {
-    first = name; rest = "";
-    return 1;
+    first = re.cap(1); rest = QString();
+    idx = re.cap(2).toInt();
+    return simpleName;
   }
   QRegExp ref( RE_FULLNAME );
   if( ref.indexIn( name ) != -1 ) {
     first = ref.cap(1); rest = ref.cap(2);
-    return 0;
+    idx = 0; // no array of objects for now
+    return complexName;
   }
-  return -1;
+  first = rest = QString(); idx = 0;
+  return badName;
 }
 
 

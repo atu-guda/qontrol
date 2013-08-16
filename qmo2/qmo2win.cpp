@@ -18,6 +18,7 @@
 #include <cstdlib>
 #include <QtGui>
 
+#include "miscfun.h"
 #include "qmo2view.h"
 #include "qmo2doc.h"
 #include "qmo2win.h"
@@ -1103,11 +1104,31 @@ void QMo2Win::slotTest(void)
   ostr += "\nbuild: "; 
   ostr += findRes("build.dat");
   ostr += "\nenv: "; 
-  ostr += findRes("env.dat");
-  ostr += "\nDMIN: " + QSN( DMIN );
-  ostr += " DMAX: "  + QSN( DMAX );
-  ostr += "\niDMIN: " + QSN( (int)(DMIN) );
-  ostr += " iDMAX: "  + QSN( (int)(DMAX) );
+  ostr += findRes("env.dat") + "\n";
+  //ostr += "\nDMIN: " + QSN( DMIN );
+  //ostr += " DMAX: "  + QSN( DMAX );
+  //ostr += "\niDMIN: " + QSN( (int)(DMIN) );
+  //ostr += " iDMAX: "  + QSN( (int)(DMAX) );
+  QString first, rest; 
+  int idx, nmt;
+  const char* const tst_str[] =  {
+    "[5]",
+    "abcd",
+    "abcd[5]",
+    "abcd[5].xxx[6]",
+    "abcd.xxx[6]",
+    "abcd[5].xxx",
+    "aaa6.bbb.ccc.ddd.eee",
+    "aaa6.bbb.ccc.ddd.eee[5]"
+  };
+  for( auto s : tst_str ) {
+    QString t = s;
+    nmt = splitName( t, first, rest, idx );
+    ostr += "t=\"" + t + "\" nmt=" + QSN(nmt) + " first=\"" + first 
+         + "\" rest=\"" + rest + "\" idx=" + QSN(idx) + "\n";
+  }
+  
+
   QMessageBox::information( this, tr( "Test" ), ostr, QMessageBox::Ok );
   statusBar()->showMessage( tr( "Ready." ) );
 }

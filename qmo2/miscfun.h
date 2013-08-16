@@ -34,10 +34,16 @@ struct GraphInfo {
 /** gets real time in seconds.ms */
 double get_real_time(void);
 
+enum NameType {
+  simpleName = 1,
+  complexName = 2,
+  badName = -1
+};
 
 /** splits string like aa.b.cc.d to first="aa" and rest="b.cc.d"
-    @returns: 0 -- both parts, 1 -- only first, -1 -- bad line  */
-int splitName( const QString &name, QString &first, QString &rest );
+    @returns: complexName -- both parts, simpleName -- only first, -1 -- bad line
+    fills idx in SIMLE! name contains [N] part*/
+NameType splitName( const QString &name, QString &first, QString &rest, int &idx );
 /** checks if name syntax correct aaa_bbb2 */
 int isGoodName( const QString &s );
 QString flags2str( int fl );

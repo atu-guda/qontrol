@@ -30,25 +30,11 @@ using namespace std;
 const char* TModel::helpstr = "<H1>TModel</H1>\n"
  "Hold all active elements, output arrays and graph descriptions";
 
-static const int RESERVED_OUTS = 1024;
-
 STD_CLASSINFO(TModel,clpSpecial | clpContainer);
 
 CTOR(TModel,TDataContainer),
          vars( MODEL_NVAR, 0 )
 {
-  //tt = 100; nn = n_tot= 100000; nl1 = 1; nl2 = 1; n_steps=1000; use_sync = 0;
-  //prm0s = prm1s = prm2s = prm3s = 0.1; 
-  //prm0d = prm1d = 0.01; xval1 = xval2 = 0;
-  //seed = 117; useSameSeed = 1; seedType = 0;
-  //ic_mouse = ic_joy = ic_sound = ic_key = ic_aux = -1;
-  //oc_0 = oc_1 = oc_2 = oc_3 = oc_4 = oc_5 = -1;
-  //oct_0 = oct_1 = oct_2 = oct_3 = oct_4 = oct_5 = 0;
-  // ii = il1 = il2 = i_tot = 0;
-  // prm0 = prm1 = prm2 = prm3 = 0; start_time = 0; 
-  // prm0s = prm1s = 0.1; prm0d = prm1d = 0.01; sgnt = -3;
-  reset_dfl();
-  
   rtime = t = 0; tdt = tt / nn; 
   m_sqrt2 = sqrt(2.0);
   m_sqrt1_2 = sqrt(0.5);
@@ -645,7 +631,8 @@ void TModel::sortOrd(void)/*{{{1*/
 
 int TModel::hintOrd(void) const/*{{{1*/
 {
-  vector<int>::const_iterator pm = max_element( v_ord.begin(), v_ord.end() );
+  //vector<int>::const_iterator pm = max_element( v_ord.begin(), v_ord.end() );
+  auto pm = max_element( v_ord.begin(), v_ord.end() );
   int m = 0;
   if( pm != v_ord.end() )
     m = *pm;

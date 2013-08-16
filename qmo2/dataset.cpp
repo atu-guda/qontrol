@@ -224,7 +224,7 @@ void HolderInt::reset_dfl()
 }
 
 
-bool HolderInt::set( const QVariant & x )
+bool HolderInt::set( const QVariant & x, int /* idx */ )
 {
   bool ok;
   v = x.toInt( &ok );
@@ -232,7 +232,7 @@ bool HolderInt::set( const QVariant & x )
   return ok;
 }
 
-QVariant HolderInt::get() const
+QVariant HolderInt::get( int /* idx */ ) const
 {
   return QVariant( v );
 }
@@ -373,7 +373,7 @@ void HolderDouble::reset_dfl()
 }
 
 
-bool HolderDouble::set( const QVariant & x )
+bool HolderDouble::set( const QVariant & x, int /* idx */ )
 {
   bool ok;
   v = x.toDouble( &ok );
@@ -381,7 +381,7 @@ bool HolderDouble::set( const QVariant & x )
   return ok;
 }
 
-QVariant HolderDouble::get() const
+QVariant HolderDouble::get( int /* idx */ ) const
 {
   return QVariant( v );
 }
@@ -453,14 +453,14 @@ void HolderString::reset_dfl()
   post_set();
 }
 
-bool HolderString::set( const QVariant & x )
+bool HolderString::set( const QVariant & x, int /* idx */  )
 {
   v = x.toString();
   post_set();
   return true;
 }
 
-QVariant HolderString::get() const
+QVariant HolderString::get( int /* idx */ ) const
 {
   return QVariant( v );
 }
@@ -527,7 +527,7 @@ void HolderColor::reset_dfl()
 }
 
 
-bool HolderColor::set( const QVariant & x )
+bool HolderColor::set( const QVariant & x, int /* idx */  )
 {
   QRgb rgba = x.toInt();
   v.setRgba( rgba );
@@ -535,7 +535,7 @@ bool HolderColor::set( const QVariant & x )
   return true;
 }
 
-QVariant HolderColor::get() const
+QVariant HolderColor::get( int /* idx */ ) const
 {
   return QVariant( (int)(v.rgba()) );
 }
@@ -677,8 +677,9 @@ bool TDataSet::getData( const QString &nm, QVariant &da ) const
   if( nm.isEmpty() )
     return 0;
   QString first, rest;
-  int nm_type = splitName( nm, first, rest );
-  if( nm_type == -1 ) {
+  int idx;
+  NameType nm_type = splitName( nm, first, rest, idx );
+  if( nm_type == badName ) {
     DBGx( "warn: bad target name \"%s\"", qP( nm ) );
     return 0;
   }
@@ -688,8 +689,8 @@ bool TDataSet::getData( const QString &nm, QVariant &da ) const
     DBGx( "warn: fail to find name \"%s\"", qP( first ) );
     return 0;
   }
-  if( nm_type == 1 ) { // first only 
-    da = ho->get(); // TODO: check for slimple data?
+  if( nm_type == simpleName ) { // first only 
+    da = ho->get( idx ); // TODO: check for slimple data?
     return 1;
   }
 
@@ -750,8 +751,9 @@ bool TDataSet::setData( const QString &nm, const QVariant &da )
   if( nm.isEmpty() )
     return 0;
   QString first, rest;
-  int nm_type = splitName( nm, first, rest );
-  if( nm_type == -1 ) {
+  int idx;
+  NameType nm_type = splitName( nm, first, rest, idx );
+  if( nm_type == badName ) {
     DBG2q( "warn: bad target name", nm );
     return 0;
   }
@@ -761,8 +763,8 @@ bool TDataSet::setData( const QString &nm, const QVariant &da )
     DBG2q( "warn: fail to find name", first );
     return 0;
   }
-  if( nm_type == 1 ) { // first only 
-    return ho->set( da );
+  if( nm_type == simpleName ) { // first only 
+    return ho->set( da, idx );
   }
 
   // both part of name exists
@@ -794,8 +796,9 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) 
     nmf.remove( 0, 1 );
   }
 
-  int nm_type = splitName( nmf, first, rest );
-  if( nm_type == -1 ) {
+  int idx;
+  NameType nm_type = splitName( nmf, first, rest, idx );
+  if( nm_type == badName ) {
     if( lt )
       *lt = LinkBad;
     DBG2q( "warn: bad target name", nmf );
@@ -811,7 +814,7 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) 
     return 0;
   }
   
-  if( nm_type == 1 ) { // first only
+  if( nm_type == simpleName ) { // first only
     if( ho->isObject() ) {
       TDataSet *ds= qobject_cast<TDataSet*>(ho);
       return ds->getDoublePtr( "out0", lt, lev+1 );
@@ -825,6 +828,7 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) 
       }
       return hod->caddr();
     }
+    // TODO: DoubleArray
     return nullptr;
   }
 
@@ -967,13 +971,13 @@ bool TDataSet::isChildOf( const QString &cname ) const
 }
 
 
-bool TDataSet::set( const QVariant & x )
+bool TDataSet::set( const QVariant & x, int /* idx */  )
 {
   check_guard();
   return fromString( x.toString() );
 }
 
-QVariant TDataSet::get() const
+QVariant TDataSet::get( int /* idx */ ) const
 {
   check_guard();
   return QVariant( this->toString() );

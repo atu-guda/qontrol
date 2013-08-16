@@ -94,8 +94,8 @@ struct TClassInfo {
 //* declare common data manipulation functions
 #define DCL_STD_GETSET \
   virtual void reset_dfl() override; \
-  virtual bool set( const QVariant & x ) override; \
-  virtual QVariant get() const override; \
+  virtual bool set( const QVariant & x, int idx = 0 ) override; \
+  virtual QVariant get( int idx = 0 ) const override; \
   virtual void post_set() override; \
   virtual QString toString() const override; \
   virtual bool fromString( const QString &s ) override; 
@@ -196,10 +196,11 @@ class HolderData : public QObject {
   virtual QString getType() const = 0;
   virtual const char* getHelp() const  = 0;
   virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
-  virtual bool set( const QVariant & x ) = 0;
-  virtual QVariant get() const = 0;
+  virtual bool set( const QVariant & x, int idx = 0 ) = 0;
+  virtual QVariant get( int idx = 0 ) const = 0;
   virtual QString toString() const = 0;
   virtual bool fromString( const QString &s ) = 0;
+  virtual int size() const { return 1; }
  protected:
   void extraToParm();
 
