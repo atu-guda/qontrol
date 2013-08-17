@@ -43,7 +43,8 @@ class TThrum : public TMiso  {
    PRM_DOUBLE( p_doun, efNoRunChange, "Double N", "test noRunChange", "def=1.1\nmax=1e10" );
    PRM_COLOR( p_col, 0, "Color", "Color value", "def=silver" );
    PRM_STRING( p_str, 0, "String", "some string", "sep=col\nncol=2\ndef=\"a d f\"" );
-   PRM_STRING( p_strn, 0, "ML String", "Large string", "sep=block\nprops=STRING,MLINE\nncol=-1" );
+   // PRM_STRING( p_strn, 0, "ML String", "Large string", "sep=block\nprops=STRING,MLINE\nncol=-1" );
+   PRM_INT_ARR( a_int, 0, "int[]", "int array", "N=5\ndef=1\ndefs=0 2 4 \nsep=block" );
    
    DCL_DEFAULT_STATIC;
 };

@@ -40,7 +40,8 @@ enum ClassProps {
   clpPure = 2,      //* dont know - may by for stateless or abstract
   clpContainer = 4, //* can contain elements
   clpSpecial = 8,   //* have special meaning for structue
-  clpData = 16      //* simple data
+  clpData = 16,     //* simple data
+  clpArray = 32     //* array
 };
 
 
@@ -337,6 +338,29 @@ class HolderColor : public HolderData {
 
 #define PRM_COLOR( name, flags, vname, descr, extra ) \
  HolderColor name = { #name, this, flags, vname, descr, extra  } ; 
+
+// ----------------------------------------------------------------
+/** Holder: array of int */
+class HolderIntArray : public HolderData {
+  Q_OBJECT
+ public: 
+  DCL_CTOR(HolderIntArray);
+  virtual ~HolderIntArray();
+  DCL_CREATE;
+  DCL_STD_INF;
+  DCL_STD_GETSET;
+  virtual int size() const override { return v.size(); }
+  virtual QString getType() const override; 
+  STD_CONVERSIONS(std::vector<int>);
+  int operator[](int i) const { return v[i]; };
+  int& operator[](int i) { return v[i]; };
+ protected:
+  std::vector<int> v;
+  DCL_DEFAULT_STATIC;
+};
+
+#define PRM_INT_ARR( name, flags, vname, descr, extra ) \
+ HolderIntArray name = { #name, this, flags, vname, descr, extra  } ; 
 
 
 // ####################################################################
