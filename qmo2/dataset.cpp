@@ -610,8 +610,6 @@ void HolderIntArray::reset_dfl()
   }
 
   post_set();
-
-  DBGx( "dbg3: size=%d s=\"%s\"", v.size(), qP( toString() ) );
 }
 
 
@@ -669,7 +667,6 @@ bool HolderIntArray::fromString( const QString &s )
   }
 
   post_set();
-  DBGx( "dbg4: size=%d s=\"%s\" from=\"%s\"", v.size(), qP( toString() ), qP(s) );
   return ok; // ? only last
 }
 

@@ -48,6 +48,7 @@ DummyDataWidget::DummyDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
   lbl_d( new QLabel( this ) )
 {
+  main_w = lbl_d;
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
@@ -565,6 +566,85 @@ int ColorDataWidget::reg()
 
 
 
+// ------------------- IntArrayDataWidget ---------------------------
+int IntArrayDataWidget::registered = IntArrayDataWidget::reg();
+
+IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
+  : DataWidget( h, parent ),
+  pwi( new QWidget( this ) )
+{
+  main_w = pwi;
+  bool ro = h.getFlags() & ( efRO | efRODial );
+  int n = h.size();
+  // DBGx( " name= \"%s\"  n=%d", qP(h.objectName()), n );
+  les.reserve(n);
+  QString vn = h.getParm("v_name");
+  if( vn.isEmpty() )
+    vn = h.objectName();
+  vn += '[';
+  
+  int v_min { IMIN }, v_max { IMAX };
+  QString s_min = h.getParm( "min" );
+  if( ! s_min.isEmpty() ) 
+    v_min = s_min.toInt();
+  QString s_max = h.getParm( "max" );
+  if( ! s_max.isEmpty() ) 
+    v_max = s_max.toInt();
+  
+  lbl->setText(""); // hack: hide common name
+  QGridLayout *lay = new QGridLayout( pwi );
+
+  for( int i=0; i<n; ++i ) {
+    QLabel *la = new QLabel( pwi );
+    la->setText( vn + QSN(i) + ']' );
+    lay->addWidget( la, i, 0 );
+
+
+    QLineEdit *le = new QLineEdit( pwi );
+    le->setReadOnly( ro );
+    le->setValidator( new QIntValidator( v_min, v_max, le ) );
+    lay->addWidget( le, i, 1 );
+    les.push_back( le );
+  }
+  
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  pwi->setLayout( lay ); // ???
+}
+
+bool IntArrayDataWidget::set()
+{
+  int n = les.size();
+  // DBGx( "dbg: les.size=%d h.size=%d", n, ho.size() );
+  for( int i=0; i<n; ++i ) {
+    les[i]->setText( QSN( ho.get(i).toInt() ) ); 
+  }
+  return true;
+}
+
+bool IntArrayDataWidget::get() const
+{
+  bool ok = false;
+  int n = les.size();
+  QVariant v;
+  for( int i=0; i<n; ++i ) {
+    v = les[i]->text().toInt( &ok, 0 );
+    ho.set( v, i );
+  }
+  return ok;
+}
+
+DataWidget* IntArrayDataWidget::create( HolderData &h, QWidget *parent  )
+{
+  return new IntArrayDataWidget( h, parent );
+}
+
+int IntArrayDataWidget::reg()
+{
+  static DataWidgetProp p { create, "ARRAY_INT,INPLINE" };
+  return FactoryDataWidget::theFactory().registerWidgetType( "IntArrayDataWidget", p );
+}
+
+
 // ------------------- ObjDataWidget ---------------------------
 int ObjDataWidget::registered = ObjDataWidget::reg();
 
@@ -644,7 +724,7 @@ QString FactoryDataWidget::findForHolder( const HolderData &ho, int *lev ) const
   int max_good = IMIN;
   QStringList ho_p_list = ho.getParm("props").split(",");
 
-  for( auto i = propMap.begin(); i!= propMap.end(); ++i ) {
+  for( auto i = propMap.begin(); i!= propMap.end(); ++i ) { // no : need key
     int good = 0;
     QStringList w_p_list = QString( i.value().eprop ).split(",");
 
@@ -671,8 +751,11 @@ QString FactoryDataWidget::findForHolder( const HolderData &ho, int *lev ) const
     max_good = 0;
   }
 
-  if( lev != 0 )
+  if( lev != nullptr )
     *lev = max_good;
+
+  //DBGx( "dbg: name: \"%s\" w_type: \"%s\" max_good: %d", 
+  //    qP(ho.objectName()), qP(name), max_good );
 
   return name;
 }
