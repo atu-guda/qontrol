@@ -54,6 +54,7 @@ enum _ELEM_FLAGS {
   efNoDial = 4, efRODial = 8,                /* ND, ROD */
   efNoSave = 16, efRO = 32, efStatic = 64,   /* NS, RO, - */
   efInner = efNoDial | efNoSave | efRO,
+  efOld = efNoRunChange | efNoDial | efNoSave,
   efOnlyFirst = 0x8000 /* not part, of flags, set by TMiso::fillLinks if req*/
 
 };

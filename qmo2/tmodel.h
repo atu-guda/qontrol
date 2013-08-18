@@ -26,13 +26,6 @@
 #include "toutarr.h"
 #include "tgraph.h"
 
-struct li_el { // structure for links representation in arrays;
-  int maxl; // not count, may be gaps
-  int l[4]; // -1 -- unused, all else - see xout(int)
-  li_el() { // default constructor 
-    maxl = 0; l[0] = l[1] = l[2] = l[3] = -1;
-  }; 
-};
 
 /**Contains all elements of model
   *@author atu

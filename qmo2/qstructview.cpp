@@ -182,11 +182,11 @@ void QStructView::drawAll( QPainter &p )
     ob->getData( "vis_x", &ob_x ); 
     ob->getData( "vis_y", &ob_y );
     ob->getData( "ord", &ob_ord );
-    ob->getData( "links.locked", &ob_lock );
-    ob->getData( "links.onlyFirst", &ob_first );
-    ob->getData( "links.onlyLast", &ob_last );
-    ob->getData( "links.flip", &ob_flip );
-    ob->getData( "links.noIcon", &ob_noIcon );
+    ob->getData( "locked", &ob_lock );
+    ob->getData( "onlyFirst", &ob_first );
+    ob->getData( "onlyLast", &ob_last );
+    ob->getData( "flip", &ob_flip );
+    ob->getData( "noIcon", &ob_noIcon );
     if( ob_x < 0 || ob_x >=MODEL_MX || ob_y < 0 || ob_y >= MODEL_MY )
       continue;
     // set real object icon origin

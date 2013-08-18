@@ -435,9 +435,9 @@ void QMo2View::lockElm()
   if( ! checkState( selCheck ) )
     return;  
   
-  selObj->getData( "links.locked", &lck );
+  selObj->getData( "locked", &lck );
   lck = !lck;
-  selObj->setData( "links.locked", lck );
+  selObj->setData( "locked", lck );
   
   model->reset();
   model->setModified();

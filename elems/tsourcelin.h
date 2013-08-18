@@ -25,7 +25,6 @@
   * @author atu
   */
 
-constexpr int efOld = efNoRunChange | efNoDial | efNoSave;
 constexpr int def_n_slopes=16; // keep with init strings
 
 class TSourceLin : public TMiso  {

@@ -51,12 +51,12 @@ class TElmLink : public TDataSet {
    PRM_STRING( inps1, efNoRunChange, "Input 1", "Name of source for input 1", "max=32" );
    PRM_STRING( inps2, efNoRunChange, "Input 2", "Name of source for input 2", "max=32" );
    PRM_STRING( inps3, efNoRunChange, "Input 3", "Name of source for input 3", "max=32" );
-   PRM_SWITCH( noauto, efInner, "No Auto", "Unused", "def=0" );
-   PRM_SWITCH( locked, efNoRunChange, "Locked", "Bypass u[0] to output", "sep=col"  );
-   PRM_SWITCH( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", ""); 
-   PRM_SWITCH( onlyLast, efNoRunChange , "only Last", "Process element only at last iteration", ""); 
-   PRM_SWITCH( flip, efNoRunChange, "flip image", "flip left-right element icon", "sep=col");
-   PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "");
+   PRM_SWITCH( noauto, efOld, "No Auto", "Unused", "def=0" );
+   PRM_SWITCH( locked, efOld, "Locked", "Bypass u[0] to output", "sep=col"  );
+   PRM_SWITCH( onlyFirst, efOld, "only First", "Process element only at first iteration", ""); 
+   PRM_SWITCH( onlyLast, efOld , "only Last", "Process element only at last iteration", ""); 
+   PRM_SWITCH( flip, efOld, "flip image", "flip left-right element icon", "sep=col");
+   PRM_SWITCH( noIcon, efOld, "no Icon", "don't show element icon", "");
    /** names of elms, which outputs will be used as parm inputs */
    PRM_STRING( pinps0, efNoRunChange, "Parm. input 0", "Name of source for parametric input 0", "max=32\nsep=block"  );
    PRM_STRING( pinps1, efNoRunChange, "Parm. input 1", "Name of source for parametric input 1", "max=32"  );
@@ -112,6 +112,7 @@ class TMiso : public TDataSet  {
    virtual ~TMiso();
    DCL_CREATE;
    DCL_STD_INF;
+   virtual void post_set() override;
 
    /** external computation function + in/out */
    double fun( double t, IterType itype );
@@ -163,23 +164,28 @@ class TMiso : public TDataSet  {
        "Order, in which element will be processed", "min=0\nsep=block" );
    /** visual coordinates */
    PRM_INT( vis_x, efRODial | efNoRunChange, "Visual x", 
-       "X-coordinate of element in scheme", "min=0\nmax=64\nsep=col" );
+       "X-coordinate of element in scheme", "min=0\nmax=64" );
    PRM_INT( vis_y, efRODial | efNoRunChange, "Visual y", 
        "Y-coordinate of element in scheme", "min=0\nmax=64" );
-   PRM_DOUBLE( out0_init, efNoRunChange, "Init output", 
-       "Initial value of output", "sep=col" );
-   PRM_DOUBLE( out0, efInner, "Output", 
-       "Main output", "" );
+   PRM_DOUBLE( out0_init, efNoRunChange, "Init value", 
+       "Initial value of output", "" );
+   PRM_SWITCH( locked, efNoRunChange, "Locked", "Bypass u[0] to output", "sep=col"  );
+   PRM_SWITCH( flip, efNoRunChange, "flip image", "flip left-right element icon", "");
+   PRM_SWITCH( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", "cep=col"); 
+   PRM_SWITCH( onlyLast, efNoRunChange , "only Last", "Process element only at last iteration", ""); 
+   PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "sep=col");
+   
+   PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
    /** pointer to link data */
    TElmLink *links;
    // PRM_OBJ1( links, 0, "object links", "Object links description", "sep=blockend" );
-   /** time step -- setted by preRun */
-   double tdt; 
+   /** time step -- setted by preRun 0 - special value to detect usage before start */
+   double tdt = 0; 
    /** number of iteration per loop -- setted by PreRun */
-   int model_nn;
+   int model_nn = 0;
    /** pointer to model-owner of this element, same as parent only 
     * between preRun -- postRun, elseware-0 */
-   TModel *model;
+   TModel *model = nullptr;
    /** fake source */
    double fake_so = 0;
    /** fake param target */

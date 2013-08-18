@@ -45,26 +45,36 @@ STD_CLASSINFO(TMiso,clpSpecial);
 CTOR(TMiso,TDataSet) ,
        links( new TElmLink( "links", this, 0, "links", "object links", "sep=blockend" ) )
 {
-  ord = -1;
-  vis_x = vis_y = 0; tdt = 0; model_nn = 0; 
-  model = 0;
 }
 
 TMiso::~TMiso()
 {
 }
 
+void TMiso::post_set()
+{
+  TDataSet::post_set();
+  // at least one set - use new data
+  if( locked || flip || onlyFirst || onlyLast || noIcon || !links )
+    return;
+  // try to migrate from old data
+  int t = 0; links->getData( "locked", &t ); locked = t;
+  t = 0;     links->getData( "flip", &t ); flip = t;
+  t = 0;     links->getData( "onlyFirst", &t ); onlyFirst = t;
+  t = 0;     links->getData( "onlyLast", &t ); onlyLast = t;
+  t = 0;     links->getData( "noIcon", &t ); noIcon = t;
+}
 
 DEFAULT_FUNCS_REG(TMiso);
 
 double TMiso::fun( double t, IterType itype )
 {
   int v;
-  if( links->locked ) 
+  if( locked ) 
     return out0 = *in_so[0];
-  if( links->onlyFirst && itype != IterFirst )
+  if( onlyFirst && itype != IterFirst )
     return out0;
-  if( links->onlyLast && itype != IterLast )
+  if( onlyLast && itype != IterLast )
     return out0;
   
   modifyPrms();

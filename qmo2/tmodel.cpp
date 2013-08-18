@@ -672,7 +672,7 @@ int TModel::getLinkInfos( int elnu, LinkInfo *li )/*{{{1*/
       continue;
     vx = vy = -1; flip = 0;
     ob->getData( "vis_x", &vx ); ob->getData( "vis_y", &vy );
-    ob->getData( "links.flip", &flip ); 
+    ob->getData( "flip", &flip ); 
     if( vx < 0 || vy < 0 ) 
       continue;
     li[i].ltype = LinkElm;
@@ -698,7 +698,7 @@ int TModel::getLinkInfos( int elnu, LinkInfo *li )/*{{{1*/
       continue;
     vx = vy = -1; flip = 0;
     ob->getData( "vis_x", &vx ); ob->getData( "vis_y", &vy );
-    ob->getData( "links.flip", &flip ); 
+    ob->getData( "flip", &flip ); 
     if( vx < 0 || vy < 0 ) 
       continue;
     li[pi].ltype = LinkElm;
