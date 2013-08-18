@@ -1471,6 +1471,7 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
       return false;
     }
   }
+  post_set();
   structChanged();
 
   return true;
