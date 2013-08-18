@@ -42,10 +42,11 @@ class TThrum : public TMiso  {
    PRM_DOUBLE( p_dous,  0, "Double S", "Spin test", "props=DOUBLE,SPIN\ndef=-5.\nmin=10\nmax=100\nstep=0.5" );
    PRM_DOUBLE( p_doun, efNoRunChange, "Double N", "test noRunChange", "def=1.1\nmax=1e10" );
    PRM_COLOR( p_col, 0, "Color", "Color value", "def=silver" );
-   PRM_STRING( p_str, 0, "String", "some string", "sep=col\nncol=2\ndef=\"a d f\"" );
+   PRM_STRING( p_str, 0, "String", "some string", u8"sep=col\nncol=2\ndef=\"a b c d f\"" );
    // PRM_STRING( p_strn, 0, "ML String", "Large string", "sep=block\nprops=STRING,MLINE\nncol=-1" );
    PRM_INT_ARR( a_int, 0, "int[]", "int array", "N=5\ndef=1\ndefs=0 2 4 \nsep=block" );
-   PRM_DOUBLE_ARR( a_dou, 0, "double[]", "double array", "N=5\ndef=0.1\ndefs=7 1.2e-5 3e7 \nsep=col" );
+   PRM_DOUBLE_ARR( a_dou, 0, "dou[]", "double array", "N=5\ndef=0.1\ndefs=7 1.2e-5 3e7 \nsep=col" );
+   PRM_STRING_ARR( a_str, 0, "str[]", "string array", "N=5\ndef=a b c\ndefs=first\x01second x x\x01last\nsep=col" );
    
    DCL_DEFAULT_STATIC;
 };

@@ -385,6 +385,29 @@ class HolderDoubleArray : public HolderData {
 #define PRM_DOUBLE_ARR( name, flags, vname, descr, extra ) \
  HolderDoubleArray name = { #name, this, flags, vname, descr, extra  } ; 
 
+// ----------------------------------------------------------------
+/** Holder: array of QString */
+class HolderStringArray : public HolderData {
+  Q_OBJECT
+ public: 
+  DCL_CTOR(HolderStringArray);
+  virtual ~HolderStringArray();
+  DCL_CREATE;
+  DCL_STD_INF;
+  DCL_STD_GETSET;
+  virtual int size() const override { return v.size(); }
+  virtual QString getType() const override; 
+  STD_CONVERSIONS(QStringList);
+  QString operator[](int i) const { return v[i]; };
+  QString& operator[](int i) { return v[i]; };
+ protected:
+  QStringList v;
+  DCL_DEFAULT_STATIC;
+};
+
+#define PRM_STRING_ARR( name, flags, vname, descr, extra ) \
+ HolderStringArray name = { #name, this, flags, vname, descr, extra  } ; 
+
 
 // ####################################################################
 

@@ -596,17 +596,19 @@ void HolderIntArray::reset_dfl()
   v.assign( n, v0 );
 
   s = getParm("defs");
-  QStringList sl = s.split( " ", QString::SkipEmptyParts );
-  if( sl.size() > (int)v.size() )
-    v.assign( sl.size(), v0 );
+  if( ! s.isEmpty() ) {
+    QStringList sl = s.split( " ", QString::SkipEmptyParts );
+    if( sl.size() > (int)v.size() )
+      v.assign( sl.size(), v0 );
   
-  int vc, i = 0;
-  bool ok;
-  for( auto cs : sl ) {
-    vc = cs.toInt( &ok, 0 ); // 0 = auto base
-    if( ok )
-      v[i] = vc;
-    ++i;
+    int vc, i = 0;
+    bool ok;
+    for( auto cs : sl ) {
+      vc = cs.toInt( &ok, 0 ); // 0 = auto base
+      if( ok )
+        v[i] = vc;
+      ++i;
+    }
   }
 
   post_set();
@@ -700,25 +702,29 @@ HolderDoubleArray::~HolderDoubleArray()
 
 void HolderDoubleArray::reset_dfl()
 {
-  int n = 1, v0 = 0;
+  int n = 1;
+  double v0 = 0;
   QString s = getParm("N");
   if( ! s.isEmpty() )
-    n = s.toDouble();
+    n = s.toInt();
   s = getParm("def");
   v.assign( n, v0 );
 
   s = getParm("defs");
-  QStringList sl = s.split( " ", QString::SkipEmptyParts );
-  if( sl.size() > (int)v.size() )
-    v.assign( sl.size(), v0 );
+  if( ! s.isEmpty() ) {
+    QStringList sl = s.split( " ", QString::SkipEmptyParts );
+    if( sl.size() > (int)v.size() )
+      v.assign( sl.size(), v0 );
   
-  double vc, i = 0;
-  bool ok;
-  for( auto cs : sl ) {
-    vc = cs.toDouble( &ok );
-    if( ok )
-      v[i] = vc;
-    ++i;
+    double vc;
+    int i = 0;
+    bool ok;
+    for( auto cs : sl ) {
+      vc = cs.toDouble( &ok );
+      if( ok )
+        v[i] = vc;
+      ++i;
+    }
   }
 
   post_set();
@@ -792,6 +798,107 @@ const char* HolderDoubleArray::helpstr { "Contains vector of double data" };
 
 
 DEFAULT_FUNCS_REG(HolderDoubleArray);
+
+
+// ---------------- HolderStringArray ---------
+STD_CLASSINFO_ALIAS(HolderStringArray,clpData|clpArray,string[]);
+
+CTOR(HolderStringArray,HolderData)
+{
+  tp=QVariant::UserType;
+  if( getParm("props").isEmpty() ) {
+    setParm( "props", "ARRAY_STRING" );
+  }
+}
+
+HolderStringArray::~HolderStringArray()
+{
+  dyn = 0;
+}
+
+void HolderStringArray::reset_dfl()
+{
+  int n = 1;
+  QString s = getParm("N");
+  if( ! s.isEmpty() )
+    n = s.toInt();
+  QString sd = getParm("def");
+
+  QStringList sl;
+  s = getParm("defs");
+  if( ! s.isEmpty() ) {
+    sl = s.split( '\x01', QString::KeepEmptyParts ); // keep here
+    if( sl.size() > n )
+      n = sl.size();
+  }
+  
+  v.clear();
+  int nds = sl.size();
+  for( int i=0; i<n; ++i ) {
+    QString vc;
+    if( i < nds )
+      vc = sl[i];
+    else
+      vc = sd;
+    v.append( vc );
+  }
+
+  post_set();
+}
+
+
+bool HolderStringArray::set( const QVariant & x, int idx )
+{
+  bool ok;
+  if( idx < 0 || idx >= v.size() ) // slow, but safe - not for fast code
+    return false;
+  v[idx] = x.toString();
+  post_set();
+  return ok;
+}
+
+QVariant HolderStringArray::get( int idx ) const
+{
+  if( idx < 0 || idx >= v.size() ) // slow, but safe - not for fast code
+    return QVariant();
+  return QVariant( v[idx] );
+}
+
+void HolderStringArray::post_set()
+{
+  int len_max = IMAX;
+  QString s_max = getParm( "max" );
+  if( ! s_max.isEmpty() ) {
+    len_max = s_max.toInt();
+    for( QString& vc : v ) {
+      vc.truncate(len_max);
+    }
+  }
+}
+
+QString HolderStringArray::toString() const
+{
+  return v.join("\x01");
+}
+
+bool HolderStringArray::fromString( const QString &s )
+{
+  v = s.split('\x01', QString::KeepEmptyParts );
+
+  post_set();
+  return !v.isEmpty(); 
+}
+
+
+QString HolderStringArray::getType() const
+{
+  return "string[]";
+}
+
+const char* HolderStringArray::helpstr { "Contains QStringList" };
+
+
+DEFAULT_FUNCS_REG(HolderStringArray);
 
 
 

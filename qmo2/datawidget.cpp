@@ -91,7 +91,7 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
     le->setReadOnly( true );
   }
 
-  int v_max { IMAX };
+  int v_max { 4096 }; // not IMAX - good limit for single-line string
   QString s_max = h.getParm( "max" );
   if( ! s_max.isEmpty() ) 
     v_max = s_max.toInt();
@@ -106,7 +106,6 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
   lay->addWidget( lbl );
   lay->addWidget( le, 1 );
   setLayout( lay );
-  // TODO: r/o, size, mask ....
   setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred ); // TODO: check?
 }
 
@@ -724,6 +723,84 @@ int DoubleArrayDataWidget::reg()
 {
   static DataWidgetProp p { create, "ARRAY_DOUBLE,INLINE" };
   return FactoryDataWidget::theFactory().registerWidgetType( "DoubleArrayDataWidget", p );
+}
+
+
+// ------------------- StringArrayDataWidget ---------------------------
+int StringArrayDataWidget::registered = StringArrayDataWidget::reg();
+
+StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent )
+  : DataWidget( h, parent ),
+  pwi( new QWidget( this ) )
+{
+  main_w = pwi;
+  bool ro = h.getFlags() & ( efRO | efRODial );
+  int n = h.size();
+
+  les.reserve(n);
+  QString vn = h.getParm("v_name");
+  if( vn.isEmpty() )
+    vn = h.objectName();
+  vn += '[';
+  
+  int len_max { 4096 }; // not IMAX - simple string in array limit
+  QString s_max = h.getParm( "max" );
+  if( ! s_max.isEmpty() ) 
+    len_max = s_max.toInt();
+  QString mask = h.getParm( "mask" );
+  
+  lbl->setText(""); // hack: hide common name
+  QGridLayout *lay = new QGridLayout( pwi );
+
+  for( int i=0; i<n; ++i ) {
+    QLabel *la = new QLabel( pwi );
+    la->setText( vn + QSN(i) + ']' );
+    lay->addWidget( la, i, 0 );
+
+
+    QLineEdit *le = new QLineEdit( pwi );
+    le->setReadOnly( ro );
+    le->setMaxLength( len_max );
+    if( !mask.isEmpty() )
+      le->setInputMask( mask );
+    lay->addWidget( le, i, 1 );
+    les.push_back( le );
+  }
+  
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  pwi->setLayout( lay ); // ???
+}
+
+bool StringArrayDataWidget::set()
+{
+  int n = les.size();
+  for( int i=0; i<n; ++i ) {
+    les[i]->setText( ho.get(i).toString() ); 
+  }
+  return true;
+}
+
+bool StringArrayDataWidget::get() const
+{
+  bool ok = false;
+  int n = les.size();
+  QVariant v;
+  for( int i=0; i<n; ++i ) {
+    v = les[i]->text();
+    ho.set( v, i );
+  }
+  return ok;
+}
+
+DataWidget* StringArrayDataWidget::create( HolderData &h, QWidget *parent  )
+{
+  return new StringArrayDataWidget( h, parent );
+}
+
+int StringArrayDataWidget::reg()
+{
+  static DataWidgetProp p { create, "ARRAY_STRING,INLINE" };
+  return FactoryDataWidget::theFactory().registerWidgetType( "StringArrayDataWidget", p );
 }
 
 
