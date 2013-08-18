@@ -682,6 +682,118 @@ const char* HolderIntArray::helpstr { "Contains vector of integer data" };
 DEFAULT_FUNCS_REG(HolderIntArray);
 
 
+// ---------------- HolderDoubleArray ---------
+STD_CLASSINFO_ALIAS(HolderDoubleArray,clpData|clpArray,double[]);
+
+CTOR(HolderDoubleArray,HolderData)
+{
+  tp=QVariant::UserType;
+  if( getParm("props").isEmpty() ) {
+    setParm( "props", "ARRAY_DOUBLE" );
+  }
+}
+
+HolderDoubleArray::~HolderDoubleArray()
+{
+  dyn = 0;
+}
+
+void HolderDoubleArray::reset_dfl()
+{
+  int n = 1, v0 = 0;
+  QString s = getParm("N");
+  if( ! s.isEmpty() )
+    n = s.toDouble();
+  s = getParm("def");
+  v.assign( n, v0 );
+
+  s = getParm("defs");
+  QStringList sl = s.split( " ", QString::SkipEmptyParts );
+  if( sl.size() > (int)v.size() )
+    v.assign( sl.size(), v0 );
+  
+  double vc, i = 0;
+  bool ok;
+  for( auto cs : sl ) {
+    vc = cs.toDouble( &ok );
+    if( ok )
+      v[i] = vc;
+    ++i;
+  }
+
+  post_set();
+}
+
+
+bool HolderDoubleArray::set( const QVariant & x, int idx )
+{
+  bool ok;
+  if( idx < 0 || (unsigned)(idx) >= v.size() ) // slow, but safe - not for fast code
+    return false;
+  v[idx] = x.toDouble( &ok );
+  post_set();
+  return ok;
+}
+
+QVariant HolderDoubleArray::get( int idx ) const
+{
+  if( idx < 0 || (unsigned)idx >= v.size() ) // slow, but safe - not for fast code
+    return QVariant();
+  return QVariant( v[idx] );
+}
+
+void HolderDoubleArray::post_set()
+{
+  double v_min { DMIN }, v_max { DMAX };
+  QString s_min = getParm( "min" );
+  if( ! s_min.isEmpty() ) 
+    v_min = s_min.toDouble();
+  QString s_max = getParm( "max" );
+  if( ! s_max.isEmpty() ) 
+    v_max = s_max.toDouble();
+  for( double& vc : v ) {
+    vc = qBound( v_min, vc, v_max );
+  }
+}
+
+QString HolderDoubleArray::toString() const
+{
+  QString s, sep = "";
+  for( double vc : v ) {
+    s += sep + QSN( vc );
+    sep = " ";
+  }
+  return s;
+}
+
+bool HolderDoubleArray::fromString( const QString &s )
+{
+  bool ok;
+  QStringList sl = s.split(" ", QString::SkipEmptyParts );
+  v.clear(); v.reserve( sl.size() );
+  double vc;
+
+  for( auto s : sl ) {
+    vc = s.toDouble( &ok );
+    v.push_back( vc );
+  }
+
+  post_set();
+  return ok; // ? only last
+}
+
+
+QString HolderDoubleArray::getType() const
+{
+  return "double[]";
+}
+
+const char* HolderDoubleArray::helpstr { "Contains vector of double data" };
+
+
+DEFAULT_FUNCS_REG(HolderDoubleArray);
+
+
 
 // ---------------- TDataSet ------------------------
 STD_CLASSINFO(TDataSet,clpSpecial);

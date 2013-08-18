@@ -189,6 +189,20 @@ class IntArrayDataWidget: public DataWidget {
 };
 
 
+class DoubleArrayDataWidget: public DataWidget {
+ public:
+  DoubleArrayDataWidget( HolderData &h, QWidget *parent = 0 );
+  virtual bool set();
+  virtual bool get() const;
+  static DataWidget* create( HolderData &h, QWidget *parent  );
+ protected:
+  static int reg();
+  static int registered;
+  std::vector<QLineEdit*> les;
+  QWidget *pwi;
+};
+
+
 class ObjDataWidget: public DataWidget {
   Q_OBJECT
  public:

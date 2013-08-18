@@ -614,7 +614,6 @@ IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
 bool IntArrayDataWidget::set()
 {
   int n = les.size();
-  // DBGx( "dbg: les.size=%d h.size=%d", n, ho.size() );
   for( int i=0; i<n; ++i ) {
     les[i]->setText( QSN( ho.get(i).toInt() ) ); 
   }
@@ -640,8 +639,91 @@ DataWidget* IntArrayDataWidget::create( HolderData &h, QWidget *parent  )
 
 int IntArrayDataWidget::reg()
 {
-  static DataWidgetProp p { create, "ARRAY_INT,INPLINE" };
+  static DataWidgetProp p { create, "ARRAY_INT,INLINE" };
   return FactoryDataWidget::theFactory().registerWidgetType( "IntArrayDataWidget", p );
+}
+
+
+// ------------------- DoubleArrayDataWidget ---------------------------
+int DoubleArrayDataWidget::registered = DoubleArrayDataWidget::reg();
+
+DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent )
+  : DataWidget( h, parent ),
+  pwi( new QWidget( this ) )
+{
+  main_w = pwi;
+  bool ro = h.getFlags() & ( efRO | efRODial );
+  int n = h.size();
+
+  les.reserve(n);
+  QString vn = h.getParm("v_name");
+  if( vn.isEmpty() )
+    vn = h.objectName();
+  vn += '[';
+  
+  double v_min { DMIN }, v_max { DMAX };
+  QString s_min = h.getParm( "min" );
+  if( ! s_min.isEmpty() ) 
+    v_min = s_min.toDouble();
+  QString s_max = h.getParm( "max" );
+  if( ! s_max.isEmpty() ) 
+    v_max = s_max.toDouble();
+  int decimals = 12;
+  QString sdec =  h.getParm("decimals" );
+  if( ! sdec.isEmpty() ) {
+    decimals = sdec.toInt();
+  }
+  
+  lbl->setText(""); // hack: hide common name
+  QGridLayout *lay = new QGridLayout( pwi );
+
+  for( int i=0; i<n; ++i ) {
+    QLabel *la = new QLabel( pwi );
+    la->setText( vn + QSN(i) + ']' );
+    lay->addWidget( la, i, 0 );
+
+
+    QLineEdit *le = new QLineEdit( pwi );
+    le->setReadOnly( ro );
+    le->setValidator( new QDoubleValidator( v_min, v_max, decimals, le ) );
+    lay->addWidget( le, i, 1 );
+    les.push_back( le );
+  }
+  
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  pwi->setLayout( lay ); // ???
+}
+
+bool DoubleArrayDataWidget::set()
+{
+  int n = les.size();
+  for( int i=0; i<n; ++i ) {
+    les[i]->setText( QSN( ho.get(i).toDouble() ) ); 
+  }
+  return true;
+}
+
+bool DoubleArrayDataWidget::get() const
+{
+  bool ok = false;
+  int n = les.size();
+  QVariant v;
+  for( int i=0; i<n; ++i ) {
+    v = les[i]->text().toDouble( &ok );
+    ho.set( v, i );
+  }
+  return ok;
+}
+
+DataWidget* DoubleArrayDataWidget::create( HolderData &h, QWidget *parent  )
+{
+  return new DoubleArrayDataWidget( h, parent );
+}
+
+int DoubleArrayDataWidget::reg()
+{
+  static DataWidgetProp p { create, "ARRAY_DOUBLE,INLINE" };
+  return FactoryDataWidget::theFactory().registerWidgetType( "DoubleArrayDataWidget", p );
 }
 
 

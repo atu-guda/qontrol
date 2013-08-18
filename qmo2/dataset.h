@@ -362,6 +362,29 @@ class HolderIntArray : public HolderData {
 #define PRM_INT_ARR( name, flags, vname, descr, extra ) \
  HolderIntArray name = { #name, this, flags, vname, descr, extra  } ; 
 
+// ----------------------------------------------------------------
+/** Holder: array of double */
+class HolderDoubleArray : public HolderData {
+  Q_OBJECT
+ public: 
+  DCL_CTOR(HolderDoubleArray);
+  virtual ~HolderDoubleArray();
+  DCL_CREATE;
+  DCL_STD_INF;
+  DCL_STD_GETSET;
+  virtual int size() const override { return v.size(); }
+  virtual QString getType() const override; 
+  STD_CONVERSIONS(std::vector<double>);
+  double operator[](int i) const { return v[i]; };
+  double& operator[](int i) { return v[i]; };
+ protected:
+  std::vector<double> v;
+  DCL_DEFAULT_STATIC;
+};
+
+#define PRM_DOUBLE_ARR( name, flags, vname, descr, extra ) \
+ HolderDoubleArray name = { #name, this, flags, vname, descr, extra  } ; 
+
 
 // ####################################################################
 

@@ -45,6 +45,7 @@ class TThrum : public TMiso  {
    PRM_STRING( p_str, 0, "String", "some string", "sep=col\nncol=2\ndef=\"a d f\"" );
    // PRM_STRING( p_strn, 0, "ML String", "Large string", "sep=block\nprops=STRING,MLINE\nncol=-1" );
    PRM_INT_ARR( a_int, 0, "int[]", "int array", "N=5\ndef=1\ndefs=0 2 4 \nsep=block" );
+   PRM_DOUBLE_ARR( a_dou, 0, "double[]", "double array", "N=5\ndef=0.1\ndefs=7 1.2e-5 3e7 \nsep=col" );
    
    DCL_DEFAULT_STATIC;
 };

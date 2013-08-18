@@ -628,6 +628,7 @@ void QMo2Win::initIface()
   elmToolbar->addAction( act_runrun );
   elmToolbar->addAction( act_runprm );
   elmToolbar->addAction( act_runprm2 );
+  elmToolbar->addAction( act_runscript );
 
 }
 
