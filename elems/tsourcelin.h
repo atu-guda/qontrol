@@ -26,6 +26,7 @@
   */
 
 constexpr int efOld = efNoRunChange | efNoDial | efNoSave;
+constexpr int def_n_slopes=16; // keep with init strings
 
 class TSourceLin : public TMiso  {
   Q_OBJECT
@@ -100,7 +101,7 @@ class TSourceLin : public TMiso  {
    PRM_DOUBLE(   ve_15,efOld,  "ve[15]", "Stop  15", "" );
    /* ------------ end of iface vars */
    /** slope values of each line */
-   double slopes[16];
+   dvector slopes;
    /** number of lines, current line */
    int n_lin, curr_lin;
    /** start time of current line */

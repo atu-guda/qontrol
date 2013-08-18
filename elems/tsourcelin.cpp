@@ -22,16 +22,17 @@
 using namespace std;
 
 const char* TSourceLin::helpstr = "<H1>TSourceLin</H1>\n"
- "<b>dont work now!</b> Source of signal, which consist of some linear segments. \n"
- "Each segment have time: <B>t_inr[i]</B>, \n"
+ "<p>Source of signal, which consist of some linear segments. \n"
+ "Each segment have time: <B>t_int[i]</B>, \n"
  "start value: <B>vs[i]</B>, \n"
  "end value: <B>ve[i]</B>, <BR>\n"
- "List terminated, in t_int &lt=; 0.\n"
+ "List terminated, in t_int[i] &lt=; 0.</p>\n"
 ;
 
 STD_CLASSINFO(TSourceLin,clpElem );
 
-CTOR(TSourceLin,TMiso)
+CTOR(TSourceLin,TMiso),
+  slopes( def_n_slopes, 0 )
 {
 }
 
@@ -39,7 +40,7 @@ void TSourceLin::post_set()
 {
   TDataSet::post_set();
   if( t_int_0 != 31415926 ) { // convert from old data TODO: remove after convert
-    DBG1( "inf: convertions from structure" );
+    DBG1( "inf: convertions from OLD structure" );
     t_int[0]  = t_int_0;  vs[0]  = vs_0;  ve[0]  = ve_0; 
     t_int[1]  = t_int_1;  vs[1]  = vs_1;  ve[1]  = ve_1; 
     t_int[2]  = t_int_2;  vs[2]  = vs_2;  ve[2]  = ve_2; 
@@ -57,6 +58,7 @@ void TSourceLin::post_set()
     t_int[14] = t_int_14; vs[14] = vs_14; ve[14] = ve_14;
     t_int[15] = t_int_15; vs[15] = vs_15; ve[15] = ve_15;
   }
+  slopes.assign( t_int.size(), 0 );
 }
 
 
@@ -84,11 +86,14 @@ int TSourceLin::do_startLoop( int /*acnx*/, int /*acny*/ )
 
 void TSourceLin::recalc(void)
 {
-  int i;
+  int n = t_int.size();
+  slopes.assign( n, 0 );
+  
   // fail-safe
   if( t_int[0] <= 0 )
     t_int[0] = 1;
-  for( i=0; i<16; i++ ) {
+
+  for( int i=0; i<n; ++i ) {
     if( t_int[i] <= 0 ) {
       n_lin = i; 
       break;
