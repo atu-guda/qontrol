@@ -15,8 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <gsl/gsl_rng.h>
-
 #include <QApplication>
 #include <QFont>
 
@@ -25,7 +23,6 @@
 int main( int argc, char *argv[] )
 {
   QApplication a(argc, argv);
-  gsl_rng_env_setup();
 
   QMo2Win *qmo2 = new QMo2Win();
 

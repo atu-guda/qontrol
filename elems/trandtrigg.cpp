@@ -15,7 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h>
 #include "miscfun.h"
 #include "tmodel.h"
 #include "trandtrigg.h"
@@ -36,20 +35,11 @@ CTOR(TRandTrigg,TMiso)
 {
 }
 
-TRandTrigg::~TRandTrigg()
-{
-  if( rng ) {
-    gsl_rng_free( rng );
-    rng = 0;
-  }
-}
 
 
 int TRandTrigg::do_preRun( int /*run_tp*/, int /*an*/, 
                            int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  const gsl_rng_type *t = gsl_rng_default;
-  rng = gsl_rng_alloc( t );
   eff_seedType = seedType;
   if( seedType == 3 ) { // as model 
     model->getData( "seedType", &eff_seedType ); 
@@ -61,14 +51,6 @@ int TRandTrigg::do_preRun( int /*run_tp*/, int /*an*/,
   return 0;
 }
 
-int TRandTrigg::do_postRun( int /*good*/ )
-{
-  if( rng ) {
-    gsl_rng_free( rng );
-    rng = 0;
-  }
-  return 0;
-}
 
 int TRandTrigg::do_startLoop( int acnx, int acny )
 {
@@ -82,7 +64,7 @@ int TRandTrigg::do_startLoop( int acnx, int acny )
     } else {
       sseed = seed + bseed;
     }
-    gsl_rng_set( rng, sseed );
+    rng.set( sseed );
   };
   return 0;
 }
@@ -102,7 +84,7 @@ double TRandTrigg::f( double /* t */ )
     return ( currOut ) ? 1 : ( useZero ? 0 : -1 );
   };
   if( ( useLevel && *in_so[0] > 0.1 ) || ( !useLevel && fabs(du) > 0.5 ) ) {
-    rv = gsl_ran_flat( rng, 0, 1 ); 
+    rv = rng.flat( 0, 1 ); 
     if( rv <= prob || nforce <= 1 || ns >= nforce-1 ) {
       ns = 0; currOut = !currOut;
     } else {

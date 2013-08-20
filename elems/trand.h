@@ -18,9 +18,8 @@
 #ifndef TRAND_H
 #define TRAND_H
 
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
 #include <tmiso.h>
+#include "rand_gen.h"
 
 static const char* const trand_list_type = 
      "flat(-sigma,sigma)\n"       // 0
@@ -28,7 +27,19 @@ static const char* const trand_list_type =
      "gaussian_tail(a,sigma)\n"   // 2
      "exponential(sigma)\n"       // 3
      "laplace(a)\n"               // 4
-     "exppow(a,b)"                // 5
+     "exppow(a,b)\n"              // 5
+     "beta(a,b)\n"                // 6
+     "cauchy(a)\n"                // 7
+     "chisq(a)\n"                 // 8
+     "erlang(a,b)\n"              // 9
+     "fdist(a,b)\n"               // 10
+     "gamma(a,b)\n"               // 11
+     "levy(a,b)\n"                // 12
+     "logistic(a)\n"              // 13
+     "lognormal(a,sigma)\n"       // 14
+     "pareto(a,b)\n"              // 15
+     "rayleigh(sigma)\n"          // 16 
+     "weibull(a,b)"               // 17
 ;
 
 static const char* const trand_list_seedType = 
@@ -48,14 +59,11 @@ class TRand : public TMiso  {
    DCL_CTOR(TRand);
    DCL_CREATE;
    DCL_STD_INF;
-   virtual ~TRand() override;
  protected:
    /** main computation function */
    virtual double f( double t ) override;
-   /** reimplemented from TMiso to create generator */
+   /** reimplemented from TMiso to init generator */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
-   /** reimplemented from TMiso to delete generator */
-   virtual int do_postRun( int good ) override;
    /** reimplemented from TMiso to init generator and variables */
    virtual int do_startLoop( int acnx, int acny ) override;
    
@@ -94,7 +102,7 @@ class TRand : public TMiso  {
    /** copy valuse of base seed */
    int bseed;
    /** generator structure from GSL */
-   gsl_rng *rng;
+   RandGenerator rng;
    
    DCL_DEFAULT_STATIC;
 };

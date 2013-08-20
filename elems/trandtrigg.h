@@ -18,9 +18,8 @@
 #ifndef TRANDTRIGG_H
 #define TRANDTRIGG_H
 
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
 #include <tmiso.h>
+#include "rand_gen.h"
 
 static const char* const trandtrigg_list_seedType = 
      "Every run\n"          // 0
@@ -39,14 +38,11 @@ class TRandTrigg : public TMiso  {
    DCL_CTOR(TRandTrigg);
    DCL_CREATE;
    DCL_STD_INF;
-   virtual ~TRandTrigg() override;
  protected:
    /** main computation function */
    virtual double f( double t ) override;
    /** reimplemented from TMiso to init random generator */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
-   /** reimplemented from TMiso to drop random generator */
-   virtual int do_postRun( int good ) override;
    /** reimplemented from TMiso to set start values */
    virtual int do_startLoop( int acnx, int acny ) override;
    
@@ -80,8 +76,8 @@ class TRandTrigg : public TMiso  {
    int eff_seedType;
    /** copy valuse of base seed */
    int bseed;
-   /** generator structure from GSL */
-   gsl_rng *rng = nullptr;
+   /** generator */
+   RandGenerator rng;
    
    DCL_DEFAULT_STATIC;
 };

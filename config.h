@@ -1,6 +1,6 @@
 /* atu: now modifyed manualy */
 
-#define VERSION "0.0.49"
+#define VERSION "0.0.50"
 
 /* Name of package */
 #define PACKAGE "qmo2x"

@@ -18,9 +18,8 @@
 #ifndef TSOURCE_H
 #define TSOURCE_H
 
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
 #include "tmiso.h"
+#include "rand_gen.h"
 
 static const char* const tsource_list_type = 
              "U*sin(o*t)\n"           // 0
@@ -55,14 +54,11 @@ class TSource : public TMiso  {
    DCL_CTOR(TSource);
    DCL_CREATE;
    DCL_STD_INF;
-   virtual ~TSource() override;
  protected:
    /** main computation function */
    virtual double f( double t ) override;
    /** will be called before any action -- good place for allocs */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
-   /** reimplemented to delete rnds */
-   virtual int do_postRun( int good ) override;
    /** called before each inner param loop. Unused param - -1 */
    virtual int do_startLoop( int acnx, int acny ) override;
 
@@ -102,8 +98,8 @@ class TSource : public TMiso  {
        eff_seedType_u, eff_seedType_p;
    
    
-   /** generator structures from GSL */
-   gsl_rng *rng_u = nullptr, *rng_p = nullptr;
+   /** generator structures */
+   RandGenerator rng_u, rng_p;
    /** triggers */
    int was_pulse = 0;
    /** values to store some model vars */	  

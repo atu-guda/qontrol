@@ -32,18 +32,6 @@ CTOR(TSource,TMiso)
 {
 }
 
-TSource::~TSource()
-{
-  if( rng_u ) {
-    gsl_rng_free( rng_u );
-    rng_u = 0;
-  }
-  if( rng_p ) {
-    gsl_rng_free( rng_p );
-    rng_p = 0;
-  }
-}
-
 
 double TSource::f( double t )
 {
@@ -55,9 +43,9 @@ double TSource::f( double t )
       u_ch = u_ch_vs + ( t - u_ch_ts ) * u_ch_k;
     } else {
       u_ch = u_ch_vs = u_ch_ve;
-      u_ch_ve = gsl_ran_flat( rng_u,  u_ch_v0, u_ch_vm );
+      u_ch_ve = rng_u.flat( u_ch_v0, u_ch_vm );
       u_ch_ts = t;
-      u_ch_te = t + gsl_ran_flat( rng_u, u_ch_t0, u_ch_tm );
+      u_ch_te = t + rng_u.flat( u_ch_t0, u_ch_tm );
       u_ch_k = ( u_ch_ve - u_ch_vs ) / ( u_ch_te - u_ch_ts );
     };
   }; // end if( u_chaos )
@@ -66,9 +54,9 @@ double TSource::f( double t )
       f_ch = f_ch_vs + ( t - f_ch_ts ) * f_ch_k;
     } else {
       f_ch = f_ch_vs = f_ch_ve;
-      f_ch_ve = gsl_ran_flat( rng_p, f_ch_v0, f_ch_vm );
+      f_ch_ve = rng_p.flat( f_ch_v0, f_ch_vm );
       f_ch_ts = t;
-      f_ch_te = t + gsl_ran_flat( rng_p, f_ch_t0, f_ch_tm );
+      f_ch_te = t + rng_p.flat( f_ch_t0, f_ch_tm );
       f_ch_k = ( f_ch_ve - f_ch_vs ) / ( f_ch_te - f_ch_ts );
     };
   }; // end if( f_chaos )
@@ -114,10 +102,7 @@ double TSource::f( double t )
 int TSource::do_preRun( int /*run_tp*/, int /*an*/, 
                      int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  const gsl_rng_type *t = gsl_rng_default;
-  // U
   if( use_u_ch ) {
-    rng_u = gsl_rng_alloc( t );
     eff_seedType_u = seedType_u;
     if( seedType_u == 3 ) { // as model 
       model->getData( "seedType", &eff_seedType_u ); 
@@ -129,7 +114,6 @@ int TSource::do_preRun( int /*run_tp*/, int /*an*/,
   };
   // Phi
   if( use_f_ch ) {
-    rng_p = gsl_rng_alloc( t );
     eff_seedType_p = seedType_p;
     if( seedType_p == 3 ) { // as model 
       model->getData( "seedType", &eff_seedType_p ); 
@@ -140,19 +124,6 @@ int TSource::do_preRun( int /*run_tp*/, int /*an*/,
     };
   };
 
-  return 0;
-}
-
-int TSource::do_postRun( int /*good*/ )
-{
-  if( rng_u ) {
-    gsl_rng_free( rng_u );
-    rng_u = nullptr;
-  };
-  if( rng_p ) {
-    gsl_rng_free( rng_p );
-    rng_p = nullptr;
-  };
   return 0;
 }
 
@@ -172,13 +143,13 @@ int TSource::do_startLoop( int acnx, int acny )
       } else {
 	sseed_u = seed_u + bseed_u;
       }
-      gsl_rng_set( rng_u, sseed_u );
+      rng_u.set( sseed_u );
     };
     
-    u_ch_vs = gsl_ran_flat( rng_u, u_ch_v0, u_ch_vm );
-    u_ch_ve = gsl_ran_flat( rng_u, u_ch_v0, u_ch_vm );
+    u_ch_vs = rng_u.flat( u_ch_v0, u_ch_vm );
+    u_ch_ve = rng_u.flat( u_ch_v0, u_ch_vm );
     u_ch_ts = 0;
-    u_ch_te = gsl_ran_flat( rng_u, u_ch_t0, u_ch_tm );
+    u_ch_te = rng_u.flat( u_ch_t0, u_ch_tm );
     u_ch_k = ( u_ch_ve - u_ch_vs ) / ( u_ch_te - u_ch_ts );
   };
 
@@ -193,13 +164,13 @@ int TSource::do_startLoop( int acnx, int acny )
       } else {
 	sseed_p = seed_p + bseed_p;
       }
-      gsl_rng_set( rng_p, sseed_p );
+      rng_p.set( sseed_p );
     };
     
-    f_ch_vs = gsl_ran_flat( rng_p, f_ch_v0, f_ch_vm );
-    f_ch_ve = gsl_ran_flat( rng_p, f_ch_v0, f_ch_vm );
+    f_ch_vs = rng_p.flat( f_ch_v0, f_ch_vm );
+    f_ch_ve = rng_p.flat( f_ch_v0, f_ch_vm );
     f_ch_ts = 0;
-    f_ch_te = gsl_ran_flat( rng_p, f_ch_t0, f_ch_tm );
+    f_ch_te = rng_p.flat( f_ch_t0, f_ch_tm );
     f_ch_k = ( f_ch_ve - f_ch_vs ) / ( f_ch_te - f_ch_ts );
   };
 

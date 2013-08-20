@@ -39,6 +39,7 @@ SOURCES += \
   datawidget.cpp \
   tgraph.cpp \
   toutarr.cpp \
+  rand_gen.cpp \
   ../elems/tadjgen.cpp \
   ../elems/tcorralalysis.cpp \
   ../elems/tcounter.cpp \
@@ -98,6 +99,7 @@ HEADERS += \
   datawidget.h \
   tgraph.h \
   toutarr.h \
+  rand_gen.h \
   ../elems/tadjgen.h \
   ../elems/tcorralalysis.h \
   ../elems/tcounter.h \
