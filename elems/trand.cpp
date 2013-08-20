@@ -22,18 +22,18 @@
 #include "trand.h"
 
 const char* TRand::helpstr = "<H1>TRand</H1>\n"
- "Random values signal (noise) generator: <br>\n"
+ "<p>Random values signal (noise) generator: <br>\n"
  "Integer parameter <b>type</b> selects type of distribution (see GSL docs).<br>\n"
  "Argument <b>tau</b> defined recalculation time of generator<br>.\n"
  "Argument <b>ampl</b> - scale of output.<br>\n"
  "Argument <b>zval</b> - zero level of output.<br>\n"
+ "Flag <b>InputTime</b> - if set, uses time is input, non in[0] (def).<br>\n"
  "Arguments <b>sigma, a, b, c</b> -- may me parameters of distribution.<br>\n"
  "Integer parameter <b>seed</b> -- seed of generator, if -1 -- new seed every seeding.<br>\n"
  "Integer <b>seedType</b> -- type of seedeng\n"
  "Flag <b>addBaseSeed</b> -- add value of base seed to current\n"
  "Double parameters <b>ampl, zval, sigma, a, b, c</b> can be changed at any time.<br>\n"
- "About distributions and parameters see GSL documentation.<br>\n"
- "Input is u[0], <b>not time</b>. If need time, link first input to 't'.<br>\n"
+ "About distributions and parameters see GSL documentation.<br></p>\n"
 ;
 
 
@@ -41,7 +41,6 @@ STD_CLASSINFO(TRand,clpElem);
 
 CTOR(TRand,TMiso)
 {
-  // seed = 2942 + ( time(0) & 0x07FF );
   rng = nullptr;
 }
 
@@ -98,9 +97,15 @@ int TRand::do_startLoop( int acnx, int acny )
   return 0;
 }
 
-double TRand::f( double  /*t*/  )
+double TRand::f( double  t  )
 {
-  double v, du;
+  double v, du, in;
+  if( inputTime ) {
+    in = t;
+  } else {
+    in = *in_so[0];
+  }
+
   if( sp_time >= tau || tau <=0  ) {
     sp_time -= tau;
     if( sp_time >= tau )
@@ -116,7 +121,7 @@ double TRand::f( double  /*t*/  )
     };
     old_val = zval + ampl * v;
   };
-  du = *in_so[0] - old_in; old_in = *in_so[0];
+  du = in - old_in; old_in = in;
   sp_time += du;
   return old_val; 
 }

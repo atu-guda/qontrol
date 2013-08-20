@@ -34,7 +34,6 @@ STD_CLASSINFO(TRandTrigg,clpElem);
 
 CTOR(TRandTrigg,TMiso)
 {
-  // seed = 9561 + (time(0) & 0x1AFFF );
 }
 
 TRandTrigg::~TRandTrigg()

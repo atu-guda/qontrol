@@ -62,7 +62,7 @@ class TRandTrigg : public TMiso  {
    PRM_SWITCH( useZero,  efNRC, "0 = neg. output", 
        "Use 0 as negative output, not -1", "");
    /** seed value for generator */
-   PRM_INT( seed, efNRC, "Seed", "Random generator seed", "sep=col\ndef=4235" );
+   PRM_INT( seed, efNRC, "Seed", "Random generator seed", "sep=col\ndef=RND" );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
    PRM_LIST( seedType, efNRC, "Seed at", "Specifies, when to seed", "def=3", 
        trandtrigg_list_seedType );

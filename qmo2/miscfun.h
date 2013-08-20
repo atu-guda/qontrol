@@ -31,6 +31,9 @@ struct GraphInfo {
   { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 };
 
+/** converts string to int with some special values: RND, IMIN, IMAX */
+int QString2IntEx( const QString &s, bool *ok = nullptr );
+
 /** gets real time in seconds.ms */
 double get_real_time(void);
 

@@ -64,16 +64,17 @@ class TRand : public TMiso  {
    /** time of const output value, if <=0 -- change every tick */
    PRM_DOUBLE( tau, efNRC, "\\tau", "time of const output value, if <=0 -- change every tick ", "def=0.05" );
    /** amplitude of output */
-   PRM_DOUBLE( ampl, 0, "Amplitude", "Amplitude scale of output", "def=1" );
+   PRM_DOUBLE( ampl, 0, "Ampl", "Amplitude scale of output", "def=1" );
    /** zero value of output */
-   PRM_DOUBLE( zval, 0, "Base value", "Zero value of output ", "" );
+   PRM_DOUBLE( zval, 0, "Base", "Base (zero) value of output ", "" );
+   PRM_SWITCH( inputTime, efNRC, " input Time", "input is time, not[0]", "def=1" );
    /** coefficients of distribution */
    PRM_DOUBLE( sigma, 0, "\\sigma", "\\sigma value of distrinution", "sep=col\ndef=1" );
    PRM_DOUBLE( a, 0, "a", "Parameter a", "def=1" );
    PRM_DOUBLE( b, 0, "b", "Parameter b", "def=1" );
    PRM_DOUBLE( c, 0, "c", "Parameter c", "def=1" );
    /** seed value for generator */
-   PRM_INT( seed, efNRC, "Seed", "Seed value for generator", "sep=col\bdef=1234" );
+   PRM_INT( seed, efNRC, "Seed", "Seed value for generator", "sep=col\ndef=RND" );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
    PRM_LIST( seedType, efNRC, "Seed type", "0 - every run 1- 1d loop .. 3-by model ", "def=3",
        trand_list_seedType );

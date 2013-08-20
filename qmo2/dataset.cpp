@@ -218,7 +218,7 @@ void HolderInt::reset_dfl()
   v = 0;
   QString s = getParm( "def" );
   if( ! s.isEmpty() ) {
-    v = s.toInt();
+    v = QString2IntEx( s );
   }
   post_set();
 }
@@ -227,8 +227,12 @@ void HolderInt::reset_dfl()
 bool HolderInt::set( const QVariant & x, int /* idx */ )
 {
   bool ok;
-  v = x.toInt( &ok );
-  post_set();
+  if( x.type() == QVariant::Int ) {
+    v = x.toInt( &ok );
+    post_set();
+    return ok;
+  }
+  v = QString2IntEx( x.toString(), &ok );
   return ok;
 }
 
@@ -256,8 +260,8 @@ QString HolderInt::toString() const
 
 bool HolderInt::fromString( const QString &s )
 {
-  bool ok;
-  int vc = s.toInt( &ok, 0 ); // 0 = auto base
+  bool ok = true;
+  int vc = QString2IntEx( s, &ok );
   if( ok ) {
     v = vc;
     post_set();

@@ -162,8 +162,8 @@ class TModel : public TDataContainer  {
   PRM_DOUBLE( prm1d, efNoRunChange, "prm1+=", "Parameter 1 delta", "" );
   PRM_DOUBLE( xval1, 0, "xval1", "Reserved 1", "props=DOUBLE,SPIN\nstep=0.2" );
   PRM_DOUBLE( xval2, 0, "xval2", "Reserved 2", "" );
-  PRM_INT( seed, efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=117" );
-  PRM_INT( useSameSeed, efNoRunChange, "use Same Seed - no", "Unused", "props=INT,SPIN\nstep=2\nmin=-100\nmax=100" ); // TODO: OBSOLETE
+  PRM_INT( seed, efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
+  PRM_INT( useSameSeed, efOld, "use Same Seed - no", "Unused", "props=INT,SPIN\nstep=2\nmin=-100\nmax=100" ); // TODO: OBSOLETE
   /** type of seeding: 0 - every run, 1 - every 1d loop .. obj: 3 - as model */
   PRM_LIST( seedType, efNoRunChange, "Seed type",
       "type of seeding: 0 - every run... ", "",

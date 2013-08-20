@@ -32,6 +32,24 @@ const char* getStateString( int stat_num )
     stat_num = 8;
   return statStr[ stat_num ];
 }
+
+int QString2IntEx( const QString &s, bool *ok )
+{
+  bool r_ok;
+  int v = s.toInt( &r_ok, 0 ); // first try as simple int
+  if( ! r_ok ) {
+    if( s == "RND" ) {
+      v = rand(); r_ok = true;
+    } else if( s == "IMIN" ) {
+      v = IMIN; r_ok = true;
+    } else if( s == "IMAX" ) {
+      v = IMAX; r_ok = true;
+    }
+  }
+  if( ok != nullptr )
+    *ok = r_ok;
+  return v;
+}
       
 
 
