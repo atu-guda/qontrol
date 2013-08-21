@@ -983,6 +983,7 @@ int DataDialog::setAll()
     w->get();
     ++ns;
   }
+  ds.post_set();
 
   return ns;
 }

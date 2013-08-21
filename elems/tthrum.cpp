@@ -28,7 +28,7 @@ CTOR(TThrum,TMiso)
 
 double TThrum::f( double /* t */ )
 {
-  return *in_so[0] * a_int[1];
+  return in0 * 3.1;
 }
 
 DEFAULT_FUNCS_REG(TThrum)

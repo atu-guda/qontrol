@@ -1146,7 +1146,7 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) 
   if( !ho ) {
     if( lt )
       *lt = LinkBad;
-    DBG2q( "warn: fail to find name ", first );
+    DBGx( "warn: fail to find name \"%s\" in \"%s\"", qP(first), qP(objectName()) );
     return 0;
   }
   
@@ -1224,7 +1224,7 @@ HolderData* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
   if( !ob ) {
     return nullptr;
   }
-  structChanged();
+  reportStructChanged();
   
   return ob;
 }
@@ -1267,7 +1267,7 @@ int TDataSet::del_obj( const QString &ob_name )
     return 0;
   }
   delete ho; // auto remove object and from parent lists
-  structChanged();
+  reportStructChanged();
   return 1;
 }
 
@@ -1283,7 +1283,7 @@ HolderData* TDataSet::add_param( const QString &tp_name, const QString &ob_name 
   if( !ho ) {
     return nullptr;
   }
-  structChanged();
+  reportStructChanged();
   return ho;
 }
 
@@ -1322,6 +1322,12 @@ QVariant TDataSet::get( int /* idx */ ) const
 void TDataSet::post_set()
 {
   check_guard();
+  for( auto e: children() ) { // propagate to childs
+    HolderData* ho = qobject_cast<HolderData*>(e);
+    if( !ho )
+      continue;
+    ho->post_set();
+  }
 // TODO:
 }
 
@@ -1476,7 +1482,7 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
     }
   }
   post_set();
-  structChanged();
+  reportStructChanged();
 
   return true;
 }
@@ -1489,11 +1495,33 @@ void TDataSet::check_guard() const
   }
 }
 
-
-void TDataSet::structChanged()
+void TDataSet::reportStructChanged()
 {
-  do_structChanged();
-  emit sigStructChanged();
+  TDataSet *p = this, *np;
+  while( (np = p->getParent()) != nullptr ) { // find root
+    p = np;
+  }
+  // p is root now
+  p->handleStructChanged();
+}
+
+
+void TDataSet::handleStructChanged()
+{
+  // TODO: handle suspend state: to simplify mass changes on load
+  for( auto c : children() ) {
+    TDataSet *ds = qobject_cast<TDataSet*>(c);
+    if( ! ds )
+      continue; // only datasets can handle 
+    ds->handleStructChanged();
+  }
+
+  do_structChanged(); // functions to override
+  
+  if( ! par ) { // root signals about changes to world
+    // DBG1( "dbg: root reports about change" );
+    emit sigStructChanged();
+  }
 }
 
 void TDataSet::do_structChanged()
@@ -1523,6 +1551,57 @@ void TDataSet::dumpStruct() const
   DBGx( "*%d END", dump_lev );
   --dump_lev;
 }
+
+// ------------------------------------ InputSimple ---------
+STD_CLASSINFO(InputSimple,clpInput|clpSpecial);
+
+const double InputSimple::fake_in {0};
+
+CTOR(InputSimple,TDataSet)
+{
+}
+
+InputSimple::~InputSimple()
+{
+}
+
+
+void InputSimple::post_set()
+{
+  TDataSet::post_set();
+  reportStructChanged(); // changed link means changes structure
+}
+
+void InputSimple::do_structChanged()
+{
+  set_link();
+}
+
+void InputSimple::set_link()
+{
+  p = &fake_in;
+  TDataSet *schem;
+  if( !par || !(schem=par->getParent()) )
+    return;
+  ltype_t lt;
+  const double *cp = schem->getDoublePtr( addr, &lt, 0 );
+  if( lt == LinkElm || lt == LinkSpec ) {
+    p = cp;
+    DBGx( "dbg: ptr set to target %p for \"%s\" in \"%s\"", 
+        cp, qP(addr), qP(getFullName())  );
+  } else {
+    DBGx( "dbg: ptr not found for \"%s\" in \"%s\"", 
+        qP(addr), qP(getFullName()) );
+  }
+
+  // more actions here
+}
+
+
+const char* InputSimple::helpstr { "Link to source of simple double data" };
+
+DEFAULT_FUNCS_REG(InputSimple);
+
 
 // end of dataset.cpp
 

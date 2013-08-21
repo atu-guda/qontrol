@@ -47,6 +47,7 @@ class TThrum : public TMiso  {
    PRM_INT_ARR( a_int, 0, "int[]", "int array", "N=5\ndef=1\ndefs=0 2 4 \nsep=block" );
    PRM_DOUBLE_ARR( a_dou, 0, "dou[]", "double array", "N=5\ndef=0.1\ndefs=7 1.2e-5 3e7 \nsep=col" );
    PRM_STRING_ARR( a_str, 0, "str[]", "string array", "N=5\ndef=a b c\ndefs=first\x01second x x\x01last\nsep=col" );
+   PRM_INPUT( in0, 0, "input 0", "First input", "sep=block" );
    
    DCL_DEFAULT_STATIC;
 };

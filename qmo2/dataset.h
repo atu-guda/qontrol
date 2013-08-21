@@ -23,6 +23,7 @@ typedef QMap<QString,QString> QSSMap;
 
 class HolderData;
 class   TDataSet;
+class InputSimple;
 typedef HolderData* PHolderData;
 typedef TDataSet* PTDataSet;
 typedef const TDataSet* CPTDataSet;
@@ -41,7 +42,8 @@ enum ClassProps {
   clpContainer = 4, //* can contain elements
   clpSpecial = 8,   //* have special meaning for structue
   clpData = 16,     //* simple data
-  clpArray = 32     //* array
+  clpArray = 32,     //* array
+  clpInput = 64     //* link to other
 };
 
 
@@ -409,6 +411,7 @@ class HolderStringArray : public HolderData {
  HolderStringArray name = { #name, this, flags, vname, descr, extra  } ; 
 
 
+
 // ####################################################################
 
 /** base class for all non-trivial data objects */
@@ -445,7 +448,6 @@ class TDataSet : public HolderData {
    /** drop modified flag */
    void setUnModified() { modified = 0; }
    /** return ptr to elem by name with optional type check */
-   // use only by QMo2Doc while creating/loading 
    HolderData* getObj( const QString &ename, const QString &cl_name = QString() );   
   
    virtual bool getData( const QString &nm, QVariant &da ) const override;
@@ -468,8 +470,8 @@ class TDataSet : public HolderData {
    QDomElement toDom( QDomDocument &dd ) const;
    bool fromDom( QDomElement &de, QString &errstr );
    void check_guard() const;
-   /** reaction to add/remove of subobjects: call do_structChanged */
-   void structChanged();
+   /** initiates reactions to structure change: common: to root */
+   void reportStructChanged();
    // special part - TODO: remove or ifdef in separate lib
    /** returns pointer to given parameter, checking if valid 
     * valid names:
@@ -489,6 +491,8 @@ class TDataSet : public HolderData {
    /** gets pointer to parameter, near to getDoublePrmPtr 
     * for param mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
+   /** reaction to add/remove of subobjects: call do_structChanged */
+   void handleStructChanged();
    /** do real actions after structure changed */
    virtual void do_structChanged();
  protected:
@@ -501,12 +505,45 @@ class TDataSet : public HolderData {
    int allow_add = 0;
    /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
    int modified = 0;
+   /** place for inputs */
+   QMap<QString,InputSimple*> inputs;
    DCL_DEFAULT_STATIC;
 };
 
 // ---------------------------------------------------------------------
+/** Special holder link, have QString, but can be used as const double */
+class InputSimple : public TDataSet {
+  Q_OBJECT
+ public: 
+  DCL_CTOR(InputSimple);
+  virtual ~InputSimple();
+  DCL_CREATE;
+  DCL_STD_INF;
+  virtual void post_set() override;
+  // less operators for double: const only
+  operator double() const { return *p; };
+  const double* caddr() const { return p; };
+ protected:
+  /** do real actions after structure changed */
+  virtual void do_structChanged();
+  /** find and set link to target or dfake target */
+  void set_link();
+  
+  PRM_STRING( addr, efNoRunChange, "Address", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK"  );
+  PRM_STRING( to,   efNoRunChange, "Param", "parameter name. only for parametric input", "max=64\nprops=STRING,SIMPLE,PARAM"  );
+  PRM_INT( x_shift, 0, "X shift", "Shift on x-part of link represenration", "sep=col" );
+  PRM_INT( y_shift, 0, "Y shift", "Shift on y-part of link represenration", "" );
+  static const double fake_in;
+  const double *p = &fake_in;
+  DCL_DEFAULT_STATIC;
+};
 
-/** creator of TDataSet childs by name or id (legacy)
+#define PRM_INPUT( name, flags, vname, descr, extra ) \
+  InputSimple name = { #name, this, flags, vname, descr, extra  } ; 
+
+// ----------------------------------------------------------------
+
+/** creator of TDataSet childs by name
  * */
 class ElemFactory {
  typedef QMap<QString,const TClassInfo*> MapStrClass;
