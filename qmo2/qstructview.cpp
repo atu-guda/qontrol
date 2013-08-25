@@ -150,6 +150,7 @@ void QStructView::drawAll( QPainter &p )
   s_icons = psett->showicons;
   const QFont &strf = QMo2Win::qmo2win->getStructFont();
   p.setFont( strf );
+  const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
   h = height(); w = width(); nh = 1 + h / grid_sz; nw = 1 + w / grid_sz;
   sel_x = mainview->getSelX();
   sel_y = mainview->getSelY();
@@ -338,9 +339,31 @@ void QStructView::drawAll( QPainter &p )
 
       };
     }; // end param inputs loop
+    
+    //  new input marks
+    int n_in = ob->inputsCount(); 
+    p.setFont( smlf );
+    if( psett->showLinks ) {
+      p.drawText( ob_gx + 2, st_y+2, QSN( n_in ) );
+      for( int i_in=0; i_in < n_in; ++i_in ) {
+        const InputSimple *in = ob->getInput(i_in);
+        if( ! in )
+          continue;
+        QString lbl; int l_c;
+        if( in->getData("line_color", &l_c ) ) {
+          p.setPen( QRgb(l_c) );
+        } else {
+          p.setPen( Qt::black );
+        }
+        in->getData("label", lbl );
+        if( ! lbl.isEmpty() ) {
+          p.drawText( ob_gx - 10, st_y+2, lbl );
+        }
+
+      }
+    }
   }; // end loop on elems
 
-  const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
   p.setFont( smlf );
   n_out = model->getNOutArr(); p.setPen( Qt::black );
  

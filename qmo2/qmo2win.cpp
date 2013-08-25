@@ -424,6 +424,11 @@ void QMo2Win::initIface()
   act_showicons->setChecked( sett.showicons );
   connect( act_showicons, SIGNAL( activated() ), this, SLOT( slotShowIcons()) );
 
+  act_showlinks = new QAction( "Show &Links", this );
+  act_showlinks->setCheckable( true );
+  act_showlinks->setChecked( sett.showLinks );
+  connect( act_showlinks, SIGNAL( activated() ), this, SLOT( slotShowLinks()) );
+
   // ==== window group
 
   act_winClose = new QAction( QIcon::fromTheme("window-close"), "Cl&ose Window", this);
@@ -572,6 +577,7 @@ void QMo2Win::initIface()
   pViewMenu->addAction( act_showgrid );
   pViewMenu->addAction( act_shownames );
   pViewMenu->addAction( act_showicons );
+  pViewMenu->addAction( act_showlinks );
 
   ///////////////////////////////////////////////////////////////////
   // menuBar entry window-Menu
@@ -1027,6 +1033,14 @@ void QMo2Win::slotShowNames()
 void QMo2Win::slotShowIcons()
 {
   sett.showicons = ! sett.showicons;
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->update();
+}
+
+void QMo2Win::slotShowLinks()
+{
+  sett.showLinks = ! sett.showLinks;
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->update();
@@ -1546,6 +1560,7 @@ void Mo2Settings::load()
   showgrid  = sets.value("view/showgrid", true ).toBool();
   shownames = sets.value("view/shownames", true ).toBool();
   showicons = sets.value("view/showicons", true ).toBool();
+  showLinks = sets.value("view/showLinks", true ).toBool();
   showmax   = sets.value("view/showmax", true ).toBool();
   /* -------- fonts ----------- */
   //  "Arial,10,-1,5,50,0,0,0,0,0" 
@@ -1567,6 +1582,7 @@ void Mo2Settings::save() const
   sets.setValue( "view/showgrid", showgrid );
   sets.setValue( "view/shownames", shownames );
   sets.setValue( "view/showicons", showicons );
+  sets.setValue( "view/showLinks", showLinks );
   sets.setValue( "view/showmax", showmax );
   /* ---------- fonts ------------- */
   sets.setValue( "fonts/main", mainFont );

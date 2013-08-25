@@ -3,7 +3,7 @@
                              -------------------
     begin                : Wed Mar 29 2000
     copyright            : GPL (C) 2000-2013 by atu
-    email                : atu@dmeti.dp.ua
+    email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
 #ifndef _DATASET_H
@@ -417,6 +417,7 @@ class HolderStringArray : public HolderData {
 /** base class for all non-trivial data objects */
 class TDataSet : public HolderData {
   Q_OBJECT
+  friend class InputSimple; // for register  
  signals: 
    void sigStructChanged();
  public:
@@ -482,6 +483,10 @@ class TDataSet : public HolderData {
     * lt - ptr: store link type, 
     * lev - level of recursion, not for user */
    virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = 0, int lev = 0 ) const;
+   /** return number of inputs */
+   int inputsCount() const { return inputs.size(); };
+   /** returns input by number */
+   const InputSimple* getInput (int n) const; 
  public slots:
    /** create object with params as string */
    bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
@@ -495,6 +500,10 @@ class TDataSet : public HolderData {
    void handleStructChanged();
    /** do real actions after structure changed */
    virtual void do_structChanged();
+   /** register input (call by ctor) in inputs */
+   void registerInput( InputSimple *inp );
+   /** unregister input (call by dtor) from inputs */
+   void unregisterInput( InputSimple *inp );
  protected:
    /** guard value: debug */
    static const int guard_val = 7442428;
@@ -506,7 +515,7 @@ class TDataSet : public HolderData {
    /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
    int modified = 0;
    /** place for inputs */
-   QMap<QString,InputSimple*> inputs;
+   QVector<InputSimple*> inputs;
    DCL_DEFAULT_STATIC;
 };
 
@@ -529,11 +538,15 @@ class InputSimple : public TDataSet {
   /** find and set link to target or dfake target */
   void set_link();
   
-  PRM_STRING( addr, efNoRunChange, "Address", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK"  );
-  PRM_STRING( to,   efNoRunChange, "Param", "parameter name. only for parametric input", "max=64\nprops=STRING,SIMPLE,PARAM"  );
+  PRM_STRING( source, efNoRunChange, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK"  );
+  PRM_STRING( label,  efNoRunChange, "Label", "Label to display on structure", "max=64"  );
   PRM_INT( x_shift, 0, "X shift", "Shift on x-part of link represenration", "sep=col" );
   PRM_INT( y_shift, 0, "Y shift", "Shift on y-part of link represenration", "" );
+  PRM_INT( line_w,  0, "Line width", "Line width on scheme", "def=1\nmin=0\nmax=20" );
+  PRM_COLOR( line_color,  0, "Line color", "Line color on scheme", "def=black" );
+  PRM_SWITCH( onlyLabel, 0, "only Label", "draw only label of link on scheme", "" );
   static const double fake_in;
+  static const double one_in;
   const double *p = &fake_in;
   DCL_DEFAULT_STATIC;
 };

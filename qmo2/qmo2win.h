@@ -3,7 +3,7 @@
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
     copyright            : (C) 2000-2013 by atu
-    email                : atu@dmeti.dp.ua
+    email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
 /***************************************************************************
@@ -53,6 +53,8 @@ class Mo2Settings {
    bool showicons;
    /** flag: maximize main window: /view/showmax */
    bool showmax;
+   /** flag: show links (new) in structure /view/showlinks */
+   bool showLinks;
    /** main font string: /fonts/main */
    QString mainFont;
    /** small font string: /fonts/small */
@@ -207,6 +209,8 @@ class QMo2Win : public QMainWindow
     void slotShowNames();
     /** toggle the showicons flag */
     void slotShowIcons();
+    /** toggle the showLinks flag */
+    void slotShowLinks();
     // ==== window related
     void slotWindowClose();
     void slotWindowCloseAll();
@@ -294,7 +298,7 @@ class QMo2Win : public QMainWindow
 	    *act_runrun, *act_runprm, *act_runprm2, *act_runscript, *act_reset,
 	    // iface
 	    *act_tbar, *act_sbar,
-	    *act_showord, *act_showgrid, *act_shownames, *act_showicons,
+	    *act_showord, *act_showgrid, *act_shownames, *act_showicons, *act_showlinks,
 	    // win
 	    *act_winClose, *act_winCloseAll, *act_winTile, *act_winCascade,
 	    // help

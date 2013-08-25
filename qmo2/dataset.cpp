@@ -3,7 +3,7 @@
                              -------------------
     begin                : Wed Mar 29 2000
     copyright            : GPL (C) 2000-2013 by atu
-    email                : atu@dmeti.dp.ua
+    email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
 #include <QColor>
@@ -1528,6 +1528,38 @@ void TDataSet::do_structChanged()
 {
 }
 
+void TDataSet::registerInput( InputSimple *inp )
+{
+  if( ! inp )
+    return;
+  if( inputs.indexOf( inp ) != -1 ) {
+    DBG2q( "warn: input \"%s\" already registered", inp->objectName() );
+    return;
+  }
+  inputs.push_back( inp );
+}
+
+void TDataSet::unregisterInput( InputSimple *inp )
+{
+  if( ! inp )
+    return;
+  int idx = inputs.indexOf( inp );
+  if( idx == -1 ) {
+    DBG2q( "warn: input \"%s\" not registered", inp->objectName() );
+    return;
+  }
+  inputs.remove( idx );
+}
+
+const InputSimple* TDataSet::getInput (int n) const
+{
+  if( n < 0 || n >= inputs.size() ) {
+    DBGx( "warn: bad input number %d, size= %d", n, inputs.size() );
+    return nullptr;
+  }
+  return inputs[n];
+}
+
 void TDataSet::dumpStruct() const
 {
   static int dump_lev = -1;
@@ -1556,13 +1588,20 @@ void TDataSet::dumpStruct() const
 STD_CLASSINFO(InputSimple,clpInput|clpSpecial);
 
 const double InputSimple::fake_in {0};
+const double InputSimple::one_in {1.0};
 
 CTOR(InputSimple,TDataSet)
 {
+  if( par ) {
+    par->registerInput( this );
+  }
 }
 
 InputSimple::~InputSimple()
 {
+  if( par ) {
+    par->unregisterInput( this );
+  }
 }
 
 
@@ -1580,18 +1619,23 @@ void InputSimple::do_structChanged()
 void InputSimple::set_link()
 {
   p = &fake_in;
+  if ( source.cval() == ":one" ) { // special local case
+    p = &one_in;
+    return;
+  }
+
   TDataSet *schem;
   if( !par || !(schem=par->getParent()) )
     return;
   ltype_t lt;
-  const double *cp = schem->getDoublePtr( addr, &lt, 0 );
+  const double *cp = schem->getDoublePtr( source, &lt, 0 );
   if( lt == LinkElm || lt == LinkSpec ) {
     p = cp;
     DBGx( "dbg: ptr set to target %p for \"%s\" in \"%s\"", 
-        cp, qP(addr), qP(getFullName())  );
+        cp, qP(source), qP(getFullName())  );
   } else {
     DBGx( "dbg: ptr not found for \"%s\" in \"%s\"", 
-        qP(addr), qP(getFullName()) );
+        qP(source), qP(getFullName()) );
   }
 
   // more actions here
