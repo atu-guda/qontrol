@@ -34,7 +34,9 @@ QStructView::QStructView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
   doc = adoc; mainview = mview;
   model = mainview->getModel(); 
   devTp = 0;
-  grid_sz = 40; lm = tm = 4;
+  // grid_sz = 40; 
+  grid_sz = 46; 
+  lm = tm = 4;  obj_sz = 32;
   // setBackgroundMode( Qt::NoBackground );
   setMaximumSize( grid_sz*MODEL_MX, grid_sz*MODEL_MY );
   setMinimumSize( grid_sz*8, grid_sz*6 );
@@ -133,38 +135,38 @@ void QStructView::drawAll( QPainter &p )
   int ob_x, ob_y, ob_ord, ob_lock, ob_first, ob_last;
   int ob_flip, ob_noIcon;
   int li_mid_y, li_src_x, li_src_y, li_dst_x, li_dst_y;
-  int ob_gx, ob_gy, st_y, ic_sz;
+  int ob_gx, ob_gy; /* left top point of object icon */
+  int ob_gxc; /* x- center of object icon */
+  int flip_factor; /* sign of input offsets amd labels */
+  int st_y; /* label on elems start y */
   int sel_x, sel_y, /*sel,*/ mark;
   int li_dst_xs, li_src_xs, li_dst_xa;
-  int s_ord, s_grid, s_names, s_icons;
   LinkInfo li[8];
   QString qs, ob_name, target_name;
   TMiso *ob;
   TOutArr *arr;
   Mo2Settings *psett;
-  static int xl_diff[4] = { 16, 10, 8, 6 };
+  const static int xl_diff[4] = { 16, 10, 8, 6 };
   psett = QMo2Win::qmo2win->getSettings();
-  s_ord =   psett->showord;
-  s_grid =  psett->showgrid;
-  s_names = psett->shownames;
-  s_icons = psett->showicons;
+  int s_icons = psett->showicons;
   const QFont &strf = QMo2Win::qmo2win->getStructFont();
   p.setFont( strf );
   const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
   h = height(); w = width(); nh = 1 + h / grid_sz; nw = 1 + w / grid_sz;
+  int el_marg = (grid_sz-obj_sz)/2; // elements margin
   sel_x = mainview->getSelX();
   sel_y = mainview->getSelY();
   //sel = mainview->getSel();
   mark = mainview->getMark();
   if( nh >= MODEL_MY ) nh = MODEL_MY;
   if( nw >= MODEL_MX ) nh = MODEL_MX;
-  if( model == 0 ) {
+  if( ! model ) {
     p.setBrush( Qt::red );
     p.drawRect( 0, 0, w, 8 );
     return;
   };
   // ---------- draw grid
-  if( s_grid ) {
+  if( psett->showgrid ) {
     p.setPen( QPen(QColor(200,220,220), 0, Qt::DotLine ) );
     for( i=0; i<nw; i++ )
       p.drawLine( lm + i*grid_sz, tm, lm+i*grid_sz, h );
@@ -176,9 +178,10 @@ void QStructView::drawAll( QPainter &p )
   // --------- draw elems ---------------------
   for( elnu=0; elnu<n_el; elnu++ ) {
     ob = model->getMiso( elnu );
-    if( ob == 0 ) continue;
+    if( !ob ) 
+      continue;
     ob_name =  ob->objectName();
-    line_busy = 0; ob_x = ob_y = -1; ob_ord = -1;
+    line_busy = 0; ob_x = ob_y = -1; ob_ord = -1; flip_factor = -1;
     ob_lock = ob_first = ob_last = ob_flip = ob_noIcon = 0;
     ob->getData( "vis_x", &ob_x ); 
     ob->getData( "vis_y", &ob_y );
@@ -191,19 +194,22 @@ void QStructView::drawAll( QPainter &p )
     if( ob_x < 0 || ob_x >=MODEL_MX || ob_y < 0 || ob_y >= MODEL_MY )
       continue;
     // set real object icon origin
-    ob_gx = lm + ob_x * grid_sz + 4; ob_gy = tm + ob_y * grid_sz + 4;
+    ob_gx = lm + ob_x * grid_sz + el_marg; 
+    ob_gy = tm + ob_y * grid_sz + el_marg;
+    ob_gxc = ob_gx + obj_sz/2; 
+    flip_factor = ob_flip ? 1 : -1;
     p.setPen( Qt::black );
 
     // --------------------- draw element icon or frame
     if( ob_noIcon || !s_icons ) {
       p.setPen( QPen(Qt::black,2) );  p.setBrush( Qt::NoBrush );
-      p.drawRect( ob_gx, ob_gy, 32, 32 );
+      p.drawRect( ob_gx, ob_gy, obj_sz, obj_sz );
     } else {
       QString iconName = QString( ":icons/elm_" )
 	+ QString(ob->getType()).toLower() 
 	+ ".png";
       QIcon el_ico(iconName);
-      el_ico.paint( &p, ob_gx, ob_gy, grid_sz-8, grid_sz-8 );
+      el_ico.paint( &p, ob_gx, ob_gy, obj_sz, obj_sz );
     };
     p.setPen( Qt::black );  p.setBrush( Qt::red );
 
@@ -216,17 +222,17 @@ void QStructView::drawAll( QPainter &p )
       p.drawRect( ob_gx + 20, ob_gy, 6, 6 );
     
     // order mark
-    if( s_ord ) {
+    if( psett->showord ) {
       if( s_icons && ! ob_noIcon )  {
 	p.setPen( Qt::NoPen ); p.setBrush( QColor(240,240,255) );
 	p.drawRect( ob_gx, ob_gy, 31,11);
       };
       p.setPen( Qt::black );
-      p.drawText( ob_gx + 2, ob_gy + 10, QString::number(ob_ord) );
+      p.drawText( ob_gx + 2, ob_gy + 10, QSN(ob_ord) );
       line_busy++;
     };
     // --------------------- draw element name
-    if( s_names || ob_noIcon || !s_icons ) { 
+    if( psett->shownames || ob_noIcon || !s_icons ) { 
       st_y = ob_gy + line_busy*10;
       if( s_icons && ! ob_noIcon )  {
 	p.setPen( Qt::NoPen ); p.setBrush( QColor(255,255,225) );
@@ -239,14 +245,11 @@ void QStructView::drawAll( QPainter &p )
     // TODO: vector icon here
     p.setBrush( Qt::NoBrush ); p.setPen( QPen(Qt::black,1) );
     st_y = ob_gy + line_busy*10; 
-    ic_sz = 32 - line_busy * 10; ++ic_sz; ic_sz--; // TODO: fake
-    //p.drawRect( ob_gx + 32 - ic_sz, st_y, ic_sz, ic_sz);
 
     
     if( elnu == mark ) { // red rect around marked element
       p.setBrush( Qt::NoBrush ); p.setPen( Qt::red );
       p.drawRect( lm + ob_x*grid_sz, tm + ob_y*grid_sz, grid_sz, grid_sz );
-      p.drawRect( lm - 1 + ob_x*grid_sz, tm - 1 + ob_y*grid_sz, 42, 42 );
     };
 
     // ------------------ draw element links
@@ -259,8 +262,8 @@ void QStructView::drawAll( QPainter &p )
 	n_li++;
     };
     for( ci=0,i=0; i<4 && n_li > 0 ; i++ ) { // inputs
-      li_dst_x = lm+4 + ob_x*grid_sz + ( ob_flip ? 32 : 0 );
-      li_dst_y = tm+4 + ob_y*grid_sz + (ci+1)*xl_diff[n_li-1];
+      li_dst_x = ob_gxc + flip_factor * obj_sz/2;
+      li_dst_y = ob_gy + (ci+1)*xl_diff[n_li-1];
       switch( li[i].ltype ) {
 	case LinkNone: continue;
 	case LinkBad: 
@@ -268,7 +271,7 @@ void QStructView::drawAll( QPainter &p )
 	      p.drawRect( li_dst_x-2, li_dst_y-1, 4, 4 );
 	      ci++; break;
 	case LinkElm:
-	      li_src_x = lm + 36 + li[i].x*grid_sz - (li[i].eflip ? 32 : 0); 
+	      li_src_x = lm + 36 + li[i].x*grid_sz - (li[i].eflip ? obj_sz : 0); 
 	      li_src_y = tm + 20 + li[i].y*grid_sz;
 	      if( ob_y == li[i].y  &&  ob_flip == li[i].eflip ) {
 		li_src_y = li_dst_y;
@@ -305,8 +308,8 @@ void QStructView::drawAll( QPainter &p )
       };
     };
     for( i=4; i<8; i++ ) { // param inputs
-      li_dst_x = lm+6 + ob_x*grid_sz + (i-4)*6;
-      li_dst_y = tm+34+ob_y*grid_sz;
+      li_dst_x = ob_gx + (i-3)*6;
+      li_dst_y = ob_gy + obj_sz-el_marg;
       switch( li[i].ltype ) {
 	case LinkNone: continue;
 	case LinkBad: 
@@ -314,19 +317,16 @@ void QStructView::drawAll( QPainter &p )
 	      p.drawRect( li_dst_x, li_dst_y, 4, 4 );
               break;
 	case LinkElm:
-	      li_src_x = lm + 34 + li[i].x*grid_sz - (li[i].eflip ? 32 : 0); 
-	      li_src_y = tm + 20 + li[i].y*grid_sz;
+	      li_src_x = lm + li[i].x*grid_sz + (li[i].eflip ? el_marg : obj_sz+el_marg); 
+	      li_src_y = tm + obj_sz + li[i].y*grid_sz - 8;
 	      if( li_dst_x > li_src_x )
 		li_mid_y = li_src_y;
 	      else  
 		li_mid_y = ( li_src_y + li_dst_y ) / 2 ;
 
-	      if( devTp != 1 ) {
-		p.setPen( li[i].pflags ? QPen(Qt::magenta,2) : QPen(Qt::red,2) );
-	      } else {
-		p.setPen( QPen( Qt::black, 2 ) );
-	      };
-	      li_src_xs = li_src_x + (li[i].eflip?-3:3);
+	      p.setPen( li[i].pflags ? QPen(Qt::magenta,2) : QPen(Qt::red,2) );
+	      
+              li_src_xs = li_src_x + (li[i].eflip?-3:3);
 	      p.drawLine( li_src_x, li_src_y, li_src_xs, li_src_y );
 	      p.drawLine( li_dst_x, li_dst_y, li_dst_x, li_dst_y+4 );
 	      p.drawLine( li_src_xs, li_src_y, li_src_xs, li_dst_y+4 );
@@ -341,23 +341,33 @@ void QStructView::drawAll( QPainter &p )
     }; // end param inputs loop
     
     //  new input marks
-    int n_in = ob->inputsCount(); 
+    int n_in = ob->inputsCount();
+    int in_sep_sz = obj_sz/(n_in+1);
     p.setFont( smlf );
     if( psett->showLinks ) {
-      p.drawText( ob_gx + 2, st_y+2, QSN( n_in ) );
+      p.drawText( ob_gx + 16, ob_gy+obj_sz/2, QSN( n_in ) );
       for( int i_in=0; i_in < n_in; ++i_in ) {
         const InputSimple *in = ob->getInput(i_in);
         if( ! in )
           continue;
-        QString lbl; int l_c;
-        if( in->getData("line_color", &l_c ) ) {
-          p.setPen( QRgb(l_c) );
+        li_dst_x = ob_gxc + flip_factor * (obj_sz/2);
+        li_dst_y = ob_gy + (i_in+1)*in_sep_sz;
+        int pre_dst_x = li_dst_x + 2 * el_marg * flip_factor;
+        QString lbl; 
+        int line_color, line_width = 1;
+        in->getData("line_w", &line_width );
+        if( in->getData("line_color", &line_color ) ) {
+          p.setPen( QPen( QColor(QRgb(line_color)), line_width ) );
         } else {
-          p.setPen( Qt::black );
+          p.setPen( QPen( Qt::black, line_width ) );
         }
+        // arrow
+        p.drawLine( pre_dst_x, li_dst_y,   li_dst_x, li_dst_y  );
+        p.drawLine( li_dst_x +  4*flip_factor, li_dst_y-2, li_dst_x, li_dst_y  );
+        p.drawLine( li_dst_x +  4*flip_factor, li_dst_y+2, li_dst_x, li_dst_y  );
         in->getData("label", lbl );
         if( ! lbl.isEmpty() ) {
-          p.drawText( ob_gx - 10, st_y+2, lbl );
+          p.drawText( pre_dst_x, li_dst_y-2, lbl );
         }
 
       }

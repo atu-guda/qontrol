@@ -76,8 +76,8 @@ class QStructView : public QWidget  {
    TModel *model;
    /** type of output device */
    int devTp;
-   /** grid size, left, top margin size */
-   int grid_sz, lm, tm;
+   /** grid size, left, top margin size, object size */
+   int grid_sz, lm, tm, obj_sz;
 };
 
 #endif
