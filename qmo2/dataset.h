@@ -481,8 +481,10 @@ class TDataSet : public HolderData {
     * :parmname - only local param? 
     * parmname - try new, w/o ':' 
     * lt - ptr: store link type, 
+    * targ - ptr_pre: strore ptr to target TDataSet, 
     * lev - level of recursion, not for user */
-   virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = 0, int lev = 0 ) const;
+   virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = nullptr, 
+        const TDataSet **targ = nullptr, int lev = 0 ) const;
    /** return number of inputs */
    int inputsCount() const { return inputs.size(); };
    /** returns input by number */
@@ -532,6 +534,10 @@ class InputSimple : public TDataSet {
   // less operators for double: const only
   operator double() const { return *p; };
   const double* caddr() const { return p; };
+  //* return ptr to TDataSet, which holds element or nullptr;
+  const TDataSet* getTarget() const { return target; };
+  //* returns type of link
+  ltype_t getLinkType() const { return linkType; };
  protected:
   /** do real actions after structure changed */
   virtual void do_structChanged();
@@ -548,6 +554,8 @@ class InputSimple : public TDataSet {
   static const double fake_in;
   static const double one_in;
   const double *p = &fake_in;
+  const TDataSet *target = nullptr;
+  ltype_t linkType = LinkBad;
   DCL_DEFAULT_STATIC;
 };
 

@@ -710,24 +710,25 @@ int TModel::getLinkInfos( int elnu, LinkInfo *li )/*{{{1*/
 
 
 
-const double* TModel::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) const
-{
-  static const double fake_so = 0;
-  if( nm[0] != '#' ) {
-    return TDataSet::getDoublePtr( nm, lt, lev );
-  }
-  QString nn = nm;
-  nn.remove( 0, 1 );
-  int n = nn.toInt();
-  if( n < 0 || n >= MODEL_NVAR ) {
-    if( lt )
-      *lt = LinkBad;
-    return &fake_so;
-  }
-  if( lt )
-    *lt = LinkSpec;
-  return &( vars[n] );
-}
+//  const double* TModel::getDoublePtr( const QString &nm, ltype_t *lt, 
+//      TDataSet **targ, int lev ) const
+//  {
+//    static const double fake_so = 0;
+//    if( nm[0] != '#' ) {
+//      return TDataSet::getDoublePtr( nm, lt, lev );
+//    }
+//    QString nn = nm;
+//    nn.remove( 0, 1 );
+//    int n = nn.toInt();
+//    if( n < 0 || n >= MODEL_NVAR ) {
+//      if( lt )
+//        *lt = LinkBad;
+//      return &fake_so;
+//    }
+//    if( lt )
+//      *lt = LinkSpec;
+//    return &( vars[n] );
+//  }
 
 DEFAULT_FUNCS_REG(TModel)
 

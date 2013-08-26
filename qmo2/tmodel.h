@@ -40,7 +40,8 @@ class TModel : public TDataContainer  {
   DCL_STD_INF;
 
   /** reimplemented from TDataSet to provide access to '#nvar' TODO: drop*/
-  virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = 0, int lev = 0 ) const;
+  //virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = nullptr, 
+  //    TDataSet **targ = nullptr, int lev = 0 ) const override;
   /** prepare to run */
   virtual int startRun( int type );
   /** run csteps next steps */

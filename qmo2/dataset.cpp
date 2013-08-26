@@ -1119,7 +1119,8 @@ int TDataSet::checkData( int /* ni */ )
   return 0;
 }
 
-const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) const
+const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt, 
+              const TDataSet **targ, int lev  ) const
 {
   if( nm.isEmpty() ) {
     if( lt )
@@ -1153,7 +1154,7 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) 
   if( nm_type == simpleName ) { // first only
     if( ho->isObject() ) {
       TDataSet *ds= qobject_cast<TDataSet*>(ho);
-      return ds->getDoublePtr( "out0", lt, lev+1 );
+      return ds->getDoublePtr( "out0", lt, targ, lev+1 );
     }
     if( ho->getTp() == QVariant::Double ) {
       HolderDouble *hod = qobject_cast<HolderDouble*>(ho);
@@ -1161,6 +1162,9 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) 
         return nullptr;
       if( lt ) {
 	*lt = ( lev == 1 ) ? LinkElm : LinkSpec;
+      }
+      if( targ ) {
+	*targ = this;
       }
       return hod->caddr();
     }
@@ -1175,7 +1179,7 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt, int lev ) 
     return 0;
   }
   TDataSet *ds = qobject_cast<TDataSet*>(ho);
-  return ds->getDoublePtr( rest, lt, lev+1 );
+  return ds->getDoublePtr( rest, lt, targ, lev+1 );
   
 }
 
@@ -1618,8 +1622,13 @@ void InputSimple::do_structChanged()
 
 void InputSimple::set_link()
 {
-  p = &fake_in;
+  p = &fake_in; target = nullptr; linkType = LinkBad;
+  if ( source.cval().isEmpty() ) { 
+    linkType = LinkNone;
+    return;
+  }
   if ( source.cval() == ":one" ) { // special local case
+    linkType = LinkSpec;
     p = &one_in;
     return;
   }
@@ -1628,11 +1637,12 @@ void InputSimple::set_link()
   if( !par || !(schem=par->getParent()) )
     return;
   ltype_t lt;
-  const double *cp = schem->getDoublePtr( source, &lt, 0 );
+  const TDataSet *targ = nullptr;
+  const double *cp = schem->getDoublePtr( source, &lt, &targ, 0 );
   if( lt == LinkElm || lt == LinkSpec ) {
-    p = cp;
-    DBGx( "dbg: ptr set to target %p for \"%s\" in \"%s\"", 
-        cp, qP(source), qP(getFullName())  );
+    p = cp;  target = targ; linkType = lt;
+    //DBGx( "dbg: ptr set to target %p for \"%s\" in \"%s\"", 
+    //   cp, qP(source), qP(getFullName())  );
   } else {
     DBGx( "dbg: ptr not found for \"%s\" in \"%s\"", 
         qP(source), qP(getFullName()) );

@@ -104,7 +104,7 @@ void QStructView::paintEvent( QPaintEvent * /*pe*/ )
   model = doc->getModel();
   devTp = 0;
   QPainter p( this );
-  p.setBackgroundMode( Qt::OpaqueMode );
+  // p.setBackgroundMode( Qt::OpaqueMode );
   p.setBackground( hasFocus() ? Qt::white : QColor( 230, 230, 230 )  );
   p.eraseRect( 2, 2, width()-4, height()-4 );
   drawAll( p );
@@ -343,13 +343,17 @@ void QStructView::drawAll( QPainter &p )
     //  new input marks
     int n_in = ob->inputsCount();
     int in_sep_sz = obj_sz/(n_in+1);
-    p.setFont( smlf );
+    p.setFont( smlf ); 
+    p.setBrush( Qt::NoBrush );
+    
     if( psett->showLinks ) {
       p.drawText( ob_gx + 16, ob_gy+obj_sz/2, QSN( n_in ) );
       for( int i_in=0; i_in < n_in; ++i_in ) {
         const InputSimple *in = ob->getInput(i_in);
         if( ! in )
           continue;
+        ltype_t lt = in->getLinkType();
+        const TDataSet* targ = in->getTarget();
         li_dst_x = ob_gxc + flip_factor * (obj_sz/2);
         li_dst_y = ob_gy + (i_in+1)*in_sep_sz;
         int pre_dst_x = li_dst_x + 2 * el_marg * flip_factor;
@@ -361,14 +365,67 @@ void QStructView::drawAll( QPainter &p )
         } else {
           p.setPen( QPen( Qt::black, line_width ) );
         }
+        if( lt == LinkNone ) {
+          p.drawEllipse( QPoint(li_dst_x, li_dst_y), el_marg/2, el_marg/2 );
+          continue;
+        }
         // arrow
         p.drawLine( pre_dst_x, li_dst_y,   li_dst_x, li_dst_y  );
         p.drawLine( li_dst_x +  4*flip_factor, li_dst_y-2, li_dst_x, li_dst_y  );
         p.drawLine( li_dst_x +  4*flip_factor, li_dst_y+2, li_dst_x, li_dst_y  );
+        
         in->getData("label", lbl );
         if( ! lbl.isEmpty() ) {
           p.drawText( pre_dst_x, li_dst_y-2, lbl );
         }
+        
+        if( lt == LinkBad ) {
+          p.setPen( QPen( Qt::red, 2 ) );
+          p.drawLine( pre_dst_x-el_marg/3, li_dst_y-el_marg/3, 
+                      pre_dst_x+el_marg/3, li_dst_y+el_marg/3 );
+          p.drawLine( pre_dst_x-el_marg/3, li_dst_y+el_marg/3, 
+                      pre_dst_x+el_marg/3, li_dst_y-el_marg/3 );
+          continue;
+        }
+        
+        if( lt == LinkSpec ) {
+          p.setPen( QPen( Qt::magenta, 2 ) );
+          p.drawRect( pre_dst_x-el_marg/4, li_dst_y-el_marg/4, el_marg/2, el_marg/2 );
+          continue;
+        }
+
+        // here must be ordinary targets -> large mark if not so
+        const TMiso *etarg = nullptr;
+        if( !targ || ( (etarg = qobject_cast<const TMiso*>(targ)) == nullptr ) ) {
+          p.setPen( QPen( Qt::red, 4 ) );
+          p.drawEllipse( QPoint(pre_dst_x, li_dst_y), el_marg, el_marg );
+          continue;
+        }
+
+        int so_x = -1, so_y = -1, so_flip = 0, only_lbl = 0;
+        int so_flip_factor = 1, li_src_xc = 0;
+        etarg->getData( "vis_x", &so_x );
+        etarg->getData( "vis_y", &so_y );
+        etarg->getData( "flip", &so_flip );
+        so_flip_factor = ( so_flip ) ? -1 : 1;
+
+        li_src_xc = lm + so_x*grid_sz + obj_sz/2 + el_marg;
+        li_src_x = li_src_xc + ( obj_sz + el_marg ) * so_flip_factor / 2;
+        li_src_y = tm + so_y*grid_sz + ( obj_sz + el_marg )/2;
+        p.drawLine( li_src_x, li_src_y, 
+                    li_src_x + 2*el_marg*so_flip_factor, li_src_y );
+        
+        in->getData( "onlyLabel", &only_lbl );
+        if( only_lbl ) {
+          if( ! lbl.isEmpty() ) {
+            p.drawText( li_src_x, li_src_y-2, lbl );
+          }
+          continue;
+        }
+        
+        // strait now
+        p.drawLine( li_src_x + 2*el_marg*so_flip_factor, li_src_y, pre_dst_x, li_dst_y );
+
 
       }
     }
