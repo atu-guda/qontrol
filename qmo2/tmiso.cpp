@@ -54,15 +54,35 @@ TMiso::~TMiso()
 void TMiso::post_set()
 {
   TDataSet::post_set();
-  // at least one set - use new data
-  if( locked || flip || onlyFirst || onlyLast || noIcon || !links )
+  // no links -- means only new data
+  if( !links )
     return;
-  // try to migrate from old data
-  int t = 0; links->getData( "locked", &t ); locked = t;
-  t = 0;     links->getData( "flip", &t ); flip = t;
-  t = 0;     links->getData( "onlyFirst", &t ); onlyFirst = t;
-  t = 0;     links->getData( "onlyLast", &t ); onlyLast = t;
-  t = 0;     links->getData( "noIcon", &t ); noIcon = t;
+  int t = 0;
+  if( ! ( locked || flip || onlyFirst || onlyLast || noIcon ) ) {
+    // try to migrate from old data
+    t = 0; links->getData( "locked", &t ); locked = t;
+    t = 0; links->getData( "flip", &t ); flip = t;
+    t = 0; links->getData( "onlyFirst", &t ); onlyFirst = t;
+    t = 0; links->getData( "onlyLast", &t ); onlyLast = t;
+    t = 0; links->getData( "noIcon", &t ); noIcon = t;
+  }
+
+  // ordirary links convert
+  int nl = inputs.size();
+  QString source, iname;
+  for( int i=0; i<nl; ++i ) {
+    InputSimple *in = inputs[i];
+    if( !in )
+      continue;
+    if( ! in->getData( "source", source )  ) 
+      continue;
+    if( ! source.isEmpty() )
+      continue;
+    iname = "inps" + QSN(i);
+    if( ! links->getData( iname, source )  ) 
+      continue;
+    in->setData( "source", source );
+  }
 }
 
 DEFAULT_FUNCS_REG(TMiso);

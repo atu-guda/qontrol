@@ -153,6 +153,7 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
   rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
 
   model = 0;
+  rootdata->suspendHandleStructChange();
   bool read_ok = rootdata->fromDom( obj_root, errstr );
   if( ! read_ok ) {
     // QString xxx = rootdata->toString();
@@ -178,6 +179,8 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
        QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
     return false;
   };
+  
+  rootdata->resumeHandleStructChange();
   model->reset();
   m_filename = filename;
   m_title = QFileInfo(filename).fileName();

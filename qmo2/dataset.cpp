@@ -1512,7 +1512,9 @@ void TDataSet::reportStructChanged()
 
 void TDataSet::handleStructChanged()
 {
-  // TODO: handle suspend state: to simplify mass changes on load
+  if( updSuspended )
+    return;
+
   for( auto c : children() ) {
     TDataSet *ds = qobject_cast<TDataSet*>(c);
     if( ! ds )

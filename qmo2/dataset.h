@@ -473,6 +473,10 @@ class TDataSet : public HolderData {
    void check_guard() const;
    /** initiates reactions to structure change: common: to root */
    void reportStructChanged();
+   /** temporary suspend reaction to struct changes */
+   void suspendHandleStructChange() { updSuspended = true; }
+   /** resume reaction to struct changes */
+   void resumeHandleStructChange() { updSuspended = false; handleStructChanged(); }
    // special part - TODO: remove or ifdef in separate lib
    /** returns pointer to given parameter, checking if valid 
     * valid names:
@@ -516,6 +520,8 @@ class TDataSet : public HolderData {
    int allow_add = 0;
    /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
    int modified = 0;
+   /** flag: suspend reaction to structure update: use only in mass changes */
+   bool updSuspended = false;
    /** place for inputs */
    QVector<InputSimple*> inputs;
    DCL_DEFAULT_STATIC;
