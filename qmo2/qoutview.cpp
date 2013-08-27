@@ -42,12 +42,14 @@ QOutView::~QOutView()
 
 void QOutView::paintEvent( QPaintEvent * /*pe*/ )
 {
-  int h, w, nh, n_out, out_nu, out_type, elnu, out_st, level;
+  int h, w, nh, n_out, out_nu, out_type, out_st, level;
   TOutArr *arr;
-  QString elmname;
-  if( doc == 0 ) return;
+  QString target_name;
+  if( ! doc ) 
+    return;
   model = doc->getModel();
-  if( model == 0 ) return;
+  if( ! model ) 
+    return;
   QPainter p( this );
   const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
   p.setFont( smlf );
@@ -68,32 +70,39 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
   
   for( out_nu=0; out_nu < n_out && out_nu < nh; out_nu++ ) {
     arr = model->getOutArr( out_nu );
-    if( arr == 0 ) 
+    if( ! arr ) 
       continue;
-    arr->getData( "name", elmname );
-    elnu = model->oname2elnu( elmname );
+    if( ! arr->getData( "name", target_name ) )
+      continue;
+    
+    ltype_t lt  = LinkBad; 
+    const TDataSet *lob = nullptr;
+    const double *fp = model->getDoublePtr( target_name, &lt, &lob );
+    const TMiso *targ = qobject_cast<const TMiso*>(lob);
+
     out_type = -1;
     arr->getData( "type", &out_type );
     switch( out_type ) {
-      case 0: p.setBrush( Qt::white ); break;
-      case 1: p.setBrush( Qt::green ); break;
-      case 2: p.setBrush( Qt::cyan ); break;
-      case 3: p.setBrush( Qt::gray ); break;
-      default: p.setBrush( Qt::red ); break;
+      case outSimple: p.setBrush( Qt::white ); break;
+      case outParm1:  p.setBrush( Qt::green ); break;
+      case outParm2:  p.setBrush( Qt::cyan );  break;
+      case outSpec:   p.setBrush( Qt::gray );  break;
+      default:        p.setBrush( Qt::red );   break;
     };
-    if( elnu >= 0 || out_type == 3) {
-      p.setPen( Qt::black );
-    } else {
-      if( elnu < -9  )
-        p.setPen( Qt::magenta );
-      else
+    if( !fp ) {
         p.setPen( Qt::red );
+    } else {
+      if( targ != nullptr || out_type == outSpec ) {
+        p.setPen( Qt::black );
+      } else {
+        p.setPen( Qt::magenta );
+      }
     };
 
     // label
     p.drawRect( 3, 10 + out_nu*grid_sz, fwidth, ex_sz );
     p.drawText( 5, grid_sz + out_nu*grid_sz, 
-        QString::number( out_nu ) + ": " + elmname );
+        QSN( out_nu ) + ": " + target_name );
     out_st = arr->getState();
 
     if( out_st > 1 ) {
@@ -132,7 +141,7 @@ void QOutView::mousePressEvent( QMouseEvent *me )
     nn = -1;
     arr->getData( "n", &nn );
     title = outname
-            % QString( "[" ) % QString::number(nn) % QString("]")
+            % QString( "[" ) % QSN(nn) % QString("]")
             % QString(" -> " ) % elmname;
   };
   old_level = mainview->getLevel();

@@ -29,19 +29,17 @@ const char* TOutArr::helpstr = "<H1>TOutArr</H1>\n"
 
 STD_CLASSINFO(TOutArr,clpSpecial);
 
-CTOR(TOutArr,TDataSet), 
-   fake_so(0), so( &fake_so ) 
+CTOR(TOutArr,TDataSet) 
 {
 }
 
 TOutArr::~TOutArr()
 {
   n = ny = 0;
-  // qDebug( "dbg: TOutArr::~TOutArr(): %s", qPrintable( getFullName() ));
 }
 
 
-const dvector* TOutArr::getArray(void)
+const dvector* TOutArr::getArray()
 {
   return &arr;
 }
@@ -63,7 +61,7 @@ int TOutArr::alloc( int sz, int a_ny )
   return 0;
 }
 
-int TOutArr::free(void)
+int TOutArr::free()
 {
   // no real delete
   arrsize = 0;  n = 0; state = 1;

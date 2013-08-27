@@ -456,7 +456,8 @@ void QStructView::drawAll( QPainter &p )
   // -------------- output marks
   for( out_nu=0; out_nu < n_out; out_nu++ ) {
     arr = model->getOutArr( out_nu );
-    if( arr == 0 ) continue;
+    if( ! arr ) 
+      continue;
     target_name = ""; out_tp = -1;
     arr->getData( "name", target_name );
     arr->getData( "type", &out_tp );

@@ -31,6 +31,13 @@ static const char* const toutarr_list =
   "Special"  // 3
 ;
 
+enum OutArrType {
+  outSimple = 0,
+  outParm1  = 1,
+  outParm2  = 2,
+  outSpec   = 3
+};
+
 /** Collector of data during simulation.
   * Depend on type, collect data from single loop, parm loop 1 & 2.
   * @author atu
@@ -44,11 +51,11 @@ class TOutArr : public TDataSet  {
    DCL_STD_INF;
    virtual ~TOutArr() override;
    /** access to array value */
-   virtual const dvector* getArray(void);
+   virtual const dvector* getArray();
    /** request to allocate array */
    virtual int alloc( int sz, int a_ny = 1 );
    /** request to dealloc array */
-   virtual int free(void);
+   virtual int free();
    /** reset counter,  if level >= type */
    virtual int reset( int level);
    /** push next value. pushed only if level >= type */
@@ -83,12 +90,12 @@ class TOutArr : public TDataSet  {
    PRM_INT( arrsize, efInner, "full size", "Full array size", "" );
    /** current number of datas */
    PRM_INT( n, efInner, "current size", "Current number of datas", "" );
-   /** data storage TODO: vector */
+   /** data storage */
    dvector arr;
    /** fake source */
-   double fake_so;
+   double fake_so = 0;
    /** ptr to source */
-   const double *so;
+   const double *so = &fake_so;
    
    DCL_DEFAULT_STATIC;
 };
