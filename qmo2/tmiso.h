@@ -176,6 +176,11 @@ class TMiso : public TDataSet  {
    PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "sep=col");
    
    PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
+   
+   //PRM_INPUT( in0, 0, "input 0", "First input",  "sep=block" );
+   //PRM_INPUT( in1, 0, "input 1", "Second input", "sep=col" );
+   //PRM_INPUT( in2, 0, "input 2", "Third input",  "sep=col" );
+   //PRM_INPUT( in3, 0, "input 3", "Fourth input", "sep=col" );
    /** pointer to link data */
    TElmLink *links;
    // PRM_OBJ1( links, 0, "object links", "Object links description", "sep=blockend" );

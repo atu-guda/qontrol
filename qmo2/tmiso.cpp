@@ -91,7 +91,7 @@ double TMiso::fun( double t, IterType itype )
 {
   int v;
   if( locked ) 
-    return out0 = *in_so[0];
+    return out0 = (double)out0_init;
   if( onlyFirst && itype != IterFirst )
     return out0;
   if( onlyLast && itype != IterLast )

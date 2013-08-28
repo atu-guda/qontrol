@@ -215,11 +215,11 @@ void QStructView::drawAll( QPainter &p )
 
     // special marks: TODO: icons
     if( ob_lock )
-      p.drawRect( ob_gx + 4, ob_gy + 10, 20, 8 );
+      p.drawRect( ob_gx + 4, ob_gy + 8, 20, 8 );
     if( ob_first )
-      p.drawRect( ob_gx + 4, ob_gy, 6, 6 );
+      p.drawRect( ob_gx + 4, ob_gy + 14, 6, 6 );
     if( ob_last )
-      p.drawRect( ob_gx + 20, ob_gy, 6, 6 );
+      p.drawRect( ob_gx + 20, ob_gy +14, 6, 6 );
     
     // order mark
     if( psett->showord ) {
@@ -368,7 +368,7 @@ void QStructView::drawAll( QPainter &p )
           p.setPen( QPen( Qt::black, line_width ) );
         }
         if( lt == LinkNone ) {
-          p.drawEllipse( QPoint(li_dst_x, li_dst_y), el_marg/2, el_marg/2 );
+          p.drawEllipse( QPoint(li_dst_x, li_dst_y), el_marg/3, el_marg/3 );
           continue;
         }
         int x_vert = pre_dst_x + x_shift * flip_factor;
