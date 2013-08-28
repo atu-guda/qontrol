@@ -366,9 +366,7 @@ void QMo2View::linkElm()
 
 void QMo2View::qlinkElm()
 {
-  int k;
   QString toname;
-  QString oldlink;
   if( ! checkState( linkToCheck ) )
     return;  
 
@@ -376,13 +374,19 @@ void QMo2View::qlinkElm()
     return;
   toname = markObj->objectName();
 
-  QString lnkname( "links.inps" );
-  lnkname += QString::number( level );
-  k = selObj->getData( lnkname, oldlink );
-  if( !k )
+  // TODO: its model action
+
+  InputSimple *in = selObj->getInput( level );
+  if( ! in )
     return;
-  k = selObj->setData( lnkname, toname );
-  model->reset(); model->setModified();
+  if( ! in->setData( "source", toname ) ) {
+    DBGx( "warn: fail to set source in \"%s\" to \"%s\"",
+          qP(in->objectName()), qP(toname) );
+    return;
+  }
+  model->reportStructChanged();
+  model->reset(); 
+  model->setModified();
   emit viewChanged();
 }
 
@@ -411,20 +415,25 @@ void QMo2View::qplinkElm()
 void QMo2View::unlinkElm()
 {
   int k;
-  if( ! checkState( linkToCheck ) )
+  if( ! checkState( selCheck ) ) // no need marked to unlink
     return;  
   
   QString lnkname;
   QString none("");
-  for( k=0; k<4; k++ ) {
-    lnkname = "links.inps" + QString::number(k);
-    selObj->setData( lnkname, none );
-  };
+  int ni = selObj->inputsCount();
+  for( int i=0; i<ni; ++i ) {
+    InputSimple *in = selObj->getInput( i );
+    if( ! in )
+      continue;
+    in->setData( "source", none );
+  }
 
   for( k=0; k<4; k++ ) {
     lnkname = "links.pinps" + QString::number(k);
     selObj->setData( lnkname, none );
   };
+  
+  model->reportStructChanged();
   model->reset(); model->setModified();
   emit viewChanged();
 }

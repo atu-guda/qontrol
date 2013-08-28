@@ -78,7 +78,7 @@ class QMo2Doc : public QObject
   const QString& pathName() const;
   /** create XML representation */
   QString makeXML() const;
-  /** call engine anf returns result, casted to QString */
+  /** call engine and returns result, casted to QString */
   QString runScript( const QString& script );
 
 

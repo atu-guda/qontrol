@@ -47,10 +47,10 @@ class TElmLink : public TDataSet {
   DCL_STD_INF;
  protected:
    /** names of elements, which outputs will be used as inputs */
-   PRM_STRING( inps0, efNoRunChange, "Input 0", "Name of source for input 0", "max=32" );
-   PRM_STRING( inps1, efNoRunChange, "Input 1", "Name of source for input 1", "max=32" );
-   PRM_STRING( inps2, efNoRunChange, "Input 2", "Name of source for input 2", "max=32" );
-   PRM_STRING( inps3, efNoRunChange, "Input 3", "Name of source for input 3", "max=32" );
+   PRM_STRING( inps0, efOld, "Input 0", "Name of source for input 0", "max=32" );
+   PRM_STRING( inps1, efOld, "Input 1", "Name of source for input 1", "max=32" );
+   PRM_STRING( inps2, efOld, "Input 2", "Name of source for input 2", "max=32" );
+   PRM_STRING( inps3, efOld, "Input 3", "Name of source for input 3", "max=32" );
    PRM_SWITCH( noauto, efOld, "No Auto", "Unused", "def=0" );
    PRM_SWITCH( locked, efOld, "Locked", "Bypass u[0] to output", "sep=col"  );
    PRM_SWITCH( onlyFirst, efOld, "only First", "Process element only at first iteration", ""); 

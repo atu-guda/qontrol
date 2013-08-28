@@ -130,23 +130,22 @@ void QStructView::printAll()
 
 void QStructView::drawAll( QPainter &p )
 {
-  int i, ci, h, w, nh, nw;
+  int i, h, w, nh, nw;
   int n_el, elnu,  n_out, out_nu, out_tp, n_li, line_busy;
   int ob_x, ob_y, ob_ord, ob_lock, ob_first, ob_last;
   int ob_flip, ob_noIcon;
-  int li_mid_y, li_src_x, li_src_y, li_dst_x, li_dst_y;
+  int li_src_x, li_src_y, li_dst_x, li_dst_y;
   int ob_gx, ob_gy; /* left top point of object icon */
   int ob_gxc; /* x- center of object icon */
   int flip_factor; /* sign of input offsets amd labels */
   int st_y; /* label on elems start y */
   int sel_x, sel_y, /*sel,*/ mark;
-  int li_dst_xs, li_src_xs, li_dst_xa;
+  int li_src_xs;
   LinkInfo li[8];
   QString qs, ob_name, target_name;
   TMiso *ob;
   TOutArr *arr;
   Mo2Settings *psett;
-  const static int xl_diff[4] = { 16, 10, 8, 6 };
   psett = QMo2Win::qmo2win->getSettings();
   int s_icons = psett->showicons;
   const QFont &strf = QMo2Win::qmo2win->getStructFont();
@@ -261,53 +260,9 @@ void QStructView::drawAll( QPainter &p )
       if( li[i].ltype != LinkNone )
 	n_li++;
     };
-    for( ci=0,i=0; i<4 && n_li > 0 ; i++ ) { // inputs
-      li_dst_x = ob_gxc + flip_factor * obj_sz/2;
-      li_dst_y = ob_gy + (ci+1)*xl_diff[n_li-1];
-      switch( li[i].ltype ) {
-	case LinkNone: continue;
-	case LinkBad: 
-	      p.setPen( Qt::NoPen ); p.setBrush( Qt::red );
-	      p.drawRect( li_dst_x-2, li_dst_y-1, 4, 4 );
-	      ci++; break;
-	case LinkElm:
-	      li_src_x = lm + 36 + li[i].x*grid_sz - (li[i].eflip ? obj_sz : 0); 
-	      li_src_y = tm + 20 + li[i].y*grid_sz;
-	      if( ob_y == li[i].y  &&  ob_flip == li[i].eflip ) {
-		li_src_y = li_dst_y;
-	      };
-	      if( ((li_dst_x + 4> li_src_x) || li[i].eflip  ) )
-	         li_mid_y = li_src_y;
-	      else  
-	         li_mid_y = li_dst_y;
-	         //li_mid_y = ( li_src_y + li_dst_y ) / 2 ;
-
-	      p.setPen( QPen(Qt::black,1) );
-	      li_dst_xs = li_dst_x - (8-ci*2) * (ob_flip?-1:1);
-	      li_dst_xa = li_dst_x + (ob_flip?3:-3);
-	      li_src_xs = li_src_x + (li[i].eflip?-4:4);
-              
-	      if( ( li[i].x < ob_x ) ^ (li_src_xs < li_dst_xs ) ) {
-		li_src_xs = li_dst_xs = ( li_src_xs + li_dst_xs ) / 2;
-	      };
-
-	      p.drawLine( li_src_x, li_src_y, li_src_xs, li_src_y ); // start-
-	      p.drawLine( li_dst_x, li_dst_y, li_dst_xs, li_dst_y ); // -end
-	      p.drawLine( li_src_xs, li_mid_y, li_dst_xs, li_mid_y );// --mid-- 
-	      p.drawLine( li_src_xs, li_src_y, li_src_xs, li_mid_y );//1st vert
-	      p.drawLine( li_dst_xs, li_dst_y, li_dst_xs, li_mid_y );//2nd vert
-	      //  arrow
-	      p.drawLine( li_dst_x, li_dst_y, li_dst_xa, li_dst_y+2 );
-	      p.drawLine( li_dst_x, li_dst_y, li_dst_xa, li_dst_y-2 );
-	      ci++; break;
-	case LinkSpec:
-	      p.setPen( Qt::NoPen );  p.setBrush( Qt::blue );
-	      p.drawRect( li_dst_x-2, li_dst_y-1, 4, 4 );
-	      ci++; break;
-
-      };
-    };
-    for( i=4; i<8; i++ ) { // param inputs
+    // old simple inputs: replaced
+    
+    for( i=4; i<8; i++ ) { // param inputs TODO: replace
       li_dst_x = ob_gx + (i-3)*6;
       li_dst_y = ob_gy + obj_sz-el_marg;
       switch( li[i].ltype ) {
@@ -319,10 +274,6 @@ void QStructView::drawAll( QPainter &p )
 	case LinkElm:
 	      li_src_x = lm + li[i].x*grid_sz + (li[i].eflip ? el_marg : obj_sz+el_marg); 
 	      li_src_y = tm + obj_sz + li[i].y*grid_sz - 8;
-	      if( li_dst_x > li_src_x )
-		li_mid_y = li_src_y;
-	      else  
-		li_mid_y = ( li_src_y + li_dst_y ) / 2 ;
 
 	      p.setPen( li[i].pflags ? QPen(Qt::magenta,2) : QPen(Qt::red,2) );
 	      

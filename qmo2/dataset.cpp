@@ -1557,7 +1557,7 @@ void TDataSet::unregisterInput( InputSimple *inp )
   inputs.remove( idx );
 }
 
-const InputSimple* TDataSet::getInput (int n) const
+InputSimple* TDataSet::getInput (int n)
 {
   if( n < 0 || n >= inputs.size() ) {
     DBGx( "warn: bad input number %d, size= %d", n, inputs.size() );

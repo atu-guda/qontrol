@@ -492,7 +492,7 @@ class TDataSet : public HolderData {
    /** return number of inputs */
    int inputsCount() const { return inputs.size(); };
    /** returns input by number */
-   const InputSimple* getInput (int n) const; 
+   InputSimple* getInput (int n) ; 
  public slots:
    /** create object with params as string */
    bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
