@@ -185,7 +185,7 @@ class TMiso : public TDataSet  {
    /** number of iteration per loop -- setted by PreRun */
    int model_nn = 0;
    /** pointer to model-owner of this element, same as parent only 
-    * between preRun -- postRun, elseware-0 */
+    * between preRun -- postRun, elseware-0 TODO: remove */
    TModel *model = nullptr;
    /** fake source */
    double fake_so = 0;

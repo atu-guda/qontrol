@@ -853,12 +853,11 @@ void HolderStringArray::reset_dfl()
 
 bool HolderStringArray::set( const QVariant & x, int idx )
 {
-  bool ok;
   if( idx < 0 || idx >= v.size() ) // slow, but safe - not for fast code
     return false;
   v[idx] = x.toString();
   post_set();
-  return ok;
+  return ! v[idx].isEmpty();
 }
 
 QVariant HolderStringArray::get( int idx ) const
@@ -1590,39 +1589,37 @@ void TDataSet::dumpStruct() const
   --dump_lev;
 }
 
-// ------------------------------------ InputSimple ---------
-STD_CLASSINFO(InputSimple,clpInput|clpSpecial);
 
-const double InputSimple::fake_in {0};
-const double InputSimple::one_in {1.0};
+// ------------------------------------ InputAbstract ---------
+//
+// STD_CLASSINFO(InputAbstract,clpInput|clpSpecial);
 
-CTOR(InputSimple,TDataSet)
+const double InputAbstract::fake_in {0};
+const double InputAbstract::one_in {1.0};
+
+CTOR(InputAbstract,TDataSet)
 {
-  if( par ) {
-    par->registerInput( this );
-  }
+  // child may register itself to parent
 }
 
-InputSimple::~InputSimple()
+InputAbstract::~InputAbstract() // = 0
 {
-  if( par ) {
-    par->unregisterInput( this );
-  }
+  // child may unregister itself from parent
 }
 
 
-void InputSimple::post_set()
+void InputAbstract::post_set()
 {
   TDataSet::post_set();
   reportStructChanged(); // changed link means changes structure
 }
 
-void InputSimple::do_structChanged()
+void InputAbstract::do_structChanged()
 {
   set_link();
 }
 
-void InputSimple::set_link()
+void InputAbstract::set_link()
 {
   p = &fake_in; target = nullptr; linkType = LinkBad;
   if ( source.cval().isEmpty() ) { 
@@ -1651,6 +1648,41 @@ void InputSimple::set_link()
   }
 
   // more actions here
+}
+
+
+// const char* InputAbstract::helpstr { "Abstract link with common  functions" };
+
+// DEFAULT_FUNCS_REG(InputAbstract);
+
+
+// ------------------------------------ InputSimple ---------
+STD_CLASSINFO(InputSimple,clpInput|clpSpecial);
+
+CTOR(InputSimple,InputAbstract)
+{
+  if( par ) {
+    par->registerInput( this );
+  }
+}
+
+InputSimple::~InputSimple()
+{
+  if( par ) {
+    par->unregisterInput( this );
+  }
+}
+
+
+void InputSimple::post_set()
+{
+  InputAbstract::post_set(); // report is here
+}
+
+
+void InputSimple::set_link()
+{
+  InputAbstract::set_link();
 }
 
 

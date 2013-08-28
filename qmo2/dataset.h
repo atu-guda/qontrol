@@ -528,18 +528,14 @@ class TDataSet : public HolderData {
 };
 
 // ---------------------------------------------------------------------
-/** Special holder link, have QString, but can be used as const double */
-class InputSimple : public TDataSet {
+/** Abstract-alike special holder link, parent for all inputs */
+class InputAbstract : public TDataSet {
   Q_OBJECT
  public: 
-  DCL_CTOR(InputSimple);
-  virtual ~InputSimple();
-  DCL_CREATE;
-  DCL_STD_INF;
+  DCL_CTOR(InputAbstract);
+  virtual ~InputAbstract() = 0; // to force register
+  // no DCL_STD_INF;
   virtual void post_set() override;
-  // less operators for double: const only
-  operator double() const { return *p; };
-  const double* caddr() const { return p; };
   //* return ptr to TDataSet, which holds element or nullptr;
   const TDataSet* getTarget() const { return target; };
   //* returns type of link
@@ -547,8 +543,8 @@ class InputSimple : public TDataSet {
  protected:
   /** do real actions after structure changed */
   virtual void do_structChanged();
-  /** find and set link to target or dfake target */
-  void set_link();
+  /** find and set link to target or fake target */
+  virtual void set_link() = 0;
   
   PRM_STRING( source, efNoRunChange, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK"  );
   PRM_STRING( label,  efNoRunChange, "Label", "Label to display on structure", "max=64"  );
@@ -561,6 +557,29 @@ class InputSimple : public TDataSet {
   static const double one_in;
   const double *p = &fake_in;
   const TDataSet *target = nullptr;
+  ltype_t linkType = LinkBad;
+  // no - no create DCL_DEFAULT_STATIC;
+  // const TClassInfo* getClassInfo() const {  return &class_info; } 
+  // const char* getHelp() const {  return helpstr; }
+};
+
+// ---------------------------------------------------------------------
+/** Special holder link, have QString, but can be used as const double */
+class InputSimple : public InputAbstract {
+  Q_OBJECT
+ public: 
+  DCL_CTOR(InputSimple);
+  virtual ~InputSimple();
+  DCL_CREATE;
+  DCL_STD_INF;
+  virtual void post_set() override;
+  // less operators for double: const only
+  operator double() const { return *p; };
+  const double* caddr() const { return p; };
+ protected:
+  /** find and set link to target or fake target */
+  virtual void set_link() override;
+  
   ltype_t linkType = LinkBad;
   DCL_DEFAULT_STATIC;
 };
