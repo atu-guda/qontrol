@@ -46,14 +46,20 @@ class TIntegrator : public TMiso  {
    /** flags */
    PRM_SWITCH( useMin,   efNRC, "use Min value", "limit output to minimum value", "sep=col" );
    PRM_SWITCH( useMax,   efNRC, "use Max value", "limit output to maximum value", "" );
-   PRM_SWITCH( useReset, efNRC, "u[1] is Reset", "Use u[1] as Reset signal", "" );
-   PRM_SWITCH( useBase,  efNRC, "u[3] is Base",  "Use u[3] as base signal", "" );
+   PRM_SWITCH( useReset, efNRC, "use Reset", "Use in_rst as Reset signal", "" );
+   PRM_SWITCH( useBase,  efNRC, "use Base",  "Use in_base as base signal", "" );
    PRM_SWITCH( useAdd,   efNRC, "add base", "Add base to level", "" );
    PRM_SWITCH( useDis,   efNRC, "use Discharge", "Use discharge coefficient", "sep=col" );
    PRM_SWITCH( useHold,  efNRC, "Hold", "Hold output 1 tick after reset", "" );
    PRM_SWITCH( useAver,  efNRC, "Calc Aver", "Calculate average value", "" );
    PRM_SWITCH( useSqIn,  efNRC, "x^2 on input", "Calculate square on input", "");
    PRM_SWITCH( useSqrOut,efNRC, "sqrt on output", "Calculate square root on output", "");
+   
+   PRM_INPUT( in_u, 0, "input", "Main input",  "sep=block" );
+   PRM_INPUT( in_rst, 0, "rst in", "Reset signal", "sep=col" );
+   PRM_INPUT( in_fake, 0, "no in", "no input - anchient artefact",  "sep=col" );
+   PRM_INPUT( in_base, 0, "Base in", "Fourth input", "sep=col" );
+
    double v_old;
    double t_rst;
 

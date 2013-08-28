@@ -69,6 +69,8 @@ void TMiso::post_set()
 
   // ordirary links convert
   int nl = inputs.size();
+  if( nl > 4 ) 
+    nl = 4;
   QString source, iname;
   for( int i=0; i<nl; ++i ) {
     InputSimple *in = inputs[i];
@@ -133,16 +135,7 @@ int TMiso::fillLinks()
   double *pp;
   QString iname, pname, soname, sopname;
   
-  // ordinary input links
-  for( int i=0; i<4; ++i ) {
-    in_so[i] = &fake_so;
-    iname = "inps" + QString::number(i);
-    links->getData( iname, soname );
-    p = par->getDoublePtr( soname );
-    if( p ) {
-      in_so[i] = p;
-    }
-  }
+  // ordinary input links: obsoleted by InputSimple
 
   // parametric input links
   max_prm = 0;

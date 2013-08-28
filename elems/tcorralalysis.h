@@ -42,52 +42,31 @@ class TCorrAnalysis : public TMiso  {
    void reset_data();
    /** calculate all output values */
    int calc();
-   /** puts calculated values to model common vars array */
-   void putModelVars();
    /** retrives data from model arrays */
    int getDataFromArrays();
 
    /* ============= data members ================== */
    /** type of data collection, flags */
    PRM_LIST( type, efNoRunChange, "Type", "Collection type", "", "All\nt0<t<t1\nu2>0\narrays" );
-   PRM_SWITCH( useCalc,  efNoRunChange, "Calc on u[3]", "Use u3>0 as signal to calc", "" );
-   PRM_SWITCH( useReset, efNoRunChange, "Reset on u[3]", "Use u3<0 as signal to reset", "" );
+   PRM_SWITCH( useCalc,  efNoRunChange, "use Calc", "Use in_calc>0 as signal to calc", "" );
+   PRM_SWITCH( useReset, efNoRunChange, "use Reset", "Use u_rst>0 as signal to reset", "" );
    PRM_SWITCH( useFill,  efNoRunChange, "Fill arrays", "Fill output array", "" );
    /** time start / stop values */
-   PRM_DOUBLE( t0, efNoRunChange, "t0", "Time to start on given type", "min=0" );
-   PRM_DOUBLE( t1, efNoRunChange, "t1", "Time to stop on given type", "min=0\bdef=1000" );
+   PRM_DOUBLE( t0, efNoRunChange, "t0", "Time to start on given type", "min=0\nsep=col" );
+   PRM_DOUBLE( t1, efNoRunChange, "t1", "Time to stop on given type", "min=0\ndef=10000" );
    /** Names of input arrays if type=UseArrays */
    PRM_STRING( x_in, efNoRunChange, "in x[]", "name of input x array", "" );
    PRM_STRING( y_in, efNoRunChange, "in y[]", "name of input y array", "" );
    /** indexes of output values to be stored to model */
-   PRM_INT( out_a, efNoRunChange, "a idx", "Index to store 'a' value", "sep=col\ndef=-1" );
-   PRM_INT( out_b, efNoRunChange, "b idx", "Index to store 'b' value", "def=-1" );
-   PRM_INT( out_corr, efNoRunChange, "corr idx", "Index to store 'corr' value", "def=-1" );
-   PRM_INT( out_ok, efNoRunChange, "ok idx", "Index to store 'ok' value", "def=-1" );
+   //PRM_INT( out_a, efNoRunChange, "a idx", "Index to store 'a' value", "sep=col\ndef=-1" );
+   //PRM_INT( out_b, efNoRunChange, "b idx", "Index to store 'b' value", "def=-1" );
+   //PRM_INT( out_corr, efNoRunChange, "corr idx", "Index to store 'corr' value", "def=-1" );
+   //PRM_INT( out_ok, efNoRunChange, "ok idx", "Index to store 'ok' value", "def=-1" );
    /** names of output arrays */
    PRM_STRING( x_oname, efNoRunChange, "out x name", "name of output x array", "sep=col" );
    PRM_STRING( y_oname, efNoRunChange, "out y name", "name of output y array", "" );
    PRM_STRING( c_oname, efNoRunChange, "compare name", "name of array to compare with", "" );
    /** main output source */
-   PRM_LIST( mainOutput, efNoRunChange, "Main outout", "What value will be main output", "",
-       "summ(x)\n"      //  0
-       "summ(x^2)\n"    //  1
-       "summ(y)\n"      //  2
-       "summ(y^2)\n"    //  3 
-       "summ(xy)\n"     //  4
-       "a\n"            //  5
-       "b\n"            //  6
-       "corr\n"         //  7
-       "cov\n"          //  8
-       "disp(x)\n"      //  9
-       "dips(y)\n"      // 10
-       "sigma(x)\n"     // 11
-       "sigma(y)\n"     // 12
-       "aver(x)\n"      // 13
-       "aver(y)\n"      // 14
-       "aver(x^2)\n"    // 15
-       "aver(y^2)"      // 16
-   );
    /** current loop # and number of collected data,  ok state - calculated */
    PRM_INT( ii, efInner, "ii", "current loop number", "" );
    PRM_INT( n, efInner, "n", "number of collected data", "" );
@@ -117,8 +96,13 @@ class TCorrAnalysis : public TMiso  {
    PRM_DOUBLE( cmp_ampl, efInner, "cmp_ampl", "error amplitude", "" );
    PRM_DOUBLE( cmp_tmin, efInner, "cmp_tmin", "time(min error)", "" );
    PRM_DOUBLE( cmp_tmax, efInner, "cmp_tmax", "time(max error)", "" );
-   /** pointerrs for output source */
-   const double *out_source[20];
+   
+   PRM_INPUT( in_x, 0, "x input", "First input",  "sep=block" );
+   PRM_INPUT( in_y, 0, "y input", "Second input", "" );
+   PRM_INPUT( in_add, 0, "add input", "Signal to add",  "sep=col" );
+   PRM_INPUT( in_rst, 0, "rst signal", "Reset signal", "" );
+   PRM_INPUT( in_calc, 0, "calc signal", "Calc signal", "sep=col" );
+   
    DCL_DEFAULT_STATIC;
 };
 

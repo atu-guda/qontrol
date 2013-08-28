@@ -122,7 +122,7 @@ double TFourier::f( double t )
   int i;
   double av;
   if( ii < n_st || ii > n_en ) { ii++; return ampl1; };
-  double xx = *in_so[0];
+  double xx = in_u;
   for( i=0; i<=ng; i++ ) {
     aa[i] += xx * cos( i * omega * t );
     bb[i] += xx * sin( i * omega * t );

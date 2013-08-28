@@ -44,14 +44,6 @@ int TInputAny::do_preRun( int /*run_tp*/, int /*an*/,
     return 0;
   }
 
-  if( name.cval()[0] == '#' ) { // access to model vars by number
-    QString nname = name;
-    nname.remove( 0, 1 );
-    int ne = nname.toInt();
-    so = &( (*model->getVars())[ne] );
-    return 0;
-  };
-
   so = par->getDoublePtr( name ); 
   if( !so ) {
     so = &fake_so; 

@@ -22,9 +22,9 @@
 #include "tsource.h"
 
 const char* TSource::helpstr = "<H1>TSource</H1>\n"
- "Source of different kind of signals: <br>\n"
+ "<p>Source of different kind of signals: <br>\n"
  "Have N parameters: <b>type, U, omega, .. b</b>,"
- "each can be changed at any time ??.";
+ "each can be changed at any time .</p>";
 
 STD_CLASSINFO(TSource,clpElem);
 

@@ -22,7 +22,7 @@ const char* TCounter::helpstr = "<H1>TCounter</H1>\n"
  "Parameters:<br>\n"
  " - <b>type</b> -- output type: level, pulse{+, +-}.. ;<br>\n"
  " - <b>n</b> -- up to count;<br>\n"
- " - <b>useReset</b> -- use u[1] as reset counter signal;<br>\n"
+ " - <b>useReset</b> -- use in_rst as reset counter signal;<br>\n"
  " - <b>cn</b> -- counter [0;n-1] (ro).<br>\n";
 
 STD_CLASSINFO(TCounter,clpElem );
@@ -42,8 +42,8 @@ double TCounter::f( double /* t */ )
 {
   double v, du;
   int tick;
-  du = *in_so[0] - u_old; u_old  = *in_so[0]; tick = 0;
-  if( useReset && *in_so[1] > 0.1 ) {
+  du = in_x - u_old; u_old  = in_x; tick = 0;
+  if( useReset && in_rst > 0.1 ) {
     cn = flip = 0; 
   } else {
     if( du > 0.1 ) {

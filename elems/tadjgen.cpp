@@ -43,7 +43,7 @@ double TAdjGen::f( double /* t */ )
 {
   double om, om2, df, ff, v, diff_out = 0;
   int g1, g2;
-  om = *in_so[0]; om2 = *in_so[3];
+  om = in_omega; om2 = in_omega2;
   if( useF ) {
     om  = omega_0 * ( 1 + om*k_omega );
     om2 = omega_0 * ( 1 + om2*k_omega );
@@ -51,10 +51,10 @@ double TAdjGen::f( double /* t */ )
   real_tick = 0; tick = 0;
   switch( (int)type ) {
     case 0: ig += om * tdt;                 // Pi=int_0^T(om*dt);
-	    if( useReset && *in_so[1] > 0.01 ) {
+	    if( useReset && in_rst > 0.01 ) {
 	      real_tick = 1; break;
 	    };
-	    if( useLock && *in_so[2] > 0.01 ) break;
+	    if( useLock && in_lock > 0.01 ) break;
             if( ig > M_PI ) {
 	      real_tick = 1;
             };
@@ -62,10 +62,10 @@ double TAdjGen::f( double /* t */ )
     case 1: if( om < 1.0e-100 ) om = 1.0e-50; 
             ctt += tdt; ff = 1.0 / om;  df = tdt * ff;
             ig += df * M_PI;
-	    if( useReset && *in_so[1] > 0.01 ) {
+	    if( useReset && in_rst > 0.01 ) {
 	      real_tick = 1; break;
 	    }; 
-	    if( useLock && *in_so[2] > 0.01 ) break;
+	    if( useLock && in_lock > 0.01 ) break;
             if( ctt*ctt > ig ) {
 	      real_tick = 1;
             };
@@ -73,10 +73,10 @@ double TAdjGen::f( double /* t */ )
     case 2: ig += om * tdt; ig2 += om2 * tdt;      // dual
 	    g1 = ( ig  > M_PI );
 	    g2 = ( ig2 > M_PI );
-	    if( useReset && *in_so[1] > 0.01 ) {
+	    if( useReset && in_rst > 0.01 ) {
 	      real_tick = 1; break;
 	    };
-	    if( useLock && *in_so[2] > 0.01 ) break;
+	    if( useLock && in_lock > 0.01 ) break;
             if( g1 && g2 ) {
 	      real_tick = 1;
             };

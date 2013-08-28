@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include <time.h>
-#include <math.h>
+#include <cmath>
 #include <miscfun.h>
 #include "tmodel.h"
 #include "trand.h"
@@ -27,7 +27,7 @@ const char* TRand::helpstr = "<H1>TRand</H1>\n"
  "Argument <b>tau</b> defined recalculation time of generator<br>.\n"
  "Argument <b>ampl</b> - scale of output.<br>\n"
  "Argument <b>zval</b> - zero level of output.<br>\n"
- "Flag <b>InputTime</b> - if set, uses time is input, non in[0] (def).<br>\n"
+ "Flag <b>InputTime</b> - if set, uses time is input, not in_t (def).<br>\n"
  "Arguments <b>sigma, a, b, c</b> -- may me parameters of distribution.<br>\n"
  "Integer parameter <b>seed</b> -- seed of generator, if -1 -- new seed every seeding.<br>\n"
  "Integer <b>seedType</b> -- type of seedeng\n"
@@ -85,7 +85,7 @@ double TRand::f( double  t  )
   if( inputTime ) {
     in = t;
   } else {
-    in = *in_so[0];
+    in = in_t;
   }
 
   if( sp_time >= tau || tau <=0  ) {

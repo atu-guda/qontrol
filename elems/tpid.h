@@ -46,6 +46,9 @@ class TPid : public TMiso  {
    PRM_DOUBLE( ki2, 0, "k_i2", "Coefficient in second intergator", "");
    /** should output be devided to t */
    PRM_SWITCH( aver, efNRC, "Average", "Calculate average value", "sep=col" );
+   
+   PRM_INPUT( in_u, 0, "input", "Single input u(x)",  "sep=block" );
+
    /** accumulators and old values */
    double vi1 = 0, vi2 = 0, u_old = 0, u_old2 = 0, tdt2 = 1;
    /** flag for special handling initial steps */

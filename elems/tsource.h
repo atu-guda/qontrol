@@ -90,6 +90,8 @@ class TSource : public TMiso  {
    PRM_INT( seed_p, efNRC,     "F seed"       , "Random Generator seed", "def=RND" );
    PRM_LIST( seedType_p, efNRC,"F seed type"  , "When to seed", "def=3", tsource_list_seedType);
    PRM_SWITCH( addBaseSeed_p, efNRC, "F add base to seed", "Add seed from base(model)", "def=1" );
+
+   // NO inputs
    
    /** chaos current values */
    double u_ch_vs = 1, u_ch_ve = 1, u_ch_ts = 1, u_ch_te = 1, u_ch_k = 1,

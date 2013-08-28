@@ -177,10 +177,6 @@ class TMiso : public TDataSet  {
    
    PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
    
-   //PRM_INPUT( in0, 0, "input 0", "First input",  "sep=block" );
-   //PRM_INPUT( in1, 0, "input 1", "Second input", "sep=col" );
-   //PRM_INPUT( in2, 0, "input 2", "Third input",  "sep=col" );
-   //PRM_INPUT( in3, 0, "input 3", "Fourth input", "sep=col" );
    /** pointer to link data */
    TElmLink *links;
    // PRM_OBJ1( links, 0, "object links", "Object links description", "sep=blockend" );
@@ -195,8 +191,6 @@ class TMiso : public TDataSet  {
    double fake_so = 0;
    /** fake param target */
    double fake_prm = 0;
-   /** pointers to inputs */
-   const double* in_so[4] = { &fake_so, &fake_so, &fake_so, &fake_so };
    /** pointers to param inputs */
    const double* inp_so[4] = { &fake_so, &fake_so, &fake_so, &fake_so };
    /** pointers to params */

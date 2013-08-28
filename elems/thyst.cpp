@@ -23,11 +23,11 @@ using namespace std;
 
 
 const char* THyst::helpstr = "<H1>THyst</H1>\n"
- "Can simulate some simple models of hysteresis: <br>\n"
+ "<p>Can simulate some simple models of hysteresis: <br>\n"
  "Have 5 parameters: <b>x0, alpha, a, b, type</b>\n"
  " <b>x0, alpha </b> - parameers of hysteresys\n"
  " <b>a, b </b> - output scale\n"
- "Can be changed at any time: <b>x0, alpha</b>.";
+ "Can be changed at any time: <b>x0, alpha</b>.</p>";
 
 STD_CLASSINFO(THyst,clpElem);
 
@@ -45,7 +45,7 @@ double THyst::f( double /* t */ )
   // atu test
   u_old = d + s;
   // 
-  ud = *in_so[0] - u_old; 
+  ud = in_u - u_old; 
   ts = s + ud;
   if( ts >= x0 ) { 
     s = (double)x0;  d += ts - x0;  

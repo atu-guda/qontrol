@@ -23,11 +23,11 @@ using namespace std;
 
 
 const char* TFuncTrans::helpstr = "<H1>TFuncTrans</H1>\n"
- "Harmonic-alike functions: <br>\n"
+ "<p>Harmonic-alike functions: <br>\n"
  "Argument <b>y</b> calculates as:<br>\n"
- "<b>y = u[0] - u[1] - x0</b><br>\n"
+ "<b>y = in_0 - in_1 - x0</b><br>\n"
  "Integer parameter <b>type</b> selects type of function.<br>\n"
- "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n";
+ "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n</p>";
 
 STD_CLASSINFO(TFuncTrans,clpElem);
 
@@ -39,12 +39,12 @@ CTOR(TFuncTrans,TMiso)
 double TFuncTrans::f( double /* t */ )
 {
   double v, y, by, tm;
-  y = *in_so[0] - *in_so[1] - x0; by = y * b;
+  y = in_0 - in_1 - x0; by = y * b;
   switch( (int)type ) {
     case 0:   v = a * sin( by ); break;
     case 1:   v = a * sign( sin( by ) + c ); break;
     case 2:   v = a * tanh( by ); break;
-    case 3:   v = a * atan2( *in_so[0], *in_so[1] ); break;
+    case 3:   v = a * atan2( in_0, in_1 ); break;
     case 4:   v = a * exp( by ); break;
     case 5:   v = a * exp( -by * y ); break;
     case 6:   v = a * waveWave( by ); break;

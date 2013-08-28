@@ -23,10 +23,10 @@
 using namespace std;
 
 const char* TLorenz::helpstr = "<H1>TLorenz</H1>\n"
- "Simulator element for Lorenz system <br>\n"
- " \\dot{x} = \\sigma ( y-x );<br>\n"
- " \\dot{y} = x (r-z ) - y; <br>\n"
- " \\dot{z} = xy - bz.<br>\n"
+ "<p>Simulator element for Lorenz system <br>\n"
+ " \\dot{x} = \\sigma ( y-x ); + in_x<br>\n"
+ " \\dot{y} = x (r-z ) - y + in_y; <br>\n"
+ " \\dot{z} = xy - bz.<br> + in_z\n"
  " <br>\n"
  " Inputs 0-2: add to x, y, z <br>\n"
  " <br>\n"
@@ -34,7 +34,7 @@ const char* TLorenz::helpstr = "<H1>TLorenz</H1>\n"
  " <br>\n"
  "Have 6 parameters: 3 from system, <b>sigma, r ,b </b>, <br>"
  "and 3 inital state: <b> x_0, y_0, z_0 </b>, <br>"
- "First 3 may can be changed at any time.";
+ "First 3 may can be changed at any time.</p>";
 
 STD_CLASSINFO(TLorenz,clpElem );
 
@@ -45,9 +45,9 @@ CTOR(TLorenz,TMiso)
 double TLorenz::f( double /*t*/ )
 {
   double xn, yn, zn;
-  xn = x + tdt * ( sigma * (y-x) ) + *in_so[0];
-  yn = y + tdt * ( x * (r-z) - y ) + *in_so[1];
-  zn = z + tdt * ( x*y - b*z )     + *in_so[2];
+  xn = x + tdt * ( sigma * (y-x) ) + in_x;
+  yn = y + tdt * ( x * (r-z) - y ) + in_y;
+  zn = z + tdt * ( x*y - b*z )     + in_z;
   x = xn; y = yn; z = zn;
   return x; 
 }

@@ -50,10 +50,10 @@ double TDelay::f( double t )
     v2 = v - icd; v1 = 1.0 - v2;
   }
   
-  //
+  double cu = in_u;
   if( t < 1.3 * tdt )
-    u00 = *in_so[0];
-  buf->add( *in_so[0] );
+    u00 = cu;
+  buf->add( cu );
   a1 = (*buf)[icd]; a2 = (*buf)[icd+1];
   if( t < cdelay )
     return u00;

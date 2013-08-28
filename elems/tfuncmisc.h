@@ -66,6 +66,9 @@ class TFuncMisc : public TMiso  {
    PRM_DOUBLE( g,  0, "g", "Parameter g", "" );
    PRM_DOUBLE( x0, 0, "x0", "Input shift: y = u[0] - u[1] - x0;", "" );
    
+   PRM_INPUT( in_0, 0, "input 0", "First input",  "sep=block" );
+   PRM_INPUT( in_1, 0, "input 1", "Second input", "sep=col" );
+   
    DCL_DEFAULT_STATIC;
 };
 

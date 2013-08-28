@@ -54,9 +54,9 @@ int TFriction::do_startLoop( int /*acnx*/, int /*acny*/ )
 double TFriction::f( double /* t */ )
 {
   double f, x, f_fv, f_fd, cf_mx;
-  double fx = *in_so[0];
+  double fx = in_u;
   if( useMf )
-    cf_mx = *in_so[1];
+    cf_mx = in_f_mx;
   else
     cf_mx = f_mx;
 

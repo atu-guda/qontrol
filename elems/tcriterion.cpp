@@ -20,11 +20,11 @@
 
 
 const char* TCriterion::helpstr = "<H1>TCriterion</H1>\n"
- "Miscellaneous criterions: <br>\n"
+ "<p>Miscellaneous criterions in diff signal x=in_pos - in_neg: <br>\n"
  "Parameter <b>type</b> -- type of criterion. <br>\n"
- "Parameters <b>a,b</b> -- to with compare (x=u[0]-u[1]). <br>\n"
+ "Parameters <b>a,b</b> -- to with compare x. <br>\n"
  "Parameter <b>t0</b> -- start time (if enabled). <br>\n"
- "5 flags: <b>useA, useT0, useEnable, useLock, usePulse</b>.";
+ "5 flags: <b>useA, useT0, useEnable, useLock, usePulse</b>.</p>";
 
 STD_CLASSINFO(TCriterion,clpElem);
 
@@ -44,16 +44,16 @@ double TCriterion::f( double t )
   int ok, rv; 
   double aa, x;
   if( useT0 && t < t0 ) return 0;
-  x = *in_so[0] - *in_so[1];
+  x = in_pos - in_neg;
   if( useLock && st > 0 )
     return usePulse ? 0 : 1;
-  if( useEnable && *in_so[2] < 0.1 ) {
+  if( useEnable && in_ena < 0.1 ) { // disabled
     if( !st ) return 0;
     return usePulse ? 0 : 1;
   };
   aa = a;
   if( useA )
-    aa = *in_so[3];
+    aa = in_a;
   switch( (int)type ) {
     case 0: ok = ( fabs( x ) < aa ); break;
     case 1: ok = ( fabs( x ) > aa ); break;

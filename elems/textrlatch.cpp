@@ -39,18 +39,18 @@ CTOR(TExtrLatch,TMiso)
 
 double TExtrLatch::f( double t )
 {
-  double v, u, ua;
+  double v, u, ua, uc = in_u;
   int k;
   static const int mybits[6] = { 1, 2, 4, 7, 7, 0 };
   if( useLocal && fuzzy > 0 && isStart == 0 ) { // TODO: more robust need
-    u = ( *in_so[0] + fuzzy * u_old + 0.1 * fuzzy * u_old2 ) / ( 1 + 1.1 * fuzzy );
+    u = ( uc + fuzzy * u_old + 0.1 * fuzzy * u_old2 ) / ( 1 + 1.1 * fuzzy );
   } else {
-    u = *in_so[0]; 
+    u = uc; 
   };
   ua = fabs( u );
   if( t < tStart )                 // time before work
      return u;
-  if( useReset && *in_so[1] > 0.1 ) {   // reset on u[1] signal
+  if( useReset && in_rst > 0.1 ) {   // reset on u[1] signal
     isStart = 1; wasExtr = 0; // for first only
     u_max = u_min = u_abs = u_ex = t_max = t_min = t_abs = t_ex = 0;
     u_old = u_old2 = t_old = 0;
@@ -69,13 +69,13 @@ double TExtrLatch::f( double t )
       case 4: u_ex = 0; break;
       default: u_ex = 0;
     };
-    u_old = *in_so[0];
+    u_old = uc;
     return outT ? t : u;
   };
   if( isStart == 2 ) {
     isStart = 0;
     if( useLocal ) {
-      u_old2 = u_old; u_old = *in_so[0]; 
+      u_old2 = u_old; u_old = uc; 
       return u;
     };
   };

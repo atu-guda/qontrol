@@ -30,7 +30,7 @@ CTOR(TLinear,TMiso)
 
 double TLinear::f( double /* t */ )
 {
-  return *in_so[0]*a0 + *in_so[1]*a1 + *in_so[2]*a2 + *in_so[3]*a3 + b;
+  return in_0*a0 + in_1*a1 + in_2*a2 + in_3*a3 + b;
 }
 
 DEFAULT_FUNCS_REG(TLinear)

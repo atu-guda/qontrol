@@ -18,14 +18,14 @@
 #include "tswitch.h"
 
 const char* TSwitch::helpstr = "<H1>TSwitch</H1>\n"
- "Connects output to one of inputs, accrding to values of u[3]: <br>\n"
+ "<p>Connects output to one of inputs, accrding to values of u[3]: <br>\n"
  " if( u[3] &lt; level1 ) out = u[0]; <br>\n"
  " if( u[3] &gt; level2 ) out = u[2]; <br>\n"
  " else out = u[1]. <br>\n"
  "Parameters:<br>\n"
- " - <b>level1</b> -- level of u[3] to switch u[0]->u[1];<br>\n"
- " - <b>level2</b> -- level of u[3] to switch u[1]->u[2].<br>\n"
- "Each parameter can be changed at any time.";
+ " - <b>level1</b> -- level of in_3 to switch in_0->in_1;<br>\n"
+ " - <b>level2</b> -- level of in_3 to switch in_1->in_2.<br>\n"
+ "Each parameter can be changed at any time.</p>";
 
 STD_CLASSINFO(TSwitch,clpElem);
 
@@ -37,9 +37,9 @@ CTOR(TSwitch,TMiso)
 double TSwitch::f( double /* t */ )
 {
   double v;
-  v = ( *in_so[3] < level1 ) ? 
-    *in_so[0] 
-    : ( ( *in_so[3]>level2 ) ? *in_so[2] : *in_so[1] );
+  v = ( in_3 < level1 ) ? 
+    in_0 
+    : ( ( in_3>level2 ) ? in_2 : in_1 );
   return v;
 }
 

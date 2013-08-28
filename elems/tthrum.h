@@ -51,7 +51,6 @@ class TThrum : public TMiso  {
    PRM_INPUT( in0, 0, "input 0", "First input",  "sep=block" );
    PRM_INPUT( in1, 0, "input 1", "Second input", "sep=col" );
    PRM_INPUT( in2, 0, "input 2", "Third input",  "sep=col" );
-   //PRM_INPUT( in3, 0, "input 3", "Fourth input", "sep=col" );
    
    DCL_DEFAULT_STATIC;
 };

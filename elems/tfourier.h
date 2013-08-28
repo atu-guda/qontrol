@@ -73,6 +73,9 @@ class TFourier : public TMiso  {
    PRM_DOUBLE( qpow, efInner, "qpow", "power criterion?", "" );
    PRM_DOUBLE( qpow1, efInner, "qpow1", "power criterion1?", "" );
    PRM_DOUBLE( s_x2, efInner, "s_x2", "Input power", "" );
+   
+   PRM_INPUT( in_u, 0, "input", "Single input u(t)",  "sep=block" );
+   
    int nper, n_st, n_en, ii;
    /** arrays for summators */
    dvector aa, bb, am;

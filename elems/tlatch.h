@@ -50,6 +50,10 @@ class TLatch : public TMiso  {
    PRM_SWITCH( usePulse, efNRC, "use Pulse", "latch on jump of u[1] (>0.5), not level", "sep=col" );
    PRM_SWITCH( useFirst, efNRC, "use First", "count only first signal to latch", "" );
    PRM_SWITCH( useAdd,   efNRC, "use Add", "add current u[0] to value, not set", "" );
+   
+   PRM_INPUT( in_u, 0, "input", "Main input",  "sep=block" );
+   PRM_INPUT( in_latch, 0, "latch in", "Latch input", "sep=col" );
+
    int wasLatch = -1;
    
    DCL_DEFAULT_STATIC;

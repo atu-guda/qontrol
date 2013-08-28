@@ -47,12 +47,12 @@ double TLinP1Q0::f( double /*t*/ )
 {
   double x, f;
   if( use_u1 ) {
-    f = *in_so[1];
+    f = in_f;
   } else {
     f = x_old;
   };
   // TODO: check this for stability
-  x = x_old + a * tdt * ( ku * *in_so[0] - f );
+  x = x_old + a * tdt * ( ku * in_u - f );
   x_old = x;
   return x;
 }

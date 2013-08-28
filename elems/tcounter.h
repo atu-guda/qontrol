@@ -45,7 +45,11 @@ class TCounter : public TMiso  {
    //* current counter */
    PRM_INT( cn, efInner, "cn", "Current counter value", "" );
    /** use u[1] as reset */
-   PRM_SWITCH( useReset, 0, "u[1] is Reset", "Use u[1] as Reset signal", "" );
+   PRM_SWITCH( useReset, 0, "use Reset", "Use in_rst as Reset signal", "sep=col" );
+   
+   PRM_INPUT( in_x,   0, "input", "Input source",  "sep=block" );
+   PRM_INPUT( in_rst, 0, "rst input", "Signal to reset counter", "sep=col" );
+   
    int flip;
    /** old value of input */
    double u_old = DMAX;

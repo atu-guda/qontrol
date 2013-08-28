@@ -33,19 +33,19 @@ class TOutputAny : public TMiso  {
  protected:
    /** main computation function */
    virtual double f( double t ) override;
-   /** reimplemented from TMiso to set source */
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
 
    /** name of source */
    PRM_STRING( name, efNRC, "Sink name", "Name of sink to output", "ncol=2\nmax=80" );
    /** enabler = u[1]  */
-   PRM_SWITCH( useEnable, 0,  "u[1] is Enable", "Use u[1] as enable", "");
+   PRM_SWITCH( useEnable, 0,  "use in_ena", "Use in_ena as enable", "");
+   
+   PRM_INPUT( in_u,   0, "input", "main input",  "sep=block" );
+   PRM_INPUT( in_ena, 0, "Enable in", "input signal to enable",  "sep=col" );
+
    /** type of output: -1:bad, 0:object, 1-vars.  */
    int type;
    /** idx of sink */
    int ne;
-   /** name of last subelement xx.xx.xxx.lastname */
-   QString lastname;
    
    DCL_DEFAULT_STATIC;
 };

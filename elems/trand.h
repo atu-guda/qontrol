@@ -89,6 +89,8 @@ class TRand : public TMiso  {
    /** flag: add base seed to element seed */
    PRM_SWITCH( addBaseSeed, efNRC, "Add base", "Add base seed to element seed ", "def=1" );
    
+   PRM_INPUT( in_t, 0, "input t", "Input t if not used automaticaly",  "sep=block" );
+   
    /** time (may not be time) after previos value change */
    double sp_time = DMAX;
    /** old input (usualy time) to calc difference */

@@ -39,6 +39,11 @@ class TLinear : public TMiso  {
    PRM_DOUBLE( a2, 0, "a2", "factor in input 2", "sep=col" );
    PRM_DOUBLE( a3, 0, "a3", "factor in input 3", "" );
    PRM_DOUBLE( b,  0, "b", "static shift", "sep=col" );
+   
+   PRM_INPUT( in_0, 0, "input 0", "First input",  "sep=block" );
+   PRM_INPUT( in_1, 0, "input 1", "Second input", "sep=col" );
+   PRM_INPUT( in_2, 0, "input 2", "Third input",  "sep=col" );
+   PRM_INPUT( in_3, 0, "input 3", "Fourth input", "sep=col" );
 
    DCL_DEFAULT_STATIC;
 };

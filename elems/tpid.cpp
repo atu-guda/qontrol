@@ -18,9 +18,9 @@
 #include "tpid.h"
 
 const char* TPid::helpstr = "<H1>TPid</H1>\n"
- "Integrators, differenciators and proportional element: <br>\n"
+ "<p>Integrators, differenciators and proportional element: <br>\n"
  "Have 6 parameters: <b>kd2, kd1, kp, ki1, ki1, aver</b>.\n"
- "Coefficients can be changed at any time, aver - no.";
+ "Coefficients can be changed at any time, aver - no.</p>";
 
 STD_CLASSINFO(TPid,clpElem );
 
@@ -47,28 +47,28 @@ int TPid::do_startLoop( int /*acnx*/, int /*acny*/ )
 
 double TPid::f( double t )
 {
-  double v, d1, d2;
-  v = 0;
+  double v = 0, d1, d2, uc = in_u;
+
   if( start == 1 ) {
-    start = 2; u_old = *in_so[0]; vi1 += *in_so[0] * tdt; vi2 += vi1 * tdt;
-    v = kp * *in_so[0] + ki1 * vi1 + ki2 * vi2;
+    start = 2; u_old = uc; vi1 += uc * tdt; vi2 += vi1 * tdt;
+    v = kp * uc + ki1 * vi1 + ki2 * vi2;
     return v;
   };
   if( start == 2 ) {
-    start = 0; d1 = ( *in_so[0] - u_old ) / tdt;
-    vi1 += *in_so[0] * tdt; vi2 += vi1 * tdt;
-    u_old2 = u_old; u_old = *in_so[0];
-    v = kd1 * d1 + kp * *in_so[0] + ki1 * vi1 + ki2 * vi2;
+    start = 0; d1 = ( uc - u_old ) / tdt;
+    vi1 += uc * tdt; vi2 += vi1 * tdt;
+    u_old2 = u_old; u_old = uc;
+    v = kd1 * d1 + kp * uc + ki1 * vi1 + ki2 * vi2;
     return v;
   };
-  d1 = ( *in_so[0] - u_old ) / tdt;
-  d2 = ( *in_so[0] - 2*u_old + u_old2 ) / tdt2;
-  vi1 += *in_so[0] * tdt;
+  d1 = ( uc - u_old ) / tdt;
+  d2 = ( uc - 2*u_old + u_old2 ) / tdt2;
+  vi1 += uc * tdt;
   vi2 += vi1 * tdt;
-  v = kd2 * d2 + kd1 * d1 + kp * *in_so[0] + ki1 * vi1 + ki2 * vi2;
+  v = kd2 * d2 + kd1 * d1 + kp * uc + ki1 * vi1 + ki2 * vi2;
   if( aver )
     v /= t;
-  u_old2 = u_old; u_old = *in_so[0];
+  u_old2 = u_old; u_old = uc;
   return v; 
 }
 

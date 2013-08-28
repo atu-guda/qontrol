@@ -22,7 +22,7 @@
 const char* TFuncMisc::helpstr = "<H1>TFuncMisc</H1>\n"
  "Miscelenios nonlinear functions: <br>\n"
  "Argument <b>y</b> calculates as:<br>\n"
- "<b>y = u[0] - u[1] - x0</b><br>\n"
+ "<b>y = in_0 - in_1 - x0</b><br>\n"
  "Integer parameter <b>type</b> selects type of function.<br>\n"
  "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n";
 
@@ -37,7 +37,7 @@ CTOR(TFuncMisc,TMiso)
 double TFuncMisc::f( double /* t */ )
 {
   double v, y;
-  y = *in_so[0] - *in_so[1] - x0; 
+  y = in_0 - in_1 - x0; 
   switch( (int)type ) {
     case 0:  v = a * deadLine( y, b ); break;
     case 1:  v = a * limitLine( y, b ); break;
@@ -49,13 +49,13 @@ double TFuncMisc::f( double /* t */ )
     case 7:  v = a * triangleLine( y , b ); break;
     case 8:  v = a * rectLine( y, b, c ); break;
     case 9:  v = ( y >= 0 ) ? (a * y) : ( b * y ); break;
-    case 10: v = a * *in_so[0] / ( *in_so[1] +  b );  break;
+    case 10: v = a * in_0 / ( in_1 +  b );  break;
     case 11: v = a * int( y * b );  break;
     case 12: v = a * ( ( y * b ) - int( y * b ) );  break;
     case 13: v = a * asin( fabs( sin( y * b) ) );  break;
     case 14: v = a * erf( y*b );  break;
-    case 15: v = a * fmin( *in_so[0], *in_so[1] );  break;
-    case 16: v = a * fmax( *in_so[0], *in_so[1] );  break;
+    case 15: v = a * fmin( in_0, in_1 );  break;
+    case 16: v = a * fmax( in_0, in_1 );  break;
     default: v = 0;
   };
   v += g;

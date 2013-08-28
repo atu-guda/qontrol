@@ -61,9 +61,9 @@ double TVibro::f( double /*t*/ )
     v = ( x - x_old2 ) / ( 2 * tdt );
   }
   
-  f_old = use_u1 ? *in_so[1] : x;
+  f_old = use_u1 ? in_f : x;
   
-  u_old = *in_so[0]; 
+  u_old = in_u; 
   x_old2 = x_old; x_old = x;
   return x;
 }

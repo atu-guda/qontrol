@@ -98,7 +98,9 @@ class TSourceLin : public TMiso  {
    PRM_DOUBLE(   ve_13,efOld,  "ve[13]", "Stop  13", "" );
    PRM_DOUBLE(   ve_14,efOld,  "ve[14]", "Stop  14", "" );
    PRM_DOUBLE(   ve_15,efOld,  "ve[15]", "Stop  15", "" );
-   /* ------------ end of iface vars */
+
+   // NO inputs: todo: fake time
+
    /** slope values of each line */
    dvector slopes;
    /** number of lines, current line */

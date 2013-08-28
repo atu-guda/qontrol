@@ -57,6 +57,11 @@ class TAdjGen : public TMiso  {
    PRM_DOUBLE( ctt, efInner, "ctt", "Accumulator 0", "" );
    PRM_DOUBLE( ig, efInner,  "ig",  "Accumulator 1", "" );
    PRM_DOUBLE( ig2, efInner, "ig2", "Accumulator 2", "" );
+   
+   PRM_INPUT( in_omega, 0, "\\omega", "omega input",  "sep=block" );
+   PRM_INPUT( in_rst,   0, "reset", "reset input input", "sep=col" );
+   PRM_INPUT( in_lock,  0, "lock", "lock input",  "sep=col" );
+   PRM_INPUT( in_omega2, 0, "\\omega 2", "seconf omega input", "sep=col" );
    /** real tick: exported to double tick */
    int real_tick;
    DCL_DEFAULT_STATIC;

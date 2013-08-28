@@ -55,14 +55,16 @@ int TIntegrator::do_startLoop( int /*acnx*/, int /*acny*/ )
 double TIntegrator::f( double /* t */ )
 {
   double v_ret, base = 0, in;
-  if( useBase ) base = *in_so[3];
-  if( useAdd )  base += s_val;
+  if( useBase ) 
+    base = in_base;
+  if( useAdd )  
+    base += s_val;
   if( useSqIn )
-    in = *in_so[0] * *in_so[0];
+    in = in_u * in_u;
   else
-    in = *in_so[0];
+    in = in_u;
 
-  if( useReset && *in_so[1] > 0.1 ) {
+  if( useReset && in_rst > 0.1 ) {
     t_rst = 0;
   };
 

@@ -47,6 +47,8 @@ class TDelay : public TMiso  {
    PRM_DOUBLE( mdelay, efNRC, "Max. delay", "Maximum delay", "min=0\nmax=1e20\ndef=1.5");
    /** current delay */
    PRM_DOUBLE( cdelay, 0, "Cur. delay", "Current delay", "min=0\nmax=1e20\ndef=1.0" );
+   
+   PRM_INPUT( in_u, 0, "input", "Single input",  "sep=block" );
 
    double v1;
    double v2;

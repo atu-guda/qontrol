@@ -29,26 +29,6 @@ STD_CLASSINFO(TCorrAnalysis,clpElem );
 
 CTOR(TCorrAnalysis,TMiso)
 {
-  mainOutput = 0;
-  reset_data();
-  out_source[0]  = s_x.addr(); 
-  out_source[1]  = s_x2.addr(); 
-  out_source[2]  = s_y.addr(); 
-  out_source[3]  = s_y2.addr(); 
-  out_source[4]  = s_xy.addr(); 
-  out_source[5]  = a.addr(); 
-  out_source[6]  = b.addr(); 
-  out_source[7]  = corr.addr(); 
-  out_source[8]  = cov.addr(); 
-  out_source[9]  = dis_x.addr(); 
-  out_source[10] = dis_y.addr(); 
-  out_source[11] = sigma_x.addr(); 
-  out_source[12] = sigma_y.addr(); 
-  out_source[13] = ave_x.addr(); 
-  out_source[14] = ave_y.addr(); 
-  out_source[15] = ave_x2.addr(); 
-  out_source[16] = ave_y2.addr(); 
-  out_source[17] = 0; out_source[18] = 0; out_source[19] = 0; 
 }
 
 
@@ -132,15 +112,15 @@ int TCorrAnalysis::do_endLoop()
 double TCorrAnalysis::f( double t )
 {
   int add;
-  double x = *in_so[0], y = *in_so[1];
+  double x = in_x, y = in_y;
   ii++;
-  if( useReset && *in_so[3] < 0.1 /* sic: < */ ) {
+  if( useReset && in_rst > 0.1 ) { // history was < 0.1
     reset_data();
   };
   switch( (int)type ) {
     case 0: add = 1; break;
     case 1: add = ( t >= t0 ) && ( t <= t1 ); break;
-    case 2: add = ( *in_so[2] > 0.1 ); break;
+    case 2: add = ( in_add > 0.1 ); break;
     case 3: add = 0; // dont add, use arrays
     default: add = 0;
   };
@@ -149,13 +129,12 @@ double TCorrAnalysis::f( double t )
     s_xy += x * y; 
     n++;
   };
-  if( ( ii >= model_nn-1 || ( useCalc && *in_so[3] > 0.1 ))   ) {
+  if( ( ii >= model_nn-1 || ( useCalc && in_calc > 0.1 ))   ) {
     if( type >= 3 )
       getDataFromArrays();
     calc();
-    putModelVars();
   };
-  return *out_source[ mainOutput ];
+  return s_x;
 }
 
 int TCorrAnalysis::getDataFromArrays()
@@ -172,8 +151,6 @@ int TCorrAnalysis::getDataFromArrays()
     xdat = arrx->getArray();
   } else {
     xdat = 0; nx = 0;
-    // DEBUG:
-    // cerr << __PRETTY_FUNCTION__ << ": fail to find x: " << x_in << '\n';
   };
   // get x array
   TOutArr *arry = model->getOutArr( y_in );
@@ -182,8 +159,6 @@ int TCorrAnalysis::getDataFromArrays()
     ydat = arry->getArray();
   } else {
     ydat = 0; ny = 0;
-    // DEBUG:
-    // cerr << __PRETTY_FUNCTION__ << ": fail to find y: " << x_in << '\n';
   };
   if( nx < 1 && ny < 1 )
     return 0;
@@ -236,18 +211,6 @@ int TCorrAnalysis::calc()
   return ok;
 }  
   
-void TCorrAnalysis::putModelVars()
-{
-  // model = static_cast<TModel*>(parent);
-  if( out_a >= 0 )
-    model->setVar( out_a, a );
-  if( out_b >= 0 )
-    model->setVar( out_b, b );
-  if( out_corr >= 0 )
-    model->setVar( out_corr, corr );
-  if( out_ok >= 0 )
-    model->setVar( out_ok, ok );
-}
 
 DEFAULT_FUNCS_REG(TCorrAnalysis)
 

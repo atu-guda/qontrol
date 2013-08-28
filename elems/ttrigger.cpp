@@ -40,43 +40,52 @@ int TTrigger::do_startLoop( int /*acnx*/, int /*acny*/ )
 
 double TTrigger::f( double t )
 {
-  int i, ui[4], sw, act;
+  int sw, act;
+  int ui_r = ( in_r > level1 );
+  int ui_s = ( in_s > level1 );
+  int ui_x = ( in_x > level1 );
+  int ui_ena = ( in_ena > level1 );
   double du;
+  
   if( t > tdt/2 ) {
-    du = *in_so[2] - u2_old;
+    du = in_s - u2_old;
   } else {
     du = 0;
   };
-  u2_old = *in_so[2];
-  for( i=0; i<4; i++ )
-    ui[i] = ( *in_so[i]>level1 );
-  if( useEnable && ui[3] < 1 ) {
-    if( usePulse ) return 0;
-    if( cst ) return 1;
+  u2_old = in_s;
+
+  if( useEnable && ! ui_ena ) { // disabled state
+    if( usePulse ) 
+      return 0;
+    if( cst ) 
+      return 1;
     return useMinus ? -1 : 0;
   };
+
   sw = 0;
-  if( ui[1] ) { // SET/RESET inputs 
+  if( ui_s ) { // SET/RESET inputs 
     sw = 1; 
   } else {
-    if( ui[0] ) { 
+    if( ui_r ) { 
       sw = -1; 
     };
   };
-  if( sw == 0 ) {
+
+  if( sw == 0 ) { // no R ot S signal : main work
     switch( (int)type ) {
       case 0: break;
-      case 1: if( *in_so[2] > level1 ) { sw = 1; break; };
-	      if( *in_so[2] < level0 ) { sw = -1; break; };
+      case 1: if( in_x > level1 ) { sw =  1; break; };
+	      if( in_x < level0 ) { sw = -1; break; };
 	      break;
-      case 2: if( du > 0.5 ) sw = 2; 
+      case 2: if( du >  level1 ) sw = 2; 
 	      break;  
-      case 3: if( du < -0.5 ) sw = 2;
+      case 3: if( du < -level1 ) sw = 2;
 	      break;
-      case 4: sw = ui[2] ? 2 : 0; break;
+      case 4: sw = ui_x ? 2 : 0; break;
       default: break;
     };
   };
+
   if( useT0 && sw == 0 && cst == 1 ) {
     if( et >= t0 ) {
       sw = -1; et = 0;
@@ -97,7 +106,8 @@ double TTrigger::f( double t )
   };
   if( usePulse ) 
     return act;
-  if( cst ) return 1;
+  if( cst ) 
+    return 1;
   return useMinus ? -1 : 0;
 }
 

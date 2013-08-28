@@ -48,6 +48,11 @@ class TLorenz : public TMiso  {
    PRM_DOUBLE( x, efInner, "x", "x current value", "" );
    PRM_DOUBLE( y, efInner, "y", "y current value", ""  );
    PRM_DOUBLE( z, efInner, "z", "z current value", ""  );
+
+   PRM_INPUT( in_x, 0, "input x", "X additional input",  "sep=block" );
+   PRM_INPUT( in_y, 0, "input y", "Y additional input", "sep=col" );
+   PRM_INPUT( in_z, 0, "input z", "Z additional input",  "sep=col" );
+
    /** values to store some model vars */	  
    double tt;
    

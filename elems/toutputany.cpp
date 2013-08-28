@@ -22,7 +22,7 @@
 #include "toutputany.h"
 
 const char* TOutputAny::helpstr = "<H1>TOutputAny</H1>\n"
- "<h2>Obsoleted element, use only to out to model vars (obsoleted too)</h2>\n"
+ "<h2>Obsoleted element, dont work at all: use links</h2>\n"
  "Puts signal to given target: <br>\n"
  "1-st form: #12 - put models var #12 <br>\n"
  "2-nd form: name relative to model: source.u <br>\n"
@@ -32,39 +32,13 @@ STD_CLASSINFO(TOutputAny,clpElem);
 
 CTOR(TOutputAny,TMiso)
 {
-  type = -1; 
-  useEnable = 0; ne = -1;
 }
 
 
-// TODO: fix! NO: remove this object!
-int TOutputAny::do_preRun( int /*run_tp*/, int /*an*/, 
-                           int /*anx*/, int /*any*/, double /*adt*/ )
-{
-  int l;
-  lastname = "";
-  type = -1; ne = -1;
-  l = name.cval().size();
-  if( l < 2 ) return 0; // smallest: '#0'
-  if( name.cval()[0] == '#' ) { // access to model vars by number
-    type = 1; 
-    ne = atoi( name.cval().toLocal8Bit().constData() + 1 );
-    return 0;
-  };
-  // all output dropped
-  return 0;
-}
 
 double TOutputAny::f( double /* t */ )
 {
-  if( useEnable && *in_so[1] < 0.1 )
-    return *in_so[0];
-  switch( type ) {
-    // case 0: pel->setDataID( ne, *in_so[0], 1 ); break; TODO: drop at all
-    case 1: model->setVar( ne, *in_so[0] ); break;
-    default: ;
-  };
-  return *in_so[0];
+  return in_u;
 }
 
 DEFAULT_FUNCS_REG(TOutputAny)

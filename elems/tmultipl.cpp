@@ -18,9 +18,9 @@
 #include "tmultipl.h"
 
 const char* TMultipl::helpstr = "<H1>TMultipl</H1>\n"
- "Simple multiplicator: <br>\n"
+ "<p>Simple multiplicator: <br>\n"
  "it multimplies all enabled inputs and parametr <b>a</b>\n"
- "Have 5 parameters: <b>on0 .. on3, a</b>, each can be changed at any time.";
+ "Have 5 parameters: <b>on0 .. on3, a</b>, each can be changed at any time.</p>";
 
 STD_CLASSINFO(TMultipl,clpElem);
 
@@ -33,13 +33,13 @@ double TMultipl::f( double /* t */ )
 {
   double v = a; 
   if( on0 )
-    v *= *in_so[0];
+    v *= in_0;
   if( on1 )
-    v *= *in_so[1];
+    v *= in_1;
   if( on2 )
-    v *= *in_so[2];
+    v *= in_2;
   if( on3 )
-    v *= *in_so[3];
+    v *= in_3;
   return v; 
 }
 
