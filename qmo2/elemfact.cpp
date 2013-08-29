@@ -10,13 +10,6 @@
 #include "dataset.h"
 
 
-// old example
-//int TDataSetXXX::reg()
-//{
-//  static TDataSetXXX p { create, "" };
-//  return EFACT.registerElemType( p );
-//}
-
 
 ElemFactory::ElemFactory()
 {
@@ -38,6 +31,14 @@ HolderData* ElemFactory::createElem( const QString &a_type,
           qP(a_type), qP(obj_name) ); 
     return nullptr;
   }
+  
+  // check for manual abstract elements
+  if( i.value()->props & clpPure ) {
+    DBGx( "WARN: refuse to create object \"%s\" with abstract type \"%s\"", 
+          qP(obj_name), qP(a_type) ); 
+    return nullptr;
+  }
+
   // check parent for name
   if( a_parent->getElem(obj_name) ) {
     DBGx( "WARN: name \"%s\" exists in parent \"%s\"", 
@@ -64,23 +65,15 @@ bool ElemFactory::registerElemType( const TClassInfo *cl_info )
     return false;
   }
   str_class.insert( cl_name, cl_info );
-  if( cl_info->props & clpData ) {
+
+  int props = cl_info->props;
+  if( ( props & clpData ) && ! ( props & clpPure ) ) {
     param_names << cl_name; 
   }
   //DBGx( "dbg:  registered \"%s\" %d", cl_info->className, cl_info->props ); 
   return true;
 }
 
-//bool ElemFactory::unregisterElemType( const QString &a_type )
-//{
-//  auto i = str_class.find( a_type );
-//  if( i == str_class.end() ) {
-//    DBG2q( "ERR: fail to find class", a_type ); 
-//    return 0;
-//  }
-//  str_class.erase( i );
-//  return true;
-//}
 
 const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
 {
@@ -92,4 +85,30 @@ const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
   return i.value();
 }
 
+bool ElemFactory::isChildOf( const QString &cl, const QString &par_cl )
+{
+  // DBGx( "dbg: test: is \"%s\" a child of \"%s\"", qP(cl), qP(par_cl) );
+  if( cl == par_cl ) {
+    return true;
+  }
+
+  auto ic = str_class.find( cl );
+  if( ic == str_class.end() ) {
+    return false;
+  }
+  auto icp = str_class.find( par_cl );
+  if( icp == str_class.end() ) {
+    return false;
+  }
+
+  const QMetaObject *mob = ic.value()->meta;
+  while( mob ) {
+    if( par_cl == mob->className() ) {
+      // DBGx( "dbg: \"%s\" is child of \"%s\"", qP(cl), qP(par_cl) );
+      return true;
+    }
+    mob = mob->superClass(); 
+  }
+  return false;
+}
 

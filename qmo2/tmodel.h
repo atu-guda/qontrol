@@ -38,6 +38,10 @@ class TModel : public TDataContainer  {
   virtual ~TModel() override;
   DCL_CREATE;
   DCL_STD_INF;
+  virtual const char* allowTypes() const override 
+  { 
+    return "TMiso,TGraph,TOutArr,HolderValue,InputSimple"; 
+  }
 
   /** reimplemented from TDataSet to provide access to '#nvar' TODO: drop*/
   //virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = nullptr, 
@@ -107,8 +111,6 @@ class TModel : public TDataContainer  {
   
   /** reimplemented from TDataSet to ensure all data filled and linked */
   virtual int checkData( int i );
-  /** reimplemented to allow add TMiso.. TOutArr... TGraph TODO: containers */
-  virtual int isValidType( const QString &cl_name ) const;
   
  protected:
   /** reimplemented to real Elems, OutArr, Graphs: TODO: separate containers */

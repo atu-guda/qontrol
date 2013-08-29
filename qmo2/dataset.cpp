@@ -15,7 +15,7 @@ using namespace std;
 
 // ================================================================
 // ---------------- HolderData .... ----------------------
-STD_CLASSINFO(HolderData,clpSpecial);
+STD_CLASSINFO(HolderData,clpSpecial|clpPure);
 
 HolderData::HolderData( ARGS_CTOR_MIN )
      :QObject( a_parent ),
@@ -195,11 +195,65 @@ bool HolderData::setData( const QString &nm, const QVariant &da )
 const char* HolderData::helpstr { "Abstract data holder" };
 
 
+// ---------------- HolderValue ---------
+STD_CLASSINFO(HolderValue,clpData|clpPure);
+
+CTOR(HolderValue,HolderData)
+{
+}
+
+void HolderValue::reset_dfl()
+{
+  DBG1( "ERR: abstract class funcion called" );
+}
+
+
+bool HolderValue::set( const QVariant & /*x*/, int /* idx */ )
+{
+  DBG1( "ERR: abstract class funcion called" );
+  return false;
+}
+
+QVariant HolderValue::get( int /* idx */ ) const
+{
+  DBG1( "ERR: abstract class funcion called" );
+  return QVariant();
+}
+
+void HolderValue::post_set()
+{
+  DBG1( "ERR: abstract class funcion called" );
+}
+
+QString HolderValue::toString() const
+{
+  DBG1( "ERR: abstract class funcion called" );
+  return QString();
+}
+
+bool HolderValue::fromString( const QString & /*s */ )
+{
+  DBG1( "ERR: abstract class funcion called" );
+  return false;
+}
+
+
+QString HolderValue::getType() const
+{
+  return "value?";
+}
+
+const char* HolderValue::helpstr { "Parent of all data" };
+
+
+DEFAULT_FUNCS_REG(HolderValue);
+
+
 
 // ---------------- HolderInt ---------
 STD_CLASSINFO_ALIAS(HolderInt,clpData,int);
 
-CTOR(HolderInt,HolderData) , v(0)
+CTOR(HolderInt,HolderValue) , v(0)
 {
   tp=QVariant::Int;
   if( getParm("props").isEmpty() ) {
@@ -352,7 +406,7 @@ DEFAULT_FUNCS_REG(HolderList);
 // ---------------- HolderDouble ---------
 STD_CLASSINFO_ALIAS(HolderDouble,clpData,double);
 
-CTOR(HolderDouble,HolderData), v(0)
+CTOR(HolderDouble,HolderValue), v(0)
 {
   tp=QVariant::Double;
   post_set();
@@ -432,7 +486,7 @@ DEFAULT_FUNCS_REG(HolderDouble);
 // ---------------- HolderString ---------
 STD_CLASSINFO_ALIAS(HolderString,clpData,QString);
 
-CTOR(HolderString,HolderData)
+CTOR(HolderString,HolderValue)
 {
   tp=QVariant::String;
   post_set();
@@ -504,7 +558,7 @@ DEFAULT_FUNCS_REG(HolderString);
 // ---------------- HolderColor ---------
 STD_CLASSINFO_ALIAS(HolderColor,clpData,QColor);
 
-CTOR(HolderColor,HolderData)
+CTOR(HolderColor,HolderValue)
 {
   tp=QVariant::Color;
   post_set();
@@ -576,7 +630,7 @@ DEFAULT_FUNCS_REG(HolderColor);
 // ---------------- HolderIntArray ---------
 STD_CLASSINFO_ALIAS(HolderIntArray,clpData|clpArray,int[]);
 
-CTOR(HolderIntArray,HolderData)
+CTOR(HolderIntArray,HolderValue)
 {
   tp=QVariant::UserType;
   if( getParm("props").isEmpty() ) {
@@ -691,7 +745,7 @@ DEFAULT_FUNCS_REG(HolderIntArray);
 // ---------------- HolderDoubleArray ---------
 STD_CLASSINFO_ALIAS(HolderDoubleArray,clpData|clpArray,double[]);
 
-CTOR(HolderDoubleArray,HolderData)
+CTOR(HolderDoubleArray,HolderValue)
 {
   tp=QVariant::UserType;
   if( getParm("props").isEmpty() ) {
@@ -807,7 +861,7 @@ DEFAULT_FUNCS_REG(HolderDoubleArray);
 // ---------------- HolderStringArray ---------
 STD_CLASSINFO_ALIAS(HolderStringArray,clpData|clpArray,string[]);
 
-CTOR(HolderStringArray,HolderData)
+CTOR(HolderStringArray,HolderValue)
 {
   tp=QVariant::UserType;
   if( getParm("props").isEmpty() ) {
@@ -906,7 +960,7 @@ DEFAULT_FUNCS_REG(HolderStringArray);
 
 
 // ---------------- TDataSet ------------------------
-STD_CLASSINFO(TDataSet,clpSpecial);
+STD_CLASSINFO(TDataSet,clpSpecial|clpPure);
 
 
 const char* TDataSet::helpstr = 
@@ -1195,6 +1249,8 @@ double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg ) // TODO: why no
 // TODO: more args
 HolderData* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
 {
+  //DBGx( "dbg: try to add \"%s\" type \"%s\" to \"%s\"",
+  //    qP(ob_name), qP(cl_name), qP( getFullName() ) );
   if( ! ( allow_add & allowObject ) )
     return nullptr;
   HolderData *el = getElem( ob_name );
@@ -1204,8 +1260,8 @@ HolderData* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
     return nullptr;
   }
   if( ! isValidType( cl_name ) ) {
-    DBGx( "WARN: type \"%s\" not allowed in \"%s\"!", 
-          qP(ob_name), qP( getFullName() ) );
+    DBGx( "WARN: type \"%s\" for \"%s\" not allowed in \"%s\"!", 
+          qP(cl_name), qP(ob_name), qP( getFullName() ) );
     return nullptr;
   }
   HolderData *ob = EFACT.createElem( cl_name, ob_name, this );
@@ -1277,9 +1333,22 @@ HolderData* TDataSet::add_param( const QString &tp_name, const QString &ob_name 
 
 
 
-int TDataSet::isValidType(  const QString & /*cl_name*/  ) const
+int TDataSet::isValidType(  const QString &cl_name  ) const
 {
-  return 1;
+  // DBGx( "dbg: allowTypes: \"%s\" for %s", allowTypes(), qP(getType()) );
+  const TClassInfo *ci = EFACT.getInfo( cl_name );
+  if( ! ci )
+    return false;
+  if( ci->props & clpPure )
+    return false;
+
+  QStringList atp = QString(allowTypes()).split(',');
+  for( auto c : atp ) {
+    if( EFACT.isChildOf( cl_name, c ) ) {
+      return true;
+    }
+  }
+  return false;
 }
 
 bool TDataSet::isChildOf( const QString &cname ) const
@@ -1607,7 +1676,7 @@ void TDataSet::dumpStruct() const
 
 // ------------------------------------ InputAbstract ---------
 //
-// STD_CLASSINFO(InputAbstract,clpInput|clpSpecial);
+STD_CLASSINFO(InputAbstract,clpInput|clpSpecial|clpPure);
 
 const double InputAbstract::fake_in {0};
 const double InputAbstract::one_in {1.0};
@@ -1617,7 +1686,7 @@ CTOR(InputAbstract,TDataSet)
   // child may register itself to parent
 }
 
-InputAbstract::~InputAbstract() // = 0
+InputAbstract::~InputAbstract() 
 {
   // child may unregister itself from parent
 }
@@ -1664,6 +1733,9 @@ void InputAbstract::set_link()
 
 }
 
+const char* InputAbstract::helpstr { "Abstract link" };
+
+DEFAULT_FUNCS_REG(InputAbstract);
 
 // ------------------------------------ InputSimple ---------
 STD_CLASSINFO(InputSimple,clpInput|clpSpecial);

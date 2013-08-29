@@ -194,6 +194,7 @@ class HolderData : public QObject {
   virtual bool getData( const QString &nm, QString &da ) const;
   virtual bool setData( const QString &nm, const QVariant &da );
   virtual QDomElement toDom( QDomDocument &dd ) const;
+  virtual const char* allowTypes() const { return ""; }
  public slots: 
   /** returns full name of object: aaa.bbb.cc  */ // TODO: up to HolderData
   QString getFullName() const;
@@ -220,8 +221,23 @@ class HolderData : public QObject {
 };
 
 
+/** Parent of all value holders */
+class HolderValue : public HolderData {
+  Q_OBJECT
+ public: 
+  DCL_CTOR(HolderValue);
+  DCL_CREATE;
+  DCL_STD_INF;
+  DCL_STD_GETSET; // just for working create (need fr register)
+  virtual QString getType() const override; 
+ protected:
+  DCL_DEFAULT_STATIC;
+};
+
+
+
 /** Holder of int values */
-class HolderInt : public HolderData {
+class HolderInt : public HolderValue {
   Q_OBJECT
  public: 
   DCL_CTOR(HolderInt);
@@ -284,7 +300,7 @@ class HolderList : public HolderInt {
  HolderList name ={ #name, this, flags, vname, descr, extra, elems }; 
 
 /** Holder of double values */
-class HolderDouble : public HolderData {
+class HolderDouble : public HolderValue {
   Q_OBJECT
  public: 
   DCL_CTOR(HolderDouble);
@@ -305,7 +321,7 @@ class HolderDouble : public HolderData {
  
 
 /** Holder of QString values */
-class HolderString : public HolderData {
+class HolderString : public HolderValue {
   Q_OBJECT
  public: 
   DCL_CTOR(HolderString);
@@ -327,7 +343,7 @@ class HolderString : public HolderData {
 
 
 /** Holder of QColor values */
-class HolderColor : public HolderData {
+class HolderColor : public HolderValue {
   Q_OBJECT
  public: 
   DCL_CTOR(HolderColor);
@@ -347,7 +363,7 @@ class HolderColor : public HolderData {
 
 // ----------------------------------------------------------------
 /** Holder: array of int */
-class HolderIntArray : public HolderData {
+class HolderIntArray : public HolderValue {
   Q_OBJECT
  public: 
   DCL_CTOR(HolderIntArray);
@@ -370,7 +386,7 @@ class HolderIntArray : public HolderData {
 
 // ----------------------------------------------------------------
 /** Holder: array of double */
-class HolderDoubleArray : public HolderData {
+class HolderDoubleArray : public HolderValue {
   Q_OBJECT
  public: 
   DCL_CTOR(HolderDoubleArray);
@@ -393,7 +409,7 @@ class HolderDoubleArray : public HolderData {
 
 // ----------------------------------------------------------------
 /** Holder: array of QString */
-class HolderStringArray : public HolderData {
+class HolderStringArray : public HolderValue {
   Q_OBJECT
  public: 
   DCL_CTOR(HolderStringArray);
@@ -551,8 +567,9 @@ class InputAbstract : public TDataSet {
   Q_OBJECT
  public: 
   DCL_CTOR(InputAbstract);
-  virtual ~InputAbstract() = 0; // to force register
-  // no DCL_STD_INF;
+  virtual ~InputAbstract();  // must be abstract, but in this case cannot register
+  DCL_CREATE;
+  DCL_STD_INF;
   virtual void post_set() override;
   //* return ptr to TDataSet, which holds element or nullptr;
   const TDataSet* getSourceObj() const { return src_obj; };
@@ -562,7 +579,7 @@ class InputAbstract : public TDataSet {
   /** do real actions after structure changed */
   virtual void do_structChanged();
   /** find and set link to source or fake source */
-  virtual void set_link() = 0;
+  virtual void set_link();
   
   PRM_STRING( source, efNoRunChange, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK"  );
   PRM_STRING( label,  efNoRunChange, "Label", "Label to display on structure", "max=64"  );
@@ -576,9 +593,7 @@ class InputAbstract : public TDataSet {
   const double *p = &fake_in;
   const TDataSet *src_obj = nullptr;
   ltype_t linkType = LinkBad;
-  // no - no create DCL_DEFAULT_STATIC;
-  // const TClassInfo* getClassInfo() const {  return &class_info; } 
-  // const char* getHelp() const {  return helpstr; }
+  DCL_DEFAULT_STATIC;
 };
 
 // ---------------------------------------------------------------------

@@ -339,23 +339,6 @@ int TModel::checkData( int n )/*{{{1*/
   return TDataContainer::checkData( n );
 }/*}}}1*/
 
-// TODO: not here: use separate containers
-int TModel::isValidType( const QString & cl_name ) const
-{
-  const TClassInfo *ci = EFACT.getInfo( cl_name );
-  if( !ci ) {
-    return 0;
-  }
-  if( ci->props | clpElem ) {
-    return 1;
-  }
-  // FIXME:
-  if( cl_name == "TOutArr" || cl_name == "TGraph" ) {
-    return 1;
-  }
-  DBG2q( "warn: bad object type to insertion", cl_name );
-  return 0;
-}
 
 int TModel::xy2elnu( int avis_x, int avis_y )/*{{{1*/ // TODO: todel
 {

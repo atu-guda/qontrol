@@ -286,13 +286,6 @@ void QMo2View::newElm()
     return;
   }
   
-  const TClassInfo *ci = EFACT.getInfo( aei.type );
-  if( !ci ) {
-    QMessageBox::critical( this, "Error", 
-       QString("Fail to add Elem: class \"") + aei.type + "\" not found", 
-       QMessageBox::Ok, QMessageBox::NoButton );
-    return;
-  }
   TMiso *ob = model->insElem( aei.type, aei.name, aei.order, sel_x, sel_y );
   if( !ob  ) {
     QMessageBox::critical( this, "Error", 

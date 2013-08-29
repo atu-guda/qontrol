@@ -21,6 +21,7 @@ class TRootData : public TDataContainer {
    virtual ~TRootData() override;
    DCL_CREATE;
    DCL_STD_INF;
+   virtual const char* allowTypes() const override { return "TModel"; }
  protected:
    DCL_DEFAULT_STATIC;
 };

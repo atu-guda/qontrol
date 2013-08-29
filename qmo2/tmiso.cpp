@@ -39,7 +39,7 @@ DEFAULT_FUNCS_REG(TElmLink);
 const char* TMiso::helpstr = "<H1>TMiso</H1>\n"
  "Base class for all active elements. Never should be used.";
 
-STD_CLASSINFO(TMiso,clpSpecial);
+STD_CLASSINFO(TMiso,clpSpecial|clpPure);
 
 
 CTOR(TMiso,TDataSet) ,
