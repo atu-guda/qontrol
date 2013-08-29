@@ -1548,6 +1548,8 @@ void TDataSet::unregisterInput( InputSimple *inp )
 {
   if( ! inp )
     return;
+  if( ! guard ) // BUG: bad order of destruction
+    return;
   int idx = inputs.indexOf( inp );
   if( idx == -1 ) {
     DBG2q( "warn: input \"%s\" not registered", inp->objectName() );
@@ -1563,6 +1565,41 @@ InputSimple* TDataSet::getInput (int n)
     return nullptr;
   }
   return inputs[n];
+}
+
+
+void TDataSet::registerParamInput( InputParam *inp )
+{
+  if( ! inp )
+    return;
+  if( pinputs.indexOf( inp ) != -1 ) {
+    DBG2q( "warn: param input \"%s\" already registered", inp->objectName() );
+    return;
+  }
+  pinputs.push_back( inp );
+}
+
+void TDataSet::unregisterParamInput( InputParam *inp )
+{
+  if( ! inp )
+    return;
+  if( ! guard ) // BUG: bad order of destruction
+    return;
+  int idx = pinputs.indexOf( inp );
+  if( idx == -1 ) {
+    DBG2q( "warn: parametric input \"%s\" not registered", inp->objectName() );
+    return;
+  }
+  pinputs.remove( idx );
+}
+
+InputParam* TDataSet::getParamInput(int n)
+{
+  if( n < 0 || n >= pinputs.size() ) {
+    DBGx( "warn: bad parametric input number %d, size= %d", n, pinputs.size() );
+    return nullptr;
+  }
+  return pinputs[n];
 }
 
 void TDataSet::dumpStruct() const
@@ -1621,7 +1658,7 @@ void InputAbstract::do_structChanged()
 
 void InputAbstract::set_link()
 {
-  p = &fake_in; target = nullptr; linkType = LinkBad;
+  p = &fake_in; src_obj = nullptr; linkType = LinkBad;
   if ( source.cval().isEmpty() ) { 
     linkType = LinkNone;
     return;
@@ -1636,10 +1673,10 @@ void InputAbstract::set_link()
   if( !par || !(schem=par->getParent()) )
     return;
   ltype_t lt;
-  const TDataSet *targ = nullptr;
-  const double *cp = schem->getDoublePtr( source, &lt, &targ, 0 );
+  const TDataSet *srct = nullptr;
+  const double *cp = schem->getDoublePtr( source, &lt, &srct, 0 );
   if( lt == LinkElm || lt == LinkSpec ) {
-    p = cp;  target = targ; linkType = lt;
+    p = cp;  src_obj = srct; linkType = lt;
     //DBGx( "dbg: ptr set to target %p for \"%s\" in \"%s\"", 
     //   cp, qP(source), qP(getFullName())  );
   } else {
@@ -1647,13 +1684,7 @@ void InputAbstract::set_link()
         qP(source), qP(getFullName()) );
   }
 
-  // more actions here
 }
-
-
-// const char* InputAbstract::helpstr { "Abstract link with common  functions" };
-
-// DEFAULT_FUNCS_REG(InputAbstract);
 
 
 // ------------------------------------ InputSimple ---------
@@ -1689,6 +1720,50 @@ void InputSimple::set_link()
 const char* InputSimple::helpstr { "Link to source of simple double data" };
 
 DEFAULT_FUNCS_REG(InputSimple);
+
+
+// ------------------------------------ InputParam ---------
+STD_CLASSINFO(InputParam,clpInput|clpSpecial);
+
+CTOR(InputParam,InputAbstract)
+{
+  if( par ) {
+    par->registerParamInput( this );
+  }
+}
+
+InputParam::~InputParam()
+{
+  if( par ) {
+    par->unregisterParamInput( this );
+  }
+}
+
+
+void InputParam::post_set()
+{
+  InputAbstract::post_set(); // report is here
+}
+
+
+void InputParam::set_link()
+{
+  InputAbstract::set_link();
+  // FIXME: set target
+}
+
+bool InputParam::apply()
+{
+  if( linkType != LinkElm  && linkType != LinkSpec )
+    return false;
+  *targ = *p;
+  return true;
+}
+
+
+const char* InputParam::helpstr { "Link from source to inner parameter" };
+
+DEFAULT_FUNCS_REG(InputParam);
 
 
 // end of dataset.cpp

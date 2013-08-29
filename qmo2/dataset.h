@@ -24,6 +24,7 @@ typedef QMap<QString,QString> QSSMap;
 class HolderData;
 class   TDataSet;
 class InputSimple;
+class InputParam;
 typedef HolderData* PHolderData;
 typedef TDataSet* PTDataSet;
 typedef const TDataSet* CPTDataSet;
@@ -152,7 +153,7 @@ enum ltype_t {
   LinkNone = 0, // not linked
   LinkElm,      // linked to element 
   LinkSpec,     // linked to special name, like ':prm1', ':t'
-  LinkBad       // link target not found
+  LinkBad       // link source or target not found
 };
 
 enum allow_type {
@@ -418,6 +419,7 @@ class HolderStringArray : public HolderData {
 class TDataSet : public HolderData {
   Q_OBJECT
   friend class InputSimple; // for register  
+  friend class InputParam; //  same
  signals: 
    void sigStructChanged();
  public:
@@ -485,14 +487,18 @@ class TDataSet : public HolderData {
     * :parmname - only local param? 
     * parmname - try new, w/o ':' 
     * lt - ptr: store link type, 
-    * targ - ptr_pre: strore ptr to target TDataSet, 
+    * targ - ptr_pre: strore ptr to source TDataSet, 
     * lev - level of recursion, not for user */
    virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = nullptr, 
-        const TDataSet **targ = nullptr, int lev = 0 ) const;
+        const TDataSet **src_ob = nullptr, int lev = 0 ) const;
    /** return number of inputs */
    int inputsCount() const { return inputs.size(); };
    /** returns input by number */
    InputSimple* getInput (int n) ; 
+   /** return number of parametric inputs */
+   int inputsParamCount() const { return pinputs.size(); };
+   /** returns input by number */
+   InputParam* getParamInput (int n) ; 
  public slots:
    /** create object with params as string */
    bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
@@ -510,6 +516,10 @@ class TDataSet : public HolderData {
    void registerInput( InputSimple *inp );
    /** unregister input (call by dtor) from inputs */
    void unregisterInput( InputSimple *inp );
+   /** register input (call by ctor) in inputs */
+   void registerParamInput( InputParam *inp );
+   /** unregister input (call by dtor) from inputs */
+   void unregisterParamInput( InputParam *inp );
  protected:
    /** guard value: debug */
    static const int guard_val = 7442428;
@@ -524,6 +534,8 @@ class TDataSet : public HolderData {
    bool updSuspended = false;
    /** place for inputs */
    QVector<InputSimple*> inputs;
+   /** place for parametric inputs */
+   QVector<InputParam*> pinputs;
    DCL_DEFAULT_STATIC;
 };
 
@@ -537,13 +549,13 @@ class InputAbstract : public TDataSet {
   // no DCL_STD_INF;
   virtual void post_set() override;
   //* return ptr to TDataSet, which holds element or nullptr;
-  const TDataSet* getTarget() const { return target; };
+  const TDataSet* getSourceObj() const { return src_obj; };
   //* returns type of link
   ltype_t getLinkType() const { return linkType; };
  protected:
   /** do real actions after structure changed */
   virtual void do_structChanged();
-  /** find and set link to target or fake target */
+  /** find and set link to source or fake source */
   virtual void set_link() = 0;
   
   PRM_STRING( source, efNoRunChange, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK"  );
@@ -556,7 +568,7 @@ class InputAbstract : public TDataSet {
   static const double fake_in;
   static const double one_in;
   const double *p = &fake_in;
-  const TDataSet *target = nullptr;
+  const TDataSet *src_obj = nullptr;
   ltype_t linkType = LinkBad;
   // no - no create DCL_DEFAULT_STATIC;
   // const TClassInfo* getClassInfo() const {  return &class_info; } 
@@ -577,15 +589,44 @@ class InputSimple : public InputAbstract {
   operator double() const { return *p; };
   const double* caddr() const { return p; };
  protected:
-  /** find and set link to target or fake target */
+  /** find and set link to source or fake source */
   virtual void set_link() override;
   
-  ltype_t linkType = LinkBad;
   DCL_DEFAULT_STATIC;
 };
 
 #define PRM_INPUT( name, flags, vname, descr, extra ) \
   InputSimple name = { #name, this, flags, vname, descr, extra  } ; 
+
+// ----------------------------------------------------------------
+/** Special holder link - paramitric input, 
+ * like simple, but with local param target */
+class InputParam : public InputAbstract {
+  Q_OBJECT
+ public: 
+  DCL_CTOR(InputParam);
+  virtual ~InputParam();
+  DCL_CREATE;
+  DCL_STD_INF;
+  virtual void post_set() override;
+  operator double() const { return *p; };
+  const double* caddr() const { return p; };
+  /** make change in parent */
+  bool apply();
+ protected:
+  /** find and set link to  from (fake)  source to (fake) target */
+  virtual void set_link() override;
+  
+  PRM_STRING( tparam, efNoRunChange, "Param", "Name of param target", "max=128\nprops=STRING,SIMPLE,INNERLINK\nsep=block"  );
+  PRM_SWITCH( onlyFirst, 0, "only First", "apply only at start of run", "" );
+
+  double fake_target = 0;
+  double *targ = &fake_target;
+  
+  DCL_DEFAULT_STATIC;
+};
+
+// no auto init
 
 // ----------------------------------------------------------------
 

@@ -142,7 +142,7 @@ void QStructView::drawAll( QPainter &p )
   int sel_x, sel_y, /*sel,*/ mark;
   int li_src_xs;
   LinkInfo li[8];
-  QString qs, ob_name, target_name;
+  QString qs, ob_name, src_name;
   TMiso *ob;
   TOutArr *arr;
   Mo2Settings *psett;
@@ -304,7 +304,7 @@ void QStructView::drawAll( QPainter &p )
         if( ! in )
           continue;
         ltype_t lt = in->getLinkType();
-        const TDataSet* targ = in->getTarget();
+        const TDataSet* sobj = in->getSourceObj();
         li_dst_x = ob_gxc + flip_factor * (obj_sz/2);
         li_dst_y = ob_gy + (i_in+1)*in_sep_sz;
         int pre_dst_x = li_dst_x + el_marg * flip_factor; // *2 ?
@@ -349,9 +349,9 @@ void QStructView::drawAll( QPainter &p )
           continue;
         }
 
-        // here must be ordinary targets -> large mark if not so
-        const TMiso *etarg = nullptr;
-        if( !targ || ( (etarg = qobject_cast<const TMiso*>(targ)) == nullptr ) ) {
+        // here must be ordinary sources -> large mark if not so
+        const TMiso *so_obj = nullptr;
+        if( !sobj || ( (so_obj = qobject_cast<const TMiso*>(sobj)) == nullptr ) ) {
           p.setPen( QPen( Qt::red, 4 ) );
           p.drawEllipse( QPoint(x_vert, li_dst_y), el_marg, el_marg );
           continue;
@@ -361,9 +361,9 @@ void QStructView::drawAll( QPainter &p )
         int so_x = -1, so_y = -1, so_flip = 0, only_lbl = 0;
         int so_flip_factor = 1, li_src_xc = 0;
         QString so;
-        etarg->getData( "vis_x", &so_x );
-        etarg->getData( "vis_y", &so_y );
-        etarg->getData( "flip", &so_flip );
+        so_obj->getData( "vis_x", &so_x );
+        so_obj->getData( "vis_y", &so_y );
+        so_obj->getData( "flip", &so_flip );
         in->getData( "source", so );
         so_flip_factor = ( so_flip ) ? -1 : 1;
 
@@ -409,19 +409,19 @@ void QStructView::drawAll( QPainter &p )
     arr = model->getOutArr( out_nu );
     if( ! arr ) 
       continue;
-    target_name = ""; out_tp = -1;
-    arr->getData( "name", target_name );
+    src_name = ""; out_tp = -1;
+    arr->getData( "name", src_name );
     arr->getData( "type", &out_tp );
     ltype_t lt  = LinkBad; 
     const TDataSet *lob = nullptr;
-    const double *fp = model->getDoublePtr( target_name, &lt, &lob );
+    const double *fp = model->getDoublePtr( src_name, &lt, &lob );
     if( !fp || lt != LinkElm || !lob )
       continue;
-    const TMiso *targ = qobject_cast<const TMiso*>(lob);
-    if( ! targ ) 
+    const TMiso *src_obj = qobject_cast<const TMiso*>(lob);
+    if( ! src_obj ) 
       continue;
     ob_x = ob_y = -1;
-    targ->getData( "vis_x", &ob_x ); targ->getData( "vis_y", &ob_y );
+    src_obj->getData( "vis_x", &ob_x ); src_obj->getData( "vis_y", &ob_y );
     if( ob_x < 0 || ob_x >=MODEL_MX || ob_y < 0 || ob_y >= MODEL_MY )
       continue;
     switch( out_tp ) {
@@ -434,7 +434,7 @@ void QStructView::drawAll( QPainter &p )
     int omark_x = lm + ob_x*grid_sz + obj_sz - 10 - out_nu;
     int omark_y = tm + ob_y*grid_sz +  1;
     p.drawRect( omark_x, omark_y, 10, 10 );
-    if( target_name.contains('.') ) { // inner link mark
+    if( src_name.contains('.') ) { // inner link mark
       p.setBrush( Qt::red );
       p.drawRect( omark_x, omark_y+9, 10, 2 );
     }
