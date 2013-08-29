@@ -44,7 +44,8 @@ enum ClassProps {
   clpSpecial = 8,   //* have special meaning for structue
   clpData = 16,     //* simple data
   clpArray = 32,     //* array
-  clpInput = 64     //* link to other
+  clpInput = 64,     //* link to other
+  clpParamInput = 128 //* link to other + name of innter field
 };
 
 
@@ -60,6 +61,8 @@ struct TClassInfo {
   const char *helpstr;
   /** properties of class (not ClassProps, as use | ) */
   int props;
+  /** pointer to class metaboject */
+  const QMetaObject *meta;
 };
 
 //* arguments for std ctor and creater - full form
@@ -130,12 +133,12 @@ struct TClassInfo {
 // standard class_info definition
 #define STD_CLASSINFO(clname,clp) \
   TClassInfo clname::class_info =  \
-    {  #clname,  clname::create,  helpstr, clp };
+    {  #clname,  clname::create,  helpstr, clp, &staticMetaObject };
 
 // class_info definition under alias (for data holders HolderInt->int)
 #define STD_CLASSINFO_ALIAS(clname,clp,alias) \
   TClassInfo clname::class_info =  \
-    {  #alias,  clname::create,  helpstr, clp };
+    {  #alias,  clname::create,  helpstr, clp, &staticMetaObject };
 
 
 // define in class common converions to target type
@@ -440,6 +443,11 @@ class TDataSet : public HolderData {
    HolderData* getElem( int i ) const;
    /** find holder for object by name */
    HolderData* getElem( const QString &oname ) const;
+   /** find holder for object by name, safely cast to type T */
+   template<typename T> T getElemT( const QString &oname ) const
+      {
+        return qobject_cast<T>( getElem( oname ) );
+      }
    /** index of holder, if my, -1 - if not */
    int indexOfHolder( HolderData *ho ) const;
    /** return state */
@@ -450,8 +458,6 @@ class TDataSet : public HolderData {
    void setModified() { modified |= 1; }
    /** drop modified flag */
    void setUnModified() { modified = 0; }
-   /** return ptr to elem by name with optional type check */
-   HolderData* getObj( const QString &ename, const QString &cl_name = QString() );   
   
    virtual bool getData( const QString &nm, QVariant &da ) const override;
    virtual bool getData( const QString &nm, int *da ) const override;

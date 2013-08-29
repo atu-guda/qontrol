@@ -350,7 +350,7 @@ void QMo2View::linkElm()
   if( ! checkState( selCheck ) )
     return;  
 
-  el = qobject_cast<TElmLink*>( selObj->getObj( "links" ) );
+  el = selObj->getElemT<TElmLink*>( "links" );
   if( el == 0 ) {
     DBG2q( "ERR: fail to find links for object", selObj->getFullName() );
     return ;

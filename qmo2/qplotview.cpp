@@ -40,7 +40,7 @@ QPlotView::QPlotView( QMo2Doc *adoc, TGraph *agra, QWidget *parent )
 {
   int i;
   doc = adoc; gra = agra;
-  scd = static_cast<ScaleData*>( gra->getObj( "scd", "ScaleData" ) );
+  scd =  gra->getElemT<ScaleData*>( "scd" );
   if( !scd ) {
     DBG1( "ScaleData not found, recreatind" );
     scd = new ScaleData( "scd", gra, 0, "scale", "default scale data" ); // ???

@@ -416,7 +416,7 @@ TOutArr* TModel::getOutArr( const QString &oname )/*{{{1*/
 {
   if( oname.isEmpty() )
     return nullptr;
-  TOutArr *arr = qobject_cast<TOutArr*>(getObj( oname, "TOutArr" ));
+  TOutArr *arr = getElemT<TOutArr*>( oname );
   if( !arr ) {
     DBG2q( "warn: fail to find TOutArr", oname );
   }
@@ -482,7 +482,7 @@ int TModel::insGraph( const QString &gname )/*{{{1*/
 
 int TModel::delElem( const QString &ename )/*{{{1*/
 {
-  TMiso *ob = qobject_cast<TMiso*>(getObj( ename, "TMiso" ));
+  TMiso *ob = getElemT<TMiso*>( ename );
   if( !ob ) {
     DBG2q( "err: fail to find TMiso", ename );
     return 0;
@@ -520,7 +520,7 @@ int TModel::delGraph( int gr_nu )/*{{{1*/
 
 int TModel::newOrder( const QString &name, int new_ord )/*{{{1*/
 {
-  TMiso *ob = qobject_cast<TMiso*>( getObj( name, "TMiso" ) );
+  TMiso *ob = getElemT<TMiso*>( name );
   if( !ob )
     return -1;
   int k = ord2elnu( new_ord );

@@ -166,10 +166,10 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
     return false;
   }
   
-  model = qobject_cast<TModel*> (rootdata->getObj( "model", "TModel" )); 
+  model = rootdata->getElemT<TModel*>( "model" ); 
   if( model ) {
     loaded_as_old = true; 
-  } else if ( (model = static_cast<TModel*>(rootdata->getObj( "schems.main", "TModel" ))) != nullptr ) {
+  } else if ( ( model = rootdata->getElemT<TModel*>( "schems.main" ) ) != nullptr ) {
     loaded_as_old = false;
     // and many more actions
   } else {

@@ -979,6 +979,7 @@ HolderData* TDataSet::getElem( const QString &oname ) const
   return nullptr;
 }
 
+
 HolderData* TDataSet::getElem( int i ) const
 {
   auto cs = children()[i];
@@ -988,22 +989,6 @@ HolderData* TDataSet::getElem( int i ) const
 int TDataSet::indexOfHolder( HolderData *ho ) const
 {
   return children().indexOf( ho );
-}
-
-
-HolderData* TDataSet::getObj( const QString &ename, const QString &cl_name )
-{
-  HolderData *ho = getElem( ename );
-  if( !ho ) {
-    DBGx( "ERR: not found element \"%s\"", qP(ename) );
-    return nullptr;
-  }
-  if( ! ho->isObject( cl_name ) ){
-    DBGx( "ERR: element \"%s\" in %s has type \"%s\", need \"%s\"",
-	qP(ename), qP(getFullName()), qP(ho->getType()), qP(cl_name) );
-    return nullptr;
-  }
-  return ho;
 }
 
 
@@ -1433,22 +1418,15 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
 	  return false;
 	}
       }
-      ho = getElem( elname );
-      if( !ho ) {
+      
+      TDataSet* ob = getElemT<TDataSet*>( elname );
+      if( !ob ) {
 	errstr = QString("TDataSet::fromDom: fail to find created obj %1 %2 in %3")
 		 .arg(cl_name).arg(elname).arg( objectName() ); 
         DBG1q( errstr );
 	return false;
       }
-      if( ! ho->isObject( cl_name ) ) {
-	errstr = QString("TDataSet::fromDom: created obj %1 %2 in %3 is not given object ")
-		 .arg(cl_name).arg(elname).arg( objectName() ); 
-        DBG1q( errstr );
-        DBGx( "ei: name: \"%s\" type: \"%s\"", qP(ho->objectName()), qP(ho->getType()) );
-	return false;
-      }
 
-      TDataSet *ob = qobject_cast<TDataSet*>(ho);
       if( ! ob->fromDom( ee, errstr ) ) {
 	return false;
       }
