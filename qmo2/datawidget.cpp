@@ -1131,7 +1131,7 @@ void DataDialog::addObj()
   addElemInfo aei;
   aei.name = QString("obj_") + QString::number( ds.getNumObj() ) ;
   aei.order = 0;
-  AddElemDialog *dia = new AddElemDialog( &aei, 0, &ds, this );
+  AddElemDialog *dia = new AddElemDialog( &aei, &ds, this );
 
   int rc = dia->exec();
   delete dia; dia = 0;

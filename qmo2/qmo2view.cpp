@@ -270,7 +270,8 @@ void QMo2View::newElm()
   addElemInfo aei;
   aei.name = QString("obj_") + QString::number( model->getNMiso() ) ;
   aei.order = model->hintOrd();
-  AddElemDialog *dia = new AddElemDialog( &aei, clpElem, model, this );
+  AddElemDialog *dia = new AddElemDialog( &aei, model, this, "TMiso" );
+                                          // limit to such elements here
 
   int rc = dia->exec();
   delete dia; dia = 0;

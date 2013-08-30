@@ -13,10 +13,14 @@
 using namespace std;
 
 
-AddElemDialog::AddElemDialog( addElemInfo *a_aei, int a_props, 
-             TDataSet *a_pobj,  QWidget *aparent )
-  : QDialog( aparent ), aei( a_aei ), props( a_props ), pobj( a_pobj)
+AddElemDialog::AddElemDialog( addElemInfo *a_aei, 
+             TDataSet *a_pobj,  QWidget *aparent,
+             const QString& allowed_types )
+  : QDialog( aparent ), aei( a_aei ), allowed( a_pobj->allowTypes() ), pobj( a_pobj)
 {
+  if( ! allowed_types.isEmpty() ) {
+    allowed = allowed_types;
+  }
   setupUi();
 }
 
@@ -48,15 +52,10 @@ void AddElemDialog::setupUi()
   lay->addWidget( la_type, 2, 0 );
 
   lw = new QListWidget( this );
-  QStringList cl_names = EFACT.allTypeNames();
+
+  QStringList cl_names = EFACT.goodTypeNames( allowed );
+  QSize def_sz( 72, 50 ); // TODO: calculate;
   for( QString cname : cl_names ) {
-    const TClassInfo *ci = EFACT.getInfo( cname );
-    if( !ci ) 
-      continue;
-    if( props && ! ( ci->props & props ) )
-      continue;
-    if( pobj && ! pobj->isValidType( cname ) )
-      continue;
     QString iconName = QString( ":icons/elm_" )
       + cname.toLower() 
       + ".png";
@@ -67,13 +66,15 @@ void AddElemDialog::setupUi()
     } else {
       lwi = new QListWidgetItem( QIcon(":icons/elm_unknown.png"), cname ); 
     }
+    lwi->setSizeHint( def_sz );
+    lwi->setToolTip( cname );
     lw->addItem( lwi );
     if( cname == "TLinear" ) {
       lw->setCurrentItem( lwi );
     }
   };
   lw->setViewMode( QListView::IconMode );
-  // lw->setUniformItemSizes( true );
+  lw->setUniformItemSizes( true );
   lw->setResizeMode ( QListView::Adjust );
   lay->addWidget( lw, 3, 0, 1, 2 );
   
@@ -82,7 +83,7 @@ void AddElemDialog::setupUi()
   lay->addWidget( bbox, 5, 0, 1, 2 );
   connect(bbox, SIGNAL(accepted()), this, SLOT(accept()));
   connect(bbox, SIGNAL(rejected()), this, SLOT(reject()));
-  resize( 600, 400 );
+  resize( 720, 400 );
 }
 
 void AddElemDialog::accept()

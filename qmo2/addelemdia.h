@@ -21,14 +21,15 @@ struct addElemInfo {
 class AddElemDialog : public QDialog {
  Q_OBJECT
   public:
-   AddElemDialog( addElemInfo *a_aei, int a_props, TDataSet *a_pobj, QWidget *aparent );
+   AddElemDialog( addElemInfo *a_aei, TDataSet *a_pobj, QWidget *aparent, 
+       const QString& allowed_types = QString() );
   public slots:
    virtual void accept();
   protected:
    void setupUi();
    addElemInfo *aei;
-   int props;
-   TDataSet *pobj; // parent object - to ask allowed types. my be 0
+   QString allowed;
+   TDataSet *pobj; // parent object - to ask allowed types. my not be 0
    QLineEdit *ed_name;
    QLineEdit *ed_order;
    QListWidget *lw;

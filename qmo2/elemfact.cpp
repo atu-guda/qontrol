@@ -75,6 +75,23 @@ bool ElemFactory::registerElemType( const TClassInfo *cl_info )
 }
 
 
+QStringList ElemFactory::goodTypeNames( const QString & allows ) const
+{
+  QStringList res;
+  QStringList atp = allows.split(',');
+  for( auto i : str_class ) {
+    if( i->props & ( clpPure | clpSpecial ) )
+      continue;
+    for( auto ptp : atp ) {
+      if( isChildOf( i->className, ptp ) ) {
+        res << i->className;
+      }
+    }
+  }
+  return res;
+}
+
+
 const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
 {
   auto i = str_class.find( a_type );
@@ -85,7 +102,7 @@ const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
   return i.value();
 }
 
-bool ElemFactory::isChildOf( const QString &cl, const QString &par_cl )
+bool ElemFactory::isChildOf( const QString &cl, const QString &par_cl ) const
 {
   // DBGx( "dbg: test: is \"%s\" a child of \"%s\"", qP(cl), qP(par_cl) );
   if( cl == par_cl ) {
