@@ -60,7 +60,13 @@ void AddElemDialog::setupUi()
     QString iconName = QString( ":icons/elm_" )
       + cname.toLower() 
       + ".png";
-    QListWidgetItem *lwi = new QListWidgetItem( QIcon(iconName), cname ); 
+    QListWidgetItem *lwi; 
+    QFileInfo fi( iconName );
+    if( fi.isFile() ) {
+      lwi = new QListWidgetItem( QIcon(iconName), cname ); 
+    } else {
+      lwi = new QListWidgetItem( QIcon(":icons/elm_unknown.png"), cname ); 
+    }
     lw->addItem( lwi );
     if( cname == "TLinear" ) {
       lw->setCurrentItem( lwi );
