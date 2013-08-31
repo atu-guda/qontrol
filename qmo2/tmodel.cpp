@@ -15,13 +15,11 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <cstdlib>
-#include <cstring>
 #include <ctime>
 #include <cmath>
+// unistd for usleep: TODO: replace with threads
 #include <unistd.h>
 #include <algorithm>
-#include <limits>
 #include "miscfun.h"
 #include "tmodel.h"
 
@@ -32,9 +30,9 @@ const char* TModel::helpstr = "<H1>TModel</H1>\n"
 
 STD_CLASSINFO(TModel,clpSpecial | clpContainer);
 
-CTOR(TModel,TDataContainer),
-         vars( MODEL_NVAR, 0 )
+CTOR(TModel,TDataContainer)
 {
+  allowed_types = "TMiso,TGraph,TOutArr,HolderValue,InputSimple"; 
   rtime = t = 0; tdt = tt / nn; 
   m_sqrt2 = sqrt(2.0);
   m_sqrt1_2 = sqrt(0.5);
@@ -262,24 +260,7 @@ void TModel::resetOutArrs( int level )/*{{{1*/
 }/*}}}1*/
 
 
-double TModel::getVar( int n )/*{{{1*/
-{
-  if( n < 0 || n >= MODEL_NVAR )
-    return 0;
-  return vars[n];
-}/*}}}1*/
 
-void TModel::setVar( int n, double v )/*{{{1*/
-{
-  if( n < 0 || n >= MODEL_NVAR )
-    return;
-  vars[n] = v;
-}/*}}}1*/
-
-dvector* TModel::getVars(void)/*{{{1*/
-{
-  return &vars; // TODO: its bad: remove
-}/*}}}1*/
 
 int TModel::oname2elnu( const QString &iname ) const/*{{{1*/
 {
@@ -693,25 +674,6 @@ int TModel::getLinkInfos( int elnu, LinkInfo *li )/*{{{1*/
 
 
 
-//  const double* TModel::getDoublePtr( const QString &nm, ltype_t *lt, 
-//      TDataSet **targ, int lev ) const
-//  {
-//    static const double fake_so = 0;
-//    if( nm[0] != '#' ) {
-//      return TDataSet::getDoublePtr( nm, lt, lev );
-//    }
-//    QString nn = nm;
-//    nn.remove( 0, 1 );
-//    int n = nn.toInt();
-//    if( n < 0 || n >= MODEL_NVAR ) {
-//      if( lt )
-//        *lt = LinkBad;
-//      return &fake_so;
-//    }
-//    if( lt )
-//      *lt = LinkSpec;
-//    return &( vars[n] );
-//  }
 
 DEFAULT_FUNCS_REG(TModel)
 

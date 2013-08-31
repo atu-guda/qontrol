@@ -15,8 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <string.h>
-#include <stdlib.h>
 #include "miscfun.h"
 #include "tmodel.h"
 #include "tinputany.h"

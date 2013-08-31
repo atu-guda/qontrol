@@ -97,7 +97,7 @@ void QPlotView::printPlot( void )
   QPrintDialog pr_dialog( pr, this );
   if( pr_dialog.exec() ) {
     devTp = 1;
-    pr->setFullPage( FALSE );
+    pr->setFullPage( false );
     pr->newPage();
     QPainter p( pr ); 
     drawAll( p );

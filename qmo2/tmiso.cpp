@@ -15,7 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <limits>
 #include "tmiso.h"
 #include "tmodel.h"
 
@@ -115,7 +114,7 @@ double TMiso::f( double /* t */ )
 int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
 {
   tdt = adt; model_nn = an; 
-  model = static_cast<TModel*>(par); 
+  model = qobject_cast<TModel*>(par); 
   fillLinks();
   int rc =  do_preRun( run_tp, an, anx, any, adt );
   if( rc != 0 )

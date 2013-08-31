@@ -15,8 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <cstdlib>
-#include <cstring>
 #include "miscfun.h"
 #include "toutarr.h"
 

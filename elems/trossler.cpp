@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include <time.h>
-#include <math.h> 
+#include <cmath> 
 #include "miscfun.h" 
 #include "trossler.h"
 

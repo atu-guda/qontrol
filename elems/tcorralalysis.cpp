@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h>
+#include <cmath>
 #include "tmodel.h"
 #include "toutarr.h"
 #include "tcorralalysis.h"

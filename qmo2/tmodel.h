@@ -18,8 +18,6 @@
 #ifndef TMODEL_H
 #define TMODEL_H
 
-#include <vector>
-
 #include "defs.h"
 #include "datacont.h"
 #include "tmiso.h"
@@ -38,14 +36,7 @@ class TModel : public TDataContainer  {
   virtual ~TModel() override;
   DCL_CREATE;
   DCL_STD_INF;
-  virtual const char* allowTypes() const override 
-  { 
-    return "TMiso,TGraph,TOutArr,HolderValue,InputSimple"; 
-  }
 
-  /** reimplemented from TDataSet to provide access to '#nvar' TODO: drop*/
-  //virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = nullptr, 
-  //    TDataSet **targ = nullptr, int lev = 0 ) const override;
   /** prepare to run */
   virtual int startRun( int type );
   /** run csteps next steps */
@@ -102,12 +93,6 @@ class TModel : public TDataContainer  {
   virtual int getLinkInfos( int elnu, LinkInfo *li );
   /** frees output arrays and state: 2->1 */
   virtual int reset(void);
-  /** read access to vars[] */
-  double getVar( int n );
-  /** write access to vars[] */
-  void setVar( int n, double v );
-  /** access to all vars as array. Its BAD!!!  remove! */
-  dvector* getVars(void);
   
   /** reimplemented from TDataSet to ensure all data filled and linked */
   virtual int checkData( int i );
@@ -256,8 +241,6 @@ class TModel : public TDataContainer  {
   std::vector<TGraph*> v_graph;
   /** vector of elems orders */
   std::vector<int> v_ord;
-  /** general purpose vars[MODEL_NVAR] */
-  dvector vars;
   DCL_DEFAULT_STATIC;
 
 };

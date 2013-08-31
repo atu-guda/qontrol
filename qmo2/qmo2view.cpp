@@ -15,7 +15,6 @@
  ***************************************************************************/
 
 #include <cmath>
-#include <limits>
 // include files for Qt
 #include <QtGui>
 
@@ -70,20 +69,13 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   
   stam = new QStatusModel( this, this );
 
-  // TODO: not auto
-  //QTreeView *treeView = new QTreeView( this );
-  //treeView->setModel( ho_mo );
-
   grLay->addWidget( scrollArea, 0, 0 );
   grLay->addWidget( oview, 0, 1 );
   grLay->addWidget( gview, 0, 2 );
   
-  //grLay->addWidget( treeView, 0, 2 );
-
   left_part->setLayout( grLay );
 
   split->addWidget( left_part );
-  // split->addWidget( treeView );
 
   vlay->addWidget( split );
   vlay->addWidget( stam );
@@ -1170,39 +1162,6 @@ void QMo2View::editModel()
   };
 }
 
-
-void QMo2View::showVars()
-{
-  QDialog *dia;
-  DoubleTableModel *dmod;
-  QTableView *dtv;
-  QVBoxLayout *lv;
-  GraphInfo gi;
-  QString fnq; QPushButton *bt_ok;
-  if( ! checkState( validCheck ) )
-    return;
-  dvector *vars = model->getVars();
-  gi.row = MODEL_NVAR; gi.col = 1; gi.ny = gi.row;
-  gi.title = "Model vars";
-  gi.dat[0] = vars;
-  gi.label[0] = "vars";
-
-  dia = new QDialog( this );
-  dia->setWindowTitle( QString("Model vars: ") );
-  lv = new QVBoxLayout( dia );
-  
-  dmod = new DoubleTableModel( &gi, dia );
-  dtv = new QTableView( dia );
-  dtv->setModel( dmod );
-  lv->addWidget( dtv );
-
-  bt_ok = new QPushButton( "Done", dia );
-  bt_ok->setDefault( true );
-  lv->addWidget( bt_ok );
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
-  dia->exec();
-  delete dia;
-}
 
 void QMo2View::showTreeModel()
 {

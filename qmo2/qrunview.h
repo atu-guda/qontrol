@@ -121,8 +121,6 @@ class QRunView : public QDialog  {
     /** unknown device values */
     double auxs[20];
     // some next vars filled from TModel =========================
-    /** data array of model */
-    dvector *data = nullptr;
     /** total number of loops */
     int n_tot;
     /** total counter */

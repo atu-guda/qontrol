@@ -1221,26 +1221,22 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
   
 }
 
-double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg ) // TODO: why not const?
+// not const - change param
+double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg ) 
 {
   if( nm.isEmpty() )
-    return 0;
+    return nullptr;
   
-  HolderData *ho = getElem( nm );
+  HolderDouble *hod = getElemT<HolderDouble*>( nm );
   
-  if( !ho ) {
+  if( !hod ) {
     DBG2q( "warn: fail to find name", nm );
     return 0;
   }
   
-  if( ho->getTp() == QVariant::Double ) {
-    HolderDouble *hod = qobject_cast<HolderDouble*>(ho);
-    if( !hod )
-      return nullptr;
-    if( flg )
-      *flg = ho->getFlags();
-    return hod->addr();
-  }
+  if( flg )
+    *flg = hod->getFlags();
+  return hod->addr();
   
   return 0;
 }

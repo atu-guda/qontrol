@@ -194,7 +194,7 @@ class HolderData : public QObject {
   virtual bool getData( const QString &nm, QString &da ) const;
   virtual bool setData( const QString &nm, const QVariant &da );
   virtual QDomElement toDom( QDomDocument &dd ) const;
-  virtual const char* allowTypes() const { return ""; }
+  const QString& allowTypes() const { return allowed_types; }
  public slots: 
   /** returns full name of object: aaa.bbb.cc  */ // TODO: up to HolderData
   QString getFullName() const;
@@ -217,6 +217,7 @@ class HolderData : public QObject {
   QVariant::Type tp = QVariant::Invalid;
   TDataSet *par; // keep it?
   QSSMap parms;
+  QString allowed_types = "";
   DCL_DEFAULT_STATIC;
 };
 

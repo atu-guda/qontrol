@@ -11,7 +11,6 @@
 #ifndef __MISCFUN_H
 #define __MISCFUN_H
 
-#include <vector>
 #include <QString>
 #include "defs.h"
 

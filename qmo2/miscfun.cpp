@@ -8,7 +8,6 @@
 
 #include <fstream>
 #include <iomanip>
-#include <cstring>
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>

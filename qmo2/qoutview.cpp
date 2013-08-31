@@ -128,7 +128,7 @@ void QOutView::mousePressEvent( QMouseEvent *me )
   h = height(); nh = h / grid_sz - 1; ++nh; --nh; // TODO: FAKE
   x = me->x(); y = me->y();
   if( x < 2 || x > fwidth ) return;
-  out_nu = ( y - grid_sz/2 ) / grid_sz; // TODO: why 10?
+  out_nu = ( y - grid_sz/2 ) / grid_sz;
   n_out = model->getNOutArr();
   if( out_nu < 0 || out_nu >= n_out ) return;
   title = "??bad??";

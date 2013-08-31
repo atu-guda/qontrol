@@ -117,7 +117,6 @@ class QMo2View : public QWidget
   
    // model related
    void editModel();
-   void showVars();
    void showTreeModel();
    void runScript();
   

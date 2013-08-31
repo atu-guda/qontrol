@@ -354,11 +354,6 @@ void QMo2Win::initIface()
   act_editmodel->setWhatsThis( tr("Edit model parameters.") );
   connect( act_editmodel, SIGNAL( activated() ), this, SLOT( slotEditModel()));
 
-  act_showvars = new QAction( "&Show model vars", this ); 
-  act_showvars->setShortcut(  Qt::SHIFT+Qt::CTRL+Qt::Key_D );
-  act_showvars->setWhatsThis( tr("Show model vars field") );
-  connect( act_showvars, SIGNAL( activated() ), this, SLOT( slotShowVars()));
- 
   act_showtreemodel = new QAction( "show model tree", this );
   act_showtreemodel->setShortcut( Qt::CTRL+Qt::Key_T );
   act_showtreemodel->setWhatsThis( tr("Show tree-like model structure") );
@@ -552,8 +547,6 @@ void QMo2Win::initIface()
   pModelMenu = menuBar()->addMenu( tr("&Model") );
   pModelMenu->addAction( act_editmodel );
   pModelMenu->addAction( act_showtreemodel );
-  pModelMenu->addSeparator();
-  pModelMenu->addAction( act_showvars );
   
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pRunMenu
@@ -690,7 +683,6 @@ void QMo2Win::enableActions( bool ena, int id_ )
        // model
        act_editmodel->setEnabled( ena );
        act_showtreemodel->setEnabled( ena );
-       act_showvars->setEnabled( ena );
        // run
        act_runrun->setEnabled( ena );
        act_runprm->setEnabled( ena );
@@ -1465,15 +1457,6 @@ void QMo2Win::slotEditModel()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
-void QMo2Win::slotShowVars()
-{
-  statusBar()->showMessage( tr( "Showing model vars..." ) );
-  
-  QMo2View* m =  activeMdiChild();
-  if ( m )
-    m->showVars();
-  statusBar()->showMessage( tr( "Ready." ) );
-}
 
 void QMo2Win::slotShowTreeModel()
 {

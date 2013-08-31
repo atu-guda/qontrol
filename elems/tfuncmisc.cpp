@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h>
+#include <cmath>
 #include "miscfun.h"
 #include "tfuncmisc.h"
 

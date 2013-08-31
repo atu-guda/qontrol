@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h>
+#include <cmath>
 #include "tmodel.h"
 #include "toutarr.h"
 #include "tfourier.h"
@@ -55,22 +55,6 @@ int TFourier::do_endLoop()
   TOutArr *arra, *arrb, *arram, *arrom, *arrx, *arry;
   double v, vx;
   
-  if( out_a >= 0 ) { // ------- fill model vars 
-    for( i=0; i<=ng; i++ ) 
-      model->setVar( out_a + i, aa[i]);
-  };
-  if( out_b >= 0 ) {
-    for( i=0; i<=ng; i++ ) 
-      model->setVar( out_b + i, bb[i]);
-  };
-  if( out_am >= 0 ) {
-    for( i=0; i<=ng; i++ ) 
-      model->setVar( out_am + i, am[i]);
-  };
-  if( out_om >= 0 ) {
-    for( i=0; i<=ng; i++ ) 
-      model->setVar( out_om + i, omega * i );
-  };
   arra = model->getOutArr( a_oname );// ---- fill a,b,am output arrays
   if( arra ) {
     arra->alloc( ng+1, 1 );
@@ -157,7 +141,7 @@ void TFourier::initVars(void)
   tp = 2 * M_PI / omega; 
   np = int( tp / tdt );
   tt = 1; // safe value
-  model->getData( "tt", &tt );
+  par->getData( "tt", &tt );
   t_st = 0; t_en = tt;
   if( t0 > 0 && t0 < tt-tp ) 
     t_st = t0;

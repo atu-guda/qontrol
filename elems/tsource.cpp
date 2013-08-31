@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include <time.h>
-#include <math.h> 
+#include <cmath> 
 #include "miscfun.h" 
 #include "tmodel.h"
 #include "tsource.h"
@@ -105,22 +105,22 @@ int TSource::do_preRun( int /*run_tp*/, int /*an*/,
   if( use_u_ch ) {
     eff_seedType_u = seedType_u;
     if( seedType_u == 3 ) { // as model 
-      model->getData( "seedType", &eff_seedType_u ); 
+      par->getData( "seedType", &eff_seedType_u ); 
     };
     bseed_u = 0;
     if( addBaseSeed_u ) {
-      model->getData( "seed", &bseed_u );
+      par->getData( "seed", &bseed_u );
     };
   };
   // Phi
   if( use_f_ch ) {
     eff_seedType_p = seedType_p;
     if( seedType_p == 3 ) { // as model 
-      model->getData( "seedType", &eff_seedType_p ); 
+      par->getData( "seedType", &eff_seedType_p ); 
     };
     bseed_p = 0;
     if( addBaseSeed_p ) {
-      model->getData( "seed", &bseed_p );
+      par->getData( "seed", &bseed_p );
     };
   };
 

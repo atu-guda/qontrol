@@ -18,8 +18,6 @@
 #ifndef QDOUBLETABLE_H
 #define QDOUBLETABLE_H
 
-#include <vector>
-
 #include <QAbstractTableModel>
 #include <QWidget>
 #include <QString>

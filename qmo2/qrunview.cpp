@@ -181,7 +181,8 @@ void QRunView::drawCross( QPainter &p )
   for( i=0; i<6; i++ ) {
     if( oc[i] < 0 || oct[i] < 1 || oct[i] > 3 ) 
       continue;
-    x = (*data)[ oc[i] ]; y = (*data)[ 1+oc[i] ];
+    // x = (*data)[ oc[i] ]; y = (*data)[ 1+oc[i] ];
+    x = 0; y = 0; // TODO use new interface
     if( x > 1 ) x = 1; if( x < -1 ) x = -1;
     if( y > 1 ) y = 1; if( y < -1 ) y = -1;
     phys2vis( x, y, &ix, &iy );
@@ -202,7 +203,8 @@ void QRunView::drawVbar( QPainter &p )
   for( i=0; i<6; i++ ) {
     if( oc[i] < 0 || oct[i] < 4 || oct[i] > 7 ) 
       continue;
-    x = -0.9 + (oct[i] - 4) * 0.4 ; y = (*data)[ oc[i] ];
+    //x = -0.9 + (oct[i] - 4) * 0.4 ; y = (*data)[ oc[i] ];
+    x = 0; y = 0; // TODO use new interface
     if( y > 1 ) y = 1; if( y < -1 ) y = -1;
     phys2vis( x, y, &ix, &iy );
     p.fillRect( ix, c_y, 30, iy - c_y, colors[ oct[i] - 4 ]  );
@@ -218,7 +220,8 @@ void QRunView::drawGbar( QPainter &p )
   for( i=0; i<6; i++ ) {
     if( oc[i] < 0 || oct[i] < 8 || oct[i] > 11 ) 
       continue;
-    x = (*data)[ oc[i] ];y = 0.9 - (oct[i] - 8) * 0.4 ;
+    //x = (*data)[ oc[i] ];y = 0.9 - (oct[i] - 8) * 0.4 ;
+    x = 0; y = 0; // TODO use new interface
     if( x > 1 ) x = 1; if( x < -1 ) x = -1;
     phys2vis( x, y, &ix, &iy );
     p.fillRect( c_x, iy, ix - c_x, 30, colors[ oct[i] - 8 ] );
@@ -232,7 +235,8 @@ void QRunView::drawLED( QPainter &p )
   for( i=0; i<6; i++ ) {
     if( oc[i] < 0 || oct[i] < 12 || oct[i] > 15 ) 
       continue;
-    x = (*data)[ oc[i] ]; 
+    // x = (*data)[ oc[i] ]; 
+    x = 0; // TODO use new interface
     p.fillRect( 50 * ( 1 + oct[i] - 12 ), g_h-19, 20, 20,
        ( x > 0.1 ) ? Qt::green : Qt::darkRed );
   };
@@ -386,7 +390,6 @@ void QRunView::getModelData(void)
   model->getData( "oct_3", oct+3 );
   model->getData( "oct_4", oct+4 );
   model->getData( "oct_5", oct+5 );
-  data = model->getVars();
   state = model->getState();
   s_h = use_sync ? 520 : 40;
 }
@@ -408,9 +411,10 @@ void QRunView::getAuxVal(void)
 
 void QRunView::fillVars(void)
 {
-  int i;
-  if( state != stateRun || !use_sync || data == nullptr )
+  // int i;
+  if( state != stateRun || !use_sync )
     return;
+  /*
   if( ic_mouse >= 0 && ic_mouse < MODEL_NVAR - 10 ) {
     (*data)[ic_mouse]   = mouse_x; 
     (*data)[ic_mouse+1] = mouse_y; 
@@ -422,6 +426,10 @@ void QRunView::fillVars(void)
     for( i=0; i<6; i++ )
       (*data)[ic_key+i] = double( keys_state[i] );
   };
+  */
+  // TODO: use new interface
+  //
+
   // getSoundVal();
   // getJoyVal();
   // getAuxVal();

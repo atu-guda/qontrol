@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <math.h>
+#include <cmath>
 #include "textrlatch.h"
 
 const char* TExtrLatch::helpstr = "<H1>TExtrLatch</H1>\n"
