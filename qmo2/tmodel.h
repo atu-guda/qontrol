@@ -46,14 +46,10 @@ class TModel : public TDataContainer  {
   /** function to call from elem.f() to signal something */
   virtual int fback( int code, int aord, const QString &tdescr );
   
-  /** converts name of output to it's elnu, if possible; none=-1;bad=-2 ... */
-  virtual int oname2elnu( const QString &iname ) const;
-  /** converts name output array to it's out_nu, bad=-1 ... */
-  virtual int  outname2out_nu( const QString &iname ) const;
   /** converts order of element to it's position in v_el */
   virtual int ord2elnu( int aord ) const;
   /** visual coords -> TMiso number. @returns: <0 - not found, >=0 -- elnu */
-  virtual int xy2elnu( int avis_x, int avis_y ); /* must be const. but.. */
+  virtual int xy2elnu( int avis_x, int avis_y ) const;
   /** visual coords -> TMiso @returns: nullptr - not found */
   TMiso* xy2Miso( int avis_x, int avis_y ) const; 
   /** returns number of TMiso ( max value of elnu + 1 ) */

@@ -38,7 +38,7 @@ QGraphView::~QGraphView()
 
 void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
 {
-  int h, w, nh, n_graph, graph_nu, out_nu, i, level;
+  int h, w, nh, n_graph, graph_nu;
   TGraph *gra;
   QString out_name, yname;
   QPainter p( this );
@@ -57,7 +57,6 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
     return;
   model = doc->getModel();
   if( model == 0 ) return;
-  level = mainview->getLevel();
   h = height(); 
   nh = 1 + h / grid_sz;
   nh += h; // FAKE TODO:
@@ -70,27 +69,12 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
   yname = "y0name";
   for( graph_nu=0; graph_nu < n_graph ; graph_nu++ ) {
     gra = model->getGraph( graph_nu );
-    if( gra == 0 ) 
+    if( ! gra ) 
       continue;
     p.setPen( Qt::black );
     p.drawRect( 14, 10 + graph_nu * grid_sz, fwidth-10, ex_sz );
     p.drawText( grid_sz+1, grid_sz + graph_nu*grid_sz, 
-        QString::number( graph_nu ) + ":" + gra->objectName() );
-    if( level != graph_nu ) continue;
-    gra->getData( "xname", out_name );
-    out_nu = model->outname2out_nu( out_name );
-    if( out_nu >= 0 ) {
-      p.drawLine( 0, grid_sz + out_nu*grid_sz, 12, grid_sz + graph_nu*grid_sz );
-    };
-    p.setPen( Qt::yellow );
-    for( i=0; i<6; i++ ) {
-      yname[1] = char( '0' + i );
-      gra->getData( yname, out_name );
-      out_nu = model->outname2out_nu( out_name );
-      if( out_nu >= 0 ) {
-	p.drawLine( 0, grid_sz + out_nu*grid_sz, 12, grid_sz + graph_nu*grid_sz );
-      };
-    };
+                QSN( graph_nu ) + ":" + gra->objectName() );
   }; // end loop on graphs
 }
 

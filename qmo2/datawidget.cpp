@@ -984,6 +984,7 @@ int DataDialog::setAll()
     ++ns;
   }
   ds.post_set();
+  ds.setModified();
 
   return ns;
 }

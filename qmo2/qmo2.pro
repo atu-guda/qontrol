@@ -34,6 +34,7 @@ SOURCES += \
   qstructview.cpp \
   rootdata.cpp \
   scaledata.cpp \
+  scheme.cpp \
   tmiso.cpp \
   tmodel.cpp \
   datawidget.cpp \
@@ -94,6 +95,7 @@ HEADERS += \
   qstructview.h \
   rootdata.h \
   scaledata.h \
+  scheme.h \
   tmiso.h \
   tmodel.h \ 
   datawidget.h \
