@@ -42,7 +42,8 @@ STD_CLASSINFO(TMiso,clpSpecial|clpPure);
 
 
 CTOR(TMiso,TDataSet) ,
-       links( new TElmLink( "links", this, 0, "links", "object links", "sep=blockend" ) )
+       links( new TElmLink( "links", this, 0, "links", "object links", "" ) ),
+       pis( new InputParams( "pis", this, 0, "param links", "object paramitric links", "sep=blockend") )
 {
 }
 
@@ -84,6 +85,38 @@ void TMiso::post_set()
       continue;
     in->setData( "source", source );
   }
+  
+  // param links convert
+  if( ! pis || pis->getNumObj() != 0 )
+    return;
+  
+  QString prm_name, flg_name;
+  int flg;
+  for( int i=0; i<4; ++i ) {
+    iname = "pinps" + QSN(i);
+    if( ! links->getData( iname, source )  ) 
+      continue;
+    if( source.isEmpty() )
+      continue;
+    iname = "pnames" + QSN(i);
+    links->getData( iname, prm_name ); // ignore error
+    iname = "pflags" + QSN(i);
+    links->getData( iname, &flg ); // ignore error
+    iname = "p" + QSN(i);
+    pis->add_obj( "InputParam", iname );
+    InputParam *pa = pis->getElemT<InputParam*>(iname);
+    if( !pa ) {
+      DBGx( "warn: fail to convert param input in \"%s\" N %d src \"%s\"",
+          qP(objectName()), i, qP(source) );
+      continue;
+    }
+    pa->setData( "source", source );
+    pa->setData( "tparam", prm_name );
+    pa->setData( "onlyFirst", flg );
+    pa->setData( "line_w", 2 );
+    pa->setData( "line_color", "red" );
+  }
+
 }
 
 DEFAULT_FUNCS_REG(TMiso);
@@ -98,7 +131,7 @@ double TMiso::fun( double t, IterType itype )
   if( onlyLast && itype != IterLast )
     return out0;
   
-  modifyPrms();
+  prm_mod = pis->apply();
 
   v = out0 = f( t );
   prm_mod = 0;
@@ -115,7 +148,7 @@ int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
 {
   tdt = adt; model_nn = an; 
   model = qobject_cast<TModel*>(par); 
-  fillLinks();
+  pis->prepare();
   int rc =  do_preRun( run_tp, an, anx, any, adt );
   if( rc != 0 )
     return rc;
@@ -128,67 +161,7 @@ int TMiso::do_preRun( int /*run_tp*/, int /*an*/, int /*anx*/,
   return 0;
 }
 
-int TMiso::fillLinks()
-{
-  const double *p;
-  double *pp;
-  QString iname, pname, soname, sopname;
-  
-  // ordinary input links: obsoleted by InputSimple
 
-  // parametric input links
-  max_prm = 0;
-  int flg, onlyFirstPrm;
-  for( int i=0; i<4; ++i ) {
-    inp_so[i] = &fake_so;
-    inp_prm[i] = &fake_prm;
-    prm_flg[i] = -1;
-    onlyFirstPrm = 0;
-    iname = "pinps" + QString::number(i);
-    pname = "pnames" + QString::number(i);
-    links->getData( iname, soname );
-    links->getData( pname, sopname );
-    p = par->getDoublePtr( soname );
-    pp = getDoublePrmPtr( sopname, &flg );
-    links->getData( "pflags" + QString::number(i), &onlyFirstPrm );
-    if( flg & efNoRunChange ) // force only-first if param cannot be changed in RT
-      onlyFirstPrm = 1;
-    if( onlyFirstPrm ) 
-      flg |= efOnlyFirst; 
-
-    if( p && pp && ! ( flg & efRO )) {
-      inp_so[i] = p;
-      inp_prm[i] = pp;
-      prm_flg[i] = flg;
-      max_prm = i+1;
-    }
-  }
-  return 0;
-}
-
-int TMiso::modifyPrmsPre()
-{
-  for( int i=0; i<max_prm; ++i ) {
-    if( prm_flg[i] == -1  || ! ( prm_flg[i] & efOnlyFirst )  ) { 
-      continue; 
-    }
-    *inp_prm[i] = *inp_so[i];
-    ++prm_mod;
-  }
-  return prm_mod;
-}
-
-int TMiso::modifyPrms()
-{
-  for( int i=0; i<max_prm; ++i ) {
-    if( prm_flg[i] == -1 || ( prm_flg[i] & efOnlyFirst ) ) {
-      continue; 
-    }
-    *inp_prm[i] = *inp_so[i];
-    ++prm_mod;
-  }
-  return prm_mod;
-}
 
 int TMiso::postRun( int good )
 {
@@ -207,7 +180,7 @@ int TMiso::startLoop( int acnx, int acny )
 {
   state = stateRun;
   out0 = (double)out0_init;
-  modifyPrmsPre();
+  pis->apply_pre();
   prm_mod = 0;
   return do_startLoop( acnx, acny );
 }

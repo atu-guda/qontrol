@@ -53,7 +53,7 @@ int TOutArr::alloc( int sz, int a_ny )
   if( ny < 1 ) ny = 1;
   arr.resize( sz ); 
   arrsize = sz; n = 0; dmin = 0; dmax = 1; cnq = 0;
-  so = par->getDoublePtr( name );
+  so = par->getSchemeDoublePtr( name );
   if( !so )
     so = &fake_so;
   return 0;

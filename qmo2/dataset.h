@@ -514,14 +514,14 @@ class TDataSet : public HolderData {
     * lev - level of recursion, not for user */
    virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = nullptr, 
         const TDataSet **src_ob = nullptr, int lev = 0 ) const;
+   //* transmit this requues to parent, untill scheme detected, where work done
+   // via getDoublePtr
+   virtual const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt = nullptr, 
+        const TDataSet **src_ob = nullptr, int lev = 0 ) const;
    /** return number of inputs */
    int inputsCount() const { return inputs.size(); };
    /** returns input by number */
    InputSimple* getInput (int n) ; 
-   /** return number of parametric inputs */
-   int inputsParamCount() const { return pinputs.size(); };
-   /** returns input by number */
-   InputParam* getParamInput (int n) ; 
  public slots:
    /** create object with params as string */
    bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
@@ -558,7 +558,6 @@ class TDataSet : public HolderData {
    /** place for inputs */
    QVector<InputSimple*> inputs;
    /** place for parametric inputs */
-   QVector<InputParam*> pinputs;
    DCL_DEFAULT_STATIC;
 };
 
@@ -633,8 +632,9 @@ class InputParam : public InputAbstract {
   virtual void post_set() override;
   operator double() const { return *p; };
   const double* caddr() const { return p; };
-  /** make change in parent */
-  bool apply();
+  double* targ_addr() const { return targ; };
+  int getOnlyFirst() const { return onlyFirst; }
+  int getTargetFlag() const { return target_flag; }
  protected:
   /** find and set link to  from (fake)  source to (fake) target */
   virtual void set_link() override;
@@ -644,6 +644,7 @@ class InputParam : public InputAbstract {
 
   double fake_target = 0;
   double *targ = &fake_target;
+  int target_flag = 0;
   
   DCL_DEFAULT_STATIC;
 };

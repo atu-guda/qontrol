@@ -587,8 +587,12 @@ void HolderColor::reset_dfl()
 
 bool HolderColor::set( const QVariant & x, int /* idx */  )
 {
-  QRgb rgba = x.toInt();
-  v.setRgba( rgba );
+  QString s = x.toString();
+  v = QColor( s );
+  if( ! v.isValid() ) {
+    QRgb rgba = x.toInt();
+    v.setRgba( rgba );
+  }
   post_set();
   return true;
 }
@@ -606,13 +610,17 @@ void HolderColor::post_set()
 
 QString HolderColor::toString() const
 {
-  return QSN( (int)(v.rgba()) );
+  //return QSN( (int)(v.rgba()) );
+  return v.name();
 }
 
 bool HolderColor::fromString( const QString &s )
 {
-  QRgb rgba = s.toInt();
-  v.setRgba( rgba );
+  v = QColor( s );
+  if( ! v.isValid() ) {
+    QRgb rgba = s.toInt();
+    v.setRgba( rgba );
+  }
   post_set();
   return true;
 }
@@ -1185,7 +1193,7 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
   if( !ho ) {
     if( lt )
       *lt = LinkBad;
-    DBGx( "warn: fail to find name \"%s\" in \"%s\"", qP(first), qP(objectName()) );
+    DBGx( "warn: fail to find name \"%s\" in \"%s\"", qP(first), qP(getFullName()) );
     return 0;
   }
   
@@ -1221,6 +1229,19 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
   
 }
 
+const double* TDataSet::getSchemeDoublePtr( const QString &nm, ltype_t *lt, 
+        const TDataSet **src_ob, int lev) const
+{
+  ltype_t clt = LinkNone;
+  ltype_t *plt = ( lt ) ? lt : &clt;  // failsafe link
+  
+  if( !par ) {  // parent-less object or root
+    *plt = LinkBad;
+    return nullptr;
+  }
+  return par->getSchemeDoublePtr( nm, lt, src_ob, lev );
+}
+
 // not const - change param
 double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg ) 
 {
@@ -1230,7 +1251,7 @@ double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg )
   HolderDouble *hod = getElemT<HolderDouble*>( nm );
   
   if( !hod ) {
-    DBG2q( "warn: fail to find name", nm );
+    DBGx( "warn: fail to find name \"%s\" in \"%s\"", qP(nm), qP(getFullName()) );
     return 0;
   }
   
@@ -1611,39 +1632,6 @@ InputSimple* TDataSet::getInput (int n)
 }
 
 
-void TDataSet::registerParamInput( InputParam *inp )
-{
-  if( ! inp )
-    return;
-  if( pinputs.indexOf( inp ) != -1 ) {
-    DBG2q( "warn: param input \"%s\" already registered", inp->objectName() );
-    return;
-  }
-  pinputs.push_back( inp );
-}
-
-void TDataSet::unregisterParamInput( InputParam *inp )
-{
-  if( ! inp )
-    return;
-  if( ! guard ) // BUG: bad order of destruction
-    return;
-  int idx = pinputs.indexOf( inp );
-  if( idx == -1 ) {
-    DBG2q( "warn: parametric input \"%s\" not registered", inp->objectName() );
-    return;
-  }
-  pinputs.remove( idx );
-}
-
-InputParam* TDataSet::getParamInput(int n)
-{
-  if( n < 0 || n >= pinputs.size() ) {
-    DBGx( "warn: bad parametric input number %d, size= %d", n, pinputs.size() );
-    return nullptr;
-  }
-  return pinputs[n];
-}
 
 void TDataSet::dumpStruct() const
 {
@@ -1712,12 +1700,9 @@ void InputAbstract::set_link()
     return;
   }
 
-  TDataSet *schem;
-  if( !par || !(schem=par->getParent()) )
-    return;
   ltype_t lt;
   const TDataSet *srct = nullptr;
-  const double *cp = schem->getDoublePtr( source, &lt, &srct, 0 );
+  const double *cp = getSchemeDoublePtr( source, &lt, &srct, 0 );
   if( lt == LinkElm || lt == LinkSpec ) {
     p = cp;  src_obj = srct; linkType = lt;
     //DBGx( "dbg: ptr set to target %p for \"%s\" in \"%s\"", 
@@ -1773,16 +1758,10 @@ STD_CLASSINFO(InputParam,clpInput|clpSpecial);
 
 CTOR(InputParam,InputAbstract)
 {
-  if( par ) {
-    par->registerParamInput( this );
-  }
 }
 
 InputParam::~InputParam()
 {
-  if( par ) {
-    par->unregisterParamInput( this );
-  }
 }
 
 
@@ -1795,16 +1774,21 @@ void InputParam::post_set()
 void InputParam::set_link()
 {
   InputAbstract::set_link();
-  // FIXME: set target
+  target_flag = 0;;
+  targ = &fake_target;
+  if( !par ) // par seems to be InputParams, but may be dangling objects
+    return;
+
+  TDataSet *el = par->getParent(); // grang par may by TMiso, but ...
+  if( !el )
+    return;
+
+  targ = el->getDoublePrmPtr( tparam, &target_flag );
+  if( !targ ) {
+    targ = &fake_target;
+  }
 }
 
-bool InputParam::apply()
-{
-  if( linkType != LinkElm  && linkType != LinkSpec )
-    return false;
-  *targ = *p;
-  return true;
-}
 
 
 const char* InputParam::helpstr { "Link from source to inner parameter" };

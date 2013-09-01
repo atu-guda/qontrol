@@ -78,11 +78,16 @@ bool ElemFactory::registerElemType( const TClassInfo *cl_info )
 QStringList ElemFactory::goodTypeNames( const QString & allows ) const
 {
   QStringList res;
+  int mask = clpPure | clpSpecial;
+  if( allows.contains( "+SPECIAL" ) )
+    mask &= ~clpSpecial;
   QStringList atp = allows.split(',');
   for( auto i : str_class ) {
-    if( i->props & ( clpPure | clpSpecial ) )
+    if( i->props & mask )
       continue;
     for( auto ptp : atp ) {
+      if( ptp[0] == '+' )  // ignore special names, like +SPECIAL
+        continue;
       if( isChildOf( i->className, ptp ) ) {
         res << i->className;
       }

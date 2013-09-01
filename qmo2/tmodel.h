@@ -36,6 +36,10 @@ class TModel : public TDataContainer  {
   virtual ~TModel() override;
   DCL_CREATE;
   DCL_STD_INF;
+   
+  //* make main work via getDoublePtr
+  virtual const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt = nullptr, 
+        const TDataSet **src_ob = nullptr, int lev = 0 ) const override;
 
   /** prepare to run */
   virtual int startRun( int type );

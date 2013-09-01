@@ -51,6 +51,13 @@ TModel::~TModel()
 {
 }
 
+const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt, 
+        const TDataSet **src_ob, int lev) const
+{
+  return getDoublePtr( nm, lt, src_ob, lev );
+}
+
+
 
 int TModel::startRun( int type )/*{{{1*/
 {

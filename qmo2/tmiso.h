@@ -24,6 +24,7 @@
 #define TMISO_H
 
 #include "dataset.h"
+#include "inputparams.h"
 
 /** iteration type */
 enum IterType {
@@ -148,14 +149,6 @@ class TMiso : public TDataSet  {
    virtual int do_startLoop( int acnx, int acny );
    /** will be called after each inner loop: called frop endLoop */
    virtual int do_endLoop(void);
-   /** fill links to sources */
-   int fillLinks();
-   /** proceed parameters modification before first iteration 
-    * returns number of modified params */
-   int modifyPrmsPre();
-   /** proceed parameters modification in every iteration before fun()
-    * returns number of modified params */
-   int modifyPrms();
    /** description on element */
    PRM_STRING( descr, efNoRunChange, "description", 
        "Object description", "max=128\nncol=-1");
@@ -179,6 +172,8 @@ class TMiso : public TDataSet  {
    
    /** pointer to link data */
    TElmLink *links;
+   /** */
+   InputParams *pis;
    // PRM_OBJ1( links, 0, "object links", "Object links description", "sep=blockend" );
    /** time step -- setted by preRun 0 - special value to detect usage before start */
    double tdt = 0; 
