@@ -30,13 +30,26 @@ class QKeyEvent;
 
 class QPainter;
 
-/**display TModel structure ...
+
+/**display model (scheme) structure ...
   *@author atu
   */
 
 class QStructView : public QWidget  {
    Q_OBJECT
  public:
+  //* information about element to draw
+  struct ElemInfo {
+    // from element
+    QString name, type;
+    int vis_x, vis_y, ord, locked, onlyFirst, onlyLast, flip, noIcon;
+    // number of signal and parametric inputs
+    int n_inp, n_pinp;
+    // calculated
+    int xs0, ys0, xs, ys, xc, yc, flip_factor;
+    int li_dst_x, pre_dst_x, li_src_x, li_pdst_y;
+    const InputParams *pis;
+  };
    /** constructor */
    QStructView( QMo2Doc *adoc, QMo2View *mview,  QWidget *parent );
    /** destructor */
@@ -56,6 +69,8 @@ class QStructView : public QWidget  {
    void sig_changeSel(int,int,int);
    void sig_changeLevel(int);
  protected:
+   /** fill and calc info about element */
+   bool fill_elmInfo( const TMiso *ob, ElemInfo &el ) const;
    /** draw itself */
    virtual void paintEvent( QPaintEvent *pe );
    /** reaction to mouse */
@@ -76,8 +91,8 @@ class QStructView : public QWidget  {
    TModel *model;
    /** type of output device */
    int devTp;
-   /** grid size, left, top margin size, object size */
-   int grid_sz, lm, tm, obj_sz;
+   /** grid size, left, top margin size, object size,  elements margin */
+   int grid_sz, lm, tm, obj_sz, el_marg;
 };
 
 #endif

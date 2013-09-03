@@ -128,21 +128,54 @@ void QStructView::printAll()
   };
 }
 
+bool QStructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
+{
+  if( ! ob )
+    return false;
+  
+  ei.name = ob->objectName();
+  ei.type = ob->getType();
+  ei.vis_x  = ei.vis_y =  ei.ord = ei.locked = ei.onlyFirst 
+    =  ei.onlyLast = ei.flip = ei.noIcon = 0;
+
+  ob->getData( "vis_x", &ei.vis_x );
+  ob->getData( "vis_y", &ei.vis_y );
+  ob->getData( "ord", &ei.ord );
+  ob->getData( "locked", &ei.locked );
+  ob->getData( "onlyFirst", &ei.onlyFirst );
+  ob->getData( "onlyLast", &ei.onlyLast );
+  ob->getData( "flip", &ei.flip );
+  ob->getData( "noIcon", &ei.noIcon );
+  ei.flip_factor = ei.flip ? 1 : -1;
+  ei.n_inp = ob->inputsCount();
+  ei.n_pinp = 0; // TODO: real
+
+  ei.xs0 = lm + ei.vis_x * grid_sz;
+  ei.ys0 = lm + ei.vis_y * grid_sz;
+  ei.xs = ei.xs0 + el_marg;
+  ei.ys = ei.ys0 + el_marg;
+  ei.xc = ei.xs + obj_sz/2;
+  ei.yc = ei.ys + obj_sz/2;
+  ei.li_dst_x = ei.xc + ei.flip_factor*(obj_sz/2);
+  ei.pre_dst_x = ei.li_dst_x + el_marg * ei.flip_factor;
+  ei.li_src_x = ei.xc - ei.flip_factor*(obj_sz/2);
+  ei.li_pdst_y = ei.yc + (obj_sz/2);
+  
+  ei.pis = ob->getElemT<const InputParams*>("pis");
+  ei.n_pinp = ei.pis->getNumObj();
+  
+  return true;
+}
+
 void QStructView::drawAll( QPainter &p )
 {
   int i, h, w, nh, nw;
-  int n_el, elnu,  n_out, out_nu, out_tp, n_li, line_busy;
-  int ob_x, ob_y, ob_ord, ob_lock, ob_first, ob_last;
-  int ob_flip, ob_noIcon;
-  int li_src_x, li_src_y, li_dst_x, li_dst_y;
-  int ob_gx, ob_gy; /* left top point of object icon */
-  int ob_gxc; /* x- center of object icon */
-  int flip_factor; /* sign of input offsets amd labels */
+  int n_el, elnu,  n_out, out_nu, out_tp, line_busy;
+  int li_src_y, li_dst_y;
+  int line_color, line_width = 1, x_shift = 0, y_shift = 0;
   int st_y; /* label on elems start y */
   int sel_x, sel_y, /*sel,*/ mark;
-  int li_src_xs;
-  LinkInfo li[8];
-  QString qs, ob_name, src_name;
+  QString src_name;
   TMiso *ob;
   TOutArr *arr;
   Mo2Settings *psett;
@@ -152,7 +185,7 @@ void QStructView::drawAll( QPainter &p )
   p.setFont( strf );
   const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
   h = height(); w = width(); nh = 1 + h / grid_sz; nw = 1 + w / grid_sz;
-  int el_marg = (grid_sz-obj_sz)/2; // elements margin
+  el_marg = (grid_sz-obj_sz)/2; 
   sel_x = mainview->getSelX();
   sel_y = mainview->getSelY();
   //sel = mainview->getSel();
@@ -175,230 +208,256 @@ void QStructView::drawAll( QPainter &p )
   n_el = model->getNMiso();
   p.setPen( Qt::black );
   // --------- draw elems ---------------------
+  int cr_diff = el_marg/3;
+  QPoint p_crp {  cr_diff, cr_diff }; // difs for cross and arrow
+  QPoint p_crm { -cr_diff, cr_diff };
+
+  ElemInfo ei, sei;
   for( elnu=0; elnu<n_el; elnu++ ) {
     ob = model->getMiso( elnu );
     if( !ob ) 
       continue;
-    ob_name =  ob->objectName();
-    line_busy = 0; ob_x = ob_y = -1; ob_ord = -1; flip_factor = -1;
-    ob_lock = ob_first = ob_last = ob_flip = ob_noIcon = 0;
-    ob->getData( "vis_x", &ob_x ); 
-    ob->getData( "vis_y", &ob_y );
-    ob->getData( "ord", &ob_ord );
-    ob->getData( "locked", &ob_lock );
-    ob->getData( "onlyFirst", &ob_first );
-    ob->getData( "onlyLast", &ob_last );
-    ob->getData( "flip", &ob_flip );
-    ob->getData( "noIcon", &ob_noIcon );
-    if( ob_x < 0 || ob_x >=MODEL_MX || ob_y < 0 || ob_y >= MODEL_MY )
+    if( ! fill_elmInfo( ob, ei ) )
       continue;
-    // set real object icon origin
-    ob_gx = lm + ob_x * grid_sz + el_marg; 
-    ob_gy = tm + ob_y * grid_sz + el_marg;
-    ob_gxc = ob_gx + obj_sz/2; 
-    flip_factor = ob_flip ? 1 : -1;
+    line_busy = 0;
+    if( ei.vis_x < 0 || ei.vis_y < 0  )
+      continue;
     p.setPen( Qt::black );
 
     // --------------------- draw element icon or frame
-    if( ob_noIcon || !s_icons ) {
+    if( ei.noIcon || !s_icons ) {
       p.setPen( QPen(Qt::black,2) );  p.setBrush( Qt::NoBrush );
-      p.drawRect( ob_gx, ob_gy, obj_sz, obj_sz );
+      p.drawRect( ei.xs, ei.ys, obj_sz, obj_sz );
     } else {
       QString iconName = QString( ":icons/elm_" )
 	+ QString(ob->getType()).toLower() 
 	+ ".png";
       QIcon el_ico(iconName);
-      el_ico.paint( &p, ob_gx, ob_gy, obj_sz, obj_sz );
+      el_ico.paint( &p, ei.xs, ei.ys, obj_sz, obj_sz );
+      
+      // tmp: debug: to see sizes
+      //p.setPen( QPen(Qt::black,1) );  p.setBrush( Qt::NoBrush );
+      //p.drawRect( ei.xs, ei.ys, obj_sz, obj_sz );
     };
     p.setPen( Qt::black );  p.setBrush( Qt::red );
 
     // special marks: TODO: icons
-    if( ob_lock )
-      p.drawRect( ob_gx + 4, ob_gy + 8, 20, 8 );
-    if( ob_first )
-      p.drawRect( ob_gx + 4, ob_gy + 14, 6, 6 );
-    if( ob_last )
-      p.drawRect( ob_gx + 20, ob_gy +14, 6, 6 );
+    if( ei.locked )
+      p.drawRect( ei.xs + 4, ei.ys + 8, 20, 8 );
+    if( ei.onlyFirst )
+      p.drawRect( ei.xs + 4, ei.ys + 14, 6, 6 );
+    if( ei.onlyLast )
+      p.drawRect( ei.xs + 20, ei.ys +14, 6, 6 );
     
     // order mark
     if( psett->showord ) {
-      if( s_icons && ! ob_noIcon )  {
+      if( s_icons && ! ei.noIcon )  {
 	p.setPen( Qt::NoPen ); p.setBrush( QColor(240,240,255) );
-	p.drawRect( ob_gx, ob_gy, 31,11);
+	p.drawRect( ei.xs, ei.ys, 31,11);
       };
       p.setPen( Qt::black );
-      p.drawText( ob_gx + 2, ob_gy + 10, QSN(ob_ord) );
+      p.drawText( ei.xs + 2, ei.ys + 10, QSN(ei.ord) );
       line_busy++;
     };
     // --------------------- draw element name
-    if( psett->shownames || ob_noIcon || !s_icons ) { 
-      st_y = ob_gy + line_busy*10;
-      if( s_icons && ! ob_noIcon )  {
+    if( psett->shownames || ei.noIcon || !s_icons ) { 
+      st_y = ei.ys + line_busy*10;
+      if( s_icons && ! ei.noIcon )  {
 	p.setPen( Qt::NoPen ); p.setBrush( QColor(255,255,225) );
-	p.drawRect( ob_gx, st_y, 31,11);
+	p.drawRect( ei.xs, st_y, 31,11);
       };
       p.setPen( Qt::black );
-      p.drawText( ob_gx + 2, st_y+10, ob_name );
+      p.drawText( ei.xs + 2, st_y+10, ei.name );
       line_busy++;
     };
     // TODO: vector icon here
     p.setBrush( Qt::NoBrush ); p.setPen( QPen(Qt::black,1) );
-    st_y = ob_gy + line_busy*10; 
+    st_y = ei.ys + line_busy*10; 
 
     
     if( elnu == mark ) { // red rect around marked element
       p.setBrush( Qt::NoBrush ); p.setPen( Qt::red );
-      p.drawRect( lm + ob_x*grid_sz, tm + ob_y*grid_sz, grid_sz, grid_sz );
+      p.drawRect( ei.xs0, ei.ys0, grid_sz, grid_sz );
     };
 
-    // ------------------ draw element links
-    if( model->getLinkInfos( elnu, li ) != 0 )
+    
+    if( ! psett->showLinks ) {
       continue;
-    p.setBrush( Qt::red );
-    n_li = 0;
-    for( i=0; i<4; i++ ) {
-      if( li[i].ltype != LinkNone )
-	n_li++;
-    };
-    // old simple inputs: replaced
+    }
     
-    for( i=4; i<8; i++ ) { // param inputs TODO: replace
-      li_dst_x = ob_gx + (i-3)*6;
-      li_dst_y = ob_gy + obj_sz-el_marg;
-      switch( li[i].ltype ) {
-	case LinkNone: continue;
-	case LinkBad: 
-	      p.setPen( Qt::NoPen ); p.setBrush( Qt::red );
-	      p.drawRect( li_dst_x, li_dst_y, 4, 4 );
-              break;
-	case LinkElm:
-	      li_src_x = lm + li[i].x*grid_sz + (li[i].eflip ? el_marg : obj_sz+el_marg); 
-	      li_src_y = tm + obj_sz + li[i].y*grid_sz - 8;
-
-	      p.setPen( li[i].pflags ? QPen(Qt::magenta,2) : QPen(Qt::red,2) );
-	      
-              li_src_xs = li_src_x + (li[i].eflip?-3:3);
-	      p.drawLine( li_src_x, li_src_y, li_src_xs, li_src_y );
-	      p.drawLine( li_dst_x, li_dst_y, li_dst_x, li_dst_y+4 );
-	      p.drawLine( li_src_xs, li_src_y, li_src_xs, li_dst_y+4 );
-	      p.drawLine( li_src_xs, li_dst_y+4, li_dst_x, li_dst_y+4 );
-	      break;
-	case LinkSpec:
-	      p.setPen( Qt::NoPen );  p.setBrush( Qt::blue );
-	      p.drawRect( li_dst_x, li_dst_y, 4, 4 );
-	      break;
-
-      };
-    }; // end param inputs loop
-    
-    //  new input marks
-    int n_in = ob->inputsCount();
-    int in_sep_sz = obj_sz/(n_in+1);
+    //  input marks
+    int in_sep_sz = obj_sz/(ei.n_inp+1);
     p.setFont( smlf ); 
     p.setBrush( Qt::NoBrush );
-    
-    if( psett->showLinks ) {
-      // p.drawText( ob_gx + 16, ob_gy+obj_sz/2, QSN( n_in ) );
-      for( int i_in=0; i_in < n_in; ++i_in ) {
-        const InputSimple *in = ob->getInput(i_in);
-        if( ! in )
-          continue;
-        ltype_t lt = in->getLinkType();
-        const TDataSet* sobj = in->getSourceObj();
-        li_dst_x = ob_gxc + flip_factor * (obj_sz/2);
-        li_dst_y = ob_gy + (i_in+1)*in_sep_sz;
-        int pre_dst_x = li_dst_x + el_marg * flip_factor; // *2 ?
-        QString lbl; 
-        int line_color, line_width = 1, x_shift = 0, y_shift = 0;
-        in->getData("line_w", &line_width );
-        in->getData("x_shift", &x_shift );
-        in->getData("y_shift", &y_shift );
-        if( in->getData("line_color", &line_color ) ) {
-          p.setPen( QPen( QColor(QRgb(line_color)), line_width ) );
-        } else {
-          p.setPen( QPen( Qt::black, line_width ) );
-        }
-        if( lt == LinkNone ) {
-          p.drawEllipse( QPoint(li_dst_x, li_dst_y), el_marg/3, el_marg/3 );
-          continue;
-        }
-        int x_vert = pre_dst_x + x_shift * flip_factor;
-        // arrow
-        // p.drawLine( pre_dst_x, li_dst_y,   li_dst_x, li_dst_y  );
-        p.drawLine( li_dst_x, li_dst_y, x_vert, li_dst_y );
-        p.drawLine( li_dst_x +  3*flip_factor, li_dst_y-2, li_dst_x, li_dst_y  );
-        p.drawLine( li_dst_x +  3*flip_factor, li_dst_y+2, li_dst_x, li_dst_y  );
-        
-        in->getData("label", lbl );
-        if( ! lbl.isEmpty() ) {
-          p.drawText( x_vert-2*flip_factor, li_dst_y-2, lbl );
-        }
-        
-        if( lt == LinkBad ) {
-          p.setPen( QPen( Qt::red, 2 ) );
-          p.drawLine( x_vert-el_marg/3, li_dst_y-el_marg/3, 
-                      x_vert+el_marg/3, li_dst_y+el_marg/3 );
-          p.drawLine( x_vert-el_marg/3, li_dst_y+el_marg/3, 
-                      x_vert+el_marg/3, li_dst_y-el_marg/3 );
-          continue;
-        }
-        
-        if( lt == LinkSpec ) {
-          p.setPen( QPen( Qt::magenta, 2 ) );
-          p.drawRect( x_vert-el_marg/4, li_dst_y-el_marg/4, el_marg/2, el_marg/2 );
-          continue;
-        }
 
-        // here must be ordinary sources -> large mark if not so
-        const TMiso *so_obj = nullptr;
-        if( !sobj || ( (so_obj = qobject_cast<const TMiso*>(sobj)) == nullptr ) ) {
-          p.setPen( QPen( Qt::red, 4 ) );
-          p.drawEllipse( QPoint(x_vert, li_dst_y), el_marg, el_marg );
-          continue;
-        }
-
-        // get info about source and calc coords
-        int so_x = -1, so_y = -1, so_flip = 0, only_lbl = 0;
-        int so_flip_factor = 1, li_src_xc = 0;
-        QString so;
-        so_obj->getData( "vis_x", &so_x );
-        so_obj->getData( "vis_y", &so_y );
-        so_obj->getData( "flip", &so_flip );
-        in->getData( "source", so );
-        so_flip_factor = ( so_flip ) ? -1 : 1;
-
-        li_src_xc = lm + so_x*grid_sz + obj_sz/2 + el_marg;
-        li_src_x = li_src_xc + obj_sz * so_flip_factor / 2;
-        if( ob_y != so_y ) {
-          li_src_y = tm + so_y*grid_sz + obj_sz/2 + el_marg - y_shift;
-        } else {
-          li_src_y = li_dst_y - y_shift; // special case: one line
-        }
-
-        if( so.contains(".") ) { // complex - not 'out0' source
-          QChar qshc = (so.right(1))[0];
-          char shc = qshc.toLatin1();
-          li_src_y += 2 + ( shc  & 0x07 );
-          p.drawLine( li_src_x + el_marg*so_flip_factor/2, li_src_y, 
-                      li_src_x + el_marg*so_flip_factor/2, li_src_y+3 );
-        }
-
-        p.drawLine( li_src_x, li_src_y, 
-                    li_src_x + el_marg*so_flip_factor, li_src_y );
-        
-        in->getData( "onlyLabel", &only_lbl );
-        if( only_lbl ) {
-          if( ! lbl.isEmpty() ) {
-            p.drawText( li_src_x+(3+el_marg)*so_flip_factor, li_src_y-2, lbl );
-          }
-          continue;
-        }
-        
-        p.drawLine( x_vert, li_dst_y, x_vert, li_src_y ); // vertical part
-        p.drawLine( x_vert, li_src_y, li_src_x, li_src_y); // horiz. from src
-
+    // ordinary inputs
+    for( int i_in=0; i_in < ei.n_inp; ++i_in ) {
+      const InputSimple *in = ob->getInput(i_in);
+      if( ! in )
+        continue;
+      ltype_t lt = in->getLinkType();
+      const TDataSet* sobj = in->getSourceObj();
+      li_dst_y = ei.ys + (i_in+1)*in_sep_sz;
+      QString lbl; 
+      line_width = 1, x_shift = 0, y_shift = 0;
+      in->getData("line_w", &line_width );
+      in->getData("x_shift", &x_shift );
+      in->getData("y_shift", &y_shift );
+      if( in->getData("line_color", &line_color ) ) {
+        p.setPen( QPen( QColor(QRgb(line_color)), line_width ) );
+      } else {
+        p.setPen( QPen( Qt::black, line_width ) );
       }
-    }
+      if( lt == LinkNone ) {
+        p.drawEllipse( QPoint(ei.li_dst_x, li_dst_y), el_marg/3, el_marg/3 );
+        continue;
+      }
+      int x_vert = ei.pre_dst_x + x_shift * ei.flip_factor;
+      // arrow
+      // p.drawLine( pre_dst_x, li_dst_y,   li_dst_x, li_dst_y  );
+      p.drawLine( ei.li_dst_x, li_dst_y, x_vert, li_dst_y );
+      p.drawLine( ei.li_dst_x +  3*ei.flip_factor, li_dst_y-2, ei.li_dst_x, li_dst_y  );
+      p.drawLine( ei.li_dst_x +  3*ei.flip_factor, li_dst_y+2, ei.li_dst_x, li_dst_y  );
+      
+      in->getData("label", lbl );
+      if( ! lbl.isEmpty() ) {
+        p.drawText( x_vert-2*ei.flip_factor, li_dst_y-2, lbl );
+      }
+      
+      if( lt == LinkBad ) {
+        p.setPen( QPen( Qt::red, 2 ) );
+        p.drawLine( x_vert-el_marg/3, li_dst_y-el_marg/3, 
+                    x_vert+el_marg/3, li_dst_y+el_marg/3 );
+        p.drawLine( x_vert-el_marg/3, li_dst_y+el_marg/3, 
+                    x_vert+el_marg/3, li_dst_y-el_marg/3 );
+        continue;
+      }
+      
+      if( lt == LinkSpec ) {
+        p.setPen( QPen( Qt::magenta, 2 ) );
+        p.drawRect( x_vert-el_marg/4, li_dst_y-el_marg/4, el_marg/2, el_marg/2 );
+        continue;
+      }
+
+      // here must be ordinary sources -> large mark if not so
+      const TMiso *so_obj = nullptr;
+      if( !sobj || ( (so_obj = qobject_cast<const TMiso*>(sobj)) == nullptr ) ) {
+        p.setPen( QPen( Qt::red, 4 ) );
+        p.drawEllipse( QPoint(x_vert, li_dst_y), el_marg, el_marg );
+        continue;
+      }
+
+      // get info about source and calc coords
+      fill_elmInfo( so_obj, sei );
+      int so_x = -1, so_y = -1, so_flip = 0, only_lbl = 0;
+      QString so;
+      so_obj->getData( "vis_x", &so_x );
+      so_obj->getData( "vis_y", &so_y );
+      so_obj->getData( "flip", &so_flip );
+      in->getData( "source", so );
+
+      if( ei.vis_y != sei.vis_y ) {
+        li_src_y = sei.yc - y_shift;
+      } else {
+        li_src_y = li_dst_y - y_shift; // special case: one line
+      }
+
+      if( so.contains(".") ) { // complex - not 'out0' source
+        QChar qshc = (so.right(1))[0];
+        char shc = qshc.toLatin1();
+        li_src_y += 2 + ( shc  & 0x07 );
+        p.drawLine( sei.li_src_x + el_marg*sei.flip_factor/2, li_src_y, 
+                    sei.li_src_x + el_marg*sei.flip_factor/2, li_src_y+3 );
+      }
+
+      p.drawLine( sei.li_src_x, li_src_y, 
+                  sei.li_src_x + el_marg*sei.flip_factor, li_src_y );
+      
+      in->getData( "onlyLabel", &only_lbl );
+      if( only_lbl ) {
+        if( ! lbl.isEmpty() ) {
+          p.drawText( sei.li_src_x+(3+el_marg)*sei.flip_factor, li_src_y-2, lbl );
+        }
+        continue;
+      }
+      
+      p.drawLine( x_vert, li_dst_y, x_vert, li_src_y ); // vertical part
+      p.drawLine( x_vert, li_src_y, sei.li_src_x, li_src_y); // horiz. from src
+
+    } // end of simple input loop
+
+
+    // ----------- parametric inputs
+    int i_in=0;
+    in_sep_sz = obj_sz/(ei.n_pinp+1);
+    for( const auto c : ei.pis->children() ) {
+      const InputParam* ips = qobject_cast<const InputParam*>( c );
+      if( ! ips )
+        continue;
+      
+      line_width = 2, x_shift = 0, y_shift = 0;
+      ips->getData("line_w", &line_width );
+      ips->getData("x_shift", &x_shift );
+      ips->getData("y_shift", &y_shift );
+      if( ips->getData("line_color", &line_color ) ) {
+        p.setPen( QPen( QColor(QRgb(line_color)), line_width ) );
+      } else {
+        p.setPen( QPen( Qt::black, line_width ) );
+      }
+      
+      int li_pdst_x = ei.xs + (1+i_in) * in_sep_sz;
+      QPoint p_bott { li_pdst_x, ei.li_pdst_y+el_marg };
+      QPoint p_dst  { li_pdst_x, ei.li_pdst_y };
+
+      // arrow
+      p.drawLine( p_bott, p_dst );
+      p.drawLine( p_dst+p_crp, p_dst );
+      p.drawLine( p_dst+p_crm, p_dst );
+      
+      ltype_t lt = ips->getLinkType();
+      if( lt == LinkNone ) {
+        // unlike signal input, must be unlikly
+        p.drawEllipse( p_bott, el_marg/3, el_marg/3 );
+        continue;
+      }
+      
+      if( lt == LinkBad ) {
+        p.setPen( QPen( Qt::red, 2 ) );
+        p.drawLine( p_bott+p_crp, p_bott-p_crp );
+        p.drawLine( p_bott+p_crm, p_bott-p_crm );
+        continue;
+      }
+      
+      if( lt == LinkSpec ) {
+        p.setPen( QPen( Qt::magenta, 2 ) );
+        p.drawRect( QRect( p_bott, QSize(el_marg/2, el_marg/2) ) );
+        continue;
+      }
+      
+      // must be ordinary link
+      const TDataSet* sobj = ips->getSourceObj();
+      const TMiso *so_obj = nullptr;
+      if( !sobj || ( (so_obj = qobject_cast<const TMiso*>(sobj)) == nullptr ) ) {
+        p.setPen( QPen( Qt::red, 4 ) );
+        p.drawEllipse( p_bott, el_marg, el_marg );
+        continue;
+      }
+      
+      fill_elmInfo( so_obj, sei );
+      
+      li_src_y = sei.yc - y_shift;
+
+      // TODO: label
+
+      int x_vert = sei.li_src_x - ( x_shift + el_marg ) * sei.flip_factor;
+      
+      p.drawLine( sei.li_src_x, li_src_y, x_vert, li_src_y ); // from src
+      p.drawLine( x_vert, ei.li_pdst_y+el_marg,  x_vert, li_src_y ); // vert line
+      p.drawLine( p_bott, QPoint( x_vert, ei.li_pdst_y+el_marg ) );  // to dst.bottom
+
+      ++i_in;
+    } // end of param input loop
+
   }; // end loop on elems
 
   p.setFont( smlf );
@@ -420,9 +479,9 @@ void QStructView::drawAll( QPainter &p )
     const TMiso *src_obj = qobject_cast<const TMiso*>(lob);
     if( ! src_obj ) 
       continue;
-    ob_x = ob_y = -1;
-    src_obj->getData( "vis_x", &ob_x ); src_obj->getData( "vis_y", &ob_y );
-    if( ob_x < 0 || ob_x >=MODEL_MX || ob_y < 0 || ob_y >= MODEL_MY )
+    fill_elmInfo( src_obj, sei );
+
+    if( sei.vis_x < 0 || sei.vis_y < 0 )
       continue;
     switch( out_tp ) {
       case 0: p.setBrush( Qt::white ); break;
@@ -431,8 +490,8 @@ void QStructView::drawAll( QPainter &p )
       case 3: p.setBrush( Qt::gray ); break;
       default: p.setBrush( Qt::red ); break;
     };
-    int omark_x = lm + ob_x*grid_sz + obj_sz - 10 - out_nu;
-    int omark_y = tm + ob_y*grid_sz +  1;
+    int omark_x = sei.xs0 + obj_sz - 10 - out_nu;
+    int omark_y = sei.ys0 +  1;
     p.drawRect( omark_x, omark_y, 10, 10 );
     if( src_name.contains('.') ) { // inner link mark
       p.setBrush( Qt::red );

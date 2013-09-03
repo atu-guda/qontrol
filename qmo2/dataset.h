@@ -539,10 +539,6 @@ class TDataSet : public HolderData {
    void registerInput( InputSimple *inp );
    /** unregister input (call by dtor) from inputs */
    void unregisterInput( InputSimple *inp );
-   /** register input (call by ctor) in inputs */
-   void registerParamInput( InputParam *inp );
-   /** unregister input (call by dtor) from inputs */
-   void unregisterParamInput( InputParam *inp );
  protected:
    /** guard value: debug */
    static const int guard_val = 7442428;
