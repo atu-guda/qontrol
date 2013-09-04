@@ -83,7 +83,6 @@ class QMo2View : public QWidget
    void newElm();
    void delElm();
    void editElm();
-   void linkElm();
    void qlinkElm();
    void qplinkElm();
    void unlinkElm();

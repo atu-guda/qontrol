@@ -35,7 +35,7 @@ enum IterType {
 
 class TModel;
 
-/** \class TElmLink  
+/** class TElmLink  - obseleted by InputSimple and Input Param
  * aux class for get/set TMiso links and flags 
 */
 
@@ -59,20 +59,20 @@ class TElmLink : public TDataSet {
    PRM_SWITCH( flip, efOld, "flip image", "flip left-right element icon", "sep=col");
    PRM_SWITCH( noIcon, efOld, "no Icon", "don't show element icon", "");
    /** names of elms, which outputs will be used as parm inputs */
-   PRM_STRING( pinps0, efNoRunChange, "Parm. input 0", "Name of source for parametric input 0", "max=32\nsep=block"  );
-   PRM_STRING( pinps1, efNoRunChange, "Parm. input 1", "Name of source for parametric input 1", "max=32"  );
-   PRM_STRING( pinps2, efNoRunChange, "Parm. input 2", "Name of source for parametric input 2", "max=32"  );
-   PRM_STRING( pinps3, efNoRunChange, "Parm. input 3", "Name of source for parametric input 3", "max=32"  );
+   PRM_STRING( pinps0, efOld, "Parm. input 0", "Name of source for parametric input 0", "max=32\nsep=block"  );
+   PRM_STRING( pinps1, efOld, "Parm. input 1", "Name of source for parametric input 1", "max=32"  );
+   PRM_STRING( pinps2, efOld, "Parm. input 2", "Name of source for parametric input 2", "max=32"  );
+   PRM_STRING( pinps3, efOld, "Parm. input 3", "Name of source for parametric input 3", "max=32"  );
    /** names of inner params, to be modifyed */ 
-   PRM_STRING( pnames0, efNoRunChange, "Parm. name 0", "Name of inner parameter 0", "max=32\nsep=col" );
-   PRM_STRING( pnames1, efNoRunChange, "Parm. name 1", "Name of inner parameter 1", "max=32"  );
-   PRM_STRING( pnames2, efNoRunChange, "Parm. name 2", "Name of inner parameter 2", "max=32"  );
-   PRM_STRING( pnames3, efNoRunChange, "Parm. name 3", "Name of inner parameter 3", "max=32"  );
+   PRM_STRING( pnames0, efOld, "Parm. name 0", "Name of inner parameter 0", "max=32\nsep=col" );
+   PRM_STRING( pnames1, efOld, "Parm. name 1", "Name of inner parameter 1", "max=32"  );
+   PRM_STRING( pnames2, efOld, "Parm. name 2", "Name of inner parameter 2", "max=32"  );
+   PRM_STRING( pnames3, efOld, "Parm. name 3", "Name of inner parameter 3", "max=32"  );
    /** inner flags for params: 1-only start of loop, ..? */
-   PRM_SWITCH( pflags0, efNoRunChange, "only First 0", "Change param 0 only at start", "sep=col" );
-   PRM_SWITCH( pflags1, efNoRunChange, "only First 1", "Change param 1 only at start", ""  );
-   PRM_SWITCH( pflags2, efNoRunChange, "only First 2", "Change param 2 only at start", ""  );
-   PRM_SWITCH( pflags3, efNoRunChange, "only First 3", "Change param 3 only at start", ""  );
+   PRM_SWITCH( pflags0, efOld, "only First 0", "Change param 0 only at start", "sep=col" );
+   PRM_SWITCH( pflags1, efOld, "only First 1", "Change param 1 only at start", ""  );
+   PRM_SWITCH( pflags2, efOld, "only First 2", "Change param 2 only at start", ""  );
+   PRM_SWITCH( pflags3, efOld, "only First 3", "Change param 3 only at start", ""  );
    DCL_DEFAULT_STATIC;
 }; 
 typedef TElmLink* PTElmLink;

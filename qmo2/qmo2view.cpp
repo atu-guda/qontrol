@@ -329,26 +329,6 @@ void QMo2View::editElm()
   emit viewChanged();
 }
 
-void QMo2View::linkElm()
-{
-  TElmLink *el;
-  int rc;
-  if( ! checkState( selCheck ) )
-    return;  
-
-  el = selObj->getElemT<TElmLink*>( "links" );
-  if( el == 0 ) {
-    DBG2q( "ERR: fail to find links for object", selObj->getFullName() );
-    return ;
-  }
-  DataDialog *dia = new DataDialog( *el, this );
-  rc = dia->exec();
-  delete dia;
-  if( rc == QDialog::Accepted ) {
-    model->reset(); model->setModified();
-    emit viewChanged();
-  };
-}
 
 void QMo2View::qlinkElm()
 {
@@ -379,7 +359,6 @@ void QMo2View::qlinkElm()
 
 void QMo2View::qplinkElm()
 {
-  int k;
   QString oldlink;
   if( ! checkState( linkToCheck ) )
     return;  
@@ -388,19 +367,29 @@ void QMo2View::qplinkElm()
     return;
   QString toname = markObj->objectName();
 
-  QString lnkname( "links.pinps" );
-  lnkname += QString::number( level );
-  k = selObj->getData( lnkname, oldlink );
-  if( !k  || ! oldlink.isEmpty() )
+  InputParams *pis = selObj->getElemT<InputParams*>("pis");
+  if( !pis ) {
+    DBG2q( "err: no pis object in ", selObj->getFullName() );
     return;
-  k = selObj->setData( lnkname, toname );
+  }
+  int n_pi = pis->getNumObj();
+  QString pi_name = QString("pi_") + QSN(n_pi);
+  InputParam *pi = qobject_cast<InputParam*>( pis->add_obj( "InputParam", pi_name ) );
+  if( !pi ) {
+    return;
+  }
+
+  pi->setData( "source", toname );
+  pi->setData( "line_w", 2 );
+  pi->setData( "line_color", "red" );
+
+  model->reportStructChanged();
   model->reset(); model->setModified();
   emit viewChanged();
 }
 
 void QMo2View::unlinkElm()
 {
-  int k;
   if( ! checkState( selCheck ) ) // no need marked to unlink
     return;  
   
@@ -413,11 +402,13 @@ void QMo2View::unlinkElm()
       continue;
     in->setData( "source", none );
   }
-
-  for( k=0; k<4; k++ ) {
-    lnkname = "links.pinps" + QString::number(k);
-    selObj->setData( lnkname, none );
-  };
+  
+  InputParams *pis = selObj->getElemT<InputParams*>("pis");
+  if( !pis ) {
+    DBG2q( "err: no pis object in ", selObj->getFullName() );
+    return;
+  }
+  qDeleteAll( pis->children() );
   
   model->reportStructChanged();
   model->reset(); model->setModified();

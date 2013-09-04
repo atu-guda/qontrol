@@ -552,7 +552,7 @@ void QStructView::mousePressEvent( QMouseEvent *me )
 	      connect( act, SIGNAL( activated() ), mainview, SLOT(delElm() ) );
 	      menu->addSeparator();
 	      act = menu->addAction( "&Link" );
-	      connect( act, SIGNAL( activated() ), mainview, SLOT(linkElm() ) );
+	      connect( act, SIGNAL( activated() ), mainview, SLOT(qlinkElm() ) );
 	      act = menu->addAction( "&Reorder" );
 	      connect( act, SIGNAL( activated() ), mainview, SLOT(ordElm() ) );
 	      menu->addSeparator();

@@ -21,13 +21,14 @@
 using namespace  std;
 
 const char* TElmLink::helpstr = "<H1>TElmLink</H1> \n"
- "Defines signal and parametric inputs for given element. \n"
- "Each element may have up to 4 both signal and parametric inputs\n";
+ "<p><b>Obsoleted.</b>Defines signal and parametric inputs for given element. \n"
+ "Each element may have up to 4 both signal and parametric inputs</p>\n";
 
 STD_CLASSINFO( TElmLink, clpSpecial );
 
 CTOR(TElmLink,TDataSet)
 {
+  flags |= efNoSave | efNoDial;
 }
 
 DEFAULT_FUNCS_REG(TElmLink);

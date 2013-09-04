@@ -228,11 +228,6 @@ void QMo2Win::initIface()
   act_editelm->setWhatsThis( tr("Edit selected element") );
   connect( act_editelm, SIGNAL( activated() ), this, SLOT( slotEditElm() ));
  
-  act_linkelm= new QAction( QIcon( ":icons/linkelm.png" ), "&Link element", this );
-  act_linkelm->setShortcut( Qt::Key_L );
-  act_linkelm->setWhatsThis( tr("Edit links of selected element") );
-  connect( act_linkelm, SIGNAL( activated() ), this, SLOT( slotLinkElm() ));
- 
   act_qlinkelm= new QAction( "&Quick link element", this );
   act_qlinkelm->setShortcut( Qt::CTRL+Qt::Key_L );
   act_qlinkelm->setWhatsThis( tr("Link marked to selected element") );
@@ -503,7 +498,6 @@ void QMo2Win::initIface()
   pElmMenu->addAction( act_delelm );
   pElmMenu->addAction( act_editelm );
   pElmMenu->addSeparator();
-  pElmMenu->addAction( act_linkelm );
   pElmMenu->addAction( act_qlinkelm );
   pElmMenu->addAction( act_qplinkelm );
   pElmMenu->addAction( act_unlinkelm );
@@ -605,7 +599,6 @@ void QMo2Win::initIface()
   elmToolbar->addAction( act_newelm );
   elmToolbar->addAction( act_delelm );
   elmToolbar->addAction( act_editelm );
-  elmToolbar->addAction( act_linkelm );
   // elmToolbar->addAction( act_lockelm );
   elmToolbar->addAction( act_ordelm );
   elmToolbar->addAction( act_markelm );
@@ -654,7 +647,6 @@ void QMo2Win::enableActions( bool ena, int id_ )
        act_newelm->setEnabled( ena );
        act_delelm->setEnabled( ena );
        act_editelm->setEnabled( ena );
-       act_linkelm->setEnabled( ena );
        act_qlinkelm->setEnabled( ena );
        act_qplinkelm->setEnabled( ena );
        act_unlinkelm->setEnabled( ena );
@@ -1205,15 +1197,6 @@ void QMo2Win::slotEditElm()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
-void QMo2Win::slotLinkElm()
-{
-  statusBar()->showMessage( tr( "Linking element..." ) );
-  
-  QMo2View* m =  activeMdiChild();
-  if ( m )
-    m->linkElm();
-  statusBar()->showMessage( tr( "Ready." ) );
-}
 
 void QMo2Win::slotqLinkElm()
 {

@@ -155,7 +155,6 @@ class QMo2Win : public QMainWindow
     void slotNewElm();
     void slotDelElm();
     void slotEditElm();
-    void slotLinkElm();
     void slotqLinkElm();
     void slotqpLinkElm();
     void slotUnlinkElm();
@@ -280,7 +279,7 @@ class QMo2Win : public QMainWindow
 	    *act_undo, *act_cut, *act_copy, *act_paste,
 	    // elm
 	    *act_newelm, *act_delelm, *act_editelm, 
-	    *act_linkelm, *act_qlinkelm, *act_qplinkelm, *act_unlinkelm,
+	    *act_qlinkelm, *act_qplinkelm, *act_unlinkelm,
 	    *act_lockelm, *act_ordelm, *act_markelm, *act_moveelm,
 	    *act_infoelm, *act_showtreeelm,
 	    *act_testelm1, *act_testelm2,

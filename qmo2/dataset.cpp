@@ -1625,7 +1625,8 @@ void TDataSet::unregisterInput( InputSimple *inp )
 InputSimple* TDataSet::getInput (int n)
 {
   if( n < 0 || n >= inputs.size() ) {
-    DBGx( "warn: bad input number %d, size= %d", n, inputs.size() );
+    DBGx( "warn: bad input number %d, in \"%s\" size= %d", 
+        n, qP(getFullName()), inputs.size() );
     return nullptr;
   }
   return inputs[n];
