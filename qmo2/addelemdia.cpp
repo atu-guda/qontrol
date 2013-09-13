@@ -44,7 +44,7 @@ void AddElemDialog::setupUi()
   lay->addWidget( la_order, 0, 1 );
 
   ed_order = new QLineEdit( this );
-  ed_order->setText( QString::number( aei->order ) );
+  ed_order->setText( QSN( aei->order ) );
   lay->addWidget( ed_order, 1, 1 );
   ed_order->setValidator( new QIntValidator( 0, IMAX, this ) );
   

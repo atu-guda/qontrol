@@ -535,7 +535,7 @@ void QStructView::mousePressEvent( QMouseEvent *me )
     };
     title = elmname;
     if( model->getState() > 1 ) {
-      title += QString( "(" ) + QString::number( outval ) + QString( ")" );
+      title += QString( "(" ) + QSN( outval ) + QString( ")" );
     }
     switch( me->button() ) {
       case Qt::LeftButton:  break;

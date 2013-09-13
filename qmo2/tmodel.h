@@ -142,14 +142,14 @@ class TModel : public TDataContainer  {
       "number of steps per i/o action ",
       "min=1\nmax=100000\nsep=col\ndef=1000" );
   /** Initial parametrs values */
-  PRM_DOUBLE( prm0s, efNoRunChange, "param. 0", "Initial prm0 value", "sep=block" );
-  PRM_DOUBLE( prm1s, efNoRunChange, "param. 1", "Initial prm1 value", "" );
-  PRM_DOUBLE( prm2s, efNoRunChange, "param. 2", "Initial prm2 value", ""  );
-  PRM_DOUBLE( prm3s, efNoRunChange, "param. 3", "Initial prm3 value", ""  );
-  PRM_DOUBLE( prm0d, efNoRunChange, "prm0+=", "Parameter 0 delta", "" );
+  PRM_DOUBLE( prm0s, efNoRunChange, "prm0s", "Initial prm0 value", "sep=block" );
+  PRM_DOUBLE( prm1s, efNoRunChange, "prm1s", "Initial prm1 value", "" );
+  PRM_DOUBLE( prm2s, efNoRunChange, "prm2s", "Initial prm2 value", ""  );
+  PRM_DOUBLE( prm3s, efNoRunChange, "prm3s", "Initial prm3 value", ""  );
+  PRM_DOUBLE( prm0d, efNoRunChange, "prm0+=", "Parameter 0 delta", "sep=col" );
   PRM_DOUBLE( prm1d, efNoRunChange, "prm1+=", "Parameter 1 delta", "" );
-  PRM_DOUBLE( xval1, 0, "xval1", "Reserved 1", "props=DOUBLE,SPIN\nstep=0.2" );
-  PRM_DOUBLE( xval2, 0, "xval2", "Reserved 2", "" );
+  PRM_DOUBLE( xval1, efOld, "xval1", "Reserved 1", "props=DOUBLE,SPIN\nstep=0.2" );
+  PRM_DOUBLE( xval2, efOld, "xval2", "Reserved 2", "" );
   PRM_INT( seed, efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
   PRM_INT( useSameSeed, efOld, "use Same Seed - no", "Unused", "props=INT,SPIN\nstep=2\nmin=-100\nmax=100" ); // TODO: OBSOLETE
   /** type of seeding: 0 - every run, 1 - every 1d loop .. obj: 3 - as model */
@@ -158,23 +158,23 @@ class TModel : public TDataContainer  {
       "Every Run\nStart 1d loop\nStart 2d loop" );
   // -------- input channels indexes -------
   /** input from mouse (x,y,btn1,btn2,btn3) abs(x,y) <= 1, 0 - center */
-  PRM_INT( ic_mouse, efNoRunChange, "Mouse idx", "Mouse input index", "sep=col" );
+  PRM_INT( ic_mouse, efOld, "Mouse idx", "Mouse input index", "sep=col" );
   /** input from joystick (x,y,btn) abs(x,y) <= 1, 0 - center */
-  PRM_INT( ic_joy, efNoRunChange, "Joystick idx", "Joystick input index", "" );
+  PRM_INT( ic_joy, efOld, "Joystick idx", "Joystick input index", "" );
   /** input from soundcard (lert,right) */
-  PRM_INT( ic_sound, efNoRunChange, "Sound idx", "Soundcard input index", "" );
+  PRM_INT( ic_sound, efOld, "Sound idx", "Soundcard input index", "" );
   /** input from keyboard (left,right,top,bottom,space,enter) */
-  PRM_INT( ic_key, efNoRunChange, "Keyboard idx", "Keyboard input index", "" );
+  PRM_INT( ic_key, efOld, "Keyboard idx", "Keyboard input index", "" );
   /** input from unknown device, up to 20 values */
-  PRM_INT( ic_aux, efNoRunChange, "AUX idx", "Unknown input index", "" );
+  PRM_INT( ic_aux, efOld, "AUX idx", "Unknown input index", "" );
   // -------- output channels indexes -------
   /** indexes for output */
-  PRM_INT( oc_0, efNoRunChange, "Out idx 0", "Output index 0", "" );
-  PRM_INT( oc_1, efNoRunChange, "Out idx 1", "Output index 1", ""  );
-  PRM_INT( oc_2, efNoRunChange, "Out idx 2", "Output index 2", ""  );
-  PRM_INT( oc_3, efNoRunChange, "Out idx 3", "Output index 3", ""  );
-  PRM_INT( oc_4, efNoRunChange, "Out idx 4", "Output index 4", ""  );
-  PRM_INT( oc_5, efNoRunChange, "Out idx 5", "Output index 5", ""  );
+  PRM_INT( oc_0, efOld, "Out idx 0", "Output index 0", "" );
+  PRM_INT( oc_1, efOld, "Out idx 1", "Output index 1", ""  );
+  PRM_INT( oc_2, efOld, "Out idx 2", "Output index 2", ""  );
+  PRM_INT( oc_3, efOld, "Out idx 3", "Output index 3", ""  );
+  PRM_INT( oc_4, efOld, "Out idx 4", "Output index 4", ""  );
+  PRM_INT( oc_5, efOld, "Out idx 5", "Output index 5", ""  );
   /** types of output 1-3=cross, 4-7=vbar, 8-11=gbar, 12-15=leds, 16,17=sound */
   const char *const och_type_str = 
     "None\nCross1\nCross2\nCross3\n"
@@ -183,12 +183,12 @@ class TModel : public TDataContainer  {
     "LED0\nLED1\nLED2\nLED3\n"
     "Sound0\nSound1\n"
     "Aux0\nAux1";
-  PRM_LIST( oct_0, efNoRunChange, "Out Type 0", "Output Type 0", "sep=col", och_type_str );
-  PRM_LIST( oct_1, efNoRunChange, "Out Type 1", "Output Type 1", "", och_type_str  );
-  PRM_LIST( oct_2, efNoRunChange, "Out Type 2", "Output Type 2", "", och_type_str );
-  PRM_LIST( oct_3, efNoRunChange, "Out Type 3", "Output Type 3", "", och_type_str );
-  PRM_LIST( oct_4, efNoRunChange, "Out Type 4", "Output Type 4", "", och_type_str );
-  PRM_LIST( oct_5, efNoRunChange, "Out Type 5", "Output Type 5", "", och_type_str );
+  PRM_LIST( oct_0, efOld, "Out Type 0", "Output Type 0", "sep=col", och_type_str );
+  PRM_LIST( oct_1, efOld, "Out Type 1", "Output Type 1", "", och_type_str  );
+  PRM_LIST( oct_2, efOld, "Out Type 2", "Output Type 2", "", och_type_str );
+  PRM_LIST( oct_3, efOld, "Out Type 3", "Output Type 3", "", och_type_str );
+  PRM_LIST( oct_4, efOld, "Out Type 4", "Output Type 4", "", och_type_str );
+  PRM_LIST( oct_5, efOld, "Out Type 5", "Output Type 5", "", och_type_str );
   // ---------------------------------------
   /** long description */
   PRM_STRING( long_descr, 0, "Description", "Model description", 

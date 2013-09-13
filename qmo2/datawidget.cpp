@@ -219,7 +219,7 @@ IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent )
 
 bool IntDataWidget::set()
 {
-  le->setText( QString::number( ho.get().toInt() ) ); 
+  le->setText( QSN( ho.get().toInt() ) ); 
   return true;
 }
 
@@ -433,7 +433,7 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
 
 bool DoubleDataWidget::set()
 {
-  le->setText( QString::number( ho.get().toDouble() ) ); 
+  le->setText( QSN( ho.get().toDouble() ) ); 
   return true;
 }
 
@@ -1130,7 +1130,7 @@ void DataDialog::addParam()
 void DataDialog::addObj()
 {
   addElemInfo aei;
-  aei.name = QString("obj_") + QString::number( ds.getNumObj() ) ;
+  aei.name = QString("obj_") + QSN( ds.getNumObj() ) ;
   aei.order = 0;
   AddElemDialog *dia = new AddElemDialog( &aei, &ds, this );
 

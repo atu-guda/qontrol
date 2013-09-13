@@ -260,7 +260,7 @@ void QMo2View::newElm()
     return;
 
   addElemInfo aei;
-  aei.name = QString("obj_") + QString::number( model->getNMiso() ) ;
+  aei.name = QString("obj_") + QSN( model->getNMiso() ) ;
   aei.order = model->hintOrd();
   AddElemDialog *dia = new AddElemDialog( &aei, model, this, "TMiso" );
                                           // limit to such elements here
@@ -654,7 +654,7 @@ void QMo2View::pasteElm()
   QString elname_base = elname;
   int suff_n = 1;
   while( model->getElem( elname ) && suff_n < 50 ) { // guess good name
-    elname = elname_base + "_" + QString::number( suff_n );
+    elname = elname_base + "_" + QSN( suff_n );
     suff_n++;
     if( suff_n > 20 ) {
       elname += "_x";
@@ -678,7 +678,7 @@ void QMo2View::pasteElm()
   lay->addWidget( la_ord, 0, 1 );
 
   QLineEdit *oord_ed = new QLineEdit( dia );
-  oord_ed->setText( QString::number(oord) );
+  oord_ed->setText( QSN(oord) );
   lay->addWidget( oord_ed, 1, 1 );
   
   QDialogButtonBox *bbox 
@@ -878,15 +878,15 @@ void QMo2View::showOutData() // TODO: special dialog (+ for many rows)
   dtv->setModel( dmod );
   lay->addWidget( dtv, 0, 0 );
 
-  sinf = QString( "n= " ) % QString::number( gi.row )
-       % QString( "; \nave= " ) % QString::number( ave )
-       % QString( "; \nave2= " ) % QString::number( ave2 ) 
-       % QString( "; \nsum= " ) % QString::number( s )
-       % QString( "; \nsum2= " ) % QString::number( s2 )
-       % QString( ";\nD= " ) % QString::number( disp )
-       % QString( "; \nsigm= " ) % QString::number( msq )
-       % QString( "; \nmin= " ) % QString::number( vmin )
-       % QString( "; \nmax= " ) % QString::number( vmax ); 
+  sinf = QString( "n= " ) % QSN( gi.row )
+       % QString( "; \nave= " ) % QSN( ave )
+       % QString( "; \nave2= " ) % QSN( ave2 ) 
+       % QString( "; \nsum= " ) % QSN( s )
+       % QString( "; \nsum2= " ) % QSN( s2 )
+       % QString( ";\nD= " ) % QSN( disp )
+       % QString( "; \nsigm= " ) % QSN( msq )
+       % QString( "; \nmin= " ) % QSN( vmin )
+       % QString( "; \nmax= " ) % QSN( vmax ); 
   lab = new QLabel( sinf, dia );
   lab->setTextInteractionFlags( Qt::TextSelectableByMouse 
        | Qt::TextSelectableByKeyboard);
@@ -929,7 +929,7 @@ void QMo2View::newGraph()
   if( ! checkState( validCheck ) )
     return;
   no = model->getNGraph();
-  grnameq = QString("graph") + QString::number( no ); 
+  grnameq = QString("graph") + QSN( no ); 
   aname = QInputDialog::getText( this, "Creating new Graph descriptions",
       "Enter name of new Graph:", QLineEdit::Normal, 
       grnameq, &ok );

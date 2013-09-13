@@ -178,7 +178,7 @@ void QPlotView::drawGrid( QPainter &p )
       p.drawLine( ix, pix_y0,  ix, pix_y0 - pix_y );
       p.setPen( QPen( labelColor, linew ) );
       p.drawText( ix - 20, pix_y0 + 2, 40, 12, Qt::AlignHCenter,
-                QString::number( lvx ) );
+                QSN( lvx ) );
     };
   };
   if( scd->gridY > 0 ) {
@@ -194,7 +194,7 @@ void QPlotView::drawGrid( QPainter &p )
       p.drawLine( pix_l, iy, pix_x0 + pix_x, iy );
       p.setPen( QPen( labelColor, linew ) );
       p.drawText( 1, iy - 6, pix_l-2, 12, Qt::AlignRight,
-                  QString::number( lvy ) );
+                  QSN( lvy ) );
     };
   };
   // -------- draw ticks
@@ -244,8 +244,8 @@ void QPlotView::drawAxes( QPainter &p )
   if( pix_r >= leg_sz ) {
     p.setPen( labelColor ); p.setBrush( Qt::NoBrush );
     p.drawText( pix_x0 + pix_x + 5, pix_y0 + 6, xLabel );
-    p.drawText( pix_x0 + pix_x + 5, pix_y0 - 14, QString::number(nn) );
-    p.drawText( pix_x0 + pix_x + 5, pix_y0 - 24, QString::number(ny) );
+    p.drawText( pix_x0 + pix_x + 5, pix_y0 - 14, QSN(nn) );
+    p.drawText( pix_x0 + pix_x + 5, pix_y0 - 24, QSN(ny) );
     for( i=0; i<ng; i++ ) {
       p.setPen( QPen( plotColor[i], linew ) );
       p.drawLine( pix_x0 + pix_x + 2, pix_t + 10 + i*20,
@@ -278,19 +278,19 @@ void QPlotView::drawAxes( QPainter &p )
   if( tooldx != 0) 
     toolk = tooldy / tooldx;
   qs = QString("(") 
-    % QString::number( tool_x, 'g', 4 ) + QString("; " )
-    % QString::number( tool_y, 'g', 4 ) + QString(") [" )
-    % QString::number( sel_idx ) + QString("]; ref= (" )
-    % QString::number( ref_x, 'g', 4 ) + QString("; " ) 
-    % QString::number( ref_y, 'g', 4 ) + QString(") dlt = (" ) 
-    % QString::number( tooldx, 'g', 4 ) + QString("; " ) 
-    % QString::number( tooldy, 'g', 4 ) + QString(") R = " ) 
-    % QString::number( hypot( tooldx, tooldy  ), 'g', 4 ) 
+    % QSN( tool_x, 'g', 4 ) + QString("; " )
+    % QSN( tool_y, 'g', 4 ) + QString(") [" )
+    % QSN( sel_idx ) + QString("]; ref= (" )
+    % QSN( ref_x, 'g', 4 ) + QString("; " ) 
+    % QSN( ref_y, 'g', 4 ) + QString(") dlt = (" ) 
+    % QSN( tooldx, 'g', 4 ) + QString("; " ) 
+    % QSN( tooldy, 'g', 4 ) + QString(") R = " ) 
+    % QSN( hypot( tooldx, tooldy  ), 'g', 4 ) 
     % QString(" ; f = " ) 
-    % QString::number( atan2( tooldy, tooldx ), 'g', 4 ) 
-    % QString(" ; k = " ) + QString::number( toolk, 'g', 4 );
+    % QSN( atan2( tooldy, tooldx ), 'g', 4 ) 
+    % QString(" ; k = " ) + QSN( toolk, 'g', 4 );
   if( ny > 1 && sel_idx >= 0 ) {
-    qs += QString( "; y= " ) + QString::number( datay[0][sel_idx], 'g', 4 );
+    qs += QString( "; y= " ) + QSN( datay[0][sel_idx], 'g', 4 );
   };
   p.drawText( 2, pix_h-12, qs  );
   if( devTp == 0 ) {
@@ -392,8 +392,8 @@ void QPlotView::mousePressEvent( QMouseEvent *me )
     case Qt::MidButton:
          //QMessageBox::information( this, "Coordinates",
          //          QString("Middle button pressed at :")
-         //          + QString::number( vx ) + QString(", ")
-         //          + QString::number( vy ),
+         //          + QSN( vx ) + QString(", ")
+         //          + QSN( vy ),
          //          0, 0, 0 );
          break;
     default:
@@ -642,7 +642,7 @@ void QPlotView::initArrs(void)
     start_from = 0;
     if( ny > 1 ) 
       start_from = 1; // skip y in autoscale for 3D-like plot
-    buf = "y" + QString::number(i) + "name";
+    buf = "y" + QSN(i) + "name";
     outname = "";
     gra->getData( buf, outname );
     if( !isGoodName( outname ) ) continue;
@@ -674,7 +674,7 @@ void QPlotView::initArrs(void)
     buf = "";
     arr->getData( "label", buf );
     if( buf.size() < 1 ) {
-      buf = "y" + QString::number(i);
+      buf = "y" + QSN(i);
     };
     yLabel[ng] = buf;
     ng++;
@@ -949,7 +949,7 @@ void QPlotView::setStartColors(void)
     gra->getData( "bgcolor", &c );
     bgColor = QRgb( c );
     for( i=0; i<6; i++ ) {
-      gra->getData( "y" + QString::number(i) + "color", &c );
+      gra->getData( "y" + QSN(i) + "color", &c );
       plotColor[i] = QRgb( c );
     };
   } else {
@@ -1037,21 +1037,21 @@ void QPlotView::dataInfo(void)
   toolk = 0; tooldx = tool_x - ref_x; tooldy = tool_y - ref_y;
   r = hypot( tooldx, tooldy  );
   phi = atan2( tooldy, tooldx );
-  qs = QString( "Tool: (" ) % QString::number( tool_x ) % "; " 
-     % QString::number( tool_y ) % " ) [" 
-     % QString::number( sel_idx ) % "];\n"
-     % QString( "Ref: (" ) % QString::number( ref_x ) % "; " 
-     % QString::number( ref_y ) % " );\n"
-     % QString( "Tool-Ref: (" ) % QString::number( tooldx ) % "; " 
-     % QString::number( tooldy ) % " );\n"
-     % QString("R = " ) % QString::number( r ) + "; k = ";
+  qs = QString( "Tool: (" ) % QSN( tool_x ) % "; " 
+     % QSN( tool_y ) % " ) [" 
+     % QSN( sel_idx ) % "];\n"
+     % QString( "Ref: (" ) % QSN( ref_x ) % "; " 
+     % QSN( ref_y ) % " );\n"
+     % QString( "Tool-Ref: (" ) % QSN( tooldx ) % "; " 
+     % QSN( tooldy ) % " );\n"
+     % QString("R = " ) % QSN( r ) + "; k = ";
   if( tooldx != 0 ) {
     toolk = tooldy / tooldx;
-    qs += QString::number( toolk );
+    qs += QSN( toolk );
   } else {
     qs += "inf";
   };    
-  qs += "; Phi = " + QString::number( phi ) + ";\n\n";
+  qs += "; Phi = " + QSN( phi ) + ";\n\n";
   
   qs += "--- Logarithmical: ---\n\n";  
   lg_tx = log10( tool_x ); lg_ty = log10( tool_y );
@@ -1059,26 +1059,26 @@ void QPlotView::dataInfo(void)
   lg_toolk = 0; lg_tooldx = lg_tx - lg_rx; lg_tooldy = lg_ty - lg_ry;
   lg_r = hypot( lg_tooldx, lg_tooldy  );
   lg_phi = atan2( lg_tooldy, lg_tooldx );
-  QString qs1 = QString( "Tool: (" ) % QString::number( lg_tx ) % "; " 
-     % QString::number( lg_ty) % " );\n"
-     % QString( "Ref: (" ) % QString::number( lg_rx ) % "; " 
-     % QString::number( lg_ry ) % " );\n"
-     % QString( "Tool-Ref: (" ) % QString::number( lg_tooldx ) % "; " 
-     % QString::number( lg_tooldy ) % " );\n"
-     % QString("R = " ) % QString::number( lg_r ) % "; k = ";
+  QString qs1 = QString( "Tool: (" ) % QSN( lg_tx ) % "; " 
+     % QSN( lg_ty) % " );\n"
+     % QString( "Ref: (" ) % QSN( lg_rx ) % "; " 
+     % QSN( lg_ry ) % " );\n"
+     % QString( "Tool-Ref: (" ) % QSN( lg_tooldx ) % "; " 
+     % QSN( lg_tooldy ) % " );\n"
+     % QString("R = " ) % QSN( lg_r ) % "; k = ";
   if( lg_tooldx != 0 ) {
     lg_toolk = lg_tooldy / lg_tooldx;
-    qs1 += QString::number( lg_toolk );
+    qs1 += QSN( lg_toolk );
   } else {
     qs1 += "inf";
   };    
-  qs1 += "; Phi = " + QString::number( lg_phi ) + ";\n";
+  qs1 += "; Phi = " + QSN( lg_phi ) + ";\n";
 
   qs1 += "--- Data info: ---\n\n"; 
 
-  qs1 += "Points (nn): " + QString::number( nn ) + 
-        ";\n Graphs (ng): " + QString::number( ng ) +
-        "; Y-dim  (ny): " + QString::number( ny ) + 
+  qs1 += "Points (nn): " + QSN( nn ) + 
+        ";\n Graphs (ng): " + QSN( ng ) +
+        "; Y-dim  (ny): " + QSN( ny ) + 
         ";\n";
  
   QMessageBox::information( this, "Data info", qs + qs1);
@@ -1092,11 +1092,11 @@ void QPlotView::moveTool(void)
   
   QLineEdit *toolx_ed = new QLineEdit( dia );
   toolx_ed->setValidator( new QDoubleValidator() );
-  toolx_ed->setText( QString::number( tool_x ) );
+  toolx_ed->setText( QSN( tool_x ) );
   lay->addWidget( toolx_ed, 0, 1 );
   QLineEdit *tooly_ed = new QLineEdit( dia );
   tooly_ed->setValidator( new QDoubleValidator() );
-  tooly_ed->setText( QString::number( tool_y ) );
+  tooly_ed->setText( QSN( tool_y ) );
   lay->addWidget( tooly_ed, 1, 1 );
   
   QLabel *la_x = new QLabel( "the &X value", dia );

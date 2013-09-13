@@ -82,7 +82,7 @@ void QStatusModel::update()
   TMiso *ob;
   double val;
   QString s_nums("");
-  l_level->setText( QString::number( mainview->getLevel() ) );
+  l_level->setText( QSN( mainview->getLevel() ) );
   l_name->setText( "." );  l_desc->setText( "." );  l_val->setText( "" );
   model = mainview->getModel();
   if( model != 0 ) {
@@ -103,7 +103,7 @@ void QStatusModel::update()
       l_desc->setText( ob_descr );
       if( stat > 1 ) {
 	ob->getData( "out0", &val );
-        l_val->setText( QString::number( val, 'g', 12 ) );
+        l_val->setText( QSN( val, 'g', 12 ) );
       };
     };
   } else { // w/o model -- error case

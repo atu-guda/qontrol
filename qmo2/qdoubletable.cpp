@@ -63,6 +63,6 @@ QVariant DoubleTableModel::headerData( int section, Qt::Orientation orientation,
   }
   if( section >= row )
     return QVariant();
-  return QVariant( QString::number(section) );
+  return QVariant( QSN(section) );
 }
 
