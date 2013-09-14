@@ -21,9 +21,9 @@
 #include <tmiso.h>
 #include "rand_gen.h"
 
-static const char* const trand_list_type = 
+static const char* const trand_list_type =
      "flat(-sigma,sigma)\n"       // 0
-     "gaussian(sigma)\n"          // 1 
+     "gaussian(sigma)\n"          // 1
      "gaussian_tail(a,sigma)\n"   // 2
      "exponential(sigma)\n"       // 3
      "laplace(a)\n"               // 4
@@ -38,13 +38,13 @@ static const char* const trand_list_type =
      "logistic(a)\n"              // 13
      "lognormal(a,sigma)\n"       // 14
      "pareto(a,b)\n"              // 15
-     "rayleigh(sigma)\n"          // 16 
+     "rayleigh(sigma)\n"          // 16
      "weibull(a,b)"               // 17
 ;
 
-static const char* const trand_list_seedType = 
+static const char* const trand_list_seedType =
      "Every run\n"          // 0
-     "Start of 1d-loop\n"   // 1 
+     "Start of 1d-loop\n"   // 1
      "Start of 2d-loop\n"   // 2
      "As model"             // 3
 ;
@@ -66,7 +66,7 @@ class TRand : public TMiso  {
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    /** reimplemented from TMiso to init generator and variables */
    virtual int do_startLoop( int acnx, int acny ) override;
-   
+
    /** type of distribution */
    PRM_LIST( type, efNRC, "Type", "Distribution type", "", trand_list_type );
    /** time of const output value, if <=0 -- change every tick */
@@ -88,9 +88,9 @@ class TRand : public TMiso  {
        trand_list_seedType );
    /** flag: add base seed to element seed */
    PRM_SWITCH( addBaseSeed, efNRC, "Add base", "Add base seed to element seed ", "def=1" );
-   
+
    PRM_INPUT( in_t, 0, "input t", "Input t if not used automaticaly",  "sep=block" );
-   
+
    /** time (may not be time) after previos value change */
    double sp_time = DMAX;
    /** old input (usualy time) to calc difference */
@@ -105,7 +105,7 @@ class TRand : public TMiso  {
    int bseed;
    /** generator structure from GSL */
    RandGenerator rng;
-   
+
    DCL_DEFAULT_STATIC;
 };
 

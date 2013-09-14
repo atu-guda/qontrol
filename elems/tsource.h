@@ -21,7 +21,7 @@
 #include "tmiso.h"
 #include "rand_gen.h"
 
-static const char* const tsource_list_type = 
+static const char* const tsource_list_type =
              "U*sin(o*t)\n"           // 0
              "U*sign(sin(o*t))\n"     // 1
              "U*t/T*sin(o*t)\n"       // 2
@@ -36,9 +36,9 @@ static const char* const tsource_list_type =
              "Phase"                 // 11
 ;
 
-static const char* const tsource_list_seedType = 
+static const char* const tsource_list_seedType =
      "Every run\n"          // 0
-     "Start of 1d-loop\n"   // 1 
+     "Start of 1d-loop\n"   // 1
      "Start of 2d-loop\n"   // 2
      "As model"             // 3
 ;
@@ -80,7 +80,7 @@ class TSource : public TMiso  {
    PRM_INT(      seed_u, efNRC, "U seed"     , "Random Generator seed", "def=RND" );
    PRM_LIST( seedType_u, efNRC, "U seed type", "When to seed", "def=3", tsource_list_seedType );
    PRM_SWITCH( addBaseSeed_u, efNRC, "U add base seed", "Add seed from base(model)", "def=1");
-   
+
    // ----------- Phi chaos ----------------------
    PRM_SWITCH( use_f_ch,efNRC, "use Phi chaos", "Use phase perturbations", "sep=col" );
    PRM_DOUBLE( f_ch_v0, efNRC, "vF min"       , "Minimum value of phase factor", "def=-0.2" );
@@ -92,21 +92,21 @@ class TSource : public TMiso  {
    PRM_SWITCH( addBaseSeed_p, efNRC, "F add base to seed", "Add seed from base(model)", "def=1" );
 
    // NO inputs
-   
+
    /** chaos current values */
    double u_ch_vs = 1, u_ch_ve = 1, u_ch_ts = 1, u_ch_te = 1, u_ch_k = 1,
           f_ch_vs = 1, f_ch_ve = 1, f_ch_ts = 1, f_ch_te = 1, f_ch_k = 1;
    int sseed_u, sseed_p, bseed_u, bseed_p,
        eff_seedType_u, eff_seedType_p;
-   
-   
+
+
    /** generator structures */
    RandGenerator rng_u, rng_p;
    /** triggers */
    int was_pulse = 0;
-   /** values to store some model vars */	  
+   /** values to store some model vars */
    double tt;
-   
+
    DCL_DEFAULT_STATIC;
 };
 

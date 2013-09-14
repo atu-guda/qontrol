@@ -13,7 +13,7 @@
 using namespace std;
 
 
-AddElemDialog::AddElemDialog( addElemInfo *a_aei, 
+AddElemDialog::AddElemDialog( addElemInfo *a_aei,
              TDataSet *a_pobj,  QWidget *aparent,
              const QString& allowed_types )
   : QDialog( aparent ), aei( a_aei ), allowed( a_pobj->allowTypes() ), pobj( a_pobj)
@@ -28,7 +28,7 @@ void AddElemDialog::setupUi()
 {
   if( !aei )
     return;
-  
+
   QGridLayout *lay = new QGridLayout( this );
 
   QLabel *la_name = new QLabel( "Name", this );
@@ -47,7 +47,7 @@ void AddElemDialog::setupUi()
   ed_order->setText( QSN( aei->order ) );
   lay->addWidget( ed_order, 1, 1 );
   ed_order->setValidator( new QIntValidator( 0, IMAX, this ) );
-  
+
   QLabel *la_type = new QLabel( "Type", this );
   lay->addWidget( la_type, 2, 0 );
 
@@ -57,14 +57,14 @@ void AddElemDialog::setupUi()
   QSize def_sz( 72, 50 ); // TODO: calculate;
   for( QString cname : cl_names ) {
     QString iconName = QString( ":icons/elm_" )
-      + cname.toLower() 
+      + cname.toLower()
       + ".png";
-    QListWidgetItem *lwi; 
+    QListWidgetItem *lwi;
     QFileInfo fi( iconName );
     if( fi.isFile() ) {
-      lwi = new QListWidgetItem( QIcon(iconName), cname ); 
+      lwi = new QListWidgetItem( QIcon(iconName), cname );
     } else {
-      lwi = new QListWidgetItem( QIcon(":icons/elm_unknown.png"), cname ); 
+      lwi = new QListWidgetItem( QIcon(":icons/elm_unknown.png"), cname );
     }
     lwi->setSizeHint( def_sz );
     lwi->setToolTip( cname );
@@ -77,8 +77,8 @@ void AddElemDialog::setupUi()
   lw->setUniformItemSizes( true );
   lw->setResizeMode ( QListView::Adjust );
   lay->addWidget( lw, 3, 0, 1, 2 );
-  
-  QDialogButtonBox *bbox 
+
+  QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 5, 0, 1, 2 );
   connect(bbox, SIGNAL(accepted()), this, SLOT(accept()));
@@ -88,10 +88,10 @@ void AddElemDialog::setupUi()
 
 void AddElemDialog::accept()
 {
-  if( lw->currentItem() ) 
+  if( lw->currentItem() )
     aei->type = lw->currentItem()->text();
-  aei->name = ed_name->text(); 
-  aei->order = ed_order->text().toInt(); 
+  aei->name = ed_name->text();
+  aei->order = ed_order->text().toInt();
   QDialog::accept();
 }
 

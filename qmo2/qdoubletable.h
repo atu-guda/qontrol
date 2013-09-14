@@ -32,9 +32,9 @@ class DoubleTableModel : public QAbstractTableModel {
    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
    virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
-   virtual QVariant headerData( int section, Qt::Orientation orientation, 
+   virtual QVariant headerData( int section, Qt::Orientation orientation,
             int role = Qt::DisplayRole ) const;
-  protected: 
+  protected:
    int row, col, ny;
    QString title;
    QStringList labels;

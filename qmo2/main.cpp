@@ -30,7 +30,7 @@ int main( int argc, char *argv[] )
 
   if( argc>1 )
     qmo2->doFileOpenXML( QString::fromLocal8Bit( argv[1] ) );
-	
+
   return a.exec();
 }
 

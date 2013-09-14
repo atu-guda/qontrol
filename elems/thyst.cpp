@@ -40,25 +40,25 @@ double THyst::f( double /* t */ )
 {
   double ud, ts , v, u_old;
   if( prm_mod ) {
-    fixState(); 
+    fixState();
   }
   // atu test
   u_old = d + s;
-  // 
-  ud = in_u - u_old; 
+  //
+  ud = in_u - u_old;
   ts = s + ud;
-  if( ts >= x0 ) { 
-    s = (double)x0;  d += ts - x0;  
-  } else { 
-    if( ts <= -x0 ) { 
-      s = -x0;  d += ts + x0; 
-    }  else { 
-      s = ts; 
+  if( ts >= x0 ) {
+    s = (double)x0;  d += ts - x0;
+  } else {
+    if( ts <= -x0 ) {
+      s = -x0;  d += ts + x0;
+    }  else {
+      s = ts;
     };
   };
   switch( (int)type ) {
     case 0: v = s + alpha * d; break;
-    case 1: v = alpha * d; break;   
+    case 1: v = alpha * d; break;
     case 2: v = thetta( d ); break;
     case 3: v = sign( d ); break;
     case 4: v = tanh( alpha * d ); break;
@@ -69,11 +69,11 @@ double THyst::f( double /* t */ )
   return v;
 }
 
-void THyst::fixState(void) 
+void THyst::fixState(void)
 {
-  if( s > x0 )  
+  if( s > x0 )
     { d += s - x0;  s = (double)x0;  };
-  if( s < -x0 ) 
+  if( s < -x0 )
     { d += s + x0;  s = -x0; };
 }
 
@@ -88,4 +88,4 @@ DEFAULT_FUNCS_REG(THyst)
 
 // end of thyst.cpp
 
- 
+

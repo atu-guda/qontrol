@@ -38,7 +38,7 @@ class TOutputAny : public TMiso  {
    PRM_STRING( name, efNRC, "Sink name", "Name of sink to output", "ncol=2\nmax=80" );
    /** enabler = u[1]  */
    PRM_SWITCH( useEnable, 0,  "use in_ena", "Use in_ena as enable", "");
-   
+
    PRM_INPUT( in_u,   0, "input", "main input",  "sep=block" );
    PRM_INPUT( in_ena, 0, "Enable in", "input signal to enable",  "sep=col" );
 
@@ -46,7 +46,7 @@ class TOutputAny : public TMiso  {
    int type;
    /** idx of sink */
    int ne;
-   
+
    DCL_DEFAULT_STATIC;
 };
 

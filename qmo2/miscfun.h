@@ -25,8 +25,8 @@ struct GraphInfo {
   int col = 0;
   int ny = 0;
   QString title = "";
-  QString label[max_graphs] = { "", "", "", "", "", "", "" }; 
-  const dvector *dat[max_graphs] = 
+  QString label[max_graphs] = { "", "", "", "", "", "", "" };
+  const dvector *dat[max_graphs] =
   { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 };
 
@@ -77,13 +77,13 @@ int findGlobalMin( int n, const double *a );
 /** find index of global maximum */
 int findGlobalMax( int n, const double *a );
 /** computes length of perpendicular from point p to line s-e */
-double perpLen( double xs, double ys, double xe, double ye, 
+double perpLen( double xs, double ys, double xe, double ye,
                 double xp, double yp );
 
 /** dumps data to given file, possibly with labels */
 int dumpDatas( const char *fn, const GraphInfo *gi, char delim = ' ' );
 /** exports data to given files suitable for gnuplot */
-int gnuplotDatas( int otp, const GraphInfo *gi, 
+int gnuplotDatas( int otp, const GraphInfo *gi,
      const char *fn, const char *eps_fn, const char *dat_fn );
 
 // ------------- miscelanios classes -----------------------------

@@ -22,12 +22,12 @@
 #include "defs.h"
 #include <QDialog>
 
-class TModel; class TDataSet; class TMiso; 
-class QPaintEvent; class QMouseEvent; class QKeyEvent; 
+class TModel; class TDataSet; class TMiso;
+class QPaintEvent; class QMouseEvent; class QKeyEvent;
 class QPainter; class QPaintDevice;
 
 /** displays run-time information about process and
-  * give feedback 
+  * give feedback
   * @author atu
   */
 
@@ -92,14 +92,14 @@ class QRunView : public QDialog  {
    void drawGbar( QPainter &p );
    /** draws LED-like indicators */
    void drawLED( QPainter &p );
- // ========================================== data ==================  
+ // ========================================== data ==================
   protected:
     /** pointer to model ro run */
     TModel *model;
     /** timer to send timer events */
     QTimer *timer;
     /** geometry: w_ - window, g_ - graph, c_ center, s_ - set */
-    int w_w, w_h, g_w, g_h, c_x, c_y, s_h; 
+    int w_w, w_h, g_w, g_h, c_x, c_y, s_h;
     /** koefficients to transform visual and phis coorgs */
     double gkx, gky;
     /** run type */

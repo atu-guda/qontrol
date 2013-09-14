@@ -4,7 +4,7 @@
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 
-/** Class to embed gsl random generator (standalone) 
+/** Class to embed gsl random generator (standalone)
  * for more info see info:gsl-ref */
 
 class RandGenerator {
@@ -12,10 +12,10 @@ class RandGenerator {
    RandGenerator() = default;
    ~RandGenerator() { gsl_rng_free( rng );  rng = nullptr; };
    void set( unsigned long s ) { gsl_rng_set( rng, s ); };
-   unsigned long min() const { return gsl_rng_min( rng ); } 
-   unsigned long max() const { return gsl_rng_max( rng ); } 
-   unsigned long get() { return gsl_rng_get( rng ); } 
-   // distributions 
+   unsigned long min() const { return gsl_rng_min( rng ); }
+   unsigned long max() const { return gsl_rng_max( rng ); }
+   unsigned long get() { return gsl_rng_get( rng ); }
+   // distributions
    double beta( double a, double b ) { return gsl_ran_beta( rng, a, b ); }
    double cauchy( double a ) { return gsl_ran_cauchy( rng, a ); }
    double chisq( double nu ) { return gsl_ran_chisq( rng, nu ); }

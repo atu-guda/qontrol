@@ -66,7 +66,7 @@ class TGraph : public TDataSet  {
    // TODO: legend
    ScaleData *scd;
    // PRM_OBJ( scd, 0, "Scale data", "Information about scales", "sep=block" );
- 
+
    DCL_DEFAULT_STATIC;
 };
 typedef TGraph *PTGraph;

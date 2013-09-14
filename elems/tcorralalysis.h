@@ -96,13 +96,13 @@ class TCorrAnalysis : public TMiso  {
    PRM_DOUBLE( cmp_ampl, efInner, "cmp_ampl", "error amplitude", "" );
    PRM_DOUBLE( cmp_tmin, efInner, "cmp_tmin", "time(min error)", "" );
    PRM_DOUBLE( cmp_tmax, efInner, "cmp_tmax", "time(max error)", "" );
-   
+
    PRM_INPUT( in_x, 0, "x input", "First input",  "sep=block" );
    PRM_INPUT( in_y, 0, "y input", "Second input", "" );
    PRM_INPUT( in_add, 0, "add input", "Signal to add",  "sep=col" );
    PRM_INPUT( in_rst, 0, "rst signal", "Reset signal", "" );
    PRM_INPUT( in_calc, 0, "calc signal", "Calc signal", "sep=col" );
-   
+
    DCL_DEFAULT_STATIC;
 };
 

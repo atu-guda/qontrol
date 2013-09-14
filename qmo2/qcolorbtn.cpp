@@ -69,4 +69,4 @@ void QColorBtn::paintEvent( QPaintEvent * ev )
 }
 
 // end of qcolorbtn.cpp
- 
+

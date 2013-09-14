@@ -23,12 +23,12 @@
 
 #include "qoutview.h"
 
-QOutView::QOutView(  QMo2Doc *adoc,  QMo2View *mview, 
+QOutView::QOutView(  QMo2Doc *adoc,  QMo2View *mview,
                      QWidget *parent )
          : QWidget( parent )
 {
   doc = adoc; mainview = mview;
-  model = 0; grid_sz = 15; 
+  model = 0; grid_sz = 15;
   QPalette palette;
   palette.setColor(backgroundRole(), QColor(0,0,128) );
   setPalette(palette);
@@ -45,10 +45,10 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
   int h, w, nh, n_out, out_nu, out_type, out_st, level;
   TOutArr *arr;
   QString target_name;
-  if( ! doc ) 
+  if( ! doc )
     return;
   model = doc->getModel();
-  if( ! model ) 
+  if( ! model )
     return;
   QPainter p( this );
   const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
@@ -57,25 +57,25 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
   ex_sz = fm.width("W") + 4;
   grid_sz = ex_sz + 6;
   fwidth = grid_sz * 4;// good/min number of letters in name
-  setFixedWidth( fwidth + 8 ); 
+  setFixedWidth( fwidth + 8 );
 
   p.setPen( Qt::black );
   p.setBrush( QColor( 80,128,255 ) );
-  h = height(); w = width(); 
-  nh = 1 + h / grid_sz; 
+  h = height(); w = width();
+  nh = 1 + h / grid_sz;
   p.drawRect( 0, 0, w, h );
 
   n_out = model->getNOutArr();
   level = mainview->getLevel();
-  
+
   for( out_nu=0; out_nu < n_out && out_nu < nh; out_nu++ ) {
     arr = model->getOutArr( out_nu );
-    if( ! arr ) 
+    if( ! arr )
       continue;
     if( ! arr->getData( "name", target_name ) )
       continue;
-    
-    ltype_t lt  = LinkBad; 
+
+    ltype_t lt  = LinkBad;
     const TDataSet *lob = nullptr;
     const double *fp = model->getDoublePtr( target_name, &lt, &lob );
     const TMiso *targ = qobject_cast<const TMiso*>(lob);
@@ -101,7 +101,7 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
 
     // label
     p.drawRect( 3, 10 + out_nu*grid_sz, fwidth, ex_sz );
-    p.drawText( 5, grid_sz + out_nu*grid_sz, 
+    p.drawText( 5, grid_sz + out_nu*grid_sz,
         QSN( out_nu ) + ": " + target_name );
     out_st = arr->getState();
 
@@ -148,29 +148,29 @@ void QOutView::mousePressEvent( QMouseEvent *me )
   mainview->changeLevel( out_nu );
   QAction *act;
   switch( me->button() ) {
-    case Qt::LeftButton: 
+    case Qt::LeftButton:
          mainview->editOut();
          break;
-    case Qt::RightButton: 
-         menu = new QMenu( this ); 
-	 (void) menu->addAction( title ); // fake action: title
+    case Qt::RightButton:
+         menu = new QMenu( this );
+         (void) menu->addAction( title ); // fake action: title
          menu->addSeparator();
-	 act = menu->addAction( "&New" );
-	 connect( act, SIGNAL( activated() ), mainview, SLOT(newOut() ) );
-	 act = menu->addAction( "&Edit" );
-	 connect( act, SIGNAL( activated() ), mainview, SLOT(editOut() ) );
-	 act = menu->addAction( "&Delete" );
-	 connect( act, SIGNAL( activated() ), mainview, SLOT(delOut() ) );
+         act = menu->addAction( "&New" );
+         connect( act, SIGNAL( activated() ), mainview, SLOT(newOut() ) );
+         act = menu->addAction( "&Edit" );
+         connect( act, SIGNAL( activated() ), mainview, SLOT(editOut() ) );
+         act = menu->addAction( "&Delete" );
+         connect( act, SIGNAL( activated() ), mainview, SLOT(delOut() ) );
          menu->addSeparator();
-	 act = menu->addAction( "D&ump" );
-	 connect( act, SIGNAL( activated() ), mainview, SLOT(exportOut() ) );
-	 act = menu->addAction( "&Show data" );
-	 connect( act, SIGNAL( activated() ), mainview, SLOT(showOutData() ) );
+         act = menu->addAction( "D&ump" );
+         connect( act, SIGNAL( activated() ), mainview, SLOT(exportOut() ) );
+         act = menu->addAction( "&Show data" );
+         connect( act, SIGNAL( activated() ), mainview, SLOT(showOutData() ) );
          menu->exec( mapToGlobal(QPoint( x, y )) );
          delete menu;
          break;
     case Qt::MidButton:
-	 old_level = out_nu;
+         old_level = out_nu;
          break;
     default: break;// none
   };

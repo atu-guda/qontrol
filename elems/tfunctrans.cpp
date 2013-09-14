@@ -63,7 +63,7 @@ double TFuncTrans::f( double /* t */ )
     default:  v = 0;
   };
   v += g;
-  return v; 
+  return v;
 }
 
 DEFAULT_FUNCS_REG(TFuncTrans)

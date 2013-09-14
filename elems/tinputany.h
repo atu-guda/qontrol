@@ -37,13 +37,13 @@ class TInputAny : public TMiso  {
    /** reimplemented from TMiso to set source */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** name of source */
-   PRM_STRING( name, efNoRunChange, "Name", 
+   PRM_STRING( name, efNoRunChange, "Name",
        "Name of element (and may be parameter) to get values", "max=80");
    /** fake source */
    double fake_so;
    /** pointer to source */
    const double *so;
-   
+
    DCL_DEFAULT_STATIC;
 };
 

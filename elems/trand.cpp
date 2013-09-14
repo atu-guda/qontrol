@@ -47,12 +47,12 @@ CTOR(TRand,TMiso)
 
 // =========================== meat ================================
 
-int TRand::do_preRun( int /*run_tp*/, int /*an*/, 
+int TRand::do_preRun( int /*run_tp*/, int /*an*/,
                      int /*anx*/, int /*any*/, double /*adt*/ )
 {
   eff_seedType = seedType;
-  if( seedType == 3 ) { // as model 
-    par->getData( "seedType", &eff_seedType ); 
+  if( seedType == 3 ) { // as model
+    par->getData( "seedType", &eff_seedType );
   };
   bseed = 0;
   if( addBaseSeed ) {
@@ -67,7 +67,7 @@ int TRand::do_startLoop( int acnx, int acny )
   old_val = 0; sp_time = DMAX; old_in = 0;
   if( (eff_seedType == 0) ||                // need to seed now
       (eff_seedType == 1 && acnx == 0 ) ||
-      (acnx == 0 && acny == 0) 
+      (acnx == 0 && acny == 0)
     ) {
     if( seed == -1 || ( addBaseSeed && bseed == -1) ) {
       sseed = int( time(0) + acnx * 1001 + acny );
@@ -117,7 +117,7 @@ double TRand::f( double  t  )
   };
   du = in - old_in; old_in = in;
   sp_time += du;
-  return old_val; 
+  return old_val;
 }
 
 DEFAULT_FUNCS_REG(TRand)

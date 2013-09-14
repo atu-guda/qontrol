@@ -20,8 +20,8 @@
 
 #include <tmiso.h>
 
-static const char* const tlogic_list = 
- "AND\n"  // 0 
+static const char* const tlogic_list =
+ "AND\n"  // 0
  "OR\n"   // 1
  "XOR\n"  // 2
  "u[0]\n" // 3
@@ -54,7 +54,7 @@ class TLogic : public TMiso  {
    PRM_SWITCH( useNInp3, efNRC, "Inverse u_3", "Inverse input u_3", ""  );
    PRM_SWITCH( useNOut, efNRC,  "Inverse out" , "Inverse input output", "sep=col"  );
    PRM_SWITCH( useMinus, efNRC, "Negative out", "Negative output is -1, not 0", "" );
-   
+
    PRM_INPUT( in_0, 0, "input 0", "First input",  "sep=block" );
    PRM_INPUT( in_1, 0, "input 1", "Second input", "sep=col" );
    PRM_INPUT( in_2, 0, "input 2", "Third input",  "sep=col" );

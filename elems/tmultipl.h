@@ -41,12 +41,12 @@ class TMultipl : public TMiso  {
    PRM_SWITCH( on1, 0, "On 1", "Use input 1", "def=1\nsep=col" );
    PRM_SWITCH( on2, 0, "On 2", "Use input 2", "sep=col" );
    PRM_SWITCH( on3, 0, "On 3", "Use input 3", "sep=col" );
-   
+
    PRM_INPUT( in_0, 0, "input 0", "First input",  "sep=block" );
    PRM_INPUT( in_1, 0, "input 1", "Second input", "sep=col" );
    PRM_INPUT( in_2, 0, "input 2", "Third input",  "sep=col" );
    PRM_INPUT( in_3, 0, "input 3", "Fourth input", "sep=col" );
-   
+
    DCL_DEFAULT_STATIC;
 };
 

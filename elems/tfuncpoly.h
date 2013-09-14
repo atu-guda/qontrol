@@ -20,9 +20,9 @@
 
 #include <tmiso.h>
 
-static const char* const tfuncpoly_list = 
+static const char* const tfuncpoly_list =
      "a*y+g\n"                                 // 0
-     "a*y^2+b*y+g\n"                           // 1 
+     "a*y^2+b*y+g\n"                           // 1
      "a*y^3+b*y^2+c*y+g\n"                     // 2
      "a*u0^2+b*u0*u1+c*u1^2+g\n"               // 3
      "a*sqrt(y)+g\n"                           // 4
@@ -60,12 +60,12 @@ class TFuncPoly : public TMiso  {
    PRM_DOUBLE( e,  0, "e", "Parameter e", "" );
    PRM_DOUBLE( g,  0, "g", "Parameter g", "" );
    PRM_DOUBLE( x0, 0, "x0", "Input shift: y = in_0 - in_1 - x0;", "" );
-   
+
    PRM_INPUT( in_0, 0, "input 0", "First input",  "sep=block" );
    PRM_INPUT( in_1, 0, "input 1", "Second input", "sep=col" );
    PRM_INPUT( in_2, 0, "input 2", "Third input",  "sep=col" );
    PRM_INPUT( in_3, 0, "input 3", "Fourth input", "sep=col" );
-   
+
    DCL_DEFAULT_STATIC;
 };
 

@@ -45,7 +45,7 @@ CTOR(TFriction,TMiso)
 
 int TFriction::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  x_old = out0_init; 
+  x_old = out0_init;
   v = v_old = Ff = 0;
   bodyState = 0;
   return 0;
@@ -68,7 +68,7 @@ double TFriction::f( double /* t */ )
       f_fd = - cf_mx * sign(fx);
       Ff = f = fx + f_fd;  // skip viscous now ?
       v = f * tdt / mass;
-      x = x_old + v * tdt / 2; 
+      x = x_old + v * tdt / 2;
       bodyState = 1;  // begin to move;
     };
   } else { // moving
@@ -93,4 +93,4 @@ DEFAULT_FUNCS_REG(TFriction)
 
 // end of tfriction.cpp
 
- 
+

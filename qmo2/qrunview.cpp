@@ -40,10 +40,10 @@ QRunView::QRunView( TModel *amodel, int atype, QWidget *parent )
   connect( timer, SIGNAL(timeout()), this, SLOT(slotRunNext()) );
   model->reset();
   getModelData();
-  for( i=0; i < 10; i++ ) 
+  for( i=0; i < 10; i++ )
     keys_state[i] = 0;
   for( i=0; i<20; i++ ) auxs[i] = 0;
-  i_tot = 0; n_tot = 1; 
+  i_tot = 0; n_tot = 1;
   setMinimumSize( 500, s_h );
   setFocusPolicy( Qt::StrongFocus );
   setFocus();
@@ -97,15 +97,15 @@ void QRunView::slotRunNext(void)
   model->nextSteps( n_steps );
   m_state = model->getState();
   switch( m_state ) {
-    case stateRun: 
+    case stateRun:
       model->getData( "i_tot", &i_tot );
       if( i_tot >= n_tot ) {
-	model->stopRun(0);
-	state = model->getState();
+        model->stopRun(0);
+        state = model->getState();
       };
       break;
-    case stateDone: 
-      model->stopRun(0); state = stateDone; 
+    case stateDone:
+      model->stopRun(0); state = stateDone;
       break;
     default:
       model->stopRun(1); state = stateBad;
@@ -132,7 +132,7 @@ void QRunView::resizeEvent( QResizeEvent *e )
 
 void QRunView::paintEvent( QPaintEvent * /*pe*/ )
 {
-  static const QColor bco[4] = { QColor(96,0,0),  QColor(0,64,128), 
+  static const QColor bco[4] = { QColor(96,0,0),  QColor(0,64,128),
                           QColor(32,196,64), QColor(0,0,64) };
   QPainter p( this );
   p.fillRect( 0, 0, width(), height(), QBrush( bco[state] ) );
@@ -146,7 +146,7 @@ void QRunView::drawAll( QPainter &p )
   int gauge_w, il1, il2;
   double t = 0, rt;
   QString s;
-  
+
   gauge_w = int( double(i_tot) * g_w / n_tot );
   p.fillRect( 0, g_h+1, gauge_w, 18, Qt::red );
   p.setPen( Qt::white );
@@ -160,8 +160,8 @@ void QRunView::drawAll( QPainter &p )
   model->getData( "t", &t );
   model->getData( "il1", &il1 );
   model->getData( "il2", &il2 );
-  s.sprintf( "%5s  tp: %d t: %012.3f; m: [% .2f; % .2f]; rt: %7.2f  i: %7d (%3d:%3d);", 
-    getStateString(state), run_type, t, mouse_x, mouse_y, rt, 
+  s.sprintf( "%5s  tp: %d t: %012.3f; m: [% .2f; % .2f]; rt: %7.2f  i: %7d (%3d:%3d);",
+    getStateString(state), run_type, t, mouse_x, mouse_y, rt,
     i_tot, il1, il2  );
   p.drawText( 10, 14, s );
   if( use_sync ) {
@@ -179,7 +179,7 @@ void QRunView::drawCross( QPainter &p )
   double x, y;
   static const QColor colors[3] = { Qt::white, Qt::red, Qt::green };
   for( i=0; i<6; i++ ) {
-    if( oc[i] < 0 || oct[i] < 1 || oct[i] > 3 ) 
+    if( oc[i] < 0 || oct[i] < 1 || oct[i] > 3 )
       continue;
     // x = (*data)[ oc[i] ]; y = (*data)[ 1+oc[i] ];
     x = 0; y = 0; // TODO use new interface
@@ -201,7 +201,7 @@ void QRunView::drawVbar( QPainter &p )
   double x, y;
   static const QColor colors[4] = { Qt::white, Qt::red, Qt::green, Qt::yellow };
   for( i=0; i<6; i++ ) {
-    if( oc[i] < 0 || oct[i] < 4 || oct[i] > 7 ) 
+    if( oc[i] < 0 || oct[i] < 4 || oct[i] > 7 )
       continue;
     //x = -0.9 + (oct[i] - 4) * 0.4 ; y = (*data)[ oc[i] ];
     x = 0; y = 0; // TODO use new interface
@@ -218,7 +218,7 @@ void QRunView::drawGbar( QPainter &p )
   double x, y;
   static const QColor colors[4] = { Qt::white, Qt::red, Qt::green, Qt::yellow };
   for( i=0; i<6; i++ ) {
-    if( oc[i] < 0 || oct[i] < 8 || oct[i] > 11 ) 
+    if( oc[i] < 0 || oct[i] < 8 || oct[i] > 11 )
       continue;
     //x = (*data)[ oc[i] ];y = 0.9 - (oct[i] - 8) * 0.4 ;
     x = 0; y = 0; // TODO use new interface
@@ -233,15 +233,15 @@ void QRunView::drawLED( QPainter &p )
   int i;
   double x;
   for( i=0; i<6; i++ ) {
-    if( oc[i] < 0 || oct[i] < 12 || oct[i] > 15 ) 
+    if( oc[i] < 0 || oct[i] < 12 || oct[i] > 15 )
       continue;
-    // x = (*data)[ oc[i] ]; 
+    // x = (*data)[ oc[i] ];
     x = 0; // TODO use new interface
     p.fillRect( 50 * ( 1 + oct[i] - 12 ), g_h-19, 20, 20,
        ( x > 0.1 ) ? Qt::green : Qt::darkRed );
   };
 }
-   
+
 void QRunView::mousePressEvent( QMouseEvent *me )
 {
   int x, y, btn;
@@ -278,7 +278,7 @@ void QRunView::mouseMoveEvent( QMouseEvent *me )
 {
   int x, y;
   double vx, vy;
-  x = me->x(); y = me->y(); 
+  x = me->x(); y = me->y();
   vis2phys( x, y, &vx, &vy );
   mouse_x = vx; mouse_y = vy;
 }
@@ -301,15 +301,15 @@ void QRunView::keyPressEvent( QKeyEvent *ke )
   };
   if( state == stateGood ) {
     slotStartRun();
-  } else {  
+  } else {
     switch( k ) {
-      case Qt::Key_Left:  keys_state[0] = mul_btn;	 break;
-      case Qt::Key_Right: keys_state[1] = mul_btn;	 break;
-      case Qt::Key_Up:    keys_state[2] = mul_btn;	 break;
-      case Qt::Key_Down:  keys_state[3] = mul_btn;	 break;
-      case Qt::Key_Space: keys_state[4] = mul_btn;	 break;
-      case Qt::Key_Enter: keys_state[5] = mul_btn;	 break;
-      case Qt::Key_Escape: slotStopRun(); 	         break;
+      case Qt::Key_Left:  keys_state[0] = mul_btn;         break;
+      case Qt::Key_Right: keys_state[1] = mul_btn;         break;
+      case Qt::Key_Up:    keys_state[2] = mul_btn;         break;
+      case Qt::Key_Down:  keys_state[3] = mul_btn;         break;
+      case Qt::Key_Space: keys_state[4] = mul_btn;         break;
+      case Qt::Key_Enter: keys_state[5] = mul_btn;         break;
+      case Qt::Key_Escape: slotStopRun();                  break;
       default: ke->ignore();
     };
   };
@@ -318,18 +318,18 @@ void QRunView::keyPressEvent( QKeyEvent *ke )
 void QRunView::keyReleaseEvent( QKeyEvent *ke )
 {
   int k;
-  k = ke->key(); 
+  k = ke->key();
   if( state != stateRun ) {
     ke->ignore();
     return;
-  } else {  
+  } else {
     switch( k ) {
-      case Qt::Key_Left:  keys_state[0] = 0;	 break;
-      case Qt::Key_Right: keys_state[1] = 0;	 break;
-      case Qt::Key_Up:    keys_state[2] = 0;	 break;
-      case Qt::Key_Down:  keys_state[3] = 0;	 break;
-      case Qt::Key_Space: keys_state[4] = 0;	 break;
-      case Qt::Key_Enter: keys_state[5] = 0;	 break;
+      case Qt::Key_Left:  keys_state[0] = 0;         break;
+      case Qt::Key_Right: keys_state[1] = 0;         break;
+      case Qt::Key_Up:    keys_state[2] = 0;         break;
+      case Qt::Key_Down:  keys_state[3] = 0;         break;
+      case Qt::Key_Space: keys_state[4] = 0;         break;
+      case Qt::Key_Enter: keys_state[5] = 0;         break;
       default: ke->ignore();
     };
   };
@@ -339,10 +339,10 @@ void QRunView::keyReleaseEvent( QKeyEvent *ke )
 void QRunView::phys2vis( double x, double y, double *vx, double *vy )
 {
   if( vx != 0 ) {
-    *vx = c_x + x * gkx; 
+    *vx = c_x + x * gkx;
   };
   if( vy != 0 ) {
-    *vy = c_y - y * gky; 
+    *vy = c_y - y * gky;
   };
 }
 
@@ -351,10 +351,10 @@ void QRunView::phys2vis( double x, double y, int *ix, int *iy )
   double tx, ty;
   phys2vis( x, y, &tx, &ty );
   if( ix != 0 ) {
-    *ix = (int) rint( tx ); 
+    *ix = (int) rint( tx );
   };
   if( iy != 0 ) {
-    *iy = (int) rint( ty ); 
+    *iy = (int) rint( ty );
   };
 }
 
@@ -416,11 +416,11 @@ void QRunView::fillVars(void)
     return;
   /*
   if( ic_mouse >= 0 && ic_mouse < MODEL_NVAR - 10 ) {
-    (*data)[ic_mouse]   = mouse_x; 
-    (*data)[ic_mouse+1] = mouse_y; 
-    (*data)[ic_mouse+2] = mouse_l; 
-    (*data)[ic_mouse+3] = mouse_r; 
-    (*data)[ic_mouse+4] = mouse_m; 
+    (*data)[ic_mouse]   = mouse_x;
+    (*data)[ic_mouse+1] = mouse_y;
+    (*data)[ic_mouse+2] = mouse_l;
+    (*data)[ic_mouse+3] = mouse_r;
+    (*data)[ic_mouse+4] = mouse_m;
   };
   if( ic_key >=0 && ic_key < MODEL_NVAR - 10 ) {
     for( i=0; i<6; i++ )

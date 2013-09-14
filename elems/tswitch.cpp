@@ -37,8 +37,8 @@ CTOR(TSwitch,TMiso)
 double TSwitch::f( double /* t */ )
 {
   double v;
-  v = ( in_3 < level1 ) ? 
-    in_0 
+  v = ( in_3 < level1 ) ?
+    in_0
     : ( ( in_3>level2 ) ? in_2 : in_1 );
   return v;
 }

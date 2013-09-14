@@ -51,36 +51,36 @@ double TAdjGen::f( double /* t */ )
   real_tick = 0; tick = 0;
   switch( (int)type ) {
     case 0: ig += om * tdt;                 // Pi=int_0^T(om*dt);
-	    if( useReset && in_rst > 0.01 ) {
-	      real_tick = 1; break;
-	    };
-	    if( useLock && in_lock > 0.01 ) break;
+            if( useReset && in_rst > 0.01 ) {
+              real_tick = 1; break;
+            };
+            if( useLock && in_lock > 0.01 ) break;
             if( ig > M_PI ) {
-	      real_tick = 1;
+              real_tick = 1;
             };
             break;
-    case 1: if( om < 1.0e-100 ) om = 1.0e-50; 
+    case 1: if( om < 1.0e-100 ) om = 1.0e-50;
             ctt += tdt; ff = 1.0 / om;  df = tdt * ff;
             ig += df * M_PI;
-	    if( useReset && in_rst > 0.01 ) {
-	      real_tick = 1; break;
-	    }; 
-	    if( useLock && in_lock > 0.01 ) break;
+            if( useReset && in_rst > 0.01 ) {
+              real_tick = 1; break;
+            };
+            if( useLock && in_lock > 0.01 ) break;
             if( ctt*ctt > ig ) {
-	      real_tick = 1;
+              real_tick = 1;
             };
             break;
     case 2: ig += om * tdt; ig2 += om2 * tdt;      // dual
-	    g1 = ( ig  > M_PI );
-	    g2 = ( ig2 > M_PI );
-	    if( useReset && in_rst > 0.01 ) {
-	      real_tick = 1; break;
-	    };
-	    if( useLock && in_lock > 0.01 ) break;
-            if( g1 && g2 ) {
-	      real_tick = 1;
+            g1 = ( ig  > M_PI );
+            g2 = ( ig2 > M_PI );
+            if( useReset && in_rst > 0.01 ) {
+              real_tick = 1; break;
             };
-	    diff_out = g1 - g2;
+            if( useLock && in_lock > 0.01 ) break;
+            if( g1 && g2 ) {
+              real_tick = 1;
+            };
+            diff_out = g1 - g2;
             break;
     default: v = 0;
   };
@@ -91,11 +91,11 @@ double TAdjGen::f( double /* t */ )
   };
   if( type == 2 ) { // dual
     return diff_out;
-  } 
+  }
   v = currOut ? 1.0 : ( useZero ? 0.0 : -1.0 );
   if( !outStrobe )
     return v;
-  if( !real_tick ) 
+  if( !real_tick )
     return 0;
   if( usePlusStrobe && v < 1 )
     return 0;

@@ -36,7 +36,7 @@ QMo2Doc::QMo2Doc()
 QMo2Doc::~QMo2Doc()
 {
   // DBG1( "dbg: dtor" );
-  delete rootdata; 
+  delete rootdata;
   rootdata = nullptr; model = nullptr; // model belong to rootdata
 }
 
@@ -73,15 +73,15 @@ bool QMo2Doc::newDocument()
 {
   if( rootdata ) {
     DBG1( "warn: non-null rootdata while creation new doc" );
-    delete rootdata; 
+    delete rootdata;
     rootdata = nullptr; model = nullptr;
   }
 
   rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
   model = qobject_cast<TModel*>(rootdata->add_obj( "TModel", "model" ));
   if( !model ) {
-    delete rootdata; rootdata = nullptr; 
-    QMessageBox::critical( 0, "QMo2Doc::newDocument", 
+    delete rootdata; rootdata = nullptr;
+    QMessageBox::critical( 0, "QMo2Doc::newDocument",
       QString("Fail to insert model to root: "), 0,0,0 );
     return false;
   }
@@ -90,7 +90,7 @@ bool QMo2Doc::newDocument()
   modified = false; is_nonamed = true;
   loaded_as_old = true; // TODO: change to false when new model be created by default
 
-  // add to engine 
+  // add to engine
   initEngine();
 
   return true;
@@ -123,9 +123,9 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
   }
   QDomElement domroot = dd.documentElement();
   QDomElement obj_root;
-  
+
   QDomNode cnode = domroot.firstChild();
-  
+
   while( ! cnode.isNull() ) {
     if ( cnode.isElement()) {
       QDomElement ee = cnode.toElement();
@@ -147,7 +147,7 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
 
   if( rootdata ) {
     DBG1( "warn: non-null rootdata while opening new doc" );
-    delete rootdata; 
+    delete rootdata;
     rootdata = nullptr; model = nullptr;
   }
   rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
@@ -165,30 +165,30 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
        QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
     return false;
   }
-  
-  model = rootdata->getElemT<TModel*>( "model" ); 
+
+  model = rootdata->getElemT<TModel*>( "model" );
   if( model ) {
-    loaded_as_old = true; 
+    loaded_as_old = true;
   } else if ( ( model = rootdata->getElemT<TModel*>( "schems.main" ) ) != nullptr ) {
     loaded_as_old = false;
     // and many more actions
   } else {
-    delete rootdata; rootdata = 0; model = 0; 
+    delete rootdata; rootdata = 0; model = 0;
     QMessageBox::critical( 0, "openDocumentXML Error:",
        QString("Fail to detect model in file: ") + filename,
        QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
     return false;
   };
-  
+
   rootdata->resumeHandleStructChange();
   model->reset();
   m_filename = filename;
   m_title = QFileInfo(filename).fileName();
   is_nonamed = false;
-  
+
   initEngine();
 
-  return true; 
+  return true;
 }
 
 
@@ -196,7 +196,7 @@ bool QMo2Doc::saveDocumentXML( const QString &filename )
 {
   if( rootdata == 0 )
     return false;
-  
+
   QFile file( filename );
   if ( ! file.open( QFile::WriteOnly )) {
     QMessageBox::warning( QMo2Win::qmo2win, tr(PACKAGE),
@@ -235,11 +235,11 @@ QString QMo2Doc::makeXML() const
   QDomElement dd_root = dd.createElement("QontrolLabML");
   dd.appendChild( dd_root );
 
-  if( rootdata ) { 
+  if( rootdata ) {
     QDomElement de = rootdata->toDom( dd );
     dd_root.appendChild( de );
   }
-  
+
   return dd.toString();
 }
 
@@ -250,46 +250,46 @@ void QMo2Doc::deleteContents()
   delete rootdata; rootdata = 0; model = 0;
 }
 
-bool QMo2Doc::canCloseFrame( QMo2View* pFrame ) 
+bool QMo2Doc::canCloseFrame( QMo2View* pFrame )
 {
   if( !isLastView()  )
     return true;
   bool ret = false;
   if( isModified() ) {
     QString saveName;
-    switch( QMessageBox::information(pFrame, title(), 
+    switch( QMessageBox::information(pFrame, title(),
              tr("The current file has been modified.\n"
-                 "Do you want to save it?"), 
-	     QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel )) {
+                 "Do you want to save it?"),
+             QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel )) {
       case QMessageBox::Yes:
-  	   if( is_nonamed ) {
+             if( is_nonamed ) {
              saveName = QFileDialog::getSaveFileName( QMo2Win::qmo2win, tr("Save model"),
                  QString::null, "Model *.qol files (*.qol);;All files(*)" );
              if(saveName.isEmpty())
-          	return false;
-	   } else {
-  	     saveName = pathName();
-	   };     
+                  return false;
+           } else {
+               saveName = pathName();
+           };
            if( ! saveDocumentXML( saveName ) ) {
- 	     switch(QMessageBox::critical(pFrame, tr("I/O Error !"), 
-	             tr("Could not save the current document !\n" "Close anyway ?"),
-		     QMessageBox::Yes ,QMessageBox::No)) {
- 			case QMessageBox::Yes:
- 			  ret=true;
- 			case QMessageBox::No:
- 			  ret=false;
- 	     }; // switch
-	   } else {
-	    ret=true;
-	   };    
-	   break;
+              switch(QMessageBox::critical(pFrame, tr("I/O Error !"),
+                     tr("Could not save the current document !\n" "Close anyway ?"),
+                     QMessageBox::Yes ,QMessageBox::No)) {
+                         case QMessageBox::Yes:
+                           ret=true;
+                         case QMessageBox::No:
+                           ret=false;
+              }; // switch
+           } else {
+            ret=true;
+           };
+           break;
       case QMessageBox::No:
- 	   ret=true;
-	   break;
+            ret=true;
+           break;
       case QMessageBox::Cancel:
       default:
            ret=false;
-	   break;
+           break;
     }; // switch
   } else {
     ret=true;
@@ -309,7 +309,7 @@ TRootData* QMo2Doc::getRoot(void) const
 }
 
 bool QMo2Doc::isModified() const
-{ 
+{
   int mmd;
   if( rootdata == 0 || model == 0  )
     return 0;

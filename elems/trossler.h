@@ -35,7 +35,7 @@ class TRossler : public TMiso  {
    virtual double f( double t ) override;
    /** called before each inner param loop. Unused param - -1 */
    virtual int do_startLoop( int acnx, int acny ) override;
-   
+
    /** main system parameters */
    PRM_DOUBLE( a, 0, "a", "Parameter a", "def=0.25" );
    PRM_DOUBLE( b, 0, "b", "Parameter b", "def=1" );
@@ -48,14 +48,14 @@ class TRossler : public TMiso  {
    PRM_DOUBLE( x, efInner, "x", "x value", "" );
    PRM_DOUBLE( y, efInner, "y", "y value", "" );
    PRM_DOUBLE( z, efInner, "z", "z value", "" );
-   
+
    PRM_INPUT( in_x, 0, "input x", "Addition to x",  "sep=block" );
    PRM_INPUT( in_y, 0, "input x", "Addition to y", "sep=col" );
    PRM_INPUT( in_z, 0, "input x", "Addition to z",  "sep=col" );
-   
-   /** values to store some model vars */	  
+
+   /** values to store some model vars */
    double tt;
-   
+
    DCL_DEFAULT_STATIC;
 };
 

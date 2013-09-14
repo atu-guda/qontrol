@@ -37,7 +37,7 @@ class TVibro : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
    /** will be called before any action -- good place for allocs */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
-   
+
    /** damping */
    PRM_DOUBLE( c0, 0, "c_0", "Damping coeficient", "def=0.4" );
    /** natural frequency */
@@ -45,19 +45,19 @@ class TVibro : public TMiso  {
    /** Initial velosity dx/dt(0) */
    PRM_DOUBLE( v0, efNoRunChange, "v_0", "v(0)", "sep=col" );
    /** Use u[1] as return force element output */
-   PRM_SWITCH( use_u1, efNoRunChange, "use Force", 
+   PRM_SWITCH( use_u1, efNoRunChange, "use Force",
         "Use in_force as return force element output", "" );
    /** Curent velosity dx/dt */
    PRM_DOUBLE( v, efInner, "v", "v(t)", "" );
-   
+
    PRM_INPUT( in_u, 0, "input u", "Main input",  "sep=block" );
    PRM_INPUT( in_f, 0, "input f", "Force input (if enabled)", "sep=col" );
-   
+
    /** flag for start(1,2,0)  */
    int isStart = 1;
    /** old values and misc */
    double u_old, f_old, x_old, x_old2, tdt2;
-   
+
    DCL_DEFAULT_STATIC;
 };
 

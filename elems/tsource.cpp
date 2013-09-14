@@ -16,8 +16,8 @@
  ***************************************************************************/
 
 #include <time.h>
-#include <cmath> 
-#include "miscfun.h" 
+#include <cmath>
+#include "miscfun.h"
 #include "tmodel.h"
 #include "tsource.h"
 
@@ -69,43 +69,43 @@ double TSource::f( double t )
     case 2: v = uu_s * sin( omet_s ) * t / tt; break;
     case 3: v = uu_s * sign( sin( omet_s ) ) * t / tt; break;
     case 4: v = 0;
-	    if( was_pulse == 0 && t >= omega ) 
-	      { v = uu / tdt; was_pulse = 1; };  
-	    break;
+            if( was_pulse == 0 && t >= omega )
+              { v = uu / tdt; was_pulse = 1; };
+            break;
     case 5: v = ( t > omega ) ? uu_s : 0; break;
     case 6: v = uu_s * ( t + f_ch ) / tt; break;
     case 7: n = int( t / omega ); lt = t - n * omega;
-	    v = uu_s * ( lt + f_ch ) / omega;
-	    break;
+            v = uu_s * ( lt + f_ch ) / omega;
+            break;
     case 8: n = int( 2 * t / omega ); lt = 2 * t - n * omega;
-	    if( n & 1 ) {
-	      v = 0.5 * uu - 2 * ( lt + f_ch ) * uu / omega;
-	    } else {
-	      v = -0.5 * uu + 2 * ( lt + f_ch ) * uu / omega;
-	    };
-	    break;
-    case 9: v = f_ch; break; 	
-    case 10: if( phi_0 <= 0.25 ) 
-	       v = uu_s * 4 * phi_0;
-	     else if ( phi_0 <= 0.75 )
-	       v = uu_s * ( 1 - 4*(phi_0-0.25));
-	     else
-	       v = uu_s * ( -1 +4*(phi_0-0.75));
-	     break; 	
-    case 11: v = phi_0; break; 	
+            if( n & 1 ) {
+              v = 0.5 * uu - 2 * ( lt + f_ch ) * uu / omega;
+            } else {
+              v = -0.5 * uu + 2 * ( lt + f_ch ) * uu / omega;
+            };
+            break;
+    case 9: v = f_ch; break;
+    case 10: if( phi_0 <= 0.25 )
+               v = uu_s * 4 * phi_0;
+             else if ( phi_0 <= 0.75 )
+               v = uu_s * ( 1 - 4*(phi_0-0.25));
+             else
+               v = uu_s * ( -1 +4*(phi_0-0.75));
+             break;
+    case 11: v = phi_0; break;
     default: v = 0;
   };
   v += cc;
-  return v; 
+  return v;
 }
 
-int TSource::do_preRun( int /*run_tp*/, int /*an*/, 
+int TSource::do_preRun( int /*run_tp*/, int /*an*/,
                      int /*anx*/, int /*any*/, double /*adt*/ )
 {
   if( use_u_ch ) {
     eff_seedType_u = seedType_u;
-    if( seedType_u == 3 ) { // as model 
-      par->getData( "seedType", &eff_seedType_u ); 
+    if( seedType_u == 3 ) { // as model
+      par->getData( "seedType", &eff_seedType_u );
     };
     bseed_u = 0;
     if( addBaseSeed_u ) {
@@ -115,8 +115,8 @@ int TSource::do_preRun( int /*run_tp*/, int /*an*/,
   // Phi
   if( use_f_ch ) {
     eff_seedType_p = seedType_p;
-    if( seedType_p == 3 ) { // as model 
-      par->getData( "seedType", &eff_seedType_p ); 
+    if( seedType_p == 3 ) { // as model
+      par->getData( "seedType", &eff_seedType_p );
     };
     bseed_p = 0;
     if( addBaseSeed_p ) {
@@ -135,17 +135,17 @@ int TSource::do_startLoop( int acnx, int acny )
   // U rnd init
   if( use_u_ch ) {
     if( (eff_seedType_u == 0) ||                // need to seed now
-	(eff_seedType_u == 1 && acnx == 0 ) ||
-	(acnx == 0 && acny == 0) 
+        (eff_seedType_u == 1 && acnx == 0 ) ||
+        (acnx == 0 && acny == 0)
       ) {
       if( seed_u == -1 || ( addBaseSeed_u && bseed_u == -1) ) {
-	sseed_u = int( time(0) + acnx * 101 + acny*17 );
+        sseed_u = int( time(0) + acnx * 101 + acny*17 );
       } else {
-	sseed_u = seed_u + bseed_u;
+        sseed_u = seed_u + bseed_u;
       }
       rng_u.set( sseed_u );
     };
-    
+
     u_ch_vs = rng_u.flat( u_ch_v0, u_ch_vm );
     u_ch_ve = rng_u.flat( u_ch_v0, u_ch_vm );
     u_ch_ts = 0;
@@ -156,17 +156,17 @@ int TSource::do_startLoop( int acnx, int acny )
   // Phi rnd init
   if( use_f_ch ) {
     if( (eff_seedType_p == 0) ||                // need to seed now
-	(eff_seedType_p == 1 && acnx == 0 ) ||
-	(acnx == 0 && acny == 0) 
+        (eff_seedType_p == 1 && acnx == 0 ) ||
+        (acnx == 0 && acny == 0)
       ) {
       if( seed_p == -1 || ( addBaseSeed_p && bseed_p == -1) ) {
-	sseed_p = int( time(0) + acnx * 171 + acny*23 + 123);
+        sseed_p = int( time(0) + acnx * 171 + acny*23 + 123);
       } else {
-	sseed_p = seed_p + bseed_p;
+        sseed_p = seed_p + bseed_p;
       }
       rng_p.set( sseed_p );
     };
-    
+
     f_ch_vs = rng_p.flat( f_ch_v0, f_ch_vm );
     f_ch_ve = rng_p.flat( f_ch_v0, f_ch_vm );
     f_ch_ts = 0;

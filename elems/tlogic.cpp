@@ -48,29 +48,29 @@ double TLogic::f( double /* t */ )
   ou = 0;
   switch( (int)type ) {
     case 0: if( iu0 > 0 && iu1 > 0 && iu2 > 0 && iu3 > 0 )  // AND
-	      ou = 1;
-	    break;
+              ou = 1;
+            break;
     case 1: if( iu0 > 0 || iu1 > 0 || iu2 > 0 || iu3 > 0 )  // OR
-	      ou = 1;
-	    break;
-    case 2:                                                 // XOR 
-	    if( iu0 )
-		ou = !ou;
-	    if( iu1 )
-		ou = !ou;
-	    if( iu2 )
-		ou = !ou;
-	    if( iu3 )
-		ou = !ou;
-	    break;
+              ou = 1;
+            break;
+    case 2:                                                 // XOR
+            if( iu0 )
+                ou = !ou;
+            if( iu1 )
+                ou = !ou;
+            if( iu2 )
+                ou = !ou;
+            if( iu3 )
+                ou = !ou;
+            break;
     case 3: ou = iu0; break;                               // in0
     case 4: ou = 0; break;                                   // 0
     case 5: ou = 1; break;                                   // 1
     default: ;
   };
-  if( useNOut ) 
+  if( useNOut )
     ou = !ou;
-  if( ou ) 
+  if( ou )
     return 1;
   return useMinus ? -1 : 0;
 }

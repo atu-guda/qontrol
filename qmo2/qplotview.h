@@ -26,7 +26,7 @@
 class QResizeEvent;
 class QMo2Doc; class TRootData; class TModel;
 class TDataSet; class TMiso; class TGraph;
-class QPaintEvent; class QMouseEvent; class QKeyEvent; 
+class QPaintEvent; class QMouseEvent; class QKeyEvent;
 class QPainter; class QPaintDevice;
 
 /**can plot graphs for TModel on info by TGraph

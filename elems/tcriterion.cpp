@@ -41,7 +41,7 @@ int TCriterion::do_startLoop( int /*acnx*/, int /*acny*/ )
 
 double TCriterion::f( double t )
 {
-  int ok, rv; 
+  int ok, rv;
   double aa, x;
   if( useT0 && t < t0 ) return 0;
   x = in_pos - in_neg;

@@ -46,7 +46,7 @@ double TTrigger::f( double t )
   int ui_x = ( in_x > level1 );
   int ui_ena = ( in_ena > level1 );
   double du;
-  
+
   if( t > tdt/2 ) {
     du = in_s - u2_old;
   } else {
@@ -55,19 +55,19 @@ double TTrigger::f( double t )
   u2_old = in_s;
 
   if( useEnable && ! ui_ena ) { // disabled state
-    if( usePulse ) 
+    if( usePulse )
       return 0;
-    if( cst ) 
+    if( cst )
       return 1;
     return useMinus ? -1 : 0;
   };
 
   sw = 0;
-  if( ui_s ) { // SET/RESET inputs 
-    sw = 1; 
+  if( ui_s ) { // SET/RESET inputs
+    sw = 1;
   } else {
-    if( ui_r ) { 
-      sw = -1; 
+    if( ui_r ) {
+      sw = -1;
     };
   };
 
@@ -75,12 +75,12 @@ double TTrigger::f( double t )
     switch( (int)type ) {
       case 0: break;
       case 1: if( in_x > level1 ) { sw =  1; break; };
-	      if( in_x < level0 ) { sw = -1; break; };
-	      break;
-      case 2: if( du >  level1 ) sw = 2; 
-	      break;  
+              if( in_x < level0 ) { sw = -1; break; };
+              break;
+      case 2: if( du >  level1 ) sw = 2;
+              break;
       case 3: if( du < -level1 ) sw = 2;
-	      break;
+              break;
       case 4: sw = ui_x ? 2 : 0; break;
       default: break;
     };
@@ -97,16 +97,16 @@ double TTrigger::f( double t )
   switch( sw ) {
     case 0:  break;
     case 1:  if( cst == 0 ) act = 1;
-	     cst = 1; et = 0; break;
+             cst = 1; et = 0; break;
     case -1: if( cst == 1 ) act = -1;
-	     cst = 0; break;
+             cst = 0; break;
     case 2:  cst = !cst;  act = cst ? 1 : -1;
-	     if( cst ) et = 0; break;
+             if( cst ) et = 0; break;
     default: break;
   };
-  if( usePulse ) 
+  if( usePulse )
     return act;
-  if( cst ) 
+  if( cst )
     return 1;
   return useMinus ? -1 : 0;
 }

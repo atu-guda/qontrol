@@ -44,7 +44,7 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
     qDebug( "err: %s: %s", __PRETTY_FUNCTION__, "gi==0" );
     return -1;
   }
-  
+
   gi->row = gi->col = 0; gi->ny = 1;
   gi->title = objectName();
   if( !par || ! par->isChildOf("TModel") ) {
@@ -55,41 +55,41 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
     qDebug( "err: %s: %s", __PRETTY_FUNCTION__, "State is not 'Done'" );
     return -11;
   }
-  
+
   TModel *model = static_cast<TModel*>(par);
   // x-data
   arr = model->getOutArr( xname.cval() );
-  if( !arr ) 
+  if( !arr )
     return -1;
   out_nn = -1; ny = -1;
-  const dvector *dat = arr->getArray(); 
+  const dvector *dat = arr->getArray();
   arr->getData( "n", &out_nn );
   arr->getData( "ny", &ny );
   if( dat == 0 || out_nn < 1 || ny < 0 ) return -1;
-  row = out_nn; 
+  row = out_nn;
   gi->dat[0] = dat;
   arr->getData( "label", label );
   if( label.isEmpty() ) {
-    label = "x"; 
+    label = "x";
   };
   gi->label[0] = label;
   col = 1; // unlike show, x and y[] in single index
-  QString ynms[]  = 
-    { y0name.cval(), y1name.cval(), y2name.cval(), 
+  QString ynms[]  =
+    { y0name.cval(), y1name.cval(), y2name.cval(),
       y3name.cval(), y4name.cval(), y5name.cval() }; // TODO: replace
   for( i=0; i<6; i++ ) {
     arr = model->getOutArr( ynms[i] );
-    if( !arr ) 
+    if( !arr )
       continue;
     out_nn = -1;
-    dat = arr->getArray(); 
+    dat = arr->getArray();
     arr->getData( "n", &out_nn );
     if( dat == 0 || out_nn != row ) continue;
     gi->dat[col] = dat;
     label = "";
     arr->getData( "label", label );
-    if( label.isEmpty() ) { 
-      label = "y"; 
+    if( label.isEmpty() ) {
+      label = "y";
     };
     gi->label[col] = label;
     col++;
@@ -110,7 +110,7 @@ int  TGraph::dump( const char *fn, char delim /* = ' ' */ )
   return k;
 }
 
-int TGraph::gnuPlot( int otp, const char *fn, const char *atitle, 
+int TGraph::gnuPlot( int otp, const char *fn, const char *atitle,
                      const char *eps_fn, const char *dat_fn )
 {
   int k;

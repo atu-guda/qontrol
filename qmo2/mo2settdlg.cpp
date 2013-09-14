@@ -8,8 +8,8 @@ Mo2SettDlg::Mo2SettDlg( Mo2Settings &se,  QWidget* parent )
       pse(se), ts(se)
 {
   setWindowTitle( tr( "Settings" ) );
-  
-  lay = new QGridLayout; 
+
+  lay = new QGridLayout;
 
   btnMainFont = new QPushButton( tr( "&Main Font..." ), this );
   lay->addWidget( btnMainFont, 0, 0 );
@@ -26,8 +26,8 @@ Mo2SettDlg::Mo2SettDlg( Mo2Settings &se,  QWidget* parent )
   chkMaximize = new QCheckBox( tr( "Ma&ximize at start" ), this );
   chkMaximize->setChecked(ts.showmax);
   lay->addWidget( chkMaximize, 0, 1 );
-  
-  QDialogButtonBox *bbox 
+
+  QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 4, 0, 1, 2 );
   connect(bbox, SIGNAL(accepted()), this, SLOT(accept()));

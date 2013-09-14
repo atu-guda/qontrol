@@ -44,12 +44,12 @@ double TCounter::f( double /* t */ )
   int tick;
   du = in_x - u_old; u_old  = in_x; tick = 0;
   if( useReset && in_rst > 0.1 ) {
-    cn = flip = 0; 
+    cn = flip = 0;
   } else {
     if( du > 0.1 ) {
       cn++;
       if( cn >= n ) {
-	cn = 0; tick = 1; flip = ! flip;
+        cn = 0; tick = 1; flip = ! flip;
       };
     };
   };

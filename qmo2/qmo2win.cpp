@@ -31,7 +31,7 @@ QMo2Win* QMo2Win::qmo2win = 0;
 QMo2Win::QMo2Win(void)
 {
   setWindowTitle( PACKAGE " " VERSION );
-  
+
   mdiArea = new QMdiArea;
   mdiArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAsNeeded );
   //mdiArea->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
@@ -45,7 +45,7 @@ QMo2Win::QMo2Win(void)
 
   printer = new QPrinter;
   // printer->setPageSize( QPrinter::A4 );
-  // printer->setColorMode( QPrinter::GrayScale ); 
+  // printer->setColorMode( QPrinter::GrayScale );
   untitledCount = 0;
   /* -------- other ----------- */
   add_dir = "" ;
@@ -55,7 +55,7 @@ QMo2Win::QMo2Win(void)
   setFonts();
   initIface();
   initStatusBar();
-  
+
   setWindowIcon( QIcon( ":icons/app.png" ) );
   if( sett.showmax )
     showMaximized();
@@ -75,11 +75,11 @@ void QMo2Win::initDirs() // TODO: remove or rewrite
   QString app = L8B( "share/" PACKAGE );
   QString sep = L8B( "/" );
   QString prefix = L8B( "/usr" ); // TODO: from config
-  
+
   xbuild_dir = QString();
   QDir d( qApp->applicationDirPath() );
   d.makeAbsolute();
-  if( d.exists( L8B( "main.cpp" ) )  
+  if( d.exists( L8B( "main.cpp" ) )
       && d.exists( app  ) ) {
     xbuild_dir = d.canonicalPath() + sep + app;
   };
@@ -96,7 +96,7 @@ void QMo2Win::initDirs() // TODO: remove or rewrite
   if( d.isReadable() ) {
     local_dir = d.canonicalPath();
   };
-  
+
   d.setPath( add_dir );
   d.makeAbsolute();
   if( ! d.isReadable() ) {
@@ -145,7 +145,7 @@ void QMo2Win::initIface()
 {
   // Actions
   // File group
- 
+
   act_new = new QAction( QIcon( ":icons/filenew.png" ), "&New model", this );
   act_new->setShortcuts( QKeySequence::New );
   act_new->setWhatsThis( tr("Click this button to create a new model file.") );
@@ -178,7 +178,7 @@ void QMo2Win::initIface()
   act_settings = new QAction( "Sett&ings", this );
   act_settings ->setWhatsThis( "Edit application settings" );
   connect( act_settings, SIGNAL( activated() ), this, SLOT( slotFileSettings() ) );
-  
+
   act_savesett = new QAction( "Save s&ettings", this );
   act_savesett ->setWhatsThis( "Save application settings" );
   connect( act_savesett, SIGNAL( activated() ), this, SLOT( slotFileSaveSett() ) );
@@ -190,97 +190,97 @@ void QMo2Win::initIface()
   connect( act_quit, SIGNAL( activated() ), this, SLOT( slotFileQuit() ) );
 
   // ==== Edit group
- 
+
   act_undo = new QAction( QIcon::fromTheme("edit-undo"), "&Undo", this );
   act_undo->setShortcuts( QKeySequence::Undo );
   act_undo->setWhatsThis( tr("Undo last action") + " EMPTY" );
   connect( act_undo, SIGNAL( activated() ), this, SLOT( slotEditUndo() ) );
- 
+
   act_cut = new QAction(  QIcon::fromTheme("edit-cut"),"Cut", this );
   act_cut->setShortcuts( QKeySequence::Cut );
   act_cut->setWhatsThis( tr("Cut selected")  + " EMPTY" );
   connect( act_cut, SIGNAL( activated() ), this, SLOT( slotEditCut() ) );
- 
+
   act_copy = new QAction( QIcon::fromTheme("edit-copy"), "Copy", this );
   act_copy->setShortcuts( QKeySequence::Copy );
   act_copy->setWhatsThis( tr("Copy selected") + " EMPTY" );
   connect( act_copy, SIGNAL( activated() ), this, SLOT( slotEditCopy() ) );
- 
+
   act_paste= new QAction( QIcon::fromTheme("edit-paste"), "Paste", this );
   act_paste->setShortcuts( QKeySequence::Paste );
   act_paste->setWhatsThis( tr("Paste selected") + " EMPTY" );
   connect( act_paste, SIGNAL( activated() ), this, SLOT( slotEditPaste() ) );
 
   // ==== Element group
- 
-  act_newelm= new QAction( QIcon( ":icons/newelm.png" ), "&New element", this ); 
+
+  act_newelm= new QAction( QIcon( ":icons/newelm.png" ), "&New element", this );
   act_newelm->setShortcut( Qt::Key_Insert );
   act_newelm->setWhatsThis( tr("Create new element") );
   connect( act_newelm, SIGNAL( activated() ), this, SLOT( slotNewElm() ) );
- 
+
   act_delelm= new QAction( QIcon( ":icons/delelm.png" ), "&Delete element", this );
   act_delelm->setShortcut( Qt::Key_Delete );
   act_delelm->setWhatsThis( tr("Delete selected element") );
   connect( act_delelm, SIGNAL( activated() ), this, SLOT( slotDelElm() ) );
- 
+
   act_editelm= new QAction( QIcon( ":icons/editelm.png" ), "&Edit element", this );
   act_editelm->setShortcut( Qt::Key_Enter );
   act_editelm->setWhatsThis( tr("Edit selected element") );
   connect( act_editelm, SIGNAL( activated() ), this, SLOT( slotEditElm() ));
- 
+
   act_qlinkelm= new QAction( "&Quick link element", this );
   act_qlinkelm->setShortcut( Qt::CTRL+Qt::Key_L );
   act_qlinkelm->setWhatsThis( tr("Link marked to selected element") );
   connect( act_qlinkelm, SIGNAL( activated() ), this, SLOT( slotqLinkElm() ));
- 
+
   act_qplinkelm= new QAction( "&Parametr link element", this );
   act_qplinkelm->setShortcut(  Qt::SHIFT+Qt::CTRL+Qt::Key_L );
   act_qplinkelm->setWhatsThis( tr("Link marked to selected element "
-	                          "(parameter input)") );
+                                  "(parameter input)") );
   connect( act_qplinkelm, SIGNAL( activated() ), this, SLOT( slotqpLinkElm()));
- 
+
   act_unlinkelm= new QAction( "&Unlink element", this );
   act_unlinkelm->setWhatsThis( tr("Remove links of selected element") );
   connect( act_unlinkelm, SIGNAL( activated() ), this, SLOT( slotUnlinkElm() ));
- 
+
   act_lockelm= new QAction( QIcon( ":icons/lockelm.png" ), "Loc&k element",  this );
   act_lockelm->setShortcut( Qt::CTRL+Qt::Key_K );
   act_lockelm->setWhatsThis( tr("Lock current element") );
   connect( act_lockelm, SIGNAL( activated() ), this, SLOT( slotLockElm() ));
- 
+
   act_ordelm= new QAction( QIcon( ":icons/orderelm.png" ), "Change &Orger", this );
   act_ordelm->setShortcut( Qt::Key_O );
   act_ordelm->setWhatsThis( tr("Change order numper of selected element") );
   connect( act_ordelm, SIGNAL( activated() ), this, SLOT( slotOrdElm() ));
- 
+
   act_markelm= new QAction( QIcon( ":icons/markelm.png" ), "&Mark element", this );
   act_markelm->setShortcut( Qt::Key_M );
   act_ordelm->setWhatsThis( tr("Mark selected element") );
   connect( act_markelm, SIGNAL( activated() ), this, SLOT( slotMarkElm() ));
- 
+
   act_moveelm= new QAction( "Move element", this );
   act_moveelm->setShortcut( Qt::SHIFT+Qt::Key_M );
   act_moveelm->setWhatsThis( tr("Move marked element to selected cell") );
   connect( act_moveelm, SIGNAL( activated() ), this, SLOT( slotMoveElm() ));
- 
+
   act_infoelm= new QAction( QIcon( ":icons/infoelm.png" ), "show &Info", this );
   act_infoelm->setShortcut( Qt::Key_I );
   act_infoelm->setWhatsThis( tr("Show information about element structure") );
   connect( act_infoelm, SIGNAL( activated() ), this, SLOT( slotInfoElm() ));
- 
+
   act_showtreeelm = new QAction( "show element tree", this );
   act_showtreeelm->setWhatsThis( tr("Show tree-like element structure") );
   connect( act_showtreeelm, SIGNAL( activated() ), this, SLOT( slotShowTreeElm() ));
- 
+
   act_testelm1= new QAction( "test element 1", this );
   act_testelm1->setWhatsThis( tr("Test something in element") );
   connect( act_testelm1, SIGNAL( activated() ), this, SLOT( slotTestElm1() ));
-  
+
   act_testelm2= new QAction( "test element 2", this );
   act_testelm2->setWhatsThis( tr("Test something in element") );
   connect( act_testelm2, SIGNAL( activated() ), this, SLOT( slotTestElm2() ));
-  // ==== out group 
- 
+  // ==== out group
+
   act_newout = new QAction( QIcon( ":icons/newout.png" ), "&New Out", this );
   act_newout->setShortcut( Qt::Key_U );
   act_newout->setWhatsThis( tr("Create output collector") );
@@ -360,7 +360,7 @@ void QMo2Win::initIface()
   act_runrun->setShortcut( Qt::Key_F9 );
   act_runrun->setWhatsThis( tr("Click this button start simple run.") );
   connect( act_runrun, SIGNAL( activated() ), this, SLOT( slotRunRun()) );
-  
+
   act_runprm= new QAction( QIcon( ":icons/run_p1.png" ), "Run &1D Parm loop", this );
   act_runprm->setShortcut( Qt::CTRL+Qt::Key_F9 );
   act_runprm->setWhatsThis( tr("Click this button start 1D parametric run.") );
@@ -370,7 +370,7 @@ void QMo2Win::initIface()
   act_runprm2->setShortcut( Qt::SHIFT+Qt::CTRL+Qt::Key_F9 );
   act_runprm2->setWhatsThis( tr("Click this button start 2D parametric run.") );
   connect( act_runprm2, SIGNAL( activated() ), this, SLOT( slotRunPrm2()) );
- 
+
   act_runscript = new QAction( QIcon::fromTheme("application-x-javascript"), "run &Script", this );
   act_runscript->setShortcut( Qt::SHIFT+Qt::Key_F9 );
   act_runscript->setWhatsThis( tr("Run script on model") );
@@ -436,7 +436,7 @@ void QMo2Win::initIface()
   act_winCascade = new QAction( "&Cascade Windows",  this );
   act_winCascade->setWhatsThis( tr("Cascade the windows") );
   connect( act_winCascade, SIGNAL( activated() ), this, SLOT( slotWindowCascade()) );
-  
+
   //act_winnew = new QAction( "&New Window", 0, this, "winnew");
   //act_winnew->setWhatsThis( tr("Crerate new window for same model") );
   //connect( act_winnew, SIGNAL( activated() ), this, SLOT( slotWindowNewWindow()) );
@@ -450,7 +450,7 @@ void QMo2Win::initIface()
   act_helpaboutqt = new QAction( "About &Qt", this );
   // act_helpabout->setWhatsThis( tr("") );
   connect( act_helpaboutqt, SIGNAL( activated() ), this, SLOT( slotHelpAboutQt()) );
-  
+
   act_whatsthis = new QAction( "&What's This", this );
   // act_whatsthis->setWhatsThis( tr("") );
   // TODO:
@@ -460,10 +460,10 @@ void QMo2Win::initIface()
   act_test->setWhatsThis( tr("Click this button to test something.") );
   connect( act_test, SIGNAL( activated() ), this, SLOT( slotTest()) );
 
-  
+
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pFileMenu
-		
+
   pFileMenu = menuBar()->addMenu( tr("&File") );
   pFileMenu->addAction( act_new );
   pFileMenu->addSeparator();
@@ -490,7 +490,7 @@ void QMo2Win::initIface()
   pEditMenu->addAction( act_paste );
   pEditMenu->addSeparator();
   pEditMenu->addAction( act_test );
-  
+
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pElmMenu
   pElmMenu = menuBar()->addMenu( tr("E&lement") );
@@ -535,13 +535,13 @@ void QMo2Win::initIface()
   pGraphMenu->addAction( act_showgraphdata );
   pGraphMenu->addAction( act_exportgraphdata );
   pGraphMenu->addAction( act_gnuplotgraph );
-  
+
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pModelMenu
   pModelMenu = menuBar()->addMenu( tr("&Model") );
   pModelMenu->addAction( act_editmodel );
   pModelMenu->addAction( act_showtreemodel );
-  
+
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pRunMenu
   pRunMenu = menuBar()->addMenu( tr("&Run") );
@@ -552,7 +552,7 @@ void QMo2Win::initIface()
   pRunMenu->addAction( act_runscript );
   pRunMenu->addSeparator();
   pRunMenu->addAction( act_reset );
-  
+
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pViewMenu
   pViewMenu = menuBar()->addMenu( tr("&View") );
@@ -578,7 +578,7 @@ void QMo2Win::initIface()
   pHelpMenu->addAction( act_helpaboutqt );
   pHelpMenu->addSeparator();
   pHelpMenu->addAction( act_whatsthis );
-  
+
   ///////////////////////////////////////////////////////////////////
   // CONNECT THE SUBMENU SLOTS WITH SIGNALS
 
@@ -594,7 +594,7 @@ void QMo2Win::initIface()
     fileToolbar->addSeparator();
   fileToolbar->addAction( act_test );
     fileToolbar->addSeparator();
-  
+
   elmToolbar = addToolBar( tr("Element") );
   elmToolbar->addAction( act_newelm );
   elmToolbar->addAction( act_delelm );
@@ -699,7 +699,7 @@ void QMo2Win::updateActions()
     enableActions( false, 0 );
   };
   setWndTitle( this ); // "this" is fake
-  
+
 }
 
 void QMo2Win::setWndTitle( QWidget* )
@@ -707,7 +707,7 @@ void QMo2Win::setWndTitle( QWidget* )
   if( mdiArea->currentSubWindow() != 0 ) {
     setWindowTitle( mdiArea->currentSubWindow()->windowTitle() + " " PACKAGE );
   } else {
-    setWindowTitle( PACKAGE " " VERSION ); 
+    setWindowTitle( PACKAGE " " VERSION );
   };
 }
 
@@ -732,7 +732,7 @@ QMo2View* QMo2Win::createChild( QMo2Doc* doc )
 
 bool QMo2Win::queryExit()
 {
-  int exit = QMessageBox::information( this, 
+  int exit = QMessageBox::information( this,
       tr("Quit..."), tr("Do your really want to quit?"),
       QMessageBox::Ok, QMessageBox::Cancel);
 
@@ -767,7 +767,7 @@ QMo2View* QMo2Win::activeMdiChild()
 void QMo2Win::slotFileNew()
 {
   statusBar()->showMessage( tr( "Creating new model file..." ) );
-  
+
   QMo2Doc* doc = new QMo2Doc();
   ++untitledCount;
   QString fileName = QString( "untitled_%1.mo2" ).arg(untitledCount);
@@ -785,9 +785,9 @@ void QMo2Win::slotFileNew()
 void QMo2Win::slotFileOpenXML()
 {
   statusBar()->showMessage( tr( "Opening model file..." ) );
-  QString fileName = 
+  QString fileName =
     QFileDialog::getOpenFileName( this, tr("Open model file"),
-	"", "Model *.qol files (*.qol);;All files(*)" );
+        "", "Model *.qol files (*.qol);;All files(*)" );
   if ( fileName.isEmpty() ) {
      statusBar()->showMessage( tr( "Open canceled." ) );
      updateActions();
@@ -804,7 +804,7 @@ void QMo2Win::slotFileOpenXML()
   }
 
   bool rc = doFileOpenXML( fileName );
-  
+
   statusBar()->showMessage( rc ? tr( "Ready." ) : tr( "Fail" ) );
 }
 
@@ -813,14 +813,14 @@ bool QMo2Win::doFileOpenXML( const QString &fn )
 {
   QMo2Doc* doc = new QMo2Doc();
   if( ! doc->openDocumentXML( fn ) ) {
-    QMessageBox::critical( this, tr("Error !"), 
-			   tr("Could not read file !" ) + fn );
+    QMessageBox::critical( this, tr("Error !"),
+                           tr("Could not read file !" ) + fn );
     delete doc;
     updateActions();
     statusBar()->showMessage( tr( "Open Failed." ) );
     return false;
   };
-  
+
   QMo2View *cw = createChild( doc );
   cw->show();
   updateActions();
@@ -830,7 +830,7 @@ bool QMo2Win::doFileOpenXML( const QString &fn )
 
 void QMo2Win::slotFileSaveXML()
 {
-  statusBar()->showMessage( tr( "Saving model file...") );	
+  statusBar()->showMessage( tr( "Saving model file...") );
   QMo2View* m =  activeMdiChild();
   if( m ) {
     QMo2Doc* doc = m->getDocument();
@@ -838,9 +838,9 @@ void QMo2Win::slotFileSaveXML()
       slotFileSaveXMLAs();
     } else {
       if( ! doc->saveDocumentXML( doc->pathName() ) )
-         QMessageBox::critical( this, 
-	   tr("I/O Error !"), tr("Could not save the current document !" ) );
-    };	 
+         QMessageBox::critical( this,
+           tr("I/O Error !"), tr("Could not save the current document !" ) );
+    };
     m->update();
   };
   updateActions();
@@ -853,7 +853,7 @@ void QMo2Win::slotFileSaveXMLAs()
   statusBar()->showMessage( tr ( "Saving model file under new filename..." ) );
   QMo2View* m =  activeMdiChild();
   if( !m ) {
-    QMessageBox::critical ( this, 
+    QMessageBox::critical ( this,
       tr("Critical error!"), tr("Fail to find active window while saving file!") );
   }
   QString fn = QFileDialog::getSaveFileName( this, tr("Save model"),
@@ -865,11 +865,11 @@ void QMo2Win::slotFileSaveXMLAs()
     if( ! pfn.contains('.') )
       fn += ".qol";
     fi.setFile( fn );
-    
+
     QMo2Doc* doc = m->getDocument();
     if( ! doc->saveDocumentXML( fn ) ) {
-       QMessageBox::critical ( this, 
-	   tr("I/O Error !"), tr("Could not save the current model file!") );
+       QMessageBox::critical ( this,
+           tr("I/O Error !"), tr("Could not save the current model file!") );
        return;
     };
     m->setWindowTitle( doc->title() );
@@ -885,7 +885,7 @@ void QMo2Win::slotFileClose()
 
 void QMo2Win::slotFilePrint()
 {
-  statusBar()->showMessage( tr ( "Printing..." ) );	
+  statusBar()->showMessage( tr ( "Printing..." ) );
   QMo2View* m =  activeMdiChild();
   if ( m != 0 )
     m->print();
@@ -895,32 +895,32 @@ void QMo2Win::slotFilePrint()
 
 void QMo2Win::slotFileSettings()
 {
-  statusBar()->showMessage( tr ( "Edit settings..." ) );	
-  
+  statusBar()->showMessage( tr ( "Edit settings..." ) );
+
   Mo2SettDlg *dia = new Mo2SettDlg( sett, this );
   if ( dia->exec() == QDialog::Accepted ) {
     setFonts();
   };
-  
+
   statusBar()->showMessage( tr ( "Ready." ) );
 }
 
 
 void QMo2Win::slotFileSaveSett()
 {
-  statusBar()->showMessage( tr ( "Saving settings..." ) );	
+  statusBar()->showMessage( tr ( "Saving settings..." ) );
   sett.save();
   statusBar()->showMessage( tr ( "Ready." ) );
 }
 
 void QMo2Win::slotFileQuit()
-{ 
+{
   qApp->closeAllWindows();
 }
 
 void QMo2Win::slotEditUndo()
 {
-  statusBar()->showMessage( tr( "Reverting last action..." ) );	
+  statusBar()->showMessage( tr( "Reverting last action..." ) );
 //  QMo2View* m = (QMo2View*) pWorkspace->activeWindow();
 //  if ( m )
 //    m->undo();
@@ -929,7 +929,7 @@ void QMo2Win::slotEditUndo()
 
 void QMo2Win::slotEditCut()
 {
-  statusBar()->showMessage( tr( "Cutting selection..." ) );	
+  statusBar()->showMessage( tr( "Cutting selection..." ) );
   QMo2View* m = activeMdiChild();
   if ( m )
     m->cutElm();
@@ -960,7 +960,7 @@ void QMo2Win::slotViewToolBar()
   statusBar()->showMessage( tr( "Toggle toolbar..." ) );
   ///////////////////////////////////////////////////////////////////
   // turn Toolbar on or off
-  
+
   if (fileToolbar->isVisible()) {
     fileToolbar->hide();
     elmToolbar->hide();
@@ -978,7 +978,7 @@ void QMo2Win::slotViewStatusBar()
   statusBar()->showMessage( tr( "Toggle statusbar..." ) );
   ///////////////////////////////////////////////////////////////////
   //turn Statusbar on or off
-  
+
   if (statusBar()->isVisible()) {
     statusBar()->hide();
     act_sbar->setChecked( false );
@@ -986,7 +986,7 @@ void QMo2Win::slotViewStatusBar()
     statusBar()->show();
     act_sbar->setChecked( true );
   };
-  
+
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
@@ -1059,7 +1059,7 @@ void QMo2Win::slotWindowCascade()
 
 void QMo2Win::slotHelpAbout()
 {
-  QString ostr = QString( PACKAGE "\nVersion " VERSION " build: " 
+  QString ostr = QString( PACKAGE "\nVersion " VERSION " build: "
       __DATE__ " " __TIME__ "\n"  COPYRIGHT );
   QMessageBox::about( this, tr( "About..." ), ostr );
 }
@@ -1079,7 +1079,7 @@ void QMo2Win::slotStatusHelpMsg(const QString &text)
 
 void QMo2Win::slotTest(void)
 {
-  static const char *loc_test = "" 
+  static const char *loc_test = ""
     "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЪЬЭЮЯ:"
     "абвгдежзиклмнопрстуфхцчшщыъьэюя:іІїЇєЄёЁҐґ."
   ;
@@ -1089,7 +1089,7 @@ void QMo2Win::slotTest(void)
   ostr += QString::fromAscii( loc_test ) + "(Ascii)\n";
   for( unsigned ccode=0x0390; ccode < 0x0400; ++ccode )  {
     ostr += QChar( ccode );
-    if( (ccode & 0x1F) == 0x1F ) 
+    if( (ccode & 0x1F) == 0x1F )
       ostr += " <:> " + QSN(ccode,16) + "\n";
   }
   ostr += "\n";
@@ -1098,19 +1098,19 @@ void QMo2Win::slotTest(void)
     ostr += QSN(i) + ": ";
     ostr += *all_dirs[i] + "\n";
   };
-  ostr += "local: "; 
+  ostr += "local: ";
   ostr += findRes("local.dat");
-  ostr += "\nglobal: "; 
+  ostr += "\nglobal: ";
   ostr += findRes("global.dat");
-  ostr += "\nbuild: "; 
+  ostr += "\nbuild: ";
   ostr += findRes("build.dat");
-  ostr += "\nenv: "; 
+  ostr += "\nenv: ";
   ostr += findRes("env.dat") + "\n";
   //ostr += "\nDMIN: " + QSN( DMIN );
   //ostr += " DMAX: "  + QSN( DMAX );
   //ostr += "\niDMIN: " + QSN( (int)(DMIN) );
   //ostr += " iDMAX: "  + QSN( (int)(DMAX) );
-  QString first, rest; 
+  QString first, rest;
   int idx, nmt;
   const char* const tst_str[] =  {
     "[5]",
@@ -1125,10 +1125,10 @@ void QMo2Win::slotTest(void)
   for( auto s : tst_str ) {
     QString t = s;
     nmt = splitName( t, first, rest, idx );
-    ostr += "t=\"" + t + "\" nmt=" + QSN(nmt) + " first=\"" + first 
+    ostr += "t=\"" + t + "\" nmt=" + QSN(nmt) + " first=\"" + first
          + "\" rest=\"" + rest + "\" idx=" + QSN(idx) + "\n";
   }
-  
+
 
   QMessageBox::information( this, tr( "Test" ), ostr, QMessageBox::Ok );
   statusBar()->showMessage( tr( "Ready." ) );
@@ -1136,7 +1136,7 @@ void QMo2Win::slotTest(void)
 
 void QMo2Win::windowMenuAboutToShow()
 {
-  pWindowMenu->clear();	
+  pWindowMenu->clear();
   pWindowMenu->addAction( act_winClose );
   pWindowMenu->addAction( act_winCloseAll );
   pWindowMenu->addSeparator();
@@ -1161,7 +1161,7 @@ void QMo2Win::windowMenuAboutToShow()
     connect( action, SIGNAL(triggered()), windowMapper, SLOT(map()) );
     windowMapper->setMapping( action, windows.at(i) );
   }
-	
+
   updateActions();
 
 }
@@ -1190,7 +1190,7 @@ void QMo2Win::slotDelElm()
 void QMo2Win::slotEditElm()
 {
   statusBar()->showMessage( tr( "Editing element properties..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->editElm();
@@ -1201,7 +1201,7 @@ void QMo2Win::slotEditElm()
 void QMo2Win::slotqLinkElm()
 {
   statusBar()->showMessage( tr( "Quick linking element..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->qlinkElm();
@@ -1211,7 +1211,7 @@ void QMo2Win::slotqLinkElm()
 void QMo2Win::slotqpLinkElm()
 {
   statusBar()->showMessage( tr( "Quick parametr linking element..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->qplinkElm();
@@ -1221,7 +1221,7 @@ void QMo2Win::slotqpLinkElm()
 void QMo2Win::slotUnlinkElm()
 {
   statusBar()->showMessage( tr( "Uninking element..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->unlinkElm();
@@ -1231,7 +1231,7 @@ void QMo2Win::slotUnlinkElm()
 void QMo2Win::slotLockElm()
 {
   statusBar()->showMessage( tr( "Locking element..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->lockElm();
@@ -1242,7 +1242,7 @@ void QMo2Win::slotLockElm()
 void QMo2Win::slotOrdElm()
 {
   statusBar()->showMessage( tr( "Setting new order of element..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->ordElm();
@@ -1252,7 +1252,7 @@ void QMo2Win::slotOrdElm()
 void QMo2Win::slotMarkElm()
 {
   statusBar()->showMessage( tr( "Marking element..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->markElm();
@@ -1262,7 +1262,7 @@ void QMo2Win::slotMarkElm()
 void QMo2Win::slotMoveElm()
 {
   statusBar()->showMessage( tr( "Moving element..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->moveElm();
@@ -1272,7 +1272,7 @@ void QMo2Win::slotMoveElm()
 void QMo2Win::slotInfoElm()
 {
   statusBar()->showMessage( tr( "Information about element..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->infoElm();
@@ -1282,7 +1282,7 @@ void QMo2Win::slotInfoElm()
 void QMo2Win::slotShowTreeElm()
 {
   statusBar()->showMessage( tr( "Show element tree..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->showTreeElm();
@@ -1292,7 +1292,7 @@ void QMo2Win::slotShowTreeElm()
 void QMo2Win::slotTestElm1()
 {
   statusBar()->showMessage( tr( "Test element 1..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->testElm1();
@@ -1302,7 +1302,7 @@ void QMo2Win::slotTestElm1()
 void QMo2Win::slotTestElm2()
 {
   statusBar()->showMessage( tr( "Test element 2..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->testElm2();
@@ -1313,7 +1313,7 @@ void QMo2Win::slotTestElm2()
 void QMo2Win::slotNewOut()
 {
   statusBar()->showMessage( tr( "Inserting output array..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->newOut();
@@ -1323,7 +1323,7 @@ void QMo2Win::slotNewOut()
 void QMo2Win::slotDelOut()
 {
   statusBar()->showMessage( tr( "Deleting output array..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->delOut();
@@ -1333,7 +1333,7 @@ void QMo2Win::slotDelOut()
 void QMo2Win::slotEditOut()
 {
   statusBar()->showMessage( tr( "Editing output array..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->editOut();
@@ -1343,7 +1343,7 @@ void QMo2Win::slotEditOut()
 void QMo2Win::slotShowOutData()
 {
   statusBar()->showMessage( tr( "Data from output array..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->showOutData();
@@ -1353,7 +1353,7 @@ void QMo2Win::slotShowOutData()
 void QMo2Win::slotExportOut()
 {
   statusBar()->showMessage( tr( "Exporting data from output array..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->exportOut();
@@ -1363,7 +1363,7 @@ void QMo2Win::slotExportOut()
 void QMo2Win::slotNewGraph()
 {
   statusBar()->showMessage( tr( "Inserting new graph..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->newGraph();
@@ -1373,7 +1373,7 @@ void QMo2Win::slotNewGraph()
 void QMo2Win::slotDelGraph()
 {
   statusBar()->showMessage( tr( "Deleting graph..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->delGraph();
@@ -1383,7 +1383,7 @@ void QMo2Win::slotDelGraph()
 void QMo2Win::slotEditGraph()
 {
   statusBar()->showMessage( tr( "Editing graph..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->editGraph();
@@ -1393,7 +1393,7 @@ void QMo2Win::slotEditGraph()
 void QMo2Win::slotShowGraph()
 {
   statusBar()->showMessage( tr( "Showing graph plot..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->showGraph();
@@ -1403,7 +1403,7 @@ void QMo2Win::slotShowGraph()
 void QMo2Win::slotShowGraphData()
 {
   statusBar()->showMessage( tr( "Showing graph data..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->showGraphData();
@@ -1413,7 +1413,7 @@ void QMo2Win::slotShowGraphData()
 void QMo2Win::slotExportGraphData()
 {
   statusBar()->showMessage( tr( "Exporting graph data..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->exportGraphData();
@@ -1423,7 +1423,7 @@ void QMo2Win::slotExportGraphData()
 void QMo2Win::slotGnuplotGraph()
 {
   statusBar()->showMessage( tr( "Exporting graph to gnuplot..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->gnuplotGraph();
@@ -1433,7 +1433,7 @@ void QMo2Win::slotGnuplotGraph()
 void QMo2Win::slotEditModel()
 {
   statusBar()->showMessage( tr( "Editing model parametrs..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->editModel();
@@ -1444,7 +1444,7 @@ void QMo2Win::slotEditModel()
 void QMo2Win::slotShowTreeModel()
 {
   statusBar()->showMessage( tr( "Show model tree..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->showTreeModel();
@@ -1455,7 +1455,7 @@ void QMo2Win::slotShowTreeModel()
 void QMo2Win::slotRunRun()
 {
   statusBar()->showMessage( tr( "Running simple loop..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->runRun();
@@ -1465,7 +1465,7 @@ void QMo2Win::slotRunRun()
 void QMo2Win::slotRunPrm()
 {
   statusBar()->showMessage( tr( "Running parametric loop..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->runPrm();
@@ -1475,7 +1475,7 @@ void QMo2Win::slotRunPrm()
 void QMo2Win::slotRunPrm2()
 {
   statusBar()->showMessage( tr( "Running 2D parametric loop..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->runPrm2();
@@ -1485,7 +1485,7 @@ void QMo2Win::slotRunPrm2()
 void QMo2Win::slotReset()
 {
   statusBar()->showMessage( tr( "Reseting model..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->resetModel();
@@ -1495,7 +1495,7 @@ void QMo2Win::slotReset()
 void QMo2Win::slotRunScript()
 {
   statusBar()->showMessage( tr( "Show model tree..." ) );
-  
+
   QMo2View* m =  activeMdiChild();
   if ( m )
     m->runScript();
@@ -1529,7 +1529,7 @@ void Mo2Settings::load()
   showLinks = sets.value("view/showLinks", true ).toBool();
   showmax   = sets.value("view/showmax", true ).toBool();
   /* -------- fonts ----------- */
-  //  "Arial,10,-1,5,50,0,0,0,0,0" 
+  //  "Arial,10,-1,5,50,0,0,0,0,0"
   QFont df;
   QString dfs = df.toString();
   mainFont    = sets.value("fonts/main", dfs ).toString();

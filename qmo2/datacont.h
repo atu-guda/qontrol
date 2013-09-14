@@ -24,7 +24,7 @@ class TDataContainer : public TDataSet  {
   virtual ~TDataContainer() override;
   DCL_CREATE;
   DCL_STD_INF;
- protected: 
+ protected:
   DCL_DEFAULT_STATIC;
 };
 

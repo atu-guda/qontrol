@@ -42,7 +42,7 @@ class Mo2Settings {
    Mo2Settings();
    void load();
    void save() const;
-  public: 
+  public:
    /** flag: show element order: /view/showord */
    bool showord;
    /** flag: show grid in structure view: /view/showgrid */
@@ -63,7 +63,7 @@ class Mo2Settings {
    QString plotFont;
    /** structure view font string: /fonts/struct */
    QString structFont;
-    
+
 };
 
 /**
@@ -71,7 +71,7 @@ class Mo2Settings {
   * window and providing a menubar, toolbar
   * and statusbar. For the main view, an instance of class QMo2View is
   * created which creates your view.
-  * 	
+  *
   * @author atu
   */
 class QMo2Win : public QMainWindow
@@ -114,8 +114,8 @@ class QMo2Win : public QMainWindow
      QMo2View* activeMdiChild();
 
   private slots:
-  
-    /** sets the main application window title each time 
+
+    /** sets the main application window title each time
       * the active MDI child window changes. */
     void setWndTitle( QWidget* );
     /** automaticaly enables/disable actions */
@@ -150,7 +150,7 @@ class QMo2Win : public QMainWindow
     /** paste the clipboard into the document*/
     void slotEditPaste();
     // atu start:
-    
+
     // ==== element related
     void slotNewElm();
     void slotDelElm();
@@ -187,7 +187,7 @@ class QMo2Win : public QMainWindow
     void slotEditModel();
     void slotShowTreeModel();
     void slotRunScript();
-    
+
     // ==== run related
     void slotRunRun();
     void slotRunPrm();
@@ -224,7 +224,7 @@ class QMo2Win : public QMainWindow
     void slotTest(void);
     /** change the status message of the whole statusbar temporary */
     void slotStatusHelpMsg(const QString &text);
-    /** gets called when the window menu is activated; recreates 
+    /** gets called when the window menu is activated; recreates
         the window menu with all opened window titles. */
     void windowMenuAboutToShow();
 
@@ -239,19 +239,19 @@ class QMo2Win : public QMainWindow
     void initDirs();
     /** recreate fonts from config */
     void setFonts();
-		
+
     QMdiArea *mdiArea;
     QSignalMapper *windowMapper;
     /** the printer instance */
     QPrinter *printer;
-    /** a counter that gets increased each time the user creates 
+    /** a counter that gets increased each time the user creates
           a new document with "File"->"New" */
     int untitledCount;
     /**  settings  */
     Mo2Settings sett;
     /** common fonts */
-    QFont mainFont, smallFont, plotFont, structFont; 
-    
+    QFont mainFont, smallFont, plotFont, structFont;
+
     /* ------------------------ dirs ---------------------------- */
     /** directories to search resources */
     QString global_dir, local_dir, add_dir, xbuild_dir, env_dir;
@@ -273,35 +273,35 @@ class QMo2Win : public QMainWindow
     QToolBar *elmToolbar;
 
     /** actions */
-    QAction *act_new, *act_openxml, *act_close, 
-	    *act_savexml, *act_savexmlas,
+    QAction *act_new, *act_openxml, *act_close,
+            *act_savexml, *act_savexmlas,
             *act_print, *act_settings, *act_savesett, *act_quit,
-	    *act_undo, *act_cut, *act_copy, *act_paste,
-	    // elm
-	    *act_newelm, *act_delelm, *act_editelm, 
-	    *act_qlinkelm, *act_qplinkelm, *act_unlinkelm,
-	    *act_lockelm, *act_ordelm, *act_markelm, *act_moveelm,
-	    *act_infoelm, *act_showtreeelm,
-	    *act_testelm1, *act_testelm2,
-	    // out
-	    *act_newout, *act_delout, *act_editout,
-	    *act_showoutdata, *act_exportout,
-	    // graph
-	    *act_newgraph, *act_delgraph, *act_editgraph,
-	    *act_showgraph, *act_showgraphdata, 
-	    *act_exportgraphdata, *act_gnuplotgraph,
-	    // model
-	    *act_editmodel, *act_showtreemodel,
-	    // run
-	    *act_runrun, *act_runprm, *act_runprm2, *act_runscript, *act_reset,
-	    // iface
-	    *act_tbar, *act_sbar,
-	    *act_showord, *act_showgrid, *act_shownames, *act_showicons, *act_showlinks,
-	    // win
-	    *act_winClose, *act_winCloseAll, *act_winTile, *act_winCascade,
-	    // help
-	    *act_helpabout, *act_helpaboutqt, *act_whatsthis,
-	    *act_test;
+            *act_undo, *act_cut, *act_copy, *act_paste,
+            // elm
+            *act_newelm, *act_delelm, *act_editelm,
+            *act_qlinkelm, *act_qplinkelm, *act_unlinkelm,
+            *act_lockelm, *act_ordelm, *act_markelm, *act_moveelm,
+            *act_infoelm, *act_showtreeelm,
+            *act_testelm1, *act_testelm2,
+            // out
+            *act_newout, *act_delout, *act_editout,
+            *act_showoutdata, *act_exportout,
+            // graph
+            *act_newgraph, *act_delgraph, *act_editgraph,
+            *act_showgraph, *act_showgraphdata,
+            *act_exportgraphdata, *act_gnuplotgraph,
+            // model
+            *act_editmodel, *act_showtreemodel,
+            // run
+            *act_runrun, *act_runprm, *act_runprm2, *act_runscript, *act_reset,
+            // iface
+            *act_tbar, *act_sbar,
+            *act_showord, *act_showgrid, *act_shownames, *act_showicons, *act_showlinks,
+            // win
+            *act_winClose, *act_winCloseAll, *act_winTile, *act_winCascade,
+            // help
+            *act_helpabout, *act_helpaboutqt, *act_whatsthis,
+            *act_test;
   public:
     /** static pointer to main window -- the only allowed */
     static QMo2Win *qmo2win;
@@ -309,7 +309,7 @@ class QMo2Win : public QMainWindow
 };
 
 
-#endif 
+#endif
 
 // end of qmo2win.h
 

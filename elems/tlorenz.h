@@ -35,7 +35,7 @@ class TLorenz : public TMiso  {
    virtual double f( double t ) override;
    /** called before each inner param loop. Unused param - -1 */
    virtual int do_startLoop( int acnx, int acny ) override;
-   
+
    /** main system parameters */
    PRM_DOUBLE( sigma, 0, "\\sigma", "\\sigma parameter", "def=10.0" );
    PRM_DOUBLE( r, 0, "r", "r parameter", "def=28.0" );
@@ -53,9 +53,9 @@ class TLorenz : public TMiso  {
    PRM_INPUT( in_y, 0, "input y", "Y additional input", "sep=col" );
    PRM_INPUT( in_z, 0, "input z", "Z additional input",  "sep=col" );
 
-   /** values to store some model vars */	  
+   /** values to store some model vars */
    double tt;
-   
+
    DCL_DEFAULT_STATIC;
 };
 

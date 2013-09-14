@@ -29,7 +29,7 @@ const char* TLatch::helpstr = "<H1>TLatch</H1>\n"
  "- <b>usePulse</b>. - latch on jump of in_latch (>0.5), not level;<br>\n"
  "- <b>useFirst</b>. - count only first signal to latch, ignore all other;<br>\n"
  "- <b>useAdd</b>. - add current u[0] to value, not set.<br>\n</p>";
- 
+
 STD_CLASSINFO(TLatch,clpElem);
 
 CTOR(TLatch,TMiso)
@@ -45,32 +45,32 @@ int TLatch::do_startLoop( int /*acnx*/, int /*acny*/ )
 
 double TLatch::f( double t )
 {
-  double dv, bv; 
+  double dv, bv;
   int ok;
-  dv = in_latch - u_old; 
+  dv = in_latch - u_old;
   u_old = in_latch;
-  if( wasLatch == -1 ) { 
+  if( wasLatch == -1 ) {
     dv = 0; wasLatch = 0; // first step
-  }; 
+  };
   bv = useAdd ? v : 0;
   switch( (int)type ) {
     case 0: if( t >= t0 ) {
-              if( wasLatch ) 
+              if( wasLatch )
                 break;
-	      wasLatch = 1; v = bv + in_u;
-	    };
+              wasLatch = 1; v = bv + in_u;
+            };
             break;
-    case 1: if( useFirst && (wasLatch > 0) ) 
-	      break;
+    case 1: if( useFirst && (wasLatch > 0) )
+              break;
             if( usePulse ) {
-	      ok = ( dv > 0.5 );
-	    } else {
-	      ok = ( in_latch > 0.1 );
-	    };
-	    if( ok ) { 
-	      wasLatch = 1; v = bv + in_u;
-	    };
-	    break;
+              ok = ( dv > 0.5 );
+            } else {
+              ok = ( in_latch > 0.1 );
+            };
+            if( ok ) {
+              wasLatch = 1; v = bv + in_u;
+            };
+            break;
     default: ;
   };
   return v;

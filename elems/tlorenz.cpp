@@ -16,8 +16,8 @@
  ***************************************************************************/
 
 #include <ctime>
-#include <cmath> 
-#include "miscfun.h" 
+#include <cmath>
+#include "miscfun.h"
 #include "tlorenz.h"
 
 using namespace std;
@@ -49,7 +49,7 @@ double TLorenz::f( double /*t*/ )
   yn = y + tdt * ( x * (r-z) - y ) + in_y;
   zn = z + tdt * ( x*y - b*z )     + in_z;
   x = xn; y = yn; z = zn;
-  return x; 
+  return x;
 }
 
 

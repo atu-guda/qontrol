@@ -20,9 +20,9 @@
 
 #include <tmiso.h>
 
-static const char* const tfunctrans_list = 
+static const char* const tfunctrans_list =
      "a*sin(b*y)+g\n"                // 0
-     "a*sign(sin(b*y)+c)+g\n"        // 1 
+     "a*sign(sin(b*y)+c)+g\n"        // 1
      "a*tanh(by)+g\n"                // 2
      "a*atan2(u0,u1(x))+g\n"         // 3
      "a*exp(b*y)+g\n"                // 4
@@ -64,10 +64,10 @@ class TFuncTrans : public TMiso  {
    PRM_DOUBLE( e,  0, "e", "Parameter e", "" );
    PRM_DOUBLE( g,  0, "g", "Parameter g", "" );
    PRM_DOUBLE( x0, 0, "x0", "Input shift: y = in_0 - in_1 - x0;", "" );
-   
+
    PRM_INPUT( in_0, 0, "input 0", "First input",  "sep=block" );
    PRM_INPUT( in_1, 0, "input 1", "Second input", "sep=col" );
-   
+
    DCL_DEFAULT_STATIC;
 };
 

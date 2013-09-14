@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include "tdelay.h"
-#include "miscfun.h" 
+#include "miscfun.h"
 #include "tdelay.h"
 
 const char* TDelay::helpstr = "<H1>TDelay</H1>\n"
@@ -28,7 +28,7 @@ STD_CLASSINFO(TDelay,clpElem );
 
 CTOR(TDelay,TMiso)
 {
-  v1 = v2 = u00 = 0; buf = nullptr; 
+  v1 = v2 = u00 = 0; buf = nullptr;
 }
 
 TDelay::~TDelay()
@@ -41,15 +41,15 @@ double TDelay::f( double t )
 {
   double a1, a2;
   if( buf == 0 ) return 0;
-  
+
   if( prm_mod ) {
-    if( mdelay < cdelay ) 
+    if( mdelay < cdelay )
       cdelay = (double)mdelay;
     double v = cdelay / tdt;
     icd = int( v );
     v2 = v - icd; v1 = 1.0 - v2;
   }
-  
+
   double cu = in_u;
   if( t < 1.3 * tdt )
     u00 = cu;
@@ -77,7 +77,7 @@ int TDelay::do_postRun( int /*good*/ )
 int TDelay::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   double v;
-  buf->reset(); u00 = 0; 
+  buf->reset(); u00 = 0;
   v = cdelay / tdt;
   icd = int( v );
   v2 = v - icd; v1 = 1.0 - v2;
@@ -90,4 +90,4 @@ DEFAULT_FUNCS_REG(TDelay)
 
 // end of tdelay.cpp
 
- 
+

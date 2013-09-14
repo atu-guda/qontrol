@@ -28,9 +28,9 @@ class InputParam;
 typedef HolderData* PHolderData;
 typedef TDataSet* PTDataSet;
 typedef const TDataSet* CPTDataSet;
-typedef HolderData* (*PFHolderData)( 
-    const QString& a_name, TDataSet* a_pa, 
-    int a_flags, const QString &a_v_name, 
+typedef HolderData* (*PFHolderData)(
+    const QString& a_name, TDataSet* a_pa,
+    int a_flags, const QString &a_v_name,
     const QString& a_descr, const QString& a_extra );
 typedef PTDataSet (*PFDataSet)( PTDataSet aparent );
 class   TDataContainer;
@@ -68,17 +68,17 @@ struct TClassInfo {
 //* arguments for std ctor and creater - full form
 #define ARGS_CTOR const QString &obj_name, TDataSet *a_parent, \
          int a_flags = 0, const QString &a_v_name = QString(),  \
-	 const QString &a_descr = QString(), const QString &a_extra = QString() 
+         const QString &a_descr = QString(), const QString &a_extra = QString()
 
 //* arguments for std ctor and creater - short form w/o def values
 #define ARGS_CTOR_MIN const QString &obj_name, TDataSet *a_parent, \
          int a_flags, const QString &a_v_name,  \
-	 const QString &a_descr, const QString &a_extra 
+         const QString &a_descr, const QString &a_extra
 
 //* arguments for std ctor and creater - only names
 #define ARGS_CTOR_NAMES obj_name, a_parent, \
          a_flags, a_v_name,  \
-	 a_descr, a_extra 
+         a_descr, a_extra
 
 //* declare common ctor
 #define DCL_CTOR(clname) \
@@ -96,7 +96,7 @@ struct TClassInfo {
 //* declare common info functions
 #define DCL_STD_INF \
   virtual const TClassInfo* getClassInfo() const override; \
-  virtual const char* getHelp() const override; 
+  virtual const char* getHelp() const override;
 
 //* declare common data manipulation functions
 #define DCL_STD_GETSET \
@@ -105,7 +105,7 @@ struct TClassInfo {
   virtual QVariant get( int idx = 0 ) const override; \
   virtual void post_set() override; \
   virtual QString toString() const override; \
-  virtual bool fromString( const QString &s ) override; 
+  virtual bool fromString( const QString &s ) override;
 
 // default actions in cpp file to register class in factory
 #define REGISTER_CLASS(clname) \
@@ -154,7 +154,7 @@ struct TClassInfo {
 /** types of link - moved from tmiso.h */
 enum ltype_t {
   LinkNone = 0, // not linked
-  LinkElm,      // linked to element 
+  LinkElm,      // linked to element
   LinkSpec,     // linked to special name, like ':prm1', ':t'
   LinkBad       // link source or target not found
 };
@@ -172,7 +172,7 @@ enum allow_type {
 /** Abstract holder for simple data types */
 class HolderData : public QObject {
   Q_OBJECT
- public: 
+ public:
   DCL_CTOR(HolderData);
   virtual ~HolderData();
   DCL_CREATE;
@@ -195,12 +195,12 @@ class HolderData : public QObject {
   virtual bool setData( const QString &nm, const QVariant &da );
   virtual QDomElement toDom( QDomDocument &dd ) const;
   const QString& allowTypes() const { return allowed_types; }
- public slots: 
+ public slots:
   /** returns full name of object: aaa.bbb.cc  */ // TODO: up to HolderData
   QString getFullName() const;
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
-  void setElems( const QString &els ); 
+  void setElems( const QString &els );
   virtual QString getType() const = 0;
   virtual const char* getHelp() const  = 0;
   virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
@@ -225,12 +225,12 @@ class HolderData : public QObject {
 /** Parent of all value holders */
 class HolderValue : public HolderData {
   Q_OBJECT
- public: 
+ public:
   DCL_CTOR(HolderValue);
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET; // just for working create (need fr register)
-  virtual QString getType() const override; 
+  virtual QString getType() const override;
  protected:
   DCL_DEFAULT_STATIC;
 };
@@ -240,13 +240,13 @@ class HolderValue : public HolderData {
 /** Holder of int values */
 class HolderInt : public HolderValue {
   Q_OBJECT
- public: 
+ public:
   DCL_CTOR(HolderInt);
   virtual ~HolderInt();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual QString getType() const override; 
+  virtual QString getType() const override;
   STD_CONVERSIONS(int);
  protected:
   int v;
@@ -254,12 +254,12 @@ class HolderInt : public HolderValue {
 };
 
 #define PRM_INT( name, flags, vname, descr, extra ) \
- HolderInt name = { #name, this, flags, vname, descr, extra  } ; 
+ HolderInt name = { #name, this, flags, vname, descr, extra  } ;
 
 /** Holder of int values as Switch */
 class HolderSwitch : public HolderInt {
   Q_OBJECT
- public: 
+ public:
   DCL_CTOR(HolderSwitch);
   virtual ~HolderSwitch();
   DCL_CREATE;
@@ -268,12 +268,12 @@ class HolderSwitch : public HolderInt {
   virtual void post_set() override;
   virtual QString getType() const override;
   int operator=( int a ) { v=a; post_set(); return v; }
- protected: 
+ protected:
   DCL_DEFAULT_STATIC;
 };
 
 #define PRM_SWITCH( name, flags, vname, descr, extra ) \
- HolderSwitch name = { #name, this, flags, vname, descr, extra  } ; 
+ HolderSwitch name = { #name, this, flags, vname, descr, extra  } ;
 
 
 /** Holder of int values as List (ComboBox) */
@@ -292,24 +292,24 @@ class HolderList : public HolderInt {
   virtual void post_set() override;
   virtual QString getType() const;
   int operator=( int a ) { v=a; post_set(); return v; }
- protected: 
+ protected:
   DCL_DEFAULT_STATIC;
 };
 
 
 #define PRM_LIST( name, flags, vname, descr, extra, elems ) \
- HolderList name ={ #name, this, flags, vname, descr, extra, elems }; 
+ HolderList name ={ #name, this, flags, vname, descr, extra, elems };
 
 /** Holder of double values */
 class HolderDouble : public HolderValue {
   Q_OBJECT
- public: 
+ public:
   DCL_CTOR(HolderDouble);
   virtual ~HolderDouble();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual QString getType() const override; 
+  virtual QString getType() const override;
   STD_CONVERSIONS(double);
  protected:
   double v;
@@ -317,20 +317,20 @@ class HolderDouble : public HolderValue {
 };
 
 #define PRM_DOUBLE( name, flags, vname, descr, extra ) \
- HolderDouble name = { #name, this, flags, vname, descr, extra  } ; 
- 
- 
+ HolderDouble name = { #name, this, flags, vname, descr, extra  } ;
+
+
 
 /** Holder of QString values */
 class HolderString : public HolderValue {
   Q_OBJECT
- public: 
+ public:
   DCL_CTOR(HolderString);
   virtual ~HolderString();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual QString getType() const override; 
+  virtual QString getType() const override;
   STD_CONVERSIONS(QString);
   const QString& cval() const { return v; };
  protected:
@@ -339,20 +339,20 @@ class HolderString : public HolderValue {
 };
 
 #define PRM_STRING( name, flags, vname, descr, extra ) \
- HolderString name = { #name, this, flags, vname, descr, extra  } ; 
+ HolderString name = { #name, this, flags, vname, descr, extra  } ;
 
 
 
 /** Holder of QColor values */
 class HolderColor : public HolderValue {
   Q_OBJECT
- public: 
+ public:
   DCL_CTOR(HolderColor);
   virtual ~HolderColor();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual QString getType() const override; 
+  virtual QString getType() const override;
   STD_CONVERSIONS(QColor);
  protected:
   QColor v;
@@ -360,20 +360,20 @@ class HolderColor : public HolderValue {
 };
 
 #define PRM_COLOR( name, flags, vname, descr, extra ) \
- HolderColor name = { #name, this, flags, vname, descr, extra  } ; 
+ HolderColor name = { #name, this, flags, vname, descr, extra  } ;
 
 // ----------------------------------------------------------------
 /** Holder: array of int */
 class HolderIntArray : public HolderValue {
   Q_OBJECT
- public: 
+ public:
   DCL_CTOR(HolderIntArray);
   virtual ~HolderIntArray();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
   virtual int size() const override { return v.size(); }
-  virtual QString getType() const override; 
+  virtual QString getType() const override;
   STD_CONVERSIONS(std::vector<int>);
   int operator[](int i) const { return v[i]; };
   int& operator[](int i) { return v[i]; };
@@ -383,20 +383,20 @@ class HolderIntArray : public HolderValue {
 };
 
 #define PRM_INT_ARR( name, flags, vname, descr, extra ) \
- HolderIntArray name = { #name, this, flags, vname, descr, extra  } ; 
+ HolderIntArray name = { #name, this, flags, vname, descr, extra  } ;
 
 // ----------------------------------------------------------------
 /** Holder: array of double */
 class HolderDoubleArray : public HolderValue {
   Q_OBJECT
- public: 
+ public:
   DCL_CTOR(HolderDoubleArray);
   virtual ~HolderDoubleArray();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
   virtual int size() const override { return v.size(); }
-  virtual QString getType() const override; 
+  virtual QString getType() const override;
   STD_CONVERSIONS(std::vector<double>);
   double operator[](int i) const { return v[i]; };
   double& operator[](int i) { return v[i]; };
@@ -406,20 +406,20 @@ class HolderDoubleArray : public HolderValue {
 };
 
 #define PRM_DOUBLE_ARR( name, flags, vname, descr, extra ) \
- HolderDoubleArray name = { #name, this, flags, vname, descr, extra  } ; 
+ HolderDoubleArray name = { #name, this, flags, vname, descr, extra  } ;
 
 // ----------------------------------------------------------------
 /** Holder: array of QString */
 class HolderStringArray : public HolderValue {
   Q_OBJECT
- public: 
+ public:
   DCL_CTOR(HolderStringArray);
   virtual ~HolderStringArray();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
   virtual int size() const override { return v.size(); }
-  virtual QString getType() const override; 
+  virtual QString getType() const override;
   STD_CONVERSIONS(QStringList);
   QString operator[](int i) const { return v[i]; };
   QString& operator[](int i) { return v[i]; };
@@ -429,7 +429,7 @@ class HolderStringArray : public HolderValue {
 };
 
 #define PRM_STRING_ARR( name, flags, vname, descr, extra ) \
- HolderStringArray name = { #name, this, flags, vname, descr, extra  } ; 
+ HolderStringArray name = { #name, this, flags, vname, descr, extra  } ;
 
 
 
@@ -438,9 +438,9 @@ class HolderStringArray : public HolderValue {
 /** base class for all non-trivial data objects */
 class TDataSet : public HolderData {
   Q_OBJECT
-  friend class InputSimple; // for register  
+  friend class InputSimple; // for register
   friend class InputParam; //  same
- signals: 
+ signals:
    void sigStructChanged();
  public:
    DCL_CTOR(TDataSet);
@@ -448,7 +448,7 @@ class TDataSet : public HolderData {
    DCL_CREATE;
    DCL_STD_INF;
    DCL_STD_GETSET;
-   virtual QString getType() const override; 
+   virtual QString getType() const override;
    virtual bool isObject( const QString &cl_name = QString() ) const override;
    /** return number of elems */
    virtual int getNumObj() const override { return children().size(); };
@@ -475,7 +475,7 @@ class TDataSet : public HolderData {
    void setModified() { modified |= 1; }
    /** drop modified flag */
    void setUnModified() { modified = 0; }
-  
+
    virtual bool getData( const QString &nm, QVariant &da ) const override;
    virtual bool getData( const QString &nm, int *da ) const override;
    virtual bool getData( const QString &nm, double *da ) const override;
@@ -503,32 +503,32 @@ class TDataSet : public HolderData {
    /** resume reaction to struct changes */
    void resumeHandleStructChange() { updSuspended = false; handleStructChanged(); }
    // special part - TODO: remove or ifdef in separate lib
-   /** returns pointer to given parameter, checking if valid 
+   /** returns pointer to given parameter, checking if valid
     * valid names:
-    * elmname = elmname.out0 
-    * elmname.parmname 
-    * :parmname - only local param? 
-    * parmname - try new, w/o ':' 
-    * lt - ptr: store link type, 
-    * targ - ptr_pre: strore ptr to source TDataSet, 
+    * elmname = elmname.out0
+    * elmname.parmname
+    * :parmname - only local param?
+    * parmname - try new, w/o ':'
+    * lt - ptr: store link type,
+    * targ - ptr_pre: strore ptr to source TDataSet,
     * lev - level of recursion, not for user */
-   virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = nullptr, 
+   virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = nullptr,
         const TDataSet **src_ob = nullptr, int lev = 0 ) const;
    //* transmit this requues to parent, untill scheme detected, where work done
    // via getDoublePtr
-   virtual const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt = nullptr, 
+   virtual const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt = nullptr,
         const TDataSet **src_ob = nullptr, int lev = 0 ) const;
    /** return number of inputs */
    int inputsCount() const { return inputs.size(); };
    /** returns input by number */
-   InputSimple* getInput (int n) ; 
+   InputSimple* getInput (int n) ;
  public slots:
    /** create object with params as string */
    bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
    /** delete given object by name */
    int del_obj( const QString &ob_name );
  protected:
-   /** gets pointer to parameter, near to getDoublePrmPtr 
+   /** gets pointer to parameter, near to getDoublePrmPtr
     * for param mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
    /** reaction to add/remove of subobjects: call do_structChanged */
@@ -544,7 +544,7 @@ class TDataSet : public HolderData {
    static const int guard_val = 7442428;
    int guard = guard_val;
    /** state: 0-bad, 1-constructed, 2-run; */
-   int state = stateGood; 
+   int state = stateGood;
    /** allowing object add /remove for some classes 1-add obj, 2-add params */
    int allow_add = 0;
    /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
@@ -561,7 +561,7 @@ class TDataSet : public HolderData {
 /** Abstract-alike special holder link, parent for all inputs */
 class InputAbstract : public TDataSet {
   Q_OBJECT
- public: 
+ public:
   DCL_CTOR(InputAbstract);
   virtual ~InputAbstract();  // must be abstract, but in this case cannot register
   DCL_CREATE;
@@ -576,7 +576,7 @@ class InputAbstract : public TDataSet {
   virtual void do_structChanged();
   /** find and set link to source or fake source */
   virtual void set_link();
-  
+
   PRM_STRING( source, efNoRunChange, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK"  );
   PRM_STRING( label,  efNoRunChange, "Label", "Label to display on structure", "max=64"  );
   PRM_INT( x_shift, 0, "X shift", "Shift on x-part of link represenration", "sep=col" );
@@ -596,7 +596,7 @@ class InputAbstract : public TDataSet {
 /** Special holder link, have QString, but can be used as const double */
 class InputSimple : public InputAbstract {
   Q_OBJECT
- public: 
+ public:
   DCL_CTOR(InputSimple);
   virtual ~InputSimple();
   DCL_CREATE;
@@ -608,19 +608,19 @@ class InputSimple : public InputAbstract {
  protected:
   /** find and set link to source or fake source */
   virtual void set_link() override;
-  
+
   DCL_DEFAULT_STATIC;
 };
 
 #define PRM_INPUT( name, flags, vname, descr, extra ) \
-  InputSimple name = { #name, this, flags, vname, descr, extra  } ; 
+  InputSimple name = { #name, this, flags, vname, descr, extra  } ;
 
 // ----------------------------------------------------------------
-/** Special holder link - paramitric input, 
+/** Special holder link - paramitric input,
  * like simple, but with local param target */
 class InputParam : public InputAbstract {
   Q_OBJECT
- public: 
+ public:
   DCL_CTOR(InputParam);
   virtual ~InputParam();
   DCL_CREATE;
@@ -634,14 +634,14 @@ class InputParam : public InputAbstract {
  protected:
   /** find and set link to  from (fake)  source to (fake) target */
   virtual void set_link() override;
-  
+
   PRM_STRING( tparam, efNoRunChange, "Param", "Name of param target", "max=128\nprops=STRING,SIMPLE,INNERLINK\nsep=block"  );
   PRM_SWITCH( onlyFirst, 0, "only First", "apply only at start of run", "" );
 
   double fake_target = 0;
   double *targ = &fake_target;
   int target_flag = 0;
-  
+
   DCL_DEFAULT_STATIC;
 };
 
@@ -660,7 +660,7 @@ class ElemFactory {
    // bool unregisterElemType( const QString &a_type );
    QStringList allTypeNames() const { return str_class.keys(); } // TODO: criterion
    QStringList goodTypeNames( const QString & allows ) const;
-   const QStringList& allParamTypes() const { return param_names; } 
+   const QStringList& allParamTypes() const { return param_names; }
    const TClassInfo* getInfo( const QString &a_type ) const;
    bool isChildOf( const QString &cl, const QString &par_cl ) const;
 
@@ -675,7 +675,7 @@ class ElemFactory {
    QStringList param_names;
 };
 
-#define EFACT ElemFactory::theFactory() 
+#define EFACT ElemFactory::theFactory()
 
 #endif  // _DATASET_H
 

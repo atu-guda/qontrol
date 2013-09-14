@@ -27,14 +27,14 @@ const char* TIntegrator::helpstr = "<H1>TIntegrator</H1>\n"
  "- <b>s_val</b> - initial value, may be added to base;<br/>\n"
  "- <b>vmin, vmax</b> - limits. Used if checked flags <b>useMin, UseMax</b>;<br/>\n"
  "- <b>dis</b> - coefficient of discharge.Used if checked flag <b>useDis</b>;<br/>\n"
- "- <b>useReset</b> - set value to <b>base</b> if u[1] > 0.1;<br/>\n"  
- "- <b>useBase</b> - use u[3] as base for reset and discharge, def=0;<br/>\n"  
- "- <b>useAdd</b> - add <b>s_val</b> to base;<br/>\n"  
- "- <b>useHold</b> - on reset, hold old value this step;<br/>\n"  
- "- <b>useAver</b> - calculate average value;<br/>\n"  
- "- <b>useSqIn</b> - calculate u^2 before processing;<br/>\n"  
- "- <b>useSqrOut</b> - calculate sqrt(out);<br/>\n"  
- "- <b>useMin, useMax</b> - use limits to bound value.</p>"; 
+ "- <b>useReset</b> - set value to <b>base</b> if u[1] > 0.1;<br/>\n"
+ "- <b>useBase</b> - use u[3] as base for reset and discharge, def=0;<br/>\n"
+ "- <b>useAdd</b> - add <b>s_val</b> to base;<br/>\n"
+ "- <b>useHold</b> - on reset, hold old value this step;<br/>\n"
+ "- <b>useAver</b> - calculate average value;<br/>\n"
+ "- <b>useSqIn</b> - calculate u^2 before processing;<br/>\n"
+ "- <b>useSqrOut</b> - calculate sqrt(out);<br/>\n"
+ "- <b>useMin, useMax</b> - use limits to bound value.</p>";
 
 STD_CLASSINFO(TIntegrator,clpElem );
 
@@ -55,9 +55,9 @@ int TIntegrator::do_startLoop( int /*acnx*/, int /*acny*/ )
 double TIntegrator::f( double /* t */ )
 {
   double v_ret, base = 0, in;
-  if( useBase ) 
+  if( useBase )
     base = in_base;
-  if( useAdd )  
+  if( useAdd )
     base += s_val;
   if( useSqIn )
     in = in_u * in_u;
@@ -74,11 +74,11 @@ double TIntegrator::f( double /* t */ )
       v = 0;
       v_ret = in;
       if( useHold )
-	v_ret = v_old ;
+        v_ret = v_old ;
     } else {
       v = v_ret = s_val;
-      if( useHold ) 
-	v_ret = v_old;
+      if( useHold )
+        v_ret = v_old;
     };
   } else {
     v += in * tdt * ki;
@@ -92,7 +92,7 @@ double TIntegrator::f( double /* t */ )
     v_ret = v;
     if( useAver ) {
        v_ret = v_ret  / t_rst;
-    };  
+    };
   };
   t_rst += tdt; v_old = v_ret;
   if( useSqrOut ) {

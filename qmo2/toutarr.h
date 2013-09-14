@@ -24,7 +24,7 @@ struct GraphInfo;
 
 // ==================== TOutArr ======================================
 
-static const char* const toutarr_list = 
+static const char* const toutarr_list =
   "Simple\n" // 0
   "Parm 1\n" // 1
   "Parm 2\n" // 2
@@ -68,7 +68,7 @@ class TOutArr : public TDataSet  {
    int fillGraphInfo( GraphInfo *gi ) const;
  protected:
    /** type of array: 0:simple, 1:parm1, 2:parm2, 3:special */
-   PRM_LIST( type, efNoRunChange, "Type", 
+   PRM_LIST( type, efNoRunChange, "Type",
        "Type of array: 0:simple, 1:parm1, 2:parm2, 3:special", "", toutarr_list );
    /** name of element to use */
    PRM_STRING( name, efNoRunChange, "Source", "Name of element to use", "max=64" );
@@ -96,7 +96,7 @@ class TOutArr : public TDataSet  {
    double fake_so = 0;
    /** ptr to source */
    const double *so = &fake_so;
-   
+
    DCL_DEFAULT_STATIC;
 };
 typedef TOutArr *PTOutArr;

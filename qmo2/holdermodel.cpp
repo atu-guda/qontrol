@@ -18,7 +18,7 @@ HolderModel::HolderModel( TDataSet *a_ds, QObject *a_parent )
 int HolderModel::columnCount( const QModelIndex & /*parent*/ ) const
 {
   return 2;
-  //if( parent.isValid() ) 
+  //if( parent.isValid() )
   //return 0;
 }
 
@@ -42,7 +42,7 @@ QVariant HolderModel::data( const QModelIndex &index, int role ) const
       r += '.';
     return r;
   }
-  
+
   if( col != 1 ) { // no data - fake output
     return QString("col: ") + QSN(col) + QString(" row: ") + QSN(index.row());
   }
@@ -54,8 +54,8 @@ QVariant HolderModel::data( const QModelIndex &index, int role ) const
   TDataSet *ob = qobject_cast<TDataSet*>(ho);
   if( !ob )
       return "?cast?";
-  
-  return QString("*_") + QSN( ob->getNumObj() ) 
+
+  return QString("*_") + QSN( ob->getNumObj() )
        + ":" + QSN( ob->getAllowAdd() );
 }
 
@@ -64,7 +64,7 @@ QVariant HolderModel::data( const QModelIndex &index, int role ) const
 //  return false;
 //}
 
-QModelIndex HolderModel::index( int row, int column, 
+QModelIndex HolderModel::index( int row, int column,
                         const QModelIndex &parent ) const
 {
   if( ! hasIndex(row, column, parent) )
@@ -87,7 +87,7 @@ QModelIndex HolderModel::index( int row, int column,
   HolderData *ho = parentItem->getElem( row );
   if( !ho )
     return QModelIndex();
-  
+
   return createIndex( row, column, ho );
 }
 
@@ -105,7 +105,7 @@ QModelIndex HolderModel::parent( const QModelIndex &index ) const
   TDataSet *cds = ho->getParent(); // not 0
   if( cds == ds )
     return QModelIndex();
-  
+
   int ho_idx = cds->indexOfHolder( ho );
 
   return createIndex( ho_idx, 0, cds );
@@ -113,7 +113,7 @@ QModelIndex HolderModel::parent( const QModelIndex &index ) const
 
 int HolderModel::rowCount( const QModelIndex &parent ) const
 {
-  if( ! parent.isValid() ) 
+  if( ! parent.isValid() )
     return ds->getNumObj();
 
   HolderData *ho = static_cast<HolderData*>( parent.internalPointer() );

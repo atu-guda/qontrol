@@ -6,7 +6,7 @@
     email                : atu@nmetau.edu.ua
  *************************************************************************/
 
-#ifndef _DEFS_H 
+#ifndef _DEFS_H
 #define _DEFS_H
 
 #include <limits>
@@ -47,10 +47,10 @@ const double DMAX   { std::numeric_limits<double>::max() };
 #define QSN QString::number
 
 using dvector = std::vector<double>;
- 
+
 
 enum _ELEM_FLAGS {
-  efMustRead = 1, efNoRunChange = 2, efNRC = efNoRunChange,  /* MR, NRC */ 
+  efMustRead = 1, efNoRunChange = 2, efNRC = efNoRunChange,  /* MR, NRC */
   efNoDial = 4, efRODial = 8,                /* ND, ROD */
   efNoSave = 16, efRO = 32, efStatic = 64,   /* NS, RO, - */
   efInner = efNoDial | efNoSave | efRO,
@@ -76,7 +76,7 @@ const char* getStateString( int stat_num );
 constexpr char RE_NAME[] { R"!(^[_a-zA-Z][_0-9A-Za-z]*$)!" };
 constexpr char RE_NAME_IDX[] { R"!(^([_a-zA-Z][_0-9A-Za-z]*)(?:\[(\d+)\])?$)!" };
 // not good, allowing "a..b", buf fast
-constexpr char RE_FULLNAME[]  
+constexpr char RE_FULLNAME[]
   { R"(^([_a-zA-Z]+[_0-9A-Za-z]*)\.([_a-zA-Z]+[_0-9A-Za-z.]*(?:\[(\d+)\])?)$)" } ;
 
 #endif // _DEFS_H

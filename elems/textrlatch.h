@@ -22,7 +22,7 @@
 
 
 
-/**detector of extremums, average and amplitude 
+/**detector of extremums, average and amplitude
   *@author atu
   */
 
@@ -37,7 +37,7 @@ class TExtrLatch : public TMiso  {
    virtual double f( double t ) override;
    /** reimplemented from TMiso to reset */
    virtual int do_startLoop( int acnx, int acny ) override;
-   
+
    /** type of extremum */
    PRM_LIST( type, efNRC, "Type", "Type of catching extremum", "",
        "Max\nMin\nMax||\nAverage\nAmplitude" );
@@ -60,10 +60,10 @@ class TExtrLatch : public TMiso  {
    PRM_DOUBLE( t_abs, efInner, "t_abs", "t_abs", "");
    PRM_DOUBLE( u_ex,  efInner, "u_ex",  "u_ex" , "");
    PRM_DOUBLE( t_ex,  efInner, "t_ex",  "t_ex" , "");
-   
+
    PRM_INPUT( in_u,   0, "u input", "Main input",  "sep=block" );
    PRM_INPUT( in_rst, 0, "rst signal", "Signal to reset", "sep=col" );
-   
+
    double  u_old = 0, u_old2 = 0, t_old = 0;
    DCL_DEFAULT_STATIC;
 };

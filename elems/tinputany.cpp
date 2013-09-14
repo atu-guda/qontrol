@@ -29,12 +29,12 @@ const char* TInputAny::helpstr = "<H1>TInputAny</H1>\n"
 STD_CLASSINFO(TInputAny,clpElem);
 
 CTOR(TInputAny,TMiso),
-	fake_so(0), so( &fake_so )
+        fake_so(0), so( &fake_so )
 {
 }
 
 
-int TInputAny::do_preRun( int /*run_tp*/, int /*an*/, 
+int TInputAny::do_preRun( int /*run_tp*/, int /*an*/,
                           int /*anx*/, int /*any*/, double /*adt*/ )
 {
   so = &fake_so;
@@ -42,9 +42,9 @@ int TInputAny::do_preRun( int /*run_tp*/, int /*an*/,
     return 0;
   }
 
-  so = par->getDoublePtr( name ); 
+  so = par->getDoublePtr( name );
   if( !so ) {
-    so = &fake_so; 
+    so = &fake_so;
     qDebug( "WARN: TInputAny::preRun: fail to find source name \"%s\"",
              qPrintable(name) );
   }

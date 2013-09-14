@@ -21,12 +21,12 @@
 #include "qdoubletable.h"
 
 DoubleTableModel::DoubleTableModel( const GraphInfo *gi, QObject *parent )
-  : QAbstractTableModel( parent ), 
+  : QAbstractTableModel( parent ),
     row( gi->row ), col( gi->col ), ny ( gi->ny ),
     title( gi->title ),
     dat( gi->row )
 {
-  for( int i=0; i<max_graphs; ++i ) { 
+  for( int i=0; i<max_graphs; ++i ) {
     labels << gi->label[i];
     dat[i] = gi->dat[i];
   }
@@ -39,7 +39,7 @@ int DoubleTableModel::columnCount( const QModelIndex & /*parent*/ ) const
 
 int DoubleTableModel::rowCount( const QModelIndex & /*parent*/ ) const
 {
-  return row; 
+  return row;
 }
 
 QVariant DoubleTableModel::data( const QModelIndex & index, int role ) const

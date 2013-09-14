@@ -2,7 +2,7 @@
                           qstatusmodel.h  -  description
                              -------------------
 
-    begin                : Sat Aug 17 2002 
+    begin                : Sat Aug 17 2002
     copyright            : (C) 2002-2013 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/

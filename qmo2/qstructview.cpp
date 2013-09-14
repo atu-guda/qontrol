@@ -27,15 +27,15 @@
 #include "qrunview.h"
 
 
-  
+
 QStructView::QStructView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
             : QWidget( parent )
 {
   doc = adoc; mainview = mview;
-  model = mainview->getModel(); 
+  model = mainview->getModel();
   devTp = 0;
-  // grid_sz = 40; 
-  grid_sz = 46; 
+  // grid_sz = 40;
+  grid_sz = 46;
   lm = tm = 4;  obj_sz = 32;
   // setBackgroundMode( Qt::NoBackground );
   setMaximumSize( grid_sz*MODEL_MX, grid_sz*MODEL_MY );
@@ -76,7 +76,7 @@ QSize QStructView::getElemsBound() const
   if( mx > pas.width() ) pas.setWidth( mx );
   if( my > pas.height() ) pas.setHeight( my );
   return pas;
-}  
+}
 
 QSize QStructView::sizeHint() const
 {
@@ -95,7 +95,7 @@ void QStructView::update()
 {
   resize( getElemsBound() );
   QWidget::update();
-}  
+}
 
 
 void QStructView::paintEvent( QPaintEvent * /*pe*/ )
@@ -122,7 +122,7 @@ void QStructView::printAll()
     devTp = 1;
     pr->setFullPage( false );
     pr->newPage();
-    QPainter p( pr ); 
+    QPainter p( pr );
     drawAll( p );
     p.end();
   };
@@ -132,10 +132,10 @@ bool QStructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
 {
   if( ! ob )
     return false;
-  
+
   ei.name = ob->objectName();
   ei.type = ob->getType();
-  ei.vis_x  = ei.vis_y =  ei.ord = ei.locked = ei.onlyFirst 
+  ei.vis_x  = ei.vis_y =  ei.ord = ei.locked = ei.onlyFirst
     =  ei.onlyLast = ei.flip = ei.noIcon = 0;
 
   ob->getData( "vis_x", &ei.vis_x );
@@ -160,10 +160,10 @@ bool QStructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   ei.pre_dst_x = ei.li_dst_x + el_marg * ei.flip_factor;
   ei.li_src_x = ei.xc - ei.flip_factor*(obj_sz/2);
   ei.li_pdst_y = ei.yc + (obj_sz/2);
-  
+
   ei.pis = ob->getElemT<const InputParams*>("pis");
   ei.n_pinp = ei.pis->getNumObj();
-  
+
   return true;
 }
 
@@ -185,7 +185,7 @@ void QStructView::drawAll( QPainter &p )
   p.setFont( strf );
   const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
   h = height(); w = width(); nh = 1 + h / grid_sz; nw = 1 + w / grid_sz;
-  el_marg = (grid_sz-obj_sz)/2; 
+  el_marg = (grid_sz-obj_sz)/2;
   sel_x = mainview->getSelX();
   sel_y = mainview->getSelY();
   //sel = mainview->getSel();
@@ -215,7 +215,7 @@ void QStructView::drawAll( QPainter &p )
   ElemInfo ei, sei;
   for( elnu=0; elnu<n_el; elnu++ ) {
     ob = model->getMiso( elnu );
-    if( !ob ) 
+    if( !ob )
       continue;
     if( ! fill_elmInfo( ob, ei ) )
       continue;
@@ -230,11 +230,11 @@ void QStructView::drawAll( QPainter &p )
       p.drawRect( ei.xs, ei.ys, obj_sz, obj_sz );
     } else {
       QString iconName = QString( ":icons/elm_" )
-	+ QString(ob->getType()).toLower() 
-	+ ".png";
+        + QString(ob->getType()).toLower()
+        + ".png";
       QIcon el_ico(iconName);
       el_ico.paint( &p, ei.xs, ei.ys, obj_sz, obj_sz );
-      
+
       // tmp: debug: to see sizes
       //p.setPen( QPen(Qt::black,1) );  p.setBrush( Qt::NoBrush );
       //p.drawRect( ei.xs, ei.ys, obj_sz, obj_sz );
@@ -248,23 +248,23 @@ void QStructView::drawAll( QPainter &p )
       p.drawRect( ei.xs + 4, ei.ys + 14, 6, 6 );
     if( ei.onlyLast )
       p.drawRect( ei.xs + 20, ei.ys +14, 6, 6 );
-    
+
     // order mark
     if( psett->showord ) {
       if( s_icons && ! ei.noIcon )  {
-	p.setPen( Qt::NoPen ); p.setBrush( QColor(240,240,255) );
-	p.drawRect( ei.xs, ei.ys, 31,11);
+        p.setPen( Qt::NoPen ); p.setBrush( QColor(240,240,255) );
+        p.drawRect( ei.xs, ei.ys, 31,11);
       };
       p.setPen( Qt::black );
       p.drawText( ei.xs + 2, ei.ys + 10, QSN(ei.ord) );
       line_busy++;
     };
     // --------------------- draw element name
-    if( psett->shownames || ei.noIcon || !s_icons ) { 
+    if( psett->shownames || ei.noIcon || !s_icons ) {
       st_y = ei.ys + line_busy*10;
       if( s_icons && ! ei.noIcon )  {
-	p.setPen( Qt::NoPen ); p.setBrush( QColor(255,255,225) );
-	p.drawRect( ei.xs, st_y, 31,11);
+        p.setPen( Qt::NoPen ); p.setBrush( QColor(255,255,225) );
+        p.drawRect( ei.xs, st_y, 31,11);
       };
       p.setPen( Qt::black );
       p.drawText( ei.xs + 2, st_y+10, ei.name );
@@ -272,22 +272,22 @@ void QStructView::drawAll( QPainter &p )
     };
     // TODO: vector icon here
     p.setBrush( Qt::NoBrush ); p.setPen( QPen(Qt::black,1) );
-    st_y = ei.ys + line_busy*10; 
+    st_y = ei.ys + line_busy*10;
 
-    
+
     if( elnu == mark ) { // red rect around marked element
       p.setBrush( Qt::NoBrush ); p.setPen( Qt::red );
       p.drawRect( ei.xs0, ei.ys0, grid_sz, grid_sz );
     };
 
-    
+
     if( ! psett->showLinks ) {
       continue;
     }
-    
+
     //  input marks
     int in_sep_sz = obj_sz/(ei.n_inp+1);
-    p.setFont( smlf ); 
+    p.setFont( smlf );
     p.setBrush( Qt::NoBrush );
 
     // ordinary inputs
@@ -298,7 +298,7 @@ void QStructView::drawAll( QPainter &p )
       ltype_t lt = in->getLinkType();
       const TDataSet* sobj = in->getSourceObj();
       li_dst_y = ei.ys + (i_in+1)*in_sep_sz;
-      QString lbl; 
+      QString lbl;
       line_width = 1, x_shift = 0, y_shift = 0;
       in->getData("line_w", &line_width );
       in->getData("x_shift", &x_shift );
@@ -318,21 +318,21 @@ void QStructView::drawAll( QPainter &p )
       p.drawLine( ei.li_dst_x, li_dst_y, x_vert, li_dst_y );
       p.drawLine( ei.li_dst_x +  3*ei.flip_factor, li_dst_y-2, ei.li_dst_x, li_dst_y  );
       p.drawLine( ei.li_dst_x +  3*ei.flip_factor, li_dst_y+2, ei.li_dst_x, li_dst_y  );
-      
+
       in->getData("label", lbl );
       if( ! lbl.isEmpty() ) {
         p.drawText( x_vert-2*ei.flip_factor, li_dst_y-2, lbl );
       }
-      
+
       if( lt == LinkBad ) {
         p.setPen( QPen( Qt::red, 2 ) );
-        p.drawLine( x_vert-el_marg/3, li_dst_y-el_marg/3, 
+        p.drawLine( x_vert-el_marg/3, li_dst_y-el_marg/3,
                     x_vert+el_marg/3, li_dst_y+el_marg/3 );
-        p.drawLine( x_vert-el_marg/3, li_dst_y+el_marg/3, 
+        p.drawLine( x_vert-el_marg/3, li_dst_y+el_marg/3,
                     x_vert+el_marg/3, li_dst_y-el_marg/3 );
         continue;
       }
-      
+
       if( lt == LinkSpec ) {
         p.setPen( QPen( Qt::magenta, 2 ) );
         p.drawRect( x_vert-el_marg/4, li_dst_y-el_marg/4, el_marg/2, el_marg/2 );
@@ -366,13 +366,13 @@ void QStructView::drawAll( QPainter &p )
         QChar qshc = (so.right(1))[0];
         char shc = qshc.toLatin1();
         li_src_y += 2 + ( shc  & 0x07 );
-        p.drawLine( sei.li_src_x + el_marg*sei.flip_factor/2, li_src_y, 
+        p.drawLine( sei.li_src_x + el_marg*sei.flip_factor/2, li_src_y,
                     sei.li_src_x + el_marg*sei.flip_factor/2, li_src_y+3 );
       }
 
-      p.drawLine( sei.li_src_x, li_src_y, 
+      p.drawLine( sei.li_src_x, li_src_y,
                   sei.li_src_x + el_marg*sei.flip_factor, li_src_y );
-      
+
       in->getData( "onlyLabel", &only_lbl );
       if( only_lbl ) {
         if( ! lbl.isEmpty() ) {
@@ -380,7 +380,7 @@ void QStructView::drawAll( QPainter &p )
         }
         continue;
       }
-      
+
       p.drawLine( x_vert, li_dst_y, x_vert, li_src_y ); // vertical part
       p.drawLine( x_vert, li_src_y, sei.li_src_x, li_src_y); // horiz. from src
 
@@ -394,7 +394,7 @@ void QStructView::drawAll( QPainter &p )
       const InputParam* ips = qobject_cast<const InputParam*>( c );
       if( ! ips )
         continue;
-      
+
       line_width = 2, x_shift = 0, y_shift = 0;
       ips->getData("line_w", &line_width );
       ips->getData("x_shift", &x_shift );
@@ -404,7 +404,7 @@ void QStructView::drawAll( QPainter &p )
       } else {
         p.setPen( QPen( Qt::black, line_width ) );
       }
-      
+
       int li_pdst_x = ei.xs + (1+i_in) * in_sep_sz;
       QPoint p_bott { li_pdst_x, ei.li_pdst_y+el_marg };
       QPoint p_dst  { li_pdst_x, ei.li_pdst_y };
@@ -413,27 +413,27 @@ void QStructView::drawAll( QPainter &p )
       p.drawLine( p_bott, p_dst );
       p.drawLine( p_dst+p_crp, p_dst );
       p.drawLine( p_dst+p_crm, p_dst );
-      
+
       ltype_t lt = ips->getLinkType();
       if( lt == LinkNone ) {
         // unlike signal input, must be unlikly
         p.drawEllipse( p_bott, el_marg/3, el_marg/3 );
         continue;
       }
-      
+
       if( lt == LinkBad ) {
         p.setPen( QPen( Qt::red, 2 ) );
         p.drawLine( p_bott+p_crp, p_bott-p_crp );
         p.drawLine( p_bott+p_crm, p_bott-p_crm );
         continue;
       }
-      
+
       if( lt == LinkSpec ) {
         p.setPen( QPen( Qt::magenta, 2 ) );
         p.drawRect( QRect( p_bott, QSize(el_marg/2, el_marg/2) ) );
         continue;
       }
-      
+
       // must be ordinary link
       const TDataSet* sobj = ips->getSourceObj();
       const TMiso *so_obj = nullptr;
@@ -442,15 +442,15 @@ void QStructView::drawAll( QPainter &p )
         p.drawEllipse( p_bott, el_marg, el_marg );
         continue;
       }
-      
+
       fill_elmInfo( so_obj, sei );
-      
+
       li_src_y = sei.yc - y_shift;
 
       // TODO: label
 
       int x_vert = sei.li_src_x - ( x_shift + el_marg ) * sei.flip_factor;
-      
+
       p.drawLine( sei.li_src_x, li_src_y, x_vert, li_src_y ); // from src
       p.drawLine( x_vert, ei.li_pdst_y+el_marg,  x_vert, li_src_y ); // vert line
       p.drawLine( p_bott, QPoint( x_vert, ei.li_pdst_y+el_marg ) );  // to dst.bottom
@@ -462,22 +462,22 @@ void QStructView::drawAll( QPainter &p )
 
   p.setFont( smlf );
   n_out = model->getNOutArr(); p.setPen( Qt::black );
- 
+
   // -------------- output marks
   for( out_nu=0; out_nu < n_out; out_nu++ ) {
     arr = model->getOutArr( out_nu );
-    if( ! arr ) 
+    if( ! arr )
       continue;
     src_name = ""; out_tp = -1;
     arr->getData( "name", src_name );
     arr->getData( "type", &out_tp );
-    ltype_t lt  = LinkBad; 
+    ltype_t lt  = LinkBad;
     const TDataSet *lob = nullptr;
     const double *fp = model->getDoublePtr( src_name, &lt, &lob );
     if( !fp || lt != LinkElm || !lob )
       continue;
     const TMiso *src_obj = qobject_cast<const TMiso*>(lob);
-    if( ! src_obj ) 
+    if( ! src_obj )
       continue;
     fill_elmInfo( src_obj, sei );
 
@@ -499,12 +499,12 @@ void QStructView::drawAll( QPainter &p )
     }
     p.drawText( omark_x+2, omark_y+9,  QSN( out_nu ) );
   }; // end loop on outputs
-  
+
   // ----------- draw selection
   if( devTp != 1 ) {
     QPainter::CompositionMode old_op = p.compositionMode();
     p.setCompositionMode( QPainter::RasterOp_SourceXorDestination );
-    p.setPen( Qt::NoPen ); 
+    p.setPen( Qt::NoPen );
     p.setBrush( QColor(64,64,32) );
     p.drawRect( lm + sel_x*grid_sz, tm + sel_y*grid_sz, grid_sz, grid_sz );
     p.setCompositionMode( old_op );
@@ -522,7 +522,7 @@ void QStructView::mousePressEvent( QMouseEvent *me )
   double outval = 0;
   QString title;
   h = height(); w = width(); nh = h / grid_sz - 1; nw = w / grid_sz - 1;
-  x = me->x(); y = me->y(); 
+  x = me->x(); y = me->y();
   ex = ( x - lm ) / grid_sz; ey = ( y - tm ) / grid_sz;
   if( ex >= 0 && ex <= nw && ey >=0 && ey <= nh ) {
     mainview->changeSel( ex, ey, 0 );
@@ -531,7 +531,7 @@ void QStructView::mousePressEvent( QMouseEvent *me )
       elmname = ob->objectName();
       ob->getData( "out0", &outval );
       if( elmname.isEmpty() )
-	elmname = "?unknown?";
+        elmname = "?unknown?";
     };
     title = elmname;
     if( model->getState() > 1 ) {
@@ -539,42 +539,42 @@ void QStructView::mousePressEvent( QMouseEvent *me )
     }
     switch( me->button() ) {
       case Qt::LeftButton:  break;
-      case Qt::RightButton:  
-	    menu = new QMenu( this ); 
-	    QAction *act;
-	    if( ob != 0 ) {
-	      // menu->setTitle( title );
-	      (void) menu->addAction( title ); // only a title
-	      menu->addSeparator();
-	      act = menu->addAction( "&Edit" );
-	      connect( act, SIGNAL( activated() ), mainview, SLOT(editElm() ) );
-	      act = menu->addAction( "&Delete" );
-	      connect( act, SIGNAL( activated() ), mainview, SLOT(delElm() ) );
-	      menu->addSeparator();
-	      act = menu->addAction( "&Link" );
-	      connect( act, SIGNAL( activated() ), mainview, SLOT(qlinkElm() ) );
-	      act = menu->addAction( "&Reorder" );
-	      connect( act, SIGNAL( activated() ), mainview, SLOT(ordElm() ) );
-	      menu->addSeparator();
-	    } else {
-	      act = menu->addAction( "&New" );
-	      connect( act, SIGNAL( activated() ), mainview, SLOT(newElm() ) );
-	      if( mainview->getMark() >= 0 ) {
-		act = menu->addAction( "&Move to" );
-		connect( act, SIGNAL( activated() ), mainview, SLOT(moveElm() ) );
+      case Qt::RightButton:
+            menu = new QMenu( this );
+            QAction *act;
+            if( ob != 0 ) {
+              // menu->setTitle( title );
+              (void) menu->addAction( title ); // only a title
+              menu->addSeparator();
+              act = menu->addAction( "&Edit" );
+              connect( act, SIGNAL( activated() ), mainview, SLOT(editElm() ) );
+              act = menu->addAction( "&Delete" );
+              connect( act, SIGNAL( activated() ), mainview, SLOT(delElm() ) );
+              menu->addSeparator();
+              act = menu->addAction( "&Link" );
+              connect( act, SIGNAL( activated() ), mainview, SLOT(qlinkElm() ) );
+              act = menu->addAction( "&Reorder" );
+              connect( act, SIGNAL( activated() ), mainview, SLOT(ordElm() ) );
+              menu->addSeparator();
+            } else {
+              act = menu->addAction( "&New" );
+              connect( act, SIGNAL( activated() ), mainview, SLOT(newElm() ) );
+              if( mainview->getMark() >= 0 ) {
+                act = menu->addAction( "&Move to" );
+                connect( act, SIGNAL( activated() ), mainview, SLOT(moveElm() ) );
               }
-	    };
-	    menu->addSeparator();
-	    act = menu->addAction( "New outp&ut" );
-	    connect( act, SIGNAL( activated() ), mainview, SLOT(newOut() ) );
-	    menu->addSeparator();
-	    act = menu->addAction( "Edit model" );
-	    connect( act, SIGNAL( activated() ), mainview, SLOT(editModel() ) );
-	    act = menu->addAction( "Print model" );
-	    connect( act, SIGNAL( activated() ), mainview, SLOT(print() ) );
-	    
-	    menu->exec( mapToGlobal(QPoint( x, y )) );
-	    delete menu;
+            };
+            menu->addSeparator();
+            act = menu->addAction( "New outp&ut" );
+            connect( act, SIGNAL( activated() ), mainview, SLOT(newOut() ) );
+            menu->addSeparator();
+            act = menu->addAction( "Edit model" );
+            connect( act, SIGNAL( activated() ), mainview, SLOT(editModel() ) );
+            act = menu->addAction( "Print model" );
+            connect( act, SIGNAL( activated() ), mainview, SLOT(print() ) );
+
+            menu->exec( mapToGlobal(QPoint( x, y )) );
+            delete menu;
             break;
       case Qt::MidButton:   mainview->editElm();  break;
       default: break;// none
@@ -591,12 +591,12 @@ void QStructView::mouseDoubleClickEvent( QMouseEvent * /*me*/ )
 void QStructView::keyPressEvent( QKeyEvent *ke )
 {
   int k, /*h, w, nh, nw,*/ st, btnShift, /*btnCtrl,*/ xy_delta;
-  k = ke->key(); st = ke->modifiers(); 
+  k = ke->key(); st = ke->modifiers();
   btnShift = ( ( st & Qt::ShiftModifier ) != 0 );
   // btnCtrl = ( ( st & Qt::ControlModifier ) != 0 );
-  // h = height(); 
-  // w = width(); 
-  // nh = h / grid_sz - 1; 
+  // h = height();
+  // w = width();
+  // nh = h / grid_sz - 1;
   // nw = w / grid_sz - 1;
   xy_delta = btnShift ? 5 : 1;
   switch( k ) {

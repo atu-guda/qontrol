@@ -45,7 +45,7 @@ double TExtrLatch::f( double t )
   if( useLocal && fuzzy > 0 && isStart == 0 ) { // TODO: more robust need
     u = ( uc + fuzzy * u_old + 0.1 * fuzzy * u_old2 ) / ( 1 + 1.1 * fuzzy );
   } else {
-    u = uc; 
+    u = uc;
   };
   ua = fabs( u );
   if( t < tStart )                 // time before work
@@ -62,7 +62,7 @@ double TExtrLatch::f( double t )
     u_min = u_max = u; u_abs = ua; t_ex = t_min = t_max = t_abs = t;
     if( outT ) return t;
     switch( (int)type ) {
-      case 0: u_ex = (double)u_max; break; 
+      case 0: u_ex = (double)u_max; break;
       case 1: u_ex = (double)u_min; break;
       case 2: u_ex = (double)u_abs; break;
       case 3: u_ex = (double)u_max; break;
@@ -75,62 +75,62 @@ double TExtrLatch::f( double t )
   if( isStart == 2 ) {
     isStart = 0;
     if( useLocal ) {
-      u_old2 = u_old; u_old = uc; 
+      u_old2 = u_old; u_old = uc;
       return u;
     };
   };
   if( !useLocal ) {
     k = 0;
-    if( u > u_max ) 
+    if( u > u_max )
       { u_max = u; t_max = t; k  = 1; };
-    if( u < u_min ) 
+    if( u < u_min )
       { u_min = u; t_min = t; k |= 2; };
     if( ua > u_abs )
       { u_abs = ua; t_abs = t; k |= 4; };
     if( k & mybits[ type ] ) {
       switch( (int)type ) {
-	case 0: u_ex = (double)u_max; t_ex = (double)t_max; break;
-	case 1: u_ex = (double)u_min; t_ex = (double)t_min; break;
-	case 2: u_ex = (double)u_abs; t_ex = (double)t_abs; break;
-	case 3: u_ex = 0.5 * ( u_min + u_max ); 
-		t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
-	case 4: u_ex = 0.5 * ( (double)u_max - (double)u_min );
-		t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
-	default: u_ex = 0; t_ex = t;
+        case 0: u_ex = (double)u_max; t_ex = (double)t_max; break;
+        case 1: u_ex = (double)u_min; t_ex = (double)t_min; break;
+        case 2: u_ex = (double)u_abs; t_ex = (double)t_abs; break;
+        case 3: u_ex = 0.5 * ( u_min + u_max );
+                t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
+        case 4: u_ex = 0.5 * ( (double)u_max - (double)u_min );
+                t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
+        default: u_ex = 0; t_ex = t;
       };
     } else {
       if( useFirst )
-	wasExtr = 1;
+        wasExtr = 1;
     };
   } else {  // -------------------------- useLocal
     k = 0;
     if( u < u_old && u_old >= u_old2 ) {
       u_max = u_old; t_max = t_old; k = 1;
       if( u_max > u_abs ) {
-	u_abs = (double)u_max; t_abs = (double)t_max; k |= 4;
+        u_abs = (double)u_max; t_abs = (double)t_max; k |= 4;
       };
-    }; 
+    };
     if( u > u_old && u_old <= u_old2 ) {
       u_min = u_old; t_min = t_old; k |= 2;
       if( fabs( u_min ) > u_abs ) {
-	u_abs = fabs( u_min ); k |= 4;
+        u_abs = fabs( u_min ); k |= 4;
       };
-    }; 
+    };
     if( k & mybits[ type ] ) {
       switch( (int)type ) {
-	case 0: u_ex = (double)u_max; t_ex = (double)t_max; break;
-	case 1: u_ex = (double)u_min; t_ex = (double)t_min; break;
-	case 2: u_ex = (double)u_abs; t_ex = (double)t_abs; break;
-	case 3: u_ex = 0.5 * ( (double)u_max + u_min );
-		t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
-	case 4: u_ex = 0.5 * ( (double)u_max - u_min );
-		t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
-	default: u_ex = 0; t_ex = t; break;
+        case 0: u_ex = (double)u_max; t_ex = (double)t_max; break;
+        case 1: u_ex = (double)u_min; t_ex = (double)t_min; break;
+        case 2: u_ex = (double)u_abs; t_ex = (double)t_abs; break;
+        case 3: u_ex = 0.5 * ( (double)u_max + u_min );
+                t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
+        case 4: u_ex = 0.5 * ( (double)u_max - u_min );
+                t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
+        default: u_ex = 0; t_ex = t; break;
       };
     };
   };
 
-  v = outT ? t_ex : u_ex; 
+  v = outT ? t_ex : u_ex;
   u_old2 = u_old; u_old = u; t_old = t;
   return v;
 }

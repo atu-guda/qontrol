@@ -12,7 +12,7 @@
 #include "dataset.h"
 
 /** Information about scale: really struct */
-class ScaleData : public TDataSet 
+class ScaleData : public TDataSet
 {
   Q_OBJECT
   public:
@@ -52,7 +52,7 @@ class ScaleData : public TDataSet
    PRM_DOUBLE(rightMar,  efNRC, "Right Margin %", "Value of plot right margin in %", "sep=col\ndef=0.1" );
    PRM_DOUBLE(bottomMar, efNRC, "Bottom Margin %", "Value of plot bottom margin in %", "def=0.1" );
    PRM_DOUBLE(  maxErr,  efNRC, "Max Err", "Maximum plot error in pixels", "def=0.5" );
-  protected: 
+  protected:
    DCL_DEFAULT_STATIC;
 };
 

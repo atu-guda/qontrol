@@ -29,10 +29,10 @@ CTOR(TPid,TMiso)
 }
 
 
-int TPid::do_preRun( int /*run_tp*/, int /*an*/, 
+int TPid::do_preRun( int /*run_tp*/, int /*an*/,
                      int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  if( tdt < 1e-100 ) 
+  if( tdt < 1e-100 )
     return 1;
   tdt2 = tdt * tdt;
   return 0;
@@ -69,7 +69,7 @@ double TPid::f( double t )
   if( aver )
     v /= t;
   u_old2 = u_old; u_old = uc;
-  return v; 
+  return v;
 }
 
 DEFAULT_FUNCS_REG(TPid)

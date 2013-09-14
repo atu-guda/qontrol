@@ -49,7 +49,7 @@ int QString2IntEx( const QString &s, bool *ok )
     *ok = r_ok;
   return v;
 }
-      
+
 
 
 double get_real_time(void)
@@ -59,7 +59,7 @@ double get_real_time(void)
   gettimeofday( &tv, 0 );
   t = (double)( tv.tv_sec ) + 1e-6 * (double)( tv.tv_usec );
   return t;
-}  
+}
 
 NameType splitName( const QString &name, QString &first, QString &rest, int &idx )
 {
@@ -121,7 +121,7 @@ double deadLine( double x, double x0 )
 
 double limitLine( double x, double x0 )
 {
-  if( x0 < x0*(numeric_limits<double>::min()) ) 
+  if( x0 < x0*(numeric_limits<double>::min()) )
     return 0;
   if( x > x0 )
     return 1;
@@ -142,7 +142,7 @@ double deadLimitLine( double x, double x0, double x1, double a )
     return ( x + x0 ) * a;
   return 0;
 }
-  
+
 
 double triangleLine( double x, double x0 )
 {
@@ -150,7 +150,7 @@ double triangleLine( double x, double x0 )
   if( x > x0 || x < -x0 )
     return 0;
   if( x < 0 )
-    x = -x;  
+    x = -x;
   return ( x0 - x ) / x0;
 }
 
@@ -220,7 +220,7 @@ int findNearMin( int n, const double *a, int sidx )
   if( n < 1 ) return -1;
   if( n == 1 || sidx < 0 || sidx >= n )
     return 0;
-  
+
   dm = a[sidx];
   if( sidx == 0 ) {      // search from left point
     searchRight = 1;
@@ -242,7 +242,7 @@ int findNearMin( int n, const double *a, int sidx )
     };
     return n-1;
   };
-  
+
   for( i=sidx-1; i>=0; i-- ) {
     if( a[i] > dm )
       return i+1;
@@ -250,7 +250,7 @@ int findNearMin( int n, const double *a, int sidx )
   };
   return 0;
 }
-  
+
 
 int findNearMax( int n, const double *a, int sidx )
 {
@@ -259,7 +259,7 @@ int findNearMax( int n, const double *a, int sidx )
   if( n < 1 ) return -1;
   if( n == 1 || sidx < 0 || sidx >= n )
     return 0;
-  
+
   dm = a[sidx];
   if( sidx == 0 ) {      // search from left point
     searchRight = 1;
@@ -281,7 +281,7 @@ int findNearMax( int n, const double *a, int sidx )
     };
     return n-1;
   };
-  
+
   for( i=sidx-1; i>=0; i-- ) {
     if( a[i] < dm )
       return i+1;
@@ -327,7 +327,7 @@ int dumpDatas( const char *fn, const GraphInfo *gi, char delim )
   for( j=0; j<gi->col; j++ ) {  // labels row
    os << setw( 18 ) << qPrintable( gi->label[j] ) << delim;
   };
-  
+
   int nr = gi->row, nc = gi->col;
   os << '\n';
   // TODO: unmagic, config
@@ -345,7 +345,7 @@ int dumpDatas( const char *fn, const GraphInfo *gi, char delim )
 
 
 // TODO: use structure for gnuplot options, call gnuplot, template file
-int gnuplotDatas( int otp, const GraphInfo *gi, 
+int gnuplotDatas( int otp, const GraphInfo *gi,
      const char *fn, const char *eps_fn, const char *dat_fn )
 {
   ofstream os, osd;
@@ -358,7 +358,7 @@ int gnuplotDatas( int otp, const GraphInfo *gi,
   os << "# vim: ft=gnuplot\n";
   os << "set terminal ";
   if( otp ) {
-    os << "postscript eps enhanced\nset output \"" << eps_fn << "\"\n"; 
+    os << "postscript eps enhanced\nset output \"" << eps_fn << "\"\n";
   } else {
     os << "x11\n";
   };
@@ -419,13 +419,13 @@ int gnuplotDatas( int otp, const GraphInfo *gi,
 }
 
 
-double perpLen( double xs, double ys, double xe, double ye, 
+double perpLen( double xs, double ys, double xe, double ye,
                 double xp, double yp )
 {
   double p, r1, xf, yf;
   xe -= xs; ye -= ys; xp -= xs; yp -= ys;
   r1 = xe * xe + ye * ye;
-  if( r1 == 0 ) 
+  if( r1 == 0 )
     return 0;
   xf = xe * ( xe * xp + ye * yp ) / r1;
   yf = ye * ( xe * xp + ye * yp ) / r1;
@@ -458,9 +458,9 @@ void TCircBuf::add( double a )
   if( nf >= nb )
     su -= d[s];
   d[s++] = a; su += a;
-  if( s >= nb ) 
+  if( s >= nb )
     s = 0;
-  if( nf < nb )  
+  if( nf < nb )
     nf++;
   ni++;
   if( ni > 5000 )
@@ -472,7 +472,7 @@ double TCircBuf::operator[]( int i )
   int j;
   if( i < 0 || i >= nf ) return 0;
   j = s - i - 1;
-  if( j < 0 ) 
+  if( j < 0 )
     j += nb;
   return d[j];
 }
@@ -481,7 +481,7 @@ int TCircBuf::getN(void)
 {
   return nf;
 }
-  
+
 double TCircBuf::sum( int force )
 {
   if( force ) {

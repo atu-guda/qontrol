@@ -28,11 +28,11 @@ STD_CLASSINFO(TFourier,clpElem);
 
 CTOR(TFourier,TMiso)
 {
-  tp = 2 * M_PI / omega; 
+  tp = 2 * M_PI / omega;
 }
 
 
-int TFourier::do_preRun( int /*run_tp*/, int /*an*/, 
+int TFourier::do_preRun( int /*run_tp*/, int /*an*/,
                          int /*anx*/, int /*any*/, double /*adt*/ )
 {
   aa.resize( ng+2 );  bb.resize( ng+2 );  am.resize( ng+2 );
@@ -54,7 +54,7 @@ int TFourier::do_endLoop()
   int i, j, nx;
   TOutArr *arra, *arrb, *arram, *arrom, *arrx, *arry;
   double v, vx;
-  
+
   arra = model->getOutArr( a_oname );// ---- fill a,b,am output arrays
   if( arra ) {
     arra->alloc( ng+1, 1 );
@@ -80,18 +80,18 @@ int TFourier::do_endLoop()
       arrom->push_val( omega * i, 10000 ); // ignore level
   };
 
-  if( ! useFill ) 
+  if( ! useFill )
     return 0;
   arrx = model->getOutArr( x_oname ); // -- fill compare out array
   arry = model->getOutArr( y_oname );
-  if( !arrx || !arry ) 
+  if( !arrx || !arry )
     return 1;
   const dvector *xdat = arrx->getArray();
   nx = -1;
   arrx->getData( "n", &nx );
-  if( xdat == 0 || nx < 2 ) 
+  if( xdat == 0 || nx < 2 )
     return 1;
-  arry->alloc( nx, 1 ); 
+  arry->alloc( nx, 1 );
   for( i=0; i<nx; i++ ) {
     v = 0; vx = omega * (*xdat)[i];
     for( j=0; j<=ng; j++ )
@@ -123,12 +123,12 @@ double TFourier::f( double t )
     };
     s_x2 /= nn; ampl = sqrt( ampl );
     a0 = aa[0]; a1 = aa[1];  b1 = bb[1]; ampl1 = am[1];
-    phi = atan2( a1, b1 ); 
+    phi = atan2( a1, b1 );
     if( s_x2 > 0 ) {
       qpow = ampl * ampl / s_x2;
       qpow1 = ampl1 * ampl1 / s_x2;
     } else {
-      qpow = qpow1 = 1; // no source - quality max 
+      qpow = qpow1 = 1; // no source - quality max
     };
   };
   ii++;
@@ -138,17 +138,17 @@ double TFourier::f( double t )
 void TFourier::initVars(void)
 {
   double t_st, t_en, tt, dt;
-  tp = 2 * M_PI / omega; 
+  tp = 2 * M_PI / omega;
   np = int( tp / tdt );
   tt = 1; // safe value
   par->getData( "tt", &tt );
   t_st = 0; t_en = tt;
-  if( t0 > 0 && t0 < tt-tp ) 
+  if( t0 > 0 && t0 < tt-tp )
     t_st = t0;
-  if( t1 > tp && t1 < tt ) 
+  if( t1 > tp && t1 < tt )
     t_en = t1;
   dt = t_en - t_st; nper = int( dt / tp );
-  n_st = int( t_st / tdt ); 
+  n_st = int( t_st / tdt );
   if( useOptim ) {
     dt = nper * tp;
   };

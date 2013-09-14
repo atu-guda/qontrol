@@ -27,7 +27,7 @@ const char* TOutArr::helpstr = "<H1>TOutArr</H1>\n"
 
 STD_CLASSINFO(TOutArr,clpSpecial);
 
-CTOR(TOutArr,TDataSet) 
+CTOR(TOutArr,TDataSet)
 {
 }
 
@@ -49,9 +49,9 @@ int TOutArr::alloc( int sz, int a_ny )
     return 0;
   };
   ny = a_ny;
-  if( sz < 1 ) sz = 1; 
+  if( sz < 1 ) sz = 1;
   if( ny < 1 ) ny = 1;
-  arr.resize( sz ); 
+  arr.resize( sz );
   arrsize = sz; n = 0; dmin = 0; dmax = 1; cnq = 0;
   so = par->getSchemeDoublePtr( name );
   if( !so )
@@ -87,12 +87,12 @@ int TOutArr::push_val( double v, int level )
     } else {
       if( v > dmax ) dmax = v;
       if( v < dmin ) dmin = v;
-    };  
-    arr[n] = v;  
-    n++; 
+    };
+    arr[n] = v;
+    n++;
   };
-  cnq++; 
-  if( cnq >= nq ) 
+  cnq++;
+  if( cnq >= nq )
     cnq = 0;
   return n;
 }
@@ -110,12 +110,12 @@ int TOutArr::take_val( int level )
     } else {
       if( v > dmax ) dmax = v;
       if( v < dmin ) dmin = v;
-    };  
-    arr[n] = v;  
-    n++; 
+    };
+    arr[n] = v;
+    n++;
   };
-  cnq++; 
-  if( cnq >= nq ) 
+  cnq++;
+  if( cnq >= nq )
     cnq = 0;
   return n;
 }
@@ -127,7 +127,7 @@ int TOutArr::fillGraphInfo( GraphInfo *gi ) const
   if( gi == 0 )
     return -1;
   gi->row = gi->col = 0; gi->ny = 1;
-  for( i=0; i<7; i++ ) 
+  for( i=0; i<7; i++ )
     gi->label[i] = "";
   gi->title = objectName();
   gi->label[0] = label.cval();
@@ -136,7 +136,7 @@ int TOutArr::fillGraphInfo( GraphInfo *gi ) const
   gi->row = n; gi->col = 1; gi->ny = ny;
   gi->dat[0] = &arr;
   return 0;
-}  
+}
 
 int TOutArr::dump( const char *fn, char delim )
 {

@@ -17,12 +17,12 @@ class HolderData;
 class HolderModel : public QAbstractItemModel {
   Q_OBJECT
  public:
-   HolderModel( TDataSet *a_ds, QObject *a_parent ); 
+   HolderModel( TDataSet *a_ds, QObject *a_parent );
    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const override;
-   virtual QVariant data( const QModelIndex &index, 
+   virtual QVariant data( const QModelIndex &index,
                       int role = Qt::DisplayRole ) const override;
    // virtual bool hasChildren( const QModelIndex &parent = QModelIndex() ) const;
-   virtual QModelIndex index( int row, int column, 
+   virtual QModelIndex index( int row, int column,
                         const QModelIndex &parent = QModelIndex() ) const override;
    virtual QModelIndex parent( const QModelIndex &index ) const override;
    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const override;

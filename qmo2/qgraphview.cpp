@@ -42,38 +42,38 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
   TGraph *gra;
   QString out_name, yname;
   QPainter p( this );
-  
+
   const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
   p.setFont( smlf );
   QFontMetrics fm { smlf };
   ex_sz = fm.width("W") + 4;
   grid_sz = ex_sz + 6;
   fwidth = grid_sz * 3;
-  setFixedWidth( fwidth + 8 ); 
-  
+  setFixedWidth( fwidth + 8 );
+
   p.setPen( Qt::black );
- 
-  if( doc == 0 ) 
+
+  if( doc == 0 )
     return;
   model = doc->getModel();
   if( model == 0 ) return;
-  h = height(); 
+  h = height();
   nh = 1 + h / grid_sz;
   nh += h; // FAKE TODO:
   w = width(); ++w; --w;
   p.setBrush( QColor( 0,128,96 ) );
   p.drawRect( 0, 0, w, h );
-  
+
   n_graph = model->getNGraph();
-  p.setBrush( Qt::yellow ); 
+  p.setBrush( Qt::yellow );
   yname = "y0name";
   for( graph_nu=0; graph_nu < n_graph ; graph_nu++ ) {
     gra = model->getGraph( graph_nu );
-    if( ! gra ) 
+    if( ! gra )
       continue;
     p.setPen( Qt::black );
     p.drawRect( 14, 10 + graph_nu * grid_sz, fwidth-10, ex_sz );
-    p.drawText( grid_sz+1, grid_sz + graph_nu*grid_sz, 
+    p.drawText( grid_sz+1, grid_sz + graph_nu*grid_sz,
                 QSN( graph_nu ) + ":" + gra->objectName() );
   }; // end loop on graphs
 }
@@ -85,8 +85,8 @@ void QGraphView::mousePressEvent( QMouseEvent *me )
   TGraph *gra;
   QString graname( "?bad?" );
   if( model == 0 ) return;
-  h = height(); 
-  w = width(); 
+  h = height();
+  w = width();
   nh = h / grid_sz - 1;
   w+=nh; w-=nh; // TODO: fake
   x = me->x(); y = me->y();
@@ -112,31 +112,31 @@ void QGraphView::mousePressEvent( QMouseEvent *me )
          };
          break;
     case Qt::RightButton:
-         menu = new QMenu( this ); 
+         menu = new QMenu( this );
          QAction *act;
          if( graph_nu >=0 ) {
-	   (void) menu->addAction( graname ); // fake: title
+           (void) menu->addAction( graname ); // fake: title
            menu->addSeparator();
          };
-	 act = menu->addAction( "&New" );
-	 connect( act, SIGNAL( activated() ), mainview, SLOT(newGraph() ) );
+         act = menu->addAction( "&New" );
+         connect( act, SIGNAL( activated() ), mainview, SLOT(newGraph() ) );
          if( graph_nu >=0 ) {
-	   act = menu->addAction( "&Edit" );
-	   connect( act, SIGNAL( activated() ), mainview, SLOT(editGraph() ) );
-	   act = menu->addAction( "&Delete" );
-	   connect( act, SIGNAL( activated() ), mainview, SLOT(delGraph() ) );
+           act = menu->addAction( "&Edit" );
+           connect( act, SIGNAL( activated() ), mainview, SLOT(editGraph() ) );
+           act = menu->addAction( "&Delete" );
+           connect( act, SIGNAL( activated() ), mainview, SLOT(delGraph() ) );
            menu->addSeparator();
-	   act = menu->addAction( "&Show" );
-	   connect( act, SIGNAL( activated() ), mainview, SLOT(showGraph() ) );
-	   act = menu->addAction( "Show D&ata" );
-	   connect( act, SIGNAL( activated() ), mainview, SLOT(showGraphData() ) );
-	   act = menu->addAction( "D&ump" );
-	   connect( act, SIGNAL( activated() ), mainview, SLOT(exportGraphData() ) );
-	   act = menu->addAction( "Gnu&plot" );
-	   connect( act, SIGNAL( activated() ), mainview, SLOT(gnuplotGraph() ) );
+           act = menu->addAction( "&Show" );
+           connect( act, SIGNAL( activated() ), mainview, SLOT(showGraph() ) );
+           act = menu->addAction( "Show D&ata" );
+           connect( act, SIGNAL( activated() ), mainview, SLOT(showGraphData() ) );
+           act = menu->addAction( "D&ump" );
+           connect( act, SIGNAL( activated() ), mainview, SLOT(exportGraphData() ) );
+           act = menu->addAction( "Gnu&plot" );
+           connect( act, SIGNAL( activated() ), mainview, SLOT(gnuplotGraph() ) );
          };
          menu->exec( mapToGlobal(QPoint( x, y )) );
-         delete menu; 
+         delete menu;
          break;
     case Qt::MidButton:
          if( graph_nu >=0 ) {

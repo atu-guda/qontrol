@@ -31,7 +31,7 @@ CTOR(TMultipl,TMiso)
 
 double TMultipl::f( double /* t */ )
 {
-  double v = a; 
+  double v = a;
   if( on0 )
     v *= in_0;
   if( on1 )
@@ -40,7 +40,7 @@ double TMultipl::f( double /* t */ )
     v *= in_2;
   if( on3 )
     v *= in_3;
-  return v; 
+  return v;
 }
 
 DEFAULT_FUNCS_REG(TMultipl)

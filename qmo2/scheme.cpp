@@ -32,8 +32,8 @@ STD_CLASSINFO(Scheme,clpSpecial | clpContainer);
 
 CTOR(Scheme,TDataContainer)
 {
-  allowed_types = "TMiso"; 
-  rtime = t = 0; tdt = t_full / nn; 
+  allowed_types = "TMiso";
+  rtime = t = 0; tdt = t_full / nn;
   m_sqrt2 = sqrt(2.0);
   m_sqrt1_2 = sqrt(0.5);
   one = 1.0;
@@ -55,8 +55,8 @@ int Scheme::startRun( int type )
     return -1;
   if( type < 0 || type > 2 )
     type = 0;
-  reset(); 
-  run_type = type; 
+  reset();
+  run_type = type;
   n1_eff = n2_eff = 1;
   if( run_type > 0 ) n1_eff = nl1;
   if( run_type > 1 ) n2_eff = nl2;
@@ -65,7 +65,7 @@ int Scheme::startRun( int type )
   prm2 = (double)prm2s; prm3 = (double)prm3s;
   rc = preRun( run_type, n1_eff, n2_eff );
   if( rc != 0 ) {
-    end_loop = 1; 
+    end_loop = 1;
     postRun();
     return rc;
   };
@@ -78,8 +78,8 @@ int Scheme::nextSteps( int csteps )
 {
   int i, rc;
   double prm0d { 0.1 }, prm1d {0.1}; // FIXME: read from parent, but not here
-  if( csteps < 1 ) 
-    csteps = 1;  
+  if( csteps < 1 )
+    csteps = 1;
 
   for( i=0; i < csteps && i_tot < n_tot && end_loop == 0; i++, i_tot++ ) {
     prm0 = prm0s + il1 * prm0d; prm1 = prm1s + il2 * prm1d;
@@ -92,11 +92,11 @@ int Scheme::nextSteps( int csteps )
 
     rc = runOneLoop();
     if( rc == 1 )
-      return 0;    
+      return 0;
 
     if( ii >= nn ) {
       allEndLoop();
-      ii = 0; il1++; 
+      ii = 0; il1++;
     };
     if( il1 >= nl1 ) {
       il1 = 0; il2++;
@@ -118,7 +118,7 @@ int Scheme::stopRun( int reason )
   };
   return 0;
 }
-  
+
 int Scheme::runOneLoop(void)
 {
   unsigned long wait_ms;
@@ -129,7 +129,7 @@ int Scheme::runOneLoop(void)
        usleep( wait_ms );
        // return 1;
      };
-  };  
+  };
   IterType itype = IterMid;
 
   if( ii == 0 ) {
@@ -142,11 +142,11 @@ int Scheme::runOneLoop(void)
   for( TMiso* cur_el : v_el ) {
     if( end_loop )
       break;
-     
+
      cur_el->fun( t, itype );  // <============ main action
      ++elnu;
   };  // end element loop;
-  
+
   t += tdt; ii++;
   return 0;
 }
@@ -155,13 +155,13 @@ int Scheme::preRun( int run_tp, int anx, int any )
 {
   int rc;
   tdt = t_full / nn;
-  
+
   state = stateRun;
   for( TMiso *ob : v_el ) {
     if( ob != 0 ) {
       rc = ob->preRun( run_tp, nn, anx, any, tdt );
       if( rc != 0 )
-	return rc;
+        return rc;
     };
   };
   return 0;
@@ -193,7 +193,7 @@ int Scheme::allStartLoop( int acnx, int acny )
 {
   int rc;
   for( TMiso *ob : v_el ) {
-    if( ob == 0 ) 
+    if( ob == 0 )
       continue;
     rc = ob->startLoop( acnx, acny );
     if( rc != 0 )
@@ -205,7 +205,7 @@ int Scheme::allStartLoop( int acnx, int acny )
 void Scheme::allEndLoop()
 {
   for( TMiso *ob : v_el ) {
-    if( ob == nullptr ) 
+    if( ob == nullptr )
       continue;
     ob->endLoop();
   };
@@ -218,7 +218,7 @@ int Scheme::ord2elnu( int aord ) const
   for( unsigned i=0; i<v_ord.size(); i++ ) {
     if( v_ord[i] == aord )
       return i;
-  };	  
+  };
   return -1;
 }
 
@@ -226,7 +226,7 @@ int Scheme::fback( int code, int /* aord */, const QString & /* tdescr */ )
 {
   if( code ) {
     end_loop = code;
-  };    
+  };
   return 0;
 }
 
@@ -242,15 +242,15 @@ int Scheme::xy2elnu( int avis_x, int avis_y )
 {
   int i = 0, ox, oy;
   for( TMiso *ob : v_el ) {
-    if( ob == 0 ) 
+    if( ob == 0 )
       continue;
     ox = oy = -1;
     ob->getData( "vis_x", &ox );
     ob->getData( "vis_y", &oy );
-    if( ox == avis_x && oy == avis_y ) 
+    if( ox == avis_x && oy == avis_y )
       return i;
     ++i;
-  };	  
+  };
   return -1;
 }
 
@@ -263,7 +263,7 @@ TMiso* Scheme::xy2Miso( int avis_x, int avis_y ) const
     ox = oy = -1;
     ob->getData( "vis_x", &ox );
     ob->getData( "vis_y", &oy );
-    if( ox == avis_x && oy == avis_y ) 
+    if( ox == avis_x && oy == avis_y )
       return ob;
   }
   return nullptr;
@@ -294,7 +294,7 @@ TMiso* Scheme::insElem( const QString &cl_name, const QString &ob_name,
   if( !ob )
     return nullptr;
   ob->setData( "ord", aord );
-  ob->setData( "vis_x", avis_x );  
+  ob->setData( "vis_x", avis_x );
   ob->setData( "vis_y", avis_y );
   reset();
   modified |= 1;
@@ -347,7 +347,7 @@ int Scheme::moveElem( int elnu, int newx, int newy )
     if( ob1 == 0 ) continue;
     ob1->getData( "vis_x", &cx ); ob1->getData( "vis_y", &cy );
     if( newx == cx && newy == cy ) return -1;
-  };  
+  };
   ob->setData( "vis_x", newx );
   ob->setData( "vis_y", newy );
   reset();
@@ -359,7 +359,7 @@ int Scheme::linkNames(void)
   int oord;
   QString lname, pname, nname, oname;
   v_el.clear(); v_ord.clear();
-  
+
   for( auto c : children() ) { // find elements of given types: TODO:
     HolderData *ho = qobject_cast<HolderData*>(c);
     if( !ho || !ho->isObject()  )
@@ -367,7 +367,7 @@ int Scheme::linkNames(void)
     TDataSet *ds = qobject_cast<TDataSet*>(ho);
     if( !ds )
       continue;
-    
+
     if( ds->isChildOf( "TMiso" )) {
       v_el.push_back( qobject_cast<TMiso*>(ds) );
       oord = -1;

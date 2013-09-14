@@ -53,22 +53,22 @@ int TCorrAnalysis::do_endLoop()
   int j, nx, nx_c, do_cmp, do_fill;
   const dvector *xdat, *cdat;
   TOutArr *arrx, *arry = 0, *arrc;
-  cmp_ms = cmp_min = cmp_max = cmp_ampl = cmp_tmin = cmp_tmax = se2 = 0; 
+  cmp_ms = cmp_min = cmp_max = cmp_ampl = cmp_tmin = cmp_tmax = se2 = 0;
   do_cmp = do_fill = 0;
   if( ! par )
     return 1;
   QString tmp = x_oname;
   arrx = model->getOutArr( tmp );
-  if( !arrx ) 
+  if( !arrx )
     return 1;
   nx = nx_c = 0;
   arrx->getData( "n", &nx );
   xdat = arrx->getArray();
-  if( xdat == 0 || nx < 2 ) 
+  if( xdat == 0 || nx < 2 )
     return 1;
   cdat = 0;
   tmp = c_oname;
-  arrc = model->getOutArr( tmp );  
+  arrc = model->getOutArr( tmp );
   if( arrc ) {
     cdat = arrc->getArray();
     arrc->getData( "n", &nx_c );
@@ -92,10 +92,10 @@ int TCorrAnalysis::do_endLoop()
       e = (*cdat)[j] - yy;
       se2 += e * e;
       if( e > cmp_max ) {
-        cmp_max = e; cmp_tmax = (*xdat)[j]; 
+        cmp_max = e; cmp_tmax = (*xdat)[j];
       };
       if( e < cmp_min && j > 0 ) {
-	cmp_min = e; cmp_tmin = (*xdat)[j];
+        cmp_min = e; cmp_tmin = (*xdat)[j];
       };
     };
     if( do_fill )
@@ -105,7 +105,7 @@ int TCorrAnalysis::do_endLoop()
     cmp_ms = sqrt( se2 / nx );
     cmp_ampl = 0.5 * ( cmp_max - cmp_min );
   };
-  return 0; 
+  return 0;
 }
 
 
@@ -126,7 +126,7 @@ double TCorrAnalysis::f( double t )
   };
   if( add ) {
     s_x += x; s_x2 += x*x; s_y += y; s_y2 += y*y;
-    s_xy += x * y; 
+    s_xy += x * y;
     n++;
   };
   if( ( ii >= model_nn-1 || ( useCalc && in_calc > 0.1 ))   ) {
@@ -142,7 +142,7 @@ int TCorrAnalysis::getDataFromArrays()
   double x, y;
   const dvector *xdat, *ydat;
   int nx = 0, ny = 0;
-  
+
   reset_data();
   // get x array
   TOutArr *arrx = model->getOutArr( x_in );
@@ -189,7 +189,7 @@ int TCorrAnalysis::calc()
   };
 
   nc = (int)n;
-    
+
   ave_x = s_x / n; ave_y = s_y / n;
   ave_x2 = s_x2 / n; ave_y2 = s_y2 / n;
   dis_x = ( s_x2 * n - s_x * s_x ) / ( double(n) * n );
@@ -201,16 +201,16 @@ int TCorrAnalysis::calc()
   cov = ( n * s_xy - s_x * s_y ) / ( n * n );
   if( dd > 0 ) {
     a = ( n * s_xy - s_x * s_y ) / dd;
-    b = ( s_y * s_x2 - s_x * s_xy ) / dd; 
-    corr = ( n * s_xy - s_x * s_y ) 
-      / sqrt( ( n*s_x2 - s_x*s_x ) * ( n*s_y2 - s_y*s_y ) ); 
+    b = ( s_y * s_x2 - s_x * s_xy ) / dd;
+    corr = ( n * s_xy - s_x * s_y )
+      / sqrt( ( n*s_x2 - s_x*s_x ) * ( n*s_y2 - s_y*s_y ) );
     ok = 1;
   } else {
     a = b = corr = 0; ok = 0;
   };
   return ok;
-}  
-  
+}
+
 
 DEFAULT_FUNCS_REG(TCorrAnalysis)
 

@@ -41,12 +41,12 @@ class TSourceLin : public TMiso  {
    virtual double f( double t ) override;
    /** times of lines, <=0 - end */
    virtual int do_startLoop( int acnx, int acny ) override;
-   
+
    // time 0 means end of sequence - to start
    PRM_DOUBLE_ARR( t_int, efNoRunChange, "t_int", "Time intervals", "N=16\ndef=0\nmin=0\ndefs=1 1 1  1  1 0\nsep=block" );
    PRM_DOUBLE_ARR( vs, efNoRunChange, "vs", "start value",                 "N=16\ndef=0\ndefs=0 0 1 -1 -1 0\nsep=col" );
    PRM_DOUBLE_ARR( ve, efNoRunChange, "ve", "end value",                   "N=16\ndef=0\ndefs=0 1 1 -1  0 0\nsep=col" );
-   
+
    // [0]==3141592 is a label of old data
    PRM_DOUBLE( t_int_0,  efOld, "t_int[0]",  "Time 0 ", "min=0\ndef=31415926" );
    PRM_DOUBLE( t_int_1,  efOld, "t_int[1]",  "Time 1 ", "min=0" );
@@ -64,7 +64,7 @@ class TSourceLin : public TMiso  {
    PRM_DOUBLE( t_int_13, efOld, "t_int[13]", "Time 13", "min=0" );
    PRM_DOUBLE( t_int_14, efOld, "t_int[14]", "Time 14", "min=0" );
    PRM_DOUBLE( t_int_15, efOld, "t_int[15]", "Time 15", "min=0" );
-   // 
+   //
    PRM_DOUBLE(  vs_0, efOld,  "vs[0]",  "Start 0 ", "" );
    PRM_DOUBLE(  vs_1, efOld,  "vs[1]",  "Start 1 ", "" );
    PRM_DOUBLE(  vs_2, efOld,  "vs[2]",  "Start 2 ", "" );
@@ -107,7 +107,7 @@ class TSourceLin : public TMiso  {
    int n_lin, curr_lin;
    /** start time of current line */
    double t_start;
-   
+
    DCL_DEFAULT_STATIC;
 };
 

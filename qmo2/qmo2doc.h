@@ -33,11 +33,11 @@
 // forward declaration of the QMo2 classes
 class QMo2View;
 
-/**	QMo2Doc provides a document object for a document-view model.
+/**        QMo2Doc provides a document object for a document-view model.
   *
-  * The QMo2Doc class provides a document object that can be used 
+  * The QMo2Doc class provides a document object that can be used
   * in conjunction with the classes
-  * QMo2Win and QMo2View to create a document-view model for 
+  * QMo2Win and QMo2View to create a document-view model for
   * MDI (Multiple Document Interface)
   */
 class QMo2Doc : public QObject
@@ -53,15 +53,15 @@ class QMo2Doc : public QObject
   /** returns true, if the requested view is the last view of the document */
   bool isLastView() const;
   /** This method gets called when the user is about to close a frame window.
-      * It checks, if more than one view is connected to the document 
-      * (then the frame can be closed), if pFrame is the last view and the 
-      * document is modified, the user gets asked if he wants to save the 
+      * It checks, if more than one view is connected to the document
+      * (then the frame can be closed), if pFrame is the last view and the
+      * document is modified, the user gets asked if he wants to save the
       * document. Not const: can save document if need.*/
   bool canCloseFrame( QMo2View* pFrame );
-  /** sets the modified flag for the document after a modifying action 
+  /** sets the modified flag for the document after a modifying action
       on the view connected to the document. */
   void setModified( bool _m = true ){ modified=_m; }
-  /** returns if the document is modified or not. Use this to determine 
+  /** returns if the document is modified or not. Use this to determine
       if your document needs saving by the user on closing.*/
   bool isModified() const; // { return modified; };
   /** deletes the document's contents */
@@ -70,7 +70,7 @@ class QMo2Doc : public QObject
   bool newDocument();
   /** loads the XML model document by filename  */
   bool openDocumentXML( const QString &filename );
-  /** saves the XML model document under filename */	
+  /** saves the XML model document under filename */
   bool saveDocumentXML( const QString &filename );
   /** sets the path to the file connected with the document */
   void setPathName( const QString &name );
@@ -96,9 +96,9 @@ class QMo2Doc : public QObject
   void fillRoot(void);
   /** returns nonamed status */
   bool nonamed(void) const { return is_nonamed; }
-      
+
  public slots:
- 	
+
  private:
    void initEngine();
    /** the modified flag of the current document */
@@ -108,7 +108,7 @@ class QMo2Doc : public QObject
    QScriptEngine eng;
  protected:
    TRootData *rootdata = nullptr;
-   TModel *model = nullptr;      
+   TModel *model = nullptr;
    bool is_nonamed = true;
    bool loaded_as_old = true;
 };

@@ -16,8 +16,8 @@
  ***************************************************************************/
 
 #include <time.h>
-#include <cmath> 
-#include "miscfun.h" 
+#include <cmath>
+#include "miscfun.h"
 #include "trossler.h"
 
 const char* TRossler::helpstr = "<H1>TRossler</H1>\n"
@@ -48,7 +48,7 @@ double TRossler::f( double /*t*/ )
   yn = y + tdt * ( x  + a*y )    + in_y;
   zn = z + tdt * ( b + z*(x-c) ) + in_z;
   x = xn; y = yn; z = zn;
-  return x; 
+  return x;
 }
 
 int TRossler::do_startLoop( int /*acnx*/, int /*acny*/ )

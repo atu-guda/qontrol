@@ -22,30 +22,30 @@ ElemFactory& ElemFactory::theFactory()
 }
 
 
-HolderData* ElemFactory::createElem( const QString &a_type, 
+HolderData* ElemFactory::createElem( const QString &a_type,
              ARGS_CTOR_MIN ) const
 {
   auto i = str_class.find( a_type );
   if( i == str_class.end() ) {
-    DBGx( "WARN: fail to find class \"%s\" for object \"%s\"", 
-          qP(a_type), qP(obj_name) ); 
+    DBGx( "WARN: fail to find class \"%s\" for object \"%s\"",
+          qP(a_type), qP(obj_name) );
     return nullptr;
   }
-  
+
   // check for manual abstract elements
   if( i.value()->props & clpPure ) {
-    DBGx( "WARN: refuse to create object \"%s\" with abstract type \"%s\"", 
-          qP(obj_name), qP(a_type) ); 
+    DBGx( "WARN: refuse to create object \"%s\" with abstract type \"%s\"",
+          qP(obj_name), qP(a_type) );
     return nullptr;
   }
 
   // check parent for name
   if( a_parent->getElem(obj_name) ) {
-    DBGx( "WARN: name \"%s\" exists in parent \"%s\"", 
+    DBGx( "WARN: name \"%s\" exists in parent \"%s\"",
 	     qP( obj_name ), qP( a_parent->getFullName() ) );
     return nullptr;
   }
-  
+
   HolderData *ob =  (i.value()->creator)( ARGS_CTOR_NAMES );
   if( !ob ) {
     DBGx( "err: fail to create obj \"%s\" type \"%s\"", qP(obj_name), qP(a_type) );
@@ -61,16 +61,16 @@ bool ElemFactory::registerElemType( const TClassInfo *cl_info )
     return false;
   QString cl_name = L8B( cl_info->className );
   if( str_class.contains( cl_name ) ) {
-    DBG2q( "ERR: reg: class already exists", cl_name ); 
+    DBG2q( "ERR: reg: class already exists", cl_name );
     return false;
   }
   str_class.insert( cl_name, cl_info );
 
   int props = cl_info->props;
   if( ( props & clpData ) && ! ( props & clpPure ) ) {
-    param_names << cl_name; 
+    param_names << cl_name;
   }
-  //DBGx( "dbg:  registered \"%s\" %d", cl_info->className, cl_info->props ); 
+  //DBGx( "dbg:  registered \"%s\" %d", cl_info->className, cl_info->props );
   return true;
 }
 
@@ -101,7 +101,7 @@ const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
 {
   auto i = str_class.find( a_type );
   if( i == str_class.end() ) {
-    DBG2q( "ERR: fail to find class", a_type ); 
+    DBG2q( "ERR: fail to find class", a_type );
     return nullptr;
   }
   return i.value();
@@ -129,7 +129,7 @@ bool ElemFactory::isChildOf( const QString &cl, const QString &par_cl ) const
       // DBGx( "dbg: \"%s\" is child of \"%s\"", qP(cl), qP(par_cl) );
       return true;
     }
-    mob = mob->superClass(); 
+    mob = mob->superClass();
   }
   return false;
 }

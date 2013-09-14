@@ -27,7 +27,7 @@ STD_CLASSINFO(InputParams,clpSpecial | clpContainer);
 CTOR(InputParams,TDataContainer)
 {
   allow_add = allowObject;
-  allowed_types = "InputParam,+SPECIAL"; 
+  allowed_types = "InputParam,+SPECIAL";
 }
 
 InputParams::~InputParams()
@@ -49,7 +49,7 @@ void InputParams::prepare()
     // force only-first of noRunChange target
     if( inp->getTargetFlag() & efNoRunChange )
       flg = 1;
-    
+
     if( flg ) {
       srcs_p.push_back( inp->caddr() );
       targets_p.push_back( inp->targ_addr() );

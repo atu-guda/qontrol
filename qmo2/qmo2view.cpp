@@ -38,14 +38,14 @@ using namespace std;
 
 
 QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
-: QWidget( parent ) 
+: QWidget( parent )
 {
   doc = pDoc;
   QSize p_size = parent->size();
   root = doc->getRoot();
   model = doc->getModel();
   ho_mo = new HolderModel( root, this );
-  sel = mark = -1; sel_x = sel_y = 0; level = 0; 
+  sel = mark = -1; sel_x = sel_y = 0; level = 0;
   selObj = nullptr; markObj = nullptr;
 
   QVBoxLayout *vlay = new QVBoxLayout( this );
@@ -55,7 +55,7 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   setAttribute(Qt::WA_DeleteOnClose);
 
   QSplitter *split = new QSplitter( this );
-  
+
   QGridLayout *grLay = new QGridLayout( left_part );
 
   scrollArea = new QScrollArea( left_part );
@@ -66,13 +66,13 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
   oview = new QOutView( doc, this, left_part );
   gview = new QGraphView( doc, this, left_part );
-  
+
   stam = new QStatusModel( this, this );
 
   grLay->addWidget( scrollArea, 0, 0 );
   grLay->addWidget( oview, 0, 1 );
   grLay->addWidget( gview, 0, 2 );
-  
+
   left_part->setLayout( grLay );
 
   split->addWidget( left_part );
@@ -80,7 +80,7 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   vlay->addWidget( split );
   vlay->addWidget( stam );
   setLayout( vlay );
-  
+
   QSize s_size ( sview->getElemsBound() );
   s_size += QSize( 2 * oview->width() + gview->width(), 0 );
   QSize n_size = s_size.boundedTo( p_size );
@@ -106,13 +106,13 @@ QMo2Doc *QMo2View::getDocument() const
   return doc;
 }
 
-const QString& QMo2View::currentFile() const 
-{ 
-  return doc->pathName(); 
+const QString& QMo2View::currentFile() const
+{
+  return doc->pathName();
 }
 
-QSize QMo2View::svSize() const 
-{ 
+QSize QMo2View::svSize() const
+{
   return scrollArea->size();
 }
 
@@ -126,7 +126,7 @@ void QMo2View::update()
 
 void QMo2View::print()
 {
-  sview->printAll(); 
+  sview->printAll();
 }
 
 void QMo2View::closeEvent( QCloseEvent *e )
@@ -144,43 +144,43 @@ void QMo2View::resizeEvent( QResizeEvent *e )
   QWidget::resizeEvent( e );
 }
 
-int QMo2View::checkState( CheckType ctp ) 
+int QMo2View::checkState( CheckType ctp )
 {
   QString msg;
   int state;
   if( model == 0 || root == 0 ) {
     QMessageBox::critical( this, "Error", "Model or root don't exist!",
-	QMessageBox::Ok, QMessageBox::NoButton );
-    return 0; 
+        QMessageBox::Ok, QMessageBox::NoButton );
+    return 0;
   };
   switch( ctp ) {
     case validCheck: break;
-    case selCheck: 
-		     if( !selObj ) 
-		       msg = "You must select object to do this"; 
-		     break;
+    case selCheck:
+                     if( !selObj )
+                       msg = "You must select object to do this";
+                     break;
     case linkToCheck:
-		     if( !selObj || !markObj || level < 0  || level >=4 )
-		       msg = "You need selected and marked objects to link";
-		     break;
+                     if( !selObj || !markObj || level < 0  || level >=4 )
+                       msg = "You need selected and marked objects to link";
+                     break;
     case noselCheck: if( selObj != nullptr )
-		       msg = "You heed empty sell to do this";
-		     break;
+                       msg = "You heed empty sell to do this";
+                     break;
     case moveCheck: if( selObj != nullptr || !markObj )
-		      msg = "You need marked object and empty cell to move";
-		    break;
+                      msg = "You need marked object and empty cell to move";
+                    break;
     case doneCheck:
-		    state = model->getState();
-		    if( state < stateDone ) {
-		      msg = QString("Nothing to plot: state '%1', not 'Done' !").arg(
-			  getStateString(state)  );
-		    };
-		    break;
+                    state = model->getState();
+                    if( state < stateDone ) {
+                      msg = QString("Nothing to plot: state '%1', not 'Done' !").arg(
+                          getStateString(state)  );
+                    };
+                    break;
     default: msg = "Unknown check?";
   };
   if( ! msg.isEmpty() ) {
     QMessageBox::warning( this, "Warning", msg,
-	QMessageBox::Ok, QMessageBox::NoButton );
+        QMessageBox::Ok, QMessageBox::NoButton );
     return 0;
   };
   return 1;
@@ -205,7 +205,7 @@ void QMo2View::updateViews()
   stam->update();
   // treeView->reset();
   // treeView->update();
-}  
+}
 
 
 void QMo2View::changeSel( int x, int y, int rel )
@@ -217,21 +217,21 @@ void QMo2View::changeSel( int x, int y, int rel )
     case 0: sel_x = x; sel_y = y; break;
     case 1: sel_x += x; sel_y += y; break;
     case 2:
-	    elnu = model->xy2elnu( sel_x, sel_y );
-	    elnu++;
-	    if( elnu >= model->getNMiso() )
-	      elnu = 0;
-	    ob = model->getMiso( elnu );
-	    if( ob == 0 )
-	      break;
-	    ob->getData( "vis_x", &sel_x ); 
-	    ob->getData( "vis_y", &sel_y );
-	    break;
+            elnu = model->xy2elnu( sel_x, sel_y );
+            elnu++;
+            if( elnu >= model->getNMiso() )
+              elnu = 0;
+            ob = model->getMiso( elnu );
+            if( ob == 0 )
+              break;
+            ob->getData( "vis_x", &sel_x );
+            ob->getData( "vis_y", &sel_y );
+            break;
     default: break;
   };
-  if( sel_x >= MODEL_MX ) sel_x = MODEL_MX-1; 
+  if( sel_x >= MODEL_MX ) sel_x = MODEL_MX-1;
   if( sel_y >= MODEL_MY ) sel_y = MODEL_MY-1;
-  if( sel_x < 0 ) sel_x = 0; 
+  if( sel_x < 0 ) sel_x = 0;
   if( sel_y < 0 ) sel_y = 0;
   sel = model->xy2elnu( sel_x, sel_y );
   ob = model->xy2Miso( sel_x, sel_y );
@@ -250,7 +250,7 @@ void QMo2View::changeLevel( int lev )
   if( level < 0 || level >= 64 )
     level = 0;
   emit viewChanged();
-}  
+}
 
 // ==== element related
 
@@ -269,20 +269,20 @@ void QMo2View::newElm()
   delete dia; dia = 0;
   if( rc != QDialog::Accepted ) {
     return;
-  }; 
+  };
   if( rc != QDialog::Accepted || aei.type.isEmpty() )
     return;
   if( ! isGoodName( aei.name )  ) {
-    QMessageBox::critical( this, "Error", 
-       QString("Fail to add Elem: bad object name \"") + aei.name + "\"", 
+    QMessageBox::critical( this, "Error",
+       QString("Fail to add Elem: bad object name \"") + aei.name + "\"",
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
-  
+
   TMiso *ob = model->insElem( aei.type, aei.name, aei.order, sel_x, sel_y );
   if( !ob  ) {
-    QMessageBox::critical( this, "Error", 
-       QString("Fail to add Elem: ") + aei.type + " " + aei.name, 
+    QMessageBox::critical( this, "Error",
+       QString("Fail to add Elem: ") + aei.type + " " + aei.name,
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
@@ -294,12 +294,12 @@ void QMo2View::delElm()
 {
   int k;
   if( ! checkState( selCheck ) )
-    return;  
-  
+    return;
+
   QString oname = selObj->objectName();
 
   k = QMessageBox::information( this, PACKAGE " delete confirmation",
-       QString("Do you really want to delete element \"") 
+       QString("Do you really want to delete element \"")
         + oname + QString("\" ?"),
        "&Yes", "&No", "Help", 0, 1 );
   if( k == 0 ) {
@@ -317,11 +317,11 @@ void QMo2View::delElm()
 void QMo2View::editElm()
 {
   if( ! checkState( selCheck ) )
-    return;  
+    return;
   DataDialog *dia = new DataDialog( *selObj, this );
   int rc = dia->exec();
   delete dia;
-  
+
   if( rc == QDialog::Accepted ) {
     model->reset();
     model->setModified();
@@ -334,7 +334,7 @@ void QMo2View::qlinkElm()
 {
   QString toname;
   if( ! checkState( linkToCheck ) )
-    return;  
+    return;
 
   if( !selObj || !markObj )
     return;
@@ -351,7 +351,7 @@ void QMo2View::qlinkElm()
     return;
   }
   model->reportStructChanged();
-  model->reset(); 
+  model->reset();
   model->setModified();
   emit viewChanged();
 }
@@ -361,7 +361,7 @@ void QMo2View::qplinkElm()
 {
   QString oldlink;
   if( ! checkState( linkToCheck ) )
-    return;  
+    return;
 
   if( !selObj || !markObj  )
     return;
@@ -391,8 +391,8 @@ void QMo2View::qplinkElm()
 void QMo2View::unlinkElm()
 {
   if( ! checkState( selCheck ) ) // no need marked to unlink
-    return;  
-  
+    return;
+
   QString lnkname;
   QString none("");
   int ni = selObj->inputsCount();
@@ -402,14 +402,14 @@ void QMo2View::unlinkElm()
       continue;
     in->setData( "source", none );
   }
-  
+
   InputParams *pis = selObj->getElemT<InputParams*>("pis");
   if( !pis ) {
     DBG2q( "err: no pis object in ", selObj->getFullName() );
     return;
   }
   qDeleteAll( pis->children() );
-  
+
   model->reportStructChanged();
   model->reset(); model->setModified();
   emit viewChanged();
@@ -419,12 +419,12 @@ void QMo2View::lockElm()
 {
   int lck;
   if( ! checkState( selCheck ) )
-    return;  
-  
+    return;
+
   selObj->getData( "locked", &lck );
   lck = !lck;
   selObj->setData( "locked", lck );
-  
+
   model->reset();
   model->setModified();
   emit viewChanged();
@@ -438,13 +438,13 @@ void QMo2View::ordElm()
     return;
   old_ord = -1;
   selObj->getData( "ord", &old_ord );
-  new_ord = QInputDialog::getInt(this, "New element order", 
-      "Input new element order", 
+  new_ord = QInputDialog::getInt(this, "New element order",
+      "Input new element order",
       old_ord, 0, IMAX, 1, &ok );
   if( ok ) {
     model->newOrder( selObj->objectName(), new_ord ); // reset implied
     emit viewChanged();
-  }; 
+  };
 }
 
 void QMo2View::markElm()
@@ -457,7 +457,7 @@ void QMo2View::markElm()
 void QMo2View::moveElm()
 {
   if( ! checkState( moveCheck ) )
-    return;  
+    return;
   model->moveElem( mark, sel_x, sel_y );
   emit viewChanged();
 }
@@ -465,14 +465,14 @@ void QMo2View::moveElm()
 void QMo2View::infoElm()
 {
   QString cbuf;
-  QDialog *dia; 
+  QDialog *dia;
   QPushButton *bt_ok;
   QVBoxLayout *lay;
   QTableWidget *tv;
   QString qs;
   if( ! checkState( selCheck ) )
-    return;  
-  
+    return;
+
   dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": Structure of ") + selObj->getFullName() );
 
@@ -482,13 +482,13 @@ void QMo2View::infoElm()
   QStringList hlabels;
   hlabels << "Name" << "Type" << "Value" << "Descr" << "Target"<< "Flags";
   tv->setHorizontalHeaderLabels( hlabels );
-  
+
   QObjectList childs = selObj->children();
-  
+
   int i = 0;
   for( auto o :  childs ) {
     QObject *ob = o;
-    tv->setItem( i, 0, new  QTableWidgetItem( ob->objectName() ) ); 
+    tv->setItem( i, 0, new  QTableWidgetItem( ob->objectName() ) );
     if( ob->inherits("TDataSet" ) ) {
       TDataSet *ds = qobject_cast<TDataSet*>(ob);
       tv->setItem( i, 1, new QTableWidgetItem(ds->getType()) );
@@ -497,8 +497,8 @@ void QMo2View::infoElm()
       HolderData *ho = qobject_cast<HolderData*>(ob);
       tv->setItem( i, 1, new QTableWidgetItem(ho->getType() ) );
       tv->setItem( i, 2, new QTableWidgetItem(ho->toString() ) );
-      tv->setItem( i, 3, new QTableWidgetItem(ho->getParm("vis_name") + " \"" 
-	            + ho->getParm("descr" ) + "\"" ) );
+      tv->setItem( i, 3, new QTableWidgetItem(ho->getParm("vis_name") + " \""
+                    + ho->getParm("descr" ) + "\"" ) );
       tv->setItem( i, 4, new QTableWidgetItem( ho->objectName() ) );
       tv->setItem( i, 5, new QTableWidgetItem( flags2str(ho->getFlags()) ) );
 
@@ -510,7 +510,7 @@ void QMo2View::infoElm()
   }
 
 
-  
+
   lay->addWidget( tv );
 
   bt_ok = new QPushButton( tr("Done"), dia);
@@ -528,18 +528,18 @@ void QMo2View::infoElm()
 void QMo2View::showTreeElm()
 {
   if( ! checkState( selCheck ) )
-    return;  
+    return;
   if( selObj == 0 )
     return;
-  
+
   HolderModel *ho_elm = new HolderModel( selObj, this );
-  
+
   QDialog *dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": Element tree: ") + selObj->objectName() );
-  
+
   QVBoxLayout *lay = new QVBoxLayout();
-  
-  
+
+
   QTreeView *treeView = new QTreeView( dia );
   treeView->setModel( ho_elm );
 
@@ -566,11 +566,11 @@ void QMo2View::testElm1()
 {
   QString buf;
   if( ! checkState( selCheck ) )
-    return;  
-  
+    return;
+
   QDialog *dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": test1 ") + selObj->objectName() );
-  
+
   buf = selObj->toString();
 
 
@@ -598,10 +598,10 @@ void QMo2View::testElm1()
 void QMo2View::testElm2()
 {
   if( ! checkState( selCheck ) )
-    return;  
+    return;
   if( selObj == 0 )
     return;
-  
+
   return;
 }
 
@@ -640,7 +640,7 @@ void QMo2View::pasteElm()
     return;
   }
   QDomElement ee = x_dd.documentElement();
-  
+
   QString tagname = ee.tagName();
   if( tagname != "obj" ) {
     QMessageBox::warning(QMo2Win::qmo2win, tr( PACKAGE ),
@@ -648,7 +648,7 @@ void QMo2View::pasteElm()
                          .arg( tagname ) );
     return;
   }
-  
+
   QString eltype = ee.attribute( "otype" );
   QString elname = ee.attribute( "name" );
   QString elname_base = elname;
@@ -660,9 +660,9 @@ void QMo2View::pasteElm()
       elname += "_x";
     }
   }
-  
+
   int oord = model->hintOrd();
-  
+
   QDialog *dia = new QDialog( this );
   QGridLayout *lay = new QGridLayout( dia );
 
@@ -680,33 +680,33 @@ void QMo2View::pasteElm()
   QLineEdit *oord_ed = new QLineEdit( dia );
   oord_ed->setText( QSN(oord) );
   lay->addWidget( oord_ed, 1, 1 );
-  
-  QDialogButtonBox *bbox 
+
+  QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 2, 0, 1, 2 );
   connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
   connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
 
   int rc = dia->exec();
-  elname = oname_ed->text(); 
+  elname = oname_ed->text();
   oord = oord_ed->text().toInt();
   delete dia;
-  
+
   if( rc != QDialog::Accepted ) {
     return;
-  }; 
-  
+  };
+
   if( ! isGoodName( elname )  ) {
-    QMessageBox::critical( this, "Error", 
-       QString("Fail to add Elem: bad object name \"") + elname + "\"", 
+    QMessageBox::critical( this, "Error",
+       QString("Fail to add Elem: bad object name \"") + elname + "\"",
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
 
   TMiso *ob = model->insElem( eltype, elname, oord, sel_x, sel_y) ; // reset() implied
   if( !ob  ) {
-    QMessageBox::critical( this, "Error", 
-       QString("Fail to add Elem: ") + eltype + " " + elname, 
+    QMessageBox::critical( this, "Error",
+       QString("Fail to add Elem: ") + eltype + " " + elname,
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
@@ -719,10 +719,10 @@ void QMo2View::pasteElm()
   ob->setData( "vis_y", sel_y );
   ob->setData( "ord", oord );
   changeSel( 0, 0, 1 ); // update sel
-  
+
 }
 
-// ==== outs related 
+// ==== outs related
 
 void QMo2View::newOut()
 {
@@ -733,7 +733,7 @@ void QMo2View::newOut()
   QGridLayout *lay;
   if( ! checkState( validCheck ) )
     return;
-  
+
   if( selObj  )
   {
     enameq = selObj->objectName();
@@ -763,8 +763,8 @@ void QMo2View::newOut()
   ename_ed->setMaxLength( MAX_NAMELEN-1 );
   ename_ed->setText( enameq );
   lay->addWidget( ename_ed, 1, 1 );
-  
-  QDialogButtonBox *bbox 
+
+  QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 2, 0, 1, 2 );
   connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
@@ -773,21 +773,21 @@ void QMo2View::newOut()
   rc = dia->exec();
   onameq = oname_ed->text(); enameq = ename_ed->text();
   delete dia;
-  if( rc != QDialog::Accepted ) 
+  if( rc != QDialog::Accepted )
     return;
-    
+
   if( isGoodName( onameq ) ) {
     int irc = model->insOut( onameq, enameq );
     if( irc  ) {
-      QMessageBox::critical( this, "Error", 
-	 QString("Fail to add Output: ") + onameq, 
-	 QMessageBox::Ok, QMessageBox::NoButton );
+      QMessageBox::critical( this, "Error",
+         QString("Fail to add Output: ") + onameq,
+         QMessageBox::Ok, QMessageBox::NoButton );
     }
     emit viewChanged();
     return;
   }
-  QMessageBox::critical( this, "Error", 
-     QString("Bad output name: ") + onameq, 
+  QMessageBox::critical( this, "Error",
+     QString("Bad output name: ") + onameq,
      QMessageBox::Ok, QMessageBox::NoButton );
 }
 
@@ -795,7 +795,7 @@ void QMo2View::delOut()
 {
   int k;
   if( ! checkState( validCheck ) )
-    return;  
+    return;
   if( level < 0 || level >= model->getNOutArr() )
     return;
   TOutArr *arr= model->getOutArr( level );
@@ -880,15 +880,15 @@ void QMo2View::showOutData() // TODO: special dialog (+ for many rows)
 
   sinf = QString( "n= " ) % QSN( gi.row )
        % QString( "; \nave= " ) % QSN( ave )
-       % QString( "; \nave2= " ) % QSN( ave2 ) 
+       % QString( "; \nave2= " ) % QSN( ave2 )
        % QString( "; \nsum= " ) % QSN( s )
        % QString( "; \nsum2= " ) % QSN( s2 )
        % QString( ";\nD= " ) % QSN( disp )
        % QString( "; \nsigm= " ) % QSN( msq )
        % QString( "; \nmin= " ) % QSN( vmin )
-       % QString( "; \nmax= " ) % QSN( vmax ); 
+       % QString( "; \nmax= " ) % QSN( vmax );
   lab = new QLabel( sinf, dia );
-  lab->setTextInteractionFlags( Qt::TextSelectableByMouse 
+  lab->setTextInteractionFlags( Qt::TextSelectableByMouse
        | Qt::TextSelectableByKeyboard);
   lay->addWidget( lab, 0, 1 );
 
@@ -929,15 +929,15 @@ void QMo2View::newGraph()
   if( ! checkState( validCheck ) )
     return;
   no = model->getNGraph();
-  grnameq = QString("graph") + QSN( no ); 
+  grnameq = QString("graph") + QSN( no );
   aname = QInputDialog::getText( this, "Creating new Graph descriptions",
-      "Enter name of new Graph:", QLineEdit::Normal, 
+      "Enter name of new Graph:", QLineEdit::Normal,
       grnameq, &ok );
   if( ok ) {
-    if( ! isGoodName( aname ) ) { 
-      QMessageBox::critical( this, "Error", 
-         QString("Bad graph name: \"") + aname + "\"", 
-	 QMessageBox::Ok, QMessageBox::NoButton );
+    if( ! isGoodName( aname ) ) {
+      QMessageBox::critical( this, "Error",
+         QString("Bad graph name: \"") + aname + "\"",
+         QMessageBox::Ok, QMessageBox::NoButton );
     }
     model->insGraph( aname );
     emit viewChanged();
@@ -1073,7 +1073,7 @@ void QMo2View::gnuplotGraph()
   QDialog *dia;
   QLabel *lb1, *lb2, *lb3; QLineEdit *ed_pgm, *ed_dat, *ed_eps;
   QCheckBox *sw_x11;
-  QGridLayout *lay; 
+  QGridLayout *lay;
   QString f_pgm, f_dat, f_eps, cdir;
   int l, rc, use_x11;
   if( ! checkState( doneCheck ) )
@@ -1086,11 +1086,11 @@ void QMo2View::gnuplotGraph()
   f_pgm = doc->pathName();
   QFileInfo doc_fi( f_pgm );
   cdir = QDir::currentPath();
-  if( cdir == doc_fi.absolutePath() ) 
+  if( cdir == doc_fi.absolutePath() )
     f_pgm = doc_fi.fileName();
   if( f_pgm.length() < 1 ) { f_pgm = "gplot"; };
   l = f_pgm.length();
-  if( doc_fi.suffix() == "mo2"  ) 
+  if( doc_fi.suffix() == "mo2"  )
     f_pgm.truncate( l-4 );
   f_dat = f_pgm + ".dat"; f_eps = f_pgm + ".eps";
   f_pgm += ".gp";
@@ -1119,8 +1119,8 @@ void QMo2View::gnuplotGraph()
   ed_pgm = new QLineEdit( dia );
   ed_pgm->setText( f_pgm );
   lay->addWidget( ed_pgm, 6, 0, 1, 2 );
-  
-  QDialogButtonBox *bbox 
+
+  QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 7, 0, 1, 2 );
   connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
@@ -1128,10 +1128,10 @@ void QMo2View::gnuplotGraph()
 
   rc = dia->exec();
   if( rc == QDialog::Accepted ) {
-    f_pgm = ed_pgm->text(); f_eps = ed_eps->text(); 
+    f_pgm = ed_pgm->text(); f_eps = ed_eps->text();
     f_dat = ed_dat->text(); use_x11 = sw_x11->isChecked();
-    gra->gnuPlot( !use_x11, f_pgm.toLocal8Bit(), 0, 
-	          f_eps.toLocal8Bit(), f_dat.toLocal8Bit() );
+    gra->gnuPlot( !use_x11, f_pgm.toLocal8Bit(), 0,
+                  f_eps.toLocal8Bit(), f_dat.toLocal8Bit() );
   };
   delete dia;
 }
@@ -1158,9 +1158,9 @@ void QMo2View::showTreeModel()
 {
   QDialog *dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": Model ") );
-  
+
   QVBoxLayout *lay = new QVBoxLayout();
-  
+
   QTreeView *treeView = new QTreeView( dia );
   treeView->setModel( ho_mo );
 
@@ -1193,21 +1193,21 @@ void QMo2View::runScript()
   auto *ted = new QTextEdit( this );
   ted->setText( scr );
   lv->addWidget( ted );
-  
+
   auto bt_ok = new QPushButton( "&Ok", dia );
   // bt_ok->setDefault( true );
   lv->addWidget( bt_ok );
 
   connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
-  
+
   int rc = dia->exec();
   if( rc == QDialog::Accepted ) {
     scr = ted->toPlainText();
     QString res = doc->runScript( scr );
     QMessageBox::information( this, PACKAGE " script result ", res );
-  }; 
+  };
   delete dia; dia = nullptr;
-  
+
 }
 
 
@@ -1272,11 +1272,11 @@ void QMo2View::showHelp(void)
   dia = new QDialog( this );
   dia->setWindowTitle( "Hot keys in structure window" );
   lv = new QVBoxLayout( dia );
-  
+
   la = new QLabel( dia );
   la->setText( helpstr );
   lv->addWidget( la );
-  
+
   bt_ok = new QPushButton( "&Ok", dia );
   bt_ok->setDefault( true );
   lv->addWidget( bt_ok );

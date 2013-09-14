@@ -28,7 +28,7 @@ CTOR(TVibro,TMiso)
 }
 
 
-int TVibro::do_preRun( int /*run_tp*/, int /*an*/, 
+int TVibro::do_preRun( int /*run_tp*/, int /*an*/,
                        int /*anx*/, int /*any*/, double /*adt*/ )
 {
   tdt2 = tdt * tdt;
@@ -48,22 +48,22 @@ int TVibro::do_startLoop( int /*acnx*/, int /*acny*/ )
 double TVibro::f( double /*t*/ )
 {
   double x, ctau = tdt * c0 / 2; // c0 can be changed at any time, so here
-  
+
   if( isStart == 1 ) {  // first step
     isStart = 2; x = out0_init; v = (double)v0;
   } else if ( isStart == 2 ) {  // second step
-    isStart = 0; 
+    isStart = 0;
     x = x_old + v0 * tdt + 0.5 * tdt2 * u_old;
     v = v0 + u_old * tdt;
   } else {  // all other steps
-    x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * (u_old - Omega * Omega * f_old) ) 
+    x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * (u_old - Omega * Omega * f_old) )
       / ( 1 + ctau );
     v = ( x - x_old2 ) / ( 2 * tdt );
   }
-  
+
   f_old = use_u1 ? in_f : x;
-  
-  u_old = in_u; 
+
+  u_old = in_u;
   x_old2 = x_old; x_old = x;
   return x;
 }
@@ -72,4 +72,4 @@ DEFAULT_FUNCS_REG(TVibro)
 
 // end of tvibro.cpp
 
- 
+

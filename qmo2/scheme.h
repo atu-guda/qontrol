@@ -1,5 +1,5 @@
 /***************************************************************************
-                          scheme.h  
+                          scheme.h
                              -------------------
     begin                : 2013.09.01
     copyright            : (C) 2000-2013 by atu
@@ -45,19 +45,19 @@ class Scheme : public TDataContainer  {
   virtual int stopRun( int reason );
   /** function to call from elem.f() to signal something */
   virtual int fback( int code, int aord, const QString &tdescr );
-  
+
   /** converts order of element to it's position in v_el */
   virtual int ord2elnu( int aord ) const;
   /** visual coords -> TMiso number. @returns: <0 - not found, >=0 -- elnu */
   virtual int xy2elnu( int avis_x, int avis_y ); /* must be const. but.. */
   /** visual coords -> TMiso @returns: nullptr - not found */
-  TMiso* xy2Miso( int avis_x, int avis_y ) const; 
+  TMiso* xy2Miso( int avis_x, int avis_y ) const;
   /** returns ptr to TMiso by elnu */
   virtual TMiso* getMiso( int elnu );
   /** returns ptr to TOutArr by name */
   TOutArr* getOutArr( const QString &oname );
   /** inserts active element @returns: nulltpr - bad  elese -ptr to inserted element */
-  TMiso* insElem( const QString &cl_name, const QString &ob_name,  
+  TMiso* insElem( const QString &cl_name, const QString &ob_name,
                        int aord, int avis_x, int avis_y );
   /** delete active element by name !0 = sucess */
   virtual int delElem( const QString &ename );
@@ -69,10 +69,10 @@ class Scheme : public TDataContainer  {
   virtual int hintOrd() const;
   /** resets elements and state: 2->1 */
   virtual int reset();
-  
+
   /** reimplemented from TDataSet to ensure all data filled and linked */
   virtual int checkData( int i );
-  
+
  protected:
   /** reimplemented to real Elems, TODO: separate containers */
   virtual void do_structChanged();
@@ -90,21 +90,21 @@ class Scheme : public TDataContainer  {
   virtual void allEndLoop();
   /** links input & parm names -> indexses in ptrs TODO: drop */
   virtual int linkNames();
-  
+
  protected:
   // =============== iface objects ==============================
   // most of them - copy copy of current model or param blocks
-  /** total model time, starts with 0 each inner loop */ 
+  /** total model time, starts with 0 each inner loop */
   PRM_DOUBLE( t_full, efInner, "t_full", "Full Run Time", "min=0\nmax=1e300\ndef=100" );
   /** number of inner loop iterations */
-  PRM_INT( nn, efInner, "nn", "Number of steps in one run", 
+  PRM_INT( nn, efInner, "nn", "Number of steps in one run",
       "min=1\nmax=200000000\nsep=col\ndef=10000"  );
   /** flag for real and model time syncronization */
-  PRM_SWITCH( use_sync, efInner, "Sync RT", 
+  PRM_SWITCH( use_sync, efInner, "Sync RT",
       "flag for real and model time syncronization ", "sep=col" );
   /** number of inner parametric loops iterations */
   PRM_INT( nl1, efInner, "nl1",
-       "Number of inner parametric loops iterations", 
+       "Number of inner parametric loops iterations",
        "min=1\nmax=10000\nsep=block\ndef=1" );
   /** number of outer parametric loops iterations */
   PRM_INT( nl2, efInner, "N2",
@@ -126,7 +126,7 @@ class Scheme : public TDataContainer  {
   PRM_INT( ii, efInner,  "ii", "Inner index", "" );
   PRM_INT( il1, efInner, "il1", "Param 0 index", "" );
   PRM_INT( il2, efInner, "il2", "Param 1 index", "" );
-  /** current time and time step, real time */ 
+  /** current time and time step, real time */
   PRM_DOUBLE( t, efInner, "time", "model time", "" );
   PRM_DOUBLE( tdt, efInner, "\\tau", "time step", "" );
   PRM_DOUBLE( rtime, efInner, "rtime", "real world time", "" );

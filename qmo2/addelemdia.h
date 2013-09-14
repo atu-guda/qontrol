@@ -21,7 +21,7 @@ struct addElemInfo {
 class AddElemDialog : public QDialog {
  Q_OBJECT
   public:
-   AddElemDialog( addElemInfo *a_aei, TDataSet *a_pobj, QWidget *aparent, 
+   AddElemDialog( addElemInfo *a_aei, TDataSet *a_pobj, QWidget *aparent,
        const QString& allowed_types = QString() );
   public slots:
    virtual void accept();
@@ -35,5 +35,5 @@ class AddElemDialog : public QDialog {
    QListWidget *lw;
 };
 
-#endif 
+#endif
 

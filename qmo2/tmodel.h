@@ -36,9 +36,9 @@ class TModel : public TDataContainer  {
   virtual ~TModel() override;
   DCL_CREATE;
   DCL_STD_INF;
-   
+
   //* make main work via getDoublePtr
-  virtual const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt = nullptr, 
+  virtual const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt = nullptr,
         const TDataSet **src_ob = nullptr, int lev = 0 ) const override;
 
   /** prepare to run */
@@ -49,13 +49,13 @@ class TModel : public TDataContainer  {
   virtual int stopRun( int reason );
   /** function to call from elem.f() to signal something */
   virtual int fback( int code, int aord, const QString &tdescr );
-  
+
   /** converts order of element to it's position in v_el */
   virtual int ord2elnu( int aord ) const;
   /** visual coords -> TMiso number. @returns: <0 - not found, >=0 -- elnu */
   virtual int xy2elnu( int avis_x, int avis_y ) const;
   /** visual coords -> TMiso @returns: nullptr - not found */
-  TMiso* xy2Miso( int avis_x, int avis_y ) const; 
+  TMiso* xy2Miso( int avis_x, int avis_y ) const;
   /** returns number of TMiso ( max value of elnu + 1 ) */
   virtual int getNMiso(void) const;
   /** returns ptr to TMiso by elnu */
@@ -71,7 +71,7 @@ class TModel : public TDataContainer  {
   /** returns ptr to TGraph gra_nu */
   virtual TGraph* getGraph( int gra_nu );
   /** inserts active element @returns: nulltpr - bad  elese -ptr to inserted element */
-  TMiso* insElem( const QString &cl_name, const QString &ob_name,  
+  TMiso* insElem( const QString &cl_name, const QString &ob_name,
                        int aord, int avis_x, int avis_y );
   /** inserts new out array @returns: <0 - bad, >0= index in ptrs[] */
   virtual int insOut( const  QString &outname, const QString &objname );
@@ -93,10 +93,10 @@ class TModel : public TDataContainer  {
   virtual int getLinkInfos( int elnu, LinkInfo *li );
   /** frees output arrays and state: 2->1 */
   virtual int reset(void);
-  
+
   /** reimplemented from TDataSet to ensure all data filled and linked */
   virtual int checkData( int i );
-  
+
  protected:
   /** reimplemented to real Elems, OutArr, Graphs: TODO: separate containers */
   virtual void do_structChanged();
@@ -118,20 +118,20 @@ class TModel : public TDataContainer  {
   virtual void allocOutArrs( int tp );
   /** resets all array with given level or below */
   virtual void resetOutArrs( int level );
-  
+
  protected:
   // =============== iface objects ==============================
-  /** total model time, starts with 0 each inner loop */ 
+  /** total model time, starts with 0 each inner loop */
   PRM_DOUBLE( tt, efNoRunChange, "T", "Full Run Time", "min=0\nmax=1e300\ndef=100" );
   /** number of inner loop iterations */
-  PRM_INT( nn, efNoRunChange, "N", "Number of steps in one run", 
+  PRM_INT( nn, efNoRunChange, "N", "Number of steps in one run",
       "min=1\nmax=200000000\nsep=col\ndef=10000"  );
   /** flag for real and model time syncronization */
-  PRM_SWITCH( use_sync, efNoRunChange, "Sync RT", 
+  PRM_SWITCH( use_sync, efNoRunChange, "Sync RT",
       "flag for real and model time syncronization ", "sep=col" );
   /** number of inner parametric loops iterations */
   PRM_INT( nl1, efNoRunChange, "N1",
-       "Number of inner parametric loops iterations", 
+       "Number of inner parametric loops iterations",
        "min=1\nmax=10000\nsep=block\ndef=1" );
   /** number of outer parametric loops iterations */
   PRM_INT( nl2, efNoRunChange, "N2",
@@ -176,7 +176,7 @@ class TModel : public TDataContainer  {
   PRM_INT( oc_4, efOld, "Out idx 4", "Output index 4", ""  );
   PRM_INT( oc_5, efOld, "Out idx 5", "Output index 5", ""  );
   /** types of output 1-3=cross, 4-7=vbar, 8-11=gbar, 12-15=leds, 16,17=sound */
-  const char *const och_type_str = 
+  const char *const och_type_str =
     "None\nCross1\nCross2\nCross3\n"
     "Vbar0\nVbar1\nVbar2\nVbar3\n"
     "Gbar0\nGbar1\nGbar2\nGbar3\n"
@@ -191,14 +191,14 @@ class TModel : public TDataContainer  {
   PRM_LIST( oct_5, efOld, "Out Type 5", "Output Type 5", "", och_type_str );
   // ---------------------------------------
   /** long description */
-  PRM_STRING( long_descr, 0, "Description", "Model description", 
+  PRM_STRING( long_descr, 0, "Description", "Model description",
       "props=STRING,MLINE\nncol=-1\nsep=block");
   // ======================= invisible vars ======================
   /** loops counters */
   PRM_INT( ii, efInner,  "ii", "Inner index", "" );
   PRM_INT( il1, efInner, "il1", "Param 0 index", "" );
   PRM_INT( il2, efInner, "il2", "Param 1 index", "" );
-  /** current time and time step, real time */ 
+  /** current time and time step, real time */
   PRM_DOUBLE( t, efInner, "time", "model time", "" );
   PRM_DOUBLE( tdt, efInner, "\\tau", "time step", "" );
   PRM_DOUBLE( rtime, efInner, "rtime", "real world time", "" );

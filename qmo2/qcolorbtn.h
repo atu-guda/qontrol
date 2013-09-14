@@ -35,13 +35,13 @@ class QColorBtn : public QPushButton  {
    int colorInt(void) const;
    void setColor( const QColor &c );
    void setColor( int ic );
- signals: 
+ signals:
    void changed( const QColor &newColor );
  protected slots:
    /** called if clicked */
    void slotClicked();
  protected:
-   virtual void paintEvent( QPaintEvent *ev );   
+   virtual void paintEvent( QPaintEvent *ev );
  protected:
    QColor col;
 };

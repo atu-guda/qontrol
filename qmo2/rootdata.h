@@ -17,7 +17,7 @@
 class TRootData : public TDataContainer {
   Q_OBJECT
  public:
-   DCL_CTOR(TRootData); 
+   DCL_CTOR(TRootData);
    virtual ~TRootData() override;
    DCL_CREATE;
    DCL_STD_INF;

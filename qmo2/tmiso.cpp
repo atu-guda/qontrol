@@ -70,32 +70,32 @@ void TMiso::post_set()
 
   // ordirary links convert
   int nl = inputs.size();
-  if( nl > 4 ) 
+  if( nl > 4 )
     nl = 4;
   QString source, iname;
   for( int i=0; i<nl; ++i ) {
     InputSimple *in = inputs[i];
     if( !in )
       continue;
-    if( ! in->getData( "source", source )  ) 
+    if( ! in->getData( "source", source )  )
       continue;
     if( ! source.isEmpty() )
       continue;
     iname = "inps" + QSN(i);
-    if( ! links->getData( iname, source )  ) 
+    if( ! links->getData( iname, source )  )
       continue;
     in->setData( "source", source );
   }
-  
+
   // param links convert
   if( ! pis || pis->getNumObj() != 0 )
     return;
-  
+
   QString prm_name, flg_name;
   int flg;
   for( int i=0; i<4; ++i ) {
     iname = "pinps" + QSN(i);
-    if( ! links->getData( iname, source )  ) 
+    if( ! links->getData( iname, source )  )
       continue;
     if( source.isEmpty() )
       continue;
@@ -125,13 +125,13 @@ DEFAULT_FUNCS_REG(TMiso);
 double TMiso::fun( double t, IterType itype )
 {
   int v;
-  if( locked ) 
+  if( locked )
     return out0 = (double)out0_init;
   if( onlyFirst && itype != IterFirst )
     return out0;
   if( onlyLast && itype != IterLast )
     return out0;
-  
+
   prm_mod = pis->apply();
 
   v = out0 = f( t );
@@ -147,8 +147,8 @@ double TMiso::f( double /* t */ )
 
 int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
 {
-  tdt = adt; model_nn = an; 
-  model = qobject_cast<TModel*>(par); 
+  tdt = adt; model_nn = an;
+  model = qobject_cast<TModel*>(par);
   pis->prepare();
   int rc =  do_preRun( run_tp, an, anx, any, adt );
   if( rc != 0 )

@@ -20,12 +20,12 @@
 
 #include <tmiso.h>
 
-static const char *ttrigger_list = 
+static const char *ttrigger_list =
    "RS\n"               // 0
    "Shmitt(in_x)\n"     // 1
    "CountRise(in_x)\n"  // 2
    "CountDown(in_x)\n"  // 3
-   "CountLevel(in_x)"   // 4 
+   "CountLevel(in_x)"   // 4
 ;
 
 /**different kinds if triggers
@@ -43,12 +43,12 @@ class TTrigger : public TMiso  {
    virtual double f( double t ) override;
    /** reimplemented from TMiso to init state */
    virtual int do_startLoop( int acnx, int acny ) override;
-   
+
    /** type of trigger */
    PRM_LIST( type, efNRC, "Type", "Type of trigger", "", ttrigger_list );
    /**  current state */
    PRM_INT( cst, efInner, "state", "current state", "" );
-   /** level of 0  */ 
+   /** level of 0  */
    PRM_DOUBLE( level0, 0, "Level of 0", "Level of '0' signal", "def=0.1" );
    /** level of 1 (shmidt) */
    PRM_DOUBLE( level1, 0, "Level of 1", "Level of '1' signal (for shmidt)", "def=0.5"  );
@@ -66,15 +66,15 @@ class TTrigger : public TMiso  {
    PRM_SWITCH( useMinus, efNRC, "Negative pulse", "Drop pulse is negative, not 0", "" );
    /** autoreset after t0 */
    PRM_SWITCH( useT0, efNRC, "Autoreset (t0)", "Use autoreset after t0 time elapsed", "");
-   
+
    PRM_INPUT( in_r, 0, "R input", "Reset input",  "sep=block" );
    PRM_INPUT( in_s, 0, "S input", "Set input", "sep=col" );
    PRM_INPUT( in_x, 0, "X input", "X input",  "sep=col" );
    PRM_INPUT( in_ena, 0, "enable in", "enable input", "sep=col" );
-   
+
    /** old u[2] value */
    double u2_old = 0;
-   
+
    DCL_DEFAULT_STATIC;
 };
 

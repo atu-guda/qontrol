@@ -36,9 +36,9 @@ class TAdjGen : public TMiso  {
    virtual double f( double t ) override;
    /** reimplemented from TMiso to reset */
    virtual int do_startLoop( int acnx, int acny );
-   
+
    /** type of averaging, */
-   PRM_LIST( type, efNoRunChange, "Type", "Type of generator", "", 
+   PRM_LIST( type, efNoRunChange, "Type", "Type of generator", "",
        "Default\nMAI\nDual(u0,u3)" );
    /** misc flags */
    PRM_SWITCH( useReset, efNoRunChange, "u[1] is Reset", "Use u[1] as Reset signal", "" );
@@ -57,7 +57,7 @@ class TAdjGen : public TMiso  {
    PRM_DOUBLE( ctt, efInner, "ctt", "Accumulator 0", "" );
    PRM_DOUBLE( ig, efInner,  "ig",  "Accumulator 1", "" );
    PRM_DOUBLE( ig2, efInner, "ig2", "Accumulator 2", "" );
-   
+
    PRM_INPUT( in_omega, 0, "\\omega", "omega input",  "sep=block" );
    PRM_INPUT( in_rst,   0, "reset", "reset input input", "sep=col" );
    PRM_INPUT( in_lock,  0, "lock", "lock input",  "sep=col" );

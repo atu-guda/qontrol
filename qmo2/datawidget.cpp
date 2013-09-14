@@ -93,7 +93,7 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
 
   int v_max { 4096 }; // not IMAX - good limit for single-line string
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() ) 
+  if( ! s_max.isEmpty() )
     v_max = s_max.toInt();
   le->setMaxLength( v_max );
 
@@ -204,10 +204,10 @@ IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent )
   }
   int v_min { IMIN }, v_max { IMAX };
   QString s_min = h.getParm( "min" );
-  if( ! s_min.isEmpty() ) 
+  if( ! s_min.isEmpty() )
     v_min = s_min.toInt();
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() ) 
+  if( ! s_max.isEmpty() )
     v_max = s_max.toInt();
   le->setValidator( new QIntValidator( v_min, v_max, le ) );
   QHBoxLayout *lay =  new QHBoxLayout( this );
@@ -219,7 +219,7 @@ IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent )
 
 bool IntDataWidget::set()
 {
-  le->setText( QSN( ho.get().toInt() ) ); 
+  le->setText( QSN( ho.get().toInt() ) );
   return true;
 }
 
@@ -256,10 +256,10 @@ IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent )
   }
   int v_min { IMIN }, v_max { IMAX };
   QString s_min = h.getParm( "min" );
-  if( ! s_min.isEmpty() ) 
+  if( ! s_min.isEmpty() )
     v_min = s_min.toInt();
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() ) 
+  if( ! s_max.isEmpty() )
     v_max = s_max.toInt();
   sb->setRange( v_min, v_max );
   QString prefix = h.getParm( "prefix" );
@@ -277,12 +277,12 @@ IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent )
   lay->addWidget( lbl );
   lay->addWidget( sb, 1 );
   setLayout( lay );
-  
+
 }
 
 bool IntSpinDataWidget::set()
 {
-  sb->setValue(  ho.get().toInt() ); 
+  sb->setValue(  ho.get().toInt() );
   return true;
 }
 
@@ -317,7 +317,7 @@ SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     cb->setDisabled( true );
   }
-  
+
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   // lay->addWidget( lbl ); // not for this widget
@@ -328,7 +328,7 @@ SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
 
 bool SwitchDataWidget::set()
 {
-  cb->setChecked(  ho.get().toBool() ); 
+  cb->setChecked(  ho.get().toBool() );
   return true;
 }
 
@@ -363,7 +363,7 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
     cb->setDisabled( true );
   }
   cb->addItems( ho.getParm( "list_elems" ).split("\n") );
-  
+
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
@@ -373,7 +373,7 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
 
 bool ListDataWidget::set()
 {
-  cb->setCurrentIndex( ho.get().toInt() ); 
+  cb->setCurrentIndex( ho.get().toInt() );
   return true;
 }
 
@@ -408,7 +408,7 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     le->setReadOnly( true );
   }
-  
+
   int decimals = 12;
   QString sdec =  h.getParm("decimals" );
   if( ! sdec.isEmpty() ) {
@@ -416,14 +416,14 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
   }
   double v_min { DMIN }, v_max { DMAX };
   QString s_min = h.getParm( "min" );
-  if( ! s_min.isEmpty() ) 
+  if( ! s_min.isEmpty() )
     v_min = s_min.toDouble();
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() ) 
+  if( ! s_max.isEmpty() )
     v_max = s_max.toDouble();
-  
+
   le->setValidator( new QDoubleValidator( v_min, v_max, decimals, le ) );
-  
+
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
@@ -433,7 +433,7 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
 
 bool DoubleDataWidget::set()
 {
-  le->setText( QSN( ho.get().toDouble() ) ); 
+  le->setText( QSN( ho.get().toDouble() ) );
   return true;
 }
 
@@ -470,10 +470,10 @@ DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent )
   }
   double v_min { DMIN }, v_max { DMAX };
   QString s_min = h.getParm( "min" );
-  if( ! s_min.isEmpty() ) 
+  if( ! s_min.isEmpty() )
     v_min = s_min.toDouble();
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() ) 
+  if( ! s_max.isEmpty() )
     v_max = s_max.toDouble();
   sb->setRange( v_min, v_max );
   QString prefix = h.getParm( "prefix" );
@@ -485,7 +485,7 @@ DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent )
   if( ok ) {
     sb->setSingleStep( step );
   }
-  
+
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
@@ -495,7 +495,7 @@ DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent )
 
 bool DoubleSpinDataWidget::set()
 {
-  sb->setValue(  ho.get().toDouble() ); 
+  sb->setValue(  ho.get().toDouble() );
   return true;
 }
 
@@ -531,7 +531,7 @@ ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent )
     cb->setDisabled( true ); // TODO: real read-only
   }
   cb->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Expanding );
-  
+
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
@@ -581,15 +581,15 @@ IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
   if( vn.isEmpty() )
     vn = h.objectName();
   vn += '[';
-  
+
   int v_min { IMIN }, v_max { IMAX };
   QString s_min = h.getParm( "min" );
-  if( ! s_min.isEmpty() ) 
+  if( ! s_min.isEmpty() )
     v_min = s_min.toInt();
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() ) 
+  if( ! s_max.isEmpty() )
     v_max = s_max.toInt();
-  
+
   lbl->setText(""); // hack: hide common name
   QGridLayout *lay = new QGridLayout( pwi );
 
@@ -605,7 +605,7 @@ IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
     lay->addWidget( le, i, 1 );
     les.push_back( le );
   }
-  
+
   lay->setContentsMargins( 0, 0, 0, 0 );
   pwi->setLayout( lay ); // ???
 }
@@ -614,7 +614,7 @@ bool IntArrayDataWidget::set()
 {
   int n = les.size();
   for( int i=0; i<n; ++i ) {
-    les[i]->setText( QSN( ho.get(i).toInt() ) ); 
+    les[i]->setText( QSN( ho.get(i).toInt() ) );
   }
   return true;
 }
@@ -659,20 +659,20 @@ DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent )
   if( vn.isEmpty() )
     vn = h.objectName();
   vn += '[';
-  
+
   double v_min { DMIN }, v_max { DMAX };
   QString s_min = h.getParm( "min" );
-  if( ! s_min.isEmpty() ) 
+  if( ! s_min.isEmpty() )
     v_min = s_min.toDouble();
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() ) 
+  if( ! s_max.isEmpty() )
     v_max = s_max.toDouble();
   int decimals = 12;
   QString sdec =  h.getParm("decimals" );
   if( ! sdec.isEmpty() ) {
     decimals = sdec.toInt();
   }
-  
+
   lbl->setText(""); // hack: hide common name
   QGridLayout *lay = new QGridLayout( pwi );
 
@@ -688,7 +688,7 @@ DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent )
     lay->addWidget( le, i, 1 );
     les.push_back( le );
   }
-  
+
   lay->setContentsMargins( 0, 0, 0, 0 );
   pwi->setLayout( lay ); // ???
 }
@@ -697,7 +697,7 @@ bool DoubleArrayDataWidget::set()
 {
   int n = les.size();
   for( int i=0; i<n; ++i ) {
-    les[i]->setText( QSN( ho.get(i).toDouble() ) ); 
+    les[i]->setText( QSN( ho.get(i).toDouble() ) );
   }
   return true;
 }
@@ -742,13 +742,13 @@ StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent )
   if( vn.isEmpty() )
     vn = h.objectName();
   vn += '[';
-  
+
   int len_max { 4096 }; // not IMAX - simple string in array limit
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() ) 
+  if( ! s_max.isEmpty() )
     len_max = s_max.toInt();
   QString mask = h.getParm( "mask" );
-  
+
   lbl->setText(""); // hack: hide common name
   QGridLayout *lay = new QGridLayout( pwi );
 
@@ -766,7 +766,7 @@ StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent )
     lay->addWidget( le, i, 1 );
     les.push_back( le );
   }
-  
+
   lay->setContentsMargins( 0, 0, 0, 0 );
   pwi->setLayout( lay ); // ???
 }
@@ -775,7 +775,7 @@ bool StringArrayDataWidget::set()
 {
   int n = les.size();
   for( int i=0; i<n; ++i ) {
-    les[i]->setText( ho.get(i).toString() ); 
+    les[i]->setText( ho.get(i).toString() );
   }
   return true;
 }
@@ -818,7 +818,7 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
   pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   pb->setText( ho.objectName() );
   connect( pb, SIGNAL(clicked()), this, SLOT(edit()) );
-  
+
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
@@ -913,7 +913,7 @@ QString FactoryDataWidget::findForHolder( const HolderData &ho, int *lev ) const
   if( lev != nullptr )
     *lev = max_good;
 
-  //DBGx( "dbg: name: \"%s\" w_type: \"%s\" max_good: %d", 
+  //DBGx( "dbg: name: \"%s\" w_type: \"%s\" max_good: %d",
   //    qP(ho.objectName()), qP(name), max_good );
 
   return name;
@@ -931,7 +931,7 @@ DataWidget* FactoryDataWidget::createDataWidget( HolderData &ho, QWidget *parent
   return i.value().creator( ho, parent );
 }
 
-bool FactoryDataWidget::registerWidgetType( const QString &wname, 
+bool FactoryDataWidget::registerWidgetType( const QString &wname,
     const DataWidgetProp &prop )
 {
   if( propMap.contains( wname ) )
@@ -954,13 +954,13 @@ bool FactoryDataWidget::unregisterWidgetType( const QString &wname )
 // ======================= DataDialog ===========================
 
 DataDialog::DataDialog( TDataSet &a_ds, QWidget *parent )
-  : QDialog( parent ), ds( a_ds) 
+  : QDialog( parent ), ds( a_ds)
 {
   QString s = ds.getType()  %  ' ' %  ds.getFullName();
   setWindowTitle( s );
   createWidgets();
   getAll();
-  
+
 }
 
 int DataDialog::getAll()
@@ -997,7 +997,7 @@ void DataDialog::accept()
 
 void DataDialog::checkData()
 {
-  // TODO: 
+  // TODO:
 }
 
 void DataDialog::showHelp()
@@ -1010,7 +1010,7 @@ void DataDialog::showHelp()
   resname += L8B( "/index.html" );
   QString helpfile = QMo2Win::qmo2win->findRes( resname );
   // TODO: rich browser here or in next function
-  //if( helpfile.isEmpty() )  
+  //if( helpfile.isEmpty() )
   //  return showSimpleHelp();
   return showSimpleHelp();
 }
@@ -1027,14 +1027,14 @@ void DataDialog::showSimpleHelp(void)
     return;
   QString help_str( "<p><a name=\"help_head\"></a> </p><hr/>\n" );
 
-  help_str += help; 
-  help_str += "<hr/>\n"; 
+  help_str += help;
+  help_str += "<hr/>\n";
 
   for( auto c : ds.children() ) {
     HolderData *ho = qobject_cast<HolderData*>(c);
     if( !ho )
       continue;
-    help_str += "<p>" % ho->getType() 
+    help_str += "<p>" % ho->getType()
       % " <b> " % ho->objectName() % " </b>; // "
       % ho->getParm("descr")  % " ("
       % ho->getParm("vis_name") % ")</p>\n";
@@ -1043,9 +1043,9 @@ void DataDialog::showSimpleHelp(void)
   dia = new QDialog( this );
   dia->setMinimumSize( 500, 480 );
   dia->setWindowTitle( PACKAGE ": Help on element" );
-  
+
   lay = new QGridLayout;
-  
+
   brow = new QTextBrowser( this );
   brow->insertHtml( help_str );
   lay->addWidget( brow, 0, 0 );
@@ -1066,7 +1066,7 @@ void DataDialog::addParam()
   QStringList ptypes = EFACT.allParamTypes();
   QDialog *dia = new QDialog( this );
   QGridLayout *lay = new QGridLayout( dia );
-  
+
   QLabel *lbl_type = new QLabel( "Type", dia );
   lay->addWidget( lbl_type, 0, 0 );
   QListWidget *lw = new QListWidget( dia );
@@ -1078,24 +1078,24 @@ void DataDialog::addParam()
     }
   }
   lay->addWidget( lw, 1, 0, 3, 1 );
-  
+
   QLabel *lbl_name = new QLabel( "Name", dia );
   lay->addWidget( lbl_name, 0, 1 );
   QLineEdit *ed_name = new QLineEdit( this );
   ed_name->setValidator( new QRegExpValidator( QRegExp(RE_NAME), this ) );
   lay->addWidget( ed_name, 1, 1 );
-  
+
   QLabel *lbl_val = new QLabel( "Value", dia );
   lay->addWidget( lbl_val, 2, 1 );
   QLineEdit *ed_val = new QLineEdit( this );
   lay->addWidget( ed_val, 3, 1 );
-  
+
   QLabel *lbl_descr = new QLabel( "Description", dia );
   lay->addWidget( lbl_descr, 4, 1 );
   QLineEdit *ed_descr = new QLineEdit( this );
   lay->addWidget( ed_descr, 5, 1 );
-  
-  QDialogButtonBox *bbox 
+
+  QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dia );
   lay->addWidget( bbox, 6, 0, 1, 2 );
   connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
@@ -1106,7 +1106,7 @@ void DataDialog::addParam()
   QString val = ed_val->text();
   QString descr = ed_descr->text();
   QString ptype;
-  if( lw->currentItem() ) 
+  if( lw->currentItem() )
     ptype = lw->currentItem()->text();
   delete dia;
   if( rc != QDialog::Accepted || nm.isEmpty() || ptype.isEmpty() ) {
@@ -1114,8 +1114,8 @@ void DataDialog::addParam()
   }
   HolderData *ho = ds.add_param( ptype, nm );
   if( !ho ) {
-    QMessageBox::critical( this, "Error", 
-       QString("Fail to add parameter: ") + ptype + " " + nm, 
+    QMessageBox::critical( this, "Error",
+       QString("Fail to add parameter: ") + ptype + " " + nm,
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
@@ -1138,27 +1138,27 @@ void DataDialog::addObj()
   delete dia; dia = 0;
   if( rc != QDialog::Accepted ) {
     return;
-  }; 
+  };
   if( rc != QDialog::Accepted || aei.type.isEmpty() )
     return;
   if( ! isGoodName( aei.name )  ) {
-    QMessageBox::critical( this, "Error", 
-       QString("Fail to add Elem: bad object name \"") + aei.name + "\"", 
+    QMessageBox::critical( this, "Error",
+       QString("Fail to add Elem: bad object name \"") + aei.name + "\"",
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
-  
+
   const TClassInfo *ci = EFACT.getInfo( aei.type );
   if( !ci ) {
-    QMessageBox::critical( this, "Error", 
-       QString("Fail to add Elem: class \"") + aei.type + "\" not found", 
+    QMessageBox::critical( this, "Error",
+       QString("Fail to add Elem: class \"") + aei.type + "\" not found",
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
   HolderData *ob = ds.add_obj( aei.type, aei.name );
   if( !ob  ) {
-    QMessageBox::critical( this, "Error", 
-       QString("Fail to add Elem: ") + aei.type + " " + aei.name, 
+    QMessageBox::critical( this, "Error",
+       QString("Fail to add Elem: ") + aei.type + " " + aei.name,
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
@@ -1173,9 +1173,9 @@ void DataDialog::delSome( bool is_obj )
   for( auto c :  ds.children() ) {
     HolderData *ho = qobject_cast<HolderData*>(c);
     if( !ho  || !ho->isDyn() )
-      continue; 
+      continue;
     if( (is_obj ^ ho->isObject()) )
-      continue; 
+      continue;
     sl << ho->objectName();
   }
   if( sl.isEmpty() )
@@ -1185,14 +1185,14 @@ void DataDialog::delSome( bool is_obj )
 
   QLabel *la = new QLabel( "Delete param", dia );
   lay->addWidget( la );
-  
+
   QListWidget *lw = new QListWidget( dia );
   for( QString ob_name : sl ) {
     lw->addItem( ob_name );
   };
   lay->addWidget( lw );
-  
-  QDialogButtonBox *bbox 
+
+  QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox );
   connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
@@ -1200,7 +1200,7 @@ void DataDialog::delSome( bool is_obj )
 
   int rc = dia->exec();
   QString ob_name;
-  if( lw->currentItem() ) 
+  if( lw->currentItem() )
     ob_name = lw->currentItem()->text();
   delete dia;
   if( rc != QDialog::Accepted || ob_name.isEmpty() )
@@ -1225,7 +1225,7 @@ int DataDialog::createWidgets()
 {
   int nr = 0, nc = 0, nr_max = 0, nr_block = 0;
   int was_block = 0, was_col = 0;
-  
+
   // remove existent- if recreate need
   for( QObject *child : children() ) {
     delete child;
@@ -1233,7 +1233,7 @@ int DataDialog::createWidgets()
   dwm.clear();
 
   QVBoxLayout *lay1 = new QVBoxLayout;
-  
+
   QGridLayout *lay2 = new QGridLayout;
   lay1->addLayout( lay2 );
 
@@ -1241,11 +1241,11 @@ int DataDialog::createWidgets()
 
   // FIXME part of tmp workaround for displaing Elems in model
   bool is_model = ds.isChildOf( "TModel" );
-  
+
   for( auto c :  ds.children() ) {
     HolderData *ho = qobject_cast<HolderData*>(c);
     if( !ho )
-      continue; 
+      continue;
     if( ho->getFlags() & efNoDial )
       continue;
 
@@ -1263,9 +1263,9 @@ int DataDialog::createWidgets()
       ncol = ncol_str.toInt();
       ncol = qBound( -1, ncol, 20 );
     }
-    
+
     if( ho->getParm("sep") == "col" || was_col ) {
-      nr = nr_block; ++nc; 
+      nr = nr_block; ++nc;
     }
 
     if( ho->getParm("sep") == "block" || was_block) {
@@ -1285,14 +1285,14 @@ int DataDialog::createWidgets()
       DBG2q( "warn: not found edit widget for object", name );
       continue;
     }
-    
+
     dwm[name] = w;
     w->setWhatsThis( ho->getParm("descr") );
     lay2->addWidget( w, nr, nc, 1, ncol );
     ++nr;
     if( nr > nr_max )
       nr_max = nr;
-    
+
     was_col = was_block = 0;
     if( ho->getParm("sep") == "colend" ||  nr >= 40 ) {
       was_col = 1;
@@ -1308,16 +1308,16 @@ int DataDialog::createWidgets()
   lay1->addWidget( frb );
 
   QHBoxLayout *lay_btn2 = new QHBoxLayout;
-  
+
   QPushButton *btn_addParam = new QPushButton( "Add param" );
   connect(btn_addParam, SIGNAL(clicked()), this, SLOT(addParam()));
   lay_btn2->addWidget( btn_addParam );
-  if( ! (ds.getAllowAdd() & allowParam ) ) 
+  if( ! (ds.getAllowAdd() & allowParam ) )
     btn_addParam->setEnabled( false );
   QPushButton *btn_addObj = new QPushButton( "Add object" );
   connect(btn_addObj, SIGNAL(clicked()), this, SLOT(addObj()));
   lay_btn2->addWidget( btn_addObj );
-  if( ! (ds.getAllowAdd() & allowObject ) ) 
+  if( ! (ds.getAllowAdd() & allowObject ) )
     btn_addObj->setEnabled( false );
   QPushButton *btn_delParam = new QPushButton( "Delete param" );
   connect(btn_delParam, SIGNAL(clicked()), this, SLOT(delParam()));
@@ -1327,7 +1327,7 @@ int DataDialog::createWidgets()
   QPushButton *btn_delObj = new QPushButton( "Delete object" );
   connect(btn_delObj, SIGNAL(clicked()), this, SLOT(delObj()));
   lay_btn2->addWidget( btn_delObj );
-  if( ! (ds.getAllowAdd() & allowObject ) ) 
+  if( ! (ds.getAllowAdd() & allowObject ) )
     btn_delObj->setEnabled( false );
   lay1->addLayout( lay_btn2 );
 
@@ -1336,7 +1336,7 @@ int DataDialog::createWidgets()
   btn_ok->setDefault( true );
   connect(btn_ok, SIGNAL(clicked()), this, SLOT(accept()));
   lay_btn->addWidget( btn_ok );
-  // 
+  //
   QPushButton *btn_cancel = new QPushButton( QIcon::fromTheme("dialog-cancel"), "Cancel" );
   connect(btn_cancel, SIGNAL(clicked()), this, SLOT(reject()));
   lay_btn->addWidget( btn_cancel );

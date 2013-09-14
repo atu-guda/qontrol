@@ -36,9 +36,9 @@ class TCounter : public TMiso  {
    virtual double f( double t ) override;
    /** reimplemented from TMiso to reset counter */
    virtual int do_startLoop( int acnx, int acny ) override;
-   
+
    /** type of output from counter */
-   PRM_LIST( type, efNRC, "Type", "Type of counters output", "", 
+   PRM_LIST( type, efNRC, "Type", "Type of counters output", "",
        "level\npulse+\npulse+-\nn" );
    //* n of counts */
    PRM_INT( n, efNRC, "n", "Number to count", "sep=col\ndef=2" );
@@ -46,10 +46,10 @@ class TCounter : public TMiso  {
    PRM_INT( cn, efInner, "cn", "Current counter value", "" );
    /** use u[1] as reset */
    PRM_SWITCH( useReset, 0, "use Reset", "Use in_rst as Reset signal", "sep=col" );
-   
+
    PRM_INPUT( in_x,   0, "input", "Input source",  "sep=block" );
    PRM_INPUT( in_rst, 0, "rst input", "Signal to reset counter", "sep=col" );
-   
+
    int flip;
    /** old value of input */
    double u_old = DMAX;

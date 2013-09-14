@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-/** \file tmiso.h 
+/** \file tmiso.h
   *@author atu
 */
 
@@ -36,7 +36,7 @@ enum IterType {
 class TModel;
 
 /** class TElmLink  - obseleted by InputSimple and Input Param
- * aux class for get/set TMiso links and flags 
+ * aux class for get/set TMiso links and flags
 */
 
 class TElmLink : public TDataSet {
@@ -54,8 +54,8 @@ class TElmLink : public TDataSet {
    PRM_STRING( inps3, efOld, "Input 3", "Name of source for input 3", "max=32" );
    PRM_SWITCH( noauto, efOld, "No Auto", "Unused", "def=0" );
    PRM_SWITCH( locked, efOld, "Locked", "Bypass u[0] to output", "sep=col"  );
-   PRM_SWITCH( onlyFirst, efOld, "only First", "Process element only at first iteration", ""); 
-   PRM_SWITCH( onlyLast, efOld , "only Last", "Process element only at last iteration", ""); 
+   PRM_SWITCH( onlyFirst, efOld, "only First", "Process element only at first iteration", "");
+   PRM_SWITCH( onlyLast, efOld , "only Last", "Process element only at last iteration", "");
    PRM_SWITCH( flip, efOld, "flip image", "flip left-right element icon", "sep=col");
    PRM_SWITCH( noIcon, efOld, "no Icon", "don't show element icon", "");
    /** names of elms, which outputs will be used as parm inputs */
@@ -63,7 +63,7 @@ class TElmLink : public TDataSet {
    PRM_STRING( pinps1, efOld, "Parm. input 1", "Name of source for parametric input 1", "max=32"  );
    PRM_STRING( pinps2, efOld, "Parm. input 2", "Name of source for parametric input 2", "max=32"  );
    PRM_STRING( pinps3, efOld, "Parm. input 3", "Name of source for parametric input 3", "max=32"  );
-   /** names of inner params, to be modifyed */ 
+   /** names of inner params, to be modifyed */
    PRM_STRING( pnames0, efOld, "Parm. name 0", "Name of inner parameter 0", "max=32\nsep=col" );
    PRM_STRING( pnames1, efOld, "Parm. name 1", "Name of inner parameter 1", "max=32"  );
    PRM_STRING( pnames2, efOld, "Parm. name 2", "Name of inner parameter 2", "max=32"  );
@@ -74,26 +74,26 @@ class TElmLink : public TDataSet {
    PRM_SWITCH( pflags2, efOld, "only First 2", "Change param 2 only at start", ""  );
    PRM_SWITCH( pflags3, efOld, "only First 3", "Change param 3 only at start", ""  );
    DCL_DEFAULT_STATIC;
-}; 
+};
 typedef TElmLink* PTElmLink;
 typedef const TElmLink* CPTElmLink;
 
 // ------------------------- LinkInfo ----------------------------
 
-/** 
+/**
  * \struct LinkInfo tmiso.h
  * filled by TModel::getLinkInfos
  * */
 struct LinkInfo {
-  ltype_t ltype; /** type in link */ 
+  ltype_t ltype; /** type in link */
   int elnu;  /** number of linked element or -1; */
   int x, y;  /** coordinates of linked element or -1 */
   int eflip; /** flag: linked element is flipped */
   int pflags; /** flags from inner model array */
-  // 
+  //
   LinkInfo() { reset(); }
-  void reset() { 
-    ltype = LinkNone; elnu = x = y = -1;  
+  void reset() {
+    ltype = LinkNone; elnu = x = y = -1;
     eflip = 0; pflags = 0;
   };
 };
@@ -102,13 +102,13 @@ struct LinkInfo {
 // -------------------------- TMiso -----------------------------
 
 /** \class TMiso tmiso.h
- * \breef Pure parent of all model elements. 
+ * \breef Pure parent of all model elements.
  *
  */
 
-class TMiso : public TDataSet  { 
+class TMiso : public TDataSet  {
   Q_OBJECT
- public: 
+ public:
    DCL_CTOR(TMiso);
    virtual ~TMiso();
    DCL_CREATE;
@@ -117,14 +117,14 @@ class TMiso : public TDataSet  {
 
    /** external computation function + in/out */
    double fun( double t, IterType itype );
-   
-   /** will be called before any action -- good place for allocs 
+
+   /** will be called before any action -- good place for allocs
     *
-    * \param run_tp current run type: 0-simple, 
+    * \param run_tp current run type: 0-simple,
     *      1 - 1d param loop, 2 - 2d param loop
     * \param an number of steps in modeling
-    * \param anx number of inner param loop 
-    * \param any number of outer param loop 
+    * \param anx number of inner param loop
+    * \param any number of outer param loop
     * \param adt time step  - will be a \b tdt in elememt
     * non-virtual: adjusted by do_preRun
     * */
@@ -150,36 +150,36 @@ class TMiso : public TDataSet  {
    /** will be called after each inner loop: called frop endLoop */
    virtual int do_endLoop(void);
    /** description on element */
-   PRM_STRING( descr, efNoRunChange, "description", 
+   PRM_STRING( descr, efNoRunChange, "description",
        "Object description", "max=128\nncol=-1");
    /** order, in which elements will be used and holder */
-   PRM_INT( ord, efRODial | efNoRunChange, "Order", 
+   PRM_INT( ord, efRODial | efNoRunChange, "Order",
        "Order, in which element will be processed", "min=0\nsep=block" );
    /** visual coordinates */
-   PRM_INT( vis_x, efRODial | efNoRunChange, "Visual x", 
+   PRM_INT( vis_x, efRODial | efNoRunChange, "Visual x",
        "X-coordinate of element in scheme", "min=0\nmax=64" );
-   PRM_INT( vis_y, efRODial | efNoRunChange, "Visual y", 
+   PRM_INT( vis_y, efRODial | efNoRunChange, "Visual y",
        "Y-coordinate of element in scheme", "min=0\nmax=64" );
-   PRM_DOUBLE( out0_init, efNoRunChange, "Init value", 
+   PRM_DOUBLE( out0_init, efNoRunChange, "Init value",
        "Initial value of output", "" );
    PRM_SWITCH( locked, efNoRunChange, "Locked", "Bypass u[0] to output", "sep=col"  );
    PRM_SWITCH( flip, efNoRunChange, "flip image", "flip left-right element icon", "");
-   PRM_SWITCH( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", "cep=col"); 
-   PRM_SWITCH( onlyLast, efNoRunChange , "only Last", "Process element only at last iteration", ""); 
+   PRM_SWITCH( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", "cep=col");
+   PRM_SWITCH( onlyLast, efNoRunChange , "only Last", "Process element only at last iteration", "");
    PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "sep=col");
-   
+
    PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
-   
+
    /** pointer to link data */
    TElmLink *links;
    /** */
    InputParams *pis;
    // PRM_OBJ1( links, 0, "object links", "Object links description", "sep=blockend" );
    /** time step -- setted by preRun 0 - special value to detect usage before start */
-   double tdt = 0; 
+   double tdt = 0;
    /** number of iteration per loop -- setted by PreRun */
    int model_nn = 0;
-   /** pointer to model-owner of this element, same as parent only 
+   /** pointer to model-owner of this element, same as parent only
     * between preRun -- postRun, elseware-0 TODO: remove */
    TModel *model = nullptr;
    /** parameters modified during run flag */
@@ -187,7 +187,7 @@ class TMiso : public TDataSet  {
 
    DCL_DEFAULT_STATIC;
 
-}; 
+};
 
 typedef TMiso* PTMiso;
 

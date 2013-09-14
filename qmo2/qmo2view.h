@@ -50,7 +50,7 @@ class QMo2View : public QWidget
                      noselCheck, moveCheck, doneCheck
    };
    /** Constructor for the view
-     * @param pDoc  your document instance that the view represents. 
+     * @param pDoc  your document instance that the view represents.
      * Create a document before calling the constructor
      * or connect an already existing document to a new MDI child widget.*/
    QMo2View( QMo2Doc* pDoc, QWidget* parent );
@@ -70,7 +70,7 @@ class QMo2View : public QWidget
  signals:
    void viewChanged();
 
- public slots: 
+ public slots:
    /** called whan we need to update views */
    void updateViews();
    /** change selection rel: 0-abs 1-rel 2-next elm */
@@ -97,14 +97,14 @@ class QMo2View : public QWidget
    void cutElm();
    void copyElm();
    void pasteElm();
-   
+
    // outs related
    void newOut();
    void delOut();
    void editOut();
    void showOutData();
    void exportOut();
-  
+
    // graphs related
    void newGraph();
    void delGraph();
@@ -113,22 +113,22 @@ class QMo2View : public QWidget
    void showGraphData();
    void exportGraphData();
    void gnuplotGraph();
-  
+
    // model related
    void editModel();
    void showTreeModel();
    void runScript();
-  
+
    // runs
    void runRun();
    void runPrm();
    void runPrm2();
    void resetModel();
-   
+
    // misc
    void showHelp();
 
- public: 
+ public:
    /** returns document rootdata */
    TRootData* getRoot(void);
    /** returns document model */
@@ -149,7 +149,7 @@ class QMo2View : public QWidget
    virtual void closeEvent( QCloseEvent* );
    virtual void resizeEvent( QResizeEvent* );
    int checkState( CheckType ctp );
- protected:  
+ protected:
    QScrollArea *scrollArea;
    QStructView *sview;
    QOutView *oview;

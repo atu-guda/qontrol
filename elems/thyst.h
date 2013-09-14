@@ -20,11 +20,11 @@
 
 #include <tmiso.h>
 
-static const char* const thyst_list = 
+static const char* const thyst_list =
      "s+alpha*d\n"     // 0
      "alpha*d\n"       // 1
-     "Thetta(d)\n"     // 2 
-     "sign(d)\n"       // 3 
+     "Thetta(d)\n"     // 2
+     "sign(d)\n"       // 3
      "tanh(alpha*d)\n" // 4
      "tanh(s+alpha*d)"; // 5
 
@@ -58,9 +58,9 @@ class THyst : public TMiso  {
    PRM_DOUBLE( d, efInner, "d", "inner state 'd'", "" );
    /** state s */
    PRM_DOUBLE( s, efInner, "s", "inner state 's'", "" );
-   
+
    PRM_INPUT( in_u, 0, "input", "Single input",  "sep=block" );
-   
+
    DCL_DEFAULT_STATIC;
 };
 

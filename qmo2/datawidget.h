@@ -23,10 +23,10 @@ class DataWidget;
 /** Abstract class for any widgets for data editing in DataDialog...
  * */
 class DataWidget : public QFrame {
- public: 
+ public:
   DataWidget( HolderData &d, QWidget *parent = 0 );
-  virtual QSize	minimumSizeHint() const;
-  virtual QSize	sizeHint() const;
+  virtual QSize        minimumSizeHint() const;
+  virtual QSize        sizeHint() const;
   virtual bool set() = 0;
   virtual bool get() const = 0;
   QVariant::Type getTp() const { return ho.getTp(); }
@@ -79,8 +79,8 @@ class StringMLDataWidget: public DataWidget {
   virtual bool set();
   virtual bool get() const;
   static DataWidget* create( HolderData &h, QWidget *parent  );
-  virtual QSize	minimumSizeHint() const;
-  virtual QSize	sizeHint() const;
+  virtual QSize        minimumSizeHint() const;
+  virtual QSize        sizeHint() const;
  protected:
   static int reg();
   static int registered;
@@ -234,7 +234,7 @@ class ObjDataWidget: public DataWidget {
 // --------------------------- Factory ----------------------
 
 
-/** creator of DataWidget and database of its properties 
+/** creator of DataWidget and database of its properties
  * */
 class FactoryDataWidget {
   public:
@@ -271,7 +271,7 @@ class DataDialog : public QDialog {
    void addObj();
    void delParam();
    void delObj();
-  protected: 
+  protected:
    virtual int createWidgets();
    void showSimpleHelp();
    void delSome( bool is_obj );

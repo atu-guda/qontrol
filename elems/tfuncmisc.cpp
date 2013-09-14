@@ -37,7 +37,7 @@ CTOR(TFuncMisc,TMiso)
 double TFuncMisc::f( double /* t */ )
 {
   double v, y;
-  y = in_0 - in_1 - x0; 
+  y = in_0 - in_1 - x0;
   switch( (int)type ) {
     case 0:  v = a * deadLine( y, b ); break;
     case 1:  v = a * limitLine( y, b ); break;
@@ -59,7 +59,7 @@ double TFuncMisc::f( double /* t */ )
     default: v = 0;
   };
   v += g;
-  return v; 
+  return v;
 }
 
 DEFAULT_FUNCS_REG(TFuncMisc)
