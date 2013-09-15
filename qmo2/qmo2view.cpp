@@ -210,19 +210,14 @@ void QMo2View::updateViews()
 
 void QMo2View::changeSel( int x, int y, int rel )
 {
-  int elnu;
   TMiso *ob;
   selObj = nullptr;
   switch( rel ) {
     case 0: sel_x = x; sel_y = y; break;
     case 1: sel_x += x; sel_y += y; break;
     case 2:
-            elnu = model->xy2elnu( sel_x, sel_y );
-            elnu++;
-            if( elnu >= model->getNMiso() )
-              elnu = 0;
-            ob = model->getMiso( elnu );
-            if( ob == 0 )
+            ob = model->xy2Miso( sel_x, sel_y );
+            if( !ob )
               break;
             ob->getData( "vis_x", &sel_x );
             ob->getData( "vis_y", &sel_y );

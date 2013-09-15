@@ -78,26 +78,6 @@ class TElmLink : public TDataSet {
 typedef TElmLink* PTElmLink;
 typedef const TElmLink* CPTElmLink;
 
-// ------------------------- LinkInfo ----------------------------
-
-/**
- * \struct LinkInfo tmiso.h
- * filled by TModel::getLinkInfos
- * */
-struct LinkInfo {
-  ltype_t ltype; /** type in link */
-  int elnu;  /** number of linked element or -1; */
-  int x, y;  /** coordinates of linked element or -1 */
-  int eflip; /** flag: linked element is flipped */
-  int pflags; /** flags from inner model array */
-  //
-  LinkInfo() { reset(); }
-  void reset() {
-    ltype = LinkNone; elnu = x = y = -1;
-    eflip = 0; pflags = 0;
-  };
-};
-
 
 // -------------------------- TMiso -----------------------------
 
@@ -135,6 +115,14 @@ class TMiso : public TDataSet  {
    int startLoop( int acnx, int acny );
    /** will be called after each inner loop -- call do_endLoop */
    int endLoop(void);
+   /** fast access to order */
+   int getOrder() const { return ord; }
+   /** compare objects by order - to sort before run */
+   friend bool operator<( const TMiso &lhs, const TMiso &rhs )
+     { return lhs.ord < rhs.ord; }
+   /** check, if element have given visual coords */
+   bool isAtCoord( int ax, int ay ) const
+     { return (vis_x == ax && vis_y == ay ); }
  protected:
    /** main computation function
     * \param t current time
@@ -170,11 +158,10 @@ class TMiso : public TDataSet  {
 
    PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
 
-   /** pointer to link data */
+   /** pointer to link data : obsoleted, TODO: remove after conversion */
    TElmLink *links;
-   /** */
+   /** pointer to param inputs container */
    InputParams *pis;
-   // PRM_OBJ1( links, 0, "object links", "Object links description", "sep=blockend" );
    /** time step -- setted by preRun 0 - special value to detect usage before start */
    double tdt = 0;
    /** number of iteration per loop -- setted by PreRun */

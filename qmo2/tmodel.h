@@ -50,24 +50,22 @@ class TModel : public TDataContainer  {
   /** function to call from elem.f() to signal something */
   virtual int fback( int code, int aord, const QString &tdescr );
 
-  /** converts order of element to it's position in v_el */
-  virtual int ord2elnu( int aord ) const;
   /** visual coords -> TMiso number. @returns: <0 - not found, >=0 -- elnu */
   virtual int xy2elnu( int avis_x, int avis_y ) const;
   /** visual coords -> TMiso @returns: nullptr - not found */
   TMiso* xy2Miso( int avis_x, int avis_y ) const;
   /** returns number of TMiso ( max value of elnu + 1 ) */
-  virtual int getNMiso(void) const;
+  virtual int getNMiso() const;
   /** returns ptr to TMiso by elnu */
   virtual TMiso* getMiso( int elnu );
   /** returns number of TOutArr */
-  virtual int getNOutArr(void) const;
+  virtual int getNOutArr() const;
   /** returns ptr to TOutArr by out_nu */
   TOutArr* getOutArr( int out_nu );
   /** returns ptr to TOutArr by name */
   TOutArr* getOutArr( const QString &oname );
   /** returns number of TGraph */
-  virtual int getNGraph(void) const;
+  virtual int getNGraph() const;
   /** returns ptr to TGraph gra_nu */
   virtual TGraph* getGraph( int gra_nu );
   /** inserts active element @returns: nulltpr - bad  elese -ptr to inserted element */
@@ -88,11 +86,9 @@ class TModel : public TDataContainer  {
   /** new order of element ny name */
   virtual int newOrder( const QString &name, int new_ord );
   /** suggest order value for new element */
-  virtual int hintOrd(void) const;
-  /** fills (8=2*4) array of LinkInfo structures for link visualization ... */
-  virtual int getLinkInfos( int elnu, LinkInfo *li );
+  virtual int hintOrd() const;
   /** frees output arrays and state: 2->1 */
-  virtual int reset(void);
+  virtual int reset();
 
   /** reimplemented from TDataSet to ensure all data filled and linked */
   virtual int checkData( int i );
@@ -100,20 +96,20 @@ class TModel : public TDataContainer  {
  protected:
   /** reimplemented to real Elems, OutArr, Graphs: TODO: separate containers */
   virtual void do_structChanged();
-  /** sorts {v_el,v_ord} on v_ord */
-  void sortOrd(void);
+  /** sorts {v_el} on el.ord */
+  void sortOrd();
   /** performs one loop */
-  virtual int runOneLoop(void);
+  virtual int runOneLoop();
   /** fill tables & call preRun for elements */
   virtual int preRun( int run_tp, int anx, int any );
   /** call postRun for elements and dealloc inner buffers */
-  virtual int postRun(void);
+  virtual int postRun();
   /** calls startLoop for all elms */
   virtual int allStartLoop( int acnx, int acny );
   /** calls endLoop for all elms */
-  virtual void allEndLoop(void);
+  virtual void allEndLoop();
   /** links input & parm names -> indexses in ptrs */
-  virtual int linkNames(void);
+  virtual int linkNames();
   /** call to allocate out arrays for given type and below */
   virtual void allocOutArrs( int tp );
   /** resets all array with given level or below */
@@ -239,8 +235,6 @@ class TModel : public TDataContainer  {
   std::vector<int> v_outt;
   /** vector indexes of graph */
   std::vector<TGraph*> v_graph;
-  /** vector of elems orders */
-  std::vector<int> v_ord;
   DCL_DEFAULT_STATIC;
 
 };

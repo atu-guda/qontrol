@@ -40,7 +40,7 @@ CTOR(TModel,TDataContainer)
   m_PI = M_PI;
   m_E = M_E;
   const int ELM_RES = 64; const int OUT_RES = 32;
-  v_el.reserve( ELM_RES ); v_ord.reserve( ELM_RES );
+  v_el.reserve( ELM_RES );
   v_out.reserve( OUT_RES );
   v_outt.reserve( OUT_RES );
   v_graph.reserve( 16 );
@@ -59,7 +59,7 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
 
 
 
-int TModel::startRun( int type )/*{{{1*/
+int TModel::startRun( int type )
 {
   int rc;
   if( run_type >= 0 ) // in progress now
@@ -68,14 +68,17 @@ int TModel::startRun( int type )/*{{{1*/
     type = 0;
   reset();
   run_type = type;
+
   n1_eff = n2_eff = 1;
-  if( run_type > 0 ) n1_eff = nl1;
-  if( run_type > 1 ) n2_eff = nl2;
+  if( run_type > 0 ) 
+    n1_eff = nl1;
+  if( run_type > 1 ) 
+    n2_eff = nl2;
+
   n_tot = nn * n1_eff * n2_eff; i_tot = ii = il1 = il2 = 0;
   sgnt = int( time( 0 ) );
   prm2 = (double)prm2s; prm3 = (double)prm3s;
-  //if( seed != -1 )
-  //  srand( seed );
+
   allocOutArrs( run_type );
   rc = preRun( run_type, n1_eff, n2_eff );
   if( rc != 0 ) {
@@ -86,16 +89,17 @@ int TModel::startRun( int type )/*{{{1*/
   t = rtime = 0;
 
   return 0;
-}/*}}}1*/
+}
 
-int TModel::nextSteps( int csteps )/*{{{1*/
+int TModel::nextSteps( int csteps )
 {
   int i, rc;
   if( csteps < 1 )
     csteps = 1;
 
   for( i=0; i < csteps && i_tot < n_tot && end_loop == 0; i++, i_tot++ ) {
-    prm0 = prm0s + il1 * prm0d; prm1 = prm1s + il2 * prm1d;
+    prm0 = prm0s + il1 * prm0d;
+    prm1 = prm1s + il2 * prm1d;
     if( ii == 0 ) {    // --------------------- start inner loop --
       if( il1 == 0 ) { // start prm0 loop
         resetOutArrs( 1 );
@@ -122,9 +126,9 @@ int TModel::nextSteps( int csteps )/*{{{1*/
   if( i_tot >= n_tot )
     stopRun(0);
   return 0;
-}/*}}}1*/
+}
 
-int TModel::stopRun( int reason )/*{{{1*/
+int TModel::stopRun( int reason )
 {
   if( end_loop || reason ) {
     reset();
@@ -134,9 +138,9 @@ int TModel::stopRun( int reason )/*{{{1*/
     state = stateDone;
   };
   return 0;
-}/*}}}1*/
+}
 
-int TModel::runOneLoop(void)/*{{{1*/
+int TModel::runOneLoop()
 {
   int out_level;
   unsigned long wait_ms;
@@ -157,42 +161,41 @@ int TModel::runOneLoop(void)/*{{{1*/
     out_level = run_type;
   };
 
-  int elnu = 0;
   for( TMiso* cur_el : v_el ) {
     if( end_loop )
       break;
 
      cur_el->fun( t, itype );  // <============ main action
-     ++elnu;
   };  // end element loop;
+
   for( TOutArr* arr : v_out ) {
     arr->take_val( out_level );
   };
   t += tdt; ii++;
   return 0;
-}/*}}}1*/
+}
 
-int TModel::preRun( int run_tp, int anx, int any )/*{{{1*/
+int TModel::preRun( int run_tp, int anx, int any )
 {
   int rc;
   tdt = tt / nn;
 
   state = stateRun;
   for( TMiso *ob : v_el ) {
-    if( ob != 0 ) {
+    if( ob ) {
       rc = ob->preRun( run_tp, nn, anx, any, tdt );
       if( rc != 0 )
         return rc;
     };
   };
   return 0;
-}/*}}}1*/
+}
 
-int TModel::postRun(void)/*{{{1*/
+int TModel::postRun()
 {
   int cm = 0;
   for( TMiso *ob : v_el ) {
-    if( ob != 0 ) {
+    if( ob ) {
       ob->postRun( end_loop );
       cm |= ob->getModified();
     };
@@ -200,43 +203,43 @@ int TModel::postRun(void)/*{{{1*/
   if( modified == 0 || cm != 0 )
     modified |= 2;
   return 0;
-}/*}}}1*/
+}
 
-int TModel::reset(void)/*{{{1*/
+int TModel::reset()
 {
   linkNames();
   for( TOutArr *arr : v_out ) {
-    if( arr == 0 )
+    if( ! arr )
       continue; // never be!
     arr->free();
   };
   state = stateGood; run_type = -1; sgnt = int( time(0) );
   return 0;
-}/*}}}1*/
+}
 
-int TModel::allStartLoop( int acnx, int acny )/*{{{1*/
+int TModel::allStartLoop( int acnx, int acny )
 {
   int rc;
   for( TMiso *ob : v_el ) {
-    if( ob == 0 )
+    if( ! ob )
       continue;
     rc = ob->startLoop( acnx, acny );
     if( rc != 0 )
       return rc;
   };
   return 0;
-}/*}}}1*/
+}
 
-void TModel::allEndLoop(void)/*{{{1*/
+void TModel::allEndLoop()
 {
   for( TMiso *ob : v_el ) {
-    if( ob == nullptr )
+    if( ! ob )
       continue;
     ob->endLoop();
   };
-}/*}}}1*/
+}
 
-void TModel::allocOutArrs( int tp )/*{{{1*/
+void TModel::allocOutArrs( int tp ) // TODO: common code
 {
   int out_tp;
   if( tp < 0 || tp > 2 )
@@ -255,101 +258,88 @@ void TModel::allocOutArrs( int tp )/*{{{1*/
       default: ; // don't allocate special arrays
     };
   };
-}/*}}}1*/
+}
 
-void TModel::resetOutArrs( int level )/*{{{1*/
+void TModel::resetOutArrs( int level )
 {
   for( TOutArr *arr : v_out ) {
     if( !arr )
       continue;
     arr->reset( level );
   };
-}/*}}}1*/
+}
 
 
 
 
-int TModel::ord2elnu( int aord ) const/*{{{1*/
-{
-  for( unsigned i=0; i<v_ord.size(); i++ ) {
-    if( v_ord[i] == aord )
-      return i;
-  };
-  return -1;
-}/*}}}1*/
 
-int TModel::fback( int code, int /* aord */, const QString & /* tdescr */ )/*{{{1*/
+int TModel::fback( int code, int /* aord */, const QString & /* tdescr */ )
 {
   if( code ) {
     end_loop = code;
   };
   return 0;
-}/*}}}1*/
+}
 
-int TModel::checkData( int n )/*{{{1*/
+int TModel::checkData( int n )
 {
   if( n < 0 )
     linkNames();
   return TDataContainer::checkData( n );
-}/*}}}1*/
+}
 
 
-int TModel::xy2elnu( int avis_x, int avis_y ) const /*{{{1*/ // TODO: todel
+int TModel::xy2elnu( int avis_x, int avis_y ) const // TODO: todel ?
 {
-  int i = 0, ox, oy;
+  int i = 0;
   for( const TMiso *ob : v_el ) {
-    if( ob == 0 )
+    if( !ob )
       continue;
-    ox = oy = -1;
-    ob->getData( "vis_x", &ox );
-    ob->getData( "vis_y", &oy );
-    if( ox == avis_x && oy == avis_y )
+    if( ob->isAtCoord( avis_x, avis_y ) ) {
       return i;
+    }
     ++i;
   };
   return -1;
-}/*}}}1*/
+}
 
-TMiso* TModel::xy2Miso( int avis_x, int avis_y ) const/*{{{1*/
+TMiso* TModel::xy2Miso( int avis_x, int avis_y ) const
 {
-  int  ox, oy;
   for( TMiso *ob : v_el ) {
     if( !ob )
       continue;
-    ox = oy = -1;
-    ob->getData( "vis_x", &ox );
-    ob->getData( "vis_y", &oy );
-    if( ox == avis_x && oy == avis_y )
+    if( ob->isAtCoord( avis_x, avis_y ) ) {
       return ob;
+    }
   }
   return nullptr;
-}/*}}}1*/
+}
 
-int TModel::getNMiso(void) const/*{{{1*/
+int TModel::getNMiso() const
 {
   return v_el.size();
-}/*}}}1*/
+}
 
-TMiso* TModel::getMiso( int elnu )/*{{{1*/
+TMiso* TModel::getMiso( int elnu )
 {
   if( elnu < 0 || elnu >= (int)v_el.size() )
     return nullptr;
   return v_el[elnu];
-}/*}}}1*/
+}
 
-int TModel::getNOutArr(void) const/*{{{1*/
+int TModel::getNOutArr() const
 {
   return v_out.size();
-}/*}}}1*/
+}
 
-TOutArr* TModel::getOutArr( int out_nu )/*{{{1*/
+TOutArr* TModel::getOutArr( int out_nu )
 {
   if( out_nu < 0 || out_nu >= (int)v_out.size() )
     return nullptr;
   return v_out[out_nu];
-}/*}}}1*/
+}
 
-TOutArr* TModel::getOutArr( const QString &oname )/*{{{1*/
+TOutArr* TModel::getOutArr( const QString &oname )
 {
   if( oname.isEmpty() )
     return nullptr;
@@ -358,26 +348,26 @@ TOutArr* TModel::getOutArr( const QString &oname )/*{{{1*/
     DBG2q( "warn: fail to find TOutArr", oname );
   }
   return arr;
-}/*}}}1*/
+}
 
-int TModel::getNGraph(void) const/*{{{1*/
+int TModel::getNGraph() const
 {
   return v_graph.size();
-}/*}}}1*/
+}
 
-TGraph* TModel::getGraph( int gra_nu )/*{{{1*/
+TGraph* TModel::getGraph( int gra_nu )
 {
   if( gra_nu < 0 || gra_nu >= (int)v_graph.size() )
     return nullptr;
   return v_graph[gra_nu];
-}/*}}}1*/
+}
 
 TMiso* TModel::insElem( const QString &cl_name, const QString &ob_name,
-                     int aord, int avis_x, int avis_y )/*{{{1*/
+                     int aord, int avis_x, int avis_y )
 {
   TMiso *ob;
   ob = qobject_cast<TMiso*>( add_obj( cl_name, ob_name ) );
-  if( !ob || ob->isChildOf( "TMiso" ) == 0 ) // FIXME: leak?
+  if( !ob ) // FIXME: leak?
     return nullptr;
   ob->setData( "ord", aord );
   ob->setData( "vis_x", avis_x );
@@ -385,12 +375,12 @@ TMiso* TModel::insElem( const QString &cl_name, const QString &ob_name,
   reset();
   modified |= 1;
   return ob;
-}/*}}}1*/
+}
 
-int TModel::insOut( const QString &outname, const QString &objname )/*{{{1*/
+int TModel::insOut( const QString &outname, const QString &objname )
 {
   TOutArr *arr = qobject_cast<TOutArr*>( add_obj( "TOutArr", outname ) );
-  if( !arr || arr->isChildOf( "TOutArr" ) == 0 )
+  if( !arr )
     return -1;
   arr->setData( "name", objname );
 
@@ -405,19 +395,19 @@ int TModel::insOut( const QString &outname, const QString &objname )/*{{{1*/
   reset();
   modified |= 1;
   return 0;
-}/*}}}1*/
+}
 
-int TModel::insGraph( const QString &gname )/*{{{1*/
+int TModel::insGraph( const QString &gname )
 {
   TGraph *gra = qobject_cast<TGraph*>( add_obj( "TGraph", gname ) );
-  if( !gra || gra->isChildOf( "TGraph" ) == 0 )
+  if( !gra )
     return -1;
   reset();
   modified |= 1;
   return 0;
-}/*}}}1*/
+}
 
-int TModel::delElem( const QString &ename )/*{{{1*/
+int TModel::delElem( const QString &ename )
 {
   TMiso *ob = getElemT<TMiso*>( ename );
   if( !ob ) {
@@ -430,10 +420,10 @@ int TModel::delElem( const QString &ename )/*{{{1*/
     modified |= 1;
   }
   return rc;
-}/*}}}1*/
+}
 
 
-int TModel::delOut( int out_nu )/*{{{1*/
+int TModel::delOut( int out_nu )
 {
   int k;
   if( out_nu < 0 || out_nu >= (int)v_out.size() )
@@ -442,9 +432,9 @@ int TModel::delOut( int out_nu )/*{{{1*/
   reset();
   modified |= 1;
   return k;
-}/*}}}1*/
+}
 
-int TModel::delGraph( int gr_nu )/*{{{1*/
+int TModel::delGraph( int gr_nu )
 {
   int k;
   if( gr_nu < 0 || gr_nu >= (int)v_graph.size() )
@@ -453,50 +443,56 @@ int TModel::delGraph( int gr_nu )/*{{{1*/
   reset();
   modified |= 1;
   return k;
-}/*}}}1*/
+}
 
-int TModel::newOrder( const QString &name, int new_ord )/*{{{1*/
+int TModel::newOrder( const QString &name, int new_ord )
 {
   TMiso *ob = getElemT<TMiso*>( name );
   if( !ob )
     return -1;
-  int k = ord2elnu( new_ord );
-  if( k >= 0 )
+
+  auto p = find_if( v_el.begin(), v_el.end(),
+      [new_ord](const TMiso *el) { return new_ord == el->getOrder(); } );
+  if( p != v_el.end() ) {
+    DBGx( "warn: order %d have element \"%s\"",
+          new_ord, qP((*p)->getFullName()) );
     return -1;
+  }
+
   ob->setData( "ord", new_ord );
-  ob->getData( "ord", &k );
+  int real_ord;
+  ob->getData( "ord", &real_ord );
   reset();
   modified |= 1;
-  return ( k == new_ord ) ? 0 : -1;
-}/*}}}1*/
+  return ( real_ord == new_ord ) ? 0 : -1;
+}
 
-int TModel::moveElem( int elnu, int newx, int newy )/*{{{1*/
+int TModel::moveElem( int elnu, int newx, int newy )
 {
-  int cx, cy;
   TMiso *ob, *ob1;
   if( newx < 0 || newy < 0 )
     return -1;
   ob = getMiso( elnu );
   if( ob == 0 ) return -1;
   for( unsigned i=0; i<v_el.size(); i++ ) {
-    if( (int)i == elnu ) continue;
-    cx = cy = -2;
+    if( (int)i == elnu ) 
+      continue;
     ob1 = getMiso( i );
-    if( ob1 == 0 ) continue;
-    ob1->getData( "vis_x", &cx ); ob1->getData( "vis_y", &cy );
-    if( newx == cx && newy == cy ) return -1;
+    if( ! ob1 )
+      continue;
+    if( ob1->isAtCoord( newx, newy ) )
+      return -1;
   };
   ob->setData( "vis_x", newx );
   ob->setData( "vis_y", newy );
   reset();
   return 0;
-}/*}}}1*/
+}
 
-int TModel::linkNames(void)/*{{{1*/
+int TModel::linkNames()
 {
-  int oord, out_tp;
   QString lname, pname, nname, oname;
-  v_el.clear(); v_ord.clear();
+  v_el.clear();
   v_out.clear(); v_outt.clear();
   v_graph.clear();
 
@@ -510,9 +506,6 @@ int TModel::linkNames(void)/*{{{1*/
 
     if( ds->isChildOf( "TMiso" )) {
       v_el.push_back( qobject_cast<TMiso*>(ds) );
-      oord = -1;
-      ds->getData( "ord", &oord );
-      v_ord.push_back( oord );
       continue;
     };
     if( ds->isChildOf( "TOutArr" )) {
@@ -529,8 +522,9 @@ int TModel::linkNames(void)/*{{{1*/
   sortOrd();
 
   // fill outs elnus and types
+  int out_tp;
   for( TOutArr *arr : v_out ) {
-    if( arr == 0 ) { // FIXME
+    if( !arr ) { // FIXME
       v_outt.push_back(-1);
       continue;
     };
@@ -539,91 +533,27 @@ int TModel::linkNames(void)/*{{{1*/
     v_outt.push_back( out_tp );
   };
   return 0;
-}/*}}}1*/
+}
 
 void TModel::do_structChanged()
 {
   linkNames();
 }
 
-void TModel::sortOrd(void)/*{{{1*/
+void TModel::sortOrd()
 {
-  int i, n, en, t;
-  TMiso *tob;
-  if( v_el.size() < 2 )
-    return;
-  en = 0; n = v_el.size();
-  while( en == 0 ) { // simple bubble sort TODO: use STL sort
-     en = 1;
-     for( i=0; i<n-1; i++ ) {
-        if( v_ord[i] > v_ord[i+1] ) {
-          t = v_ord[i];   v_ord[i] = v_ord[i+1]; v_ord[i+1] = t;
-          tob = v_el[i];  v_el[i] = v_el[i+1];   v_el[i+1] = tob;
-          en = 0;
-        };
-     };
-     n--;
-  };
-}/*}}}1*/
+  sort( v_el.begin(), v_el.end(),
+      []( const TMiso *a, const TMiso*b) { return *a < *b; } );
+}
 
-int TModel::hintOrd(void) const/*{{{1*/
+int TModel::hintOrd() const
 {
-  //vector<int>::const_iterator pm = max_element( v_ord.begin(), v_ord.end() );
-  auto pm = max_element( v_ord.begin(), v_ord.end() );
   int m = 0;
-  if( pm != v_ord.end() )
-    m = *pm;
+  for_each( v_el.begin(), v_el.end(),
+      [&m](TMiso *el) { m = max(m,el->getOrder()); } );
   int m1 = ( (m+10) / 10 ) * 10;
   return m1;
-}/*}}}1*/
-
-
-int TModel::getLinkInfos( int elnu, LinkInfo *li )/*{{{1*/
-{
-  int i, vx, vy, flip;
-  QString lnk;
-  if( !li )
-    return -1;
-  for( i=0; i<8; i++ ) {  // reset all fields to default
-    li[i].reset();
-  };
-  TMiso *to_ob = getMiso( elnu );
-  if( !to_ob )
-    return -1;
-
-
-  for( i=0; i<4; i++ ) {  // parm inputs
-    int pi = i+4;
-    if( ! to_ob->getData( "links.pinps" + QSN(i), lnk ) )
-      continue;
-    if( lnk.isEmpty() ) {
-      continue;
-    }
-
-    const TDataSet *ob = nullptr;
-    ltype_t lt;
-    const double *so_d = getDoublePtr( lnk, &lt, &ob );
-    li[pi].ltype = lt;
-    if( lt != LinkElm )
-      continue;
-
-    if( ! so_d || !ob ) {
-      li[pi].ltype = LinkBad;
-      continue;
-    }
-
-    vx = vy = -1; flip = 0;
-    ob->getData( "vis_x", &vx ); ob->getData( "vis_y", &vy );
-    ob->getData( "flip", &flip );
-    if( vx < 0 || vy < 0 )
-      continue;
-    li[pi].ltype = LinkElm;
-    li[pi].x = vx; li[pi].y = vy; li[pi].eflip = flip;
-  };
-  return 0;
-
-}/*}}}1*/
-
+}
 
 
 
