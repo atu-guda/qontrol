@@ -1002,16 +1002,7 @@ void DataDialog::checkData()
 
 void DataDialog::showHelp()
 {
-  QString cl_name = ds.getType();
-  if( cl_name.isEmpty() )
-    return showSimpleHelp();
-  QString resname = L8B( "elems/" );
-  resname += cl_name;
-  resname += L8B( "/index.html" );
-  QString helpfile = QMo2Win::qmo2win->findRes( resname );
-  // TODO: rich browser here or in next function
-  //if( helpfile.isEmpty() )
-  //  return showSimpleHelp();
+  // TODO: file
   return showSimpleHelp();
 }
 

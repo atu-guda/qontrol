@@ -118,14 +118,13 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
 
 void QOutView::mousePressEvent( QMouseEvent *me )
 {
-  int h, nh, out_nu, n_out, x, y, nn, old_level;
+  int out_nu, n_out, x, y, nn, old_level;
   QMenu *menu;
   TOutArr *arr;
   QString outname( "?bad?" );
   QString elmname;
   QString title;
   if( model == 0 ) return;
-  h = height(); nh = h / grid_sz - 1; ++nh; --nh; // TODO: FAKE
   x = me->x(); y = me->y();
   if( x < 2 || x > fwidth ) return;
   out_nu = ( y - grid_sz/2 ) / grid_sz;

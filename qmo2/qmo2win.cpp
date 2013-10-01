@@ -47,8 +47,6 @@ QMo2Win::QMo2Win(void)
   // printer->setPageSize( QPrinter::A4 );
   // printer->setColorMode( QPrinter::GrayScale );
   untitledCount = 0;
-  /* -------- other ----------- */
-  add_dir = "" ;
 
   initDirs();
   // call inits to invoke all other construction parts
@@ -72,50 +70,56 @@ QMo2Win::~QMo2Win()
 
 void QMo2Win::initDirs() // TODO: remove or rewrite
 {
+  QStringList dl;
   QString app = L8B( "share/" PACKAGE );
   QString sep = L8B( "/" );
   QString prefix = L8B( "/usr" ); // TODO: from config
 
-  xbuild_dir = QString();
+  QString xbuild_dir;
   QDir d( qApp->applicationDirPath() );
   d.makeAbsolute();
+  xbuild_dir = d.canonicalPath() + sep + app;
+  // DBGx( "dbg: test build dir: \"%s\"", qP(xbuild_dir) );
   if( d.exists( L8B( "main.cpp" ) )
       && d.exists( app  ) ) {
-    xbuild_dir = d.canonicalPath() + sep + app;
+    dl << xbuild_dir;
+    DBGx( "dbg: add build dir: \"%s\"", qP(xbuild_dir) );
   };
 
-  global_dir = QString::null;
+  QString global_dir;
   d.setPath( prefix + sep + app );
+  global_dir = d.canonicalPath();
+  // DBGx( "dbg: test global dir: \"%s\"", qP(global_dir) );
   if( d.isReadable() ) {
-    global_dir = d.canonicalPath();
+    dl << global_dir;
+    DBGx( "dbg: add global dir: \"%s\"", qP(global_dir) );
   };
 
-  local_dir = QString::null;
+  QString local_dir;
   d.setPath( QDir::homePath() + sep + app );
   d.makeAbsolute();
+  local_dir = d.canonicalPath();
+  // DBGx( "dbg: test local dir: \"%s\"", qP(local_dir) );
   if( d.isReadable() ) {
-    local_dir = d.canonicalPath();
+    dl << local_dir;
+    DBGx( "dbg: add local dir: \"%s\"", qP(local_dir) );
   };
 
-  d.setPath( add_dir );
-  d.makeAbsolute();
-  if( ! d.isReadable() ) {
-    add_dir = QString::null;
-  };
 
-  env_dir = QString::null;
-  const char *evar = getenv("QMO2DIR");
+  QString env_dir;
+  const char *evar = getenv("QMO2XDIR");
   if( evar ) {
     d.setPath( L8B(evar) );
     if( d.isReadable() ) {
       d.makeAbsolute();
       env_dir = d.canonicalPath();
+      dl << env_dir;
+      DBGx( "dbg: add env dir: \"%s\"", qP(env_dir) );
     };
   };
 
-  all_dirs[4] = &global_dir; all_dirs[3] = &local_dir;
-  all_dirs[2] = &add_dir;    all_dirs[1] = &xbuild_dir;
-  all_dirs[0] = &env_dir;    all_dirs[5] = 0;
+  QDir::setSearchPaths("app", dl );
+  DBGx( "dbg: app dirs: \"%s\"", qP( QDir::searchPaths("app").join(" ") ) );
 
 }
 
@@ -128,18 +132,6 @@ void QMo2Win::setFonts()
   QApplication::setFont( mainFont );
 }
 
-QString QMo2Win::findRes( const QString &res )
-{
-  for( int i=0; i<5; i++ ) {
-    if( all_dirs[i]->isEmpty() )
-      continue;
-    QDir d( *all_dirs[i] );
-    if( d.exists( ) ) { // TODO: it was 2 args?
-      return *all_dirs[i] + "/" + res;
-    };
-  };
-  return QString::null;
-}
 
 void QMo2Win::initIface()
 {
@@ -1079,33 +1071,16 @@ void QMo2Win::slotStatusHelpMsg(const QString &text)
 
 void QMo2Win::slotTest(void)
 {
-  static const char *loc_test = ""
-    "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЫЪЬЭЮЯ:"
-    "абвгдежзиклмнопрстуфхцчшщыъьэюя:іІїЇєЄёЁҐґ."
-  ;
   QString ostr( "Test called\n" );
   statusBar()->showMessage( tr( "Test something..." ) );
-  ostr += L8B( loc_test ) + "(Local8bit)\n" ;
-  ostr += QString::fromAscii( loc_test ) + "(Ascii)\n";
-  for( unsigned ccode=0x0390; ccode < 0x0400; ++ccode )  {
+
+  for( unsigned ccode=0x03A0; ccode < 0x0400; ++ccode )  {
     ostr += QChar( ccode );
     if( (ccode & 0x1F) == 0x1F )
       ostr += " <:> " + QSN(ccode,16) + "\n";
   }
   ostr += "\n";
 
-  for(int i=0; i<5; i++) {
-    ostr += QSN(i) + ": ";
-    ostr += *all_dirs[i] + "\n";
-  };
-  ostr += "local: ";
-  ostr += findRes("local.dat");
-  ostr += "\nglobal: ";
-  ostr += findRes("global.dat");
-  ostr += "\nbuild: ";
-  ostr += findRes("build.dat");
-  ostr += "\nenv: ";
-  ostr += findRes("env.dat") + "\n";
   //ostr += "\nDMIN: " + QSN( DMIN );
   //ostr += " DMAX: "  + QSN( DMAX );
   //ostr += "\niDMIN: " + QSN( (int)(DMIN) );

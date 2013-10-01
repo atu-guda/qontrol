@@ -123,7 +123,7 @@ QString HolderData::getFullName() const
   const TDataSet *cob;
   QString res = objectName();
   QString tn;
-  cob = par; // TODO? is first dot need
+  cob = par;
   while( cob != 0 ) {
     tn = cob->objectName();
     tn += '.';
@@ -1402,7 +1402,6 @@ void TDataSet::post_set()
       continue;
     ho->post_set();
   }
-// TODO:
 }
 
 QString TDataSet::toString() const

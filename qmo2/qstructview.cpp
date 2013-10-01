@@ -148,7 +148,6 @@ bool QStructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   ob->getData( "noIcon", &ei.noIcon );
   ei.flip_factor = ei.flip ? 1 : -1;
   ei.n_inp = ob->inputsCount();
-  ei.n_pinp = 0; // TODO: real
 
   ei.xs0 = lm + ei.vis_x * grid_sz;
   ei.ys0 = lm + ei.vis_y * grid_sz;

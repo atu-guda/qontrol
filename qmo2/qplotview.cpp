@@ -585,7 +585,7 @@ void QPlotView::initFakeArrs(void)
 
 void QPlotView::initArrs(void)
 {
-  int i, k, tp, out_tp, out_nn, out_ny, start_from;
+  int i, k, out_tp, out_nn, out_ny, start_from;
   double vmin, vmax;
   QString outname, buf;
   TOutArr *arr;
@@ -632,7 +632,6 @@ void QPlotView::initArrs(void)
   arr->getData( "dmin", &vmin );
   arr->getData( "dmax", &vmax );
   if( vmin >= vmax ) vmax = vmin + 1;
-  tp = out_tp; ++tp; --tp; // TODO: fake
   nn = out_nn;
   scd->realMinX = scd->plotMinX = vmin; scd->realMaxX = scd->plotMaxX = vmax;
   arr->getData( "label", buf );

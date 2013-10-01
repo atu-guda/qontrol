@@ -1,5 +1,5 @@
-create simple types
-gsl_* envelop
+autostart flag model/run
+rename Q* classes to w/o Q - not part of Qt
 TCircBuf + TDelay re*
 TFourier, TCorrAnal - remove output to TModel vars: can be user directly
 More plot types (dot...). Qwtplot?
@@ -9,7 +9,6 @@ Rename action
 Auto create GET/SET function for my datas, create Qt properties - scripts. ?
 
 
-Tree View. -- rethink??
 
 migrate to qontrol
 
@@ -22,10 +21,9 @@ implement loading objects in so.
 handling special names, filling in TAnyDial
 functions in data info
 
-more flexible TOutArr
 Distributions analysis + plot
-rename,cut,copy,paste+rename (clipboard textual or bin)
-vector icons (language) (may be dynamic)
+rename
+vector icons (language=SVG?) (may be dynamic)
 Hue of elements
 Label of element (or/and floating labels on structure view)
 Labels on plot view (fixed, attached to some points)

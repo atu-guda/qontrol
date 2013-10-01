@@ -86,9 +86,7 @@ class QMo2Win : public QMainWindow
     /** enables/disables menu entries/toolbar items */
     void enableActions( bool ena, int id_ );
     /** returns apps printer */
-    QPrinter* getPrinter(void) { return printer; }
-    /** finds resource file among resource dirs */
-    QString findRes( const QString &res );
+    QPrinter* getPrinter() { return printer; }
     /** returns pointer to settings object */
     Mo2Settings* getSettings() { return &sett; }
     /** reads new XML file: to use from slot and commanline */
@@ -252,11 +250,6 @@ class QMo2Win : public QMainWindow
     /** common fonts */
     QFont mainFont, smallFont, plotFont, structFont;
 
-    /* ------------------------ dirs ---------------------------- */
-    /** directories to search resources */
-    QString global_dir, local_dir, add_dir, xbuild_dir, env_dir;
-    /** array of pointers to search dir strings */
-    QString* all_dirs[6];
 
     QMenu *pFileMenu;
     QMenu *pEditMenu;
