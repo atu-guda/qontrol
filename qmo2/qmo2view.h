@@ -155,17 +155,16 @@ class QMo2View : public QWidget
    QOutView *oview;
    QGraphView *gview;
    QStatusModel *stam;
-   // QTreeView *treeView;
+
    QMo2Doc *doc;
    TRootData *root;
    TModel *model;
-   HolderModel *ho_mo;
-   int sel, sel_x, sel_y, mark, level;
+   int sel = -1, sel_x = 0, sel_y = 0, mark = -1, level = 0;
    QString scr = "a=12;\nb=4;\nprint('From script\\n');\nprint( model );\n a*b; ";
    /** prt to selected object or nullptr */
-   TMiso *selObj;
+   TMiso *selObj = nullptr;
    /** prt to marked object or nullptr */
-   TMiso *markObj;
+   TMiso *markObj = nullptr;
    /** name of marked element */
    QString markName;
    /** help string */

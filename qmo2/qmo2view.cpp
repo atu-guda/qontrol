@@ -38,34 +38,32 @@ using namespace std;
 
 
 QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
-: QWidget( parent )
+: QWidget( parent ), doc( pDoc ),
+  root( doc->getRoot() ),
+  model( doc->getModel() )
 {
-  doc = pDoc;
-  QSize p_size = parent->size();
-  root = doc->getRoot();
-  model = doc->getModel();
-  ho_mo = new HolderModel( root, this );
-  sel = mark = -1; sel_x = sel_y = 0; level = 0;
-  selObj = nullptr; markObj = nullptr;
-
   QVBoxLayout *vlay = new QVBoxLayout( this );
+  vlay->setContentsMargins( 2, 1, 2, 2 );
 
-  QWidget *left_part = new QWidget( this );
+  QWidget *main_part = new QWidget( this );
 
   setAttribute(Qt::WA_DeleteOnClose);
 
-  QSplitter *split = new QSplitter( this );
 
-  QGridLayout *grLay = new QGridLayout( left_part );
+  QGridLayout *grLay = new QGridLayout( main_part );
+  grLay->setContentsMargins( 2, 2, 2, 2 );
 
-  scrollArea = new QScrollArea( left_part );
-  sview = new QStructView( doc, this, left_part );
+  scrollArea = new QScrollArea( main_part );
+
+  sview = new QStructView( doc, this, main_part );
   scrollArea->setWidget( sview );
-  scrollArea->setLineWidth( 2 );
-  scrollArea->setMidLineWidth( 2 );
+  scrollArea->setLineWidth( 1 );
+  scrollArea->setMidLineWidth( 1 );
   scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
-  oview = new QOutView( doc, this, left_part );
-  gview = new QGraphView( doc, this, left_part );
+  scrollArea->setFocusProxy( sview );
+
+  oview = new QOutView( doc, this, main_part );
+  gview = new QGraphView( doc, this, main_part );
 
   stam = new QStatusModel( this, this );
 
@@ -73,18 +71,11 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   grLay->addWidget( oview, 0, 1 );
   grLay->addWidget( gview, 0, 2 );
 
-  left_part->setLayout( grLay );
+  main_part->setLayout( grLay );
 
-  split->addWidget( left_part );
-
-  vlay->addWidget( split );
+  vlay->addWidget( main_part );
   vlay->addWidget( stam );
   setLayout( vlay );
-
-  QSize s_size ( sview->getElemsBound() );
-  s_size += QSize( 2 * oview->width() + gview->width(), 0 );
-  QSize n_size = s_size.boundedTo( p_size );
-  resize( n_size );
 
   setWindowTitle( doc->title() );
 
@@ -1155,6 +1146,7 @@ void QMo2View::showTreeModel()
 
   QVBoxLayout *lay = new QVBoxLayout();
 
+  HolderModel *ho_mo = new HolderModel( root, this );
   QTreeView *treeView = new QTreeView( dia );
   treeView->setModel( ho_mo );
 
@@ -1169,6 +1161,7 @@ void QMo2View::showTreeModel()
   dia->resize( 600, 400 ); // TODO: unmagic
   dia->exec();
   delete dia;
+  delete ho_mo;
   emit viewChanged();
   return;
 }

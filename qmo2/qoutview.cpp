@@ -29,11 +29,13 @@ QOutView::QOutView(  QMo2Doc *adoc,  QMo2View *mview,
 {
   doc = adoc; mainview = mview;
   model = 0; grid_sz = 15;
-  QPalette palette;
-  palette.setColor(backgroundRole(), QColor(0,0,128) );
-  setPalette(palette);
+  QPalette pal;
+  pal.setBrush( QPalette::Window, QBrush( QColor( 80,128,255 ) ) );
+  setPalette( pal );
+  setAutoFillBackground(true);
   setFixedWidth( 17 );
-  setFocusPolicy( Qt::NoFocus );
+  // setFocusPolicy( Qt::NoFocus );  // default
+  // setFocusPolicy( Qt::StrongFocus ); // for test
 }
 
 QOutView::~QOutView()
@@ -42,7 +44,7 @@ QOutView::~QOutView()
 
 void QOutView::paintEvent( QPaintEvent * /*pe*/ )
 {
-  int h, w, nh, n_out, out_nu, out_type, out_st, level;
+  int h, nh, n_out, out_nu, out_type, out_st, level;
   TOutArr *arr;
   QString target_name;
   if( ! doc )
@@ -58,12 +60,10 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
   grid_sz = ex_sz + 6;
   fwidth = grid_sz * 4;// good/min number of letters in name
   setFixedWidth( fwidth + 8 );
+  h = height();
 
   p.setPen( Qt::black );
-  p.setBrush( QColor( 80,128,255 ) );
-  h = height(); w = width();
   nh = 1 + h / grid_sz;
-  p.drawRect( 0, 0, w, h );
 
   n_out = model->getNOutArr();
   level = mainview->getLevel();

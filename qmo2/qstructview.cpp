@@ -39,8 +39,14 @@ QStructView::QStructView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
   // grid_sz = 40;
   grid_sz = 46;
   lm = tm = 4;  obj_sz = 32;
-  // setBackgroundMode( Qt::NoBackground );
+
+  QPalette pal;
+  pal.setBrush( QPalette::Window, QBrush( Qt::white ) );
+  setPalette( pal );
+  setAutoFillBackground(true);
+
   setMaximumSize( grid_sz*MODEL_MX, grid_sz*MODEL_MY );
+  // setMinimumSize( grid_sz*MODEL_MX, grid_sz*MODEL_MY ); // debug
   setMinimumSize( grid_sz*8, grid_sz*6 );
   setFocusPolicy( Qt::StrongFocus );
   setFocus();
@@ -70,13 +76,19 @@ QSize QStructView::getElemsBound() const
       if( y > my ) my = y;
     };
   };
-  if( sel_x > mx ) mx = sel_x;
-  if( sel_y > my ) my = sel_y;
-  mx+=3; my+=3;
+  if( sel_x > mx )
+    mx = sel_x;
+  if( sel_y > my )
+    my = sel_y;
+  mx += 3; my += 3; // free bound
+
   mx *= grid_sz; my *= grid_sz;
-  QSize pas = mainview->svSize();
-  if( mx > pas.width() ) pas.setWidth( mx );
-  if( my > pas.height() ) pas.setHeight( my );
+  // return QSize( mx, my );
+  QSize pas = mainview->svSize() - QSize(16,16);
+  if( mx > pas.width() ) 
+    pas.setWidth( mx );
+  if( my > pas.height() ) 
+    pas.setHeight( my );
   return pas;
 }
 
@@ -102,13 +114,12 @@ void QStructView::update()
 
 void QStructView::paintEvent( QPaintEvent * /*pe*/ )
 {
-  if( doc == 0 ) return;
+  if( ! doc )
+    return;
   model = doc->getModel();
   devTp = 0;
   QPainter p( this );
-  // p.setBackgroundMode( Qt::OpaqueMode );
-  p.setBackground( hasFocus() ? Qt::white : QColor( 230, 230, 230 )  );
-  p.eraseRect( 2, 2, width()-4, height()-4 );
+
   drawAll( p );
   p.end();
 }
@@ -116,9 +127,11 @@ void QStructView::paintEvent( QPaintEvent * /*pe*/ )
 void QStructView::printAll()
 {
   QPrinter *pr;
-  if( doc == 0 || model == 0 || QMo2Win::qmo2win == 0 ) return;
+  if( !doc || !model || !QMo2Win::qmo2win ) 
+    return;
   pr = QMo2Win::qmo2win->getPrinter();
-  if( pr == 0 ) return;
+  if( !pr ) 
+    return;
   QPrintDialog pr_dialog( pr, this );
   if( pr_dialog.exec() ) {
     devTp = 1;
@@ -519,9 +532,8 @@ void QStructView::mousePressEvent( QMouseEvent *me )
   int h, w, nh, nw, ex, ey, x, y;
   QMenu *menu;
   TMiso *ob = 0;
-  QString elmname( "?bad?" );
+  QString elmname;
   double outval = 0;
-  QString title;
   h = height(); w = width(); nh = h / grid_sz - 1; nw = w / grid_sz - 1;
   x = me->x(); y = me->y();
   ex = ( x - lm ) / grid_sz; ey = ( y - tm ) / grid_sz;
@@ -529,51 +541,15 @@ void QStructView::mousePressEvent( QMouseEvent *me )
     mainview->changeSel( ex, ey, 0 );
     ob = model->xy2Miso( ex, ey );
     if( ob ) {
-      elmname = ob->objectName();
+      elmname = ob->getFullName();
       ob->getData( "out0", &outval );
       if( elmname.isEmpty() )
         elmname = "?unknown?";
     };
-    title = elmname;
-    if( model->getState() > 1 ) {
-      title += QString( "(" ) + QSN( outval ) + QString( ")" );
-    }
     switch( me->button() ) {
       case Qt::LeftButton:  break;
       case Qt::RightButton:
-            menu = new QMenu( this );
-            QAction *act;
-            if( ob != 0 ) {
-              // menu->setTitle( title );
-              (void) menu->addAction( title ); // only a title
-              menu->addSeparator();
-              act = menu->addAction( QIcon( ":icons/editelm.png" ), "&Edit element" );
-              connect( act, &QAction::triggered, mainview, &QMo2View::editElm );
-              act = menu->addAction( QIcon( ":icons/delelm.png" ), "&Delete element" );
-              connect( act, &QAction::triggered, mainview, &QMo2View::delElm );
-              menu->addSeparator();
-              act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
-              connect( act, &QAction::triggered, mainview, &QMo2View::qlinkElm );
-              act = menu->addAction(  QIcon( ":icons/orderelm.png" ), "&Reorder" );
-              connect( act, &QAction::triggered, mainview, &QMo2View::ordElm );
-              menu->addSeparator();
-            } else {
-              act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );
-              connect( act, &QAction::triggered, mainview, &QMo2View::newElm );
-              if( mainview->getMark() >= 0 ) {
-                act = menu->addAction( "&Move to" );
-                connect( act, &QAction::triggered, mainview, &QMo2View::moveElm );
-              }
-            };
-            menu->addSeparator();
-            act = menu->addAction( QIcon( ":icons/newout.png" ), "New outp&ut" );
-            connect( act, &QAction::triggered, mainview, &QMo2View::newOut );
-            menu->addSeparator();
-            act = menu->addAction( QIcon( ":icons/editmodel.png" ), "Edit model" );
-            connect( act, &QAction::triggered, mainview, &QMo2View::editModel );
-            act = menu->addAction( QIcon::fromTheme("document-print"),"Print model" );
-            connect( act, &QAction::triggered, mainview, &QMo2View::print );
-
+            menu = createPopupMenu( elmname, ob != nullptr );
             menu->exec( mapToGlobal(QPoint( x, y )) );
             delete menu;
             break;
@@ -581,6 +557,48 @@ void QStructView::mousePressEvent( QMouseEvent *me )
       default: break;// none
     };
   };
+}
+
+QMenu* QStructView::createPopupMenu( const QString &title, bool has_elem )
+{
+  QMenu *menu = new QMenu( this );
+  QAction *act;
+  (void) menu->addSeparator();
+  if( title.isEmpty() ) {
+    (void) menu->addSection( "  ** Empty **  ");
+  } else {
+    (void) menu->addSection( title );
+  }
+  if( has_elem ) {
+    menu->addSeparator();
+    act = menu->addAction( QIcon( ":icons/editelm.png" ), "&Edit element" );
+    connect( act, &QAction::triggered, mainview, &QMo2View::editElm );
+    act = menu->addAction( QIcon( ":icons/delelm.png" ), "&Delete element" );
+    connect( act, &QAction::triggered, mainview, &QMo2View::delElm );
+    menu->addSeparator();
+    act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
+    connect( act, &QAction::triggered, mainview, &QMo2View::qlinkElm );
+    act = menu->addAction(  QIcon( ":icons/orderelm.png" ), "&Reorder" );
+    connect( act, &QAction::triggered, mainview, &QMo2View::ordElm );
+    menu->addSeparator();
+  } else {
+    act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );
+    connect( act, &QAction::triggered, mainview, &QMo2View::newElm );
+    if( mainview->getMark() >= 0 ) {
+      act = menu->addAction( "&Move to" );
+      connect( act, &QAction::triggered, mainview, &QMo2View::moveElm );
+    }
+  };
+  menu->addSeparator();
+  act = menu->addAction( QIcon( ":icons/newout.png" ), "New outp&ut" );
+  connect( act, &QAction::triggered, mainview, &QMo2View::newOut );
+  menu->addSeparator();
+  act = menu->addAction( QIcon( ":icons/editmodel.png" ), "Edit model" );
+  connect( act, &QAction::triggered, mainview, &QMo2View::editModel );
+  act = menu->addAction( QIcon::fromTheme("document-print"),"Print model" );
+  connect( act, &QAction::triggered, mainview, &QMo2View::print );
+
+  return menu;
 }
 
 void QStructView::mouseDoubleClickEvent( QMouseEvent * /*me*/ )
@@ -594,6 +612,12 @@ void QStructView::keyPressEvent( QKeyEvent *ke )
   int k, /*h, w, nh, nw,*/ st, btnShift, /*btnCtrl,*/ xy_delta;
   k = ke->key(); st = ke->modifiers();
   btnShift = ( ( st & Qt::ShiftModifier ) != 0 );
+  QMenu* menu;
+  QString title;
+  TMiso *ob = mainview->getSelObj();
+  if( ob ) {
+    title = ob->getFullName();
+  }
   // btnCtrl = ( ( st & Qt::ControlModifier ) != 0 );
   // h = height();
   // w = width();
@@ -607,7 +631,7 @@ void QStructView::keyPressEvent( QKeyEvent *ke )
     case Qt::Key_Right: emit sig_changeSel( xy_delta, 0, 1 );  break;
     case Qt::Key_Up:    emit sig_changeSel( 0, -xy_delta, 1 );  break;
     case Qt::Key_Down:  emit sig_changeSel( 0, xy_delta, 1 );  break;
-    case Qt::Key_Tab:   emit sig_changeSel( 1, 0, 2 ); break;
+    case Qt::Key_N:     emit sig_changeSel( 1, 0, 2 ); break;
     case Qt::Key_0:     emit sig_changeLevel(0); break;
     case Qt::Key_1:     emit sig_changeLevel(1); break;
     case Qt::Key_2:     emit sig_changeLevel(2); break;
@@ -618,6 +642,12 @@ void QStructView::keyPressEvent( QKeyEvent *ke )
     case Qt::Key_7:     emit sig_changeLevel(7); break;
     case Qt::Key_8:     emit sig_changeLevel(8); break;
     case Qt::Key_9:     emit sig_changeLevel(9); break;
+
+    case Qt::Key_F10:
+            menu = createPopupMenu( title, ob != nullptr ); // FIXME: use
+            menu->exec( mapToGlobal( getSelCoords() )  );
+            delete menu;
+            break;
     default: ke->ignore();
   };
 }

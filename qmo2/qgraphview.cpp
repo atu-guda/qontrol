@@ -30,6 +30,10 @@ QGraphView::QGraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
   grid_sz = 15;
   setFixedWidth( 25 );
   setFocusPolicy( Qt::NoFocus );
+  QPalette pal;
+  pal.setBrush( QPalette::Window, QBrush( QColor( 0,128,96 ) ) );
+  setPalette( pal );
+  setAutoFillBackground(true);
 }
 
 QGraphView::~QGraphView()
@@ -53,16 +57,16 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
 
   p.setPen( Qt::black );
 
-  if( doc == 0 )
+  if( ! doc )
     return;
   model = doc->getModel();
-  if( model == 0 ) return;
+  if( ! model ) 
+    return;
+
   h = height();
   nh = 1 + h / grid_sz;
   nh += h; // FAKE TODO:
   w = width(); ++w; --w;
-  p.setBrush( QColor( 0,128,96 ) );
-  p.drawRect( 0, 0, w, h );
 
   n_graph = model->getNGraph();
   p.setBrush( Qt::yellow );

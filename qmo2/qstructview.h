@@ -23,6 +23,7 @@
 class QPaintEvent;
 class QMouseEvent;
 class QKeyEvent;
+class QMenu;
 
 #include "tmodel.h"
 #include "qmo2doc.h"
@@ -81,6 +82,8 @@ class QStructView : public QWidget  {
    virtual void keyPressEvent( QKeyEvent *ke );
    /** paint all in given painter */
    void drawAll( QPainter &p );
+   /** create popup menu */
+   QMenu* createPopupMenu( const QString &title, bool has_elem );
 
  protected:
    /** pointer to  document */

@@ -25,7 +25,7 @@ QStatusModel::QStatusModel( QMo2View *mview, QWidget *parent )
 {
   mainview = mview;
   const int label_lw = 1;
-  const int label_sep = 8;
+  const int label_sep = 6;
   // const int label_fs = QFrame::Box | QFrame::Raised;
   const int label_fs = QFrame::Panel | QFrame::Sunken;
   int mw;
@@ -66,7 +66,7 @@ QStatusModel::QStatusModel( QMo2View *mview, QWidget *parent )
   l_val->setLineWidth( label_lw ); l_val->setFrameStyle( label_fs );
   addWidget( l_val );
 
-  setFixedHeight( fm.height() + 16 );
+  setFixedHeight( fm.height() + 12 );
 }
 
 QStatusModel::~QStatusModel()

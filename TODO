@@ -1,4 +1,4 @@
-autostart flag model/run
+run w/o interface fun:
 rename Q* classes to w/o Q - not part of Qt
 command line key -w = write
 TCircBuf + TDelay re*
