@@ -119,21 +119,21 @@ void QGraphView::mousePressEvent( QMouseEvent *me )
            menu->addSeparator();
          };
          act = menu->addAction( "&New" );
-         connect( act, SIGNAL( triggered() ), mainview, SLOT(newGraph() ) );
+         connect( act, &QAction::triggered, mainview, &QMo2View::newGraph );
          if( graph_nu >=0 ) {
            act = menu->addAction( "&Edit" );
-           connect( act, SIGNAL( triggered() ), mainview, SLOT(editGraph() ) );
+           connect( act, &QAction::triggered, mainview, &QMo2View::editGraph );
            act = menu->addAction( "&Delete" );
-           connect( act, SIGNAL( triggered() ), mainview, SLOT(delGraph() ) );
+           connect( act, &QAction::triggered, mainview, &QMo2View::delGraph );
            menu->addSeparator();
            act = menu->addAction( "&Show" );
-           connect( act, SIGNAL( triggered() ), mainview, SLOT(showGraph() ) );
+           connect( act, &QAction::triggered, mainview, &QMo2View::showGraph );
            act = menu->addAction( "Show D&ata" );
-           connect( act, SIGNAL( triggered() ), mainview, SLOT(showGraphData() ) );
+           connect( act, &QAction::triggered, mainview, &QMo2View::showGraphData );
            act = menu->addAction( "D&ump" );
-           connect( act, SIGNAL( triggered() ), mainview, SLOT(exportGraphData() ) );
+           connect( act, &QAction::triggered, mainview, &QMo2View::exportGraphData );
            act = menu->addAction( "Gnu&plot" );
-           connect( act, SIGNAL( triggered() ), mainview, SLOT(gnuplotGraph() ) );
+           connect( act, &QAction::triggered, mainview, &QMo2View::gnuplotGraph );
          };
          menu->exec( mapToGlobal(QPoint( x, y )) );
          delete menu;

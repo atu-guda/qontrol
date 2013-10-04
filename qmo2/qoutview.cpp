@@ -155,16 +155,16 @@ void QOutView::mousePressEvent( QMouseEvent *me )
          (void) menu->addAction( title ); // fake action: title
          menu->addSeparator();
          act = menu->addAction( "&New" );
-         connect( act, SIGNAL( triggered() ), mainview, SLOT(newOut() ) );
+         connect( act, &QAction::triggered, mainview, &QMo2View::newOut );
          act = menu->addAction( "&Edit" );
-         connect( act, SIGNAL( triggered() ), mainview, SLOT(editOut() ) );
+         connect( act, &QAction::triggered, mainview, &QMo2View::editOut );
          act = menu->addAction( "&Delete" );
-         connect( act, SIGNAL( triggered() ), mainview, SLOT(delOut() ) );
+         connect( act, &QAction::triggered, mainview, &QMo2View::delOut );
          menu->addSeparator();
          act = menu->addAction( "D&ump" );
-         connect( act, SIGNAL( triggered() ), mainview, SLOT(exportOut() ) );
+         connect( act, &QAction::triggered, mainview, &QMo2View::exportOut );
          act = menu->addAction( "&Show data" );
-         connect( act, SIGNAL( triggered() ), mainview, SLOT(showOutData() ) );
+         connect( act, &QAction::triggered, mainview, &QMo2View::showOutData );
          menu->exec( mapToGlobal(QPoint( x, y )) );
          delete menu;
          break;

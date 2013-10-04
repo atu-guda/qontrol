@@ -1009,8 +1009,8 @@ void QPlotView::setColors(void)
   QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, i, 0, 1, 2 );
-  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
-  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
+  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
 
   int rc = dia->exec();
   if( rc == QDialog::Accepted ) {
@@ -1110,8 +1110,8 @@ void QPlotView::moveTool(void)
   QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 2, 0, 1, 2 );
-  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
-  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
+  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
 
   int rc = dia->exec();
   if( rc == QDialog::Accepted ) {

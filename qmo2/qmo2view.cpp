@@ -88,10 +88,9 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
 
   setWindowTitle( doc->title() );
 
-  // connect( model, SIGNAL(sigStructChanged()), treeView, SLOT(reset()) );
-  connect( this, SIGNAL(viewChanged()), this, SLOT(updateViews()) );
-  connect( sview, SIGNAL(sig_changeSel(int,int,int)), this, SLOT(changeSel(int,int,int)) );
-  connect( sview, SIGNAL(sig_changeLevel(int)), this, SLOT(changeLevel(int)) );
+  connect( this, &QMo2View::viewChanged, this, &QMo2View::updateViews );
+  connect( sview, &QStructView::sig_changeSel,   this, &QMo2View::changeSel );
+  connect( sview, &QStructView::sig_changeLevel, this, &QMo2View::changeLevel );
 
 }
 
@@ -513,7 +512,7 @@ void QMo2View::infoElm()
   lay->addWidget( bt_ok );
   dia->setLayout( lay );
 
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
   // dia->resize( 600, 300 );
   dia->exec();
   delete dia;
@@ -547,8 +546,8 @@ void QMo2View::showTreeElm()
   lay->addWidget( bt_ok );
   dia->setLayout( lay );
 
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
-  dia->resize( 600, 400 );
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
+  dia->resize( 600, 400 ); // TODO: unmagic
   dia->exec();
   delete dia;
   delete ho_elm;
@@ -583,8 +582,8 @@ void QMo2View::testElm1()
   lay->addWidget( bt_ok );
   dia->setLayout( lay );
 
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
-  dia->resize( 600, 300 );
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
+  dia->resize( 600, 300 ); // TODO: unmagic
   dia->exec();
   delete dia;
   emit viewChanged();
@@ -679,8 +678,8 @@ void QMo2View::pasteElm()
   QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 2, 0, 1, 2 );
-  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
-  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
+  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
 
   int rc = dia->exec();
   elname = oname_ed->text();
@@ -762,8 +761,8 @@ void QMo2View::newOut()
   QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 2, 0, 1, 2 );
-  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
-  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
+  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
 
   rc = dia->exec();
   onameq = oname_ed->text(); enameq = ename_ed->text();
@@ -889,7 +888,7 @@ void QMo2View::showOutData() // TODO: special dialog (+ for many rows)
 
   bt_ok = new QPushButton( "Done", dia );
   bt_ok->setDefault( true );
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
   lay->addWidget( bt_ok, 1, 0, 1, 2 );
   dia->setLayout( lay );
 
@@ -1034,7 +1033,7 @@ void QMo2View::showGraphData()
 
   bt_ok = new QPushButton( "Done", dia );
   bt_ok->setDefault( true );
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
   lv->addWidget( bt_ok );
 
   dia->exec();
@@ -1118,8 +1117,8 @@ void QMo2View::gnuplotGraph()
   QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 7, 0, 1, 2 );
-  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
-  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
+  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
 
   rc = dia->exec();
   if( rc == QDialog::Accepted ) {
@@ -1166,8 +1165,8 @@ void QMo2View::showTreeModel()
   lay->addWidget( bt_ok );
   dia->setLayout( lay );
 
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
-  dia->resize( 600, 400 );
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
+  dia->resize( 600, 400 ); // TODO: unmagic
   dia->exec();
   delete dia;
   emit viewChanged();
@@ -1193,7 +1192,7 @@ void QMo2View::runScript()
   // bt_ok->setDefault( true );
   lv->addWidget( bt_ok );
 
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
 
   int rc = dia->exec();
   if( rc == QDialog::Accepted ) {
@@ -1276,7 +1275,7 @@ void QMo2View::showHelp(void)
   bt_ok->setDefault( true );
   lv->addWidget( bt_ok );
 
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
   dia->exec();
   delete dia;
 }

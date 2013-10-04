@@ -22,7 +22,7 @@
 QColorBtn::QColorBtn( QWidget *parent )
           : QPushButton( parent )
 {
-  connect( this, SIGNAL( clicked() ), SLOT( slotClicked() ) );
+  connect( this, &QColorBtn::clicked, this, &QColorBtn::slotClicked );
   col = Qt::black;
 }
 

@@ -81,8 +81,8 @@ void AddElemDialog::setupUi()
   QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 5, 0, 1, 2 );
-  connect(bbox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(bbox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect( bbox, &QDialogButtonBox::accepted, this, &AddElemDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, this, &AddElemDialog::reject );
   resize( 720, 400 );
 }
 

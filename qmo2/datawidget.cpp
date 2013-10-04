@@ -817,7 +817,7 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
   }
   pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   pb->setText( ho.objectName() );
-  connect( pb, SIGNAL(clicked()), this, SLOT(edit()) );
+  connect( pb, &QPushButton::clicked, this, &ObjDataWidget::edit );
 
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
@@ -1045,7 +1045,7 @@ void DataDialog::showSimpleHelp(void)
   lay->addWidget( bt_ok, 1, 0 );
   dia->setLayout( lay );
 
-  connect( bt_ok, SIGNAL(clicked()), dia, SLOT(accept()) );
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
   brow->scrollToAnchor( "help_head" );
   dia->exec();
   delete dia;
@@ -1089,8 +1089,8 @@ void DataDialog::addParam()
   QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dia );
   lay->addWidget( bbox, 6, 0, 1, 2 );
-  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
-  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
+  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
 
   int rc = dia->exec();
   QString nm = ed_name->text();
@@ -1186,8 +1186,8 @@ void DataDialog::delSome( bool is_obj )
   QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox );
-  connect(bbox, SIGNAL(accepted()), dia, SLOT(accept()));
-  connect(bbox, SIGNAL(rejected()), dia, SLOT(reject()));
+  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
 
   int rc = dia->exec();
   QString ob_name;
@@ -1301,22 +1301,22 @@ int DataDialog::createWidgets()
   QHBoxLayout *lay_btn2 = new QHBoxLayout;
 
   QPushButton *btn_addParam = new QPushButton( "Add param" );
-  connect(btn_addParam, SIGNAL(clicked()), this, SLOT(addParam()));
+  connect( btn_addParam, &QPushButton::clicked, this, &DataDialog::addParam);
   lay_btn2->addWidget( btn_addParam );
   if( ! (ds.getAllowAdd() & allowParam ) )
     btn_addParam->setEnabled( false );
   QPushButton *btn_addObj = new QPushButton( "Add object" );
-  connect(btn_addObj, SIGNAL(clicked()), this, SLOT(addObj()));
+  connect( btn_addObj, &QPushButton::clicked, this, &DataDialog::addObj);
   lay_btn2->addWidget( btn_addObj );
   if( ! (ds.getAllowAdd() & allowObject ) )
     btn_addObj->setEnabled( false );
   QPushButton *btn_delParam = new QPushButton( "Delete param" );
-  connect(btn_delParam, SIGNAL(clicked()), this, SLOT(delParam()));
+  connect( btn_delParam, &QPushButton::clicked, this, &DataDialog::delParam);
   lay_btn2->addWidget( btn_delParam );
   if( ! (ds.getAllowAdd() & allowParam ) )  // TODO: + check list
     btn_delParam->setEnabled( false );
   QPushButton *btn_delObj = new QPushButton( "Delete object" );
-  connect(btn_delObj, SIGNAL(clicked()), this, SLOT(delObj()));
+  connect( btn_delObj, &QPushButton::clicked, this, &DataDialog::delObj);
   lay_btn2->addWidget( btn_delObj );
   if( ! (ds.getAllowAdd() & allowObject ) )
     btn_delObj->setEnabled( false );
@@ -1325,17 +1325,17 @@ int DataDialog::createWidgets()
   QHBoxLayout *lay_btn = new QHBoxLayout;
   QPushButton *btn_ok = new QPushButton( QIcon::fromTheme("dialog-ok"),"Ok" );
   btn_ok->setDefault( true );
-  connect(btn_ok, SIGNAL(clicked()), this, SLOT(accept()));
+  connect( btn_ok, &QPushButton::clicked, this, &DataDialog::accept);
   lay_btn->addWidget( btn_ok );
   //
   QPushButton *btn_cancel = new QPushButton( QIcon::fromTheme("dialog-cancel"), "Cancel" );
-  connect(btn_cancel, SIGNAL(clicked()), this, SLOT(reject()));
+  connect( btn_cancel, &QPushButton::clicked, this, &DataDialog::reject);
   lay_btn->addWidget( btn_cancel );
   QPushButton *btn_check = new QPushButton( "Check?" );
-  connect(btn_check, SIGNAL(clicked()), this, SLOT(checkData())); // TODO:
+  connect( btn_check, &QPushButton::clicked, this, &DataDialog::checkData); // TODO:
   lay_btn->addWidget( btn_check );
   QPushButton *btn_help = new QPushButton( QIcon::fromTheme("help-contents"), "Help" );
-   connect(btn_help, SIGNAL(clicked()), this, SLOT(showHelp()));
+  connect( btn_help, &QPushButton::clicked, this, &DataDialog::showHelp);
   lay_btn->addWidget( btn_help );
   lay1->addLayout( lay_btn );
 

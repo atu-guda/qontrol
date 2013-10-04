@@ -548,31 +548,31 @@ void QStructView::mousePressEvent( QMouseEvent *me )
               (void) menu->addAction( title ); // only a title
               menu->addSeparator();
               act = menu->addAction( "&Edit" );
-              connect( act, SIGNAL( triggered() ), mainview, SLOT(editElm() ) );
+              connect( act, &QAction::triggered, mainview, &QMo2View::editElm );
               act = menu->addAction( "&Delete" );
-              connect( act, SIGNAL( triggered() ), mainview, SLOT(delElm() ) );
+              connect( act, &QAction::triggered, mainview, &QMo2View::delElm );
               menu->addSeparator();
               act = menu->addAction( "&Link" );
-              connect( act, SIGNAL( triggered() ), mainview, SLOT(qlinkElm() ) );
+              connect( act, &QAction::triggered, mainview, &QMo2View::qlinkElm );
               act = menu->addAction( "&Reorder" );
-              connect( act, SIGNAL( triggered() ), mainview, SLOT(ordElm() ) );
+              connect( act, &QAction::triggered, mainview, &QMo2View::ordElm );
               menu->addSeparator();
             } else {
               act = menu->addAction( "&New" );
-              connect( act, SIGNAL( triggered() ), mainview, SLOT(newElm() ) );
+              connect( act, &QAction::triggered, mainview, &QMo2View::newElm );
               if( mainview->getMark() >= 0 ) {
                 act = menu->addAction( "&Move to" );
-                connect( act, SIGNAL( triggered() ), mainview, SLOT(moveElm() ) );
+                connect( act, &QAction::triggered, mainview, &QMo2View::moveElm );
               }
             };
             menu->addSeparator();
             act = menu->addAction( "New outp&ut" );
-            connect( act, SIGNAL( triggered() ), mainview, SLOT(newOut() ) );
+            connect( act, &QAction::triggered, mainview, &QMo2View::newOut );
             menu->addSeparator();
             act = menu->addAction( "Edit model" );
-            connect( act, SIGNAL( triggered() ), mainview, SLOT(editModel() ) );
+            connect( act, &QAction::triggered, mainview, &QMo2View::editModel );
             act = menu->addAction( "Print model" );
-            connect( act, SIGNAL( triggered() ), mainview, SLOT(print() ) );
+            connect( act, &QAction::triggered, mainview, &QMo2View::print );
 
             menu->exec( mapToGlobal(QPoint( x, y )) );
             delete menu;

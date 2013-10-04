@@ -30,15 +30,15 @@ Mo2SettDlg::Mo2SettDlg( Mo2Settings &se,  QWidget* parent )
   QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 4, 0, 1, 2 );
-  connect(bbox, SIGNAL(accepted()), this, SLOT(accept()));
-  connect(bbox, SIGNAL(rejected()), this, SLOT(reject()));
+  connect( bbox, &QDialogButtonBox::accepted, this, &QDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, this, &QDialog::reject );
 
   setLayout( lay );
 
-  connect( btnMainFont, SIGNAL( clicked() ), this, SLOT( mainFontSlot() ) );
-  connect( btnSmallFont, SIGNAL( clicked() ), this, SLOT( smallFontSlot() ) );
-  connect( btnPlotFont, SIGNAL( clicked() ), this, SLOT( mainFontSlot() ) );
-  connect( btnStructFont, SIGNAL( clicked() ), this, SLOT( structFontSlot() ) );
+  connect( btnMainFont,   &QPushButton::clicked, this, &Mo2SettDlg::mainFontSlot );
+  connect( btnSmallFont,  &QPushButton::clicked, this, &Mo2SettDlg::smallFontSlot );
+  connect( btnPlotFont,   &QPushButton::clicked, this, &Mo2SettDlg::mainFontSlot );
+  connect( btnStructFont, &QPushButton::clicked, this, &Mo2SettDlg::structFontSlot );
 }
 
 /*

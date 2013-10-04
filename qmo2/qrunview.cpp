@@ -37,7 +37,7 @@ QRunView::QRunView( TModel *amodel, int atype, QWidget *parent )
   // setBackgroundMode( Qt::NoBackground );
   setCursor( Qt::CrossCursor );
   timer = new QTimer();
-  connect( timer, SIGNAL(timeout()), this, SLOT(slotRunNext()) );
+  connect( timer, &QTimer::timeout, this, &QRunView::slotRunNext );
   model->reset();
   getModelData();
   for( i=0; i < 10; i++ )
