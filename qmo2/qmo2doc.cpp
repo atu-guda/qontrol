@@ -197,7 +197,7 @@ bool QMo2Doc::saveDocumentXML( const QString &filename )
   if( rootdata == 0 )
     return false;
 
-  QFile file( filename );
+  QSaveFile file( filename );
   if ( ! file.open( QFile::WriteOnly )) {
     QMessageBox::warning( QMo2Win::qmo2win, tr(PACKAGE),
                          tr("Cannot write file %1:\n%2.")
@@ -212,8 +212,12 @@ bool QMo2Doc::saveDocumentXML( const QString &filename )
   QString textData;
   textData = makeXML();
   out << textData;
-
   QApplication::restoreOverrideCursor();
+
+  if( ! file.commit() ) {
+    return false;
+  }
+
   modified = false;
   model->setUnModified();
   m_filename = filename;
