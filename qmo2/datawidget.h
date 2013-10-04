@@ -9,7 +9,7 @@
 #ifndef _DATAWIDGET_H
 #define _DATAWIDGET_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include <QVariant>
 #include <QString>
 

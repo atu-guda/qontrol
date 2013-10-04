@@ -9,7 +9,7 @@
 #ifndef _ADDELEMDIA_H
 #define _ADDELEMDIA_H
 
-#include <QtGui>
+#include <QtWidgets>
 #include "dataset.h"
 
 struct addElemInfo {

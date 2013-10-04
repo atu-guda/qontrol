@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "qmo2win.h"
 #include "qmo2doc.h"
@@ -155,16 +155,16 @@ void QOutView::mousePressEvent( QMouseEvent *me )
          (void) menu->addAction( title ); // fake action: title
          menu->addSeparator();
          act = menu->addAction( "&New" );
-         connect( act, SIGNAL( activated() ), mainview, SLOT(newOut() ) );
+         connect( act, SIGNAL( triggered() ), mainview, SLOT(newOut() ) );
          act = menu->addAction( "&Edit" );
-         connect( act, SIGNAL( activated() ), mainview, SLOT(editOut() ) );
+         connect( act, SIGNAL( triggered() ), mainview, SLOT(editOut() ) );
          act = menu->addAction( "&Delete" );
-         connect( act, SIGNAL( activated() ), mainview, SLOT(delOut() ) );
+         connect( act, SIGNAL( triggered() ), mainview, SLOT(delOut() ) );
          menu->addSeparator();
          act = menu->addAction( "D&ump" );
-         connect( act, SIGNAL( activated() ), mainview, SLOT(exportOut() ) );
+         connect( act, SIGNAL( triggered() ), mainview, SLOT(exportOut() ) );
          act = menu->addAction( "&Show data" );
-         connect( act, SIGNAL( activated() ), mainview, SLOT(showOutData() ) );
+         connect( act, SIGNAL( triggered() ), mainview, SLOT(showOutData() ) );
          menu->exec( mapToGlobal(QPoint( x, y )) );
          delete menu;
          break;

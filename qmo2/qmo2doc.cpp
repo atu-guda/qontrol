@@ -19,7 +19,7 @@
 #include <fstream>
 #include <iostream>
 // include files for Qt
-#include <QtGui>
+#include <QtWidgets>
 #include <QtXml>
 
 // application specific includes

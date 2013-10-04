@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include <QString>
-#include <QtGui>
+#include <QtWidgets>
 #include "miscfun.h"
 #include "qdoubletable.h"
 

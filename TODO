@@ -1,5 +1,6 @@
 autostart flag model/run
 rename Q* classes to w/o Q - not part of Qt
+command line key -w = write
 TCircBuf + TDelay re*
 TFourier, TCorrAnal - remove output to TModel vars: can be user directly
 More plot types (dot...). Qwtplot?

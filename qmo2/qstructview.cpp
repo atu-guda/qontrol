@@ -15,7 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QtGui>
+#include <QtWidgets>
+#include <QPrinter>
+#include <QPrintDialog>
 
 #include "miscfun.h"
 #include "qstructview.h"
@@ -546,31 +548,31 @@ void QStructView::mousePressEvent( QMouseEvent *me )
               (void) menu->addAction( title ); // only a title
               menu->addSeparator();
               act = menu->addAction( "&Edit" );
-              connect( act, SIGNAL( activated() ), mainview, SLOT(editElm() ) );
+              connect( act, SIGNAL( triggered() ), mainview, SLOT(editElm() ) );
               act = menu->addAction( "&Delete" );
-              connect( act, SIGNAL( activated() ), mainview, SLOT(delElm() ) );
+              connect( act, SIGNAL( triggered() ), mainview, SLOT(delElm() ) );
               menu->addSeparator();
               act = menu->addAction( "&Link" );
-              connect( act, SIGNAL( activated() ), mainview, SLOT(qlinkElm() ) );
+              connect( act, SIGNAL( triggered() ), mainview, SLOT(qlinkElm() ) );
               act = menu->addAction( "&Reorder" );
-              connect( act, SIGNAL( activated() ), mainview, SLOT(ordElm() ) );
+              connect( act, SIGNAL( triggered() ), mainview, SLOT(ordElm() ) );
               menu->addSeparator();
             } else {
               act = menu->addAction( "&New" );
-              connect( act, SIGNAL( activated() ), mainview, SLOT(newElm() ) );
+              connect( act, SIGNAL( triggered() ), mainview, SLOT(newElm() ) );
               if( mainview->getMark() >= 0 ) {
                 act = menu->addAction( "&Move to" );
-                connect( act, SIGNAL( activated() ), mainview, SLOT(moveElm() ) );
+                connect( act, SIGNAL( triggered() ), mainview, SLOT(moveElm() ) );
               }
             };
             menu->addSeparator();
             act = menu->addAction( "New outp&ut" );
-            connect( act, SIGNAL( activated() ), mainview, SLOT(newOut() ) );
+            connect( act, SIGNAL( triggered() ), mainview, SLOT(newOut() ) );
             menu->addSeparator();
             act = menu->addAction( "Edit model" );
-            connect( act, SIGNAL( activated() ), mainview, SLOT(editModel() ) );
+            connect( act, SIGNAL( triggered() ), mainview, SLOT(editModel() ) );
             act = menu->addAction( "Print model" );
-            connect( act, SIGNAL( activated() ), mainview, SLOT(print() ) );
+            connect( act, SIGNAL( triggered() ), mainview, SLOT(print() ) );
 
             menu->exec( mapToGlobal(QPoint( x, y )) );
             delete menu;

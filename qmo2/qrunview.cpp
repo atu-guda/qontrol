@@ -18,7 +18,7 @@
 #include <cmath>
 
 #include <QApplication>
-#include <QtGui>
+#include <QtWidgets>
 
 #include "miscfun.h"
 #include "dataset.h"

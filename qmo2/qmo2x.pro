@@ -1,9 +1,8 @@
-QT += core gui xml script
+QT += core widgets xml script printsupport
 TEMPLATE = app
 TARGET = qmo2x
-CONFIG += release warn_on qt thread 
-#QMAKE_CXXFLAGS += -std=c++11 -msse2 -march=core2 -mfpmath=sse
-QMAKE_CXXFLAGS += -std=c++11
+CONFIG += c++11 release warn_on qt thread 
+#QMAKE_CXXFLAGS += -std=c++11
 #CONFIG += debug warn_on qt thread 
 
 RESOURCES = qmo2x.qrc

@@ -16,7 +16,8 @@
  ***************************************************************************/
 
 #include <cstdlib>
-#include <QtGui>
+#include <QtWidgets>
+#include <QPrinter>
 
 #include "miscfun.h"
 #include "qmo2view.h"
@@ -141,236 +142,236 @@ void QMo2Win::initIface()
   act_new = new QAction( QIcon( ":icons/filenew.png" ), "&New model", this );
   act_new->setShortcuts( QKeySequence::New );
   act_new->setWhatsThis( tr("Click this button to create a new model file.") );
-  connect( act_new, SIGNAL( activated() ), this, SLOT( slotFileNew() ) );
+  connect( act_new, SIGNAL( triggered() ), this, SLOT( slotFileNew() ) );
 
   act_openxml = new QAction( QIcon::fromTheme("document-open"), "Open model", this );
   act_openxml->setShortcuts( QKeySequence::Open );
   act_openxml->setWhatsThis( tr("Click this button to open a model file." ) );
-  connect( act_openxml, SIGNAL( activated() ), this, SLOT( slotFileOpenXML() ) );
+  connect( act_openxml, SIGNAL( triggered() ), this, SLOT( slotFileOpenXML() ) );
 
   act_close = new QAction( "&Close", this );
   act_close->setWhatsThis( tr("Close active window") );
-  connect( act_close, SIGNAL( activated() ), this, SLOT( slotFileClose() ) );
+  connect( act_close, SIGNAL( triggered() ), this, SLOT( slotFileClose() ) );
 
   act_savexml = new QAction( QIcon::fromTheme("document-save"), "Save model",  this );
   act_savexml->setShortcuts( QKeySequence::Save );
   act_savexml->setWhatsThis( tr("Click this button to save the model file you are "
                   "editing. You will be prompted for a file name." ) );
-  connect( act_savexml, SIGNAL( activated() ), this, SLOT( slotFileSaveXML() ) );
+  connect( act_savexml, SIGNAL( triggered() ), this, SLOT( slotFileSaveXML() ) );
 
   act_savexmlas = new QAction(QIcon::fromTheme("document-save-as"), "Save model As", this );
   act_savexmlas->setWhatsThis( tr("Save current model with another filename") );
-  connect( act_savexmlas, SIGNAL( activated() ), this, SLOT( slotFileSaveXMLAs() ) );
+  connect( act_savexmlas, SIGNAL( triggered() ), this, SLOT( slotFileSaveXMLAs() ) );
 
   act_print = new QAction(  QIcon::fromTheme("document-print"), "&Print", this );
   act_print->setShortcuts( QKeySequence::Print );
   act_print->setWhatsThis( tr("Print current model") );
-  connect( act_print, SIGNAL( activated() ), this, SLOT( slotFilePrint() ) );
+  connect( act_print, SIGNAL( triggered() ), this, SLOT( slotFilePrint() ) );
 
   act_settings = new QAction( "Sett&ings", this );
   act_settings ->setWhatsThis( "Edit application settings" );
-  connect( act_settings, SIGNAL( activated() ), this, SLOT( slotFileSettings() ) );
+  connect( act_settings, SIGNAL( triggered() ), this, SLOT( slotFileSettings() ) );
 
   act_savesett = new QAction( "Save s&ettings", this );
   act_savesett ->setWhatsThis( "Save application settings" );
-  connect( act_savesett, SIGNAL( activated() ), this, SLOT( slotFileSaveSett() ) );
+  connect( act_savesett, SIGNAL( triggered() ), this, SLOT( slotFileSaveSett() ) );
 
 
   act_quit = new QAction(  QIcon::fromTheme("application-exit"), "&Quit", this );
   act_quit->setShortcuts( QKeySequence::Quit );
   act_quit->setWhatsThis( tr("Click this button to quit application.") );
-  connect( act_quit, SIGNAL( activated() ), this, SLOT( slotFileQuit() ) );
+  connect( act_quit, SIGNAL( triggered() ), this, SLOT( slotFileQuit() ) );
 
   // ==== Edit group
 
   act_undo = new QAction( QIcon::fromTheme("edit-undo"), "&Undo", this );
   act_undo->setShortcuts( QKeySequence::Undo );
   act_undo->setWhatsThis( tr("Undo last action") + " EMPTY" );
-  connect( act_undo, SIGNAL( activated() ), this, SLOT( slotEditUndo() ) );
+  connect( act_undo, SIGNAL( triggered() ), this, SLOT( slotEditUndo() ) );
 
   act_cut = new QAction(  QIcon::fromTheme("edit-cut"),"Cut", this );
   act_cut->setShortcuts( QKeySequence::Cut );
   act_cut->setWhatsThis( tr("Cut selected")  + " EMPTY" );
-  connect( act_cut, SIGNAL( activated() ), this, SLOT( slotEditCut() ) );
+  connect( act_cut, SIGNAL( triggered() ), this, SLOT( slotEditCut() ) );
 
   act_copy = new QAction( QIcon::fromTheme("edit-copy"), "Copy", this );
   act_copy->setShortcuts( QKeySequence::Copy );
   act_copy->setWhatsThis( tr("Copy selected") + " EMPTY" );
-  connect( act_copy, SIGNAL( activated() ), this, SLOT( slotEditCopy() ) );
+  connect( act_copy, SIGNAL( triggered() ), this, SLOT( slotEditCopy() ) );
 
   act_paste= new QAction( QIcon::fromTheme("edit-paste"), "Paste", this );
   act_paste->setShortcuts( QKeySequence::Paste );
   act_paste->setWhatsThis( tr("Paste selected") + " EMPTY" );
-  connect( act_paste, SIGNAL( activated() ), this, SLOT( slotEditPaste() ) );
+  connect( act_paste, SIGNAL( triggered() ), this, SLOT( slotEditPaste() ) );
 
   // ==== Element group
 
   act_newelm= new QAction( QIcon( ":icons/newelm.png" ), "&New element", this );
   act_newelm->setShortcut( Qt::Key_Insert );
   act_newelm->setWhatsThis( tr("Create new element") );
-  connect( act_newelm, SIGNAL( activated() ), this, SLOT( slotNewElm() ) );
+  connect( act_newelm, SIGNAL( triggered() ), this, SLOT( slotNewElm() ) );
 
   act_delelm= new QAction( QIcon( ":icons/delelm.png" ), "&Delete element", this );
   act_delelm->setShortcut( Qt::Key_Delete );
   act_delelm->setWhatsThis( tr("Delete selected element") );
-  connect( act_delelm, SIGNAL( activated() ), this, SLOT( slotDelElm() ) );
+  connect( act_delelm, SIGNAL( triggered() ), this, SLOT( slotDelElm() ) );
 
   act_editelm= new QAction( QIcon( ":icons/editelm.png" ), "&Edit element", this );
   act_editelm->setShortcut( Qt::Key_Enter );
   act_editelm->setWhatsThis( tr("Edit selected element") );
-  connect( act_editelm, SIGNAL( activated() ), this, SLOT( slotEditElm() ));
+  connect( act_editelm, SIGNAL( triggered() ), this, SLOT( slotEditElm() ));
 
   act_qlinkelm= new QAction( "&Quick link element", this );
   act_qlinkelm->setShortcut( Qt::CTRL+Qt::Key_L );
   act_qlinkelm->setWhatsThis( tr("Link marked to selected element") );
-  connect( act_qlinkelm, SIGNAL( activated() ), this, SLOT( slotqLinkElm() ));
+  connect( act_qlinkelm, SIGNAL( triggered() ), this, SLOT( slotqLinkElm() ));
 
   act_qplinkelm= new QAction( "&Parametr link element", this );
   act_qplinkelm->setShortcut(  Qt::SHIFT+Qt::CTRL+Qt::Key_L );
   act_qplinkelm->setWhatsThis( tr("Link marked to selected element "
                                   "(parameter input)") );
-  connect( act_qplinkelm, SIGNAL( activated() ), this, SLOT( slotqpLinkElm()));
+  connect( act_qplinkelm, SIGNAL( triggered() ), this, SLOT( slotqpLinkElm()));
 
   act_unlinkelm= new QAction( "&Unlink element", this );
   act_unlinkelm->setWhatsThis( tr("Remove links of selected element") );
-  connect( act_unlinkelm, SIGNAL( activated() ), this, SLOT( slotUnlinkElm() ));
+  connect( act_unlinkelm, SIGNAL( triggered() ), this, SLOT( slotUnlinkElm() ));
 
   act_lockelm= new QAction( QIcon( ":icons/lockelm.png" ), "Loc&k element",  this );
   act_lockelm->setShortcut( Qt::CTRL+Qt::Key_K );
   act_lockelm->setWhatsThis( tr("Lock current element") );
-  connect( act_lockelm, SIGNAL( activated() ), this, SLOT( slotLockElm() ));
+  connect( act_lockelm, SIGNAL( triggered() ), this, SLOT( slotLockElm() ));
 
   act_ordelm= new QAction( QIcon( ":icons/orderelm.png" ), "Change &Orger", this );
   act_ordelm->setShortcut( Qt::Key_O );
   act_ordelm->setWhatsThis( tr("Change order numper of selected element") );
-  connect( act_ordelm, SIGNAL( activated() ), this, SLOT( slotOrdElm() ));
+  connect( act_ordelm, SIGNAL( triggered() ), this, SLOT( slotOrdElm() ));
 
   act_markelm= new QAction( QIcon( ":icons/markelm.png" ), "&Mark element", this );
   act_markelm->setShortcut( Qt::Key_M );
   act_ordelm->setWhatsThis( tr("Mark selected element") );
-  connect( act_markelm, SIGNAL( activated() ), this, SLOT( slotMarkElm() ));
+  connect( act_markelm, SIGNAL( triggered() ), this, SLOT( slotMarkElm() ));
 
   act_moveelm= new QAction( "Move element", this );
   act_moveelm->setShortcut( Qt::SHIFT+Qt::Key_M );
   act_moveelm->setWhatsThis( tr("Move marked element to selected cell") );
-  connect( act_moveelm, SIGNAL( activated() ), this, SLOT( slotMoveElm() ));
+  connect( act_moveelm, SIGNAL( triggered() ), this, SLOT( slotMoveElm() ));
 
   act_infoelm= new QAction( QIcon( ":icons/infoelm.png" ), "show &Info", this );
   act_infoelm->setShortcut( Qt::Key_I );
   act_infoelm->setWhatsThis( tr("Show information about element structure") );
-  connect( act_infoelm, SIGNAL( activated() ), this, SLOT( slotInfoElm() ));
+  connect( act_infoelm, SIGNAL( triggered() ), this, SLOT( slotInfoElm() ));
 
   act_showtreeelm = new QAction( "show element tree", this );
   act_showtreeelm->setWhatsThis( tr("Show tree-like element structure") );
-  connect( act_showtreeelm, SIGNAL( activated() ), this, SLOT( slotShowTreeElm() ));
+  connect( act_showtreeelm, SIGNAL( triggered() ), this, SLOT( slotShowTreeElm() ));
 
   act_testelm1= new QAction( "test element 1", this );
   act_testelm1->setWhatsThis( tr("Test something in element") );
-  connect( act_testelm1, SIGNAL( activated() ), this, SLOT( slotTestElm1() ));
+  connect( act_testelm1, SIGNAL( triggered() ), this, SLOT( slotTestElm1() ));
 
   act_testelm2= new QAction( "test element 2", this );
   act_testelm2->setWhatsThis( tr("Test something in element") );
-  connect( act_testelm2, SIGNAL( activated() ), this, SLOT( slotTestElm2() ));
+  connect( act_testelm2, SIGNAL( triggered() ), this, SLOT( slotTestElm2() ));
   // ==== out group
 
   act_newout = new QAction( QIcon( ":icons/newout.png" ), "&New Out", this );
   act_newout->setShortcut( Qt::Key_U );
   act_newout->setWhatsThis( tr("Create output collector") );
-  connect( act_newout, SIGNAL( activated() ), this, SLOT( slotNewOut() ));
+  connect( act_newout, SIGNAL( triggered() ), this, SLOT( slotNewOut() ));
 
   act_delout = new QAction( QIcon( ":icons/delout.png" ), "&Delete out", this );
   act_delout->setShortcut( Qt::Key_X );
   act_delout->setWhatsThis( tr("Delete output collector with current level") );
-  connect( act_delout, SIGNAL( activated() ), this, SLOT( slotDelOut() ));
+  connect( act_delout, SIGNAL( triggered() ), this, SLOT( slotDelOut() ));
 
   act_editout = new QAction( QIcon( ":icons/editout.png" ), "&Edit out", this );
   act_editout->setShortcut( Qt::SHIFT+Qt::Key_U );
   act_editout->setWhatsThis( tr("Edit outsput collector withcurrent level") );
-  connect( act_editout, SIGNAL( activated() ), this, SLOT( slotEditOut() ));
+  connect( act_editout, SIGNAL( triggered() ), this, SLOT( slotEditOut() ));
 
   act_showoutdata = new QAction( QIcon( ":icons/showoutdata.png" ), "&Show out data", this );
   act_showoutdata->setShortcut( Qt::Key_D );
   act_showoutdata->setWhatsThis( tr("Show data collected by output.") );
-  connect( act_showoutdata, SIGNAL( activated() ), this, SLOT( slotShowOutData() ));
+  connect( act_showoutdata, SIGNAL( triggered() ), this, SLOT( slotShowOutData() ));
 
   act_exportout = new QAction( "E&xport out data", this );
   act_exportout->setShortcut( Qt::Key_E );
   act_exportout->setWhatsThis( tr("Export data collected by output to text file.") );
-  connect( act_exportout, SIGNAL( activated() ), this, SLOT( slotExportOut() ));
+  connect( act_exportout, SIGNAL( triggered() ), this, SLOT( slotExportOut() ));
 
   // ==== graph group
 
   act_newgraph = new QAction( QIcon( ":icons/newgraph.png" ), "&New Graph", this );
   act_newgraph->setShortcut( Qt::Key_G );
   act_newgraph->setWhatsThis( tr("Create new graph") );
-  connect( act_newgraph, SIGNAL( activated() ), this, SLOT( slotNewGraph()));
+  connect( act_newgraph, SIGNAL( triggered() ), this, SLOT( slotNewGraph()));
 
   act_delgraph = new QAction( QIcon( ":icons/delgraph.png" ), "&Delete graph", this );
   act_delgraph->setShortcut( Qt::SHIFT+Qt::Key_X );
   act_delgraph->setWhatsThis( tr("Delete graph with selected level") );
-  connect( act_delgraph, SIGNAL( activated() ), this, SLOT( slotDelGraph()));
+  connect( act_delgraph, SIGNAL( triggered() ), this, SLOT( slotDelGraph()));
 
   act_editgraph = new QAction( QIcon( ":icons/editgraph.png" ), "&Edit graph", this );
   act_editgraph->setShortcut(  Qt::SHIFT+Qt::Key_G );
   act_editgraph->setWhatsThis( tr("Edit graph with current level") );
-  connect( act_editgraph, SIGNAL( activated() ), this, SLOT( slotEditGraph() ));
+  connect( act_editgraph, SIGNAL( triggered() ), this, SLOT( slotEditGraph() ));
 
   act_showgraph = new QAction( QIcon( ":icons/showgraph.png" ), "&Show graph", this );
   act_showgraph->setShortcut( Qt::Key_S );
   act_showgraph->setWhatsThis( tr("Show graph plot") );
-  connect( act_showgraph, SIGNAL( activated() ), this, SLOT( slotShowGraph() ));
+  connect( act_showgraph, SIGNAL( triggered() ), this, SLOT( slotShowGraph() ));
 
   act_showgraphdata = new QAction( QIcon( ":icons/showgraphdata.png" ), "show graph Data", this );
   act_showgraphdata->setShortcut(  Qt::SHIFT+Qt::Key_D );
   act_showgraphdata->setWhatsThis( tr("Show graph data") );
-  connect( act_showgraphdata, SIGNAL( activated() ), this, SLOT( slotShowGraphData() ));
+  connect( act_showgraphdata, SIGNAL( triggered() ), this, SLOT( slotShowGraphData() ));
 
   act_exportgraphdata = new QAction( "E&xport graph data", this );
   act_exportgraphdata->setShortcut( Qt::SHIFT+Qt::Key_E );
   act_exportgraphdata->setWhatsThis( tr("Export graph data to text file") );
-  connect( act_exportgraphdata, SIGNAL( activated() ), this, SLOT( slotExportGraphData() ));
+  connect( act_exportgraphdata, SIGNAL( triggered() ), this, SLOT( slotExportGraphData() ));
 
   act_gnuplotgraph = new QAction( "&Gnuplot graph", this);
   act_gnuplotgraph->setWhatsThis( tr("Export graph data to gnuplot-compatiomle file") );
-  connect( act_gnuplotgraph, SIGNAL( activated() ), this, SLOT( slotGnuplotGraph() ));
+  connect( act_gnuplotgraph, SIGNAL( triggered() ), this, SLOT( slotGnuplotGraph() ));
 
   // ==== model group
 
   act_editmodel = new QAction( QIcon( ":icons/editmodel.png" ), "&Edit Model", this );
   act_editmodel->setShortcut(  Qt::CTRL+Qt::Key_Enter );
   act_editmodel->setWhatsThis( tr("Edit model parameters.") );
-  connect( act_editmodel, SIGNAL( activated() ), this, SLOT( slotEditModel()));
+  connect( act_editmodel, SIGNAL( triggered() ), this, SLOT( slotEditModel()));
 
   act_showtreemodel = new QAction( "show model tree", this );
   act_showtreemodel->setShortcut( Qt::CTRL+Qt::Key_T );
   act_showtreemodel->setWhatsThis( tr("Show tree-like model structure") );
-  connect( act_showtreemodel, SIGNAL( activated() ), this, SLOT( slotShowTreeModel() ));
+  connect( act_showtreemodel, SIGNAL( triggered() ), this, SLOT( slotShowTreeModel() ));
 
   // ====  run group
 
   act_runrun = new QAction( QIcon( ":icons/run.png" ), "&Run", this );
   act_runrun->setShortcut( Qt::Key_F9 );
   act_runrun->setWhatsThis( tr("Click this button start simple run.") );
-  connect( act_runrun, SIGNAL( activated() ), this, SLOT( slotRunRun()) );
+  connect( act_runrun, SIGNAL( triggered() ), this, SLOT( slotRunRun()) );
 
   act_runprm= new QAction( QIcon( ":icons/run_p1.png" ), "Run &1D Parm loop", this );
   act_runprm->setShortcut( Qt::CTRL+Qt::Key_F9 );
   act_runprm->setWhatsThis( tr("Click this button start 1D parametric run.") );
-  connect( act_runprm, SIGNAL( activated() ), this, SLOT( slotRunPrm()) );
+  connect( act_runprm, SIGNAL( triggered() ), this, SLOT( slotRunPrm()) );
 
   act_runprm2= new QAction( QIcon( ":icons/run_p2.png" ), "Run &2D Parm loop", this );
   act_runprm2->setShortcut( Qt::SHIFT+Qt::CTRL+Qt::Key_F9 );
   act_runprm2->setWhatsThis( tr("Click this button start 2D parametric run.") );
-  connect( act_runprm2, SIGNAL( activated() ), this, SLOT( slotRunPrm2()) );
+  connect( act_runprm2, SIGNAL( triggered() ), this, SLOT( slotRunPrm2()) );
 
   act_runscript = new QAction( QIcon::fromTheme("application-x-javascript"), "run &Script", this );
   act_runscript->setShortcut( Qt::SHIFT+Qt::Key_F9 );
   act_runscript->setWhatsThis( tr("Run script on model") );
-  connect( act_runscript, SIGNAL( activated() ), this, SLOT( slotRunScript() ));
+  connect( act_runscript, SIGNAL( triggered() ), this, SLOT( slotRunScript() ));
 
   act_reset= new QAction( "R&eset", this );
   act_reset->setWhatsThis( tr("Reset model state.") );
-  connect( act_reset, SIGNAL( activated() ), this, SLOT( slotReset()) );
+  connect( act_reset, SIGNAL( triggered() ), this, SLOT( slotReset()) );
 
   // ==== iface group
 
@@ -378,79 +379,79 @@ void QMo2Win::initIface()
   act_tbar->setCheckable( true );
   act_tbar->setChecked( true );
   // act_tbar->setWhatsThis( tr("") );
-  connect( act_tbar, SIGNAL( activated() ), this, SLOT( slotViewToolBar()) );
+  connect( act_tbar, SIGNAL( triggered() ), this, SLOT( slotViewToolBar()) );
 
   act_sbar = new QAction( "View &Statusbar", this );
   act_sbar->setCheckable( true );
   act_sbar->setChecked( true );
   // act_sbar->setWhatsThis( tr("") );
-  connect( act_sbar, SIGNAL( activated() ), this, SLOT( slotViewStatusBar()) );
+  connect( act_sbar, SIGNAL( triggered() ), this, SLOT( slotViewStatusBar()) );
 
   act_showord = new QAction( "Show &Orders", this );
   act_showord->setCheckable( true );
   act_showord->setChecked( sett.showord );
-  connect( act_showord, SIGNAL( activated() ), this, SLOT( slotShowOrd()) );
+  connect( act_showord, SIGNAL( triggered() ), this, SLOT( slotShowOrd()) );
 
   act_showgrid = new QAction( "Show &Grid", this );
   act_showgrid->setCheckable( true );
   act_showgrid->setChecked( sett.showgrid );
-  connect( act_showgrid, SIGNAL( activated() ), this, SLOT( slotShowGrid()) );
+  connect( act_showgrid, SIGNAL( triggered() ), this, SLOT( slotShowGrid()) );
 
   act_shownames = new QAction( "Show &Names", this );
   act_shownames->setCheckable( true );
   act_shownames->setChecked( sett.shownames );
-  connect( act_shownames, SIGNAL( activated() ), this, SLOT( slotShowNames()) );
+  connect( act_shownames, SIGNAL( triggered() ), this, SLOT( slotShowNames()) );
 
   act_showicons = new QAction( "Show &Icons", this );
   act_showicons->setCheckable( true );
   act_showicons->setChecked( sett.showicons );
-  connect( act_showicons, SIGNAL( activated() ), this, SLOT( slotShowIcons()) );
+  connect( act_showicons, SIGNAL( triggered() ), this, SLOT( slotShowIcons()) );
 
   act_showlinks = new QAction( "Show &Links", this );
   act_showlinks->setCheckable( true );
   act_showlinks->setChecked( sett.showLinks );
-  connect( act_showlinks, SIGNAL( activated() ), this, SLOT( slotShowLinks()) );
+  connect( act_showlinks, SIGNAL( triggered() ), this, SLOT( slotShowLinks()) );
 
   // ==== window group
 
   act_winClose = new QAction( QIcon::fromTheme("window-close"), "Cl&ose Window", this);
   act_winClose->setWhatsThis( tr("Close this window") );
-  connect( act_winClose, SIGNAL( activated() ), this, SLOT( slotWindowClose()) );
+  connect( act_winClose, SIGNAL( triggered() ), this, SLOT( slotWindowClose()) );
 
   act_winCloseAll = new QAction( "Close &All Windows",  this );
   act_winCloseAll->setWhatsThis( tr("Close all windoww") );
-  connect( act_winCloseAll, SIGNAL( activated() ), this, SLOT( slotWindowCloseAll()) );
+  connect( act_winCloseAll, SIGNAL( triggered() ), this, SLOT( slotWindowCloseAll()) );
 
   act_winTile = new QAction( "&Tile Windows",  this );
   act_winTile->setWhatsThis( tr("Tile the windows") );
-  connect( act_winTile, SIGNAL( activated() ), this, SLOT( slotWindowTile()) );
+  connect( act_winTile, SIGNAL( triggered() ), this, SLOT( slotWindowTile()) );
 
   act_winCascade = new QAction( "&Cascade Windows",  this );
   act_winCascade->setWhatsThis( tr("Cascade the windows") );
-  connect( act_winCascade, SIGNAL( activated() ), this, SLOT( slotWindowCascade()) );
+  connect( act_winCascade, SIGNAL( triggered() ), this, SLOT( slotWindowCascade()) );
 
   //act_winnew = new QAction( "&New Window", 0, this, "winnew");
   //act_winnew->setWhatsThis( tr("Crerate new window for same model") );
-  //connect( act_winnew, SIGNAL( activated() ), this, SLOT( slotWindowNewWindow()) );
+  //connect( act_winnew, SIGNAL( triggered() ), this, SLOT( slotWindowNewWindow()) );
 
   // ==== help group
 
   act_helpabout = new QAction( QIcon::fromTheme("help-about"), "&About", this );
   // act_helpabout->setWhatsThis( tr("") );
-  connect( act_helpabout, SIGNAL( activated() ), this, SLOT( slotHelpAbout()) );
+  connect( act_helpabout, SIGNAL( triggered() ), this, SLOT( slotHelpAbout()) );
 
   act_helpaboutqt = new QAction( "About &Qt", this );
   // act_helpabout->setWhatsThis( tr("") );
-  connect( act_helpaboutqt, SIGNAL( activated() ), this, SLOT( slotHelpAboutQt()) );
+  connect( act_helpaboutqt, SIGNAL( triggered() ), this, SLOT( slotHelpAboutQt()) );
 
   act_whatsthis = new QAction( "&What's This", this );
   // act_whatsthis->setWhatsThis( tr("") );
   // TODO:
-  //connect( act_whatsthis, SIGNAL( activated() ), this, SLOT( slotWhatsThis()) );
+  //connect( act_whatsthis, SIGNAL( triggered() ), this, SLOT( slotWhatsThis()) );
 
   act_test = new QAction( QIcon( ":icons/test.png" ), "&Test", this );
   act_test->setWhatsThis( tr("Click this button to test something.") );
-  connect( act_test, SIGNAL( activated() ), this, SLOT( slotTest()) );
+  connect( act_test, SIGNAL( triggered() ), this, SLOT( slotTest()) );
 
 
   ///////////////////////////////////////////////////////////////////

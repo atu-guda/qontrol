@@ -16,7 +16,7 @@
 
 #include <cmath>
 // include files for Qt
-#include <QtGui>
+#include <QtWidgets>
 
 // application specific includes
 #include "miscfun.h"

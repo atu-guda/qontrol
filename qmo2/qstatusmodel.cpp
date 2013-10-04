@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "miscfun.h"
 #include "qstatusmodel.h"

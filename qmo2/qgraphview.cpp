@@ -14,7 +14,7 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <QtGui>
+#include <QtWidgets>
 
 #include "miscfun.h"
 #include "qmo2doc.h"
@@ -119,21 +119,21 @@ void QGraphView::mousePressEvent( QMouseEvent *me )
            menu->addSeparator();
          };
          act = menu->addAction( "&New" );
-         connect( act, SIGNAL( activated() ), mainview, SLOT(newGraph() ) );
+         connect( act, SIGNAL( triggered() ), mainview, SLOT(newGraph() ) );
          if( graph_nu >=0 ) {
            act = menu->addAction( "&Edit" );
-           connect( act, SIGNAL( activated() ), mainview, SLOT(editGraph() ) );
+           connect( act, SIGNAL( triggered() ), mainview, SLOT(editGraph() ) );
            act = menu->addAction( "&Delete" );
-           connect( act, SIGNAL( activated() ), mainview, SLOT(delGraph() ) );
+           connect( act, SIGNAL( triggered() ), mainview, SLOT(delGraph() ) );
            menu->addSeparator();
            act = menu->addAction( "&Show" );
-           connect( act, SIGNAL( activated() ), mainview, SLOT(showGraph() ) );
+           connect( act, SIGNAL( triggered() ), mainview, SLOT(showGraph() ) );
            act = menu->addAction( "Show D&ata" );
-           connect( act, SIGNAL( activated() ), mainview, SLOT(showGraphData() ) );
+           connect( act, SIGNAL( triggered() ), mainview, SLOT(showGraphData() ) );
            act = menu->addAction( "D&ump" );
-           connect( act, SIGNAL( activated() ), mainview, SLOT(exportGraphData() ) );
+           connect( act, SIGNAL( triggered() ), mainview, SLOT(exportGraphData() ) );
            act = menu->addAction( "Gnu&plot" );
-           connect( act, SIGNAL( activated() ), mainview, SLOT(gnuplotGraph() ) );
+           connect( act, SIGNAL( triggered() ), mainview, SLOT(gnuplotGraph() ) );
          };
          menu->exec( mapToGlobal(QPoint( x, y )) );
          delete menu;

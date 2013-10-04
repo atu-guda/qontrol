@@ -19,7 +19,9 @@
 // #include <stdio.h>
 
 #include <cmath>
-#include <QtGui>
+#include <QtWidgets>
+#include <QPrinter>
+#include <QPrintDialog>
 
 #include "miscfun.h"
 #include "dataset.h"
