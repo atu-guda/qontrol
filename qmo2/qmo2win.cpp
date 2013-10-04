@@ -219,7 +219,7 @@ void QMo2Win::initIface()
   act_editelm->setWhatsThis( tr("Edit selected element") );
   connect( act_editelm, &QAction::triggered, this, &QMo2Win::slotEditElm);
 
-  act_qlinkelm= new QAction( "&Quick link element", this );
+  act_qlinkelm= new QAction( QIcon::fromTheme("insert-link"), "&Quick link element", this );
   act_qlinkelm->setShortcut( Qt::CTRL+Qt::Key_L );
   act_qlinkelm->setWhatsThis( tr("Link marked to selected element") );
   connect( act_qlinkelm, &QAction::triggered, this, &QMo2Win::slotqLinkElm);
@@ -336,7 +336,8 @@ void QMo2Win::initIface()
   // ==== model group
 
   act_editmodel = new QAction( QIcon( ":icons/editmodel.png" ), "&Edit Model", this );
-  act_editmodel->setShortcut(  Qt::CTRL+Qt::Key_Enter );
+  // act_editmodel->setShortcut(  Qt::CTRL+Qt::Key_Enter );
+  act_editmodel->setShortcut(  Qt::CTRL+Qt::Key_R );
   act_editmodel->setWhatsThis( tr("Edit model parameters.") );
   connect( act_editmodel, &QAction::triggered, this, &QMo2Win::slotEditModel);
 

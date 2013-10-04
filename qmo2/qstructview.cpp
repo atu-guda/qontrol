@@ -547,18 +547,18 @@ void QStructView::mousePressEvent( QMouseEvent *me )
               // menu->setTitle( title );
               (void) menu->addAction( title ); // only a title
               menu->addSeparator();
-              act = menu->addAction( "&Edit" );
+              act = menu->addAction( QIcon( ":icons/editelm.png" ), "&Edit element" );
               connect( act, &QAction::triggered, mainview, &QMo2View::editElm );
-              act = menu->addAction( "&Delete" );
+              act = menu->addAction( QIcon( ":icons/delelm.png" ), "&Delete element" );
               connect( act, &QAction::triggered, mainview, &QMo2View::delElm );
               menu->addSeparator();
-              act = menu->addAction( "&Link" );
+              act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
               connect( act, &QAction::triggered, mainview, &QMo2View::qlinkElm );
-              act = menu->addAction( "&Reorder" );
+              act = menu->addAction(  QIcon( ":icons/orderelm.png" ), "&Reorder" );
               connect( act, &QAction::triggered, mainview, &QMo2View::ordElm );
               menu->addSeparator();
             } else {
-              act = menu->addAction( "&New" );
+              act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );
               connect( act, &QAction::triggered, mainview, &QMo2View::newElm );
               if( mainview->getMark() >= 0 ) {
                 act = menu->addAction( "&Move to" );
@@ -566,12 +566,12 @@ void QStructView::mousePressEvent( QMouseEvent *me )
               }
             };
             menu->addSeparator();
-            act = menu->addAction( "New outp&ut" );
+            act = menu->addAction( QIcon( ":icons/newout.png" ), "New outp&ut" );
             connect( act, &QAction::triggered, mainview, &QMo2View::newOut );
             menu->addSeparator();
-            act = menu->addAction( "Edit model" );
+            act = menu->addAction( QIcon( ":icons/editmodel.png" ), "Edit model" );
             connect( act, &QAction::triggered, mainview, &QMo2View::editModel );
-            act = menu->addAction( "Print model" );
+            act = menu->addAction( QIcon::fromTheme("document-print"),"Print model" );
             connect( act, &QAction::triggered, mainview, &QMo2View::print );
 
             menu->exec( mapToGlobal(QPoint( x, y )) );

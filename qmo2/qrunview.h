@@ -114,12 +114,6 @@ class QRunView : public QDialog  {
     int mouse_l = 0, mouse_r = 0, mouse_m = 0;
     /** keyboard buttons state */
     int keys_state[10];
-    /** input sound value [-1;1] */
-    double sound_i_left = 0, sound_i_right = 0;
-    /** joystick values */
-    double joy_x = 0, joy_y = 0, joy_btn = 0;
-    /** unknown device values */
-    double auxs[20];
     // some next vars filled from TModel =========================
     /** total number of loops */
     int n_tot;
@@ -129,22 +123,9 @@ class QRunView : public QDialog  {
     int n_steps;
     /** flag for real and model time syncronization */
     int use_sync;
+    /** flag to start w/o keyboard hit */
+    int autoStart = 0;
     // -------- input chanals indexes -------
-    /** input from mouse (x,y,btn1,btn2,btn3) abs(x,y) <= 1, 0 - center */
-    int ic_mouse;
-    /** input from joystick (x,y,btn) abs(x,y) <= 1, 0 - center */
-    int ic_joy;
-    /** input from soundcard (lert,right) */
-    int ic_sound;
-    /** input from keyboard (left,right,top,bottom,space,enter) */
-    int ic_key;
-    /** input from unknown device, up to 20 values */
-    int ic_aux;
-    // -------- output chanals indexes -------
-    /** indexes for output */
-    int oc[6];
-    /** types of output 1-3=cross, 4-7=vbar, 8-11=gbar, 12-15=leds, 16,17=sound */
-    int oct[6];
 };
 
 #endif
