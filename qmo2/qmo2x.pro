@@ -7,7 +7,7 @@ CONFIG += c++11 release warn_on qt thread
 
 RESOURCES = qmo2x.qrc
 
-INCLUDEPATH += .. ../elems 
+INCLUDEPATH += .. ../elems
 
 LIBS += -lgsl -lgslcblas -lm
 
@@ -35,6 +35,7 @@ SOURCES += \
   rootdata.cpp \
   scaledata.cpp \
   scheme.cpp \
+  simul.cpp \
   tmiso.cpp \
   tmodel.cpp \
   datawidget.cpp \
@@ -97,8 +98,9 @@ HEADERS += \
   rootdata.h \
   scaledata.h \
   scheme.h \
+  simul.h \
   tmiso.h \
-  tmodel.h \ 
+  tmodel.h \
   datawidget.h \
   tgraph.h \
   toutarr.h \

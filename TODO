@@ -1,3 +1,8 @@
+RunWindow?
+RunInfo/Simulation
+Edit large arrays
+Plot data structure + convert old
+Current object in container / alias ?
 run w/o interface fun:
 rename Q* classes to w/o Q - not part of Qt
 command line key -w = write
@@ -19,11 +24,9 @@ objects: TFileInput, TFileOutput, TMovingAver, TDiff
 may be new field in TClassInfo to misc flags: can f() w/o preRun..., 
     class group.. etc
 implement loading objects in so.
-handling special names, filling in TAnyDial
 functions in data info
 
 Distributions analysis + plot
-rename
 vector icons (language=SVG?) (may be dynamic)
 Hue of elements
 Label of element (or/and floating labels on structure view)
