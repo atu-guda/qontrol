@@ -359,7 +359,7 @@ void QMo2View::qplinkElm()
   }
   int n_pi = pis->getNumObj();
   QString pi_name = QString("pi_") + QSN(n_pi);
-  InputParam *pi = qobject_cast<InputParam*>( pis->add_obj( "InputParam", pi_name ) );
+  InputParam *pi = pis->addObj<InputParam>( pi_name );
   if( !pi ) {
     return;
   }

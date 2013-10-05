@@ -78,7 +78,7 @@ bool QMo2Doc::newDocument()
   }
 
   rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
-  model = qobject_cast<TModel*>(rootdata->add_obj( "TModel", "model" ));
+  model = rootdata->addObj<TModel>( "model" );
   if( !model ) {
     delete rootdata; rootdata = nullptr;
     QMessageBox::critical( 0, "QMo2Doc::newDocument",
@@ -417,7 +417,7 @@ bool QMo2Doc::createEmptySyms()
 
   ContSimul *sims = model->getElemT<ContSimul*>("sims");
   if( ! sims ) { // create only if not exist
-    sims = qobject_cast<ContSimul*>(model->add_obj( "ContSimul", "sims" ));
+    sims = model->addObj<ContSimul>( "sims" );
   }
 
   if( ! sims ) {
@@ -428,7 +428,7 @@ bool QMo2Doc::createEmptySyms()
   Simulation *sim0 = sims->getElemT<Simulation*>( "sim0" );
   if( sim0 )
     return true; // creation not required: all exits
-  sim0 = qobject_cast<Simulation*>( sims->add_obj( "Simulation", "sim0" ) );
+  sim0 = sims->addObj<Simulation>( "sim0" );
   if( ! sim0 ) {
     DBG1( "ERR: Fail to create defaul simulation sim0" );
     return false;

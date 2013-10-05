@@ -104,8 +104,7 @@ void TMiso::post_set()
     iname = "pflags" + QSN(i);
     links->getData( iname, &flg ); // ignore error
     iname = "p" + QSN(i);
-    pis->add_obj( "InputParam", iname );
-    InputParam *pa = pis->getElemT<InputParam*>(iname);
+    InputParam *pa = pis->addObj<InputParam>( iname );
     if( !pa ) {
       DBGx( "warn: fail to convert param input in \"%s\" N %d src \"%s\"",
           qP(objectName()), i, qP(source) );

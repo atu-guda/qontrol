@@ -1031,22 +1031,6 @@ QStringList TDataSet::elemNames() const
   return cl;
 }
 
-HolderData* TDataSet::getElem( const QString &oname ) const
-{
-  // bad, but Qt provide only recusive search FIXME: Qt >= 5
-  for( auto c : children() ) {
-    if( c->objectName() == oname )
-      return qobject_cast<HolderData*>( c );
-  }
-  return nullptr;
-}
-
-
-HolderData* TDataSet::getElem( int i ) const
-{
-  auto cs = children()[i];
-  return qobject_cast<HolderData*>(cs);
-}
 
 int TDataSet::indexOfHolder( HolderData *ho ) const
 {

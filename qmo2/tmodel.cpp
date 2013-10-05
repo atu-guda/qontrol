@@ -366,8 +366,8 @@ TGraph* TModel::getGraph( int gra_nu )
 TMiso* TModel::insElem( const QString &cl_name, const QString &ob_name,
                      int aord, int avis_x, int avis_y )
 {
-  TMiso *ob;
-  ob = qobject_cast<TMiso*>( add_obj( cl_name, ob_name ) );
+  // no addObj: downcast
+  TMiso *ob = qobject_cast<TMiso*>( add_obj( cl_name, ob_name ) );
   if( !ob ) // FIXME: leak?
     return nullptr;
   ob->setData( "ord", aord );
@@ -380,7 +380,7 @@ TMiso* TModel::insElem( const QString &cl_name, const QString &ob_name,
 
 int TModel::insOut( const QString &outname, const QString &objname )
 {
-  TOutArr *arr = qobject_cast<TOutArr*>( add_obj( "TOutArr", outname ) );
+  TOutArr *arr = addObj<TOutArr>( outname );
   if( !arr )
     return -1;
   arr->setData( "name", objname );
@@ -400,7 +400,7 @@ int TModel::insOut( const QString &outname, const QString &objname )
 
 int TModel::insGraph( const QString &gname )
 {
-  TGraph *gra = qobject_cast<TGraph*>( add_obj( "TGraph", gname ) );
+  TGraph *gra = addObj<TGraph>( gname );
   if( !gra )
     return -1;
   reset();

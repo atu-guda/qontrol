@@ -180,7 +180,9 @@ class HolderData : public QObject {
   /** return number of elems: none for simple data */
   virtual int getNumObj() const { return 0; };
   int isDyn() const { return dyn; }
-  /** is holded value is object of given type or child */
+   /**  returns false for simple data holders
+    * returns true if this object is base or save of given type.
+    * if cl_name is empty, return true in >= TDataSet */
   virtual bool isObject( const QString &cl_name = QString() ) const;
   void setFlags( int a_flags ) { flags = a_flags; }
   int getFlags() const { return flags; }
@@ -457,13 +459,19 @@ class TDataSet : public HolderData {
    /** returns list of registerd elems names */
    QStringList elemNames() const;
    /** returns holder by number - for QModel... */
-   HolderData* getElem( int i ) const;
-   /** find holder for object by name */
-   HolderData* getElem( const QString &oname ) const;
+   HolderData* getElem( int i ) const
+     {
+      return qobject_cast<HolderData*>(children()[i]);
+     }
+   /** find holder for object by name */ // TODO: +full.name.elm
+   HolderData* getElem( const QString &oname ) const
+     {
+       return findChild<HolderData*>( oname, Qt::FindDirectChildrenOnly );
+     }
    /** find holder for object by name, safely cast to type T */
    template<typename T> T getElemT( const QString &oname ) const
       {
-        return qobject_cast<T>( getElem( oname ) );
+        return findChild<T>( oname, Qt::FindDirectChildrenOnly );
       }
    /** index of holder, if my, -1 - if not */
    int indexOfHolder( HolderData *ho ) const;
@@ -486,6 +494,12 @@ class TDataSet : public HolderData {
    virtual int checkData( int ni );
    /** add new object and it's description (new)*/
    virtual HolderData* add_obj( const QString &cl_name, const QString &ob_name );
+   /** type-cast interface to add_obj */
+   template <typename T>
+   T* addObj( const QString &ob_name ) {
+     return qobject_cast<T*>( add_obj( T::staticMetaObject.className(), ob_name ) );
+   }
+
    /** add new param and it's description */
    virtual HolderData* add_param( const QString &tp_name, const QString &ob_name );
    /** is given type of subelement valid for this object */

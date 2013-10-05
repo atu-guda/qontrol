@@ -289,8 +289,8 @@ TOutArr* Scheme::getOutArr( const QString &oname )
 TMiso* Scheme::insElem( const QString &cl_name, const QString &ob_name,
                      int aord, int avis_x, int avis_y )
 {
-  TMiso *ob;
-  ob = qobject_cast<TMiso*>( add_obj( cl_name, ob_name ) );
+  // not add_obj, downcast
+  TMiso *ob = qobject_cast<TMiso*>( add_obj( cl_name, ob_name ) ); 
   if( !ob )
     return nullptr;
   ob->setData( "ord", aord );
