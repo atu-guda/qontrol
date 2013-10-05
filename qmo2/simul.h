@@ -19,6 +19,7 @@
 #define SIMUL_H
 
 #include "dataset.h"
+#include "datacont.h"
 
 
 /** Description of simulation
@@ -71,6 +72,19 @@ class Simulation : public TDataSet  {
 
   DCL_DEFAULT_STATIC;
 
+};
+
+// ------------------ container of Simulations --------------
+
+class ContSimul : public TDataContainer {
+   Q_OBJECT
+  public:
+   DCL_CTOR(ContSimul);
+   virtual ~ContSimul() override;
+   DCL_CREATE;
+   DCL_STD_INF;
+  private:
+   DCL_DEFAULT_STATIC;
 };
 
 #endif

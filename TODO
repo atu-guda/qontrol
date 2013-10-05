@@ -1,3 +1,4 @@
+add_obj <T> + params?
 RunWindow?
 RunInfo/Simulation
 Edit large arrays

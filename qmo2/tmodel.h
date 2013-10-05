@@ -23,6 +23,7 @@
 #include "tmiso.h"
 #include "toutarr.h"
 #include "tgraph.h"
+#include "simul.h"
 
 
 /**Contains all elements of model

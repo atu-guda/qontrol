@@ -27,7 +27,7 @@ STD_CLASSINFO(Simulation,clpSpecial | clpContainer);
 CTOR(Simulation,TDataSet)
 {
   allow_add = allowParam;
-  // allowed_types = ""; // double + inputs?
+  allowed_types = "double"; // double + inputs?
 }
 
 Simulation::~Simulation()
@@ -37,6 +37,25 @@ Simulation::~Simulation()
 
 
 DEFAULT_FUNCS_REG(Simulation)
+
+// ------------------ container of Simulations --------------
+
+
+const char* ContSimul::helpstr = "<H1>ContSimul</H1>\n"
+ "Container of simulations";
+
+STD_CLASSINFO(ContSimul,clpSpecial | clpContainer);
+
+CTOR(ContSimul,TDataContainer)
+{
+  allowed_types = "Simulation";
+}
+
+ContSimul::~ContSimul()
+{
+}
+
+DEFAULT_FUNCS_REG(ContSimul)
 
 
 // end of simul.cpp

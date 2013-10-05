@@ -86,6 +86,14 @@ bool QMo2Doc::newDocument()
     return false;
   }
 
+  if( ! createEmptySyms() ) {
+    DBG1( "ERR: Fail to create sims - simulations container" );
+    delete rootdata; rootdata = nullptr; model = nullptr;
+    QMessageBox::critical( 0, "QMo2Doc::newDocument",
+      QString("Fail to insert create sims in model: "), 0,0,0 );
+    return false;
+  }
+
   // rootdata->dumpStruct();
   modified = false; is_nonamed = true;
   loaded_as_old = true; // TODO: change to false when new model be created by default
@@ -167,15 +175,19 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
   }
 
   model = rootdata->getElemT<TModel*>( "model" );
-  if( model ) {
-    loaded_as_old = true;
-  } else if ( ( model = rootdata->getElemT<TModel*>( "schems.main" ) ) != nullptr ) {
-    loaded_as_old = false;
-    // and many more actions
-  } else {
+  loaded_as_old = true;
+  if( !model ) {
     delete rootdata; rootdata = 0; model = 0;
     QMessageBox::critical( 0, "openDocumentXML Error:",
        QString("Fail to detect model in file: ") + filename,
+       QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
+    return false;
+  };
+
+  if( ! migrateSumul() ) {
+    delete rootdata; rootdata = 0; model = 0;
+    QMessageBox::critical( 0, "openDocumentXML Error:",
+       QString("Fail to migrate simulations in file: ") + filename,
        QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
     return false;
   };
@@ -345,6 +357,85 @@ void QMo2Doc::initEngine()
   QScriptValue eng_model = eng.newQObject( model );
   eng.globalObject().setProperty("model", eng_model );
 }
+
+bool QMo2Doc::migrateSumul()
+{
+  if( !rootdata || ! model ) {
+    DBG1( "ERR: no root or model" );
+    return false;
+  }
+
+  ContSimul *sims = model->getElemT<ContSimul*>("sims");
+  if( sims )
+    return true; // conversion not required
+
+  DBG1( "info: migrate tmodel->simulations" );
+
+  if( ! createEmptySyms() ) {
+    return false;
+  }
+
+  sims = model->getElemT<ContSimul*>("sims");
+  if( ! sims ) {
+    DBG1( "ERR: simulations container not created!!!" ); // unlikely
+    return false; //
+  }
+
+  Simulation *sim0 = sims->getElemT<Simulation*>("sim0");
+  if( ! sim0 ) {
+    DBG1( "ERR: default simulations not created!!!" ); // unlikely
+    return false; //
+  }
+
+  double t = 100;
+  int ti = 1000;
+  // no check
+  model->getData( "tt", &t );  sim0->setData( "T", t );
+  model->getData( "nn", &ti );  sim0->setData( "N", ti );
+  model->getData( "use_sync", &ti );  sim0->setData( "syncRT", ti );
+  model->getData( "nl1", &ti );  sim0->setData( "N1", ti );
+  model->getData( "nl2", &ti );  sim0->setData( "N2", ti );
+  model->getData( "n_steps", &ti );  sim0->setData( "n_iosteps", ti );
+  model->getData( "prm0s", &t );  sim0->setData( "prm0s", t );
+  model->getData( "prm1s", &t );  sim0->setData( "prm1s", t );
+  model->getData( "prm2s", &t );  sim0->setData( "prm2s", t );
+  model->getData( "prm3s", &t );  sim0->setData( "prm3s", t );
+  model->getData( "seed", &ti );  sim0->setData( "seed", ti );
+  model->getData( "seedType", &ti );  sim0->setData( "seedType", ti );
+  model->getData( "autoStart", &ti );  sim0->setData( "autoStart", ti );
+
+
+  return true;
+}
+
+bool QMo2Doc::createEmptySyms()
+{
+  if( !rootdata || !model ) {
+    DBG1( "ERR: no root or model" );
+    return false;
+  }
+
+  ContSimul *sims = model->getElemT<ContSimul*>("sims");
+  if( ! sims ) { // create only if not exist
+    sims = qobject_cast<ContSimul*>(model->add_obj( "ContSimul", "sims" ));
+  }
+
+  if( ! sims ) {
+    DBG1( "ERR: Fail to create sims - simulatios container" );
+    return false;
+  }
+
+  Simulation *sim0 = sims->getElemT<Simulation*>( "sim0" );
+  if( sim0 )
+    return true; // creation not required: all exits
+  sim0 = qobject_cast<Simulation*>( sims->add_obj( "Simulation", "sim0" ) );
+  if( ! sim0 ) {
+    DBG1( "ERR: Fail to create defaul simulation sim0" );
+    return false;
+  }
+  return true;
+}
+
 
 // end of qmo2doc.cpp
 

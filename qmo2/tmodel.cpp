@@ -32,7 +32,8 @@ STD_CLASSINFO(TModel,clpSpecial | clpContainer);
 
 CTOR(TModel,TDataContainer)
 {
-  allowed_types = "TMiso,TGraph,TOutArr,HolderValue,InputSimple";
+  allowed_types = "TMiso,TGraph,TOutArr,HolderValue,InputSimple,"
+                  "ContSimul,Scheme,ContOuts,ContPlots";
   rtime = t = 0; tdt = tt / nn;
   m_sqrt2 = sqrt(2.0);
   m_sqrt1_2 = sqrt(0.5);

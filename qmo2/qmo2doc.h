@@ -101,6 +101,8 @@ class QMo2Doc : public QObject
 
  private:
    void initEngine();
+   bool migrateSumul();
+   bool createEmptySyms();
    /** the modified flag of the current document */
    bool modified = false;
    QString m_title = "? unknown ";
