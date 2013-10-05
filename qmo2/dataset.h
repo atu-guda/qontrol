@@ -202,6 +202,7 @@ class HolderData : public QObject {
   QString getFullName() const;
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
+  bool setParams( const QString params ); //* params sep: newline
   void setElems( const QString &els );
   virtual QString getType() const = 0;
   virtual const char* getHelp() const  = 0;

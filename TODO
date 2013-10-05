@@ -1,6 +1,9 @@
-add_obj <T> + params?
+move some logic from QMo2View to model (scheme?)
+slots in TModel linke cmds, but with "name", not elnu - for JS
+unify add/paste elem: param in dialog?
+unify add param/object : add_obj_param? + dialog
+View for Simulations? + unify such view
 RunWindow?
-RunInfo/Simulation
 Edit large arrays
 Plot data structure + convert old
 Current object in container / alias ?
@@ -14,6 +17,7 @@ Hide startLoop - like fun,f
 New hier
 Rename action
 Auto create GET/SET function for my datas, create Qt properties - scripts. ?
+order -> only hint?
 
 
 

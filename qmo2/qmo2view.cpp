@@ -514,8 +514,6 @@ void QMo2View::showTreeElm()
 {
   if( ! checkState( selCheck ) )
     return;
-  if( selObj == 0 )
-    return;
 
   HolderModel *ho_elm = new HolderModel( selObj, this );
 

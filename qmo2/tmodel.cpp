@@ -408,19 +408,39 @@ int TModel::insGraph( const QString &gname )
   return 0;
 }
 
-int TModel::delElem( const QString &ename )
+bool TModel::insElem( const QString &tp, const QString &nm, const QString &params )
 {
-  TMiso *ob = getElemT<TMiso*>( ename );
+  int order = hintOrd();
+  TMiso *ob = insElem( tp, nm, order, 0, 0 );
+  if( !ob )
+    return false;
+  ob->setParams( params );
+  return true;
+}
+
+bool TModel::delElem( const QString &nm )
+{
+  TMiso *ob = getElemT<TMiso*>( nm ); // chesk for TMiso, TODO: remove in scheme
   if( !ob ) {
-    DBG2q( "err: fail to find TMiso", ename );
+    DBG2q( "err: fail to find TMiso", nm );
     return 0;
   }
-  int rc = del_obj( ename );
+  bool rc = del_obj( nm );
   if( rc ) {
     reset();
     modified |= 1;
   }
   return rc;
+}
+
+bool TModel::setElem( const QString &nm, const QString &params )
+{
+  TMiso *ob = getElemT<TMiso*>( nm ); // chesk for TMiso, TODO: remove in scheme
+  if( !ob ) {
+    DBG2q( "err: fail to find TMiso", nm );
+    return false;
+  }
+  return ob->setParams( params );
 }
 
 
@@ -465,6 +485,7 @@ int TModel::newOrder( const QString &name, int new_ord )
   ob->getData( "ord", &real_ord );
   reset();
   modified |= 1;
+  sortOrd();
   return ( real_ord == new_ord ) ? 0 : -1;
 }
 

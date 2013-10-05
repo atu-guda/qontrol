@@ -63,6 +63,28 @@ QString HolderData::getParm( const QString &name ) const
   return QString();
 }
 
+bool HolderData::setParams( const QString params )
+{
+  bool was_set = false;
+  QStringList sl = params.split( "\n", QString::SkipEmptyParts);
+  QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=(.+)$)" );
+
+  for( QString &s : sl ) {
+    if( s.isEmpty() ) {
+      continue;
+    }
+
+    if( re.indexIn( s ) != -1 ) {
+      QString nm  = re.cap(1);
+      QString val = re.cap(2);
+      was_set = setData( nm, val ) || was_set; // Order!
+    } else {
+      DBGx( "warn: bad param string part: \"%s\"", qP( s ) );
+    }
+  }
+  return was_set;
+}
+
 bool HolderData::isObject( const QString & /*cl_name*/  ) const
 {
   return false;
@@ -1126,7 +1148,8 @@ bool TDataSet::setData( const QString &nm, const QVariant &da )
 
   HolderData *ho = getElem( first );
   if( !ho ) {
-    DBG2q( "warn: fail to find name", first );
+    DBGx( "warn: fail to find name \"%s\" in \"%s\"", 
+          qP(first), qP(getFullName()) );
     return 0;
   }
   if( nm_type == simpleName ) { // first only
@@ -1281,22 +1304,12 @@ bool TDataSet::add_obj_param( const QString &cl_name, const QString &ob_name,
   if( ! ho )
     return false;
 
-  QStringList sl = params.split( "\n", QString::SkipEmptyParts);
-  QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=(.+)$)" );
+  //TDataSet *ds = qobject_cast<TDataSet*>( ho );
+  //if( ds ) {
+  //  ds->setParams( params );
+  //}
+  ho->setParams( params );
 
-  for( QString &s : sl ) {
-    if( s.isEmpty() ) {
-      continue;
-    }
-
-    if( re.indexIn( s ) != -1 ) {
-      QString nm  = re.cap(1);
-      QString val = re.cap(2);
-      ho->setData( nm, val );
-    } else {
-      DBGx( "warn: bad param string part: \"%s\"", qP( s ) );
-    }
-  }
   return true;
 }
 

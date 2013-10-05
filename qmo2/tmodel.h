@@ -76,8 +76,6 @@ class TModel : public TDataContainer  {
   virtual int insOut( const  QString &outname, const QString &objname );
   /** inserts new graph @returns: <0 - bad, >0= index in ptrs[] */
   virtual int insGraph( const QString &gname );
-  /** delete active element by name !0 = sucess */
-  virtual int delElem( const QString &ename );
   /** moves element to new position if free */
   int moveElem( int elnu, int newx, int newy );
   /** delete outs by out index 0 = sucess */
@@ -93,6 +91,12 @@ class TModel : public TDataContainer  {
 
   /** reimplemented from TDataSet to ensure all data filled and linked */
   virtual int checkData( int i );
+
+  // interface to commands like above, but with names - to use from JS
+ public slots:
+   bool insElem( const QString &tp, const QString &nm, const QString &params );
+   bool delElem( const QString &nm );
+   bool setElem( const QString &nm, const QString &params );
 
  protected:
   /** reimplemented to real Elems, OutArr, Graphs: TODO: separate containers */
