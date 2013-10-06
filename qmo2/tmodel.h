@@ -84,6 +84,10 @@ class TModel : public TDataContainer  {
   virtual int delGraph( int gr_nu );
   /** new order of element ny name */
   virtual int newOrder( const QString &name, int new_ord );
+
+  Simulation* getSimul( int idx );
+  Simulation* getSimul( const QString &name );
+
   /** suggest order value for new element */
   virtual int hintOrd() const;
   /** frees output arrays and state: 2->1 */
@@ -97,6 +101,10 @@ class TModel : public TDataContainer  {
    bool insElem( const QString &tp, const QString &nm, const QString &params );
    bool delElem( const QString &nm );
    bool setElem( const QString &nm, const QString &params );
+
+   int newSimul( const QString &name );
+   int delSimul( const QString &name );
+   QString getSimulName( int idx );
 
  protected:
   /** reimplemented to real Elems, OutArr, Graphs: TODO: separate containers */

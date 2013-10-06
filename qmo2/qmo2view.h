@@ -124,6 +124,10 @@ class QMo2View : public QWidget
    void runPrm();
    void runPrm2();
    void resetModel();
+   void newSimul();
+   void delSimul();
+   void editSimul();
+   void setActiveSimul();
 
    // misc
    void showHelp();
@@ -160,7 +164,8 @@ class QMo2View : public QWidget
    TRootData *root;
    TModel *model;
    int sel = -1, sel_x = 0, sel_y = 0, mark = -1, level = 0;
-   QString scr = "a=12;\nb=4;\nprint('From script\\n');\nprint( model );\n a*b; ";
+   // TODO: from file (config)
+   QString scr = R"(model.addObj("TLinear","ob","vis_x=4" )";
    /** prt to selected object or nullptr */
    TMiso *selObj = nullptr;
    /** prt to marked object or nullptr */

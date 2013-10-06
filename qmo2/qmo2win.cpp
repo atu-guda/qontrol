@@ -372,6 +372,22 @@ void QMo2Win::initIface()
   act_reset->setWhatsThis( tr("Reset model state.") );
   connect( act_reset, &QAction::triggered, this, &QMo2Win::slotReset );
 
+  act_newSimul = new QAction( "New Simulation", this );
+  act_newSimul->setWhatsThis( tr("Create new simulation") );
+  connect( act_newSimul, &QAction::triggered, this, &QMo2Win::slotNewSimul );
+
+  act_delSimul = new QAction( "Delete Simulation", this );
+  act_delSimul->setWhatsThis( tr("Delete simulation") );
+  connect( act_delSimul, &QAction::triggered, this, &QMo2Win::slotDelSimul );
+
+  act_editSimul = new QAction( "Edit Simulation", this );
+  act_editSimul->setWhatsThis( tr("Edit simulation") );
+  connect( act_editSimul, &QAction::triggered, this, &QMo2Win::slotEditSimul );
+
+  act_setActiveSimul = new QAction( "Set Active Simulation", this );
+  act_setActiveSimul->setWhatsThis( tr("Set current simulation to be active") );
+  connect( act_setActiveSimul, &QAction::triggered, this, &QMo2Win::slotSetActiveSimul );
+
   // ==== iface group
 
   act_tbar = new QAction( "View &Toolbar", this );
@@ -544,6 +560,11 @@ void QMo2Win::initIface()
   pRunMenu->addAction( act_runscript );
   pRunMenu->addSeparator();
   pRunMenu->addAction( act_reset );
+  pRunMenu->addSeparator();
+  pRunMenu->addAction( act_newSimul );
+  pRunMenu->addAction( act_delSimul );
+  pRunMenu->addAction( act_editSimul );
+  pRunMenu->addAction( act_setActiveSimul );
 
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pViewMenu
@@ -672,6 +693,10 @@ void QMo2Win::enableActions( bool ena, int id_ )
        act_runprm2->setEnabled( ena );
        act_runscript->setEnabled( ena );
        act_reset->setEnabled( ena );
+       act_newSimul->setEnabled( ena );
+       act_delSimul->setEnabled( ena );
+       act_editSimul->setEnabled( ena );
+       act_setActiveSimul->setEnabled( ena );
        // win
        act_winClose->setEnabled( ena );
        act_winCloseAll->setEnabled( ena );
@@ -1467,6 +1492,48 @@ void QMo2Win::slotReset()
     m->resetModel();
   statusBar()->showMessage( tr( "Ready." ) );
 }
+
+void QMo2Win::slotNewSimul()
+{
+  statusBar()->showMessage( tr( "Adding new simulation ..." ) );
+
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->newSimul();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+void QMo2Win::slotDelSimul()
+{
+  statusBar()->showMessage( tr( "Removing selected simulation ..." ) );
+
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->delSimul();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+void QMo2Win::slotEditSimul()
+{
+  statusBar()->showMessage( tr( "Editing selected simulation ..." ) );
+
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->editSimul();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+void QMo2Win::slotSetActiveSimul()
+{
+  statusBar()->showMessage( tr( "Setting active simulation ..." ) );
+
+  QMo2View* m =  activeMdiChild();
+  if ( m )
+    m->setActiveSimul();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+
 
 void QMo2Win::slotRunScript()
 {

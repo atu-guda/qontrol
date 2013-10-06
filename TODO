@@ -3,8 +3,10 @@ slots in TModel linke cmds, but with "name", not elnu - for JS
 unify add/paste elem: param in dialog?
 unify add param/object : add_obj_param? + dialog
 View for Simulations? + unify such view
+threads in run
 RunWindow?
 Edit large arrays
+More data/controls: Font, Date, Time
 Plot data structure + convert old
 Current object in container / alias ?
 run w/o interface fun:

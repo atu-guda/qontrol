@@ -1240,6 +1240,38 @@ void QMo2View::resetModel()
   emit viewChanged();
 }
 
+void QMo2View::newSimul()
+{
+  bool ok;
+  if( ! checkState( validCheck ) )
+    return;
+  QString simName = QString("sim") + QSN( sel );
+  simName = QInputDialog::getText( this, "Creating new Simulation",
+      "Enter name of new simulation:", QLineEdit::Normal,
+      simName, &ok );
+  if( ok ) {
+    if( ! isGoodName( simName ) ) {
+      QMessageBox::critical( this, "Error",
+         QString("Bad simulation name: \"") + simName + "\"",
+         QMessageBox::Ok, QMessageBox::NoButton );
+    }
+    model->newSimul( simName );
+    emit viewChanged();
+  };
+}
+
+void QMo2View::delSimul()
+{
+}
+
+void QMo2View::editSimul()
+{
+}
+
+void QMo2View::setActiveSimul()
+{
+}
+
 
 // misc
 

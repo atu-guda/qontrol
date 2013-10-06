@@ -191,6 +191,10 @@ class QMo2Win : public QMainWindow
     void slotRunPrm();
     void slotRunPrm2();
     void slotReset();
+    void slotNewSimul();
+    void slotDelSimul();
+    void slotEditSimul();
+    void slotSetActiveSimul();
 
     // ==== view related
     /** toggle the toolbar*/
@@ -287,6 +291,7 @@ class QMo2Win : public QMainWindow
             *act_editmodel, *act_showtreemodel,
             // run
             *act_runrun, *act_runprm, *act_runprm2, *act_runscript, *act_reset,
+            *act_newSimul, *act_delSimul, *act_editSimul, *act_setActiveSimul,
             // iface
             *act_tbar, *act_sbar,
             *act_showord, *act_showgrid, *act_shownames, *act_showicons, *act_showlinks,

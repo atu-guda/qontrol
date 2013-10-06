@@ -466,6 +466,31 @@ int TModel::delGraph( int gr_nu )
   return k;
 }
 
+int TModel::newSimul( const QString &name )
+{
+  return 0; // TODO:
+}
+
+int TModel::delSimul( const QString &name )
+{
+  return 0; // TODO:
+}
+
+QString TModel::getSimulName( int idx )
+{
+  return QString(); // TODO:
+}
+
+Simulation* TModel::getSimul( int idx )
+{
+  return nullptr; // TODO:
+}
+
+Simulation* TModel::getSimul( const QString &name )
+{
+  return nullptr; // TODO:
+}
+
 int TModel::newOrder( const QString &name, int new_ord )
 {
   TMiso *ob = getElemT<TMiso*>( name );
