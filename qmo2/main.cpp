@@ -29,7 +29,7 @@ int main( int argc, char *argv[] )
   qmo2->show();
 
   if( argc>1 )
-    qmo2->doFileOpenXML( QString::fromLocal8Bit( argv[1] ) );
+    qmo2->doFileOpenXML( QString::L8B( argv[1] ) );
 
   return a.exec();
 }

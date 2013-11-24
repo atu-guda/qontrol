@@ -21,6 +21,9 @@
 // include files for QT
 #include <QMainWindow>
 #include <QString>
+
+#include "defs.h"
+
 class QToolBar;
 class QPrinter;
 class QCloseEvent;
@@ -78,9 +81,7 @@ class QMo2Win : public QMainWindow
 {
   Q_OBJECT
   public:
-    /** construtor */
     QMo2Win(void);
-    /** destructor */
     ~QMo2Win();
 
     /** enables/disables menu entries/toolbar items */
@@ -99,17 +100,9 @@ class QMo2Win : public QMainWindow
   protected:
     /** overloaded for Message box on last window exit */
     bool queryExit();
-    /** creates a new child window. The document that will be connected to it
-     * has to be created before and the instances filled, with e.g. openDocument().
-     * Then call createClient() to get a new MDI child window.
-     * @see QMo2Doc#addView
-     * @see QMo2Doc#openDocument
-     * @param doc pointer to the document instance that the view will
-     * be connected to.
-     */
-     QMo2View* createChild( QMo2Doc* doc );
-     QMdiSubWindow* findMdiChild( const QString &fileName );
-     QMo2View* activeMdiChild();
+    QMo2View* createChild( QMo2Doc* doc );
+    QMdiSubWindow* findMdiChild( const QString &fileName );
+    QMo2View* activeMdiChild();
 
   private slots:
 

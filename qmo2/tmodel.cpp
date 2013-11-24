@@ -149,7 +149,7 @@ int TModel::runOneLoop()
   if( use_sync ) {
      if( t > rtime ) {
        wait_ms = (unsigned long)( 1000000 * ( t - rtime ) );
-       usleep( wait_ms );
+       usleep( wait_ms ); // ------------------- TODO: redesign ------
        // return 1;
      };
   };
