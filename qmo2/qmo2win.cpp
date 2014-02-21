@@ -1537,7 +1537,7 @@ void QMo2Win::slotSetActiveSimul()
 
 void QMo2Win::slotRunScript()
 {
-  statusBar()->showMessage( tr( "Show model tree..." ) );
+  statusBar()->showMessage( tr( "Running script..." ) );
 
   QMo2View* m =  activeMdiChild();
   if ( m )

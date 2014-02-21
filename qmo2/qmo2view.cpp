@@ -1170,12 +1170,13 @@ void QMo2View::runScript()
     DBG1( "ERR: can run script w/o doc or root" );
     return;
   }
+  // TODO: special class to edit js and view results
 
   auto *dia = new QDialog( this );
   dia->setWindowTitle( "Edit script" );
   QVBoxLayout *lv = new QVBoxLayout( dia );
 
-  auto *ted = new QTextEdit( this );
+  auto *ted = new QTextEdit( dia );
   ted->setText( scr );
   lv->addWidget( ted );
 
@@ -1184,14 +1185,35 @@ void QMo2View::runScript()
   lv->addWidget( bt_ok );
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
+  dia->resize( 800, 600 );
 
   int rc = dia->exec();
-  if( rc == QDialog::Accepted ) {
-    scr = ted->toPlainText();
-    QString res = doc->runScript( scr );
-    QMessageBox::information( this, PACKAGE " script result ", res );
-  };
+  QString res;
+  if( rc != QDialog::Accepted ) {
+    delete dia; dia = nullptr;
+    return;
+  }
+  scr = ted->toPlainText();
   delete dia; dia = nullptr;
+
+  res = doc->runScript( scr );
+
+  auto *dia1 = new QDialog( this );
+  dia1->setWindowTitle( "Script result" );
+  QVBoxLayout *lv1 = new QVBoxLayout( dia1 );
+
+  auto *ted1 = new QTextEdit( dia1 );
+  ted1->setText( res );
+  ted1->setReadOnly( true );
+  lv1->addWidget( ted1 );
+
+  auto bt_ok1 = new QPushButton( "&Ok", dia1 );
+  lv1->addWidget( bt_ok1 );
+
+  connect( bt_ok1, &QPushButton::clicked, dia1, &QDialog::accept );
+  dia1->resize( 800, 600 );
+  dia1->exec();
+  delete dia1; dia1 = nullptr;
 
 }
 

@@ -343,8 +343,14 @@ void QMo2Doc::fillRoot(void)
 
 QString QMo2Doc::runScript( const QString& script )
 {
-   QScriptValue res = eng.evaluate( script );
-   return res.toString();
+  QScriptValue res = eng.evaluate( script );
+  QString r;
+  if( eng.hasUncaughtException() ) {
+    int line = eng.uncaughtExceptionLineNumber();
+    r = "Error: uncaught exception at line " + QSN( line ) + " : \n";
+  }
+  r += res.toString();
+  return r;
 }
 
 void QMo2Doc::initEngine()
