@@ -284,6 +284,7 @@ class HolderList : public HolderInt {
   Q_OBJECT
  public:
   // non-standard ctor, as have elems. TODO: global enum/strings for elems
+  // elems come from string with \n separator
   HolderList( const QString &obj_name, TDataSet *a_parent,
      int a_flags = 0, const QString &v_name = QString(),
      const QString &a_descr = QString(),

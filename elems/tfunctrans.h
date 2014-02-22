@@ -2,7 +2,7 @@
                           tfunctrans.h  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -37,7 +37,9 @@ static const char* const tfunctrans_list =
      "a*cos^2(b*y)+g\n"              // 13
      "a*tan(b*y)+g\n"                // 14
      "a*exp(-b*y*y)*(1-c*sin^2(dy))+g\n" // 15
-     "a*(1-exp(-b*y*y))*(1-c*sin^2(dy))+g" // 16
+     "a*(1-exp(-b*y*y))*(1-c*sin^2(dy))+g\n" // 16
+     "a*exp(-(y/b)^2)+g\n"           // 17
+     "a/((|y|/b+1)+g"                // 18
 ;
 
 /**trigonometric, exponetial and wavelet functions

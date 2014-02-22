@@ -2,7 +2,7 @@
                           tfunctrans.cpp  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -60,6 +60,8 @@ double TFuncTrans::f( double /* t */ )
               v = a * exp( -by*y ) * tm; break;
     case 16:  tm = sin( d * y );  tm = 1 - c * tm*tm;
               v = a * (1-exp( -by*y )) * tm; break;
+    case 17:  tm = y/b; v = a * exp( - tm * tm ); break;
+    case 18:  v = a / ( fabs(y)/b + 1 ); break;
     default:  v = 0;
   };
   v += g;
