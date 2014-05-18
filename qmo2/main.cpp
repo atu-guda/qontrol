@@ -2,7 +2,7 @@
                           main.cpp  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -22,14 +22,17 @@
 
 int main( int argc, char *argv[] )
 {
-  QApplication a(argc, argv);
+  setenv( "LC_NUMERIC", "C", 1 );
+
+  QApplication a( argc, argv );
 
   QMo2Win *qmo2 = new QMo2Win();
 
   qmo2->show();
 
-  if( argc>1 )
+  if( argc>1 ) {
     qmo2->doFileOpenXML( QString::L8B( argv[1] ) );
+  }
 
   return a.exec();
 }
