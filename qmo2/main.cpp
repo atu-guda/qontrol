@@ -14,11 +14,18 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <iostream>
 
 #include <QApplication>
 #include <QFont>
 
+#include "getopt.h"
+
 #include "qmo2win.h"
+
+using namespace std;
+
+void print_usage( const char *appname );
 
 int main( int argc, char *argv[] )
 {
@@ -26,15 +33,29 @@ int main( int argc, char *argv[] )
 
   QApplication a( argc, argv );
 
+  int op;
+  while( ( op=getopt( argc, argv, "hv" ) ) != -1 ) {
+    switch( op ) {
+      case 'h' : print_usage( argv[0] ); return 0;
+      case 'v' : cout << PACKAGE << ' ' << VERSION << endl;  return 0;
+      default: cerr << "Error: unknown option '" << (char)(optopt) << "'" << endl;
+    }
+  }
+
   QMo2Win *qmo2 = new QMo2Win();
 
   qmo2->show();
 
-  if( argc>1 ) {
+  for( int i=optind; i<argc ; ++i ) {
     qmo2->doFileOpenXML( QString::L8B( argv[1] ) );
   }
 
   return a.exec();
+}
+
+void print_usage( const char *appname )
+{
+  cout << "Usage: \n" << appname << " [-h] [-v] [files...]" << endl;
 }
 
 // end of main.cpp

@@ -83,7 +83,6 @@ HEADERS += \
   inputparams.h \
   miscfun.h \
   mo2settdlg.h \
-  myelems1.h \
   qcolorbtn.h \
   qdoubletable.h \
   qgraphview.h \

@@ -18,8 +18,6 @@
 #ifndef QMO2DOC_H
 #define QMO2DOC_H
 
-#include <config.h>
-
 // include files for QT
 #include <QObject>
 #include <QString>

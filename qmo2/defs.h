@@ -2,7 +2,7 @@
                           defs.h  -  description
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2013 by atu
+    copyright            : GPL (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  *************************************************************************/
 
@@ -11,21 +11,21 @@
 
 #include <limits>
 #include <vector>
-#include <config.h>
+
+#define VERSION "0.0.51"
+
+/* Name of package */
+#define PACKAGE "qmo2x"
+#define ORG "atu.atunet"
+#define COPYRIGHT "(c) 2000-2014 atu; under GPLv2+"
 
 /* General constants */
 #define MAX_NAMELEN   32
-#define MAX_LABELLEN 128
 
 /* Model constants */
 
 #define MODEL_MX 64
 #define MODEL_MY 64
-#define MODEL_NVAR 256
-
-/** max numbers of signal and parametric inputs */
-#define OBJ_NINP 4
-#define OBJ_NPRM 4
 
 #define qP(x) qPrintable(x)
 /** interface to qDebug with more info q: qPrintable to last argubent, x - format*/

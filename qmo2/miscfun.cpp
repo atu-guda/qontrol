@@ -13,7 +13,6 @@
 #include <cmath>
 #include <unistd.h>
 #include <sys/time.h>
-#include "../config.h"
 
 #include <QString>
 #include <QRegExp>
