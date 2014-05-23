@@ -504,7 +504,8 @@ void QMo2View::infoElm()
   dia->setLayout( lay );
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  // dia->resize( 600, 300 );
+
+  dia->resize( 720, 500 ); // TODO: adjust to inner table width
   dia->exec();
   delete dia;
   emit viewChanged();

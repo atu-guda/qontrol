@@ -2,7 +2,7 @@
                           tadjgen.h  -  description
                              -------------------
     begin                : Wed Aug 30 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -31,6 +31,7 @@ class TAdjGen : public TMiso  {
    DCL_CTOR(TAdjGen);
    DCL_CREATE;
    DCL_STD_INF;
+   enum GenType { gen_def=0, gen_mai, gen_dual };
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -57,6 +58,12 @@ class TAdjGen : public TMiso  {
    PRM_DOUBLE( ctt, efInner, "ctt", "Accumulator 0", "" );
    PRM_DOUBLE( ig, efInner,  "ig",  "Accumulator 1", "" );
    PRM_DOUBLE( ig2, efInner, "ig2", "Accumulator 2", "" );
+   PRM_DOUBLE( dlt, efInner, "dlt", "Delta during last tick", "" );
+   PRM_DOUBLE( tick_T, efInner, "tick_T", "period of last tick", "" );
+   PRM_DOUBLE( tick_old, efInner, "tick_old", "time of last tick", "" );
+   PRM_DOUBLE( av, efInner,  "av",  "Average 1", "" );
+   PRM_DOUBLE( av2, efInner, "av2", "Average 2", "" );
+   PRM_DOUBLE( av_diff, efInner, "av_diff", "difference of averages", "" );
 
    PRM_INPUT( in_omega, 0, "\\omega", "omega input",  "sep=block" );
    PRM_INPUT( in_rst,   0, "reset", "reset input input", "sep=col" );
@@ -64,6 +71,7 @@ class TAdjGen : public TMiso  {
    PRM_INPUT( in_omega2, 0, "\\omega 2", "seconf omega input", "sep=col" );
    /** real tick: exported to double tick */
    int real_tick;
+   double cav, cav2; // current values for av, av2
    DCL_DEFAULT_STATIC;
 };
 
