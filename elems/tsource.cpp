@@ -2,7 +2,7 @@
                           tsource.cpp  -  description
                              -------------------
     begin                : Thu Aug 24 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -35,10 +35,11 @@ CTOR(TSource,TMiso)
 
 double TSource::f( double t )
 {
-  double v ,omet, uu_s, omet_s, lt, u_ch, f_ch, phi, phi_0;
+  double v, omet, uu_s, omet_s, lt, u_ch, f_ch, pha, pha_0;
   int n;
-  omet = t * omega; u_ch = 1; f_ch = 0;
-  if( use_u_ch ) {
+  omet = t * omega + phi; u_ch = 1; f_ch = 0;
+
+  if( use_u_ch ) { // chaos on U
     if( t < u_ch_te ) {
       u_ch = u_ch_vs + ( t - u_ch_ts ) * u_ch_k;
     } else {
@@ -49,7 +50,8 @@ double TSource::f( double t )
       u_ch_k = ( u_ch_ve - u_ch_vs ) / ( u_ch_te - u_ch_ts );
     };
   }; // end if( u_chaos )
-  if( use_f_ch ) {
+
+  if( use_f_ch ) { // chaos on phase
     if( t < f_ch_te ) {
       f_ch = f_ch_vs + ( t - f_ch_ts ) * f_ch_k;
     } else {
@@ -60,9 +62,11 @@ double TSource::f( double t )
       f_ch_k = ( f_ch_ve - f_ch_vs ) / ( f_ch_te - f_ch_ts );
     };
   }; // end if( f_chaos )
+
   uu_s = uu * u_ch; omet_s = omet + f_ch; // note u: * fi +
-  phi = omet_s * M_1_PI * 0.5;
-  phi_0 = fmod( phi, 1 ); // phase in range [ 0; 1 )
+  pha = omet_s * M_1_PI * 0.5;
+  pha_0 = fmod( pha, 1 ); // phase in range [ 0; 1 )
+
   switch( (int)type ) {
     case 0: v = uu_s * sin( omet_s ); break;
     case 1: v = uu_s * sign( sin( omet_s ) ); break;
@@ -85,14 +89,14 @@ double TSource::f( double t )
             };
             break;
     case 9: v = f_ch; break;
-    case 10: if( phi_0 <= 0.25 )
-               v = uu_s * 4 * phi_0;
-             else if ( phi_0 <= 0.75 )
-               v = uu_s * ( 1 - 4*(phi_0-0.25));
+    case 10: if( pha_0 <= 0.25 )
+               v = uu_s * 4 * pha_0;
+             else if ( pha_0 <= 0.75 )
+               v = uu_s * ( 1 - 4*(pha_0-0.25));
              else
-               v = uu_s * ( -1 +4*(phi_0-0.75));
+               v = uu_s * ( -1 +4*(pha_0-0.75));
              break;
-    case 11: v = phi_0; break;
+    case 11: v = pha_0; break;
     default: v = 0;
   };
   v += cc;

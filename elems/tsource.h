@@ -22,18 +22,18 @@
 #include "rand_gen.h"
 
 static const char* const tsource_list_type =
-             "U*sin(o*t)\n"           // 0
-             "U*sign(sin(o*t))\n"     // 1
-             "U*t/T*sin(o*t)\n"       // 2
-             "U*t/T*sign(sin(o*t))\n" // 3
-             "Dirac(t-tau)\n"         // 4
-             "U*Thetta(t-tau)\n"      // 5
-             "U*t/T\n"                // 6
-             "saw(t,tau) /|/|/| \n"   // 7
-             "saw2(t.tau) /\\/\\ \n"  // 8
-             "Chaos Wave(Phi)\n"      // 9
-             "U*triangle(o*t)\n"      // 10
-             "Phase"                 // 11
+             "U*sin(omega*t+phi)\n"           // 0
+             "U*sign(sin(omega*t+phi))\n"     // 1
+             "U*t/T*sin(omega*t+phi)\n"       // 2
+             "U*t/T*sign(sin(omega*t+phi))\n" // 3
+             "Dirac(t-tau)\n"                 // 4
+             "U*Thetta(t-tau)\n"              // 5
+             "U*t/T\n"                        // 6
+             "saw(t,tau) /|/|/| \n"           // 7
+             "saw2(t,tau) /\\/\\ \n"          // 8
+             "Chaos Wave(Phi)\n"              // 9
+             "U*triangle(omega*t+phi)\n"      // 10
+             "Phase"                          // 11
 ;
 
 static const char* const tsource_list_seedType =
@@ -65,11 +65,13 @@ class TSource : public TMiso  {
    /** type of input and misc flags */
    PRM_LIST( type, efNRC, "Type", "Source type", "", tsource_list_type );
    /** Amplitude */
-   PRM_DOUBLE( uu, 0, "Amplitude", "Amplitude of signal (or pulse max)", "def=1" );
+   PRM_DOUBLE( uu, 0, "U", "Amplitude of signal (or pulse max)", "def=1" );
    /** Frequency */
-   PRM_DOUBLE( omega, 0, "Frequency", "Frequency of source (or pulse width)", "def=0.7" );
+   PRM_DOUBLE( omega, 0, "omega", "Frequency of source (or pulse width)", "def=0.7" );
    /** constant shift */
    PRM_DOUBLE( cc, 0, "C", "Constant base", "" );
+   /** phase shift */
+   PRM_DOUBLE( phi, 0, "phi", "Phase shift", "def=0" );
 
    // ----------- U chaos ----------------------
    PRM_SWITCH( use_u_ch, efNRC, "use U chaos", "Use amplitude perturbations", "sep=col" );
