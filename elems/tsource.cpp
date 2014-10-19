@@ -74,7 +74,7 @@ double TSource::f( double t )
     case 3: v = uu_s * sign( sin( omet_s ) ) * t / tt; break;
     case 4: v = 0;
             if( was_pulse == 0 && t >= omega )
-              { v = uu / tdt; was_pulse = 1; };
+              { v = uu_s / tdt; was_pulse = 1; };
             break;
     case 5: v = ( t > omega ) ? uu_s : 0; break;
     case 6: v = uu_s * ( t + f_ch ) / tt; break;
@@ -82,13 +82,12 @@ double TSource::f( double t )
             v = uu_s * ( lt + f_ch ) / omega;
             break;
     case 8: n = int( 2 * t / omega ); lt = 2 * t - n * omega;
-            if( n & 1 ) {
-              v = 0.5 * uu - 2 * ( lt + f_ch ) * uu / omega;
-            } else {
-              v = -0.5 * uu + 2 * ( lt + f_ch ) * uu / omega;
+            v = 0.5 * uu_s - 2 * ( lt + f_ch ) * uu / omega;
+            if( ! (n & 1)  ) {
+              v = -v;
             };
             break;
-    case 9: v = f_ch; break;
+    case 9: v = uu_s * f_ch; break;
     case 10: if( pha_0 <= 0.25 )
                v = uu_s * 4 * pha_0;
              else if ( pha_0 <= 0.75 )

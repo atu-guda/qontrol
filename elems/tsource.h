@@ -29,9 +29,9 @@ static const char* const tsource_list_type =
              "Dirac(t-tau)\n"                 // 4
              "U*Thetta(t-tau)\n"              // 5
              "U*t/T\n"                        // 6
-             "saw(t,tau) /|/|/| \n"           // 7
-             "saw2(t,tau) /\\/\\ \n"          // 8
-             "Chaos Wave(Phi)\n"              // 9
+             "U*saw(t,tau) /|/|/| \n"         // 7
+             "U*saw2(t,tau) /\\/\\ \n"        // 8
+             "U*chaos Wave(Phi)\n"            // 9
              "U*triangle(omega*t+phi)\n"      // 10
              "Phase"                          // 11
 ;
