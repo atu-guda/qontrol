@@ -21,7 +21,7 @@ SOURCES += \
   main.cpp \
   miscfun.cpp \
   mo2settdlg.cpp \
-  qcolorbtn.cpp \
+  colorbtn.cpp \
   qdoubletable.cpp \
   qgraphview.cpp \
   qmo2doc.cpp \
@@ -83,7 +83,7 @@ HEADERS += \
   inputparams.h \
   miscfun.h \
   mo2settdlg.h \
-  qcolorbtn.h \
+  colorbtn.h \
   qdoubletable.h \
   qgraphview.h \
   qmo2doc.h \

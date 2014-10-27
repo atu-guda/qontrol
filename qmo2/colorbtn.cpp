@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qcolorbtn.cpp  -  description
+                          colorbtn.cpp  -  description
                              -------------------
     begin                : Sat Aug 5 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -17,7 +17,7 @@
 
 #include <QColorDialog>
 #include <QPainter>
-#include "qcolorbtn.h"
+#include "colorbtn.h"
 
 ColorBtn::ColorBtn( QWidget *parent )
           : QPushButton( parent )
