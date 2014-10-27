@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qstructview.h  -  description
+                          structview.h  -  description
                              -------------------
     begin                : Sat Aug 12 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -36,7 +36,7 @@ class QPainter;
   *@author atu
   */
 
-class QStructView : public QWidget  {
+class StructView : public QWidget  {
    Q_OBJECT
  public:
   //* information about element to draw
@@ -52,9 +52,9 @@ class QStructView : public QWidget  {
     const InputParams *pis;
   };
    /** constructor */
-   QStructView( QMo2Doc *adoc, QMo2View *mview,  QWidget *parent );
+   StructView( QMo2Doc *adoc, QMo2View *mview,  QWidget *parent );
    /** destructor */
-   virtual ~QStructView();
+   virtual ~StructView();
    /** print contents */
    void printAll();
    /** grid size */

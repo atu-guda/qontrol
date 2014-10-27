@@ -23,7 +23,7 @@
 #include "qmo2view.h"
 #include "qmo2doc.h"
 #include "qmo2win.h"
-#include "qstructview.h"
+#include "structview.h"
 #include "qoutview.h"
 #include "qgraphview.h"
 #include "qstatusmodel.h"
@@ -55,7 +55,7 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
 
   scrollArea = new QScrollArea( main_part );
 
-  sview = new QStructView( doc, this, main_part );
+  sview = new StructView( doc, this, main_part );
   scrollArea->setWidget( sview );
   scrollArea->setLineWidth( 1 );
   scrollArea->setMidLineWidth( 1 );
@@ -80,8 +80,8 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   setWindowTitle( doc->title() );
 
   connect( this, &QMo2View::viewChanged, this, &QMo2View::updateViews );
-  connect( sview, &QStructView::sig_changeSel,   this, &QMo2View::changeSel );
-  connect( sview, &QStructView::sig_changeLevel, this, &QMo2View::changeLevel );
+  connect( sview, &StructView::sig_changeSel,   this, &QMo2View::changeSel );
+  connect( sview, &StructView::sig_changeLevel, this, &QMo2View::changeLevel );
 
 }
 

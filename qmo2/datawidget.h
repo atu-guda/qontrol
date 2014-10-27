@@ -14,7 +14,7 @@
 #include <QString>
 
 #include "dataset.h"
-#include "qcolorbtn.h"
+#include "colorbtn.h"
 
 class DataWidget;
 

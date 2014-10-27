@@ -24,7 +24,7 @@ class QResizeEvent;
 class QCloseEvent;
 
 class QMo2Doc;
-class QStructView;
+class StructView;
 class QOutView;
 class QGraphView;
 class TDataSet;
@@ -155,7 +155,7 @@ class QMo2View : public QWidget
    int checkState( CheckType ctp );
  protected:
    QScrollArea *scrollArea;
-   QStructView *sview;
+   StructView *sview;
    QOutView *oview;
    QGraphView *gview;
    QStatusModel *stam;

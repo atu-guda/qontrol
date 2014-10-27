@@ -31,7 +31,7 @@ SOURCES += \
   qplotview.cpp \
   qrunview.cpp \
   qstatusmodel.cpp \
-  qstructview.cpp \
+  structview.cpp \
   rootdata.cpp \
   scaledata.cpp \
   scheme.cpp \
@@ -93,7 +93,7 @@ HEADERS += \
   qplotview.h \
   qrunview.h \
   qstatusmodel.h \
-  qstructview.h \
+  structview.h \
   rootdata.h \
   scaledata.h \
   scheme.h \

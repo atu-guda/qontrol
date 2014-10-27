@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qstructview.cpp  -  description
+                          structview.cpp  -  description
                              -------------------
     begin                : Sat Aug 12 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -20,7 +20,7 @@
 #include <QPrintDialog>
 
 #include "miscfun.h"
-#include "qstructview.h"
+#include "structview.h"
 #include "qplotview.h"
 #include "qdoubletable.h"
 #include "qmo2win.h"
@@ -30,7 +30,7 @@
 
 
 
-QStructView::QStructView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
+StructView::StructView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
             : QWidget( parent )
 {
   doc = adoc; mainview = mview;
@@ -52,12 +52,12 @@ QStructView::QStructView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
   setFocus();
 }
 
-QStructView::~QStructView()
+StructView::~StructView()
 {
 
 }
 
-QSize QStructView::getElemsBound() const
+QSize StructView::getElemsBound() const
 {
   int x, y, mx, my, elnu, n_el;
   TMiso *ob;
@@ -92,12 +92,12 @@ QSize QStructView::getElemsBound() const
   return pas;
 }
 
-QSize QStructView::sizeHint() const
+QSize StructView::sizeHint() const
 {
   return getElemsBound();
 }
 
-QPoint QStructView::getSelCoords() const
+QPoint StructView::getSelCoords() const
 {
   int sel_x = mainview->getSelX();
   int sel_y = mainview->getSelY();
@@ -105,14 +105,14 @@ QPoint QStructView::getSelCoords() const
 }
 
 
-void QStructView::update()
+void StructView::update()
 {
   resize( getElemsBound() );
   QWidget::update();
 }
 
 
-void QStructView::paintEvent( QPaintEvent * /*pe*/ )
+void StructView::paintEvent( QPaintEvent * /*pe*/ )
 {
   if( ! doc )
     return;
@@ -124,7 +124,7 @@ void QStructView::paintEvent( QPaintEvent * /*pe*/ )
   p.end();
 }
 
-void QStructView::printAll()
+void StructView::printAll()
 {
   QPrinter *pr;
   if( !doc || !model || !QMo2Win::qmo2win ) 
@@ -143,7 +143,7 @@ void QStructView::printAll()
   };
 }
 
-bool QStructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
+bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
 {
   if( ! ob )
     return false;
@@ -181,7 +181,7 @@ bool QStructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   return true;
 }
 
-void QStructView::drawAll( QPainter &p )
+void StructView::drawAll( QPainter &p )
 {
   int i, h, w, nh, nw;
   int n_el, elnu,  n_out, out_nu, out_tp, line_busy;
@@ -527,7 +527,7 @@ void QStructView::drawAll( QPainter &p )
 }
 
 
-void QStructView::mousePressEvent( QMouseEvent *me )
+void StructView::mousePressEvent( QMouseEvent *me )
 {
   int h, w, nh, nw, ex, ey, x, y;
   QMenu *menu;
@@ -559,7 +559,7 @@ void QStructView::mousePressEvent( QMouseEvent *me )
   };
 }
 
-QMenu* QStructView::createPopupMenu( const QString &title, bool has_elem )
+QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
 {
   QMenu *menu = new QMenu( this );
   QAction *act;
@@ -601,13 +601,13 @@ QMenu* QStructView::createPopupMenu( const QString &title, bool has_elem )
   return menu;
 }
 
-void QStructView::mouseDoubleClickEvent( QMouseEvent * /*me*/ )
+void StructView::mouseDoubleClickEvent( QMouseEvent * /*me*/ )
 {
   mainview->editElm();
 }
 
 
-void QStructView::keyPressEvent( QKeyEvent *ke )
+void StructView::keyPressEvent( QKeyEvent *ke )
 {
   int k, /*h, w, nh, nw,*/ st, btnShift, /*btnCtrl,*/ xy_delta;
   k = ke->key(); st = ke->modifiers();

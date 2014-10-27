@@ -27,7 +27,7 @@
 #include "dataset.h"
 #include "toutarr.h"
 #include "tgraph.h"
-#include "qcolorbtn.h"
+#include "colorbtn.h"
 #include "qmo2win.h"
 #include "qmo2doc.h"
 #include "qmo2view.h"
