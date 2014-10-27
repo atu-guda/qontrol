@@ -21,16 +21,16 @@
 
 #include "miscfun.h"
 #include "structview.h"
-#include "qplotview.h"
-#include "qdoubletable.h"
-#include "qmo2win.h"
-#include "qmo2doc.h"
-#include "qmo2view.h"
-#include "qrunview.h"
+#include "plotview.h"
+#include "doubletable.h"
+#include "labowin.h"
+#include "labodoc.h"
+#include "laboview.h"
+#include "runview.h"
 
 
 
-StructView::StructView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
+StructView::StructView( LaboDoc *adoc, LaboView *mview, QWidget *parent )
             : QWidget( parent )
 {
   doc = adoc; mainview = mview;
@@ -127,9 +127,9 @@ void StructView::paintEvent( QPaintEvent * /*pe*/ )
 void StructView::printAll()
 {
   QPrinter *pr;
-  if( !doc || !model || !QMo2Win::qmo2win ) 
+  if( !doc || !model || !LaboWin::labowin ) 
     return;
-  pr = QMo2Win::qmo2win->getPrinter();
+  pr = LaboWin::labowin->getPrinter();
   if( !pr ) 
     return;
   QPrintDialog pr_dialog( pr, this );
@@ -193,11 +193,11 @@ void StructView::drawAll( QPainter &p )
   TMiso *ob;
   TOutArr *arr;
   Mo2Settings *psett;
-  psett = QMo2Win::qmo2win->getSettings();
+  psett = LaboWin::labowin->getSettings();
   int s_icons = psett->showicons;
-  const QFont &strf = QMo2Win::qmo2win->getStructFont();
+  const QFont &strf = LaboWin::labowin->getStructFont();
   p.setFont( strf );
-  const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
+  const QFont &smlf = LaboWin::labowin->getSmallFont();
   h = height(); w = width(); nh = 1 + h / grid_sz; nw = 1 + w / grid_sz;
   el_marg = (grid_sz-obj_sz)/2;
   sel_x = mainview->getSelX();
@@ -572,31 +572,31 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
   if( has_elem ) {
     menu->addSeparator();
     act = menu->addAction( QIcon( ":icons/editelm.png" ), "&Edit element" );
-    connect( act, &QAction::triggered, mainview, &QMo2View::editElm );
+    connect( act, &QAction::triggered, mainview, &LaboView::editElm );
     act = menu->addAction( QIcon( ":icons/delelm.png" ), "&Delete element" );
-    connect( act, &QAction::triggered, mainview, &QMo2View::delElm );
+    connect( act, &QAction::triggered, mainview, &LaboView::delElm );
     menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
-    connect( act, &QAction::triggered, mainview, &QMo2View::qlinkElm );
+    connect( act, &QAction::triggered, mainview, &LaboView::qlinkElm );
     act = menu->addAction(  QIcon( ":icons/orderelm.png" ), "&Reorder" );
-    connect( act, &QAction::triggered, mainview, &QMo2View::ordElm );
+    connect( act, &QAction::triggered, mainview, &LaboView::ordElm );
     menu->addSeparator();
   } else {
     act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );
-    connect( act, &QAction::triggered, mainview, &QMo2View::newElm );
+    connect( act, &QAction::triggered, mainview, &LaboView::newElm );
     if( mainview->getMark() >= 0 ) {
       act = menu->addAction( "&Move to" );
-      connect( act, &QAction::triggered, mainview, &QMo2View::moveElm );
+      connect( act, &QAction::triggered, mainview, &LaboView::moveElm );
     }
   };
   menu->addSeparator();
   act = menu->addAction( QIcon( ":icons/newout.png" ), "New outp&ut" );
-  connect( act, &QAction::triggered, mainview, &QMo2View::newOut );
+  connect( act, &QAction::triggered, mainview, &LaboView::newOut );
   menu->addSeparator();
   act = menu->addAction( QIcon( ":icons/editmodel.png" ), "Edit model" );
-  connect( act, &QAction::triggered, mainview, &QMo2View::editModel );
+  connect( act, &QAction::triggered, mainview, &LaboView::editModel );
   act = menu->addAction( QIcon::fromTheme("document-print"),"Print model" );
-  connect( act, &QAction::triggered, mainview, &QMo2View::print );
+  connect( act, &QAction::triggered, mainview, &LaboView::print );
 
   return menu;
 }

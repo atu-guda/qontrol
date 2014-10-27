@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qplotview.cpp  -  description
+                          plotview.cpp  -  description
                              -------------------
     begin                : Sun Aug 20 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -28,16 +28,16 @@
 #include "toutarr.h"
 #include "tgraph.h"
 #include "colorbtn.h"
-#include "qmo2win.h"
-#include "qmo2doc.h"
-#include "qmo2view.h"
+#include "labowin.h"
+#include "labodoc.h"
+#include "laboview.h"
 
 #include "datawidget.h"
-#include "qplotview.h"
+#include "plotview.h"
 
 using namespace std;
 
-QPlotView::QPlotView( QMo2Doc *adoc, TGraph *agra, QWidget *parent )
+PlotView::PlotView( LaboDoc *adoc, TGraph *agra, QWidget *parent )
           : QWidget( parent )
 {
   int i;
@@ -66,22 +66,22 @@ QPlotView::QPlotView( QMo2Doc *adoc, TGraph *agra, QWidget *parent )
   setCursor( Qt::CrossCursor );
 }
 
-QPlotView::~QPlotView()
+PlotView::~PlotView()
 {
   delete plpbuf; plpbuf = 0;
 }
 
-QSize QPlotView::sizeHint(void) const
+QSize PlotView::sizeHint(void) const
 {
   return QSize( 550, 450 );
 }
 
-void QPlotView::resizeEvent( QResizeEvent *e )
+void PlotView::resizeEvent( QResizeEvent *e )
 {
   need_rescale = 1;
   QWidget::resizeEvent( e );
 }
-void QPlotView::paintEvent( QPaintEvent * /*pe*/ )
+void PlotView::paintEvent( QPaintEvent * /*pe*/ )
 {
   devTp = 0;
   QPainter p( this );
@@ -90,11 +90,11 @@ void QPlotView::paintEvent( QPaintEvent * /*pe*/ )
   p.end();
 }
 
-void QPlotView::printPlot( void )
+void PlotView::printPlot( void )
 {
   QPrinter *pr;
-  if( QMo2Win::qmo2win == 0 ) return;
-  pr = QMo2Win::qmo2win->getPrinter();
+  if( LaboWin::labowin == 0 ) return;
+  pr = LaboWin::labowin->getPrinter();
   if( pr == 0 ) return;
   QPrintDialog pr_dialog( pr, this );
   if( pr_dialog.exec() ) {
@@ -107,7 +107,7 @@ void QPlotView::printPlot( void )
   };
 }
 
-void QPlotView::exportPlot()
+void PlotView::exportPlot()
 {
 
   QString fn = QFileDialog::getSaveFileName(this, "Save Picture", "out.png",
@@ -130,7 +130,7 @@ void QPlotView::exportPlot()
 
 }
 
-void QPlotView::drawAll( QPainter &p )
+void PlotView::drawAll( QPainter &p )
 {
   int currSgnt;
   pix_h = height(); pix_w = width();
@@ -151,7 +151,7 @@ void QPlotView::drawAll( QPainter &p )
     linew = 1;
   };
   if( ! errstr ) {
-    const QFont & smlf = QMo2Win::qmo2win->getPlotFont();
+    const QFont & smlf = LaboWin::labowin->getPlotFont();
     p.setFont( smlf );
     drawGrid( p );
     drawPlots( p );
@@ -163,7 +163,7 @@ void QPlotView::drawAll( QPainter &p )
   qual = 0; linew = 0;
 }
 
-void QPlotView::drawGrid( QPainter &p )
+void PlotView::drawGrid( QPainter &p )
 {
   int i, j, ix, iy;
   double vx, vy, lvx, lvy;
@@ -226,7 +226,7 @@ void QPlotView::drawGrid( QPainter &p )
   };
 }
 
-void QPlotView::drawAxes( QPainter &p )
+void PlotView::drawAxes( QPainter &p )
 {
   int i, ix, iy;
   double toolk, tooldx, tooldy;
@@ -305,7 +305,7 @@ void QPlotView::drawAxes( QPainter &p )
   };
 }
 
-void QPlotView::drawPlots( QPainter &p )
+void PlotView::drawPlots( QPainter &p )
 {
   int i, j, j_st, ix, iy;
   j_st = 0;
@@ -363,7 +363,7 @@ void QPlotView::drawPlots( QPainter &p )
   };
 }
 
-void QPlotView::mousePressEvent( QMouseEvent *me )
+void PlotView::mousePressEvent( QMouseEvent *me )
 {
   int x, y, btn, no;
   double vx, vy;
@@ -404,7 +404,7 @@ void QPlotView::mousePressEvent( QMouseEvent *me )
   update();
 }
 
-void QPlotView::keyPressEvent( QKeyEvent *ke )
+void PlotView::keyPressEvent( QKeyEvent *ke )
 {
   int k, st, btnCtrl, btnShift, i, di;
   double dvx, dvy, adx, ady;
@@ -576,7 +576,7 @@ void QPlotView::keyPressEvent( QKeyEvent *ke )
 }
 
 
-void QPlotView::initFakeArrs(void)
+void PlotView::initFakeArrs(void)
 {
   static const double fakex[] = { 0, 1, 2, 3 };
   static const double fakey[] = { 0.5, 5.5, 1.3, 0.2 };
@@ -585,7 +585,7 @@ void QPlotView::initFakeArrs(void)
   calcScale();
 }
 
-void QPlotView::initArrs(void)
+void PlotView::initArrs(void)
 {
   int i, k, out_tp, out_nn, out_ny, start_from;
   double vmin, vmax;
@@ -702,7 +702,7 @@ void QPlotView::initArrs(void)
   calcScale();
 }
 
-void QPlotView::phys2vis( double x, double y, double *idx, double *idy )
+void PlotView::phys2vis( double x, double y, double *idx, double *idy )
 {
   if( idx != 0 ) {
     if( scd->logX ) {
@@ -720,7 +720,7 @@ void QPlotView::phys2vis( double x, double y, double *idx, double *idy )
   };
 }
 
-void QPlotView::phys2vis( double x, double y, int *ix, int *iy )
+void PlotView::phys2vis( double x, double y, int *ix, int *iy )
 {
   double tx, ty;
   phys2vis( x, y, &tx, &ty );
@@ -732,7 +732,7 @@ void QPlotView::phys2vis( double x, double y, int *ix, int *iy )
   };
 }
 
-void QPlotView::vis2phys( int ix, int iy, double *x, double *y )
+void PlotView::vis2phys( int ix, int iy, double *x, double *y )
 {
   if( x != 0 ) {
     if( scd->logX ) {
@@ -751,7 +751,7 @@ void QPlotView::vis2phys( int ix, int iy, double *x, double *y )
 }
 
 
-void QPlotView::calcPlp(void)
+void PlotView::calcPlp(void)
 {
   int i, j, r, nxy, cnc, onc, imcr, st_ng;
   double cr, mcr, xs, ys, xe, ye, xp, yp;
@@ -839,7 +839,7 @@ void QPlotView::calcPlp(void)
   }; // end for on j(st_ng..ng-1)
 }
 
-void QPlotView::calcScale(void)
+void PlotView::calcScale(void)
 {
   double dlt, k1, k2, imin, imax, t;
   int ki;
@@ -925,7 +925,7 @@ void QPlotView::calcScale(void)
 
 // here onfy iface function -- no meat
 
-void QPlotView::setPrintColors(void)
+void PlotView::setPrintColors(void)
 {
   bgColor = Qt::white;
   scaleColor = Qt::black; labelColor = scaleColor;
@@ -938,7 +938,7 @@ void QPlotView::setPrintColors(void)
   plotColor[5] = Qt::yellow;
 }
 
-void QPlotView::setStartColors(void)
+void PlotView::setStartColors(void)
 {
   int i, c;
   scaleColor = Qt::white; labelColor = scaleColor;
@@ -964,7 +964,7 @@ void QPlotView::setStartColors(void)
   };
 }
 
-void QPlotView::setScale()
+void PlotView::setScale()
 {
   DataDialog *dia = new DataDialog( *scd, this );
 
@@ -976,7 +976,7 @@ void QPlotView::setScale()
   };
 }
 
-void QPlotView::setColors(void)
+void PlotView::setColors(void)
 {
   int i;
   static const char *labels[10] = {
@@ -1029,7 +1029,7 @@ void QPlotView::setColors(void)
   update();
 }
 
-void QPlotView::dataInfo(void)
+void PlotView::dataInfo(void)
 {
   double toolk, tooldx, tooldy, r, phi, lg_tx, lg_ty, lg_rx, lg_ry,
          lg_toolk, lg_tooldx, lg_tooldy, lg_r, lg_phi;
@@ -1085,7 +1085,7 @@ void QPlotView::dataInfo(void)
   QMessageBox::information( this, "Data info", qs + qs1);
 }
 
-void QPlotView::moveTool(void)
+void PlotView::moveTool(void)
 {
   QDialog *dia = new QDialog( this );
   dia->setWindowTitle( "Move tool to point: " );
@@ -1121,7 +1121,7 @@ void QPlotView::moveTool(void)
   delete dia;
 }
 
-const char QPlotView::helpstr[] = "<b>Hot keys:</b><br>\n"
+const char PlotView::helpstr[] = "<b>Hot keys:</b><br>\n"
  "<b>q</b> - close <br>\n"
  "<b>h/F1</b> - this help <br>\n"
  "<b>a</b> - set quality <br>\n"
@@ -1143,10 +1143,10 @@ const char QPlotView::helpstr[] = "<b>Hot keys:</b><br>\n"
  "<b>[Shift]{Left, Top}</b> - prev/next point [more] <br>\n"
  "<b>[Shift]{Top, Bottom}}</b> - find [global] max/min <br>\n";
 
-void QPlotView::showHelp(void)
+void PlotView::showHelp(void)
 {
   QMessageBox::information(this,"Hot keys in plot window", helpstr);
 }
 
-// end of qplotview.cpp
+// end of plotview.cpp
 

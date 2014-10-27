@@ -1,7 +1,7 @@
 /***************************************************************************
-  qmo2view.cpp  -  description
+  laboview.cpp  -  description
   begin                : Mon Jul 31 16:51:57 EEST 2000
-  copyright            : (C) 2000-2013 by atu
+  copyright            : (C) 2000-2014 by atu
   email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -20,16 +20,16 @@
 
 // application specific includes
 #include "miscfun.h"
-#include "qmo2view.h"
-#include "qmo2doc.h"
-#include "qmo2win.h"
+#include "laboview.h"
+#include "labodoc.h"
+#include "labowin.h"
 #include "structview.h"
-#include "qoutview.h"
+#include "outview.h"
 #include "graphview.h"
-#include "qstatusmodel.h"
-#include "qdoubletable.h"
-#include "qrunview.h"
-#include "qplotview.h"
+#include "statusmodel.h"
+#include "doubletable.h"
+#include "runview.h"
+#include "plotview.h"
 #include "datawidget.h"
 #include "holdermodel.h"
 #include "addelemdia.h"
@@ -37,7 +37,7 @@
 using namespace std;
 
 
-QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
+LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 : QWidget( parent ), doc( pDoc ),
   root( doc->getRoot() ),
   model( doc->getModel() )
@@ -62,10 +62,10 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
   scrollArea->setFocusProxy( sview );
 
-  oview = new QOutView( doc, this, main_part );
+  oview = new OutView( doc, this, main_part );
   gview = new GraphView( doc, this, main_part );
 
-  stam = new QStatusModel( this, this );
+  stam = new StatusModel( this, this );
 
   grLay->addWidget( scrollArea, 0, 0 );
   grLay->addWidget( oview, 0, 1 );
@@ -79,47 +79,47 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
 
   setWindowTitle( doc->title() );
 
-  connect( this, &QMo2View::viewChanged, this, &QMo2View::updateViews );
-  connect( sview, &StructView::sig_changeSel,   this, &QMo2View::changeSel );
-  connect( sview, &StructView::sig_changeLevel, this, &QMo2View::changeLevel );
+  connect( this, &LaboView::viewChanged, this, &LaboView::updateViews );
+  connect( sview, &StructView::sig_changeSel,   this, &LaboView::changeSel );
+  connect( sview, &StructView::sig_changeLevel, this, &LaboView::changeLevel );
 
 }
 
-QMo2View::~QMo2View()
+LaboView::~LaboView()
 {
   // DBGx( "dbg: view dtor, doc=%p", doc );
   delete doc; doc = nullptr;
 }
 
-QMo2Doc *QMo2View::getDocument() const
+LaboDoc *LaboView::getDocument() const
 {
   return doc;
 }
 
-const QString& QMo2View::currentFile() const
+const QString& LaboView::currentFile() const
 {
   return doc->pathName();
 }
 
-QSize QMo2View::svSize() const
+QSize LaboView::svSize() const
 {
   return scrollArea->size();
 }
 
 
 
-void QMo2View::update()
+void LaboView::update()
 {
   updateViews();
   QWidget::update();
 }
 
-void QMo2View::print()
+void LaboView::print()
 {
   sview->printAll();
 }
 
-void QMo2View::closeEvent( QCloseEvent *e )
+void LaboView::closeEvent( QCloseEvent *e )
 {
   if( doc == 0 || doc->canCloseFrame( this ) ) {
     e->accept();
@@ -128,13 +128,13 @@ void QMo2View::closeEvent( QCloseEvent *e )
   }
 }
 
-void QMo2View::resizeEvent( QResizeEvent *e )
+void LaboView::resizeEvent( QResizeEvent *e )
 {
   updateViews();
   QWidget::resizeEvent( e );
 }
 
-int QMo2View::checkState( CheckType ctp )
+int LaboView::checkState( CheckType ctp )
 {
   QString msg;
   int state;
@@ -177,17 +177,17 @@ int QMo2View::checkState( CheckType ctp )
 }
 
 
-TRootData* QMo2View::getRoot(void)
+TRootData* LaboView::getRoot(void)
 {
   return root;
 }
 
-TModel*  QMo2View::getModel(void)
+TModel*  LaboView::getModel(void)
 {
   return model;
 }
 
-void QMo2View::updateViews()
+void LaboView::updateViews()
 {
   sview->update();
   oview->update();
@@ -198,7 +198,7 @@ void QMo2View::updateViews()
 }
 
 
-void QMo2View::changeSel( int x, int y, int rel )
+void LaboView::changeSel( int x, int y, int rel )
 {
   TMiso *ob;
   selObj = nullptr;
@@ -229,7 +229,7 @@ void QMo2View::changeSel( int x, int y, int rel )
 }
 
 
-void QMo2View::changeLevel( int lev )
+void LaboView::changeLevel( int lev )
 {
   level = lev;
   if( level < 0 || level >= 64 )
@@ -239,7 +239,7 @@ void QMo2View::changeLevel( int lev )
 
 // ==== element related
 
-void QMo2View::newElm()
+void LaboView::newElm()
 {
   if( !checkState( noselCheck ) )
     return;
@@ -275,7 +275,7 @@ void QMo2View::newElm()
   editElm();
 }
 
-void QMo2View::delElm()
+void LaboView::delElm()
 {
   int k;
   if( ! checkState( selCheck ) )
@@ -299,7 +299,7 @@ void QMo2View::delElm()
   };
 }
 
-void QMo2View::editElm()
+void LaboView::editElm()
 {
   if( ! checkState( selCheck ) )
     return;
@@ -315,7 +315,7 @@ void QMo2View::editElm()
 }
 
 
-void QMo2View::qlinkElm()
+void LaboView::qlinkElm()
 {
   QString toname;
   if( ! checkState( linkToCheck ) )
@@ -342,7 +342,7 @@ void QMo2View::qlinkElm()
 }
 
 
-void QMo2View::qplinkElm()
+void LaboView::qplinkElm()
 {
   QString oldlink;
   if( ! checkState( linkToCheck ) )
@@ -373,7 +373,7 @@ void QMo2View::qplinkElm()
   emit viewChanged();
 }
 
-void QMo2View::unlinkElm()
+void LaboView::unlinkElm()
 {
   if( ! checkState( selCheck ) ) // no need marked to unlink
     return;
@@ -400,7 +400,7 @@ void QMo2View::unlinkElm()
   emit viewChanged();
 }
 
-void QMo2View::lockElm()
+void LaboView::lockElm()
 {
   int lck;
   if( ! checkState( selCheck ) )
@@ -415,7 +415,7 @@ void QMo2View::lockElm()
   emit viewChanged();
 }
 
-void QMo2View::ordElm()
+void LaboView::ordElm()
 {
   bool ok;
   int new_ord, old_ord;
@@ -432,14 +432,14 @@ void QMo2View::ordElm()
   };
 }
 
-void QMo2View::markElm()
+void LaboView::markElm()
 {
   mark = sel;
   markObj = selObj;
   emit viewChanged();
 }
 
-void QMo2View::moveElm()
+void LaboView::moveElm()
 {
   if( ! checkState( moveCheck ) )
     return;
@@ -447,7 +447,7 @@ void QMo2View::moveElm()
   emit viewChanged();
 }
 
-void QMo2View::infoElm()
+void LaboView::infoElm()
 {
   QString cbuf;
   QDialog *dia;
@@ -511,7 +511,7 @@ void QMo2View::infoElm()
   emit viewChanged();
 }
 
-void QMo2View::showTreeElm()
+void LaboView::showTreeElm()
 {
   if( ! checkState( selCheck ) )
     return;
@@ -546,7 +546,7 @@ void QMo2View::showTreeElm()
 }
 
 
-void QMo2View::testElm1()
+void LaboView::testElm1()
 {
   QString buf;
   if( ! checkState( selCheck ) )
@@ -579,7 +579,7 @@ void QMo2View::testElm1()
   emit viewChanged();
 }
 
-void QMo2View::testElm2()
+void LaboView::testElm2()
 {
   if( ! checkState( selCheck ) )
     return;
@@ -589,13 +589,13 @@ void QMo2View::testElm2()
   return;
 }
 
-void QMo2View::cutElm()
+void LaboView::cutElm()
 {
   copyElm();
   delElm();
 }
 
-void QMo2View::copyElm()
+void LaboView::copyElm()
 {
   if( !selObj )
     return;
@@ -606,7 +606,7 @@ void QMo2View::copyElm()
   }
 }
 
-void QMo2View::pasteElm()
+void LaboView::pasteElm()
 {
   if( selObj )
     return;
@@ -618,7 +618,7 @@ void QMo2View::pasteElm()
   QString errstr;
   QDomDocument x_dd;
   if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
-    QMessageBox::warning(QMo2Win::qmo2win, tr( PACKAGE ),
+    QMessageBox::warning(LaboWin::labowin, tr( PACKAGE ),
                          tr("Cannot parse clipboard string:\n%2\nLine %3 column %4.")
                          .arg(errstr).arg(err_line).arg(err_column) );
     return;
@@ -627,7 +627,7 @@ void QMo2View::pasteElm()
 
   QString tagname = ee.tagName();
   if( tagname != "obj" ) {
-    QMessageBox::warning(QMo2Win::qmo2win, tr( PACKAGE ),
+    QMessageBox::warning(LaboWin::labowin, tr( PACKAGE ),
                  tr("element tag is not 'obj':  %2")
                          .arg( tagname ) );
     return;
@@ -695,7 +695,7 @@ void QMo2View::pasteElm()
     return;
   }
   if( !ob->fromDom( ee, errstr ) ) {
-    QMessageBox::warning(QMo2Win::qmo2win, tr( PACKAGE ),
+    QMessageBox::warning(LaboWin::labowin, tr( PACKAGE ),
                  tr("fail to set params:  %1")
                          .arg( errstr ) );
   }
@@ -708,7 +708,7 @@ void QMo2View::pasteElm()
 
 // ==== outs related
 
-void QMo2View::newOut()
+void LaboView::newOut()
 {
   int rc;
   QString onameq, enameq;
@@ -775,7 +775,7 @@ void QMo2View::newOut()
      QMessageBox::Ok, QMessageBox::NoButton );
 }
 
-void QMo2View::delOut()
+void LaboView::delOut()
 {
   int k;
   if( ! checkState( validCheck ) )
@@ -796,7 +796,7 @@ void QMo2View::delOut()
 }
 
 
-void QMo2View::editOut()
+void LaboView::editOut()
 {
   TOutArr *arr;
   int rc;
@@ -818,7 +818,7 @@ void QMo2View::editOut()
 }
 
 
-void QMo2View::showOutData() // TODO: special dialog (+ for many rows)
+void LaboView::showOutData() // TODO: special dialog (+ for many rows)
 {
   QDialog *dia;
   DoubleTableModel *dmod;
@@ -886,7 +886,7 @@ void QMo2View::showOutData() // TODO: special dialog (+ for many rows)
   delete dia;
 }
 
-void QMo2View::exportOut()
+void LaboView::exportOut()
 {
   QString fnq;
   TOutArr *arr;
@@ -905,7 +905,7 @@ void QMo2View::exportOut()
 
 // ==== graph related
 
-void QMo2View::newGraph()
+void LaboView::newGraph()
 {
   int no;
   QString grnameq, aname;
@@ -929,7 +929,7 @@ void QMo2View::newGraph()
 }
 
 
-void QMo2View::delGraph()
+void LaboView::delGraph()
 {
   int k;
   if( ! checkState( validCheck ) )
@@ -950,7 +950,7 @@ void QMo2View::delGraph()
 }
 
 
-void QMo2View::editGraph()
+void LaboView::editGraph()
 {
   TGraph *gra;
   int rc;
@@ -972,10 +972,10 @@ void QMo2View::editGraph()
 }
 
 
-void QMo2View::showGraph()
+void LaboView::showGraph()
 {
   int n_gra;
-  QPlotView *pv; TGraph *gra;
+  PlotView *pv; TGraph *gra;
   QMainWindow *plotWnd;
   if( ! checkState( doneCheck ) )
     return;
@@ -987,13 +987,13 @@ void QMo2View::showGraph()
     return;
   plotWnd = new QMainWindow( this );
   plotWnd->setWindowTitle( QString( PACKAGE ": Plot ") + gra->objectName() );
-  pv = new QPlotView( doc, gra, plotWnd );
+  pv = new PlotView( doc, gra, plotWnd );
   plotWnd->setCentralWidget( pv );
   pv->setFocus();
   plotWnd->show();
 }
 
-void QMo2View::showGraphData()
+void LaboView::showGraphData()
 {
   QDialog *dia;
   DoubleTableModel *dmod;
@@ -1031,7 +1031,7 @@ void QMo2View::showGraphData()
 
 }
 
-void QMo2View::exportGraphData()
+void LaboView::exportGraphData()
 {
   const char *fn;
   QString fnq;
@@ -1051,7 +1051,7 @@ void QMo2View::exportGraphData()
   gra->dump( fn, ' ' );
 }
 
-void QMo2View::gnuplotGraph()
+void LaboView::gnuplotGraph()
 {
   TGraph *gra;
   QDialog *dia;
@@ -1122,7 +1122,7 @@ void QMo2View::gnuplotGraph()
 
 // ==== model related
 
-void QMo2View::editModel()
+void LaboView::editModel()
 {
   int rc;
   if( ! checkState( validCheck ) )
@@ -1138,7 +1138,7 @@ void QMo2View::editModel()
 }
 
 
-void QMo2View::showTreeModel()
+void LaboView::showTreeModel()
 {
   QDialog *dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": Model ") );
@@ -1165,7 +1165,7 @@ void QMo2View::showTreeModel()
   return;
 }
 
-void QMo2View::runScript()
+void LaboView::runScript()
 {
   if( ! doc || ! root ) {
     DBG1( "ERR: can run script w/o doc or root" );
@@ -1222,40 +1222,40 @@ void QMo2View::runScript()
 
 // ==== run related
 
-void QMo2View::runRun()
+void LaboView::runRun()
 {
-  QRunView *rv;
+  RunView *rv;
   if( ! checkState( validCheck ) )
     return;
-  rv = new QRunView( model, 0, this );
+  rv = new RunView( model, 0, this );
   rv->exec();
   emit viewChanged();
   sview->setFocus();
 }
 
-void QMo2View::runPrm()
+void LaboView::runPrm()
 {
   if( ! checkState( validCheck ) )
     return;
-  QRunView *rv;
-  rv = new QRunView( model, 1, this );
+  RunView *rv;
+  rv = new RunView( model, 1, this );
   rv->exec();
   emit viewChanged();
   sview->setFocus();
 }
 
-void QMo2View::runPrm2()
+void LaboView::runPrm2()
 {
   if( ! checkState( validCheck ) )
     return;
-  QRunView *rv;
-  rv = new QRunView( model, 2, this );  // TODO remove 0
+  RunView *rv;
+  rv = new RunView( model, 2, this );  // TODO remove 0
   rv->exec();
   emit viewChanged();
   sview->setFocus();
 }
 
-void QMo2View::resetModel()
+void LaboView::resetModel()
 {
   if( ! checkState( validCheck ) )
     return;
@@ -1263,7 +1263,7 @@ void QMo2View::resetModel()
   emit viewChanged();
 }
 
-void QMo2View::newSimul()
+void LaboView::newSimul()
 {
   bool ok;
   if( ! checkState( validCheck ) )
@@ -1283,29 +1283,29 @@ void QMo2View::newSimul()
   };
 }
 
-void QMo2View::delSimul()
+void LaboView::delSimul()
 {
 }
 
-void QMo2View::editSimul()
+void LaboView::editSimul()
 {
 }
 
-void QMo2View::setActiveSimul()
+void LaboView::setActiveSimul()
 {
 }
 
 
 // misc
 
-const char QMo2View::helpstr[] = "<b>Hot keys:</b><br>\n"
+const char LaboView::helpstr[] = "<b>Hot keys:</b><br>\n"
 "<b>Ctrl-w</b> - close <br>\n"
 "<b>h/F1</b> - this help <br>\n"
 "<b>{Left, Top, Right, Bottom, Home}</b> - move selected cell <br>\n"
 "<b>0-9</b> - select out array / graph <br>\n"
 ;
 
-void QMo2View::showHelp(void)
+void LaboView::showHelp(void)
 {
   QDialog *dia; QLabel *la; QPushButton *bt_ok;
   QVBoxLayout *lv;
@@ -1327,6 +1327,6 @@ void QMo2View::showHelp(void)
 }
 
 
-// end of qmo2view.cpp
+// end of laboview.cpp
 
 

@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qmo2doc.h  -  description
+                          labodoc.h  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QMO2DOC_H
-#define QMO2DOC_H
+#ifndef LABODOC_H
+#define LABODOC_H
 
 // include files for QT
 #include <QObject>
@@ -28,25 +28,25 @@
 #include "rootdata.h"
 #include "tmodel.h"
 
-// forward declaration of the QMo2 classes
-class QMo2View;
+// forward declaration of the Labo classes
+class LaboView;
 
-/**        QMo2Doc provides a document object for a document-view model.
+/**        LaboDoc provides a document object for a document-view model.
   *
-  * The QMo2Doc class provides a document object that can be used
+  * The LaboDoc class provides a document object that can be used
   * in conjunction with the classes
-  * QMo2Win and QMo2View to create a document-view model for
+  * LaboWin and LaboView to create a document-view model for
   * MDI (Multiple Document Interface)
   */
-class QMo2Doc : public QObject
+class LaboDoc : public QObject
 {
   Q_OBJECT
-  friend class QMo2View;
+  friend class LaboView;
  public:
   /** Constructor for the fileclass of the application */
-  QMo2Doc();
+  LaboDoc();
   /** Destructor for the fileclass of the application */
-  ~QMo2Doc();
+  ~LaboDoc();
 
   /** returns true, if the requested view is the last view of the document */
   bool isLastView() const;
@@ -55,7 +55,7 @@ class QMo2Doc : public QObject
       * (then the frame can be closed), if pFrame is the last view and the
       * document is modified, the user gets asked if he wants to save the
       * document. Not const: can save document if need.*/
-  bool canCloseFrame( QMo2View* pFrame );
+  bool canCloseFrame( LaboView* pFrame );
   /** sets the modified flag for the document after a modifying action
       on the view connected to the document. */
   void setModified( bool _m = true ){ modified=_m; }
@@ -113,8 +113,8 @@ class QMo2Doc : public QObject
    bool loaded_as_old = true;
 };
 
-#endif // QMO2DOC_H
+#endif // LABODOC_H
 
-// end of qmo2doc.h
+// end of labodoc.h
 
 

@@ -1,8 +1,7 @@
-rename Q* classes to w/o Q - not part of Qt
 New hier
 Rebreand to Qontrol
 enums with labels
-move some logic from QMo2View to model (scheme?)
+move some logic from LaboView to model (scheme?)
 slots in TModel like cmds, but with "name", not elnu - for JS
 unify add/paste elem: param in dialog?
 unify add param/object : add_obj_param? + dialog

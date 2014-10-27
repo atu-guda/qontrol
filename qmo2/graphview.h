@@ -23,8 +23,8 @@ class QPaintEvent;
 class QMouseEvent;
 
 #include "tmodel.h"
-#include "qmo2doc.h"
-#include "qmo2view.h"
+#include "labodoc.h"
+#include "laboview.h"
 /**allow to see and edit graph descriptions (TGraph)
   *@author atu
   */
@@ -32,7 +32,7 @@ class QMouseEvent;
 class GraphView : public QWidget  {
  Q_OBJECT
  public:
-   GraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent );
+   GraphView( LaboDoc *adoc, LaboView *mview, QWidget *parent );
    ~GraphView();
 
  protected:
@@ -41,8 +41,8 @@ class GraphView : public QWidget  {
    /** reaction to mouse */
    virtual void mousePressEvent( QMouseEvent *me );
  protected:
-   QMo2Doc *doc;
-   QMo2View *mainview;
+   LaboDoc *doc;
+   LaboView *mainview;
    TModel *model;
    int ex_sz;
    int grid_sz;

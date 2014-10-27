@@ -7,7 +7,7 @@ class QGridLayout;
 class QPushButton;
 class QCheckBox;
 
-#include "qmo2win.h"
+#include "labowin.h"
 
 class Mo2SettDlg : public QDialog
 {

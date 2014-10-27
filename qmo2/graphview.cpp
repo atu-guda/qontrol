@@ -17,12 +17,12 @@
 #include <QtWidgets>
 
 #include "miscfun.h"
-#include "qmo2doc.h"
-#include "qmo2win.h"
-#include "qmo2view.h"
+#include "labodoc.h"
+#include "labowin.h"
+#include "laboview.h"
 #include "graphview.h"
 
-GraphView::GraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
+GraphView::GraphView( LaboDoc *adoc, LaboView *mview, QWidget *parent )
            : QWidget(parent)
 {
   doc = adoc; mainview = mview;
@@ -47,7 +47,7 @@ void GraphView::paintEvent( QPaintEvent * /*pe*/ )
   QString out_name, yname;
   QPainter p( this );
 
-  const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
+  const QFont &smlf = LaboWin::labowin->getSmallFont();
   p.setFont( smlf );
   QFontMetrics fm { smlf };
   ex_sz = fm.width("W") + 4;
@@ -123,21 +123,21 @@ void GraphView::mousePressEvent( QMouseEvent *me )
            menu->addSeparator();
          };
          act = menu->addAction( "&New" );
-         connect( act, &QAction::triggered, mainview, &QMo2View::newGraph );
+         connect( act, &QAction::triggered, mainview, &LaboView::newGraph );
          if( graph_nu >=0 ) {
            act = menu->addAction( "&Edit" );
-           connect( act, &QAction::triggered, mainview, &QMo2View::editGraph );
+           connect( act, &QAction::triggered, mainview, &LaboView::editGraph );
            act = menu->addAction( "&Delete" );
-           connect( act, &QAction::triggered, mainview, &QMo2View::delGraph );
+           connect( act, &QAction::triggered, mainview, &LaboView::delGraph );
            menu->addSeparator();
            act = menu->addAction( "&Show" );
-           connect( act, &QAction::triggered, mainview, &QMo2View::showGraph );
+           connect( act, &QAction::triggered, mainview, &LaboView::showGraph );
            act = menu->addAction( "Show D&ata" );
-           connect( act, &QAction::triggered, mainview, &QMo2View::showGraphData );
+           connect( act, &QAction::triggered, mainview, &LaboView::showGraphData );
            act = menu->addAction( "D&ump" );
-           connect( act, &QAction::triggered, mainview, &QMo2View::exportGraphData );
+           connect( act, &QAction::triggered, mainview, &LaboView::exportGraphData );
            act = menu->addAction( "Gnu&plot" );
-           connect( act, &QAction::triggered, mainview, &QMo2View::gnuplotGraph );
+           connect( act, &QAction::triggered, mainview, &LaboView::gnuplotGraph );
          };
          menu->exec( mapToGlobal(QPoint( x, y )) );
          delete menu;

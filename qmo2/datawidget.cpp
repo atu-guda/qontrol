@@ -9,7 +9,7 @@
 #include <QStringBuilder>
 #include "miscfun.h"
 #include "datawidget.h"
-#include "qmo2win.h"
+#include "labowin.h"
 #include "addelemdia.h"
 
 using namespace std;

@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qoutview.h  -  description
+                          outview.h  -  description
                              -------------------
     begin                : Fri Aug 18 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QOUTVIEW_H
-#define QOUTVIEW_H
+#ifndef OUTVIEW_H
+#define OUTVIEW_H
 
 #include <QWidget>
 
@@ -24,21 +24,21 @@ class QPaintEvent;
 class QMouseEvent;
 
 #include "tmodel.h"
-#include "qmo2doc.h"
-#include "qmo2view.h"
+#include "labodoc.h"
+#include "laboview.h"
 
 /**allow to see TOutArr as buttons and edit properties
   *@author atu
   */
 class TModel;
 
-class QOutView : public QWidget  {
+class OutView : public QWidget  {
  Q_OBJECT
  public:
    /** constructor */
-   QOutView(  QMo2Doc *adoc, QMo2View *mview,  QWidget *parent );
+   OutView(  LaboDoc *adoc, LaboView *mview,  QWidget *parent );
    /** destructor */
-   ~QOutView();
+   ~OutView();
 
  protected:
    /** draw itself */
@@ -46,8 +46,8 @@ class QOutView : public QWidget  {
    /** reaction to mouse */
    virtual void mousePressEvent( QMouseEvent *me );
  protected:
-   QMo2Doc *doc;
-   QMo2View *mainview;
+   LaboDoc *doc;
+   LaboView *mainview;
    TModel *model;
    int ex_sz;
    int grid_sz;
@@ -56,5 +56,5 @@ class QOutView : public QWidget  {
 
 #endif
 
-// end of qoutview.h
+// end of outview.h
 

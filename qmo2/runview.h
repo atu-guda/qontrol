@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qrunview.h  -  description
+                          runview.h  -  description
                              -------------------
     begin                : Fri Aug 17 2001
-    copyright            : (C) 2001-2013 by atu
+    copyright            : (C) 2001-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -16,8 +16,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QRUNVIEW_H
-#define QRUNVIEW_H
+#ifndef RUNVIEW_H
+#define RUNVIEW_H
 
 #include "defs.h"
 #include <QDialog>
@@ -31,13 +31,13 @@ class QPainter; class QPaintDevice;
   * @author atu
   */
 
-class QRunView : public QDialog  {
+class RunView : public QDialog  {
  Q_OBJECT
  public:
    /** constructor */
-   QRunView( TModel *amodel, int atype, QWidget *parent );
+   RunView( TModel *amodel, int atype, QWidget *parent );
    /** destructor */
-   ~QRunView();
+   ~RunView();
    /** hint size for good view */
    virtual QSize sizeHint(void) const;
  public slots:
@@ -130,5 +130,5 @@ class QRunView : public QDialog  {
 
 #endif
 
-// end of qrunview.h
+// end of runview.h
 

@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qmo2view.h  -  description
+                          laboview.h  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -15,22 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QMO2VIEW_H
-#define QMO2VIEW_H
+#ifndef LABOVIEW_H
+#define LABOVIEW_H
 
 // include files for Qt
 #include <QWidget>
 class QResizeEvent;
 class QCloseEvent;
 
-class QMo2Doc;
+class LaboDoc;
 class StructView;
-class QOutView;
+class OutView;
 class GraphView;
 class TDataSet;
 class TRootData;
 class TModel;
-class QStatusModel;
+class StatusModel;
 class QScrollArea;
 class QTreeView;
 
@@ -38,12 +38,12 @@ class HolderModel;
 class TMiso;
 
 /**
- * This class provides an base for QMo2Doc view.
+ * This class provides an base for LaboDoc view.
  */
-class QMo2View : public QWidget
+class LaboView : public QWidget
 {
    Q_OBJECT
-   friend class QMo2Doc;
+   friend class LaboDoc;
  public:
    /** enumeration for chate checking */
    enum CheckType { validCheck = 0, selCheck, linkToCheck,
@@ -53,11 +53,11 @@ class QMo2View : public QWidget
      * @param pDoc  your document instance that the view represents.
      * Create a document before calling the constructor
      * or connect an already existing document to a new MDI child widget.*/
-   QMo2View( QMo2Doc* pDoc, QWidget* parent );
+   LaboView( LaboDoc* pDoc, QWidget* parent );
    /** Destructor for the main view */
-   ~QMo2View();
+   ~LaboView();
    /** returns a pointer to the document connected to the view*/
-   QMo2Doc *getDocument() const;
+   LaboDoc *getDocument() const;
    /** gets called to redraw the document contents if it has been modified */
    void update();
    // /** implement preferred size */
@@ -156,11 +156,11 @@ class QMo2View : public QWidget
  protected:
    QScrollArea *scrollArea;
    StructView *sview;
-   QOutView *oview;
+   OutView *oview;
    GraphView *gview;
-   QStatusModel *stam;
+   StatusModel *stam;
 
-   QMo2Doc *doc;
+   LaboDoc *doc;
    TRootData *root;
    TModel *model;
    int sel = -1, sel_x = 0, sel_y = 0, mark = -1, level = 0;
@@ -175,9 +175,8 @@ class QMo2View : public QWidget
    /** help string */
    static const char helpstr[];
 };
-typedef QMo2View *PQMo2View;
 
 #endif
 
-// end of qmo2view.h
+// end of laboview.h
 

@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qdoubletable.cpp  -  description
+                          doubletable.cpp  -  description
                              -------------------
     begin                : Fri Sep 1 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -18,7 +18,7 @@
 #include <QString>
 #include <QtWidgets>
 #include "miscfun.h"
-#include "qdoubletable.h"
+#include "doubletable.h"
 
 DoubleTableModel::DoubleTableModel( const GraphInfo *gi, QObject *parent )
   : QAbstractTableModel( parent ),

@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qdoubletable.h  -  description
+                          doubletable.h  -  description
                              -------------------
     begin                : Fri Sep 1 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QDOUBLETABLE_H
-#define QDOUBLETABLE_H
+#ifndef DOUBLETABLE_H
+#define DOUBLETABLE_H
 
 #include <QAbstractTableModel>
 #include <QWidget>

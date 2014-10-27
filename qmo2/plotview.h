@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qplotview.h  -  description
+                          plotview.h  -  description
                              -------------------
     begin                : Sun Aug 20 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QPLOTVIEW_H
-#define QPLOTVIEW_H
+#ifndef PLOTVIEW_H
+#define PLOTVIEW_H
 
 #include <QString>
 #include <QWidget>
@@ -24,7 +24,7 @@
 #include <scaledata.h>
 
 class QResizeEvent;
-class QMo2Doc; class TRootData; class TModel;
+class LaboDoc; class TRootData; class TModel;
 class TDataSet; class TMiso; class TGraph;
 class QPaintEvent; class QMouseEvent; class QKeyEvent;
 class QPainter; class QPaintDevice;
@@ -33,13 +33,13 @@ class QPainter; class QPaintDevice;
   *@author atu
   */
 
-class QPlotView : public QWidget  {
+class PlotView : public QWidget  {
  Q_OBJECT
  public:
    /** constructor */
-   QPlotView( QMo2Doc *adoc, TGraph *agra, QWidget *parent );
+   PlotView( LaboDoc *adoc, TGraph *agra, QWidget *parent );
    /** destructor */
-   ~QPlotView();
+   ~PlotView();
    /** hint size for good view */
    virtual QSize sizeHint(void) const;
  public slots:
@@ -95,7 +95,7 @@ class QPlotView : public QWidget  {
    void calcPlp(void);
   protected:
     /** pointer to document to fill root, model.. */
-    QMo2Doc *doc;
+    LaboDoc *doc;
     /** pointer to root */
     TRootData *root;
     /** pointer to model*/
@@ -139,5 +139,5 @@ class QPlotView : public QWidget  {
 
 #endif
 
-// end of qplotview.h
+// end of plotview.h
 

@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qplotview.cpp  -  description
+                          plotview.cpp  -  description
                              -------------------
     begin                : Sat Aug 18 2001
-    copyright            : (C) 2001-2013 by atu
+    copyright            : (C) 2001-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -24,11 +24,11 @@
 #include "dataset.h"
 #include "tmodel.h"
 
-#include "qrunview.h"
+#include "runview.h"
 
 using namespace std;
 
-QRunView::QRunView( TModel *amodel, int atype, QWidget *parent )
+RunView::RunView( TModel *amodel, int atype, QWidget *parent )
           : QDialog( parent )
 {
   int i;
@@ -37,7 +37,7 @@ QRunView::QRunView( TModel *amodel, int atype, QWidget *parent )
   // setBackgroundMode( Qt::NoBackground );
   setCursor( Qt::CrossCursor );
   timer = new QTimer();
-  connect( timer, &QTimer::timeout, this, &QRunView::slotRunNext );
+  connect( timer, &QTimer::timeout, this, &RunView::slotRunNext );
   model->reset();
   getModelData();
   for( i=0; i < 10; i++ )
@@ -51,17 +51,17 @@ QRunView::QRunView( TModel *amodel, int atype, QWidget *parent )
   }
 }
 
-QRunView::~QRunView()
+RunView::~RunView()
 {
   delete timer; timer = 0;
 }
 
-QSize QRunView::sizeHint(void) const
+QSize RunView::sizeHint(void) const
 {
   return QSize( 500, s_h );
 }
 
-void QRunView::slotStartRun()
+void RunView::slotStartRun()
 {
   int rc;
   if( state != stateGood ) return;
@@ -80,7 +80,7 @@ void QRunView::slotStartRun()
   timer->start( 0 );
 }
 
-void QRunView::slotStopRun(void)
+void RunView::slotStopRun(void)
 {
   timer->stop();
   setMouseTracking( 0 );
@@ -89,7 +89,7 @@ void QRunView::slotStopRun(void)
   update();
 }
 
-void QRunView::slotRunNext(void)
+void RunView::slotRunNext(void)
 {
   int m_state;
   if( state != stateRun ) {
@@ -123,7 +123,7 @@ void QRunView::slotRunNext(void)
 }
 
 
-void QRunView::resizeEvent( QResizeEvent *e )
+void RunView::resizeEvent( QResizeEvent *e )
 {
   w_h = height(); w_w = width();
   g_h = w_h - 20; g_w = w_w;
@@ -132,7 +132,7 @@ void QRunView::resizeEvent( QResizeEvent *e )
   QWidget::resizeEvent( e );
 }
 
-void QRunView::paintEvent( QPaintEvent * /*pe*/ )
+void RunView::paintEvent( QPaintEvent * /*pe*/ )
 {
   static const QColor bco[4] = { QColor(96,0,0),  QColor(0,64,128),
                           QColor(32,196,64), QColor(0,0,64) };
@@ -143,7 +143,7 @@ void QRunView::paintEvent( QPaintEvent * /*pe*/ )
 }
 
 
-void QRunView::drawAll( QPainter &p )
+void RunView::drawAll( QPainter &p )
 {
   int gauge_w, il1, il2;
   double t = 0, rt;
@@ -175,24 +175,24 @@ void QRunView::drawAll( QPainter &p )
 }
 
 
-void QRunView::drawCross( QPainter & /*p*/ )
+void RunView::drawCross( QPainter & /*p*/ )
 {
 }
 
-void QRunView::drawVbar( QPainter & /*p*/ )
+void RunView::drawVbar( QPainter & /*p*/ )
 {
 
 }
 
-void QRunView::drawGbar( QPainter & /*p*/ )
+void RunView::drawGbar( QPainter & /*p*/ )
 {
 }
 
-void QRunView::drawLED( QPainter & /*p*/ )
+void RunView::drawLED( QPainter & /*p*/ )
 {
 }
 
-void QRunView::mousePressEvent( QMouseEvent *me )
+void RunView::mousePressEvent( QMouseEvent *me )
 {
   int x, y, btn;
   double vx, vy;
@@ -209,7 +209,7 @@ void QRunView::mousePressEvent( QMouseEvent *me )
     update();
 }
 
-void QRunView::mouseReleaseEvent( QMouseEvent *me )
+void RunView::mouseReleaseEvent( QMouseEvent *me )
 {
   int x, y, btn;
   double vx, vy;
@@ -224,7 +224,7 @@ void QRunView::mouseReleaseEvent( QMouseEvent *me )
   mouse_x = vx; mouse_y = vy;
 }
 
-void QRunView::mouseMoveEvent( QMouseEvent *me )
+void RunView::mouseMoveEvent( QMouseEvent *me )
 {
   int x, y;
   double vx, vy;
@@ -234,7 +234,7 @@ void QRunView::mouseMoveEvent( QMouseEvent *me )
 }
 
 
-void QRunView::keyPressEvent( QKeyEvent *ke )
+void RunView::keyPressEvent( QKeyEvent *ke )
 {
   int k, st, btnCtrl, btnShift, mul_btn;
   k = ke->key(); st = ke->modifiers();
@@ -265,7 +265,7 @@ void QRunView::keyPressEvent( QKeyEvent *ke )
   };
 }
 
-void QRunView::keyReleaseEvent( QKeyEvent *ke )
+void RunView::keyReleaseEvent( QKeyEvent *ke )
 {
   int k;
   k = ke->key();
@@ -286,7 +286,7 @@ void QRunView::keyReleaseEvent( QKeyEvent *ke )
 }
 
 
-void QRunView::phys2vis( double x, double y, double *vx, double *vy )
+void RunView::phys2vis( double x, double y, double *vx, double *vy )
 {
   if( vx != 0 ) {
     *vx = c_x + x * gkx;
@@ -296,7 +296,7 @@ void QRunView::phys2vis( double x, double y, double *vx, double *vy )
   };
 }
 
-void QRunView::phys2vis( double x, double y, int *ix, int *iy )
+void RunView::phys2vis( double x, double y, int *ix, int *iy )
 {
   double tx, ty;
   phys2vis( x, y, &tx, &ty );
@@ -308,7 +308,7 @@ void QRunView::phys2vis( double x, double y, int *ix, int *iy )
   };
 }
 
-void QRunView::vis2phys( int ix, int iy, double *x, double *y )
+void RunView::vis2phys( int ix, int iy, double *x, double *y )
 {
   if( x != 0 ) {
     *x = ( ix - c_x ) / gkx;
@@ -318,7 +318,7 @@ void QRunView::vis2phys( int ix, int iy, double *x, double *y )
   };
 }
 
-void QRunView::getModelData(void)
+void RunView::getModelData(void)
 {
   model->getData( "n_tot", &n_tot );
   model->getData( "n_steps", &n_steps );
@@ -328,27 +328,27 @@ void QRunView::getModelData(void)
   s_h = use_sync ? 520 : 40;
 }
 
-void QRunView::getJoyVal(void)
+void RunView::getJoyVal(void)
 {
   // not now
 }
 
-void QRunView::getSoundVal(void)
+void RunView::getSoundVal(void)
 {
   // not now
 }
 
-void QRunView::getAuxVal(void)
+void RunView::getAuxVal(void)
 {
   // not now
 }
 
-void QRunView::fillVars(void)
+void RunView::fillVars(void)
 {
   if( state != stateRun || !use_sync )
     return;
 }
 
 
-// end of qplotview.cpp
+// end of plotview.cpp
 

@@ -26,8 +26,8 @@ class QKeyEvent;
 class QMenu;
 
 #include "tmodel.h"
-#include "qmo2doc.h"
-#include "qmo2view.h"
+#include "labodoc.h"
+#include "laboview.h"
 
 class QPainter;
 
@@ -52,7 +52,7 @@ class StructView : public QWidget  {
     const InputParams *pis;
   };
    /** constructor */
-   StructView( QMo2Doc *adoc, QMo2View *mview,  QWidget *parent );
+   StructView( LaboDoc *adoc, LaboView *mview,  QWidget *parent );
    /** destructor */
    virtual ~StructView();
    /** print contents */
@@ -87,9 +87,9 @@ class StructView : public QWidget  {
 
  protected:
    /** pointer to  document */
-   QMo2Doc *doc;
+   LaboDoc *doc;
    /** main view (parent) */
-   QMo2View *mainview;
+   LaboView *mainview;
    /** pointer to TModel to be drawed */
    TModel *model;
    /** type of output device */

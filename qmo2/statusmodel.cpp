@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qstatusmodel.cpp  -  description
+                          statusmodel.cpp  -  description
                              -------------------
     begin                : Sat Aug 17 2002
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -18,9 +18,9 @@
 #include <QtWidgets>
 
 #include "miscfun.h"
-#include "qstatusmodel.h"
+#include "statusmodel.h"
 
-QStatusModel::QStatusModel( QMo2View *mview, QWidget *parent )
+StatusModel::StatusModel( LaboView *mview, QWidget *parent )
            : QStatusBar( parent )
 {
   mainview = mview;
@@ -69,11 +69,11 @@ QStatusModel::QStatusModel( QMo2View *mview, QWidget *parent )
   setFixedHeight( fm.height() + 12 );
 }
 
-QStatusModel::~QStatusModel()
+StatusModel::~StatusModel()
 {
 }
 
-void QStatusModel::update()
+void StatusModel::update()
 {
   static const char* modChar[] = { " ", "+", "#", "*", "?", "." };
   QString ob_descr, ob_nm_tp;
@@ -114,5 +114,5 @@ void QStatusModel::update()
 }
 
 
-// end of qstatusmodel.cpp
+// end of statusmodel.cpp
 

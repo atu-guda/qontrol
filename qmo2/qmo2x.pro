@@ -22,15 +22,15 @@ SOURCES += \
   miscfun.cpp \
   mo2settdlg.cpp \
   colorbtn.cpp \
-  qdoubletable.cpp \
+  doubletable.cpp \
   graphview.cpp \
-  qmo2doc.cpp \
-  qmo2view.cpp \
-  qmo2win.cpp \
-  qoutview.cpp \
-  qplotview.cpp \
-  qrunview.cpp \
-  qstatusmodel.cpp \
+  labodoc.cpp \
+  laboview.cpp \
+  labowin.cpp \
+  outview.cpp \
+  plotview.cpp \
+  runview.cpp \
+  statusmodel.cpp \
   structview.cpp \
   rootdata.cpp \
   scaledata.cpp \
@@ -84,15 +84,15 @@ HEADERS += \
   miscfun.h \
   mo2settdlg.h \
   colorbtn.h \
-  qdoubletable.h \
+  doubletable.h \
   graphview.h \
-  qmo2doc.h \
-  qmo2view.h \
-  qmo2win.h \
-  qoutview.h \
-  qplotview.h \
-  qrunview.h \
-  qstatusmodel.h \
+  labodoc.h \
+  laboview.h \
+  labowin.h \
+  outview.h \
+  plotview.h \
+  runview.h \
+  statusmodel.h \
   structview.h \
   rootdata.h \
   scaledata.h \

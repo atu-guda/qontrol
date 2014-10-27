@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qmo2doc.cpp  -  description
+                          labodoc.cpp  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -23,17 +23,17 @@
 #include <QtXml>
 
 // application specific includes
-#include "qmo2doc.h"
-#include "qmo2win.h"
-#include "qmo2view.h"
+#include "labodoc.h"
+#include "labowin.h"
+#include "laboview.h"
 
 using namespace std;
 
-QMo2Doc::QMo2Doc()
+LaboDoc::LaboDoc()
 {
 }
 
-QMo2Doc::~QMo2Doc()
+LaboDoc::~LaboDoc()
 {
   // DBG1( "dbg: dtor" );
   delete rootdata;
@@ -41,35 +41,35 @@ QMo2Doc::~QMo2Doc()
 }
 
 
-bool QMo2Doc::isLastView() const
+bool LaboDoc::isLastView() const
 {
   return true; // now the only view exist
 }
 
 
-void QMo2Doc::setPathName( const QString &name )
+void LaboDoc::setPathName( const QString &name )
 {
   m_filename = name;
   m_title = QFileInfo(name).fileName();
 }
 
-const QString& QMo2Doc::pathName() const
+const QString& LaboDoc::pathName() const
 {
   return m_filename;
 }
 
-void QMo2Doc::setTitle( const QString &title )
+void LaboDoc::setTitle( const QString &title )
 {
   m_title = title;
 }
 
-const QString &QMo2Doc::title() const
+const QString &LaboDoc::title() const
 {
   return m_title;
 }
 
 
-bool QMo2Doc::newDocument()
+bool LaboDoc::newDocument()
 {
   if( rootdata ) {
     DBG1( "warn: non-null rootdata while creation new doc" );
@@ -81,7 +81,7 @@ bool QMo2Doc::newDocument()
   model = rootdata->addObj<TModel>( "model" );
   if( !model ) {
     delete rootdata; rootdata = nullptr;
-    QMessageBox::critical( 0, "QMo2Doc::newDocument",
+    QMessageBox::critical( 0, "LaboDoc::newDocument",
       QString("Fail to insert model to root: "), 0,0,0 );
     return false;
   }
@@ -89,7 +89,7 @@ bool QMo2Doc::newDocument()
   if( ! createEmptySyms() ) {
     DBG1( "ERR: Fail to create sims - simulations container" );
     delete rootdata; rootdata = nullptr; model = nullptr;
-    QMessageBox::critical( 0, "QMo2Doc::newDocument",
+    QMessageBox::critical( 0, "LaboDoc::newDocument",
       QString("Fail to insert create sims in model: "), 0,0,0 );
     return false;
   }
@@ -104,11 +104,11 @@ bool QMo2Doc::newDocument()
   return true;
 }
 
-bool QMo2Doc::openDocumentXML(const QString &filename )
+bool LaboDoc::openDocumentXML(const QString &filename )
 {
   QFile file( filename );
   if( !file.open( QFile::ReadOnly) ) {
-    QMessageBox::warning(QMo2Win::qmo2win, tr( PACKAGE ),
+    QMessageBox::warning(LaboWin::labowin, tr( PACKAGE ),
                          tr("Cannot read file %1:\n%2.")
                          .arg(filename)
                          .arg(file.errorString()));
@@ -122,7 +122,7 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
   int err_line, err_column;
 
   if( ! dd.setContent( textData, false, &errstr, &err_line, &err_column ) ) {
-    QMessageBox::warning(QMo2Win::qmo2win, tr( PACKAGE ),
+    QMessageBox::warning(LaboWin::labowin, tr( PACKAGE ),
                          tr("Cannot parse file %1:\n%2\nLine %3 column %4.")
                          .arg(filename)
                          .arg(errstr).arg(err_line).arg(err_column) );
@@ -144,7 +144,7 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
         obj_root = ee;
         break;
       }
-      QMessageBox::critical( QMo2Win::qmo2win, tr( PACKAGE ),
+      QMessageBox::critical( LaboWin::labowin, tr( PACKAGE ),
         tr("Bad first element: %1 %2 ").arg(tagname).arg(elname) );
       return false;
     }
@@ -204,14 +204,14 @@ bool QMo2Doc::openDocumentXML(const QString &filename )
 }
 
 
-bool QMo2Doc::saveDocumentXML( const QString &filename )
+bool LaboDoc::saveDocumentXML( const QString &filename )
 {
   if( rootdata == 0 )
     return false;
 
   QSaveFile file( filename );
   if ( ! file.open( QFile::WriteOnly )) {
-    QMessageBox::warning( QMo2Win::qmo2win, tr(PACKAGE),
+    QMessageBox::warning( LaboWin::labowin, tr(PACKAGE),
                          tr("Cannot write file %1:\n%2.")
                          .arg(filename)
                          .arg(file.errorString()));
@@ -239,7 +239,7 @@ bool QMo2Doc::saveDocumentXML( const QString &filename )
   return true;
 }
 
-QString QMo2Doc::makeXML() const
+QString LaboDoc::makeXML() const
 {
   if( ! rootdata  )
     return QString();
@@ -260,13 +260,13 @@ QString QMo2Doc::makeXML() const
 }
 
 
-void QMo2Doc::deleteContents()
+void LaboDoc::deleteContents()
 {
   DBGx( "debug: rootdata: %p model: %p", rootdata, model );
   delete rootdata; rootdata = 0; model = 0;
 }
 
-bool QMo2Doc::canCloseFrame( QMo2View* pFrame )
+bool LaboDoc::canCloseFrame( LaboView* pFrame )
 {
   if( !isLastView()  )
     return true;
@@ -279,7 +279,7 @@ bool QMo2Doc::canCloseFrame( QMo2View* pFrame )
              QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel )) {
       case QMessageBox::Yes:
              if( is_nonamed ) {
-             saveName = QFileDialog::getSaveFileName( QMo2Win::qmo2win, tr("Save model"),
+             saveName = QFileDialog::getSaveFileName( LaboWin::labowin, tr("Save model"),
                  QString::null, "Model *.qol files (*.qol);;All files(*)" );
              if(saveName.isEmpty())
                   return false;
@@ -314,17 +314,17 @@ bool QMo2Doc::canCloseFrame( QMo2View* pFrame )
   return ret;
 }
 
-TModel* QMo2Doc::getModel(void) const
+TModel* LaboDoc::getModel(void) const
 {
   return model;
 }
 
-TRootData* QMo2Doc::getRoot(void) const
+TRootData* LaboDoc::getRoot(void) const
 {
   return rootdata;
 }
 
-bool QMo2Doc::isModified() const
+bool LaboDoc::isModified() const
 {
   int mmd;
   if( rootdata == 0 || model == 0  )
@@ -333,7 +333,7 @@ bool QMo2Doc::isModified() const
   return ( mmd & 1 );
 }
 
-void QMo2Doc::fillRoot(void)
+void LaboDoc::fillRoot(void)
 {
   if( rootdata == 0 ) {
     DBG1( "ERR: rootdata in null!!" );
@@ -341,7 +341,7 @@ void QMo2Doc::fillRoot(void)
   }
 }
 
-QString QMo2Doc::runScript( const QString& script )
+QString LaboDoc::runScript( const QString& script )
 {
   QScriptValue res = eng.evaluate( script );
   QString r;
@@ -353,7 +353,7 @@ QString QMo2Doc::runScript( const QString& script )
   return r;
 }
 
-void QMo2Doc::initEngine()
+void LaboDoc::initEngine()
 {
   if( !rootdata || ! model ) {
     DBG1( "ERR: no root or model" );
@@ -364,7 +364,7 @@ void QMo2Doc::initEngine()
   eng.globalObject().setProperty("model", eng_model );
 }
 
-bool QMo2Doc::migrateSumul()
+bool LaboDoc::migrateSumul()
 {
   if( !rootdata || ! model ) {
     DBG1( "ERR: no root or model" );
@@ -414,7 +414,7 @@ bool QMo2Doc::migrateSumul()
   return true;
 }
 
-bool QMo2Doc::createEmptySyms()
+bool LaboDoc::createEmptySyms()
 {
   if( !rootdata || !model ) {
     DBG1( "ERR: no root or model" );
@@ -443,5 +443,5 @@ bool QMo2Doc::createEmptySyms()
 }
 
 
-// end of qmo2doc.cpp
+// end of labodoc.cpp
 

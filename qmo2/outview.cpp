@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qoutview.cpp  -  description
+                          outview.cpp  -  description
                              -------------------
     begin                : Fri Aug 18 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -17,13 +17,13 @@
 
 #include <QtWidgets>
 
-#include "qmo2win.h"
-#include "qmo2doc.h"
-#include "qmo2view.h"
+#include "labowin.h"
+#include "labodoc.h"
+#include "laboview.h"
 
-#include "qoutview.h"
+#include "outview.h"
 
-QOutView::QOutView(  QMo2Doc *adoc,  QMo2View *mview,
+OutView::OutView(  LaboDoc *adoc,  LaboView *mview,
                      QWidget *parent )
          : QWidget( parent )
 {
@@ -38,11 +38,11 @@ QOutView::QOutView(  QMo2Doc *adoc,  QMo2View *mview,
   // setFocusPolicy( Qt::StrongFocus ); // for test
 }
 
-QOutView::~QOutView()
+OutView::~OutView()
 {
 }
 
-void QOutView::paintEvent( QPaintEvent * /*pe*/ )
+void OutView::paintEvent( QPaintEvent * /*pe*/ )
 {
   int h, nh, n_out, out_nu, out_type, out_st, level;
   TOutArr *arr;
@@ -53,7 +53,7 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
   if( ! model )
     return;
   QPainter p( this );
-  const QFont &smlf = QMo2Win::qmo2win->getSmallFont();
+  const QFont &smlf = LaboWin::labowin->getSmallFont();
   p.setFont( smlf );
   QFontMetrics fm { smlf };
   ex_sz = fm.width("W") + 4;
@@ -116,7 +116,7 @@ void QOutView::paintEvent( QPaintEvent * /*pe*/ )
   };
 }
 
-void QOutView::mousePressEvent( QMouseEvent *me )
+void OutView::mousePressEvent( QMouseEvent *me )
 {
   int out_nu, n_out, x, y, nn, old_level;
   QMenu *menu;
@@ -155,16 +155,16 @@ void QOutView::mousePressEvent( QMouseEvent *me )
          (void) menu->addAction( title ); // fake action: title
          menu->addSeparator();
          act = menu->addAction( "&New" );
-         connect( act, &QAction::triggered, mainview, &QMo2View::newOut );
+         connect( act, &QAction::triggered, mainview, &LaboView::newOut );
          act = menu->addAction( "&Edit" );
-         connect( act, &QAction::triggered, mainview, &QMo2View::editOut );
+         connect( act, &QAction::triggered, mainview, &LaboView::editOut );
          act = menu->addAction( "&Delete" );
-         connect( act, &QAction::triggered, mainview, &QMo2View::delOut );
+         connect( act, &QAction::triggered, mainview, &LaboView::delOut );
          menu->addSeparator();
          act = menu->addAction( "D&ump" );
-         connect( act, &QAction::triggered, mainview, &QMo2View::exportOut );
+         connect( act, &QAction::triggered, mainview, &LaboView::exportOut );
          act = menu->addAction( "&Show data" );
-         connect( act, &QAction::triggered, mainview, &QMo2View::showOutData );
+         connect( act, &QAction::triggered, mainview, &LaboView::showOutData );
          menu->exec( mapToGlobal(QPoint( x, y )) );
          delete menu;
          break;
@@ -176,6 +176,6 @@ void QOutView::mousePressEvent( QMouseEvent *me )
   mainview->changeLevel( old_level );
 }
 
-// end of qoutview.cpp
+// end of outview.cpp
 
 

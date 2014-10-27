@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qmo2win.h  -  description
+                          labowin.h  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QMO2WIN_H
-#define QMO2WIN_H
+#ifndef LABOWIN_H
+#define LABOWIN_H
 
 // include files for QT
 #include <QMainWindow>
@@ -35,11 +35,11 @@ class QAction;
 class QMdiSubWindow;
 class QStatusBar;
 
-// forward declaration of the QMo2Win classes
-class QMo2Doc;
-class QMo2View;
+// forward declaration of the LaboWin classes
+class LaboDoc;
+class LaboView;
 
-/** auxilary class for storing QMo2 application settings */
+/** auxilary class for storing Labo application settings */
 class Mo2Settings {
   public:
    Mo2Settings();
@@ -70,19 +70,19 @@ class Mo2Settings {
 };
 
 /**
-  * QMo2Win is the main window class for application. It sets up the main
+  * LaboWin is the main window class for application. It sets up the main
   * window and providing a menubar, toolbar
-  * and statusbar. For the main view, an instance of class QMo2View is
+  * and statusbar. For the main view, an instance of class LaboView is
   * created which creates your view.
   *
   * @author atu
   */
-class QMo2Win : public QMainWindow
+class LaboWin : public QMainWindow
 {
   Q_OBJECT
   public:
-    QMo2Win(void);
-    ~QMo2Win();
+    LaboWin(void);
+    ~LaboWin();
 
     /** enables/disables menu entries/toolbar items */
     void enableActions( bool ena, int id_ );
@@ -100,9 +100,9 @@ class QMo2Win : public QMainWindow
   protected:
     /** overloaded for Message box on last window exit */
     bool queryExit();
-    QMo2View* createChild( QMo2Doc* doc );
+    LaboView* createChild( LaboDoc* doc );
     QMdiSubWindow* findMdiChild( const QString &fileName );
-    QMo2View* activeMdiChild();
+    LaboView* activeMdiChild();
 
   private slots:
 
@@ -295,12 +295,12 @@ class QMo2Win : public QMainWindow
             *act_test;
   public:
     /** static pointer to main window -- the only allowed */
-    static QMo2Win *qmo2win;
+    static LaboWin *labowin;
 
 };
 
 
 #endif
 
-// end of qmo2win.h
+// end of labowin.h
 

@@ -1,9 +1,9 @@
 /***************************************************************************
-                          qstatusmodel.h  -  description
+                          statusmodel.h  -  description
                              -------------------
 
     begin                : Sat Aug 17 2002
-    copyright            : (C) 2002-2013 by atu
+    copyright            : (C) 2002-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -16,13 +16,13 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QSTATUSMODEL_H
-#define QSTATUSMODEL_H
+#ifndef STATUSMODEL_H
+#define STATUSMODEL_H
 
 #include <QStatusBar>
 
 #include "tmodel.h"
-#include "qmo2view.h"
+#include "laboview.h"
 
 class QLabel;
 
@@ -30,19 +30,19 @@ class QLabel;
   *@author atu
   */
 
-class QStatusModel : public QStatusBar  {
+class StatusModel : public QStatusBar  {
  Q_OBJECT
  public:
-   QStatusModel( QMo2View* mview, QWidget *parent );
-   ~QStatusModel();
+   StatusModel( LaboView* mview, QWidget *parent );
+   ~StatusModel();
    void update();
 
  protected:
-   QMo2View *mainview;
+   LaboView *mainview;
    QLabel *l_mod, *l_level, *l_stat, *l_nums, *l_name,  *l_desc, *l_val;
 };
 
 #endif
 
-// end of qstatusmodel.h
+// end of statusmodel.h
 

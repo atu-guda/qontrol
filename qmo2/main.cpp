@@ -21,7 +21,7 @@
 
 #include "getopt.h"
 
-#include "qmo2win.h"
+#include "labowin.h"
 
 using namespace std;
 
@@ -42,7 +42,7 @@ int main( int argc, char *argv[] )
     }
   }
 
-  QMo2Win *qmo2 = new QMo2Win();
+  LaboWin *qmo2 = new LaboWin();
 
   qmo2->show();
 
