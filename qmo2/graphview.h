@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qgraphview.h  -  description
+                          graphview.h  -  description
                              -------------------
     begin                : Sat Aug 19 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QGRAPHVIEW_H
-#define QGRAPHVIEW_H
+#ifndef GRAPHVIEW_H
+#define GRAPHVIEW_H
 
 #include <QWidget>
 class QPaintEvent;
@@ -29,11 +29,11 @@ class QMouseEvent;
   *@author atu
   */
 
-class QGraphView : public QWidget  {
+class GraphView : public QWidget  {
  Q_OBJECT
  public:
-   QGraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent );
-   ~QGraphView();
+   GraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent );
+   ~GraphView();
 
  protected:
    /** draw itself */
@@ -51,5 +51,5 @@ class QGraphView : public QWidget  {
 
 #endif
 
-// end of qgraphview.cpp
+// end of graphview.cpp
 

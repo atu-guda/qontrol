@@ -26,7 +26,7 @@ class QCloseEvent;
 class QMo2Doc;
 class StructView;
 class QOutView;
-class QGraphView;
+class GraphView;
 class TDataSet;
 class TRootData;
 class TModel;
@@ -157,7 +157,7 @@ class QMo2View : public QWidget
    QScrollArea *scrollArea;
    StructView *sview;
    QOutView *oview;
-   QGraphView *gview;
+   GraphView *gview;
    QStatusModel *stam;
 
    QMo2Doc *doc;

@@ -23,7 +23,7 @@ SOURCES += \
   mo2settdlg.cpp \
   colorbtn.cpp \
   qdoubletable.cpp \
-  qgraphview.cpp \
+  graphview.cpp \
   qmo2doc.cpp \
   qmo2view.cpp \
   qmo2win.cpp \
@@ -85,7 +85,7 @@ HEADERS += \
   mo2settdlg.h \
   colorbtn.h \
   qdoubletable.h \
-  qgraphview.h \
+  graphview.h \
   qmo2doc.h \
   qmo2view.h \
   qmo2win.h \

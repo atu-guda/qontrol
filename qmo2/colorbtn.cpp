@@ -68,5 +68,5 @@ void ColorBtn::paintEvent( QPaintEvent * ev )
   p.end();
 }
 
-// end of qcolorbtn.cpp
+// end of colorbtn.cpp
 

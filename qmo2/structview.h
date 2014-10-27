@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QSTRUCTVIEW_H
-#define QSTRUCTVIEW_H
+#ifndef STRUCTVIEW_H
+#define STRUCTVIEW_H
 
 #include <QWidget>
 
@@ -100,5 +100,5 @@ class StructView : public QWidget  {
 
 #endif
 
-// end of qstructview.h
+// end of structview.h
 

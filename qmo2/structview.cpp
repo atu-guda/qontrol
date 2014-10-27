@@ -652,6 +652,6 @@ void StructView::keyPressEvent( QKeyEvent *ke )
   };
 }
 
-// end of qstructview.cpp
+// end of structview.cpp
 
 

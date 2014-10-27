@@ -1,8 +1,8 @@
 /***************************************************************************
-                          qgraphview.cpp  -  description
+                          graphview.cpp  -  description
                              -------------------
     begin                : Sat Aug 19 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -20,9 +20,9 @@
 #include "qmo2doc.h"
 #include "qmo2win.h"
 #include "qmo2view.h"
-#include "qgraphview.h"
+#include "graphview.h"
 
-QGraphView::QGraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
+GraphView::GraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
            : QWidget(parent)
 {
   doc = adoc; mainview = mview;
@@ -36,11 +36,11 @@ QGraphView::QGraphView( QMo2Doc *adoc, QMo2View *mview, QWidget *parent )
   setAutoFillBackground(true);
 }
 
-QGraphView::~QGraphView()
+GraphView::~GraphView()
 {
 }
 
-void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
+void GraphView::paintEvent( QPaintEvent * /*pe*/ )
 {
   int h, w, nh, n_graph, graph_nu;
   TGraph *gra;
@@ -82,7 +82,7 @@ void QGraphView::paintEvent( QPaintEvent * /*pe*/ )
   }; // end loop on graphs
 }
 
-void QGraphView::mousePressEvent( QMouseEvent *me )
+void GraphView::mousePressEvent( QMouseEvent *me )
 {
   int h, w, nh, graph_nu, n_graph, x, y, old_level;
   QMenu *menu;
@@ -153,5 +153,5 @@ void QGraphView::mousePressEvent( QMouseEvent *me )
 }
 
 
-// end of qgraphview.cpp
+// end of graphview.cpp
 

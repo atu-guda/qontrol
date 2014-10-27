@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QCOLORBTN_H
-#define QCOLORBTN_H
+#ifndef COLORBTN_H
+#define COLORBTN_H
 
 #include <QWidget>
 #include <QPushButton>

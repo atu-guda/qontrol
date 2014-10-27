@@ -25,7 +25,7 @@
 #include "qmo2win.h"
 #include "structview.h"
 #include "qoutview.h"
-#include "qgraphview.h"
+#include "graphview.h"
 #include "qstatusmodel.h"
 #include "qdoubletable.h"
 #include "qrunview.h"
@@ -63,7 +63,7 @@ QMo2View::QMo2View( QMo2Doc* pDoc, QWidget *parent )
   scrollArea->setFocusProxy( sview );
 
   oview = new QOutView( doc, this, main_part );
-  gview = new QGraphView( doc, this, main_part );
+  gview = new GraphView( doc, this, main_part );
 
   stam = new QStatusModel( this, this );
 
