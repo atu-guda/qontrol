@@ -26,11 +26,11 @@
   *@author atu
   */
 
-class QColorBtn : public QPushButton  {
+class ColorBtn : public QPushButton  {
  Q_OBJECT
  public:
-   explicit QColorBtn( QWidget *parent );
-   virtual ~QColorBtn();
+   explicit ColorBtn( QWidget *parent );
+   virtual ~ColorBtn();
    const QColor color(void) const { return col; }
    int colorInt(void) const;
    void setColor( const QColor &c );

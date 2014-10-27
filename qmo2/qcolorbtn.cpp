@@ -19,35 +19,35 @@
 #include <QPainter>
 #include "qcolorbtn.h"
 
-QColorBtn::QColorBtn( QWidget *parent )
+ColorBtn::ColorBtn( QWidget *parent )
           : QPushButton( parent )
 {
-  connect( this, &QColorBtn::clicked, this, &QColorBtn::slotClicked );
+  connect( this, &ColorBtn::clicked, this, &ColorBtn::slotClicked );
   col = Qt::black;
 }
 
-QColorBtn::~QColorBtn()
+ColorBtn::~ColorBtn()
 {
 }
 
-int QColorBtn::colorInt(void) const
+int ColorBtn::colorInt(void) const
 {
   return int( col.rgb() );
 }
 
-void QColorBtn::setColor( const QColor &c )
+void ColorBtn::setColor( const QColor &c )
 {
   col = c;
   repaint();
 }
 
-void QColorBtn::setColor( int ic )
+void ColorBtn::setColor( int ic )
 {
   col = QRgb( ic );
   repaint();
 }
 
-void QColorBtn::slotClicked()
+void ColorBtn::slotClicked()
 {
   QColor ncol;
   ncol = QColorDialog::getColor( col );
@@ -57,7 +57,7 @@ void QColorBtn::slotClicked()
   emit changed( col );
 }
 
-void QColorBtn::paintEvent( QPaintEvent * ev )
+void ColorBtn::paintEvent( QPaintEvent * ev )
 {
   QPushButton::paintEvent( ev );
   int bor_w = 2; // border width

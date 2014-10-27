@@ -1,3 +1,7 @@
+rename Q* classes to w/o Q - not part of Qt
+New hier
+Rebreand to Qontrol
+enums with labels
 move some logic from QMo2View to model (scheme?)
 slots in TModel like cmds, but with "name", not elnu - for JS
 unify add/paste elem: param in dialog?
@@ -10,23 +14,25 @@ More data/controls: Font, Date, Time
 Plot data structure + convert old
 Current object in container / alias ?
 run w/o interface fun:
-rename Q* classes to w/o Q - not part of Qt
 command line key -w = write
 TCircBuf + TDelay re*
-TFourier, TCorrAnal - remove output to TModel vars: can be user directly
+TFourier, TCorrAnal - remove output to TModel vars: can be used directly
 More plot types (dot...). Qwtplot?
 Hide startLoop - like fun,f
-New hier
 Rename action
 Auto create GET/SET function for my datas, create Qt properties - scripts. ?
 order -> only hint?
+source choose widget
+js edit widget + button/dialog
+js preRun, preLoop
 
 
 
-migrate to qontrol
 
 iface to gnuplot data out, call gnuplot if need qr request
 objects: TFileInput, TFileOutput, TMovingAver, TDiff
+  -- TSum8, TDefuzzy, TQuality (TCriterion is busy/TCrit)
+  -- TRelaxGenerator
   -- or File Source input/output
 may be new field in TClassInfo to misc flags: can f() w/o preRun..., 
     class group.. etc

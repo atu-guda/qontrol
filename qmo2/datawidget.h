@@ -172,7 +172,7 @@ class ColorDataWidget: public DataWidget {
  protected:
   static int reg();
   static int registered;
-  QColorBtn *cb;
+  ColorBtn *cb;
 };
 
 class IntArrayDataWidget: public DataWidget {

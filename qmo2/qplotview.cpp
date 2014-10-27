@@ -987,12 +987,12 @@ void QPlotView::setColors(void)
   QDialog *dia = new QDialog( this );
   dia->setWindowTitle( PACKAGE ": Plot Colors" );
   QGridLayout *lay = new QGridLayout( dia );
-  QColorBtn* colbtns[10];
+  ColorBtn* colbtns[10];
   QLabel *la;
   for( i=0; i<10; i++ ) {
     la = new QLabel( labels[i], dia );
     lay->addWidget( la, i, 0 );
-    colbtns[i] = new QColorBtn( dia );
+    colbtns[i] = new ColorBtn( dia );
     if( i >= 4 ) {
       colbtns[i]->setColor( plotColor[i-4] );
     } else {

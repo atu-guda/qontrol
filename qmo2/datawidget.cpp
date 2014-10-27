@@ -524,7 +524,7 @@ int ColorDataWidget::registered = ColorDataWidget::reg();
 
 ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
-   cb( new QColorBtn( this ) )
+   cb( new ColorBtn( this ) )
 {
   main_w = cb;
   if( h.getFlags() & ( efRO | efRODial ) ) {
