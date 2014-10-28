@@ -67,6 +67,7 @@ SOURCES += \
   ../elems/tpid.cpp \
   ../elems/trand.cpp \
   ../elems/trandtrigg.cpp \
+  ../elems/trelaxgen.cpp \
   ../elems/tsource.cpp \
   ../elems/tsourcelin.cpp \
   ../elems/tswitch.cpp \
@@ -129,6 +130,7 @@ HEADERS += \
   ../elems/tpid.h \
   ../elems/trand.h \
   ../elems/trandtrigg.h \
+  ../elems/trelaxgen.h \
   ../elems/tsource.h \
   ../elems/tsourcelin.h \
   ../elems/tswitch.h \
