@@ -118,11 +118,17 @@ double TCorrAnalysis::f( double t )
     reset_data();
   };
   switch( (int)type ) {
-    case 0: add = 1; break;
-    case 1: add = ( t >= t0 ) && ( t <= t1 ); break;
-    case 2: add = ( in_add > 0.1 ); break;
-    case 3: add = 0; // dont add, use arrays
-    default: add = 0;
+    case call_all:
+      add = 1; break;
+    case call_time:
+      add = ( t >= t0 ) && ( t <= t1 ); break;
+    case call_u2:
+      add = ( in_add > 0.1 ); break;
+    case call_arr:
+      // PASS
+      // add = 0; // dont add, use arrays
+    default:
+      add = 0;
   };
   if( add ) {
     s_x += x; s_x2 += x*x; s_y += y; s_y2 += y*y;

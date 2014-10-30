@@ -392,14 +392,25 @@ DEFAULT_FUNCS_REG(HolderSwitch);
 // ---------------- HolderList ---------
 STD_CLASSINFO_ALIAS(HolderList,clpData,list);
 
-HolderList::HolderList( ARGS_CTOR_MIN, const QString &a_elems  )
+HolderList::HolderList( ARGS_CTOR_MIN, const QString &a_elems  ) // end this too
    : HolderInt( ARGS_CTOR_NAMES )
 {
   setParm("min","0"); setParm("max","0");
-  setElems( a_elems );
+  setElems( a_elems ); // TODO, remove, use only modern
   if( getParm("props") == "INT,SIMPLE" ) {
     setParm( "props", "INT,LIST" );
   }
+
+  // my be overkill, but one cone - one place
+  QString enum_name = getParm( "enum" );
+  QStringList sl;
+  if( ! enum_name.isEmpty() ) {
+    if( par ) {
+      sl = par->getEnumStrings( enum_name );
+    }
+  }
+  setParm( "max", QSN( sl.size()-1 ) );
+
   post_set();
 }
 

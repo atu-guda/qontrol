@@ -2,7 +2,7 @@
                           tcounter.h  -  description
                              -------------------
     begin                : Sun Nov 19 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -31,6 +31,13 @@ class TCounter : public TMiso  {
    DCL_CTOR(TCounter);
    DCL_CREATE;
    DCL_STD_INF;
+   enum CountType { co_level=0, co_plus, co_pm, co_n };
+   Q_ENUMS(CountType);
+   Q_CLASSINFO( "enum_CountType_0",  "Level" );      // co_level
+   Q_CLASSINFO( "enum_CountType_1",  "Pulse+" );     // co_plus
+   Q_CLASSINFO( "enum_CountType_2",  "Pulse+-" );    // co_pm
+   Q_CLASSINFO( "enum_CountType_3",  "N" );          // co_n
+
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -38,8 +45,7 @@ class TCounter : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** type of output from counter */
-   PRM_LIST( type, efNRC, "Type", "Type of counters output", "",
-       "level\npulse+\npulse+-\nn" );
+   PRM_LIST( type, efNRC, "Type", "Type of counters output", "enum=CountType", "REMOVE_ME" );
    //* n of counts */
    PRM_INT( n, efNRC, "n", "Number to count", "sep=col\ndef=2" );
    //* current counter */

@@ -2,7 +2,7 @@
                           tcounter.cpp  -  description
                              -------------------
     begin                : Sun Nov 19 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -54,10 +54,14 @@ double TCounter::f( double /* t */ )
     };
   };
   switch( (int)type ) {
-    case 0: v = flip; break; // level
-    case 1: v = tick; break; // pulse+
-    case 2: v = tick ? ( -1 + 2*flip ) : 0; break; // pulse+-
-    case 3: v = cn; break; // count;
+    case co_level:
+      v = flip; break;
+    case co_plus:
+      v = tick; break;
+    case co_pm:
+      v = tick ? ( -1 + 2*flip ) : 0; break;
+    case co_n:
+      v = cn; break; // count;
     default: v = 0;
   };
   return v;

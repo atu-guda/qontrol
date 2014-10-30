@@ -2,7 +2,7 @@
                           tcorralalysis.h  -  description
                              -------------------
     begin                : Fri Sep 8 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -30,6 +30,12 @@ class TCorrAnalysis : public TMiso  {
    DCL_CTOR(TCorrAnalysis);
    DCL_CREATE;
    DCL_STD_INF;
+   enum CallType { call_all = 0, call_time, call_u2, call_arr };
+   Q_ENUMS(CallType);
+   Q_CLASSINFO( "enum_CallType_0", "All" );     // call_all
+   Q_CLASSINFO( "enum_CallType_1", "t0<t<t1" ); // call_time
+   Q_CLASSINFO( "enum_CallType_2", "u2>0" );    // call_u2
+   Q_CLASSINFO( "enum_CallType_3", "arrays" );  // call_arr
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -47,7 +53,7 @@ class TCorrAnalysis : public TMiso  {
 
    /* ============= data members ================== */
    /** type of data collection, flags */
-   PRM_LIST( type, efNoRunChange, "Type", "Collection type", "", "All\nt0<t<t1\nu2>0\narrays" );
+   PRM_LIST( type, efNoRunChange, "Type", "Collection type", "enum=CallType", "REMOVE_ME" );
    PRM_SWITCH( useCalc,  efNoRunChange, "use Calc", "Use in_calc>0 as signal to calc", "" );
    PRM_SWITCH( useReset, efNoRunChange, "use Reset", "Use u_rst>0 as signal to reset", "" );
    PRM_SWITCH( useFill,  efNoRunChange, "Fill arrays", "Fill output array", "" );
@@ -57,11 +63,6 @@ class TCorrAnalysis : public TMiso  {
    /** Names of input arrays if type=UseArrays */
    PRM_STRING( x_in, efNoRunChange, "in x[]", "name of input x array", "" );
    PRM_STRING( y_in, efNoRunChange, "in y[]", "name of input y array", "" );
-   /** indexes of output values to be stored to model */
-   //PRM_INT( out_a, efNoRunChange, "a idx", "Index to store 'a' value", "sep=col\ndef=-1" );
-   //PRM_INT( out_b, efNoRunChange, "b idx", "Index to store 'b' value", "def=-1" );
-   //PRM_INT( out_corr, efNoRunChange, "corr idx", "Index to store 'corr' value", "def=-1" );
-   //PRM_INT( out_ok, efNoRunChange, "ok idx", "Index to store 'ok' value", "def=-1" );
    /** names of output arrays */
    PRM_STRING( x_oname, efNoRunChange, "out x name", "name of output x array", "sep=col" );
    PRM_STRING( y_oname, efNoRunChange, "out y name", "name of output y array", "" );

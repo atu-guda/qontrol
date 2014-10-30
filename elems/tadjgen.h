@@ -32,6 +32,10 @@ class TAdjGen : public TMiso  {
    DCL_CREATE;
    DCL_STD_INF;
    enum GenType { gen_def=0, gen_mai, gen_dual };
+   Q_ENUMS(GenType);
+   Q_CLASSINFO( "enum_GenType_0", "Default" );     // gen_def
+   Q_CLASSINFO( "enum_GenType_1", "MAI" );         // gen_mai
+   Q_CLASSINFO( "enum_GenType_2", "Dual(u0,u3)" ); // gen_dual
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -39,8 +43,7 @@ class TAdjGen : public TMiso  {
    virtual int do_startLoop( int acnx, int acny );
 
    /** type of averaging, */
-   PRM_LIST( type, efNoRunChange, "Type", "Type of generator", "",
-       "Default\nMAI\nDual(u0,u3)" );
+   PRM_LIST( type, efNoRunChange, "Type", "Type of generator", "enum=GenType", "REMOVE_ME" );
    /** misc flags */
    PRM_SWITCH( useReset, efNoRunChange, "u[1] is Reset", "Use u[1] as Reset signal", "" );
    PRM_SWITCH( useLock, efNoRunChange, "u[2] is Lock", "Use u[2] as LOck signal", "" );
