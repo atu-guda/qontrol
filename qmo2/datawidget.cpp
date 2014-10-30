@@ -362,7 +362,17 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     cb->setDisabled( true );
   }
-  cb->addItems( ho.getParm( "list_elems" ).split("\n") );
+  QString enum_name = ho.getParm( "enum" );
+  QStringList sl;
+  if( enum_name.isEmpty() ) {
+    sl = ho.getParm( "list_elems" ).split("\n");
+  } else {
+    TDataSet *par = h.getParent();
+    if( par ) {
+      sl = par->getEnumStrings( enum_name );
+    }
+  }
+  cb->addItems( sl );
 
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );

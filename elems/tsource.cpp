@@ -33,6 +33,7 @@ CTOR(TSource,TMiso)
 }
 
 
+
 double TSource::f( double t )
 {
   double v, omet, uu_s, omet_s, lt, u_ch, f_ch, pha, pha_0;
@@ -68,34 +69,47 @@ double TSource::f( double t )
   pha_0 = fmod( pha, 1 ); // phase in range [ 0; 1 )
 
   switch( (int)type ) {
-    case 0: v = uu_s * sin( omet_s ); break;
-    case 1: v = uu_s * sign( sin( omet_s ) ); break;
-    case 2: v = uu_s * sin( omet_s ) * t / tt; break;
-    case 3: v = uu_s * sign( sin( omet_s ) ) * t / tt; break;
-    case 4: v = 0;
-            if( was_pulse == 0 && t >= omega )
-              { v = uu_s / tdt; was_pulse = 1; };
-            break;
-    case 5: v = ( t > omega ) ? uu_s : 0; break;
-    case 6: v = uu_s * ( t + f_ch ) / tt; break;
-    case 7: n = int( t / omega ); lt = t - n * omega;
-            v = uu_s * ( lt + f_ch ) / omega;
-            break;
-    case 8: n = int( 2 * t / omega ); lt = 2 * t - n * omega;
-            v = 0.5 * uu_s - 2 * ( lt + f_ch ) * uu / omega;
-            if( ! (n & 1)  ) {
-              v = -v;
-            };
-            break;
-    case 9: v = uu_s * f_ch; break;
-    case 10: if( pha_0 <= 0.25 )
-               v = uu_s * 4 * pha_0;
-             else if ( pha_0 <= 0.75 )
-               v = uu_s * ( 1 - 4*(pha_0-0.25));
-             else
-               v = uu_s * ( -1 +4*(pha_0-0.75));
-             break;
-    case 11: v = pha_0; break;
+    case so_sin:
+      v = uu_s * sin( omet_s ); break;
+    case so_sign:
+      v = uu_s * sign( sin( omet_s ) ); break;
+    case so_sin_raise:
+      v = uu_s * sin( omet_s ) * t / tt; break;
+    case so_sign_raise:
+      v = uu_s * sign( sin( omet_s ) ) * t / tt; break;
+    case so_dirac:
+      v = 0;
+      if( was_pulse == 0 && t >= omega ) {
+        v = uu_s / tdt; was_pulse = 1;
+      };
+      break;
+    case so_theta:
+      v = ( t > omega ) ? uu_s : 0; break;
+    case so_raise:
+      v = uu_s * ( t + f_ch ) / tt; break;
+    case so_saw:
+      n = int( t / omega ); lt = t - n * omega;
+      v = uu_s * ( lt + f_ch ) / omega;
+      break;
+    case so_saw2:
+      n = int( 2 * t / omega ); lt = 2 * t - n * omega;
+      v = 0.5 * uu_s - 2 * ( lt + f_ch ) * uu / omega;
+      if( ! (n & 1)  ) {
+        v = -v;
+      };
+      break;
+    case so_chaos_wave:
+      v = uu_s * f_ch; break;
+    case so_triangle:
+      if( pha_0 <= 0.25 )
+        v = uu_s * 4 * pha_0;
+      else if ( pha_0 <= 0.75 )
+        v = uu_s * ( 1 - 4*(pha_0-0.25));
+      else
+        v = uu_s * ( -1 +4*(pha_0-0.75));
+      break;
+    case so_phase:
+      v = pha_0; break;
     default: v = 0;
   };
   v += cc;

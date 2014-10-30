@@ -1,11 +1,12 @@
 New hier
+Command line (':')
+Renew /unify views for Outs, Graphs, Simulations
 Rebreand to Qontrol
 enums with labels
 move some logic from LaboView to model (scheme?)
 slots in TModel like cmds, but with "name", not elnu - for JS
 unify add/paste elem: param in dialog?
 unify add param/object : add_obj_param? + dialog
-View for Simulations? + unify such view
 threads in run
 RunWindow?
 Edit large arrays

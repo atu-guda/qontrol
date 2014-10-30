@@ -2,7 +2,7 @@
                           dataset.h  -  description
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2013 by atu
+    copyright            : GPL (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -167,6 +167,7 @@ enum allow_type {
 };
 
 
+
 // -------------------------- HOLDERS ------------------------------------
 
 /** Abstract holder for simple data types */
@@ -198,7 +199,7 @@ class HolderData : public QObject {
   virtual QDomElement toDom( QDomDocument &dd ) const;
   const QString& allowTypes() const { return allowed_types; }
  public slots:
-  /** returns full name of object: aaa.bbb.cc  */ // TODO: up to HolderData
+  /** returns full name of object: aaa.bbb.cc  */
   QString getFullName() const;
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
@@ -537,7 +538,9 @@ class TDataSet : public HolderData {
    /** return number of inputs */
    int inputsCount() const { return inputs.size(); };
    /** returns input by number */
-   InputSimple* getInput (int n) ;
+   InputSimple* getInput( int n ) const;
+   //* return strings for given enum
+   QStringList getEnumStrings( const QString &enum_name ) const;
  public slots:
    /** create object with params as string */
    bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );

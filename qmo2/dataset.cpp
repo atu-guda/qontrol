@@ -1619,7 +1619,7 @@ void TDataSet::unregisterInput( InputSimple *inp )
   inputs.remove( idx );
 }
 
-InputSimple* TDataSet::getInput (int n)
+InputSimple* TDataSet::getInput( int n ) const
 {
   if( n < 0 || n >= inputs.size() ) {
     DBGx( "warn: bad input number %d, in \"%s\" size= %d",
@@ -1629,6 +1629,40 @@ InputSimple* TDataSet::getInput (int n)
   return inputs[n];
 }
 
+QStringList TDataSet::getEnumStrings( const QString &enum_name ) const
+{
+  QStringList r;
+  const QMetaObject *mci = metaObject();
+  if( ! mci ) {
+    return r;
+  };
+  int idx = mci->indexOfEnumerator( enum_name.toLocal8Bit().data() );
+  if( idx < 0 ) {
+    return r;
+  }
+  QMetaEnum me = mci->enumerator( idx );
+  if( !me.isValid() ) {
+    return r;
+  }
+
+  int n = me.keyCount();
+  QString nm, snm, lbl;
+  QMetaClassInfo ci;
+  for( int i=0; i<n; ++i ) {
+    int val = me.value( i ); // now the same as i, but ...
+    snm = me.key( i );
+    nm = QString( "enum_" ) + enum_name + "_" + QSN( val );
+    int ci_idx = mci->indexOfClassInfo( nm.toLocal8Bit().data() );
+    if( ci_idx < 0 ) {
+      r << enum_name + "_" + QSN( val );
+      continue;
+    }
+    ci = mci->classInfo( ci_idx );
+    r << ci.value();
+  }
+
+  return r;
+}
 
 
 void TDataSet::dumpStruct() const
