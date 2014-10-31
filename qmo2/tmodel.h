@@ -38,6 +38,14 @@ class TModel : public TDataContainer  {
   DCL_CREATE;
   DCL_STD_INF;
 
+  enum SeedType {
+    everyRun = 0, startLoop, start2DLoop
+  };
+  Q_ENUMS(SeedType);
+  Q_CLASSINFO( "enum_SeedType_0", "Every Run" );               // everyRun
+  Q_CLASSINFO( "enum_SeedType_1", "On start on 1D loop" );     // startLoop
+  Q_CLASSINFO( "enum_SeedType_2", "On start on 2D loop" );     // start2DLoop
+
   //* make main work via getDoublePtr
   virtual const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt = nullptr,
         const TDataSet **src_ob = nullptr, int lev = 0 ) const override;
@@ -163,8 +171,7 @@ class TModel : public TDataContainer  {
   PRM_INT( useSameSeed, efOld, "use Same Seed - no", "Unused", "props=INT,SPIN\nstep=2\nmin=-100\nmax=100" ); // TODO: OBSOLETE
   /** type of seeding: 0 - every run, 1 - every 1d loop .. obj: 3 - as model */
   PRM_LIST( seedType, efNoRunChange, "Seed type",
-      "type of seeding: 0 - every run... ", "",
-      "Every Run\nStart 1d loop\nStart 2d loop" );
+      "type of seeding: 0 - every run... ", "enum=SeedType", "REMOVE_ME" );
   PRM_SWITCH( autoStart, efNoRunChange, "auto start",
       "Start simulation without key awaitng", "sep=col" );
   // -------- input channels indexes -------
@@ -187,12 +194,12 @@ class TModel : public TDataContainer  {
   PRM_INT( oc_4, efOld, "Out idx 4", "Output index 4", ""  );
   PRM_INT( oc_5, efOld, "Out idx 5", "Output index 5", ""  );
   /** types of output: obsoleted  */
-  PRM_LIST( oct_0, efOld, "Out Type 0", "Output Type 0", "sep=col", "" );
-  PRM_LIST( oct_1, efOld, "Out Type 1", "Output Type 1", "", ""  );
-  PRM_LIST( oct_2, efOld, "Out Type 2", "Output Type 2", "", "" );
-  PRM_LIST( oct_3, efOld, "Out Type 3", "Output Type 3", "", "" );
-  PRM_LIST( oct_4, efOld, "Out Type 4", "Output Type 4", "", "" );
-  PRM_LIST( oct_5, efOld, "Out Type 5", "Output Type 5", "", "" );
+  PRM_INT( oct_0, efOld, "Out Type 0", "Output Type 0", "" );
+  PRM_INT( oct_1, efOld, "Out Type 1", "Output Type 1", "" );
+  PRM_INT( oct_2, efOld, "Out Type 2", "Output Type 2", "" );
+  PRM_INT( oct_3, efOld, "Out Type 3", "Output Type 3", "" );
+  PRM_INT( oct_4, efOld, "Out Type 4", "Output Type 4", "" );
+  PRM_INT( oct_5, efOld, "Out Type 5", "Output Type 5", "" );
   // ---------------------------------------
   /** long description */
   PRM_STRING( long_descr, 0, "Description", "Model description",

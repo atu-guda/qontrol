@@ -31,6 +31,17 @@ class TCriterion : public TMiso  {
    DCL_CTOR(TCriterion);
    DCL_CREATE;
    DCL_STD_INF;
+
+   enum CritType {
+     cr_mod_less = 0, cr_mod_greate, cr_less, cr_greate, cr_between
+   };
+   Q_ENUMS(CritType);
+   Q_CLASSINFO( "enum_CritType_0", "|x|<a" );    // cr_mod_less
+   Q_CLASSINFO( "enum_CritType_1", "|x|>a" );    // cr_mod_greate
+   Q_CLASSINFO( "enum_CritType_2", "x<a" );      // cr_less
+   Q_CLASSINFO( "enum_CritType_3", "x>a" );      // cr_greate
+   Q_CLASSINFO( "enum_CritType_4", "a<x<b" );    // cr_between
+
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -38,8 +49,7 @@ class TCriterion : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** type of criterion */
-   PRM_LIST( type, efNRC, "Type", "Type of criterion", "",
-       "|x|<a\n|x|>a\nx<a\nx>a\na<x<b"  );
+   PRM_LIST( type, efNRC, "Type", "Type of criterion", "enum=CritType", "REMOVE_ME"  );
    /** coefficients  */
    PRM_DOUBLE( a, 0, "a", "level 'a'", "def=0.5" );
    PRM_DOUBLE( b, 0, "b", "level 'b'", "def=1" );

@@ -33,6 +33,13 @@ class Simulation : public TDataSet  {
   virtual ~Simulation() override;
   DCL_CREATE;
   DCL_STD_INF;
+  enum SeedType {
+    everyRun = 0, startLoop, start2DLoop
+  };
+  Q_ENUMS(SeedType);
+  Q_CLASSINFO( "enum_SeedType_0", "Every Run" );               // everyRun
+  Q_CLASSINFO( "enum_SeedType_1", "On start on 1D loop" );     // startLoop
+  Q_CLASSINFO( "enum_SeedType_2", "On start on 2D loop" );     // start2DLoop
 
  protected:
   // simulation parameters, borrowed/renamed from TModel
@@ -60,9 +67,8 @@ class Simulation : public TDataSet  {
   PRM_DOUBLE( prm0d, efNoRunChange, "prm0+=", "Parameter 0 delta", "sep=col" );
   PRM_DOUBLE( prm1d, efNoRunChange, "prm1+=", "Parameter 1 delta", "" );
   PRM_INT( seed, efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
-  PRM_LIST( seedType, efNoRunChange, "Seed type",
-      "type of seeding: 0 - every run... ", "",
-      "Every Run\nStart 1d loop\nStart 2d loop" );
+  PRM_LIST( seedType, efInner, "Seed type",
+      "type of seeding: 0 - every run... ", "enum=SeedType", "REMOVE_ME" );
   PRM_SWITCH( autoStart, efNoRunChange, "auto start",
       "Start simulation without key awaiting", "sep=col" );
   // -------- TODO: input/output channels -------

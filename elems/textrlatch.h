@@ -32,6 +32,16 @@ class TExtrLatch : public TMiso  {
    DCL_CTOR(TExtrLatch);
    DCL_CREATE;
    DCL_STD_INF;
+
+   enum ExtrType {
+     extrMin, extrMax, extrModMax, extrAver, extrAmpl
+   };
+   Q_ENUMS(ExtrType);
+   Q_CLASSINFO( "enum_ExtrType_0", "Max" );        // extrMax
+   Q_CLASSINFO( "enum_ExtrType_1", "Min" );        // extrMin
+   Q_CLASSINFO( "enum_ExtrType_2", "Max||" );      // extrModMax
+   Q_CLASSINFO( "enum_ExtrType_3", "Average" );    // extrAver
+   Q_CLASSINFO( "enum_ExtrType_4", "Amplitude" );  // extrAmpl
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -39,8 +49,7 @@ class TExtrLatch : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** type of extremum */
-   PRM_LIST( type, efNRC, "Type", "Type of catching extremum", "",
-       "Max\nMin\nMax||\nAverage\nAmplitude" );
+   PRM_LIST( type, efNRC, "Type", "Type of catching extremum", "enum=ExtrType", "REMOVE_ME" );
    PRM_SWITCH( useLocal, efNRC, "Local extr", "Catch local extremums", "sep=col" );
    PRM_SWITCH( useFirst, efNRC, "Only first", "Catch only first local extremum", "");
    PRM_SWITCH( outT, efNRC, "Output T", "Output time of catched extremum, not value", "" );

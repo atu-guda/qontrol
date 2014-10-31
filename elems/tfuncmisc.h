@@ -2,7 +2,7 @@
                           tfuncmisc.h  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -21,26 +21,6 @@
 #include <tmiso.h>
 
 
-static const char* const tfuncmisc_list =
-     "a*deadLine(y,b)+g\n"           // 0
-     "a*limitLine(y,b)+g\n"          // 1
-     "a*deadLimitLine(y,b,c,d)+g\n"  // 2
-     "a*sign(y)+g\n"                 // 3
-     "a*Thetta(y)+g\n"               // 4
-     "a*diod(y)+g\n"                 // 5
-     "a*threeState(y,b)+g\n"         // 6
-     "a*triangle(y,b)+g\n"           // 7
-     "a*rectLine(y,b,c)+g\n"         // 8
-     "((y>0)?a:b)*y+g\n"             // 9
-     "a*u0/(u1+b)+g\n"               // 10
-     "a*int(y*b)+g\n"                      // 11
-     "a*frac(y*b)+g\n"                      // 12
-     "a*asin(abs(sin(y*b)))+g\n"     // 13
-     "a*erf(y*b)+g\n"                // 14
-     "a*min(u0,u1)+g\n"              // 15
-     "a*max(u0,u1)+g"                // 16
-;
-
 /**miscelenios nonlinear functions
   *@author atu
   */
@@ -51,12 +31,36 @@ class TFuncMisc : public TMiso  {
    DCL_CTOR(TFuncMisc);
    DCL_CREATE;
    DCL_STD_INF;
+
+   enum FuncType {
+     ft_deadLine = 0, ft_limitLine, ft_dealLimitLine, ft_sign, ft_theta, ft_diod,
+     ft_threeState, ft_triangle, ft_reactLine, ft_2slope, ft_div, ft_int,
+     ft_frac, ft_aasin, ft_erf, ft_min, ft_max
+   };
+   Q_ENUMS(FuncType);
+   Q_CLASSINFO( "enum_FuncType_0",  "a*deadLine(y,b)+g"          );    // ft_deadLine
+   Q_CLASSINFO( "enum_FuncType_1",  "a*limitLine(y,b)+g"         );    // ft_limitLine
+   Q_CLASSINFO( "enum_FuncType_2",  "a*deadLimitLine(y,b,c,d)+g" );    // ft_dealLimitLine
+   Q_CLASSINFO( "enum_FuncType_3",  "a*sign(y)+g"                );    // ft_sign
+   Q_CLASSINFO( "enum_FuncType_4",  "a*Thetta(y)+g"              );    // ft_theta
+   Q_CLASSINFO( "enum_FuncType_5",  "a*diod(y)+g"                );    // ft_diod
+   Q_CLASSINFO( "enum_FuncType_6",  "a*threeState(y,b)+g"        );    // ft_threeState
+   Q_CLASSINFO( "enum_FuncType_7",  "a*triangle(y,b)+g"          );    // ft_triangle
+   Q_CLASSINFO( "enum_FuncType_8",  "a*rectLine(y,b,c)+g"        );    // ft_reactLine
+   Q_CLASSINFO( "enum_FuncType_9",  "((y>0)?a:b)*y+g"            );    // ft_2slope
+   Q_CLASSINFO( "enum_FuncType_10", "a*u0/(u1+b)+g"              );    // ft_div
+   Q_CLASSINFO( "enum_FuncType_11", "a*int(y*b)+g"               );    // ft_int
+   Q_CLASSINFO( "enum_FuncType_12", "a*frac(y*b)+g"              );    // ft_frac
+   Q_CLASSINFO( "enum_FuncType_13", "a*asin(abs(sin(y*b)))+g"    );    // ft_aasin
+   Q_CLASSINFO( "enum_FuncType_14", "a*erf(y*b)+g"               );    // ft_erf
+   Q_CLASSINFO( "enum_FuncType_15", "a*min(u0,u1)+g"             );    // ft_min
+   Q_CLASSINFO( "enum_FuncType_16", "a*max(u0,u1)+g"             );    // ft_max
  protected:
    /** main computation function */
    virtual double f( double t ) override;
 
    /** type of function */
-   PRM_LIST( type, 0, "Type", "Function type", "", tfuncmisc_list );
+   PRM_LIST( type, 0, "Type", "Function type", "enum=FuncType", "REMOVE_ME" );
    /** coefficients and shift */
    PRM_DOUBLE( a,  0, "a", "Parameter a", "sep=col\ndef=1" );
    PRM_DOUBLE( b,  0, "b", "Parameter b", "def=1" );

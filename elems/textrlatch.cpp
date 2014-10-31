@@ -62,11 +62,16 @@ double TExtrLatch::f( double t )
     u_min = u_max = u; u_abs = ua; t_ex = t_min = t_max = t_abs = t;
     if( outT ) return t;
     switch( (int)type ) {
-      case 0: u_ex = (double)u_max; break;
-      case 1: u_ex = (double)u_min; break;
-      case 2: u_ex = (double)u_abs; break;
-      case 3: u_ex = (double)u_max; break;
-      case 4: u_ex = 0; break;
+      case extrMax:
+        u_ex = (double)u_max; break;
+      case extrMin:
+        u_ex = (double)u_min; break;
+      case extrModMax:
+        u_ex = (double)u_abs; break;
+      case extrAver:
+        u_ex = (double)u_max; break;
+      case extrAmpl:
+        u_ex = 0; break;
       default: u_ex = 0;
     };
     u_old = uc;
@@ -89,13 +94,20 @@ double TExtrLatch::f( double t )
       { u_abs = ua; t_abs = t; k |= 4; };
     if( k & mybits[ type ] ) {
       switch( (int)type ) {
-        case 0: u_ex = (double)u_max; t_ex = (double)t_max; break;
-        case 1: u_ex = (double)u_min; t_ex = (double)t_min; break;
-        case 2: u_ex = (double)u_abs; t_ex = (double)t_abs; break;
-        case 3: u_ex = 0.5 * ( u_min + u_max );
-                t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
-        case 4: u_ex = 0.5 * ( (double)u_max - (double)u_min );
-                t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
+        case extrMax:
+          u_ex = (double)u_max; t_ex = (double)t_max; break;
+        case extrMin:
+          u_ex = (double)u_min; t_ex = (double)t_min; break;
+        case extrModMax:
+          u_ex = (double)u_abs; t_ex = (double)t_abs; break;
+        case extrAver:
+          u_ex = 0.5 * ( u_min + u_max );
+          t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max;
+          break;
+        case extrAmpl:
+          u_ex = 0.5 * ( (double)u_max - (double)u_min );
+          t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max;
+          break;
         default: u_ex = 0; t_ex = t;
       };
     } else {
@@ -118,13 +130,20 @@ double TExtrLatch::f( double t )
     };
     if( k & mybits[ type ] ) {
       switch( (int)type ) {
-        case 0: u_ex = (double)u_max; t_ex = (double)t_max; break;
-        case 1: u_ex = (double)u_min; t_ex = (double)t_min; break;
-        case 2: u_ex = (double)u_abs; t_ex = (double)t_abs; break;
-        case 3: u_ex = 0.5 * ( (double)u_max + u_min );
-                t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
-        case 4: u_ex = 0.5 * ( (double)u_max - u_min );
-                t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max; break;
+        case extrMax:
+          u_ex = (double)u_max; t_ex = (double)t_max; break;
+        case extrMin:
+          u_ex = (double)u_min; t_ex = (double)t_min; break;
+        case extrModMax:
+          u_ex = (double)u_abs; t_ex = (double)t_abs; break;
+        case extrAver:
+          u_ex = 0.5 * ( (double)u_max + u_min );
+          t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max;
+          break;
+        case extrAmpl:
+          u_ex = 0.5 * ( (double)u_max - u_min );
+          t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max;
+          break;
         default: u_ex = 0; t_ex = t; break;
       };
     };

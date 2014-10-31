@@ -36,6 +36,13 @@ class Scheme : public TDataContainer  {
   virtual ~Scheme() override;
   DCL_CREATE;
   DCL_STD_INF;
+  enum SeedType {
+    everyRun = 0, startLoop, start2DLoop
+  };
+  Q_ENUMS(SeedType);
+  Q_CLASSINFO( "enum_SeedType_0", "Every Run" );               // everyRun
+  Q_CLASSINFO( "enum_SeedType_1", "On start on 1D loop" );     // startLoop
+  Q_CLASSINFO( "enum_SeedType_2", "On start on 2D loop" );     // start2DLoop
 
   /** prepare to run */
   virtual int startRun( int type );
@@ -118,8 +125,7 @@ class Scheme : public TDataContainer  {
   PRM_INT( seed, efInner, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
   /** type of seeding: 0 - every run, 1 - every 1d loop .. obj: 3 - as model */
   PRM_LIST( seedType, efInner, "Seed type",
-      "type of seeding: 0 - every run... ", "",
-      "Every Run\nStart 1d loop\nStart 2d loop" );
+      "type of seeding: 0 - every run... ", "enum=SeedType", "REMOVE_ME" );
   // ---------------------------------------
   // ======================= invisible vars ======================
   /** loops counters */

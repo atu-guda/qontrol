@@ -83,16 +83,16 @@ void OutView::paintEvent( QPaintEvent * /*pe*/ )
     out_type = -1;
     arr->getData( "type", &out_type );
     switch( out_type ) {
-      case outSimple: p.setBrush( Qt::white ); break;
-      case outParm1:  p.setBrush( Qt::green ); break;
-      case outParm2:  p.setBrush( Qt::cyan );  break;
-      case outSpec:   p.setBrush( Qt::gray );  break;
+      case TOutArr::outSimple: p.setBrush( Qt::white ); break;
+      case TOutArr::outParm1:  p.setBrush( Qt::green ); break;
+      case TOutArr::outParm2:  p.setBrush( Qt::cyan );  break;
+      case TOutArr::outSpec:   p.setBrush( Qt::gray );  break;
       default:        p.setBrush( Qt::red );   break;
     };
     if( !fp ) {
         p.setPen( Qt::red );
     } else {
-      if( targ != nullptr || out_type == outSpec ) {
+      if( targ != nullptr || out_type == TOutArr::outSpec ) {
         p.setPen( Qt::black );
       } else {
         p.setPen( Qt::magenta );

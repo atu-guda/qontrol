@@ -20,22 +20,6 @@
 
 #include <tmiso.h>
 
-static const char* const tfuncpoly_list =
-     "a*y+g\n"                                 // 0
-     "a*y^2+b*y+g\n"                           // 1
-     "a*y^3+b*y^2+c*y+g\n"                     // 2
-     "a*u0^2+b*u0*u1+c*u1^2+g\n"               // 3
-     "a*sqrt(y)+g\n"                           // 4
-     "hypot(a*u0,b*u1)+g\n"                    // 5
-     "a*u0^2+..+d*u3^2+g\n"                    // 6
-     "Vibro Ampl(omega); A=c0 B=Ome\n"         // 7
-     "a*(u1-u0^2)^2+b*(1-u0)^2\n"              // 8
-     "1-exp(-a*((u0^2+u1^2-1)^2-b*u0-c*u1))\n" // 9
-     "a*(1+b*y)+g\n"                           // 10
-     "a*(b*y+c*abs(y))+g"                      // 11
-;
-
-
 /**polinomial functions
   *@author atu
   */
@@ -46,12 +30,30 @@ class TFuncPoly : public TMiso  {
    DCL_CTOR(TFuncPoly);
    DCL_CREATE;
    DCL_STD_INF;
+
+   enum FuncType {
+     ft_lin = 0, ft_square, ft_cube, ft_biSquare, ft_sqrt, ft_hypot, ft_4square,
+     ft_vibro, ft_msquare, ft_xExp, ft_lin2, ft_linAbs
+   };
+   Q_ENUMS(FuncType);
+   Q_CLASSINFO( "enum_FuncType_0", "a*y+g"                                 ); // ft_lin
+   Q_CLASSINFO( "enum_FuncType_1", "a*y^2+b*y+g"                           ); // ft_square
+   Q_CLASSINFO( "enum_FuncType_2", "a*y^3+b*y^2+c*y+g"                     ); // ft_cube
+   Q_CLASSINFO( "enum_FuncType_3", "a*u0^2+b*u0*u1+c*u1^2+g"               ); // ft_biSquare
+   Q_CLASSINFO( "enum_FuncType_4", "a*sqrt(y)+g"                           ); // ft_sqrt
+   Q_CLASSINFO( "enum_FuncType_5", "hypot(a*u0,b*u1)+g"                    ); // ft_hypot
+   Q_CLASSINFO( "enum_FuncType_6", "a*u0^2+..+d*u3^2+g"                    ); // ft_4square
+   Q_CLASSINFO( "enum_FuncType_7", "Vibro Ampl(omega); A=c0 B=omega"       ); // ft_vibro
+   Q_CLASSINFO( "enum_FuncType_8", "a*(u1-u0^2)^2+b*(1-u0)^2"              ); // ft_msquare
+   Q_CLASSINFO( "enum_FuncType_9", "1-exp(-a*((u0^2+u1^2-1)^2-b*u0-c*u1))" ); // ft_xExp
+   Q_CLASSINFO( "enum_FuncType_10","a*(1+b*y)+g"                           ); // ft_lin2
+   Q_CLASSINFO( "enum_FuncType_11","a*(b*y+c*abs(y))+g"                    ); // ft_linAbs
  protected:
    /** main computation function */
    virtual double f( double t ) override;
 
    /** type of function */
-   PRM_LIST( type, 0, "Type", "Function type", "", tfuncpoly_list );
+   PRM_LIST( type, 0, "Type", "Function type", "enum=FuncType", "REMOVE_ME" );
    /** coefficients and shift */
    PRM_DOUBLE( a,  0, "a", "Parameter a", "sep=col\ndef=1" );
    PRM_DOUBLE( b,  0, "b", "Parameter b", "def=1" );

@@ -55,11 +55,16 @@ double TCriterion::f( double t )
   if( useA )
     aa = in_a;
   switch( (int)type ) {
-    case 0: ok = ( fabs( x ) < aa ); break;
-    case 1: ok = ( fabs( x ) > aa ); break;
-    case 2: ok = ( x < aa ); break;
-    case 3: ok = ( x > aa ); break;
-    case 4: ok = ( (x > aa) && (x < b) ); break;
+    case cr_mod_less:
+      ok = ( fabs( x ) < aa ); break;
+    case cr_mod_greate:
+      ok = ( fabs( x ) > aa ); break;
+    case cr_less:
+      ok = ( x < aa ); break;
+    case cr_greate:
+      ok = ( x > aa ); break;
+    case cr_between:
+      ok = ( (x > aa) && (x < b) ); break;
     default: ok = 0;
   };
   if( usePulse ) {

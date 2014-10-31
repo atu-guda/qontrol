@@ -2,7 +2,7 @@
                           toutarr.h  -  description
                              -------------------
     begin                : Sat Aug 5 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -24,19 +24,6 @@ struct GraphInfo;
 
 // ==================== TOutArr ======================================
 
-static const char* const toutarr_list =
-  "Simple\n" // 0
-  "Parm 1\n" // 1
-  "Parm 2\n" // 2
-  "Special"  // 3
-;
-
-enum OutArrType {
-  outSimple = 0,
-  outParm1  = 1,
-  outParm2  = 2,
-  outSpec   = 3
-};
 
 /** Collector of data during simulation.
   * Depend on type, collect data from single loop, parm loop 1 & 2.
@@ -50,6 +37,18 @@ class TOutArr : public TDataSet  {
    DCL_CREATE;
    DCL_STD_INF;
    virtual ~TOutArr() override;
+   enum OutArrType {
+     outSimple = 0,
+     outParm1  = 1,
+     outParm2  = 2,
+     outSpec   = 3
+   };
+   Q_ENUMS(OutArrType);
+   Q_CLASSINFO( "enum_OutArrType_0", "Simple" );     // outSimple
+   Q_CLASSINFO( "enum_OutArrType_1", "Parm 1" );     // outParm1
+   Q_CLASSINFO( "enum_OutArrType_2", "Parm 2" );     // outParm1
+   Q_CLASSINFO( "enum_OutArrType_3", "Special" );    // outSpec
+
    /** access to array value */
    virtual const dvector* getArray();
    /** request to allocate array */
@@ -68,8 +67,7 @@ class TOutArr : public TDataSet  {
    int fillGraphInfo( GraphInfo *gi ) const;
  protected:
    /** type of array: 0:simple, 1:parm1, 2:parm2, 3:special */
-   PRM_LIST( type, efNoRunChange, "Type",
-       "Type of array: 0:simple, 1:parm1, 2:parm2, 3:special", "", toutarr_list );
+   PRM_LIST( type, efNoRunChange, "Type", "Type of array", "enum=OutArrType", "REMOVE_ME" );
    /** name of element to use */
    PRM_STRING( name, efNoRunChange, "Source", "Name of element to use", "max=64" );
    /** label of data */

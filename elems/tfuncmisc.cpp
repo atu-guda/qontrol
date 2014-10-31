@@ -2,7 +2,7 @@
                           tfuncmisc.cpp  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -39,23 +39,23 @@ double TFuncMisc::f( double /* t */ )
   double v, y;
   y = in_0 - in_1 - x0;
   switch( (int)type ) {
-    case 0:  v = a * deadLine( y, b ); break;
-    case 1:  v = a * limitLine( y, b ); break;
-    case 2:  v = a * deadLimitLine( y, b, c, d ); break;
-    case 3:  v = a * sign( y ); break;
-    case 4:  v = a * thetta( y ); break;
-    case 5:  v = ( y > 0 ) ? y : 0; v *= a; break;
-    case 6:  v = a * threeStateLine( y, b ); break;
-    case 7:  v = a * triangleLine( y , b ); break;
-    case 8:  v = a * rectLine( y, b, c ); break;
-    case 9:  v = ( y >= 0 ) ? (a * y) : ( b * y ); break;
-    case 10: v = a * in_0 / ( in_1 +  b );  break;
-    case 11: v = a * int( y * b );  break;
-    case 12: v = a * ( ( y * b ) - int( y * b ) );  break;
-    case 13: v = a * asin( fabs( sin( y * b) ) );  break;
-    case 14: v = a * erf( y*b );  break;
-    case 15: v = a * fmin( in_0, in_1 );  break;
-    case 16: v = a * fmax( in_0, in_1 );  break;
+    case ft_deadLine     : v = a * deadLine( y, b ); break;
+    case ft_limitLine    : v = a * limitLine( y, b ); break;
+    case ft_dealLimitLine: v = a * deadLimitLine( y, b, c, d ); break;
+    case ft_sign         : v = a * sign( y ); break;
+    case ft_theta        : v = a * thetta( y ); break;
+    case ft_diod         : v = ( y > 0 ) ? y : 0; v *= a; break;
+    case ft_threeState   : v = a * threeStateLine( y, b ); break;
+    case ft_triangle     : v = a * triangleLine( y , b ); break;
+    case ft_reactLine    : v = a * rectLine( y, b, c ); break;
+    case ft_2slope       : v = ( y >= 0 ) ? (a * y) : ( b * y ); break;
+    case ft_div          : v = a * in_0 / ( in_1 +  b );  break;
+    case ft_int          : v = a * int( y * b );  break;
+    case ft_frac         : v = a * ( ( y * b ) - int( y * b ) );  break;
+    case ft_aasin        : v = a * asin( fabs( sin( y * b) ) );  break;
+    case ft_erf          : v = a * erf( y*b );  break;
+    case ft_min          : v = a * fmin( in_0, in_1 );  break;
+    case ft_max          : v = a * fmax( in_0, in_1 );  break;
     default: v = 0;
   };
   v += g;
