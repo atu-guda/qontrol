@@ -45,7 +45,8 @@ enum ClassProps {
   clpData = 16,     //* simple data
   clpArray = 32,     //* array
   clpInput = 64,     //* link to other
-  clpParamInput = 128 //* link to other + name of inner field
+  clpParamInput = 128, //* link to other + name of inner field
+  clpObsolete = 256  //* obsolesed class, should not writed
 };
 
 

@@ -1441,6 +1441,10 @@ QDomElement TDataSet::toDom( QDomDocument &dd ) const
       continue; // but how?
     if( ho->getFlags() & efNoSave )
       continue;
+    const TClassInfo *ci = ho->getClassInfo(); // dont write obsoleted objects
+    if( ci->props & clpObsolete ) {
+      continue;
+    }
     QDomElement cde = ho->toDom( dd );
     de.appendChild( cde );
   }

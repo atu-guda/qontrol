@@ -24,7 +24,7 @@ const char* TElmLink::helpstr = "<H1>TElmLink</H1> \n"
  "<p><b>Obsoleted.</b>Defines signal and parametric inputs for given element. \n"
  "Each element may have up to 4 both signal and parametric inputs</p>\n";
 
-STD_CLASSINFO( TElmLink, clpSpecial );
+STD_CLASSINFO( TElmLink, clpSpecial | clpObsolete );
 
 CTOR(TElmLink,TDataSet)
 {
