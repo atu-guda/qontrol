@@ -41,27 +41,47 @@ double TFuncTrans::f( double /* t */ )
   double v, y, by, tm;
   y = in_0 - in_1 - x0; by = y * b;
   switch( (int)type ) {
-    case 0:   v = a * sin( by ); break;
-    case 1:   v = a * sign( sin( by ) + c ); break;
-    case 2:   v = a * tanh( by ); break;
-    case 3:   v = a * atan2( in_0, in_1 ); break;
-    case 4:   v = a * exp( by ); break;
-    case 5:   v = a * exp( -by * y ); break;
-    case 6:   v = a * waveWave( by ); break;
-    case 7:   v = a * waveMhat( by ); break;
-    case 8:   v = ( by > 0 ) ? ( a * log( by ) ) : 0; break;
-    case 9:   v = a * y * exp( -by ); break;
-    case 10:  v = a * y * exp( -by * y ); break;
-    case 11:  tm = sin( by ); v = a * tm * tm; break;
-    case 12:  v = a * cos( by ); break;
-    case 13:  tm = cos( by ); v = a * tm * tm; break;
-    case 14:  v = a * tan( by ); break;
-    case 15:  tm = sin( d * y );  tm = 1 - c * tm*tm;
-              v = a * exp( -by*y ) * tm; break;
-    case 16:  tm = sin( d * y );  tm = 1 - c * tm*tm;
-              v = a * (1-exp( -by*y )) * tm; break;
-    case 17:  tm = y/b; v = a * exp( - tm * tm ); break;
-    case 18:  v = a / ( fabs(y)/b + 1 ); break;
+    case ft_sin:
+      v = a * sin( by ); break;
+    case ft_signSin:
+      v = a * sign( sin( by ) + c ); break;
+    case ft_tanh:
+      v = a * tanh( by ); break;
+    case ft_atan2:
+      v = a * atan2( in_0, in_1 ); break;
+    case ft_exp:
+      v = a * exp( by ); break;
+    case ft_expM2:
+      v = a * exp( -by * y ); break;
+    case ft_wave:
+      v = a * waveWave( by ); break;
+    case ft_mhat:
+      v = a * waveMhat( by ); break;
+    case ft_ln:
+      v = ( by > 0 ) ? ( a * log( by ) ) : 0; break;
+    case ft_yExp:
+      v = a * y * exp( -by ); break;
+    case ft_yExp2:
+      v = a * y * exp( -by * y ); break;
+    case ft_sin2:
+      tm = sin( by ); v = a * tm * tm; break;
+    case ft_cos:
+      v = a * cos( by ); break;
+    case ft_cos2:
+      tm = cos( by ); v = a * tm * tm; break;
+    case ft_tan:
+      v = a * tan( by ); break;
+    case ft_exp1Msin:
+      tm = sin( d * y );  tm = 1 - c * tm*tm;
+      v = a * exp( -by*y ) * tm; break;
+    case ft_1Mexp1Msin2:
+      tm = sin( d * y );
+      tm = 1 - c * tm*tm;
+      v = a * (1-exp( -by*y )) * tm; break;
+    case ft_expM2d:
+      tm = y/b; v = a * exp( - tm * tm ); break;
+    case ft_divMod:
+      v = a / ( fabs(y)/b + 1 ); break;
     default:  v = 0;
   };
   v += g;

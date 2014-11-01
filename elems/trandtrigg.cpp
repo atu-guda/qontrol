@@ -2,7 +2,7 @@
                           trandtrigg.cpp  -  description
                              -------------------
     begin                : Wed Aug 30 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -41,7 +41,7 @@ int TRandTrigg::do_preRun( int /*run_tp*/, int /*an*/,
                            int /*anx*/, int /*any*/, double /*adt*/ )
 {
   eff_seedType = seedType;
-  if( seedType == 3 ) { // as model
+  if( seedType == asModel ) {
     par->getData( "seedType", &eff_seedType );
   };
   bseed = 0;
@@ -55,9 +55,9 @@ int TRandTrigg::do_preRun( int /*run_tp*/, int /*an*/,
 int TRandTrigg::do_startLoop( int acnx, int acny )
 {
   ns = -1; u_old = 0; currOut = 0;
-  if( (eff_seedType == 0) ||                // need to seed now
-      (eff_seedType == 1 && acnx == 0 ) ||
-      (acnx == 0 && acny == 0)
+  if( ( eff_seedType == everyRun ) ||                // need to seed now
+      ( eff_seedType == startLoop && acnx == 0 ) ||
+      ( acnx == 0 && acny == 0)
     ) {
     if( seed == -1 || ( addBaseSeed && bseed == -1) ) {
       sseed = int( time(0) + acnx * 1001 + acny );

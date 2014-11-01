@@ -51,7 +51,7 @@ int TRand::do_preRun( int /*run_tp*/, int /*an*/,
                      int /*anx*/, int /*any*/, double /*adt*/ )
 {
   eff_seedType = seedType;
-  if( seedType == 3 ) { // as model
+  if( seedType == asModel ) {
     par->getData( "seedType", &eff_seedType );
   };
   bseed = 0;
@@ -65,8 +65,8 @@ int TRand::do_preRun( int /*run_tp*/, int /*an*/,
 int TRand::do_startLoop( int acnx, int acny )
 {
   old_val = 0; sp_time = DMAX; old_in = 0;
-  if( (eff_seedType == 0) ||                // need to seed now
-      (eff_seedType == 1 && acnx == 0 ) ||
+  if( (eff_seedType == everyRun ) ||                // need to seed now
+      (eff_seedType == startLoop && acnx == 0 ) ||
       (acnx == 0 && acny == 0)
     ) {
     if( seed == -1 || ( addBaseSeed && bseed == -1) ) {
@@ -93,24 +93,24 @@ double TRand::f( double  t  )
     if( sp_time >= tau )
       sp_time = 0;
     switch( (int)type ) {
-      case 0:  v = rng.flat( -sigma, sigma ); break;
-      case 1:  v = rng.gaussian( sigma ); break;
-      case 2:  v = rng.gaussian_tail( a, sigma ); break;
-      case 3:  v = rng.exponential( sigma ); break;
-      case 4:  v = rng.laplace( a ); break;
-      case 5:  v = rng.exppow(  a, b ); break;
-      case 6:  v = rng.beta(  a, b ); break;
-      case 7:  v = rng.cauchy( a ); break;
-      case 8:  v = rng.chisq( a ); break;
-      case 9:  v = rng.erlang( a, b ); break;
-      case 10: v = rng.fdist( a, b ); break;
-      case 11: v = rng.gamma( a, b ); break;
-      case 12: v = rng.levy( a, b ); break;
-      case 13: v = rng.logistic( a ); break;
-      case 14: v = rng.lognormal( a, sigma ); break;
-      case 15: v = rng.pareto( a, b ); break;
-      case 16: v = rng.rayleigh( sigma ); break;
-      case 17: v = rng.weibull( a, b ); break;
+      case dt_flat     :  v = rng.flat( -sigma, sigma ); break;
+      case dt_gauss    :  v = rng.gaussian( sigma ); break;
+      case dt_gausstail:  v = rng.gaussian_tail( a, sigma ); break;
+      case dt_exp      :  v = rng.exponential( sigma ); break;
+      case dt_laplace  :  v = rng.laplace( a ); break;
+      case dt_exppow   :  v = rng.exppow(  a, b ); break;
+      case dt_beta     :  v = rng.beta(  a, b ); break;
+      case dt_cauchy   :  v = rng.cauchy( a ); break;
+      case dt_chisq    :  v = rng.chisq( a ); break;
+      case dt_erlang   :  v = rng.erlang( a, b ); break;
+      case dt_fdist    : v = rng.fdist( a, b ); break;
+      case dt_gamma    : v = rng.gamma( a, b ); break;
+      case dt_levy     : v = rng.levy( a, b ); break;
+      case dt_logistic : v = rng.logistic( a ); break;
+      case dt_lognorm  : v = rng.lognormal( a, sigma ); break;
+      case dt_pareto   : v = rng.pareto( a, b ); break;
+      case dt_rayleigh : v = rng.rayleigh( sigma ); break;
+      case dt_weibull  : v = rng.weibull( a, b ); break;
       default: v = 0;
     };
     old_val = zval + ampl * v;

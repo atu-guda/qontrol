@@ -2,7 +2,7 @@
                           thyst.cpp  -  description
                              -------------------
     begin                : Sat Aug 26 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -57,12 +57,18 @@ double THyst::f( double /* t */ )
     };
   };
   switch( (int)type ) {
-    case 0: v = s + alpha * d; break;
-    case 1: v = alpha * d; break;
-    case 2: v = thetta( d ); break;
-    case 3: v = sign( d ); break;
-    case 4: v = tanh( alpha * d ); break;
-    case 5: v = tanh( s + alpha * d ); break;
+    case ht_sAlphaD:
+      v = s + alpha * d; break;
+    case ht_alphaD:
+      v = alpha * d; break;
+    case ht_thetaD:
+      v = thetta( d ); break;
+    case ht_signD:
+      v = sign( d ); break;
+    case ht_tanhAlphaD:
+      v = tanh( alpha * d ); break;
+    case ht_tanhSAlphaD:
+      v = tanh( s + alpha * d ); break;
     default: v = 0;
   };
   v = a * v + b;

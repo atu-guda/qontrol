@@ -2,7 +2,7 @@
                           trand.h  -  description
                              -------------------
     begin                : Thu Dec 18 2003
-    copyright            : (C) 2003-2013 by atu
+    copyright            : (C) 2003-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -21,37 +21,10 @@
 #include <tmiso.h>
 #include "rand_gen.h"
 
-static const char* const trand_list_type =
-     "flat(-sigma,sigma)\n"       // 0
-     "gaussian(sigma)\n"          // 1
-     "gaussian_tail(a,sigma)\n"   // 2
-     "exponential(sigma)\n"       // 3
-     "laplace(a)\n"               // 4
-     "exppow(a,b)\n"              // 5
-     "beta(a,b)\n"                // 6
-     "cauchy(a)\n"                // 7
-     "chisq(a)\n"                 // 8
-     "erlang(a,b)\n"              // 9
-     "fdist(a,b)\n"               // 10
-     "gamma(a,b)\n"               // 11
-     "levy(a,b)\n"                // 12
-     "logistic(a)\n"              // 13
-     "lognormal(a,sigma)\n"       // 14
-     "pareto(a,b)\n"              // 15
-     "rayleigh(sigma)\n"          // 16
-     "weibull(a,b)"               // 17
-;
-
-static const char* const trand_list_seedType =
-     "Every run\n"          // 0
-     "Start of 1d-loop\n"   // 1
-     "Start of 2d-loop\n"   // 2
-     "As model"             // 3
-;
 
 /** random signal generator
-  *@author atu
-  */
+*@author atu
+*/
 
 class TRand : public TMiso  {
   Q_OBJECT
@@ -59,6 +32,40 @@ class TRand : public TMiso  {
    DCL_CTOR(TRand);
    DCL_CREATE;
    DCL_STD_INF;
+
+   enum DistrType {
+     dt_flat = 0, dt_gauss, dt_gausstail, dt_exp, dt_laplace, dt_exppow, dt_beta,
+     dt_cauchy, dt_chisq, dt_erlang, dt_fdist, dt_gamma, dt_levy, dt_logistic,
+     dt_lognorm, dt_pareto, dt_rayleigh, dt_weibull
+   };
+   Q_ENUMS(DistrType);
+   Q_CLASSINFO( "enum_DistrType_0" , "flat(-sigma,sigma)"     ); // dt_flat
+   Q_CLASSINFO( "enum_DistrType_1" , "gaussian(sigma)"        ); // dt_gauss
+   Q_CLASSINFO( "enum_DistrType_2" , "gaussian_tail(a,sigma)" ); // dt_gausstail
+   Q_CLASSINFO( "enum_DistrType_3" , "exponential(sigma)"     ); // dt_exp
+   Q_CLASSINFO( "enum_DistrType_4" , "laplace(a)"             ); // dt_laplace
+   Q_CLASSINFO( "enum_DistrType_5" , "exppow(a,b)"            ); // dt_exppow
+   Q_CLASSINFO( "enum_DistrType_6" , "beta(a,b)"              ); // dt_beta
+   Q_CLASSINFO( "enum_DistrType_7" , "cauchy(a)"              ); // dt_cauchy
+   Q_CLASSINFO( "enum_DistrType_8" , "chisq(a)"               ); // dt_chisq
+   Q_CLASSINFO( "enum_DistrType_9" , "erlang(a,b)"            ); // dt_erlang
+   Q_CLASSINFO( "enum_DistrType_10", "fdist(a,b)"             ); // dt_fdist
+   Q_CLASSINFO( "enum_DistrType_11", "gamma(a,b)"             ); // dt_gamma
+   Q_CLASSINFO( "enum_DistrType_12", "levy(a,b)"              ); // dt_levy
+   Q_CLASSINFO( "enum_DistrType_13", "logistic(a)"            ); // dt_logistic
+   Q_CLASSINFO( "enum_DistrType_14", "lognormal(a,sigma)"     ); // dt_lognorm
+   Q_CLASSINFO( "enum_DistrType_15", "pareto(a,b)"            ); // dt_pareto
+   Q_CLASSINFO( "enum_DistrType_16", "rayleigh(sigma)"        ); // dt_rayleigh
+   Q_CLASSINFO( "enum_DistrType_17", "weibull(a,b)"           ); // dt_weibull
+
+   enum SeedType {
+     everyRun = 0, startLoop, start2DLoop, asModel
+   };
+   Q_ENUMS(SeedType);
+   Q_CLASSINFO( "enum_SeedType_0", "Every Run" );               // everyRun
+   Q_CLASSINFO( "enum_SeedType_1", "On start on 1D loop" );     // startLoop
+   Q_CLASSINFO( "enum_SeedType_2", "On start on 2D loop" );     // start2DLoop
+   Q_CLASSINFO( "enum_SeedType_3", "As defined in Model" );     // asModel
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -68,7 +75,7 @@ class TRand : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** type of distribution */
-   PRM_LIST( type, efNRC, "Type", "Distribution type", "", trand_list_type );
+   PRM_LIST( type, efNRC, "Type", "Distribution type", "enum=DistrType", "REMOVE_ME" );
    /** time of const output value, if <=0 -- change every tick */
    PRM_DOUBLE( tau, efNRC, "\\tau", "time of const output value, if <=0 -- change every tick ", "def=0.05" );
    /** amplitude of output */
@@ -84,8 +91,7 @@ class TRand : public TMiso  {
    /** seed value for generator */
    PRM_INT( seed, efNRC, "Seed", "Seed value for generator", "sep=col\ndef=RND" );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
-   PRM_LIST( seedType, efNRC, "Seed type", "0 - every run 1- 1d loop .. 3-by model ", "def=3",
-       trand_list_seedType );
+   PRM_LIST( seedType, efNRC, "Seed type", "When get new seed", "def=3\nenum=SeedType", "REMOVE_ME" );
    /** flag: add base seed to element seed */
    PRM_SWITCH( addBaseSeed, efNRC, "Add base", "Add base seed to element seed ", "def=1" );
 

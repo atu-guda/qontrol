@@ -2,7 +2,7 @@
                           ttrigger.h  -  description
                              -------------------
     begin                : Sun Sep 3 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -20,14 +20,6 @@
 
 #include <tmiso.h>
 
-static const char *ttrigger_list =
-   "RS\n"               // 0
-   "Shmitt(in_x)\n"     // 1
-   "CountRise(in_x)\n"  // 2
-   "CountDown(in_x)\n"  // 3
-   "CountLevel(in_x)"   // 4
-;
-
 /**different kinds if triggers
   *@author atu
   */
@@ -38,6 +30,16 @@ class TTrigger : public TMiso  {
    DCL_CTOR(TTrigger);
    DCL_CREATE;
    DCL_STD_INF;
+
+   enum TriggType {
+     tr_rs = 0, tr_shmitt, tr_crise, tr_cdown, tr_clev
+   };
+   Q_ENUMS(TriggType);
+   Q_CLASSINFO( "enum_TriggType_0", "RS"               ); // tr_rs
+   Q_CLASSINFO( "enum_TriggType_1", "Shmitt(in_x)"     ); // tr_shmitt
+   Q_CLASSINFO( "enum_TriggType_2", "CountRise(in_x)"  ); // tr_crise
+   Q_CLASSINFO( "enum_TriggType_3", "CountDown(in_x)"  ); // tr_cdown
+   Q_CLASSINFO( "enum_TriggType_4", "CountLevel(in_x)" ); // tr_clev   
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -45,7 +47,7 @@ class TTrigger : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** type of trigger */
-   PRM_LIST( type, efNRC, "Type", "Type of trigger", "", ttrigger_list );
+   PRM_LIST( type, efNRC, "Type", "Type of trigger", "enum=TriggType", "REMOVE_ME" );
    /**  current state */
    PRM_INT( cst, efInner, "state", "current state", "" );
    /** level of 0  */

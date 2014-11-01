@@ -2,7 +2,7 @@
                           tlatch.cpp  -  description
                              -------------------
     begin                : Sat Sep 2 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -39,7 +39,7 @@ CTOR(TLatch,TMiso)
 
 int TLatch::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  v = (double)v_st; u_old = 0;  wasLatch = -1;
+  v = (double)v_st; u_old = lt = 0;  wasLatch = -1;
   return 0;
 }
 
@@ -54,23 +54,25 @@ double TLatch::f( double t )
   };
   bv = useAdd ? v : 0;
   switch( (int)type ) {
-    case 0: if( t >= t0 ) {
-              if( wasLatch )
-                break;
-              wasLatch = 1; v = bv + in_u;
-            };
-            break;
-    case 1: if( useFirst && (wasLatch > 0) )
-              break;
-            if( usePulse ) {
-              ok = ( dv > 0.5 );
-            } else {
-              ok = ( in_latch > 0.1 );
-            };
-            if( ok ) {
-              wasLatch = 1; v = bv + in_u;
-            };
-            break;
+    case latchTime:
+      if( t >= t0 ) {
+        if( wasLatch )
+          break;
+        wasLatch = 1; lt = t; v = bv + in_u;
+      };
+      break;
+    case latchSignal:
+      if( useFirst && (wasLatch > 0) )
+        break;
+      if( usePulse ) {
+        ok = ( dv > 0.5 );
+      } else {
+        ok = ( in_latch > 0.1 );
+      };
+      if( ok ) {
+        wasLatch = 1; lt = t; v = bv + in_u;
+      };
+      break;
     default: ;
   };
   return v;

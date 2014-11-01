@@ -2,7 +2,7 @@
                           tintegrator.h  -  description
                              -------------------
     begin                : Wed Aug 30 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

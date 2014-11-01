@@ -2,7 +2,7 @@
                           ttrigger.cpp  -  description
                              -------------------
     begin                : Sun Sep 3 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -73,15 +73,26 @@ double TTrigger::f( double t )
 
   if( sw == 0 ) { // no R ot S signal : main work
     switch( (int)type ) {
-      case 0: break;
-      case 1: if( in_x > level1 ) { sw =  1; break; };
-              if( in_x < level0 ) { sw = -1; break; };
-              break;
-      case 2: if( du >  level1 ) sw = 2;
-              break;
-      case 3: if( du < -level1 ) sw = 2;
-              break;
-      case 4: sw = ui_x ? 2 : 0; break;
+      case tr_rs:
+        break;
+      case tr_shmitt:
+        if( in_x > level1 ) {
+          sw =  1; break;
+        };
+        if( in_x < level0 ) {
+          sw = -1; break;
+        };
+        break;
+      case tr_crise:
+        if( du >  level1 )
+          sw = 2;
+        break;
+      case tr_cdown:
+        if( du < -level1 )
+          sw = 2;
+        break;
+      case tr_clev:
+        sw = ui_x ? 2 : 0; break;
       default: break;
     };
   };

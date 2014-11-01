@@ -2,7 +2,7 @@
                           ../elems/tthrum.cpp  -  description
                              -------------------
     begin                : 2013.08.17
-    copyright            : (C) 2013-2013 by atu
+    copyright            : (C) 2013-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

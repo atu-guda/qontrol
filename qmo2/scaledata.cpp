@@ -2,7 +2,7 @@
                           scaledata.cpp  -  ScaleData implementation
                              -------------------
     begin                : 19 Jul 29 2012
-    copyright            : GPL (C) 2000-2013 by atu
+    copyright            : GPL (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

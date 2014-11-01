@@ -2,7 +2,7 @@
                           thyst.h  -  description
                              -------------------
     begin                : Sat Aug 26 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -21,12 +21,13 @@
 #include <tmiso.h>
 
 static const char* const thyst_list =
-     "s+alpha*d\n"     // 0
-     "alpha*d\n"       // 1
-     "Thetta(d)\n"     // 2
-     "sign(d)\n"       // 3
-     "tanh(alpha*d)\n" // 4
-     "tanh(s+alpha*d)"; // 5
+     "s+alpha*d"        // ht_sAlphaD
+     "alpha*d"          // ht_alphaD
+     "Thetta(d)"        // ht_thetaD
+     "sign(d)"          // ht_signD
+     "tanh(alpha*d)"    // ht_tanhAlphaD
+     "tanh(s+alpha*d)"; // ht_tanhSAlphaD
+
 
 /**basic hysteresis simulation
   *@author atu
@@ -37,6 +38,19 @@ class THyst : public TMiso  {
    DCL_CTOR(THyst);
    DCL_CREATE;
    DCL_STD_INF;
+
+   enum HystType {
+      ht_sAlphaD = 0, ht_alphaD, ht_thetaD, ht_signD,
+      ht_tanhAlphaD, ht_tanhSAlphaD
+   };
+   Q_ENUMS(HystType);
+   Q_CLASSINFO( "enum_HystType_0", "s+alpha*d"       );   // ht_sAlphaD
+   Q_CLASSINFO( "enum_HystType_1", "alpha*d"         );   // ht_alphaD
+   Q_CLASSINFO( "enum_HystType_2", "Thetta(d)"       );   // ht_thetaD
+   Q_CLASSINFO( "enum_HystType_3", "sign(d)"         );   // ht_signD
+   Q_CLASSINFO( "enum_HystType_4", "tanh(alpha*d)"   );   // ht_tanhAlphaD
+   Q_CLASSINFO( "enum_HystType_5", "tanh(s+alpha*d)" );   // ht_tanhSAlphaD
+
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -45,7 +59,7 @@ class THyst : public TMiso  {
    void fixState(void);
  protected:
    /** type of hysteresis */
-   PRM_LIST( type, efNoRunChange, "Type",  "Type of hysteresis", "", thyst_list );
+   PRM_LIST( type, efNoRunChange, "Type",  "Type of hysteresis", "enum=HystType", "REMOVE_ME" );
    /** width of hysteresis  */
    PRM_DOUBLE( x0, 0, "x_0",  "x0 - width if hysteresis", "min=0\nsep=col\ndef=1" );
    /** slope of hysteresis  */

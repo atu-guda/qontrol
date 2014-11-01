@@ -2,7 +2,7 @@
                           tlogic.cpp  -  description
                              -------------------
     begin                : Mon Sep 4 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -47,25 +47,30 @@ double TLogic::f( double /* t */ )
   if( useNInp3 ) iu3 = ! iu3;
   ou = 0;
   switch( (int)type ) {
-    case 0: if( iu0 > 0 && iu1 > 0 && iu2 > 0 && iu3 > 0 )  // AND
-              ou = 1;
-            break;
-    case 1: if( iu0 > 0 || iu1 > 0 || iu2 > 0 || iu3 > 0 )  // OR
-              ou = 1;
-            break;
-    case 2:                                                 // XOR
-            if( iu0 )
-                ou = !ou;
-            if( iu1 )
-                ou = !ou;
-            if( iu2 )
-                ou = !ou;
-            if( iu3 )
-                ou = !ou;
-            break;
-    case 3: ou = iu0; break;                               // in0
-    case 4: ou = 0; break;                                   // 0
-    case 5: ou = 1; break;                                   // 1
+    case logAnd:
+      if( iu0 > 0 && iu1 > 0 && iu2 > 0 && iu3 > 0 )
+        ou = 1;
+      break;
+    case logOr:
+      if( iu0 > 0 || iu1 > 0 || iu2 > 0 || iu3 > 0 )
+        ou = 1;
+      break;
+    case logXor:
+      if( iu0 )
+          ou = !ou;
+      if( iu1 )
+          ou = !ou;
+      if( iu2 )
+          ou = !ou;
+      if( iu3 )
+          ou = !ou;
+      break;
+    case logU0:
+      ou = iu0; break;
+    case logZero:
+      ou = 0; break;
+    case logOne:
+      ou = 1; break;
     default: ;
   };
   if( useNOut )

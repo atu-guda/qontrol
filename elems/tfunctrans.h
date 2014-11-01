@@ -20,29 +20,7 @@
 
 #include <tmiso.h>
 
-static const char* const tfunctrans_list =
-     "a*sin(b*y)+g\n"                // 0
-     "a*sign(sin(b*y)+c)+g\n"        // 1
-     "a*tanh(by)+g\n"                // 2
-     "a*atan2(u0,u1(x))+g\n"         // 3
-     "a*exp(b*y)+g\n"                // 4
-     "a*exp(-b*y^2)+g\n"             // 5
-     "a*Wave(b*y)+g\n"               // 6
-     "a*Mhat(b*y)+g\n"               // 7
-     "a*ln(b*y)+g\n"                 // 8
-     "a*y*exp(-b*y)+g\n"             // 9
-     "a*y*exp(-b*y^2)+g\n"           // 10
-     "a*sin^2(b*y)+g\n"              // 11
-     "a*cos(b*y)+g\n"                // 12
-     "a*cos^2(b*y)+g\n"              // 13
-     "a*tan(b*y)+g\n"                // 14
-     "a*exp(-b*y*y)*(1-c*sin^2(dy))+g\n" // 15
-     "a*(1-exp(-b*y*y))*(1-c*sin^2(dy))+g\n" // 16
-     "a*exp(-(y/b)^2)+g\n"           // 17
-     "a/((|y|/b+1)+g"                // 18
-;
-
-/**trigonometric, exponetial and wavelet functions
+ /**trigonometric, exponetial and wavelet functions
   *@author atu
   */
 
@@ -52,12 +30,38 @@ class TFuncTrans : public TMiso  {
    DCL_CTOR(TFuncTrans);
    DCL_CREATE;
    DCL_STD_INF;
+
+   enum FuncType {
+     ft_sin = 0, ft_signSin, ft_tanh, ft_atan2, ft_exp, ft_expM2, ft_wave, ft_mhat,
+     ft_ln, ft_yExp, ft_yExp2, ft_sin2, ft_cos, ft_cos2, ft_tan, ft_exp1Msin,
+     ft_1Mexp1Msin2, ft_expM2d, ft_divMod
+   };
+   Q_ENUMS(FuncType);
+   Q_CLASSINFO( "enum_FuncType_0",  "a*sin(b*y)+g"                         ); //  ft_sin
+   Q_CLASSINFO( "enum_FuncType_1",  "a*sign(sin(b*y)+c)+g"                 ); //  ft_signSin
+   Q_CLASSINFO( "enum_FuncType_2",  "a*tanh(by)+g"                         ); //  ft_tanh
+   Q_CLASSINFO( "enum_FuncType_3",  "a*atan2(u0,u1(x))+g"                  ); //  ft_atan2
+   Q_CLASSINFO( "enum_FuncType_4",  "a*exp(b*y)+g"                         ); //  ft_exp
+   Q_CLASSINFO( "enum_FuncType_5",  "a*exp(-b*y^2)+g"                      ); //  ft_expM2
+   Q_CLASSINFO( "enum_FuncType_6",  "a*Wave(b*y)+g"                        ); //  ft_wave
+   Q_CLASSINFO( "enum_FuncType_7",  "a*Mhat(b*y)+g"                        ); //  ft_mhat
+   Q_CLASSINFO( "enum_FuncType_8",  "a*ln(b*y)+g"                          ); //  ft_ln
+   Q_CLASSINFO( "enum_FuncType_9",  "a*y*exp(-b*y)+g"                      ); //  ft_yExp
+   Q_CLASSINFO( "enum_FuncType_10", "a*y*exp(-b*y^2)+g"                    ); //  ft_yExp2
+   Q_CLASSINFO( "enum_FuncType_11", "a*sin^2(b*y)+g"                       ); //  ft_sin2
+   Q_CLASSINFO( "enum_FuncType_12", "a*cos(b*y)+g"                         ); //  ft_cos
+   Q_CLASSINFO( "enum_FuncType_13", "a*cos^2(b*y)+g"                       ); //  ft_cos2
+   Q_CLASSINFO( "enum_FuncType_14", "a*tan(b*y)+g"                         ); //  ft_tan
+   Q_CLASSINFO( "enum_FuncType_15", "a*exp(-b*y*y)*(1-c*sin^2(dy))+g"      ); //  ft_exp1Msin
+   Q_CLASSINFO( "enum_FuncType_16", "a*(1-exp(-b*y*y))*(1-c*sin^2(dy))+g"  ); //  ft_1Mexp1Msin2
+   Q_CLASSINFO( "enum_FuncType_17", "a*exp(-(y/b)^2)+g"                    ); //  ft_expM2d
+   Q_CLASSINFO( "enum_FuncType_18", "a/((|y|/b+1)+g"                       ); //  ft_divMod
  protected:
    /** main computation function */
    virtual double f( double t ) override;
 
    /** type of function */
-   PRM_LIST( type, 0, "Type", "Function type", "", tfunctrans_list );
+   PRM_LIST( type, 0, "Type", "Function type", "enum=FuncType", "REMOVE_ME" );
    /** coefficients and shift */
    PRM_DOUBLE( a,  0, "a", "Parameter a", "sep=col\ndef=1" );
    PRM_DOUBLE( b,  0, "b", "Parameter b", "def=1" );

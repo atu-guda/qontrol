@@ -2,7 +2,7 @@
                           scaledata.h  -  description
                              -------------------
     begin                : 19 Jul 29 2012
-    copyright            : GPL (C) 2012-2013 by atu
+    copyright            : GPL (C) 2012-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

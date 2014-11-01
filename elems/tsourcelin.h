@@ -2,7 +2,7 @@
                           tsourcelin.h  -  description
                              -------------------
     begin                : Thu Aug 24 2003
-    copyright            : (C) 2003-2013 by atu
+    copyright            : (C) 2003-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

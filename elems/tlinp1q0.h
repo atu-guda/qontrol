@@ -2,7 +2,7 @@
                           tlinp1q0.h  -  description
                              -------------------
     begin                : Fri Sep 1 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

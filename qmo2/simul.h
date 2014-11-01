@@ -2,7 +2,7 @@
                           simul.h  -  description
                              -------------------
     begin                : 2013.10.05
-    copyright            : (C) 2013-2013 by atu
+    copyright            : (C) 2013-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

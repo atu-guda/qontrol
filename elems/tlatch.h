@@ -2,7 +2,7 @@
                           tlatch.h  -  description
                              -------------------
     begin                : Sat Sep 2 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -30,6 +30,14 @@ class TLatch : public TMiso  {
    DCL_CTOR(TLatch);
    DCL_CREATE;
    DCL_STD_INF;
+
+   enum LatchType {
+     latchTime = 0, latchSignal
+   };
+   Q_ENUMS(LatchType);
+   Q_CLASSINFO( "enum_LatchType_0", "Time" );        // latchTime
+   Q_CLASSINFO( "enum_LatchType_1", "Signal u[1]" ); // latchSignal
+
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -37,7 +45,7 @@ class TLatch : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** type of */
-   PRM_LIST( type, efNRC, "Type", "Latch type", "", "Time\nSignal u[1]");
+   PRM_LIST( type, efNRC, "Type", "Latch type", "enum=LatchType", "REMOVE_ME");
    /** time to latch */
    PRM_DOUBLE( t0, efNRC, "Time", "Time to latch" , "sep=col" );
    /** start value */
@@ -50,6 +58,7 @@ class TLatch : public TMiso  {
    PRM_SWITCH( usePulse, efNRC, "use Pulse", "latch on jump of u[1] (>0.5), not level", "sep=col" );
    PRM_SWITCH( useFirst, efNRC, "use First", "count only first signal to latch", "" );
    PRM_SWITCH( useAdd,   efNRC, "use Add", "add current u[0] to value, not set", "" );
+   PRM_DOUBLE( lt, efInner, "Latch Time", "Time whan latch occurs" , "" );
 
    PRM_INPUT( in_u, 0, "input", "Main input",  "sep=block" );
    PRM_INPUT( in_latch, 0, "latch in", "Latch input", "sep=col" );

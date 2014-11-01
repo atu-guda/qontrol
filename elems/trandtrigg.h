@@ -2,7 +2,7 @@
                           trandtrigg.h  -  description
                              -------------------
     begin                : Wed Aug 30 2000
-    copyright            : (C) 2000-2013 by atu
+    copyright            : (C) 2000-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -21,13 +21,6 @@
 #include <tmiso.h>
 #include "rand_gen.h"
 
-static const char* const trandtrigg_list_seedType =
-     "Every run\n"          // 0
-     "Start of 1d-loop\n"   // 1
-     "Start of 2d-loop\n"   // 2
-     "As model"             // 3
-;
-
 /**random - deterministic trigger
   *@author atu
   */
@@ -38,6 +31,15 @@ class TRandTrigg : public TMiso  {
    DCL_CTOR(TRandTrigg);
    DCL_CREATE;
    DCL_STD_INF;
+
+   enum SeedType {
+     everyRun = 0, startLoop, start2DLoop, asModel
+   };
+   Q_ENUMS(SeedType);
+   Q_CLASSINFO( "enum_SeedType_0", "Every Run" );               // everyRun
+   Q_CLASSINFO( "enum_SeedType_1", "On start on 1D loop" );     // startLoop
+   Q_CLASSINFO( "enum_SeedType_2", "On start on 2D loop" );     // start2DLoop
+   Q_CLASSINFO( "enum_SeedType_3", "As defined in Model" );     // asModel
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -60,8 +62,7 @@ class TRandTrigg : public TMiso  {
    /** seed value for generator */
    PRM_INT( seed, efNRC, "Seed", "Random generator seed", "sep=col\ndef=RND" );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
-   PRM_LIST( seedType, efNRC, "Seed at", "Specifies, when to seed", "def=3",
-       trandtrigg_list_seedType );
+   PRM_LIST( seedType, efNRC, "Seed at", "Specifies, when to seed", "def=3\nenum=SeedType", "REMOVE_ME" );
    /** flag: add base seed to element seed */
    PRM_SWITCH( addBaseSeed, efNRC, "add Base to Seed",
        "add Base (model) value to Seed", "def=1" );
