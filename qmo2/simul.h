@@ -67,8 +67,7 @@ class Simulation : public TDataSet  {
   PRM_DOUBLE( prm0d, efNoRunChange, "prm0+=", "Parameter 0 delta", "sep=col" );
   PRM_DOUBLE( prm1d, efNoRunChange, "prm1+=", "Parameter 1 delta", "" );
   PRM_INT( seed, efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
-  PRM_LIST( seedType, efInner, "Seed type",
-      "type of seeding: 0 - every run... ", "enum=SeedType", "REMOVE_ME" );
+  PRM_LIST( seedType, efInner, "Seed type",  "type of seeding", "enum=SeedType" );
   PRM_SWITCH( autoStart, efNoRunChange, "auto start",
       "Start simulation without key awaiting", "sep=col" );
   // -------- TODO: input/output channels -------

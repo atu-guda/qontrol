@@ -49,7 +49,7 @@ class TExtrLatch : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** type of extremum */
-   PRM_LIST( type, efNRC, "Type", "Type of catching extremum", "enum=ExtrType", "REMOVE_ME" );
+   PRM_LIST( type, efNRC, "Type", "Type of catching extremum", "enum=ExtrType" );
    PRM_SWITCH( useLocal, efNRC, "Local extr", "Catch local extremums", "sep=col" );
    PRM_SWITCH( useFirst, efNRC, "Only first", "Catch only first local extremum", "");
    PRM_SWITCH( outT, efNRC, "Output T", "Output time of catched extremum, not value", "" );

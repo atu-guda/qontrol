@@ -47,7 +47,7 @@ class TTrigger : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** type of trigger */
-   PRM_LIST( type, efNRC, "Type", "Type of trigger", "enum=TriggType", "REMOVE_ME" );
+   PRM_LIST( type, efNRC, "Type", "Type of trigger", "enum=TriggType" );
    /**  current state */
    PRM_INT( cst, efInner, "state", "current state", "" );
    /** level of 0  */

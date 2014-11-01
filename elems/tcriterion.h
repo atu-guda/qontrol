@@ -49,7 +49,7 @@ class TCriterion : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** type of criterion */
-   PRM_LIST( type, efNRC, "Type", "Type of criterion", "enum=CritType", "REMOVE_ME"  );
+   PRM_LIST( type, efNRC, "Type", "Type of criterion", "enum=CritType" );
    /** coefficients  */
    PRM_DOUBLE( a, 0, "a", "level 'a'", "def=0.5" );
    PRM_DOUBLE( b, 0, "b", "level 'b'", "def=1" );

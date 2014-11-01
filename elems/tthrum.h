@@ -46,7 +46,7 @@ class TThrum : public TMiso  {
 
    PRM_INT( p_int, 0, "Int", "integer value", "min=-2\nmax=12\ndef=1" );
    PRM_SWITCH( p_sw, 0, "switch", "simple switch", "def=1" );
-   PRM_LIST( p_list, 0, "LIst", "ListElement", "def=2\nenum=ListType", "REMOVE_ME" );
+   PRM_LIST( p_list, 0, "LIst", "ListElement", "def=2\nenum=ListType" );
    PRM_INT( p_intsp, 0, "Int_sp", "spin test", "props=INT,SPIN\nmin=-2\nmax=12\ndef=1" );
    PRM_DOUBLE( p_dou,  0, "Double", "factor in input 0", "def=0.123\nmin=1e-10\nsep=col" );
    PRM_DOUBLE( p_dous,  0, "Double S", "Spin test", "props=DOUBLE,SPIN\ndef=-5.\nmin=10\nmax=100\nstep=0.5" );

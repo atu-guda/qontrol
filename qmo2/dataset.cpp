@@ -111,16 +111,6 @@ void HolderData::extraToParm()
     dyn = 1;
 }
 
-void HolderData::setElems( const QString &els )
-{
-  parms["list_elems"] = els;
-  int n_nl = els.count( '\n' );
-  if( ! els.isEmpty() ) { // "" => 0, "a" => 1, "a\nb" => 2
-    ++n_nl;
-  }
-  setParm( "min", "0" );
-  setParm( "max", QSN( n_nl-1 ) );
-}
 
 QString HolderData::getType() const // = 0;
 {
@@ -392,16 +382,14 @@ DEFAULT_FUNCS_REG(HolderSwitch);
 // ---------------- HolderList ---------
 STD_CLASSINFO_ALIAS(HolderList,clpData,list);
 
-HolderList::HolderList( ARGS_CTOR_MIN, const QString &a_elems  ) // end this too
-   : HolderInt( ARGS_CTOR_NAMES )
+CTOR(HolderList,HolderInt)
 {
   setParm("min","0"); setParm("max","0");
-  setElems( a_elems ); // TODO, remove, use only modern
   if( getParm("props") == "INT,SIMPLE" ) {
     setParm( "props", "INT,LIST" );
   }
 
-  // my be overkill, but one cone - one place
+  // may be overkill, but one cone - one place
   QString enum_name = getParm( "enum" );
   QStringList sl;
   if( ! enum_name.isEmpty() ) {

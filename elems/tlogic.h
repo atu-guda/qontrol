@@ -46,7 +46,7 @@ class TLogic : public TMiso  {
    virtual double f( double t ) override;
 
    /** type of logic element */
-   PRM_LIST( type, efNRC, "Type", "Type of logic", "enum=LogicType", "REMOVE_ME" );
+   PRM_LIST( type, efNRC, "Type", "Type of logic", "enum=LogicType" );
    /** level of 1  */
    PRM_DOUBLE( level, 0, "level of 1", "Minimal level of '1' signal on input", "def=0.1" );
    /** misc flags */

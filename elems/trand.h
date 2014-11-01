@@ -75,7 +75,7 @@ class TRand : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** type of distribution */
-   PRM_LIST( type, efNRC, "Type", "Distribution type", "enum=DistrType", "REMOVE_ME" );
+   PRM_LIST( type, efNRC, "Type", "Distribution type", "enum=DistrType" );
    /** time of const output value, if <=0 -- change every tick */
    PRM_DOUBLE( tau, efNRC, "\\tau", "time of const output value, if <=0 -- change every tick ", "def=0.05" );
    /** amplitude of output */
@@ -91,7 +91,7 @@ class TRand : public TMiso  {
    /** seed value for generator */
    PRM_INT( seed, efNRC, "Seed", "Seed value for generator", "sep=col\ndef=RND" );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
-   PRM_LIST( seedType, efNRC, "Seed type", "When get new seed", "def=3\nenum=SeedType", "REMOVE_ME" );
+   PRM_LIST( seedType, efNRC, "Seed type", "When get new seed", "def=3\nenum=SeedType" );
    /** flag: add base seed to element seed */
    PRM_SWITCH( addBaseSeed, efNRC, "Add base", "Add base seed to element seed ", "def=1" );
 

@@ -53,7 +53,7 @@ class TCorrAnalysis : public TMiso  {
 
    /* ============= data members ================== */
    /** type of data collection, flags */
-   PRM_LIST( type, efNoRunChange, "Type", "Collection type", "enum=CallType", "REMOVE_ME" );
+   PRM_LIST( type, efNoRunChange, "Type", "Collection type", "enum=CallType" );
    PRM_SWITCH( useCalc,  efNoRunChange, "use Calc", "Use in_calc>0 as signal to calc", "" );
    PRM_SWITCH( useReset, efNoRunChange, "use Reset", "Use u_rst>0 as signal to reset", "" );
    PRM_SWITCH( useFill,  efNoRunChange, "Fill arrays", "Fill output array", "" );

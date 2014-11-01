@@ -204,7 +204,6 @@ class HolderData : public QObject {
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
   bool setParams( const QString params ); //* params sep: newline
-  void setElems( const QString &els );
   virtual QString getType() const = 0;
   virtual const char* getHelp() const  = 0;
   virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
@@ -284,12 +283,7 @@ class HolderSwitch : public HolderInt {
 class HolderList : public HolderInt {
   Q_OBJECT
  public:
-  // non-standard ctor, as have elems. TODO: global enum/strings for elems
-  // elems come from string with \n separator
-  HolderList( const QString &obj_name, TDataSet *a_parent,
-     int a_flags = 0, const QString &v_name = QString(),
-     const QString &a_descr = QString(),
-     const QString &a_extra  = QString(), const QString &a_elems = QString() );
+  DCL_CTOR(HolderList);
   virtual ~HolderList();
   DCL_CREATE; // now bad: no info for strings
   DCL_STD_INF;
@@ -302,8 +296,8 @@ class HolderList : public HolderInt {
 };
 
 
-#define PRM_LIST( name, flags, vname, descr, extra, elems ) \
- HolderList name ={ #name, this, flags, vname, descr, extra, elems };
+#define PRM_LIST( name, flags, vname, descr, extra ) \
+ HolderList name ={ #name, this, flags, vname, descr, extra };
 
 /** Holder of double values */
 class HolderDouble : public HolderValue {

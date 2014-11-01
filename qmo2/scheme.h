@@ -124,8 +124,7 @@ class Scheme : public TDataContainer  {
   PRM_DOUBLE( prm3s, efInner, "param. 3", "Initial prm3 value", ""  );
   PRM_INT( seed, efInner, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
   /** type of seeding: 0 - every run, 1 - every 1d loop .. obj: 3 - as model */
-  PRM_LIST( seedType, efInner, "Seed type",
-      "type of seeding: 0 - every run... ", "enum=SeedType", "REMOVE_ME" );
+  PRM_LIST( seedType, efInner, "Seed type", "type of seeding", "enum=SeedType" );
   // ---------------------------------------
   // ======================= invisible vars ======================
   /** loops counters */

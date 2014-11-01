@@ -170,8 +170,7 @@ class TModel : public TDataContainer  {
   PRM_INT( seed, efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
   PRM_INT( useSameSeed, efOld, "use Same Seed - no", "Unused", "props=INT,SPIN\nstep=2\nmin=-100\nmax=100" ); // TODO: OBSOLETE
   /** type of seeding: 0 - every run, 1 - every 1d loop .. obj: 3 - as model */
-  PRM_LIST( seedType, efNoRunChange, "Seed type",
-      "type of seeding: 0 - every run... ", "enum=SeedType", "REMOVE_ME" );
+  PRM_LIST( seedType, efNoRunChange, "Seed type", "type of seeding", "enum=SeedType" );
   PRM_SWITCH( autoStart, efNoRunChange, "auto start",
       "Start simulation without key awaitng", "sep=col" );
   // -------- input channels indexes -------

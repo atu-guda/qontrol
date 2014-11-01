@@ -45,7 +45,7 @@ class TCounter : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** type of output from counter */
-   PRM_LIST( type, efNRC, "Type", "Type of counters output", "enum=CountType", "REMOVE_ME" );
+   PRM_LIST( type, efNRC, "Type", "Type of counters output", "enum=CountType" );
    //* n of counts */
    PRM_INT( n, efNRC, "n", "Number to count", "sep=col\ndef=2" );
    //* current counter */

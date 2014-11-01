@@ -45,7 +45,7 @@ class TLatch : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** type of */
-   PRM_LIST( type, efNRC, "Type", "Latch type", "enum=LatchType", "REMOVE_ME");
+   PRM_LIST( type, efNRC, "Type", "Latch type", "enum=LatchType" );
    /** time to latch */
    PRM_DOUBLE( t0, efNRC, "Time", "Time to latch" , "sep=col" );
    /** start value */

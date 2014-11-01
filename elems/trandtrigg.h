@@ -62,7 +62,7 @@ class TRandTrigg : public TMiso  {
    /** seed value for generator */
    PRM_INT( seed, efNRC, "Seed", "Random generator seed", "sep=col\ndef=RND" );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
-   PRM_LIST( seedType, efNRC, "Seed at", "Specifies, when to seed", "def=3\nenum=SeedType", "REMOVE_ME" );
+   PRM_LIST( seedType, efNRC, "Seed at", "Specifies, when to seed", "def=3\nenum=SeedType" );
    /** flag: add base seed to element seed */
    PRM_SWITCH( addBaseSeed, efNRC, "add Base to Seed",
        "add Base (model) value to Seed", "def=1" );

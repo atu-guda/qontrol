@@ -43,7 +43,7 @@ class TAdjGen : public TMiso  {
    virtual int do_startLoop( int acnx, int acny );
 
    /** type of averaging, */
-   PRM_LIST( type, efNoRunChange, "Type", "Type of generator", "enum=GenType", "REMOVE_ME" );
+   PRM_LIST( type, efNoRunChange, "Type", "Type of generator", "enum=GenType" );
    /** misc flags */
    PRM_SWITCH( useReset, efNoRunChange, "u[1] is Reset", "Use u[1] as Reset signal", "" );
    PRM_SWITCH( useLock, efNoRunChange, "u[2] is Lock", "Use u[2] as LOck signal", "" );

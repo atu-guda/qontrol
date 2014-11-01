@@ -60,7 +60,7 @@ class TFuncMisc : public TMiso  {
    virtual double f( double t ) override;
 
    /** type of function */
-   PRM_LIST( type, 0, "Type", "Function type", "enum=FuncType", "REMOVE_ME" );
+   PRM_LIST( type, 0, "Type", "Function type", "enum=FuncType" );
    /** coefficients and shift */
    PRM_DOUBLE( a,  0, "a", "Parameter a", "sep=col\ndef=1" );
    PRM_DOUBLE( b,  0, "b", "Parameter b", "def=1" );

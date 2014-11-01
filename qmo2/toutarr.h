@@ -67,7 +67,7 @@ class TOutArr : public TDataSet  {
    int fillGraphInfo( GraphInfo *gi ) const;
  protected:
    /** type of array: 0:simple, 1:parm1, 2:parm2, 3:special */
-   PRM_LIST( type, efNoRunChange, "Type", "Type of array", "enum=OutArrType", "REMOVE_ME" );
+   PRM_LIST( type, efNoRunChange, "Type", "Type of array", "enum=OutArrType" );
    /** name of element to use */
    PRM_STRING( name, efNoRunChange, "Source", "Name of element to use", "max=64" );
    /** label of data */
