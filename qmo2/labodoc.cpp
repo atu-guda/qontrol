@@ -86,13 +86,6 @@ bool LaboDoc::newDocument()
     return false;
   }
 
-  if( ! createEmptySyms() ) {
-    DBG1( "ERR: Fail to create sims - simulations container" );
-    delete rootdata; rootdata = nullptr; model = nullptr;
-    QMessageBox::critical( 0, "LaboDoc::newDocument",
-      QString("Fail to insert create sims in model: "), 0,0,0 );
-    return false;
-  }
 
   // rootdata->dumpStruct();
   modified = false; is_nonamed = true;
@@ -372,26 +365,26 @@ bool LaboDoc::migrateSumul()
   }
 
   ContSimul *sims = model->getElemT<ContSimul*>("sims");
-  if( sims )
-    return true; // conversion not required
-
-  DBG1( "info: migrate tmodel->simulations" );
-
-  if( ! createEmptySyms() ) {
+  if( ! sims ) {
+    DBG1( "ERR: simulation array not exist!!!" ); // unlikely
     return false;
   }
 
-  sims = model->getElemT<ContSimul*>("sims");
-  if( ! sims ) {
-    DBG1( "ERR: simulations container not created!!!" ); // unlikely
-    return false; //
-  }
 
   Simulation *sim0 = sims->getElemT<Simulation*>("sim0");
   if( ! sim0 ) {
     DBG1( "ERR: default simulations not created!!!" ); // unlikely
-    return false; //
+    return false;
   }
+
+  // not so good indicator for conversion, but no silver bullet
+  QString descr;
+  sim0->getData( "descr", descr );
+  if( ! descr.isEmpty() ) {
+    return true;
+  }
+
+  DBG1( "info: migrate tmodel->simulations" );
 
   double t = 100;
   int ti = 1000;
@@ -409,38 +402,12 @@ bool LaboDoc::migrateSumul()
   model->getData( "seed", &ti );  sim0->setData( "seed", ti );
   model->getData( "seedType", &ti );  sim0->setData( "seedType", ti );
   model->getData( "autoStart", &ti );  sim0->setData( "autoStart", ti );
+  model->getData( "long_descr", descr );  sim0->setData( "descr", descr );
 
 
   return true;
 }
 
-bool LaboDoc::createEmptySyms()
-{
-  if( !rootdata || !model ) {
-    DBG1( "ERR: no root or model" );
-    return false;
-  }
-
-  ContSimul *sims = model->getElemT<ContSimul*>("sims");
-  if( ! sims ) { // create only if not exist
-    sims = model->addObj<ContSimul>( "sims" );
-  }
-
-  if( ! sims ) {
-    DBG1( "ERR: Fail to create sims - simulatios container" );
-    return false;
-  }
-
-  Simulation *sim0 = sims->getElemT<Simulation*>( "sim0" );
-  if( sim0 )
-    return true; // creation not required: all exits
-  sim0 = sims->addObj<Simulation>( "sim0" );
-  if( ! sim0 ) {
-    DBG1( "ERR: Fail to create defaul simulation sim0" );
-    return false;
-  }
-  return true;
-}
 
 
 // end of labodoc.cpp

@@ -113,6 +113,7 @@ class TModel : public TDataContainer  {
    int newSimul( const QString &name );
    int delSimul( const QString &name );
    QString getSimulName( int idx );
+   int getNSimul() const { return sims->size(); }
 
  protected:
   /** reimplemented to real Elems, OutArr, Graphs: TODO: separate containers */
@@ -137,6 +138,12 @@ class TModel : public TDataContainer  {
   virtual void resetOutArrs( int level );
 
  protected:
+  // --------------- convinience ptrs to obligatory elements
+  // init not in init list - special handling?
+  // ContSchem *schs  = nullptr;
+  // ContOut   *outs  = nullptr;
+  // ContPlots *plots = nullptr;
+  ContSimul *sims = nullptr;
   // =============== iface objects ==============================
   /** total model time, starts with 0 each inner loop */
   PRM_DOUBLE( tt, efNoRunChange, "T", "Full Run Time", "min=0\nmax=1e300\ndef=100" );

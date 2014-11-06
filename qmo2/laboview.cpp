@@ -27,6 +27,7 @@
 #include "outview.h"
 #include "graphview.h"
 #include "statusmodel.h"
+#include "simulmodel.h"
 #include "doubletable.h"
 #include "runview.h"
 #include "plotview.h"
@@ -64,12 +65,17 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   oview = new OutView( doc, this, main_part );
   gview = new GraphView( doc, this, main_part );
+  ContSimul *sims = model->getElemT<ContSimul*>( "sims" );
+  sims_model = new SimulModel( sims, this );
+  sims_view = new QListView( this );
+  sims_view->setModel( sims_model );
 
   stam = new StatusModel( this, this );
 
   grLay->addWidget( scrollArea, 0, 0 );
   grLay->addWidget( oview, 0, 1 );
   grLay->addWidget( gview, 0, 2 );
+  grLay->addWidget( sims_view, 0, 3 );
 
   main_part->setLayout( grLay );
 
@@ -1120,6 +1126,46 @@ void LaboView::gnuplotGraph()
   delete dia;
 }
 
+// ==== simulation related
+
+void LaboView::newSimul()
+{
+  bool ok;
+  if( ! checkState( validCheck ) )
+    return;
+  QString simName = QString("sim") + QSN( model->getNSimul() );
+  simName = QInputDialog::getText( this, "Creating new Simulation",
+      "Enter name of new simulation:", QLineEdit::Normal,
+      simName, &ok );
+  if( ok ) {
+    if( ! isGoodName( simName ) ) {
+      QMessageBox::critical( this, "Error",
+         QString("Bad simulation name: \"") + simName + "\"",
+         QMessageBox::Ok, QMessageBox::NoButton );
+    }
+    ok = model->newSimul( simName );
+    if( !ok ) {
+      QMessageBox::critical( this, "Error",
+         QString("Fail to create simulation: \"") + simName + "\"",
+         QMessageBox::Ok, QMessageBox::NoButton );
+    }
+    emit viewChanged();
+  };
+}
+
+void LaboView::delSimul()
+{
+}
+
+void LaboView::editSimul()
+{
+}
+
+void LaboView::setActiveSimul()
+{
+}
+
+
 // ==== model related
 
 void LaboView::editModel()
@@ -1262,39 +1308,6 @@ void LaboView::resetModel()
   model->reset();
   emit viewChanged();
 }
-
-void LaboView::newSimul()
-{
-  bool ok;
-  if( ! checkState( validCheck ) )
-    return;
-  QString simName = QString("sim") + QSN( sel );
-  simName = QInputDialog::getText( this, "Creating new Simulation",
-      "Enter name of new simulation:", QLineEdit::Normal,
-      simName, &ok );
-  if( ok ) {
-    if( ! isGoodName( simName ) ) {
-      QMessageBox::critical( this, "Error",
-         QString("Bad simulation name: \"") + simName + "\"",
-         QMessageBox::Ok, QMessageBox::NoButton );
-    }
-    model->newSimul( simName );
-    emit viewChanged();
-  };
-}
-
-void LaboView::delSimul()
-{
-}
-
-void LaboView::editSimul()
-{
-}
-
-void LaboView::setActiveSimul()
-{
-}
-
 
 // misc
 

@@ -448,9 +448,10 @@ class TDataSet : public HolderData {
    DCL_CREATE;
    DCL_STD_INF;
    DCL_STD_GETSET;
+   virtual int size() const override { return children().size(); }
    virtual QString getType() const override;
    virtual bool isObject( const QString &cl_name = QString() ) const override;
-   /** return number of elems */
+   /** return number of elems TODO: replace by size() */
    virtual int getNumObj() const override { return children().size(); };
    /** return flags of allow adding */
    int getAllowAdd() const { return allow_add; }
@@ -466,6 +467,11 @@ class TDataSet : public HolderData {
      {
        return findChild<HolderData*>( oname, Qt::FindDirectChildrenOnly );
      }
+   /** find holder for object by insex, safely cast to type T */
+   template<typename T> T getElemT( int idx ) const
+      {
+        return qobject_cast<T>( children()[idx] );
+      }
    /** find holder for object by name, safely cast to type T */
    template<typename T> T getElemT( const QString &oname ) const
       {
@@ -541,6 +547,17 @@ class TDataSet : public HolderData {
    bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
    /** delete given object by name */
    int del_obj( const QString &ob_name );
+   //* return index of selected element or -1
+   int getSel() const { return sel; }
+   //* return ptr to holder of selected element or nullptr
+   HolderData* getSelObj() const
+     { return sel >=0 ? ( qobject_cast<HolderData*>(children()[sel]) ): nullptr; }
+   //* set index of selected element, return succsess
+   bool setSel( int idx );
+   //* set index of selected element by name (or "-UNSELECT-"), return succsess
+   bool setSel( const QString &name );
+   //* next selected (ring)
+   int nextSel() { ++sel; if( sel>=size() ) {sel=0;}; return sel; };
  protected:
    /** gets pointer to parameter, near to getDoublePrmPtr
     * for param mod only - no descend  */
@@ -565,6 +582,8 @@ class TDataSet : public HolderData {
    int modified = 0;
    /** flag: suspend reaction to structure update: use only in mass changes */
    bool updSuspended = false;
+   //* index of selected element, -1 = unselected
+   int sel = -1;
    /** place for inputs */
    QVector<InputSimple*> inputs;
    /** place for parametric inputs */

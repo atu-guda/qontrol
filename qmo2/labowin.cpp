@@ -1431,6 +1431,49 @@ void LaboWin::slotGnuplotGraph()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
+void LaboWin::slotNewSimul()
+{
+  statusBar()->showMessage( tr( "Creating new simulation..." ) );
+
+  LaboView* m =  activeMdiChild();
+  if ( m )
+    m->newSimul();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+void LaboWin::slotDelSimul()
+{
+  statusBar()->showMessage( tr( "Removing simulation" ) );
+
+  LaboView* m =  activeMdiChild();
+  if ( m )
+    m->delSimul();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+void LaboWin::slotEditSimul()
+{
+  statusBar()->showMessage( tr( "Editing simulation data..." ) );
+
+  LaboView* m =  activeMdiChild();
+  if ( m )
+    m->editSimul();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+void LaboWin::slotSetActiveSimul()
+{
+  statusBar()->showMessage( tr( "Setting active simulation ..." ) );
+
+  LaboView* m =  activeMdiChild();
+  if ( m )
+    m->setActiveSimul();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+
+// ------- model -----------
+
 void LaboWin::slotEditModel()
 {
   statusBar()->showMessage( tr( "Editing model parametrs..." ) );
@@ -1490,46 +1533,6 @@ void LaboWin::slotReset()
   LaboView* m =  activeMdiChild();
   if ( m )
     m->resetModel();
-  statusBar()->showMessage( tr( "Ready." ) );
-}
-
-void LaboWin::slotNewSimul()
-{
-  statusBar()->showMessage( tr( "Adding new simulation ..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->newSimul();
-  statusBar()->showMessage( tr( "Ready." ) );
-}
-
-void LaboWin::slotDelSimul()
-{
-  statusBar()->showMessage( tr( "Removing selected simulation ..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->delSimul();
-  statusBar()->showMessage( tr( "Ready." ) );
-}
-
-void LaboWin::slotEditSimul()
-{
-  statusBar()->showMessage( tr( "Editing selected simulation ..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->editSimul();
-  statusBar()->showMessage( tr( "Ready." ) );
-}
-
-void LaboWin::slotSetActiveSimul()
-{
-  statusBar()->showMessage( tr( "Setting active simulation ..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->setActiveSimul();
   statusBar()->showMessage( tr( "Ready." ) );
 }
 

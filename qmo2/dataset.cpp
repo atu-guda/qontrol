@@ -1323,10 +1323,39 @@ int TDataSet::del_obj( const QString &ob_name )
     DBG2q( " object  is not created dynamicaly: ", ob_name );
     return 0;
   }
+
+  // save selection obj to adjust sel index
+  HolderData *s_ob = getSelObj();
   delete ho; // auto remove object and from parent lists
+  sel = indexOfHolder( s_ob );
   reportStructChanged();
   return 1;
 }
+
+bool TDataSet::setSel( int idx )
+{
+  if( idx < -1  || idx >= size() ) {
+    return false;
+  }
+  sel = idx;
+  return true;
+}
+
+bool TDataSet::setSel( const QString& name )
+{
+  if( name == "-UNSELECT-" ) { // special case
+    sel = -1;
+    return true;
+  }
+
+  HolderData *ho = getElem( name );
+  if( !ho ) {
+    return false;
+  }
+  int idx = indexOfHolder( ho );
+  return setSel( idx );
+}
+
 
 HolderData* TDataSet::add_param( const QString &tp_name, const QString &ob_name )
 {

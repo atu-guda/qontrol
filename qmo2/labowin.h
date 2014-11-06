@@ -174,6 +174,12 @@ class LaboWin : public QMainWindow
     void slotExportGraphData();
     void slotGnuplotGraph();
 
+    // ==== simulation related
+    void slotNewSimul();
+    void slotDelSimul();
+    void slotEditSimul();
+    void slotSetActiveSimul();
+
     // ==== model related
     void slotEditModel();
     void slotShowTreeModel();
@@ -184,10 +190,6 @@ class LaboWin : public QMainWindow
     void slotRunPrm();
     void slotRunPrm2();
     void slotReset();
-    void slotNewSimul();
-    void slotDelSimul();
-    void slotEditSimul();
-    void slotSetActiveSimul();
 
     // ==== view related
     /** toggle the toolbar*/

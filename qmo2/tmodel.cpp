@@ -33,7 +33,7 @@ STD_CLASSINFO(TModel,clpSpecial | clpContainer);
 CTOR(TModel,TDataContainer)
 {
   allowed_types = "TMiso,TGraph,TOutArr,HolderValue,InputSimple,"
-                  "ContSimul,Scheme,ContOuts,ContPlots";
+                  "ContSchems,ContSimul,Scheme,ContOuts,ContPlots";
   rtime = t = 0; tdt = tt / nn;
   m_sqrt2 = sqrt(2.0);
   m_sqrt1_2 = sqrt(0.5);
@@ -45,6 +45,16 @@ CTOR(TModel,TDataContainer)
   v_out.reserve( OUT_RES );
   v_outt.reserve( OUT_RES );
   v_graph.reserve( 16 );
+
+  sims = addObj<ContSimul>( "sims" );
+  if( sims ) {
+    Simulation *sim0 = sims->addObj<Simulation>( "sim0" );
+    if( ! sim0 ) {
+      DBGx( "ERR: fail to create sim0" );
+    }
+  } else {
+    DBGx( "ERR: fail to create sims" );
+  }
 
 }
 
@@ -468,26 +478,36 @@ int TModel::delGraph( int gr_nu )
 
 int TModel::newSimul( const QString &name )
 {
-  return 0; // TODO:
+  DBGx( "dbg: creating new simulation \"%s\"", qP(name) );
+  Simulation *sim = sims->addObj<Simulation>( name );
+  if( ! sim ) {
+    DBGx( "ERR: fail to create simulation \"%s\"", qP(name) );
+    return 0;
+  }
+  return 1;
 }
 
 int TModel::delSimul( const QString &name )
 {
+  DBGx( "dbg: removing simulation \"%s\"", qP(name) );
   return 0; // TODO:
 }
 
 QString TModel::getSimulName( int idx )
 {
+  DBGx( "dbg: requiest simulation name by idx %d", idx );
   return QString(); // TODO:
 }
 
 Simulation* TModel::getSimul( int idx )
 {
+  DBGx( "dbg: requiest simulation ptr by idx %d", idx );
   return nullptr; // TODO:
 }
 
 Simulation* TModel::getSimul( const QString &name )
 {
+  DBGx( "dbg: requiest simulation ptr by name \"%s\"", qP(name) );
   return nullptr; // TODO:
 }
 

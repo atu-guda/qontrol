@@ -33,9 +33,11 @@ class TModel;
 class StatusModel;
 class QScrollArea;
 class QTreeView;
+class QListView;
 
 class HolderModel;
 class TMiso;
+class SimulModel;
 
 /**
  * This class provides an base for LaboDoc view.
@@ -114,6 +116,12 @@ class LaboView : public QWidget
    void exportGraphData();
    void gnuplotGraph();
 
+   // simulation releated
+   void newSimul();
+   void delSimul();
+   void editSimul();
+   void setActiveSimul();
+
    // model related
    void editModel();
    void showTreeModel();
@@ -124,10 +132,6 @@ class LaboView : public QWidget
    void runPrm();
    void runPrm2();
    void resetModel();
-   void newSimul();
-   void delSimul();
-   void editSimul();
-   void setActiveSimul();
 
    // misc
    void showHelp();
@@ -158,6 +162,8 @@ class LaboView : public QWidget
    StructView *sview;
    OutView *oview;
    GraphView *gview;
+   SimulModel *sims_model;
+   QListView *sims_view;
    StatusModel *stam;
 
    LaboDoc *doc;
