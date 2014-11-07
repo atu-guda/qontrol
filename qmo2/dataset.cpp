@@ -18,7 +18,7 @@ using namespace std;
 STD_CLASSINFO(HolderData,clpSpecial|clpPure);
 
 HolderData::HolderData( ARGS_CTOR_MIN )
-     :QObject( a_parent ),
+     :QAbstractItemModel( a_parent ),
       flags(a_flags),
       par(a_parent)
 {
@@ -46,9 +46,46 @@ HolderData::~HolderData()
 HolderData* HolderData::create( const QString &, TDataSet *,
          int, const QString &, const QString &, const QString & )
 {
-  DBG1( "Attempt to create abstrace class" );
+  DBG1( "Attempt to create abstract class" );
   return nullptr;
 }
+
+// QAbstractItemModel part
+int HolderData::columnCount( const QModelIndex & /*par*/ ) const
+{
+  return 0;
+}
+
+int HolderData::rowCount( const QModelIndex & /*par*/ ) const
+{
+  return size();
+}
+
+QVariant HolderData::data( const QModelIndex & /*idx*/, int /*role*/ ) const
+{
+  return QVariant();
+}
+
+bool HolderData::hasChildren( const QModelIndex & /*par*/ ) const
+{
+  return false;
+}
+
+QModelIndex HolderData::index( int /*row*/, int /*column*/, const QModelIndex & /*par*/ ) const
+{
+  return QModelIndex();
+}
+
+QModelIndex HolderData::parent( const QModelIndex & idx ) const
+{
+  if( ! idx.isValid() ) {
+    return QModelIndex();
+  }
+
+  return createIndex( 0, 0, par );
+}
+
+// my part
 
 void HolderData::setParm( const QString &name, const QString &value )
 {

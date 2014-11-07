@@ -11,7 +11,7 @@
 
 HolderModel::HolderModel( TDataSet *a_ds, QObject *a_parent )
             :QAbstractItemModel( a_parent ),
-	    ds(a_ds)
+             ds(a_ds)
 {
 }
 

@@ -1,4 +1,5 @@
 Renew /unify views for Outs, Graphs, Simulations
+Rethink array save/restore: my be invalid xml (at least for strings)
 New hier
 Command line (':')
 Concept for current element in contatiner (Simulation ... )

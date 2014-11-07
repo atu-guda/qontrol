@@ -609,7 +609,7 @@ void TModel::do_structChanged()
 
 void TModel::sortOrd()
 {
-  sort( v_el.begin(), v_el.end(),
+  std::sort( v_el.begin(), v_el.end(),
       []( const TMiso *a, const TMiso*b) { return *a < *b; } );
 }
 

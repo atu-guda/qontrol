@@ -15,6 +15,7 @@
 #include <QStringList>
 #include <QVariant>
 #include <QMap>
+#include <QAbstractItemModel>
 #include <QtXml>
 typedef QMap<QString,QString> QSSMap;
 
@@ -172,12 +173,23 @@ enum allow_type {
 // -------------------------- HOLDERS ------------------------------------
 
 /** Abstract holder for simple data types */
-class HolderData : public QObject {
+class HolderData : public QAbstractItemModel {
   Q_OBJECT
  public:
   DCL_CTOR(HolderData);
   virtual ~HolderData();
   DCL_CREATE;
+
+  // QAbstractItemModel part
+  virtual int columnCount( const QModelIndex &par = QModelIndex() ) const override;
+  virtual int rowCount( const QModelIndex &par = QModelIndex() ) const override;
+  virtual QVariant data( const QModelIndex &idx,
+                     int role = Qt::DisplayRole ) const override;
+  virtual bool hasChildren( const QModelIndex &par = QModelIndex() ) const;
+  virtual QModelIndex index( int row, int column,
+                      const QModelIndex &par = QModelIndex() ) const override;
+  virtual QModelIndex parent( const QModelIndex &idx ) const override;
+
   QVariant::Type getTp() const { return tp; }
   /** return number of elems: none for simple data */
   virtual int getNumObj() const { return 0; };
@@ -212,7 +224,7 @@ class HolderData : public QObject {
   virtual QVariant get( int idx = 0 ) const = 0;
   virtual QString toString() const = 0;
   virtual bool fromString( const QString &s ) = 0;
-  virtual int size() const { return 1; }
+  virtual int size() const { return 0; }
  protected:
   void extraToParm();
 
