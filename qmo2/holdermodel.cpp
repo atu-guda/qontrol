@@ -55,7 +55,7 @@ QVariant HolderModel::data( const QModelIndex &index, int role ) const
   if( !ob )
       return "?cast?";
 
-  return QString("*_") + QSN( ob->getNumObj() )
+  return QString("*_") + QSN( ob->size() )
        + ":" + QSN( ob->getAllowAdd() );
 }
 
@@ -114,14 +114,14 @@ QModelIndex HolderModel::parent( const QModelIndex &index ) const
 int HolderModel::rowCount( const QModelIndex &parent ) const
 {
   if( ! parent.isValid() )
-    return ds->getNumObj();
+    return ds->size();
 
   HolderData *ho = static_cast<HolderData*>( parent.internalPointer() );
   if( ! ho ) {
     DBG1( "ERR: parent.internalPointer() is nullptr" );
     return 0;
   }
-  return ho->getNumObj();
+  return ho->size();
 }
 
 

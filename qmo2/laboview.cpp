@@ -363,7 +363,7 @@ void LaboView::qplinkElm()
     DBG2q( "err: no pis object in ", selObj->getFullName() );
     return;
   }
-  int n_pi = pis->getNumObj();
+  int n_pi = pis->size();
   QString pi_name = QString("pi_") + QSN(n_pi);
   InputParam *pi = pis->addObj<InputParam>( pi_name );
   if( !pi ) {

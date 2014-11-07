@@ -88,7 +88,7 @@ void TMiso::post_set()
   }
 
   // param links convert
-  if( ! pis || pis->getNumObj() != 0 )
+  if( ! pis || pis->size() != 0 )
     return;
 
   QString prm_name, flg_name;

@@ -1129,7 +1129,7 @@ void DataDialog::addParam()
 void DataDialog::addObj()
 {
   addElemInfo aei;
-  aei.name = QString("obj_") + QSN( ds.getNumObj() ) ;
+  aei.name = QString("obj_") + QSN( ds.size() ) ;
   aei.order = 0;
   AddElemDialog *dia = new AddElemDialog( &aei, &ds, this );
 

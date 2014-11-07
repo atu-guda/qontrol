@@ -176,7 +176,7 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   ei.li_pdst_y = ei.yc + (obj_sz/2);
 
   ei.pis = ob->getElemT<const InputParams*>("pis");
-  ei.n_pinp = ei.pis->getNumObj();
+  ei.n_pinp = ei.pis->size();
 
   return true;
 }

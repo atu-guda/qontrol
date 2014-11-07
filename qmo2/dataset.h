@@ -191,8 +191,6 @@ class HolderData : public QAbstractItemModel {
   virtual QModelIndex parent( const QModelIndex &idx ) const override;
 
   QVariant::Type getTp() const { return tp; }
-  /** return number of elems: none for simple data */
-  virtual int getNumObj() const { return 0; };
   int isDyn() const { return dyn; }
    /**  returns false for simple data holders
     * returns true if this object is base or save of given type.
@@ -463,8 +461,6 @@ class TDataSet : public HolderData {
    virtual int size() const override { return children().size(); }
    virtual QString getType() const override;
    virtual bool isObject( const QString &cl_name = QString() ) const override;
-   /** return number of elems TODO: replace by size() */
-   virtual int getNumObj() const override { return children().size(); };
    /** return flags of allow adding */
    int getAllowAdd() const { return allow_add; }
    /** returns list of registerd elems names */
