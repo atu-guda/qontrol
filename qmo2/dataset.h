@@ -197,8 +197,8 @@ class HolderData : public QAbstractItemModel {
     * if cl_name is empty, return true in >= TDataSet */
   virtual bool isObject( const QString &cl_name = QString() ) const;
   void setFlags( int a_flags ) { flags = a_flags; }
-  int getFlags() const { return flags; }
-  TDataSet* getParent() const { return par; }
+  Q_INVOKABLE int getFlags() const { return flags; }
+  Q_INVOKABLE TDataSet* getParent() const { return par; }
   // see DCL_STD_INF, DCL_STD_GETSET for childs
   virtual const TClassInfo* getClassInfo() const = 0;
   virtual void post_set() = 0;
@@ -209,13 +209,15 @@ class HolderData : public QAbstractItemModel {
   virtual bool setData( const QString &nm, const QVariant &da );
   virtual QDomElement toDom( QDomDocument &dd ) const;
   const QString& allowTypes() const { return allowed_types; }
+  //* make real work for getType()
+  virtual QString getTypeV() const = 0;
  public slots:
   /** returns full name of object: aaa.bbb.cc  */
   QString getFullName() const;
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
   bool setParams( const QString params ); //* params sep: newline
-  Q_INVOKABLE virtual QString getType() const = 0;
+  QString getType() const { return getTypeV(); };
   virtual const char* getHelp() const  = 0;
   virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
   virtual bool set( const QVariant & x, int idx = 0 ) = 0;
@@ -244,8 +246,8 @@ class HolderValue : public HolderData {
   DCL_CTOR(HolderValue);
   DCL_CREATE;
   DCL_STD_INF;
-  DCL_STD_GETSET; // just for working create (need fr register)
-  Q_INVOKABLE virtual QString getType() const override;
+  DCL_STD_GETSET; // just for working create (need for register)
+  virtual QString getTypeV() const override;
  protected:
   DCL_DEFAULT_STATIC;
 };
@@ -261,8 +263,8 @@ class HolderInt : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  Q_INVOKABLE virtual QString getType() const override;
   STD_CONVERSIONS(int);
+  virtual QString getTypeV() const override;
  protected:
   int v;
   DCL_DEFAULT_STATIC;
@@ -281,8 +283,8 @@ class HolderSwitch : public HolderInt {
   DCL_STD_INF;
   // most functions from HolderInt
   virtual void post_set() override;
-  Q_INVOKABLE virtual QString getType() const override;
   int operator=( int a ) { v=a; post_set(); return v; }
+  virtual QString getTypeV() const override;
  protected:
   DCL_DEFAULT_STATIC;
 };
@@ -301,8 +303,8 @@ class HolderList : public HolderInt {
   DCL_STD_INF;
   // most functions from HolderInt
   virtual void post_set() override;
-  Q_INVOKABLE virtual QString getType() const;
   int operator=( int a ) { v=a; post_set(); return v; }
+  virtual QString getTypeV() const;
  protected:
   DCL_DEFAULT_STATIC;
 };
@@ -320,8 +322,8 @@ class HolderDouble : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  Q_INVOKABLE virtual QString getType() const override;
   STD_CONVERSIONS(double);
+  virtual QString getTypeV() const override;
  protected:
   double v;
   DCL_DEFAULT_STATIC;
@@ -341,8 +343,8 @@ class HolderString : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  Q_INVOKABLE virtual QString getType() const override;
   STD_CONVERSIONS(QString);
+  virtual QString getTypeV() const override;
   const QString& cval() const { return v; };
  protected:
   QString v;
@@ -363,7 +365,7 @@ class HolderColor : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  Q_INVOKABLE virtual QString getType() const override;
+  virtual QString getTypeV() const override;
   STD_CONVERSIONS(QColor);
  protected:
   QColor v;
@@ -384,7 +386,7 @@ class HolderIntArray : public HolderValue {
   DCL_STD_INF;
   DCL_STD_GETSET;
   virtual int arrSize() const override { return v.size(); }
-  Q_INVOKABLE virtual QString getType() const override;
+  virtual QString getTypeV() const override;
   STD_CONVERSIONS(std::vector<int>);
   int operator[](int i) const { return v[i]; };
   int& operator[](int i) { return v[i]; };
@@ -407,7 +409,7 @@ class HolderDoubleArray : public HolderValue {
   DCL_STD_INF;
   DCL_STD_GETSET;
   virtual int arrSize() const override { return v.size(); }
-  Q_INVOKABLE virtual QString getType() const override;
+  virtual QString getTypeV() const override;
   STD_CONVERSIONS(std::vector<double>);
   double operator[](int i) const { return v[i]; };
   double& operator[](int i) { return v[i]; };
@@ -430,7 +432,7 @@ class HolderStringArray : public HolderValue {
   DCL_STD_INF;
   DCL_STD_GETSET;
   virtual int arrSize() const override { return v.size(); }
-  Q_INVOKABLE virtual QString getType() const override;
+  virtual QString getTypeV() const override;
   STD_CONVERSIONS(QStringList);
   QString operator[](int i) const { return v[i]; };
   QString& operator[](int i) { return v[i]; };
@@ -461,7 +463,7 @@ class TDataSet : public HolderData {
    DCL_STD_GETSET;
 
    // QAbstractItemModel part
-   virtual int columnCount( const QModelIndex &par = QModelIndex() ) const override;
+   // virtual int columnCount( const QModelIndex &par = QModelIndex() ) const override;
    // virtual int rowCount( const QModelIndex &par = QModelIndex() ) const override;
    virtual QVariant data( const QModelIndex &idx,
                      int role = Qt::DisplayRole ) const override;
@@ -470,7 +472,7 @@ class TDataSet : public HolderData {
                       const QModelIndex &par = QModelIndex() ) const override;
    // virtual QModelIndex parent( const QModelIndex &idx ) const override;
 
-   Q_INVOKABLE virtual QString getType() const override;
+   virtual QString getTypeV() const override;
    virtual bool isObject( const QString &cl_name = QString() ) const override;
    /** return flags of allow adding */
    int getAllowAdd() const { return allow_add; }

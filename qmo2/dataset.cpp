@@ -53,23 +53,24 @@ HolderData* HolderData::create( const QString &, TDataSet *,
 // QAbstractItemModel part
 int HolderData::columnCount( const QModelIndex & /*par*/ ) const
 {
-  return 0;
+  return 2;
 }
 
 int HolderData::rowCount( const QModelIndex &par ) const
 {
-  DBGx( "dbg: valid: %d this: %s", par.isValid(), qP( getFullName() ) );
+  int sz = size();
+  DBGx( "dbg: (rC0) valid: %d sz: %d this: %s", par.isValid(), sz, qP( getFullName() ) );
   if( ! par.isValid() ) { // invalid: assume self (examples: root)
-    return size();
+    return sz;
   }
 
   TDataSet *ds = static_cast<TDataSet*>( par.internalPointer() );
   if( !ds ) {
-    DBG1( "dbg: ds=0" );
+    DBG1( "dbg: (rC1) ds=0 sz=0" );
     return 0;
   }
-  int sz = ds->size();
-  DBGx( "dbg: sz=%d %s", sz, qP( ds->getFullName() ) );
+  sz = ds->size();
+  DBGx( "dbg: (rC2) sz=%d %s", sz, qP( ds->getFullName() ) );
   return sz;
 }
 
@@ -176,7 +177,7 @@ void HolderData::extraToParm()
 }
 
 
-QString HolderData::getType() const // = 0;
+QString HolderData::getTypeV() const // = 0;
 {
   return "None";
 }
@@ -314,7 +315,7 @@ bool HolderValue::fromString( const QString & /*s */ )
 }
 
 
-QString HolderValue::getType() const
+QString HolderValue::getTypeV() const
 {
   return "value?";
 }
@@ -400,7 +401,7 @@ bool HolderInt::fromString( const QString &s )
 }
 
 
-QString HolderInt::getType() const
+QString HolderInt::getTypeV() const
 {
   return "int";
 }
@@ -433,7 +434,7 @@ void HolderSwitch::post_set()
   v = v ? 1 : 0;
 }
 
-QString HolderSwitch::getType() const
+QString HolderSwitch::getTypeV() const
 {
   return "switch";
 }
@@ -477,7 +478,7 @@ void HolderList::post_set()
 }
 
 
-QString HolderList::getType() const
+QString HolderList::getTypeV() const
 {
   return "list";
 }
@@ -558,7 +559,7 @@ bool HolderDouble::fromString( const QString &s )
 }
 
 
-QString HolderDouble::getType() const
+QString HolderDouble::getTypeV() const
 {
   return "double";
 }
@@ -630,7 +631,7 @@ bool HolderString::fromString( const QString &s )
 }
 
 
-QString HolderString::getType() const
+QString HolderString::getTypeV() const
 {
   return "string";
 }
@@ -711,7 +712,7 @@ bool HolderColor::fromString( const QString &s )
 }
 
 
-QString HolderColor::getType() const
+QString HolderColor::getTypeV() const
 {
   return "color";
 }
@@ -824,7 +825,7 @@ bool HolderIntArray::fromString( const QString &s )
 }
 
 
-QString HolderIntArray::getType() const
+QString HolderIntArray::getTypeV() const
 {
   return "int[]";
 }
@@ -940,7 +941,7 @@ bool HolderDoubleArray::fromString( const QString &s )
 }
 
 
-QString HolderDoubleArray::getType() const
+QString HolderDoubleArray::getTypeV() const
 {
   return "double[]";
 }
@@ -1040,7 +1041,7 @@ bool HolderStringArray::fromString( const QString &s )
 }
 
 
-QString HolderStringArray::getType() const
+QString HolderStringArray::getTypeV() const
 {
   return "string[]";
 }
@@ -1075,10 +1076,10 @@ TDataSet::~TDataSet()
 }
 
 // QAbstractItemModel part
-int TDataSet::columnCount( const QModelIndex & /*par*/ ) const
-{
-  return 2;
-}
+// int TDataSet::columnCount( const QModelIndex & /*par*/ ) const
+// {
+//   return 2;
+// }
 
 QVariant TDataSet::data( const QModelIndex &idx, int role ) const
 {
@@ -1150,7 +1151,7 @@ void TDataSet::reset_dfl()
 
 
 
-QString TDataSet::getType() const
+QString TDataSet::getTypeV() const
 {
   return metaObject()->className();
 }
