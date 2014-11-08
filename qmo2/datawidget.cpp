@@ -582,7 +582,7 @@ IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
 {
   main_w = pwi;
   bool ro = h.getFlags() & ( efRO | efRODial );
-  int n = h.size();
+  int n = h.arrSize();
   // DBGx( " name= \"%s\"  n=%d", qP(h.objectName()), n );
   les.reserve(n);
   QString vn = h.getParm("v_name");
@@ -660,7 +660,7 @@ DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent )
 {
   main_w = pwi;
   bool ro = h.getFlags() & ( efRO | efRODial );
-  int n = h.size();
+  int n = h.arrSize();
 
   les.reserve(n);
   QString vn = h.getParm("v_name");
@@ -743,7 +743,7 @@ StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent )
 {
   main_w = pwi;
   bool ro = h.getFlags() & ( efRO | efRODial );
-  int n = h.size();
+  int n = h.arrSize();
 
   les.reserve(n);
   QString vn = h.getParm("v_name");
@@ -897,13 +897,13 @@ QString FactoryDataWidget::findForHolder( const HolderData &ho, int *lev ) const
 
     for( int j=0; j<ho_p_list.size(); ++j ) {
       if( w_p_list.contains( ho_p_list.at(j) ) ) {
-	good += 10;
+        good += 10;
       }
     }
 
     for( int j=0; j<w_p_list.size(); ++j ) {
       if( ! ho_p_list.contains( w_p_list.at(j) ) ) {
-	good -= 2;
+        good -= 2;
       }
     }
 

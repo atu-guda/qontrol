@@ -58,7 +58,7 @@ void TSourceLin::post_set()
     t_int[14] = t_int_14; vs[14] = vs_14; ve[14] = ve_14;
     t_int[15] = t_int_15; vs[15] = vs_15; ve[15] = ve_15;
   }
-  slopes.assign( t_int.size(), 0 );
+  slopes.assign( t_int.arrSize(), 0 );
 }
 
 
@@ -86,7 +86,7 @@ int TSourceLin::do_startLoop( int /*acnx*/, int /*acny*/ )
 
 void TSourceLin::recalc(void)
 {
-  int n = t_int.size();
+  int n = t_int.arrSize();
   slopes.assign( n, 0 );
 
   // fail-safe

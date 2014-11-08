@@ -56,9 +56,21 @@ int HolderData::columnCount( const QModelIndex & /*par*/ ) const
   return 0;
 }
 
-int HolderData::rowCount( const QModelIndex & /*par*/ ) const
+int HolderData::rowCount( const QModelIndex &par ) const
 {
-  return size();
+  DBGx( "dbg: valid: %d this: %s", par.isValid(), qP( getFullName() ) );
+  if( ! par.isValid() ) { // invalid: assume self (examples: root)
+    return size();
+  }
+
+  TDataSet *ds = static_cast<TDataSet*>( par.internalPointer() );
+  if( !ds ) {
+    DBG1( "dbg: ds=0" );
+    return 0;
+  }
+  int sz = ds->size();
+  DBGx( "dbg: sz=%d %s", sz, qP( ds->getFullName() ) );
+  return sz;
 }
 
 QVariant HolderData::data( const QModelIndex & /*idx*/, int /*role*/ ) const
@@ -66,10 +78,10 @@ QVariant HolderData::data( const QModelIndex & /*idx*/, int /*role*/ ) const
   return QVariant();
 }
 
-bool HolderData::hasChildren( const QModelIndex & /*par*/ ) const
-{
-  return false;
-}
+// bool HolderData::hasChildren( const QModelIndex & /*par*/ ) const
+// {
+//   return false;
+// }
 
 QModelIndex HolderData::index( int /*row*/, int /*column*/, const QModelIndex & /*par*/ ) const
 {
@@ -78,11 +90,26 @@ QModelIndex HolderData::index( int /*row*/, int /*column*/, const QModelIndex & 
 
 QModelIndex HolderData::parent( const QModelIndex & idx ) const
 {
+  DBGx( "dbg: %s", qP( getFullName() ) );
   if( ! idx.isValid() ) {
     return QModelIndex();
   }
 
-  return createIndex( 0, 0, par );
+  TDataSet *ds = static_cast<TDataSet*>( idx.internalPointer() );
+  if( !ds ) {
+    DBG1( "dbg: ds=0" );
+    return QModelIndex();
+  }
+  DBGx( "dbg: ds: %s", qP( ds->getFullName() ) );
+
+  TDataSet *ds_p = ds->getParent();
+  if( !ds_p ) {
+    DBG1( "dbg: ds_p=0" );
+    return QModelIndex();
+  }
+  DBGx( "dbg: ds_p: %s", qP( ds_p->getFullName() ) );
+
+  return createIndex( 0, 0, ds_p );
 }
 
 // my part
@@ -1046,6 +1073,57 @@ TDataSet::~TDataSet()
   // DBGx( "dbg:  %p %s", this, qP( getFullName() ));
   state = stateBad; guard = 0;
 }
+
+// QAbstractItemModel part
+int TDataSet::columnCount( const QModelIndex & /*par*/ ) const
+{
+  return 2;
+}
+
+QVariant TDataSet::data( const QModelIndex &idx, int role ) const
+{
+  DBG1( "dbg: start " );
+  if( !idx.isValid() ) {
+    return QVariant();
+  }
+  int r = idx.row(), c = idx.column();
+  DBGx( "dbg: r=%d c=%d %s", r, c, qP( getFullName() ) );
+  if( role != Qt::DisplayRole ) {
+    return QVariant();
+  }
+  QString s = QString( "r " ) + QSN( r ) + QString( " c " ) + QSN( c );
+  return s;
+  // return QVariant();
+}
+
+// bool TDataSet::hasChildren( const QModelIndex & /*par*/ ) const
+// {
+//   //return ( size()>0 );
+//   return true;
+// }
+
+QModelIndex TDataSet::index( int row, int column, const QModelIndex &par ) const
+{
+  // if( !par.isValid() ) {
+  //   return QModelIndex();
+  // }
+  DBGx( "dbg: row=%d column=%d %s", row, column, qP( getFullName() ) );
+  if( ! hasIndex( row, column, par ) ) {
+    DBG1( "dbg: no index" );
+    return QModelIndex();
+  }
+
+  TDataSet *ds_t = getElemT<TDataSet*>( row );
+  if( !ds_t ) {
+    DBG1( "dbg: no ds_t" );
+    return QModelIndex();
+  }
+  DBGx( "dbg: ds_t: %s",  qP( ds_t->getFullName() ) );
+  return createIndex( row, column, ds_t );
+}
+
+// ----------------------------------
+
 
 bool TDataSet::isObject( const QString & cl_name  ) const
 {

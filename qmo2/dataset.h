@@ -185,7 +185,7 @@ class HolderData : public QAbstractItemModel {
   virtual int rowCount( const QModelIndex &par = QModelIndex() ) const override;
   virtual QVariant data( const QModelIndex &idx,
                      int role = Qt::DisplayRole ) const override;
-  virtual bool hasChildren( const QModelIndex &par = QModelIndex() ) const;
+  // virtual bool hasChildren( const QModelIndex &par = QModelIndex() ) const;
   virtual QModelIndex index( int row, int column,
                       const QModelIndex &par = QModelIndex() ) const override;
   virtual QModelIndex parent( const QModelIndex &idx ) const override;
@@ -215,14 +215,15 @@ class HolderData : public QAbstractItemModel {
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
   bool setParams( const QString params ); //* params sep: newline
-  virtual QString getType() const = 0;
+  Q_INVOKABLE virtual QString getType() const = 0;
   virtual const char* getHelp() const  = 0;
   virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
   virtual bool set( const QVariant & x, int idx = 0 ) = 0;
   virtual QVariant get( int idx = 0 ) const = 0;
   virtual QString toString() const = 0;
   virtual bool fromString( const QString &s ) = 0;
-  virtual int size() const { return 0; }
+  int size() const { return children().size(); }
+  virtual int arrSize() const { return 1; }
  protected:
   void extraToParm();
 
@@ -244,7 +245,7 @@ class HolderValue : public HolderData {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET; // just for working create (need fr register)
-  virtual QString getType() const override;
+  Q_INVOKABLE virtual QString getType() const override;
  protected:
   DCL_DEFAULT_STATIC;
 };
@@ -260,7 +261,7 @@ class HolderInt : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual QString getType() const override;
+  Q_INVOKABLE virtual QString getType() const override;
   STD_CONVERSIONS(int);
  protected:
   int v;
@@ -280,7 +281,7 @@ class HolderSwitch : public HolderInt {
   DCL_STD_INF;
   // most functions from HolderInt
   virtual void post_set() override;
-  virtual QString getType() const override;
+  Q_INVOKABLE virtual QString getType() const override;
   int operator=( int a ) { v=a; post_set(); return v; }
  protected:
   DCL_DEFAULT_STATIC;
@@ -296,11 +297,11 @@ class HolderList : public HolderInt {
  public:
   DCL_CTOR(HolderList);
   virtual ~HolderList();
-  DCL_CREATE; // now bad: no info for strings
+  DCL_CREATE;
   DCL_STD_INF;
   // most functions from HolderInt
   virtual void post_set() override;
-  virtual QString getType() const;
+  Q_INVOKABLE virtual QString getType() const;
   int operator=( int a ) { v=a; post_set(); return v; }
  protected:
   DCL_DEFAULT_STATIC;
@@ -319,7 +320,7 @@ class HolderDouble : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual QString getType() const override;
+  Q_INVOKABLE virtual QString getType() const override;
   STD_CONVERSIONS(double);
  protected:
   double v;
@@ -340,7 +341,7 @@ class HolderString : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual QString getType() const override;
+  Q_INVOKABLE virtual QString getType() const override;
   STD_CONVERSIONS(QString);
   const QString& cval() const { return v; };
  protected:
@@ -362,7 +363,7 @@ class HolderColor : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual QString getType() const override;
+  Q_INVOKABLE virtual QString getType() const override;
   STD_CONVERSIONS(QColor);
  protected:
   QColor v;
@@ -382,8 +383,8 @@ class HolderIntArray : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual int size() const override { return v.size(); }
-  virtual QString getType() const override;
+  virtual int arrSize() const override { return v.size(); }
+  Q_INVOKABLE virtual QString getType() const override;
   STD_CONVERSIONS(std::vector<int>);
   int operator[](int i) const { return v[i]; };
   int& operator[](int i) { return v[i]; };
@@ -405,8 +406,8 @@ class HolderDoubleArray : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual int size() const override { return v.size(); }
-  virtual QString getType() const override;
+  virtual int arrSize() const override { return v.size(); }
+  Q_INVOKABLE virtual QString getType() const override;
   STD_CONVERSIONS(std::vector<double>);
   double operator[](int i) const { return v[i]; };
   double& operator[](int i) { return v[i]; };
@@ -428,8 +429,8 @@ class HolderStringArray : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual int size() const override { return v.size(); }
-  virtual QString getType() const override;
+  virtual int arrSize() const override { return v.size(); }
+  Q_INVOKABLE virtual QString getType() const override;
   STD_CONVERSIONS(QStringList);
   QString operator[](int i) const { return v[i]; };
   QString& operator[](int i) { return v[i]; };
@@ -458,8 +459,18 @@ class TDataSet : public HolderData {
    DCL_CREATE;
    DCL_STD_INF;
    DCL_STD_GETSET;
-   virtual int size() const override { return children().size(); }
-   virtual QString getType() const override;
+
+   // QAbstractItemModel part
+   virtual int columnCount( const QModelIndex &par = QModelIndex() ) const override;
+   // virtual int rowCount( const QModelIndex &par = QModelIndex() ) const override;
+   virtual QVariant data( const QModelIndex &idx,
+                     int role = Qt::DisplayRole ) const override;
+   // virtual bool hasChildren( const QModelIndex &par = QModelIndex() ) const;
+   virtual QModelIndex index( int row, int column,
+                      const QModelIndex &par = QModelIndex() ) const override;
+   // virtual QModelIndex parent( const QModelIndex &idx ) const override;
+
+   Q_INVOKABLE virtual QString getType() const override;
    virtual bool isObject( const QString &cl_name = QString() ) const override;
    /** return flags of allow adding */
    int getAllowAdd() const { return allow_add; }

@@ -1191,9 +1191,10 @@ void LaboView::showTreeModel()
 
   QVBoxLayout *lay = new QVBoxLayout();
 
-  HolderModel *ho_mo = new HolderModel( root, this );
+  // HolderModel *ho_mo = new HolderModel( root, this );
   QTreeView *treeView = new QTreeView( dia );
-  treeView->setModel( ho_mo );
+  // treeView->setModel( ho_mo );
+  treeView->setModel( root );
 
   lay->addWidget( treeView );
 
@@ -1206,7 +1207,7 @@ void LaboView::showTreeModel()
   dia->resize( 600, 400 ); // TODO: unmagic
   dia->exec();
   delete dia;
-  delete ho_mo;
+  // delete ho_mo;
   emit viewChanged();
   return;
 }
