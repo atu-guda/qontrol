@@ -1436,8 +1436,8 @@ HolderData* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
 {
   //DBGx( "dbg: try to add \"%s\" type \"%s\" to \"%s\"",
   //    qP(ob_name), qP(cl_name), qP( getFullName() ) );
-  if( ! ( allow_add & allowObject ) )
-    return nullptr;
+  // if( ! ( allow_add & allowObject ) )
+  //   return nullptr;
   HolderData *el = getElem( ob_name );
   if( el != nullptr ) {
     DBGx( "ERR: name \"%s\" (%s)  exist in \"%s\"!",
@@ -1486,45 +1486,22 @@ int TDataSet::del_obj( const QString &ob_name )
     return 0;
   }
 
-  // save selection obj to adjust sel index
-  HolderData *s_ob = getSelObj();
   delete ho; // auto remove object and from parent lists
-  sel = indexOfHolder( s_ob );
   reportStructChanged();
   return 1;
-}
-
-bool TDataSet::setSel( int idx )
-{
-  if( idx < -1  || idx >= size() ) {
-    return false;
-  }
-  sel = idx;
-  return true;
-}
-
-bool TDataSet::setSel( const QString& name )
-{
-  if( name == "-UNSELECT-" ) { // special case
-    sel = -1;
-    return true;
-  }
-
-  HolderData *ho = getElem( name );
-  if( !ho ) {
-    return false;
-  }
-  int idx = indexOfHolder( ho );
-  return setSel( idx );
 }
 
 
 HolderData* TDataSet::add_param( const QString &tp_name, const QString &ob_name )
 {
-  if( ! ( allow_add & allowParam ) )
-    return nullptr;
+  // if( ! ( allow_add & allowParam ) )
+  //   return nullptr;
   if( getElem( ob_name ) ) {
     DBGx( "ERR: name \"%s\" exist in %s!", qP(ob_name), qP( getFullName() ) );
+    return nullptr;
+  }
+  // TODO: isValidType
+  if( !isValidType( tp_name ) ) {
     return nullptr;
   }
   HolderData *ho = EFACT.createElem( tp_name, ob_name, this );
@@ -1672,10 +1649,10 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
         return false;
       }
       if( !ho ) { // name not found
-        if( ! ( allow_add & allowObject) ) {
-          DBG2q( "WARN: creating disallowed in: %s", objectName() );
-          continue;
-        }
+        // if( ! ( allow_add & allowObject) ) {
+        //   DBG2q( "WARN: creating disallowed in: %s", objectName() );
+        //   continue;
+        // }
         if( ! add_obj( cl_name, elname ) ) {
           errstr = QString("TDataSet::fromDom: fail to create obj %1 %2 ")
                    .arg(cl_name).arg(elname);
@@ -1706,10 +1683,6 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
         return false;
       }
       if( !ho ) {
-        if( ! ( allow_add & allowParam ) ) {
-          DBGx( "WARN: creating param: \"%s\" disallowed in \"%s\"", qP(elname), qP(objectName()) );
-          continue;
-        }
         ho =  add_param( tp_name, elname );
         if( !ho  ) {
           errstr = QString("TDataSet::fromDom: fail to create param %1 %2 ")

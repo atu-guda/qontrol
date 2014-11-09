@@ -26,7 +26,6 @@ STD_CLASSINFO(InputParams,clpSpecial | clpContainer);
 
 CTOR(InputParams,TDataContainer)
 {
-  allow_add = allowObject;
   allowed_types = "InputParam,+SPECIAL";
 }
 

@@ -227,6 +227,15 @@ class HolderData : public QAbstractItemModel {
       }
   /** index of holder, if my, -1 - if not */
   int indexOfHolder( const HolderData *ho ) const;
+
+  /** return state */
+  virtual int getState() const { return state; }
+  /** returns modified flag */
+  int getModified() const { return modified; }
+  /** set modified flag */
+  void setModified() { modified |= 1; }
+  /** drop modified flag */
+  void setUnModified() { modified = 0; }
   virtual void post_set() = 0;
   virtual bool getData( const QString &nm, int *da ) const;
   virtual bool getData( const QString &nm, double *da ) const;
@@ -234,7 +243,7 @@ class HolderData : public QAbstractItemModel {
   virtual bool getData( const QString &nm, QString &da ) const;
   virtual bool setData( const QString &nm, const QVariant &da );
   virtual QDomElement toDom( QDomDocument &dd ) const;
-  Q_INVOKABLE const QString& allowTypes() const { return allowed_types; }
+  Q_INVOKABLE QString allowTypes() const { return allowed_types; }
   /** is this class child of given or the same by name */
   Q_INVOKABLE bool isChildOf( const QString &cname ) const;
   //* make real work for getType()
@@ -243,6 +252,8 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE int getMyIndexInParent() const;
   Q_INVOKABLE QString childName( int n ) const
     { return ( n<size() && n >= 0 ) ? children().at( n )->objectName() : ""; }
+ signals:
+   void sigStructChanged();
  public slots:
   /** returns full name of object: aaa.bbb.cc  */
   QString getFullName() const;
@@ -265,8 +276,14 @@ class HolderData : public QAbstractItemModel {
   int flags;   //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
   QVariant::Type tp = QVariant::Invalid;
   TDataSet *par; // keep it?
+  /** state: 0-bad, 1-constructed, 2-run; */
+  int state = stateGood;
+  /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
+  int modified = 0;
+  /** flag: suspend reaction to structure update: use only in mass changes */
+  bool updSuspended = false;
   QSSMap parms;
-  QString allowed_types = "";
+  QString allowed_types = ""; // separator=','
   DCL_DEFAULT_STATIC;
 };
 
@@ -485,8 +502,6 @@ class TDataSet : public HolderData {
   Q_OBJECT
   friend class InputSimple; // for register
   friend class InputParam; //  same
- signals:
-   void sigStructChanged();
  public:
    DCL_CTOR(TDataSet);
    virtual ~TDataSet() override;
@@ -495,16 +510,6 @@ class TDataSet : public HolderData {
    DCL_STD_GETSET;
 
    virtual QString getTypeV() const override;
-   /** return flags of allow adding */
-   int getAllowAdd() const { return allow_add; }
-   /** return state */
-   virtual int getState() const { return state; }
-   /** returns modified flag */
-   int getModified() const { return modified; }
-   /** set modified flag */
-   void setModified() { modified |= 1; }
-   /** drop modified flag */
-   void setUnModified() { modified = 0; }
 
    virtual bool getData( const QString &nm, QVariant &da ) const override;
    virtual bool getData( const QString &nm, int *da ) const override;
@@ -563,17 +568,6 @@ class TDataSet : public HolderData {
    bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
    /** delete given object by name */
    int del_obj( const QString &ob_name );
-   //* return index of selected element or -1
-   int getSel() const { return sel; }
-   //* return ptr to holder of selected element or nullptr
-   HolderData* getSelObj() const
-     { return sel >=0 ? ( qobject_cast<HolderData*>(children()[sel]) ): nullptr; }
-   //* set index of selected element, return succsess
-   bool setSel( int idx );
-   //* set index of selected element by name (or "-UNSELECT-"), return succsess
-   bool setSel( const QString &name );
-   //* next selected (ring)
-   int nextSel() { ++sel; if( sel>=size() ) {sel=0;}; return sel; };
  protected:
    /** gets pointer to parameter, near to getDoublePrmPtr
     * for param mod only - no descend  */
@@ -590,16 +584,6 @@ class TDataSet : public HolderData {
    /** guard value: debug */
    static const int guard_val = 7442428;
    int guard = guard_val;
-   /** state: 0-bad, 1-constructed, 2-run; */
-   int state = stateGood;
-   /** allowing object add /remove for some classes 1-add obj, 2-add params */
-   int allow_add = 0;
-   /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
-   int modified = 0;
-   /** flag: suspend reaction to structure update: use only in mass changes */
-   bool updSuspended = false;
-   //* index of selected element, -1 = unselected
-   int sel = -1;
    /** place for inputs */
    QVector<InputSimple*> inputs;
    /** place for parametric inputs */

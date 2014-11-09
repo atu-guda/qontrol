@@ -17,7 +17,6 @@ STD_CLASSINFO(TRootData,clpContainer|clpSpecial );
 
 CTOR(TRootData,TDataContainer)
 {
-  allow_add = allowObject | allowParam;
   allowed_types = "TModel";
 }
 

@@ -55,8 +55,7 @@ QVariant HolderModel::data( const QModelIndex &index, int role ) const
   if( !ob )
       return "?cast?";
 
-  return QString("*_") + QSN( ob->size() )
-       + ":" + QSN( ob->getAllowAdd() );
+  return QString("*_") + QSN( ob->size() );
 }
 
 //bool HolderModel::hasChildren( const QModelIndex &parent ) const

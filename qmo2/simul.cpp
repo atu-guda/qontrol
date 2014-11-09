@@ -26,8 +26,7 @@ STD_CLASSINFO(Simulation,clpSpecial | clpContainer);
 
 CTOR(Simulation,TDataSet)
 {
-  allow_add = allowParam;
-  allowed_types = "double"; // double + inputs?
+  allowed_types = "double,HolderDouble"; // double + inputs? TODO: check alias
 }
 
 Simulation::~Simulation()

@@ -18,7 +18,6 @@ STD_CLASSINFO( TDataContainer,clpContainer );
 
 CTOR(TDataContainer,TDataSet)
 {
-  allow_add = allowBoth;
 }
 
 TDataContainer::~TDataContainer()

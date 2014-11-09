@@ -1311,23 +1311,27 @@ int DataDialog::createWidgets()
   QPushButton *btn_addParam = new QPushButton( "Add param" );
   connect( btn_addParam, &QPushButton::clicked, this, &DataDialog::addParam);
   lay_btn2->addWidget( btn_addParam );
-  if( ! (ds.getAllowAdd() & allowParam ) )
-    btn_addParam->setEnabled( false );
+
+  // TODO: iterate over all ds.allowTypes().split(',') and check clpData ....
+  // bool can_add_params = ds.isValidType( "HolderValue" ) || ds.isValidType( "HolderDouble" );
+  // if( !can_add_params )
+  //   btn_addParam->setEnabled( false );
   QPushButton *btn_addObj = new QPushButton( "Add object" );
   connect( btn_addObj, &QPushButton::clicked, this, &DataDialog::addObj);
   lay_btn2->addWidget( btn_addObj );
-  if( ! (ds.getAllowAdd() & allowObject ) )
-    btn_addObj->setEnabled( false );
+  // bool can_add_objs = ds.isValidType( "TDataSet" );
+  // if( ! can_add_objs )
+  //   btn_addObj->setEnabled( false );
   QPushButton *btn_delParam = new QPushButton( "Delete param" );
   connect( btn_delParam, &QPushButton::clicked, this, &DataDialog::delParam);
   lay_btn2->addWidget( btn_delParam );
-  if( ! (ds.getAllowAdd() & allowParam ) )  // TODO: + check list
-    btn_delParam->setEnabled( false );
+  // if( !can_add_params )
+  //    btn_delParam->setEnabled( false );
   QPushButton *btn_delObj = new QPushButton( "Delete object" );
   connect( btn_delObj, &QPushButton::clicked, this, &DataDialog::delObj);
   lay_btn2->addWidget( btn_delObj );
-  if( ! (ds.getAllowAdd() & allowObject ) )
-    btn_delObj->setEnabled( false );
+  // if( ! can_add_objs )
+  //   btn_delObj->setEnabled( false );
   lay1->addLayout( lay_btn2 );
 
   QHBoxLayout *lay_btn = new QHBoxLayout;
