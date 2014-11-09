@@ -195,7 +195,7 @@ class HolderData : public QAbstractItemModel {
    /**  returns false for simple data holders
     * returns true if this object is base or save of given type.
     * if cl_name is empty, return true in >= TDataSet */
-  virtual bool isObject( const QString &cl_name = QString() ) const;
+  Q_INVOKABLE bool isObject( const QString &cl_name = QString() ) const;
   void setFlags( int a_flags ) { flags = a_flags; }
   Q_INVOKABLE int getFlags() const { return flags; }
   TDataSet* getParent() const { return par; } // no Q_INVOKABLE: need reg TDataSet
@@ -209,6 +209,8 @@ class HolderData : public QAbstractItemModel {
   virtual bool setData( const QString &nm, const QVariant &da );
   virtual QDomElement toDom( QDomDocument &dd ) const;
   Q_INVOKABLE const QString& allowTypes() const { return allowed_types; }
+  /** is this class child of given or the same by name */
+  Q_INVOKABLE bool isChildOf( const QString &cname ) const;
   //* make real work for getType()
   virtual QString getTypeV() const = 0;
   //* returns this object index in parent or -1 on no [my] parent
@@ -477,7 +479,6 @@ class TDataSet : public HolderData {
    // virtual QModelIndex parent( const QModelIndex &idx ) const override;
 
    virtual QString getTypeV() const override;
-   virtual bool isObject( const QString &cl_name = QString() ) const override;
    /** return flags of allow adding */
    int getAllowAdd() const { return allow_add; }
    /** returns list of registerd elems names */
@@ -535,8 +536,6 @@ class TDataSet : public HolderData {
    virtual HolderData* add_param( const QString &tp_name, const QString &ob_name );
    /** is given type of subelement valid for this object */
    virtual int isValidType( const QString &cl_name ) const;
-   /** is this class child of given or the same by name */
-   bool isChildOf( const QString &cname ) const;
    void dumpStruct() const;
    QDomElement toDom( QDomDocument &dd ) const;
    bool fromDom( QDomElement &de, QString &errstr );

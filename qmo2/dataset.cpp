@@ -120,6 +120,22 @@ QModelIndex HolderData::parent( const QModelIndex & idx ) const
 
 // my part
 
+bool HolderData::isChildOf( const QString &cname ) const
+{
+  // DBGx( "dbg: this: \"%s\" type: \"%s\" cname: \"%s\"", qP( getFullName() ), qP( getType() ), qP( cname ) );
+  const QMetaObject *mob = metaObject();
+  while( mob ) {
+    // DBGx( "dbg: className(): \"%s\" cmp \"%s\"", qP( mob->className() ), qP( cname ) );
+    if( cname == mob->className() ) {
+      // DBG1( "dbg: true" );
+      return true;
+    }
+    mob = mob->superClass();
+  }
+  // DBG1( "dbg: false" );
+  return false;
+}
+
 void HolderData::setParm( const QString &name, const QString &value )
 {
   parms[name] = value;
@@ -155,9 +171,14 @@ bool HolderData::setParams( const QString params )
   return was_set;
 }
 
-bool HolderData::isObject( const QString & /*cl_name*/  ) const
+bool HolderData::isObject( const QString & cl_name ) const
 {
-  return false;
+  QString cn = cl_name;
+  if( cn.isEmpty() ) {
+    cn = QSL( "TDataSet" );
+  }
+
+  return isChildOf( cn );
 }
 
 void HolderData::extraToParm()
@@ -1154,16 +1175,6 @@ QModelIndex TDataSet::index( int row, int column, const QModelIndex &par ) const
 // ----------------------------------
 
 
-bool TDataSet::isObject( const QString & cl_name  ) const
-{
-  if( cl_name.isEmpty() )
-    return true;
-  if( isChildOf( cl_name ) )
-    return true;
-
-  return false;
-}
-
 void TDataSet::reset_dfl()
 {
   for( auto c : children() ) {
@@ -1392,7 +1403,7 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
   if( ! ho->isObject() ) {
     if( lt )
       *lt = LinkBad;
-    return 0;
+    return nullptr;
   }
   TDataSet *ds = qobject_cast<TDataSet*>(ho);
   return ds->getDoublePtr( rest, lt, targ, lev+1 );
@@ -1557,18 +1568,6 @@ int TDataSet::isValidType(  const QString &cl_name  ) const
   return false;
 }
 
-bool TDataSet::isChildOf( const QString &cname ) const
-{
-  check_guard();
-  const QMetaObject *mob = metaObject();
-  while( mob ) {
-    if( cname == mob->className() )
-      return true;
-    mob = mob->superClass();
-  }
-  return false;
-}
-
 
 bool TDataSet::set( const QVariant & x, int /* idx */  )
 {
@@ -1679,8 +1678,8 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
       }
       HolderData *ho = getElem( elname );
       if( ho && ! ho->isObject() ) {
-        errstr = QString("err: read elem failed \"%1\" "
-            "is not a element: \"%2\" but \"%3\" in \"%4\"" )
+        errstr = QString("err: read elem \"%1\" failed. "
+            "required: \"%2\" but have \"%3\" in \"%4\"" )
                 .arg(elname).arg(tagname).arg(ho->getType()).arg( getFullName() );
         DBG1q( errstr );
         return false;
