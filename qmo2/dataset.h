@@ -198,7 +198,7 @@ class HolderData : public QAbstractItemModel {
   virtual bool isObject( const QString &cl_name = QString() ) const;
   void setFlags( int a_flags ) { flags = a_flags; }
   Q_INVOKABLE int getFlags() const { return flags; }
-  Q_INVOKABLE TDataSet* getParent() const { return par; }
+  TDataSet* getParent() const { return par; } // no Q_INVOKABLE: need reg TDataSet
   // see DCL_STD_INF, DCL_STD_GETSET for childs
   virtual const TClassInfo* getClassInfo() const = 0;
   virtual void post_set() = 0;
@@ -208,9 +208,13 @@ class HolderData : public QAbstractItemModel {
   virtual bool getData( const QString &nm, QString &da ) const;
   virtual bool setData( const QString &nm, const QVariant &da );
   virtual QDomElement toDom( QDomDocument &dd ) const;
-  const QString& allowTypes() const { return allowed_types; }
+  Q_INVOKABLE const QString& allowTypes() const { return allowed_types; }
   //* make real work for getType()
   virtual QString getTypeV() const = 0;
+  //* returns this object index in parent or -1 on no [my] parent
+  Q_INVOKABLE int getMyIndexInParent() const;
+  Q_INVOKABLE QString childName( int n ) const
+    { return ( n<size() && n >= 0 ) ? children().at( n )->objectName() : ""; }
  public slots:
   /** returns full name of object: aaa.bbb.cc  */
   QString getFullName() const;
@@ -483,6 +487,8 @@ class TDataSet : public HolderData {
      {
       return qobject_cast<HolderData*>(children()[i]);
      }
+   /** returns holder by QModelIndex */
+   TDataSet* getElem( const QModelIndex &idx ) const;
    /** find holder for object by name */ // TODO: +full.name.elm
    HolderData* getElem( const QString &oname ) const
      {
@@ -499,7 +505,7 @@ class TDataSet : public HolderData {
         return findChild<T>( oname, Qt::FindDirectChildrenOnly );
       }
    /** index of holder, if my, -1 - if not */
-   int indexOfHolder( HolderData *ho ) const;
+   int indexOfHolder( const HolderData *ho ) const;
    /** return state */
    virtual int getState() const { return state; }
    /** returns modified flag */

@@ -7,4 +7,5 @@ ui_*.h
 *.qrc
 Session*
 qmo2/*.qol
-
+_ex
+tmp/

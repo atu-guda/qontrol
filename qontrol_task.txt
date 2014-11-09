@@ -1,0 +1,95 @@
+Идеи для qontrol
+
+База:
+DataSet: описание данных прямо в .h (cpp), позволяющее
+ 1. Автоматически строить и выполнять диалоги
+ 2. Сериализация/де. (XML)
+   ^--- это базовый уровень, полезный для других программ
+   и, может быть, вынесенный библиотеку.
+
+More:
+ Описание входов, выходов, параметров, связей, иерархии.
+ Это больше, чем 1, 2 т.к.
+ Связь вход-выход должна быть очень быстрой, (ptr), возможно  с ограничением
+  double or double[] + размерности
+ Параметрические связи - вещь чуть более нетривиальная,
+  т.к. возможно, нужен пересчёт,
+  и м.б. не только double
+ Иерархия не только классовая, но и объектная (библиотеки)
+  
+ 
+
+======================================================================
+1. Объектная модель
+
+World/Lab (static + dynamic part)
+  Simulation*
+  Scheme* (class+instances=elems)
+  Data
+  Library? (dir of schemes or file, dir of data or file)
+  InOut?
+  Report
+  Plot
+  Scene
+  Results(dyn)?
+Directory
+  ? single XML + data_dirs{in,out,pics,reports}
+  Hieararhy:
+   schemes/ exp/ libs/+ plots/ in/ out/ reports/
+
+Simulation
+  Type: run(+SetParm,RT), parm1, parm2, optimization
+  ->Main Scheme (main - autocreate instance)
+  ->Parms for scheme
+  ->Report
+  ->InOut?
+
+Scheme
+  Elements (may be schemes)
+   Special elements: Ins, Outs, 
+   Connectors
+  Links
+  ExternLinks (name,type,Link to elem)
+
+Element
+  Params
+  Ins
+  Outs
+  Flags
+  InnerLinks/Special_elems
+
+Link 
+  A. bind to In/Param
+  B. hold Both sides
+  To (element.in_name, connector.? )
+  From (element.out_name. connector.? ::global)
+  Flags
+  ? Type or only double?
+  ? Arrays?
+
+
+  
+
+Data
+  Name, type, value, flags
+
+А. Базовые объекты
+в каждом объекте машинное и человеческое описание
+ параметров
+ входов
+ выходов
++ возможность динамически добавлять
+
+Б. Контейнерные объекты
+
+В. Связи
+
+
+======================================================================
+2. Моделирование
+
+======================================================================
+3. Связь с внешним миром
+
+======================================================================
+4. Скрипты.

@@ -91,7 +91,7 @@ QModelIndex HolderData::index( int /*row*/, int /*column*/, const QModelIndex & 
 
 QModelIndex HolderData::parent( const QModelIndex & idx ) const
 {
-  DBGx( "dbg: %s", qP( getFullName() ) );
+  DBGx( "dbg: this: %s", qP( getFullName() ) );
   if( ! idx.isValid() ) {
     return QModelIndex();
   }
@@ -108,9 +108,14 @@ QModelIndex HolderData::parent( const QModelIndex & idx ) const
     DBG1( "dbg: ds_p=0" );
     return QModelIndex();
   }
+  if( ds_p == this ) {
+    DBG1( "dbg: ds_p=this" );
+    return QModelIndex();
+  }
+
   DBGx( "dbg: ds_p: %s", qP( ds_p->getFullName() ) );
 
-  return createIndex( 0, 0, ds_p );
+  return createIndex( ds_p->getMyIndexInParent(), 0, ds_p );
 }
 
 // my part
@@ -193,6 +198,14 @@ QDomElement HolderData::toDom( QDomDocument &dd ) const
   QDomText tn = dd.createTextNode( toString() );
   de.appendChild( tn );
   return de;
+}
+
+int HolderData::getMyIndexInParent() const
+{
+  if( !par ) {
+    return -1;
+  }
+  return par->indexOfHolder( this );
 }
 
 QString HolderData::getFullName() const
@@ -1088,39 +1101,54 @@ QVariant TDataSet::data( const QModelIndex &idx, int role ) const
     return QVariant();
   }
   int r = idx.row(), c = idx.column();
-  DBGx( "dbg: r=%d c=%d %s", r, c, qP( getFullName() ) );
+
+  const TDataSet *ds = getElem( idx );
+  if( !ds ) {
+    return QVariant();
+  }
+
+  DBGx( "dbg: r=%d c=%d this: %s ds: %s", r, c, qP( getFullName() ), qP( ds->getFullName() ) );
+
   if( role != Qt::DisplayRole ) {
     return QVariant();
   }
-  QString s = QString( "r " ) + QSN( r ) + QString( " c " ) + QSN( c );
-  return s;
+  if( c == 0 ) {
+    return ds->objectName();
+  }
+  return ds->getType();
+  // QString s = QString( "r " ) + QSN( r ) + QString( " c " ) + QSN( c );
+  // return s;
   // return QVariant();
 }
-
-// bool TDataSet::hasChildren( const QModelIndex & /*par*/ ) const
-// {
-//   //return ( size()>0 );
-//   return true;
-// }
 
 QModelIndex TDataSet::index( int row, int column, const QModelIndex &par ) const
 {
   // if( !par.isValid() ) {
   //   return QModelIndex();
   // }
-  DBGx( "dbg: row=%d column=%d %s", row, column, qP( getFullName() ) );
+  DBGx( "dbg: row=%d column=%d this: %s", row, column, qP( getFullName() ) );
+
   if( ! hasIndex( row, column, par ) ) {
     DBG1( "dbg: no index" );
     return QModelIndex();
   }
 
-  TDataSet *ds_t = getElemT<TDataSet*>( row );
-  if( !ds_t ) {
+  const TDataSet *ds_par = static_cast<TDataSet*>( par.internalPointer() );
+  if( !ds_par ) {
+    DBG1( "dbg: no ds_par" );
+    ds_par = this;
+    // return QModelIndex();
+  }
+  DBGx( "dbg: ds_par: %s",  qP( ds_par->getFullName() ) );
+
+  const TDataSet *ds_t = qobject_cast<TDataSet*>( ds_par->getElem( row ) );
+  if( ! ds_t ) {
     DBG1( "dbg: no ds_t" );
     return QModelIndex();
   }
   DBGx( "dbg: ds_t: %s",  qP( ds_t->getFullName() ) );
-  return createIndex( row, column, ds_t );
+
+  return createIndex( row, column, const_cast<TDataSet*>(ds_t) );
 }
 
 // ----------------------------------
@@ -1158,6 +1186,25 @@ QString TDataSet::getTypeV() const
 
 DEFAULT_FUNCS_REG(TDataSet);
 
+TDataSet* TDataSet::getElem( const QModelIndex &idx ) const
+{
+  // invalid idx means root on tree: need called object,
+  // but nullptr: root not shown
+  if( !idx.isValid() ) {
+    return nullptr;
+  }
+  TDataSet *ds = static_cast<TDataSet*>( idx.internalPointer() );
+  if( !ds ) {
+    DBGx( "warn: no ptr in valid index, this: %s", qP( getFullName() ) );
+    return nullptr;
+  }
+  int r = idx.row();
+  if( r >= size()  || r < 0 ) {
+    DBGx( "warn: bad row (%d) in index, this: %s", r, qP( getFullName() ) );
+    return nullptr;
+  }
+  return qobject_cast<TDataSet*>( children().at( r ) );
+}
 
 QStringList TDataSet::elemNames() const
 {
@@ -1169,9 +1216,10 @@ QStringList TDataSet::elemNames() const
 }
 
 
-int TDataSet::indexOfHolder( HolderData *ho ) const
+int TDataSet::indexOfHolder( const HolderData *ho ) const
 {
-  return children().indexOf( ho );
+  // children holds <QObject*>, but indexOf dont touch *it
+  return children().indexOf( const_cast<HolderData*>(ho) );
 }
 
 
