@@ -201,7 +201,7 @@ class HolderData : public QAbstractItemModel {
   TDataSet* getParent() const { return par; } // no Q_INVOKABLE: need reg TDataSet
   // see DCL_STD_INF, DCL_STD_GETSET for childs
   virtual const TClassInfo* getClassInfo() const = 0;
-  /** returns list of registerd elems names */
+  /** returns list of registerd (exists) clild elems names */
   Q_INVOKABLE QStringList elemNames() const;
   /** returns holder by number - for QModel... no check */
   HolderData* getElem( int i ) const
@@ -510,12 +510,6 @@ class TDataSet : public HolderData {
    DCL_STD_GETSET;
 
    virtual QString getTypeV() const override;
-
-   virtual bool getData( const QString &nm, QVariant &da ) const override;
-   virtual bool getData( const QString &nm, int *da ) const override;
-   virtual bool getData( const QString &nm, double *da ) const override;
-   virtual bool getData( const QString &nm, QString &da ) const override;
-   virtual bool setData( const QString &nm, const QVariant &da ) override;
 
    /** corrects data, if ni==-1 -- all elements -- now empty, see setData */
    virtual int checkData( int ni );

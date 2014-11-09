@@ -328,13 +328,42 @@ QString HolderData::getFullName() const
 
 bool HolderData::getData( const QString &nm, QVariant &da ) const
 {
-  if( ! nm.isEmpty() ) { // only w/o name
-    DBGx( "warn: complex name \"%s\" req for simple obj %s",
-        qP(nm), qP(objectName()) )
-    return false;
+  if( nm.isEmpty() ) {
+    da = get();
+    return true;
   }
-  da = get();
-  return true;
+
+  QString first, rest;
+  int idx;
+  NameType nm_type = splitName( nm, first, rest, idx );
+  if( nm_type == badName ) {
+    DBGx( "warn: bad target name \"%s\"", qP( nm ) );
+    return 0;
+  }
+
+  HolderData *ho = getElem( first );
+  if( !ho ) {
+    DBGx( "warn: fail to find name \"%s\"", qP( first ) );
+    return 0;
+  }
+  if( nm_type == simpleName ) { // first only
+    da = ho->get( idx ); // TODO: check for slimple data?
+    return 1;
+  }
+
+  // both part of name exists
+  if( ho->getTp() != QVariant::UserType ) {
+    DBGx( "warn: compound name required (1). first: \"%s\" rest: \"%s\" tp: %d",
+        qP(first), qP(rest), (int)(ho->getTp()) );
+    return 0;
+  }
+  if( ! ho->isObject() ) {
+    DBGx( "warn: compound name required (2). first: \"%s\" rest: \"%s\" obj \"%s\" type \"%s\"",
+        qP(first), qP(rest), qP(ho->objectName()), qP(ho->getType()) );
+    return 0;
+  }
+
+  return ho->getData( rest, da );
 }
 
 
@@ -376,12 +405,40 @@ bool HolderData::getData( const QString &nm, QString &da ) const
 
 bool HolderData::setData( const QString &nm, const QVariant &da )
 {
+  if( nm.isEmpty() ) {
+    return set( da );
+  }
+
+  QString first, rest;
+  int idx;
+  NameType nm_type = splitName( nm, first, rest, idx );
+  if( nm_type == badName ) {
+    DBG2q( "warn: bad target name", nm );
+    return 0;
+  }
+
+  HolderData *ho = getElem( first );
+  if( !ho ) {
+    DBGx( "warn: fail to find name \"%s\" in \"%s\"", 
+          qP(first), qP(getFullName()) );
+    return 0;
+  }
+  if( nm_type == simpleName ) { // first only
+    return ho->set( da, idx );
+  }
+
+  // both part of name exists
+  if( ho->getTp() != QVariant::UserType || ! ho->isObject() ) {
+    DBG2q( "warn: compound name required ", first );
+    return 0;
+  }
+
+  return ho->setData( rest, da );
   if( ! nm.isEmpty() ) { // only w/o name
     DBGx( "warn: complex name \"%s\" req for simple obj %s",
         qP(nm), qP(objectName()) )
     return false;
   }
-  return set( da );
 }
 
 
@@ -1221,115 +1278,10 @@ DEFAULT_FUNCS_REG(TDataSet);
 
 
 
-bool TDataSet::getData( const QString &nm, QVariant &da ) const
-{
-  if( nm.isEmpty() )
-    return 0;
-  QString first, rest;
-  int idx;
-  NameType nm_type = splitName( nm, first, rest, idx );
-  if( nm_type == badName ) {
-    DBGx( "warn: bad target name \"%s\"", qP( nm ) );
-    return 0;
-  }
-
-  HolderData *ho = getElem( first );
-  if( !ho ) {
-    DBGx( "warn: fail to find name \"%s\"", qP( first ) );
-    return 0;
-  }
-  if( nm_type == simpleName ) { // first only
-    da = ho->get( idx ); // TODO: check for slimple data?
-    return 1;
-  }
-
-  // both part of name exists
-  if( ho->getTp() != QVariant::UserType ) {
-    DBGx( "warn: compound name required (1). first: \"%s\" rest: \"%s\" tp: %d",
-        qP(first), qP(rest), (int)(ho->getTp()) );
-    return 0;
-  }
-  if( ! ho->isObject() ) {
-    DBGx( "warn: compound name required (2). first: \"%s\" rest: \"%s\" obj \"%s\" type \"%s\"",
-        qP(first), qP(rest), qP(ho->objectName()), qP(ho->getType()) );
-    return 0;
-  }
-
-  return ho->getData( rest, da );
-}
-
-
-bool TDataSet::getData( const QString &nm, int *da ) const
-{
-  if( !da )
-    return 0;
-  QVariant vda;
-  int rc = getData( nm, vda );
-  if( rc == 0 )
-    return 0;
-  *da = vda.toInt();
-  return 1;
-}
-
-bool TDataSet::getData( const QString &nm, double *da ) const
-{
-  if( !da )
-    return 0;
-  QVariant vda;
-  int rc = getData( nm, vda );
-  if( rc == 0 )
-    return 0;
-  *da = vda.toDouble();
-  return 1;
-}
-
-
-bool TDataSet::getData( const QString &nm, QString &da ) const
-{
-  QVariant vda;
-  int rc = getData( nm, vda );
-  if( rc == 0 )
-    return 0;
-  da = vda.toString();
-  return 1;
-}
-
-
-bool TDataSet::setData( const QString &nm, const QVariant &da )
-{
-  if( nm.isEmpty() )
-    return 0;
-  QString first, rest;
-  int idx;
-  NameType nm_type = splitName( nm, first, rest, idx );
-  if( nm_type == badName ) {
-    DBG2q( "warn: bad target name", nm );
-    return 0;
-  }
-
-  HolderData *ho = getElem( first );
-  if( !ho ) {
-    DBGx( "warn: fail to find name \"%s\" in \"%s\"", 
-          qP(first), qP(getFullName()) );
-    return 0;
-  }
-  if( nm_type == simpleName ) { // first only
-    return ho->set( da, idx );
-  }
-
-  // both part of name exists
-  if( ho->getTp() != QVariant::UserType || ! ho->isObject() ) {
-    DBG2q( "warn: compound name required ", first );
-    return 0;
-  }
-
-  return ho->setData( rest, da );
-}
 
 
 int TDataSet::checkData( int /* ni */ )
 {
-  check_guard();
   return 0;
 }
 
