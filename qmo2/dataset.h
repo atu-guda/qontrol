@@ -201,6 +201,32 @@ class HolderData : public QAbstractItemModel {
   TDataSet* getParent() const { return par; } // no Q_INVOKABLE: need reg TDataSet
   // see DCL_STD_INF, DCL_STD_GETSET for childs
   virtual const TClassInfo* getClassInfo() const = 0;
+  /** returns list of registerd elems names */
+  Q_INVOKABLE QStringList elemNames() const;
+  /** returns holder by number - for QModel... no check */
+  HolderData* getElem( int i ) const
+     {
+      return qobject_cast<HolderData*>(children().at(i));
+     }
+  /** returns holder by QModelIndex */
+  HolderData* getElem( const QModelIndex &idx ) const;
+  /** find holder for object by name */ // TODO: +full.name.elm
+  HolderData* getElem( const QString &oname ) const
+     {
+       return findChild<HolderData*>( oname, Qt::FindDirectChildrenOnly );
+     }
+  /** find holder for object by insex, safely cast to type T */
+  template<typename T> T getElemT( int idx ) const
+      {
+        return qobject_cast<T>( children().at(idx) );
+      }
+  /** find holder for object by name, safely cast to type T */
+  template<typename T> T getElemT( const QString &oname ) const
+      {
+        return findChild<T>( oname, Qt::FindDirectChildrenOnly );
+      }
+  /** index of holder, if my, -1 - if not */
+  int indexOfHolder( const HolderData *ho ) const;
   virtual void post_set() = 0;
   virtual bool getData( const QString &nm, int *da ) const;
   virtual bool getData( const QString &nm, double *da ) const;
@@ -468,45 +494,9 @@ class TDataSet : public HolderData {
    DCL_STD_INF;
    DCL_STD_GETSET;
 
-   // QAbstractItemModel part
-   // virtual int columnCount( const QModelIndex &par = QModelIndex() ) const override;
-   // virtual int rowCount( const QModelIndex &par = QModelIndex() ) const override;
-   virtual QVariant data( const QModelIndex &idx,
-                     int role = Qt::DisplayRole ) const override;
-   // virtual bool hasChildren( const QModelIndex &par = QModelIndex() ) const;
-   virtual QModelIndex index( int row, int column,
-                      const QModelIndex &par = QModelIndex() ) const override;
-   // virtual QModelIndex parent( const QModelIndex &idx ) const override;
-
    virtual QString getTypeV() const override;
    /** return flags of allow adding */
    int getAllowAdd() const { return allow_add; }
-   /** returns list of registerd elems names */
-   QStringList elemNames() const;
-   /** returns holder by number - for QModel... */
-   HolderData* getElem( int i ) const
-     {
-      return qobject_cast<HolderData*>(children()[i]);
-     }
-   /** returns holder by QModelIndex */
-   TDataSet* getElem( const QModelIndex &idx ) const;
-   /** find holder for object by name */ // TODO: +full.name.elm
-   HolderData* getElem( const QString &oname ) const
-     {
-       return findChild<HolderData*>( oname, Qt::FindDirectChildrenOnly );
-     }
-   /** find holder for object by insex, safely cast to type T */
-   template<typename T> T getElemT( int idx ) const
-      {
-        return qobject_cast<T>( children()[idx] );
-      }
-   /** find holder for object by name, safely cast to type T */
-   template<typename T> T getElemT( const QString &oname ) const
-      {
-        return findChild<T>( oname, Qt::FindDirectChildrenOnly );
-      }
-   /** index of holder, if my, -1 - if not */
-   int indexOfHolder( const HolderData *ho ) const;
    /** return state */
    virtual int getState() const { return state; }
    /** returns modified flag */

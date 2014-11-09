@@ -74,8 +74,31 @@ int HolderData::rowCount( const QModelIndex &par ) const
   return sz;
 }
 
-QVariant HolderData::data( const QModelIndex & /*idx*/, int /*role*/ ) const
+QVariant HolderData::data( const QModelIndex &idx, int role ) const
 {
+  DBG1( "dbg: start " );
+  if( !idx.isValid() ) {
+    return QVariant();
+  }
+  int r = idx.row(), c = idx.column();
+
+  const HolderData *ds = getElem( idx );
+  if( !ds ) {
+    return QVariant();
+  }
+
+  DBGx( "dbg: r=%d c=%d this: %s ds: %s", r, c, qP( getFullName() ), qP( ds->getFullName() ) );
+
+  if( role != Qt::DisplayRole ) {
+    return QVariant();
+  }
+  if( c == 0 ) {
+    return ds->objectName();
+  }
+  return ds->getType();
+  // QString s = QString( "r " ) + QSN( r ) + QString( " c " ) + QSN( c );
+  // return s;
+  // return QVariant();
   return QVariant();
 }
 
@@ -84,8 +107,31 @@ QVariant HolderData::data( const QModelIndex & /*idx*/, int /*role*/ ) const
 //   return false;
 // }
 
-QModelIndex HolderData::index( int /*row*/, int /*column*/, const QModelIndex & /*par*/ ) const
+QModelIndex HolderData::index( int row, int column, const QModelIndex &par ) const
 {
+  DBGx( "dbg: row=%d column=%d this: %s", row, column, qP( getFullName() ) );
+
+  if( ! hasIndex( row, column, par ) ) {
+    DBG1( "dbg: no index" );
+    return QModelIndex();
+  }
+
+  const HolderData *d_par = static_cast<HolderData*>( par.internalPointer() );
+  if( !d_par ) {
+    DBG1( "dbg: no d_par" );
+    d_par = this;
+    // return QModelIndex();
+  }
+  DBGx( "dbg: d_par: %s",  qP( d_par->getFullName() ) );
+
+  const HolderData *d_t = qobject_cast<HolderData*>( d_par->getElem( row ) );
+  if( ! d_t ) {
+    DBG1( "dbg: no d_t" );
+    return QModelIndex();
+  }
+  DBGx( "dbg: d_t: %s",  qP( d_t->getFullName() ) );
+
+  return createIndex( row, column, const_cast<HolderData*>(d_t) );
   return QModelIndex();
 }
 
@@ -96,14 +142,14 @@ QModelIndex HolderData::parent( const QModelIndex & idx ) const
     return QModelIndex();
   }
 
-  TDataSet *ds = static_cast<TDataSet*>( idx.internalPointer() );
+  HolderData *ds = static_cast<HolderData*>( idx.internalPointer() );
   if( !ds ) {
     DBG1( "dbg: ds=0" );
     return QModelIndex();
   }
   DBGx( "dbg: ds: %s", qP( ds->getFullName() ) );
 
-  TDataSet *ds_p = ds->getParent();
+  HolderData *ds_p = ds->getParent();
   if( !ds_p ) {
     DBG1( "dbg: ds_p=0" );
     return QModelIndex();
@@ -120,6 +166,33 @@ QModelIndex HolderData::parent( const QModelIndex & idx ) const
 
 // my part
 
+int HolderData::indexOfHolder( const HolderData *ho ) const
+{
+  // children holds <QObject*>, but indexOf dont touch *it
+  return children().indexOf( const_cast<HolderData*>(ho) );
+}
+
+HolderData* HolderData::getElem( const QModelIndex &idx ) const
+{
+  // invalid idx means root on tree: need called object,
+  // but nullptr: root not shown
+  if( !idx.isValid() ) {
+    return nullptr;
+  }
+  HolderData *ds = static_cast<HolderData*>( idx.internalPointer() );
+  if( !ds ) {
+    DBGx( "warn: no ptr in valid index, this: %s", qP( getFullName() ) );
+    return nullptr;
+  }
+  int r = idx.row();
+  if( r >= size()  || r < 0 ) {
+    DBGx( "warn: bad row (%d) in index, this: %s", r, qP( getFullName() ) );
+    return nullptr;
+  }
+  return qobject_cast<HolderData*>( children().at( r ) );
+}
+
+
 bool HolderData::isChildOf( const QString &cname ) const
 {
   // DBGx( "dbg: this: \"%s\" type: \"%s\" cname: \"%s\"", qP( getFullName() ), qP( getType() ), qP( cname ) );
@@ -134,6 +207,15 @@ bool HolderData::isChildOf( const QString &cname ) const
   }
   // DBG1( "dbg: false" );
   return false;
+}
+
+QStringList HolderData::elemNames() const
+{
+  QStringList cl;
+  for( const auto c : children() ) {
+    cl << c->objectName();
+  }
+  return cl;
 }
 
 void HolderData::setParm( const QString &name, const QString &value )
@@ -1109,68 +1191,6 @@ TDataSet::~TDataSet()
   state = stateBad; guard = 0;
 }
 
-// QAbstractItemModel part
-// int TDataSet::columnCount( const QModelIndex & /*par*/ ) const
-// {
-//   return 2;
-// }
-
-QVariant TDataSet::data( const QModelIndex &idx, int role ) const
-{
-  DBG1( "dbg: start " );
-  if( !idx.isValid() ) {
-    return QVariant();
-  }
-  int r = idx.row(), c = idx.column();
-
-  const TDataSet *ds = getElem( idx );
-  if( !ds ) {
-    return QVariant();
-  }
-
-  DBGx( "dbg: r=%d c=%d this: %s ds: %s", r, c, qP( getFullName() ), qP( ds->getFullName() ) );
-
-  if( role != Qt::DisplayRole ) {
-    return QVariant();
-  }
-  if( c == 0 ) {
-    return ds->objectName();
-  }
-  return ds->getType();
-  // QString s = QString( "r " ) + QSN( r ) + QString( " c " ) + QSN( c );
-  // return s;
-  // return QVariant();
-}
-
-QModelIndex TDataSet::index( int row, int column, const QModelIndex &par ) const
-{
-  // if( !par.isValid() ) {
-  //   return QModelIndex();
-  // }
-  DBGx( "dbg: row=%d column=%d this: %s", row, column, qP( getFullName() ) );
-
-  if( ! hasIndex( row, column, par ) ) {
-    DBG1( "dbg: no index" );
-    return QModelIndex();
-  }
-
-  const TDataSet *ds_par = static_cast<TDataSet*>( par.internalPointer() );
-  if( !ds_par ) {
-    DBG1( "dbg: no ds_par" );
-    ds_par = this;
-    // return QModelIndex();
-  }
-  DBGx( "dbg: ds_par: %s",  qP( ds_par->getFullName() ) );
-
-  const TDataSet *ds_t = qobject_cast<TDataSet*>( ds_par->getElem( row ) );
-  if( ! ds_t ) {
-    DBG1( "dbg: no ds_t" );
-    return QModelIndex();
-  }
-  DBGx( "dbg: ds_t: %s",  qP( ds_t->getFullName() ) );
-
-  return createIndex( row, column, const_cast<TDataSet*>(ds_t) );
-}
 
 // ----------------------------------
 
@@ -1197,41 +1217,8 @@ QString TDataSet::getTypeV() const
 
 DEFAULT_FUNCS_REG(TDataSet);
 
-TDataSet* TDataSet::getElem( const QModelIndex &idx ) const
-{
-  // invalid idx means root on tree: need called object,
-  // but nullptr: root not shown
-  if( !idx.isValid() ) {
-    return nullptr;
-  }
-  TDataSet *ds = static_cast<TDataSet*>( idx.internalPointer() );
-  if( !ds ) {
-    DBGx( "warn: no ptr in valid index, this: %s", qP( getFullName() ) );
-    return nullptr;
-  }
-  int r = idx.row();
-  if( r >= size()  || r < 0 ) {
-    DBGx( "warn: bad row (%d) in index, this: %s", r, qP( getFullName() ) );
-    return nullptr;
-  }
-  return qobject_cast<TDataSet*>( children().at( r ) );
-}
-
-QStringList TDataSet::elemNames() const
-{
-  QStringList cl;
-  for( const auto c : children() ) {
-    cl << c->objectName();
-  }
-  return cl;
-}
 
 
-int TDataSet::indexOfHolder( const HolderData *ho ) const
-{
-  // children holds <QObject*>, but indexOf dont touch *it
-  return children().indexOf( const_cast<HolderData*>(ho) );
-}
 
 
 bool TDataSet::getData( const QString &nm, QVariant &da ) const
