@@ -16,7 +16,6 @@ SOURCES += \
   datacont.cpp \
   dataset.cpp \
   elemfact.cpp \
-  holdermodel.cpp \
   inputparams.cpp \
   main.cpp \
   miscfun.cpp \
@@ -36,7 +35,6 @@ SOURCES += \
   scaledata.cpp \
   scheme.cpp \
   simul.cpp \
-  simulmodel.cpp \
   tmiso.cpp \
   tmodel.cpp \
   datawidget.cpp \
@@ -81,7 +79,6 @@ HEADERS += \
   datacont.h \
   dataset.h \
   defs.h \
-  holdermodel.h \
   inputparams.h \
   miscfun.h \
   mo2settdlg.h \
@@ -100,7 +97,6 @@ HEADERS += \
   scaledata.h \
   scheme.h \
   simul.h \
-  simulmodel.h \
   tmiso.h \
   tmodel.h \
   datawidget.h \

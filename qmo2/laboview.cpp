@@ -27,12 +27,10 @@
 #include "outview.h"
 #include "graphview.h"
 #include "statusmodel.h"
-#include "simulmodel.h"
 #include "doubletable.h"
 #include "runview.h"
 #include "plotview.h"
 #include "datawidget.h"
-#include "holdermodel.h"
 #include "addelemdia.h"
 
 using namespace std;
@@ -66,9 +64,8 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   oview = new OutView( doc, this, main_part );
   gview = new GraphView( doc, this, main_part );
   ContSimul *sims = model->getElemT<ContSimul*>( "sims" );
-  sims_model = new SimulModel( sims, this );
   sims_view = new QListView( this );
-  sims_view->setModel( sims_model );
+  sims_view->setModel( sims );
 
   stam = new StatusModel( this, this );
 
@@ -519,10 +516,9 @@ void LaboView::infoElm()
 
 void LaboView::showTreeElm()
 {
-  if( ! checkState( selCheck ) )
+  if( ! checkState( selCheck ) ) {
     return;
-
-  HolderModel *ho_elm = new HolderModel( selObj, this );
+  }
 
   QDialog *dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": Element tree: ") + selObj->objectName() );
@@ -531,9 +527,7 @@ void LaboView::showTreeElm()
 
 
   QTreeView *treeView = new QTreeView( dia );
-  treeView->setModel( ho_elm );
-
-  // scroll is in view
+  treeView->setModel( selObj );
   lay->addWidget( treeView );
 
 
@@ -543,10 +537,9 @@ void LaboView::showTreeElm()
   dia->setLayout( lay );
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  dia->resize( 600, 400 ); // TODO: unmagic
+  dia->resize( 800, 500 ); // TODO: unmagic
   dia->exec();
   delete dia;
-  delete ho_elm;
   emit viewChanged();
   return;
 }
@@ -1191,9 +1184,7 @@ void LaboView::showTreeModel()
 
   QVBoxLayout *lay = new QVBoxLayout();
 
-  // HolderModel *ho_mo = new HolderModel( root, this );
   QTreeView *treeView = new QTreeView( dia );
-  // treeView->setModel( ho_mo );
   treeView->setModel( root );
 
   lay->addWidget( treeView );
@@ -1204,7 +1195,7 @@ void LaboView::showTreeModel()
   dia->setLayout( lay );
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  dia->resize( 600, 400 ); // TODO: unmagic
+  dia->resize( 800, 500 ); // TODO: unmagic
   dia->exec();
   delete dia;
   // delete ho_mo;

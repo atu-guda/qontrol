@@ -152,7 +152,7 @@ QModelIndex HolderData::index( int row, int column, const QModelIndex &par ) con
     // DBG1( "dbg: no d_par, set from this" );
     d_par = this;
   }
-  DBGx( "dbg: d_par: %s",  qP( d_par->getFullName() ) );
+  // DBGx( "dbg: d_par: %s",  qP( d_par->getFullName() ) );
 
   const HolderData *d_t = qobject_cast<HolderData*>( d_par->getElem( row ) );
   if( ! d_t ) {
