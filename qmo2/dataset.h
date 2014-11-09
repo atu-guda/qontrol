@@ -208,8 +208,6 @@ class HolderData : public QAbstractItemModel {
      {
       return qobject_cast<HolderData*>(children().at(i));
      }
-  /** returns holder by QModelIndex */
-  HolderData* getElem( const QModelIndex &idx ) const;
   /** find holder for object by name */ // TODO: +full.name.elm
   HolderData* getElem( const QString &oname ) const
      {
