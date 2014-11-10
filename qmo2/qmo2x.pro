@@ -35,6 +35,7 @@ SOURCES += \
   scaledata.cpp \
   scheme.cpp \
   simul.cpp \
+  simulview.cpp \
   tmiso.cpp \
   tmodel.cpp \
   datawidget.cpp \
@@ -97,6 +98,7 @@ HEADERS += \
   scaledata.h \
   scheme.h \
   simul.h \
+  simulview.h \
   tmiso.h \
   tmodel.h \
   datawidget.h \

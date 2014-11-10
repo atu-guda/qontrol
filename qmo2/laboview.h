@@ -33,6 +33,7 @@ class StatusModel;
 class QScrollArea;
 class QTreeView;
 class QListView;
+class SimulView;
 
 class HolderData;
 class TMiso;
@@ -171,7 +172,7 @@ class LaboView : public QWidget
    OutView *oview;
    GraphView *gview;
    SimulModel *sims_model;
-   QListView *sims_view;
+   SimulView *sims_view;
    StatusModel *stam;
 
    LaboDoc *doc;

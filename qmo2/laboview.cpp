@@ -30,6 +30,7 @@
 #include "doubletable.h"
 #include "runview.h"
 #include "plotview.h"
+#include "simulview.h"
 #include "datawidget.h"
 #include "addelemdia.h"
 
@@ -63,9 +64,10 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   oview = new OutView( doc, this, main_part );
   gview = new GraphView( doc, this, main_part );
+
   ContSimul *sims = model->getElemT<ContSimul*>( "sims" );
-  sims_view = new QListView( this );
-  sims_view->setModel( sims );
+  sims_view = new SimulView( sims, this );
+
 
   stam = new StatusModel( this, this );
 
