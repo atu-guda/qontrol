@@ -30,7 +30,7 @@ typedef HolderData* PHolderData;
 typedef TDataSet* PTDataSet;
 typedef const TDataSet* CPTDataSet;
 typedef HolderData* (*PFHolderData)(
-    const QString& a_name, TDataSet* a_pa,
+    const QString& a_name, HolderData* a_pa,
     int a_flags, const QString &a_v_name,
     const QString& a_descr, const QString& a_extra );
 typedef PTDataSet (*PFDataSet)( PTDataSet aparent );
@@ -68,12 +68,12 @@ struct TClassInfo {
 };
 
 //* arguments for std ctor and creater - full form
-#define ARGS_CTOR const QString &obj_name, TDataSet *a_parent, \
+#define ARGS_CTOR const QString &obj_name, HolderData *a_parent, \
          int a_flags = 0, const QString &a_v_name = QString(),  \
          const QString &a_descr = QString(), const QString &a_extra = QString()
 
 //* arguments for std ctor and creater - short form w/o def values
-#define ARGS_CTOR_MIN const QString &obj_name, TDataSet *a_parent, \
+#define ARGS_CTOR_MIN const QString &obj_name, HolderData *a_parent, \
          int a_flags, const QString &a_v_name,  \
          const QString &a_descr, const QString &a_extra
 
@@ -198,7 +198,7 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE bool isObject( const QString &cl_name = QString() ) const;
   void setFlags( int a_flags ) { flags = a_flags; }
   Q_INVOKABLE int getFlags() const { return flags; }
-  TDataSet* getParent() const { return par; } // no Q_INVOKABLE: need reg TDataSet
+  HolderData* getParent() const { return par; } // no Q_INVOKABLE: need reg HolderData
   // see DCL_STD_INF, DCL_STD_GETSET for childs
   virtual const TClassInfo* getClassInfo() const = 0;
   /** returns list of registerd (exists) clild elems names */
@@ -240,6 +240,29 @@ class HolderData : public QAbstractItemModel {
   virtual bool getData( const QString &nm, QVariant &da ) const;
   virtual bool getData( const QString &nm, QString &da ) const;
   virtual bool setData( const QString &nm, const QVariant &da );
+
+  /** corrects data, if ni==-1 -- all elements -- now empty, see setData */
+  virtual int checkData( int ni );
+  /** add new object and it's description (new)*/
+  virtual HolderData* add_obj( const QString &cl_name, const QString &ob_name );
+  /** type-cast interface to add_obj */
+  template <typename T>
+    T* addObj( const QString &ob_name ) {
+      return qobject_cast<T*>( add_obj( T::staticMetaObject.className(), ob_name ) );
+    }
+  /** add new param and it's description */
+  virtual HolderData* add_param( const QString &tp_name, const QString &ob_name );
+  /** is given type of subelement valid for this object */
+  virtual int isValidType( const QString &cl_name ) const;
+  void dumpStruct() const;
+  /** initiates reactions to structure change: common: to root */
+  void reportStructChanged();
+  /** temporary suspend reaction to struct changes */
+  void suspendHandleStructChange() { updSuspended = true; }
+  /** resume reaction to struct changes */
+  void resumeHandleStructChange() { updSuspended = false; handleStructChanged(); }
+
+
   virtual QDomElement toDom( QDomDocument &dd ) const;
   Q_INVOKABLE QString allowTypes() const { return allowed_types; }
   /** is this class child of given or the same by name */
@@ -250,6 +273,8 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE int getMyIndexInParent() const;
   Q_INVOKABLE QString childName( int n ) const
     { return ( n<size() && n >= 0 ) ? children().at( n )->objectName() : ""; }
+  //* return strings for given enum
+  Q_INVOKABLE QStringList getEnumStrings( const QString &enum_name ) const;
  signals:
    void sigStructChanged();
  public slots:
@@ -267,13 +292,25 @@ class HolderData : public QAbstractItemModel {
   virtual bool fromString( const QString &s ) = 0;
   int size() const { return children().size(); }
   virtual int arrSize() const { return 1; }
+  /** create object with params as string */
+  bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
+  /** delete given object by name */
+  int del_obj( const QString &ob_name );
+  void check_guard() const;
  protected:
   void extraToParm();
+  /** reaction to add/remove of subobjects: call do_structChanged */
+  void handleStructChanged();
+  /** do real actions after structure changed */
+  virtual void do_structChanged();
 
+  /** guard value: debug */
+  static const int guard_val = 7442428;
+  int guard = guard_val;
   int dyn = 0; //* flag: is created dynamicaly i.e. can be deleted
   int flags;   //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
   QVariant::Type tp = QVariant::Invalid;
-  TDataSet *par; // keep it?
+  HolderData *par; // keep it?
   /** state: 0-bad, 1-constructed, 2-run; */
   int state = stateGood;
   /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
@@ -509,30 +546,8 @@ class TDataSet : public HolderData {
 
    virtual QString getTypeV() const override;
 
-   /** corrects data, if ni==-1 -- all elements -- now empty, see setData */
-   virtual int checkData( int ni );
-   /** add new object and it's description (new)*/
-   virtual HolderData* add_obj( const QString &cl_name, const QString &ob_name );
-   /** type-cast interface to add_obj */
-   template <typename T>
-   T* addObj( const QString &ob_name ) {
-     return qobject_cast<T*>( add_obj( T::staticMetaObject.className(), ob_name ) );
-   }
-
-   /** add new param and it's description */
-   virtual HolderData* add_param( const QString &tp_name, const QString &ob_name );
-   /** is given type of subelement valid for this object */
-   virtual int isValidType( const QString &cl_name ) const;
-   void dumpStruct() const;
    QDomElement toDom( QDomDocument &dd ) const;
    bool fromDom( QDomElement &de, QString &errstr );
-   void check_guard() const;
-   /** initiates reactions to structure change: common: to root */
-   void reportStructChanged();
-   /** temporary suspend reaction to struct changes */
-   void suspendHandleStructChange() { updSuspended = true; }
-   /** resume reaction to struct changes */
-   void resumeHandleStructChange() { updSuspended = false; handleStructChanged(); }
    // special part - TODO: remove or ifdef in separate lib
    /** returns pointer to given parameter, checking if valid
     * valid names:
@@ -553,29 +568,15 @@ class TDataSet : public HolderData {
    int inputsCount() const { return inputs.size(); };
    /** returns input by number */
    InputSimple* getInput( int n ) const;
-   //* return strings for given enum
-   QStringList getEnumStrings( const QString &enum_name ) const;
- public slots:
-   /** create object with params as string */
-   bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
-   /** delete given object by name */
-   int del_obj( const QString &ob_name );
  protected:
    /** gets pointer to parameter, near to getDoublePrmPtr
     * for param mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
-   /** reaction to add/remove of subobjects: call do_structChanged */
-   void handleStructChanged();
-   /** do real actions after structure changed */
-   virtual void do_structChanged();
    /** register input (call by ctor) in inputs */
    void registerInput( InputSimple *inp );
    /** unregister input (call by dtor) from inputs */
    void unregisterInput( InputSimple *inp );
  protected:
-   /** guard value: debug */
-   static const int guard_val = 7442428;
-   int guard = guard_val;
    /** place for inputs */
    QVector<InputSimple*> inputs;
    /** place for parametric inputs */

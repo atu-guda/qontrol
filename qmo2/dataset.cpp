@@ -43,7 +43,7 @@ HolderData::~HolderData()
   */
 }
 
-HolderData* HolderData::create( const QString &, TDataSet *,
+HolderData* HolderData::create( const QString &, HolderData *,
          int, const QString &, const QString &, const QString & )
 {
   DBG1( "Attempt to create abstract class" );
@@ -302,6 +302,148 @@ QString HolderData::getTypeV() const // = 0;
   return "None";
 }
 
+int HolderData::checkData( int /* ni */ )
+{
+  return 0;
+}
+
+void HolderData::check_guard() const
+{
+  if( guard != guard_val )  {
+    DBG1( "ERR!!!!!!!!!! Guard value!!!");
+    abort();
+  }
+}
+
+void HolderData::reportStructChanged()
+{
+  HolderData *p = this, *np;
+  while( (np = p->getParent()) != nullptr ) { // find root
+    p = np;
+  }
+  // p is root now
+  p->handleStructChanged();
+}
+
+
+void HolderData::handleStructChanged()
+{
+  if( updSuspended )
+    return;
+
+  for( auto c : children() ) {
+    HolderData *ds = qobject_cast<HolderData*>(c);
+    if( ! ds )
+      continue; // only datasets can handle
+    ds->handleStructChanged();
+  }
+
+  do_structChanged(); // functions to override
+
+  if( ! par ) { // root signals about changes to world
+    // DBG1( "dbg: root reports about change" );
+    emit sigStructChanged();
+  }
+}
+
+void HolderData::do_structChanged()
+{
+}
+
+// TODO: more args
+HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name )
+{
+  //DBGx( "dbg: try to add \"%s\" type \"%s\" to \"%s\"",
+  //    qP(ob_name), qP(cl_name), qP( getFullName() ) );
+  // if( ! ( allow_add & allowObject ) )
+  //   return nullptr;
+  HolderData *el = getElem( ob_name );
+  if( el != nullptr ) {
+    DBGx( "ERR: name \"%s\" (%s)  exist in \"%s\"!",
+          qP(ob_name), qP(el->getType()), qP( getFullName() ) );
+    return nullptr;
+  }
+  if( ! isValidType( cl_name ) ) {
+    DBGx( "WARN: type \"%s\" for \"%s\" not allowed in \"%s\"!",
+          qP(cl_name), qP(ob_name), qP( getFullName() ) );
+    return nullptr;
+  }
+  HolderData *ob = EFACT.createElem( cl_name, ob_name, this );
+  if( !ob ) {
+    return nullptr;
+  }
+  reportStructChanged();
+
+  return ob;
+}
+
+bool HolderData::add_obj_param( const QString &cl_name, const QString &ob_name,
+     const QString &params )
+{
+  HolderData *ho = add_obj( cl_name, ob_name );
+  if( ! ho )
+    return false;
+
+  ho->setParams( params );
+
+  return true;
+}
+
+int HolderData::del_obj( const QString &ob_name )
+{
+  HolderData *ho = getElem( ob_name );
+  if( !ho ) {
+    DBG2q( "warn: not found element", ob_name );
+    return 0;
+  }
+  if( ! ho->isDyn() ) {
+    DBG2q( " object  is not created dynamicaly: ", ob_name );
+    return 0;
+  }
+
+  delete ho; // auto remove object and from parent lists
+  reportStructChanged();
+  return 1;
+}
+
+
+HolderData* HolderData::add_param( const QString &tp_name, const QString &ob_name )
+{
+  if( getElem( ob_name ) ) {
+    DBGx( "ERR: name \"%s\" exist in %s!", qP(ob_name), qP( getFullName() ) );
+    return nullptr;
+  }
+  if( !isValidType( tp_name ) ) {
+    return nullptr;
+  }
+  HolderData *ho = EFACT.createElem( tp_name, ob_name, this );
+  if( !ho ) {
+    return nullptr;
+  }
+  reportStructChanged();
+  return ho;
+}
+
+
+
+int HolderData::isValidType(  const QString &cl_name  ) const
+{
+  // DBGx( "dbg: allowTypes: \"%s\" for %s", allowTypes(), qP(getType()) );
+  const TClassInfo *ci = EFACT.getInfo( cl_name );
+  if( ! ci )
+    return false;
+  if( ci->props & clpPure )
+    return false;
+
+  QStringList atp = QString(allowTypes()).split(',');
+  for( auto c : atp ) {
+    if( EFACT.isChildOf( cl_name, c ) ) {
+      return true;
+    }
+  }
+  return false;
+}
+
 QDomElement HolderData::toDom( QDomDocument &dd ) const
 {
   QDomElement de = dd.createElement( "param" );
@@ -325,7 +467,7 @@ int HolderData::getMyIndexInParent() const
 
 QString HolderData::getFullName() const
 {
-  const TDataSet *cob;
+  const HolderData *cob;
   QString res = objectName();
   QString tn;
   cob = par;
@@ -453,6 +595,78 @@ bool HolderData::setData( const QString &nm, const QVariant &da )
   }
 }
 
+QStringList HolderData::getEnumStrings( const QString &enum_name ) const
+{
+  QStringList r;
+  const QMetaObject *mci = metaObject();
+  if( ! mci ) {
+    return r;
+  };
+  int idx = mci->indexOfEnumerator( enum_name.toLocal8Bit().data() );
+  if( idx < 0 ) {
+    return r;
+  }
+  QMetaEnum me = mci->enumerator( idx );
+  if( !me.isValid() ) {
+    return r;
+  }
+
+  int n = me.keyCount();
+  QString nm, snm, lbl;
+  QMetaClassInfo ci;
+  for( int i=0; i<n; ++i ) {
+    int val = me.value( i ); // now the same as i, but ...
+    snm = me.key( i );
+    nm = QString( "enum_" ) + enum_name + "_" + QSN( val );
+    int ci_idx = mci->indexOfClassInfo( nm.toLocal8Bit().data() );
+    if( ci_idx < 0 ) {
+      r << enum_name + "_" + QSN( val );
+      continue;
+    }
+    ci = mci->classInfo( ci_idx );
+    r << ci.value();
+  }
+
+  return r;
+}
+
+
+void HolderData::dumpStruct() const
+{
+  static int dump_lev = -1;
+  ++dump_lev;
+  DBGx( "* %d struct of %s %s this=%p",
+         dump_lev, qP(getType()), qP(objectName()), this );
+  // new part
+  QObjectList childs = children();
+  int i = 0;
+  for( auto o : childs ) {
+    QObject *xo = o;
+    DBGx( "*# [%d] (%p) %s %s ",
+        i, xo, xo->metaObject()->className(), qP(xo->objectName()) );
+    if( ! xo->inherits("HolderData" )) {
+      continue;
+    }
+    HolderData *ho = qobject_cast<HolderData*>(xo);
+    DBGx( "*#    = %s", qP( ho->toString() ) );
+    ++i;
+  }
+  DBGx( "*%d END", dump_lev );
+  --dump_lev;
+}
+
+void HolderData::post_set()
+{
+  check_guard();
+  for( auto e: children() ) { // propagate to childs
+    HolderData* ho = qobject_cast<HolderData*>(e);
+    if( !ho )
+      continue;
+    ho->post_set();
+  }
+}
+
+
 
 const char* HolderData::helpstr { "Abstract data holder" };
 
@@ -469,6 +683,11 @@ void HolderValue::reset_dfl()
   DBG1( "ERR: abstract class funcion called" );
 }
 
+void HolderValue::post_set()
+{
+  DBG1( "ERR: abstract class funcion called" );
+}
+
 
 bool HolderValue::set( const QVariant & /*x*/, int /* idx */ )
 {
@@ -480,11 +699,6 @@ QVariant HolderValue::get( int /* idx */ ) const
 {
   DBG1( "ERR: abstract class funcion called" );
   return QVariant();
-}
-
-void HolderValue::post_set()
-{
-  DBG1( "ERR: abstract class funcion called" );
 }
 
 QString HolderValue::toString() const
@@ -1292,10 +1506,6 @@ DEFAULT_FUNCS_REG(TDataSet);
 
 
 
-int TDataSet::checkData( int /* ni */ )
-{
-  return 0;
-}
 
 const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
               const TDataSet **targ, int lev  ) const
@@ -1371,7 +1581,11 @@ const double* TDataSet::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
     *plt = LinkBad;
     return nullptr;
   }
-  return par->getSchemeDoublePtr( nm, lt, src_ob, lev );
+  TDataSet *ds = qobject_cast<TDataSet*>( par );
+  if( !ds ) {
+    return nullptr;
+  }
+  return ds->getSchemeDoublePtr( nm, lt, src_ob, lev );
 }
 
 // not const - change param
@@ -1395,106 +1609,6 @@ double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg )
 }
 
 
-// TODO: more args
-HolderData* TDataSet::add_obj( const QString &cl_name, const QString &ob_name )
-{
-  //DBGx( "dbg: try to add \"%s\" type \"%s\" to \"%s\"",
-  //    qP(ob_name), qP(cl_name), qP( getFullName() ) );
-  // if( ! ( allow_add & allowObject ) )
-  //   return nullptr;
-  HolderData *el = getElem( ob_name );
-  if( el != nullptr ) {
-    DBGx( "ERR: name \"%s\" (%s)  exist in \"%s\"!",
-          qP(ob_name), qP(el->getType()), qP( getFullName() ) );
-    return nullptr;
-  }
-  if( ! isValidType( cl_name ) ) {
-    DBGx( "WARN: type \"%s\" for \"%s\" not allowed in \"%s\"!",
-          qP(cl_name), qP(ob_name), qP( getFullName() ) );
-    return nullptr;
-  }
-  HolderData *ob = EFACT.createElem( cl_name, ob_name, this );
-  if( !ob ) {
-    return nullptr;
-  }
-  reportStructChanged();
-
-  return ob;
-}
-
-bool TDataSet::add_obj_param( const QString &cl_name, const QString &ob_name,
-     const QString &params )
-{
-  HolderData *ho = add_obj( cl_name, ob_name );
-  if( ! ho )
-    return false;
-
-  //TDataSet *ds = qobject_cast<TDataSet*>( ho );
-  //if( ds ) {
-  //  ds->setParams( params );
-  //}
-  ho->setParams( params );
-
-  return true;
-}
-
-int TDataSet::del_obj( const QString &ob_name )
-{
-  HolderData *ho = getElem( ob_name );
-  if( !ho ) {
-    DBG2q( "warn: not found element", ob_name );
-    return 0;
-  }
-  if( ! ho->isDyn() ) {
-    DBG2q( " object  is not created dynamicaly: ", ob_name );
-    return 0;
-  }
-
-  delete ho; // auto remove object and from parent lists
-  reportStructChanged();
-  return 1;
-}
-
-
-HolderData* TDataSet::add_param( const QString &tp_name, const QString &ob_name )
-{
-  // if( ! ( allow_add & allowParam ) )
-  //   return nullptr;
-  if( getElem( ob_name ) ) {
-    DBGx( "ERR: name \"%s\" exist in %s!", qP(ob_name), qP( getFullName() ) );
-    return nullptr;
-  }
-  // TODO: isValidType
-  if( !isValidType( tp_name ) ) {
-    return nullptr;
-  }
-  HolderData *ho = EFACT.createElem( tp_name, ob_name, this );
-  if( !ho ) {
-    return nullptr;
-  }
-  reportStructChanged();
-  return ho;
-}
-
-
-
-int TDataSet::isValidType(  const QString &cl_name  ) const
-{
-  // DBGx( "dbg: allowTypes: \"%s\" for %s", allowTypes(), qP(getType()) );
-  const TClassInfo *ci = EFACT.getInfo( cl_name );
-  if( ! ci )
-    return false;
-  if( ci->props & clpPure )
-    return false;
-
-  QStringList atp = QString(allowTypes()).split(',');
-  for( auto c : atp ) {
-    if( EFACT.isChildOf( cl_name, c ) ) {
-      return true;
-    }
-  }
-  return false;
-}
 
 
 bool TDataSet::set( const QVariant & x, int /* idx */  )
@@ -1507,17 +1621,6 @@ QVariant TDataSet::get( int /* idx */ ) const
 {
   check_guard();
   return QVariant( this->toString() );
-}
-
-void TDataSet::post_set()
-{
-  check_guard();
-  for( auto e: children() ) { // propagate to childs
-    HolderData* ho = qobject_cast<HolderData*>(e);
-    if( !ho )
-      continue;
-    ho->post_set();
-  }
 }
 
 QString TDataSet::toString() const
@@ -1670,48 +1773,9 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
   return true;
 }
 
-void TDataSet::check_guard() const
-{
-  if( guard != guard_val )  {
-    DBG1( "ERR!!!!!!!!!! Guard value!!!");
-    abort();
-  }
-}
-
-void TDataSet::reportStructChanged()
-{
-  TDataSet *p = this, *np;
-  while( (np = p->getParent()) != nullptr ) { // find root
-    p = np;
-  }
-  // p is root now
-  p->handleStructChanged();
-}
-
-
-void TDataSet::handleStructChanged()
-{
-  if( updSuspended )
-    return;
-
-  for( auto c : children() ) {
-    TDataSet *ds = qobject_cast<TDataSet*>(c);
-    if( ! ds )
-      continue; // only datasets can handle
-    ds->handleStructChanged();
-  }
-
-  do_structChanged(); // functions to override
-
-  if( ! par ) { // root signals about changes to world
-    // DBG1( "dbg: root reports about change" );
-    emit sigStructChanged();
-  }
-}
-
-void TDataSet::do_structChanged()
-{
-}
+void TDataSet::post_set() {
+  return HolderData::post_set();
+};
 
 void TDataSet::registerInput( InputSimple *inp )
 {
@@ -1748,66 +1812,6 @@ InputSimple* TDataSet::getInput( int n ) const
   return inputs[n];
 }
 
-QStringList TDataSet::getEnumStrings( const QString &enum_name ) const
-{
-  QStringList r;
-  const QMetaObject *mci = metaObject();
-  if( ! mci ) {
-    return r;
-  };
-  int idx = mci->indexOfEnumerator( enum_name.toLocal8Bit().data() );
-  if( idx < 0 ) {
-    return r;
-  }
-  QMetaEnum me = mci->enumerator( idx );
-  if( !me.isValid() ) {
-    return r;
-  }
-
-  int n = me.keyCount();
-  QString nm, snm, lbl;
-  QMetaClassInfo ci;
-  for( int i=0; i<n; ++i ) {
-    int val = me.value( i ); // now the same as i, but ...
-    snm = me.key( i );
-    nm = QString( "enum_" ) + enum_name + "_" + QSN( val );
-    int ci_idx = mci->indexOfClassInfo( nm.toLocal8Bit().data() );
-    if( ci_idx < 0 ) {
-      r << enum_name + "_" + QSN( val );
-      continue;
-    }
-    ci = mci->classInfo( ci_idx );
-    r << ci.value();
-  }
-
-  return r;
-}
-
-
-void TDataSet::dumpStruct() const
-{
-  static int dump_lev = -1;
-  ++dump_lev;
-  DBGx( "* %d struct of %s %s this=%p",
-         dump_lev, qP(getType()), qP(objectName()), this );
-  // new part
-  QObjectList childs = children();
-  int i = 0;
-  for( auto o : childs ) {
-    QObject *xo = o;
-    DBGx( "*# [%d] (%p) %s %s ",
-        i, xo, xo->metaObject()->className(), qP(xo->objectName()) );
-    if( ! xo->inherits("HolderData" )) {
-      continue;
-    }
-    HolderData *ho = qobject_cast<HolderData*>(xo);
-    DBGx( "*#    = %s", qP( ho->toString() ) );
-    ++i;
-  }
-  DBGx( "*%d END", dump_lev );
-  --dump_lev;
-}
-
 
 // ------------------------------------ InputAbstract ---------
 //
@@ -1829,7 +1833,7 @@ InputAbstract::~InputAbstract()
 
 void InputAbstract::post_set()
 {
-  TDataSet::post_set();
+  HolderData::post_set();
   reportStructChanged(); // changed link means changes structure
 }
 
@@ -1874,15 +1878,17 @@ STD_CLASSINFO(InputSimple,clpInput|clpSpecial);
 
 CTOR(InputSimple,InputAbstract)
 {
-  if( par ) {
-    par->registerInput( this );
+  TDataSet *ds = qobject_cast<TDataSet*>( par );
+  if( ds ) {
+    ds->registerInput( this );
   }
 }
 
 InputSimple::~InputSimple()
 {
-  if( par ) {
-    par->unregisterInput( this );
+  TDataSet *ds = qobject_cast<TDataSet*>( par );
+  if( ds ) {
+    ds->unregisterInput( this );
   }
 }
 
@@ -1930,7 +1936,7 @@ void InputParam::set_link()
   if( !par ) // par seems to be InputParams, but may be dangling objects
     return;
 
-  TDataSet *el = par->getParent(); // grang par may by TMiso, but ...
+  TDataSet *el = qobject_cast<TDataSet*>( par->getParent() ); // grang par may by TMiso, but ...
   if( !el )
     return;
 

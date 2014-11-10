@@ -365,7 +365,7 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
   QString enum_name = ho.getParm( "enum" );
   QStringList sl;
   if( ! enum_name.isEmpty() ) {
-    TDataSet *par = h.getParent();
+    HolderData *par = h.getParent();
     if( par ) {
       sl = par->getEnumStrings( enum_name );
     }
