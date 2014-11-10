@@ -13,6 +13,8 @@
 using namespace std;
 
 
+#define ERR_ABS "ERR: abstract class function called"
+
 // ================================================================
 // ---------------- HolderData .... ----------------------
 STD_CLASSINFO(HolderData,clpSpecial|clpPure);
@@ -334,15 +336,18 @@ void HolderData::handleStructChanged()
   for( auto c : children() ) {
     HolderData *ds = qobject_cast<HolderData*>(c);
     if( ! ds )
-      continue; // only datasets can handle
+      continue; // what?
     ds->handleStructChanged();
   }
 
   do_structChanged(); // functions to override
 
-  if( ! par ) { // root signals about changes to world
+
+  if( ! par ) { // root signals about changes to world? only root?
     // DBG1( "dbg: root reports about change" );
     emit sigStructChanged();
+    beginResetModel(); // ???
+    endResetModel();
   }
 }
 
@@ -357,6 +362,8 @@ HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name 
   //    qP(ob_name), qP(cl_name), qP( getFullName() ) );
   // if( ! ( allow_add & allowObject ) )
   //   return nullptr;
+  beginResetModel();
+
   HolderData *el = getElem( ob_name );
   if( el != nullptr ) {
     DBGx( "ERR: name \"%s\" (%s)  exist in \"%s\"!",
@@ -372,6 +379,7 @@ HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name 
   if( !ob ) {
     return nullptr;
   }
+  endResetModel();
   reportStructChanged();
 
   return ob;
@@ -391,6 +399,7 @@ bool HolderData::add_obj_param( const QString &cl_name, const QString &ob_name,
 
 int HolderData::del_obj( const QString &ob_name )
 {
+
   HolderData *ho = getElem( ob_name );
   if( !ho ) {
     DBG2q( "warn: not found element", ob_name );
@@ -401,7 +410,10 @@ int HolderData::del_obj( const QString &ob_name )
     return 0;
   }
 
+  beginResetModel();
   delete ho; // auto remove object and from parent lists
+  endResetModel();
+
   reportStructChanged();
   return 1;
 }
@@ -416,10 +428,14 @@ HolderData* HolderData::add_param( const QString &tp_name, const QString &ob_nam
   if( !isValidType( tp_name ) ) {
     return nullptr;
   }
+
+  beginResetModel();
   HolderData *ho = EFACT.createElem( tp_name, ob_name, this );
   if( !ho ) {
     return nullptr;
   }
+  endResetModel();
+
   reportStructChanged();
   return ho;
 }
@@ -680,36 +696,36 @@ CTOR(HolderValue,HolderData)
 
 void HolderValue::reset_dfl()
 {
-  DBG1( "ERR: abstract class funcion called" );
+  DBG1( ERR_ABS );
 }
 
 void HolderValue::post_set()
 {
-  DBG1( "ERR: abstract class funcion called" );
+  DBG1( ERR_ABS );
 }
 
 
 bool HolderValue::set( const QVariant & /*x*/, int /* idx */ )
 {
-  DBG1( "ERR: abstract class funcion called" );
+  DBG1( ERR_ABS );
   return false;
 }
 
 QVariant HolderValue::get( int /* idx */ ) const
 {
-  DBG1( "ERR: abstract class funcion called" );
+  DBG1( ERR_ABS );
   return QVariant();
 }
 
 QString HolderValue::toString() const
 {
-  DBG1( "ERR: abstract class funcion called" );
+  DBG1( ERR_ABS );
   return QString();
 }
 
 bool HolderValue::fromString( const QString & /*s */ )
 {
-  DBG1( "ERR: abstract class funcion called" );
+  DBG1( ERR_ABS );
   return false;
 }
 
