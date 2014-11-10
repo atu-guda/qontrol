@@ -96,6 +96,7 @@ class LaboWin : public QMainWindow
     const QFont& getSmallFont()  const  { return smallFont; }
     const QFont& getPlotFont()   const  { return plotFont; }
     const QFont& getStructFont() const  { return structFont; }
+    int getEm() const { return em; }
 
   protected:
     /** overloaded for Message box on last window exit */
@@ -244,6 +245,8 @@ class LaboWin : public QMainWindow
     /** a counter that gets increased each time the user creates
           a new document with "File"->"New" */
     int untitledCount;
+    //* default width unit (and safe default value)
+    int em = 10;
     /**  settings  */
     Mo2Settings sett;
     /** common fonts */

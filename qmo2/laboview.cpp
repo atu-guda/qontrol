@@ -524,7 +524,9 @@ void LaboView::infoElm()
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
 
-  dia->resize( 720, 500 ); // TODO: adjust to inner table width
+  int em = LaboWin::labowin->getEm();
+
+  dia->resize( 72*em, 50*em ); // TODO: adjust to inner table width
   dia->exec();
   delete dia;
   emit viewChanged();
@@ -553,7 +555,9 @@ void LaboView::showTreeElm()
   dia->setLayout( lay );
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  dia->resize( 800, 500 ); // TODO: unmagic
+
+  int em = LaboWin::labowin->getEm();
+  dia->resize( 80*em, 50*em ); // TODO: unmagic
   dia->exec();
   delete dia;
   emit viewChanged();
@@ -588,7 +592,9 @@ void LaboView::testElm1()
   dia->setLayout( lay );
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  dia->resize( 600, 300 ); // TODO: unmagic
+
+  int em = LaboWin::labowin->getEm();
+  dia->resize( 60*em, 30*em ); // TODO: unmagic
   dia->exec();
   delete dia;
   emit viewChanged();
@@ -729,7 +735,7 @@ void LaboView::newOut()
     enameq = selObj->objectName();
     onameq = QString("out_") + QString(enameq);
   } else {
-    enameq = ":t";
+    enameq = "t";
     onameq = QString("out_t");
   };
 
@@ -781,10 +787,8 @@ void LaboView::delOut()
 {
   if( ! checkState( validCheck ) )
     return;
-  if( level < 0 || level >= model->getNOutArr() )
-    return;
   TOutArr *arr= model->getOutArr( level );
-  if( arr == 0 )
+  if( !arr )
     return;
   QString nm = arr->objectName();
 
@@ -826,7 +830,7 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
   if( k != 0 )
     return;
 
-  // calculate statistical data
+  // calculate statistical data TODO: separate struct and func (or/and in TOutArr)
   double s = 0, s2 = 0, ave = 0, ave2 = 0, disp = 0, msq = 0, x;
   double vmin = DMAX, vmax = DMIN;
   for( int i=0; i<gi.row; i++ ) {
@@ -918,10 +922,8 @@ void LaboView::delGraph()
 {
   if( ! checkState( validCheck ) )
     return;
-  if( level < 0 || level >= model->getNGraph() )
-    return;
   TGraph *gra = model->getGraph( level );
-  if( gra == 0 )
+  if( !gra )
     return;
   QString nm = gra->objectName();
 
@@ -944,17 +946,14 @@ void LaboView::editGraph()
 
 void LaboView::showGraph()
 {
-  int n_gra;
   PlotView *pv; TGraph *gra;
   QMainWindow *plotWnd;
   if( ! checkState( doneCheck ) )
     return;
-  n_gra = model->getNGraph();
-  if( level < 0 || level >= n_gra )
-    return;
   gra = model->getGraph( level );
-  if( gra == 0 )
+  if( !gra )
     return;
+
   plotWnd = new QMainWindow( this );
   plotWnd->setWindowTitle( QString( PACKAGE ": Plot ") + gra->objectName() );
   pv = new PlotView( doc, gra, plotWnd );
@@ -976,7 +975,7 @@ void LaboView::showGraphData()
   if( ! checkState( doneCheck ) )
     return;
   gra = model->getGraph( level );
-  if( gra == 0 )
+  if( !gra )
     return;
   k = gra->fillGraphInfo( &gi );
   if( k != 0 )
@@ -1035,8 +1034,9 @@ void LaboView::gnuplotGraph()
   if( level < 0 || level >= model->getNGraph() )
     return;
   gra = model->getGraph( level );
-  if( gra == 0 )
+  if( !gra )
     return;
+
   f_pgm = doc->pathName();
   QFileInfo doc_fi( f_pgm );
   cdir = QDir::currentPath();
@@ -1044,13 +1044,15 @@ void LaboView::gnuplotGraph()
     f_pgm = doc_fi.fileName();
   if( f_pgm.length() < 1 ) { f_pgm = "gplot"; };
   l = f_pgm.length();
-  if( doc_fi.suffix() == "mo2"  )
+  if( doc_fi.suffix() == "qol"  )
     f_pgm.truncate( l-4 );
   f_dat = f_pgm + ".dat"; f_eps = f_pgm + ".eps";
   f_pgm += ".gp";
 
   dia = new QDialog( this );
-  dia->resize( 400, 260 );
+
+  int em = LaboWin::labowin->getEm();
+  dia->resize( 50*em, 30*em );
   lay = new QGridLayout( dia );
   sw_x11 = new QCheckBox( "Output to &X11 window", dia );
   sw_x11->setChecked( false );
@@ -1151,6 +1153,7 @@ void LaboView::editSimul()
 
 void LaboView::setActiveSimul()
 {
+  // TODO
 }
 
 
@@ -1183,7 +1186,9 @@ void LaboView::showTreeModel()
   dia->setLayout( lay );
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  dia->resize( 800, 500 ); // TODO: unmagic
+
+  int em = LaboWin::labowin->getEm();
+  dia->resize( 80*em, 50*em ); // TODO: unmagic
   dia->exec();
   delete dia;
   // delete ho_mo;
@@ -1191,6 +1196,7 @@ void LaboView::showTreeModel()
   return;
 }
 
+// TODO: 2-pane dialog + script pool
 void LaboView::runScript()
 {
   if( ! doc || ! root ) {
@@ -1208,11 +1214,12 @@ void LaboView::runScript()
   lv->addWidget( ted );
 
   auto bt_ok = new QPushButton( "&Ok", dia );
-  // bt_ok->setDefault( true );
   lv->addWidget( bt_ok );
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  dia->resize( 800, 600 );
+
+  int em = LaboWin::labowin->getEm();
+  dia->resize( 80*em, 60*em );
 
   int rc = dia->exec();
   QString res;
@@ -1238,7 +1245,8 @@ void LaboView::runScript()
   lv1->addWidget( bt_ok1 );
 
   connect( bt_ok1, &QPushButton::clicked, dia1, &QDialog::accept );
-  dia1->resize( 800, 600 );
+
+  dia1->resize( 80*em, 60*em );
   dia1->exec();
   delete dia1; dia1 = nullptr;
 

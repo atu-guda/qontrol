@@ -42,13 +42,15 @@ int main( int argc, char *argv[] )
     }
   }
 
-  LaboWin *qmo2 = new LaboWin();
+  LaboWin *main_win = new LaboWin();
 
-  qmo2->show();
+  main_win->show();
 
   for( int i=optind; i<argc ; ++i ) {
-    qmo2->doFileOpenXML( QString::L8B( argv[1] ) );
+    main_win->doFileOpenXML( QString::L8B( argv[1] ) );
   }
+
+  a.setApplicationDisplayName( PACKAGE );
 
   return a.exec();
 }

@@ -27,7 +27,7 @@
 
 using namespace std;
 
-LaboWin* LaboWin::labowin = 0;
+LaboWin* LaboWin::labowin = nullptr;
 
 LaboWin::LaboWin(void)
 {
@@ -128,6 +128,8 @@ void LaboWin::setFonts()
   smallFont.fromString( sett.smallFont );
   plotFont.fromString( sett.plotFont );
   structFont.fromString( sett.structFont );
+  QFontMetrics fm( mainFont );
+  em = fm.width( 'W' );
   QApplication::setFont( mainFont );
 }
 
@@ -1095,8 +1097,10 @@ void LaboWin::slotStatusHelpMsg(const QString &text)
 
 void LaboWin::slotTest(void)
 {
-  QString ostr( "Test called\n" );
+  QString ostr( "Test called" );
   statusBar()->showMessage( tr( "Test something..." ) );
+
+  ostr += QString(" em=" ) + QSN(em) + "\n";
 
   for( unsigned ccode=0x03A0; ccode < 0x0400; ++ccode )  {
     ostr += QChar( ccode );
