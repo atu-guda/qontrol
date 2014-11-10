@@ -489,26 +489,27 @@ int TModel::newSimul( const QString &name )
 
 int TModel::delSimul( const QString &name )
 {
-  DBGx( "dbg: removing simulation \"%s\"", qP(name) );
-  return 0; // TODO:
+  return sims->del_obj( name );
 }
 
 QString TModel::getSimulName( int idx )
 {
   DBGx( "dbg: requiest simulation name by idx %d", idx );
-  return QString(); // TODO:
+  Simulation* sim =  sims->getElemT<Simulation*>( idx );
+  if( !sim ) {
+    QString();
+  }
+  return sim->objectName();
 }
 
 Simulation* TModel::getSimul( int idx )
 {
-  DBGx( "dbg: requiest simulation ptr by idx %d", idx );
-  return nullptr; // TODO:
+  return sims->getElemT<Simulation*>( idx );
 }
 
 Simulation* TModel::getSimul( const QString &name )
 {
-  DBGx( "dbg: requiest simulation ptr by name \"%s\"", qP(name) );
-  return nullptr; // TODO:
+  return sims->getElemT<Simulation*>( name );
 }
 
 int TModel::newOrder( const QString &name, int new_ord )

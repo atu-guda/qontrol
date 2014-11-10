@@ -260,7 +260,7 @@ typedef QMap<QString,DataWidget*> DaWiMap;
 class DataDialog : public QDialog {
   Q_OBJECT
   public:
-   DataDialog( TDataSet &a_ds, QWidget *parent = 0 );
+   DataDialog( HolderData &a_ds, QWidget *parent = 0 );
    int getAll();
    int setAll();
   public slots:
@@ -275,7 +275,7 @@ class DataDialog : public QDialog {
    virtual int createWidgets();
    void showSimpleHelp();
    void delSome( bool is_obj );
-   TDataSet &ds;
+   HolderData &ds;
    DaWiMap dwm;
 };
 

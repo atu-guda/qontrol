@@ -14,7 +14,7 @@ using namespace std;
 
 
 AddElemDialog::AddElemDialog( addElemInfo *a_aei,
-             TDataSet *a_pobj,  QWidget *aparent,
+             HolderData *a_pobj,  QWidget *aparent,
              const QString& allowed_types )
   : QDialog( aparent ), aei( a_aei ), allowed( a_pobj->allowTypes() ), pobj( a_pobj)
 {

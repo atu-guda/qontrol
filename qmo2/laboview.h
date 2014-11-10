@@ -27,7 +27,6 @@ class LaboDoc;
 class StructView;
 class OutView;
 class GraphView;
-class TDataSet;
 class TRootData;
 class TModel;
 class StatusModel;
@@ -35,7 +34,7 @@ class QScrollArea;
 class QTreeView;
 class QListView;
 
-class HolderModel;
+class HolderData;
 class TMiso;
 class SimulModel;
 
@@ -68,6 +67,15 @@ class LaboView : public QWidget
    QSize svSize() const;
 
    const QString& currentFile() const;
+
+   //* requiest confirmation to delete, true = ok;
+   bool confirmDelete( const QString &obj, const QString &nm );
+   //* edit some model object
+   bool editObj( HolderData *obj );
+   //* show std error box
+   void showError( const QString &s );
+   //* show std warning box
+   void showWarn( const QString &s );
 
  signals:
    void viewChanged();

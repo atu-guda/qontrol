@@ -850,12 +850,12 @@ bool ObjDataWidget::get() const
 
 void ObjDataWidget::edit()
 {
-  TDataSet *obj = qobject_cast<TDataSet*>(&ho);
+  HolderData *obj = qobject_cast<HolderData*>(&ho);
   if( obj ) {
     QDialog *dia = new DataDialog( *obj,  this );
     dia->exec();
   } else {
-    DBG2q( "ERR: Fail to convert holder to TDataSet", ho.objectName() );
+    DBG2q( "ERR: Fail to convert holder to HolderData", ho.objectName() );
   }
 }
 
@@ -961,7 +961,7 @@ bool FactoryDataWidget::unregisterWidgetType( const QString &wname )
 
 // ======================= DataDialog ===========================
 
-DataDialog::DataDialog( TDataSet &a_ds, QWidget *parent )
+DataDialog::DataDialog( HolderData &a_ds, QWidget *parent )
   : QDialog( parent ), ds( a_ds)
 {
   QString s = ds.getType()  %  ' ' %  ds.getFullName();
@@ -1250,7 +1250,7 @@ int DataDialog::createWidgets()
 
     // second part of TMP workaround (FIXME)
     if( is_model && ho->isObject() ) {
-      TDataSet *ob = qobject_cast<TDataSet*>(ho);
+      HolderData *ob = qobject_cast<HolderData*>(ho);
       if( ob->isChildOf("TMiso")  ||  ob->isChildOf("TOutArr") || ob->isChildOf("TGraph") ) {
 	continue;
       }
@@ -1319,7 +1319,7 @@ int DataDialog::createWidgets()
   QPushButton *btn_addObj = new QPushButton( "Add object" );
   connect( btn_addObj, &QPushButton::clicked, this, &DataDialog::addObj);
   lay_btn2->addWidget( btn_addObj );
-  // bool can_add_objs = ds.isValidType( "TDataSet" );
+  // bool can_add_objs = ds.isValidType( "HolderData" );
   // if( ! can_add_objs )
   //   btn_addObj->setEnabled( false );
   QPushButton *btn_delParam = new QPushButton( "Delete param" );

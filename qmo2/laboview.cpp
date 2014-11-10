@@ -104,6 +104,41 @@ const QString& LaboView::currentFile() const
   return doc->pathName();
 }
 
+bool LaboView::confirmDelete( const QString &obj, const QString &nm )
+{
+  int rpl = QMessageBox::question( this, PACKAGE " delete confirmation",
+       QString("Do you really want to delete %1 \"%2\"?").arg(obj).arg(nm) );
+  return rpl == QMessageBox::Yes;
+}
+
+void LaboView::showError( const QString &s )
+{
+  QMessageBox::critical( this, PACKAGE ": Error", s,  QMessageBox::Ok );
+}
+
+void LaboView::showWarn( const QString &s )
+{
+  QMessageBox::warning( this, PACKAGE ": Warning", s, QMessageBox::Ok );
+}
+
+
+bool LaboView::editObj( HolderData *obj )
+{
+  if( !obj ) {
+    return false;
+  }
+
+  DataDialog *dia = new DataDialog( *obj, this );
+  int rc = dia->exec();
+  delete dia;
+  if( rc == QDialog::Accepted ) {
+    model->reset(); model->setModified();
+    emit viewChanged();
+    return true;
+  };
+  return false;
+}
+
 QSize LaboView::svSize() const
 {
   return scrollArea->size();
@@ -141,9 +176,8 @@ int LaboView::checkState( CheckType ctp )
 {
   QString msg;
   int state;
-  if( model == 0 || root == 0 ) {
-    QMessageBox::critical( this, "Error", "Model or root don't exist!",
-        QMessageBox::Ok, QMessageBox::NoButton );
+  if( !model  || !root ) {
+    showError( "Model or root don't exist!" );
     return 0;
   };
   switch( ctp ) {
@@ -172,8 +206,7 @@ int LaboView::checkState( CheckType ctp )
     default: msg = "Unknown check?";
   };
   if( ! msg.isEmpty() ) {
-    QMessageBox::warning( this, "Warning", msg,
-        QMessageBox::Ok, QMessageBox::NoButton );
+    showWarn( msg );
     return 0;
   };
   return 1;
@@ -261,17 +294,13 @@ void LaboView::newElm()
   if( rc != QDialog::Accepted || aei.type.isEmpty() )
     return;
   if( ! isGoodName( aei.name )  ) {
-    QMessageBox::critical( this, "Error",
-       QString("Fail to add Elem: bad object name \"") + aei.name + "\"",
-       QMessageBox::Ok, QMessageBox::NoButton );
+    showError( QString("Fail to add Elem: bad object name \"%1\"").arg(aei.name) );
     return;
   }
 
   TMiso *ob = model->insElem( aei.type, aei.name, aei.order, sel_x, sel_y );
   if( !ob  ) {
-    QMessageBox::critical( this, "Error",
-       QString("Fail to add Elem: ") + aei.type + " " + aei.name,
-       QMessageBox::Ok, QMessageBox::NoButton );
+    showError( QString("Fail to add Elem: type \"%1\" \"%2\"").arg(aei.type).arg(aei.name) );
     return;
   }
   changeSel( 0, 0, 1 ); // update sel
@@ -280,17 +309,12 @@ void LaboView::newElm()
 
 void LaboView::delElm()
 {
-  int k;
   if( ! checkState( selCheck ) )
     return;
 
   QString oname = selObj->objectName();
 
-  k = QMessageBox::information( this, PACKAGE " delete confirmation",
-       QString("Do you really want to delete element \"")
-        + oname + QString("\" ?"),
-       "&Yes", "&No", "Help", 0, 1 );
-  if( k == 0 ) {
+  if( confirmDelete( "element", oname) ) {
     model->delElem( oname );
     if( sel == mark ) {
       mark = -1;
@@ -306,15 +330,7 @@ void LaboView::editElm()
 {
   if( ! checkState( selCheck ) )
     return;
-  DataDialog *dia = new DataDialog( *selObj, this );
-  int rc = dia->exec();
-  delete dia;
-
-  if( rc == QDialog::Accepted ) {
-    model->reset();
-    model->setModified();
-  };
-  emit viewChanged();
+  editObj( selObj );
 }
 
 
@@ -617,18 +633,15 @@ void LaboView::pasteElm()
   QString errstr;
   QDomDocument x_dd;
   if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
-    QMessageBox::warning(LaboWin::labowin, tr( PACKAGE ),
-                         tr("Cannot parse clipboard string:\n%2\nLine %3 column %4.")
-                         .arg(errstr).arg(err_line).arg(err_column) );
+    showWarn( tr("Cannot parse clipboard string:\n%2\nLine %3 column %4.")
+                .arg(errstr).arg(err_line).arg(err_column) );
     return;
   }
   QDomElement ee = x_dd.documentElement();
 
   QString tagname = ee.tagName();
   if( tagname != "obj" ) {
-    QMessageBox::warning(LaboWin::labowin, tr( PACKAGE ),
-                 tr("element tag is not 'obj':  %2")
-                         .arg( tagname ) );
+    showWarn( tr("element tag is not 'obj':  %2").arg( tagname ) );
     return;
   }
 
@@ -680,23 +693,17 @@ void LaboView::pasteElm()
   };
 
   if( ! isGoodName( elname )  ) {
-    QMessageBox::critical( this, "Error",
-       QString("Fail to add Elem: bad object name \"") + elname + "\"",
-       QMessageBox::Ok, QMessageBox::NoButton );
+    showError( QString("Fail to add Elem: bad object name \"%1\"").arg(elname) );
     return;
   }
 
   TMiso *ob = model->insElem( eltype, elname, oord, sel_x, sel_y) ; // reset() implied
   if( !ob  ) {
-    QMessageBox::critical( this, "Error",
-       QString("Fail to add Elem: ") + eltype + " " + elname,
-       QMessageBox::Ok, QMessageBox::NoButton );
+    showError( QString("Fail to add Elem: %1 %2").arg(eltype).arg(elname) );
     return;
   }
   if( !ob->fromDom( ee, errstr ) ) {
-    QMessageBox::warning(LaboWin::labowin, tr( PACKAGE ),
-                 tr("fail to set params:  %1")
-                         .arg( errstr ) );
+    showWarn( tr("fail to set params:  %1").arg( errstr ) );
   }
   ob->setData( "vis_x", sel_x );
   ob->setData( "vis_y", sel_y );
@@ -762,21 +769,16 @@ void LaboView::newOut()
   if( isGoodName( onameq ) ) {
     int irc = model->insOut( onameq, enameq );
     if( irc  ) {
-      QMessageBox::critical( this, "Error",
-         QString("Fail to add Output: ") + onameq,
-         QMessageBox::Ok, QMessageBox::NoButton );
+      showError( QString("Fail to add Output: \"%1\"").arg(onameq) );
     }
     emit viewChanged();
     return;
   }
-  QMessageBox::critical( this, "Error",
-     QString("Bad output name: ") + onameq,
-     QMessageBox::Ok, QMessageBox::NoButton );
+  showError( QString("Bad output name: \"%1\"").arg(onameq) );
 }
 
 void LaboView::delOut()
 {
-  int k;
   if( ! checkState( validCheck ) )
     return;
   if( level < 0 || level >= model->getNOutArr() )
@@ -784,12 +786,10 @@ void LaboView::delOut()
   TOutArr *arr= model->getOutArr( level );
   if( arr == 0 )
     return;
-  k = QMessageBox::information( this, PACKAGE " delete confirmation",
-      QString("Do you really want to delete output array \"" )
-       + arr->objectName() + QString( "\" ?" ),
-      "&Yes", "&No", "&Help", 0, 1 );
-  if( k == 0 ) {
-    model->delOut( level );
+  QString nm = arr->objectName();
+
+  if( confirmDelete( "output array", nm ) ) {
+    model->delOut( level ); // TODO: by name
     emit viewChanged();
   };
 }
@@ -797,23 +797,11 @@ void LaboView::delOut()
 
 void LaboView::editOut()
 {
-  TOutArr *arr;
-  int rc;
   if( ! checkState( validCheck ) )
     return;
 
-  if( level < 0 || level >= model->getNOutArr() )
-    return;
-  arr = model->getOutArr( level );
-  if( arr == 0 )
-    return;
-  DataDialog *dia = new DataDialog( *arr, this );
-  rc = dia->exec();
-  delete dia;
-  if( rc == QDialog::Accepted ) {
-    model->reset(); model->setModified();
-    emit viewChanged();
-  };
+  TOutArr *arr = model->getOutArr( level );
+  editObj( arr );
 }
 
 
@@ -832,7 +820,7 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
   if( ! checkState( doneCheck ) )
     return;
   arr = model->getOutArr( level );
-  if( arr == 0 )
+  if( !arr )
     return;
   k = arr->fillGraphInfo( &gi );
   if( k != 0 )
@@ -918,9 +906,7 @@ void LaboView::newGraph()
       grnameq, &ok );
   if( ok ) {
     if( ! isGoodName( aname ) ) {
-      QMessageBox::critical( this, "Error",
-         QString("Bad graph name: \"") + aname + "\"",
-         QMessageBox::Ok, QMessageBox::NoButton );
+      showError( QString("Bad graph name: \"%1\"").arg(aname) );
     }
     model->insGraph( aname );
     emit viewChanged();
@@ -930,7 +916,6 @@ void LaboView::newGraph()
 
 void LaboView::delGraph()
 {
-  int k;
   if( ! checkState( validCheck ) )
     return;
   if( level < 0 || level >= model->getNGraph() )
@@ -938,12 +923,10 @@ void LaboView::delGraph()
   TGraph *gra = model->getGraph( level );
   if( gra == 0 )
     return;
-  k = QMessageBox::information( this, PACKAGE " delete confirmation",
-      QString("Do you really want to delete graph description \"")
-       + gra->objectName() + QString("\" ?") ,
-      "&Yes", "&No", "&Help", 0, 1 );
-  if( k == 0 ) {
-    model->delGraph( level );
+  QString nm = gra->objectName();
+
+  if( confirmDelete( "plot description", nm ) ) {
+    model->delGraph( level ); // TODO: by name
     emit viewChanged();
   };
 }
@@ -951,23 +934,11 @@ void LaboView::delGraph()
 
 void LaboView::editGraph()
 {
-  TGraph *gra;
-  int rc;
   if( ! checkState( validCheck ) )
     return;
 
-  if( level < 0 || level >= model->getNGraph() )
-    return;
-  gra = model->getGraph( level );
-  if( gra == 0 )
-    return;
-  DataDialog *dia = new DataDialog( *gra, this );
-  rc = dia->exec();
-  delete dia;
-  if( rc == QDialog::Accepted ) {
-    model->reset(); model->setModified();
-    emit viewChanged();
-  };
+  TGraph *gra = model->getGraph( level );
+  editObj( gra );
 }
 
 
@@ -1132,15 +1103,11 @@ void LaboView::newSimul()
       simName, &ok );
   if( ok ) {
     if( ! isGoodName( simName ) ) {
-      QMessageBox::critical( this, "Error",
-         QString("Bad simulation name: \"") + simName + "\"",
-         QMessageBox::Ok, QMessageBox::NoButton );
+      showError( QString("Bad simulation name: \"%1\"").arg(simName) );
     }
     ok = model->newSimul( simName );
     if( !ok ) {
-      QMessageBox::critical( this, "Error",
-         QString("Fail to create simulation: \"") + simName + "\"",
-         QMessageBox::Ok, QMessageBox::NoButton );
+      showError( QString("Fail to create simulation: \"%1\"").arg(simName) );
     }
     emit viewChanged();
   };
@@ -1148,10 +1115,38 @@ void LaboView::newSimul()
 
 void LaboView::delSimul()
 {
+  QItemSelectionModel *selMod = sims_view->selectionModel();
+  if( !selMod ) {
+    return;
+  }
+
+  QModelIndex cs = selMod->currentIndex();
+  if( !cs.isValid() ) {
+    return;
+  }
+  QString nm = cs.data( Qt::DisplayRole ).toString();
+
+  if( confirmDelete( "simulation", nm ) ) {
+    model->delSimul( nm );
+    emit viewChanged();
+  }
 }
 
 void LaboView::editSimul()
 {
+  QItemSelectionModel *selMod = sims_view->selectionModel();
+  if( !selMod ) {
+    return;
+  }
+
+  QModelIndex cs = selMod->currentIndex();
+  if( !cs.isValid() ) {
+    return;
+  }
+  QString nm = cs.data( Qt::DisplayRole ).toString();
+  Simulation *sim = model->getSimul( nm );
+
+  editObj( sim );
 }
 
 void LaboView::setActiveSimul()
@@ -1163,17 +1158,10 @@ void LaboView::setActiveSimul()
 
 void LaboView::editModel()
 {
-  int rc;
   if( ! checkState( validCheck ) )
     return;
 
-  DataDialog *dia = new DataDialog( *model, this );
-  rc = dia->exec();
-  if( rc == QDialog::Accepted ) {
-    model->reset();
-    model->setModified();
-    emit viewChanged();
-  };
+  editObj( model );
 }
 
 
