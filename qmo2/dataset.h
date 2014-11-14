@@ -301,11 +301,8 @@ class HolderData : public QAbstractItemModel {
   int del_obj( const QString &ob_name );
   void check_guard() const;
   int getActiveIdx() const { return active_idx; }
-  void setActiveIdx( int i ) { active_idx = i; };
-  void setActiveElem( const QString &nm ) {
-    active_idx = -1; HolderData *e = getElem( nm );
-    if( e ) { active_idx = indexOfHolder( e ); }
-  };
+  void setActiveIdx( int i );
+  void setActiveElem( const QString &nm );
   HolderData* getActiveElem() const { return getElem( active_idx ); };
  public:
   template<typename T> T getActiveElemT() const

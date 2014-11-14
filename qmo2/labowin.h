@@ -163,6 +163,7 @@ class LaboWin : public QMainWindow
     void slotNewOut();
     void slotDelOut();
     void slotEditOut();
+    void slotSelectOut();
     void slotShowOutData();
     void slotExportOut();
 
@@ -170,6 +171,7 @@ class LaboWin : public QMainWindow
     void slotNewGraph();
     void slotDelGraph();
     void slotEditGraph();
+    void slotSelectGraph();
     void slotShowGraph();
     void slotShowGraphData();
     void slotExportGraphData();
@@ -179,6 +181,7 @@ class LaboWin : public QMainWindow
     void slotNewSimul();
     void slotDelSimul();
     void slotEditSimul();
+    void slotSelectSimul();
     void slotSetActiveSimul();
 
     // ==== model related
@@ -258,6 +261,7 @@ class LaboWin : public QMainWindow
     QMenu *pElmMenu;
     QMenu *pOutMenu;
     QMenu *pGraphMenu;
+    QMenu *pSimulMenu;
     QMenu *pModelMenu;
     QMenu *pRunMenu;
     QMenu *pViewMenu;
@@ -279,17 +283,19 @@ class LaboWin : public QMainWindow
             *act_infoelm, *act_showtreeelm,
             *act_testelm1, *act_testelm2,
             // out
-            *act_newout, *act_delout, *act_editout,
+            *act_newout, *act_delout, *act_editout, *act_selectout,
             *act_showoutdata, *act_exportout,
             // graph
-            *act_newgraph, *act_delgraph, *act_editgraph,
+            *act_newgraph, *act_delgraph, *act_editgraph, *act_selectgraph,
             *act_showgraph, *act_showgraphdata,
             *act_exportgraphdata, *act_gnuplotgraph,
+            // simulation
+            *act_newSimul, *act_delSimul, *act_editSimul, *act_selectSimul,
+            *act_setActiveSimul,
             // model
             *act_editmodel, *act_showtreemodel,
             // run
             *act_runrun, *act_runprm, *act_runprm2, *act_runscript, *act_reset,
-            *act_newSimul, *act_delSimul, *act_editSimul, *act_setActiveSimul,
             // iface
             *act_tbar, *act_sbar,
             *act_showord, *act_showgrid, *act_shownames, *act_showicons, *act_showlinks,

@@ -272,6 +272,7 @@ void LaboWin::initIface()
   act_testelm2= new QAction( "test element 2", this );
   act_testelm2->setWhatsThis( tr("Test something in element") );
   connect( act_testelm2, &QAction::triggered, this, &LaboWin::slotTestElm2);
+
   // ==== out group
 
   act_newout = new QAction( QIcon( ":icons/newout.png" ), "&New Out", this );
@@ -280,60 +281,96 @@ void LaboWin::initIface()
   connect( act_newout, &QAction::triggered, this, &LaboWin::slotNewOut);
 
   act_delout = new QAction( QIcon( ":icons/delout.png" ), "&Delete out", this );
-  act_delout->setShortcut( Qt::Key_X );
+  // act_delout->setShortcut( Qt::Key_X );
   act_delout->setWhatsThis( tr("Delete output collector with current level") );
   connect( act_delout, &QAction::triggered, this, &LaboWin::slotDelOut);
 
   act_editout = new QAction( QIcon( ":icons/editout.png" ), "&Edit out", this );
   act_editout->setShortcut( Qt::SHIFT+Qt::Key_U );
-  act_editout->setWhatsThis( tr("Edit outsput collector withcurrent level") );
+  act_editout->setWhatsThis( tr("Edit outsput collector with current level") );
   connect( act_editout, &QAction::triggered, this, &LaboWin::slotEditOut);
 
+  act_selectout = new QAction( "Select out", this );
+  act_selectout->setShortcut( Qt::ALT+Qt::Key_U );
+  act_selectout->setWhatsThis( tr("Select outsput collector by current level") );
+  connect( act_selectout, &QAction::triggered, this, &LaboWin::slotSelectOut );
+
   act_showoutdata = new QAction( QIcon( ":icons/showoutdata.png" ), "&Show out data", this );
-  act_showoutdata->setShortcut( Qt::Key_D );
+  // act_showoutdata->setShortcut( Qt::Key_D );
   act_showoutdata->setWhatsThis( tr("Show data collected by output.") );
   connect( act_showoutdata, &QAction::triggered, this, &LaboWin::slotShowOutData);
 
   act_exportout = new QAction( "E&xport out data", this );
-  act_exportout->setShortcut( Qt::Key_E );
+  // act_exportout->setShortcut( Qt::Key_E );
   act_exportout->setWhatsThis( tr("Export data collected by output to text file.") );
   connect( act_exportout, &QAction::triggered, this, &LaboWin::slotExportOut);
 
-  // ==== graph group
+  // ==== graph=plot group
 
-  act_newgraph = new QAction( QIcon( ":icons/newgraph.png" ), "&New Graph", this );
-  act_newgraph->setShortcut( Qt::Key_G );
-  act_newgraph->setWhatsThis( tr("Create new graph") );
+  act_newgraph = new QAction( QIcon( ":icons/newgraph.png" ), "&New Plot", this );
+  act_newgraph->setShortcut( Qt::Key_P );
+  act_newgraph->setWhatsThis( tr("Create new plot") );
   connect( act_newgraph, &QAction::triggered, this, &LaboWin::slotNewGraph);
 
-  act_delgraph = new QAction( QIcon( ":icons/delgraph.png" ), "&Delete graph", this );
-  act_delgraph->setShortcut( Qt::SHIFT+Qt::Key_X );
-  act_delgraph->setWhatsThis( tr("Delete graph with selected level") );
+  act_delgraph = new QAction( QIcon( ":icons/delgraph.png" ), "&Delete plot", this );
+  // act_delgraph->setShortcut( Qt::SHIFT+Qt::Key_X );
+  act_delgraph->setWhatsThis( tr("Delete plot with selected level") );
   connect( act_delgraph, &QAction::triggered, this, &LaboWin::slotDelGraph);
 
-  act_editgraph = new QAction( QIcon( ":icons/editgraph.png" ), "&Edit graph", this );
-  act_editgraph->setShortcut(  Qt::SHIFT+Qt::Key_G );
-  act_editgraph->setWhatsThis( tr("Edit graph with current level") );
+  act_editgraph = new QAction( QIcon( ":icons/editgraph.png" ), "&Edit plot", this );
+  act_editgraph->setShortcut(  Qt::SHIFT+Qt::Key_P );
+  act_editgraph->setWhatsThis( tr("Edit plot with current level") );
   connect( act_editgraph, &QAction::triggered, this, &LaboWin::slotEditGraph);
 
-  act_showgraph = new QAction( QIcon( ":icons/showgraph.png" ), "&Show graph", this );
+  act_selectgraph = new QAction( "select plot", this );
+  act_selectgraph->setShortcut(  Qt::ALT+Qt::Key_P );
+  act_selectgraph->setWhatsThis( tr("Select plot by current level") );
+  connect( act_selectgraph, &QAction::triggered, this, &LaboWin::slotSelectGraph );
+
+  act_showgraph = new QAction( QIcon( ":icons/showgraph.png" ), "&Show plot", this );
   act_showgraph->setShortcut( Qt::Key_S );
-  act_showgraph->setWhatsThis( tr("Show graph plot") );
+  act_showgraph->setWhatsThis( tr("Show plot plot") );
   connect( act_showgraph, &QAction::triggered, this, &LaboWin::slotShowGraph);
 
-  act_showgraphdata = new QAction( QIcon( ":icons/showgraphdata.png" ), "show graph Data", this );
+  act_showgraphdata = new QAction( QIcon( ":icons/showgraphdata.png" ), "show plot Data", this );
   act_showgraphdata->setShortcut(  Qt::SHIFT+Qt::Key_D );
-  act_showgraphdata->setWhatsThis( tr("Show graph data") );
+  act_showgraphdata->setWhatsThis( tr("Show plot data") );
   connect( act_showgraphdata, &QAction::triggered, this, &LaboWin::slotShowGraphData);
 
-  act_exportgraphdata = new QAction( "E&xport graph data", this );
+  act_exportgraphdata = new QAction( "E&xport plot data", this );
   act_exportgraphdata->setShortcut( Qt::SHIFT+Qt::Key_E );
-  act_exportgraphdata->setWhatsThis( tr("Export graph data to text file") );
+  act_exportgraphdata->setWhatsThis( tr("Export plot data to text file") );
   connect( act_exportgraphdata, &QAction::triggered, this, &LaboWin::slotExportGraphData);
 
-  act_gnuplotgraph = new QAction( "&Gnuplot graph", this);
-  act_gnuplotgraph->setWhatsThis( tr("Export graph data to gnuplot-compatiomle file") );
+  act_gnuplotgraph = new QAction( "&Gnuplot plot", this);
+  act_gnuplotgraph->setWhatsThis( tr("Export plot data to gnuplot-compatiomle file") );
   connect( act_gnuplotgraph, &QAction::triggered, this, &LaboWin::slotGnuplotGraph);
+
+  // ==== simulation group
+
+  act_newSimul = new QAction( "&New Simulation", this );
+  act_newSimul->setWhatsThis( tr("Create new simulation") );
+  connect( act_newSimul, &QAction::triggered, this, &LaboWin::slotNewSimul );
+
+  act_delSimul = new QAction( "&Delete Simulation", this );
+  act_delSimul->setWhatsThis( tr("Delete simulation") );
+  connect( act_delSimul, &QAction::triggered, this, &LaboWin::slotDelSimul );
+
+  act_editSimul = new QAction( "&Edit Simulation", this );
+  act_editSimul->setShortcut(  Qt::SHIFT+Qt::Key_Y );
+  act_editSimul->setWhatsThis( tr("Edit simulation") );
+  connect( act_editSimul, &QAction::triggered, this, &LaboWin::slotEditSimul );
+
+  act_selectSimul = new QAction( "Select Simulation", this );
+  act_selectSimul->setShortcut(  Qt::ALT+Qt::Key_Y );
+  act_selectSimul->setWhatsThis( tr("Edit simulation") );
+  connect( act_selectSimul, &QAction::triggered, this, &LaboWin::slotSelectSimul );
+
+  act_setActiveSimul = new QAction( "Set Active Simulation", this );
+  act_setActiveSimul->setShortcut( Qt::ALT+Qt::CTRL+Qt::Key_Y );
+  act_setActiveSimul->setWhatsThis( tr("Set current simulation to be active") );
+  connect( act_setActiveSimul, &QAction::triggered, this, &LaboWin::slotSetActiveSimul );
+
 
   // ==== model group
 
@@ -373,23 +410,6 @@ void LaboWin::initIface()
   act_reset= new QAction( "R&eset", this );
   act_reset->setWhatsThis( tr("Reset model state.") );
   connect( act_reset, &QAction::triggered, this, &LaboWin::slotReset );
-
-  act_newSimul = new QAction( "New Simulation", this );
-  act_newSimul->setWhatsThis( tr("Create new simulation") );
-  connect( act_newSimul, &QAction::triggered, this, &LaboWin::slotNewSimul );
-
-  act_delSimul = new QAction( "Delete Simulation", this );
-  act_delSimul->setWhatsThis( tr("Delete simulation") );
-  connect( act_delSimul, &QAction::triggered, this, &LaboWin::slotDelSimul );
-
-  act_editSimul = new QAction( "Edit Simulation", this );
-  act_editSimul->setWhatsThis( tr("Edit simulation") );
-  connect( act_editSimul, &QAction::triggered, this, &LaboWin::slotEditSimul );
-
-  act_setActiveSimul = new QAction( "Set Active Simulation", this );
-  act_setActiveSimul->setWhatsThis( tr("Set current simulation to be active") );
-  connect( act_setActiveSimul, &QAction::triggered, this, &LaboWin::slotSetActiveSimul );
-
   // ==== iface group
 
   act_tbar = new QAction( "View &Toolbar", this );
@@ -530,21 +550,36 @@ void LaboWin::initIface()
   pOutMenu->addAction( act_delout );
   pOutMenu->addAction( act_editout );
   pOutMenu->addSeparator();
+  pOutMenu->addAction( act_selectout );
+  pOutMenu->addSeparator();
   pOutMenu->addAction( act_showoutdata );
   pOutMenu->addAction( act_exportout );
 
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pGraphMenu
-  pGraphMenu = menuBar()->addMenu( tr("&Graph") );
+  pGraphMenu = menuBar()->addMenu( tr("&Plot") );
   pGraphMenu->addAction( act_newgraph );
   pGraphMenu->addAction( act_delgraph );
   pGraphMenu->addAction( act_editgraph );
+  pGraphMenu->addSeparator();
+  pGraphMenu->addAction( act_selectgraph );
   pGraphMenu->addSeparator();
   pGraphMenu->addAction( act_showgraph );
   pGraphMenu->addSeparator();
   pGraphMenu->addAction( act_showgraphdata );
   pGraphMenu->addAction( act_exportgraphdata );
   pGraphMenu->addAction( act_gnuplotgraph );
+
+  ///////////////////////////////////////////////////////////////////
+  // menuBar entry pSimulMenu
+  pSimulMenu = menuBar()->addMenu( tr("&Simulation") );
+  pSimulMenu->addAction( act_newSimul );
+  pSimulMenu->addAction( act_delSimul );
+  pSimulMenu->addAction( act_editSimul );
+  pSimulMenu->addSeparator();
+  pSimulMenu->addAction( act_selectSimul );
+  pSimulMenu->addSeparator();
+  pSimulMenu->addAction( act_setActiveSimul );
 
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pModelMenu
@@ -562,11 +597,6 @@ void LaboWin::initIface()
   pRunMenu->addAction( act_runscript );
   pRunMenu->addSeparator();
   pRunMenu->addAction( act_reset );
-  pRunMenu->addSeparator();
-  pRunMenu->addAction( act_newSimul );
-  pRunMenu->addAction( act_delSimul );
-  pRunMenu->addAction( act_editSimul );
-  pRunMenu->addAction( act_setActiveSimul );
 
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pViewMenu
@@ -676,16 +706,24 @@ void LaboWin::enableActions( bool ena, int id_ )
        act_newout->setEnabled( ena );
        act_delout->setEnabled( ena );
        act_editout->setEnabled( ena );
+       act_selectout->setEnabled( ena );
        act_showoutdata->setEnabled( ena );
        act_exportout->setEnabled( ena );
-       // graph
+       // graph=plot
        act_newgraph->setEnabled( ena );
        act_delgraph->setEnabled( ena );
        act_editgraph->setEnabled( ena );
+       act_selectgraph->setEnabled( ena );
        act_showgraph->setEnabled( ena );
        act_showgraphdata->setEnabled( ena );
        act_exportgraphdata->setEnabled( ena );
        act_gnuplotgraph->setEnabled( ena );
+       // simul
+       act_newSimul->setEnabled( ena );
+       act_delSimul->setEnabled( ena );
+       act_editSimul->setEnabled( ena );
+       act_selectSimul->setEnabled( ena );
+       act_setActiveSimul->setEnabled( ena );
        // model
        act_editmodel->setEnabled( ena );
        act_showtreemodel->setEnabled( ena );
@@ -695,10 +733,6 @@ void LaboWin::enableActions( bool ena, int id_ )
        act_runprm2->setEnabled( ena );
        act_runscript->setEnabled( ena );
        act_reset->setEnabled( ena );
-       act_newSimul->setEnabled( ena );
-       act_delSimul->setEnabled( ena );
-       act_editSimul->setEnabled( ena );
-       act_setActiveSimul->setEnabled( ena );
        // win
        act_winClose->setEnabled( ena );
        act_winCloseAll->setEnabled( ena );
@@ -1345,6 +1379,16 @@ void LaboWin::slotEditOut()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
+void LaboWin::slotSelectOut()
+{
+  statusBar()->showMessage( tr( "Selectting output array..." ) );
+
+  LaboView* m =  activeMdiChild();
+  if ( m )
+    m->selectOut();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
 void LaboWin::slotShowOutData()
 {
   statusBar()->showMessage( tr( "Data from output array..." ) );
@@ -1367,7 +1411,7 @@ void LaboWin::slotExportOut()
 
 void LaboWin::slotNewGraph()
 {
-  statusBar()->showMessage( tr( "Inserting new graph..." ) );
+  statusBar()->showMessage( tr( "Inserting new plot..." ) );
 
   LaboView* m =  activeMdiChild();
   if ( m )
@@ -1377,7 +1421,7 @@ void LaboWin::slotNewGraph()
 
 void LaboWin::slotDelGraph()
 {
-  statusBar()->showMessage( tr( "Deleting graph..." ) );
+  statusBar()->showMessage( tr( "Deleting plot..." ) );
 
   LaboView* m =  activeMdiChild();
   if ( m )
@@ -1387,7 +1431,7 @@ void LaboWin::slotDelGraph()
 
 void LaboWin::slotEditGraph()
 {
-  statusBar()->showMessage( tr( "Editing graph..." ) );
+  statusBar()->showMessage( tr( "Editing plot..." ) );
 
   LaboView* m =  activeMdiChild();
   if ( m )
@@ -1395,9 +1439,19 @@ void LaboWin::slotEditGraph()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
+void LaboWin::slotSelectGraph()
+{
+  statusBar()->showMessage( tr( "Selecting plot..." ) );
+
+  LaboView* m =  activeMdiChild();
+  if ( m )
+    m->selectGraph();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
 void LaboWin::slotShowGraph()
 {
-  statusBar()->showMessage( tr( "Showing graph plot..." ) );
+  statusBar()->showMessage( tr( "Showing plot..." ) );
 
   LaboView* m =  activeMdiChild();
   if ( m )
@@ -1407,7 +1461,7 @@ void LaboWin::slotShowGraph()
 
 void LaboWin::slotShowGraphData()
 {
-  statusBar()->showMessage( tr( "Showing graph data..." ) );
+  statusBar()->showMessage( tr( "Showing plot data..." ) );
 
   LaboView* m =  activeMdiChild();
   if ( m )
@@ -1417,7 +1471,7 @@ void LaboWin::slotShowGraphData()
 
 void LaboWin::slotExportGraphData()
 {
-  statusBar()->showMessage( tr( "Exporting graph data..." ) );
+  statusBar()->showMessage( tr( "Exporting plot data..." ) );
 
   LaboView* m =  activeMdiChild();
   if ( m )
@@ -1427,7 +1481,7 @@ void LaboWin::slotExportGraphData()
 
 void LaboWin::slotGnuplotGraph()
 {
-  statusBar()->showMessage( tr( "Exporting graph to gnuplot..." ) );
+  statusBar()->showMessage( tr( "Exporting plot to gnuplot..." ) );
 
   LaboView* m =  activeMdiChild();
   if ( m )
@@ -1464,6 +1518,17 @@ void LaboWin::slotEditSimul()
     m->editSimul();
   statusBar()->showMessage( tr( "Ready." ) );
 }
+
+void LaboWin::slotSelectSimul()
+{
+  statusBar()->showMessage( tr( "Selectiong simulation ..." ) );
+
+  LaboView* m =  activeMdiChild();
+  if ( m )
+    m->selectSimul();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
 
 void LaboWin::slotSetActiveSimul()
 {

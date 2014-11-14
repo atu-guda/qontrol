@@ -155,7 +155,6 @@ QVariant HolderData::dataObj( int col, int role ) const
 }
 
 
-
 QModelIndex HolderData::index( int row, int column, const QModelIndex &par ) const
 {
   //DBGx( "dbg: row=%d column=%d this: %s par: %s", row, column, qP( getFullName() ), qP(idx2s(par)) );
@@ -440,6 +439,26 @@ int HolderData::del_obj( const QString &ob_name )
   reportStructChanged();
   return 1;
 }
+
+
+void HolderData::setActiveIdx( int i )
+{
+  active_idx = i;
+  if( par ) {
+    QModelIndex mi1 = createIndex( 0, 0, par );
+    QModelIndex mi2 = createIndex( par->size()-1, 0, par );
+    emit dataChanged( mi1, mi2 );
+  }
+};
+
+void HolderData::setActiveElem( const QString &nm )
+{
+  int a_idx = -1; HolderData *e = getElem( nm );
+  if( e ) {
+    a_idx = indexOfHolder( e );
+  }
+  setActiveIdx( a_idx );
+};
 
 
 HolderData* HolderData::add_param( const QString &tp_name, const QString &ob_name )

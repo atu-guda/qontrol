@@ -113,6 +113,7 @@ class LaboView : public QWidget
    void newOut();
    void delOut();
    void editOut();
+   void selectOut();
    void showOutData();
    void exportOut();
 
@@ -120,6 +121,7 @@ class LaboView : public QWidget
    void newGraph();
    void delGraph();
    void editGraph();
+   void selectGraph();
    void showGraph();
    void showGraphData();
    void exportGraphData();
@@ -129,6 +131,7 @@ class LaboView : public QWidget
    void newSimul();
    void delSimul();
    void editSimul();
+   void selectSimul();
    void setActiveSimul();
 
    // model related

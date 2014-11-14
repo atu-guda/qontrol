@@ -230,6 +230,8 @@ void LaboView::updateViews()
   sview->update();
   oview->update();
   gview->update();
+  // sims_view->reset();
+  sims_view->update();
   stam->update();
   // treeView->reset();
   // treeView->update();
@@ -810,6 +812,13 @@ void LaboView::editOut()
   editObj( arr );
 }
 
+void LaboView::selectOut()
+{
+  if( ! checkState( validCheck ) )
+    return;
+  // TODO:
+}
+
 
 void LaboView::showOutData() // TODO: special dialog (+ for many rows)
 {
@@ -944,6 +953,14 @@ void LaboView::editGraph()
   TGraph *gra = model->getGraph( level );
   editObj( gra );
 }
+
+void LaboView::selectGraph()
+{
+  if( ! checkState( validCheck ) )
+    return;
+  // TODO:
+}
+
 
 
 void LaboView::showGraph()
@@ -1153,6 +1170,27 @@ void LaboView::editSimul()
   editObj( sim );
 }
 
+void LaboView::selectSimul()
+{
+  if( ! checkState( validCheck ) )
+    return;
+  ContSimul *sims = model->getElemT<ContSimul*>( "sims" );
+  if( !sims ) {
+    return;
+  }
+  QItemSelectionModel *selMod = sims_view->selectionModel();
+  if( !selMod ) {
+    return;
+  }
+
+  QModelIndex s_idx = sims->index( level, 0, QModelIndex() );
+
+  selMod->clear();
+  selMod->select( s_idx, QItemSelectionModel::Select );
+  selMod->setCurrentIndex( s_idx, QItemSelectionModel::Select );
+  emit viewChanged();
+}
+
 void LaboView::setActiveSimul()
 {
   QItemSelectionModel *selMod = sims_view->selectionModel();
@@ -1169,6 +1207,7 @@ void LaboView::setActiveSimul()
   if( !sims ) {
     return;
   }
+
   sims->setActiveElem( nm );
   emit viewChanged();
 }
