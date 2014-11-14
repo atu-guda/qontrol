@@ -161,14 +161,6 @@ enum ltype_t {
   LinkBad       // link source or target not found
 };
 
-enum allow_type {
-  allowNone = 0,
-  allowObject = 1,
-  allowParam = 2,
-  allowBoth = 3
-};
-
-
 
 // -------------------------- HOLDERS ------------------------------------
 
@@ -203,10 +195,13 @@ class HolderData : public QAbstractItemModel {
   virtual const TClassInfo* getClassInfo() const = 0;
   /** returns list of registerd (exists) clild elems names */
   Q_INVOKABLE QStringList elemNames() const;
-  /** returns holder by number - for QModel... no check */
+  /** returns holder by number */
   HolderData* getElem( int i ) const
      {
-      return qobject_cast<HolderData*>(children().at(i));
+       if( i < size() && i >=0 ) {
+         return qobject_cast<HolderData*>(children().at(i));
+       }
+       return nullptr;
      }
   /** find holder for object by name */ // TODO: +full.name.elm
   HolderData* getElem( const QString &oname ) const
@@ -216,7 +211,10 @@ class HolderData : public QAbstractItemModel {
   /** find holder for object by insex, safely cast to type T */
   template<typename T> T getElemT( int idx ) const
       {
-        return qobject_cast<T>( children().at(idx) );
+        if( idx < size() && idx >=0 ) {
+          return qobject_cast<T>( children().at(idx) );
+        }
+        return nullptr;
       }
   /** find holder for object by name, safely cast to type T */
   template<typename T> T getElemT( const QString &oname ) const
@@ -297,6 +295,18 @@ class HolderData : public QAbstractItemModel {
   /** delete given object by name */
   int del_obj( const QString &ob_name );
   void check_guard() const;
+  int getActiveIdx() const { return active_idx; }
+  void setActiveIdx( int i ) { active_idx = i; };
+  void setActiveElem( const QString &nm ) {
+    active_idx = -1; HolderData *e = getElem( nm );
+    if( e ) { active_idx = indexOfHolder( e ); }
+  };
+  HolderData* getActiveElem() const { return getElem( active_idx ); };
+ public:
+  template<typename T> T getActiveElemT() const
+      {
+        return qobject_cast<T>( getActiveElem );
+      }
  protected:
   void extraToParm();
   /** reaction to add/remove of subobjects: call do_structChanged */
@@ -317,12 +327,14 @@ class HolderData : public QAbstractItemModel {
   int modified = 0;
   /** flag: suspend reaction to structure update: use only in mass changes */
   bool updSuspended = false;
+  //* active element index
+  int active_idx = -1;
   QSSMap parms;
   QString allowed_types = ""; // separator=','
   DCL_DEFAULT_STATIC;
 };
 
-
+// ----------------------------- HolderValue ---------------------------------
 /** Parent of all value holders */
 class HolderValue : public HolderData {
   Q_OBJECT

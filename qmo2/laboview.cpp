@@ -1155,7 +1155,22 @@ void LaboView::editSimul()
 
 void LaboView::setActiveSimul()
 {
-  // TODO
+  QItemSelectionModel *selMod = sims_view->selectionModel();
+  if( !selMod ) {
+    return;
+  }
+
+  QModelIndex cs = selMod->currentIndex();
+  if( !cs.isValid() ) {
+    return;
+  }
+  QString nm = cs.data( Qt::DisplayRole ).toString();
+  ContSimul *sims = model->getElemT<ContSimul*>( "sims" );
+  if( !sims ) {
+    return;
+  }
+  sims->setActiveElem( nm );
+  emit viewChanged();
 }
 
 
