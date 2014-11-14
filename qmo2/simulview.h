@@ -3,6 +3,7 @@
 #include "laboview.h"
 
 class SimulView : public QListView {
+  Q_OBJECT
   public:
    SimulView( HolderData *a_mod, LaboView *par );
   private:

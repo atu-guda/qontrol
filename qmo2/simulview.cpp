@@ -38,4 +38,7 @@ void SimulView::init_actions()
   act_setActive = new QAction( QIcon::fromTheme("checkmark"), "set Active", this );
   addAction( act_setActive );
   connect( act_setActive, SIGNAL(triggered()), laboview, SLOT(setActiveSimul()) );
+
+  connect( this, SIGNAL(doubleClicked(QModelIndex)), laboview, SLOT(editSimul()) );
+
 }
