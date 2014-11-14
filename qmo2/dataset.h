@@ -12,6 +12,7 @@
 #include <QObject>
 #include <QString>
 #include <QColor>
+#include <QIcon>
 #include <QStringList>
 #include <QVariant>
 #include <QMap>
@@ -181,6 +182,8 @@ class HolderData : public QAbstractItemModel {
   virtual QModelIndex index( int row, int column,
                       const QModelIndex &par = QModelIndex() ) const override;
   virtual QModelIndex parent( const QModelIndex &idx ) const override;
+  // helper for "data", but for "this", not index
+  virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const;
 
   QVariant::Type getTp() const { return tp; }
   int isDyn() const { return dyn; }
@@ -259,6 +262,8 @@ class HolderData : public QAbstractItemModel {
   void suspendHandleStructChange() { updSuspended = true; }
   /** resume reaction to struct changes */
   void resumeHandleStructChange() { updSuspended = false; handleStructChanged(); }
+  //* return icon for visualization
+  virtual QIcon getIcon() const;
 
 
   virtual QDomElement toDom( QDomDocument &dd ) const;

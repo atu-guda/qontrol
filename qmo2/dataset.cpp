@@ -102,7 +102,7 @@ QVariant HolderData::data( const QModelIndex &idx, int role ) const
   if( !idx.isValid() ) {
     return QVariant();
   }
-  int r = idx.row(), c = idx.column();
+  int c = idx.column();
 
   HolderData *ds = static_cast<HolderData*>( idx.internalPointer() );
   if( !ds ) {
@@ -110,20 +110,25 @@ QVariant HolderData::data( const QModelIndex &idx, int role ) const
   }
 
   // DBGx( "dbg: ds: %s", qP( ds->getFullName() ) );
+  return ds->dataObj( c, role );
+}
 
+QVariant HolderData::dataObj( int col, int role ) const
+{
+  // no switch: too complex
   if( role == Qt::DisplayRole ) {
     QString s;
-    s = QString( "r " ) + QSN( r ) + QString( " c " ) + QSN( c );
-    switch( c ) {
+    s = QString( "c " ) + QSN( col ); // fallback value
+    switch( col ) {
       case 0:
-        s =  ds->objectName(); break;
+        s = objectName(); break;
       case 1:
-        s = ds->getType(); break;
+        s = getType(); break;
       case 2:
-        if( ds->size() == 0 ) {
-          ds->getData( "", s );
+        if( size() == 0 ) {
+          getData( "", s );
         } else {
-          s = QSL("[") + QSN( ds->size() ) + QSL("]");
+          s = QSL("[") + QSN( size() ) + QSL("]");
         }
         break;
       default:
@@ -132,13 +137,24 @@ QVariant HolderData::data( const QModelIndex &idx, int role ) const
     return s;
   }
 
+  if( role == Qt::CheckStateRole ) {
+    if( col != 0 ) {
+      return QVariant();
+    }
+    return ( par  &&  par->getActiveElem() == this );
+  }
+
+  if( role == Qt::DecorationRole ) {
+    if( col != 0 ) {
+      return QVariant();
+    }
+    return getIcon();
+  }
+
   return QVariant();
 }
 
-// bool HolderData::hasChildren( const QModelIndex & /*par*/ ) const
-// {
-//   return false;
-// }
+
 
 QModelIndex HolderData::index( int row, int column, const QModelIndex &par ) const
 {
@@ -353,6 +369,13 @@ void HolderData::handleStructChanged()
 
 void HolderData::do_structChanged()
 {
+}
+
+QIcon HolderData::getIcon() const
+{
+  QString iconName = QString( ":icons/elm_" ) + getType().toLower() + ".png";
+  QIcon el_ico( iconName );
+  return el_ico;
 }
 
 // TODO: more args

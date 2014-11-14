@@ -243,10 +243,7 @@ void StructView::drawAll( QPainter &p )
       p.setPen( QPen(Qt::black,2) );  p.setBrush( Qt::NoBrush );
       p.drawRect( ei.xs, ei.ys, obj_sz, obj_sz );
     } else {
-      QString iconName = QString( ":icons/elm_" )
-        + QString(ob->getType()).toLower()
-        + ".png";
-      QIcon el_ico(iconName);
+      QIcon el_ico = ob->getIcon();
       el_ico.paint( &p, ei.xs, ei.ys, obj_sz, obj_sz );
 
       // tmp: debug: to see sizes
