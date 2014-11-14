@@ -359,10 +359,66 @@ void LaboDoc::initEngine()
 
 bool LaboDoc::migrateSumul()
 {
+  DBGx( "dbg: start..." );
   if( !rootdata || ! model ) {
     DBG1( "ERR: no root or model" );
     return false;
   }
+  model->linkNames(); // to get corrent number of outputs and plots
+
+  // migrate outputs
+  ContOut *outs =  model->getElemT<ContOut*>("outs");
+  if( !outs ) {
+    DBGx( "err: outs not exist!" );
+    return false;
+  }
+
+  if( outs->size() == 0 ) {
+    int n_out = model->getNOutArr();
+    DBGx( "dbg: migrate outputs (%d)", n_out );
+
+    for( int i=0; i<n_out; ++i ) {
+      TOutArr *arr_o = model->getOutArr( i );
+      if( !arr_o ) {
+        continue;
+      }
+      QString nm = arr_o->objectName();
+      DBGx( "dbg: migrate (1) TOutArr \"%s\" %d", qP(nm), i );
+      QString s = arr_o->toString();
+      TOutArr *arr_n = outs->addObj<TOutArr>( nm );
+      if( arr_n ) {
+        arr_n->fromString( s );
+        DBGx( "dbg: migrate (2) TOutArr \"%s\" %d", qP(nm), i );
+      }
+    }
+
+  }
+
+
+  // migrate plots
+  ContGraph *plots =  model->getElemT<ContGraph*>("plots");
+  if( !plots ) {
+    DBGx( "err: plots not exist!" );
+    return false;
+  }
+
+  if( plots->size() == 0 ) {
+    int n_pl = model->getNGraph();
+
+    for( int i=0; i<n_pl; ++i ) {
+      TGraph *gr_o = model->getGraph( i );
+      if( !gr_o ) {
+        continue;
+      }
+      QString s = gr_o->toString();
+      TGraph *gr_n = plots->addObj<TGraph>( gr_o->objectName() );
+      if( gr_n ) {
+        gr_n->fromString( s );
+      }
+    }
+
+  }
+
 
   ContSimul *sims = model->getElemT<ContSimul*>("sims");
   if( ! sims ) {
@@ -403,7 +459,6 @@ bool LaboDoc::migrateSumul()
   model->getData( "seedType", &ti );  sim0->setData( "seedType", ti );
   model->getData( "autoStart", &ti );  sim0->setData( "autoStart", ti );
   model->getData( "long_descr", descr );  sim0->setData( "descr", descr );
-
 
   return true;
 }

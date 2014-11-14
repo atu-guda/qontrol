@@ -104,6 +104,8 @@ class TModel : public TDataContainer  {
 
   /** reimplemented from TDataSet to ensure all data filled and linked */
   virtual int checkData( int i );
+  /** links input & parm names -> indexses in ptrs TODO: revert to protected after migration*/
+  virtual int linkNames();
 
   // interface to commands like above, but with names - to use from JS
  public slots:
@@ -131,8 +133,6 @@ class TModel : public TDataContainer  {
   virtual int allStartLoop( int acnx, int acny );
   /** calls endLoop for all elms */
   virtual void allEndLoop();
-  /** links input & parm names -> indexses in ptrs */
-  virtual int linkNames();
   /** call to allocate out arrays for given type and below */
   virtual void allocOutArrs( int tp );
   /** resets all array with given level or below */
