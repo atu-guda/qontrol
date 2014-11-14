@@ -1,10 +1,12 @@
 Renew /unify views for Outs, Graphs, Simulations
 Rethink array save/restore: my be invalid xml (at least for strings)
+Input/output elements/scheme properties (in0?)
 New hier
+Move TCorrAnal, TFourier direct access to arrays with post-run js?
 Command line (':')
 Concept for current element in contatiner (Simulation ... )
 Rebreand to Qontrol
-move some logic from LaboView to model (scheme?)
+move some logic from LaboView to model (scheme?, runner?)
 slots in TModel like cmds, but with "name", not elnu - for JS
 unify add/paste elem: param in dialog?
 unify add param/object : add_obj_param? + dialog
@@ -14,7 +16,6 @@ Edit large arrays
 Widget for link: after new hier
 More data/controls: Font, Date, Time
 Plot data structure + convert old
-Current object in container / alias ?
 run w/o interface fun:
 command line key -w = write
 TCircBuf + TDelay re*

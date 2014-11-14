@@ -33,6 +33,15 @@ class Simulation : public TDataSet  {
   virtual ~Simulation() override;
   DCL_CREATE;
   DCL_STD_INF;
+
+  enum RunType {
+    runSingle = 0, runLoop, run2DLoop
+  };
+  Q_ENUMS(RunType);
+  Q_CLASSINFO( "enum_RunType_0", "Single" );      // runSingle
+  Q_CLASSINFO( "enum_RunType_1", "1D loop" );     // runLoop
+  Q_CLASSINFO( "enum_RunType_2", "2D loop" );     // run2DLoop
+
   enum SeedType {
     everyRun = 0, startLoop, start2DLoop
   };
@@ -43,6 +52,7 @@ class Simulation : public TDataSet  {
 
  protected:
   // simulation parameters, borrowed/renamed from TModel
+  PRM_LIST( runType, efNoRunChange, "Run type",  "type of simulation run", "enum=RunType" );
   PRM_DOUBLE( T, efNoRunChange, "T", "Full Run Time", "min=0\nmax=1e300\ndef=100" );
   PRM_INT( N, efNoRunChange, "N", "Number of steps in one run",
       "min=1\nmax=200000000\nsep=col\ndef=10000"  );
