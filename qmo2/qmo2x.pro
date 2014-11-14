@@ -13,6 +13,8 @@ LIBS += -lgsl -lgslcblas -lm
 
 SOURCES += \
   addelemdia.cpp \
+  contgraph.cpp \
+  contout.cpp \
   datacont.cpp \
   dataset.cpp \
   elemfact.cpp \
@@ -77,6 +79,8 @@ SOURCES += \
 
 HEADERS += \
   addelemdia.h \
+  contgraph.h \
+  contout.h \
   datacont.h \
   dataset.h \
   defs.h \

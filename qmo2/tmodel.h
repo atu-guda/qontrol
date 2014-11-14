@@ -19,7 +19,8 @@
 #define TMODEL_H
 
 #include "defs.h"
-#include "datacont.h"
+#include "contout.h"
+#include "contgraph.h"
 #include "tmiso.h"
 #include "toutarr.h"
 #include "tgraph.h"
@@ -141,8 +142,8 @@ class TModel : public TDataContainer  {
   // --------------- convinience ptrs to obligatory elements
   // init not in init list - special handling?
   // ContSchem *schs  = nullptr;
-  // ContOut   *outs  = nullptr;
-  // ContPlots *plots = nullptr;
+  ContOut   *outs  = nullptr;
+  ContGraph *plots = nullptr;
   ContSimul *sims = nullptr;
   // =============== iface objects ==============================
   /** total model time, starts with 0 each inner loop */

@@ -33,7 +33,7 @@ STD_CLASSINFO(TModel,clpSpecial | clpContainer);
 CTOR(TModel,TDataContainer)
 {
   allowed_types = "TMiso,TGraph,TOutArr,HolderValue,InputSimple,"
-                  "ContSchems,ContSimul,Scheme,ContOuts,ContPlots";
+                  "ContSchems,ContSimul,Scheme,ContOut,ContGraph";
   rtime = t = 0; tdt = tt / nn;
   m_sqrt2 = sqrt(2.0);
   m_sqrt1_2 = sqrt(0.5);
@@ -45,6 +45,9 @@ CTOR(TModel,TDataContainer)
   v_out.reserve( OUT_RES );
   v_outt.reserve( OUT_RES );
   v_graph.reserve( 16 );
+
+  outs = addObj<ContOut>( "outs" );
+  plots = addObj<ContGraph>( "plots" );
 
   sims = addObj<ContSimul>( "sims" );
   if( sims ) {
