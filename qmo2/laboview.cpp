@@ -27,6 +27,7 @@
 #include "outview.h"
 #include "outdataview.h"
 #include "graphview.h"
+#include "graphdataview.h"
 #include "statusmodel.h"
 #include "doubletable.h"
 #include "runview.h"
@@ -69,6 +70,9 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   ContOut *outs = model->getElemT<ContOut*>( "outs" );
   outs_view = new OutDataView( outs, this );
 
+  ContGraph *plots = model->getElemT<ContGraph*>( "plots" );
+  plots_view = new GraphDataView( plots, this );
+
   ContSimul *sims = model->getElemT<ContSimul*>( "sims" );
   sims_view = new SimulView( sims, this );
 
@@ -79,7 +83,8 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   grLay->addWidget( oview, 0, 1 );
   grLay->addWidget( gview, 0, 2 );
   grLay->addWidget( outs_view, 0, 3 );
-  grLay->addWidget( sims_view, 0, 4 );
+  grLay->addWidget( plots_view, 0, 4 );
+  grLay->addWidget( sims_view, 0, 5 );
 
   main_part->setLayout( grLay );
 

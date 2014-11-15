@@ -28,6 +28,7 @@ class StructView;
 class OutView;
 class OutDataView;
 class GraphView;
+class GraphDataView;
 class TRootData;
 class TModel;
 class StatusModel;
@@ -176,6 +177,7 @@ class LaboView : public QWidget
    OutView *oview;
    OutDataView *outs_view = nullptr;
    GraphView *gview = nullptr;
+   GraphDataView *plots_view = nullptr;
    SimulView *sims_view = nullptr;
    StatusModel *stam;
 

@@ -25,6 +25,7 @@ SOURCES += \
   colorbtn.cpp \
   doubletable.cpp \
   graphview.cpp \
+  graphdataview.cpp \
   labodoc.cpp \
   laboview.cpp \
   labowin.cpp \
@@ -91,6 +92,7 @@ HEADERS += \
   colorbtn.h \
   doubletable.h \
   graphview.h \
+  graphdataview.h \
   labodoc.h \
   laboview.h \
   labowin.h \

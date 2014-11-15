@@ -1,5 +1,5 @@
 /***************************************************************************
-                          outdataview.cpp - view for outs
+                          graphdataview.cpp - view for plots
                              -------------------
     begin                : 2014.11.15
     copyright            : (C) 2014-2014 by atu
@@ -16,18 +16,18 @@
  ***************************************************************************/
 
 #include "dataset.h"
-#include "outdataview.h"
+#include "graphdataview.h"
 #include "labowin.h"
 
 
-OutDataView::OutDataView( HolderData *a_mod, LaboView *par )
+GraphDataView::GraphDataView( HolderData *a_mod, LaboView *par )
   : QListView( par ), mod( a_mod ), laboview( par )
 {
 
   init_actions();
 
   QPalette s_pal = palette();
-  s_pal.setColor( QPalette::Base, QColor( 120,220,252 ) );
+  s_pal.setColor( QPalette::Base, QColor( 96,252,192 ) );
   setPalette( s_pal );
 
   int em = LaboWin::labowin->getEm();
@@ -38,32 +38,36 @@ OutDataView::OutDataView( HolderData *a_mod, LaboView *par )
   setModel( mod );
 }
 
-void OutDataView::init_actions()
+void GraphDataView::init_actions()
 {
   act_new = new QAction( QIcon::fromTheme("list-add"), "&New", this );
   addAction( act_new );
-  connect( act_new, SIGNAL(triggered()), laboview, SLOT(newOut()) );
+  connect( act_new, SIGNAL(triggered()), laboview, SLOT(newGraph()) );
 
   act_del = new QAction( QIcon::fromTheme("list-remove"), "&Delete", this );
   addAction( act_del );
-  connect( act_del, SIGNAL(triggered()), laboview, SLOT(delOut()) );
+  connect( act_del, SIGNAL(triggered()), laboview, SLOT(delGraph()) );
 
   act_edit = new QAction( QIcon::fromTheme("document-properties"), "&Edit", this );
   addAction( act_edit );
-  connect( act_edit, SIGNAL(triggered()), laboview, SLOT(editOut()) );
+  connect( act_edit, SIGNAL(triggered()), laboview, SLOT(editGraph()) );
 
   act_setActive = new QAction( QIcon::fromTheme("checkmark"), "set &Active", this );
   addAction( act_setActive );
-  //connect( act_setActive, SIGNAL(triggered()), laboview, SLOT(setActiveSimul()) );
+  //connect( act_setActive, SIGNAL(triggered()), laboview, SLOT(setActiveGraph()) );
+
+  act_show = new QAction( "&Show", this );
+  addAction( act_show );
+  connect( act_show, SIGNAL(triggered()), laboview, SLOT(showGraph()) );
 
   act_dump = new QAction( "D&ump", this );
   addAction( act_dump );
-  connect( act_dump, SIGNAL(triggered()), laboview, SLOT(exportOut()) );
+  connect( act_dump, SIGNAL(triggered()), laboview, SLOT(exportGraphData()) );
 
   act_showdata = new QAction( "&Show data", this );
   addAction( act_showdata );
-  connect( act_showdata, SIGNAL(triggered()), laboview, SLOT(showOutData()) );
+  connect( act_showdata, SIGNAL(triggered()), laboview, SLOT(showGraphData()) );
 
-  connect( this, SIGNAL(doubleClicked(QModelIndex)), laboview, SLOT(editOut()) );
+  connect( this, SIGNAL(doubleClicked(QModelIndex)), laboview, SLOT(editGraph()) );
 
 }
