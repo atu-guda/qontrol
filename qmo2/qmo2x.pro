@@ -29,6 +29,7 @@ SOURCES += \
   laboview.cpp \
   labowin.cpp \
   outview.cpp \
+  outdataview.cpp \
   plotview.cpp \
   runview.cpp \
   statusmodel.cpp \
@@ -94,6 +95,7 @@ HEADERS += \
   laboview.h \
   labowin.h \
   outview.h \
+  outdataview.h \
   plotview.h \
   runview.h \
   statusmodel.h \

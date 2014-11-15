@@ -1,7 +1,7 @@
 /***************************************************************************
-                          simulview.cpp - view for simulations
+                          outdataview.cpp - view for outs
                              -------------------
-    begin                : 2014.10.14
+    begin                : 2014.11.15
     copyright            : (C) 2014-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
@@ -16,46 +16,54 @@
  ***************************************************************************/
 
 #include "dataset.h"
-#include "simulview.h"
+#include "outdataview.h"
 #include "labowin.h"
 
 
-SimulView::SimulView( HolderData *a_mod, LaboView *par )
+OutDataView::OutDataView( HolderData *a_mod, LaboView *par )
   : QListView( par ), mod( a_mod ), laboview( par )
 {
 
   init_actions();
 
   QPalette s_pal = palette();
-  s_pal.setColor( QPalette::Base, QColor( 255, 200, 200 ) );
+  s_pal.setColor( QPalette::Base, QColor( 120,196,255 ) );
   setPalette( s_pal );
 
   int em = LaboWin::labowin->getEm();
-  setFixedWidth( 8*em );
+  setFixedWidth( 12*em );
 
   setContextMenuPolicy( Qt::ActionsContextMenu );
 
   setModel( mod );
 }
 
-void SimulView::init_actions()
+void OutDataView::init_actions()
 {
-  act_new = new QAction( QIcon::fromTheme("list-add"), "New", this );
+  act_new = new QAction( QIcon::fromTheme("list-add"), "&New", this );
   addAction( act_new );
-  connect( act_new, SIGNAL(triggered()), laboview, SLOT(newSimul()) );
+  connect( act_new, SIGNAL(triggered()), laboview, SLOT(newOut()) );
 
-  act_del = new QAction( QIcon::fromTheme("list-remove"), "Delete", this );
+  act_del = new QAction( QIcon::fromTheme("list-remove"), "&Delete", this );
   addAction( act_del );
-  connect( act_del, SIGNAL(triggered()), laboview, SLOT(delSimul()) );
+  connect( act_del, SIGNAL(triggered()), laboview, SLOT(delOut()) );
 
-  act_edit = new QAction( QIcon::fromTheme("document-properties"), "Edit", this );
+  act_edit = new QAction( QIcon::fromTheme("document-properties"), "&Edit", this );
   addAction( act_edit );
-  connect( act_edit, SIGNAL(triggered()), laboview, SLOT(editSimul()) );
+  connect( act_edit, SIGNAL(triggered()), laboview, SLOT(editOut()) );
 
-  act_setActive = new QAction( QIcon::fromTheme("checkmark"), "set Active", this );
+  act_setActive = new QAction( QIcon::fromTheme("checkmark"), "set &Active", this );
   addAction( act_setActive );
-  connect( act_setActive, SIGNAL(triggered()), laboview, SLOT(setActiveSimul()) );
+  //connect( act_setActive, SIGNAL(triggered()), laboview, SLOT(setActiveSimul()) );
 
-  connect( this, SIGNAL(doubleClicked(QModelIndex)), laboview, SLOT(editSimul()) );
+  act_dump = new QAction( "D&ump", this );
+  addAction( act_dump );
+  connect( act_dump, SIGNAL(triggered()), laboview, SLOT(exportOut()) );
+
+  act_showdata = new QAction( "&Show data", this );
+  addAction( act_showdata );
+  connect( act_showdata, SIGNAL(triggered()), laboview, SLOT(showOutData()) );
+
+  connect( this, SIGNAL(doubleClicked(QModelIndex)), laboview, SLOT(editOut()) );
 
 }

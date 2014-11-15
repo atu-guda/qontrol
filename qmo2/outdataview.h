@@ -1,7 +1,7 @@
 /***************************************************************************
-                          simulview.h - view for simulations
+                          outdataview.h - view for outs
                              -------------------
-    begin                : 2014.10.15
+    begin                : 2014.11.15
     copyright            : (C) 2014-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
@@ -15,21 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _SIMULVIEW_H
-#define _SIMULVIEW_H
+#ifndef _OUTDATAVIEW_H
+#define _OUTDATAVIEW_H
 
 #include <QtWidgets>
 
 #include "laboview.h"
 
-class SimulView : public QListView {
+class OutDataView : public QListView {
   Q_OBJECT
   public:
-   SimulView( HolderData *a_mod, LaboView *par );
+   OutDataView( HolderData *a_mod, LaboView *par );
   private:
    HolderData *mod;
    LaboView *laboview;
-   QAction *act_new, *act_del, *act_edit, *act_setActive;
+   QAction *act_new, *act_del, *act_edit, *act_setActive,
+           *act_dump, *act_showdata;
   private:
    void init_actions();
 };

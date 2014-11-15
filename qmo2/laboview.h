@@ -26,6 +26,7 @@ class QCloseEvent;
 class LaboDoc;
 class StructView;
 class OutView;
+class OutDataView;
 class GraphView;
 class TRootData;
 class TModel;
@@ -173,9 +174,9 @@ class LaboView : public QWidget
    QScrollArea *scrollArea;
    StructView *sview;
    OutView *oview;
-   GraphView *gview;
-   SimulModel *sims_model;
-   SimulView *sims_view;
+   OutDataView *outs_view = nullptr;
+   GraphView *gview = nullptr;
+   SimulView *sims_view = nullptr;
    StatusModel *stam;
 
    LaboDoc *doc;
