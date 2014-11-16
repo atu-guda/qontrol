@@ -22,6 +22,7 @@
 #include "contout.h"
 #include "contgraph.h"
 #include "tmiso.h"
+#include "scheme.h"
 #include "toutarr.h"
 #include "tgraph.h"
 #include "simul.h"
@@ -141,10 +142,11 @@ class TModel : public TDataContainer  {
  protected:
   // --------------- convinience ptrs to obligatory elements
   // init not in init list - special handling?
-  // ContSchem *schs  = nullptr;
+  ContScheme *schems  = nullptr;
   ContOut   *outs  = nullptr;
   ContGraph *plots = nullptr;
   ContSimul *sims = nullptr;
+  Scheme* sch_main = nullptr;
   // =============== iface objects ==============================
   /** total model time, starts with 0 each inner loop */
   PRM_DOUBLE( tt, efNoRunChange, "T", "Full Run Time", "min=0\nmax=1e300\ndef=100" );

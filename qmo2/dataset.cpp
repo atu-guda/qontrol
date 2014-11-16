@@ -1643,7 +1643,7 @@ const double* TDataSet::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
   if( !ds ) {
     return nullptr;
   }
-  return ds->getSchemeDoublePtr( nm, lt, src_ob, lev+1 );
+  return ds->getSchemeDoublePtr( nm, lt, src_ob, lev );
 }
 
 // not const - change param

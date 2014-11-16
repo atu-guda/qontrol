@@ -26,6 +26,7 @@
 #include "labodoc.h"
 #include "labowin.h"
 #include "laboview.h"
+#include "scheme.h"
 
 using namespace std;
 
@@ -357,7 +358,7 @@ void LaboDoc::initEngine()
   eng.globalObject().setProperty("model", eng_model );
 }
 
-bool LaboDoc::migrateSumul()
+bool LaboDoc::migrateSumul() // TODO: remove after migration
 {
   DBGx( "dbg: start..." );
   if( !rootdata || ! model ) {
@@ -365,6 +366,51 @@ bool LaboDoc::migrateSumul()
     return false;
   }
   model->linkNames(); // to get corrent number of outputs and plots
+
+  // migrate elements
+  ContScheme *schems = model->getElemT<ContScheme*>("schems");
+  if( !schems ) {
+    DBGx( "err: schems not exist!" );
+    return false;
+  }
+
+  Scheme *sch_main = schems->getElemT<Scheme*>("main");
+  if( !schems ) {
+    DBGx( "err: main scheme not exist!" );
+    return false;
+  }
+
+  int n_el = 0;
+  for( auto o : sch_main->children() ) {
+    TMiso *el = qobject_cast<TMiso*>(o);
+    if( el ) {
+      ++n_el;
+      DBGx( "dbg: found \"%s\" elem in main, not migrating", qP( el->objectName() ) );
+      break;
+    }
+  }
+
+  DBGx( "dbg: n_el = %d size: %d", n_el, sch_main->size() );
+
+  if( n_el == 0 ) {
+    for( auto c : model->children() ) {
+      TMiso *ob = qobject_cast<TMiso*>(c);
+      if( !ob ) {
+        continue;
+      }
+      DBGx( "dbg: migrating \"%s\" element", qP( ob->objectName() ) );
+      QString s;
+
+      s = ob->toString();
+      HolderData *ob_new = sch_main->add_obj( ob->getType(), ob->objectName() );
+      if( !ob_new ) {
+        DBGx( "warn: fail to migrate elem \"%s\" type \"%s\"",
+            qP(ob->objectName()), qP(ob->getType()) );
+        continue;
+      }
+      ob_new->fromString( s );
+    };
+  }
 
   // migrate outputs
   ContOut *outs =  model->getElemT<ContOut*>("outs");
