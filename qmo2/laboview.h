@@ -36,6 +36,11 @@ class QScrollArea;
 class QTreeView;
 class QListView;
 class SimulView;
+class ContScheme;
+class Scheme;
+class ContOut;
+class ContGraph;
+class ContSimul;
 
 class HolderData;
 class TMiso;
@@ -173,17 +178,22 @@ class LaboView : public QWidget
    int checkState( CheckType ctp );
  protected:
    QScrollArea *scrollArea;
-   StructView *sview;
-   OutView *oview;
+   StructView *sview = nullptr;
    OutDataView *outs_view = nullptr;
-   GraphView *gview = nullptr;
    GraphDataView *plots_view = nullptr;
    SimulView *sims_view = nullptr;
-   StatusModel *stam;
+   StatusModel *stam = nullptr;
 
+   // document and its main parts
    LaboDoc *doc;
    TRootData *root;
    TModel *model;
+   ContScheme *schems;
+   Scheme *sch_main;
+   ContOut *outs;
+   ContGraph *plots;
+   ContSimul *sims;
+
    int sel = -1, sel_x = 0, sel_y = 0, mark = -1, level = 0;
    // TODO: from file (config)
    QString scr = R"(model.insElem("TLinear","ob","vis_x=4\nvis_y=1\na0=3.14");)";

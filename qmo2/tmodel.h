@@ -61,10 +61,6 @@ class TModel : public TDataContainer  {
   /** function to call from elem.f() to signal something */
   virtual int fback( int code, int aord, const QString &tdescr );
 
-  /** visual coords -> TMiso number. @returns: <0 - not found, >=0 -- elnu */
-  virtual int xy2elnu( int avis_x, int avis_y ) const;
-  /** visual coords -> TMiso @returns: nullptr - not found */
-  TMiso* xy2Miso( int avis_x, int avis_y ) const;
   /** returns number of TMiso ( max value of elnu + 1 ) */
   virtual int getNMiso() const;
   /** returns ptr to TMiso by elnu */
@@ -79,9 +75,6 @@ class TModel : public TDataContainer  {
   virtual int getNGraph() const;
   /** returns ptr to TGraph gra_nu */
   virtual TGraph* getGraph( int gra_nu );
-  /** inserts active element @returns: nulltpr - bad  elese -ptr to inserted element */
-  TMiso* insElem( const QString &cl_name, const QString &ob_name,
-                       int aord, int avis_x, int avis_y );
   /** inserts new out array @returns: <0 - bad, >0= index in ptrs[] */
   virtual int insOut( const  QString &outname, const QString &objname );
   /** inserts new graph @returns: <0 - bad, >0= index in ptrs[] */
@@ -110,9 +103,6 @@ class TModel : public TDataContainer  {
 
   // interface to commands like above, but with names - to use from JS
  public slots:
-   bool insElem( const QString &tp, const QString &nm, const QString &params );
-   bool delElem( const QString &nm );
-   bool setElem( const QString &nm, const QString &params );
 
    int newSimul( const QString &name );
    int delSimul( const QString &name );

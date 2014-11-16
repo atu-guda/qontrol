@@ -30,11 +30,9 @@
 
 
 
-StructView::StructView( LaboDoc *adoc, LaboView *mview, QWidget *parent )
-            : QWidget( parent )
+StructView:: StructView( Scheme *a_sch, LaboView *mview )
+            : QWidget( mview ), sch( a_sch ), mainview( mview )
 {
-  doc = adoc; mainview = mview;
-  model = mainview->getModel();
   devTp = 0;
   // grid_sz = 40;
   grid_sz = 46;
@@ -59,37 +57,20 @@ StructView::~StructView()
 
 QSize StructView::getElemsBound() const
 {
-  int x, y, mx, my, elnu, n_el;
-  TMiso *ob;
   int sel_x = mainview->getSelX();
   int sel_y = mainview->getSelY();
-  mx = my = 3;
-  if( model != 0 ) {
-    n_el = model->getNMiso();
-    for( elnu=0; elnu<n_el; elnu++ ) {
-      ob = model->getMiso( elnu );
-      if( ob == 0 ) continue;
-      x = y = 0;
-      ob->getData( "vis_x", &x );
-      ob->getData( "vis_y", &y );
-      if( x > mx ) mx = x;
-      if( y > my ) my = y;
-    };
-  };
-  if( sel_x > mx )
-    mx = sel_x;
-  if( sel_y > my )
-    my = sel_y;
-  mx += 3; my += 3; // free bound
+  QSize mss = sch->getMaxXY().expandedTo( QSize( sel_x, sel_y ) );
+  mss += QSize( 3, 3 ); // free bound
+  mss *= grid_sz;       // to grid scale
 
-  mx *= grid_sz; my *= grid_sz;
-  // return QSize( mx, my );
-  QSize pas = mainview->svSize() - QSize(16,16);
-  if( mx > pas.width() ) 
-    pas.setWidth( mx );
-  if( my > pas.height() ) 
-    pas.setHeight( my );
-  return pas;
+  return mss;
+  // TODO: revive
+  // QSize pas = mainview->svSize() - QSize(16,16);
+  // if( mx > pas.width() ) 
+  //   pas.setWidth( mx );
+  // if( my > pas.height() ) 
+  //   pas.setHeight( my );
+  // return pas;
 }
 
 QSize StructView::sizeHint() const
@@ -114,9 +95,8 @@ void StructView::update()
 
 void StructView::paintEvent( QPaintEvent * /*pe*/ )
 {
-  if( ! doc )
+  if( ! sch )
     return;
-  model = doc->getModel();
   devTp = 0;
   QPainter p( this );
 
@@ -126,12 +106,15 @@ void StructView::paintEvent( QPaintEvent * /*pe*/ )
 
 void StructView::printAll()
 {
-  QPrinter *pr;
-  if( !doc || !model || !LaboWin::labowin ) 
+  if( !sch ) {
     return;
-  pr = LaboWin::labowin->getPrinter();
-  if( !pr ) 
+  }
+
+  QPrinter *pr = LaboWin::labowin->getPrinter();
+  if( !pr ) {
     return;
+  }
+
   QPrintDialog pr_dialog( pr, this );
   if( pr_dialog.exec() ) {
     devTp = 1;
@@ -184,16 +167,16 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
 void StructView::drawAll( QPainter &p )
 {
   int i, h, w, nh, nw;
-  int n_el, elnu,  n_out, out_nu, out_tp, line_busy;
+  int line_busy;
   int li_src_y, li_dst_y;
   int line_color, line_width = 1, x_shift = 0, y_shift = 0;
   int st_y; /* label on elems start y */
   int sel_x, sel_y, /*sel,*/ mark;
   QString src_name;
   TMiso *ob;
-  TOutArr *arr;
-  Mo2Settings *psett;
-  psett = LaboWin::labowin->getSettings();
+  // TOutArr *arr;
+
+  Mo2Settings *psett = LaboWin::labowin->getSettings();
   int s_icons = psett->showicons;
   const QFont &strf = LaboWin::labowin->getStructFont();
   p.setFont( strf );
@@ -206,11 +189,13 @@ void StructView::drawAll( QPainter &p )
   mark = mainview->getMark();
   if( nh >= MODEL_MY ) nh = MODEL_MY;
   if( nw >= MODEL_MX ) nh = MODEL_MX;
-  if( ! model ) {
+
+  if( ! sch ) {
     p.setBrush( Qt::red );
     p.drawRect( 0, 0, w, 8 );
     return;
   };
+
   // ---------- draw grid
   if( psett->showgrid ) {
     p.setPen( QPen(QColor(200,220,220), 0, Qt::DotLine ) );
@@ -219,7 +204,7 @@ void StructView::drawAll( QPainter &p )
     for( i=0; i<nh; i++ )
       p.drawLine( lm, tm+i*grid_sz, w, tm+i*grid_sz );
   };
-  n_el = model->getNMiso();
+
   p.setPen( Qt::black );
   // --------- draw elems ---------------------
   int cr_diff = el_marg/3;
@@ -227,10 +212,12 @@ void StructView::drawAll( QPainter &p )
   QPoint p_crm { -cr_diff, cr_diff };
 
   ElemInfo ei, sei;
-  for( elnu=0; elnu<n_el; elnu++ ) {
-    ob = model->getMiso( elnu );
-    if( !ob )
+  for( auto o : sch->children() ) {
+    ob = qobject_cast<TMiso*>( o );
+    if( !ob ) {
       continue;
+    }
+
     if( ! fill_elmInfo( ob, ei ) )
       continue;
     line_busy = 0;
@@ -245,10 +232,6 @@ void StructView::drawAll( QPainter &p )
     } else {
       QIcon el_ico = ob->getIcon();
       el_ico.paint( &p, ei.xs, ei.ys, obj_sz, obj_sz );
-
-      // tmp: debug: to see sizes
-      //p.setPen( QPen(Qt::black,1) );  p.setBrush( Qt::NoBrush );
-      //p.drawRect( ei.xs, ei.ys, obj_sz, obj_sz );
     };
     p.setPen( Qt::black );  p.setBrush( Qt::red );
 
@@ -286,10 +269,11 @@ void StructView::drawAll( QPainter &p )
     st_y = ei.ys + line_busy*10;
 
 
-    if( elnu == mark ) { // red rect around marked element
-      p.setBrush( Qt::NoBrush ); p.setPen( Qt::red );
-      p.drawRect( ei.xs0, ei.ys0, grid_sz, grid_sz );
-    };
+    // TODO: how?
+    // if( elnu == mark ) { // red rect around marked element // TODO: active element?
+    //   p.setBrush( Qt::NoBrush ); p.setPen( Qt::red );
+    //   p.drawRect( ei.xs0, ei.ys0, grid_sz, grid_sz );
+    // };
 
 
     if( ! psett->showLinks ) {
@@ -470,46 +454,46 @@ void StructView::drawAll( QPainter &p )
     } // end of param input loop
 
   }; // end loop on elems
-
+  p.setPen( Qt::black );
   p.setFont( smlf );
-  n_out = model->getNOutArr(); p.setPen( Qt::black );
 
-  // -------------- output marks
-  for( out_nu=0; out_nu < n_out; out_nu++ ) {
-    arr = model->getOutArr( out_nu );
-    if( ! arr )
-      continue;
-    src_name = ""; out_tp = -1;
-    arr->getData( "name", src_name );
-    arr->getData( "type", &out_tp );
-    ltype_t lt  = LinkBad;
-    const TDataSet *lob = nullptr;
-    const double *fp = model->getDoublePtr( src_name, &lt, &lob );
-    if( !fp || lt != LinkElm || !lob )
-      continue;
-    const TMiso *src_obj = qobject_cast<const TMiso*>(lob);
-    if( ! src_obj )
-      continue;
-    fill_elmInfo( src_obj, sei );
-
-    if( sei.vis_x < 0 || sei.vis_y < 0 )
-      continue;
-    switch( out_tp ) {
-      case 0: p.setBrush( Qt::white ); break;
-      case 1: p.setBrush( Qt::green ); break;
-      case 2: p.setBrush( Qt::cyan ); break;
-      case 3: p.setBrush( Qt::gray ); break;
-      default: p.setBrush( Qt::red ); break;
-    };
-    int omark_x = sei.xs0 + obj_sz - 10 - out_nu;
-    int omark_y = sei.ys0 +  1;
-    p.drawRect( omark_x, omark_y, 10, 10 );
-    if( src_name.contains('.') ) { // inner link mark
-      p.setBrush( Qt::red );
-      p.drawRect( omark_x, omark_y+9, 10, 2 );
-    }
-    p.drawText( omark_x+2, omark_y+9,  QSN( out_nu ) );
-  }; // end loop on outputs
+  // -------------- output marks TODO: revive?
+  // n_out = model->getNOutArr();
+  // for( out_nu=0; out_nu < n_out; out_nu++ ) {
+  //   arr = model->getOutArr( out_nu );
+  //   if( ! arr )
+  //     continue;
+  //   src_name = ""; out_tp = -1;
+  //   arr->getData( "name", src_name );
+  //   arr->getData( "type", &out_tp );
+  //   ltype_t lt  = LinkBad;
+  //   const TDataSet *lob = nullptr;
+  //   const double *fp = model->getDoublePtr( src_name, &lt, &lob );
+  //   if( !fp || lt != LinkElm || !lob )
+  //     continue;
+  //   const TMiso *src_obj = qobject_cast<const TMiso*>(lob);
+  //   if( ! src_obj )
+  //     continue;
+  //   fill_elmInfo( src_obj, sei );
+  //
+  //   if( sei.vis_x < 0 || sei.vis_y < 0 )
+  //     continue;
+  //   switch( out_tp ) {
+  //     case 0: p.setBrush( Qt::white ); break;
+  //     case 1: p.setBrush( Qt::green ); break;
+  //     case 2: p.setBrush( Qt::cyan ); break;
+  //     case 3: p.setBrush( Qt::gray ); break;
+  //     default: p.setBrush( Qt::red ); break;
+  //   };
+  //   int omark_x = sei.xs0 + obj_sz - 10 - out_nu;
+  //   int omark_y = sei.ys0 +  1;
+  //   p.drawRect( omark_x, omark_y, 10, 10 );
+  //   if( src_name.contains('.') ) { // inner link mark
+  //     p.setBrush( Qt::red );
+  //     p.drawRect( omark_x, omark_y+9, 10, 2 );
+  //   }
+  //   p.drawText( omark_x+2, omark_y+9,  QSN( out_nu ) );
+  // }; // end loop on outputs
 
   // ----------- draw selection
   if( devTp != 1 ) {
@@ -536,7 +520,7 @@ void StructView::mousePressEvent( QMouseEvent *me )
   ex = ( x - lm ) / grid_sz; ey = ( y - tm ) / grid_sz;
   if( ex >= 0 && ex <= nw && ey >=0 && ey <= nh ) {
     mainview->changeSel( ex, ey, 0 );
-    ob = model->xy2Miso( ex, ey );
+    ob = sch->xy2Miso( ex, ey );
     if( ob ) {
       elmname = ob->getFullName();
       ob->getData( "out0", &outval );

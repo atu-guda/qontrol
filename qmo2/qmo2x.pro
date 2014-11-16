@@ -24,12 +24,10 @@ SOURCES += \
   mo2settdlg.cpp \
   colorbtn.cpp \
   doubletable.cpp \
-  graphview.cpp \
   graphdataview.cpp \
   labodoc.cpp \
   laboview.cpp \
   labowin.cpp \
-  outview.cpp \
   outdataview.cpp \
   plotview.cpp \
   runview.cpp \
@@ -91,12 +89,10 @@ HEADERS += \
   mo2settdlg.h \
   colorbtn.h \
   doubletable.h \
-  graphview.h \
   graphdataview.h \
   labodoc.h \
   laboview.h \
   labowin.h \
-  outview.h \
   outdataview.h \
   plotview.h \
   runview.h \

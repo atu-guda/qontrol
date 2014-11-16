@@ -290,8 +290,9 @@ TMiso* Scheme::xy2Miso( int avis_x, int avis_y ) const
     if( !ho )
       continue;
     TMiso *ob = qobject_cast<TMiso*>( ho );
-    if( !ob )
+    if( !ob ) {
       continue;
+    }
     ox = oy = -1;
     ob->getData( "vis_x", &ox );
     ob->getData( "vis_y", &oy );
@@ -302,6 +303,28 @@ TMiso* Scheme::xy2Miso( int avis_x, int avis_y ) const
   return nullptr;
 }
 
+QSize Scheme::getMaxXY() const
+{
+  int mx = 0, my = 0;
+  for( auto ho : children() ) {
+    if( !ho )
+      continue;
+    TMiso *ob = qobject_cast<TMiso*>( ho );
+    if( !ob ) {
+      continue;
+    }
+    int ox = 0, oy =0;
+    ob->getData( "vis_x", &ox );
+    ob->getData( "vis_y", &oy );
+    if( ox > mx ) {
+      mx = ox;
+    }
+    if( oy > my ) {
+      my = oy;
+    }
+  }
+  return QSize( mx, my );
+}
 
 
 TMiso* Scheme::insElem( const QString &cl_name, const QString &ob_name,

@@ -297,31 +297,6 @@ int TModel::checkData( int n )
 }
 
 
-int TModel::xy2elnu( int avis_x, int avis_y ) const // TODO: todel ?
-{
-  int i = 0;
-  for( const TMiso *ob : v_el ) {
-    if( !ob )
-      continue;
-    if( ob->isAtCoord( avis_x, avis_y ) ) {
-      return i;
-    }
-    ++i;
-  };
-  return -1;
-}
-
-TMiso* TModel::xy2Miso( int avis_x, int avis_y ) const
-{
-  for( TMiso *ob : v_el ) {
-    if( !ob )
-      continue;
-    if( ob->isAtCoord( avis_x, avis_y ) ) {
-      return ob;
-    }
-  }
-  return nullptr;
-}
 
 int TModel::getNMiso() const
 {
@@ -370,20 +345,6 @@ TGraph* TModel::getGraph( int gra_nu )
   return v_graph[gra_nu];
 }
 
-TMiso* TModel::insElem( const QString &cl_name, const QString &ob_name,
-                     int aord, int avis_x, int avis_y )
-{
-  // no addObj: downcast
-  TMiso *ob = qobject_cast<TMiso*>( add_obj( cl_name, ob_name ) );
-  if( !ob ) // FIXME: leak?
-    return nullptr;
-  ob->setData( "ord", aord );
-  ob->setData( "vis_x", avis_x );
-  ob->setData( "vis_y", avis_y );
-  reset();
-  modified |= 1;
-  return ob;
-}
 
 int TModel::insOut( const QString &outname, const QString &objname )
 {
@@ -415,40 +376,6 @@ int TModel::insGraph( const QString &gname )
   return 0;
 }
 
-bool TModel::insElem( const QString &tp, const QString &nm, const QString &params )
-{
-  int order = hintOrd();
-  TMiso *ob = insElem( tp, nm, order, 0, 0 );
-  if( !ob )
-    return false;
-  ob->setParams( params );
-  return true;
-}
-
-bool TModel::delElem( const QString &nm )
-{
-  TMiso *ob = getElemT<TMiso*>( nm ); // chesk for TMiso, TODO: remove in scheme
-  if( !ob ) {
-    DBG2q( "err: fail to find TMiso", nm );
-    return 0;
-  }
-  bool rc = del_obj( nm );
-  if( rc ) {
-    reset();
-    modified |= 1;
-  }
-  return rc;
-}
-
-bool TModel::setElem( const QString &nm, const QString &params )
-{
-  TMiso *ob = getElemT<TMiso*>( nm ); // chesk for TMiso, TODO: remove in scheme
-  if( !ob ) {
-    DBG2q( "err: fail to find TMiso", nm );
-    return false;
-  }
-  return ob->setParams( params );
-}
 
 
 int TModel::delOut( int out_nu )

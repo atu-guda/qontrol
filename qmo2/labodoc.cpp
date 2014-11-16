@@ -482,30 +482,43 @@ bool LaboDoc::migrateSumul() // TODO: remove after migration
   // not so good indicator for conversion, but no silver bullet
   QString descr;
   sim0->getData( "descr", descr );
-  if( ! descr.isEmpty() ) {
-    return true;
+  if( descr.isEmpty() ) {
+
+    DBG1( "info: migrate tmodel->simulations" );
+
+    double t = 100;
+    int ti = 1000;
+    // no check
+    model->getData( "tt", &t );  sim0->setData( "T", t );
+    model->getData( "nn", &ti );  sim0->setData( "N", ti );
+    model->getData( "use_sync", &ti );  sim0->setData( "syncRT", ti );
+    model->getData( "nl1", &ti );  sim0->setData( "N1", ti );
+    model->getData( "nl2", &ti );  sim0->setData( "N2", ti );
+    model->getData( "n_steps", &ti );  sim0->setData( "n_iosteps", ti );
+    model->getData( "prm0s", &t );  sim0->setData( "prm0s", t );
+    model->getData( "prm1s", &t );  sim0->setData( "prm1s", t );
+    model->getData( "prm2s", &t );  sim0->setData( "prm2s", t );
+    model->getData( "prm3s", &t );  sim0->setData( "prm3s", t );
+    model->getData( "seed", &ti );  sim0->setData( "seed", ti );
+    model->getData( "seedType", &ti );  sim0->setData( "seedType", ti );
+    model->getData( "autoStart", &ti );  sim0->setData( "autoStart", ti );
+    model->getData( "long_descr", descr );  sim0->setData( "descr", descr );
   }
 
-  DBG1( "info: migrate tmodel->simulations" );
+  // remove old elements from model
+  QStringList deads;
+  for( auto c : model->children() ) {
+    HolderData *ob = qobject_cast<HolderData*>(c);
+    QString tp = ob->getType();
+    if( ob->isChildOf("TMiso") || ob->isChildOf("TOutArr") || ob->isChildOf("TGraph") ) {
+      deads << ob->objectName();
+    }
+  };
+  for( auto nm : deads ) {
+    model->del_obj( nm );
+  }
 
-  double t = 100;
-  int ti = 1000;
-  // no check
-  model->getData( "tt", &t );  sim0->setData( "T", t );
-  model->getData( "nn", &ti );  sim0->setData( "N", ti );
-  model->getData( "use_sync", &ti );  sim0->setData( "syncRT", ti );
-  model->getData( "nl1", &ti );  sim0->setData( "N1", ti );
-  model->getData( "nl2", &ti );  sim0->setData( "N2", ti );
-  model->getData( "n_steps", &ti );  sim0->setData( "n_iosteps", ti );
-  model->getData( "prm0s", &t );  sim0->setData( "prm0s", t );
-  model->getData( "prm1s", &t );  sim0->setData( "prm1s", t );
-  model->getData( "prm2s", &t );  sim0->setData( "prm2s", t );
-  model->getData( "prm3s", &t );  sim0->setData( "prm3s", t );
-  model->getData( "seed", &ti );  sim0->setData( "seed", ti );
-  model->getData( "seedType", &ti );  sim0->setData( "seedType", ti );
-  model->getData( "autoStart", &ti );  sim0->setData( "autoStart", ti );
-  model->getData( "long_descr", descr );  sim0->setData( "descr", descr );
-
+  model->linkNames(); // rethink after kill
   return true;
 }
 

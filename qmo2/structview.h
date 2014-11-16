@@ -25,8 +25,7 @@ class QMouseEvent;
 class QKeyEvent;
 class QMenu;
 
-#include "tmodel.h"
-#include "labodoc.h"
+#include "scheme.h"
 #include "laboview.h"
 
 class QPainter;
@@ -37,65 +36,61 @@ class QPainter;
   */
 
 class StructView : public QWidget  {
-   Q_OBJECT
- public:
-  //* information about element to draw
-  struct ElemInfo {
-    // from element
-    QString name, type;
-    int vis_x, vis_y, ord, locked, onlyFirst, onlyLast, flip, noIcon;
-    // number of signal and parametric inputs
-    int n_inp, n_pinp;
-    // calculated
-    int xs0, ys0, xs, ys, xc, yc, flip_factor;
-    int li_dst_x, pre_dst_x, li_src_x, li_pdst_y;
-    const InputParams *pis;
-  };
-   /** constructor */
-   StructView( LaboDoc *adoc, LaboView *mview,  QWidget *parent );
-   /** destructor */
-   virtual ~StructView();
-   /** print contents */
-   void printAll();
-   /** grid size */
-   int getGridSize() const { return grid_sz; }
-   /** bound of all elements in model */
-   QSize getElemsBound() const;
-   virtual QSize sizeHint () const;
-   /** gets coordinates on selected element */
-   QPoint getSelCoords() const;
- public slots:
-   void update();
- signals:
-   void sig_changeSel(int,int,int);
-   void sig_changeLevel(int);
- protected:
-   /** fill and calc info about element */
-   bool fill_elmInfo( const TMiso *ob, ElemInfo &el ) const;
-   /** draw itself */
-   virtual void paintEvent( QPaintEvent *pe );
-   /** reaction to mouse */
-   virtual void mousePressEvent( QMouseEvent *me );
-   /** reaction on mouse doubleclick */
-   virtual void mouseDoubleClickEvent( QMouseEvent *me );
-   /** reaction to keyboard */
-   virtual void keyPressEvent( QKeyEvent *ke );
-   /** paint all in given painter */
-   void drawAll( QPainter &p );
-   /** create popup menu */
-   QMenu* createPopupMenu( const QString &title, bool has_elem );
+  Q_OBJECT
+  public:
+    //* information about element to draw
+    struct ElemInfo {
+      // from element
+      QString name, type;
+      int vis_x, vis_y, ord, locked, onlyFirst, onlyLast, flip, noIcon;
+      // number of signal and parametric inputs
+      int n_inp, n_pinp;
+      // calculated
+      int xs0, ys0, xs, ys, xc, yc, flip_factor;
+      int li_dst_x, pre_dst_x, li_src_x, li_pdst_y;
+      const InputParams *pis;
+    };
+    StructView( Scheme *a_sch, LaboView *mview );
+    virtual ~StructView();
+    /** print contents */
+    void printAll();
+    /** grid size */
+    int getGridSize() const { return grid_sz; }
+    /** bound of all elements in model */
+    QSize getElemsBound() const;
+    virtual QSize sizeHint () const;
+    /** gets coordinates on selected element */
+    QPoint getSelCoords() const;
+  public slots:
+    void update();
+  signals:
+    void sig_changeSel(int,int,int);
+    void sig_changeLevel(int);
+  protected:
+    /** fill and calc info about element */
+    bool fill_elmInfo( const TMiso *ob, ElemInfo &el ) const;
+    /** draw itself */
+    virtual void paintEvent( QPaintEvent *pe );
+    /** reaction to mouse */
+    virtual void mousePressEvent( QMouseEvent *me );
+    /** reaction on mouse doubleclick */
+    virtual void mouseDoubleClickEvent( QMouseEvent *me );
+    /** reaction to keyboard */
+    virtual void keyPressEvent( QKeyEvent *ke );
+    /** paint all in given painter */
+    void drawAll( QPainter &p );
+    /** create popup menu */
+    QMenu* createPopupMenu( const QString &title, bool has_elem );
 
- protected:
-   /** pointer to  document */
-   LaboDoc *doc;
-   /** main view (parent) */
-   LaboView *mainview;
-   /** pointer to TModel to be drawed */
-   TModel *model;
-   /** type of output device */
-   int devTp;
-   /** grid size, left, top margin size, object size,  elements margin */
-   int grid_sz, lm, tm, obj_sz, el_marg;
+  protected:
+    /** pointer to TModel to be drawed */
+    Scheme *sch;
+    /** main view (parent) */
+    LaboView *mainview;
+    /** type of output device */
+    int devTp;
+    /** grid size, left, top margin size, object size,  elements margin */
+    int grid_sz, lm, tm, obj_sz, el_marg;
 };
 
 #endif

@@ -48,6 +48,8 @@ class Scheme : public TDataContainer  {
   TMiso* ord2Miso( int aord ) const;
   /** visual coords -> TMiso @returns: nullptr - not found */
   TMiso* xy2Miso( int avis_x, int avis_y ) const;
+  //* return max (x,y) of all elements
+  QSize getMaxXY() const;
   /** inserts active element @returns: nulltpr - bad  elese -ptr to inserted element */
   TMiso* insElem( const QString &cl_name, const QString &ob_name,
                        int aord, int avis_x, int avis_y );

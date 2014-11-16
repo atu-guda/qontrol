@@ -24,9 +24,7 @@
 #include "labodoc.h"
 #include "labowin.h"
 #include "structview.h"
-#include "outview.h"
 #include "outdataview.h"
-#include "graphview.h"
 #include "graphdataview.h"
 #include "statusmodel.h"
 #include "doubletable.h"
@@ -42,8 +40,14 @@ using namespace std;
 LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 : QWidget( parent ), doc( pDoc ),
   root( doc->getRoot() ),
-  model( doc->getModel() )
+  model( doc->getModel() ),
+  schems( model->getElemT<ContScheme*>( "schems" ) ),
+  sch_main( schems->getElemT<Scheme*>("main") ),
+  outs( model->getElemT<ContOut*>( "outs" ) ),
+  plots( model->getElemT<ContGraph*>( "plots" ) ),
+  sims( model->getElemT<ContSimul*>( "sims" ) )
 {
+
   QVBoxLayout *vlay = new QVBoxLayout( this );
   vlay->setContentsMargins( 2, 1, 2, 2 );
 
@@ -57,34 +61,27 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   scrollArea = new QScrollArea( main_part );
 
-  sview = new StructView( doc, this, main_part );
+
+  sview = new StructView( sch_main, this );
   scrollArea->setWidget( sview );
   scrollArea->setLineWidth( 1 );
   scrollArea->setMidLineWidth( 1 );
   scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
   scrollArea->setFocusProxy( sview );
 
-  oview = new OutView( doc, this, main_part );
-  gview = new GraphView( doc, this, main_part );
-
-  ContOut *outs = model->getElemT<ContOut*>( "outs" );
   outs_view = new OutDataView( outs, this );
 
-  ContGraph *plots = model->getElemT<ContGraph*>( "plots" );
   plots_view = new GraphDataView( plots, this );
 
-  ContSimul *sims = model->getElemT<ContSimul*>( "sims" );
   sims_view = new SimulView( sims, this );
 
 
   stam = new StatusModel( this, this );
 
   grLay->addWidget( scrollArea, 0, 0 );
-  grLay->addWidget( oview, 0, 1 );
-  grLay->addWidget( gview, 0, 2 );
-  grLay->addWidget( outs_view, 0, 3 );
-  grLay->addWidget( plots_view, 0, 4 );
-  grLay->addWidget( sims_view, 0, 5 );
+  grLay->addWidget( outs_view, 0, 1 );
+  grLay->addWidget( plots_view, 0, 2 );
+  grLay->addWidget( sims_view, 0, 3 );
 
   main_part->setLayout( grLay );
 
@@ -103,7 +100,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 LaboView::~LaboView()
 {
   // DBGx( "dbg: view dtor, doc=%p", doc );
-  delete doc; doc = nullptr;
+  delete doc; doc = nullptr; // BUG: is here?
 }
 
 LaboDoc *LaboView::getDocument() const
@@ -188,8 +185,8 @@ int LaboView::checkState( CheckType ctp )
 {
   QString msg;
   int state;
-  if( !model  || !root ) {
-    showError( "Model or root don't exist!" );
+  if( !model  || !root  || !schems  || !outs || !plots || !sims ) {
+    showError( "Some part of model don't exist!" );
     return 0;
   };
   switch( ctp ) {
@@ -209,7 +206,7 @@ int LaboView::checkState( CheckType ctp )
                       msg = "You need marked object and empty cell to move";
                     break;
     case doneCheck:
-                    state = model->getState();
+                    state = sch_main->getState();
                     if( state < stateDone ) {
                       msg = QString("Nothing to plot: state '%1', not 'Done' !").arg(
                           getStateString(state)  );
@@ -238,25 +235,23 @@ TModel*  LaboView::getModel(void)
 void LaboView::updateViews()
 {
   sview->update();
-  oview->update();
-  gview->update();
-  // sims_view->reset();
+  outs_view->update();
+  plots_view->update();
   sims_view->update();
   stam->update();
-  // treeView->reset();
-  // treeView->update();
 }
 
 
 void LaboView::changeSel( int x, int y, int rel )
 {
   TMiso *ob;
+
   selObj = nullptr;
   switch( rel ) {
     case 0: sel_x = x; sel_y = y; break;
     case 1: sel_x += x; sel_y += y; break;
     case 2:
-            ob = model->xy2Miso( sel_x, sel_y );
+            ob = sch_main->xy2Miso( sel_x, sel_y );
             if( !ob )
               break;
             ob->getData( "vis_x", &sel_x );
@@ -268,10 +263,11 @@ void LaboView::changeSel( int x, int y, int rel )
   if( sel_y >= MODEL_MY ) sel_y = MODEL_MY-1;
   if( sel_x < 0 ) sel_x = 0;
   if( sel_y < 0 ) sel_y = 0;
-  sel = model->xy2elnu( sel_x, sel_y );
-  ob = model->xy2Miso( sel_x, sel_y );
+  sel = -1;
+  ob = sch_main->xy2Miso( sel_x, sel_y );
   if( ob ) {
     selObj = ob;
+    sel = ob->getMyIndexInParent();
   }
   QPoint seco = sview->getSelCoords();
   scrollArea->ensureVisible( seco.x(), seco.y() );
@@ -295,9 +291,9 @@ void LaboView::newElm()
     return;
 
   addElemInfo aei;
-  aei.name = QString("obj_") + QSN( model->getNMiso() ) ;
-  aei.order = model->hintOrd();
-  AddElemDialog *dia = new AddElemDialog( &aei, model, this, "TMiso" );
+  aei.name = QString("obj_"); // + QSN( sch_main->getNMiso() ) ; // TODO: fix
+  aei.order = sch_main->hintOrd();
+  AddElemDialog *dia = new AddElemDialog( &aei, sch_main, this, "TMiso" );
                                           // limit to such elements here
 
   int rc = dia->exec();
@@ -312,7 +308,7 @@ void LaboView::newElm()
     return;
   }
 
-  TMiso *ob = model->insElem( aei.type, aei.name, aei.order, sel_x, sel_y );
+  TMiso *ob = sch_main->insElem( aei.type, aei.name, aei.order, sel_x, sel_y );
   if( !ob  ) {
     showError( QString("Fail to add Elem: type \"%1\" \"%2\"").arg(aei.type).arg(aei.name) );
     return;
@@ -329,7 +325,7 @@ void LaboView::delElm()
   QString oname = selObj->objectName();
 
   if( confirmDelete( "element", oname) ) {
-    model->delElem( oname );
+    sch_main->delElem( oname );
     if( sel == mark ) {
       mark = -1;
       markObj = nullptr;
@@ -368,9 +364,9 @@ void LaboView::qlinkElm()
           qP(in->objectName()), qP(toname) );
     return;
   }
-  model->reportStructChanged();
-  model->reset();
-  model->setModified();
+  sch_main->reportStructChanged();
+  sch_main->reset();
+  sch_main->setModified();
   emit viewChanged();
 }
 
@@ -401,8 +397,8 @@ void LaboView::qplinkElm()
   pi->setData( "line_w", 2 );
   pi->setData( "line_color", "red" );
 
-  model->reportStructChanged();
-  model->reset(); model->setModified();
+  sch_main->reportStructChanged();
+  sch_main->reset(); sch_main->setModified();
   emit viewChanged();
 }
 
@@ -428,8 +424,8 @@ void LaboView::unlinkElm()
   }
   qDeleteAll( pis->children() );
 
-  model->reportStructChanged();
-  model->reset(); model->setModified();
+  sch_main->reportStructChanged();
+  sch_main->reset(); sch_main->setModified();
   emit viewChanged();
 }
 
@@ -443,8 +439,8 @@ void LaboView::lockElm()
   lck = !lck;
   selObj->setData( "locked", lck );
 
-  model->reset();
-  model->setModified();
+  sch_main->reset();
+  sch_main->setModified();
   emit viewChanged();
 }
 
@@ -460,7 +456,7 @@ void LaboView::ordElm()
       "Input new element order",
       old_ord, 0, IMAX, 1, &ok );
   if( ok ) {
-    model->newOrder( selObj->objectName(), new_ord ); // reset implied
+    sch_main->newOrder( selObj->objectName(), new_ord ); // reset implied
     emit viewChanged();
   };
 }
@@ -476,7 +472,10 @@ void LaboView::moveElm()
 {
   if( ! checkState( moveCheck ) )
     return;
-  model->moveElem( mark, sel_x, sel_y );
+  if( !markObj ) {
+    return;
+  }
+  sch_main->moveElem( markObj->objectName(), sel_x, sel_y );
   emit viewChanged();
 }
 
@@ -669,7 +668,7 @@ void LaboView::pasteElm()
   QString elname = ee.attribute( "name" );
   QString elname_base = elname;
   int suff_n = 1;
-  while( model->getElem( elname ) && suff_n < 50 ) { // guess good name
+  while( sch_main->getElem( elname ) && suff_n < 50 ) { // guess good name
     elname = elname_base + "_" + QSN( suff_n );
     suff_n++;
     if( suff_n > 20 ) {
@@ -677,7 +676,7 @@ void LaboView::pasteElm()
     }
   }
 
-  int oord = model->hintOrd();
+  int oord = sch_main->hintOrd();
 
   QDialog *dia = new QDialog( this );
   QGridLayout *lay = new QGridLayout( dia );
@@ -717,7 +716,7 @@ void LaboView::pasteElm()
     return;
   }
 
-  TMiso *ob = model->insElem( eltype, elname, oord, sel_x, sel_y) ; // reset() implied
+  TMiso *ob = sch_main->insElem( eltype, elname, oord, sel_x, sel_y) ; // reset() implied
   if( !ob  ) {
     showError( QString("Fail to add Elem: %1 %2").arg(eltype).arg(elname) );
     return;
@@ -1327,11 +1326,7 @@ void LaboView::runRun()
   RunView *rv;
   if( ! checkState( validCheck ) )
     return;
-  Scheme *sch = model->getElemT<Scheme*>( "schems.main" ); // TODO: from simul
-  if( ! sch ) {
-    showError( "Fail to find scheme" );
-    return;
-  }
+  // Scheme *sch = model->getElemT<Scheme*>( "schems.main" ); // TODO: from simul
 
   ContSimul *sims = model->getElemT<ContSimul*>( "sims" );
   if( !sims ) {
@@ -1344,7 +1339,7 @@ void LaboView::runRun()
     return;
   }
 
-  rv = new RunView( sch, sim, this );
+  rv = new RunView( sch_main, sim, this );
   rv->exec();
   emit viewChanged();
   sview->setFocus();
