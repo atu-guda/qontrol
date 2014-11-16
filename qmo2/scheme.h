@@ -18,11 +18,9 @@
 #ifndef SCHEME_H
 #define SCHEME_H
 
-#include "defs.h"
-#include "datacont.h"
 #include "tmiso.h"
 #include "toutarr.h"
-#include "tgraph.h"
+#include "simul.h"
 
 
 /**Contains elements of scheme
@@ -36,16 +34,9 @@ class Scheme : public TDataContainer  {
   virtual ~Scheme() override;
   DCL_CREATE;
   DCL_STD_INF;
-  enum SeedType {
-    everyRun = 0, startLoop, start2DLoop
-  };
-  Q_ENUMS(SeedType);
-  Q_CLASSINFO( "enum_SeedType_0", "Every Run" );               // everyRun
-  Q_CLASSINFO( "enum_SeedType_1", "On start on 1D loop" );     // startLoop
-  Q_CLASSINFO( "enum_SeedType_2", "On start on 2D loop" );     // start2DLoop
 
   /** prepare to run */
-  virtual int startRun( int type );
+  virtual int startRun( Simulation *a_sim );
   /** run csteps next steps */
   virtual int nextSteps( int csteps );
   /** terminates run: 0 - normal, 1.. - break */
@@ -53,23 +44,17 @@ class Scheme : public TDataContainer  {
   /** function to call from elem.f() to signal something */
   virtual int fback( int code, int aord, const QString &tdescr );
 
-  /** converts order of element to it's position in v_el */
-  virtual int ord2elnu( int aord ) const;
-  /** visual coords -> TMiso number. @returns: <0 - not found, >=0 -- elnu */
-  virtual int xy2elnu( int avis_x, int avis_y ); /* must be const. but.. */
+  /** returns element by its order */
+  TMiso* ord2Miso( int aord ) const;
   /** visual coords -> TMiso @returns: nullptr - not found */
   TMiso* xy2Miso( int avis_x, int avis_y ) const;
-  /** returns ptr to TMiso by elnu */
-  virtual TMiso* getMiso( int elnu );
-  /** returns ptr to TOutArr by name */
-  TOutArr* getOutArr( const QString &oname );
   /** inserts active element @returns: nulltpr - bad  elese -ptr to inserted element */
   TMiso* insElem( const QString &cl_name, const QString &ob_name,
                        int aord, int avis_x, int avis_y );
   /** delete active element by name !0 = sucess */
   virtual int delElem( const QString &ename );
   /** moves element to new position if free */
-  int moveElem( int elnu, int newx, int newy );
+  int moveElem( const QString &nm, int newx, int newy );
   /** new order of element ny name */
   virtual int newOrder( const QString &name, int new_ord );
   /** suggest order value for new element */
@@ -99,33 +84,6 @@ class Scheme : public TDataContainer  {
   virtual int linkNames();
 
  protected:
-  // =============== iface objects ==============================
-  // most of them - copy copy of current model or param blocks
-  /** total model time, starts with 0 each inner loop */
-  PRM_DOUBLE( t_full, efInner, "t_full", "Full Run Time", "min=0\nmax=1e300\ndef=100" );
-  /** number of inner loop iterations */
-  PRM_INT( nn, efInner, "nn", "Number of steps in one run",
-      "min=1\nmax=200000000\nsep=col\ndef=10000"  );
-  /** flag for real and model time syncronization */
-  PRM_SWITCH( use_sync, efInner, "Sync RT",
-      "flag for real and model time syncronization ", "sep=col" );
-  /** number of inner parametric loops iterations */
-  PRM_INT( nl1, efInner, "nl1",
-       "Number of inner parametric loops iterations",
-       "min=1\nmax=10000\nsep=block\ndef=1" );
-  /** number of outer parametric loops iterations */
-  PRM_INT( nl2, efInner, "N2",
-       "Number of outer parametric loops iterations",
-       "min=1\nmax=10000\nsep=col\ndef=1" );
-  /** Initial parametrs values */
-  PRM_DOUBLE( prm0s, efInner, "param. 0", "Initial prm0 value", "sep=block" );
-  PRM_DOUBLE( prm1s, efInner, "param. 1", "Initial prm1 value", "" );
-  PRM_DOUBLE( prm2s, efInner, "param. 2", "Initial prm2 value", ""  );
-  PRM_DOUBLE( prm3s, efInner, "param. 3", "Initial prm3 value", ""  );
-  PRM_INT( seed, efInner, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
-  /** type of seeding: 0 - every run, 1 - every 1d loop .. obj: 3 - as model */
-  PRM_LIST( seedType, efInner, "Seed type", "type of seeding", "enum=SeedType" );
-  // ---------------------------------------
   // ======================= invisible vars ======================
   /** loops counters */
   PRM_INT( ii, efInner,  "ii", "Inner index", "" );
@@ -163,14 +121,36 @@ class Scheme : public TDataContainer  {
   int end_loop = 0;
   /** real start time */
   double start_time;
-  // TODO: separated objects
+
+  // copy of simulation vars - but w/o onject access - just for speed;
+  double T = 1;
+  int N = 10, N1 = 1, N2 = 1, syncRT = 0;
+  double prm0s = 0, prm1s = 0, prm2s = 0, prm3s = 0;
+  double prm0d = 0,  prm1d = 0;
+  // caches for fast access
   /** vector of ptrs to active elements, my be sorted on ord */
   std::vector<TMiso*> v_el;
-  /** vector of elems orders */
-  std::vector<int> v_ord;
+
+  //* current simulation, valid only while run
+  Simulation *sim = nullptr;
+
   DCL_DEFAULT_STATIC;
 
 };
+
+// ------------------ container of Schemes --------------
+
+class ContScheme : public TDataContainer {
+   Q_OBJECT
+  public:
+   DCL_CTOR(ContScheme);
+   virtual ~ContScheme() override;
+   DCL_CREATE;
+   DCL_STD_INF;
+  private:
+   DCL_DEFAULT_STATIC;
+};
+
 
 #endif
 

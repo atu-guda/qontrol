@@ -1643,7 +1643,7 @@ const double* TDataSet::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
   if( !ds ) {
     return nullptr;
   }
-  return ds->getSchemeDoublePtr( nm, lt, src_ob, lev );
+  return ds->getSchemeDoublePtr( nm, lt, src_ob, lev+1 );
 }
 
 // not const - change param
@@ -1774,10 +1774,6 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
         return false;
       }
       if( !ho ) { // name not found
-        // if( ! ( allow_add & allowObject) ) {
-        //   DBG2q( "WARN: creating disallowed in: %s", objectName() );
-        //   continue;
-        // }
         if( ! add_obj( cl_name, elname ) ) {
           errstr = QString("TDataSet::fromDom: fail to create obj %1 %2 ")
                    .arg(cl_name).arg(elname);

@@ -59,6 +59,7 @@ void TMiso::post_set()
   if( !links )
     return;
   int t = 0;
+  // TODO: remove after migration
   if( ! ( locked || flip || onlyFirst || onlyLast || noIcon ) ) {
     // try to migrate from old data
     t = 0; links->getData( "locked", &t ); locked = t;
