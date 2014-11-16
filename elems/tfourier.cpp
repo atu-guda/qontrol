@@ -51,54 +51,61 @@ int TFourier::do_startLoop( int /*acnx*/, int /*acny*/ )
 
 int TFourier::do_endLoop()
 {
-  int i, j, nx;
-  TOutArr *arra, *arrb, *arram, *arrom, *arrx, *arry;
-  double v, vx;
+  int i;
+  TOutArr *arra, *arrb, *arram, *arrom; // , *arrx, *arry;
+  // double v, vx;
 
-  arra = model->getOutArr( a_oname );// ---- fill a,b,am output arrays
+  // TODO: rewrite or move to fun
+  // arra = model->getOutArr( a_oname );// ---- fill a,b,am output arrays
+  arra = nullptr;
   if( arra ) {
     arra->alloc( ng+1, 1 );
     for( i=0; i<=ng; i++ )
       arra->push_val( aa[i], 10000 ); // ignore level
   };
-  arrb = model->getOutArr( b_oname );
+  // arrb = model->getOutArr( b_oname );
+  arrb = nullptr;
   if( arrb ) {
     arrb->alloc( ng+1, 1 );
     for( i=0; i<=ng; i++ )
       arrb->push_val( bb[i], 10000 ); // ignore level
   };
-  arram = model->getOutArr( am_oname );
+  //arram = model->getOutArr( am_oname );
+  arram = nullptr;
   if( arram ) {
     arram->alloc( ng+1, 1 );
     for( i=0; i<=ng; i++ )
       arram->push_val( am[i], 10000 ); // ignore level
   };
-  arrom = model->getOutArr( om_oname );
+  // arrom = model->getOutArr( om_oname );
+  arrom = nullptr;
   if( arrom ) {
     arrom->alloc( ng+1, 1 );
     for( i=0; i<=ng; i++ )
       arrom->push_val( omega * i, 10000 ); // ignore level
   };
 
-  if( ! useFill )
-    return 0;
-  arrx = model->getOutArr( x_oname ); // -- fill compare out array
-  arry = model->getOutArr( y_oname );
-  if( !arrx || !arry )
-    return 1;
-  const dvector *xdat = arrx->getArray();
-  nx = -1;
-  arrx->getData( "n", &nx );
-  if( xdat == 0 || nx < 2 )
-    return 1;
-  arry->alloc( nx, 1 );
-  for( i=0; i<nx; i++ ) {
-    v = 0; vx = omega * (*xdat)[i];
-    for( j=0; j<=ng; j++ )
-      v += aa[j] * cos( j * vx ) +  bb[j] * sin( j * vx );
-    arry->push_val( v, 10000 ); // ignore level
-  };
   return 0;
+
+  // if( ! useFill )
+  //   return 0;
+  // arrx = model->getOutArr( x_oname ); // -- fill compare out array
+  // arry = model->getOutArr( y_oname );
+  // if( !arrx || !arry )
+  //   return 1;
+  // const dvector *xdat = arrx->getArray();
+  // nx = -1;
+  // arrx->getData( "n", &nx );
+  // if( xdat == 0 || nx < 2 )
+  //   return 1;
+  // arry->alloc( nx, 1 );
+  // for( i=0; i<nx; i++ ) {
+  //   v = 0; vx = omega * (*xdat)[i];
+  //   for( j=0; j<=ng; j++ )
+  //     v += aa[j] * cos( j * vx ) +  bb[j] * sin( j * vx );
+  //   arry->push_val( v, 10000 ); // ignore level
+  // };
+  // return 0;
 }
 
 double TFourier::f( double t )
@@ -141,7 +148,7 @@ void TFourier::initVars(void)
   tp = 2 * M_PI / omega;
   np = int( tp / tdt );
   tt = 1; // safe value
-  par->getData( "tt", &tt );
+  par->getData( "T", &tt );
   t_st = 0; t_en = tt;
   if( t0 > 0 && t0 < tt-tp )
     t_st = t0;

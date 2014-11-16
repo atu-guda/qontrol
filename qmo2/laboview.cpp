@@ -1327,7 +1327,24 @@ void LaboView::runRun()
   RunView *rv;
   if( ! checkState( validCheck ) )
     return;
-  rv = new RunView( model, 0, this );
+  Scheme *sch = model->getElemT<Scheme*>( "schems.main" ); // TODO: from simul
+  if( ! sch ) {
+    showError( "Fail to find scheme" );
+    return;
+  }
+
+  ContSimul *sims = model->getElemT<ContSimul*>( "sims" );
+  if( !sims ) {
+    return;
+  }
+
+  Simulation *sim = sims->getActiveElemT<Simulation*>();
+  if( !sim ) {
+    showError( "No active simulations" );
+    return;
+  }
+
+  rv = new RunView( sch, sim, this );
   rv->exec();
   emit viewChanged();
   sview->setFocus();
@@ -1335,24 +1352,12 @@ void LaboView::runRun()
 
 void LaboView::runPrm()
 {
-  if( ! checkState( validCheck ) )
-    return;
-  RunView *rv;
-  rv = new RunView( model, 1, this );
-  rv->exec();
-  emit viewChanged();
-  sview->setFocus();
+  // TODO: remove: use simulation
 }
 
 void LaboView::runPrm2()
 {
-  if( ! checkState( validCheck ) )
-    return;
-  RunView *rv;
-  rv = new RunView( model, 2, this );  // TODO remove 0
-  rv->exec();
-  emit viewChanged();
-  sview->setFocus();
+  // TODO: remove: use simulation
 }
 
 void LaboView::resetModel()

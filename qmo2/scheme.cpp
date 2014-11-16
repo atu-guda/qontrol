@@ -194,7 +194,7 @@ int Scheme::runOneLoop(void)
 int Scheme::preRun( int run_tp, int anx, int any )
 {
   int rc;
-  // tdt = t_full / nn;
+  tdt = T / N;
 
   state = stateRun;
   for( auto ob : v_el ) {

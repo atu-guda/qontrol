@@ -22,26 +22,27 @@
 
 #include "miscfun.h"
 #include "dataset.h"
-#include "tmodel.h"
+#include "scheme.h"
+#include "simul.h"
 
 #include "runview.h"
 
 using namespace std;
 
-RunView::RunView( TModel *amodel, int atype, QWidget *parent )
-          : QDialog( parent )
+RunView::RunView( Scheme *a_sch, Simulation *a_sim, QWidget *parent )
+          : QDialog( parent ), sch( a_sch ), sim( a_sim )
 {
-  int i;
-  model = amodel; run_type = atype;
   s_h = 40;
   // setBackgroundMode( Qt::NoBackground );
   setCursor( Qt::CrossCursor );
   timer = new QTimer();
   connect( timer, &QTimer::timeout, this, &RunView::slotRunNext );
-  model->reset();
-  getModelData();
-  for( i=0; i < 10; i++ )
-    keys_state[i] = 0;
+  sch->reset();
+  getSchemeData();
+
+  for( auto &ks : keys_state ) {
+    ks = 0;
+  }
   i_tot = 0; n_tot = 1;
   setMinimumSize( 500, s_h );
   setFocusPolicy( Qt::StrongFocus );
@@ -66,15 +67,15 @@ void RunView::slotStartRun()
   int rc;
   if( state != stateGood ) return;
   i_tot = 0;  state = stateRun;
-  model->reset();
-  rc = model->startRun( run_type );
+  sch->reset();
+  rc = sch->startRun( sim );
   if( rc ) {
-    model->reset();
+    sch->reset();
     state = stateBad;
     return;
   };
-  model->getData( "n_tot", &n_tot );
-  if( use_sync )
+  sch->getData( "n_tot", &n_tot );
+  if( syncRT )
     setMouseTracking(1);
   s_time = get_real_time();
   timer->start( 0 );
@@ -85,7 +86,7 @@ void RunView::slotStopRun(void)
   timer->stop();
   setMouseTracking( 0 );
   state = stateBad;
-  model->stopRun( 1 );
+  sch->stopRun( 1 );
   update();
 }
 
@@ -96,21 +97,21 @@ void RunView::slotRunNext(void)
     timer->stop(); return;
   };
   fillVars();
-  model->nextSteps( n_steps );
-  m_state = model->getState();
+  sch->nextSteps( n_iosteps );
+  m_state = sch->getState();
   switch( m_state ) {
     case stateRun:
-      model->getData( "i_tot", &i_tot );
+      sch->getData( "i_tot", &i_tot );
       if( i_tot >= n_tot ) {
-        model->stopRun(0);
-        state = model->getState();
+        sch->stopRun(0);
+        state = sch->getState();
       };
       break;
     case stateDone:
-      model->stopRun(0); state = stateDone;
+      sch->stopRun(0); state = stateDone;
       break;
     default:
-      model->stopRun(1); state = stateBad;
+      sch->stopRun(1); state = stateBad;
   };
   if( state != stateRun ) {
     timer->stop();
@@ -152,21 +153,27 @@ void RunView::drawAll( QPainter &p )
   gauge_w = int( double(i_tot) * g_w / n_tot );
   p.fillRect( 0, g_h+1, gauge_w, 18, Qt::red );
   p.setPen( Qt::white );
-  if( use_sync ) {
+
+  if( syncRT ) {
     p.drawLine( 0, c_y, g_w-1, c_y ); p.drawLine( c_x, 0, c_x, g_h );
   };
-  if( s_time > 0 )
+
+  if( s_time > 0 ) {
     rt = get_real_time() - s_time;
-  else
+  } else {
     rt = 0;
-  model->getData( "t", &t );
-  model->getData( "il1", &il1 );
-  model->getData( "il2", &il2 );
+  }
+
+  sch->getData( "t", &t );
+  sch->getData( "il1", &il1 );
+  sch->getData( "il2", &il2 );
+  int runType = -1;
+  sim->getData( "runType", &runType );
   s.sprintf( "%5s  tp: %d t: %012.3f; m: [% .2f; % .2f]; rt: %7.2f  i: %7d (%3d:%3d);",
-    getStateString(state), run_type, t, mouse_x, mouse_y, rt,
+    getStateString(state), runType, t, mouse_x, mouse_y, rt,
     i_tot, il1, il2  );
   p.drawText( 10, 14, s );
-  if( use_sync ) {
+  if( syncRT ) {
     drawVbar( p );
     drawGbar( p );
     drawLED( p );
@@ -318,14 +325,16 @@ void RunView::vis2phys( int ix, int iy, double *x, double *y )
   };
 }
 
-void RunView::getModelData(void)
+void RunView::getSchemeData(void)
 {
-  model->getData( "n_tot", &n_tot );
-  model->getData( "n_steps", &n_steps );
-  model->getData( "use_sync", &use_sync );
-  model->getData( "autoStart", &autoStart );
-  state = model->getState();
-  s_h = use_sync ? 520 : 40;
+  // sch->getData( "n_tot", &n_tot ); // TODO: fix
+  sim->getData( "N", &n_tot ); // BUG: tmp workaround
+
+  sim->getData( "n_iosteps", &n_iosteps );
+  sim->getData( "syncRT", &syncRT );
+  sim->getData( "autoStart", &autoStart );
+  state = sch->getState();
+  s_h = syncRT ? 520 : 40;
 }
 
 void RunView::getJoyVal(void)
@@ -345,7 +354,7 @@ void RunView::getAuxVal(void)
 
 void RunView::fillVars(void)
 {
-  if( state != stateRun || !use_sync )
+  if( state != stateRun || !syncRT )
     return;
 }
 

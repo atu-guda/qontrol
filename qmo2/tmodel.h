@@ -149,39 +149,39 @@ class TModel : public TDataContainer  {
   Scheme* sch_main = nullptr;
   // =============== iface objects ==============================
   /** total model time, starts with 0 each inner loop */
-  PRM_DOUBLE( tt, efNoRunChange, "T", "Full Run Time", "min=0\nmax=1e300\ndef=100" );
+  PRM_DOUBLE( tt, efOld|efNoRunChange, "T", "Full Run Time", "min=0\nmax=1e300\ndef=100" );
   /** number of inner loop iterations */
-  PRM_INT( nn, efNoRunChange, "N", "Number of steps in one run",
+  PRM_INT( nn, efOld|efNoRunChange, "N", "Number of steps in one run",
       "min=1\nmax=200000000\nsep=col\ndef=10000"  );
   /** flag for real and model time syncronization */
-  PRM_SWITCH( use_sync, efNoRunChange, "Sync RT",
+  PRM_SWITCH( use_sync, efOld|efNoRunChange, "Sync RT",
       "flag for real and model time syncronization ", "sep=col" );
   /** number of inner parametric loops iterations */
-  PRM_INT( nl1, efNoRunChange, "N1",
+  PRM_INT( nl1, efOld|efNoRunChange, "N1",
        "Number of inner parametric loops iterations",
        "min=1\nmax=10000\nsep=block\ndef=1" );
   /** number of outer parametric loops iterations */
-  PRM_INT( nl2, efNoRunChange, "N2",
+  PRM_INT( nl2, efOld|efNoRunChange, "N2",
        "Number of outer parametric loops iterations",
        "min=1\nmax=10000\nsep=col\ndef=1" );
   /** number of steps per i/o action */
-  PRM_INT( n_steps, efNoRunChange, "N steps",
+  PRM_INT( n_steps, efOld|efNoRunChange, "N steps",
       "number of steps per i/o action ",
       "min=1\nmax=100000\nsep=col\ndef=1000" );
   /** Initial parametrs values */
-  PRM_DOUBLE( prm0s, efNoRunChange, "prm0s", "Initial prm0 value", "sep=block" );
-  PRM_DOUBLE( prm1s, efNoRunChange, "prm1s", "Initial prm1 value", "" );
-  PRM_DOUBLE( prm2s, efNoRunChange, "prm2s", "Initial prm2 value", ""  );
-  PRM_DOUBLE( prm3s, efNoRunChange, "prm3s", "Initial prm3 value", ""  );
-  PRM_DOUBLE( prm0d, efNoRunChange, "prm0+=", "Parameter 0 delta", "sep=col" );
-  PRM_DOUBLE( prm1d, efNoRunChange, "prm1+=", "Parameter 1 delta", "" );
+  PRM_DOUBLE( prm0s, efOld|efNoRunChange, "prm0s", "Initial prm0 value", "sep=block" );
+  PRM_DOUBLE( prm1s, efOld|efNoRunChange, "prm1s", "Initial prm1 value", "" );
+  PRM_DOUBLE( prm2s, efOld|efNoRunChange, "prm2s", "Initial prm2 value", ""  );
+  PRM_DOUBLE( prm3s, efOld|efNoRunChange, "prm3s", "Initial prm3 value", ""  );
+  PRM_DOUBLE( prm0d, efOld|efNoRunChange, "prm0+=", "Parameter 0 delta", "sep=col" );
+  PRM_DOUBLE( prm1d, efOld|efNoRunChange, "prm1+=", "Parameter 1 delta", "" );
   PRM_DOUBLE( xval1, efOld, "xval1", "Reserved 1", "props=DOUBLE,SPIN\nstep=0.2" );
   PRM_DOUBLE( xval2, efOld, "xval2", "Reserved 2", "" );
-  PRM_INT( seed, efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
-  PRM_INT( useSameSeed, efOld, "use Same Seed - no", "Unused", "props=INT,SPIN\nstep=2\nmin=-100\nmax=100" ); // TODO: OBSOLETE
+  PRM_INT( seed, efOld|efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
+  PRM_INT( useSameSeed, efOld|efOld, "use Same Seed - no", "Unused", "props=INT,SPIN\nstep=2\nmin=-100\nmax=100" ); // TODO: OBSOLETE
   /** type of seeding: 0 - every run, 1 - every 1d loop .. obj: 3 - as model */
-  PRM_LIST( seedType, efNoRunChange, "Seed type", "type of seeding", "enum=SeedType" );
-  PRM_SWITCH( autoStart, efNoRunChange, "auto start",
+  PRM_LIST( seedType, efOld|efNoRunChange, "Seed type", "type of seeding", "enum=SeedType" );
+  PRM_SWITCH( autoStart, efOld|efNoRunChange, "auto start",
       "Start simulation without key awaitng", "sep=col" );
   // -------- input channels indexes -------
   /** input from mouse (x,y,btn1,btn2,btn3) abs(x,y) <= 1, 0 - center */
@@ -211,7 +211,7 @@ class TModel : public TDataContainer  {
   PRM_INT( oct_5, efOld, "Out Type 5", "Output Type 5", "" );
   // ---------------------------------------
   /** long description */
-  PRM_STRING( long_descr, 0, "Description", "Model description",
+  PRM_STRING( long_descr, efOld, "Description", "Model description",
       "props=STRING,MLINE\nncol=-1\nsep=block");
   // ======================= invisible vars ======================
   /** loops counters */

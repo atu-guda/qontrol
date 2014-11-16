@@ -247,6 +247,44 @@ QStringList HolderData::elemNames() const
   return cl;
 }
 
+
+HolderData* HolderData::getElem( int i ) const
+{
+  if( i < size() && i >=0 ) {
+    return qobject_cast<HolderData*>(children().at(i));
+  }
+  return nullptr;
+}
+
+
+HolderData* HolderData::getElem( const QString &oname ) const
+{
+  QString first, rest;
+  int idx = 0;
+
+  NameType nt = splitName( oname, first, rest, idx );
+
+  if( nt == badName ) {
+    return nullptr;
+  }
+
+  HolderData *ho =  findChild<HolderData*>( first, Qt::FindDirectChildrenOnly );
+  if( !ho ) { // need, as here both simpleName and complexName
+    return nullptr;
+  }
+
+  if( nt == simpleName ) {
+    return ho;
+  }
+
+  if( nt == complexName ) {
+    return ho->getElem( rest );
+  }
+
+  DBGx( "warn: unknown name type: %d", nt );
+  return nullptr;
+}
+
 void HolderData::setParm( const QString &name, const QString &value )
 {
   parms[name] = value;
@@ -555,7 +593,7 @@ bool HolderData::getData( const QString &nm, QVariant &da ) const
 
   HolderData *ho = getElem( first );
   if( !ho ) {
-    DBGx( "warn: fail to find name \"%s\"", qP( first ) );
+    DBGx( "warn: fail to find name \"%s\" in \"%s\"", qP(first), qP(getFullName()) );
     return 0;
   }
   if( nm_type == simpleName ) { // first only
@@ -631,7 +669,7 @@ bool HolderData::setData( const QString &nm, const QVariant &da )
 
   HolderData *ho = getElem( first );
   if( !ho ) {
-    DBGx( "warn: fail to find name \"%s\" in \"%s\"", 
+    DBGx( "warn: fail to find name \"%s\" in \"%s\"",
           qP(first), qP(getFullName()) );
     return 0;
   }

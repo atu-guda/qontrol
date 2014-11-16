@@ -22,7 +22,7 @@
 #include "defs.h"
 #include <QDialog>
 
-class TModel; class TDataSet; class TMiso;
+class TModel; class Scheme; class TDataSet; class TMiso; class Simulation;
 class QPaintEvent; class QMouseEvent; class QKeyEvent;
 class QPainter; class QPaintDevice;
 
@@ -35,7 +35,7 @@ class RunView : public QDialog  {
  Q_OBJECT
  public:
    /** constructor */
-   RunView( TModel *amodel, int atype, QWidget *parent );
+   RunView( Scheme *a_sch, Simulation *a_sim, QWidget *parent );
    /** destructor */
    ~RunView();
    /** hint size for good view */
@@ -45,7 +45,7 @@ class RunView : public QDialog  {
    void slotStartRun();
    /** interrupts computation */
    void slotStopRun();
-   /** do n_steps computations (by timer(0)) */
+   /** do n_iosteps computations (by timer(0)) */
    void slotRunNext();
 
   protected:
@@ -71,10 +71,10 @@ class RunView : public QDialog  {
    void phys2vis( double x, double y, double *idx, double *idy );
    /** converts visual coords to physical */
    void vis2phys( int ix, int iy, double *x, double *y );
-   /** fill vars to model data */
+   /** fill vars to scheme data */
    void fillVars(void);
-   /** gets info from TModel and fills local vars */
-   void getModelData(void);
+   /** gets info from Scheme and fills local vars */
+   void getSchemeData(void);
    /** gets joystick values */
    void getJoyVal(void);
    /** gets sound values */
@@ -94,16 +94,16 @@ class RunView : public QDialog  {
    void drawLED( QPainter &p );
  // ========================================== data ==================
   protected:
-    /** pointer to model ro run */
-    TModel *model;
+    /** pointer to scheme ro run */
+    Scheme *sch;
+    //* simulation to run
+    Simulation *sim;
     /** timer to send timer events */
     QTimer *timer;
     /** geometry: w_ - window, g_ - graph, c_ center, s_ - set */
     int w_w, w_h, g_w, g_h, c_x, c_y, s_h;
     /** koefficients to transform visual and phis coorgs */
     double gkx, gky;
-    /** run type */
-    int run_type;
     /** state of computation */
     int state;
     /** start time */
@@ -114,18 +114,17 @@ class RunView : public QDialog  {
     int mouse_l = 0, mouse_r = 0, mouse_m = 0;
     /** keyboard buttons state */
     int keys_state[10];
-    // some next vars filled from TModel =========================
+    // some next vars filled from Scheme =========================
     /** total number of loops */
     int n_tot;
     /** total counter */
     int i_tot;
     /** number of steps per i/o action */
-    int n_steps;
-    /** flag for real and model time syncronization */
-    int use_sync;
+    int n_iosteps;
+    /** flag for real and scheme time syncronization */
+    int syncRT;
     /** flag to start w/o keyboard hit */
     int autoStart = 0;
-    // -------- input chanals indexes -------
 };
 
 #endif

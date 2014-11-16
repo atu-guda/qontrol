@@ -33,7 +33,7 @@ enum IterType {
   IterLast = 2     // last iteration in inner loop
 };
 
-class TModel;
+class TModel; class Scheme;
 
 /** class TElmLink  - obseleted by InputSimple and Input Param
  * aux class for get/set TMiso links and flags
@@ -82,7 +82,7 @@ typedef const TElmLink* CPTElmLink;
 // -------------------------- TMiso -----------------------------
 
 /** \class TMiso tmiso.h
- * \breef Pure parent of all model elements.
+ * \breef Pure parent of all scheme elements.
  *
  */
 
@@ -166,9 +166,6 @@ class TMiso : public TDataSet  {
    double tdt = 0;
    /** number of iteration per loop -- setted by PreRun */
    int model_nn = 0;
-   /** pointer to model-owner of this element, same as parent only
-    * between preRun -- postRun, elseware-0 TODO: remove */
-   TModel *model = nullptr;
    /** parameters modified during run flag */
    int prm_mod = 0;
 

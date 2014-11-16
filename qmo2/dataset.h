@@ -199,31 +199,15 @@ class HolderData : public QAbstractItemModel {
   /** returns list of registerd (exists) clild elems names */
   Q_INVOKABLE QStringList elemNames() const;
   /** returns holder by number */
-  HolderData* getElem( int i ) const
-     {
-       if( i < size() && i >=0 ) {
-         return qobject_cast<HolderData*>(children().at(i));
-       }
-       return nullptr;
-     }
+  HolderData* getElem( int i ) const;
   /** find holder for object by name */ // TODO: +full.name.elm
-  HolderData* getElem( const QString &oname ) const
-     {
-       return findChild<HolderData*>( oname, Qt::FindDirectChildrenOnly );
-     }
+  HolderData* getElem( const QString &oname ) const;
   /** find holder for object by insex, safely cast to type T */
   template<typename T> T getElemT( int idx ) const
-      {
-        if( idx < size() && idx >=0 ) {
-          return qobject_cast<T>( children().at(idx) );
-        }
-        return nullptr;
-      }
+    {  return qobject_cast<T>( getElem( idx ) );  }
   /** find holder for object by name, safely cast to type T */
   template<typename T> T getElemT( const QString &oname ) const
-      {
-        return findChild<T>( oname, Qt::FindDirectChildrenOnly );
-      }
+    { return qobject_cast<T>( getElem( oname ) ); }
   /** index of holder, if my, -1 - if not */
   int indexOfHolder( const HolderData *ho ) const;
 
@@ -307,7 +291,7 @@ class HolderData : public QAbstractItemModel {
  public:
   template<typename T> T getActiveElemT() const
       {
-        return qobject_cast<T>( getActiveElem );
+        return qobject_cast<T>( getActiveElem() );
       }
  protected:
   void extraToParm();

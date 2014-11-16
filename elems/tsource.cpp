@@ -18,7 +18,7 @@
 #include <time.h>
 #include <cmath>
 #include "miscfun.h"
-#include "tmodel.h"
+#include "scheme.h"
 #include "tsource.h"
 
 const char* TSource::helpstr = "<H1>TSource</H1>\n"
