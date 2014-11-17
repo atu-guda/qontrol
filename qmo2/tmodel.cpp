@@ -40,6 +40,7 @@ CTOR(TModel,TDataContainer)
   one = 1.0;
   m_PI = M_PI;
   m_E = M_E;
+  // TODO: remove after conversion
   const int ELM_RES = 64; const int OUT_RES = 32;
   v_el.reserve( ELM_RES );
   v_out.reserve( OUT_RES );
@@ -59,193 +60,22 @@ TModel::~TModel()
 {
 }
 
-const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
-        const TDataSet **src_ob, int lev) const
-{
-  return getDoublePtr( nm, lt, src_ob, lev );
-}
+// const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
+//         const TDataSet **src_ob, int lev) const
+// {
+//   return getDoublePtr( nm, lt, src_ob, lev );
+// }
 
 
 
-int TModel::startRun( int type )
-{
-  int rc;
-  if( run_type >= 0 ) // in progress now
-    return -1;
-  if( type < 0 || type > 2 )
-    type = 0;
-  reset();
-  run_type = type;
-
-  n1_eff = n2_eff = 1;
-  if( run_type > 0 ) 
-    n1_eff = nl1;
-  if( run_type > 1 ) 
-    n2_eff = nl2;
-
-  n_tot = nn * n1_eff * n2_eff; i_tot = ii = il1 = il2 = 0;
-  sgnt = int( time( 0 ) );
-  prm2 = (double)prm2s; prm3 = (double)prm3s;
-
-  allocOutArrs( run_type );
-  rc = preRun( run_type, n1_eff, n2_eff );
-  if( rc != 0 ) {
-    end_loop = 1;
-    postRun();
-    return rc;
-  };
-  t = rtime = 0;
-
-  return 0;
-}
-
-int TModel::nextSteps( int csteps )
-{
-  int i, rc;
-  if( csteps < 1 )
-    csteps = 1;
-
-  for( i=0; i < csteps && i_tot < n_tot && end_loop == 0; i++, i_tot++ ) {
-    prm0 = prm0s + il1 * prm0d;
-    prm1 = prm1s + il2 * prm1d;
-    if( ii == 0 ) {    // --------------------- start inner loop --
-      if( il1 == 0 ) { // start prm0 loop
-        resetOutArrs( 1 );
-      };
-
-      resetOutArrs( 0 );
-      start_time = get_real_time(); rtime = t = 0;
-      // set start param
-      allStartLoop( il1, il2 );
-    };// end start inner loop
-
-    rc = runOneLoop();
-    if( rc == 1 )
-      return 0;
-
-    if( ii >= nn ) {
-      allEndLoop();
-      ii = 0; il1++;
-    };
-    if( il1 >= nl1 ) {
-      il1 = 0; il2++;
-    };
-  };
-  if( i_tot >= n_tot )
-    stopRun(0);
-  return 0;
-}
-
-int TModel::stopRun( int reason )
-{
-  if( end_loop || reason ) {
-    reset();
-    state = stateGood;
-  } else {
-    postRun();
-    state = stateDone;
-  };
-  return 0;
-}
-
-int TModel::runOneLoop()
-{
-  int out_level;
-  unsigned long wait_ms;
-  rtime = get_real_time() - start_time;
-  if( use_sync ) {
-     if( t > rtime ) {
-       wait_ms = (unsigned long)( 1000000 * ( t - rtime ) );
-       usleep( wait_ms ); // ------------------- TODO: redesign ------
-       // return 1;
-     };
-  };
-  IterType itype = IterMid;
-  out_level = 0;
-  if( ii == 0 ) {
-    itype = IterFirst;
-  } else if( ii == nn-1 ) {
-    itype = IterLast;
-    out_level = run_type;
-  };
-
-  for( TMiso* cur_el : v_el ) {
-    if( end_loop )
-      break;
-
-     cur_el->fun( t, itype );  // <============ main action
-  };  // end element loop;
-
-  for( TOutArr* arr : v_out ) {
-    arr->take_val( out_level );
-  };
-  t += tdt; ii++;
-  return 0;
-}
-
-int TModel::preRun( int run_tp, int anx, int any )
-{
-  int rc;
-  tdt = tt / nn;
-
-  state = stateRun;
-  for( TMiso *ob : v_el ) {
-    if( ob ) {
-      rc = ob->preRun( run_tp, nn, anx, any, tdt );
-      if( rc != 0 )
-        return rc;
-    };
-  };
-  return 0;
-}
-
-int TModel::postRun()
-{
-  int cm = 0;
-  for( TMiso *ob : v_el ) {
-    if( ob ) {
-      ob->postRun( end_loop );
-      cm |= ob->getModified();
-    };
-  };
-  if( modified == 0 || cm != 0 )
-    modified |= 2;
-  return 0;
-}
 
 int TModel::reset()
 {
   linkNames();
-  for( TOutArr *arr : v_out ) {
-    if( ! arr )
-      continue; // never be!
-    arr->free();
-  };
   state = stateGood; run_type = -1; sgnt = int( time(0) );
   return 0;
 }
 
-int TModel::allStartLoop( int acnx, int acny )
-{
-  int rc;
-  for( TMiso *ob : v_el ) {
-    if( ! ob )
-      continue;
-    rc = ob->startLoop( acnx, acny );
-    if( rc != 0 )
-      return rc;
-  };
-  return 0;
-}
-
-void TModel::allEndLoop()
-{
-  for( TMiso *ob : v_el ) {
-    if( ! ob )
-      continue;
-    ob->endLoop();
-  };
-}
 
 void TModel::allocOutArrs( int tp ) // TODO: common code
 {
@@ -280,15 +110,6 @@ void TModel::resetOutArrs( int level )
 
 
 
-
-int TModel::fback( int code, int /* aord */, const QString & /* tdescr */ )
-{
-  if( code ) {
-    end_loop = code;
-  };
-  return 0;
-}
-
 int TModel::checkData( int n )
 {
   if( n < 0 )
@@ -297,58 +118,20 @@ int TModel::checkData( int n )
 }
 
 
-
-int TModel::getNMiso() const
-{
-  return v_el.size();
-}
-
-TMiso* TModel::getMiso( int elnu )
-{
-  if( elnu < 0 || elnu >= (int)v_el.size() )
-    return nullptr;
-  return v_el[elnu];
-}
-
-int TModel::getNOutArr() const
-{
-  return v_out.size();
-}
-
-TOutArr* TModel::getOutArr( int out_nu )
-{
-  if( out_nu < 0 || out_nu >= (int)v_out.size() )
-    return nullptr;
-  return v_out[out_nu];
-}
-
 TOutArr* TModel::getOutArr( const QString &oname )
 {
-  if( oname.isEmpty() )
-    return nullptr;
-  TOutArr *arr = getElemT<TOutArr*>( oname );
-  if( !arr ) {
-    DBG2q( "warn: fail to find TOutArr", oname );
-  }
-  return arr;
+  return outs->getElemT<TOutArr*>( oname );
 }
 
-int TModel::getNGraph() const
+TGraph* TModel::getGraph( const QString &name )
 {
-  return v_graph.size();
-}
-
-TGraph* TModel::getGraph( int gra_nu )
-{
-  if( gra_nu < 0 || gra_nu >= (int)v_graph.size() )
-    return nullptr;
-  return v_graph[gra_nu];
+  return plots->getElemT<TGraph*>( name );
 }
 
 
 int TModel::insOut( const QString &outname, const QString &objname )
 {
-  TOutArr *arr = addObj<TOutArr>( outname );
+  TOutArr *arr = outs->addObj<TOutArr>( outname );
   if( !arr )
     return -1;
   arr->setData( "name", objname );
@@ -368,7 +151,7 @@ int TModel::insOut( const QString &outname, const QString &objname )
 
 int TModel::insGraph( const QString &gname )
 {
-  TGraph *gra = addObj<TGraph>( gname );
+  TGraph *gra = plots->addObj<TGraph>( gname );
   if( !gra )
     return -1;
   reset();
@@ -378,26 +161,14 @@ int TModel::insGraph( const QString &gname )
 
 
 
-int TModel::delOut( int out_nu )
+int TModel::delOut( const QString &name )
 {
-  int k;
-  if( out_nu < 0 || out_nu >= (int)v_out.size() )
-    return -1;
-  k = del_obj( v_out[out_nu]->objectName() );
-  reset();
-  modified |= 1;
-  return k;
+  return outs->del_obj( name );
 }
 
-int TModel::delGraph( int gr_nu )
+int TModel::delGraph( const QString &name )
 {
-  int k;
-  if( gr_nu < 0 || gr_nu >= (int)v_graph.size() )
-    return -1;
-  k = del_obj( v_graph[gr_nu]->objectName() );
-  reset();
-  modified |= 1;
-  return k;
+  return plots->del_obj( name );
 }
 
 int TModel::newSimul( const QString &name )
@@ -426,59 +197,14 @@ QString TModel::getSimulName( int idx )
   return sim->objectName();
 }
 
-Simulation* TModel::getSimul( int idx )
-{
-  return sims->getElemT<Simulation*>( idx );
-}
+// Simulation* TModel::getSimul( int idx )
+// {
+//   return sims->getElemT<Simulation*>( idx );
+// }
 
 Simulation* TModel::getSimul( const QString &name )
 {
   return sims->getElemT<Simulation*>( name );
-}
-
-int TModel::newOrder( const QString &name, int new_ord )
-{
-  TMiso *ob = getElemT<TMiso*>( name );
-  if( !ob )
-    return -1;
-
-  auto p = find_if( v_el.begin(), v_el.end(),
-      [new_ord](const TMiso *el) { return new_ord == el->getOrder(); } );
-  if( p != v_el.end() ) {
-    DBGx( "warn: order %d have element \"%s\"",
-          new_ord, qP((*p)->getFullName()) );
-    return -1;
-  }
-
-  ob->setData( "ord", new_ord );
-  int real_ord;
-  ob->getData( "ord", &real_ord );
-  reset();
-  modified |= 1;
-  sortOrd();
-  return ( real_ord == new_ord ) ? 0 : -1;
-}
-
-int TModel::moveElem( int elnu, int newx, int newy )
-{
-  TMiso *ob, *ob1;
-  if( newx < 0 || newy < 0 )
-    return -1;
-  ob = getMiso( elnu );
-  if( ob == 0 ) return -1;
-  for( unsigned i=0; i<v_el.size(); i++ ) {
-    if( (int)i == elnu ) 
-      continue;
-    ob1 = getMiso( i );
-    if( ! ob1 )
-      continue;
-    if( ob1->isAtCoord( newx, newy ) )
-      return -1;
-  };
-  ob->setData( "vis_x", newx );
-  ob->setData( "vis_y", newy );
-  reset();
-  return 0;
 }
 
 int TModel::linkNames()
@@ -511,8 +237,6 @@ int TModel::linkNames()
 
   }
 
-  sortOrd();
-
   // fill outs elnus and types
   int out_tp;
   for( TOutArr *arr : v_out ) {
@@ -532,20 +256,6 @@ void TModel::do_structChanged()
   linkNames();
 }
 
-void TModel::sortOrd()
-{
-  std::sort( v_el.begin(), v_el.end(),
-      []( const TMiso *a, const TMiso*b) { return *a < *b; } );
-}
-
-int TModel::hintOrd() const
-{
-  int m = 0;
-  for_each( v_el.begin(), v_el.end(),
-      [&m](TMiso *el) { m = max(m,el->getOrder()); } );
-  int m1 = ( (m+10) / 10 ) * 10;
-  return m1;
-}
 
 
 

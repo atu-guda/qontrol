@@ -171,7 +171,7 @@ void StructView::drawAll( QPainter &p )
   int li_src_y, li_dst_y;
   int line_color, line_width = 1, x_shift = 0, y_shift = 0;
   int st_y; /* label on elems start y */
-  int sel_x, sel_y, /*sel,*/ mark;
+  int sel_x, sel_y /*,sel, mark*/;
   QString src_name;
   TMiso *ob;
   // TOutArr *arr;
@@ -186,7 +186,7 @@ void StructView::drawAll( QPainter &p )
   sel_x = mainview->getSelX();
   sel_y = mainview->getSelY();
   //sel = mainview->getSel();
-  mark = mainview->getMark();
+  // mark = mainview->getMark();
   if( nh >= MODEL_MY ) nh = MODEL_MY;
   if( nw >= MODEL_MX ) nh = MODEL_MX;
 
@@ -565,10 +565,10 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
   } else {
     act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );
     connect( act, &QAction::triggered, mainview, &LaboView::newElm );
-    if( mainview->getMark() >= 0 ) {
+    //if( mainview->getMark() >= 0 ) {
       act = menu->addAction( "&Move to" );
       connect( act, &QAction::triggered, mainview, &LaboView::moveElm );
-    }
+    //}
   };
   menu->addSeparator();
   act = menu->addAction( QIcon( ":icons/newout.png" ), "New outp&ut" );

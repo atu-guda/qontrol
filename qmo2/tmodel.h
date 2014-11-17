@@ -40,41 +40,11 @@ class TModel : public TDataContainer  {
   DCL_CREATE;
   DCL_STD_INF;
 
-  enum SeedType {
-    everyRun = 0, startLoop, start2DLoop
-  };
-  Q_ENUMS(SeedType);
-  Q_CLASSINFO( "enum_SeedType_0", "Every Run" );               // everyRun
-  Q_CLASSINFO( "enum_SeedType_1", "On start on 1D loop" );     // startLoop
-  Q_CLASSINFO( "enum_SeedType_2", "On start on 2D loop" );     // start2DLoop
 
-  //* make main work via getDoublePtr
-  virtual const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt = nullptr,
-        const TDataSet **src_ob = nullptr, int lev = 0 ) const override;
-
-  /** prepare to run */
-  virtual int startRun( int type );
-  /** run csteps next steps */
-  virtual int nextSteps( int csteps );
-  /** terminates run: 0 - normal, 1.. - break */
-  virtual int stopRun( int reason );
-  /** function to call from elem.f() to signal something */
-  virtual int fback( int code, int aord, const QString &tdescr );
-
-  /** returns number of TMiso ( max value of elnu + 1 ) */
-  virtual int getNMiso() const;
-  /** returns ptr to TMiso by elnu */
-  virtual TMiso* getMiso( int elnu );
-  /** returns number of TOutArr */
-  virtual int getNOutArr() const;
-  /** returns ptr to TOutArr by out_nu */
-  TOutArr* getOutArr( int out_nu );
   /** returns ptr to TOutArr by name */
   TOutArr* getOutArr( const QString &oname );
-  /** returns number of TGraph */
-  virtual int getNGraph() const;
   /** returns ptr to TGraph gra_nu */
-  virtual TGraph* getGraph( int gra_nu );
+  virtual TGraph* getGraph( const QString &name );
   /** inserts new out array @returns: <0 - bad, >0= index in ptrs[] */
   virtual int insOut( const  QString &outname, const QString &objname );
   /** inserts new graph @returns: <0 - bad, >0= index in ptrs[] */
@@ -82,17 +52,13 @@ class TModel : public TDataContainer  {
   /** moves element to new position if free */
   int moveElem( int elnu, int newx, int newy );
   /** delete outs by out index 0 = sucess */
-  virtual int delOut( int out_nu );
+  virtual int delOut( const QString &name );
   /** delete graph by graph index 0 = sucess */
-  virtual int delGraph( int gr_nu );
-  /** new order of element ny name */
-  virtual int newOrder( const QString &name, int new_ord );
+  virtual int delGraph( const QString &name );
 
-  Simulation* getSimul( int idx );
+  // Simulation* getSimul( int idx );
   Simulation* getSimul( const QString &name );
 
-  /** suggest order value for new element */
-  virtual int hintOrd() const;
   /** frees output arrays and state: 2->1 */
   virtual int reset();
 
@@ -112,18 +78,6 @@ class TModel : public TDataContainer  {
  protected:
   /** reimplemented to real Elems, OutArr, Graphs: TODO: separate containers */
   virtual void do_structChanged();
-  /** sorts {v_el} on el.ord */
-  void sortOrd();
-  /** performs one loop */
-  virtual int runOneLoop();
-  /** fill tables & call preRun for elements */
-  virtual int preRun( int run_tp, int anx, int any );
-  /** call postRun for elements and dealloc inner buffers */
-  virtual int postRun();
-  /** calls startLoop for all elms */
-  virtual int allStartLoop( int acnx, int acny );
-  /** calls endLoop for all elms */
-  virtual void allEndLoop();
   /** call to allocate out arrays for given type and below */
   virtual void allocOutArrs( int tp );
   /** resets all array with given level or below */

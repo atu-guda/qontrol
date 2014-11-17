@@ -86,9 +86,8 @@ void StatusModel::update()
   l_name->setText( "." );  l_desc->setText( "." );  l_val->setText( "" );
   model = mainview->getModel();
   if( model != 0 ) {
-    s_nums.sprintf( "[%d;%d] %d",
-                    mainview->getSelX(), mainview->getSelY(),
-                    model->getNMiso() );
+    s_nums.sprintf( "[%d;%d] ",
+                    mainview->getSelX(), mainview->getSelY() );
     l_nums->setText( s_nums );
     stat = model->getState();
     l_stat->setText( getStateString( stat ) );

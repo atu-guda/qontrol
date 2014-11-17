@@ -420,23 +420,17 @@ bool LaboDoc::migrateSumul() // TODO: remove after migration
   }
 
   if( outs->size() == 0 ) {
-    int n_out = model->getNOutArr();
-    DBGx( "dbg: migrate outputs (%d)", n_out );
-
-    for( int i=0; i<n_out; ++i ) {
-      TOutArr *arr_o = model->getOutArr( i );
-      if( !arr_o ) {
-        continue;
+    for( auto c : model->children() ) {
+      HolderData *ob = qobject_cast<HolderData*>(c);
+      QString tp = ob->getType();
+      if( ob->isChildOf("TOutArr") ) {
+        QString s = ob->toString();
+        TOutArr *out_n = outs->addObj<TOutArr>( ob->objectName() );
+        if( out_n ) {
+          out_n->fromString( s );
+        }
       }
-      QString nm = arr_o->objectName();
-      DBGx( "dbg: migrate (1) TOutArr \"%s\" %d", qP(nm), i );
-      QString s = arr_o->toString();
-      TOutArr *arr_n = outs->addObj<TOutArr>( nm );
-      if( arr_n ) {
-        arr_n->fromString( s );
-        DBGx( "dbg: migrate (2) TOutArr \"%s\" %d", qP(nm), i );
-      }
-    }
+    };
 
   }
 
@@ -449,19 +443,17 @@ bool LaboDoc::migrateSumul() // TODO: remove after migration
   }
 
   if( plots->size() == 0 ) {
-    int n_pl = model->getNGraph();
-
-    for( int i=0; i<n_pl; ++i ) {
-      TGraph *gr_o = model->getGraph( i );
-      if( !gr_o ) {
-        continue;
+    for( auto c : model->children() ) {
+      HolderData *ob = qobject_cast<HolderData*>(c);
+      QString tp = ob->getType();
+      if( ob->isChildOf("TGraph") ) {
+        QString s = ob->toString();
+        TGraph *gr_n = plots->addObj<TGraph>( ob->objectName() );
+        if( gr_n ) {
+          gr_n->fromString( s );
+        }
       }
-      QString s = gr_o->toString();
-      TGraph *gr_n = plots->addObj<TGraph>( gr_o->objectName() );
-      if( gr_n ) {
-        gr_n->fromString( s );
-      }
-    }
+    };
 
   }
 

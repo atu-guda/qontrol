@@ -22,6 +22,7 @@
 #include <QWidget>
 class QResizeEvent;
 class QCloseEvent;
+class QAbstractItemView;
 
 class LaboDoc;
 class StructView;
@@ -80,6 +81,8 @@ class LaboView : public QWidget
    bool confirmDelete( const QString &obj, const QString &nm );
    //* edit some model object
    bool editObj( HolderData *obj );
+   //* returns name of current object in given view
+   QString getSelName( QAbstractItemView *view );
    //* show std error box
    void showError( const QString &s );
    //* show std warning box
@@ -168,8 +171,6 @@ class LaboView : public QWidget
    int getSel(void) const { return sel; }
    /** returns ptr to selected element or nullptr if none */
    TMiso* getSelObj(void) const { return selObj; }
-   /** returns number of marked element or -1 if none */
-   int getMark(void) const { return mark; }
    /** returns level for aux objects selection */
    int getLevel(void) const { return level; }
  protected:
@@ -194,7 +195,7 @@ class LaboView : public QWidget
    ContGraph *plots;
    ContSimul *sims;
 
-   int sel = -1, sel_x = 0, sel_y = 0, mark = -1, level = 0;
+   int sel = -1, sel_x = 0, sel_y = 0, level = 0;
    // TODO: from file (config)
    QString scr = R"(model.insElem("TLinear","ob","vis_x=4\nvis_y=1\na0=3.14");)";
    /** prt to selected object or nullptr */

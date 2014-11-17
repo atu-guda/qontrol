@@ -148,6 +148,24 @@ bool LaboView::editObj( HolderData *obj )
   return false;
 }
 
+QString LaboView::getSelName( QAbstractItemView *view )
+{
+  if( !view  ||  ! checkState( validCheck ) ) {
+    return QString();
+  }
+
+  QItemSelectionModel *selMod = view->selectionModel();
+  if( !selMod ) {
+    return QString();
+  }
+
+  QModelIndex cs = selMod->currentIndex();
+  if( !cs.isValid() ) {
+    return QString();
+  }
+  return cs.data( Qt::DisplayRole ).toString();
+}
+
 QSize LaboView::svSize() const
 {
   return scrollArea->size();
@@ -298,11 +316,10 @@ void LaboView::newElm()
 
   int rc = dia->exec();
   delete dia; dia = 0;
-  if( rc != QDialog::Accepted ) {
+
+  if( rc != QDialog::Accepted || aei.type.isEmpty() ) {
     return;
-  };
-  if( rc != QDialog::Accepted || aei.type.isEmpty() )
-    return;
+  }
   if( ! isGoodName( aei.name )  ) {
     showError( QString("Fail to add Elem: bad object name \"%1\"").arg(aei.name) );
     return;
@@ -324,10 +341,11 @@ void LaboView::delElm()
 
   QString oname = selObj->objectName();
 
+  bool sel_is_mark = ( selObj == markObj );
+
   if( confirmDelete( "element", oname) ) {
     sch_main->delElem( oname );
-    if( sel == mark ) {
-      mark = -1;
+    if( sel_is_mark ) {
       markObj = nullptr;
     }
 
@@ -338,8 +356,9 @@ void LaboView::delElm()
 
 void LaboView::editElm()
 {
-  if( ! checkState( selCheck ) )
+  if( ! checkState( selCheck ) ) {
     return;
+  }
   editObj( selObj );
 }
 
@@ -347,14 +366,16 @@ void LaboView::editElm()
 void LaboView::qlinkElm()
 {
   QString toname;
-  if( ! checkState( linkToCheck ) )
+  if( ! checkState( linkToCheck ) ) {
     return;
+  }
 
-  if( !selObj || !markObj )
+  if( !selObj || !markObj ) {
     return;
+  }
   toname = markObj->objectName();
 
-  // TODO: its model action
+  // TODO: its model action. really? model dont know about selected and marked.
 
   InputSimple *in = selObj->getInput( level );
   if( ! in )
@@ -374,11 +395,14 @@ void LaboView::qlinkElm()
 void LaboView::qplinkElm()
 {
   QString oldlink;
-  if( ! checkState( linkToCheck ) )
+  if( ! checkState( linkToCheck ) ) {
     return;
+  }
 
-  if( !selObj || !markObj  )
+  if( !selObj || !markObj  ) {
     return;
+  }
+
   QString toname = markObj->objectName();
 
   InputParams *pis = selObj->getElemT<InputParams*>("pis");
@@ -404,8 +428,9 @@ void LaboView::qplinkElm()
 
 void LaboView::unlinkElm()
 {
-  if( ! checkState( selCheck ) ) // no need marked to unlink
+  if( ! checkState( selCheck ) ) { // no need marked to unlink
     return;
+  }
 
   QString lnkname;
   QString none("");
@@ -431,10 +456,11 @@ void LaboView::unlinkElm()
 
 void LaboView::lockElm()
 {
-  int lck;
-  if( ! checkState( selCheck ) )
+  if( ! checkState( selCheck ) ) {
     return;
+  }
 
+  int lck = 0;
   selObj->getData( "locked", &lck );
   lck = !lck;
   selObj->setData( "locked", lck );
@@ -446,11 +472,12 @@ void LaboView::lockElm()
 
 void LaboView::ordElm()
 {
-  bool ok;
-  int new_ord, old_ord;
-  if( ! checkState( selCheck ) )
+  if( ! checkState( selCheck ) ) {
     return;
-  old_ord = -1;
+  }
+
+  bool ok;
+  int new_ord = -1, old_ord;
   selObj->getData( "ord", &old_ord );
   new_ord = QInputDialog::getInt(this, "New element order",
       "Input new element order",
@@ -463,18 +490,16 @@ void LaboView::ordElm()
 
 void LaboView::markElm()
 {
-  mark = sel;
   markObj = selObj;
   emit viewChanged();
 }
 
 void LaboView::moveElm()
 {
-  if( ! checkState( moveCheck ) )
-    return;
-  if( !markObj ) {
+  if( ! checkState( moveCheck )  ||  !markObj  ) {
     return;
   }
+
   sch_main->moveElem( markObj->objectName(), sel_x, sel_y );
   emit viewChanged();
 }
@@ -740,8 +765,9 @@ void LaboView::newOut()
   QDialog *dia;
   QLineEdit *oname_ed, *ename_ed; QLabel *lab1, *lab2;
   QGridLayout *lay;
-  if( ! checkState( validCheck ) )
+  if( ! checkState( validCheck ) ) {
     return;
+  }
 
   if( selObj  )
   {
@@ -798,26 +824,26 @@ void LaboView::newOut()
 
 void LaboView::delOut()
 {
-  if( ! checkState( validCheck ) )
+  QString nm = getSelName( outs_view );
+  if( nm.isEmpty() ) {
     return;
-  TOutArr *arr= model->getOutArr( level );
-  if( !arr )
-    return;
-  QString nm = arr->objectName();
+  }
 
   if( confirmDelete( "output array", nm ) ) {
-    model->delOut( level ); // TODO: by name
+    model->delOut( nm );
     emit viewChanged();
-  };
+  }
 }
 
 
 void LaboView::editOut()
 {
-  if( ! checkState( validCheck ) )
+  QString nm = getSelName( outs_view );
+  if( nm.isEmpty() ) {
     return;
+  }
 
-  TOutArr *arr = model->getOutArr( level );
+  TOutArr *arr = model->getOutArr( nm );
   editObj( arr );
 }
 
@@ -840,15 +866,23 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
   QLabel *lab;
   TOutArr *arr;
   GraphInfo gi;
-  int k;
-  if( ! checkState( doneCheck ) )
+
+  if( ! checkState( doneCheck ) ) {
     return;
-  arr = model->getOutArr( level );
-  if( !arr )
+  }
+  QString nm = getSelName( outs_view );
+  if( nm.isEmpty() ) {
     return;
-  k = arr->fillGraphInfo( &gi );
-  if( k != 0 )
+  }
+  arr = model->getOutArr( nm );
+  if( !arr ) {
     return;
+  }
+
+  int k = arr->fillGraphInfo( &gi );
+  if( k != 0 ) {
+    return;
+  }
 
   // calculate statistical data TODO: separate struct and func (or/and in TOutArr)
   double s = 0, s2 = 0, ave = 0, ave2 = 0, disp = 0, msq = 0, x;
@@ -899,18 +933,25 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
 
 void LaboView::exportOut()
 {
-  QString fnq;
-  TOutArr *arr;
-  if( ! checkState( doneCheck ) )
+  if( ! checkState( doneCheck ) ) {
     return;
-  arr = model->getOutArr( level );
-  if( arr == 0 )
+  }
+  QString nm = getSelName( outs_view );
+  if( nm.isEmpty() ) {
     return;
-  fnq = QFileDialog::getSaveFileName( this, tr("Export data"), "",
+  }
+
+  TOutArr *arr = model->getOutArr( nm );
+  if( !arr ) {
+    return;
+  }
+
+  QString fnq = QFileDialog::getSaveFileName( this, tr("Export data"), "",
       "Data files (*.txt *.dat *.csv);;All files (*)" );
-  if( fnq.isEmpty() )
+  if( fnq.isEmpty() ) {
     return;
-  arr->dump( qPrintable(fnq), ' ' ); // TODO: QString
+  }
+  arr->dump( qP(fnq), ' ' );
 }
 
 
@@ -918,19 +959,18 @@ void LaboView::exportOut()
 
 void LaboView::newGraph()
 {
-  int no;
   QString grnameq, aname;
   bool ok;
   if( ! checkState( validCheck ) )
     return;
-  no = model->getNGraph();
-  grnameq = QString("graph") + QSN( no );
-  aname = QInputDialog::getText( this, "Creating new Graph descriptions",
+  // int no = model->getNGraph();
+  grnameq = QString("graph"); // + QSN( no ); TODO: what?
+  aname = QInputDialog::getText( this, "Creating new plot",
       "Enter name of new Graph:", QLineEdit::Normal,
       grnameq, &ok );
   if( ok ) {
     if( ! isGoodName( aname ) ) {
-      showError( QString("Bad graph name: \"%1\"").arg(aname) );
+      showError( QString("Bad plot name: \"%1\"").arg(aname) );
     }
     model->insGraph( aname );
     emit viewChanged();
@@ -940,27 +980,28 @@ void LaboView::newGraph()
 
 void LaboView::delGraph()
 {
-  if( ! checkState( validCheck ) )
+  QString nm = getSelName( plots_view );
+  if( nm.isEmpty() ) {
     return;
-  TGraph *gra = model->getGraph( level );
-  if( !gra )
-    return;
-  QString nm = gra->objectName();
+  }
 
-  if( confirmDelete( "plot description", nm ) ) {
-    model->delGraph( level ); // TODO: by name
+  if( confirmDelete( "plot", nm ) ) {
+    model->delGraph( nm );
     emit viewChanged();
-  };
+  }
 }
 
 
 void LaboView::editGraph()
 {
-  if( ! checkState( validCheck ) )
+  QString nm = getSelName( plots_view );
+  if( nm.isEmpty() ) {
     return;
+  }
 
-  TGraph *gra = model->getGraph( level );
-  editObj( gra );
+  TGraph *plot = model->getGraph( nm );
+
+  editObj( plot );
 }
 
 void LaboView::selectGraph()
@@ -974,17 +1015,23 @@ void LaboView::selectGraph()
 
 void LaboView::showGraph()
 {
-  PlotView *pv; TGraph *gra;
-  QMainWindow *plotWnd;
-  if( ! checkState( doneCheck ) )
+  if( ! checkState( doneCheck ) ) {
     return;
-  gra = model->getGraph( level );
-  if( !gra )
-    return;
+  }
 
-  plotWnd = new QMainWindow( this );
+  QString nm = getSelName( plots_view );
+  if( nm.isEmpty() ) {
+    return;
+  }
+
+  TGraph *gra = model->getGraph( nm );
+  if( !gra ) {
+    return;
+  }
+
+  QMainWindow *plotWnd = new QMainWindow( this );
   plotWnd->setWindowTitle( QString( PACKAGE ": Plot ") + gra->objectName() );
-  pv = new PlotView( doc, gra, plotWnd );
+  PlotView *pv = new PlotView( doc, gra, plotWnd );
   plotWnd->setCentralWidget( pv );
   pv->setFocus();
   plotWnd->show();
@@ -992,33 +1039,35 @@ void LaboView::showGraph()
 
 void LaboView::showGraphData()
 {
-  QDialog *dia;
-  DoubleTableModel *dmod;
-  QTableView *dtv;
-  QVBoxLayout *lv;
+  if( ! checkState( doneCheck ) ) {
+    return;
+  }
+
+  QString nm = getSelName( plots_view );
+  if( nm.isEmpty() ) {
+    return;
+  }
+  TGraph *gra = model->getGraph( nm );
+  if( !gra ) {
+    return;
+  }
+
   GraphInfo gi;
-  QString fnq; QPushButton *bt_ok;
-  TGraph *gra;
-  int k;
-  if( ! checkState( doneCheck ) )
+  int k = gra->fillGraphInfo( &gi );
+  if( k != 0 ) {
     return;
-  gra = model->getGraph( level );
-  if( !gra )
-    return;
-  k = gra->fillGraphInfo( &gi );
-  if( k != 0 )
-    return;
+  }
 
-  dia = new QDialog( this );
-  dia->setWindowTitle( QString("Graph data: ") + gi.title );
-  lv = new QVBoxLayout( dia );
+  QDialog *dia = new QDialog( this );
+  dia->setWindowTitle( QString("Plot data: ") + gi.title );
+  QVBoxLayout *lv = new QVBoxLayout( dia );
 
-  dmod = new DoubleTableModel( &gi, dia );
-  dtv = new QTableView( dia );
+  DoubleTableModel *dmod = new DoubleTableModel( &gi, dia );
+  QTableView *dtv = new QTableView( dia );
   dtv->setModel( dmod );
   lv->addWidget( dtv );
 
-  bt_ok = new QPushButton( "Done", dia );
+  QPushButton *bt_ok = new QPushButton( "Done", dia );
   bt_ok->setDefault( true );
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
   lv->addWidget( bt_ok );
@@ -1030,94 +1079,98 @@ void LaboView::showGraphData()
 
 void LaboView::exportGraphData()
 {
-  const char *fn;
-  QString fnq;
-  TGraph *gra;
-  if( ! checkState( doneCheck ) )
+  if( ! checkState( doneCheck ) ) {
     return;
-  if( level < 0 || level >= model->getNGraph() )
+  }
+  QString nm = getSelName( plots_view );
+  if( nm.isEmpty() ) {
     return;
-  gra = model->getGraph( level );
-  if( gra == 0 )
+  }
+
+  TGraph *gra = model->getGraph( nm );
+  if( !gra  ) {
     return;
-  fnq = QFileDialog::getSaveFileName( this, tr("Export data"), "",
+  }
+  QString fnq = QFileDialog::getSaveFileName( this, tr("Export data"), "",
       "Data files (*.txt *.dat *.csv);;All files (*)" );
-  if( fnq.isEmpty() )
+  if( fnq.isEmpty() ) {
     return;
-  fn = fnq.toLocal8Bit();
-  gra->dump( fn, ' ' );
+  }
+
+  gra->dump( fnq.toLocal8Bit(), ' ' );
 }
 
 void LaboView::gnuplotGraph()
 {
-  TGraph *gra;
-  QDialog *dia;
-  QLabel *lb1, *lb2, *lb3; QLineEdit *ed_pgm, *ed_dat, *ed_eps;
-  QCheckBox *sw_x11;
-  QGridLayout *lay;
-  QString f_pgm, f_dat, f_eps, cdir;
-  int l, rc, use_x11;
-  if( ! checkState( doneCheck ) )
-    return;
-  if( level < 0 || level >= model->getNGraph() )
-    return;
-  gra = model->getGraph( level );
-  if( !gra )
-    return;
-
-  f_pgm = doc->pathName();
-  QFileInfo doc_fi( f_pgm );
-  cdir = QDir::currentPath();
-  if( cdir == doc_fi.absolutePath() )
-    f_pgm = doc_fi.fileName();
-  if( f_pgm.length() < 1 ) { f_pgm = "gplot"; };
-  l = f_pgm.length();
-  if( doc_fi.suffix() == "qol"  )
-    f_pgm.truncate( l-4 );
-  f_dat = f_pgm + ".dat"; f_eps = f_pgm + ".eps";
-  f_pgm += ".gp";
-
-  dia = new QDialog( this );
-
-  int em = LaboWin::labowin->getEm();
-  dia->resize( 50*em, 30*em );
-  lay = new QGridLayout( dia );
-  sw_x11 = new QCheckBox( "Output to &X11 window", dia );
-  sw_x11->setChecked( false );
-  lay->addWidget( sw_x11, 0, 0, 1, 2 );
-
-  lb1 = new QLabel( "Output to EPS file:", dia );
-  lay->addWidget( lb1, 1, 0, 1, 2 );
-  ed_eps = new QLineEdit( dia );
-  ed_eps->setText( f_eps );
-  lay->addWidget( ed_eps, 2, 0, 1, 2 );
-
-  lb2 = new QLabel( "Data file:", dia );
-  lay->addWidget( lb2, 3, 0, 1, 2 );
-  ed_dat = new QLineEdit( dia );
-  ed_dat->setText( f_dat );
-  lay->addWidget( ed_dat, 4, 0, 1, 2 );
-
-  lb3 = new QLabel( "Gnuplot program file:", dia );
-  lay->addWidget( lb3, 5, 0, 1, 2 );
-  ed_pgm = new QLineEdit( dia );
-  ed_pgm->setText( f_pgm );
-  lay->addWidget( ed_pgm, 6, 0, 1, 2 );
-
-  QDialogButtonBox *bbox
-    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  lay->addWidget( bbox, 7, 0, 1, 2 );
-  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
-  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
-
-  rc = dia->exec();
-  if( rc == QDialog::Accepted ) {
-    f_pgm = ed_pgm->text(); f_eps = ed_eps->text();
-    f_dat = ed_dat->text(); use_x11 = sw_x11->isChecked();
-    gra->gnuPlot( !use_x11, f_pgm.toLocal8Bit(), 0,
-                  f_eps.toLocal8Bit(), f_dat.toLocal8Bit() );
-  };
-  delete dia;
+  showError( "Unimplemented for now" );
+  // TGraph *gra;
+  // QDialog *dia;
+  // QLabel *lb1, *lb2, *lb3; QLineEdit *ed_pgm, *ed_dat, *ed_eps;
+  // QCheckBox *sw_x11;
+  // QGridLayout *lay;
+  // QString f_pgm, f_dat, f_eps, cdir;
+  // int l, rc, use_x11;
+  // if( ! checkState( doneCheck ) )
+  //   return;
+  // if( level < 0 || level >= model->getNGraph() )
+  //   return;
+  // gra = model->getGraph( level );
+  // if( !gra )
+  //   return;
+  //
+  // f_pgm = doc->pathName();
+  // QFileInfo doc_fi( f_pgm );
+  // cdir = QDir::currentPath();
+  // if( cdir == doc_fi.absolutePath() )
+  //   f_pgm = doc_fi.fileName();
+  // if( f_pgm.length() < 1 ) { f_pgm = "gplot"; };
+  // l = f_pgm.length();
+  // if( doc_fi.suffix() == "qol"  )
+  //   f_pgm.truncate( l-4 );
+  // f_dat = f_pgm + ".dat"; f_eps = f_pgm + ".eps";
+  // f_pgm += ".gp";
+  //
+  // dia = new QDialog( this );
+  //
+  // int em = LaboWin::labowin->getEm();
+  // dia->resize( 50*em, 30*em );
+  // lay = new QGridLayout( dia );
+  // sw_x11 = new QCheckBox( "Output to &X11 window", dia );
+  // sw_x11->setChecked( false );
+  // lay->addWidget( sw_x11, 0, 0, 1, 2 );
+  //
+  // lb1 = new QLabel( "Output to EPS file:", dia );
+  // lay->addWidget( lb1, 1, 0, 1, 2 );
+  // ed_eps = new QLineEdit( dia );
+  // ed_eps->setText( f_eps );
+  // lay->addWidget( ed_eps, 2, 0, 1, 2 );
+  //
+  // lb2 = new QLabel( "Data file:", dia );
+  // lay->addWidget( lb2, 3, 0, 1, 2 );
+  // ed_dat = new QLineEdit( dia );
+  // ed_dat->setText( f_dat );
+  // lay->addWidget( ed_dat, 4, 0, 1, 2 );
+  //
+  // lb3 = new QLabel( "Gnuplot program file:", dia );
+  // lay->addWidget( lb3, 5, 0, 1, 2 );
+  // ed_pgm = new QLineEdit( dia );
+  // ed_pgm->setText( f_pgm );
+  // lay->addWidget( ed_pgm, 6, 0, 1, 2 );
+  //
+  // QDialogButtonBox *bbox
+  //   = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  // lay->addWidget( bbox, 7, 0, 1, 2 );
+  // connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
+  // connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
+  //
+  // rc = dia->exec();
+  // if( rc == QDialog::Accepted ) {
+  //   f_pgm = ed_pgm->text(); f_eps = ed_eps->text();
+  //   f_dat = ed_dat->text(); use_x11 = sw_x11->isChecked();
+  //   gra->gnuPlot( !use_x11, f_pgm.toLocal8Bit(), 0,
+  //                 f_eps.toLocal8Bit(), f_dat.toLocal8Bit() );
+  // };
+  // delete dia;
 }
 
 // ==== simulation related
@@ -1145,16 +1198,10 @@ void LaboView::newSimul()
 
 void LaboView::delSimul()
 {
-  QItemSelectionModel *selMod = sims_view->selectionModel();
-  if( !selMod ) {
+  QString nm = getSelName( sims_view );
+  if( nm.isEmpty() ) {
     return;
   }
-
-  QModelIndex cs = selMod->currentIndex();
-  if( !cs.isValid() ) {
-    return;
-  }
-  QString nm = cs.data( Qt::DisplayRole ).toString();
 
   if( confirmDelete( "simulation", nm ) ) {
     model->delSimul( nm );
@@ -1164,29 +1211,21 @@ void LaboView::delSimul()
 
 void LaboView::editSimul()
 {
-  QItemSelectionModel *selMod = sims_view->selectionModel();
-  if( !selMod ) {
+  QString nm = getSelName( sims_view );
+  if( nm.isEmpty() ) {
     return;
   }
-
-  QModelIndex cs = selMod->currentIndex();
-  if( !cs.isValid() ) {
-    return;
-  }
-  QString nm = cs.data( Qt::DisplayRole ).toString();
   Simulation *sim = model->getSimul( nm );
 
   editObj( sim );
 }
 
-void LaboView::selectSimul()
+void LaboView::selectSimul() // TODO: propagate to all
 {
-  if( ! checkState( validCheck ) )
-    return;
-  ContSimul *sims = model->getElemT<ContSimul*>( "sims" );
-  if( !sims ) {
+  if( ! checkState( validCheck ) ) {
     return;
   }
+
   QItemSelectionModel *selMod = sims_view->selectionModel();
   if( !selMod ) {
     return;
@@ -1202,18 +1241,8 @@ void LaboView::selectSimul()
 
 void LaboView::setActiveSimul()
 {
-  QItemSelectionModel *selMod = sims_view->selectionModel();
-  if( !selMod ) {
-    return;
-  }
-
-  QModelIndex cs = selMod->currentIndex();
-  if( !cs.isValid() ) {
-    return;
-  }
-  QString nm = cs.data( Qt::DisplayRole ).toString();
-  ContSimul *sims = model->getElemT<ContSimul*>( "sims" );
-  if( !sims ) {
+  QString nm = getSelName( sims_view );
+  if( nm.isEmpty() ) {
     return;
   }
 
