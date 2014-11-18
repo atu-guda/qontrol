@@ -47,6 +47,22 @@ Scheme::~Scheme()
 {
 }
 
+const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
+        const TDataSet **src_ob, int lev) const
+{
+  // own names: elements + local vars
+  const double *p =  getDoublePtr( nm, lt, src_ob, lev );
+  if( p ) {
+    return p;
+  }
+
+  // data from simulation
+  if( sim ) {
+    p =  sim->getDoublePtr( nm, lt, src_ob, lev );
+  }
+
+  return p;
+}
 
 int Scheme::startRun( Simulation *a_sim )
 {
@@ -59,19 +75,22 @@ int Scheme::startRun( Simulation *a_sim )
     return -1;
   }
 
-  // copy of simulation data
-  sim->getData( "T", &T );
-  sim->getData( "N", &N );  sim->getData( "N1", &N1 );  sim->getData( "N2", &N2 );
-  sim->getData( "syncRT", &syncRT );
-  sim->getData( "prm0s", &prm0s );
-  sim->getData( "prm1s", &prm0s );
-  sim->getData( "prm2s", &prm0s );
-  sim->getData( "prm3s", &prm0s );
-  sim->getData( "prm0d", &prm0d );
-  sim->getData( "prm1d", &prm0s );
+  // copy of simulation data (need tmp var)
+  double x; int xi;
+  sim->getData( "T", &x ); T = x;
+  sim->getData( "N", &x ); N = x;
+  sim->getData( "N1", &x ); N1 = x;
+  sim->getData( "N2", &x ); N2 = x;
+  sim->getData( "syncRT", &xi ); syncRT = xi;
+  sim->getData( "prm0s", &x ); prm0s = x;
+  sim->getData( "prm1s", &x ); prm0s = x;
+  sim->getData( "prm2s", &x ); prm0s = x;
+  sim->getData( "prm3s", &x ); prm0s = x;
+  sim->getData( "prm0d", &x ); prm0d = x;
+  sim->getData( "prm1d", &x ); prm0s = x;
 
   int type = Simulation::runSingle;
-  sim->getData( "type", &type );
+  sim->getData( "runType", &type );
 
   if( type     !=  Simulation::runSingle
       &&  type !=  Simulation::runLoop
@@ -83,10 +102,12 @@ int Scheme::startRun( Simulation *a_sim )
 
   run_type = type;
   n1_eff = n2_eff = 1;
-  if( run_type >  Simulation::runSingle )
+  if( run_type >  Simulation::runSingle ) {
     n1_eff = N1;
-  if( run_type > Simulation::runLoop )
+  }
+  if( run_type > Simulation::runLoop ) {
     n2_eff = N2;
+  }
 
   n_tot = N * n1_eff * n2_eff;
   i_tot = ii = il1 = il2 = 0;

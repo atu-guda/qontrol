@@ -35,11 +35,6 @@ CTOR(TModel,TDataContainer)
   allowed_types = "TMiso,TGraph,TOutArr,HolderValue,InputSimple,"
                   "ContScheme,ContSimul,Scheme,ContOut,ContGraph";
   rtime = t = 0; tdt = tt / nn;
-  m_sqrt2 = sqrt(2.0);
-  m_sqrt1_2 = sqrt(0.5);
-  one = 1.0;
-  m_PI = M_PI;
-  m_E = M_E;
   // TODO: remove after conversion
   const int ELM_RES = 64; const int OUT_RES = 32;
   v_el.reserve( ELM_RES );
@@ -82,13 +77,16 @@ void TModel::allocOutArrs( int tp ) // TODO: common code
   int out_tp;
   if( tp < 0 || tp > 2 )
     return;
-  for( TOutArr *arr: v_out ) { // alloc output array
-    if( !arr )
+  for( QObject *o: outs->children() ) { // alloc output array
+    TOutArr *arr = qobject_cast<TOutArr*>( o );
+    if( !arr ) {
       continue;
+    }
     out_tp = -1;
     arr->getData( "type", &out_tp );
-    if( out_tp < 0 || out_tp > tp )
+    if( out_tp < 0 || out_tp > tp ) {
       continue;
+    }
     switch( out_tp ) {
       case 0: arr->alloc( nn, 1 ); break;
       case 1: arr->alloc( nl1, 1 ); break;
@@ -100,9 +98,11 @@ void TModel::allocOutArrs( int tp ) // TODO: common code
 
 void TModel::resetOutArrs( int level )
 {
-  for( TOutArr *arr : v_out ) {
-    if( !arr )
+  for( QObject *o: outs->children() ) { // alloc output array
+    TOutArr *arr = qobject_cast<TOutArr*>( o );
+    if( !arr ) {
       continue;
+    }
     arr->reset( level );
   };
 }

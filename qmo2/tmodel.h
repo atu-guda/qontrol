@@ -173,12 +173,6 @@ class TModel : public TDataContainer  {
   PRM_DOUBLE( prm3, efInner, "prm3", "Current prm3 value", "" );
   /** signature to check from plot painters, etc... */
   PRM_INT( sgnt, efInner, "sgnt", "signature to check", "" );
-  /** constants: todo: separate object */
-  PRM_DOUBLE( m_sqrt2, efInner, "sqrt(2)", "\\sqrt{2}", "" );
-  PRM_DOUBLE( m_sqrt1_2, efInner, "sqrt(1/2)", "\\sqrt{1/2}", "" );
-  PRM_DOUBLE( one, efInner, "1", "1", "" );
-  PRM_DOUBLE( m_PI, efInner, "\\Pi", "M_PI", "" );
-  PRM_DOUBLE( m_E, efInner, "e", "base of natural logarifm", "" );
 
   /** total number of iterations */
   PRM_INT( n_tot, efInner, "n_tot", "total number of iterations", "" );

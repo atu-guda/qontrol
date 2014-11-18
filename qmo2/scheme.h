@@ -35,6 +35,8 @@ class Scheme : public TDataContainer  {
   DCL_CREATE;
   DCL_STD_INF;
 
+  const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt,
+        const TDataSet **src_ob, int lev ) const override;
   /** prepare to run */
   virtual int startRun( Simulation *a_sim );
   /** run csteps next steps */
