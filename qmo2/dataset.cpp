@@ -470,8 +470,19 @@ int HolderData::del_obj( const QString &ob_name )
     return 0;
   }
 
+  HolderData *act_obj = getActiveElem();
+  QString act_name;
+  if( act_obj ) {
+    act_name = act_obj->objectName();
+  }
+
   beginResetModel();
+
   delete ho; // auto remove object and from parent lists
+  if( !act_name.isEmpty() ) {
+    setActiveElem( act_name );
+  }
+
   endResetModel();
 
   reportStructChanged();
