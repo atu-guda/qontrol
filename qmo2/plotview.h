@@ -45,8 +45,6 @@ class PlotView : public QWidget  {
  public slots:
    /** set geometry, axes and scale parms */
    void setScale(void);
-   /** set colors for plots*/
-   void setColors(void);
    /** set colors for printing */
    void setPrintColors(void);
    /** prints plot */
@@ -94,6 +92,8 @@ class PlotView : public QWidget  {
    /** fills plp[*] */
    void calcPlp(void);
   protected:
+    //* old limit of plot lines
+    static const int MAX_LIN = 6;
     /** pointer to document to fill root, model.. */
     LaboDoc *doc;
     /** pointer to root */
@@ -105,21 +105,21 @@ class PlotView : public QWidget  {
     /** ptr scale descrition */
     ScaleData *scd;
     /** colors elements (dia) */
-    QColor bgColor, scaleColor, gridColor, labelColor, plotColor[6];
+    QColor bgColor, scaleColor, gridColor, labelColor, plotColor[MAX_LIN];
     /** data maxmins and setup values (+-dia)*/
     double plotMinLX, plotMinLY;
     /** labels text */
-    QString xLabel, yLabel[6];
+    QString xLabel, yLabel[MAX_LIN];
     /** pointers to real data: set by initArrs() */
-    const double *datax, *datay[6];
+    const double *datax, *datay[MAX_LIN];
     /** arrays of flags -- is need to draw this point */
-    char *plpbuf, *plp[6];
+    char *plpbuf, *plp[MAX_LIN];
     /** number of graphs, number of points, number of y-coords */
     int ng, nn, ny;
     /** time value to recalc if model rerun, type of paint device */
     int modelSign, devTp;
     /** on/off plot states -- may be line thickness ? */
-    int plotOn[6];
+    int plotOn[MAX_LIN];
     /** margins and size in pixels */
     int pix_l, pix_t, pix_r, pix_b;
     int pix_x, pix_y, pix_x0, pix_y0, leg_sz, pix_w, pix_h;

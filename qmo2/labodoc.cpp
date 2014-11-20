@@ -365,7 +365,6 @@ bool LaboDoc::migrateSumul() // TODO: remove after migration
     DBG1( "ERR: no root or model" );
     return false;
   }
-  model->linkNames(); // to get corrent number of outputs and plots
 
   // migrate elements
   ContScheme *schems = model->getElemT<ContScheme*>("schems");
@@ -510,7 +509,6 @@ bool LaboDoc::migrateSumul() // TODO: remove after migration
     model->del_obj( nm );
   }
 
-  model->linkNames(); // rethink after kill
   return true;
 }
 

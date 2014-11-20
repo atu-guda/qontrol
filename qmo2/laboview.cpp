@@ -964,9 +964,9 @@ void LaboView::newGraph()
   if( ! checkState( validCheck ) )
     return;
   // int no = model->getNGraph();
-  grnameq = QString("graph"); // + QSN( no ); TODO: what?
+  grnameq = QString("plot_"); // + QSN( no ); TODO: what?
   aname = QInputDialog::getText( this, "Creating new plot",
-      "Enter name of new Graph:", QLineEdit::Normal,
+      "Enter name of new plot:", QLineEdit::Normal,
       grnameq, &ok );
   if( ok ) {
     if( ! isGoodName( aname ) ) {

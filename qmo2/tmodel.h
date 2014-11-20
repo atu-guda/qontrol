@@ -62,11 +62,6 @@ class TModel : public TDataContainer  {
   /** frees output arrays and state: 2->1 */
   virtual int reset();
 
-  /** reimplemented from TDataSet to ensure all data filled and linked */
-  virtual int checkData( int i );
-  /** links input & parm names -> indexses in ptrs TODO: revert to protected after migration*/
-  virtual int linkNames();
-
   // interface to commands like above, but with names - to use from JS
  public slots:
 
@@ -188,15 +183,6 @@ class TModel : public TDataContainer  {
   int end_loop = 0;
   /** real start time */
   double start_time;
-  // TODO: separated objects
-  /** vector of ptrs to active elements, my be sorted on ord */
-  std::vector<TMiso*> v_el;
-  /** vector indexes of outputs */
-  std::vector<TOutArr*> v_out;
-  /** vector types of outputs */
-  std::vector<int> v_outt;
-  /** vector indexes of graph */
-  std::vector<TGraph*> v_graph;
   DCL_DEFAULT_STATIC;
 
 };

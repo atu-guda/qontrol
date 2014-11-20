@@ -35,12 +35,6 @@ CTOR(TModel,TDataContainer)
   allowed_types = "TMiso,TGraph,TOutArr,HolderValue,InputSimple,"
                   "ContScheme,ContSimul,Scheme,ContOut,ContGraph";
   rtime = t = 0; tdt = tt / nn;
-  // TODO: remove after conversion
-  const int ELM_RES = 64; const int OUT_RES = 32;
-  v_el.reserve( ELM_RES );
-  v_out.reserve( OUT_RES );
-  v_outt.reserve( OUT_RES );
-  v_graph.reserve( 16 );
 
   schems = addObj<ContScheme>( "schems" );
   sch_main = schems->addObj<Scheme>( "main" );
@@ -66,7 +60,6 @@ TModel::~TModel()
 
 int TModel::reset()
 {
-  linkNames();
   state = stateGood; run_type = -1; sgnt = int( time(0) );
   return 0;
 }
@@ -107,15 +100,6 @@ void TModel::resetOutArrs( int level )
   };
 }
 
-
-
-
-int TModel::checkData( int n )
-{
-  if( n < 0 )
-    linkNames();
-  return TDataContainer::checkData( n );
-}
 
 
 TOutArr* TModel::getOutArr( const QString &oname )
@@ -207,53 +191,9 @@ Simulation* TModel::getSimul( const QString &name )
   return sims->getElemT<Simulation*>( name );
 }
 
-int TModel::linkNames()
-{
-  QString lname, pname, nname, oname;
-  v_el.clear();
-  v_out.clear(); v_outt.clear();
-  v_graph.clear();
-
-  for( auto c : children() ) { // find elements of given types: TODO:
-    HolderData *ho = qobject_cast<HolderData*>(c);
-    if( !ho || !ho->isObject()  )
-      continue;
-    TDataSet *ds = qobject_cast<TDataSet*>(ho);
-    if( !ds )
-      continue;
-
-    if( ds->isChildOf( "TMiso" )) {
-      v_el.push_back( qobject_cast<TMiso*>(ds) );
-      continue;
-    };
-    if( ds->isChildOf( "TOutArr" )) {
-      v_out.push_back( qobject_cast<TOutArr*>(ds) );
-      continue;
-    };
-    if( ds->isChildOf( "TGraph" )) {
-      v_graph.push_back( qobject_cast<TGraph*>(ds) );
-      continue;
-    };
-
-  }
-
-  // fill outs elnus and types
-  int out_tp;
-  for( TOutArr *arr : v_out ) {
-    if( !arr ) { // FIXME
-      v_outt.push_back(-1);
-      continue;
-    };
-    oname = ""; out_tp = -1;
-    arr->getData( "type", &out_tp );
-    v_outt.push_back( out_tp );
-  };
-  return 0;
-}
 
 void TModel::do_structChanged()
 {
-  linkNames();
 }
 
 

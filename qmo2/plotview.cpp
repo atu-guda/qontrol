@@ -49,7 +49,7 @@ PlotView::PlotView( LaboDoc *adoc, TGraph *agra, QWidget *parent )
   }
 
   datax = 0; plpbuf = 0;
-  for( i=0; i<6; i++ ) { datay[i] = 0; plotOn[i] = 1; plp[i] = 0; };
+  for( i=0; i<MAX_LIN; i++ ) { datay[i] = 0; plotOn[i] = 1; plp[i] = 0; };
   modelSign = -1; devTp = 0;
   plotMinLX = plotMinLY = 0;
   pix_h = 450; pix_w = 550;
@@ -456,10 +456,9 @@ void PlotView::keyPressEvent( QKeyEvent *ke )
          need_rescale = 1;
          break;
     case Qt::Key_C:
-         if( btnShift )
+         if( btnShift ) {
            setStartColors();
-         else
-           setColors();
+         }
          break;
     case Qt::Key_M:
          if( btnCtrl ) {
@@ -639,7 +638,7 @@ void PlotView::initArrs(void)
   arr->getData( "label", buf );
   if( buf.size() < 1 ) { buf = "x"; };
   xLabel = buf;
-  for( i=0; i<6; i++ ) { // TODO: 6 is number of plots
+  for( i=0; i<MAX_LIN; i++ ) { // TODO: 6 is number of plots
     start_from = 0;
     if( ny > 1 )
       start_from = 1; // skip y in autoscale for 3D-like plot
@@ -756,7 +755,7 @@ void PlotView::calcPlp(void)
   int i, j, r, nxy, cnc, onc, imcr, st_ng;
   double cr, mcr, xs, ys, xe, ye, xp, yp;
   if( plpbuf == 0 ) { // alloc arrays if need
-    plpbuf = new char[ ng * nn + 6 ];
+    plpbuf = new char[ ng * nn + MAX_LIN ];
     for( j=0; j<ng; j++ ) {
       plp[j] = plpbuf + j * nn;
     };
@@ -949,7 +948,7 @@ void PlotView::setStartColors(void)
   if( gra != 0 ) {
     gra->getData( "bgcolor", &c );
     bgColor = QRgb( c );
-    for( i=0; i<6; i++ ) {
+    for( i=0; i<MAX_LIN; i++ ) {
       gra->getData( "y" + QSN(i) + "color", &c );
       plotColor[i] = QRgb( c );
     };
@@ -976,58 +975,6 @@ void PlotView::setScale()
   };
 }
 
-void PlotView::setColors(void)
-{
-  int i;
-  static const char *labels[10] = {
-    "Background", "Scale", "Grid", "Labels",
-    "Line0", "Line1", "Line2", "Line3", "Line4", "Line5"
-  };
-
-  QDialog *dia = new QDialog( this );
-  dia->setWindowTitle( PACKAGE ": Plot Colors" );
-  QGridLayout *lay = new QGridLayout( dia );
-  ColorBtn* colbtns[10];
-  QLabel *la;
-  for( i=0; i<10; i++ ) {
-    la = new QLabel( labels[i], dia );
-    lay->addWidget( la, i, 0 );
-    colbtns[i] = new ColorBtn( dia );
-    if( i >= 4 ) {
-      colbtns[i]->setColor( plotColor[i-4] );
-    } else {
-      switch( i ) {
-        case 0: colbtns[i]->setColor( bgColor ); break;
-        case 1: colbtns[i]->setColor( scaleColor ); break;
-        case 2: colbtns[i]->setColor( gridColor ); break;
-        case 3: colbtns[i]->setColor( labelColor ); break;
-      };
-    };
-    lay->addWidget( colbtns[i], i, 1 );
-  };
-
-  QDialogButtonBox *bbox
-    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  lay->addWidget( bbox, i, 0, 1, 2 );
-  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
-  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
-
-  int rc = dia->exec();
-  if( rc == QDialog::Accepted ) {
-    bgColor = colbtns[0]->color();
-    scaleColor = colbtns[1]->color();
-    gridColor = colbtns[2]->color();
-    labelColor = colbtns[3]->color();
-    plotColor[0] = colbtns[4]->color();
-    plotColor[1] = colbtns[5]->color();
-    plotColor[2] = colbtns[6]->color();
-    plotColor[3] = colbtns[7]->color();
-    plotColor[4] = colbtns[8]->color();
-    plotColor[5] = colbtns[9]->color();
-  };
-  delete dia;
-  update();
-}
 
 void PlotView::dataInfo(void)
 {
@@ -1127,7 +1074,7 @@ const char PlotView::helpstr[] = "<b>Hot keys:</b><br>\n"
  "<b>a</b> - set quality <br>\n"
  "<b>o/O</b> - on/off non-selected plots <br>\n"
  "<b>s/S</b> - scale dialog / standard scale <br>\n"
- "<b>c/C</b> - colors dialog / initial colors <br>\n"
+ "<b>C</b> - initial colors <br>\n"
  "<b>p/Ctrl-P</b> - print / set default colors for print<br>\n"
  "<b>e</b> - export image to png <br>\n"
  "<b>m/M</b> - set mark to tool / zero point <br>\n"
