@@ -194,6 +194,18 @@ class HolderData : public QAbstractItemModel {
   void setFlags( int a_flags ) { flags = a_flags; }
   Q_INVOKABLE int getFlags() const { return flags; }
   HolderData* getParent() const { return par; } // no Q_INVOKABLE: need reg HolderData
+  // return ptr to ancessor of given type
+  template<typename T> T* getAncestorT() const {
+    HolderData *pa = *par;
+    while( pa ) {
+      T* pt = qobject_cast<T*>( pa );
+      if( pt ) {
+        return pt;
+      }
+      pa = pa->getParent();
+    }
+    return nullptr;
+  }
   // see DCL_STD_INF, DCL_STD_GETSET for childs
   virtual const TClassInfo* getClassInfo() const = 0;
   /** returns list of registerd (exists) clild elems names */

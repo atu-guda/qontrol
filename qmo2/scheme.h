@@ -52,7 +52,7 @@ class Scheme : public TDataContainer  {
   TMiso* xy2Miso( int avis_x, int avis_y ) const;
   //* return max (x,y) of all elements
   QSize getMaxXY() const;
-  /** inserts active element @returns: nulltpr - bad  elese -ptr to inserted element */
+  /** inserts active element @returns: nulltpr - bad  else - ptr to inserted element */
   TMiso* insElem( const QString &cl_name, const QString &ob_name,
                        int aord, int avis_x, int avis_y );
   /** delete active element by name !0 = sucess */
@@ -63,7 +63,7 @@ class Scheme : public TDataContainer  {
   virtual int newOrder( const QString &name, int new_ord );
   /** suggest order value for new element */
   virtual int hintOrd() const;
-  /** resets elements and state: 2->1 */
+  /** resets elements and state: Done(2)->Good(1) */
   virtual int reset();
 
   /** reimplemented from TDataSet to ensure all data filled and linked */
