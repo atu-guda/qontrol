@@ -362,13 +362,13 @@ int HolderData::checkData( int /* ni */ )
   return 0;
 }
 
-void HolderData::check_guard() const
-{
-  if( guard != guard_val )  {
-    DBG1( "ERR!!!!!!!!!! Guard value!!!");
-    abort();
-  }
-}
+// void HolderData::check_guard() const
+// {
+//   if( guard != guard_val )  {
+//     DBG1( "ERR!!!!!!!!!! Guard value!!!");
+//     abort();
+//   }
+// }
 
 void HolderData::reportStructChanged()
 {
@@ -764,7 +764,7 @@ void HolderData::dumpStruct() const
 
 void HolderData::post_set()
 {
-  check_guard();
+  // check_guard();
   for( auto e: children() ) { // propagate to childs
     HolderData* ho = qobject_cast<HolderData*>(e);
     if( !ho )
@@ -1578,7 +1578,7 @@ CTOR(TDataSet,HolderData)
 TDataSet::~TDataSet()
 {
   // DBGx( "dbg:  %p %s", this, qP( getFullName() ));
-  state = stateBad; guard = 0;
+  state = stateBad; //  guard = 0;
 }
 
 
@@ -1720,19 +1720,19 @@ double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg )
 
 bool TDataSet::set( const QVariant & x, int /* idx */  )
 {
-  check_guard();
+  // check_guard();
   return fromString( x.toString() );
 }
 
 QVariant TDataSet::get( int /* idx */ ) const
 {
-  check_guard();
+  // check_guard();
   return QVariant( this->toString() );
 }
 
 QString TDataSet::toString() const
 {
-  check_guard();
+  // check_guard();
   QString buf;
   buf.reserve(4096); // TODO ?
   QTextStream tstr( &buf, QIODevice::WriteOnly );
@@ -1895,8 +1895,8 @@ void TDataSet::unregisterInput( InputSimple *inp )
 {
   if( ! inp )
     return;
-  if( ! guard ) // BUG: bad order of destruction
-    return;
+  // if( ! guard ) // BUG: bad order of destruction
+  //   return;
   int idx = inputs.indexOf( inp );
   if( idx == -1 ) {
     DBG2q( "warn: input \"%s\" not registered", inp->objectName() );

@@ -40,6 +40,14 @@ class TModel : public TDataContainer  {
   DCL_CREATE;
   DCL_STD_INF;
 
+  const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt,
+        const TDataSet **src_ob, int lev ) const override;
+
+  //* returns active (main) Scheme
+  Scheme* getActiveScheme() const { return schems->getActiveElemT<Scheme*>(); };
+  //* returns active Simulation
+  Simulation* getActiveSimulation() const { return sims->getActiveElemT<Simulation*>(); };
+
 
   /** returns ptr to TOutArr by name */
   TOutArr* getOutArr( const QString &oname );

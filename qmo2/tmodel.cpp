@@ -38,10 +38,12 @@ CTOR(TModel,TDataContainer)
 
   schems = addObj<ContScheme>( "schems" );
   main_s = schems->addObj<Scheme>( "main_s" );
+  schems->setActiveElem( "main_s" );
   outs = addObj<ContOut>( "outs" );
   plots = addObj<ContGraph>( "plots" );
   sims = addObj<ContSimul>( "sims" );
   sims->addObj<Simulation>( "sim0" );
+  sims->setActiveElem( "sim0" );
 
 }
 
@@ -49,11 +51,20 @@ TModel::~TModel()
 {
 }
 
-// const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
-//         const TDataSet **src_ob, int lev) const
-// {
-//   return getDoublePtr( nm, lt, src_ob, lev );
-// }
+const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
+        const TDataSet **src_ob, int lev) const
+{
+  Scheme *sch = getActiveScheme();
+  const double *rv = nullptr;
+  if( sch ) {
+    rv =  sch->getDoublePtr( nm, lt, src_ob, lev );
+  };
+  if( rv ) {
+    return rv;
+  };
+  // may be some model params?
+  return getDoublePtr( nm, lt, src_ob, lev );
+}
 
 
 
@@ -91,7 +102,7 @@ void TModel::allocOutArrs( int tp ) // TODO: common code
 
 void TModel::resetOutArrs( int level )
 {
-  for( QObject *o: outs->children() ) { // alloc output array
+  for( QObject *o: outs->children() ) { // free output array
     TOutArr *arr = qobject_cast<TOutArr*>( o );
     if( !arr ) {
       continue;

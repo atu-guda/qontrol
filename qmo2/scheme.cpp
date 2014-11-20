@@ -22,6 +22,7 @@
 #include <algorithm>
 #include "miscfun.h"
 #include "scheme.h"
+#include "tmodel.h"
 
 using namespace std;
 
@@ -56,10 +57,19 @@ const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
     return p;
   }
 
-  // data from simulation
-  if( sim ) {
-    p =  sim->getDoublePtr( nm, lt, src_ob, lev );
+  TModel *mod = getAncestorT<TModel>();
+  if( mod ) {
+    Simulation *csim = mod->getActiveSimulation();
+    if( csim ) {
+      p =  csim->getDoublePtr( nm, lt, src_ob, lev );
+    } else {
+      DBG1( "No current simulation detected" );
+    }
+  } else {
+    DBG1( "No model detected" );
   }
+
+  // data from simulation
 
   return p;
 }

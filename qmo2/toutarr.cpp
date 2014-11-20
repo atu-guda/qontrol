@@ -17,6 +17,7 @@
 
 #include "miscfun.h"
 #include "toutarr.h"
+#include "tmodel.h"
 
 
 const char* TOutArr::helpstr = "<H1>TOutArr</H1>\n"
@@ -54,9 +55,10 @@ int TOutArr::alloc( int sz, int a_ny )
   arr.resize( sz );
   arrsize = sz; n = 0; dmin = 0; dmax = 1; cnq = 0;
   so = nullptr;
-  TDataSet *ds = qobject_cast<TDataSet*>( par );
-  if( ds != nullptr ) {
-    so = ds->getSchemeDoublePtr( name );
+  TModel *mod = getAncestorT<TModel>();
+  ltype_t lt; const TDataSet *so_ob;
+  if( mod ) {
+    so = mod->getSchemeDoublePtr( name, &lt, &so_ob, 0 );
   }
   if( !so )
     so = &fake_so;

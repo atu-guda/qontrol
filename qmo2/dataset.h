@@ -196,7 +196,7 @@ class HolderData : public QAbstractItemModel {
   HolderData* getParent() const { return par; } // no Q_INVOKABLE: need reg HolderData
   // return ptr to ancessor of given type
   template<typename T> T* getAncestorT() const {
-    HolderData *pa = *par;
+    HolderData *pa = par;
     while( pa ) {
       T* pt = qobject_cast<T*>( pa );
       if( pt ) {
@@ -223,8 +223,6 @@ class HolderData : public QAbstractItemModel {
   /** index of holder, if my, -1 - if not */
   int indexOfHolder( const HolderData *ho ) const;
 
-  /** return state */
-  virtual int getState() const { return state; }
   /** returns modified flag */
   int getModified() const { return modified; }
   /** set modified flag */
@@ -291,11 +289,12 @@ class HolderData : public QAbstractItemModel {
   virtual bool fromString( const QString &s ) = 0;
   int size() const { return children().size(); }
   virtual int arrSize() const { return 1; }
+  int getState() const { return state; }
   /** create object with params as string */
   bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
   /** delete given object by name, returns 0 - error, !=0 = ok */
   int del_obj( const QString &ob_name );
-  void check_guard() const;
+  // void check_guard() const;
   int getActiveIdx() const { return active_idx; }
   void setActiveIdx( int i );
   void setActiveElem( const QString &nm );
@@ -305,16 +304,16 @@ class HolderData : public QAbstractItemModel {
       {
         return qobject_cast<T>( getActiveElem() );
       }
+  /** reaction to add/remove/relink of subobjects: call do_structChanged */
+  void handleStructChanged();
  protected:
   void extraToParm();
-  /** reaction to add/remove of subobjects: call do_structChanged */
-  void handleStructChanged();
   /** do real actions after structure changed */
   virtual void do_structChanged();
 
   /** guard value: debug */
-  static const int guard_val = 7442428;
-  int guard = guard_val;
+  // static const int guard_val = 7442428;
+  // int guard = guard_val;
   int dyn = 0; //* flag: is created dynamicaly i.e. can be deleted
   int flags;   //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
   QVariant::Type tp = QVariant::Invalid;
