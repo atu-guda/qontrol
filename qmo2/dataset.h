@@ -281,7 +281,7 @@ class HolderData : public QAbstractItemModel {
   virtual int arrSize() const { return 1; }
   /** create object with params as string */
   bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
-  /** delete given object by name */
+  /** delete given object by name, returns 0 - error, !=0 = ok */
   int del_obj( const QString &ob_name );
   void check_guard() const;
   int getActiveIdx() const { return active_idx; }

@@ -42,7 +42,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   root( doc->getRoot() ),
   model( doc->getModel() ),
   schems( model->getElemT<ContScheme*>( "schems" ) ),
-  sch_main( schems->getElemT<Scheme*>("main") ),
+  main_s( schems->getElemT<Scheme*>("main_s") ),
   outs( model->getElemT<ContOut*>( "outs" ) ),
   plots( model->getElemT<ContGraph*>( "plots" ) ),
   sims( model->getElemT<ContSimul*>( "sims" ) )
@@ -62,7 +62,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   scrollArea = new QScrollArea( main_part );
 
 
-  sview = new StructView( sch_main, this );
+  sview = new StructView( main_s, this );
   scrollArea->setWidget( sview );
   scrollArea->setLineWidth( 1 );
   scrollArea->setMidLineWidth( 1 );
@@ -224,7 +224,7 @@ int LaboView::checkState( CheckType ctp )
                       msg = "You need marked object and empty cell to move";
                     break;
     case doneCheck:
-                    state = sch_main->getState();
+                    state = main_s->getState();
                     if( state < stateDone ) {
                       msg = QString("Nothing to plot: state '%1', not 'Done' !").arg(
                           getStateString(state)  );
@@ -269,7 +269,7 @@ void LaboView::changeSel( int x, int y, int rel )
     case 0: sel_x = x; sel_y = y; break;
     case 1: sel_x += x; sel_y += y; break;
     case 2:
-            ob = sch_main->xy2Miso( sel_x, sel_y );
+            ob = main_s->xy2Miso( sel_x, sel_y );
             if( !ob )
               break;
             ob->getData( "vis_x", &sel_x );
@@ -282,7 +282,7 @@ void LaboView::changeSel( int x, int y, int rel )
   if( sel_x < 0 ) sel_x = 0;
   if( sel_y < 0 ) sel_y = 0;
   sel = -1;
-  ob = sch_main->xy2Miso( sel_x, sel_y );
+  ob = main_s->xy2Miso( sel_x, sel_y );
   if( ob ) {
     selObj = ob;
     sel = ob->getMyIndexInParent();
@@ -309,9 +309,9 @@ void LaboView::newElm()
     return;
 
   addElemInfo aei;
-  aei.name = QString("obj_"); // + QSN( sch_main->getNMiso() ) ; // TODO: fix
-  aei.order = sch_main->hintOrd();
-  AddElemDialog *dia = new AddElemDialog( &aei, sch_main, this, "TMiso" );
+  aei.name = QString("obj_"); // + QSN( main_s->getNMiso() ) ; // TODO: fix
+  aei.order = main_s->hintOrd();
+  AddElemDialog *dia = new AddElemDialog( &aei, main_s, this, "TMiso" );
                                           // limit to such elements here
 
   int rc = dia->exec();
@@ -325,7 +325,7 @@ void LaboView::newElm()
     return;
   }
 
-  TMiso *ob = sch_main->insElem( aei.type, aei.name, aei.order, sel_x, sel_y );
+  TMiso *ob = main_s->insElem( aei.type, aei.name, aei.order, sel_x, sel_y );
   if( !ob  ) {
     showError( QString("Fail to add Elem: type \"%1\" \"%2\"").arg(aei.type).arg(aei.name) );
     return;
@@ -344,7 +344,7 @@ void LaboView::delElm()
   bool sel_is_mark = ( selObj == markObj );
 
   if( confirmDelete( "element", oname) ) {
-    sch_main->delElem( oname );
+    main_s->delElem( oname );
     if( sel_is_mark ) {
       markObj = nullptr;
     }
@@ -385,9 +385,9 @@ void LaboView::qlinkElm()
           qP(in->objectName()), qP(toname) );
     return;
   }
-  sch_main->reportStructChanged();
-  sch_main->reset();
-  sch_main->setModified();
+  main_s->reportStructChanged();
+  main_s->reset();
+  main_s->setModified();
   emit viewChanged();
 }
 
@@ -421,8 +421,8 @@ void LaboView::qplinkElm()
   pi->setData( "line_w", 2 );
   pi->setData( "line_color", "red" );
 
-  sch_main->reportStructChanged();
-  sch_main->reset(); sch_main->setModified();
+  main_s->reportStructChanged();
+  main_s->reset(); main_s->setModified();
   emit viewChanged();
 }
 
@@ -449,8 +449,8 @@ void LaboView::unlinkElm()
   }
   qDeleteAll( pis->children() );
 
-  sch_main->reportStructChanged();
-  sch_main->reset(); sch_main->setModified();
+  main_s->reportStructChanged();
+  main_s->reset(); main_s->setModified();
   emit viewChanged();
 }
 
@@ -465,8 +465,8 @@ void LaboView::lockElm()
   lck = !lck;
   selObj->setData( "locked", lck );
 
-  sch_main->reset();
-  sch_main->setModified();
+  main_s->reset();
+  main_s->setModified();
   emit viewChanged();
 }
 
@@ -483,7 +483,7 @@ void LaboView::ordElm()
       "Input new element order",
       old_ord, 0, IMAX, 1, &ok );
   if( ok ) {
-    sch_main->newOrder( selObj->objectName(), new_ord ); // reset implied
+    main_s->newOrder( selObj->objectName(), new_ord ); // reset implied
     emit viewChanged();
   };
 }
@@ -500,7 +500,7 @@ void LaboView::moveElm()
     return;
   }
 
-  sch_main->moveElem( markObj->objectName(), sel_x, sel_y );
+  main_s->moveElem( markObj->objectName(), sel_x, sel_y );
   emit viewChanged();
 }
 
@@ -693,7 +693,7 @@ void LaboView::pasteElm()
   QString elname = ee.attribute( "name" );
   QString elname_base = elname;
   int suff_n = 1;
-  while( sch_main->getElem( elname ) && suff_n < 50 ) { // guess good name
+  while( main_s->getElem( elname ) && suff_n < 50 ) { // guess good name
     elname = elname_base + "_" + QSN( suff_n );
     suff_n++;
     if( suff_n > 20 ) {
@@ -701,7 +701,7 @@ void LaboView::pasteElm()
     }
   }
 
-  int oord = sch_main->hintOrd();
+  int oord = main_s->hintOrd();
 
   QDialog *dia = new QDialog( this );
   QGridLayout *lay = new QGridLayout( dia );
@@ -741,7 +741,7 @@ void LaboView::pasteElm()
     return;
   }
 
-  TMiso *ob = sch_main->insElem( eltype, elname, oord, sel_x, sel_y) ; // reset() implied
+  TMiso *ob = main_s->insElem( eltype, elname, oord, sel_x, sel_y) ; // reset() implied
   if( !ob  ) {
     showError( QString("Fail to add Elem: %1 %2").arg(eltype).arg(elname) );
     return;
@@ -813,7 +813,7 @@ void LaboView::newOut()
 
   if( isGoodName( onameq ) ) {
     int irc = model->insOut( onameq, enameq );
-    if( irc  ) {
+    if( !irc  ) {
       showError( QString("Fail to add Output: \"%1\"").arg(onameq) );
     }
     emit viewChanged();
@@ -883,15 +883,18 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
   }
   QString nm = getSelName( outs_view );
   if( nm.isEmpty() ) {
+    DBGx( "warn: output array not selectd" );
     return;
   }
   arr = model->getOutArr( nm );
   if( !arr ) {
+    DBGx( "warn: fail to find output array \"%s\"", qP(nm) );
     return;
   }
 
   int k = arr->fillGraphInfo( &gi );
   if( k != 0 ) {
+    DBGx( "warn: fail to fill info about output array \"%s\" (%d)", qP(arr->getFullName()), k );
     return;
   }
 
@@ -974,16 +977,20 @@ void LaboView::newGraph()
   bool ok;
   if( ! checkState( validCheck ) )
     return;
-  // int no = model->getNGraph();
-  grnameq = QString("plot_"); // + QSN( no ); TODO: what?
+  int no = model->getNGraph();
+  grnameq = QString("plot_") + QSN( no );
   aname = QInputDialog::getText( this, "Creating new plot",
       "Enter name of new plot:", QLineEdit::Normal,
       grnameq, &ok );
   if( ok ) {
     if( ! isGoodName( aname ) ) {
       showError( QString("Bad plot name: \"%1\"").arg(aname) );
+      return;
     }
-    model->insGraph( aname );
+    if( ! model->insGraph( aname ) ) {
+      showError( QString("Fail to add plot: \"%1\"").arg(aname) );
+      return;
+    }
     emit viewChanged();
   };
 }
@@ -1385,7 +1392,7 @@ void LaboView::runRun()
     return;
   }
 
-  rv = new RunView( sch_main, sim, this );
+  rv = new RunView( main_s, sim, this );
   rv->exec();
   emit viewChanged();
   sview->setFocus();

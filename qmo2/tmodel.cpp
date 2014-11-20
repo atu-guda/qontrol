@@ -37,7 +37,7 @@ CTOR(TModel,TDataContainer)
   rtime = t = 0; tdt = tt / nn;
 
   schems = addObj<ContScheme>( "schems" );
-  sch_main = schems->addObj<Scheme>( "main" );
+  main_s = schems->addObj<Scheme>( "main_s" );
   outs = addObj<ContOut>( "outs" );
   plots = addObj<ContGraph>( "plots" );
   sims = addObj<ContSimul>( "sims" );
@@ -116,8 +116,10 @@ TGraph* TModel::getGraph( const QString &name )
 int TModel::insOut( const QString &outname, const QString &objname )
 {
   TOutArr *arr = outs->addObj<TOutArr>( outname );
-  if( !arr )
-    return -1;
+  if( !arr ) {
+    return 0;
+  }
+
   arr->setData( "name", objname );
 
   QString lbl = objname;
@@ -130,17 +132,18 @@ int TModel::insOut( const QString &outname, const QString &objname )
 
   reset();
   modified |= 1;
-  return 0;
+  return 1;
 }
 
 int TModel::insGraph( const QString &gname )
 {
   TGraph *gra = plots->addObj<TGraph>( gname );
-  if( !gra )
-    return -1;
+  if( !gra ) {
+    return 0;
+  }
   reset();
   modified |= 1;
-  return 0;
+  return 1;
 }
 
 

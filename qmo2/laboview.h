@@ -190,7 +190,7 @@ class LaboView : public QWidget
    TRootData *root;
    TModel *model;
    ContScheme *schems;
-   Scheme *sch_main;
+   Scheme *main_s;
    ContOut *outs;
    ContGraph *plots;
    ContSimul *sims;

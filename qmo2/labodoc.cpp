@@ -373,14 +373,14 @@ bool LaboDoc::migrateSumul() // TODO: remove after migration
     return false;
   }
 
-  Scheme *sch_main = schems->getElemT<Scheme*>("main");
+  Scheme *main_s = schems->getElemT<Scheme*>("main_s");
   if( !schems ) {
     DBGx( "err: main scheme not exist!" );
     return false;
   }
 
   int n_el = 0;
-  for( auto o : sch_main->children() ) {
+  for( auto o : main_s->children() ) {
     TMiso *el = qobject_cast<TMiso*>(o);
     if( el ) {
       ++n_el;
@@ -389,7 +389,7 @@ bool LaboDoc::migrateSumul() // TODO: remove after migration
     }
   }
 
-  DBGx( "dbg: n_el = %d size: %d", n_el, sch_main->size() );
+  DBGx( "dbg: n_el = %d size: %d", n_el, main_s->size() );
 
   if( n_el == 0 ) {
     for( auto c : model->children() ) {
@@ -401,7 +401,7 @@ bool LaboDoc::migrateSumul() // TODO: remove after migration
       QString s;
 
       s = ob->toString();
-      HolderData *ob_new = sch_main->add_obj( ob->getType(), ob->objectName() );
+      HolderData *ob_new = main_s->add_obj( ob->getType(), ob->objectName() );
       if( !ob_new ) {
         DBGx( "warn: fail to migrate elem \"%s\" type \"%s\"",
             qP(ob->objectName()), qP(ob->getType()) );

@@ -94,9 +94,9 @@ void StatusModel::update()
   s_nums.sprintf( "[%d;%d] ",  mainview->getSelX(), mainview->getSelY() );
   l_nums->setText( s_nums );
 
-  Scheme *sch_main = model->getElemT<Scheme*>("schems.main");
-  if( sch_main ) {
-    stat = sch_main->getState();
+  Scheme *main_s = model->getElemT<Scheme*>("schems.main");
+  if( main_s ) {
+    stat = main_s->getState();
   }
   l_stat->setText( getStateString( stat ) );
   mod = model->getModified();

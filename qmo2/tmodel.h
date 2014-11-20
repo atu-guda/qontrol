@@ -44,17 +44,7 @@ class TModel : public TDataContainer  {
   /** returns ptr to TOutArr by name */
   TOutArr* getOutArr( const QString &oname );
   /** returns ptr to TGraph by name */
-  virtual TGraph* getGraph( const QString &name );
-  /** inserts new out array @returns: <0 - bad, >0= index in ptrs[] */
-  virtual int insOut( const  QString &outname, const QString &objname );
-  /** inserts new graph @returns: <0 - bad, >0= index in ptrs[] */
-  virtual int insGraph( const QString &gname );
-  /** moves element to new position if free */
-  int moveElem( int elnu, int newx, int newy );
-  /** delete outs by out index 0 = sucess */
-  virtual int delOut( const QString &name );
-  /** delete graph by graph index 0 = sucess */
-  virtual int delGraph( const QString &name );
+  TGraph* getGraph( const QString &name );
 
   // Simulation* getSimul( int idx );
   Simulation* getSimul( const QString &name );
@@ -64,11 +54,25 @@ class TModel : public TDataContainer  {
 
   // interface to commands like above, but with names - to use from JS
  public slots:
+  int getNOuts() const { return outs->size(); }
+  //* inserts new out array @returns: 0 - bad, !=0 - Ok
+  int insOut( const  QString &outname, const QString &objname );
+  //* delete outs by name, return !=0 id success
+  int delOut( const QString &name );
 
-   int newSimul( const QString &name );
-   int delSimul( const QString &name );
-   QString getSimulName( int idx );
-   int getNSimul() const { return sims->size(); }
+  //* return number of plots
+  int getNGraph() const { return plots->size(); }
+  //* inserts new graph @returns: 0 - bad, !=0 Ok
+  int insGraph( const QString &gname );
+  //* delete graph by name, retrns !=0 -  success
+  int delGraph( const QString &name );
+
+  int newSimul( const QString &name );
+  int delSimul( const QString &name );
+  QString getSimulName( int idx );
+  int getNSimul() const { return sims->size(); }
+
+  int getNSchems() const { return schems->size(); }
 
  protected:
   /** call to allocate out arrays for given type and below */
@@ -83,7 +87,7 @@ class TModel : public TDataContainer  {
   ContOut   *outs  = nullptr;
   ContGraph *plots = nullptr;
   ContSimul *sims = nullptr;
-  Scheme* sch_main = nullptr;
+  Scheme* main_s = nullptr;
   // =============== iface objects ==============================
   /** total model time, starts with 0 each inner loop */
   PRM_DOUBLE( tt, efOld|efNoRunChange, "T", "Full Run Time", "min=0\nmax=1e300\ndef=100" );
