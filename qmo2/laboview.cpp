@@ -851,7 +851,18 @@ void LaboView::selectOut()
 {
   if( ! checkState( validCheck ) )
     return;
-  // TODO:
+
+  QItemSelectionModel *selMod = outs_view->selectionModel();
+  if( !selMod ) {
+    return;
+  }
+
+  QModelIndex s_idx = outs->index( level, 0, QModelIndex() );
+
+  selMod->clear();
+  selMod->select( s_idx, QItemSelectionModel::Select );
+  selMod->setCurrentIndex( s_idx, QItemSelectionModel::Select );
+  emit viewChanged();
 }
 
 
@@ -1008,7 +1019,18 @@ void LaboView::selectGraph()
 {
   if( ! checkState( validCheck ) )
     return;
-  // TODO:
+
+  QItemSelectionModel *selMod = plots_view->selectionModel();
+  if( !selMod ) {
+    return;
+  }
+
+  QModelIndex s_idx = plots->index( level, 0, QModelIndex() );
+
+  selMod->clear();
+  selMod->select( s_idx, QItemSelectionModel::Select );
+  selMod->setCurrentIndex( s_idx, QItemSelectionModel::Select );
+  emit viewChanged();
 }
 
 
