@@ -1375,12 +1375,7 @@ void LaboView::runScript()
 void LaboView::runRun()
 {
   RunView *rv;
-  if( ! checkState( validCheck ) )
-    return;
-  // Scheme *sch = model->getElemT<Scheme*>( "schems.main" ); // TODO: from simul
-
-  ContSimul *sims = model->getElemT<ContSimul*>( "sims" );
-  if( !sims ) {
+  if( ! checkState( validCheck ) ) {
     return;
   }
 

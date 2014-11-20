@@ -80,7 +80,7 @@ void TModel::allocOutArrs( int tp ) // TODO: common code
     if( out_tp < 0 || out_tp > tp ) {
       continue;
     }
-    switch( out_tp ) {
+    switch( out_tp ) { // TODO: move logic to TOutArr
       case 0: arr->alloc( nn, 1 ); break;
       case 1: arr->alloc( nl1, 1 ); break;
       case 2: arr->alloc( nl1 * nl2, nl1 ); break;
@@ -181,20 +181,12 @@ QString TModel::getSimulName( int idx )
   return sim->objectName();
 }
 
-// Simulation* TModel::getSimul( int idx )
-// {
-//   return sims->getElemT<Simulation*>( idx );
-// }
-
 Simulation* TModel::getSimul( const QString &name )
 {
   return sims->getElemT<Simulation*>( name );
 }
 
 
-void TModel::do_structChanged()
-{
-}
 
 
 

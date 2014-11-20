@@ -77,7 +77,7 @@ void StatusModel::update()
 {
   static const char* modChar[] = { " ", "+", "#", "*", "?", "." };
   QString ob_descr, ob_nm_tp;
-  int mod, stat;
+  int mod, stat = 0;
   TModel *model;
   TMiso *ob;
   double val;
@@ -85,30 +85,35 @@ void StatusModel::update()
   l_level->setText( QSN( mainview->getLevel() ) );
   l_name->setText( "." );  l_desc->setText( "." );  l_val->setText( "" );
   model = mainview->getModel();
-  if( model != 0 ) {
-    s_nums.sprintf( "[%d;%d] ",
-                    mainview->getSelX(), mainview->getSelY() );
-    l_nums->setText( s_nums );
-    stat = model->getState();
-    l_stat->setText( getStateString( stat ) );
-    mod = model->getModified();
-    l_mod->setText( modChar[mod] );
-    ob = mainview->getSelObj();
-    if( ob != 0 ) {
-      ob_nm_tp = ob->objectName()
-               % "  (" % ob->getType() % ")";
-      l_name->setText( ob_nm_tp );
-      ob->getData( "descr", ob_descr );
-      l_desc->setText( ob_descr );
-      if( stat > 1 ) {
-        ob->getData( "out0", &val );
-        l_val->setText( QSN( val, 'g', 12 ) );
-      };
-    };
-  } else { // w/o model -- error case
+  if( !model ) {
     l_mod->setText( "X" );
     l_stat->setText( "Error" );
+    return;
+  }
+
+  s_nums.sprintf( "[%d;%d] ",  mainview->getSelX(), mainview->getSelY() );
+  l_nums->setText( s_nums );
+
+  Scheme *sch_main = model->getElemT<Scheme*>("schems.main");
+  if( sch_main ) {
+    stat = sch_main->getState();
+  }
+  l_stat->setText( getStateString( stat ) );
+  mod = model->getModified();
+  l_mod->setText( modChar[mod] );
+  ob = mainview->getSelObj();
+  if( ob != 0 ) {
+    ob_nm_tp = ob->objectName()
+      % "  (" % ob->getType() % ")";
+    l_name->setText( ob_nm_tp );
+    ob->getData( "descr", ob_descr );
+    l_desc->setText( ob_descr );
+    if( stat > 1 ) {
+      ob->getData( "out0", &val );
+      l_val->setText( QSN( val, 'g', 12 ) );
+    };
   };
+
   QStatusBar::update();
 }
 

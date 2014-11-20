@@ -43,7 +43,7 @@ class TModel : public TDataContainer  {
 
   /** returns ptr to TOutArr by name */
   TOutArr* getOutArr( const QString &oname );
-  /** returns ptr to TGraph gra_nu */
+  /** returns ptr to TGraph by name */
   virtual TGraph* getGraph( const QString &name );
   /** inserts new out array @returns: <0 - bad, >0= index in ptrs[] */
   virtual int insOut( const  QString &outname, const QString &objname );
@@ -71,8 +71,6 @@ class TModel : public TDataContainer  {
    int getNSimul() const { return sims->size(); }
 
  protected:
-  /** reimplemented to real Elems, OutArr, Graphs: TODO: separate containers */
-  virtual void do_structChanged();
   /** call to allocate out arrays for given type and below */
   virtual void allocOutArrs( int tp );
   /** resets all array with given level or below */
