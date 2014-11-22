@@ -36,24 +36,30 @@ CTOR(TCriterion,TMiso)
 int TCriterion::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   st = 0;
-  return 0;
+  return 1;
 }
 
 double TCriterion::f( double t )
 {
   int ok, rv;
   double aa, x;
-  if( useT0 && t < t0 ) return 0;
+  if( useT0 && t < t0 ) {
+    return 0;
+  }
   x = in_pos - in_neg;
   if( useLock && st > 0 )
     return usePulse ? 0 : 1;
   if( useEnable && in_ena < 0.1 ) { // disabled
-    if( !st ) return 0;
+    if( !st ) {
+      return 0;
+    }
     return usePulse ? 0 : 1;
   };
+
   aa = a;
   if( useA )
     aa = in_a;
+
   switch( (int)type ) {
     case cr_mod_less:
       ok = ( fabs( x ) < aa ); break;
@@ -67,6 +73,7 @@ double TCriterion::f( double t )
       ok = ( (x > aa) && (x < b) ); break;
     default: ok = 0;
   };
+
   if( usePulse ) {
     if( ok == st ) {
       rv = 0;

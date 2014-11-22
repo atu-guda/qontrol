@@ -40,7 +40,7 @@ CTOR(TLatch,TMiso)
 int TLatch::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   v = (double)v_st; u_old = lt = 0;  wasLatch = -1;
-  return 0;
+  return 1;
 }
 
 double TLatch::f( double t )

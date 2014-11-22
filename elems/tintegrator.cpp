@@ -48,7 +48,7 @@ int TIntegrator::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   v_old = v = (double)s_val; // TODO: what about out0_init ?
   t_rst = 0;
-  return 0;
+  return 1;
 }
 
 

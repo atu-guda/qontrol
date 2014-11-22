@@ -56,7 +56,7 @@ double TLorenz::f( double /*t*/ )
 int TLorenz::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
-  return 0;
+  return 1;
 }
 
 DEFAULT_FUNCS_REG(TLorenz)

@@ -38,7 +38,7 @@ int TAdjGen::do_startLoop( int /*acnx*/, int /*acny*/ )
   ctt = ig = ig2 = dlt = tick_T = tick_old = av = av2 = av_diff = 0;
   currOut = 0; real_tick = 0; tick = 0;
   cav = cav2 = 0;
-  return 0;
+  return 1;
 }
 
 double TAdjGen::f( double  t )

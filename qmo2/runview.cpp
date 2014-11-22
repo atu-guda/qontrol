@@ -22,28 +22,28 @@
 
 #include "miscfun.h"
 #include "dataset.h"
-#include "scheme.h"
+#include "tmodel.h"
 #include "simul.h"
 
 #include "runview.h"
 
 using namespace std;
 
-RunView::RunView( Scheme *a_sch, Simulation *a_sim, QWidget *parent )
-          : QDialog( parent ), sch( a_sch ), sim( a_sim )
+RunView::RunView( TModel *a_mod, QWidget *parent )
+          : QDialog( parent ), model( a_mod ), timer( new QTimer( this ) )
 {
   s_h = 40;
   // setBackgroundMode( Qt::NoBackground );
+  sch = model->getActiveScheme();
   setCursor( Qt::CrossCursor );
-  timer = new QTimer();
   connect( timer, &QTimer::timeout, this, &RunView::slotRunNext );
-  sch->reset();
+  model->reset();
   getSchemeData();
 
   for( auto &ks : keys_state ) {
     ks = 0;
   }
-  i_tot = 0; n_tot = 1;
+
   setMinimumSize( 500, s_h );
   setFocusPolicy( Qt::StrongFocus );
   setFocus();
@@ -54,10 +54,10 @@ RunView::RunView( Scheme *a_sch, Simulation *a_sim, QWidget *parent )
 
 RunView::~RunView()
 {
-  delete timer; timer = 0;
+  delete timer; timer = nullptr;
 }
 
-QSize RunView::sizeHint(void) const
+QSize RunView::sizeHint() const
 {
   return QSize( 500, s_h );
 }
@@ -65,18 +65,21 @@ QSize RunView::sizeHint(void) const
 void RunView::slotStartRun()
 {
   int rc;
-  if( state != stateGood ) return;
+  if( !sch  ||  state != stateGood ) {
+    return;
+  }
   i_tot = 0;  state = stateRun;
-  sch->reset();
-  rc = sch->startRun( sim );
-  if( rc ) {
-    sch->reset();
+  rc = model->startRun();
+  if( !rc ) {
+    model->reset();
     state = stateBad;
+    DBG1( "warn: model->startRun failed" );
     return;
   };
-  sch->getData( "n_tot", &n_tot );
-  if( syncRT )
+
+  if( syncRT ) {
     setMouseTracking(1);
+  }
   s_time = get_real_time();
   timer->start( 0 );
 }
@@ -86,38 +89,49 @@ void RunView::slotStopRun(void)
   timer->stop();
   setMouseTracking( 0 );
   state = stateBad;
-  sch->stopRun( 1 );
+  model->stopRun( 1 );
   update();
 }
 
 void RunView::slotRunNext(void)
 {
   int m_state;
-  if( state != stateRun ) {
-    timer->stop(); return;
+  if( !sch  ||  state != stateRun ) {
+    timer->stop();
+    DBG1( "warn: nextRun w/o start?" );
+    return;
   };
   fillVars();
-  sch->nextSteps( n_iosteps );
-  m_state = sch->getState();
+
+  model->nextSteps( n_iosteps );
+  m_state = model->getState();
+  model->getData( "i_tot", &i_tot );
+
+  // DBGx( "dbg: m_state: %d i_tot: %d n_tot: %d", m_state, i_tot, n_tot );
+
   switch( m_state ) {
     case stateRun:
-      sch->getData( "i_tot", &i_tot );
       if( i_tot >= n_tot ) {
-        sch->stopRun(0);
-        state = sch->getState();
+        model->stopRun(0);
+        state = model->getState();
+        DBG1( "warn: overrun!" );
       };
       break;
     case stateDone:
-      sch->stopRun(0); state = stateDone;
+      model->stopRun(0); state = stateDone;
+      DBG1( "dbg: done!" );
       break;
     default:
-      sch->stopRun(1); state = stateBad;
+      model->stopRun(1); state = stateBad;
   };
+
   if( state != stateRun ) {
+    DBG1( "dbg: final!" );
     timer->stop();
     setMouseTracking( 0 );
-    if( s_time > 0  &&  ( get_real_time() - s_time ) > 10 )
+    if( s_time > 0  &&  ( get_real_time() - s_time ) > 10 ) {
       qApp->beep();
+    }
   };
   update();
   // repaint( 0 );
@@ -164,21 +178,22 @@ void RunView::drawAll( QPainter &p )
     rt = 0;
   }
 
-  sch->getData( "t", &t );
-  sch->getData( "il1", &il1 );
-  sch->getData( "il2", &il2 );
-  int runType = -1;
-  sim->getData( "runType", &runType );
-  s.sprintf( "%5s  tp: %d t: %012.3f; m: [% .2f; % .2f]; rt: %7.2f  i: %7d (%3d:%3d);",
-    getStateString(state), runType, t, mouse_x, mouse_y, rt,
+  model->getData( "t", &t );
+  model->getData( "il1", &il1 );
+  model->getData( "il2", &il2 );
+  // int runType = -1;
+  // sim->getData( "runType", &runType );
+  s.sprintf( "%5s  t: %012.3f; m: [% .2f; % .2f]; rt: %7.2f  i: %7d (%3d:%3d);",
+    getStateString(state), /*runType,*/ t, mouse_x, mouse_y, rt,
     i_tot, il1, il2  );
   p.drawText( 10, 14, s );
-  if( syncRT ) {
-    drawVbar( p );
-    drawGbar( p );
-    drawLED( p );
-    drawCross( p );
-  };
+  // TODO: misc objects
+  // if( syncRT ) {
+  //   drawVbar( p );
+  //   drawGbar( p );
+  //   drawLED( p );
+  //   drawCross( p );
+  // };
 }
 
 
@@ -325,37 +340,28 @@ void RunView::vis2phys( int ix, int iy, double *x, double *y )
   };
 }
 
-void RunView::getSchemeData(void)
+void RunView::getSchemeData()
 {
-  // sch->getData( "n_tot", &n_tot ); // TODO: fix
-  sim->getData( "N", &n_tot ); // BUG: tmp workaround
-
-  sim->getData( "n_iosteps", &n_iosteps );
-  sim->getData( "syncRT", &syncRT );
-  sim->getData( "autoStart", &autoStart );
-  state = sch->getState();
+  Simulation *c_sim = model->getActiveSimulation();
+  if( c_sim ) {
+    c_sim->getData( "n_tot", &n_tot );
+    c_sim->getData( "n_iosteps", &n_iosteps );
+    c_sim->getData( "syncRT", &syncRT );
+    c_sim->getData( "autoStart", &autoStart );
+  }
+  state = model->getState();
   s_h = syncRT ? 520 : 40;
+  DBGx( "dbg: n_tot: %d, n_iosteps: %d syncRT: %d autoStart: %d",
+      n_tot, n_iosteps, syncRT, autoStart );
 }
 
-void RunView::getJoyVal(void)
-{
-  // not now
-}
 
-void RunView::getSoundVal(void)
+void RunView::fillVars()
 {
-  // not now
-}
-
-void RunView::getAuxVal(void)
-{
-  // not now
-}
-
-void RunView::fillVars(void)
-{
-  if( state != stateRun || !syncRT )
+  if( state != stateRun || !syncRT ) {
     return;
+  }
+  // TODO: real work or drop at all?
 }
 
 

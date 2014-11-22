@@ -58,7 +58,7 @@ int TRand::do_preRun( int /*run_tp*/, int /*an*/,
   if( addBaseSeed ) {
     par->getData( "seed", &bseed );
   };
-  return 0;
+  return 1;
 }
 
 
@@ -76,7 +76,7 @@ int TRand::do_startLoop( int acnx, int acny )
     }
     rng.set( sseed );
   };
-  return 0;
+  return 1;
 }
 
 double TRand::f( double  t  )

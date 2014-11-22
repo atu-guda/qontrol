@@ -40,6 +40,7 @@ class TModel : public TDataContainer  {
   DCL_CREATE;
   DCL_STD_INF;
 
+  //* redirects requuest to active scheme (may be more)
   const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt,
         const TDataSet **src_ob, int lev ) const override;
 
@@ -58,7 +59,19 @@ class TModel : public TDataContainer  {
   Simulation* getSimul( const QString &name );
 
   /** frees output arrays and state: 2->1 */
-  virtual int reset();
+  int reset();
+  int startRun();
+  int nextSteps( int csteps );
+  int stopRun( int reason );
+ protected:
+  int runOneLoop(); // TODO: to protected
+  int postRun();
+  int allStartLoop( int acnx, int acny );
+  void allEndLoop();
+  /** call to allocate out arrays for given type and below */
+  void allocOutArrs( int tp );
+  /** resets all array with given level or below */
+  void resetOutArrs( int level );
 
   // interface to commands like above, but with names - to use from JS
  public slots:
@@ -82,11 +95,6 @@ class TModel : public TDataContainer  {
 
   int getNSchems() const { return schems->size(); }
 
- protected:
-  /** call to allocate out arrays for given type and below */
-  virtual void allocOutArrs( int tp );
-  /** resets all array with given level or below */
-  virtual void resetOutArrs( int level );
 
  protected:
   // --------------- convinience ptrs to obligatory elements
@@ -126,10 +134,7 @@ class TModel : public TDataContainer  {
   PRM_DOUBLE( prm1d, efOld|efNoRunChange, "prm1+=", "Parameter 1 delta", "" );
   PRM_DOUBLE( xval1, efOld, "xval1", "Reserved 1", "props=DOUBLE,SPIN\nstep=0.2" );
   PRM_DOUBLE( xval2, efOld, "xval2", "Reserved 2", "" );
-  PRM_INT( seed, efOld|efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
   PRM_INT( useSameSeed, efOld|efOld, "use Same Seed - no", "Unused", "props=INT,SPIN\nstep=2\nmin=-100\nmax=100" ); // TODO: OBSOLETE
-  /** type of seeding: 0 - every run, 1 - every 1d loop .. obj: 3 - as model */
-  PRM_LIST( seedType, efOld|efNoRunChange, "Seed type", "type of seeding", "enum=SeedType" );
   PRM_SWITCH( autoStart, efOld|efNoRunChange, "auto start",
       "Start simulation without key awaitng", "sep=col" );
   // -------- input channels indexes -------
@@ -167,7 +172,11 @@ class TModel : public TDataContainer  {
   PRM_INT( ii, efInner,  "ii", "Inner index", "" );
   PRM_INT( il1, efInner, "il1", "Param 0 index", "" );
   PRM_INT( il2, efInner, "il2", "Param 1 index", "" );
+  //* copies the current simulation
   /** current time and time step, real time */
+  PRM_INT( seed, efInner|efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
+  /** type of seeding: 0 - every run, 1 - every 1d loop .. obj */
+  PRM_INT( seedType, efInner|efNoRunChange, "Seed type", "type of seeding", "" ); // no list - copy
   PRM_DOUBLE( t, efInner, "time", "model time", "" );
   PRM_DOUBLE( tdt, efInner, "\\tau", "time step", "" );
   PRM_DOUBLE( rtime, efInner, "rtime", "real world time", "" );
@@ -193,6 +202,17 @@ class TModel : public TDataContainer  {
   int end_loop = 0;
   /** real start time */
   double start_time;
+  // copy of simulation vars - but w/o onject access - just for speed;
+  double T = 1;
+  int N = 10, N1 = 1, N2 = 1, syncRT = 0;
+  // TODO: uncomment after migration
+  // double prm0s = 0, prm1s = 0, prm2s = 0, prm3s = 0;
+  // double prm0d = 0,  prm1d = 0;
+
+  //* current scheme during run, else - 0
+  Scheme *c_sch = nullptr;
+  //* current simulation during run, else - 0
+  Simulation *c_sim = nullptr;
   DCL_DEFAULT_STATIC;
 
 };

@@ -33,6 +33,20 @@ Simulation::~Simulation()
 {
 }
 
+void Simulation::post_set()
+{
+  TDataSet::post_set();
+
+  n1_eff = n2_eff = 1;
+  if( runType > Simulation::runSingle ) {
+    n1_eff = (int)N1;
+  }
+  if( runType > Simulation::runLoop ) {
+    n2_eff = (int)N2;
+  }
+
+  n_tot = N * n1_eff * n2_eff;
+}
 
 
 DEFAULT_FUNCS_REG(Simulation)

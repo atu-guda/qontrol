@@ -38,7 +38,7 @@ int TRelaxGen::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   v = (double)out0_init;
   isDis = I =  dv_ch = dv_dis = 0;
-  return 0;
+  return 1;
 }
 
 double TRelaxGen::f( double  /* t */ )

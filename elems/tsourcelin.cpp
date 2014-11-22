@@ -81,7 +81,7 @@ int TSourceLin::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   recalc();
   t_start = 0; curr_lin = 0;
-  return 0;
+  return 1;
 }
 
 void TSourceLin::recalc(void)

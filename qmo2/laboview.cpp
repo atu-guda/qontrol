@@ -1393,7 +1393,7 @@ void LaboView::runRun()
     return;
   }
 
-  rv = new RunView( main_s, sim, this );
+  rv = new RunView( model, this );
   rv->exec();
   emit viewChanged();
   sview->setFocus();

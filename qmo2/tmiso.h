@@ -129,7 +129,7 @@ class TMiso : public TDataSet  {
     * \return output value of element
     * */
    virtual double f( double t );
-   /** place of customization of preRun, return: 0 = Ok */
+   /** place of customization of preRun, return: !=0 = Ok */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** will be called after all actions from posrtRun  -- good place for deallocs */
    virtual int do_postRun( int good );

@@ -32,17 +32,18 @@ CTOR(TPid,TMiso)
 int TPid::do_preRun( int /*run_tp*/, int /*an*/,
                      int /*anx*/, int /*any*/, double /*adt*/ )
 {
-  if( tdt < 1e-100 )
-    return 1;
+  if( tdt < 1e-100 ) {
+    return 0;
+  }
   tdt2 = tdt * tdt;
-  return 0;
+  return 1;
 }
 
 int TPid::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   vi1 = vi2 = u_old = u_old2 = 0;
   start = 1;
-  return 0;
+  return 1;
 }
 
 double TPid::f( double t )

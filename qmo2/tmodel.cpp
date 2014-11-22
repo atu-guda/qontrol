@@ -34,7 +34,7 @@ CTOR(TModel,TDataContainer)
 {
   allowed_types = "TMiso,TGraph,TOutArr,HolderValue,InputSimple,"
                   "ContScheme,ContSimul,Scheme,ContOut,ContGraph";
-  rtime = t = 0; tdt = tt / nn;
+  rtime = t = 0; tdt = 1; // fake
 
   schems = addObj<ContScheme>( "schems" );
   main_s = schems->addObj<Scheme>( "main_s" );
@@ -72,9 +72,218 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
 int TModel::reset()
 {
   state = stateGood; run_type = -1; sgnt = int( time(0) );
+  if( c_sch ) {
+    c_sch->reset();
+  }
   return 0;
 }
 
+int TModel::startRun()
+{
+  int rc;
+  if( run_type >= 0 ) { // in progress now
+    DBGx( "warn: run_type = %d during startRun", run_type );
+    return 0;
+  }
+  reset();
+
+  c_sim = getActiveSimulation();
+  if( !c_sim ) {
+    DBG1( "warn: No active simulation" );
+    return 0;
+  }
+
+  c_sch = getActiveScheme();
+  if( !c_sch ) {
+    DBG1( "warn: No active scheme" ); c_sim = nullptr;
+    return 0;
+  }
+
+  // copy of simulation data (need tmp var)
+  double x; int xi;
+  c_sim->getData( "T", &x ); T = x;
+  c_sim->getData( "N", &xi ); N = xi;
+  c_sim->getData( "N1", &xi ); N1 = xi;
+  c_sim->getData( "N2", &xi ); N2 = xi;
+  c_sim->getData( "n1_eff", &xi ); n1_eff = xi;
+  c_sim->getData( "n2_eff", &xi ); n2_eff = xi;
+  c_sim->getData( "n_tot", &xi ); n_tot = xi;
+  c_sim->getData( "syncRT", &xi ); syncRT = xi;
+  c_sim->getData( "prm0s", &x ); prm0s = x;
+  c_sim->getData( "prm1s", &x ); prm1s = x;
+  c_sim->getData( "prm2s", &x ); prm2s = x;
+  c_sim->getData( "prm3s", &x ); prm3s = x;
+  c_sim->getData( "prm0d", &x ); prm0d = x;
+  c_sim->getData( "prm1d", &x ); prm1d = x;
+  c_sim->getData( "seed",  &xi ); seed  = xi;
+  c_sim->getData( "seedType",  &xi ); seedType  = xi;
+
+  int type = Simulation::runSingle;
+  c_sim->getData( "runType", &type );
+
+  if( type     !=  Simulation::runSingle
+      &&  type !=  Simulation::runLoop
+      &&  type !=  Simulation::run2DLoop ) {
+    type = Simulation::runSingle;
+  }
+
+  run_type = type;
+
+  i_tot = ii = il1 = il2 = 0;
+  sgnt = int( time( 0 ) );
+  tdt = T / N;
+  prm2 = (double)prm2s; prm3 = (double)prm3s;
+
+  allocOutArrs( run_type );
+
+  rc = c_sch->preRun( run_type, N, n1_eff, n2_eff, tdt );
+  if( !rc ) {
+    DBG1( "warn: scheme preRun failed" );
+    reset();
+    c_sim = nullptr; c_sch = nullptr;
+    return 0;
+  }
+  state = stateRun;
+
+  return 1;
+}
+
+int TModel::nextSteps( int csteps )
+{
+  int i, rc;
+  if( !c_sch ) {
+    DBG1( "warn: No active scheme" );
+    return 0;
+  }
+
+  if( csteps < 1 ) {
+    csteps = 1;
+  }
+
+  for( i=0; i < csteps && i_tot < n_tot && end_loop == 0; i++, i_tot++ ) {
+    prm0 = prm0s + il1 * prm0d;
+    prm1 = prm1s + il2 * prm1d;
+    if( ii == 0 ) {    // --------------------- start inner loop --
+      if( il1 == 0 ) { // start prm0 loop
+        resetOutArrs( 1 );
+      };
+
+      resetOutArrs( 0 );
+      start_time = get_real_time(); rtime = t = 0;
+      // set start param
+      allStartLoop( il1, il2 );
+    };// end start inner loop
+
+    rc = runOneLoop();
+    if( !rc ) {
+      return 0;
+    }
+
+    if( ii >= nn ) {
+      allEndLoop();
+      ii = 0; il1++;
+    };
+    if( il1 >= nl1 ) {
+      il1 = 0; il2++;
+    };
+    if( i_tot >= n_tot ) {
+      stopRun(0);
+    }
+  }
+
+  return 1;
+}
+
+int TModel::stopRun( int reason )
+{
+  if( !c_sch ) {
+    DBG1( "warn: No active scheme" );
+    return 0;
+  }
+
+  if( end_loop || reason ) {
+    reset();
+    state = stateGood;
+  } else {
+    postRun();
+    state = stateDone;
+  }
+  return 1;
+}
+
+int TModel::runOneLoop()
+{
+  if( !c_sch ) {
+    DBG1( "warn: No active scheme" );
+    return 0;
+  }
+
+  rtime = get_real_time() - start_time;
+  if( use_sync ) {
+     if( t > rtime ) {
+       unsigned long wait_ms = (unsigned long)( 1000000 * ( t - rtime ) );
+       usleep( wait_ms ); // ------------------- TODO: redesign ------
+       // return 1;
+     };
+  };
+
+  IterType itype = IterMid;
+  int out_level = 0;
+  if( ii == 0 ) {
+    itype = IterFirst;
+  } else if( ii == nn-1 ) {
+    itype = IterLast;
+    out_level = run_type;
+  };
+
+  int rc = c_sch->runOneLoop( t, itype );
+  if( !rc ) {
+    end_loop = 1;
+  }
+
+  // TODO: process arrays
+  // for( TOutArr* arr : v_out ) {
+  //   arr->take_val( out_level );
+  // };
+
+  t += tdt; ii++;
+  return 1;
+}
+
+
+int TModel::postRun()
+{
+  if( !c_sch ) {
+    return 0;
+  }
+
+  int rc = c_sch->postRun();
+
+  int cm = c_sch->getModified();
+  if( modified == 0 || cm != 0 ) {
+    modified |= 2;
+  }
+  return rc;
+}
+
+int TModel::allStartLoop( int acnx, int acny )
+{
+  int rc = 0;
+
+  if( c_sch ) {
+    rc = c_sch->allStartLoop( acnx, acny );
+  }
+  // TODO: outs
+  return rc;
+}
+
+void TModel::allEndLoop()
+{
+  if( c_sch ) {
+    c_sch->allEndLoop();
+  }
+  // TODO: outs
+}
 
 void TModel::allocOutArrs( int tp ) // TODO: common code
 {

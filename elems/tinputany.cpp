@@ -39,7 +39,7 @@ int TInputAny::do_preRun( int /*run_tp*/, int /*an*/,
 {
   so = &fake_so;
   if( name.cval().isEmpty() ) { // empty name is good: fake source
-    return 0;
+    return 1;
   }
 
   TDataSet *ds = qobject_cast<TDataSet*>( par );
@@ -48,10 +48,9 @@ int TInputAny::do_preRun( int /*run_tp*/, int /*an*/,
   }
   if( !so ) {
     so = &fake_so;
-    qDebug( "WARN: TInputAny::preRun: fail to find source name \"%s\"",
-             qPrintable(name) );
+    DBGx( "warn: fail to find source name \"%s\"", qP(name) );
   }
-  return 0;
+  return 1;
 }
 
 double TInputAny::f( double /* t */ )

@@ -40,7 +40,7 @@ CTOR(TLinP1Q0,TMiso)
 int TLinP1Q0::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   x_old = 0;
-  return 0;
+  return 1;
 }
 
 double TLinP1Q0::f( double /*t*/ )

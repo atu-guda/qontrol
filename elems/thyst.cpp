@@ -86,7 +86,7 @@ void THyst::fixState(void)
 int THyst::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   s = d = 0;
-  return 0;
+  return 1;
 }
 
 DEFAULT_FUNCS_REG(THyst)

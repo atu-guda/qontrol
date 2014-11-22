@@ -50,6 +50,8 @@ class Simulation : public TDataSet  {
   Q_CLASSINFO( "enum_SeedType_1", "On start on 1D loop" );     // startLoop
   Q_CLASSINFO( "enum_SeedType_2", "On start on 2D loop" );     // start2DLoop
 
+  virtual void post_set() override;
+
  protected:
   // simulation parameters, borrowed/renamed from TModel
   PRM_LIST( runType, efNoRunChange, "Run type",  "type of simulation run", "enum=RunType" );
@@ -84,6 +86,10 @@ class Simulation : public TDataSet  {
   /** description */
   PRM_STRING( descr, 0, "Description", "Simulation description",
       "props=STRING,MLINE\nncol=-1\nsep=block");
+  //* helper values to simplify usage
+  PRM_INT( n1_eff, efInner, "n1_eff", "Effective number of iteration in inner loop" , "" );
+  PRM_INT( n2_eff, efInner, "n2_eff", "Effective number of iteration in outer loop" , "" );
+  PRM_INT( n_tot, efInner, "n_tot", "Total number of iterations" , "" );
 
   DCL_DEFAULT_STATIC;
 

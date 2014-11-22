@@ -34,12 +34,10 @@ class QPainter; class QPaintDevice;
 class RunView : public QDialog  {
  Q_OBJECT
  public:
-   /** constructor */
-   RunView( Scheme *a_sch, Simulation *a_sim, QWidget *parent );
-   /** destructor */
+   RunView( TModel *a_mod, QWidget *parent );
    ~RunView();
    /** hint size for good view */
-   virtual QSize sizeHint(void) const;
+   virtual QSize sizeHint() const;
  public slots:
    /**  begins computations */
    void slotStartRun();
@@ -72,15 +70,9 @@ class RunView : public QDialog  {
    /** converts visual coords to physical */
    void vis2phys( int ix, int iy, double *x, double *y );
    /** fill vars to scheme data */
-   void fillVars(void);
+   void fillVars();
    /** gets info from Scheme and fills local vars */
-   void getSchemeData(void);
-   /** gets joystick values */
-   void getJoyVal(void);
-   /** gets sound values */
-   void getSoundVal(void);
-   /** gets unknown device values */
-   void getAuxVal(void);
+   void getSchemeData();
    // --------------------- draw some parts of window
    /** draw  all parts of window, if need */
    void drawAll( QPainter &p );
@@ -94,10 +86,10 @@ class RunView : public QDialog  {
    void drawLED( QPainter &p );
  // ========================================== data ==================
   protected:
-    /** pointer to scheme ro run */
-    Scheme *sch;
-    //* simulation to run
-    Simulation *sim;
+    /** pointer to model ro run */
+    TModel *model;
+    //* pointer to active scheme: just for fast access
+    Scheme *sch = nullptr;
     /** timer to send timer events */
     QTimer *timer;
     /** geometry: w_ - window, g_ - graph, c_ center, s_ - set */
@@ -116,13 +108,13 @@ class RunView : public QDialog  {
     int keys_state[10];
     // some next vars filled from Scheme =========================
     /** total number of loops */
-    int n_tot;
+    int n_tot = 1;
     /** total counter */
-    int i_tot;
+    int i_tot = 0;
     /** number of steps per i/o action */
-    int n_iosteps;
+    int n_iosteps = 1;
     /** flag for real and scheme time syncronization */
-    int syncRT;
+    int syncRT = 0;
     /** flag to start w/o keyboard hit */
     int autoStart = 0;
 };

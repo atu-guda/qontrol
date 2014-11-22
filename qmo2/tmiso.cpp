@@ -42,7 +42,7 @@ STD_CLASSINFO(TMiso,clpSpecial|clpPure);
 
 
 CTOR(TMiso,TDataSet) ,
-       links( new TElmLink( "links", this, 0, "links", "object links", "" ) ),
+       links( new TElmLink( "links", this, 0, "links", "object links", "" ) ), // TODO: remove
        pis( new InputParams( "pis", this, 0, "param links", "object paramitric links", "sep=blockend") )
 {
 }
@@ -55,10 +55,12 @@ void TMiso::post_set()
 {
   TDataSet::post_set();
   // no links -- means only new data
-  if( !links )
+  if( !links ) {
     return;
-  int t = 0;
+  }
+
   // TODO: remove after migration
+  int t = 0;
   if( ! ( locked || flip || onlyFirst || onlyLast || noIcon ) ) {
     // try to migrate from old data
     t = 0; links->getData( "locked", &t ); locked = t;
@@ -124,12 +126,17 @@ DEFAULT_FUNCS_REG(TMiso);
 double TMiso::fun( double t, IterType itype )
 {
   int v;
-  if( locked )
+  if( locked ) {
     return out0 = (double)out0_init;
-  if( onlyFirst && itype != IterFirst )
+  }
+
+  if( onlyFirst && itype != IterFirst ) {
     return out0;
-  if( onlyLast && itype != IterLast )
+  }
+
+  if( onlyLast && itype != IterLast ) {
     return out0;
+  }
 
   prm_mod = pis->apply();
 
@@ -149,29 +156,30 @@ int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
   tdt = adt; model_nn = an;
   pis->prepare();
   int rc =  do_preRun( run_tp, an, anx, any, adt );
-  if( rc != 0 )
-    return rc;
-  return (state > 0 ) ? 0 : 1;
+  if( !rc ) {
+    return 0;
+  }
+  return (state > 0 ) ? 1 : 0;
 }
 
 int TMiso::do_preRun( int /*run_tp*/, int /*an*/, int /*anx*/,
                       int /*any*/, double /*adt*/ )
 {
-  return 0;
+  return 1;
 }
 
 
 
 int TMiso::postRun( int good )
 {
-  do_postRun( good );
+  int rc = do_postRun( good );
   state = good ? stateDone : stateGood;
-  return 0;
+  return rc;
 }
 
 int TMiso::do_postRun( int /*good*/ )
 {
-  return 0;
+  return 1;
 }
 
 int TMiso::startLoop( int acnx, int acny )
@@ -185,7 +193,7 @@ int TMiso::startLoop( int acnx, int acny )
 
 int TMiso::do_startLoop( int /* acnx */, int /* acny */ )
 {
-  return 0;
+  return 1;
 }
 
 int TMiso::endLoop()
@@ -196,6 +204,6 @@ int TMiso::endLoop()
 
 int TMiso::do_endLoop()
 {
-  return 0;
+  return 1;
 }
 

@@ -32,7 +32,7 @@ int TVibro::do_preRun( int /*run_tp*/, int /*an*/,
                        int /*anx*/, int /*any*/, double /*adt*/ )
 {
   tdt2 = tdt * tdt;
-  return 0;
+  return 1;
 }
 
 int TVibro::do_startLoop( int /*acnx*/, int /*acny*/ )
@@ -42,7 +42,7 @@ int TVibro::do_startLoop( int /*acnx*/, int /*acny*/ )
   x_old = out0_init;
   x_old2 = out0_init - v0 * tdt;
   isStart = 1;
-  return 0;
+  return 1;
 }
 
 double TVibro::f( double /*t*/ )

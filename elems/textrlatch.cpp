@@ -159,7 +159,7 @@ int TExtrLatch::do_startLoop( int /*acnx*/, int /*acny*/ )
   isStart = 1; wasExtr = 0; // for first only
   u_max = u_min = u_abs = u_ex = t_max = t_min = t_abs = t_ex = 0;
   u_old = u_old2 = t_old = 0;
-  return 0;
+  return 1;
 }
 
 DEFAULT_FUNCS_REG(TExtrLatch)

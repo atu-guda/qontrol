@@ -40,7 +40,9 @@ TDelay::~TDelay()
 double TDelay::f( double t )
 {
   double a1, a2;
-  if( buf == 0 ) return 0;
+  if( !buf ) {
+    return 0;
+  }
 
   if( prm_mod ) {
     if( mdelay < cdelay )
@@ -65,13 +67,13 @@ int TDelay::do_preRun( int /*run_tp*/, int /*an*/,
 {
   imd = int( mdelay / tdt );
   buf = new TCircBuf( imd );
-  return 0;
+  return 1;
 }
 
 int TDelay::do_postRun( int /*good*/ )
 {
   delete buf; buf = 0;
-  return 0;
+  return 1;
 }
 
 int TDelay::do_startLoop( int /*acnx*/, int /*acny*/ )
@@ -81,7 +83,7 @@ int TDelay::do_startLoop( int /*acnx*/, int /*acny*/ )
   v = cdelay / tdt;
   icd = int( v );
   v2 = v - icd; v1 = 1.0 - v2;
-  return 0;
+  return 1;
 }
 
 

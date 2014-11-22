@@ -33,13 +33,7 @@ STD_CLASSINFO(Scheme,clpSpecial | clpContainer);
 
 CTOR(Scheme,TDataContainer)
 {
-  allowed_types = "TMiso,double,HolderDouble,HolderInt";
-  rtime = t = 0;
-  m_sqrt2 = sqrt(2.0);
-  m_sqrt1_2 = sqrt(0.5);
-  one = 1.0;
-  m_PI = M_PI;
-  m_E = M_E;
+  allowed_types = "TMiso";
   const int ELM_RES = 64;
   v_el.reserve( ELM_RES );
 }
@@ -51,190 +45,57 @@ Scheme::~Scheme()
 const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
         const TDataSet **src_ob, int lev) const
 {
-  // own names: elements + local vars
+  // own names: elements (no local vars?)
   const double *p =  getDoublePtr( nm, lt, src_ob, lev );
   if( p ) {
     return p;
   }
 
+  // then try model
   TModel *mod = getAncestorT<TModel>();
-  if( mod ) {
-    Simulation *csim = mod->getActiveSimulation();
-    if( csim ) {
-      p =  csim->getDoublePtr( nm, lt, src_ob, lev );
-    } else {
-      DBG1( "No current simulation detected" );
-    }
-  } else {
+  if( !mod ) {
     DBG1( "No model detected" );
+    return nullptr;
   }
 
-  // data from simulation
+  p =  mod->getDoublePtr( nm, lt, src_ob, lev );
+  if( p ) {
+    return p;
+  }
+
+  // then - active simulation
+  Simulation *csim = mod->getActiveSimulation();
+  if( csim ) {
+    p =  csim->getDoublePtr( nm, lt, src_ob, lev );
+  }
 
   return p;
 }
 
-int Scheme::startRun( Simulation *a_sim )
+
+int Scheme::runOneLoop( double t, IterType itype )
 {
-  if( ! a_sim ) {
-    return -1;
-  }
-  sim = a_sim;
-
-  if( run_type >= 0 ) { // in progress now
-    return -1;
-  }
-
-  // copy of simulation data (need tmp var)
-  double x; int xi;
-  sim->getData( "T", &x ); T = x;
-  sim->getData( "N", &x ); N = x;
-  sim->getData( "N1", &x ); N1 = x;
-  sim->getData( "N2", &x ); N2 = x;
-  sim->getData( "syncRT", &xi ); syncRT = xi;
-  sim->getData( "prm0s", &x ); prm0s = x;
-  sim->getData( "prm1s", &x ); prm0s = x;
-  sim->getData( "prm2s", &x ); prm0s = x;
-  sim->getData( "prm3s", &x ); prm0s = x;
-  sim->getData( "prm0d", &x ); prm0d = x;
-  sim->getData( "prm1d", &x ); prm0s = x;
-
-  int type = Simulation::runSingle;
-  sim->getData( "runType", &type );
-
-  if( type     !=  Simulation::runSingle
-      &&  type !=  Simulation::runLoop
-      &&  type !=  Simulation::run2DLoop ) {
-    type = Simulation::runSingle;
-  }
-
-  reset();
-
-  run_type = type;
-  n1_eff = n2_eff = 1;
-  if( run_type >  Simulation::runSingle ) {
-    n1_eff = N1;
-  }
-  if( run_type > Simulation::runLoop ) {
-    n2_eff = N2;
-  }
-
-  n_tot = N * n1_eff * n2_eff;
-  i_tot = ii = il1 = il2 = 0;
-  sgnt = int( time( 0 ) );
-  prm2 = (double)prm2s; prm3 = (double)prm3s;
-
-  // TODO: fill v_el
-
-  int rc = preRun( run_type, n1_eff, n2_eff );
-  if( rc != 0 ) {
-    end_loop = 1;
-    postRun();
-    return rc;
-  };
-  t = rtime = 0;
-
-  return 0;
-}
-
-int Scheme::nextSteps( int csteps )
-{
-  int i, rc;
-  if( ! sim ) {
-    return 0;
-  }
-
-  if( csteps < 1 )
-    csteps = 1;
-
-  for( i=0; i < csteps && i_tot < n_tot && end_loop == 0; i++, i_tot++ ) {
-    prm0 = prm0s + il1 * prm0d;
-    prm1 = prm1s + il2 * prm1d;
-    if( ii == 0 ) {    // --------------------- start inner loop --
-
-      start_time = get_real_time(); rtime = t = 0;
-      // set start param
-      allStartLoop( il1, il2 );
-    };// end start inner loop
-
-    rc = runOneLoop();
-    if( rc == 1 )
-      return 0;
-
-    if( ii >= N ) {
-      allEndLoop();
-      ii = 0; il1++;
-    };
-    if( il1 >= N1 ) {
-      il1 = 0; il2++;
-    };
-  };
-
-  if( i_tot >= n_tot ) {
-    stopRun(0);
-  }
-
-  return 0;
-}
-
-int Scheme::stopRun( int reason )
-{
-  if( end_loop || reason ) {
-    reset();
-    state = stateGood;
-  } else {
-    postRun();
-    state = stateDone;
-  };
-  sim = nullptr;
-  return 0;
-}
-
-int Scheme::runOneLoop(void)
-{
-  unsigned long wait_ms;
-  rtime = get_real_time() - start_time;
-  if( syncRT ) {
-     if( t > rtime ) {
-       wait_ms = (unsigned long)( 1000000 * ( t - rtime ) );
-       usleep( wait_ms );
-       // return 1;
-     };
-  };
-  IterType itype = IterMid;
-
-  if( ii == 0 ) {
-    itype = IterFirst;
-  } else if( ii == N-1 ) {
-    itype = IterLast;
-  };
-
-  int elnu = 0;
   for( auto cur_el : v_el ) {
     if( end_loop )
       break;
 
      cur_el->fun( t, itype );  // <============ main action
-     ++elnu;
-  };  // end element loop;
+  };
 
-  t += tdt; ii++;
-  return 0;
+  return 1;
 }
 
-int Scheme::preRun( int run_tp, int anx, int any )
+int Scheme::preRun( int run_tp, int N, int anx, int any, double tdt )
 {
-  int rc;
-  tdt = T / N;
-
   state = stateRun;
   for( auto ob : v_el ) {
-    rc = ob->preRun( run_tp, N, anx, any, tdt );
-    if( rc != 0 ) {
-      return rc;
+    int rc = ob->preRun( run_tp, N, anx, any, tdt );
+    if( !rc ) {
+      DBGx( "warn: preRun failed for object \"%s\"", qP( ob->getFullName() ) );
+      return 0;
     }
   };
-  return 0;
+  return 1;
 }
 
 int Scheme::postRun()
@@ -247,14 +108,14 @@ int Scheme::postRun()
 
   if( modified == 0 || cm != 0 )
     modified |= 2;
-  return 0;
+  return 1;
 }
 
 int Scheme::reset()
 {
   linkNames();
 
-  state = stateGood; run_type = -1; sgnt = int( time(0) );
+  state = stateGood; run_type = -1;
   return 0;
 }
 

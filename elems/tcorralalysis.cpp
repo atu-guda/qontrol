@@ -44,13 +44,13 @@ void TCorrAnalysis::reset_data()
 int TCorrAnalysis::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   reset_data();
-  return 0;
+  return 1;
 }
 
 int TCorrAnalysis::do_endLoop()
 {
   // TODO: move to separate fun
-  return 0;
+  return 1;
   // double yy, e, se2;
   // int j, nx, nx_c, do_cmp, do_fill;
   // const dvector *xdat, *cdat;
@@ -107,7 +107,7 @@ int TCorrAnalysis::do_endLoop()
   //   cmp_ms = sqrt( se2 / nx );
   //   cmp_ampl = 0.5 * ( cmp_max - cmp_min );
   // };
-  // return 0;
+  // return 1;
 }
 
 
@@ -147,7 +147,7 @@ double TCorrAnalysis::f( double t )
 
 int TCorrAnalysis::getDataFromArrays()
 {
-  return 0; // TODO: rewrite
+  return 1; // TODO: rewrite
   // double x, y;
   // const dvector *xdat, *ydat;
   // int nx = 0, ny = 0;
@@ -170,7 +170,7 @@ int TCorrAnalysis::getDataFromArrays()
   //   ydat = 0; ny = 0;
   // };
   // if( nx < 1 && ny < 1 )
-  //   return 0;
+  //   return 1;
   // if( nx < 1 )
   //   n = ny;
   // else if( ny < 1 )

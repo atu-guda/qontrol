@@ -141,7 +141,7 @@ int TSource::do_preRun( int /*run_tp*/, int /*an*/,
     };
   };
 
-  return 0;
+  return 1;
 }
 
 
@@ -191,7 +191,7 @@ int TSource::do_startLoop( int acnx, int acny )
     f_ch_k = ( f_ch_ve - f_ch_vs ) / ( f_ch_te - f_ch_ts );
   };
 
-  return 0;
+  return 1;
 }
 
 DEFAULT_FUNCS_REG(TSource)

@@ -48,7 +48,7 @@ int TFriction::do_startLoop( int /*acnx*/, int /*acny*/ )
   x_old = out0_init;
   v = v_old = Ff = 0;
   bodyState = 0;
-  return 0;
+  return 1;
 }
 
 double TFriction::f( double /* t */ )
