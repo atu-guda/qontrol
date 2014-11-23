@@ -33,6 +33,18 @@ Simulation::~Simulation()
 {
 }
 
+QIcon Simulation::getIcon() const
+{
+  int xtype = runType;
+  if( xtype >= 3 ) { // bad type
+    xtype = 3;
+  }
+  QString iconName = QString( ":icons/elm_simul_" ) + QSN(xtype) + ".png";
+  QIcon el_ico( iconName );
+  return el_ico;
+}
+
+
 void Simulation::post_set()
 {
   TDataSet::post_set();

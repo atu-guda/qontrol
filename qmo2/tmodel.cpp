@@ -75,6 +75,7 @@ int TModel::reset()
   if( c_sch ) {
     c_sch->reset();
   }
+  resetOutArrs( 1000 ); // all?
   return 0;
 }
 

@@ -49,6 +49,9 @@ class TOutArr : public TDataSet  {
    Q_CLASSINFO( "enum_OutArrType_2", "Parm 2" );     // outParm1
    Q_CLASSINFO( "enum_OutArrType_3", "Special" );    // outSpec
 
+   virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
+   virtual QIcon getIcon() const override;
+
    /** access to array value */
    virtual const dvector* getArray();
    /** request to allocate array */

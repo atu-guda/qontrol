@@ -50,6 +50,10 @@ class Simulation : public TDataSet  {
   Q_CLASSINFO( "enum_SeedType_1", "On start on 1D loop" );     // startLoop
   Q_CLASSINFO( "enum_SeedType_2", "On start on 2D loop" );     // start2DLoop
 
+
+  //virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
+  virtual QIcon getIcon() const override;
+
   virtual void post_set() override;
 
  protected:

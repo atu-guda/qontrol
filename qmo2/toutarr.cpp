@@ -15,6 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QBrush>
+
 #include "miscfun.h"
 #include "toutarr.h"
 #include "tmodel.h"
@@ -36,6 +38,41 @@ TOutArr::~TOutArr()
 {
   n = ny = 0;
 }
+
+QVariant TOutArr::dataObj( int col, int role ) const
+{
+  if( role == Qt::BackgroundRole ) {
+    if( col != 0 || n < 1 ) {
+      return QVariant();
+    }
+    if( n == arrsize ) {
+      return QBrush( QColor(0,254,0) ) ;
+    }
+    return QBrush( QColor(0,64,128) ) ;
+  }
+
+  else if ( role == Qt::ToolTipRole ) {
+    if( col != 0 ) {
+      return QVariant();
+    }
+    QString s = name.cval() + " [" + QSN(n) + "]";
+    return s;
+  }
+
+  return TDataSet::dataObj( col, role );
+}
+
+QIcon TOutArr::getIcon() const
+{
+  int xtype = type;
+  if( xtype >= 4 ) { // bad type
+    xtype = 4;
+  }
+  QString iconName = QString( ":icons/elm_toutarr_" ) + QSN(xtype) + ".png";
+  QIcon el_ico( iconName );
+  return el_ico;
+}
+
 
 
 const dvector* TOutArr::getArray()
