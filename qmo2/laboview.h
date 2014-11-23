@@ -20,6 +20,8 @@
 
 // include files for Qt
 #include <QWidget>
+#include <QScriptEngine>
+
 class QResizeEvent;
 class QCloseEvent;
 class QAbstractItemView;
@@ -175,6 +177,9 @@ class LaboView : public QWidget
    virtual void closeEvent( QCloseEvent* );
    virtual void resizeEvent( QResizeEvent* );
    int checkState( CheckType ctp );
+   void initEngine();
+   //* call engine and returns result, casted to QString
+   QString runScript( const QString& script );
  protected:
    QScrollArea *scrollArea;
    StructView *sview = nullptr;
@@ -193,9 +198,11 @@ class LaboView : public QWidget
    ContGraph *plots;
    ContSimul *sims;
 
+   QScriptEngine eng;
+
    int sel = -1, sel_x = 0, sel_y = 0, level = 0;
    // TODO: from file (config)
-   QString scr = R"(model.insElem("TLinear","ob","vis_x=4\nvis_y=1\na0=3.14");)";
+   QString scr = R"(main_s.add_obj_param("TLinear","ob","vis_x=4\nvis_y=1\na0=3.14");)";
    /** prt to selected object or nullptr */
    TMiso *selObj = nullptr;
    /** prt to marked object or nullptr */

@@ -47,20 +47,20 @@ class Scheme : public TDataContainer  {
   //* return max (x,y) of all elements
   QSize getMaxXY() const;
   //* return number of elements of TMiso-alike
-  int getNMiso() const { return v_el.size(); }
+  Q_INVOKABLE int getNMiso() const { return v_el.size(); }
   /** inserts active element @returns: nullptr - bad  else - ptr to inserted element */
   TMiso* insElem( const QString &cl_name, const QString &ob_name,
                        int aord, int avis_x, int avis_y );
   /** delete active element by name !0 = sucess */
-  virtual int delElem( const QString &ename );
+  Q_INVOKABLE int delElem( const QString &ename );
   /** moves element to new position if free */
-  int moveElem( const QString &nm, int newx, int newy );
+  Q_INVOKABLE int moveElem( const QString &nm, int newx, int newy );
   /** new order of element ny name */
-  virtual int newOrder( const QString &name, int new_ord );
+  Q_INVOKABLE int newOrder( const QString &name, int new_ord );
   /** suggest order value for new element */
-  virtual int hintOrd() const;
+  Q_INVOKABLE int hintOrd() const;
   /** resets elements and state: Done(2)->Good(1) */
-  virtual int reset();
+  Q_INVOKABLE virtual int reset();
 
   /** reimplemented from TDataSet to ensure all data filled and linked */
   virtual int checkData( int i );

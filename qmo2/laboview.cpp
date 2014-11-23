@@ -100,6 +100,8 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   selectGraph();
   selectSimul();
 
+  initEngine();
+
 }
 
 LaboView::~LaboView()
@@ -1325,6 +1327,30 @@ void LaboView::showTreeModel()
   return;
 }
 
+void LaboView::initEngine()
+{
+  if( ! model ) {
+    DBG1( "ERR: no model" );
+  }
+  QScriptValue eng_model = eng.newQObject( model );
+  eng.globalObject().setProperty( "model", eng_model );
+  QScriptValue eng_main_s = eng.newQObject( main_s );
+  eng.globalObject().setProperty( "main_s", eng_main_s );
+}
+
+QString LaboView::runScript( const QString& script )
+{
+  QScriptValue res = eng.evaluate( script );
+  QString r;
+  if( eng.hasUncaughtException() ) {
+    int line = eng.uncaughtExceptionLineNumber();
+    r = "Error: uncaught exception at line " + QSN( line ) + " : \n";
+  }
+  r += res.toString();
+  return r;
+}
+
+
 // TODO: 2-pane dialog + script pool
 void LaboView::runScript()
 {
@@ -1359,7 +1385,7 @@ void LaboView::runScript()
   scr = ted->toPlainText();
   delete dia; dia = nullptr;
 
-  res = doc->runScript( scr );
+  res = runScript( scr );
 
   auto *dia1 = new QDialog( this );
   dia1->setWindowTitle( "Script result" );

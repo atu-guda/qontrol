@@ -92,9 +92,6 @@ bool LaboDoc::newDocument()
   modified = false; is_nonamed = true;
   loaded_as_old = true; // TODO: change to false when new model be created by default
 
-  // add to engine
-  initEngine();
-
   return true;
 }
 
@@ -191,8 +188,6 @@ bool LaboDoc::openDocumentXML(const QString &filename )
   m_filename = filename;
   m_title = QFileInfo(filename).fileName();
   is_nonamed = false;
-
-  initEngine();
 
   return true;
 }
@@ -333,29 +328,6 @@ void LaboDoc::fillRoot(void)
     DBG1( "ERR: rootdata in null!!" );
     return;
   }
-}
-
-QString LaboDoc::runScript( const QString& script )
-{
-  QScriptValue res = eng.evaluate( script );
-  QString r;
-  if( eng.hasUncaughtException() ) {
-    int line = eng.uncaughtExceptionLineNumber();
-    r = "Error: uncaught exception at line " + QSN( line ) + " : \n";
-  }
-  r += res.toString();
-  return r;
-}
-
-void LaboDoc::initEngine()
-{
-  if( !rootdata || ! model ) {
-    DBG1( "ERR: no root or model" );
-  }
-  QScriptValue eng_root = eng.newQObject( rootdata );
-  eng.globalObject().setProperty("root", eng_root );
-  QScriptValue eng_model = eng.newQObject( model );
-  eng.globalObject().setProperty("model", eng_model );
 }
 
 bool LaboDoc::migrateSumul() // TODO: remove after migration
