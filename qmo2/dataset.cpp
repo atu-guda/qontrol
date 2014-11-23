@@ -1586,12 +1586,16 @@ void HolderStringArray::post_set()
 
 QString HolderStringArray::toString() const
 {
-  return v.join("\x01");
+  return v.join( QChar(0x2400) ); // NUL representation in Unicode
 }
 
 bool HolderStringArray::fromString( const QString &s )
 {
-  v = s.split('\x01', QString::KeepEmptyParts );
+  if( s.contains( QChar(0x2400) ) ) {
+    v = s.split( QChar(0x2400), QString::KeepEmptyParts );
+  } else {
+    v = s.split('\x01', QString::KeepEmptyParts ); // old strings
+  }
 
   post_set();
   return !v.isEmpty();

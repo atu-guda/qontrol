@@ -1,10 +1,8 @@
-Renew /unify views for Outs, Graphs, Simulations
-Rethink array save/restore: my be invalid xml (at least for strings)
+call parent post_set (if req). flag?
 Input/output elements/scheme properties (in0?)
 New hier
 Move TCorrAnal, TFourier direct access to arrays with post-run js?
 Command line (':')
-Concept for current element in contatiner (Simulation ... )
 Rebreand to Qontrol
 move some logic from LaboView to model (scheme?, runner?)
 slots in TModel like cmds, but with "name", not elnu - for JS
@@ -19,7 +17,6 @@ Plot data structure + convert old
 run w/o interface fun:
 command line key -w = write
 TCircBuf + TDelay re*
-TFourier, TCorrAnal - remove output to TModel vars: can be used directly
 More plot types (dot...). Qwtplot?
 Hide startLoop - like fun,f
 Rename action
@@ -29,6 +26,7 @@ source choose widget
 js edit widget + button/dialog
 js preRun, preLoop
 Really remove TElmLink
+Tests
 
 
 

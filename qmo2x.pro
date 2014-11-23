@@ -1,5 +1,5 @@
-TEMPLATE = subdirs 
-SUBDIRS += qmo2 
+TEMPLATE = subdirs
+SUBDIRS += qmo2
 
-DISTFILES += NEWS ChangeLog config.h
+DISTFILES += NEWS ChangeLog
 
