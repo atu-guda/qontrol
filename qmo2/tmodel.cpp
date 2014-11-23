@@ -160,7 +160,7 @@ int TModel::nextSteps( int csteps )
     csteps = 1;
   }
 
-  for( i=0; i < csteps && i_tot < n_tot && end_loop == 0; i++, i_tot++ ) {
+  for( i=0; i < csteps && i_tot < n_tot && end_loop == 0; ++i, ++i_tot ) {
     prm0 = prm0s + il1 * prm0d;
     prm1 = prm1s + il2 * prm1d;
     if( ii == 0 ) {    // --------------------- start inner loop --
@@ -181,10 +181,10 @@ int TModel::nextSteps( int csteps )
 
     if( ii >= N ) {
       allEndLoop();
-      ii = 0; il1++;
+      ii = 0; ++il1;
     };
     if( il1 >= nl1 ) {
-      il1 = 0; il2++;
+      il1 = 0; ++il2;
     };
     if( i_tot >= n_tot ) {
       stopRun(0);
@@ -242,7 +242,7 @@ int TModel::runOneLoop()
 
   outs->takeAllVals( out_level );
 
-  t += tdt; ii++;
+  t += tdt; ++ii;
   return 1;
 }
 

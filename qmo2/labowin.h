@@ -191,8 +191,6 @@ class LaboWin : public QMainWindow
 
     // ==== run related
     void slotRunRun();
-    void slotRunPrm();
-    void slotRunPrm2();
     void slotReset();
 
     // ==== view related
@@ -295,7 +293,7 @@ class LaboWin : public QMainWindow
             // model
             *act_editmodel, *act_showtreemodel,
             // run
-            *act_runrun, *act_runprm, *act_runprm2, *act_runscript, *act_reset,
+            *act_runrun, *act_runscript, *act_reset,
             // iface
             *act_tbar, *act_sbar,
             *act_showord, *act_showgrid, *act_shownames, *act_showicons, *act_showlinks,
@@ -304,6 +302,7 @@ class LaboWin : public QMainWindow
             // help
             *act_helpabout, *act_helpaboutqt, *act_whatsthis,
             *act_test;
+    QList<QAction*> model_acts; //* list of actions, depending on model
   public:
     /** static pointer to main window -- the only allowed */
     static LaboWin *labowin;

@@ -114,7 +114,7 @@ void RunView::slotRunNext(void)
       if( i_tot >= n_tot ) {
         model->stopRun(0);
         state = model->getState();
-        DBG1( "warn: overrun!" );
+        DBGx( "warn: overrrun! m_state: %d i_tot: %d n_tot: %d", m_state, i_tot, n_tot );
       };
       break;
     case stateDone:
@@ -126,7 +126,7 @@ void RunView::slotRunNext(void)
   };
 
   if( state != stateRun ) {
-    DBG1( "dbg: final!" );
+    DBGx( "dbg: final! state: %d m_state: %d", state, m_state );
     timer->stop();
     setMouseTracking( 0 );
     if( s_time > 0  &&  ( get_real_time() - s_time ) > 10 ) {
@@ -348,7 +348,10 @@ void RunView::getSchemeData()
     c_sim->getData( "n_iosteps", &n_iosteps );
     c_sim->getData( "syncRT", &syncRT );
     c_sim->getData( "autoStart", &autoStart );
+  } else {
+    DBG1( "warn: no active simulation!" );
   }
+
   state = model->getState();
   s_h = syncRT ? 520 : 40;
   DBGx( "dbg: n_tot: %d, n_iosteps: %d syncRT: %d autoStart: %d",

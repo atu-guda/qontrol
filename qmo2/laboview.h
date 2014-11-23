@@ -151,8 +151,6 @@ class LaboView : public QWidget
 
    // runs
    void runRun();
-   void runPrm();
-   void runPrm2();
    void resetModel();
 
    // misc

@@ -95,6 +95,11 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   connect( sview, &StructView::sig_changeSel,   this, &LaboView::changeSel );
   connect( sview, &StructView::sig_changeLevel, this, &LaboView::changeLevel );
 
+  // default: select object 0
+  selectOut();
+  selectGraph();
+  selectSimul();
+
 }
 
 LaboView::~LaboView()
@@ -309,7 +314,7 @@ void LaboView::newElm()
     return;
 
   addElemInfo aei;
-  aei.name = QString("obj_"); // + QSN( main_s->getNMiso() ) ; // TODO: fix
+  aei.name = QString("obj_")+ QSN( main_s->getNMiso() ) ; // TODO: fix
   aei.order = main_s->hintOrd();
   AddElemDialog *dia = new AddElemDialog( &aei, main_s, this, "TMiso" );
                                           // limit to such elements here
@@ -1399,15 +1404,6 @@ void LaboView::runRun()
   sview->setFocus();
 }
 
-void LaboView::runPrm()
-{
-  // TODO: remove: use simulation
-}
-
-void LaboView::runPrm2()
-{
-  // TODO: remove: use simulation
-}
 
 void LaboView::resetModel()
 {

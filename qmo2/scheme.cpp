@@ -124,11 +124,11 @@ int Scheme::allStartLoop( int acnx, int acny )
   int rc;
   for( auto ob : v_el ) {
     rc = ob->startLoop( acnx, acny );
-    if( rc != 0 ) {
-      return rc;
+    if( !rc ) {
+      return 0;
     }
   };
-  return 0;
+  return 1;
 }
 
 void Scheme::allEndLoop()
@@ -325,7 +325,7 @@ int Scheme::hintOrd() const
     if( !ob ) {
       continue;
     }
-    getData( "ord", &mc );
+    ob->getData( "ord", &mc );
     if( mc > m ) {
       m = mc;
     }

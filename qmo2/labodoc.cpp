@@ -494,6 +494,7 @@ bool LaboDoc::migrateSumul() // TODO: remove after migration
     model->getData( "seedType", &ti );  sim0->setData( "seedType", ti );
     model->getData( "autoStart", &ti );  sim0->setData( "autoStart", ti );
     model->getData( "long_descr", descr );  sim0->setData( "descr", descr );
+    sim0->post_set();
   }
 
   // remove old elements from model

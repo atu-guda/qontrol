@@ -46,6 +46,8 @@ class Scheme : public TDataContainer  {
   TMiso* xy2Miso( int avis_x, int avis_y ) const;
   //* return max (x,y) of all elements
   QSize getMaxXY() const;
+  //* return number of elements of TMiso-alike
+  int getNMiso() const { return v_el.size(); }
   /** inserts active element @returns: nullptr - bad  else - ptr to inserted element */
   TMiso* insElem( const QString &cl_name, const QString &ob_name,
                        int aord, int avis_x, int avis_y );

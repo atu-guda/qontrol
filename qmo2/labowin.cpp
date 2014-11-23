@@ -152,21 +152,25 @@ void LaboWin::initIface()
   act_close = new QAction( "&Close", this );
   act_close->setWhatsThis( tr("Close active window") );
   connect( act_close, &QAction::triggered, this, &LaboWin::slotFileClose );
+  model_acts << act_close;
 
   act_savexml = new QAction( QIcon::fromTheme("document-save"), "Save model",  this );
   act_savexml->setShortcuts( QKeySequence::Save );
   act_savexml->setWhatsThis( tr("Click this button to save the model file you are "
                   "editing. You will be prompted for a file name." ) );
   connect( act_savexml, &QAction::triggered, this, &LaboWin::slotFileSaveXML );
+  model_acts << act_savexml;
 
   act_savexmlas = new QAction(QIcon::fromTheme("document-save-as"), "Save model As", this );
   act_savexmlas->setWhatsThis( tr("Save current model with another filename") );
   connect( act_savexmlas, &QAction::triggered, this, &LaboWin::slotFileSaveXMLAs );
+  model_acts << act_savexmlas;
 
   act_print = new QAction(  QIcon::fromTheme("document-print"), "&Print", this );
   act_print->setShortcuts( QKeySequence::Print );
   act_print->setWhatsThis( tr("Print current model") );
   connect( act_print, &QAction::triggered, this, &LaboWin::slotFilePrint );
+  model_acts << act_print;
 
   act_settings = new QAction( "Sett&ings", this );
   act_settings ->setWhatsThis( "Edit application settings" );
@@ -188,21 +192,25 @@ void LaboWin::initIface()
   act_undo->setShortcuts( QKeySequence::Undo );
   act_undo->setWhatsThis( tr("Undo last action") + " EMPTY" );
   connect( act_undo, &QAction::triggered, this, &LaboWin::slotEditUndo );
+  // model_acts << act_undo;
 
   act_cut = new QAction(  QIcon::fromTheme("edit-cut"),"Cut", this );
   act_cut->setShortcuts( QKeySequence::Cut );
   act_cut->setWhatsThis( tr("Cut selected")  + " EMPTY" );
   connect( act_cut, &QAction::triggered, this, &LaboWin::slotEditCut );
+  model_acts << act_cut;
 
   act_copy = new QAction( QIcon::fromTheme("edit-copy"), "Copy", this );
   act_copy->setShortcuts( QKeySequence::Copy );
   act_copy->setWhatsThis( tr("Copy selected") + " EMPTY" );
   connect( act_copy, &QAction::triggered, this, &LaboWin::slotEditCopy );
+  model_acts << act_copy;
 
   act_paste= new QAction( QIcon::fromTheme("edit-paste"), "Paste", this );
   act_paste->setShortcuts( QKeySequence::Paste );
   act_paste->setWhatsThis( tr("Paste selected") + " EMPTY" );
   connect( act_paste, &QAction::triggered, this, &LaboWin::slotEditPaste );
+  model_acts << act_paste;
 
   // ==== Element group
 
@@ -210,68 +218,82 @@ void LaboWin::initIface()
   act_newelm->setShortcut( Qt::Key_Insert );
   act_newelm->setWhatsThis( tr("Create new element") );
   connect( act_newelm, &QAction::triggered, this, &LaboWin::slotNewElm );
+  model_acts << act_newelm;
 
   act_delelm= new QAction( QIcon( ":icons/delelm.png" ), "&Delete element", this );
   act_delelm->setShortcut( Qt::Key_Delete );
   act_delelm->setWhatsThis( tr("Delete selected element") );
   connect( act_delelm, &QAction::triggered, this, &LaboWin::slotDelElm );
+  model_acts << act_delelm;
 
   act_editelm= new QAction( QIcon( ":icons/editelm.png" ), "&Edit element", this );
   act_editelm->setShortcut( Qt::Key_Enter );
   act_editelm->setWhatsThis( tr("Edit selected element") );
-  connect( act_editelm, &QAction::triggered, this, &LaboWin::slotEditElm);
+  connect( act_editelm, &QAction::triggered, this, &LaboWin::slotEditElm );
+  model_acts << act_editelm;
 
   act_qlinkelm= new QAction( QIcon::fromTheme("insert-link"), "&Quick link element", this );
   act_qlinkelm->setShortcut( Qt::CTRL+Qt::Key_L );
   act_qlinkelm->setWhatsThis( tr("Link marked to selected element") );
   connect( act_qlinkelm, &QAction::triggered, this, &LaboWin::slotqLinkElm);
+  model_acts << act_qlinkelm;
 
   act_qplinkelm= new QAction( "&Parametr link element", this );
   act_qplinkelm->setShortcut(  Qt::SHIFT+Qt::CTRL+Qt::Key_L );
   act_qplinkelm->setWhatsThis( tr("Link marked to selected element "
                                   "(parameter input)") );
   connect( act_qplinkelm, &QAction::triggered, this, &LaboWin::slotqpLinkElm);
+  model_acts << act_qplinkelm;
 
   act_unlinkelm= new QAction( "&Unlink element", this );
   act_unlinkelm->setWhatsThis( tr("Remove links of selected element") );
   connect( act_unlinkelm, &QAction::triggered, this, &LaboWin::slotUnlinkElm);
+  model_acts << act_unlinkelm;
 
   act_lockelm= new QAction( QIcon( ":icons/lockelm.png" ), "Loc&k element",  this );
   act_lockelm->setShortcut( Qt::CTRL+Qt::Key_K );
   act_lockelm->setWhatsThis( tr("Lock current element") );
   connect( act_lockelm, &QAction::triggered, this, &LaboWin::slotLockElm);
+  model_acts << act_lockelm;
 
   act_ordelm= new QAction( QIcon( ":icons/orderelm.png" ), "Change &Orger", this );
   act_ordelm->setShortcut( Qt::Key_O );
   act_ordelm->setWhatsThis( tr("Change order numper of selected element") );
   connect( act_ordelm, &QAction::triggered, this, &LaboWin::slotOrdElm);
+  model_acts << act_ordelm;
 
   act_markelm= new QAction( QIcon( ":icons/markelm.png" ), "&Mark element", this );
   act_markelm->setShortcut( Qt::Key_M );
   act_ordelm->setWhatsThis( tr("Mark selected element") );
   connect( act_markelm, &QAction::triggered, this, &LaboWin::slotMarkElm);
+  model_acts << act_markelm;
 
   act_moveelm= new QAction( "Move element", this );
   act_moveelm->setShortcut( Qt::SHIFT+Qt::Key_M );
   act_moveelm->setWhatsThis( tr("Move marked element to selected cell") );
   connect( act_moveelm, &QAction::triggered, this, &LaboWin::slotMoveElm);
+  model_acts << act_moveelm;
 
   act_infoelm= new QAction( QIcon( ":icons/infoelm.png" ), "show &Info", this );
   act_infoelm->setShortcut( Qt::Key_I );
   act_infoelm->setWhatsThis( tr("Show information about element structure") );
   connect( act_infoelm, &QAction::triggered, this, &LaboWin::slotInfoElm);
+  model_acts << act_infoelm;
 
   act_showtreeelm = new QAction( "show element tree", this );
   act_showtreeelm->setWhatsThis( tr("Show tree-like element structure") );
   connect( act_showtreeelm, &QAction::triggered, this, &LaboWin::slotShowTreeElm);
+  model_acts << act_showtreeelm;
 
   act_testelm1= new QAction( "test element 1", this );
   act_testelm1->setWhatsThis( tr("Test something in element") );
   connect( act_testelm1, &QAction::triggered, this, &LaboWin::slotTestElm1);
+  model_acts << act_testelm1;
 
   act_testelm2= new QAction( "test element 2", this );
   act_testelm2->setWhatsThis( tr("Test something in element") );
   connect( act_testelm2, &QAction::triggered, this, &LaboWin::slotTestElm2);
+  model_acts << act_testelm2;
 
   // ==== out group
 
@@ -279,31 +301,37 @@ void LaboWin::initIface()
   act_newout->setShortcut( Qt::Key_U );
   act_newout->setWhatsThis( tr("Create output collector") );
   connect( act_newout, &QAction::triggered, this, &LaboWin::slotNewOut);
+  model_acts << act_newout;
 
   act_delout = new QAction( QIcon( ":icons/delout.png" ), "&Delete out", this );
   // act_delout->setShortcut( Qt::Key_X );
   act_delout->setWhatsThis( tr("Delete output collector with current level") );
   connect( act_delout, &QAction::triggered, this, &LaboWin::slotDelOut);
+  model_acts << act_delout;
 
   act_editout = new QAction( QIcon( ":icons/editout.png" ), "&Edit out", this );
   act_editout->setShortcut( Qt::SHIFT+Qt::Key_U );
   act_editout->setWhatsThis( tr("Edit outsput collector with current level") );
   connect( act_editout, &QAction::triggered, this, &LaboWin::slotEditOut);
+  model_acts << act_editout;
 
   act_selectout = new QAction( "Select out", this );
   act_selectout->setShortcut( Qt::ALT+Qt::Key_U );
   act_selectout->setWhatsThis( tr("Select outsput collector by current level") );
   connect( act_selectout, &QAction::triggered, this, &LaboWin::slotSelectOut );
+  model_acts << act_selectout;
 
   act_showoutdata = new QAction( QIcon( ":icons/showoutdata.png" ), "&Show out data", this );
   // act_showoutdata->setShortcut( Qt::Key_D );
   act_showoutdata->setWhatsThis( tr("Show data collected by output.") );
   connect( act_showoutdata, &QAction::triggered, this, &LaboWin::slotShowOutData);
+  model_acts << act_showoutdata;
 
   act_exportout = new QAction( "E&xport out data", this );
   // act_exportout->setShortcut( Qt::Key_E );
   act_exportout->setWhatsThis( tr("Export data collected by output to text file.") );
   connect( act_exportout, &QAction::triggered, this, &LaboWin::slotExportOut);
+  model_acts << act_exportout;
 
   // ==== graph=plot group
 
@@ -311,65 +339,78 @@ void LaboWin::initIface()
   act_newgraph->setShortcut( Qt::Key_P );
   act_newgraph->setWhatsThis( tr("Create new plot") );
   connect( act_newgraph, &QAction::triggered, this, &LaboWin::slotNewGraph);
+  model_acts << act_newgraph;
 
   act_delgraph = new QAction( QIcon( ":icons/delgraph.png" ), "&Delete plot", this );
   // act_delgraph->setShortcut( Qt::SHIFT+Qt::Key_X );
   act_delgraph->setWhatsThis( tr("Delete plot with selected level") );
   connect( act_delgraph, &QAction::triggered, this, &LaboWin::slotDelGraph);
+  model_acts << act_delgraph;
 
   act_editgraph = new QAction( QIcon( ":icons/editgraph.png" ), "&Edit plot", this );
   act_editgraph->setShortcut(  Qt::SHIFT+Qt::Key_P );
   act_editgraph->setWhatsThis( tr("Edit plot with current level") );
   connect( act_editgraph, &QAction::triggered, this, &LaboWin::slotEditGraph);
+  model_acts << act_editgraph;
 
   act_selectgraph = new QAction( "select plot", this );
-  act_selectgraph->setShortcut(  Qt::ALT+Qt::Key_P );
+  act_selectgraph->setShortcut(  Qt::ALT+Qt::Key_G ); // Alt-P is busy by menu
   act_selectgraph->setWhatsThis( tr("Select plot by current level") );
   connect( act_selectgraph, &QAction::triggered, this, &LaboWin::slotSelectGraph );
+  model_acts << act_selectgraph;
 
   act_showgraph = new QAction( QIcon( ":icons/showgraph.png" ), "&Show plot", this );
   act_showgraph->setShortcut( Qt::Key_S );
-  act_showgraph->setWhatsThis( tr("Show plot plot") );
+  act_showgraph->setWhatsThis( tr("Show plot") );
   connect( act_showgraph, &QAction::triggered, this, &LaboWin::slotShowGraph);
+  model_acts << act_showgraph;
 
   act_showgraphdata = new QAction( QIcon( ":icons/showgraphdata.png" ), "show plot Data", this );
   act_showgraphdata->setShortcut(  Qt::SHIFT+Qt::Key_D );
   act_showgraphdata->setWhatsThis( tr("Show plot data") );
   connect( act_showgraphdata, &QAction::triggered, this, &LaboWin::slotShowGraphData);
+  model_acts << act_showgraphdata;
 
   act_exportgraphdata = new QAction( "E&xport plot data", this );
   act_exportgraphdata->setShortcut( Qt::SHIFT+Qt::Key_E );
   act_exportgraphdata->setWhatsThis( tr("Export plot data to text file") );
   connect( act_exportgraphdata, &QAction::triggered, this, &LaboWin::slotExportGraphData);
+  model_acts << act_exportgraphdata;
 
   act_gnuplotgraph = new QAction( "&Gnuplot plot", this);
   act_gnuplotgraph->setWhatsThis( tr("Export plot data to gnuplot-compatiomle file") );
   connect( act_gnuplotgraph, &QAction::triggered, this, &LaboWin::slotGnuplotGraph);
+  model_acts << act_gnuplotgraph;
 
   // ==== simulation group
 
   act_newSimul = new QAction( "&New Simulation", this );
   act_newSimul->setWhatsThis( tr("Create new simulation") );
   connect( act_newSimul, &QAction::triggered, this, &LaboWin::slotNewSimul );
+  model_acts << act_newSimul;
 
   act_delSimul = new QAction( "&Delete Simulation", this );
   act_delSimul->setWhatsThis( tr("Delete simulation") );
   connect( act_delSimul, &QAction::triggered, this, &LaboWin::slotDelSimul );
+  model_acts << act_delSimul;
 
   act_editSimul = new QAction( "&Edit Simulation", this );
   act_editSimul->setShortcut(  Qt::SHIFT+Qt::Key_Y );
   act_editSimul->setWhatsThis( tr("Edit simulation") );
   connect( act_editSimul, &QAction::triggered, this, &LaboWin::slotEditSimul );
+  model_acts << act_editSimul;
 
   act_selectSimul = new QAction( "Select Simulation", this );
   act_selectSimul->setShortcut(  Qt::ALT+Qt::Key_Y );
   act_selectSimul->setWhatsThis( tr("Edit simulation") );
   connect( act_selectSimul, &QAction::triggered, this, &LaboWin::slotSelectSimul );
+  model_acts << act_selectSimul;
 
   act_setActiveSimul = new QAction( "Set Active Simulation", this );
   act_setActiveSimul->setShortcut( Qt::ALT+Qt::CTRL+Qt::Key_Y );
   act_setActiveSimul->setWhatsThis( tr("Set current simulation to be active") );
   connect( act_setActiveSimul, &QAction::triggered, this, &LaboWin::slotSetActiveSimul );
+  model_acts << act_setActiveSimul;
 
 
   // ==== model group
@@ -379,37 +420,32 @@ void LaboWin::initIface()
   act_editmodel->setShortcut(  Qt::CTRL+Qt::Key_R );
   act_editmodel->setWhatsThis( tr("Edit model parameters.") );
   connect( act_editmodel, &QAction::triggered, this, &LaboWin::slotEditModel);
+  model_acts << act_editmodel;
 
   act_showtreemodel = new QAction( "show model tree", this );
   act_showtreemodel->setShortcut( Qt::CTRL+Qt::Key_T );
   act_showtreemodel->setWhatsThis( tr("Show tree-like model structure") );
   connect( act_showtreemodel, &QAction::triggered, this, &LaboWin::slotShowTreeModel);
+  model_acts << act_showtreemodel;
 
   // ====  run group
 
   act_runrun = new QAction( QIcon( ":icons/run.png" ), "&Run", this );
   act_runrun->setShortcut( Qt::Key_F9 );
-  act_runrun->setWhatsThis( tr("Click this button start simple run.") );
+  act_runrun->setWhatsThis( tr("Click this button to start simulation.") );
   connect( act_runrun, &QAction::triggered, this, &LaboWin::slotRunRun );
-
-  act_runprm= new QAction( QIcon( ":icons/run_p1.png" ), "Run &1D Parm loop", this );
-  act_runprm->setShortcut( Qt::CTRL+Qt::Key_F9 );
-  act_runprm->setWhatsThis( tr("Click this button start 1D parametric run.") );
-  connect( act_runprm, &QAction::triggered, this, &LaboWin::slotRunPrm );
-
-  act_runprm2= new QAction( QIcon( ":icons/run_p2.png" ), "Run &2D Parm loop", this );
-  act_runprm2->setShortcut( Qt::SHIFT+Qt::CTRL+Qt::Key_F9 );
-  act_runprm2->setWhatsThis( tr("Click this button start 2D parametric run.") );
-  connect( act_runprm2, &QAction::triggered, this, &LaboWin::slotRunPrm2 );
+  model_acts << act_runrun;
 
   act_runscript = new QAction( QIcon::fromTheme("application-x-javascript"), "run &Script", this );
   act_runscript->setShortcut( Qt::SHIFT+Qt::Key_F9 );
   act_runscript->setWhatsThis( tr("Run script on model") );
   connect( act_runscript, &QAction::triggered, this, &LaboWin::slotRunScript);
+  model_acts << act_runscript;
 
   act_reset= new QAction( "R&eset", this );
   act_reset->setWhatsThis( tr("Reset model state.") );
   connect( act_reset, &QAction::triggered, this, &LaboWin::slotReset );
+  model_acts << act_reset;
   // ==== iface group
 
   act_tbar = new QAction( "View &Toolbar", this );
@@ -591,8 +627,6 @@ void LaboWin::initIface()
   // menuBar entry pRunMenu
   pRunMenu = menuBar()->addMenu( tr("&Run") );
   pRunMenu->addAction( act_runrun );
-  pRunMenu->addAction( act_runprm );
-  pRunMenu->addAction( act_runprm2 );
   pRunMenu->addSeparator();
   pRunMenu->addAction( act_runscript );
   pRunMenu->addSeparator();
@@ -662,8 +696,6 @@ void LaboWin::initIface()
   elmToolbar->addAction( act_editmodel );
     elmToolbar->addSeparator();
   elmToolbar->addAction( act_runrun );
-  elmToolbar->addAction( act_runprm );
-  elmToolbar->addAction( act_runprm2 );
   elmToolbar->addAction( act_runscript );
 
 }
@@ -678,68 +710,12 @@ void LaboWin::enableActions( bool ena, int id_ )
 {
   switch( id_ ) {
     case 0: // model-specific actions
-       act_close->setEnabled( ena );
-       act_savexml->setEnabled( ena );
-       act_savexmlas->setEnabled( ena );
-       act_print->setEnabled( ena );
-       // TODO: implement this
-       act_undo->setEnabled( false );
-       act_cut->setEnabled( ena );
-       act_copy->setEnabled( ena );
-       act_paste->setEnabled( ena );
-       // elm
-       act_newelm->setEnabled( ena );
-       act_delelm->setEnabled( ena );
-       act_editelm->setEnabled( ena );
-       act_qlinkelm->setEnabled( ena );
-       act_qplinkelm->setEnabled( ena );
-       act_unlinkelm->setEnabled( ena );
-       act_lockelm->setEnabled( ena );
-       act_ordelm->setEnabled( ena );
-       act_markelm->setEnabled( ena );
-       act_moveelm->setEnabled( ena );
-       act_infoelm->setEnabled( ena );
-       act_showtreeelm->setEnabled( ena );
-       act_testelm1->setEnabled( ena );
-       act_testelm2->setEnabled( ena );
-       // out
-       act_newout->setEnabled( ena );
-       act_delout->setEnabled( ena );
-       act_editout->setEnabled( ena );
-       act_selectout->setEnabled( ena );
-       act_showoutdata->setEnabled( ena );
-       act_exportout->setEnabled( ena );
-       // graph=plot
-       act_newgraph->setEnabled( ena );
-       act_delgraph->setEnabled( ena );
-       act_editgraph->setEnabled( ena );
-       act_selectgraph->setEnabled( ena );
-       act_showgraph->setEnabled( ena );
-       act_showgraphdata->setEnabled( ena );
-       act_exportgraphdata->setEnabled( ena );
-       act_gnuplotgraph->setEnabled( ena );
-       // simul
-       act_newSimul->setEnabled( ena );
-       act_delSimul->setEnabled( ena );
-       act_editSimul->setEnabled( ena );
-       act_selectSimul->setEnabled( ena );
-       act_setActiveSimul->setEnabled( ena );
-       // model
-       act_editmodel->setEnabled( ena );
-       act_showtreemodel->setEnabled( ena );
-       // run
-       act_runrun->setEnabled( ena );
-       act_runprm->setEnabled( ena );
-       act_runprm2->setEnabled( ena );
-       act_runscript->setEnabled( ena );
-       act_reset->setEnabled( ena );
-       // win
-       act_winClose->setEnabled( ena );
-       act_winCloseAll->setEnabled( ena );
-       act_winTile->setEnabled( ena );
-       act_winCascade->setEnabled( ena );
-       break;
-    default: break;
+      for( auto a : model_acts ) {
+        a->setEnabled( ena );
+      };
+      break;
+    default:
+      break;
   };
 }
 
@@ -1575,25 +1551,6 @@ void LaboWin::slotRunRun()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
-void LaboWin::slotRunPrm()
-{
-  statusBar()->showMessage( tr( "Running parametric loop..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->runPrm();
-  statusBar()->showMessage( tr( "Ready." ) );
-}
-
-void LaboWin::slotRunPrm2()
-{
-  statusBar()->showMessage( tr( "Running 2D parametric loop..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->runPrm2();
-  statusBar()->showMessage( tr( "Ready." ) );
-}
 
 void LaboWin::slotReset()
 {
