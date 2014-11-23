@@ -608,7 +608,7 @@ bool HolderData::getData( const QString &nm, QVariant &da ) const
     return 0;
   }
   if( nm_type == simpleName ) { // first only
-    da = ho->get( idx ); // TODO: check for slimple data?
+    da = ho->get( idx ); // TODO: check for simple data?
     return 1;
   }
 
@@ -701,6 +701,57 @@ bool HolderData::setData( const QString &nm, const QVariant &da )
     return false;
   }
 }
+
+bool HolderData::getUpData( const QString &nm, int *da ) const
+{
+  if( !da ) {
+    return false;
+  }
+
+  for( HolderData *p = par; p; p=p->par ) {
+    if( p->getData( nm, da ) ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+
+bool HolderData::getUpData( const QString &nm, double *da ) const
+{
+  if( !da ) {
+    return false;
+  }
+
+  for( HolderData *p = par; p; p=p->par ) {
+    if( p->getData( nm, da ) ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool HolderData::getUpData( const QString &nm, QString &da ) const
+{
+  for( HolderData *p = par; p; p=p->par ) {
+    if( p->getData( nm, da ) ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool HolderData::getUpData( const QString &nm, QVariant &da ) const
+{
+  for( HolderData *p = par; p; p=p->par ) {
+    if( p->getData( nm, da ) ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+
 
 QStringList HolderData::getEnumStrings( const QString &enum_name ) const
 {

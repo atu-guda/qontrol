@@ -235,6 +235,11 @@ class HolderData : public QAbstractItemModel {
   virtual bool getData( const QString &nm, QVariant &da ) const;
   virtual bool getData( const QString &nm, QString &da ) const;
   virtual bool setData( const QString &nm, const QVariant &da );
+  //* get data from some of parent
+  bool getUpData( const QString &nm, int *da ) const;
+  bool getUpData( const QString &nm, double *da ) const;
+  bool getUpData( const QString &nm, QString &da ) const;
+  bool getUpData( const QString &nm, QVariant &da ) const;
 
   /** corrects data, if ni==-1 -- all elements -- now empty, see setData */
   virtual int checkData( int ni );
