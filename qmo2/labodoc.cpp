@@ -462,6 +462,8 @@ bool LaboDoc::migrateSumul() // TODO: remove after migration
     model->getData( "prm1s", &t );  sim0->setData( "prm1s", t );
     model->getData( "prm2s", &t );  sim0->setData( "prm2s", t );
     model->getData( "prm3s", &t );  sim0->setData( "prm3s", t );
+    model->getData( "prm0d", &t );  sim0->setData( "prm0d", t );
+    model->getData( "prm1d", &t );  sim0->setData( "prm1d", t );
     model->getData( "seed", &ti );  sim0->setData( "seed", ti );
     model->getData( "seedType", &ti );  sim0->setData( "seedType", ti );
     model->getData( "autoStart", &ti );  sim0->setData( "autoStart", ti );
