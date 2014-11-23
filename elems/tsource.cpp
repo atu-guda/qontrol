@@ -122,22 +122,22 @@ int TSource::do_preRun( int /*run_tp*/, int /*an*/,
   if( use_u_ch ) {
     eff_seedType_u = seedType_u;
     if( seedType_u == 3 ) { // as model
-      par->getData( "seedType", &eff_seedType_u );
+      getUpData( "seedType", &eff_seedType_u );
     };
     bseed_u = 0;
     if( addBaseSeed_u ) {
-      par->getData( "seed", &bseed_u );
+      getUpData( "seed", &bseed_u );
     };
   };
   // Phi
   if( use_f_ch ) {
     eff_seedType_p = seedType_p;
     if( seedType_p == 3 ) { // as model
-      par->getData( "seedType", &eff_seedType_p );
+      getUpData( "seedType", &eff_seedType_p );
     };
     bseed_p = 0;
     if( addBaseSeed_p ) {
-      par->getData( "seed", &bseed_p );
+      getUpData( "seed", &bseed_p );
     };
   };
 

@@ -94,7 +94,7 @@ void TFourier::initVars(void)
   tp = 2 * M_PI / omega;
   np = int( tp / tdt );
   tt = 1; // safe value
-  par->getData( "T", &tt );
+  getUpData( "T", &tt );
   t_st = 0; t_en = tt;
   if( t0 > 0 && t0 < tt-tp )
     t_st = t0;

@@ -52,11 +52,11 @@ int TRand::do_preRun( int /*run_tp*/, int /*an*/,
 {
   eff_seedType = seedType;
   if( seedType == asModel ) {
-    par->getData( "seedType", &eff_seedType );
+    getUpData( "seedType", &eff_seedType );
   };
   bseed = 0;
   if( addBaseSeed ) {
-    par->getData( "seed", &bseed );
+    getUpData( "seed", &bseed );
   };
   return 1;
 }
