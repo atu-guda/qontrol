@@ -45,22 +45,25 @@ int TGraph::fillGraphInfo( GraphInfo *gi ) const
     return -1;
   }
 
-  gi->row = gi->col = 0; gi->ny = 1;
-  gi->title = objectName();
-  if( !par || ! par->isChildOf("TModel") ) {
-    qDebug( "err: %s: %s", __PRETTY_FUNCTION__, "parent in not TModel" );
+  TModel *model = getAncestorT<TModel>();
+  if( !model  ) {
+    DBGx( "warn: fail to find model from \"%s\"", qP(getFullName()) );
     return -10;
   }
-  if( par->getState() < stateDone ) {
-    qDebug( "err: %s: %s", __PRETTY_FUNCTION__, "State is not 'Done'" );
+  if( model->getState() < stateDone ) {
+    DBGx( "warn: model state is not 'Done' : \"%s\"", qP(getFullName()) );
     return -11;
   }
 
-  TModel *model = static_cast<TModel*>(par);
+  gi->row = gi->col = 0; gi->ny = 1;
+  gi->title = objectName();
+
   // x-data
   arr = model->getOutArr( xname.cval() );
-  if( !arr )
+  if( !arr ) {
     return -1;
+  }
+
   out_nn = -1; ny = -1;
   const dvector *dat = arr->getArray();
   arr->getData( "n", &out_nn );

@@ -179,7 +179,7 @@ int TModel::nextSteps( int csteps )
       return 0;
     }
 
-    if( ii >= nn ) {
+    if( ii >= N ) {
       allEndLoop();
       ii = 0; il1++;
     };
@@ -223,7 +223,6 @@ int TModel::runOneLoop()
      if( t > rtime ) {
        unsigned long wait_ms = (unsigned long)( 1000000 * ( t - rtime ) );
        usleep( wait_ms ); // ------------------- TODO: redesign ------
-       // return 1;
      };
   };
 
@@ -231,7 +230,7 @@ int TModel::runOneLoop()
   int out_level = 0;
   if( ii == 0 ) {
     itype = IterFirst;
-  } else if( ii == nn-1 ) {
+  } else if( ii == N-1 ) {
     itype = IterLast;
     out_level = run_type;
   };
@@ -241,10 +240,7 @@ int TModel::runOneLoop()
     end_loop = 1;
   }
 
-  // TODO: process arrays
-  // for( TOutArr* arr : v_out ) {
-  //   arr->take_val( out_level );
-  // };
+  outs->takeAllVals( out_level );
 
   t += tdt; ii++;
   return 1;
@@ -301,9 +297,9 @@ void TModel::allocOutArrs( int tp ) // TODO: common code
       continue;
     }
     switch( out_tp ) { // TODO: move logic to TOutArr
-      case 0: arr->alloc( nn, 1 ); break;
-      case 1: arr->alloc( nl1, 1 ); break;
-      case 2: arr->alloc( nl1 * nl2, nl1 ); break;
+      case 0: arr->alloc( N, 1 ); break;
+      case 1: arr->alloc( n1_eff, 1 ); break;
+      case 2: arr->alloc( n1_eff * n2_eff, n1_eff ); break;
       default: ; // don't allocate special arrays
     };
   };

@@ -27,6 +27,7 @@ class ContOut : public TDataContainer {
    virtual ~ContOut() override;
    DCL_CREATE;
    DCL_STD_INF;
+   void takeAllVals( int level );
   private:
    DCL_DEFAULT_STATIC;
 };

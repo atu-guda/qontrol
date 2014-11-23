@@ -16,6 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "toutarr.h"
 #include "contout.h"
 
 using namespace std;
@@ -37,6 +38,16 @@ ContOut::~ContOut()
 
 DEFAULT_FUNCS_REG(ContOut)
 
+void ContOut::takeAllVals( int level )
+{
+  for( auto o : children() ) {
+    TOutArr *arr = qobject_cast<TOutArr*>( o );
+    if( !arr ) { // unlikely
+      continue;
+    }
+    arr->take_val( level );
+  }
+}
 
 // end of contout.cpp
 
