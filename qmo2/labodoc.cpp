@@ -206,6 +206,8 @@ bool LaboDoc::saveDocumentXML( const QString &filename )
                          .arg(file.errorString()));
     return false;
   }
+  file.setPermissions( QFileDevice::ReadUser | QFileDevice::WriteUser
+           | QFileDevice::ReadGroup | QFileDevice::ReadOther );
   QTextStream out(&file);
   out.setCodec("UTF-8");
   QApplication::setOverrideCursor(Qt::WaitCursor);
