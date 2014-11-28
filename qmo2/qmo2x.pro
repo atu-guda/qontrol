@@ -1,15 +1,16 @@
 QT += core widgets xml script printsupport
 TEMPLATE = app
 TARGET = qmo2x
-CONFIG += c++11 release warn_on qt thread 
-#QMAKE_CXXFLAGS += -std=c++11
-#CONFIG += debug warn_on qt thread 
+CONFIG += c++11 release warn_on qt thread
+QMAKE_CXXFLAGS += -std=gnu++11 -fgnu-keywords
+#CONFIG += debug warn_on qt thread
 
 RESOURCES = qmo2x.qrc
 
 INCLUDEPATH += .. ../elems
 
-LIBS += -lgsl -lgslcblas -lm
+LIBS += -lgsl -lgslcblas
+LIBS += -lmgl -lmgl-qt5
 
 SOURCES += \
   addelemdia.cpp \

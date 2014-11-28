@@ -20,6 +20,9 @@
 
 #include <QColor>
 #include <QString>
+
+#include <mgl2/qt.h>
+
 #include "dataset.h"
 #include "scaledata.h"
 class GraphInfo;
@@ -65,7 +68,9 @@ class TGraph : public TDataSet  {
    PRM_COLOR( y5color, efNRC, "Y0 color", "Color for Y5", "def=#ff00ff");
    // TODO: legend
    ScaleData *scd;
-   // PRM_OBJ( scd, 0, "Scale data", "Information about scales", "sep=block" );
+
+   // just to test
+   mglData mgd;
 
    DCL_DEFAULT_STATIC;
 };
