@@ -27,6 +27,25 @@
 #include "scaledata.h"
 class GraphInfo;
 
+//* decription of one line in plot
+
+class GraphElem : public TDataSet {
+   Q_OBJECT
+ public:
+   DCL_CTOR(GraphElem);
+   DCL_CREATE;
+   DCL_STD_INF;
+ protected:
+   PRM_STRING( src,   efNRC, "Source", "Name of source for values", "max=128" );
+   PRM_STRING( title, efNRC, "Title", "Title", "max=128" );
+   PRM_COLOR(  color, efNRC, "line color", "plot line color", "def=black" );
+   PRM_INT(    lw,    efNRC, "line width", "plot line width", "def=1\nmin=0\nmax=20" );
+
+   DCL_DEFAULT_STATIC;
+};
+
+
+// --------------------------------------------------------------------
 
 /**Description of graph
   *@author atu
@@ -46,6 +65,8 @@ class TGraph : public TDataSet  {
    /** fills fields in GraphInfo structure */
    int fillGraphInfo( GraphInfo *gi ) const;
  protected:
+   virtual void post_set() override; // to migrate
+
    /** title of graph  */
    PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nsep=blockend\ncol=-1\ndef=fig. " );
    /** name of output array for x  */
@@ -70,7 +91,7 @@ class TGraph : public TDataSet  {
    ScaleData *scd;
 
    // just to test
-   mglData mgd;
+   // mglData mgd;
 
    DCL_DEFAULT_STATIC;
 };

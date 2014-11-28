@@ -21,6 +21,20 @@
 #include "tmodel.h"
 #include "toutarr.h"
 
+
+const char* GraphElem::helpstr = "<H1>GraphElem</H1>\n"
+ "Defines one source and output type for onw  line";
+
+STD_CLASSINFO(GraphElem,clpElem);
+
+CTOR(GraphElem,TDataSet)
+{
+}
+
+DEFAULT_FUNCS_REG(GraphElem);
+
+// --------------------------------------------------------------------
+
 const char* TGraph::helpstr = "<H1>TGraph</H1>\n"
  "Define, which outputs will be used for plotting and dumping. \n"
  "All outputs must be the same type";
@@ -30,6 +44,7 @@ STD_CLASSINFO(TGraph,clpSpecial);
 CTOR(TGraph,TDataSet) ,
      scd( new ScaleData( "scd", this, 0, "scale", "scale data", "" ) )
 {
+  allowed_types = "GraphElem,GraphLabel,+SPECICAL";
 }
 
 
@@ -128,6 +143,48 @@ int TGraph::gnuPlot( int otp, const char *fn, const char *atitle,
   return k;
 }
 
+void TGraph::post_set()
+{
+  TDataSet::post_set();
+  // migration: TODO: remove after conversion
+  QString s;
+  s = xname.cval();
+
+  GraphElem *ge = getElemT<GraphElem*>( "x" );
+  if( !ge ) {
+    ge = addObj<GraphElem>( "x" );
+  }
+  if( ge ) {
+    ge->setData( "src", s );
+    ge->setData( "title", "x" );
+    ge->setParm( "sep", "block" );
+  }
+
+  GraphElem *gy = nullptr;
+  QVariant v; // realy color
+
+  for( int i=0; i<6; ++i ) {
+    s = QString();
+    QString nm_new = QStringLiteral( "y" ) + QSN(i);
+    QString nm_old_s = QString( "y%1name" ).arg( i );
+    QString nm_old_c = QString( "y%1color" ).arg( i );
+    getData( nm_old_s, s );
+    getData( nm_old_c, v );
+
+    if( ! s.isEmpty() ) {
+      gy = getElemT<GraphElem*>( nm_new );
+      if( !gy ) {
+        gy = addObj<GraphElem>( nm_new );
+      }
+      if( gy ) {
+        gy->setData( "src", s );
+        gy->setData( "title", nm_new );
+        gy->setData( "color", v );
+      }
+    }
+  }
+
+}
 
 DEFAULT_FUNCS_REG(TGraph);
 
