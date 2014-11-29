@@ -156,7 +156,7 @@ void TGraph::post_set()
   }
   if( ge ) {
     ge->setData( "src", s );
-    ge->setData( "title", "x" );
+    ge->setData( "label", "x" );
     ge->setParm( "sep", "block" );
   }
 
@@ -178,7 +178,7 @@ void TGraph::post_set()
       }
       if( gy ) {
         gy->setData( "src", s );
-        gy->setData( "title", nm_new );
+        gy->setData( "label", nm_new );
         gy->setData( "color", v );
       }
     }

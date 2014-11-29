@@ -21,7 +21,6 @@
 #include <QColor>
 #include <QString>
 
-#include <mgl2/qt.h>
 
 #include "dataset.h"
 #include "scaledata.h"
@@ -37,9 +36,10 @@ class GraphElem : public TDataSet {
    DCL_STD_INF;
  protected:
    PRM_STRING( src,   efNRC, "Source", "Name of source for values", "max=128" );
-   PRM_STRING( title, efNRC, "Title", "Title", "max=128" );
+   PRM_STRING( label, efNRC, "Label", "Label", "max=128" );
    PRM_COLOR(  color, efNRC, "line color", "plot line color", "def=black" );
-   PRM_INT(    lw,    efNRC, "line width", "plot line width", "def=1\nmin=0\nmax=20" );
+   PRM_INT(    lw,    efNRC, "line width", "plot line width", "def=1\nmin=0\nmax=9" );
+   PRM_STRING( extra, efNRC, "Extra", "Extra options to plot", "max=128\ndef=-" );
 
    DCL_DEFAULT_STATIC;
 };
@@ -57,6 +57,28 @@ class TGraph : public TDataSet  {
    DCL_CTOR(TGraph);
    DCL_CREATE;
    DCL_STD_INF;
+
+   enum PlotType {
+     PlotPLot = 0, PlotRadar, PlotStep, PlotArea, PlotRegion, // 1D
+     PlotStem, PlotBars, PlotBarh, PlotChart,
+     PlotSurf, PlotMesh, PlotFall, PlotBelt, PlotCont // 2D. TODO: more
+   };
+   Q_ENUMS( PlotType );
+   Q_CLASSINFO( "enum_PlotType_0",  "Plot   " );      // PlotPlot
+   Q_CLASSINFO( "enum_PlotType_1",  "Radar  " );      // PlotRadar
+   Q_CLASSINFO( "enum_PlotType_2",  "Step   " );      // PlotStep
+   Q_CLASSINFO( "enum_PlotType_3",  "Area   " );      // PlotArea
+   Q_CLASSINFO( "enum_PlotType_4",  "Region " );      // PlotRegion
+   Q_CLASSINFO( "enum_PlotType_5",  "Stem   " );      // PlotStem
+   Q_CLASSINFO( "enum_PlotType_6",  "Bars   " );      // PlotBars
+   Q_CLASSINFO( "enum_PlotType_7",  "Barh   " );      // PlotBarh
+   Q_CLASSINFO( "enum_PlotType_8",  "Chart  " );      // PlotChart
+   Q_CLASSINFO( "enum_PlotType_9",  "Surf 2D" );      // PlotSurf
+   Q_CLASSINFO( "enum_PlotType_10", "Mesh 2D" );      // PlotMesh
+   Q_CLASSINFO( "enum_PlotType_11", "Fall 2D" );      // PlotFall
+   Q_CLASSINFO( "enum_PlotType_12", "Belt 2D" );      // PlotBelt
+   Q_CLASSINFO( "enum_PlotType_13", "Cont 2D" );      // PlotCont
+
    /** dumps data to file */
    int  dump( const char *fn, char delim = ' ' );
    /** dumps data to file to be used by gnuplot */
@@ -68,7 +90,20 @@ class TGraph : public TDataSet  {
    virtual void post_set() override; // to migrate
 
    /** title of graph  */
-   PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nsep=blockend\ncol=-1\ndef=fig. " );
+   PRM_LIST( type,  efNRC, "Type", "Plot Type", "enum=PlotType" );
+   PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nsep=col\ndef=fig. " );
+   PRM_INT(    w0,    efNRC, "width", "Initial plot width", "def=800\nmin=100\nmax=10000\nsep=col" );
+   PRM_INT(    h0,    efNRC, "height", "Initial plot width height", "def=600\nmin=100\nmax=10000\n" );
+   PRM_DOUBLE( plotScale,  efNRC, "Plot scale", "Plot scale relative to canvas", "def=1.3\nmin=0.5\nmax=10\nsep=block" );
+   PRM_DOUBLE( fontSise,  efNRC, "Font size", "Base font size", "def=2.0\nmin=0.1\nmax=10" );
+   PRM_SWITCH( useLight,  efNRC, "Light", "Use lighting", "def=1\nsep=col" );
+   PRM_SWITCH( useAlpha,  efNRC, "Use alpha", "Use transparency", "def=0" );
+   PRM_DOUBLE( alpha,     efNRC, "Alpha", "transparency value", "def=0.5\nmin=0.0\nmax=1.0" );
+   PRM_COLOR( bgcolor, efNRC, "BG color", "Background color", "sep=col\ndef=#000060");
+   PRM_STRING( extra, efNRC, "Extra", "Extra options to plot", "max=128" );
+   PRM_STRING( colorScheme, efNRC, "Color scheme", "Color Scheme for 2D plot", "max=128\ndef=BbcyrR" );
+
+   // old values: TODO: remove after conversion
    /** name of output array for x  */
    PRM_STRING( xname, efNRC, "X  name", "Name of source for X values", "max=64\nsep=block" );
    /** names of output array for y[i]  */
@@ -78,10 +113,8 @@ class TGraph : public TDataSet  {
    PRM_STRING( y3name, efNRC, "Y3 name", "Name of source for Y3 values", "max=64" );
    PRM_STRING( y4name, efNRC, "Y4 name", "Name of source for Y4 values", "max=64" );
    PRM_STRING( y5name, efNRC, "Y5 name", "Name of source for Y5 values", "max=64" );
-   /** back color  */
-   PRM_COLOR( bgcolor, efNRC, "BG color", "Background color", "sep=col\ndef=#000060");
    /** color of lines */
-   PRM_COLOR( y0color, efNRC, "Y0 color", "Color for Y0", "def=white");
+   PRM_COLOR( y0color, efNRC, "Y0 color", "Color for Y0", "def=white\nsep=col");
    PRM_COLOR( y1color, efNRC, "Y0 color", "Color for Y1", "def=yellow");
    PRM_COLOR( y2color, efNRC, "Y0 color", "Color for Y2", "def=#ff0000");
    PRM_COLOR( y3color, efNRC, "Y0 color", "Color for Y3", "def=#00ff00");
