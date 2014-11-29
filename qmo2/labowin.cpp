@@ -365,6 +365,19 @@ void LaboWin::initIface()
   connect( act_showgraph, &QAction::triggered, this, &LaboWin::slotShowGraph);
   model_acts << act_showgraph;
 
+  // TODO: remove previos and adjust keys
+  act_showmgl = new QAction( /*QIcon( ":icons/showgraph.png" ),*/ "Show &MGL", this );
+  // act_showmgl->setShortcut( Qt::Key_S );
+  act_showmgl->setWhatsThis( tr("Show plot via MGL") );
+  connect( act_showmgl, &QAction::triggered, this, &LaboWin::slotShowMgl );
+  model_acts << act_showmgl;
+
+  act_graphaddout = new QAction( "Add out to plot", this );
+  act_graphaddout->setWhatsThis( tr("Add current output array to plo") );
+  connect( act_graphaddout, &QAction::triggered, this, &LaboWin::slotGraphAddOut );
+  model_acts << act_graphaddout;
+
+
   act_showgraphdata = new QAction( QIcon( ":icons/showgraphdata.png" ), "show plot Data", this );
   act_showgraphdata->setShortcut(  Qt::SHIFT+Qt::Key_D );
   act_showgraphdata->setWhatsThis( tr("Show plot data") );
@@ -601,6 +614,9 @@ void LaboWin::initIface()
   pGraphMenu->addAction( act_selectgraph );
   pGraphMenu->addSeparator();
   pGraphMenu->addAction( act_showgraph );
+  pGraphMenu->addAction( act_showmgl );
+  pGraphMenu->addSeparator();
+  pGraphMenu->addAction( act_graphaddout );
   pGraphMenu->addSeparator();
   pGraphMenu->addAction( act_showgraphdata );
   pGraphMenu->addAction( act_exportgraphdata );
@@ -1432,6 +1448,26 @@ void LaboWin::slotShowGraph()
   LaboView* m =  activeMdiChild();
   if ( m )
     m->showGraph();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+void LaboWin::slotShowMgl()
+{
+  statusBar()->showMessage( tr( "Showing plot..." ) );
+
+  LaboView* m =  activeMdiChild();
+  if ( m )
+    m->showMgl();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+void LaboWin::slotGraphAddOut()
+{
+  statusBar()->showMessage( tr( "Adding current output to plot..." ) );
+
+  LaboView* m =  activeMdiChild();
+  if ( m )
+    m->graphAddOut();
   statusBar()->showMessage( tr( "Ready." ) );
 }
 

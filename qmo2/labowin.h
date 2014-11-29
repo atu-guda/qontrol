@@ -173,6 +173,8 @@ class LaboWin : public QMainWindow
     void slotEditGraph();
     void slotSelectGraph();
     void slotShowGraph();
+    void slotShowMgl();
+    void slotGraphAddOut();
     void slotShowGraphData();
     void slotExportGraphData();
     void slotGnuplotGraph();
@@ -285,7 +287,7 @@ class LaboWin : public QMainWindow
             *act_showoutdata, *act_exportout,
             // graph
             *act_newgraph, *act_delgraph, *act_editgraph, *act_selectgraph,
-            *act_showgraph, *act_showgraphdata,
+            *act_showgraph, *act_showmgl, *act_graphaddout, *act_showgraphdata,
             *act_exportgraphdata, *act_gnuplotgraph,
             // simulation
             *act_newSimul, *act_delSimul, *act_editSimul, *act_selectSimul,

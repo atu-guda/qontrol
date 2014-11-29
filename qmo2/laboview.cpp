@@ -1073,6 +1073,40 @@ void LaboView::showGraph()
   plotWnd->show();
 }
 
+void LaboView::showMgl()
+{
+  if( ! checkState( validCheck ) ) {
+    return;
+  }
+
+  QString nm = getSelName( plots_view );
+  if( nm.isEmpty() ) {
+    return;
+  }
+
+  TGraph *gra = model->getGraph( nm );
+  if( !gra ) {
+    return;
+  }
+
+  showWarn( "Unimplemented now" );
+
+  // QMainWindow *plotWnd = new QMainWindow( this );
+  // plotWnd->setWindowTitle( QString( PACKAGE ": Plot ") + gra->objectName() );
+  // PlotView *pv = new PlotView( doc, gra, plotWnd );
+  // plotWnd->setCentralWidget( pv );
+  // pv->setFocus();
+  // plotWnd->show();
+}
+
+void LaboView::graphAddOut()
+{
+  if( ! checkState( validCheck ) ) {
+    return;
+  }
+  showWarn( "Unimplemented now" );
+}
+
 void LaboView::showGraphData()
 {
   if( ! checkState( doneCheck ) ) {
