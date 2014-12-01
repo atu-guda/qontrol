@@ -18,6 +18,9 @@
 // include files for Qt
 #include <QtWidgets>
 
+// test: TODO: remoe if not req
+#include <mgl2/qmathgl.h>
+
 // application specific includes
 #include "miscfun.h"
 #include "laboview.h"
@@ -30,6 +33,7 @@
 #include "doubletable.h"
 #include "runview.h"
 #include "plotview.h"
+#include "mglview.h"
 #include "simulview.h"
 #include "datawidget.h"
 #include "addelemdia.h"
@@ -1067,6 +1071,7 @@ void LaboView::showGraph()
 
   QMainWindow *plotWnd = new QMainWindow( this );
   plotWnd->setWindowTitle( QString( PACKAGE ": Plot ") + gra->objectName() );
+  plotWnd->setAttribute( Qt::WA_DeleteOnClose );
   PlotView *pv = new PlotView( doc, gra, plotWnd );
   plotWnd->setCentralWidget( pv );
   pv->setFocus();
@@ -1089,14 +1094,16 @@ void LaboView::showMgl()
     return;
   }
 
-  showWarn( "Unimplemented now" );
+  QMainWindow *plotWnd = new QMainWindow( this );
+  plotWnd->setWindowTitle( QString( PACKAGE ": MGL ") + gra->objectName() );
+  plotWnd->setAttribute( Qt::WA_DeleteOnClose );
+  MglView *pv = new MglView( gra, plotWnd );
+  // QWidget *pv = new QWidget( plotWnd );
+  // QMathGL *pv = new QMathGL( plotWnd );
 
-  // QMainWindow *plotWnd = new QMainWindow( this );
-  // plotWnd->setWindowTitle( QString( PACKAGE ": Plot ") + gra->objectName() );
-  // PlotView *pv = new PlotView( doc, gra, plotWnd );
-  // plotWnd->setCentralWidget( pv );
-  // pv->setFocus();
-  // plotWnd->show();
+  plotWnd->setCentralWidget( pv );
+  pv->setFocus();
+  plotWnd->show();
 }
 
 void LaboView::graphAddOut()

@@ -29,6 +29,7 @@ SOURCES += \
   labodoc.cpp \
   laboview.cpp \
   labowin.cpp \
+  mglview.cpp \
   outdataview.cpp \
   plotview.cpp \
   runview.cpp \
@@ -94,6 +95,7 @@ HEADERS += \
   labodoc.h \
   laboview.h \
   labowin.h \
+  mglview.h \
   outdataview.h \
   plotview.h \
   runview.h \

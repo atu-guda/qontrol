@@ -59,7 +59,7 @@ class TGraph : public TDataSet  {
    DCL_STD_INF;
 
    enum PlotType {
-     PlotPLot = 0, PlotRadar, PlotStep, PlotArea, PlotRegion, // 1D
+     PlotPlot = 0, PlotRadar, PlotStep, PlotArea, PlotRegion, // 1D
      PlotStem, PlotBars, PlotBarh, PlotChart,
      PlotSurf, PlotMesh, PlotFall, PlotBelt, PlotCont // 2D. TODO: more
    };
