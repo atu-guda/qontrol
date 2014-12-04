@@ -19,6 +19,7 @@
 #define MGLVIEW_H
 
 #include <QString>
+#include <QStringList>
 #include <QWidget>
 #include <QColor>
 #include <QList>
@@ -42,8 +43,20 @@ class MglDrawer : public mglDraw
    virtual ~MglDrawer() override;
    virtual int Draw( mglGraph *gr ) override;
    virtual void Reload() override;
+   void resetData();
+   QSize getSize0() const { return QSize( w0, h0 ); }
   protected:
    TGraph *gra;
+   TModel *model = nullptr;
+   // TGraph::PlotType type = TGraph::PlotType::PlotPlot; // need include for now
+   int type = 0;
+   int w0 = 200, h0 = 180;
+   double x_min = 0, x_max = 0.01, y_min = 0, y_max = 0; // TODO: z?
+   QList<mglData*> d;
+   QString label_x, label_y;
+   QStringList labels;
+   QStringList extras;
+   mglData *dx = nullptr;
 };
 
 /**can plot graphs for TModel on info by TGraph
@@ -64,19 +77,10 @@ class MglView : public QWidget  {
    // virtual void mousePressEvent( QMouseEvent *me );
    // virtual void keyPressEvent( QKeyEvent *ke );
  protected:
-   // TGraph *gra;
-   // TModel *model = nullptr;
    QVBoxLayout *lay;
    MglDrawer *drawer;
    QMathGL *mgl;
    QLabel *lbl;
-   int xxx = 1; // just for debug
-   // TGraph::PlotType type =TGraph::PlotType::PlotPlot; // need include for now
-   // int type = 0;
-   // int w0 = 200, h0 = 180;
-   // double x_min = 0, x_max = 0.01, y_min = 0, y_max = 0; // TODO: z?
-   // QList<mglData*> d;
-   // mglData *dx = nullptr;
 };
 
 #endif

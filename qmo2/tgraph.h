@@ -94,8 +94,10 @@ class TGraph : public TDataSet  {
    PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nsep=col\ndef=fig. " );
    PRM_INT(    w0,    efNRC, "width", "Initial plot width", "def=800\nmin=100\nmax=10000\nsep=col" );
    PRM_INT(    h0,    efNRC, "height", "Initial plot width height", "def=600\nmin=100\nmax=10000\n" );
-   PRM_DOUBLE( plotScale,  efNRC, "Plot scale", "Plot scale relative to canvas", "def=1.3\nmin=0.5\nmax=10\nsep=block" );
+   PRM_DOUBLE( plotFactor,  efNRC, "Plot factor", "Plot scale relative to canvas", "def=1.3\nmin=0.5\nmax=10\nsep=block" );
    PRM_DOUBLE( fontSise,  efNRC, "Font size", "Base font size", "def=2.0\nmin=0.1\nmax=10" );
+   PRM_DOUBLE( phi,  efNRC, "Phi", "Phi angle", "def=0.0" );
+   PRM_DOUBLE( theta,  efNRC, "Theta", "Theta angle", "def=0.0" );
    PRM_SWITCH( useLight,  efNRC, "Light", "Use lighting", "def=1\nsep=col" );
    PRM_SWITCH( useAlpha,  efNRC, "Use alpha", "Use transparency", "def=0" );
    PRM_DOUBLE( alpha,     efNRC, "Alpha", "transparency value", "def=0.5\nmin=0.0\nmax=1.0" );
@@ -115,11 +117,11 @@ class TGraph : public TDataSet  {
    PRM_STRING( y5name, efNRC, "Y5 name", "Name of source for Y5 values", "max=64" );
    /** color of lines */
    PRM_COLOR( y0color, efNRC, "Y0 color", "Color for Y0", "def=white\nsep=col");
-   PRM_COLOR( y1color, efNRC, "Y0 color", "Color for Y1", "def=yellow");
-   PRM_COLOR( y2color, efNRC, "Y0 color", "Color for Y2", "def=#ff0000");
-   PRM_COLOR( y3color, efNRC, "Y0 color", "Color for Y3", "def=#00ff00");
-   PRM_COLOR( y4color, efNRC, "Y0 color", "Color for Y4", "def=#0000ff");
-   PRM_COLOR( y5color, efNRC, "Y0 color", "Color for Y5", "def=#ff00ff");
+   PRM_COLOR( y1color, efNRC, "Y1 color", "Color for Y1", "def=yellow");
+   PRM_COLOR( y2color, efNRC, "Y2 color", "Color for Y2", "def=#ff0000");
+   PRM_COLOR( y3color, efNRC, "Y3 color", "Color for Y3", "def=#00ff00");
+   PRM_COLOR( y4color, efNRC, "Y4 color", "Color for Y4", "def=#0000ff");
+   PRM_COLOR( y5color, efNRC, "Y5 color", "Color for Y5", "def=#ff00ff");
    // TODO: legend
    ScaleData *scd;
 
