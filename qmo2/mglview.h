@@ -30,6 +30,8 @@ class QMathGL;
 class mglData;
 class mglGraph;
 class mglDraw;
+class QVBoxLayout;
+class QLabel;
 
 //* inner helper class to draw MathGL plot
 
@@ -64,10 +66,10 @@ class MglView : public QWidget  {
  protected:
    // TGraph *gra;
    // TModel *model = nullptr;
+   QVBoxLayout *lay;
    MglDrawer *drawer;
-   // MglDrawer drawer;
    QMathGL *mgl;
-   // QWidget *xxw; // more debug
+   QLabel *lbl;
    int xxx = 1; // just for debug
    // TGraph::PlotType type =TGraph::PlotType::PlotPlot; // need include for now
    // int type = 0;

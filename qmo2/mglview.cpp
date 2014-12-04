@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include <cmath>
+
 #include <QtWidgets>
 #include <QPrinter>
 #include <QPrintDialog>
@@ -59,11 +60,15 @@ void MglDrawer::Reload( )
 
 MglView::MglView( TGraph *agra, QWidget *parent )
           : QWidget( parent ),
+          lay( new QVBoxLayout( this ) ),
           drawer( new MglDrawer( agra ) ),
-          // drawer( agra ),
-          mgl( new QMathGL( this ) )
+          mgl( new QMathGL( this ) ),
+          lbl( new QLabel( "lbl", this) )
 {
   // getData();
+  lbl->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+  lay->addWidget( mgl );
+  lay->addWidget( lbl );
   mgl->setDraw( drawer );
   mgl->update();
 }
