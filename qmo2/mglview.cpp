@@ -40,7 +40,7 @@ MglDrawer::MglDrawer( TGraph *agra )
 
 MglDrawer::~MglDrawer()
 {
-  DBGx( "dbg: dtor gra=%p", gra );
+  // DBGx( "dbg: dtor gra=%p", gra );
   resetData();
   gra = nullptr; // not delete, we are not owner, just for debug
 }
@@ -94,10 +94,6 @@ int MglDrawer::Draw( mglGraph *gr )
   int i_cb;
   gra->getData( "bgcolor", &i_cb );
   QColor cv = QRgb( i_cb );
-  // QString s_cb; // TODO: remove after debug: need not here
-  // s_cb.sprintf( "{x%02X%02X%02X}", cv.red(),  cv.green(), cv.blue() );
-  //DBGx( "dbg: bgcolor ok=%d %lf %lf %lf \"%s\" %6X.",
-  //    (int)(ok), cv.redF(), cv.greenF(), cv.blueF(), qP(s_cb), i_cb )
   gr->Clf( cv.redF(), cv.greenF(), cv.blueF() );
 
   int start_idx = 0; // most of 1D plots
@@ -172,6 +168,7 @@ void MglDrawer::Reload( )
     return;
   }
 
+
   gra->getData( "w0", &w0 );
   gra->getData( "h0", &h0 );
 
@@ -203,24 +200,22 @@ void MglDrawer::Reload( )
   }
 
 
-  // get all other elements
-  int nx = 0;
-  arr->getData( "n", &nx );
+  int nn = 0;
+  arr->getData( "n", &nn );
   int ny = 1;
   arr->getData( "ny", &ny );
+  int nx = nn / ny;
   arr->getData( "dmin", &x_min );
   arr->getData( "dmax", &x_max );
   const dvector *ve = arr->getArray();
-  const double *ver = ve->data();
   arr->getData( "label", label_x );
 
-  mglData *md = new mglData( nx, ny );
-  dx = md;
-  md->Link( const_cast<double*>(ver), nx, ny );
 
   QString label_c, extra_c;
   int ng = 0;
 
+  // get all other elements
+  vector< const dvector* > ves;
   for( auto c : gra->children() ) {
     ge = qobject_cast<GraphElem*>( c );
     if( ! ge ) {
@@ -239,8 +234,15 @@ void MglDrawer::Reload( )
     if( !arr ) {
       continue;
     }
-    arr->getData( "n", &nx );
-    arr->getData( "ny", &ny );
+
+    int nn_c = 0;
+    arr->getData( "n", &nn_c );
+    int ny_c = 1;
+    arr->getData( "ny", &ny_c );
+    int nx_c = nn_c / ny_c;
+    if( nn_c != nn  ||  ny_c != ny  ||  nx_c != nx ) { // only same dimensions
+      continue;
+    }
     double tmin = 0, tmax = 0;
     arr->getData( "dmin", &tmin );
     arr->getData( "dmax", &tmax );
@@ -250,8 +252,7 @@ void MglDrawer::Reload( )
     if( tmax > y_max ) {
       y_max = tmax;
     }
-    ve = arr->getArray();
-    ver = ve->data();
+    ves.push_back( arr->getArray() );
 
     label_c = QString( "y_%1" ).arg( ng );
     arr->getData( "label", label_c );
@@ -275,14 +276,88 @@ void MglDrawer::Reload( )
     extras.push_back( extra_c );
 
 
-    mglData *md = new mglData( nx, ny );
-    md->Link( const_cast<double*>(ver), nx, ny );
-    d.push_back( md );
     DBGx( "dbg: added array \"%s\" nx= %d, ny=%d ng = %d label: \"%s\" extra: \"%s\"",
         qP(arr->getFullName()), nx, ny, ng, qP(label_c), qP(extra_c) );
     ++ng;
 
   }
+
+  const int max_nn_nosqz = 2000;
+  int np = nn; // number of selected points
+  vector<uint8_t> plp( nn, 0 ); // flags: point worth to draw
+
+  if( nn > max_nn_nosqz ) {
+
+    const double qual = 1.3; // TODO: param
+    const int nd0 = 4;
+    double mdlt_y = qual * ( y_max - y_min ) / h0; // TODO: current height?
+    int stp0 = nn * nd0 / h0;
+    np = 0;
+
+
+    // base grid
+    for( int i=0; i<nn; i+=stp0 ) {
+      plp[i] = 1;
+      ++np;
+    }
+    if( ! plp[nn-1] ) {
+      plp[nn-1] = 1;
+      ++np;
+    }
+    // DBGx( " dbg: np start = %d  mdlt_y= %f" , np, mdlt_y );
+
+    int was_add = 1;
+    for( int n_add = 0; was_add && n_add < 10; ++n_add ) { // 10 : max iterations to split
+      was_add = 0;
+      for( auto yyc : ves ) {
+        for( int i0 = 0, i1 = 0; i0 < nn-1; i0 = i1 ) {
+          for( i1 = i0+1; !plp[i1] && i1 < nn; ++i1 ) /* NOP: find next set*/;
+          double x0 = (*ve)[i0], x1 = (*ve)[i1];
+          double y0 = (*yyc)[i0], y1 = (*yyc)[i1];
+          if( y0 == y1 ) {
+            continue;
+          }
+          double kxy = ( y1 - y0 ) / ( x1 - x0 );
+
+          // find point of maximum delta
+          int i_cm = 0; // index of current maximum
+          double dly_cm = 0; // value of this max
+          for( int i2=i0+1; i2<i1-1; ++i2 ) {
+            double yc = y0 + kxy * ( (*ve)[i2] - x0 );
+            double dly = fabs( yc - (*yyc)[i2] );
+            if( dly > dly_cm ) {
+              dly_cm = dly; i_cm = i2;
+            }
+          }
+          if( dly_cm > mdlt_y  && ! plp[i_cm]  ) { // may be set by other
+            plp[i_cm] = 1; ++np; ++was_add;
+          }
+        }
+      }
+      // DBGx( " dbg: np mid = %d  n_add= %d was_add= %d" , np, n_add, was_add );
+    }
+  } else {
+    plp.assign( nn, 1 ); // all point are good
+  }
+  // DBGx( "dbg: nn: %d np: %d nx: %d ny: %d ng: %d", nn, np, nx, ny, ng );
+
+  // create mglData for X and copy data
+  mglData *md = new mglData( np, ny );
+  dx = md;
+  for( int ig=0; ig<ng; ++ig ) {
+    d.push_back( new mglData( np, ny ) );
+  }
+
+  for( int i=0, j=0; i<nn && j<np ; ++i ) {
+    if( plp[i] ) {
+      dx->a[j] = (*ve)[i];
+      for( int ig=0; ig<ng; ++ig ) {
+        d[ig]->a[j] = (*ves[ig])[i];
+      }
+      ++j;
+    }
+  }
+
 }
 
 // ------------------------- MglView ------------------------
