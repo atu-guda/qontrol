@@ -86,31 +86,17 @@ class TGraph : public TDataSet  {
                 const char *eps_fn, const char *dat_fn );
    /** fills fields in GraphInfo structure */
    int fillGraphInfo( GraphInfo *gi ) const;
+   void migrate1(); // to migrate
  protected:
-   virtual void post_set() override; // to migrate
 
    /** title of graph  */
    PRM_LIST( type,  efNRC, "Type", "Plot Type", "enum=PlotType" );
    PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nsep=col\ndef=fig. " );
-   PRM_INT(    w0,    efNRC, "width", "Initial plot width", "def=800\nmin=100\nmax=10000\nsep=col" );
-   PRM_INT(    h0,    efNRC, "height", "Initial plot width height", "def=600\nmin=100\nmax=10000\n" );
-   PRM_DOUBLE( plotFactor,  efNRC, "Plot factor", "Plot scale relative to canvas", "def=1.3\nmin=0.5\nmax=10\nsep=block" );
-   PRM_DOUBLE( fontSise,  efNRC, "Font size", "Base font size", "def=2.0\nmin=0.1\nmax=10" );
-   PRM_DOUBLE( phi,  efNRC, "Phi", "Phi angle", "def=0.0" );
-   PRM_DOUBLE( theta,  efNRC, "Theta", "Theta angle", "def=0.0" );
-   PRM_SWITCH( useLight,  efNRC, "Light", "Use lighting", "def=1\nsep=col" );
-   PRM_SWITCH( useAlpha,  efNRC, "Use alpha", "Use transparency", "def=0" );
-   PRM_DOUBLE( alpha,     efNRC, "Alpha", "transparency value", "def=0.5\nmin=0.0\nmax=1.0" );
-   PRM_INT( legend_pos,   efNRC, "Legend pos", "Legend position index", "def=3\nmin=0\nmax=4" );
-   PRM_COLOR( bgcolor, efNRC, "BG color", "Background color", "sep=col\ndef=#FFFFFF");
-   PRM_COLOR( axis_color, efNRC, "Axis color", "Axis color", "def=#000000");
-   PRM_COLOR( grid_color, efNRC, "Grid color", "Grid color", "def=#CCCCCC");
-   PRM_STRING( extra, efNRC, "Extra", "Extra options to plot", "max=128" );
-   PRM_STRING( colorScheme, efNRC, "Color scheme", "Color Scheme for 2D plot", "max=128\ndef=BbcyrR" );
 
    // old values: TODO: remove after conversion
    /** name of output array for x  */
    PRM_STRING( xname, efNRC, "X  name", "Name of source for X values", "max=64\nsep=block" );
+   PRM_COLOR( bgcolor, efOld, "BG color", "Background color", "sep=col\ndef=#FFFFFF");
    /** names of output array for y[i]  */
    PRM_STRING( y0name, efNRC, "Y0 name", "Name of source for Y0 values", "max=64" );
    PRM_STRING( y1name, efNRC, "Y1 name", "Name of source for Y1 values", "max=64" );

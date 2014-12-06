@@ -143,24 +143,39 @@ int TGraph::gnuPlot( int otp, const char *fn, const char *atitle,
   return k;
 }
 
-void TGraph::post_set()
+// migration: TODO: remove after conversion
+void TGraph::migrate1()
 {
-  TDataSet::post_set();
-  // migration: TODO: remove after conversion
-  QString s;
+  QString s, lbl;
   s = xname.cval();
 
   GraphElem *ge = getElemT<GraphElem*>( "x" );
   if( ge ) { // already converted
     return;
   }
-  bgcolor = QColor( 255, 255, 255 );
+
+  if( scd ) {
+    scd->bgcolor = QColor( 255, 255, 255 );
+  }
+
+  TModel *model = getAncestorT<TModel>();
+  if( !model  ) {
+    DBGx( "warn: fail to find model from \"%s\"", qP(getFullName()) );
+    return;
+  }
 
   ge = addObj<GraphElem>( "x" );
   if( ge ) {
+    lbl = "x";
     ge->setData( "src", s );
-    ge->setData( "label", "x" );
     ge->setParm( "sep", "block" );
+    TOutArr *arr = model->getOutArr( s );
+    if( arr ) {
+      arr->getData( "label", lbl );
+    } else {
+      DBGx( "warn: not found array \"%s\"", qP( s ) );
+    }
+    ge->setData( "label", lbl );
   }
 
   GraphElem *gy = nullptr;
@@ -174,7 +189,7 @@ void TGraph::post_set()
     getData( nm_old_s, s );
     getData( nm_old_c, &li_col );
     DBGx( "dbg: color for \"%s\" : %X", qP(nm_old_s), li_col );
-    if( li_col == 0xFFFFFF ) { // white->black
+    if( ( li_col & 0xFFFFFF  ) == 0xFFFFFF ) { // white->black
       li_col = 0;
     }
     li_col = QColor( QRgb(li_col) ).darker( 200 ).rgb();
@@ -186,8 +201,13 @@ void TGraph::post_set()
       }
       if( gy ) {
         gy->setData( "src", s );
-        gy->setData( "label", nm_new );
+        lbl = nm_new;
         gy->setData( "color", li_col );
+        TOutArr *arr = model->getOutArr( s );
+        if( arr ) {
+          arr->getData( "label", lbl );
+        }
+        gy->setData( "label", lbl );
       }
     }
   }

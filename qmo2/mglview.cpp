@@ -65,7 +65,11 @@ void MglDrawer::resetData()
   label_x = label_y = QString();
   labels.clear();
   extras.clear();
-  w0 = 100; h0 = 50;
+}
+
+QSize MglDrawer::getSize0() const
+{
+  return scd ? QSize( scd->w0, scd->h0 ) : QSize( 50, 50);
 }
 
 int MglDrawer::Draw( mglGraph *gr )
@@ -74,12 +78,12 @@ int MglDrawer::Draw( mglGraph *gr )
     return 0;
   }
 
-  gr->SetFontSize( fsz );
-  gr->SetPlotFactor( plotFactor );
-  gr->Rotate( phi, theta );
-  gr->Light( useLight );
-  gr->SetAlphaDef( alpha );
-  gr->Alpha( (bool)(useAlpha) );
+  gr->SetFontSize( scd->fontSise );
+  gr->SetPlotFactor( scd->plotFactor );
+  gr->Rotate( scd->phi, scd->theta );
+  gr->Light( scd->useLight );
+  gr->SetAlphaDef( scd->alpha );
+  gr->Alpha( (bool)(scd->useAlpha) );
 
   gr->SetRanges( x_min, x_max, y_min, y_max );
 
@@ -92,10 +96,10 @@ int MglDrawer::Draw( mglGraph *gr )
   gr->SetTicks( 'x', -(scd->gridX), scd->tickX );
   gr->SetTicks( 'y', -(scd->gridY), scd->tickY );
 
-  QByteArray axis_style = color2style( axis_color.rgb(), 1 ).toLocal8Bit();
-  QByteArray grid_style = color2style( grid_color.rgb(), 1, "=" ).toLocal8Bit();
+  QByteArray axis_style = color2style( QColor(scd->axis_color).rgb(), 1 ).toLocal8Bit();
+  QByteArray grid_style = color2style( QColor(scd->grid_color).rgb(), 1, "=" ).toLocal8Bit();
 
-  gr->Clf( bgcolor.redF(), bgcolor.greenF(), bgcolor.blueF() );
+  gr->Clf( QColor(scd->bgcolor).redF(), QColor(scd->bgcolor).greenF(), QColor(scd->bgcolor).blueF() );
 
   int start_idx = 0; // most of 1D plots
   int end_idx = d.size();
@@ -118,32 +122,32 @@ int MglDrawer::Draw( mglGraph *gr )
 
   for( int ng = start_idx; ng < end_idx; ++ng ) {
     auto di = d[ng];
-    auto lbl = labels[ng];
-    auto extra = qP( extras[ng] );
+
+    gr->AddLegend( labels[ng].c_str(), extras[ng].c_str() );
     switch( type ) {
       case TGraph::PlotType::PlotPlot:
-        gr->Plot( *dx, *di, extra );
+        gr->Plot( *dx, *di, extras[ng].c_str() );
         break;
       case TGraph::PlotType::PlotRadar:
-        gr->Radar( *di, extra );
+        gr->Radar( *di, extras[ng].c_str() );
         break;
       case TGraph::PlotType::PlotStep:
-        gr->Step( *dx, *di, extra );
+        gr->Step( *dx, *di, extras[ng].c_str() );
         break;
       case TGraph::PlotType::PlotArea:
-        gr->Area( *dx, *di, extra );
+        gr->Area( *dx, *di, extras[ng].c_str() );
         break;
       case TGraph::PlotType::PlotStem:
-        gr->Stem( *dx, *di, extra );
+        gr->Stem( *dx, *di, extras[ng].c_str() );
         break;
       case TGraph::PlotType::PlotBars:
-        gr->Bars( *dx, *di, extra );
+        gr->Bars( *dx, *di, extras[ng].c_str() );
         break;
       case TGraph::PlotType::PlotBarh:
-        gr->Barh( *dx, *di, extra );
+        gr->Barh( *dx, *di, extras[ng].c_str() );
         break;
       case TGraph::PlotType::PlotChart:
-        gr->Chart( *di, extra );
+        gr->Chart( *di, extras[ng].c_str() );
         break;
       case TGraph::PlotType::PlotSurf:
         // gr->Surf( *dx, *dy, *di );
@@ -155,6 +159,9 @@ int MglDrawer::Draw( mglGraph *gr )
 
 
   gr->Box( axis_style );
+  if( scd->legend_pos < 4 ) {
+    gr->Legend( scd->legend_pos, "#" );
+  }
   return 1;
 }
 
@@ -174,25 +181,6 @@ void MglDrawer::Reload( )
     scd_del = scd; // to delete on exit
   }
 
-
-  gra->getData( "w0", &w0 );
-  gra->getData( "h0", &h0 );
-
-  gra->getData( "fontSise", &fsz );
-  gra->getData( "plotFactor", &plotFactor );
-  gra->getData( "phi", &phi );
-  gra->getData( "theta", &theta );
-  gra->getData( "useLight", &useLight );
-  gra->getData( "useAlpha", &useAlpha );
-  gra->getData( "alpha", &alpha );
-
-  int col;
-  gra->getData( "bgcolor", &col );
-  bgcolor = QColor( col );
-  gra->getData( "axis_color", &col );
-  axis_color = QColor( col );
-  gra->getData( "grid_color", &col );
-  grid_color = QColor( col );
 
   gra->getData( "type", &type );
 
@@ -277,11 +265,12 @@ void MglDrawer::Reload( )
     ves.push_back( arr->getArray() );
 
     label_c = QString( "y_%1" ).arg( ng );
-    arr->getData( "label", label_c );
-    if( labels.isEmpty() ) {
+    ge->getData( "label", label_c );
+    if( labels.empty() ) {
       label_y = label_c;
     }
-    labels.push_back( label_c );
+    label_c.prepend( QSN(ng) + ": " );
+    labels.push_back( label_c.toLocal8Bit().constData() );
 
     int lw = 1;
     ge->getData( "lw", &lw );
@@ -292,7 +281,7 @@ void MglDrawer::Reload( )
     QString extra_add = QString( "" );
     ge->getData( "extra", extra_add );
     extra_c = color2style( i_cc, lw, extra_add );
-    extras.push_back( extra_c );
+    extras.push_back( extra_c.toLocal8Bit().constData() );
 
 
     DBGx( "dbg: added array \"%s\" nx= %d, ny=%d ng = %d label: \"%s\" extra: \"%s\"",
@@ -307,10 +296,9 @@ void MglDrawer::Reload( )
 
   if( nn > max_nn_nosqz ) {
 
-    const double qual = 1.3; // TODO: param
     const int nd0 = 4;
-    double mdlt_y = qual * ( y_max - y_min ) / h0; // TODO: current height?
-    int stp0 = nn * nd0 / h0;
+    double mdlt_y = scd->maxErr * ( y_max - y_min ) / scd->h0; // TODO: current height?
+    int stp0 = nn * nd0 / scd->h0;
     np = 0;
 
 

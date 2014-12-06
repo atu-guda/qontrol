@@ -486,6 +486,15 @@ bool LaboDoc::migrateSumul() // TODO: remove after migration
     model->del_obj( nm );
   }
 
+  // convert TGraph to new scheme
+  for( auto g : plots->children() ) {
+    TGraph *gra = qobject_cast<TGraph*>(g);
+    if( !gra ) {
+      continue;
+    }
+    gra->migrate1();
+  }
+
   return true;
 }
 

@@ -18,6 +18,9 @@
 #ifndef MGLVIEW_H
 #define MGLVIEW_H
 
+#include <vector>
+#include <string>
+
 #include <QString>
 #include <QStringList>
 #include <QWidget>
@@ -48,27 +51,19 @@ class MglDrawer : public mglDraw
    virtual int Draw( mglGraph *gr ) override;
    virtual void Reload() override;
    void resetData();
-   QSize getSize0() const { return QSize( w0, h0 ); }
+   QSize getSize0() const;
   protected:
    TGraph *gra;
    TModel *model = nullptr;
    // TGraph::PlotType type = TGraph::PlotType::PlotPlot; // need include for now
    int type = 0;
-   int w0 = 200, h0 = 180;
    double x_min = 0, x_max = 0.01, y_min = 0, y_max = 0; // TODO: z?
    QList<mglData*> d;
    QString label_x, label_y;
-   QStringList labels;
-   QStringList extras;
+   std::vector<std::string> labels; // not QStringList: pass to c-alike funcs
+   std::vector<std::string> extras;
    mglData *dx = nullptr;
-   QColor bgcolor, axis_color, grid_color;
    ScaleData *scd = nullptr, *scd_del = nullptr;
-   double fsz = 1.5; // default font size
-   double plotFactor = 1.5;
-   double phi = 0, theta = 0;
-   int useLight = 0;
-   int useAlpha = 0;
-   double alpha = 0.5;
 };
 
 /**can plot graphs for TModel on info by TGraph
