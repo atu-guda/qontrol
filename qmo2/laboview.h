@@ -82,7 +82,7 @@ class LaboView : public QWidget
    //* requiest confirmation to delete, true = ok;
    bool confirmDelete( const QString &obj, const QString &nm );
    //* edit some model object
-   bool editObj( HolderData *obj );
+   bool editObj( HolderData *obj, bool resetModel = true );
    //* returns name of current object in given view
    QString getSelName( QAbstractItemView *view );
    //* show std error box

@@ -367,7 +367,7 @@ void LaboWin::initIface()
 
   // TODO: remove previos and adjust keys
   act_showmgl = new QAction( /*QIcon( ":icons/showgraph.png" ),*/ "Show &MGL", this );
-  // act_showmgl->setShortcut( Qt::Key_S );
+  act_showmgl->setShortcut( Qt::Key_Z ); // TMP: move to Key_S
   act_showmgl->setWhatsThis( tr("Show plot via MGL") );
   connect( act_showmgl, &QAction::triggered, this, &LaboWin::slotShowMgl );
   model_acts << act_showmgl;
@@ -1453,7 +1453,7 @@ void LaboWin::slotShowGraph()
 
 void LaboWin::slotShowMgl()
 {
-  statusBar()->showMessage( tr( "Showing plot..." ) );
+  statusBar()->showMessage( tr( "Showing MGL plot..." ) );
 
   LaboView* m =  activeMdiChild();
   if ( m )

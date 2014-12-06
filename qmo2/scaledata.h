@@ -25,7 +25,7 @@ class ScaleData : public TDataSet
    PRM_DOUBLE( plotMinX, efNRC,    "Plot min(x)", "Used for plot minimum X value", "" );
    PRM_DOUBLE( realMaxX, efRODial | efNoSave , "Real max(x)", "Real maximum X value", "def=1" );
    PRM_DOUBLE( plotMaxX, efNRC,    "Plot max(x)", "Used for plot maximum X value", "def=1" );
-   PRM_INT(       gridX, efNRC,    "Grid X", "Number of Grid lines for X", "def=10" );
+   PRM_DOUBLE(    gridX, efNRC,    "Grid X", "Number of Grid lines for X (- =step)", "def=10" );
    PRM_INT(       tickX, efNRC,    "Tick X", "Number of Ticks for X", "def=5" );
    PRM_SWITCH( autoScX,  efNRC,    "Autoscale X", "Automaticaly make X scale", "sep=col\ndef=1" );
    PRM_SWITCH( goodScX,  efNRC,    "Good Scale X", "Make good values for X scale", "def=1" );
@@ -38,7 +38,7 @@ class ScaleData : public TDataSet
    PRM_DOUBLE( plotMinY, efNRC,    "Plot min(y)", "Used for plot minimum Y value", "" );
    PRM_DOUBLE( realMaxY, efRODial | efNoSave , "Real max(y)", "Real maximum Y value", "def=1" );
    PRM_DOUBLE( plotMaxY, efNRC,    "Plot max(y)", "Used for plot maximum Y value", "def=1" );
-   PRM_INT(       gridY, efNRC,    "Grid Y", "Number of Grid lines for Y", "def=10" );
+   PRM_DOUBLE(    gridY, efNRC,    "Grid Y", "Number of Grid lines for Y (- =step)", "def=10" );
    PRM_INT(       tickY, efNRC,    "Tick Y", "Number of Ticks for Y", "def=5" );
    PRM_SWITCH( autoScY,  efNRC,    "Autoscale Y", "Automaticaly make Y scale", "sep=col\ndef=1" );
    PRM_SWITCH( goodScY,  efNRC,    "Good Scale Y", "Make good values for Y scale", "def=1" );
@@ -51,7 +51,7 @@ class ScaleData : public TDataSet
    PRM_DOUBLE(  topMar,  efNRC, "Top Margin %", "Value of plot top margin in %", "def=0.02" );
    PRM_DOUBLE(rightMar,  efNRC, "Right Margin %", "Value of plot right margin in %", "sep=col\ndef=0.1" );
    PRM_DOUBLE(bottomMar, efNRC, "Bottom Margin %", "Value of plot bottom margin in %", "def=0.1" );
-   PRM_DOUBLE(  maxErr,  efNRC, "Max Err", "Maximum plot error in pixels", "def=0.5" );
+   PRM_DOUBLE(  maxErr,  efNRC, "Max Err", "Maximum plot error", "def=0.5" );
   protected:
    DCL_DEFAULT_STATIC;
 };

@@ -27,12 +27,16 @@
 
 class TGraph;
 class TModel;
+class ScaleData;
 class QMathGL;
 class mglData;
 class mglGraph;
 class mglDraw;
 class QVBoxLayout;
 class QLabel;
+
+//* converts color and width to style
+QString color2style( int color, int lw = 1, const QString &extra = QString() );
 
 //* inner helper class to draw MathGL plot
 
@@ -57,6 +61,14 @@ class MglDrawer : public mglDraw
    QStringList labels;
    QStringList extras;
    mglData *dx = nullptr;
+   QColor bgcolor, axis_color, grid_color;
+   ScaleData *scd = nullptr, *scd_del = nullptr;
+   double fsz = 1.5; // default font size
+   double plotFactor = 1.5;
+   double phi = 0, theta = 0;
+   int useLight = 0;
+   int useAlpha = 0;
+   double alpha = 0.5;
 };
 
 /**can plot graphs for TModel on info by TGraph

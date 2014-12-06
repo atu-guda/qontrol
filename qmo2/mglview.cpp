@@ -30,6 +30,16 @@
 
 #include "mglview.h"
 
+QString color2style( int color, int lw, const QString &extra )
+{
+  QColor cc = QRgb( color );
+  QString s_cc;
+  s_cc.sprintf( "%d{x%02X%02X%02X}", lw, cc.red(),  cc.green(), cc.blue() );
+  s_cc += extra;
+  return s_cc;
+}
+
+// ---------------------------------------------------------------------
 
 using namespace std;
 MglDrawer::MglDrawer( TGraph *agra )
@@ -43,6 +53,7 @@ MglDrawer::~MglDrawer()
   // DBGx( "dbg: dtor gra=%p", gra );
   resetData();
   gra = nullptr; // not delete, we are not owner, just for debug
+  delete scd_del; scd_del = nullptr;
 }
 
 void MglDrawer::resetData()
@@ -63,38 +74,28 @@ int MglDrawer::Draw( mglGraph *gr )
     return 0;
   }
 
-  int fsz = 1;
-  gra->getData( "fontSise", &fsz );
   gr->SetFontSize( fsz );
-
-  double plotFactor = 1.5;
-  gra->getData( "plotFactor", &plotFactor );
   gr->SetPlotFactor( plotFactor );
-
-  double phi = 0, theta = 0;
-  gra->getData( "phi", &phi );
-  gra->getData( "theta", &theta );
   gr->Rotate( phi, theta );
-
-  int useLight = 0;
-  gra->getData( "useLight", &useLight );
   gr->Light( useLight );
+  gr->SetAlphaDef( alpha );
+  gr->Alpha( (bool)(useAlpha) );
 
-  int useAlpha = 0;
-  gra->getData( "useAlpha", &useAlpha );
-  if( useAlpha ) {
-    double alpha = 0.5;
-    gra->getData( "alpha", &alpha );
-    gr->Alpha( true );
-    gr->SetAlphaDef( alpha );
-  } else{
-    gr->Alpha( false );
+  gr->SetRanges( x_min, x_max, y_min, y_max );
+
+  if( ! scd->autoScX ) {
+    gr->SetRange( 'x', scd->plotMinX, scd->plotMaxX );
   }
+  if( ! scd->autoScY ) {
+    gr->SetRange( 'y', scd->plotMinY, scd->plotMaxY );
+  }
+  gr->SetTicks( 'x', -(scd->gridX), scd->tickX );
+  gr->SetTicks( 'y', -(scd->gridY), scd->tickY );
 
-  int i_cb;
-  gra->getData( "bgcolor", &i_cb );
-  QColor cv = QRgb( i_cb );
-  gr->Clf( cv.redF(), cv.greenF(), cv.blueF() );
+  QByteArray axis_style = color2style( axis_color.rgb(), 1 ).toLocal8Bit();
+  QByteArray grid_style = color2style( grid_color.rgb(), 1, "=" ).toLocal8Bit();
+
+  gr->Clf( bgcolor.redF(), bgcolor.greenF(), bgcolor.blueF() );
 
   int start_idx = 0; // most of 1D plots
   int end_idx = d.size();
@@ -105,15 +106,14 @@ int MglDrawer::Draw( mglGraph *gr )
       return 0;
     }
     start_idx = 1;
-    gr->Axis( "xyzU3AKDTVISO" );
-    gr->Grid( "xyz", "{h7}", "" );
+    gr->Axis( "xyzU3AKDTVISO",  axis_style );
+    gr->Grid( "xyz", grid_style );
   } else {
     if( d.size() < 1 ) {
       return 0;
     }
-    gr->SetRanges( x_min, x_max, y_min, y_max );
-    gr->Axis( "xyU3AKDTVISO" );
-    gr->Grid( "xy", "{h7}", "" );
+    gr->Axis( "xyzU3AKDTVISO", axis_style );
+    gr->Grid( "xy", grid_style );
   }
 
   for( int ng = start_idx; ng < end_idx; ++ng ) {
@@ -154,7 +154,7 @@ int MglDrawer::Draw( mglGraph *gr )
   }
 
 
-  gr->Box();
+  gr->Box( axis_style );
   return 1;
 }
 
@@ -167,10 +167,32 @@ void MglDrawer::Reload( )
     DBG1( "err: no TGraph passed to MglDrawer" );
     return;
   }
+  scd =  gra->getElemT<ScaleData*>( "scd" );
+  if( !scd ) {
+    DBG1( "ScaleData not found, recreatind" );
+    scd = new ScaleData( "scd", gra, 0, "scale", "default scale data" );
+    scd_del = scd; // to delete on exit
+  }
 
 
   gra->getData( "w0", &w0 );
   gra->getData( "h0", &h0 );
+
+  gra->getData( "fontSise", &fsz );
+  gra->getData( "plotFactor", &plotFactor );
+  gra->getData( "phi", &phi );
+  gra->getData( "theta", &theta );
+  gra->getData( "useLight", &useLight );
+  gra->getData( "useAlpha", &useAlpha );
+  gra->getData( "alpha", &alpha );
+
+  int col;
+  gra->getData( "bgcolor", &col );
+  bgcolor = QColor( col );
+  gra->getData( "axis_color", &col );
+  axis_color = QColor( col );
+  gra->getData( "grid_color", &col );
+  grid_color = QColor( col );
 
   gra->getData( "type", &type );
 
@@ -266,13 +288,10 @@ void MglDrawer::Reload( )
 
     int i_cc = 0;
     ge->getData( "color", &i_cc );
-    QColor cc = QRgb( i_cc );
-    QString s_cc;
-    s_cc.sprintf( "%d{x%02X%02X%02X}", lw, cc.red(),  cc.green(), cc.blue() );
 
     QString extra_add = QString( "" );
     ge->getData( "extra", extra_add );
-    extra_c = s_cc + extra_add;
+    extra_c = color2style( i_cc, lw, extra_add );
     extras.push_back( extra_c );
 
 

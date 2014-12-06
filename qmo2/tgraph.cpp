@@ -151,9 +151,12 @@ void TGraph::post_set()
   s = xname.cval();
 
   GraphElem *ge = getElemT<GraphElem*>( "x" );
-  if( !ge ) {
-    ge = addObj<GraphElem>( "x" );
+  if( ge ) { // already converted
+    return;
   }
+  bgcolor = QColor( 255, 255, 255 );
+
+  ge = addObj<GraphElem>( "x" );
   if( ge ) {
     ge->setData( "src", s );
     ge->setData( "label", "x" );
@@ -161,7 +164,7 @@ void TGraph::post_set()
   }
 
   GraphElem *gy = nullptr;
-  QVariant v; // realy color
+  int li_col; // really color
 
   for( int i=0; i<6; ++i ) {
     s = QString();
@@ -169,7 +172,12 @@ void TGraph::post_set()
     QString nm_old_s = QString( "y%1name" ).arg( i );
     QString nm_old_c = QString( "y%1color" ).arg( i );
     getData( nm_old_s, s );
-    getData( nm_old_c, v );
+    getData( nm_old_c, &li_col );
+    DBGx( "dbg: color for \"%s\" : %X", qP(nm_old_s), li_col );
+    if( li_col == 0xFFFFFF ) { // white->black
+      li_col = 0;
+    }
+    li_col = QColor( QRgb(li_col) ).darker( 200 ).rgb();
 
     if( ! s.isEmpty() ) {
       gy = getElemT<GraphElem*>( nm_new );
@@ -179,7 +187,7 @@ void TGraph::post_set()
       if( gy ) {
         gy->setData( "src", s );
         gy->setData( "label", nm_new );
-        gy->setData( "color", v );
+        gy->setData( "color", li_col );
       }
     }
   }

@@ -142,7 +142,7 @@ void LaboView::showWarn( const QString &s )
 }
 
 
-bool LaboView::editObj( HolderData *obj )
+bool LaboView::editObj( HolderData *obj, bool resetModel  )
 {
   if( !obj ) {
     return false;
@@ -152,7 +152,11 @@ bool LaboView::editObj( HolderData *obj )
   int rc = dia->exec();
   delete dia;
   if( rc == QDialog::Accepted ) {
-    model->reset(); model->setModified();
+
+    model->setModified();
+    if( resetModel ) {
+      model->reset();
+    }
     emit viewChanged();
     return true;
   };
@@ -1030,7 +1034,7 @@ void LaboView::editGraph()
 
   TGraph *plot = model->getGraph( nm );
 
-  editObj( plot );
+  editObj( plot, false ); // no reset if only view changed
 }
 
 void LaboView::selectGraph()

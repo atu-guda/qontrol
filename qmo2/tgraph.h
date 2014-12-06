@@ -101,7 +101,10 @@ class TGraph : public TDataSet  {
    PRM_SWITCH( useLight,  efNRC, "Light", "Use lighting", "def=1\nsep=col" );
    PRM_SWITCH( useAlpha,  efNRC, "Use alpha", "Use transparency", "def=0" );
    PRM_DOUBLE( alpha,     efNRC, "Alpha", "transparency value", "def=0.5\nmin=0.0\nmax=1.0" );
-   PRM_COLOR( bgcolor, efNRC, "BG color", "Background color", "sep=col\ndef=#000060");
+   PRM_INT( legend_pos,   efNRC, "Legend pos", "Legend position index", "def=3\nmin=0\nmax=4" );
+   PRM_COLOR( bgcolor, efNRC, "BG color", "Background color", "sep=col\ndef=#FFFFFF");
+   PRM_COLOR( axis_color, efNRC, "Axis color", "Axis color", "def=#000000");
+   PRM_COLOR( grid_color, efNRC, "Grid color", "Grid color", "def=#CCCCCC");
    PRM_STRING( extra, efNRC, "Extra", "Extra options to plot", "max=128" );
    PRM_STRING( colorScheme, efNRC, "Color scheme", "Color Scheme for 2D plot", "max=128\ndef=BbcyrR" );
 
