@@ -18,6 +18,7 @@
 #include <QColorDialog>
 #include <QPainter>
 #include "colorbtn.h"
+#include "defs.h"
 
 ColorBtn::ColorBtn( QWidget *parent )
           : QPushButton( parent )
@@ -50,9 +51,11 @@ void ColorBtn::setColor( int ic )
 void ColorBtn::slotClicked()
 {
   QColor ncol;
-  ncol = QColorDialog::getColor( col );
-  if( ncol.isValid() )
+  // DBGx( "dbg: Click: \"%s\"", qP( col.name() ) );
+  ncol = QColorDialog::getColor( col, this, "Choose color", QColorDialog::ShowAlphaChannel );
+  if( ncol.isValid() ) {
     col = ncol;
+  }
   repaint();
   emit changed( col );
 }
@@ -61,7 +64,6 @@ void ColorBtn::paintEvent( QPaintEvent * ev )
 {
   QPushButton::paintEvent( ev );
   int bor_w = 2; // border width
-  // QColor lnCol = Qt::black;
   QColor fillCol = isEnabled() ? col : Qt::gray;
   QPainter p( this );
   p.fillRect( bor_w*2, bor_w*2, width() - 4*bor_w, height() - 5*bor_w, fillCol );

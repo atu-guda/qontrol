@@ -549,13 +549,21 @@ ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent )
 
 bool ColorDataWidget::set()
 {
-  cb->setColor( ho.get().toInt() ); // Int to Color inside button
+  int c_i = ho.get().toInt();
+  QRgb c_r( c_i );
+  QColor c( c_r );
+  // DBGx( "dbg: set: c_i: %08X c: \"%s\"", c_i, qP(c.name()) );
+  // cb->setColor( c_r ); // Int to Color inside button
+  cb->setColor( c ); // Int to Color inside button
   return true;
 }
 
 bool ColorDataWidget::get() const
 {
-  QVariant v = (cb->color()).rgba();
+  QColor c = cb->color();
+  int c_i = c.rgba();
+  // DBGx( "dbg: get: c_i: %08X c: \"%s\"", c_i, qP(c.name()) );
+  QVariant v = c_i;
   ho.set( v );
   return true;
 }
