@@ -167,6 +167,7 @@ void TGraph::migrate1()
   ge = addObj<GraphElem>( "x" );
   if( ge ) {
     lbl = "x";
+    ge->setData( "type", GraphElem::DataType::DataAxisX );
     ge->setData( "src", s );
     ge->setParm( "sep", "block" );
     TOutArr *arr = model->getOutArr( s );
@@ -200,6 +201,7 @@ void TGraph::migrate1()
         gy = addObj<GraphElem>( nm_new );
       }
       if( gy ) {
+        gy->setData( "type", GraphElem::DataType::DataPlot );
         gy->setData( "src", s );
         lbl = nm_new;
         gy->setData( "color", li_col );
