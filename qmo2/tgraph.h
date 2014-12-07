@@ -34,7 +34,57 @@ class GraphElem : public TDataSet {
    DCL_CTOR(GraphElem);
    DCL_CREATE;
    DCL_STD_INF;
+
+   enum DataType {
+     DataNone = 0, // just to ignore data
+     DataAxisX, DataAxisY, DataAxisZ, // coords (Z unused for now)
+     DataC0, DataC1, DataC2, DataC3, DataC4, DataC5, // aux data for misc plots
+     DataPlot,  DataStep, DataTape,
+     DataStem, DataBars, DataBarh, DataTens, DataArea,
+     DataRegion, DataOHLC, DataBoxPlot, DataCandle, DataCones,
+     DataError, DataMark, DataTube,
+     DataSurf, DataMesh, DataFall, DataBelt, DataDens,
+     DataCont, DataContF, DataContD
+   };
+   Q_ENUMS( DataType );
+   Q_CLASSINFO( "enum_DataType_0",   "None   " );     // DataNone
+   Q_CLASSINFO( "enum_DataType_1",   "AxisX  " );     // DataAxisX
+   Q_CLASSINFO( "enum_DataType_2",   "AxisY  " );     // DataAxisY
+   Q_CLASSINFO( "enum_DataType_3",   "AxisZ  " );     // DataAxisZ
+   Q_CLASSINFO( "enum_DataType_4",   "C0     " );     // DataC0
+   Q_CLASSINFO( "enum_DataType_5",   "C1     " );     // DataC1
+   Q_CLASSINFO( "enum_DataType_6",   "C2     " );     // DataC2
+   Q_CLASSINFO( "enum_DataType_7",   "C3     " );     // DataC3
+   Q_CLASSINFO( "enum_DataType_8",   "C4     " );     // DataC4
+   Q_CLASSINFO( "enum_DataType_9",   "C5     " );     // DataC5
+   Q_CLASSINFO( "enum_DataType_10",  "Plot   " );     // DataPlot
+   Q_CLASSINFO( "enum_DataType_11",  "Step   " );     // DataStep
+   Q_CLASSINFO( "enum_DataType_12",  "Tape   " );     // DataTape
+   Q_CLASSINFO( "enum_DataType_13",  "Stem   " );     // DataStem
+   Q_CLASSINFO( "enum_DataType_14",  "Bars   " );     // DataBars
+   Q_CLASSINFO( "enum_DataType_15",  "Barh   " );     // DataBarh
+   Q_CLASSINFO( "enum_DataType_16",  "Tens  1" );     // DataTens
+   Q_CLASSINFO( "enum_DataType_17",  "Area   " );     // DataArea
+   Q_CLASSINFO( "enum_DataType_18",  "Region 1" );    // DataRegion
+   Q_CLASSINFO( "enum_DataType_19",  "OHLC  3" );     // DataOHLC
+   Q_CLASSINFO( "enum_DataType_20",  "BoxPlot 5" );   // DataBoxPlot
+   Q_CLASSINFO( "enum_DataType_21",  "Candle  3" );   // DataCandle
+   Q_CLASSINFO( "enum_DataType_22",  "Cones  " );     // DataCones
+   Q_CLASSINFO( "enum_DataType_23",  "Error 2" );     // DataError
+   Q_CLASSINFO( "enum_DataType_24",  "Mark  1" );     // DataMark
+   Q_CLASSINFO( "enum_DataType_25",  "Tube   " );     // DataTube
+   Q_CLASSINFO( "enum_DataType_26",  "Surf 2D" );     // DataSurf
+   Q_CLASSINFO( "enum_DataType_27",  "Mesh 2D" );     // DataMesh
+   Q_CLASSINFO( "enum_DataType_28",  "Fall 2D" );     // DataFall
+   Q_CLASSINFO( "enum_DataType_29",  "Belt 2D" );     // DataBelt
+   Q_CLASSINFO( "enum_DataType_30",  "Dens 2D" );     // DataDens
+   Q_CLASSINFO( "enum_DataType_31",  "Cont 2D" );     // DataCont
+   Q_CLASSINFO( "enum_DataType_32",  "ContF 2D" );    // DataContF
+   Q_CLASSINFO( "enum_DataType_33",  "ContD 2D" );    // DataContD
+
  protected:
+   PRM_LIST( type,    efNRC, "Type", "Data Type", "enum=DataType" );
+   PRM_SWITCH( is2D,  efNRC, "2D", "Data for 2D plot", "" );
    PRM_STRING( src,   efNRC, "Source", "Name of source for values", "max=128" );
    PRM_STRING( label, efNRC, "Label", "Label", "max=128" );
    PRM_COLOR(  color, efNRC, "line color", "plot line color", "def=black" );

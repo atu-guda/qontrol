@@ -184,7 +184,7 @@ void MglDrawer::Reload( )
 
   gra->getData( "type", &type );
 
-  model = gra->getAncestorT<TModel>();
+  TModel *model = gra->getAncestorT<TModel>();
   if( !model ) {
     DBGx( "warn: not found model in \"%s\"", qP(gra->getFullName()) );
     return;

@@ -29,7 +29,6 @@
 #include <mgl2/qt.h>
 
 class TGraph;
-class TModel;
 class ScaleData;
 class QMathGL;
 class mglData;
@@ -54,7 +53,6 @@ class MglDrawer : public mglDraw
    QSize getSize0() const;
   protected:
    TGraph *gra;
-   TModel *model = nullptr;
    // TGraph::PlotType type = TGraph::PlotType::PlotPlot; // need include for now
    int type = 0;
    double x_min = 0, x_max = 0.01, y_min = 0, y_max = 0; // TODO: z?
