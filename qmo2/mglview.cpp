@@ -58,13 +58,15 @@ MglDrawer::~MglDrawer()
 
 void MglDrawer::resetData()
 {
-  delete dx; dx = nullptr;
-  qDeleteAll( d.begin(), d.end() );
-  d.clear();
+  d_x = d_y = d_z = d_c0 = d_c1 = d_c2 = d_c3 = d_c4 = d_c5 = nullptr;
+  x_min = x_max = y_min = y_max = z_min = z_max = 0.0;
 
-  label_x = label_y = QString();
-  labels.clear();
-  extras.clear();
+  for( auto cdl : dl ) {
+    delete cdl.md;
+  }
+  dl.clear();
+
+  label_x = label_y = label_z = "";
 }
 
 QSize MglDrawer::getSize0() const
@@ -96,69 +98,66 @@ int MglDrawer::Draw( mglGraph *gr )
   gr->SetTicks( 'x', -(scd->gridX), scd->tickX );
   gr->SetTicks( 'y', -(scd->gridY), scd->tickY );
 
-  QByteArray axis_style = color2style( QColor(scd->axis_color).rgb(), 1 ).toLocal8Bit();
-  QByteArray grid_style = color2style( QColor(scd->grid_color).rgb(), 1, "=" ).toLocal8Bit();
+  string axis_style = color2style( QColor(scd->axis_color).rgb(), 1 ).toStdString();
+  string grid_style = color2style( QColor(scd->grid_color).rgb(), 1, "=" ).toStdString();
 
   gr->Clf( QColor(scd->bgcolor).redF(), QColor(scd->bgcolor).greenF(), QColor(scd->bgcolor).blueF() );
 
-  int start_idx = 0; // most of 1D plots
-  int end_idx = d.size();
+  gr->SetRanges( x_min, x_max, y_min, y_max, z_min, z_max );
+  gr->Axis( "xyzU3AKDTVISO",  axis_style.c_str() );
+  gr->Grid( "xyz", grid_style.c_str() );
 
-  if( type >= TGraph::PlotType::PlotSurf ) { // 2D plot
-    // gr->SetRanges( x_min, x_max, y_min, y_max, y_min, y_max ); // TODO: fix for Z~
-    if( d.size() < 2 ) {
-      return 0;
+  for( auto cdl : dl ) {
+    if( cdl.type < GraphElem::DataType::DataPlot // only real plots
+        || cdl.type >= GraphElem::DataType::DataC0 )
+    {
+      continue;
     }
-    start_idx = 1;
-    gr->Axis( "xyzU3AKDTVISO",  axis_style );
-    gr->Grid( "xyz", grid_style );
-  } else {
-    if( d.size() < 1 ) {
-      return 0;
-    }
-    gr->Axis( "xyzU3AKDTVISO", axis_style );
-    gr->Grid( "xy", grid_style );
-  }
 
-  for( int ng = start_idx; ng < end_idx; ++ng ) {
-    auto di = d[ng];
-
-    gr->AddLegend( labels[ng].c_str(), extras[ng].c_str() );
-    switch( type ) {
-      case TGraph::PlotType::PlotPlot:
-        gr->Plot( *dx, *di, extras[ng].c_str() );
+    switch( cdl.type ) {
+      case GraphElem::DataType::DataPlot :
+        if( cdl.is2D ) {
+          if( d_x && d_y ) {
+            gr->Plot( *d_x, *d_y, *(cdl.md), cdl.extra.c_str() );
+          }
+          break;
+        }
+        if( d_x ) {
+          gr->Plot( *d_x, *(cdl.md), cdl.extra.c_str() );
+        }
         break;
-      case TGraph::PlotType::PlotRadar:
-        gr->Radar( *di, extras[ng].c_str() );
-        break;
-      case TGraph::PlotType::PlotStep:
-        gr->Step( *dx, *di, extras[ng].c_str() );
-        break;
-      case TGraph::PlotType::PlotArea:
-        gr->Area( *dx, *di, extras[ng].c_str() );
-        break;
-      case TGraph::PlotType::PlotStem:
-        gr->Stem( *dx, *di, extras[ng].c_str() );
-        break;
-      case TGraph::PlotType::PlotBars:
-        gr->Bars( *dx, *di, extras[ng].c_str() );
-        break;
-      case TGraph::PlotType::PlotBarh:
-        gr->Barh( *dx, *di, extras[ng].c_str() );
-        break;
-      case TGraph::PlotType::PlotChart:
-        gr->Chart( *di, extras[ng].c_str() );
-        break;
-      case TGraph::PlotType::PlotSurf:
-        // gr->Surf( *dx, *dy, *di );
-        break;
-      default:
-        break;
+      case GraphElem::DataType::DataStep :
+      case GraphElem::DataType::DataTape :
+      case GraphElem::DataType::DataStem :
+      case GraphElem::DataType::DataBars :
+      case GraphElem::DataType::DataBarh :
+      case GraphElem::DataType::DataTens :
+      case GraphElem::DataType::DataArea :
+      case GraphElem::DataType::DataRegion :
+      case GraphElem::DataType::DataOHLC :
+      case GraphElem::DataType::DataBoxPlot :
+      case GraphElem::DataType::DataCandle :
+      case GraphElem::DataType::DataCones :
+      case GraphElem::DataType::DataError :
+      case GraphElem::DataType::DataMark :
+      case GraphElem::DataType::DataTube :
+      case GraphElem::DataType::DataSurf :
+      case GraphElem::DataType::DataMesh :
+      case GraphElem::DataType::DataFall :
+      case GraphElem::DataType::DataBelt :
+      case GraphElem::DataType::DataDens :
+      case GraphElem::DataType::DataCont :
+      case GraphElem::DataType::DataContF :
+      case GraphElem::DataType::DataContD :
+      default: break;
     }
+    gr->AddLegend( cdl.label.c_str(), cdl.extra.c_str() );
   }
 
 
-  gr->Box( axis_style );
+
+
+  gr->Box( axis_style.c_str() );
   if( scd->legend_pos < 4 ) {
     gr->Legend( scd->legend_pos, "#" );
   }
@@ -181,66 +180,35 @@ void MglDrawer::Reload( )
     scd_del = scd; // to delete on exit
   }
 
-
-  gra->getData( "type", &type );
-
   TModel *model = gra->getAncestorT<TModel>();
   if( !model ) {
     DBGx( "warn: not found model in \"%s\"", qP(gra->getFullName()) );
     return;
   }
 
-  // get X axis element
-  GraphElem *ge = gra->getElemT<GraphElem*>( "x" );
-  if( !ge ) {
-    DBGx( "warn: not found 'x' element in \"%s\"", qP(gra->getFullName()) );
-    return;
-  }
-  QString src;
-  ge->getData( "src", src );
-  if( src.isEmpty() ) {
-    DBGx( "warn: empty source for 'x' element in \"%s\"", qP(gra->getFullName()) );
-    return;
-  }
-
-  TOutArr *arr = model->getOutArr( src );
-  if( !arr ) {
-    DBGx( "warn: bad source \"%s\" for 'x' element in \"%s\"", qP(src), qP(gra->getFullName()) );
-    return;
-  }
-
-
-  int nn = 0;
-  arr->getData( "n", &nn );
-  int ny = 1;
-  arr->getData( "ny", &ny );
-  int nx = nn / ny;
-  arr->getData( "dmin", &x_min );
-  arr->getData( "dmax", &x_max );
-  const dvector *ve = arr->getArray();
-  arr->getData( "label", label_x );
-
+  int nn = 0, ny = 1, nx = 0;
+  double vmin = DMAX, vmax = DMIN; // cross!
+  const dvector* ve_x = nullptr;
 
   QString label_c, extra_c;
-  int ng = 0;
 
-  // get all other elements
-  vector< const dvector* > ves;
   for( auto c : gra->children() ) {
-    ge = qobject_cast<GraphElem*>( c );
+    GraphElem *ge = qobject_cast<GraphElem*>( c );
     if( ! ge ) {
       continue;
     }
-    if( ge->objectName() == "x" ) {
-      continue;
-    }
 
-    src = QString();
+    int dtype = GraphElem::DataType::DataNone;
+    ge->getData( "type", &dtype );
+    int is2D = 0;
+    ge->getData( "is2D", &is2D );
+
+    QString src = QString();
     ge->getData( "src", src );
     if( src.isEmpty() ) {
       continue;
     }
-    arr = model->getOutArr( src );
+    TOutArr *arr = model->getOutArr( src );
     if( !arr ) {
       continue;
     }
@@ -250,54 +218,65 @@ void MglDrawer::Reload( )
     int ny_c = 1;
     arr->getData( "ny", &ny_c );
     int nx_c = nn_c / ny_c;
-    if( nn_c != nn  ||  ny_c != ny  ||  nx_c != nx ) { // only same dimensions
-      continue;
+    // first array defines dimensions
+    if( dl.size() == 0 ) {
+      nn = nn_c; nx = nx_c; ny = ny_c;
     }
+    else if( nn_c != nn  ||  ny_c != ny  ||  nx_c != nx ) { // only same dimensions
+       continue;
+    }
+
     double tmin = 0, tmax = 0;
     arr->getData( "dmin", &tmin );
     arr->getData( "dmax", &tmax );
-    if( tmin < y_min ) {
-      y_min = tmin;
-    }
-    if( tmax > y_max ) {
-      y_max = tmax;
-    }
-    ves.push_back( arr->getArray() );
 
-    label_c = QString( "y_%1" ).arg( ng );
-    ge->getData( "label", label_c );
-    if( labels.empty() ) {
-      label_y = label_c;
+    if( dtype >= GraphElem::DataType::DataPlot ) {
+      if( tmin < vmin ) {
+        vmin = tmin;
+      }
+      if( tmax > vmax ) {
+        vmax = tmax;
+      }
     }
-    label_c.prepend( QSN(ng) + ": " );
-    labels.push_back( label_c.toLocal8Bit().constData() );
+
+    label_c = QString( "y_%1" ).arg( dl.size() );
+    ge->getData( "label", label_c );
+    label_c.prepend( QSN( dl.size() ) + ": " );
 
     int lw = 1;
     ge->getData( "lw", &lw );
-
     int i_cc = 0;
     ge->getData( "color", &i_cc );
-
     QString extra_add = QString( "" );
     ge->getData( "extra", extra_add );
     extra_c = color2style( i_cc, lw, extra_add );
-    extras.push_back( extra_c.toLocal8Bit().constData() );
+
+    DBGx( "dbg: adding array \"%s\" type: %d nx= %d, ny=%d ng = %lu label: \"%s\" extra: \"%s\"",
+        qP(arr->getFullName()), dtype, nx, ny, dl.size(), qP(label_c), qP(extra_c) );
+
+    dl.push_back( /*DataLineInfo*/ {
+        dtype, is2D, label_c.toStdString(), extra_c.toStdString(), tmin, tmax,
+        nullptr, arr->getArray()
+        } );
+    // special case:
+    if( dtype == GraphElem::DataType::DataAxisX  &&  ! ve_x ) {
+      ve_x = arr->getArray();
+    }
 
 
-    DBGx( "dbg: added array \"%s\" nx= %d, ny=%d ng = %d label: \"%s\" extra: \"%s\"",
-        qP(arr->getFullName()), nx, ny, ng, qP(label_c), qP(extra_c) );
-    ++ng;
 
   }
+
+  // -------------------- squize data if needed -----------
 
   const int max_nn_nosqz = 2000;
   int np = nn; // number of selected points
   vector<uint8_t> plp( nn, 0 ); // flags: point worth to draw
 
-  if( nn > max_nn_nosqz ) {
+  if( nn > max_nn_nosqz && ve_x ) {
 
     const int nd0 = 4;
-    double mdlt_y = scd->maxErr * ( y_max - y_min ) / scd->h0; // TODO: current height?
+    double mdlt_y = scd->maxErr * ( vmax - vmin ) / scd->h0; // TODO: current height?
     int stp0 = nn * nd0 / scd->h0;
     np = 0;
 
@@ -316,10 +295,14 @@ void MglDrawer::Reload( )
     int was_add = 1;
     for( int n_add = 0; was_add && n_add < 10; ++n_add ) { // 10 : max iterations to split
       was_add = 0;
-      for( auto yyc : ves ) {
+      for( auto cdl : dl ) {
+        const dvector* yyc = cdl.ve;
+        if( ! yyc ) {
+          continue;
+        }
         for( int i0 = 0, i1 = 0; i0 < nn-1; i0 = i1 ) {
           for( i1 = i0+1; !plp[i1] && i1 < nn; ++i1 ) /* NOP: find next set*/;
-          double x0 = (*ve)[i0], x1 = (*ve)[i1];
+          double x0 = (*ve_x)[i0], x1 = (*ve_x)[i1];
           double y0 = (*yyc)[i0], y1 = (*yyc)[i1];
           if( y0 == y1 ) {
             continue;
@@ -330,7 +313,7 @@ void MglDrawer::Reload( )
           int i_cm = 0; // index of current maximum
           double dly_cm = 0; // value of this max
           for( int i2=i0+1; i2<i1-1; ++i2 ) {
-            double yc = y0 + kxy * ( (*ve)[i2] - x0 );
+            double yc = y0 + kxy * ( (*ve_x)[i2] - x0 );
             double dly = fabs( yc - (*yyc)[i2] );
             if( dly > dly_cm ) {
               dly_cm = dly; i_cm = i2;
@@ -348,20 +331,74 @@ void MglDrawer::Reload( )
   }
   // DBGx( "dbg: nn: %d np: %d nx: %d ny: %d ng: %d", nn, np, nx, ny, ng );
 
-  // create mglData for X and copy data
-  mglData *md = new mglData( np, ny );
-  dx = md;
-  for( int ig=0; ig<ng; ++ig ) {
-    d.push_back( new mglData( np, ny ) );
-  }
+  z_min = vmin; z_max = vmax; // untill real 3D plot
 
-  for( int i=0, j=0; i<nn && j<np ; ++i ) {
-    if( plp[i] ) {
-      dx->a[j] = (*ve)[i];
-      for( int ig=0; ig<ng; ++ig ) {
-        d[ig]->a[j] = (*ves[ig])[i];
-      }
+
+  for( auto &cdl : dl ) {
+    mglData *md = new mglData( np, ny );
+    // copy squized data
+    for( int i=0, j=0; i<nn && j<np ; ++i ) {
+      if( plp[i] ) {
+        md->a[j] = (*cdl.ve)[i];
       ++j;
+      }
+    }
+    cdl.md = md;
+
+    switch( cdl.type ) {
+      case GraphElem::DataType::DataNone :
+        break;
+      case GraphElem::DataType::DataAxisX:
+        d_x = md; label_x = label_c.toStdString();
+        x_min = cdl.v_min; x_max = cdl.v_max;
+        break;
+      case GraphElem::DataType::DataAxisY :
+        d_y = md; label_y = label_c.toStdString();
+        y_min = cdl.v_min; y_max = cdl.v_max;
+        break;
+      case GraphElem::DataType::DataAxisZ :
+        d_z = md; label_z = label_c.toStdString();
+        // z_min = cdl.v_min; z_max = cdl.v_max;
+        break;
+      case GraphElem::DataType::DataPlot :
+      case GraphElem::DataType::DataStep :
+      case GraphElem::DataType::DataTape :
+      case GraphElem::DataType::DataStem :
+      case GraphElem::DataType::DataBars :
+      case GraphElem::DataType::DataBarh :
+      case GraphElem::DataType::DataTens :
+      case GraphElem::DataType::DataArea :
+      case GraphElem::DataType::DataRegion :
+      case GraphElem::DataType::DataOHLC :
+      case GraphElem::DataType::DataBoxPlot :
+      case GraphElem::DataType::DataCandle :
+      case GraphElem::DataType::DataCones :
+      case GraphElem::DataType::DataError :
+      case GraphElem::DataType::DataMark :
+      case GraphElem::DataType::DataTube :
+      case GraphElem::DataType::DataSurf :
+      case GraphElem::DataType::DataMesh :
+      case GraphElem::DataType::DataFall :
+      case GraphElem::DataType::DataBelt :
+      case GraphElem::DataType::DataDens :
+      case GraphElem::DataType::DataCont :
+      case GraphElem::DataType::DataContF :
+      case GraphElem::DataType::DataContD :
+        break;
+      case GraphElem::DataType::DataC0 :
+        d_c0 = md; break;
+      case GraphElem::DataType::DataC1 :
+        d_c0 = md; break;
+      case GraphElem::DataType::DataC2 :
+        d_c0 = md; break;
+      case GraphElem::DataType::DataC3 :
+        d_c0 = md; break;
+      case GraphElem::DataType::DataC4 :
+        d_c0 = md; break;
+      case GraphElem::DataType::DataC5 :
+        d_c0 = md; break;
+      default:
+        DBGx( "warn: unknown type %d label \"%s\"", cdl.type, qP(label_c) );
     }
   }
 

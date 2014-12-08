@@ -40,6 +40,17 @@ class QLabel;
 //* converts color and width to style
 QString color2style( int color, int lw = 1, const QString &extra = QString() );
 
+// modified copy of GraphElem
+struct DataLineInfo {
+  int type;
+  int is2D;
+  std::string label;
+  std::string extra;
+  double v_min, v_max;
+  mglData *md;
+  const std::vector<double> *ve;
+};
+
 //* inner helper class to draw MathGL plot
 
 class MglDrawer : public mglDraw
@@ -53,14 +64,11 @@ class MglDrawer : public mglDraw
    QSize getSize0() const;
   protected:
    TGraph *gra;
-   // TGraph::PlotType type = TGraph::PlotType::PlotPlot; // need include for now
-   int type = 0;
-   double x_min = 0, x_max = 0.01, y_min = 0, y_max = 0; // TODO: z?
-   QList<mglData*> d;
-   QString label_x, label_y;
-   std::vector<std::string> labels; // not QStringList: pass to c-alike funcs
-   std::vector<std::string> extras;
-   mglData *dx = nullptr;
+   std::vector<DataLineInfo> dl;
+   double x_min = 0, x_max = 0.01, y_min = 0, y_max = 0, z_min = 0, z_max = 0; // TODO: z?
+   std::string label_x, label_y, label_z;
+   mglData *d_x, *d_y, *d_z; // axiz data
+   mglData *d_c0, *d_c1, *d_c2, *d_c3, *d_c4, *d_c5; // aux data - not owning
    ScaleData *scd = nullptr, *scd_del = nullptr;
 };
 
