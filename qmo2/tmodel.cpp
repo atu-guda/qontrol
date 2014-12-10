@@ -184,7 +184,7 @@ int TModel::nextSteps( int csteps )
       allEndLoop();
       ii = 0; ++il1;
     };
-    if( il1 >= nl1 ) {
+    if( il1 >= N1 ) {
       il1 = 0; ++il2;
     };
     if( i_tot >= n_tot ) {
