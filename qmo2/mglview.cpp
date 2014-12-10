@@ -245,8 +245,8 @@ int MglDrawer::Draw( mglGraph *gr )
 
       case GraphElem::DataType::DataSurf :
         if( d_x && d_y ) {
-          gr->Surf( *d_x, *d_y, *(cdl.md), cdl.extra.c_str() );
-          // gr->Surf( *d_x, *d_y, *(cdl.md) );
+          /// gr->Surf( *d_x, *d_y, *(cdl.md), cdl.extra.c_str() );
+          gr->Surf( *d_x, *d_y, *(cdl.md) );
         }
         break;
       case GraphElem::DataType::DataMesh :
@@ -390,7 +390,7 @@ void MglDrawer::Reload( )
   int np = nn; // number of selected points
   vector<uint8_t> plp( nn, 0 ); // flags: point worth to draw
 
-  if( nn > max_nn_nosqz && ve_x ) {  // TODO: no on Surf ....
+  if( nn > max_nn_nosqz && ve_x && ny == 1 ) {  // TODO: no on Surf (ny?)
 
     const int nd0 = 4;
     double mdlt_y = scd->maxErr * ( vmax - vmin ) / scd->h0; // TODO: current height?
@@ -443,6 +443,7 @@ void MglDrawer::Reload( )
       }
       // DBGx( " dbg: np mid = %d  n_add= %d was_add= %d" , np, n_add, was_add );
     }
+    nx = np;
   } else {
     plp.assign( nn, 1 ); // all point are good
   }
