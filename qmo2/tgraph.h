@@ -76,7 +76,7 @@ class GraphElem : public TDataSet {
    Q_CLASSINFO( "enum_DataType_26",  "ContF 2D" );    // DataContF
    Q_CLASSINFO( "enum_DataType_27",  "ContD 2D" );    // DataContD
    Q_CLASSINFO( "enum_DataType_28",   "C0     " );    // DataC0
-   Q_CLASSINFO( "enum_DataType_28",   "C1     " );    // DataC1
+   Q_CLASSINFO( "enum_DataType_29",   "C1     " );    // DataC1
    Q_CLASSINFO( "enum_DataType_30",   "C2     " );    // DataC2
    Q_CLASSINFO( "enum_DataType_31",   "C3     " );    // DataC3
    Q_CLASSINFO( "enum_DataType_32",   "C4     " );    // DataC4
@@ -124,22 +124,22 @@ class TGraph : public TDataSet  {
 
    // old values: TODO: remove after conversion
    /** name of output array for x  */
-   PRM_STRING( xname, efNRC, "X  name", "Name of source for X values", "max=64\nsep=block" );
+   PRM_STRING( xname,  efOld, "X  name", "Name of source for X values", "max=64\nsep=block" );
    PRM_COLOR( bgcolor, efOld, "BG color", "Background color", "sep=col\ndef=#FFFFFF");
    /** names of output array for y[i]  */
-   PRM_STRING( y0name, efNRC, "Y0 name", "Name of source for Y0 values", "max=64" );
-   PRM_STRING( y1name, efNRC, "Y1 name", "Name of source for Y1 values", "max=64" );
-   PRM_STRING( y2name, efNRC, "Y2 name", "Name of source for Y2 values", "max=64" );
-   PRM_STRING( y3name, efNRC, "Y3 name", "Name of source for Y3 values", "max=64" );
-   PRM_STRING( y4name, efNRC, "Y4 name", "Name of source for Y4 values", "max=64" );
-   PRM_STRING( y5name, efNRC, "Y5 name", "Name of source for Y5 values", "max=64" );
+   PRM_STRING( y0name, efOld, "Y0 name", "Name of source for Y0 values", "max=64" );
+   PRM_STRING( y1name, efOld, "Y1 name", "Name of source for Y1 values", "max=64" );
+   PRM_STRING( y2name, efOld, "Y2 name", "Name of source for Y2 values", "max=64" );
+   PRM_STRING( y3name, efOld, "Y3 name", "Name of source for Y3 values", "max=64" );
+   PRM_STRING( y4name, efOld, "Y4 name", "Name of source for Y4 values", "max=64" );
+   PRM_STRING( y5name, efOld, "Y5 name", "Name of source for Y5 values", "max=64" );
    /** color of lines */
-   PRM_COLOR( y0color, efNRC, "Y0 color", "Color for Y0", "def=white\nsep=col");
-   PRM_COLOR( y1color, efNRC, "Y1 color", "Color for Y1", "def=yellow");
-   PRM_COLOR( y2color, efNRC, "Y2 color", "Color for Y2", "def=#ff0000");
-   PRM_COLOR( y3color, efNRC, "Y3 color", "Color for Y3", "def=#00ff00");
-   PRM_COLOR( y4color, efNRC, "Y4 color", "Color for Y4", "def=#0000ff");
-   PRM_COLOR( y5color, efNRC, "Y5 color", "Color for Y5", "def=#ff00ff");
+   PRM_COLOR( y0color, efOld, "Y0 color", "Color for Y0", "def=white\nsep=col");
+   PRM_COLOR( y1color, efOld, "Y1 color", "Color for Y1", "def=yellow");
+   PRM_COLOR( y2color, efOld, "Y2 color", "Color for Y2", "def=#ff0000");
+   PRM_COLOR( y3color, efOld, "Y3 color", "Color for Y3", "def=#00ff00");
+   PRM_COLOR( y4color, efOld, "Y4 color", "Color for Y4", "def=#0000ff");
+   PRM_COLOR( y5color, efOld, "Y5 color", "Color for Y5", "def=#ff00ff");
    // TODO: legend
    ScaleData *scd;
 
