@@ -245,11 +245,16 @@ int MglDrawer::Draw( mglGraph *gr )
 
       case GraphElem::DataType::DataSurf :
         if( d_x && d_y ) {
-          // gr->Surf( *d_x, *d_y, *(cdl.md), "" /*cdl.extra.c_str()*/ );
-          gr->Surf( *d_x, *d_y, *(cdl.md) );
+          gr->Surf( *d_x, *d_y, *(cdl.md), cdl.extra.c_str() );
+          // gr->Surf( *d_x, *d_y, *(cdl.md) );
         }
         break;
       case GraphElem::DataType::DataMesh :
+        if( d_x && d_y ) {
+          // gr->Mesh( *d_x, *d_y, *(cdl.md), "" /*cdl.extra.c_str()*/ );
+          gr->Mesh( *d_x, *d_y, *(cdl.md) );
+        }
+        break;
       case GraphElem::DataType::DataFall :
       case GraphElem::DataType::DataBelt :
       case GraphElem::DataType::DataDens :
@@ -445,7 +450,7 @@ void MglDrawer::Reload( )
 
 
   for( auto &cdl : dl ) {
-    mglData *md = new mglData( np, ny );
+    mglData *md = new mglData( nx, ny );
     // copy squeezed data
     for( int i=0, j=0; i<nn && j<np ; ++i ) {
       if( plp[i] ) {
