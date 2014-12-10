@@ -87,7 +87,7 @@ int MglDrawer::Draw( mglGraph *gr )
   gr->SetAlphaDef( scd->alpha );
   gr->Alpha( (bool)(scd->useAlpha) );
 
-  gr->SetRanges( x_min, x_max, y_min, y_max );
+  gr->SetRanges( x_min, x_max, y_min, y_max, z_min, z_max );
 
   if( ! scd->autoScX ) {
     gr->SetRange( 'x', scd->plotMinX, scd->plotMaxX );
@@ -103,7 +103,6 @@ int MglDrawer::Draw( mglGraph *gr )
 
   gr->Clf( QColor(scd->bgcolor).redF(), QColor(scd->bgcolor).greenF(), QColor(scd->bgcolor).blueF() );
 
-  gr->SetRanges( x_min, x_max, y_min, y_max, z_min, z_max );
   gr->Axis( "xyzU3AKDTVISO",  axis_style.c_str() );
   gr->Grid( "xyz", grid_style.c_str() );
 
@@ -175,7 +174,7 @@ void MglDrawer::Reload( )
   }
   scd =  gra->getElemT<ScaleData*>( "scd" );
   if( !scd ) {
-    DBG1( "ScaleData not found, recreatind" );
+    DBG1( "ScaleData not found, recreating" );
     scd = new ScaleData( "scd", gra, 0, "scale", "default scale data" );
     scd_del = scd; // to delete on exit
   }
@@ -254,11 +253,11 @@ void MglDrawer::Reload( )
     DBGx( "dbg: adding array \"%s\" type: %d nx= %d, ny=%d ng = %lu label: \"%s\" extra: \"%s\"",
         qP(arr->getFullName()), dtype, nx, ny, dl.size(), qP(label_c), qP(extra_c) );
 
-    dl.push_back( /*DataLineInfo*/ {
+    dl.push_back( {
         dtype, is2D, label_c.toStdString(), extra_c.toStdString(), tmin, tmax,
         nullptr, arr->getArray()
         } );
-    // special case:
+    // special case: need for squeeze
     if( dtype == GraphElem::DataType::DataAxisX  &&  ! ve_x ) {
       ve_x = arr->getArray();
     }
@@ -267,7 +266,7 @@ void MglDrawer::Reload( )
 
   }
 
-  // -------------------- squize data if needed -----------
+  // -------------------- squeeze data if needed -----------
 
   const int max_nn_nosqz = 2000;
   int np = nn; // number of selected points
@@ -331,12 +330,12 @@ void MglDrawer::Reload( )
   }
   // DBGx( "dbg: nn: %d np: %d nx: %d ny: %d ng: %d", nn, np, nx, ny, ng );
 
-  z_min = vmin; z_max = vmax; // untill real 3D plot
+  // z_min = vmin; z_max = vmax; // until real 3D plot
 
 
   for( auto &cdl : dl ) {
     mglData *md = new mglData( np, ny );
-    // copy squized data
+    // copy squeezed data
     for( int i=0, j=0; i<nn && j<np ; ++i ) {
       if( plp[i] ) {
         md->a[j] = (*cdl.ve)[i];
@@ -345,20 +344,22 @@ void MglDrawer::Reload( )
     }
     cdl.md = md;
 
+    int minmax_idx = -1; // -1: none, 0: x, 1: y, 2: z 3: ?c?
+
     switch( cdl.type ) {
       case GraphElem::DataType::DataNone :
         break;
       case GraphElem::DataType::DataAxisX:
         d_x = md; label_x = label_c.toStdString();
-        x_min = cdl.v_min; x_max = cdl.v_max;
+        minmax_idx = 0;
         break;
       case GraphElem::DataType::DataAxisY :
         d_y = md; label_y = label_c.toStdString();
-        y_min = cdl.v_min; y_max = cdl.v_max;
+        minmax_idx = 1;
         break;
       case GraphElem::DataType::DataAxisZ :
         d_z = md; label_z = label_c.toStdString();
-        // z_min = cdl.v_min; z_max = cdl.v_max;
+        minmax_idx = 2;
         break;
       case GraphElem::DataType::DataPlot :
       case GraphElem::DataType::DataStep :
@@ -376,6 +377,12 @@ void MglDrawer::Reload( )
       case GraphElem::DataType::DataError :
       case GraphElem::DataType::DataMark :
       case GraphElem::DataType::DataTube :
+        if( cdl.is2D ) {
+          minmax_idx = 2;
+        } else {
+          minmax_idx = 1;
+        }
+        break;
       case GraphElem::DataType::DataSurf :
       case GraphElem::DataType::DataMesh :
       case GraphElem::DataType::DataFall :
@@ -384,6 +391,7 @@ void MglDrawer::Reload( )
       case GraphElem::DataType::DataCont :
       case GraphElem::DataType::DataContF :
       case GraphElem::DataType::DataContD :
+        minmax_idx = 2;
         break;
       case GraphElem::DataType::DataC0 :
         d_c0 = md; break;
@@ -399,6 +407,36 @@ void MglDrawer::Reload( )
         d_c0 = md; break;
       default:
         DBGx( "warn: unknown type %d label \"%s\"", cdl.type, qP(label_c) );
+    }
+
+    DBGx( "dbg: minmax_idx %d lbl: \"%s\" min: %lf max: %lf",  minmax_idx, cdl.label.c_str(), cdl.v_min, cdl.v_max );
+    switch( minmax_idx ) {
+      case 0:
+        if( cdl.v_min < x_min ) {
+          x_min = cdl.v_min;
+        }
+        if( cdl.v_max > x_max ) {
+          x_max = cdl.v_max;
+        }
+        break;
+      case 1:
+        if( cdl.v_min < y_min ) {
+          y_min = cdl.v_min;
+        }
+        if( cdl.v_max > y_max ) {
+          y_max = cdl.v_max;
+        }
+        break;
+      case 2:
+        if( cdl.v_min < z_min ) {
+          z_min = cdl.v_min;
+        }
+        if( cdl.v_max > z_max ) {
+          z_max = cdl.v_max;
+        }
+        break;
+      default:
+        break;
     }
   }
 

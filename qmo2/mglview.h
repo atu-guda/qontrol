@@ -65,7 +65,7 @@ class MglDrawer : public mglDraw
   protected:
    TGraph *gra;
    std::vector<DataLineInfo> dl;
-   double x_min = 0, x_max = 0.01, y_min = 0, y_max = 0, z_min = 0, z_max = 0; // TODO: z?
+   double x_min = 0, x_max = 0.01, y_min = 0, y_max = 0, z_min = 0, z_max = 0;
    std::string label_x, label_y, label_z;
    mglData *d_x, *d_y, *d_z; // axiz data
    mglData *d_c0, *d_c1, *d_c2, *d_c3, *d_c4, *d_c5; // aux data - not owning
