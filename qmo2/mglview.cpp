@@ -336,7 +336,7 @@ void MglDrawer::Reload( )
     return;
   }
 
-  int nn = 0, ny = 1, nx = 0, ng = 0;
+  int nn = 0, ny = 1, nx = 0;
   double vmin = DMAX, vmax = DMIN; // cross!
   const dvector* ve_x = nullptr;
 
@@ -391,9 +391,9 @@ void MglDrawer::Reload( )
       }
     }
 
-    label_c = QString( "y_%1" ).arg( ng );
+    label_c = QString( "y_%1" ).arg( dl.size() );
     ge->getData( "label", label_c );
-    label_c.prepend( QSN( ng ) + ": " );
+    // label_c.prepend( QSN( ng ) + ": " );
 
     int lw = 1;
     ge->getData( "lw", &lw );
@@ -410,14 +410,13 @@ void MglDrawer::Reload( )
     opt_c = QString();
     ge->getData( "opt", opt_c );
 
-    DBGx( "dbg: adding array \"%s\" type: %d nx= %d, ny=%d nn= %d ng= %d label: \"%s\" extra: \"%s\"",
-        qP(arr->getFullName()), dtype, nx, ny, nn, ng, qP(label_c), qP(extra_c) );
+    DBGx( "dbg: adding array \"%s\" type: %d nx= %d, ny=%d nn= %d label: \"%s\" extra: \"%s\"",
+        qP(arr->getFullName()), dtype, nx, ny, nn, qP(label_c), qP(extra_c) );
 
     dl.push_back( {
-        dtype, is2D, label_c.toStdString(), extra_c.toStdString(), opt_c.toStdString(),
+        dtype, is2D, -1, label_c.toStdString(), extra_c.toStdString(), opt_c.toStdString(),
         tmin, tmax,  nullptr, arr->getArray()
         } );
-    ++ng;
     // special case: need for squeeze
     if( dtype == GraphElem::DataType::DataAxisX  &&  ! ve_x ) {
       ve_x = arr->getArray();
@@ -490,10 +489,12 @@ void MglDrawer::Reload( )
   } else {
     plp.assign( nn, 1 ); // all point are good
   }
-  DBGx( "dbg: after squeeze: nn: %d np: %d nx: %d ny: %d ng: %d", nn, np, nx, ny, ng );
+  DBGx( "dbg: after squeeze: nn: %d np: %d nx: %d ny: %d ", nn, np, nx, ny );
 
 
+  int ng = 0;
   for( auto &cdl : dl ) {
+
     mglData *md = new mglData( nx, ny );
     // copy squeezed data
     for( int i=0, j=0; i<nn && j<np ; ++i ) {
@@ -505,6 +506,7 @@ void MglDrawer::Reload( )
     cdl.md = md;
 
     int minmax_idx = -1; // -1: none, 0: x, 1: y, 2: z 3: ?c?
+    int add_ng = 0;
 
     switch( cdl.type ) {
       case GraphElem::DataType::DataNone :
@@ -537,6 +539,7 @@ void MglDrawer::Reload( )
       case GraphElem::DataType::DataError :
       case GraphElem::DataType::DataMark :
       case GraphElem::DataType::DataTube :
+        add_ng = 1;
         if( cdl.is2D ) {
           minmax_idx = 2;
         } else {
@@ -553,7 +556,7 @@ void MglDrawer::Reload( )
       case GraphElem::DataType::DataCont :
       case GraphElem::DataType::DataContF :
       case GraphElem::DataType::DataContD :
-        minmax_idx = 2;
+        add_ng = 1; minmax_idx = 2;
         break;
       case GraphElem::DataType::DataC0 :
         d_c0 = md; break;
@@ -571,7 +574,11 @@ void MglDrawer::Reload( )
         DBGx( "warn: unknown type %d label \"%s\"", cdl.type, qP(label_c) );
     }
 
-    // DBGx( "dbg: minmax_idx %d lbl: \"%s\" min: %lf max: %lf",  minmax_idx, cdl.label.c_str(), cdl.v_min, cdl.v_max );
+    if( add_ng ) {
+      cdl.ig = ng++;
+      cdl.label = to_string( cdl.ig ) + ": " + cdl.label;
+    }
+
     switch( minmax_idx ) {
       case 0:
         if( cdl.v_min < x_min ) {

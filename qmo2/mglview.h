@@ -44,6 +44,7 @@ QString color2style( int color, int lw = 1, const QString &extra = QString() );
 struct DataLineInfo {
   int type;
   int is2D;
+  int ig;
   std::string label;
   std::string extra;
   std::string opt;

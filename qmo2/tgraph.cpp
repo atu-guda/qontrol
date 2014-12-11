@@ -148,7 +148,6 @@ void TGraph::migrate1()
 {
   QString s, lbl;
   s = xname.cval();
-  DBGx( "dbg: xname: \"%s\" for \"%s\"", qP(s), qP(getFullName()) );
 
   GraphElem *ge = getElemT<GraphElem*>( "x" );
   if( ge ) { // already converted
