@@ -80,7 +80,7 @@ class MglView : public QWidget  {
    std::string label_x, label_y, label_z;
    mglData *d_x, *d_y, *d_z; // axiz data
    mglData *d_c0, *d_c1, *d_c2, *d_c3, *d_c4, *d_c5; // aux data - not owning
-   ScaleData *scd = nullptr, *scd_del = nullptr;
+   ScaleData *scd, *scd_o; // _o = ptr to original
    std::vector<uint8_t> pb; // pix buf
    int alc_x = 0, alc_y = 0; // size of allocated buffer**4
 };

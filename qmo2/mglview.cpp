@@ -44,7 +44,8 @@ QString color2style( int color, int lw, const QString &extra )
 
 MglView::MglView( TGraph *agra, QWidget *parent )
           : QWidget( parent ),
-          gra( agra )
+          gra( agra ),
+          scd ( new ScaleData( "scd", gra, 0, "scale", "default scale data" ) )
 {
   Reload();
   QSize sz0 = getSize0();
@@ -60,7 +61,7 @@ MglView::~MglView()
 {
   resetData();
   gra = nullptr; // not delete, we are not owner, just for debug
-  delete scd_del; scd_del = nullptr;
+  delete scd; scd = nullptr;
 }
 
 void MglView::resetData()
@@ -78,7 +79,7 @@ void MglView::resetData()
 
 QSize MglView::getSize0() const
 {
-  return scd ? QSize( scd->w0, scd->h0 ) : QSize( 50, 50);
+  return QSize( scd->w0, scd->h0 );
 }
 
 int MglView::Draw( mglGraph *gr )
@@ -323,20 +324,22 @@ int MglView::Draw( mglGraph *gr )
 
 void MglView::Reload( )
 {
-  DBG1( "dbg: Reload()!" );
   resetData();
-  int ch = height();
 
   if( !gra ) {
     DBG1( "err: no TGraph passed to MglDrawer" );
     return;
   }
-  scd =  gra->getElemT<ScaleData*>( "scd" );
-  if( !scd ) {
-    DBG1( "ScaleData not found, recreating" );
-    scd = new ScaleData( "scd", gra, 0, "scale", "default scale data" );
-    scd_del = scd; // to delete on exit
+
+  scd_o =  gra->getElemT<ScaleData*>( "scd" );
+  if( scd_o ) {
+    // terrble copy
+    QString s = scd_o->toString();
+    scd->fromString( s );
   }
+  int ch = 30;
+  scd->getData( "h0", &ch );
+  DBGx( "dbg: Reload()! ch=%d", ch );
 
   TModel *model = gra->getAncestorT<TModel>();
   if( !model ) {
@@ -651,13 +654,22 @@ void MglView::mousePressEvent( QMouseEvent *me )
 
 void MglView::keyPressEvent( QKeyEvent *ke )
 {
+  constexpr int Sh = 0x40000000;
+  constexpr int Ct = 0x80000000;
   int k = ke->key(), st = ke->modifiers();
-  bool btnShift = (( st & Qt::ShiftModifier ) != 0 );
-  bool btnCtrl = (( st & Qt::ControlModifier ) != 0 );
+  if( st & Qt::ShiftModifier ) {
+      k |= Sh;
+  }
+  if( st & Qt::ControlModifier ) {
+      k |= Ct;
+  }
 
   switch( k ) {
     case Qt::Key_Q:
       parentWidget()->close();
+      break;
+    case Qt::Key_R | Sh:
+      Reload();
       break;
   }
 
@@ -670,7 +682,7 @@ void MglView::resizeEvent( QResizeEvent *e )
   alc_x = cs.width(); alc_y = cs.height();
   pb.resize( alc_x * alc_y * 4 );
 
-  Reload();
+  // Reload();
 
   QWidget::resizeEvent( e );
 }
