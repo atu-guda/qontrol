@@ -88,7 +88,10 @@ int MglView::Draw( mglGraph *gr )
     return 0;
   }
 
+  gr->DefaultPlotParam();
+
   gr->SetFontSize( scd->fontSise );
+  // gr->SetMarkSize( 3.0 );
   gr->SetPlotFactor( scd->plotFactor );
   gr->Rotate( scd->phi, scd->theta );
   gr->Light( scd->useLight );
@@ -315,10 +318,14 @@ int MglView::Draw( mglGraph *gr )
   gr->Axis( "xyzU3AKDTVISO",  axis_style.c_str() );
   gr->Label( 'x', label_x.c_str() );
   gr->Label( 'y', label_y.c_str() );
+  gr->Mark( mark_point, "3r+" );
+  gr->Mark( base_point, "5B*" );
   // gr->Label( 'z', label_z.c_str() );
+
   if( scd->legend_pos < 4 ) {
     gr->Legend( scd->legend_pos, "#" );
   }
+
   return 1;
 }
 
@@ -633,7 +640,7 @@ QSize MglView::sizeHint() const
 void MglView::paintEvent( QPaintEvent * /*pe*/ )
 {
   int w = width(), h = height();
-  mglGraph gr( 0, w, h );
+  gr.SetSize( w, h );
   Draw( &gr );
 
   gr.GetBGRN( pb.data(), 4*w*h );
@@ -649,6 +656,22 @@ void MglView::paintEvent( QPaintEvent * /*pe*/ )
 
 void MglView::mousePressEvent( QMouseEvent *me )
 {
+  int mx = me->x(), my = me->y(), btn = me->button();
+  mglPoint po = gr.CalcXYZ( mx, my );
+  // DBGx( "dbg: mouse: x: %d y: %d ; graph: x: %lf y: %lf z: %lf",
+  //        mx, my, mark_point.x, mark_point.y, mark_point.z );
+  switch( btn ) {
+    case Qt::LeftButton:
+      mark_point = po;
+         break;
+    case Qt::RightButton:
+         break;
+    case Qt::MidButton:
+         break;
+    default:
+         break;
+  };
+  update();
 
 }
 

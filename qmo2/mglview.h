@@ -75,6 +75,7 @@ class MglView : public QWidget  {
    QSize getSize0() const;
  protected:
    TGraph *gra;
+   mglGraph gr = mglGraph( 0,100, 100 );
    std::vector<DataLineInfo> dl;
    double x_min = 0, x_max = 0.01, y_min = 0, y_max = 0, z_min = 0, z_max = 0;
    std::string label_x, label_y, label_z;
@@ -83,6 +84,8 @@ class MglView : public QWidget  {
    ScaleData *scd, *scd_o; // _o = ptr to original
    std::vector<uint8_t> pb; // pix buf
    int alc_x = 0, alc_y = 0; // size of allocated buffer**4
+   mglPoint mark_point { 0, 0, 0 };
+   mglPoint base_point { 0, 0, 0 };
 };
 
 #endif
