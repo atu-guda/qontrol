@@ -42,7 +42,8 @@ class GraphElem : public TDataSet {
      DataStem, DataBars, DataBarh, DataTens, DataArea,
      DataRegion, DataOHLC, DataBoxPlot, DataCandle, DataCones,
      DataError, DataMark, DataTube,
-     DataSurf, DataMesh, DataFall, DataBelt, DataDens,
+     DataSurf, DataSurfC, DataSurfA,
+     DataMesh, DataFall, DataBelt, DataDens,
      DataCont, DataContF, DataContD,
      DataC0, DataC1, DataC2, DataC3, DataC4, DataC5, // aux data for misc plots
    };
@@ -68,19 +69,21 @@ class GraphElem : public TDataSet {
    Q_CLASSINFO( "enum_DataType_18",  "Mark  1" );     // DataMark
    Q_CLASSINFO( "enum_DataType_19",  "Tube   " );     // DataTube
    Q_CLASSINFO( "enum_DataType_20",  "Surf 2D" );     // DataSurf
-   Q_CLASSINFO( "enum_DataType_21",  "Mesh 2D" );     // DataMesh
-   Q_CLASSINFO( "enum_DataType_22",  "Fall 2D" );     // DataFall
-   Q_CLASSINFO( "enum_DataType_23",  "Belt 2D" );     // DataBelt
-   Q_CLASSINFO( "enum_DataType_24",  "Dens 2D" );     // DataDens
-   Q_CLASSINFO( "enum_DataType_25",  "Cont 2D" );     // DataCont
-   Q_CLASSINFO( "enum_DataType_26",  "ContF 2D" );    // DataContF
-   Q_CLASSINFO( "enum_DataType_27",  "ContD 2D" );    // DataContD
-   Q_CLASSINFO( "enum_DataType_28",   "C0     " );    // DataC0
-   Q_CLASSINFO( "enum_DataType_29",   "C1     " );    // DataC1
-   Q_CLASSINFO( "enum_DataType_30",   "C2     " );    // DataC2
-   Q_CLASSINFO( "enum_DataType_31",   "C3     " );    // DataC3
-   Q_CLASSINFO( "enum_DataType_32",   "C4     " );    // DataC4
-   Q_CLASSINFO( "enum_DataType_33",   "C5     " );    // DataC5     
+   Q_CLASSINFO( "enum_DataType_21",  "SurfC 2D" );    // DataSurfC
+   Q_CLASSINFO( "enum_DataType_22",  "SurfA 2D" );    // DataSurfA
+   Q_CLASSINFO( "enum_DataType_23",  "Mesh 2D" );     // DataMesh
+   Q_CLASSINFO( "enum_DataType_24",  "Fall 2D" );     // DataFall
+   Q_CLASSINFO( "enum_DataType_25",  "Belt 2D" );     // DataBelt
+   Q_CLASSINFO( "enum_DataType_26",  "Dens 2D" );     // DataDens
+   Q_CLASSINFO( "enum_DataType_27",  "Cont 2D" );     // DataCont
+   Q_CLASSINFO( "enum_DataType_28",  "ContF 2D" );    // DataContF
+   Q_CLASSINFO( "enum_DataType_29",  "ContD 2D" );    // DataContD
+   Q_CLASSINFO( "enum_DataType_30",   "C0     " );    // DataC0
+   Q_CLASSINFO( "enum_DataType_31",   "C1     " );    // DataC1
+   Q_CLASSINFO( "enum_DataType_32",   "C2     " );    // DataC2
+   Q_CLASSINFO( "enum_DataType_33",   "C3     " );    // DataC3
+   Q_CLASSINFO( "enum_DataType_34",   "C4     " );    // DataC4
+   Q_CLASSINFO( "enum_DataType_35",   "C5     " );    // DataC5     
 
  protected:
    PRM_LIST( type,    efNRC, "Type", "Data Type", "enum=DataType" );
@@ -89,7 +92,9 @@ class GraphElem : public TDataSet {
    PRM_STRING( label, efNRC, "Label", "Label", "max=128" );
    PRM_COLOR(  color, efNRC, "line color", "plot line color", "def=black" );
    PRM_INT(    lw,    efNRC, "line width", "plot line width", "def=1\nmin=0\nmax=9" );
-   PRM_STRING( extra, efNRC, "Extra", "Extra options to plot", "max=128\ndef=-" );
+   PRM_SWITCH(noColor,efNRC, "NO color", "ignore color and line width", "" );
+   PRM_STRING( extra, efNRC, "Extra", "Extra pen params to plot", "max=128\ndef=-" );
+   PRM_STRING( opt,   efNRC, "Options", "Options to plot", "max=128" );
 
    DCL_DEFAULT_STATIC;
 };

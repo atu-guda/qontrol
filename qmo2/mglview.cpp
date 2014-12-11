@@ -110,101 +110,103 @@ int MglDrawer::Draw( mglGraph *gr )
     {
       continue;
     }
+    const char *ext = cdl.extra.c_str();
+    const char *opt = cdl.opt.c_str();
 
     switch( cdl.type ) {
       case GraphElem::DataType::DataPlot :
         if( cdl.is2D ) {
           if( d_x && d_y ) {
-            gr->Plot( *d_x, *d_y, *(cdl.md), cdl.extra.c_str() );
+            gr->Plot( *d_x, *d_y, *(cdl.md), ext, opt );
           }
           break;
         }
         if( d_x ) {
-          gr->Plot( *d_x, *(cdl.md), cdl.extra.c_str() );
+          gr->Plot( *d_x, *(cdl.md), ext, opt );
         }
         break;
 
       case GraphElem::DataType::DataStep :
         if( cdl.is2D ) {
           if( d_x && d_y ) {
-            gr->Step( *d_x, *d_y, *(cdl.md), cdl.extra.c_str() );
+            gr->Step( *d_x, *d_y, *(cdl.md), ext, opt );
           }
           break;
         }
         if( d_x ) {
-          gr->Step( *d_x, *(cdl.md), cdl.extra.c_str() );
+          gr->Step( *d_x, *(cdl.md), ext, opt );
         }
         break;
 
       case GraphElem::DataType::DataTape :
         if( cdl.is2D ) {
           if( d_x && d_y ) {
-            gr->Tape( *d_x, *d_y, *(cdl.md), cdl.extra.c_str() );
+            gr->Tape( *d_x, *d_y, *(cdl.md), ext, opt );
           }
           break;
         }
         if( d_x ) {
-          gr->Tape( *d_x, *(cdl.md), cdl.extra.c_str() );
+          gr->Tape( *d_x, *(cdl.md), ext, opt );
         }
         break;
 
       case GraphElem::DataType::DataStem :
         if( cdl.is2D ) {
           if( d_x && d_y ) {
-            gr->Stem( *d_x, *d_y, *(cdl.md), cdl.extra.c_str() );
+            gr->Stem( *d_x, *d_y, *(cdl.md), ext, opt );
           }
           break;
         }
         if( d_x ) {
-          gr->Stem( *d_x, *(cdl.md), cdl.extra.c_str() );
+          gr->Stem( *d_x, *(cdl.md), ext, opt );
         }
         break;
 
       case GraphElem::DataType::DataBars :
         if( cdl.is2D ) {
           if( d_x && d_y ) {
-            gr->Bars( *d_x, *d_y, *(cdl.md), cdl.extra.c_str() );
+            gr->Bars( *d_x, *d_y, *(cdl.md), ext, opt );
           }
           break;
         }
         if( d_x ) {
-          gr->Bars( *d_x, *(cdl.md), cdl.extra.c_str() );
+          gr->Bars( *d_x, *(cdl.md), ext, opt );
         }
         break;
 
       case GraphElem::DataType::DataBarh :
         if( cdl.is2D ) {
           if( d_x && d_y ) {
-            // gr->Barh( *d_x, *d_y, *(cdl.md), cdl.extra.c_str() );
+            // gr->Barh( *d_x, *d_y, *(cdl.md), ext, opt );
           }
           break;
         }
         if( d_x ) {
-          gr->Barh( *d_x, *(cdl.md), cdl.extra.c_str() );
+          gr->Barh( *d_x, *(cdl.md), ext, opt );
         }
         break;
 
       case GraphElem::DataType::DataTens : // C0: color
         if( cdl.is2D ) {
           if( d_x && d_y && d_c0 ) {
-            gr->Tens( *d_x, *d_y, *(cdl.md), *d_c0, cdl.extra.c_str() );
+            gr->Tens( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
           }
           break;
         }
         if( d_x && d_c0 ) {
-          gr->Tens( *d_x, *(cdl.md), *d_c0, "" /*cdl.extra.c_str()*/ ); // TODO: drop only color!
+          gr->Tens( *d_x, *(cdl.md), *d_c0, ext, opt );
         }
         break;
 
       case GraphElem::DataType::DataArea :
         if( cdl.is2D ) {
           if( d_x && d_y ) {
-            gr->Area( *d_x, *d_y, *(cdl.md), "B" /*cdl.extra.c_str()*/ ); // TODO: only color?
+            gr->Area( *d_x, *d_y, *(cdl.md), ext, opt );
           }
           break;
         }
         if( d_x ) {
-          gr->Area( *d_x, *(cdl.md), "B" /*cdl.extra.c_str()*/ );
+          gr->Area( *d_x, *(cdl.md), ext, opt );
         }
         break;
       case GraphElem::DataType::DataRegion :
@@ -222,48 +224,80 @@ int MglDrawer::Draw( mglGraph *gr )
       case GraphElem::DataType::DataMark : // C0: sz
         if( cdl.is2D ) {
           if( d_x && d_y && d_c0 ) {
-            gr->Mark( *d_x, *d_y, *(cdl.md), *d_c0, cdl.extra.c_str() );
+            gr->Mark( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
           }
           break;
         }
         if( d_x && d_c0 ) {
-          gr->Mark( *d_x, *(cdl.md), *d_c0, cdl.extra.c_str() );
+          gr->Mark( *d_x, *(cdl.md), *d_c0, ext, opt  );
         }
         break;
 
-      case GraphElem::DataType::DataTube : // C): r
+      case GraphElem::DataType::DataTube : // C0: r
         if( cdl.is2D ) {
           if( d_x && d_y && d_c0 ) {
-            gr->Tube( *d_x, *d_y, *(cdl.md), *d_c0, cdl.extra.c_str() );
+            gr->Tube( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
           }
           break;
         }
         if( d_x && d_c0 ) {
-          gr->Tube( *d_x, *(cdl.md), *d_c0, cdl.extra.c_str() );
+          gr->Tube( *d_x, *(cdl.md), *d_c0, ext, opt );
         }
         break;
 
       case GraphElem::DataType::DataSurf :
         if( d_x && d_y ) {
-          /// gr->Surf( *d_x, *d_y, *(cdl.md), cdl.extra.c_str() );
-          gr->Surf( *d_x, *d_y, *(cdl.md) );
+          gr->Surf( *d_x, *d_y, *(cdl.md), ext, opt );
+        }
+        break;
+      case GraphElem::DataType::DataSurfC :
+        if( d_x && d_y && d_c0 ) {
+          gr->SurfC( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
+        }
+        break;
+      case GraphElem::DataType::DataSurfA :
+        if( d_x && d_y && d_c0 ) {
+          gr->SurfA( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
         }
         break;
       case GraphElem::DataType::DataMesh :
         if( d_x && d_y ) {
-          // gr->Mesh( *d_x, *d_y, *(cdl.md), "" /*cdl.extra.c_str()*/ );
-          gr->Mesh( *d_x, *d_y, *(cdl.md) );
+          gr->Mesh( *d_x, *d_y, *(cdl.md), ext, opt );
         }
         break;
       case GraphElem::DataType::DataFall :
+        if( d_x && d_y ) {
+          gr->Fall( *d_x, *d_y, *(cdl.md), ext, opt );
+        }
+        break;
       case GraphElem::DataType::DataBelt :
+        if( d_x && d_y ) {
+          gr->Belt( *d_x, *d_y, *(cdl.md), ext, opt );
+        }
+        break;
       case GraphElem::DataType::DataDens :
+        if( d_x && d_y ) {
+          gr->Dens( *d_x, *d_y, *(cdl.md), ext, opt );
+        }
+        break;
       case GraphElem::DataType::DataCont :
-      case GraphElem::DataType::DataContF :
-      case GraphElem::DataType::DataContD :
+        if( d_x && d_y ) {
+          gr->Cont( *d_x, *d_y, *(cdl.md), ext, opt );
+        }
+        break;
+      case GraphElem::DataType::DataContF : // C0: v
+        if( d_x && d_y && d_c0) {
+          gr->ContF( *d_c0, *d_x, *d_y, *(cdl.md),  ext, opt );
+        }
+        break;
+      case GraphElem::DataType::DataContD : // C0: d
+        if( d_x && d_y && d_c0) {
+          gr->ContD( *d_c0, *d_x, *d_y, *(cdl.md), ext, opt );
+        }
+        break;
       default: break;
     }
-    gr->AddLegend( cdl.label.c_str(), cdl.extra.c_str() );
+    gr->AddLegend( cdl.label.c_str(), ext );
   }
 
 
@@ -306,7 +340,7 @@ void MglDrawer::Reload( )
   double vmin = DMAX, vmax = DMIN; // cross!
   const dvector* ve_x = nullptr;
 
-  QString label_c, extra_c;
+  QString label_c, extra_c, opt_c;
 
   for( auto c : gra->children() ) {
     GraphElem *ge = qobject_cast<GraphElem*>( c );
@@ -318,6 +352,8 @@ void MglDrawer::Reload( )
     ge->getData( "type", &dtype );
     int is2D = 0;
     ge->getData( "is2D", &is2D );
+    int noColor = 0;
+    ge->getData( "noColor", &noColor );
 
     QString src = QString();
     ge->getData( "src", src );
@@ -365,14 +401,21 @@ void MglDrawer::Reload( )
     ge->getData( "color", &i_cc );
     QString extra_add = QString( "" );
     ge->getData( "extra", extra_add );
-    extra_c = color2style( i_cc, lw, extra_add );
+    if( noColor ) {
+      extra_c = extra_add;
+    } else {
+      extra_c = color2style( i_cc, lw, extra_add );
+    }
+
+    opt_c = QString();
+    ge->getData( "opt", opt_c );
 
     DBGx( "dbg: adding array \"%s\" type: %d nx= %d, ny=%d nn= %d ng= %d label: \"%s\" extra: \"%s\"",
         qP(arr->getFullName()), dtype, nx, ny, nn, ng, qP(label_c), qP(extra_c) );
 
     dl.push_back( {
-        dtype, is2D, label_c.toStdString(), extra_c.toStdString(), tmin, tmax,
-        nullptr, arr->getArray()
+        dtype, is2D, label_c.toStdString(), extra_c.toStdString(), opt_c.toStdString(),
+        tmin, tmax,  nullptr, arr->getArray()
         } );
     ++ng;
     // special case: need for squeeze
@@ -501,6 +544,8 @@ void MglDrawer::Reload( )
         }
         break;
       case GraphElem::DataType::DataSurf :
+      case GraphElem::DataType::DataSurfC :
+      case GraphElem::DataType::DataSurfA :
       case GraphElem::DataType::DataMesh :
       case GraphElem::DataType::DataFall :
       case GraphElem::DataType::DataBelt :

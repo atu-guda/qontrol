@@ -46,6 +46,7 @@ struct DataLineInfo {
   int is2D;
   std::string label;
   std::string extra;
+  std::string opt;
   double v_min, v_max;
   mglData *md;
   const std::vector<double> *ve;
