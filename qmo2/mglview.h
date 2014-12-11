@@ -50,29 +50,6 @@ struct DataLineInfo {
   const std::vector<double> *ve;
 };
 
-//* inner helper class to draw MathGL plot
-
-class MglDrawer : public mglDraw
-{
-  public:
-   MglDrawer( TGraph *agra );
-   virtual ~MglDrawer() override;
-   virtual int Draw( mglGraph *gr ) override;
-   virtual void Reload() override;
-   void resetData();
-   QSize getSize0() const;
-   void setSize( QSize sz );
-  protected:
-   int cw = 100, ch = 100; // current size
-   TGraph *gra;
-   std::vector<DataLineInfo> dl;
-   double x_min = 0, x_max = 0.01, y_min = 0, y_max = 0, z_min = 0, z_max = 0;
-   std::string label_x, label_y, label_z;
-   mglData *d_x, *d_y, *d_z; // axiz data
-   mglData *d_c0, *d_c1, *d_c2, *d_c3, *d_c4, *d_c5; // aux data - not owning
-   ScaleData *scd = nullptr, *scd_del = nullptr;
-};
-
 /**can plot graphs for TModel on info by TGraph
   *@author atu
   */
@@ -92,12 +69,20 @@ class MglView : public QWidget  {
    virtual void keyPressEvent( QKeyEvent *ke ) override;
    virtual void resizeEvent( QResizeEvent *e ) override;
  protected:
-   // QVBoxLayout *lay;
-   MglDrawer *drawer;
+   int Draw( mglGraph *gr );
+   void Reload();
+   void resetData();
+   QSize getSize0() const;
+ protected:
+   TGraph *gra;
+   std::vector<DataLineInfo> dl;
+   double x_min = 0, x_max = 0.01, y_min = 0, y_max = 0, z_min = 0, z_max = 0;
+   std::string label_x, label_y, label_z;
+   mglData *d_x, *d_y, *d_z; // axiz data
+   mglData *d_c0, *d_c1, *d_c2, *d_c3, *d_c4, *d_c5; // aux data - not owning
+   ScaleData *scd = nullptr, *scd_del = nullptr;
    std::vector<uint8_t> pb; // pix buf
    int alc_x = 0, alc_y = 0; // size of allocated buffer**4
-   // QMathGL *mgl;
-   // QLabel *lbl;
 };
 
 #endif

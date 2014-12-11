@@ -29,6 +29,8 @@
 
 #include "mglview.h"
 
+using namespace std;
+
 QString color2style( int color, int lw, const QString &extra )
 {
   QColor cc = QRgb( color );
@@ -38,24 +40,30 @@ QString color2style( int color, int lw, const QString &extra )
   return s_cc;
 }
 
-// ---------------------------------------------------------------------
+// ------------------------- MglView ------------------------
 
-using namespace std;
-MglDrawer::MglDrawer( TGraph *agra )
-  : gra( agra )
+MglView::MglView( TGraph *agra, QWidget *parent )
+          : QWidget( parent ),
+          gra( agra )
 {
   Reload();
+  QSize sz0 = getSize0();
+  resize( sz0 );
+  alc_x = sz0.height(); alc_y = sz0.width();
+  pb.resize( alc_x * alc_y * 4 );
+
+  setMinimumSize( 350, 280 );
+  setCursor( Qt::CrossCursor );
 }
 
-MglDrawer::~MglDrawer()
+MglView::~MglView()
 {
-  // DBGx( "dbg: dtor gra=%p", gra );
   resetData();
   gra = nullptr; // not delete, we are not owner, just for debug
   delete scd_del; scd_del = nullptr;
 }
 
-void MglDrawer::resetData()
+void MglView::resetData()
 {
   d_x = d_y = d_z = d_c0 = d_c1 = d_c2 = d_c3 = d_c4 = d_c5 = nullptr;
   x_min = x_max = y_min = y_max = z_min = z_max = 0.0;
@@ -68,12 +76,12 @@ void MglDrawer::resetData()
   label_x = label_y = label_z = "";
 }
 
-QSize MglDrawer::getSize0() const
+QSize MglView::getSize0() const
 {
   return scd ? QSize( scd->w0, scd->h0 ) : QSize( 50, 50);
 }
 
-int MglDrawer::Draw( mglGraph *gr )
+int MglView::Draw( mglGraph *gr )
 {
   if( !gr  || !gra ) {
     return 0;
@@ -313,10 +321,11 @@ int MglDrawer::Draw( mglGraph *gr )
   return 1;
 }
 
-void MglDrawer::Reload( )
+void MglView::Reload( )
 {
   DBG1( "dbg: Reload()!" );
   resetData();
+  int ch = height();
 
   if( !gra ) {
     DBG1( "err: no TGraph passed to MglDrawer" );
@@ -610,36 +619,11 @@ void MglDrawer::Reload( )
 
 }
 
-void MglDrawer::setSize( QSize sz )
-{
-  cw = sz.width(); ch = sz.height();
-}
 
-// ------------------------- MglView ------------------------
-
-MglView::MglView( TGraph *agra, QWidget *parent )
-          : QWidget( parent ),
-          drawer( new MglDrawer( agra ) )
-{
-  QSize sz0 = drawer->getSize0();
-  drawer->setSize( sz0 );
-  resize( sz0 );
-  alc_x = sz0.height(); alc_y = sz0.width();
-  pb.resize( alc_x * alc_y * 4 );
-
-  setMinimumSize( 350, 280 );
-  setCursor( Qt::CrossCursor );
-}
-
-MglView::~MglView()
-{
-  // delete mgl; mgl = nullptr;
-  delete drawer; drawer = nullptr; // deleted by mgl dtor !!! no mgl for now
-}
 
 QSize MglView::sizeHint() const
 {
-  return drawer->getSize0() + QSize( 10, 10 );
+  return getSize0() + QSize( 10, 10 );
 }
 
 
@@ -647,7 +631,7 @@ void MglView::paintEvent( QPaintEvent * /*pe*/ )
 {
   int w = width(), h = height();
   mglGraph gr( 0, w, h );
-  drawer->Draw( &gr );
+  Draw( &gr );
 
   gr.GetBGRN( pb.data(), 4*w*h );
 
@@ -683,11 +667,10 @@ void MglView::keyPressEvent( QKeyEvent *ke )
 void MglView::resizeEvent( QResizeEvent *e )
 {
   QSize cs = size();
-  drawer->setSize( cs );
   alc_x = cs.width(); alc_y = cs.height();
   pb.resize( alc_x * alc_y * 4 );
 
-  drawer->Reload();
+  Reload();
 
   QWidget::resizeEvent( e );
 }
