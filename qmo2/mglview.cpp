@@ -617,16 +617,13 @@ MglView::MglView( TGraph *agra, QWidget *parent )
           : QWidget( parent ),
           lay( new QVBoxLayout( this ) ),
           drawer( new MglDrawer( agra ) ),
-          mgl( new QMathGL( this ) ),
-          lbl( new QLabel( "lbl", this) )
+          mgl( new QMathGL( this ) )
 {
-  lbl->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
   lay->addWidget( mgl );
-  lay->addWidget( lbl );
 
   QSize sz0 = drawer->getSize0();
   mgl->resize( sz0 );
-  resize( sz0 + lbl->sizeHint() );
+  resize( sz0 );
 
   mgl->setDraw( drawer );
   mgl->update();

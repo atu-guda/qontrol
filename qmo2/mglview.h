@@ -95,7 +95,7 @@ class MglView : public QWidget  {
    QVBoxLayout *lay;
    MglDrawer *drawer;
    QMathGL *mgl;
-   QLabel *lbl;
+   // QLabel *lbl;
 };
 
 #endif
