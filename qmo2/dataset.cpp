@@ -1822,14 +1822,18 @@ QDomElement TDataSet::toDom( QDomDocument &dd ) const
 
   for( auto ch : children() ) {
     HolderData *ho = qobject_cast<HolderData*>(ch);
-    if( !ho )
+    if( !ho ) {
       continue; // but how?
-    if( ho->getFlags() & efNoSave )
+    }
+    if( ho->getFlags() & efNoSave ) {
       continue;
+    }
+
     const TClassInfo *ci = ho->getClassInfo(); // dont write obsoleted objects
     if( ci->props & clpObsolete ) {
       continue;
     }
+
     QDomElement cde = ho->toDom( dd );
     de.appendChild( cde );
   }

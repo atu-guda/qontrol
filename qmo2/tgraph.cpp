@@ -148,9 +148,11 @@ void TGraph::migrate1()
 {
   QString s, lbl;
   s = xname.cval();
+  DBGx( "dbg: xname: \"%s\" for \"%s\"", qP(s), qP(getFullName()) );
 
   GraphElem *ge = getElemT<GraphElem*>( "x" );
   if( ge ) { // already converted
+    DBGx( "dbg: Graph \"%s\" already converted", qP(getFullName()) );
     return;
   }
 
@@ -174,7 +176,7 @@ void TGraph::migrate1()
     if( arr ) {
       arr->getData( "label", lbl );
     } else {
-      DBGx( "warn: not found array \"%s\"", qP( s ) );
+      DBGx( "warn: not found array \"%s\" for converting X axis", qP( s ) );
     }
     ge->setData( "label", lbl );
   }
@@ -189,7 +191,7 @@ void TGraph::migrate1()
     QString nm_old_c = QString( "y%1color" ).arg( i );
     getData( nm_old_s, s );
     getData( nm_old_c, &li_col );
-    DBGx( "dbg: color for \"%s\" : %X", qP(nm_old_s), li_col );
+    // DBGx( "dbg: color for \"%s\" : %X", qP(nm_old_s), li_col );
     if( ( li_col & 0xFFFFFF  ) == 0xFFFFFF ) { // white->black
       li_col = 0;
     }
