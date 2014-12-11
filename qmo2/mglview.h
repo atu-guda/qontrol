@@ -30,12 +30,9 @@
 
 class TGraph;
 class ScaleData;
-class QMathGL;
 class mglData;
 class mglGraph;
 class mglDraw;
-class QVBoxLayout;
-class QLabel;
 
 //* converts color and width to style
 QString color2style( int color, int lw = 1, const QString &extra = QString() );
@@ -64,7 +61,9 @@ class MglDrawer : public mglDraw
    virtual void Reload() override;
    void resetData();
    QSize getSize0() const;
+   void setSize( QSize sz );
   protected:
+   int cw = 100, ch = 100; // current size
    TGraph *gra;
    std::vector<DataLineInfo> dl;
    double x_min = 0, x_max = 0.01, y_min = 0, y_max = 0, z_min = 0, z_max = 0;
@@ -88,13 +87,16 @@ class MglView : public QWidget  {
  public slots:
 
  protected:
-   // virtual void paintEvent( QPaintEvent *pe );
-   // virtual void mousePressEvent( QMouseEvent *me );
-   // virtual void keyPressEvent( QKeyEvent *ke );
+   virtual void paintEvent( QPaintEvent *pe ) override;
+   virtual void mousePressEvent( QMouseEvent *me ) override;
+   virtual void keyPressEvent( QKeyEvent *ke ) override;
+   virtual void resizeEvent( QResizeEvent *e ) override;
  protected:
-   QVBoxLayout *lay;
+   // QVBoxLayout *lay;
    MglDrawer *drawer;
-   QMathGL *mgl;
+   std::vector<uint8_t> pb; // pix buf
+   int alc_x = 0, alc_y = 0; // size of allocated buffer**4
+   // QMathGL *mgl;
    // QLabel *lbl;
 };
 

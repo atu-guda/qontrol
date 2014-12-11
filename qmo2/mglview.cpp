@@ -21,8 +21,7 @@
 #include <QPrinter>
 #include <QPrintDialog>
 
-#include <mgl2/qt.h>
-#include <mgl2/qmathgl.h>
+#include <mgl2/mgl.h>
 
 #include "toutarr.h"
 #include "tgraph.h"
@@ -435,8 +434,8 @@ void MglDrawer::Reload( )
   if( nn > max_nn_nosqz && ve_x && ny == 1 ) {  // TODO: no on Surf (ny?)
 
     const int nd0 = 4;
-    double mdlt_y = scd->maxErr * ( vmax - vmin ) / scd->h0; // TODO: current height?
-    int stp0 = nn * nd0 / scd->h0;
+    double mdlt_y = scd->maxErr * ( vmax - vmin ) / ch;
+    int stp0 = nn * nd0 / ch;
     np = 0;
 
 
@@ -611,28 +610,31 @@ void MglDrawer::Reload( )
 
 }
 
+void MglDrawer::setSize( QSize sz )
+{
+  cw = sz.width(); ch = sz.height();
+}
+
 // ------------------------- MglView ------------------------
 
 MglView::MglView( TGraph *agra, QWidget *parent )
           : QWidget( parent ),
-          lay( new QVBoxLayout( this ) ),
-          drawer( new MglDrawer( agra ) ),
-          mgl( new QMathGL( this ) )
+          drawer( new MglDrawer( agra ) )
 {
-  lay->addWidget( mgl );
-
   QSize sz0 = drawer->getSize0();
-  mgl->resize( sz0 );
+  drawer->setSize( sz0 );
   resize( sz0 );
+  alc_x = sz0.height(); alc_y = sz0.width();
+  pb.resize( alc_x * alc_y * 4 );
 
-  mgl->setDraw( drawer );
-  mgl->update();
+  setMinimumSize( 350, 280 );
+  setCursor( Qt::CrossCursor );
 }
 
 MglView::~MglView()
 {
-  delete mgl; mgl = nullptr;
-  // delete drawer; drawer = nullptr; // deleted by mgl dtor !!!
+  // delete mgl; mgl = nullptr;
+  delete drawer; drawer = nullptr; // deleted by mgl dtor !!! no mgl for now
 }
 
 QSize MglView::sizeHint() const
@@ -640,4 +642,53 @@ QSize MglView::sizeHint() const
   return drawer->getSize0() + QSize( 10, 10 );
 }
 
+
+void MglView::paintEvent( QPaintEvent * /*pe*/ )
+{
+  int w = width(), h = height();
+  mglGraph gr( 0, w, h );
+  drawer->Draw( &gr );
+
+  gr.GetBGRN( pb.data(), 4*w*h );
+
+  QPixmap pic = QPixmap::fromImage( QImage( pb.data(), w, h, QImage::Format_RGB32 ));
+
+  QPainter p( this );
+  // p.fillRect( 0, 0, w, h, QBrush( QColor(128,255,255) ) );
+  p.drawPixmap( 0, 0, pic );
+  p.end();
+
+}
+
+void MglView::mousePressEvent( QMouseEvent *me )
+{
+
+}
+
+void MglView::keyPressEvent( QKeyEvent *ke )
+{
+  int k = ke->key(), st = ke->modifiers();
+  bool btnShift = (( st & Qt::ShiftModifier ) != 0 );
+  bool btnCtrl = (( st & Qt::ControlModifier ) != 0 );
+
+  switch( k ) {
+    case Qt::Key_Q:
+      parentWidget()->close();
+      break;
+  }
+
+  update();
+}
+
+void MglView::resizeEvent( QResizeEvent *e )
+{
+  QSize cs = size();
+  drawer->setSize( cs );
+  alc_x = cs.width(); alc_y = cs.height();
+  pb.resize( alc_x * alc_y * 4 );
+
+  drawer->Reload();
+
+  QWidget::resizeEvent( e );
+}
 
