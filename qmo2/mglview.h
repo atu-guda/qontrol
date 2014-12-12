@@ -68,9 +68,9 @@ class MglView : public QWidget  {
    void markToBase();
    void setPhi( double a_phi, bool add = false );
    void setTheta( double a_theta, bool add = false );
-   void setXmag( double mag, bool mul = false );
-   void setYmag( double mag, bool mul = false );
-   void setZmag( double mag, bool mul = false );
+   void setXmag( double amag, bool mul = false );
+   void setYmag( double amag, bool mul = false );
+   void setZmag( double amag, bool mul = false );
    void setXbase( double base, bool rel = false );
    void setYbase( double base, bool rel = false );
    void setZbase( double base, bool rel = false );
@@ -90,7 +90,6 @@ class MglView : public QWidget  {
    TGraph *gra;
    mglGraph gr = mglGraph( 0,100, 100 );
    std::vector<DataLineInfo> dl;
-   double x_min = 0, x_max = 0.01, y_min = 0, y_max = 0, z_min = 0, z_max = 0;
    std::string label_x, label_y, label_z;
    mglData *d_x, *d_y, *d_z; // axiz data
    mglData *d_c0, *d_c1, *d_c2, *d_c3, *d_c4, *d_c5; // aux data - not owning
@@ -101,12 +100,10 @@ class MglView : public QWidget  {
    int alc_x = 0, alc_y = 0; // size of allocated buffer**4
    mglPoint mark_point { 0, 0, 0 };
    mglPoint base_point { 0, 0, 0 };
-   mglPoint p0 { 0, 0, 0 }; // start of plotting
-   mglPoint dlt { 1, 1, 1 }; // size of plotting
-   double angle_step = 5.0, mag_step = 0.707106781, scale_step = 0.25;
-   double mag_x = 1.0, mag_y = 1.0, mag_z = 1.0;
-   double base_x = 0.0, base_y = 0.0, base_z = 0.0;
-   double dlt_x = 1.0, dlt_y = 1.0, dlt_z = 1.0;
+   mglPoint pr_min { 0, 0, 0 }, pr_max { 1, 1, 1 }, pr_dlt { 1, 1, 1 }; // real
+   mglPoint pv_min { 0, 0, 0 }, pv_max { 1, 1, 1 }, pv_dlt { 1, 1, 1 }; // visual
+   mglPoint mag { 1, 1, 1 };
+   double angle_step = 5.0, mag_step = 0.707106781, scale_step = 0.10;
 };
 
 #endif

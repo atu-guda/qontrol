@@ -81,7 +81,8 @@ MglView::~MglView()
 void MglView::resetData()
 {
   d_x = d_y = d_z = d_c0 = d_c1 = d_c2 = d_c3 = d_c4 = d_c5 = nullptr;
-  x_min = x_max = y_min = y_max = z_min = z_max = 0.0;
+  // x_min = x_max = y_min = y_max = z_min = z_max = 0.0;
+  pr_min  = { 0, 0, 0 }; pr_max  = { 1, 1, 1 };  pr_dlt = { 1, 1, 1 };
 
   for( auto cdl : dl ) {
     delete cdl.md;
@@ -112,12 +113,10 @@ int MglView::Draw( mglGraph *gr )
   gr->SetAlphaDef( scd->alpha );
   gr->Alpha( (bool)(scd->useAlpha) );
 
-  dlt = mglPoint( ( x_max - x_min ) * mag_x, ( y_max - y_min ) * mag_y, ( z_max - z_min ) * mag_z );
-  dlt_x = ( x_max - x_min ) * mag_x;
-  dlt_y = ( y_max - y_min ) * mag_y;
-  dlt_z = ( z_max - z_min ) * mag_z;
+  pv_dlt = pr_dlt / mag; // realy * by coords
+  pv_max = pv_min + pv_dlt;
 
-  gr->SetRanges( base_x, base_x + dlt_x, base_y, base_y + dlt_y, base_z, base_z + dlt_z );
+  gr->SetRanges( pv_min, pv_max );
 
   if( ! scd->autoScX ) { // TODO: move as default to Reload()
     gr->SetRange( 'x', scd->plotMinX, scd->plotMaxX );
@@ -339,7 +338,8 @@ int MglView::Draw( mglGraph *gr )
   gr->Label( 'y', label_y.c_str() );
   gr->Mark( mark_point, "3r+" );
   gr->Mark( base_point, "3B*" );
-  gr->Error( base_point, mglPoint( x_max-x_min, y_max-y_min, z_max-z_min ), "B" );
+  // gr->Error( base_point, mglPoint( x_max-x_min, y_max-y_min, z_max-z_min ), "B" );
+  gr->Error( base_point, pr_dlt, "B" );
   // gr->Label( 'z', label_z.c_str() );
 
   if( scd->legend_pos < 4 ) {
@@ -619,27 +619,27 @@ void MglView::Reload( )
 
     switch( minmax_idx ) {
       case 0:
-        if( cdl.v_min < x_min ) {
-          x_min = cdl.v_min;
+        if( cdl.v_min < pr_min.x ) {
+          pr_min.x = cdl.v_min;
         }
-        if( cdl.v_max > x_max ) {
-          x_max = cdl.v_max;
+        if( cdl.v_max > pr_max.x ) {
+          pr_max.x = cdl.v_max;
         }
         break;
       case 1:
-        if( cdl.v_min < y_min ) {
-          y_min = cdl.v_min;
+        if( cdl.v_min < pr_min.y ) {
+          pr_min.y = cdl.v_min;
         }
-        if( cdl.v_max > y_max ) {
-          y_max = cdl.v_max;
+        if( cdl.v_max > pr_max.y ) {
+          pr_max.y = cdl.v_max;
         }
         break;
       case 2:
-        if( cdl.v_min < z_min ) {
-          z_min = cdl.v_min;
+        if( cdl.v_min < pr_min.z ) {
+          pr_min.z = cdl.v_min;
         }
-        if( cdl.v_max > z_max ) {
-          z_max = cdl.v_max;
+        if( cdl.v_max > pr_max.z ) {
+          pr_max.z = cdl.v_max;
         }
         break;
       default:
@@ -647,9 +647,9 @@ void MglView::Reload( )
     }
   }
 
-
-  mag_x = mag_y = mag_z = 1.0;
-  base_x = x_min; base_y = y_min; base_z = z_min;
+  mag = { 1, 1, 1 };
+  pr_dlt = pr_max - pr_min;
+  pv_min = pr_min; //   pv_max = pr_max; pv_dlt = pr_dlt; recalced on Draw
 
 }
 
@@ -703,7 +703,10 @@ void MglView::drawFooter( QPainter &p, int hg )
   QString s = QString( "mark: ") % toQString( mark_point )
      % "  base: " % toQString( base_point )
      % "  rel: " % toQString( rel_p ) % " kyx: " % QSN( kyx ) % " kzx: " % QSN( kzx )
-     % "\n 0: [ " % QSN( base_x ) % "; " % QSN( base_y ) % "; " % QSN( base_z ) % " ]";
+     % "\n  vis: " % toQString( pv_min ) % " - " % toQString( pv_max )
+     % " D: " % toQString( pv_dlt )
+     % "  mag: " % toQString( mag )
+     % "  real: " % toQString( pr_min ) % " - " % toQString( pr_max );
   p.drawText( ex, hg, w-2*ex, bottom_h, Qt::AlignLeft, s );
 }
 
@@ -753,16 +756,22 @@ void MglView::keyPressEvent( QKeyEvent *ke )
 
     // Shift
     case Qt::Key_Up:
-      setYbase( -dlt_y * scale_step, true );
+      setYbase( -pv_dlt.y * scale_step, true );
       break;
     case Qt::Key_Down:
-      setYbase( dlt_y * scale_step, true );
+      setYbase( pv_dlt.y * scale_step, true );
       break;
     case Qt::Key_Left:
-      setXbase( dlt_x * scale_step, true );
+      setXbase( pv_dlt.x * scale_step, true );
       break;
     case Qt::Key_Right:
-      setXbase( -dlt_x * scale_step, true );
+      setXbase( -pv_dlt.x * scale_step, true );
+      break;
+    case Qt::Key_PageUp:
+      setZbase( -pv_dlt.z * scale_step, true );
+      break;
+    case Qt::Key_PageDown:
+      setZbase( pv_dlt.z * scale_step, true );
       break;
 
     // Rotate
@@ -806,9 +815,7 @@ void MglView::resizeEvent( QResizeEvent *e )
 {
   QSize cs = size();
   alc_x = cs.width(); alc_y = cs.height();
-  pb.resize( alc_x * alc_y * 4 );
-
-  // Reload();
+  pb.resize( alc_x * alc_y * 4 ); // sub bottom_h ?
 
   QWidget::resizeEvent( e );
 }
@@ -846,32 +853,32 @@ void MglView::setTheta( double a_theta, bool add )
   update();
 }
 
-void MglView::setXmag( double mag, bool mul )
+void MglView::setXmag( double amag, bool mul )
 {
   if( mul ) {
-    mag_x *= mag;
+    mag.x *= amag;
   } else {
-    mag_x = mag;
+    mag.x = amag;
   }
   update();
 }
 
-void MglView::setYmag( double mag, bool mul )
+void MglView::setYmag( double amag, bool mul )
 {
   if( mul ) {
-    mag_y *= mag;
+    mag.y *= amag;
   } else {
-    mag_y = mag;
+    mag.y = amag;
   }
   update();
 }
 
-void MglView::setZmag( double mag, bool mul )
+void MglView::setZmag( double amag, bool mul )
 {
   if( mul ) {
-    mag_z *= mag;
+    mag.z *= amag;
   } else {
-    mag_z = mag;
+    mag.z = amag;
   }
   update();
 }
@@ -879,9 +886,9 @@ void MglView::setZmag( double mag, bool mul )
 void MglView::setXbase( double base, bool rel )
 {
   if( rel ) {
-    base_x = base;
+    pv_min.x += base;
   } else {
-    base_x += base;
+    pv_min.x  = base;
   }
   update();
 }
@@ -889,9 +896,9 @@ void MglView::setXbase( double base, bool rel )
 void MglView::setYbase( double base, bool rel )
 {
   if( rel ) {
-    base_y = base;
+    pv_min.y += base;
   } else {
-    base_y += base;
+    pv_min.y  = base;
   }
   update();
 }
@@ -899,9 +906,9 @@ void MglView::setYbase( double base, bool rel )
 void MglView::setZbase( double base, bool rel )
 {
   if( rel ) {
-    base_z = base;
+    pv_min.z += base;
   } else {
-    base_z += base;
+    pv_min.z  = base;
   }
   update();
 }
