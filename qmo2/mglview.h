@@ -74,7 +74,14 @@ class MglView : public QWidget  {
    void setXbase( double base, bool rel = false );
    void setYbase( double base, bool rel = false );
    void setZbase( double base, bool rel = false );
+   void setAlpha( double al, bool rel = false );
    void zoom(); // from base to mark
+   void printPlot();
+   void exportPlot();
+   void showHelp();
+   void setMark();
+   void setScale();
+   void saveScale();
 
  protected:
    virtual void paintEvent( QPaintEvent *pe ) override;
@@ -82,6 +89,7 @@ class MglView : public QWidget  {
    virtual void keyPressEvent( QKeyEvent *ke ) override;
    virtual void resizeEvent( QResizeEvent *e ) override;
  protected:
+   void drawAll( QPainter &p );
    int Draw( mglGraph *gr );
    void Reload();
    void resetData();

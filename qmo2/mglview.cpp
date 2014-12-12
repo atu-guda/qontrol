@@ -27,6 +27,7 @@
 #include "toutarr.h"
 #include "tgraph.h"
 #include "tmodel.h"
+#include "datawidget.h"
 
 #include "mglview.h"
 
@@ -670,8 +671,7 @@ QSize MglView::sizeHint() const
   return getSize0() + QSize( 0, bottom_h );
 }
 
-
-void MglView::paintEvent( QPaintEvent * /*pe*/ )
+void MglView::drawAll( QPainter &p )
 {
   int w = width(), h = height(), hg = h - bottom_h;
   gr.SetSize( w, hg );
@@ -681,11 +681,16 @@ void MglView::paintEvent( QPaintEvent * /*pe*/ )
 
   QPixmap pic = QPixmap::fromImage( QImage( pb.data(), w, hg, QImage::Format_RGB32 ));
 
-  QPainter p( this );
   p.setFont( pa_fnt );
   // p.fillRect( 0, 0, w, h, QBrush( QColor(128,255,255) ) );
   p.drawPixmap( 0, 0, pic );
   drawFooter( p, hg );
+}
+
+void MglView::paintEvent( QPaintEvent * /*pe*/ )
+{
+  QPainter p( this );
+  drawAll( p );
   p.end();
 
 }
@@ -754,6 +759,9 @@ void MglView::keyPressEvent( QKeyEvent *ke )
   }
 
   switch( k ) {
+    case Qt::Key_F1:
+      showHelp();
+      break;
     case Qt::Key_M:
       markToBase();
       break;
@@ -762,6 +770,27 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       break;
     case Qt::Key_R | Sh:
       resetScale();
+      break;
+    case Qt::Key_P | Ct:
+      printPlot();
+      break;
+    case Qt::Key_E:
+      exportPlot();
+      break;
+    case Qt::Key_G:
+      setMark();
+      break;
+    case Qt::Key_S:
+      setScale();
+      break;
+    case Qt::Key_S | Sh:
+      saveScale();
+      break;
+    case Qt::Key_A:
+      setAlpha( 0.1, true );
+      break;
+    case Qt::Key_A | Sh :
+      setAlpha( -0.1, true );
       break;
 
     // Shift
@@ -924,5 +953,165 @@ void MglView::setZbase( double base, bool rel )
     pv_min.z  = base;
   }
   update();
+}
+
+void MglView::setAlpha( double al, bool rel )
+{
+  if( rel ) {
+    scd->alpha += al;
+  } else {
+    scd->alpha  = al;
+  }
+  scd->alpha = qBound( 0.0, (double)(scd->alpha), 1.0 );
+  update();
+}
+
+
+void MglView::setMark()
+{
+  QDialog *dia = new QDialog( this );
+  dia->setWindowTitle( "Set mark to point: " );
+  QGridLayout *lay = new QGridLayout( dia );
+
+  QLineEdit *markX_ed = new QLineEdit( dia );
+  markX_ed->setValidator( new QDoubleValidator() );
+  markX_ed->setText( QSN( mark_point.x ) );
+  lay->addWidget( markX_ed, 0, 1 );
+
+  QLineEdit *markY_ed = new QLineEdit( dia );
+  markY_ed->setValidator( new QDoubleValidator() );
+  markY_ed->setText( QSN( mark_point.y ) );
+  lay->addWidget( markY_ed, 1, 1 );
+
+  QLineEdit *markZ_ed = new QLineEdit( dia );
+  markZ_ed->setValidator( new QDoubleValidator() );
+  markZ_ed->setText( QSN( mark_point.z ) );
+  lay->addWidget( markZ_ed, 2, 1 );
+
+  QLabel *la_x = new QLabel( "&X value", dia );
+  la_x->setBuddy( markX_ed );
+  lay->addWidget( la_x, 0, 0 );
+  QLabel *la_y = new QLabel( "&Y value", dia );
+  la_y->setBuddy( markY_ed );
+  lay->addWidget( la_y, 1, 0 );
+  QLabel *la_z = new QLabel( "&Z value", dia );
+  la_z->setBuddy( markZ_ed );
+  lay->addWidget( la_z, 2, 0 );
+
+  QDialogButtonBox *bbox
+    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  lay->addWidget( bbox, 3, 0, 1, 2 );
+  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
+
+  int rc = dia->exec();
+  if( rc == QDialog::Accepted ) {
+    mark_point.x = markX_ed->text().toDouble();
+    mark_point.y = markY_ed->text().toDouble();
+    mark_point.z = markZ_ed->text().toDouble();
+  };
+  delete dia;
+  update();
+
+}
+
+void MglView::setScale()
+{
+  DataDialog *dia = new DataDialog( *scd, this );
+
+  int rc = dia->exec();
+  delete dia;
+  if( rc == QDialog::Accepted ) {
+    update();
+  };
+}
+
+void MglView::saveScale()
+{
+  if( !scd_o ) {
+    return;
+  }
+  if( QMessageBox::question( this, "Save scale settings",
+        "Are you sure to save current scale settings?" )
+      == QMessageBox::Yes )
+  {
+    // terrble copy
+    QString s = scd->toString();
+    scd_o->fromString( s );
+  }
+}
+
+void MglView::printPlot()
+{
+  QPrinter *pr;
+  if( ! LaboWin::labowin ) {
+    return;
+  }
+  pr = LaboWin::labowin->getPrinter();
+  if( !pr ) {
+    return;
+  }
+
+  QPrintDialog pr_dialog( pr, this );
+  if( pr_dialog.exec() ) {
+    pr->setFullPage( false );
+    pr->newPage();
+    QPainter p( pr );
+    drawAll( p );
+    p.end();
+  };
+
+}
+
+void MglView::exportPlot()
+{
+  QString fn = QFileDialog::getSaveFileName( this, "Save Picture", "out.png",
+               "PNG files (*.png);;All files (*)" );
+  if( fn.isEmpty() ) {
+    return;
+  };
+
+  QImage timg( width(), height(), QImage::Format_RGB32 );
+  timg.fill( 0xFF );
+  QPainter painter( &timg );
+  render( &painter );
+
+  if( ! timg.save( fn, "PNG", 50 ) ) {
+    QString err = strerror(errno);
+    QMessageBox::warning(this, "Fail to save picture",
+        QString("Fail fo save picture file: \"%1\": %2").arg( fn ).arg( err ),
+        QMessageBox::Ok );
+  }
+
+
+}
+
+static const char plot_helpstr[] = "<b>Hot keys:</b><br/>\n"
+ "<b>q</b> - close <br/>\n"
+ "<b>F1</b> - this help <br/>\n"
+ "<b>a/A</b> - change alpha <br/>\n"
+ "<b>o/O</b> - on/off non-selected plots <br/>\n"
+ "<b>s/S</b> - scale dialog / save current scale <br/>\n"
+ "<b>Ctrl-P</b> - print<br/>\n"
+ "<b>R</b> - reset and redraw<br/>\n"
+ "<b>e</b> - export image to png <br/>\n"
+ "<b>m</b> - set base to mark<br/>\n"
+ "<b>g</b> - set mark to given point <br/>\n"
+ "<b>l/L</b> - link/Unlink to data <br/>\n"
+ "<b>d</b> - data info <br/>\n"
+ "<b>z</b> - zoom base - mark, or near mark <br/>\n"
+ "<b>PageUp, PageDown</b> - move Up/Down <br>\n"
+ "<b>+/- Shift, Ctrl</b> - Zoom on X (Y,Z) <br>\n"
+ "<b> - not in link state: - </b> <br/>\n"
+ "<b>Left, Top, Right, Bottom</b> - Move <br/>\n"
+ "<b>[Shift]{Left, Top, Right, Bottom}</b> - Rotate <br>\n"
+ "<b>Ctrl {Left, Top, Right, Bottom}</b> - shift plot <br>\n"
+ "<b>- in link state: -</b>  <br>\n"
+ "<b>[Shift]{Left, Top}</b> - prev/next point [more] <br>\n"
+ "<b>[Shift]{Top, Bottom}}</b> - find [global] max/min <br>\n";
+
+void MglView::showHelp()
+{
+  QMessageBox::information( this,"Hot keys in plot window", plot_helpstr );
 }
 
