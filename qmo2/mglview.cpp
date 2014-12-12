@@ -81,7 +81,6 @@ MglView::~MglView()
 void MglView::resetData()
 {
   d_x = d_y = d_z = d_c0 = d_c1 = d_c2 = d_c3 = d_c4 = d_c5 = nullptr;
-  // x_min = x_max = y_min = y_max = z_min = z_max = 0.0;
   pr_min  = { 0, 0, 0 }; pr_max  = { 1, 1, 1 };  pr_dlt = { 1, 1, 1 };
 
   for( auto cdl : dl ) {
@@ -118,12 +117,6 @@ int MglView::Draw( mglGraph *gr )
 
   gr->SetRanges( pv_min, pv_max );
 
-  if( ! scd->autoScX ) { // TODO: move as default to Reload()
-    gr->SetRange( 'x', scd->plotMinX, scd->plotMaxX );
-  }
-  if( ! scd->autoScY ) {
-    gr->SetRange( 'y', scd->plotMinY, scd->plotMaxY );
-  }
   gr->SetTicks( 'x', -(scd->gridX), scd->tickX );
   gr->SetTicks( 'y', -(scd->gridY), scd->tickY );
 
@@ -647,6 +640,13 @@ void MglView::Reload( )
     }
   }
 
+  if( ! scd->autoScX ) { // manual scale from config
+    pr_min.x =  scd->plotMinX; pr_max.x =  scd->plotMaxX;
+  }
+  if( ! scd->autoScY ) {
+    pr_min.y =  scd->plotMinY; pr_max.y =  scd->plotMaxY;
+  }
+
   mag = { 1, 1, 1 };
   pr_dlt = pr_max - pr_min;
   pv_min = pr_min; //   pv_max = pr_max; pv_dlt = pr_dlt; recalced on Draw
@@ -654,6 +654,16 @@ void MglView::Reload( )
 }
 
 
+void MglView::zoom()
+{
+  mglPoint p0 = base_point, p1 = mark_point;
+  if( base_point == mark_point ) {
+    p0 -= 0.25 * pv_dlt; p1 += 0.25 * pv_dlt;
+  }
+  pv_min = p0; pv_max = p1; pv_dlt = pv_max - pv_min;
+  mag = mglPoint( pv_dlt.x / pr_dlt.x, pv_dlt.y / pr_dlt.y, pv_dlt.z / pr_dlt.z );
+  update();
+}
 
 QSize MglView::sizeHint() const
 {
@@ -805,6 +815,9 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       break;
     case Qt::Key_Minus | Ct:
       setZmag( 1.0/mag_step, true );
+      break;
+    case Qt::Key_Z:
+      zoom();
       break;
   }
 
