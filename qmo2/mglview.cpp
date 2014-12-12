@@ -83,6 +83,8 @@ void MglView::resetData()
 {
   d_x = d_y = d_z = d_c0 = d_c1 = d_c2 = d_c3 = d_c4 = d_c5 = nullptr;
   pr_min  = { 0, 0, 0 }; pr_max  = { 1, 1, 1 };  pr_dlt = { 1, 1, 1 };
+  sel = 0;
+  dli.assign( 10, -1 );
 
   for( auto cdl : dl ) {
     delete cdl.md;
@@ -128,8 +130,9 @@ int MglView::Draw( mglGraph *gr )
 
 
   for( auto cdl : dl ) {
-    if( cdl.type < GraphElem::DataType::DataPlot // only real plots
-        || cdl.type >= GraphElem::DataType::DataC0 )
+    if( cdl.type < GraphElem::DataType::DataPlot // only real plots (and in 'on' state)
+        || cdl.type >= GraphElem::DataType::DataC0 
+        || ! cdl.on )
     {
       continue;
     }
@@ -446,7 +449,7 @@ void MglView::Reload( )
         qP(arr->getFullName()), dtype, nx, ny, nn, qP(label_c), qP(extra_c) );
 
     dl.push_back( {
-        dtype, is2D, -1, label_c.toStdString(), extra_c.toStdString(), opt_c.toStdString(),
+        dtype, is2D, -1, 1, label_c.toStdString(), extra_c.toStdString(), opt_c.toStdString(),
         tmin, tmax,  nullptr, arr->getArray()
         } );
     // special case: need for squeeze
@@ -524,7 +527,7 @@ void MglView::Reload( )
   DBGx( "dbg: after squeeze: nn: %d np: %d nx: %d ny: %d ", nn, np, nx, ny );
 
 
-  int ng = 0;
+  int ng = 0, cdl_idx = 0;
   for( auto &cdl : dl ) {
 
     mglData *md = new mglData( nx, ny );
@@ -609,6 +612,7 @@ void MglView::Reload( )
     if( add_ng ) {
       cdl.ig = ng++;
       cdl.label = to_string( cdl.ig ) + ": " + cdl.label;
+      dli[ cdl.ig ] = cdl_idx;
     }
 
     switch( minmax_idx ) {
@@ -639,6 +643,7 @@ void MglView::Reload( )
       default:
         break;
     }
+    ++cdl_idx;
   }
 
   if( ! scd->autoScX ) { // manual scale from config
@@ -721,7 +726,14 @@ void MglView::drawFooter( QPainter &p, int hg )
      % "\n  vis: " % toQString( pv_min ) % " - " % toQString( pv_max )
      % " D: " % toQString( pv_dlt )
      % "  mag: " % toQString( mag )
-     % "  real: " % toQString( pr_min ) % " - " % toQString( pr_max );
+     % "  real: " % toQString( pr_min ) % " - " % toQString( pr_max )
+     % "\n " % QSN( sel ) % " ";
+
+  int ni = dli[sel];
+  if( ni >=0 && ni < (int)(dl.size()) ) {
+    s += QString::fromStdString( dl[ ni ].label );
+  }
+
   p.drawText( ex, hg, w-2*ex, bottom_h, Qt::AlignLeft, s );
 }
 
@@ -764,6 +776,12 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       break;
     case Qt::Key_M:
       markToBase();
+      break;
+    case Qt::Key_O:
+      togglePlot();
+      break;
+    case Qt::Key_O | Sh:
+      toggleAllPlots();
       break;
     case Qt::Key_Q:
       parentWidget()->close();
@@ -848,6 +866,17 @@ void MglView::keyPressEvent( QKeyEvent *ke )
     case Qt::Key_Z:
       zoom();
       break;
+
+    case Qt::Key_0: sel = 0; update(); break;
+    case Qt::Key_1: sel = 1; update(); break;
+    case Qt::Key_2: sel = 2; update(); break;
+    case Qt::Key_3: sel = 3; update(); break;
+    case Qt::Key_4: sel = 4; update(); break;
+    case Qt::Key_5: sel = 5; update(); break;
+    case Qt::Key_6: sel = 6; update(); break;
+    case Qt::Key_7: sel = 7; update(); break;
+    case Qt::Key_8: sel = 8; update(); break;
+    case Qt::Key_9: sel = 9; update(); break;
   }
 
   update();
@@ -1039,6 +1068,30 @@ void MglView::saveScale()
     QString s = scd->toString();
     scd_o->fromString( s );
   }
+}
+
+void MglView::togglePlot()
+{
+  int ni = dli[sel];
+  if( ni < 0 || ni >= (int)(dl.size()) ) {
+    return;
+  }
+
+  dl[ni].on = !dl[ni].on;
+
+  update();
+}
+
+void MglView::toggleAllPlots()
+{
+  for( auto &cdl: dl ) {
+    if( cdl.ig == sel ) {
+      continue;
+    }
+    cdl.on = !cdl.on;
+  }
+
+  update();
 }
 
 void MglView::printPlot()

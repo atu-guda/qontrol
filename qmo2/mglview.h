@@ -44,6 +44,7 @@ struct DataLineInfo {
   int type;
   int is2D;
   int ig;
+  int on;
   std::string label;
   std::string extra;
   std::string opt;
@@ -82,6 +83,8 @@ class MglView : public QWidget  {
    void setMark();
    void setScale();
    void saveScale();
+   void togglePlot();
+   void toggleAllPlots();
 
  protected:
    virtual void paintEvent( QPaintEvent *pe ) override;
@@ -99,6 +102,7 @@ class MglView : public QWidget  {
    TGraph *gra;
    mglGraph gr = mglGraph( 0,100, 100 );
    std::vector<DataLineInfo> dl;
+   std::vector<int> dli; // convert sel -> idx in dl[], or -1
    std::string label_x, label_y, label_z;
    mglData *d_x, *d_y, *d_z; // axiz data
    mglData *d_c0, *d_c1, *d_c2, *d_c3, *d_c4, *d_c5; // aux data - not owning
@@ -113,6 +117,7 @@ class MglView : public QWidget  {
    mglPoint pv_min { 0, 0, 0 }, pv_max { 1, 1, 1 }, pv_dlt { 1, 1, 1 }; // visual
    mglPoint mag { 1, 1, 1 };
    double angle_step = 5.0, mag_step = 0.707106781, scale_step = 0.10;
+   int sel = 0;
 };
 
 #endif
