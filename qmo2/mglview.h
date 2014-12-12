@@ -22,7 +22,7 @@
 #include <string>
 
 #include <QString>
-#include <QStringList>
+#include <QFont>
 #include <QWidget>
 #include <QColor>
 #include <QList>
@@ -36,6 +36,8 @@ class mglDraw;
 
 //* converts color and width to style
 QString color2style( int color, int lw = 1, const QString &extra = QString() );
+//* converts MathGL point to QString
+QString toQString( const mglPoint &p );
 
 // modified copy of GraphElem
 struct DataLineInfo {
@@ -62,6 +64,16 @@ class MglView : public QWidget  {
    virtual QSize sizeHint() const override;
 
  public slots:
+   void resetScale();
+   void markToBase();
+   void setPhi( double a_phi, bool add = false );
+   void setTheta( double a_theta, bool add = false );
+   void setXmag( double mag, bool mul = false );
+   void setYmag( double mag, bool mul = false );
+   void setZmag( double mag, bool mul = false );
+   void setXbase( double base, bool rel = false );
+   void setYbase( double base, bool rel = false );
+   void setZbase( double base, bool rel = false );
 
  protected:
    virtual void paintEvent( QPaintEvent *pe ) override;
@@ -73,6 +85,7 @@ class MglView : public QWidget  {
    void Reload();
    void resetData();
    QSize getSize0() const;
+   void drawFooter( QPainter &p, int hg );
  protected:
    TGraph *gra;
    mglGraph gr = mglGraph( 0,100, 100 );
@@ -82,10 +95,18 @@ class MglView : public QWidget  {
    mglData *d_x, *d_y, *d_z; // axiz data
    mglData *d_c0, *d_c1, *d_c2, *d_c3, *d_c4, *d_c5; // aux data - not owning
    ScaleData *scd, *scd_o; // _o = ptr to original
+   const QFont &pa_fnt;
+   int em = 10, ex = 10, bottom_h = 40; // default only
    std::vector<uint8_t> pb; // pix buf
    int alc_x = 0, alc_y = 0; // size of allocated buffer**4
    mglPoint mark_point { 0, 0, 0 };
    mglPoint base_point { 0, 0, 0 };
+   mglPoint p0 { 0, 0, 0 }; // start of plotting
+   mglPoint dlt { 1, 1, 1 }; // size of plotting
+   double angle_step = 5.0, mag_step = 0.707106781, scale_step = 0.25;
+   double mag_x = 1.0, mag_y = 1.0, mag_z = 1.0;
+   double base_x = 0.0, base_y = 0.0, base_z = 0.0;
+   double dlt_x = 1.0, dlt_y = 1.0, dlt_z = 1.0;
 };
 
 #endif

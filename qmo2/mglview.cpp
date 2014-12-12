@@ -23,6 +23,7 @@
 
 #include <mgl2/mgl.h>
 
+#include "labowin.h"
 #include "toutarr.h"
 #include "tgraph.h"
 #include "tmodel.h"
@@ -40,20 +41,33 @@ QString color2style( int color, int lw, const QString &extra )
   return s_cc;
 }
 
+QString toQString( const mglPoint &p )
+{
+  QString s = QString( "[ %1; %2; %3 ]" ).arg( p.x ).arg( p.y ).arg( p.z );
+  return s;
+}
+
 // ------------------------- MglView ------------------------
 
 MglView::MglView( TGraph *agra, QWidget *parent )
           : QWidget( parent ),
           gra( agra ),
-          scd ( new ScaleData( "scd", gra, 0, "scale", "default scale data" ) )
+          scd ( new ScaleData( "scd", gra, 0, "scale", "default scale data" ) ),
+          pa_fnt ( LaboWin::labowin->getPlotFont() )
 {
+  QFontMetrics fm( pa_fnt );
+  em = fm.width( 'W' );
+  ex = fm.height();
+  bottom_h = 4 * ex;
+
   Reload();
   QSize sz0 = getSize0();
-  resize( sz0 );
+  resize( sz0 + QSize( 0, bottom_h ) );
+
   alc_x = sz0.height(); alc_y = sz0.width();
   pb.resize( alc_x * alc_y * 4 );
 
-  setMinimumSize( 350, 280 );
+  setMinimumSize( 480, 420 );
   setCursor( Qt::CrossCursor );
 }
 
@@ -98,9 +112,14 @@ int MglView::Draw( mglGraph *gr )
   gr->SetAlphaDef( scd->alpha );
   gr->Alpha( (bool)(scd->useAlpha) );
 
-  gr->SetRanges( x_min, x_max, y_min, y_max, z_min, z_max );
+  dlt = mglPoint( ( x_max - x_min ) * mag_x, ( y_max - y_min ) * mag_y, ( z_max - z_min ) * mag_z );
+  dlt_x = ( x_max - x_min ) * mag_x;
+  dlt_y = ( y_max - y_min ) * mag_y;
+  dlt_z = ( z_max - z_min ) * mag_z;
 
-  if( ! scd->autoScX ) {
+  gr->SetRanges( base_x, base_x + dlt_x, base_y, base_y + dlt_y, base_z, base_z + dlt_z );
+
+  if( ! scd->autoScX ) { // TODO: move as default to Reload()
     gr->SetRange( 'x', scd->plotMinX, scd->plotMaxX );
   }
   if( ! scd->autoScY ) {
@@ -319,7 +338,8 @@ int MglView::Draw( mglGraph *gr )
   gr->Label( 'x', label_x.c_str() );
   gr->Label( 'y', label_y.c_str() );
   gr->Mark( mark_point, "3r+" );
-  gr->Mark( base_point, "5B*" );
+  gr->Mark( base_point, "3B*" );
+  gr->Error( base_point, mglPoint( x_max-x_min, y_max-y_min, z_max-z_min ), "B" );
   // gr->Label( 'z', label_z.c_str() );
 
   if( scd->legend_pos < 4 ) {
@@ -627,31 +647,64 @@ void MglView::Reload( )
     }
   }
 
+
+  mag_x = mag_y = mag_z = 1.0;
+  base_x = x_min; base_y = y_min; base_z = z_min;
+
 }
 
 
 
 QSize MglView::sizeHint() const
 {
-  return getSize0() + QSize( 10, 10 );
+  return getSize0() + QSize( 0, bottom_h );
 }
 
 
 void MglView::paintEvent( QPaintEvent * /*pe*/ )
 {
-  int w = width(), h = height();
-  gr.SetSize( w, h );
+  int w = width(), h = height(), hg = h - bottom_h;
+  gr.SetSize( w, hg );
   Draw( &gr );
 
-  gr.GetBGRN( pb.data(), 4*w*h );
+  gr.GetBGRN( pb.data(), 4*w*hg );
 
-  QPixmap pic = QPixmap::fromImage( QImage( pb.data(), w, h, QImage::Format_RGB32 ));
+  QPixmap pic = QPixmap::fromImage( QImage( pb.data(), w, hg, QImage::Format_RGB32 ));
 
   QPainter p( this );
+  p.setFont( pa_fnt );
   // p.fillRect( 0, 0, w, h, QBrush( QColor(128,255,255) ) );
   p.drawPixmap( 0, 0, pic );
+  drawFooter( p, hg );
   p.end();
 
+}
+
+void MglView::drawFooter( QPainter &p, int hg )
+{
+  int w = width();
+  QColor bg_c = QColor( scd->bgcolor );
+  QColor fg_c = QColor( 0,0,0 );
+  if( bg_c.value() < 128 ) {
+    fg_c = QColor( 255, 255, 255 );
+  }
+
+  p.fillRect( 0, hg, w, bottom_h, QBrush( bg_c ) );
+  p.setPen( fg_c );
+  p.drawLine( 0, hg, w, hg );
+
+  mglPoint rel_p = mark_point - base_point;
+  double kyx = 0.0, kzx = 0.0;
+  if( rel_p.x != 0 ) {
+    kyx = rel_p.y / rel_p.x;
+    kzx = rel_p.z / rel_p.x;
+  }
+
+  QString s = QString( "mark: ") % toQString( mark_point )
+     % "  base: " % toQString( base_point )
+     % "  rel: " % toQString( rel_p ) % " kyx: " % QSN( kyx ) % " kzx: " % QSN( kzx )
+     % "\n 0: [ " % QSN( base_x ) % "; " % QSN( base_y ) % "; " % QSN( base_z ) % " ]";
+  p.drawText( ex, hg, w-2*ex, bottom_h, Qt::AlignLeft, s );
 }
 
 void MglView::mousePressEvent( QMouseEvent *me )
@@ -688,11 +741,61 @@ void MglView::keyPressEvent( QKeyEvent *ke )
   }
 
   switch( k ) {
+    case Qt::Key_M:
+      markToBase();
+      break;
     case Qt::Key_Q:
       parentWidget()->close();
       break;
     case Qt::Key_R | Sh:
-      Reload();
+      resetScale();
+      break;
+
+    // Shift
+    case Qt::Key_Up:
+      setYbase( -dlt_y * scale_step, true );
+      break;
+    case Qt::Key_Down:
+      setYbase( dlt_y * scale_step, true );
+      break;
+    case Qt::Key_Left:
+      setXbase( dlt_x * scale_step, true );
+      break;
+    case Qt::Key_Right:
+      setXbase( -dlt_x * scale_step, true );
+      break;
+
+    // Rotate
+    case Qt::Key_Up | Sh:
+      setPhi( angle_step, true );
+      break;
+    case Qt::Key_Down | Sh:
+      setPhi( -angle_step, true );
+      break;
+    case Qt::Key_Left | Sh:
+      setTheta( angle_step, true );
+      break;
+    case Qt::Key_Right | Sh:
+      setTheta( -angle_step, true );
+      break;
+
+    case Qt::Key_Plus:
+      setXmag( mag_step, true );
+      break;
+    case Qt::Key_Minus:
+      setXmag( 1.0/mag_step, true );
+      break;
+    case Qt::Key_Plus | Sh:
+      setYmag( mag_step, true );
+      break;
+    case Qt::Key_Minus | Sh:
+      setYmag( 1.0/mag_step, true );
+      break;
+    case Qt::Key_Plus | Ct:
+      setZmag( mag_step, true );
+      break;
+    case Qt::Key_Minus | Ct:
+      setZmag( 1.0/mag_step, true );
       break;
   }
 
@@ -708,5 +811,98 @@ void MglView::resizeEvent( QResizeEvent *e )
   // Reload();
 
   QWidget::resizeEvent( e );
+}
+
+void MglView::resetScale()
+{
+  Reload();
+  // TODO: more
+  update();
+}
+
+void MglView::markToBase()
+{
+  base_point = mark_point;
+  update();
+}
+
+void MglView::setPhi( double a_phi, bool add )
+{
+  if( add ) {
+    scd->phi += a_phi;
+  } else {
+    scd->phi  = a_phi;
+  }
+  update();
+}
+
+void MglView::setTheta( double a_theta, bool add )
+{
+  if( add ) {
+    scd->theta += a_theta;
+  } else {
+    scd->theta  = a_theta;
+  }
+  update();
+}
+
+void MglView::setXmag( double mag, bool mul )
+{
+  if( mul ) {
+    mag_x *= mag;
+  } else {
+    mag_x = mag;
+  }
+  update();
+}
+
+void MglView::setYmag( double mag, bool mul )
+{
+  if( mul ) {
+    mag_y *= mag;
+  } else {
+    mag_y = mag;
+  }
+  update();
+}
+
+void MglView::setZmag( double mag, bool mul )
+{
+  if( mul ) {
+    mag_z *= mag;
+  } else {
+    mag_z = mag;
+  }
+  update();
+}
+
+void MglView::setXbase( double base, bool rel )
+{
+  if( rel ) {
+    base_x = base;
+  } else {
+    base_x += base;
+  }
+  update();
+}
+
+void MglView::setYbase( double base, bool rel )
+{
+  if( rel ) {
+    base_y = base;
+  } else {
+    base_y += base;
+  }
+  update();
+}
+
+void MglView::setZbase( double base, bool rel )
+{
+  if( rel ) {
+    base_z = base;
+  } else {
+    base_z += base;
+  }
+  update();
 }
 
