@@ -85,6 +85,9 @@ class MglView : public QWidget  {
    void saveScale();
    void togglePlot();
    void toggleAllPlots();
+   void linkToPlot();
+   void unlinkFromPlot();
+   void nextPointInPlot( int step = 1 );
 
  protected:
    virtual void paintEvent( QPaintEvent *pe ) override;
@@ -98,6 +101,8 @@ class MglView : public QWidget  {
    void resetData();
    QSize getSize0() const;
    void drawFooter( QPainter &p, int hg );
+   void setMarkToLink();
+   int findNearest( const mglPoint &p, int dl_idx );//* find nearest point index
  protected:
    TGraph *gra;
    mglGraph gr = mglGraph( 0,100, 100 );
@@ -105,6 +110,7 @@ class MglView : public QWidget  {
    std::vector<int> dli; // convert sel -> idx in dl[], or -1
    std::string label_x, label_y, label_z;
    mglData *d_x, *d_y, *d_z; // axiz data
+   int nn = 0, ny = 1, nx = 0; //* copy from arrays
    mglData *d_c0, *d_c1, *d_c2, *d_c3, *d_c4, *d_c5; // aux data - not owning
    ScaleData *scd, *scd_o; // _o = ptr to original
    const QFont &pa_fnt;
@@ -117,7 +123,9 @@ class MglView : public QWidget  {
    mglPoint pv_min { 0, 0, 0 }, pv_max { 1, 1, 1 }, pv_dlt { 1, 1, 1 }; // visual
    mglPoint mag { 1, 1, 1 };
    double angle_step = 5.0, mag_step = 0.707106781, scale_step = 0.10;
-   int sel = 0;
+   int sel = 0; //* selected plot, may be none: see dli[sel]
+   int linkPlot = -1; //* linked data index (unlike sel, dl[linkTo])
+   int linkIdx = 0;   //* current point index in linked array
 };
 
 #endif

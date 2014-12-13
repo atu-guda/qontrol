@@ -48,6 +48,7 @@ QString toQString( const mglPoint &p )
   return s;
 }
 
+
 // ------------------------- MglView ------------------------
 
 MglView::MglView( TGraph *agra, QWidget *parent )
@@ -84,6 +85,8 @@ void MglView::resetData()
   d_x = d_y = d_z = d_c0 = d_c1 = d_c2 = d_c3 = d_c4 = d_c5 = nullptr;
   pr_min  = { 0, 0, 0 }; pr_max  = { 1, 1, 1 };  pr_dlt = { 1, 1, 1 };
   sel = 0;
+  linkPlot = -1; linkIdx = 0;
+  nn = 0; ny = 1; nx = 0;
   dli.assign( 10, -1 );
 
   for( auto cdl : dl ) {
@@ -371,7 +374,6 @@ void MglView::Reload( )
     return;
   }
 
-  int nn = 0, ny = 1, nx = 0;
   double vmin = DMAX, vmax = DMIN; // cross!
   const dvector* ve_x = nullptr;
 
@@ -645,6 +647,7 @@ void MglView::Reload( )
     }
     ++cdl_idx;
   }
+  nn = nx * ny; // fix real nn
 
   if( ! scd->autoScX ) { // manual scale from config
     pr_min.x =  scd->plotMinX; pr_max.x =  scd->plotMaxX;
@@ -734,6 +737,15 @@ void MglView::drawFooter( QPainter &p, int hg )
     s += QString::fromStdString( dl[ ni ].label );
   }
 
+  if( linkPlot > -1 ) {
+    if( linkPlot < (int)dl.size() ) {
+      s += "  Link: " % QSN( dl[ linkPlot ].ig ) % " "
+        % QString::fromStdString( dl[ linkPlot ].label ) % " [" % QSN( linkIdx ) % "]";
+    } else {
+      s += " !!! Bad link " % QSN( linkPlot );
+    }
+  }
+
   p.drawText( ex, hg, w-2*ex, bottom_h, Qt::AlignLeft, s );
 }
 
@@ -809,6 +821,25 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       break;
     case Qt::Key_A | Sh :
       setAlpha( -0.1, true );
+      break;
+    // link/point
+    case Qt::Key_L:
+      linkToPlot();
+      break;
+    case Qt::Key_L | Sh :
+      unlinkFromPlot();
+      break;
+    case Qt::Key_BracketLeft:
+      nextPointInPlot( -1 );
+      break;
+    case Qt::Key_BracketRight:
+      nextPointInPlot( 1 );
+      break;
+    case Qt::Key_BraceLeft | Sh:
+      nextPointInPlot( -nx / 10 );
+      break;
+    case Qt::Key_BraceRight | Sh:
+      nextPointInPlot( nx / 10 );
       break;
 
     // Shift
@@ -1092,6 +1123,67 @@ void MglView::toggleAllPlots()
   }
 
   update();
+}
+
+void MglView::linkToPlot()
+{
+  int lp = dli[sel];
+  if( lp < 0 ) {
+    return;
+  }
+
+  linkPlot = lp;
+  linkIdx = 0; // TODO: findNear
+  setMarkToLink(); // bound and update included
+}
+
+void MglView::unlinkFromPlot()
+{
+  linkPlot = -1; linkIdx = 0;
+  update();
+}
+
+void MglView::nextPointInPlot( int step )
+{
+  if( linkPlot < 0 ) {
+    return;
+  }
+  linkIdx += step;
+  setMarkToLink(); // bound and update in it
+}
+
+void MglView::setMarkToLink()
+{
+  if( linkPlot < 0 ) {
+    return;
+  }
+  linkIdx = qBound( 0, linkIdx, nn-1 );
+
+  auto cdl = dl[linkPlot];
+  if( cdl.is2D ) {
+    mark_point = mglPoint( d_x->a[linkIdx], d_y->a[linkIdx], cdl.md->a[linkIdx] );
+  } else {
+    mark_point = mglPoint( d_x->a[linkIdx], cdl.md->a[linkIdx], 0 );
+  }
+  update();
+}
+
+int MglView::findNearest( const mglPoint &p, int dl_idx )
+{
+  if( dl_idx < 0 || dl_idx >= (int)dl.size() ) {
+    return 0;
+  }
+  const auto cdl = dl[dl_idx];
+
+  mglPoint p0 = p, p1;
+
+  if( cdl.is2D ) {
+    p0.z = 0;
+  } else {
+  }
+
+  return 0;
+
 }
 
 void MglView::printPlot()
