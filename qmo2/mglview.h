@@ -65,6 +65,7 @@ class MglView : public QWidget  {
    MglView( TGraph *agra, QWidget *parent );
    ~MglView();
    virtual QSize sizeHint() const override;
+   QString getInfo( bool more = false ) const;
 
  public slots:
    void resetScale();
@@ -81,6 +82,7 @@ class MglView : public QWidget  {
    void zoom(); // from base to mark
    void printPlot();
    void exportPlot();
+   void showInfo();
    void showHelp();
    void setMark();
    void setScale();

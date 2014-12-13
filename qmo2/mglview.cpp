@@ -490,7 +490,7 @@ void MglView::Reload( )
       plp[nn-1] = 1;
       ++np;
     }
-    DBGx( "dbg: squeeze start: np= %d  mdlt_y= %lf vmin= %lf vmax= %lf" , np, mdlt_y, vmin, vmax );
+    // DBGx( "dbg: squeeze start: np= %d  mdlt_y= %lf vmin= %lf vmax= %lf" , np, mdlt_y, vmin, vmax );
 
     int was_add = 1;
     for( int n_add = 0; was_add && n_add < 10; ++n_add ) { // 10 : max iterations to split
@@ -752,41 +752,7 @@ void MglView::drawFooter( QPainter &p, int hg )
   p.setPen( fg_c );
   p.drawLine( 0, hg, w, hg );
 
-  if( !data_loaded ) {
-    p.drawText( ex, hg, w-2*ex, bottom_h, Qt::AlignLeft, "No data" );
-    return;
-  }
-
-
-  mglPoint rel_p = mark_point - base_point;
-  double kyx = 0.0, kzx = 0.0;
-  if( rel_p.x != 0 ) {
-    kyx = rel_p.y / rel_p.x;
-    kzx = rel_p.z / rel_p.x;
-  }
-
-  QString s = QString( "mark: ") % toQString( mark_point )
-     % "  base: " % toQString( base_point )
-     % "  rel: " % toQString( rel_p ) % " kyx: " % QSN( kyx ) % " kzx: " % QSN( kzx )
-     % "\n  vis: " % toQString( pv_min ) % " - " % toQString( pv_max )
-     % " D: " % toQString( pv_dlt )
-     % "  mag: " % toQString( mag )
-     % "  real: " % toQString( pr_min ) % " - " % toQString( pr_max )
-     % "\n " % QSN( sel ) % " ";
-
-  int ni = dli[sel];
-  if( ni >=0 && ni < (int)(dl.size()) ) {
-    s += QString::fromStdString( dl[ ni ].label );
-  }
-
-  if( linkPlot > -1 ) {
-    if( linkPlot < (int)dl.size() ) {
-      s += "  Link: " % QSN( dl[ linkPlot ].ig ) % " "
-        % QString::fromStdString( dl[ linkPlot ].label ) % " [" % QSN( linkIdx ) % "]";
-    } else {
-      s += " !!! Bad link " % QSN( linkPlot );
-    }
-  }
+  QString s = getInfo();
 
   p.drawText( ex, hg, w-2*ex, bottom_h, Qt::AlignLeft, s );
 }
@@ -832,6 +798,9 @@ void MglView::keyPressEvent( QKeyEvent *ke )
   switch( k ) {
     case Qt::Key_F1:
       showHelp();
+      break;
+    case Qt::Key_I:
+      showInfo();
       break;
     case Qt::Key_M:
       markToBase();
@@ -1294,6 +1263,63 @@ void MglView::exportPlot()
   }
 
 
+}
+
+QString MglView::getInfo( bool more ) const
+{
+  if( ! data_loaded ) {
+    return QString( "No Data" );
+  }
+  QString nl = "\n", nl1 = " ";
+  if( more ) {
+    nl = "<br/>\n"; nl1 = nl;
+  }
+
+  mglPoint rel_p = mark_point - base_point;
+  double kyx = 0.0, kzx = 0.0;
+  if( rel_p.x != 0 ) {
+    kyx = rel_p.y / rel_p.x;
+    kzx = rel_p.z / rel_p.x;
+  }
+
+  QString s = QString( "mark: ") % toQString( mark_point )
+     % "  base: " % toQString( base_point ) % nl1
+     % "  rel: " % toQString( rel_p ) % " kyx: " % QSN( kyx ) % " kzx: " % QSN( kzx ) % nl
+     % "vis: " % toQString( pv_min ) % " - " % toQString( pv_max ) % nl1
+     % " D: " % toQString( pv_dlt )
+     % "  mag: " % toQString( mag ) % nl1
+     % "real: " % toQString( pr_min ) % " - " % toQString( pr_max ) % nl
+     % QSN( sel ) % " ";
+
+  int ni = dli[sel];
+  if( ni >=0 && ni < (int)(dl.size()) ) {
+    s += QString::fromStdString( dl[ ni ].label );
+  }
+
+  if( linkPlot > -1 ) {
+    if( linkPlot < (int)dl.size() ) {
+      s += "  Link: " % QSN( dl[ linkPlot ].ig ) % " "
+        % QString::fromStdString( dl[ linkPlot ].label ) % " [" % QSN( linkIdx ) % "]";
+    } else {
+      s += " !!! Bad link " % QSN( linkPlot );
+    }
+  }
+  return s;
+}
+
+void MglView::showInfo()
+{
+  QString s = "<p>" + getInfo( true ) + "\n</p>\n<pre>\n";
+
+  if( data_loaded ) {
+    int ni = dli[sel];
+    if( ni >=0 && ni < (int)(dl.size()) ) {
+      s +=  dl[ ni ].md->PrintInfo();
+    }
+  }
+  s += "\n</pre>\n";
+
+  QMessageBox::information( this,"Data info", s );
 }
 
 static const char plot_helpstr[] = "<b>Hot keys:</b><br/>\n"
