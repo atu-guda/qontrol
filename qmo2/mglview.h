@@ -50,7 +50,7 @@ struct DataLineInfo {
   std::string opt;
   double v_min, v_max;
   mglData *md;
-  const std::vector<double> *ve;
+  const std::vector<double> *ve; // until md is filled
 };
 
 /**can plot graphs for TModel on info by TGraph
@@ -109,6 +109,7 @@ class MglView : public QWidget  {
    std::vector<DataLineInfo> dl;
    std::vector<int> dli; // convert sel -> idx in dl[], or -1
    std::string label_x, label_y, label_z;
+   mglData *d_zero; // special data: zeros
    mglData *d_x, *d_y, *d_z; // axiz data
    int nn = 0, ny = 1, nx = 0; //* copy from arrays
    mglData *d_c0, *d_c1, *d_c2, *d_c3, *d_c4, *d_c5; // aux data - not owning
@@ -126,6 +127,7 @@ class MglView : public QWidget  {
    int sel = 0; //* selected plot, may be none: see dli[sel]
    int linkPlot = -1; //* linked data index (unlike sel, dl[linkTo])
    int linkIdx = 0;   //* current point index in linked array
+   bool data_loaded = false;
 };
 
 #endif

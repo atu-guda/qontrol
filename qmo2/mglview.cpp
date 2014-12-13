@@ -82,6 +82,8 @@ MglView::~MglView()
 
 void MglView::resetData()
 {
+  data_loaded = false;
+  d_zero = nullptr;
   d_x = d_y = d_z = d_c0 = d_c1 = d_c2 = d_c3 = d_c4 = d_c5 = nullptr;
   pr_min  = { 0, 0, 0 }; pr_max  = { 1, 1, 1 };  pr_dlt = { 1, 1, 1 };
   sel = 0;
@@ -104,7 +106,7 @@ QSize MglView::getSize0() const
 
 int MglView::Draw( mglGraph *gr )
 {
-  if( !gr  || !gra ) {
+  if( !gr  || !gra  || ! data_loaded ) {
     return 0;
   }
 
@@ -145,98 +147,66 @@ int MglView::Draw( mglGraph *gr )
     switch( cdl.type ) {
       case GraphElem::DataType::DataPlot :
         if( cdl.is2D ) {
-          if( d_x && d_y ) {
-            gr->Plot( *d_x, *d_y, *(cdl.md), ext, opt );
-          }
+          gr->Plot( *d_x, *d_y, *(cdl.md), ext, opt );
           break;
         }
-        if( d_x ) {
-          gr->Plot( *d_x, *(cdl.md), ext, opt );
-        }
+        gr->Plot( *d_x, *(cdl.md), ext, opt );
         break;
 
       case GraphElem::DataType::DataStep :
         if( cdl.is2D ) {
-          if( d_x && d_y ) {
-            gr->Step( *d_x, *d_y, *(cdl.md), ext, opt );
-          }
+          gr->Step( *d_x, *d_y, *(cdl.md), ext, opt );
           break;
         }
-        if( d_x ) {
-          gr->Step( *d_x, *(cdl.md), ext, opt );
-        }
+        gr->Step( *d_x, *(cdl.md), ext, opt );
         break;
 
       case GraphElem::DataType::DataTape :
         if( cdl.is2D ) {
-          if( d_x && d_y ) {
-            gr->Tape( *d_x, *d_y, *(cdl.md), ext, opt );
-          }
+          gr->Tape( *d_x, *d_y, *(cdl.md), ext, opt );
           break;
         }
-        if( d_x ) {
-          gr->Tape( *d_x, *(cdl.md), ext, opt );
-        }
+        gr->Tape( *d_x, *(cdl.md), ext, opt );
         break;
 
       case GraphElem::DataType::DataStem :
         if( cdl.is2D ) {
-          if( d_x && d_y ) {
-            gr->Stem( *d_x, *d_y, *(cdl.md), ext, opt );
-          }
+          gr->Stem( *d_x, *d_y, *(cdl.md), ext, opt );
           break;
         }
-        if( d_x ) {
-          gr->Stem( *d_x, *(cdl.md), ext, opt );
-        }
+        gr->Stem( *d_x, *(cdl.md), ext, opt );
         break;
 
       case GraphElem::DataType::DataBars :
         if( cdl.is2D ) {
-          if( d_x && d_y ) {
-            gr->Bars( *d_x, *d_y, *(cdl.md), ext, opt );
-          }
+          gr->Bars( *d_x, *d_y, *(cdl.md), ext, opt );
           break;
         }
-        if( d_x ) {
-          gr->Bars( *d_x, *(cdl.md), ext, opt );
-        }
+        gr->Bars( *d_x, *(cdl.md), ext, opt );
         break;
 
       case GraphElem::DataType::DataBarh :
         if( cdl.is2D ) {
-          if( d_x && d_y ) {
-            // gr->Barh( *d_x, *d_y, *(cdl.md), ext, opt );
-          }
+          gr->Barh( *(cdl.md), *d_x, ext, opt );
           break;
         }
-        if( d_x ) {
-          gr->Barh( *d_x, *(cdl.md), ext, opt );
-        }
+        gr->Barh( *(cdl.md), *d_x, ext, opt );
         break;
 
       case GraphElem::DataType::DataTens : // C0: color
         if( cdl.is2D ) {
-          if( d_x && d_y && d_c0 ) {
-            gr->Tens( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
-          }
+          gr->Tens( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
           break;
         }
-        if( d_x && d_c0 ) {
-          gr->Tens( *d_x, *(cdl.md), *d_c0, ext, opt );
-        }
+        gr->Tens( *d_x, *(cdl.md), *d_c0, ext, opt );
         break;
 
       case GraphElem::DataType::DataArea :
         if( cdl.is2D ) {
-          if( d_x && d_y ) {
-            gr->Area( *d_x, *d_y, *(cdl.md), ext, opt );
-          }
+          gr->Area( *d_x, *d_y, *(cdl.md), ext, opt );
           break;
         }
-        if( d_x ) {
-          gr->Area( *d_x, *(cdl.md), ext, opt );
-        }
+        gr->Area( *d_x, *(cdl.md), ext, opt );
         break;
       case GraphElem::DataType::DataRegion :
         break; // unknown for now
@@ -252,77 +222,49 @@ int MglView::Draw( mglGraph *gr )
         break; // unknown for now
       case GraphElem::DataType::DataMark : // C0: sz
         if( cdl.is2D ) {
-          if( d_x && d_y && d_c0 ) {
-            gr->Mark( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
-          }
+          gr->Mark( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
           break;
         }
-        if( d_x && d_c0 ) {
-          gr->Mark( *d_x, *(cdl.md), *d_c0, ext, opt  );
-        }
+        gr->Mark( *d_x, *(cdl.md), *d_c0, ext, opt  );
         break;
 
       case GraphElem::DataType::DataTube : // C0: r
         if( cdl.is2D ) {
-          if( d_x && d_y && d_c0 ) {
-            gr->Tube( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
-          }
+          gr->Tube( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
           break;
         }
-        if( d_x && d_c0 ) {
-          gr->Tube( *d_x, *(cdl.md), *d_c0, ext, opt );
-        }
+        gr->Tube( *d_x, *(cdl.md), *d_c0, ext, opt );
         break;
 
       case GraphElem::DataType::DataSurf :
-        if( d_x && d_y ) {
-          gr->Surf( *d_x, *d_y, *(cdl.md), ext, opt );
-        }
+        gr->Surf( *d_x, *d_y, *(cdl.md), ext, opt );
         break;
       case GraphElem::DataType::DataSurfC :
-        if( d_x && d_y && d_c0 ) {
-          gr->SurfC( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
-        }
+        gr->SurfC( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
         break;
       case GraphElem::DataType::DataSurfA :
-        if( d_x && d_y && d_c0 ) {
-          gr->SurfA( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
-        }
+        gr->SurfA( *d_x, *d_y, *(cdl.md), *d_c0, ext, opt );
         break;
       case GraphElem::DataType::DataMesh :
-        if( d_x && d_y ) {
-          gr->Mesh( *d_x, *d_y, *(cdl.md), ext, opt );
-        }
+        gr->Mesh( *d_x, *d_y, *(cdl.md), ext, opt );
         break;
       case GraphElem::DataType::DataFall :
-        if( d_x && d_y ) {
-          gr->Fall( *d_x, *d_y, *(cdl.md), ext, opt );
-        }
+        gr->Fall( *d_x, *d_y, *(cdl.md), ext, opt );
         break;
       case GraphElem::DataType::DataBelt :
-        if( d_x && d_y ) {
-          gr->Belt( *d_x, *d_y, *(cdl.md), ext, opt );
-        }
+        gr->Belt( *d_x, *d_y, *(cdl.md), ext, opt );
         break;
       case GraphElem::DataType::DataDens :
-        if( d_x && d_y ) {
-          gr->Dens( *d_x, *d_y, *(cdl.md), ext, opt );
-        }
+        gr->Dens( *d_x, *d_y, *(cdl.md), ext, opt );
         break;
       case GraphElem::DataType::DataCont :
-        if( d_x && d_y ) {
-          gr->Cont( *d_x, *d_y, *(cdl.md), ext, opt );
-        }
+        gr->Cont( *d_x, *d_y, *(cdl.md), ext, opt );
         break;
       case GraphElem::DataType::DataContF : // C0: v
-        if( d_x && d_y && d_c0) {
-          gr->ContF( *d_c0, *d_x, *d_y, *(cdl.md),  ext, opt );
-        }
+        gr->ContF( *d_c0, *d_x, *d_y, *(cdl.md),  ext, opt );
         break;
       case GraphElem::DataType::DataContD : // C0: d
-        if( d_x && d_y && d_c0) {
-          gr->ContD( *d_c0, *d_x, *d_y, *(cdl.md), ext, opt );
-        }
+        gr->ContD( *d_c0, *d_x, *d_y, *(cdl.md), ext, opt );
         break;
       default: break;
     }
@@ -379,6 +321,9 @@ void MglView::Reload( )
 
   QString label_c, extra_c, opt_c;
 
+  bool was_x = false, was_y = false, was_2D = false;
+  int n_out = 0;
+
   for( auto c : gra->children() ) {
     GraphElem *ge = qobject_cast<GraphElem*>( c );
     if( ! ge ) {
@@ -404,9 +349,16 @@ void MglView::Reload( )
 
     int nn_c = 0;
     arr->getData( "n", &nn_c );
+    if( nn_c < 1 ) {
+      continue;
+    }
     int ny_c = 1;
     arr->getData( "ny", &ny_c );
+    if( ny_c < 1 ) {
+      continue;
+    }
     int nx_c = nn_c / ny_c;
+
     // first array defines dimensions
     if( dl.size() == 0 ) {
       nn = nn_c; nx = nx_c; ny = ny_c;
@@ -419,13 +371,16 @@ void MglView::Reload( )
     arr->getData( "dmin", &tmin );
     arr->getData( "dmax", &tmax );
 
-    if( dtype >= GraphElem::DataType::DataPlot ) { // TODO: combine with bottom part
+    if( dtype >= GraphElem::DataType::DataPlot    // TODO: combine with bottom part?
+        || dtype <  GraphElem::DataType::DataC0 )
+    {
       if( tmin < vmin ) {
         vmin = tmin;
       }
       if( tmax > vmax ) {
         vmax = tmax;
       }
+      ++n_out;
     }
 
     label_c = QString( "y_%1" ).arg( dl.size() );
@@ -450,18 +405,61 @@ void MglView::Reload( )
     DBGx( "dbg: adding array \"%s\" type: %d nx= %d, ny=%d nn= %d label: \"%s\" extra: \"%s\"",
         qP(arr->getFullName()), dtype, nx, ny, nn, qP(label_c), qP(extra_c) );
 
-    dl.push_back( {
+    DataLineInfo cdl  {
         dtype, is2D, -1, 1, label_c.toStdString(), extra_c.toStdString(), opt_c.toStdString(),
         tmin, tmax,  nullptr, arr->getArray()
-        } );
+    };
+
+    dl.push_back( cdl );
     // special case: need for squeeze
     if( dtype == GraphElem::DataType::DataAxisX  &&  ! ve_x ) {
-      ve_x = arr->getArray();
+      ve_x = cdl.ve;
+      was_x = true;
+    }
+    if( dtype == GraphElem::DataType::DataAxisY ) {
+      was_y = true;
+    }
+    if( is2D ||
+        ( dtype >= GraphElem::DataType::DataSurf && dtype < GraphElem::DataType::DataC0 ) )
+    {
+      was_2D = true;
     }
 
+  } // -- end GraphElem loop
 
-
+  if( n_out == 0 || nn < 1 || nx < 1 ) {
+    DBG1( "No Data to plot" );
+    return;
   }
+
+  vector<double> ve_num, ve_num_y;
+  if( !was_x ) { // make fake x array
+    ve_num.resize( nn );
+    for( int j=0; j<ny; ++j ) {
+      for( int i=0; i<nx; ++i ) {
+        ve_num[i+j*nx] = i;
+      }
+    }
+
+    DataLineInfo cdl
+      { GraphElem::DataType::DataAxisX, 0, -1, 1, "x_N", "", "", 0.0, nx-1.0, nullptr, &ve_num };
+    dl.push_back( cdl );
+    ve_x = cdl.ve;
+  }
+
+  if( was_2D && !was_y ) { // make fake y array if at least 1 2D plot
+    ve_num_y.resize( nn );
+    for( int j=0; j<ny; ++j ) {
+      for( int i=0; i<nx; ++i ) {
+        ve_num_y[i+j*nx] = j;
+      }
+    }
+
+    DataLineInfo cdl
+      { GraphElem::DataType::DataAxisY, 0, -1, 1, "y_N", "", "", 0.0, ny-1.0, nullptr, &ve_num_y };
+    dl.push_back( cdl );
+  }
+
 
   // -------------------- squeeze data if needed -----------
 
@@ -646,6 +644,7 @@ void MglView::Reload( )
         break;
     }
     ++cdl_idx;
+    cdl.ve = nullptr; // no use after this point
   }
   nn = nx * ny; // fix real nn
 
@@ -656,15 +655,45 @@ void MglView::Reload( )
     pr_min.y =  scd->plotMinY; pr_max.y =  scd->plotMaxY;
   }
 
+  // special array
+  d_zero = new mglData( nx, ny );
+  int zero_dtype = GraphElem::DataType::DataNone;
+  for( int i=0; i<nn; ++i ) {
+    d_zero->a[i] = 0.0;
+  }
+  // and set all unsetted
+  if( !d_x ) {
+    DBG1( "warn: d_x is still undefined" );
+    return;
+  }
+  if( !d_y ) {
+    d_y = d_zero;
+    zero_dtype = GraphElem::DataType::DataAxisY;
+  }
+  if( !d_z ) { d_z = d_zero; }
+  if( !d_c0 ) { d_c0 = d_zero; }
+  if( !d_c1 ) { d_c1 = d_zero; }
+  if( !d_c2 ) { d_c2 = d_zero; }
+  if( !d_c3 ) { d_c3 = d_zero; }
+  if( !d_c4 ) { d_c4 = d_zero; }
+  if( !d_c5 ) { d_c5 = d_zero; }
+
+  dl.push_back( { zero_dtype, 0, -1, 1, "x_N", "", "", 0.0,    1.0, d_zero, nullptr } );
+
   mag = { 1, 1, 1 };
   pr_dlt = pr_max - pr_min;
   pv_min = pr_min; //   pv_max = pr_max; pv_dlt = pr_dlt; recalced on Draw
+  data_loaded = true;
 
 }
 
 
 void MglView::zoom()
 {
+  if( !data_loaded ) {
+    return;
+  }
+
   mglPoint p0 = base_point, p1 = mark_point;
   if( base_point == mark_point ) {
     p0 -= 0.25 * pv_dlt; p1 += 0.25 * pv_dlt;
@@ -716,6 +745,12 @@ void MglView::drawFooter( QPainter &p, int hg )
   p.setPen( fg_c );
   p.drawLine( 0, hg, w, hg );
 
+  if( !data_loaded ) {
+    p.drawText( ex, hg, w-2*ex, bottom_h, Qt::AlignLeft, "No data" );
+    return;
+  }
+
+
   mglPoint rel_p = mark_point - base_point;
   double kyx = 0.0, kzx = 0.0;
   if( rel_p.x != 0 ) {
@@ -751,6 +786,10 @@ void MglView::drawFooter( QPainter &p, int hg )
 
 void MglView::mousePressEvent( QMouseEvent *me )
 {
+  if( !data_loaded ) {
+    return;
+  }
+
   int mx = me->x(), my = me->y(), btn = me->button();
   mglPoint po = gr.CalcXYZ( mx, my );
   // DBGx( "dbg: mouse: x: %d y: %d ; graph: x: %lf y: %lf z: %lf",
@@ -1168,19 +1207,23 @@ void MglView::setMarkToLink()
   update();
 }
 
-int MglView::findNearest( const mglPoint &p, int dl_idx )
+int MglView::findNearest( const mglPoint & /*p*/, int /*dl_idx*/ )
 {
-  if( dl_idx < 0 || dl_idx >= (int)dl.size() ) {
+  if( !data_loaded ) {
     return 0;
   }
-  const auto cdl = dl[dl_idx];
 
-  mglPoint p0 = p, p1;
-
-  if( cdl.is2D ) {
-    p0.z = 0;
-  } else {
-  }
+  // if( dl_idx < 0 || dl_idx >= (int)dl.size() ) {
+  //   return 0;
+  // }
+  // const auto cdl = dl[dl_idx];
+  //
+  // mglPoint p0 = p, p1;
+  //
+  // if( cdl.is2D ) {
+  //   p0.z = 0;
+  // } else {
+  // }
 
   return 0;
 
