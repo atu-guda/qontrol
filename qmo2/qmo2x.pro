@@ -31,7 +31,6 @@ SOURCES += \
   labowin.cpp \
   mglview.cpp \
   outdataview.cpp \
-  plotview.cpp \
   runview.cpp \
   statusmodel.cpp \
   structview.cpp \
@@ -97,7 +96,6 @@ HEADERS += \
   labowin.h \
   mglview.h \
   outdataview.h \
-  plotview.h \
   runview.h \
   statusmodel.h \
   structview.h \

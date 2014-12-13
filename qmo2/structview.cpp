@@ -21,7 +21,6 @@
 
 #include "miscfun.h"
 #include "structview.h"
-#include "plotview.h"
 #include "doubletable.h"
 #include "labowin.h"
 #include "labodoc.h"

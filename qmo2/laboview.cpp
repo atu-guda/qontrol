@@ -32,7 +32,6 @@
 #include "statusmodel.h"
 #include "doubletable.h"
 #include "runview.h"
-#include "plotview.h"
 #include "mglview.h"
 #include "simulview.h"
 #include "datawidget.h"
@@ -1059,31 +1058,6 @@ void LaboView::selectGraph()
 
 void LaboView::showGraph()
 {
-  if( ! checkState( doneCheck ) ) {
-    return;
-  }
-
-  QString nm = getSelName( plots_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  TGraph *gra = model->getGraph( nm );
-  if( !gra ) {
-    return;
-  }
-
-  QMainWindow *plotWnd = new QMainWindow( this );
-  plotWnd->setWindowTitle( QString( PACKAGE ": Plot ") + gra->objectName() );
-  plotWnd->setAttribute( Qt::WA_DeleteOnClose );
-  PlotView *pv = new PlotView( doc, gra, plotWnd );
-  plotWnd->setCentralWidget( pv );
-  pv->setFocus();
-  plotWnd->show();
-}
-
-void LaboView::showMgl()
-{
   if( ! checkState( validCheck ) ) {
     return;
   }
@@ -1102,8 +1076,6 @@ void LaboView::showMgl()
   plotWnd->setWindowTitle( QString( PACKAGE ": MGL ") + gra->objectName() );
   plotWnd->setAttribute( Qt::WA_DeleteOnClose );
   MglView *pv = new MglView( gra, plotWnd );
-  // QWidget *pv = new QWidget( plotWnd );
-  // QMathGL *pv = new QMathGL( plotWnd );
 
   plotWnd->setCentralWidget( pv );
   pv->setFocus();

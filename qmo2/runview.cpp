@@ -1,5 +1,5 @@
 /***************************************************************************
-                          plotview.cpp  -  description
+                          runview.cpp  -  description
                              -------------------
     begin                : Sat Aug 18 2001
     copyright            : (C) 2001-2014 by atu
@@ -368,5 +368,5 @@ void RunView::fillVars()
 }
 
 
-// end of plotview.cpp
+// end of runview.cpp
 

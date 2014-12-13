@@ -312,7 +312,7 @@ void MglView::Reload( )
   }
   int ch = 30;
   scd->getData( "h0", &ch );
-  DBGx( "dbg: Reload()! ch=%d", ch );
+  // DBGx( "dbg: Reload()! ch=%d", ch );
 
   TModel *model = gra->getAncestorT<TModel>();
   if( !model ) {
@@ -410,8 +410,8 @@ void MglView::Reload( )
       is2D = true;
     }
 
-    DBGx( "dbg: adding array \"%s\" type: %d nx= %d, ny=%d nn= %d label: \"%s\" extra: \"%s\"",
-        qP(arr->getFullName()), dtype, nx, ny, nn, qP(label_c), qP(extra_c) );
+    //DBGx( "dbg: adding array \"%s\" type: %d nx= %d, ny=%d nn= %d label: \"%s\" extra: \"%s\"",
+    //    qP(arr->getFullName()), dtype, nx, ny, nn, qP(label_c), qP(extra_c) );
 
     DataLineInfo cdl  {
         dtype, is2D, -1, 1, label_c.toStdString(), extra_c.toStdString(), opt_c.toStdString(),
@@ -531,7 +531,7 @@ void MglView::Reload( )
   } else {
     plp.assign( nn, 1 ); // all point are good
   }
-  DBGx( "dbg: after squeeze: nn: %d np: %d nx: %d ny: %d ", nn, np, nx, ny );
+  // DBGx( "dbg: after squeeze: nn: %d np: %d nx: %d ny: %d ", nn, np, nx, ny );
 
 
   int ng = 0, cdl_idx = 0;

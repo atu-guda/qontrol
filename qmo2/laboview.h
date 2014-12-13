@@ -135,7 +135,6 @@ class LaboView : public QWidget
    void editGraph();
    void selectGraph();
    void showGraph();
-   void showMgl();
    void graphAddOut();
    void showGraphData();
    void exportGraphData();
