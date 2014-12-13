@@ -138,7 +138,6 @@ class LaboView : public QWidget
    void graphAddOut();
    void showGraphData();
    void exportGraphData();
-   void gnuplotGraph();
 
    // simulation releated
    void newSimul();

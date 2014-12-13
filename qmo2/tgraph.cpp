@@ -50,98 +50,81 @@ CTOR(TGraph,TDataSet) ,
 
 
 
-int TGraph::fillGraphInfo( GraphInfo *gi ) const
+int  TGraph::dump( const QString &fn, const QString &delim )
 {
-  int i, row, col, ny, out_nn;
-  TOutArr *arr;
-  QString label;
-  if( gi == 0 ) {
-    qDebug( "err: %s: %s", __PRETTY_FUNCTION__, "gi==0" );
-    return -1;
-  }
+  QStringList nms;
+  QVector<const dvector *> ves;
+  int nn = IMAX;
 
   TModel *model = getAncestorT<TModel>();
-  if( !model  ) {
-    DBGx( "warn: fail to find model from \"%s\"", qP(getFullName()) );
-    return -10;
-  }
-  if( model->getState() < stateDone ) {
-    DBGx( "warn: model state is not 'Done' : \"%s\"", qP(getFullName()) );
-    return -11;
+  if( !model ) {
+    DBGx( "warn: not found model in \"%s\"", qP(getFullName()) );
+    return 0;
   }
 
-  gi->row = gi->col = 0; gi->ny = 1;
-  gi->title = objectName();
-
-  // x-data
-  arr = model->getOutArr( xname.cval() );
-  if( !arr ) {
-    return -1;
-  }
-
-  out_nn = -1; ny = -1;
-  const dvector *dat = arr->getArray();
-  arr->getData( "n", &out_nn );
-  arr->getData( "ny", &ny );
-  if( dat == 0 || out_nn < 1 || ny < 0 ) return -1;
-  row = out_nn;
-  gi->dat[0] = dat;
-  arr->getData( "label", label );
-  if( label.isEmpty() ) {
-    label = "x";
-  };
-  gi->label[0] = label;
-  col = 1; // unlike show, x and y[] in single index
-  QString ynms[]  =
-    { y0name.cval(), y1name.cval(), y2name.cval(),
-      y3name.cval(), y4name.cval(), y5name.cval() }; // TODO: replace
-  for( i=0; i<6; i++ ) {
-    arr = model->getOutArr( ynms[i] );
-    if( !arr )
+  for( auto c : children() ) {
+    GraphElem *ge = qobject_cast<GraphElem*>( c );
+    if( ! ge ) {
       continue;
-    out_nn = -1;
-    dat = arr->getArray();
-    arr->getData( "n", &out_nn );
-    if( dat == 0 || out_nn != row ) continue;
-    gi->dat[col] = dat;
-    label = "";
-    arr->getData( "label", label );
-    if( label.isEmpty() ) {
-      label = "y";
-    };
-    gi->label[col] = label;
-    col++;
-  };
-  gi->col = col; gi->row = row; gi->ny = ny;
-  return 0;
-}
+    }
+    QString s;
+    ge->getData( "src", s );
+    if( s.isEmpty() ) {
+      continue;
+    }
+
+    TOutArr *arr = model->getOutArr( s );
+    if( !arr ) {
+      continue;
+    }
+    int nn_c = 0;
+    arr->getData( "n", &nn_c );
+    if( nn_c < 1 ) {
+      continue;
+    }
+    const dvector *ve = arr->getArray();
+    if( !ve ) {
+      continue;
+    }
+    if( nn_c < nn ) {
+      nn = nn_c;
+    }
+    QString lbl = QString( "v_%1" ).arg( QSN( ves.size() ) );
+    ge->getData( "label", lbl );
+    nms.push_back( lbl );
+    ves.push_back( ve );
+  }
+
+  if( ves.size() < 1 || nn < 1 ) {
+    DBGx( "warn: no data to output: outs: %d n: %d", ves.size(), nn );
+    return 0;
+  }
 
 
-int  TGraph::dump( const char *fn, char delim /* = ' ' */ )
-{
-  int k;
-  GraphInfo gi;
-  k = fillGraphInfo( &gi );
-  if( k != 0 )
-    return k;
-  k = dumpDatas( fn, &gi, delim );
-  return k;
+  QFile of( fn );
+  if( ! of.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
+    DBGx( "warn: fail to open file \"%s\"", qP( fn ) );
+    return 0;
+  }
+  QTextStream os( &of );
+
+  os << "#";
+  for( auto nm : nms ) {
+    os << nm << delim;
+  }
+  os << endl;
+
+  for( int i=0; i<nn; ++i ) {
+    for( auto ve : ves ) {
+      os << (*ve)[i] << delim;
+    }
+    os << endl;
+  }
+
+
+  return 1;
 }
 
-int TGraph::gnuPlot( int otp, const char *fn, const char *atitle,
-                     const char *eps_fn, const char *dat_fn )
-{
-  int k;
-  GraphInfo gi;
-  k = fillGraphInfo( &gi );
-  if( k != 0 )
-    return k;
-  if( atitle != 0  && atitle[0] != 0 ) {
-    gi.title = atitle;
-  };
-  k = gnuplotDatas( otp, &gi, fn, eps_fn, dat_fn );
-  return k;
-}
 
 // migration: TODO: remove after conversion
 void TGraph::migrate1()

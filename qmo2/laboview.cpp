@@ -1096,37 +1096,38 @@ void LaboView::showGraphData()
     return;
   }
 
-  QString nm = getSelName( plots_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-  TGraph *gra = model->getGraph( nm );
-  if( !gra ) {
-    return;
-  }
-
-  GraphInfo gi;
-  int k = gra->fillGraphInfo( &gi );
-  if( k != 0 ) {
-    return;
-  }
-
-  QDialog *dia = new QDialog( this );
-  dia->setWindowTitle( QString("Plot data: ") + gi.title );
-  QVBoxLayout *lv = new QVBoxLayout( dia );
-
-  DoubleTableModel *dmod = new DoubleTableModel( &gi, dia );
-  QTableView *dtv = new QTableView( dia );
-  dtv->setModel( dmod );
-  lv->addWidget( dtv );
-
-  QPushButton *bt_ok = new QPushButton( "Done", dia );
-  bt_ok->setDefault( true );
-  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  lv->addWidget( bt_ok );
-
-  dia->exec();
-  delete dia;
+  // TODO: revive
+  // QString nm = getSelName( plots_view );
+  // if( nm.isEmpty() ) {
+  //   return;
+  // }
+  // TGraph *gra = model->getGraph( nm );
+  // if( !gra ) {
+  //   return;
+  // }
+  //
+  // GraphInfo gi;
+  // int k = gra->fillGraphInfo( &gi );
+  // if( k != 0 ) {
+  //   return;
+  // }
+  //
+  // QDialog *dia = new QDialog( this );
+  // dia->setWindowTitle( QString("Plot data: ") + gi.title );
+  // QVBoxLayout *lv = new QVBoxLayout( dia );
+  //
+  // DoubleTableModel *dmod = new DoubleTableModel( &gi, dia );
+  // QTableView *dtv = new QTableView( dia );
+  // dtv->setModel( dmod );
+  // lv->addWidget( dtv );
+  //
+  // QPushButton *bt_ok = new QPushButton( "Done", dia );
+  // bt_ok->setDefault( true );
+  // connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
+  // lv->addWidget( bt_ok );
+  //
+  // dia->exec();
+  // delete dia;
 
 }
 
@@ -1150,81 +1151,9 @@ void LaboView::exportGraphData()
     return;
   }
 
-  gra->dump( fnq.toLocal8Bit(), ' ' );
+  gra->dump( fnq, " " );
 }
 
-void LaboView::gnuplotGraph()
-{
-  showError( "Unimplemented for now" );
-  // TGraph *gra;
-  // QDialog *dia;
-  // QLabel *lb1, *lb2, *lb3; QLineEdit *ed_pgm, *ed_dat, *ed_eps;
-  // QCheckBox *sw_x11;
-  // QGridLayout *lay;
-  // QString f_pgm, f_dat, f_eps, cdir;
-  // int l, rc, use_x11;
-  // if( ! checkState( doneCheck ) )
-  //   return;
-  // if( level < 0 || level >= model->getNGraph() )
-  //   return;
-  // gra = model->getGraph( level );
-  // if( !gra )
-  //   return;
-  //
-  // f_pgm = doc->pathName();
-  // QFileInfo doc_fi( f_pgm );
-  // cdir = QDir::currentPath();
-  // if( cdir == doc_fi.absolutePath() )
-  //   f_pgm = doc_fi.fileName();
-  // if( f_pgm.length() < 1 ) { f_pgm = "gplot"; };
-  // l = f_pgm.length();
-  // if( doc_fi.suffix() == "qol"  )
-  //   f_pgm.truncate( l-4 );
-  // f_dat = f_pgm + ".dat"; f_eps = f_pgm + ".eps";
-  // f_pgm += ".gp";
-  //
-  // dia = new QDialog( this );
-  //
-  // int em = LaboWin::labowin->getEm();
-  // dia->resize( 50*em, 30*em );
-  // lay = new QGridLayout( dia );
-  // sw_x11 = new QCheckBox( "Output to &X11 window", dia );
-  // sw_x11->setChecked( false );
-  // lay->addWidget( sw_x11, 0, 0, 1, 2 );
-  //
-  // lb1 = new QLabel( "Output to EPS file:", dia );
-  // lay->addWidget( lb1, 1, 0, 1, 2 );
-  // ed_eps = new QLineEdit( dia );
-  // ed_eps->setText( f_eps );
-  // lay->addWidget( ed_eps, 2, 0, 1, 2 );
-  //
-  // lb2 = new QLabel( "Data file:", dia );
-  // lay->addWidget( lb2, 3, 0, 1, 2 );
-  // ed_dat = new QLineEdit( dia );
-  // ed_dat->setText( f_dat );
-  // lay->addWidget( ed_dat, 4, 0, 1, 2 );
-  //
-  // lb3 = new QLabel( "Gnuplot program file:", dia );
-  // lay->addWidget( lb3, 5, 0, 1, 2 );
-  // ed_pgm = new QLineEdit( dia );
-  // ed_pgm->setText( f_pgm );
-  // lay->addWidget( ed_pgm, 6, 0, 1, 2 );
-  //
-  // QDialogButtonBox *bbox
-  //   = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  // lay->addWidget( bbox, 7, 0, 1, 2 );
-  // connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
-  // connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
-  //
-  // rc = dia->exec();
-  // if( rc == QDialog::Accepted ) {
-  //   f_pgm = ed_pgm->text(); f_eps = ed_eps->text();
-  //   f_dat = ed_dat->text(); use_x11 = sw_x11->isChecked();
-  //   gra->gnuPlot( !use_x11, f_pgm.toLocal8Bit(), 0,
-  //                 f_eps.toLocal8Bit(), f_dat.toLocal8Bit() );
-  // };
-  // delete dia;
-}
 
 // ==== simulation related
 

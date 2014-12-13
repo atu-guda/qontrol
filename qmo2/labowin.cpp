@@ -383,11 +383,6 @@ void LaboWin::initIface()
   connect( act_exportgraphdata, &QAction::triggered, this, &LaboWin::slotExportGraphData);
   model_acts << act_exportgraphdata;
 
-  act_gnuplotgraph = new QAction( "&Gnuplot plot", this);
-  act_gnuplotgraph->setWhatsThis( tr("Export plot data to gnuplot-compatiomle file") );
-  connect( act_gnuplotgraph, &QAction::triggered, this, &LaboWin::slotGnuplotGraph);
-  model_acts << act_gnuplotgraph;
-
   // ==== simulation group
 
   act_newSimul = new QAction( "&New Simulation", this );
@@ -612,7 +607,6 @@ void LaboWin::initIface()
   pGraphMenu->addSeparator();
   pGraphMenu->addAction( act_showgraphdata );
   pGraphMenu->addAction( act_exportgraphdata );
-  pGraphMenu->addAction( act_gnuplotgraph );
 
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pSimulMenu
@@ -1473,15 +1467,6 @@ void LaboWin::slotExportGraphData()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
-void LaboWin::slotGnuplotGraph()
-{
-  statusBar()->showMessage( tr( "Exporting plot to gnuplot..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->gnuplotGraph();
-  statusBar()->showMessage( tr( "Ready." ) );
-}
 
 void LaboWin::slotNewSimul()
 {

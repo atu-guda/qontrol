@@ -115,12 +115,7 @@ class TGraph : public TDataSet  {
 
 
    /** dumps data to file */
-   int  dump( const char *fn, char delim = ' ' );
-   /** dumps data to file to be used by gnuplot */
-   int gnuPlot( int otp, const char *fn, const char *title,
-                const char *eps_fn, const char *dat_fn );
-   /** fills fields in GraphInfo structure */
-   int fillGraphInfo( GraphInfo *gi ) const;
+   int  dump( const QString &fn, const QString &delim = " " );
    void migrate1(); // to migrate
  protected:
 
