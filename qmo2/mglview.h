@@ -38,6 +38,8 @@ class mglDraw;
 QString color2style( int color, int lw = 1, const QString &extra = QString() );
 //* converts MathGL point to QString
 QString toQString( const mglPoint &p );
+//* distance beween points
+double mglLen( const mglPoint &a, const mglPoint &b );
 
 // modified copy of GraphElem
 struct DataLineInfo {

@@ -48,6 +48,10 @@ QString toQString( const mglPoint &p )
   return s;
 }
 
+double mglLen( const mglPoint &a, const mglPoint &b )
+{
+  return sqrt( (b.x-a.x)*(b.x-a.x) +(b.y-a.y)*(b.y-a.y) +(b.z-a.z)*(b.z-a.z) );
+}
 
 // ------------------------- MglView ------------------------
 
@@ -402,6 +406,10 @@ void MglView::Reload( )
     opt_c = QString();
     ge->getData( "opt", opt_c );
 
+    if( dtype >= GraphElem::DataType::DataSurf && dtype < GraphElem::DataType::DataC0  )  {
+      is2D = true;
+    }
+
     DBGx( "dbg: adding array \"%s\" type: %d nx= %d, ny=%d nn= %d label: \"%s\" extra: \"%s\"",
         qP(arr->getFullName()), dtype, nx, ny, nn, qP(label_c), qP(extra_c) );
 
@@ -419,9 +427,7 @@ void MglView::Reload( )
     if( dtype == GraphElem::DataType::DataAxisY ) {
       was_y = true;
     }
-    if( is2D ||
-        ( dtype >= GraphElem::DataType::DataSurf && dtype < GraphElem::DataType::DataC0 ) )
-    {
+    if( is2D ) {
       was_2D = true;
     }
 
@@ -796,6 +802,7 @@ void MglView::mousePressEvent( QMouseEvent *me )
   //        mx, my, mark_point.x, mark_point.y, mark_point.z );
   switch( btn ) {
     case Qt::LeftButton:
+      unlinkFromPlot();
       mark_point = po;
          break;
     case Qt::RightButton:
@@ -1172,7 +1179,7 @@ void MglView::linkToPlot()
   }
 
   linkPlot = lp;
-  linkIdx = 0; // TODO: findNear
+  linkIdx = findNearest( mark_point, lp );
   setMarkToLink(); // bound and update included
 }
 
@@ -1207,25 +1214,39 @@ void MglView::setMarkToLink()
   update();
 }
 
-int MglView::findNearest( const mglPoint & /*p*/, int /*dl_idx*/ )
+int MglView::findNearest( const mglPoint &p, int dl_idx )
 {
   if( !data_loaded ) {
     return 0;
   }
 
-  // if( dl_idx < 0 || dl_idx >= (int)dl.size() ) {
-  //   return 0;
-  // }
-  // const auto cdl = dl[dl_idx];
-  //
-  // mglPoint p0 = p, p1;
-  //
-  // if( cdl.is2D ) {
-  //   p0.z = 0;
-  // } else {
-  // }
+  if( dl_idx < 0 || dl_idx >= (int)dl.size() ) {
+    return 0;
+  }
+  const auto cdl = dl[dl_idx];
+  auto d_v = cdl.md;
 
-  return 0;
+  mglPoint p0 = p, p1;
+
+  if( !cdl.is2D ) {
+    p0.z = 0;
+  }
+
+  double l_min = DMAX; int i_min = 0;
+
+  for( int i=0; i<nn; ++i ) {
+    if( cdl.is2D ) {
+      p1 = { d_x->a[i], d_y->a[i], d_v->a[i] };
+    } else {
+      p1 = { d_x->a[i], d_v->a[i], 0 };
+    }
+    double l = mglLen( p0, p1 );
+    if( l < l_min ) {
+      l_min = l; i_min = i;
+    }
+  }
+
+  return i_min;
 
 }
 
