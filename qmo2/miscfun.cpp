@@ -229,14 +229,14 @@ int findNearMin( int n, const double *a, int sidx )
     } else {            // general case
       searchRight = 0;
       if( a[sidx+1] < dm )
-	searchRight = 1;
+        searchRight = 1;
     };
   };
 
   if( searchRight ) {
     for( i=sidx+1; i<n; i++ ) {
       if( a[i] > dm )
-	return i-1;
+        return i-1;
       dm = a[i];
     };
     return n-1;
@@ -268,14 +268,14 @@ int findNearMax( int n, const double *a, int sidx )
     } else {            // general case
       searchRight = 0;
       if( a[sidx+1] > dm )
-	searchRight = 1;
+        searchRight = 1;
     };
   };
 
   if( searchRight ) {
     for( i=sidx+1; i<n; i++ ) {
       if( a[i] < dm )
-	return i-1;
+        return i-1;
       dm = a[i];
     };
     return n-1;
@@ -380,11 +380,11 @@ int gnuplotDatas( int otp, const GraphInfo *gi,
     os << "splot \"" << dat_fn << "\" ";
     for( j=2; j<gi->col; j++ ) {
       if( j != 2 )
-	os << "  \"\" ";
+        os << "  \"\" ";
       os << " using 1:2:" << j+1;
       os << " title \"" << qPrintable(gi->label[j]) << "\" w l lt " << j-2;
       if( j < gi->col-1 )
-	os << " , \\\n";
+        os << " , \\\n";
     };
   } else {
     os << "set grid lt 2 lw 1.1;\n";
@@ -394,11 +394,11 @@ int gnuplotDatas( int otp, const GraphInfo *gi,
     os << "plot \"" << dat_fn << "\" ";
     for( j=1; j<gi->col; j++ ) {
       if( j != 1 )
-	os << "  \"\" ";
+        os << "  \"\" ";
       os << " using 1:" << j+1;
       os << " title \"" << qPrintable(gi->label[j]) << "\" w l lt " << j;
       if( j < gi->col-1 )
-	os << " , \\\n";
+        os << " , \\\n";
     };
   };
   if( otp == 0 )
@@ -435,7 +435,7 @@ double perpLen( double xs, double ys, double xe, double ye,
 
 // ------------- miscelanios classes -----------------------------
 
-TCircBuf::TCircBuf( int nn ) :
+TCircBuf::TCircBuf( unsigned nn ) :
   nb(nn), s(0), nf(0), ni(0), su(0),
   d( nb + 2, 0 )
 {
@@ -447,47 +447,51 @@ TCircBuf::~TCircBuf()
   reset();
 }
 
-void TCircBuf::reset(void)
+void TCircBuf::reset()
 {
   s = nf = ni = 0; su = 0;
 }
 
 void TCircBuf::add( double a )
 {
-  if( nf >= nb )
+  if( nf >= nb ) {
     su -= d[s];
+  }
+
   d[s++] = a; su += a;
-  if( s >= nb )
+  if( s >= nb ) {
     s = 0;
-  if( nf < nb )
+  }
+  if( nf < nb ) {
     nf++;
+  }
   ni++;
-  if( ni > 5000 )
-    (void) sum( 1 );
+
+  if( ni > recalc_after ) {
+    (void) sumCalc();
+  }
 }
 
-double TCircBuf::operator[]( int i )
+double TCircBuf::operator[]( int i ) const
 {
   int j;
-  if( i < 0 || i >= nf ) return 0;
+  if( i < 0 || (unsigned)i >= nf ) { // first comparison rejects bad values for second
+    return 0;
+  }
   j = s - i - 1;
-  if( j < 0 )
+  if( j < 0 ) {
     j += nb;
+  }
   return d[j];
 }
 
-int TCircBuf::getN(void)
-{
-  return nf;
-}
 
-double TCircBuf::sum( int force )
+double TCircBuf::sumCalc()
 {
-  if( force ) {
-    su = 0; ni = 0;
-    for( int i=0; i<nf; i++ )
-      su += d[i];
-  };
+  su = 0; ni = 0;
+  for( unsigned i=0; i<nf; ++i ) {
+    su += d[i];
+  }
   return su;
 }
 
