@@ -376,7 +376,7 @@ void MglView::Reload( )
     arr->getData( "dmax", &tmax );
 
     if( dtype >= GraphElem::DataType::DataPlot    // TODO: combine with bottom part?
-        || dtype <  GraphElem::DataType::DataC0 )
+        && dtype <  GraphElem::DataType::DataC0 )
     {
       if( tmin < vmin ) {
         vmin = tmin;
@@ -490,7 +490,7 @@ void MglView::Reload( )
       plp[nn-1] = 1;
       ++np;
     }
-    // DBGx( " dbg: np start = %d  mdlt_y= %f" , np, mdlt_y );
+    DBGx( "dbg: squeeze start: np= %d  mdlt_y= %lf vmin= %lf vmax= %lf" , np, mdlt_y, vmin, vmax );
 
     int was_add = 1;
     for( int n_add = 0; was_add && n_add < 10; ++n_add ) { // 10 : max iterations to split
@@ -498,13 +498,14 @@ void MglView::Reload( )
       for( auto cdl : dl ) {
         const dvector* yyc = cdl.ve;
         if( ! yyc ) {
+          DBGx( "warn: no array in squeeze \"%s\"", cdl.label.c_str() );
           continue;
         }
         for( int i0 = 0, i1 = 0; i0 < nn-1; i0 = i1 ) {
           for( i1 = i0+1; !plp[i1] && i1 < nn; ++i1 ) /* NOP: find next set*/;
           double x0 = (*ve_x)[i0], x1 = (*ve_x)[i1];
           double y0 = (*yyc)[i0], y1 = (*yyc)[i1];
-          if( y0 == y1 ) {
+          if( x0 == x1 ) {
             continue;
           }
           double kxy = ( y1 - y0 ) / ( x1 - x0 );
