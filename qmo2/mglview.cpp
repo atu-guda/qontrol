@@ -89,7 +89,7 @@ void MglView::resetData()
   data_loaded = false;
   d_zero = nullptr;
   d_x = d_y = d_z = d_c0 = d_c1 = d_c2 = d_c3 = d_c4 = d_c5 = nullptr;
-  pr_min  = { 0, 0, 0 }; pr_max  = { 1, 1, 1 };  pr_dlt = { 1, 1, 1 };
+  pr_min  = { DMAX, DMAX, DMAX }; pr_max  = { DMIN, DMIN, DMIN };  pr_dlt = { 1, 1, 1 };
   sel = 0;
   linkPlot = -1; linkIdx = 0;
   nn = 0; ny = 1; nx = 0;
@@ -654,6 +654,13 @@ void MglView::Reload( )
     cdl.ve = nullptr; // no use after this point
   }
   nn = nx * ny; // fix real nn
+  // fix unfilled
+  if( pr_min.x == DMAX ) { pr_min.x = 0.0; };
+  if( pr_min.y == DMAX ) { pr_min.y = 0.0; };
+  if( pr_min.z == DMAX ) { pr_min.z = 0.0; };
+  if( pr_max.x == DMIN ) { pr_max.x = 1.0; };
+  if( pr_max.y == DMIN ) { pr_max.y = 1.0; };
+  if( pr_max.z == DMIN ) { pr_max.z = 1.0; };
 
   if( ! scd->autoScX ) { // manual scale from config
     pr_min.x =  scd->plotMinX; pr_max.x =  scd->plotMaxX;
