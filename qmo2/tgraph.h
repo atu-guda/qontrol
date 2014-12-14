@@ -24,7 +24,7 @@
 
 #include "dataset.h"
 #include "scaledata.h"
-class GraphInfo;
+class DatasInfo;
 
 //* decription of one line in plot
 
@@ -114,6 +114,8 @@ class TGraph : public TDataSet  {
    DCL_STD_INF;
 
 
+   /** fills fields in DatasInfo structure, return number of elements (nn) */
+   int fillDatasInfo( DatasInfo *di ) const;
    /** dumps data to file */
    int  dump( const QString &fn, const QString &delim = " " );
    void migrate1(); // to migrate

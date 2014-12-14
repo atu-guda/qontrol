@@ -48,19 +48,20 @@ CTOR(TGraph,TDataSet) ,
 }
 
 
-
-
-int  TGraph::dump( const QString &fn, const QString &delim )
+int TGraph::fillDatasInfo( DatasInfo *di ) const
 {
-  QStringList nms;
-  QVector<const dvector *> ves;
-  int nn = IMAX;
+  if( !di ) {
+    return 0;
+  }
 
   TModel *model = getAncestorT<TModel>();
   if( !model ) {
     DBGx( "warn: not found model in \"%s\"", qP(getFullName()) );
     return 0;
   }
+
+  di->reset();
+  int nn = IMAX, ny = 0; // 0 is special: not found
 
   for( auto c : children() ) {
     GraphElem *ge = qobject_cast<GraphElem*>( c );
@@ -82,6 +83,9 @@ int  TGraph::dump( const QString &fn, const QString &delim )
     if( nn_c < 1 ) {
       continue;
     }
+    if( ny < 1 ) {
+      arr->getData( "ny", &ny );
+    }
     const dvector *ve = arr->getArray();
     if( !ve ) {
       continue;
@@ -89,17 +93,34 @@ int  TGraph::dump( const QString &fn, const QString &delim )
     if( nn_c < nn ) {
       nn = nn_c;
     }
-    QString lbl = QString( "v_%1" ).arg( QSN( ves.size() ) );
+    QString lbl = QString( "v_%1" ).arg( QSN( di->ves.size() ) );
     ge->getData( "label", lbl );
-    nms.push_back( lbl );
-    ves.push_back( ve );
+    di->labels.push_back( lbl );
+    di->ves.push_back( ve );
   }
 
-  if( ves.size() < 1 || nn < 1 ) {
-    DBGx( "warn: no data to output: outs: %d n: %d", ves.size(), nn );
+  if( di->ves.size() < 1 || nn < 1 ) {
     return 0;
   }
+  if( ny < 1 ) { // unlikely
+    ny = 1;
+  }
 
+  di->title = objectName();
+  di->nn = nn; di->nx = nn / ny; di->ny = ny;
+
+  return nn;
+}
+
+
+int  TGraph::dump( const QString &fn, const QString &delim )
+{
+  int n;
+  DatasInfo di;
+  n = fillDatasInfo( &di );
+  if( !n ) {
+    return 0;
+  }
 
   QFile of( fn );
   if( ! of.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
@@ -108,21 +129,8 @@ int  TGraph::dump( const QString &fn, const QString &delim )
   }
   QTextStream os( &of );
 
-  os << "#";
-  for( auto nm : nms ) {
-    os << nm << delim;
-  }
-  os << endl;
-
-  for( int i=0; i<nn; ++i ) {
-    for( auto ve : ves ) {
-      os << (*ve)[i] << delim;
-    }
-    os << endl;
-  }
-
-
-  return 1;
+  n = di.dump( os, delim );
+  return n;
 }
 
 

@@ -181,15 +181,41 @@ int TOutArr::fillGraphInfo( GraphInfo *gi ) const
   return 0;
 }
 
-int TOutArr::dump( const char *fn, char delim )
+int TOutArr::fillDatasInfo( DatasInfo *di ) const
 {
-  int k;
-  GraphInfo gi;
-  k = fillGraphInfo( &gi );
-  if ( k != 0 )
-    return k;
-  k = dumpDatas( fn, &gi, delim );
-  return k;
+  if( !di ) {
+    return 0;
+  }
+  di->reset();
+  di->title = objectName();
+  di->labels << label.cval();
+  (di->ves).push_back( &arr );
+  if( n < 1 ) {
+    return 0;
+  }
+  di->nn = n; di->ny = (ny > 0) ? ny: 1;
+  di->nx = n / di->ny;
+  return di->nn;
+}
+
+int TOutArr::dump( const QString &fn, const QString &delim )
+{
+  int n;
+  DatasInfo di;
+  n = fillDatasInfo( &di );
+  if( !n ) {
+    return 0;
+  }
+
+  QFile of( fn );
+  if( ! of.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
+    DBGx( "warn: fail to open file \"%s\"", qP( fn ) );
+    return 0;
+  }
+  QTextStream os( &of );
+
+  n = di.dump( os, delim );
+  return n;
 }
 
 DEFAULT_FUNCS_REG(TOutArr)

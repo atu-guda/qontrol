@@ -21,6 +21,7 @@
 #include "dataset.h"
 
 struct GraphInfo;
+struct DatasInfo;
 
 // ==================== TOutArr ======================================
 
@@ -65,9 +66,11 @@ class TOutArr : public TDataSet  {
    /** get and push next value. pushed only if level >= type */
    virtual int take_val( int level );
    /** dumps data to file */
-   int dump( const char *fn, char delim = ' ' );
+   int dump( const QString &fn, const QString &delim );
    /** fills fields in GraphInfo structure */
    int fillGraphInfo( GraphInfo *gi ) const;
+   /** fills fields in DatasInfo structure, return number of elements (nn) */
+   int fillDatasInfo( DatasInfo *di ) const;
  protected:
    /** type of array: 0:simple, 1:parm1, 2:parm2, 3:special */
    PRM_LIST( type, efNoRunChange, "Type", "Type of array", "enum=OutArrType" );

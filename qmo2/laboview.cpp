@@ -979,7 +979,7 @@ void LaboView::exportOut()
   if( fnq.isEmpty() ) {
     return;
   }
-  arr->dump( qP(fnq), ' ' );
+  arr->dump( fnq, " " );
 }
 
 

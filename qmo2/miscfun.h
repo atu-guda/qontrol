@@ -12,6 +12,8 @@
 #define __MISCFUN_H
 
 #include <QString>
+#include <QStringList>
+#include <QTextStream>
 #include "defs.h"
 
 
@@ -20,7 +22,7 @@ const int max_graphs = 7; // TODO: remove
  *  filled by fillGraphInfo in TOutArr and TGraph
  * */
 
-struct GraphInfo {
+struct GraphInfo { // TODO: remove
   int row = 0;
   int col = 0;
   int ny = 0;
@@ -28,6 +30,20 @@ struct GraphInfo {
   QString label[max_graphs] = { "", "", "", "", "", "", "" };
   const dvector *dat[max_graphs] =
   { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+};
+
+//* new version of GraphInfo
+struct DatasInfo {
+  int nn = 0; //* total number of data: minimal of present arrays
+  int nx = 0; //* x-dimension, used only in 1 array output
+  int ny = 1; //* y-dimension, the same
+  QStringList labels; //* labels of arrays
+  std::vector<const dvector*> ves; //* prts to arrays itself
+  QString title; //* obviosly, used for display
+  static constexpr const int prec = 12; //* magic prcision
+  void reset() { nn = nx = 0; ny = 1; labels.clear(); ves.clear(); title = QString(); }
+  int size() const { return ves.size(); }
+  int dump( QTextStream& os, const QString &delim = " " );
 };
 
 /** converts string to int with some special values: RND, IMIN, IMAX */
@@ -82,9 +98,6 @@ double perpLen( double xs, double ys, double xe, double ye,
 
 /** dumps data to given file, possibly with labels */
 int dumpDatas( const char *fn, const GraphInfo *gi, char delim = ' ' );
-/** exports data to given files suitable for gnuplot */
-int gnuplotDatas( int otp, const GraphInfo *gi,
-     const char *fn, const char *eps_fn, const char *dat_fn );
 
 // ------------- miscelanios classes -----------------------------
 
