@@ -56,6 +56,10 @@ void OutDataView::init_actions()
   addAction( act_setActive );
   //connect( act_setActive, SIGNAL(triggered()), laboview, SLOT(setActiveSimul()) );
 
+  act_graphaddout = new QAction( "&Add to plot", this );
+  addAction( act_graphaddout  );
+  connect( act_graphaddout, SIGNAL(triggered()), laboview, SLOT(graphAddOut()) );
+
   act_dump = new QAction( "D&ump", this );
   addAction( act_dump );
   connect( act_dump, SIGNAL(triggered()), laboview, SLOT(exportOut()) );

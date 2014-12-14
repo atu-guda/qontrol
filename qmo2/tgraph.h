@@ -118,6 +118,8 @@ class TGraph : public TDataSet  {
    int fillDatasInfo( DatasInfo *di ) const;
    /** dumps data to file */
    int  dump( const QString &fn, const QString &delim = " " );
+   //* add new GraphElem to given TOutArr
+   int addOutArr( const QString &o_name );
    void migrate1(); // to migrate
  protected:
 

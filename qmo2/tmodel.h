@@ -87,6 +87,8 @@ class TModel : public TDataContainer  {
   int insGraph( const QString &gname );
   //* delete graph by name, retrns !=0 -  success
   int delGraph( const QString &name );
+  //* add output array to graph
+  int addOutToGraph( const QString &o_name, const QString &g_name );
 
   int newSimul( const QString &name );
   int delSimul( const QString &name );

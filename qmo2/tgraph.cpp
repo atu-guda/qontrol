@@ -133,6 +133,91 @@ int  TGraph::dump( const QString &fn, const QString &delim )
   return n;
 }
 
+int TGraph::addOutArr( const QString &o_name )
+{
+  static constexpr const unsigned dc_num = 14;
+  static const unsigned def_col[dc_num] =
+    {        0, 0x880000, 0x008800, 0x000088, 0x888800, 0x880088, 0x000088,
+      0x404040, 0xAA4444, 0x44AA44, 0x4444AA, 0xAAAA44, 0xAA44AA, 0x4444AA };
+
+  bool was_x = false, was_y = false;
+
+  int ne = 0; // plot elements
+  for( auto c : children() ) {
+    GraphElem *ge = qobject_cast<GraphElem*>( c );
+    if( ! ge ) {
+      continue;
+    }
+    int dtype = GraphElem::DataType::DataNone;
+    ge->getData( "type", &dtype );
+    if( dtype == GraphElem::DataType::DataAxisX ) {
+      was_x = true;
+      continue;
+    }
+    if( dtype == GraphElem::DataType::DataAxisY ) {
+      was_y = true;
+      continue;
+    }
+    if( dtype >= GraphElem::DataType::DataPlot && dtype < GraphElem::DataType::DataC0 ) {
+      ++ne;
+    }
+  }
+
+  // find good name
+  QString nm0 = "y", nm = "y0";
+  if( ! was_x ) {
+    nm0 = nm = "x";
+  } else if( was_y ) {
+    nm0 = "z"; nm = "z0";
+  }
+
+  for( int j=1; j<100; ++j ) {
+    if( ! getElemT<GraphElem*>( nm ) ) {
+      break;
+    }
+    nm = nm0 + QSN( j );
+  }
+
+  GraphElem *ge = addObj<GraphElem>( nm );
+  if( !ge ) {
+    DBGx( "warn: Fail to create GraphElem \"%s\"", qP( nm ));
+    return 0;
+  }
+  ge->setData( "src", o_name );
+  int dtype = GraphElem::DataType::DataPlot;
+  if( !was_x ) {
+    dtype = GraphElem::DataType::DataAxisX;
+  }
+  ge->setData( "type", dtype );
+  unsigned nc = ne;
+  if( nc >= dc_num ) {
+    nc = 0;
+  }
+  ge->setData( "color", def_col[nc] );
+
+  // now we have element, but can improve it
+
+  TModel *mod = getAncestorT<TModel>();
+  if( !mod ) {
+    return 1;
+  }
+
+  TOutArr *arr = mod->getOutArr( o_name );
+  if( !arr ) {
+    return 1;
+  }
+  QString lbl = nm;
+  arr->getData( "label", lbl );
+  ge->setData( "label", lbl );
+  int otype = 0;
+  arr->getData( "type", &otype );
+  if( otype == TOutArr::OutArrType::outParm2 ) {
+    ge->setData( "is2D", 1 );
+  }
+
+
+  return 1;
+}
 
 // migration: TODO: remove after conversion
 void TGraph::migrate1()

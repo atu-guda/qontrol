@@ -366,7 +366,8 @@ void LaboWin::initIface()
   model_acts << act_showgraph;
 
   act_graphaddout = new QAction( "Add out to plot", this );
-  act_graphaddout->setWhatsThis( tr("Add current output array to plo") );
+  act_graphaddout->setShortcut( Qt::CTRL | Qt::Key_U );
+  act_graphaddout->setWhatsThis( tr("Add current output array to plot") );
   connect( act_graphaddout, &QAction::triggered, this, &LaboWin::slotGraphAddOut );
   model_acts << act_graphaddout;
 

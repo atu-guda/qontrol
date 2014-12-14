@@ -1085,7 +1085,19 @@ void LaboView::graphAddOut()
   if( ! checkState( validCheck ) ) {
     return;
   }
-  showWarn( "Unimplemented now" );
+
+  QString nm_o = getSelName( outs_view );
+  if( nm_o.isEmpty() ) {
+    return;
+  }
+
+  QString nm_g = getSelName( plots_view );
+  if( nm_g.isEmpty() ) {
+    return;
+  }
+
+  model->addOutToGraph( nm_o, nm_g );
+  emit viewChanged();
 }
 
 void LaboView::showGraphData()

@@ -375,6 +375,19 @@ int TModel::delGraph( const QString &name )
   return plots->del_obj( name );
 }
 
+int TModel::addOutToGraph( const QString &o_name, const QString &g_name )
+{
+  TGraph *gra = getGraph( g_name );
+  if( !gra ) {
+    return 0;
+  }
+  int rc = gra->addOutArr( o_name );
+  if( rc ) {
+    reset();
+  }
+  return rc;
+}
+
 int TModel::newSimul( const QString &name )
 {
   DBGx( "dbg: creating new simulation \"%s\"", qP(name) );
