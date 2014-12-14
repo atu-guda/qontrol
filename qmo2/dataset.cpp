@@ -1886,7 +1886,8 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
           errstr = QString("TDataSet::fromDom: fail to create obj %1 %2 ")
                    .arg(cl_name).arg(elname);
           DBG1q( errstr );
-          return false;
+          continue; // for conversion: ignore unknown
+          // return false;
         }
       }
 
@@ -1914,10 +1915,11 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
       if( !ho ) {
         ho =  add_param( tp_name, elname );
         if( !ho  ) {
-          errstr = QString("TDataSet::fromDom: fail to create param %1 %2 ")
+          errstr = QString("TDataSet::fromDom: fail to create param \"%1\" in \"%2\" ")
                    .arg(tp_name).arg(elname);
           DBG1q( errstr );
-          return false;
+          // return false;
+          continue; // ignore unused params
         }
       }
       ho->fromString( getDomText(ee) );
