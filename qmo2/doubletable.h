@@ -22,23 +22,20 @@
 #include <QWidget>
 #include <QString>
 #include <QStringList>
-class QPainer; struct GraphInfo;
+class QPainer; struct DatasInfo;
 
 
 /** new model for model/view Qt4 approach */
 class DoubleTableModel : public QAbstractTableModel {
   public:
-   DoubleTableModel( const GraphInfo *gi, QObject *parent = 0 );
+   DoubleTableModel( const DatasInfo &a_di, QObject *parent = 0 );
    virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
    virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
    virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
    virtual QVariant headerData( int section, Qt::Orientation orientation,
             int role = Qt::DisplayRole ) const;
   protected:
-   int row, col, ny;
-   QString title;
-   QStringList labels;
-   std::vector<const dvector *> dat;
+   const DatasInfo &di;
 };
 
 #endif

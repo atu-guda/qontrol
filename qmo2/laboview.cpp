@@ -18,8 +18,6 @@
 // include files for Qt
 #include <QtWidgets>
 
-// test: TODO: remoe if not req
-#include <mgl2/qmathgl.h>
 
 // application specific includes
 #include "miscfun.h"
@@ -890,7 +888,7 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
   QPushButton *bt_ok;
   QLabel *lab;
   TOutArr *arr;
-  GraphInfo gi;
+  DatasInfo di;
 
   if( ! checkState( doneCheck ) ) {
     return;
@@ -906,8 +904,8 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
     return;
   }
 
-  int k = arr->fillGraphInfo( &gi );
-  if( k != 0 ) {
+  int k = arr->fillDatasInfo( &di );
+  if( !k ) {
     DBGx( "warn: fail to fill info about output array \"%s\" (%d)", qP(arr->getFullName()), k );
     return;
   }
@@ -915,27 +913,27 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
   // calculate statistical data TODO: separate struct and func (or/and in TOutArr)
   double s = 0, s2 = 0, ave = 0, ave2 = 0, disp = 0, msq = 0, x;
   double vmin = DMAX, vmax = DMIN;
-  for( int i=0; i<gi.row; i++ ) {
-    x =  (*gi.dat[0])[i];
+  for( int i=0; i<di.nn; i++ ) {
+    x =  (*di.ves[0])[i];
     s += x; s2 += x * x;
     if( x < vmin ) vmin = x;
     if( x > vmax ) vmax = x;
   };
-  ave = s / gi.row; ave2 = s2 / gi.row;
+  ave = s / di.nn; ave2 = s2 / di.nn;
   disp = ave2 - ave * ave;
   msq = sqrt( disp );
 
 
   dia = new QDialog( this );
-  dia->setWindowTitle( QString("Data array: ") + QString(gi.title) );
+  dia->setWindowTitle( QString("Data array: ") + di.title );
   lay = new QGridLayout( dia );
 
-  dmod = new DoubleTableModel( &gi, dia );
+  dmod = new DoubleTableModel( di, dia );
   dtv = new QTableView( dia );
   dtv->setModel( dmod );
   lay->addWidget( dtv, 0, 0 );
 
-  sinf = QString( "n= " ) % QSN( gi.row )
+  sinf = QString( "n= " ) % QSN( di.nn )
        % QString( "; \nave= " ) % QSN( ave )
        % QString( "; \nave2= " ) % QSN( ave2 )
        % QString( "; \nsum= " ) % QSN( s )
@@ -1096,38 +1094,41 @@ void LaboView::showGraphData()
     return;
   }
 
-  // TODO: revive
-  // QString nm = getSelName( plots_view );
-  // if( nm.isEmpty() ) {
-  //   return;
-  // }
-  // TGraph *gra = model->getGraph( nm );
-  // if( !gra ) {
-  //   return;
-  // }
-  //
-  // GraphInfo gi;
-  // int k = gra->fillGraphInfo( &gi );
-  // if( k != 0 ) {
-  //   return;
-  // }
-  //
-  // QDialog *dia = new QDialog( this );
-  // dia->setWindowTitle( QString("Plot data: ") + gi.title );
-  // QVBoxLayout *lv = new QVBoxLayout( dia );
-  //
-  // DoubleTableModel *dmod = new DoubleTableModel( &gi, dia );
-  // QTableView *dtv = new QTableView( dia );
-  // dtv->setModel( dmod );
-  // lv->addWidget( dtv );
-  //
-  // QPushButton *bt_ok = new QPushButton( "Done", dia );
-  // bt_ok->setDefault( true );
-  // connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  // lv->addWidget( bt_ok );
-  //
-  // dia->exec();
-  // delete dia;
+  QString nm = getSelName( plots_view );
+  if( nm.isEmpty() ) {
+    return;
+  }
+  TGraph *gra = model->getGraph( nm );
+  if( !gra ) {
+    return;
+  }
+
+  DatasInfo di;
+  int k = gra->fillDatasInfo( &di );
+  if( !k ) {
+    return;
+  }
+
+  QDialog *dia = new QDialog( this );
+  dia->setWindowTitle( QString("Plot data: ") + di.title );
+  QVBoxLayout *lv = new QVBoxLayout( dia );
+
+  DoubleTableModel *dmod = new DoubleTableModel( di, dia );
+  QTableView *dtv = new QTableView( dia );
+  dtv->setModel( dmod );
+  lv->addWidget( dtv );
+
+  QPushButton *bt_ok = new QPushButton( "Done", dia );
+  bt_ok->setDefault( true );
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
+  lv->addWidget( bt_ok );
+
+  int em = LaboWin::labowin->getEm();
+  int w0 = di.size() * 12 * em;
+  dia->resize( w0, em*40 );
+
+  dia->exec();
+  delete dia;
 
 }
 

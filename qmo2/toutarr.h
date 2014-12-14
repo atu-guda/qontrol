@@ -20,7 +20,6 @@
 
 #include "dataset.h"
 
-struct GraphInfo;
 struct DatasInfo;
 
 // ==================== TOutArr ======================================
@@ -67,8 +66,6 @@ class TOutArr : public TDataSet  {
    virtual int take_val( int level );
    /** dumps data to file */
    int dump( const QString &fn, const QString &delim );
-   /** fills fields in GraphInfo structure */
-   int fillGraphInfo( GraphInfo *gi ) const;
    /** fills fields in DatasInfo structure, return number of elements (nn) */
    int fillDatasInfo( DatasInfo *di ) const;
  protected:

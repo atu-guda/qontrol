@@ -17,22 +17,8 @@
 #include "defs.h"
 
 
-const int max_graphs = 7; // TODO: remove
-/** Structure containg data needed to plot graphs, export, view.
- *  filled by fillGraphInfo in TOutArr and TGraph
- * */
 
-struct GraphInfo { // TODO: remove
-  int row = 0;
-  int col = 0;
-  int ny = 0;
-  QString title = "";
-  QString label[max_graphs] = { "", "", "", "", "", "", "" };
-  const dvector *dat[max_graphs] =
-  { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
-};
-
-//* new version of GraphInfo
+//* describe data arrays for dump, show....
 struct DatasInfo {
   int nn = 0; //* total number of data: minimal of present arrays
   int nx = 0; //* x-dimension, used only in 1 array output
@@ -95,9 +81,6 @@ int findGlobalMax( int n, const double *a );
 /** computes length of perpendicular from point p to line s-e */
 double perpLen( double xs, double ys, double xe, double ye,
                 double xp, double yp );
-
-/** dumps data to given file, possibly with labels */
-int dumpDatas( const char *fn, const GraphInfo *gi, char delim = ' ' );
 
 // ------------- miscelanios classes -----------------------------
 

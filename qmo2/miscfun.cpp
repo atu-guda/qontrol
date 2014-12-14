@@ -317,30 +317,6 @@ int findGlobalMax( int n, const double *a )
 }
 
 
-int dumpDatas( const char *fn, const GraphInfo *gi, char delim )
-{
-  int i, j;
-  ofstream os( fn );
-  if( !os.good() ) return -1;
-  os << "#";  // save labels for gnuplot input data
-  for( j=0; j<gi->col; j++ ) {  // labels row
-   os << setw( 18 ) << qPrintable( gi->label[j] ) << delim;
-  };
-
-  int nr = gi->row, nc = gi->col;
-  os << '\n';
-  // TODO: unmagic, config
-  os.precision(12);
-  for( i=0; i<nr; i++ ) {  // data rows
-    for( j=0; j<nc; j++ ) {
-      os << setw( 18 ) << (*gi->dat[j])[i] << delim;
-    };
-    os << '\n';
-  };
-  os.close();
-  return 0;
-}
-
 
 int DatasInfo::dump( QTextStream& os, const QString &delim )
 {

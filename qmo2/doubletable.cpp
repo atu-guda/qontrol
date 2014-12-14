@@ -20,49 +20,57 @@
 #include "miscfun.h"
 #include "doubletable.h"
 
-DoubleTableModel::DoubleTableModel( const GraphInfo *gi, QObject *parent )
+DoubleTableModel::DoubleTableModel( const DatasInfo &a_di, QObject *parent )
   : QAbstractTableModel( parent ),
-    row( gi->row ), col( gi->col ), ny ( gi->ny ),
-    title( gi->title ),
-    dat( gi->row )
+    di( a_di )
 {
-  for( int i=0; i<max_graphs; ++i ) {
-    labels << gi->label[i];
-    dat[i] = gi->dat[i];
-  }
 }
 
 int DoubleTableModel::columnCount( const QModelIndex & /*parent*/ ) const
 {
-  return col;
+  return di.size();
 }
 
 int DoubleTableModel::rowCount( const QModelIndex & /*parent*/ ) const
 {
-  return row;
+  return di.nn;
 }
 
 QVariant DoubleTableModel::data( const QModelIndex & index, int role ) const
 {
-  if( role != Qt::DisplayRole )
+  if( role != Qt::DisplayRole ) {
     return QVariant();
-  if( ! index.isValid() )
+  }
+  if( ! index.isValid() ) {
     return QVariant();
-  return QVariant( (*dat[index.column()])[index.row()] );
+  }
+
+  int col = index.column(), row = index.row();
+  if( col >= di.size() || row >= di.nn ) {
+    return QVariant();
+  }
+  auto ve = di.ves[col];
+
+  return QVariant( (*ve)[row] );
 }
 
 
 QVariant DoubleTableModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  if( role != Qt::DisplayRole )
+  if( role != Qt::DisplayRole ) {
     return QVariant();
-  if( orientation == Qt::Horizontal ) {
-    if( section >= col )
-      return QVariant();
-    return QVariant( labels[section] );
   }
-  if( section >= row )
+
+  if( orientation == Qt::Horizontal ) {
+    if( section >= di.size() ) {
+      return QVariant();
+    }
+    return QVariant( di.labels[section] );
+  }
+
+  if( section >= di.nn ) {
     return QVariant();
+  }
   return QVariant( QSN(section) );
 }
 

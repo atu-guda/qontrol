@@ -164,23 +164,6 @@ int TOutArr::take_val( int level )
 }
 
 
-int TOutArr::fillGraphInfo( GraphInfo *gi ) const
-{
-  int i;
-  if( gi == 0 )
-    return -1;
-  gi->row = gi->col = 0; gi->ny = 1;
-  for( i=0; i<7; i++ )
-    gi->label[i] = "";
-  gi->title = objectName();
-  gi->label[0] = label.cval();
-  if( n < 1 )
-    return -2;
-  gi->row = n; gi->col = 1; gi->ny = ny;
-  gi->dat[0] = &arr;
-  return 0;
-}
-
 int TOutArr::fillDatasInfo( DatasInfo *di ) const
 {
   if( !di ) {
