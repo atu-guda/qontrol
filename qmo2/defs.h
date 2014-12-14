@@ -12,7 +12,7 @@
 #include <limits>
 #include <vector>
 
-#define VERSION "0.0.51"
+#define VERSION "0.0.52"
 
 /* Name of package */
 #define PACKAGE "qmo2x"

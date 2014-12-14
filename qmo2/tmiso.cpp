@@ -19,18 +19,6 @@
 
 using namespace  std;
 
-const char* TElmLink::helpstr = "<H1>TElmLink</H1> \n"
- "<p><b>Obsoleted.</b>Defines signal and parametric inputs for given element. \n"
- "Each element may have up to 4 both signal and parametric inputs</p>\n";
-
-STD_CLASSINFO( TElmLink, clpSpecial | clpObsolete );
-
-CTOR(TElmLink,TDataSet)
-{
-  flags |= efNoSave | efNoDial;
-}
-
-DEFAULT_FUNCS_REG(TElmLink);
 
 
 // ------------------------ TMiso -------------------------------
@@ -42,7 +30,6 @@ STD_CLASSINFO(TMiso,clpSpecial|clpPure);
 
 
 CTOR(TMiso,TDataSet) ,
-       links( new TElmLink( "links", this, 0, "links", "object links", "" ) ), // TODO: remove
        pis( new InputParams( "pis", this, 0, "param links", "object paramitric links", "sep=blockend") )
 {
 }
@@ -51,75 +38,6 @@ TMiso::~TMiso()
 {
 }
 
-void TMiso::post_set()
-{
-  TDataSet::post_set();
-  // no links -- means only new data
-  if( !links ) {
-    return;
-  }
-
-  // TODO: remove after migration
-  int t = 0;
-  if( ! ( locked || flip || onlyFirst || onlyLast || noIcon ) ) {
-    // try to migrate from old data
-    t = 0; links->getData( "locked", &t ); locked = t;
-    t = 0; links->getData( "flip", &t ); flip = t;
-    t = 0; links->getData( "onlyFirst", &t ); onlyFirst = t;
-    t = 0; links->getData( "onlyLast", &t ); onlyLast = t;
-    t = 0; links->getData( "noIcon", &t ); noIcon = t;
-  }
-
-  // ordirary links convert
-  int nl = inputs.size();
-  if( nl > 4 )
-    nl = 4;
-  QString source, iname;
-  for( int i=0; i<nl; ++i ) {
-    InputSimple *in = inputs[i];
-    if( !in )
-      continue;
-    if( ! in->getData( "source", source )  )
-      continue;
-    if( ! source.isEmpty() )
-      continue;
-    iname = "inps" + QSN(i);
-    if( ! links->getData( iname, source )  )
-      continue;
-    in->setData( "source", source );
-  }
-
-  // param links convert
-  if( ! pis || pis->size() != 0 )
-    return;
-
-  QString prm_name, flg_name;
-  int flg;
-  for( int i=0; i<4; ++i ) {
-    iname = "pinps" + QSN(i);
-    if( ! links->getData( iname, source )  )
-      continue;
-    if( source.isEmpty() )
-      continue;
-    iname = "pnames" + QSN(i);
-    links->getData( iname, prm_name ); // ignore error
-    iname = "pflags" + QSN(i);
-    links->getData( iname, &flg ); // ignore error
-    iname = "p" + QSN(i);
-    InputParam *pa = pis->addObj<InputParam>( iname );
-    if( !pa ) {
-      DBGx( "warn: fail to convert param input in \"%s\" N %d src \"%s\"",
-          qP(objectName()), i, qP(source) );
-      continue;
-    }
-    pa->setData( "source", source );
-    pa->setData( "tparam", prm_name );
-    pa->setData( "onlyFirst", flg );
-    pa->setData( "line_w", 2 );
-    pa->setData( "line_color", "red" );
-  }
-
-}
 
 DEFAULT_FUNCS_REG(TMiso);
 

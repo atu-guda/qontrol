@@ -220,7 +220,7 @@ int TModel::runOneLoop()
   }
 
   rtime = get_real_time() - start_time;
-  if( use_sync ) {
+  if( syncRT ) {
      if( t > rtime ) {
        unsigned long wait_ms = (unsigned long)( 1000000 * ( t - rtime ) );
        usleep( wait_ms ); // ------------------- TODO: redesign ------

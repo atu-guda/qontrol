@@ -93,7 +93,6 @@ class LaboDoc : public QObject
  public slots:
 
  private:
-   bool migrateSumul();
    /** the modified flag of the current document */
    bool modified = false;
    QString m_title = "? unknown ";
@@ -102,7 +101,6 @@ class LaboDoc : public QObject
    TRootData *rootdata = nullptr;
    TModel *model = nullptr;
    bool is_nonamed = true;
-   bool loaded_as_old = true;
 };
 
 #endif // LABODOC_H

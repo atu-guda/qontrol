@@ -35,50 +35,6 @@ enum IterType {
 
 class TModel; class Scheme;
 
-/** class TElmLink  - obseleted by InputSimple and Input Param
- * aux class for get/set TMiso links and flags
-*/
-
-class TElmLink : public TDataSet {
-  Q_OBJECT
- friend class TMiso;
- public:
-  DCL_CTOR(TElmLink);
-  DCL_CREATE;
-  DCL_STD_INF;
- protected:
-   /** names of elements, which outputs will be used as inputs */
-   PRM_STRING( inps0, efOld, "Input 0", "Name of source for input 0", "max=32" );
-   PRM_STRING( inps1, efOld, "Input 1", "Name of source for input 1", "max=32" );
-   PRM_STRING( inps2, efOld, "Input 2", "Name of source for input 2", "max=32" );
-   PRM_STRING( inps3, efOld, "Input 3", "Name of source for input 3", "max=32" );
-   PRM_SWITCH( noauto, efOld, "No Auto", "Unused", "def=0" );
-   PRM_SWITCH( locked, efOld, "Locked", "Bypass u[0] to output", "sep=col"  );
-   PRM_SWITCH( onlyFirst, efOld, "only First", "Process element only at first iteration", "");
-   PRM_SWITCH( onlyLast, efOld , "only Last", "Process element only at last iteration", "");
-   PRM_SWITCH( flip, efOld, "flip image", "flip left-right element icon", "sep=col");
-   PRM_SWITCH( noIcon, efOld, "no Icon", "don't show element icon", "");
-   /** names of elms, which outputs will be used as parm inputs */
-   PRM_STRING( pinps0, efOld, "Parm. input 0", "Name of source for parametric input 0", "max=32\nsep=block"  );
-   PRM_STRING( pinps1, efOld, "Parm. input 1", "Name of source for parametric input 1", "max=32"  );
-   PRM_STRING( pinps2, efOld, "Parm. input 2", "Name of source for parametric input 2", "max=32"  );
-   PRM_STRING( pinps3, efOld, "Parm. input 3", "Name of source for parametric input 3", "max=32"  );
-   /** names of inner params, to be modifyed */
-   PRM_STRING( pnames0, efOld, "Parm. name 0", "Name of inner parameter 0", "max=32\nsep=col" );
-   PRM_STRING( pnames1, efOld, "Parm. name 1", "Name of inner parameter 1", "max=32"  );
-   PRM_STRING( pnames2, efOld, "Parm. name 2", "Name of inner parameter 2", "max=32"  );
-   PRM_STRING( pnames3, efOld, "Parm. name 3", "Name of inner parameter 3", "max=32"  );
-   /** inner flags for params: 1-only start of loop, ..? */
-   PRM_SWITCH( pflags0, efOld, "only First 0", "Change param 0 only at start", "sep=col" );
-   PRM_SWITCH( pflags1, efOld, "only First 1", "Change param 1 only at start", ""  );
-   PRM_SWITCH( pflags2, efOld, "only First 2", "Change param 2 only at start", ""  );
-   PRM_SWITCH( pflags3, efOld, "only First 3", "Change param 3 only at start", ""  );
-   DCL_DEFAULT_STATIC;
-};
-typedef TElmLink* PTElmLink;
-typedef const TElmLink* CPTElmLink;
-
-
 // -------------------------- TMiso -----------------------------
 
 /** \class TMiso tmiso.h
@@ -93,7 +49,6 @@ class TMiso : public TDataSet  {
    virtual ~TMiso();
    DCL_CREATE;
    DCL_STD_INF;
-   virtual void post_set() override;
 
    /** external computation function + in/out */
    double fun( double t, IterType itype );
@@ -158,8 +113,6 @@ class TMiso : public TDataSet  {
 
    PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
 
-   /** pointer to link data : obsoleted, TODO: remove after conversion */
-   TElmLink *links;
    /** pointer to param inputs container */
    InputParams *pis;
    /** time step -- setted by preRun 0 - special value to detect usage before start */

@@ -90,7 +90,6 @@ bool LaboDoc::newDocument()
 
   // rootdata->dumpStruct();
   modified = false; is_nonamed = true;
-  loaded_as_old = true; // TODO: change to false when new model be created by default
 
   return true;
 }
@@ -166,19 +165,11 @@ bool LaboDoc::openDocumentXML(const QString &filename )
   }
 
   model = rootdata->getElemT<TModel*>( "model" );
-  loaded_as_old = true;
+
   if( !model ) {
     delete rootdata; rootdata = 0; model = 0;
     QMessageBox::critical( 0, "openDocumentXML Error:",
        QString("Fail to detect model in file: ") + filename,
-       QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
-    return false;
-  };
-
-  if( ! migrateSumul() ) {
-    delete rootdata; rootdata = 0; model = 0;
-    QMessageBox::critical( 0, "openDocumentXML Error:",
-       QString("Fail to migrate simulations in file: ") + filename,
        QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
     return false;
   };
@@ -327,176 +318,11 @@ bool LaboDoc::isModified() const
 void LaboDoc::fillRoot(void)
 {
   if( rootdata == 0 ) {
-    DBG1( "ERR: rootdata in null!!" );
+    DBG1( "ERR: rootdata is null!!" );
     return;
   }
 }
 
-bool LaboDoc::migrateSumul() // TODO: remove after migration
-{
-  DBGx( "dbg: start..." );
-  if( !rootdata || ! model ) {
-    DBG1( "ERR: no root or model" );
-    return false;
-  }
-
-  // migrate elements
-  ContScheme *schems = model->getElemT<ContScheme*>("schems");
-  if( !schems ) {
-    DBGx( "err: schems not exist!" );
-    return false;
-  }
-
-  Scheme *main_s = schems->getElemT<Scheme*>("main_s");
-  if( !schems ) {
-    DBGx( "err: main scheme not exist!" );
-    return false;
-  }
-
-  int n_el = 0;
-  for( auto o : main_s->children() ) {
-    TMiso *el = qobject_cast<TMiso*>(o);
-    if( el ) {
-      ++n_el;
-      DBGx( "dbg: found \"%s\" elem in main, not migrating", qP( el->objectName() ) );
-      break;
-    }
-  }
-
-  DBGx( "dbg: n_el = %d size: %d", n_el, main_s->size() );
-
-  if( n_el == 0 ) {
-    for( auto c : model->children() ) {
-      TMiso *ob = qobject_cast<TMiso*>(c);
-      if( !ob ) {
-        continue;
-      }
-      DBGx( "dbg: migrating \"%s\" element", qP( ob->objectName() ) );
-      QString s;
-
-      s = ob->toString();
-      HolderData *ob_new = main_s->add_obj( ob->getType(), ob->objectName() );
-      if( !ob_new ) {
-        DBGx( "warn: fail to migrate elem \"%s\" type \"%s\"",
-            qP(ob->objectName()), qP(ob->getType()) );
-        continue;
-      }
-      ob_new->fromString( s );
-    };
-  }
-
-  // migrate outputs
-  ContOut *outs =  model->getElemT<ContOut*>("outs");
-  if( !outs ) {
-    DBGx( "err: outs not exist!" );
-    return false;
-  }
-
-  if( outs->size() == 0 ) {
-    for( auto c : model->children() ) {
-      HolderData *ob = qobject_cast<HolderData*>(c);
-      QString tp = ob->getType();
-      if( ob->isChildOf("TOutArr") ) {
-        QString s = ob->toString();
-        TOutArr *out_n = outs->addObj<TOutArr>( ob->objectName() );
-        if( out_n ) {
-          out_n->fromString( s );
-        }
-      }
-    };
-
-  }
-
-
-  // migrate plots
-  ContGraph *plots =  model->getElemT<ContGraph*>("plots");
-  if( !plots ) {
-    DBGx( "err: plots not exist!" );
-    return false;
-  }
-
-  if( plots->size() == 0 ) {
-    for( auto c : model->children() ) {
-      HolderData *ob = qobject_cast<HolderData*>(c);
-      QString tp = ob->getType();
-      if( ob->isChildOf("TGraph") ) {
-        QString s = ob->toString();
-        TGraph *gr_n = plots->addObj<TGraph>( ob->objectName() );
-        if( gr_n ) {
-          gr_n->fromString( s );
-        }
-      }
-    };
-
-  }
-
-
-  ContSimul *sims = model->getElemT<ContSimul*>("sims");
-  if( ! sims ) {
-    DBG1( "ERR: simulation array not exist!!!" ); // unlikely
-    return false;
-  }
-
-
-  Simulation *sim0 = sims->getElemT<Simulation*>("sim0");
-  if( ! sim0 ) {
-    DBG1( "ERR: default simulations not created!!!" ); // unlikely
-    return false;
-  }
-
-  // not so good indicator for conversion, but no silver bullet
-  QString descr;
-  sim0->getData( "descr", descr );
-  if( descr.isEmpty() ) {
-
-    DBG1( "info: migrate tmodel->simulations" );
-
-    double t = 100;
-    int ti = 1000;
-    // no check
-    model->getData( "tt", &t );  sim0->setData( "T", t );
-    model->getData( "nn", &ti );  sim0->setData( "N", ti );
-    model->getData( "use_sync", &ti );  sim0->setData( "syncRT", ti );
-    model->getData( "nl1", &ti );  sim0->setData( "N1", ti );
-    model->getData( "nl2", &ti );  sim0->setData( "N2", ti );
-    model->getData( "n_steps", &ti );  sim0->setData( "n_iosteps", ti );
-    model->getData( "prm0s", &t );  sim0->setData( "prm0s", t );
-    model->getData( "prm1s", &t );  sim0->setData( "prm1s", t );
-    model->getData( "prm2s", &t );  sim0->setData( "prm2s", t );
-    model->getData( "prm3s", &t );  sim0->setData( "prm3s", t );
-    model->getData( "prm0d", &t );  sim0->setData( "prm0d", t );
-    model->getData( "prm1d", &t );  sim0->setData( "prm1d", t );
-    model->getData( "seed", &ti );  sim0->setData( "seed", ti );
-    model->getData( "seedType", &ti );  sim0->setData( "seedType", ti );
-    model->getData( "autoStart", &ti );  sim0->setData( "autoStart", ti );
-    model->getData( "long_descr", descr );  sim0->setData( "descr", descr );
-    sim0->post_set();
-  }
-
-  // remove old elements from model
-  QStringList deads;
-  for( auto c : model->children() ) {
-    HolderData *ob = qobject_cast<HolderData*>(c);
-    QString tp = ob->getType();
-    if( ob->isChildOf("TMiso") || ob->isChildOf("TOutArr") || ob->isChildOf("TGraph") ) {
-      deads << ob->objectName();
-    }
-  };
-  for( auto nm : deads ) {
-    model->del_obj( nm );
-  }
-
-  // convert TGraph to new scheme
-  for( auto g : plots->children() ) {
-    TGraph *gra = qobject_cast<TGraph*>(g);
-    if( !gra ) {
-      continue;
-    }
-    gra->migrate1();
-  }
-
-  return true;
-}
 
 
 

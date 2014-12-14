@@ -10,7 +10,7 @@ RESOURCES = qmo2x.qrc
 INCLUDEPATH += .. ../elems
 
 LIBS += -lgsl -lgslcblas
-LIBS += -lmgl -lmgl-qt5
+LIBS += -lmgl
 
 SOURCES += \
   addelemdia.cpp \
@@ -66,7 +66,6 @@ SOURCES += \
   ../elems/tlorenz.cpp \
   ../elems/trossler.cpp \
   ../elems/tmultipl.cpp \
-  ../elems/toutputany.cpp \
   ../elems/tpid.cpp \
   ../elems/trand.cpp \
   ../elems/trandtrigg.cpp \
@@ -131,7 +130,6 @@ HEADERS += \
   ../elems/tlorenz.h \
   ../elems/trossler.h \
   ../elems/tmultipl.h \
-  ../elems/toutputany.h \
   ../elems/tpid.h \
   ../elems/trand.h \
   ../elems/trandtrigg.h \
