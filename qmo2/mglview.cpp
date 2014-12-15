@@ -58,7 +58,7 @@ double mglLen( const mglPoint &a, const mglPoint &b )
 MglView::MglView( TGraph *agra, QWidget *parent )
           : QWidget( parent ),
           gra( agra ),
-          scd ( new ScaleData( "scd", gra, 0, "scale", "default scale data" ) ),
+          scd ( new ScaleData( "scd", nullptr, 0, "scale", "current scale data" ) ),
           pa_fnt ( LaboWin::labowin->getPlotFont() )
 {
   QFontMetrics fm( pa_fnt );

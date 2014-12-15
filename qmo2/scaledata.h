@@ -39,35 +39,16 @@ class ScaleData : public TDataSet
    PRM_STRING( colorScheme, efNRC, "Color scheme", "Color Scheme for 2D plot", "max=128\ndef=BbcyrR" );
    // X-scale
    PRM_SWITCH( autoScX,  efNRC,    "Autoscale X", "Automaticaly make X scale", "def=1\nsep=block" );
-   PRM_DOUBLE( realMinX, efNoDial | efNoSave , "Real min(x)", "Real minimum X value", "" );
    PRM_DOUBLE( plotMinX, efNRC,    "Plot min(x)", "Used for plot minimum X value", "" );
-   PRM_DOUBLE( realMaxX, efNoDial | efNoSave , "Real max(x)", "Real maximum X value", "def=1" );
    PRM_DOUBLE( plotMaxX, efNRC,    "Plot max(x)", "Used for plot maximum X value", "def=1" );
    PRM_DOUBLE(    gridX, efNRC,    "Grid X", "Number of Grid lines for X (- =step)", "def=0" );
    PRM_INT(       tickX, efNRC,    "Tick X", "Number of Ticks for X", "def=5" );
-   PRM_SWITCH( goodScX,  efOld,    "Good Scale X", "Make good values for X scale", "def=1" );
-   PRM_SWITCH(    logX,  efOld,    "Logarifmic X", "Use log(X) ", "" );
-   PRM_SWITCH(logScaleX, efOld,    "Log. scale X", "Use logarifmic scale for X", "" );
-   PRM_SWITCH(    zeroX, efOld,    "Zero X", "Use zero as one of X bounds", "" );
-   PRM_SWITCH(  centerX, efOld,    "Center X", "Use symmetrical bounds for X", "" );
    // Y-scale
    PRM_SWITCH( autoScY,  efNRC,    "Autoscale Y", "Automaticaly make Y scale", "sep=col\ndef=1" );
-   PRM_DOUBLE( realMinY, efNoDial | efNoSave , "Real min(y)", "Real minimum Y value", "" );
    PRM_DOUBLE( plotMinY, efNRC,    "Plot min(y)", "Used for plot minimum Y value", "" );
-   PRM_DOUBLE( realMaxY, efNoDial | efNoSave , "Real max(y)", "Real maximum Y value", "def=1" );
    PRM_DOUBLE( plotMaxY, efNRC,    "Plot max(y)", "Used for plot maximum Y value", "def=1" );
    PRM_DOUBLE(    gridY, efNRC,    "Grid Y", "Number of Grid lines for Y (- =step)", "def=0" );
    PRM_INT(       tickY, efNRC,    "Tick Y", "Number of Ticks for Y", "def=5" );
-   PRM_SWITCH( goodScY,  efOld,    "Good Scale Y", "Make good values for Y scale", "def=1" );
-   PRM_SWITCH(    logY,  efOld,    "Logarifmic Y", "Use log(Y) ", "" );
-   PRM_SWITCH(logScaleY, efOld,    "Log. scale Y", "Use logarifmic scale for Y", "" );
-   PRM_SWITCH(    zeroY, efOld,    "Zero Y", "Use zero as one of Y bounds", "" );
-   PRM_SWITCH(  centerY, efOld,    "Center Y", "Use symmetrical bounds for Y", "" );
-   // margins
-   PRM_DOUBLE( leftMar,  efOld, "Left Margin %", "Value of plot left margin in %", "sep=block\ndef=0.1" );
-   PRM_DOUBLE(  topMar,  efOld, "Top Margin %", "Value of plot top margin in %", "def=0.02" );
-   PRM_DOUBLE(rightMar,  efOld, "Right Margin %", "Value of plot right margin in %", "sep=col\ndef=0.1" );
-   PRM_DOUBLE(bottomMar, efOld, "Bottom Margin %", "Value of plot bottom margin in %", "def=0.1" );
   protected:
    DCL_DEFAULT_STATIC;
 };
