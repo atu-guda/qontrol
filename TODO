@@ -1,6 +1,6 @@
+Clone Simulation / sub simulation
 call parent post_set (if req). flag?
 Input/output elements/scheme properties (in0?)
-New hier
 Move TCorrAnal, TFourier direct access to arrays with post-run js?
 Command line (':')
 Rebreand to Qontrol
@@ -13,11 +13,8 @@ RunWindow?
 Edit large arrays
 Widget for link: after new hier
 More data/controls: Font, Date, Time
-Plot data structure + convert old
 run w/o interface fun:
-command line key -w = write
 TCircBuf + TDelay re*
-More plot types (dot...). Qwtplot?
 Hide startLoop - like fun,f
 Rename action
 Auto create GET/SET function for my datas, create Qt properties - scripts. ?
@@ -25,15 +22,14 @@ order -> only hint?
 source choose widget
 js edit widget + button/dialog
 js preRun, preLoop
-Really remove TElmLink
 Tests
 
 
 
-iface to gnuplot data out, call gnuplot if need qr request
 objects: TFileInput, TFileOutput, TMovingAver, TDiff
   -- TSum8, TDefuzzy, TQuality (TCriterion is busy/TCrit)
   -- or File Source input/output
+Chaotic: export v_x....
 may be new field in TClassInfo to misc flags: can f() w/o preRun..., 
     class group.. etc
 implement loading objects in so.

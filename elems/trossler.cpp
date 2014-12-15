@@ -2,7 +2,7 @@
                           trossler.cpp  -  description
                              -------------------
     begin                : Thu May 03 2012
-    copyright            : (C) 2012 by atu
+    copyright            : (C) 2012-2414 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -43,11 +43,13 @@ CTOR(TRossler,TMiso)
 
 double TRossler::f( double /*t*/ )
 {
-  double xn, yn, zn;
-  xn = x + tdt * ( -y - z )      + in_x;
-  yn = y + tdt * ( x  + a*y )    + in_y;
-  zn = z + tdt * ( b + z*(x-c) ) + in_z;
-  x = xn; y = yn; z = zn;
+  vx = -y - z;
+  vy = x  + a*y;
+  vz = b + z*(x-c);
+
+  x += tdt * vx + in_x;
+  y += tdt * vy + in_y;
+  z += tdt * vz + in_z;
   return x;
 }
 

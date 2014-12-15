@@ -2,7 +2,7 @@
                           tlorenz.cpp  -  description
                              -------------------
     begin                : Fri Mar 09 2012
-    copyright            : (C) 2012 by atu
+    copyright            : (C) 2012-2014 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -44,11 +44,13 @@ CTOR(TLorenz,TMiso)
 
 double TLorenz::f( double /*t*/ )
 {
-  double xn, yn, zn;
-  xn = x + tdt * ( sigma * (y-x) ) + in_x;
-  yn = y + tdt * ( x * (r-z) - y ) + in_y;
-  zn = z + tdt * ( x*y - b*z )     + in_z;
-  x = xn; y = yn; z = zn;
+  vx = ( sigma * (y-x) );
+  vy = ( x * (r-z) - y );
+  vz = ( x*y - b*z );
+
+  x += tdt * vx + in_x;
+  y += tdt * vy + in_y;
+  z += tdt * vz + in_z;
   return x;
 }
 

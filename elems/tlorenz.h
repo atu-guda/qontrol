@@ -2,7 +2,7 @@
                           tlorenz.h  -  description
                              -------------------
     begin                : Fri Mar 09 2012
-    copyright            : (C) 2012 by atu
+    copyright            : (C) 2012-1024 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -48,6 +48,10 @@ class TLorenz : public TMiso  {
    PRM_DOUBLE( x, efInner, "x", "x current value", "" );
    PRM_DOUBLE( y, efInner, "y", "y current value", ""  );
    PRM_DOUBLE( z, efInner, "z", "z current value", ""  );
+   /** its derivates */
+   PRM_DOUBLE( vx, efInner, "vx", "dx/dt", "" );
+   PRM_DOUBLE( vy, efInner, "vy", "dy/dt", ""  );
+   PRM_DOUBLE( vz, efInner, "vz", "dz/dt", ""  );
 
    PRM_INPUT( in_x, 0, "input x", "X additional input",  "sep=block" );
    PRM_INPUT( in_y, 0, "input y", "Y additional input", "sep=col" );
