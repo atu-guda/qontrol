@@ -63,7 +63,13 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
     return rv;
   };
   // may be some model params?
-  return getDoublePtr( nm, lt, src_ob, lev );
+  rv =  getDoublePtr( nm, lt, src_ob, lev );
+
+  if( !rv ) {
+    DBGx( "warn: fail to find target \"%s\" in model", qP(nm) );
+  }
+
+  return rv;
 }
 
 

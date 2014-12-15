@@ -1697,7 +1697,7 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
   if( !ho ) {
     if( lt )
       *lt = LinkBad;
-    DBGx( "warn: fail to find name \"%s\" in \"%s\"", qP(first), qP(getFullName()) );
+    // DBGx( "warn: fail to find name \"%s\" in \"%s\"", qP(first), qP(getFullName()) );
     return 0;
   }
 

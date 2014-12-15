@@ -69,6 +69,10 @@ const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
     p =  csim->getDoublePtr( nm, lt, src_ob, lev );
   }
 
+  if( !p ) {
+    DBGx( "warn: fail to find target \"%s\" in scheme \"%s\"", qP(nm), qP(getFullName()) );
+  }
+
   return p;
 }
 
