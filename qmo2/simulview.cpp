@@ -56,6 +56,10 @@ void SimulView::init_actions()
   addAction( act_setActive );
   connect( act_setActive, SIGNAL(triggered()), laboview, SLOT(setActiveSimul()) );
 
+  act_clone = new QAction( "Clone", this );
+  addAction( act_clone );
+  connect( act_clone, SIGNAL(triggered()), laboview, SLOT(cloneSimul()) );
+
   connect( this, SIGNAL(doubleClicked(QModelIndex)), laboview, SLOT(editSimul()) );
 
 }

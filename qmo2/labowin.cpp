@@ -384,6 +384,11 @@ void LaboWin::initIface()
   connect( act_exportgraphdata, &QAction::triggered, this, &LaboWin::slotExportGraphData);
   model_acts << act_exportgraphdata;
 
+  act_cloneGraph = new QAction( "Clone plot", this );
+  act_cloneGraph->setWhatsThis( tr("Clone current plot") );
+  connect( act_cloneGraph, &QAction::triggered, this, &LaboWin::slotCloneGraph );
+  model_acts << act_cloneGraph;
+
   // ==== simulation group
 
   act_newSimul = new QAction( "&New Simulation", this );
@@ -414,6 +419,11 @@ void LaboWin::initIface()
   connect( act_setActiveSimul, &QAction::triggered, this, &LaboWin::slotSetActiveSimul );
   model_acts << act_setActiveSimul;
 
+
+  act_cloneSimul = new QAction( "Clone Simulation", this );
+  act_cloneSimul->setWhatsThis( tr("Cone current cimulation") );
+  connect( act_cloneSimul, &QAction::triggered, this, &LaboWin::slotCloneSimul );
+  model_acts << act_cloneSimul;
 
   // ==== model group
 
@@ -608,6 +618,7 @@ void LaboWin::initIface()
   pGraphMenu->addSeparator();
   pGraphMenu->addAction( act_showgraphdata );
   pGraphMenu->addAction( act_exportgraphdata );
+  pGraphMenu->addAction( act_cloneGraph );
 
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pSimulMenu
@@ -619,6 +630,7 @@ void LaboWin::initIface()
   pSimulMenu->addAction( act_selectSimul );
   pSimulMenu->addSeparator();
   pSimulMenu->addAction( act_setActiveSimul );
+  pSimulMenu->addAction( act_cloneSimul );
 
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pModelMenu
@@ -1468,6 +1480,17 @@ void LaboWin::slotExportGraphData()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
+void LaboWin::slotCloneGraph()
+{
+  statusBar()->showMessage( tr( "Cloning plot ..." ) );
+
+  LaboView* m =  activeMdiChild();
+  if ( m )
+    m->cloneGraph();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+
 
 void LaboWin::slotNewSimul()
 {
@@ -1517,6 +1540,17 @@ void LaboWin::slotSetActiveSimul()
   LaboView* m =  activeMdiChild();
   if ( m )
     m->setActiveSimul();
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
+
+void LaboWin::slotCloneSimul()
+{
+  statusBar()->showMessage( tr( "Cloning simulation ..." ) );
+
+  LaboView* m =  activeMdiChild();
+  if ( m )
+    m->cloneSimul();
   statusBar()->showMessage( tr( "Ready." ) );
 }
 

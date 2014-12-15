@@ -1,14 +1,16 @@
-Clone Simulation / sub simulation
+Fix crash: close LaboView while opened MglView
+Rebreand to Qontrol
+threads in run
+Sub simulation?
+
 call parent post_set (if req). flag?
 Input/output elements/scheme properties (in0?)
 Move TCorrAnal, TFourier direct access to arrays with post-run js?
 Command line (':')
-Rebreand to Qontrol
 move some logic from LaboView to model (scheme?, runner?)
 slots in TModel like cmds, but with "name", not elnu - for JS
 unify add/paste elem: param in dialog?
 unify add param/object : add_obj_param? + dialog
-threads in run
 RunWindow?
 Edit large arrays
 Widget for link: after new hier
@@ -28,8 +30,8 @@ Tests
 
 objects: TFileInput, TFileOutput, TMovingAver, TDiff
   -- TSum8, TDefuzzy, TQuality (TCriterion is busy/TCrit)
+  -- Rastrigin and more
   -- or File Source input/output
-Chaotic: export v_x....
 may be new field in TClassInfo to misc flags: can f() w/o preRun..., 
     class group.. etc
 implement loading objects in so.

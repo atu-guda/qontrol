@@ -68,6 +68,10 @@ void GraphDataView::init_actions()
   addAction( act_showdata );
   connect( act_showdata, SIGNAL(triggered()), laboview, SLOT(showGraphData()) );
 
+  act_clone = new QAction( "Clone", this );
+  addAction( act_clone );
+  connect( act_clone, SIGNAL(triggered()), laboview, SLOT(cloneGraph()) );
+
   connect( this, SIGNAL(doubleClicked(QModelIndex)), laboview, SLOT(editGraph()) );
 
 }

@@ -29,7 +29,7 @@ class SimulView : public QListView {
   private:
    HolderData *mod;
    LaboView *laboview;
-   QAction *act_new, *act_del, *act_edit, *act_setActive;
+   QAction *act_new, *act_del, *act_edit, *act_setActive, *act_clone;
   private:
    void init_actions();
 };

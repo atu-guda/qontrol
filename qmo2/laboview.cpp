@@ -111,10 +111,6 @@ LaboView::~LaboView()
   delete doc; doc = nullptr; // BUG: is here?
 }
 
-LaboDoc *LaboView::getDocument() const
-{
-  return doc;
-}
 
 const QString& LaboView::currentFile() const
 {
@@ -652,10 +648,13 @@ void LaboView::testElm1()
 
 void LaboView::testElm2()
 {
-  if( ! checkState( selCheck ) )
+  if( ! checkState( selCheck ) ) {
     return;
-  if( selObj == 0 )
+  }
+  if( selObj == 0 ) {
     return;
+  }
+  // place for action here
 
   return;
 }
@@ -668,8 +667,9 @@ void LaboView::cutElm()
 
 void LaboView::copyElm()
 {
-  if( !selObj )
+  if( !selObj ) {
     return;
+  }
   QString s = selObj->toString();
   QClipboard *clp = QApplication::clipboard();
   if( clp ) {
@@ -1168,6 +1168,27 @@ void LaboView::exportGraphData()
 }
 
 
+void LaboView::cloneGraph()
+{
+  QString nm = getSelName( plots_view );
+  if( nm.isEmpty() ) {
+    return;
+  }
+
+  QString nn = nm + "_1";
+  bool ok;
+  QString new_name = QInputDialog::getText(
+      this, tr( "New plot name" ), tr( "Plot name:" ), QLineEdit::Normal,
+      nn, &ok );
+
+  if( ok ) {
+    model->cloneGraph( nm, new_name );
+    model->handleStructChanged();
+    emit viewChanged();
+  }
+}
+
+
 // ==== simulation related
 
 void LaboView::newSimul()
@@ -1244,6 +1265,26 @@ void LaboView::setActiveSimul()
   sims->setActiveElem( nm );
   model->handleStructChanged();
   emit viewChanged();
+}
+
+void LaboView::cloneSimul()
+{
+  QString nm = getSelName( sims_view );
+  if( nm.isEmpty() ) {
+    return;
+  }
+
+  QString nn = nm + "_1";
+  bool ok;
+  QString new_name = QInputDialog::getText(
+      this, tr( "New simulation name" ), tr( "Simulation name:" ), QLineEdit::Normal,
+      nn, &ok );
+
+  if( ok ) {
+    model->cloneSimul( nm, new_name );
+    model->handleStructChanged();
+    emit viewChanged();
+  }
 }
 
 

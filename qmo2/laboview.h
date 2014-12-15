@@ -61,15 +61,10 @@ class LaboView : public QWidget
    enum CheckType { validCheck = 0, selCheck, linkToCheck,
                      noselCheck, moveCheck, doneCheck
    };
-   /** Constructor for the view
-     * @param pDoc  your document instance that the view represents.
-     * Create a document before calling the constructor
-     * or connect an already existing document to a new MDI child widget.*/
    LaboView( LaboDoc* pDoc, QWidget* parent );
-   /** Destructor for the main view */
    ~LaboView();
    /** returns a pointer to the document connected to the view*/
-   LaboDoc *getDocument() const;
+   LaboDoc *getDocument() const { return  doc; };
    /** gets called to redraw the document contents if it has been modified */
    void update();
    // /** implement preferred size */
@@ -138,6 +133,7 @@ class LaboView : public QWidget
    void graphAddOut();
    void showGraphData();
    void exportGraphData();
+   void cloneGraph();
 
    // simulation releated
    void newSimul();
@@ -145,6 +141,7 @@ class LaboView : public QWidget
    void editSimul();
    void selectSimul();
    void setActiveSimul();
+   void cloneSimul();
 
    // model related
    void editModel();

@@ -89,11 +89,13 @@ class TModel : public TDataContainer  {
   int delGraph( const QString &name );
   //* add output array to graph
   int addOutToGraph( const QString &o_name, const QString &g_name );
+  bool cloneGraph( const QString &old_name, const QString &new_name );
 
   int newSimul( const QString &name );
   int delSimul( const QString &name );
   QString getSimulName( int idx );
   int getNSimul() const { return sims->size(); }
+  bool cloneSimul( const QString &old_name, const QString &new_name );
 
   int getNSchems() const { return schems->size(); }
 

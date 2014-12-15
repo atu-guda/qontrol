@@ -325,6 +325,8 @@ void TModel::resetOutArrs( int level )
 
 
 
+// ------------------------------------------
+
 TOutArr* TModel::getOutArr( const QString &oname )
 {
   return outs->getElemT<TOutArr*>( oname );
@@ -357,6 +359,8 @@ int TModel::insOut( const QString &outname, const QString &objname )
   modified |= 1;
   return 1;
 }
+
+// ------------------------------------------
 
 int TModel::insGraph( const QString &gname )
 {
@@ -394,6 +398,26 @@ int TModel::addOutToGraph( const QString &o_name, const QString &g_name )
   return rc;
 }
 
+bool TModel::cloneGraph( const QString &old_name, const QString &new_name )
+{
+  TGraph *old_gra = plots->getElemT<TGraph*>( old_name );
+  if( !old_gra ) {
+    DBGx( "warn: old plot \"%s\" not exist", qP( old_name ) );
+    return 0;
+  }
+
+  QString s = old_gra->toString();
+
+  TGraph *new_gra = plots->addObj<TGraph>( new_name );
+  if( !new_gra ) {
+    DBGx( "warn: fail to create new plot \"%s\"", qP( new_name ) );
+    return 0;
+  }
+  return new_gra->fromString( s );
+}
+
+// ------------------------------------------
+
 int TModel::newSimul( const QString &name )
 {
   DBGx( "dbg: creating new simulation \"%s\"", qP(name) );
@@ -415,7 +439,7 @@ QString TModel::getSimulName( int idx )
   DBGx( "dbg: requiest simulation name by idx %d", idx );
   Simulation* sim =  sims->getElemT<Simulation*>( idx );
   if( !sim ) {
-    QString();
+    return QString();
   }
   return sim->objectName();
 }
@@ -426,6 +450,23 @@ Simulation* TModel::getSimul( const QString &name )
 }
 
 
+bool TModel::cloneSimul( const QString &old_name, const QString &new_name )
+{
+  Simulation *old_sim = sims->getElemT<Simulation*>( old_name );
+  if( !old_sim ) {
+    DBGx( "warn: old simulation \"%s\" not exist", qP( old_name ) );
+    return 0;
+  }
+
+  QString s = old_sim->toString();
+
+  Simulation *new_sim = sims->addObj<Simulation>( new_name );
+  if( !new_sim ) {
+    DBGx( "warn: fail to create new simulation \"%s\"", qP( new_name ) );
+    return 0;
+  }
+  return new_sim->fromString( s );
+}
 
 
 
