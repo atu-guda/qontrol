@@ -173,7 +173,7 @@ void StructView::drawAll( QPainter &p )
   int sel_x, sel_y /*,sel, mark*/;
   QString src_name;
   TMiso *ob;
-  // TOutArr *arr;
+  TModel *model = sch->getAncestorT<TModel>();
 
   Mo2Settings *psett = LaboWin::labowin->getSettings();
   int s_icons = psett->showicons;
@@ -184,8 +184,6 @@ void StructView::drawAll( QPainter &p )
   el_marg = (grid_sz-obj_sz)/2;
   sel_x = mainview->getSelX();
   sel_y = mainview->getSelY();
-  //sel = mainview->getSel();
-  // mark = mainview->getMark();
   if( nh >= MODEL_MY ) nh = MODEL_MY;
   if( nw >= MODEL_MX ) nh = MODEL_MX;
 
@@ -197,7 +195,7 @@ void StructView::drawAll( QPainter &p )
 
   // ---------- draw grid
   if( psett->showgrid ) {
-    p.setPen( QPen(QColor(200,220,220), 0, Qt::DotLine ) );
+    p.setPen( QPen(QColor(200,220,220), 0, Qt::DotLine ) ); // TODO: config
     for( i=0; i<nw; i++ )
       p.drawLine( lm + i*grid_sz, tm, lm+i*grid_sz, h );
     for( i=0; i<nh; i++ )
@@ -456,43 +454,61 @@ void StructView::drawAll( QPainter &p )
   p.setPen( Qt::black );
   p.setFont( smlf );
 
-  // -------------- output marks TODO: revive?
-  // n_out = model->getNOutArr();
-  // for( out_nu=0; out_nu < n_out; out_nu++ ) {
-  //   arr = model->getOutArr( out_nu );
-  //   if( ! arr )
-  //     continue;
-  //   src_name = ""; out_tp = -1;
-  //   arr->getData( "name", src_name );
-  //   arr->getData( "type", &out_tp );
-  //   ltype_t lt  = LinkBad;
-  //   const TDataSet *lob = nullptr;
-  //   const double *fp = model->getDoublePtr( src_name, &lt, &lob );
-  //   if( !fp || lt != LinkElm || !lob )
-  //     continue;
-  //   const TMiso *src_obj = qobject_cast<const TMiso*>(lob);
-  //   if( ! src_obj )
-  //     continue;
-  //   fill_elmInfo( src_obj, sei );
-  //
-  //   if( sei.vis_x < 0 || sei.vis_y < 0 )
-  //     continue;
-  //   switch( out_tp ) {
-  //     case 0: p.setBrush( Qt::white ); break;
-  //     case 1: p.setBrush( Qt::green ); break;
-  //     case 2: p.setBrush( Qt::cyan ); break;
-  //     case 3: p.setBrush( Qt::gray ); break;
-  //     default: p.setBrush( Qt::red ); break;
-  //   };
-  //   int omark_x = sei.xs0 + obj_sz - 10 - out_nu;
-  //   int omark_y = sei.ys0 +  1;
-  //   p.drawRect( omark_x, omark_y, 10, 10 );
-  //   if( src_name.contains('.') ) { // inner link mark
-  //     p.setBrush( Qt::red );
-  //     p.drawRect( omark_x, omark_y+9, 10, 2 );
-  //   }
-  //   p.drawText( omark_x+2, omark_y+9,  QSN( out_nu ) );
-  // }; // end loop on outputs
+  // -------------- output marks
+  if( !model ) {
+    DBG1( "warn: not found model" );
+    return;
+  }
+
+  ContOut *outs = model->getElemT<ContOut*>( "outs" );
+  if( !outs ) {
+    DBG1( "warn: not found 'outs' in model" );
+    return;
+  }
+  int out_nu = -1; // first vill be 0 (after ++)
+  for( auto c : outs->children() ) {
+    TOutArr *arr = qobject_cast<TOutArr*>( c );
+    if( ! arr ) {
+      continue;
+    }
+    ++out_nu;
+    src_name = ""; int out_tp = -1;
+    arr->getData( "name", src_name );
+    arr->getData( "type", &out_tp );
+    ltype_t lt  = LinkBad;
+    const TDataSet *lob = nullptr;
+    const double *fp = sch->getDoublePtr( src_name, &lt, &lob );
+
+    if( !fp || lt != LinkElm || !lob ) {
+      continue;
+    }
+    const TMiso *src_obj = qobject_cast<const TMiso*>(lob);
+    if( ! src_obj ) {
+      continue;
+    }
+    fill_elmInfo( src_obj, sei );
+
+    if( sei.vis_x < 0 || sei.vis_y < 0 ) {
+      continue;
+    }
+
+    switch( out_tp ) {
+      case 0: p.setBrush( Qt::white ); break;
+      case 1: p.setBrush( Qt::green ); break;
+      case 2: p.setBrush( Qt::cyan ); break;
+      case 3: p.setBrush( Qt::gray ); break;
+      default: p.setBrush( Qt::red ); break;
+    };
+    int omark_x = sei.xs0 + obj_sz - 10 - out_nu*2;
+    int omark_y = sei.ys0 +  1;
+    p.drawRect( omark_x, omark_y, 10, 10 );
+    if( src_name.contains('.') ) { // inner link mark
+      p.setBrush( Qt::red );
+      p.drawRect( omark_x, omark_y+9, 10, 2 );
+    }
+    p.drawText( omark_x+2, omark_y+9,  QSN( out_nu ) );
+
+  } // ------------ end output marks
 
   // ----------- draw selection
   if( devTp != 1 ) {
