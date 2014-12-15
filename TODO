@@ -1,6 +1,10 @@
+LaboWin::initDirs?
+unselected types
+allow to rename flag + Rename action
 Rebreand to Qontrol
 threads in run
-Sub simulation?
+Sub simulation? / set of dialoged values before run
+findMdiChild not work if file opened by argv
 
 call parent post_set (if req). flag?
 Input/output elements/scheme properties (in0?)
@@ -17,7 +21,6 @@ More data/controls: Font, Date, Time
 run w/o interface fun:
 TCircBuf + TDelay re*
 Hide startLoop - like fun,f
-Rename action
 Auto create GET/SET function for my datas, create Qt properties - scripts. ?
 order -> only hint?
 source choose widget

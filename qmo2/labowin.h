@@ -103,7 +103,9 @@ class LaboWin : public QMainWindow
     bool queryExit();
     LaboView* createChild( LaboDoc* doc );
     QMdiSubWindow* findMdiChild( const QString &fileName );
-    LaboView* activeMdiChild();
+    LaboView* activeLaboView();
+    //* call gives simple slot from active LaboView
+    void callLaboViewSlot( const char *slot, const QString &mess );
 
   private slots:
 

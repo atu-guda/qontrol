@@ -63,8 +63,8 @@ LaboWin::LaboWin(void)
 LaboWin::~LaboWin()
 {
   delete printer;
-  printer = 0;
-  labowin = 0;
+  printer = nullptr;
+  labowin = nullptr;
 }
 
 void LaboWin::initDirs() // TODO: remove or rewrite
@@ -786,8 +786,11 @@ QMdiSubWindow* LaboWin::findMdiChild( const QString &fileName )
 {
   QString canonicalFilePath = QFileInfo(fileName).canonicalFilePath();
 
-  foreach( QMdiSubWindow *window, mdiArea->subWindowList() ) {
+  for( QMdiSubWindow *window : mdiArea->subWindowList() ) {
     LaboView *mdiChild = qobject_cast<LaboView *>(window->widget());
+    if( !mdiChild ) {
+      continue;
+    }
     if( mdiChild->currentFile() == canonicalFilePath ) {
       return window;
     }
@@ -795,12 +798,25 @@ QMdiSubWindow* LaboWin::findMdiChild( const QString &fileName )
   return 0;
 }
 
-LaboView* LaboWin::activeMdiChild()
+LaboView* LaboWin::activeLaboView()
 {
-  if (QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow())
+  if( QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow() )
     return qobject_cast<LaboView *>( activeSubWindow->widget() );
-  return 0;
+  return nullptr;
 }
+
+void LaboWin::callLaboViewSlot( const char *slot, const QString &mess )
+{
+  statusBar()->showMessage( mess );
+
+  LaboView* m =  activeLaboView();
+  if ( m ) {
+    QMetaObject::invokeMethod( m, slot, Qt::DirectConnection );
+    m->update();
+  }
+  statusBar()->showMessage( tr( "Ready." ) );
+}
+
 
 /////////////////////////////////////////////////////////////////////
 // SLOT IMPLEMENTATION
@@ -874,7 +890,7 @@ bool LaboWin::doFileOpenXML( const QString &fn )
 void LaboWin::slotFileSaveXML()
 {
   statusBar()->showMessage( tr( "Saving model file...") );
-  LaboView* m =  activeMdiChild();
+  LaboView* m =  activeLaboView();
   if( m ) {
     LaboDoc* doc = m->getDocument();
     if( doc->nonamed() ) {
@@ -894,7 +910,7 @@ void LaboWin::slotFileSaveXML()
 void LaboWin::slotFileSaveXMLAs()
 {
   statusBar()->showMessage( tr ( "Saving model file under new filename..." ) );
-  LaboView* m =  activeMdiChild();
+  LaboView* m =  activeLaboView();
   if( !m ) {
     QMessageBox::critical ( this,
       tr("Critical error!"), tr("Fail to find active window while saving file!") );
@@ -928,12 +944,7 @@ void LaboWin::slotFileClose()
 
 void LaboWin::slotFilePrint()
 {
-  statusBar()->showMessage( tr ( "Printing..." ) );
-  LaboView* m =  activeMdiChild();
-  if ( m != 0 )
-    m->print();
-  updateActions();
-  statusBar()->showMessage( tr ( "Ready." ) );
+  callLaboViewSlot( "print", tr ( "Printing..." ) );
 }
 
 void LaboWin::slotFileSettings()
@@ -963,38 +974,22 @@ void LaboWin::slotFileQuit()
 
 void LaboWin::slotEditUndo()
 {
-  statusBar()->showMessage( tr( "Reverting last action..." ) );
-//  LaboView* m = (LaboView*) pWorkspace->activeWindow();
-//  if ( m )
-//    m->undo();
-  statusBar()->showMessage( tr( "Ready." ) );
+  // callLaboViewSlot( "undo", tr ( "Reverting last action..." ) );
 }
 
 void LaboWin::slotEditCut()
 {
-  statusBar()->showMessage( tr( "Cutting selection..." ) );
-  LaboView* m = activeMdiChild();
-  if ( m )
-    m->cutElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "cutElm", tr( "Cutting selection..." ) );
 }
 
 void LaboWin::slotEditCopy()
 {
-  statusBar()->showMessage( tr( "Copying selection to clipboard..." ) );
-  LaboView* m = activeMdiChild();
-  if ( m )
-    m->copyElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "copyElm", tr( "Copying selection to clipboard..." ) );
 }
 
 void LaboWin::slotEditPaste()
 {
-  statusBar()->showMessage( tr( "Inserting clipboard contents..." ) );
-  LaboView* m = activeMdiChild();
-  if ( m )
-    m->pasteElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "pasteElm", tr( "Inserting clipboard contents..." ) );
 }
 
 
@@ -1036,41 +1031,31 @@ void LaboWin::slotViewStatusBar()
 void LaboWin::slotShowOrd()
 {
   sett.showord = ! sett.showord;
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->update();
+  callLaboViewSlot( "update", "Updating View" );
 }
 
 void LaboWin::slotShowGrid()
 {
   sett.showgrid = ! sett.showgrid;
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->update();
+  callLaboViewSlot( "update", "Updating View" );
 }
 
 void LaboWin::slotShowNames()
 {
   sett.shownames = ! sett.shownames;
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->update();
+  callLaboViewSlot( "update", "Updating View" );
 }
 
 void LaboWin::slotShowIcons()
 {
   sett.showicons = ! sett.showicons;
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->update();
+  callLaboViewSlot( "update", "Updating View" );
 }
 
 void LaboWin::slotShowLinks()
 {
   sett.showLinks = ! sett.showLinks;
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->update();
+  callLaboViewSlot( "update", "Updating View" );
 }
 
 
@@ -1185,7 +1170,7 @@ void LaboWin::windowMenuAboutToShow()
     }
     QAction *action  = pWindowMenu->addAction( text );
     action->setCheckable(true);
-    action->setChecked( child == activeMdiChild() );
+    action->setChecked( child == activeLaboView() );
     // cast to fight unbiguity:
     connect( action, &QAction::triggered, windowMapper,
         static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map) );
@@ -1200,358 +1185,184 @@ void LaboWin::windowMenuAboutToShow()
 
 void LaboWin::slotNewElm()
 {
-  statusBar()->showMessage( tr( "Inserting new element..." ) );
-  LaboView* m = activeMdiChild();
-  if ( m )
-    m->newElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "newElm", tr( "Inserting new element..." ) );
 }
 
 void LaboWin::slotDelElm()
 {
-  statusBar()->showMessage( tr( "Deleting selected element..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->delElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "delElm", tr( "Deleting selected element..." ) );
 }
 
 void LaboWin::slotEditElm()
 {
-  statusBar()->showMessage( tr( "Editing element properties..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->editElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "editElm", tr( "Editing element properties..." ) );
 }
 
 
 void LaboWin::slotqLinkElm()
 {
-  statusBar()->showMessage( tr( "Quick linking element..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->qlinkElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "qlinkElm", tr( "Quick linking element..." ) );
 }
 
 void LaboWin::slotqpLinkElm()
 {
-  statusBar()->showMessage( tr( "Quick parametr linking element..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->qplinkElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "qplinkElm", tr( "Quick parametr linking element..." ) );
 }
 
 void LaboWin::slotUnlinkElm()
 {
-  statusBar()->showMessage( tr( "Uninking element..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->unlinkElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "unlinkElm", tr( "Uninking element..." ) );
 }
 
 void LaboWin::slotLockElm()
 {
-  statusBar()->showMessage( tr( "Locking element..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->lockElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "lockElm", tr( "Locking element..." ) );
 }
 
 
 void LaboWin::slotOrdElm()
 {
-  statusBar()->showMessage( tr( "Setting new order of element..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->ordElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "ordElm", tr( "Setting new order of element..." ) );
 }
 
 void LaboWin::slotMarkElm()
 {
-  statusBar()->showMessage( tr( "Marking element..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->markElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "markElm", tr( "Marking element..." ) );
 }
 
 void LaboWin::slotMoveElm()
 {
-  statusBar()->showMessage( tr( "Moving element..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->moveElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "moveElm", tr( "Moving element..." ) );
 }
 
 void LaboWin::slotInfoElm()
 {
-  statusBar()->showMessage( tr( "Information about element..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->infoElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "infoElm", tr( "Information about element..." ) );
 }
 
 void LaboWin::slotShowTreeElm()
 {
-  statusBar()->showMessage( tr( "Show element tree..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->showTreeElm();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "showTreeElm", tr( "Show element tree..." ) );
 }
 
 void LaboWin::slotTestElm1()
 {
-  statusBar()->showMessage( tr( "Test element 1..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->testElm1();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "testElm1", tr( "Test element 1..." ) );
 }
 
 void LaboWin::slotTestElm2()
 {
-  statusBar()->showMessage( tr( "Test element 2..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->testElm2();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "testElm2", tr( "Test element 2..." ) );
 }
 
 
 void LaboWin::slotNewOut()
 {
-  statusBar()->showMessage( tr( "Inserting output array..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->newOut();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "newOut", tr( "Inserting output array..." ) );
 }
 
 void LaboWin::slotDelOut()
 {
-  statusBar()->showMessage( tr( "Deleting output array..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->delOut();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "delOut", tr( "Deleting output array..." ) );
 }
 
 void LaboWin::slotEditOut()
 {
-  statusBar()->showMessage( tr( "Editing output array..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->editOut();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "editOut", tr( "Editing output array..." ) );
 }
 
 void LaboWin::slotSelectOut()
 {
-  statusBar()->showMessage( tr( "Selectting output array..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->selectOut();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "selectOut", tr( "Selectting output array..." ) );
 }
 
 void LaboWin::slotShowOutData()
 {
-  statusBar()->showMessage( tr( "Data from output array..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->showOutData();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "showOutData", tr( "Data from output array..." ) );
 }
 
 void LaboWin::slotExportOut()
 {
-  statusBar()->showMessage( tr( "Exporting data from output array..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->exportOut();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "exportOut", tr( "Exporting data from output array..." ) );
 }
 
 void LaboWin::slotNewGraph()
 {
-  statusBar()->showMessage( tr( "Inserting new plot..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->newGraph();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "newGraph", tr( "Inserting new plot..." ) );
 }
 
 void LaboWin::slotDelGraph()
 {
-  statusBar()->showMessage( tr( "Deleting plot..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->delGraph();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "delGraph", tr( "Deleting plot..." ) );
 }
 
 void LaboWin::slotEditGraph()
 {
-  statusBar()->showMessage( tr( "Editing plot..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->editGraph();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "editGraph", tr( "Editing plot..." ) );
 }
 
 void LaboWin::slotSelectGraph()
 {
-  statusBar()->showMessage( tr( "Selecting plot..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->selectGraph();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "selectGraph", tr( "Selecting plot..." ) );
 }
 
 void LaboWin::slotShowGraph()
 {
-  statusBar()->showMessage( tr( "Showing plot..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->showGraph();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "showGraph", tr( "Showing plot..." ) );
 }
 
 void LaboWin::slotGraphAddOut()
 {
-  statusBar()->showMessage( tr( "Adding current output to plot..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->graphAddOut();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "graphAddOut", tr( "Adding current output to plot..." ) );
 }
 
 void LaboWin::slotShowGraphData()
 {
-  statusBar()->showMessage( tr( "Showing plot data..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->showGraphData();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "showGraphData", tr( "Showing plot data..." ) );
 }
 
 void LaboWin::slotExportGraphData()
 {
-  statusBar()->showMessage( tr( "Exporting plot data..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->exportGraphData();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "exportGraphData", tr( "Exporting plot data..." ) );
 }
 
 void LaboWin::slotCloneGraph()
 {
-  statusBar()->showMessage( tr( "Cloning plot ..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->cloneGraph();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "cloneGraph", tr( "Cloning plot ..." ) );
 }
 
 
 
 void LaboWin::slotNewSimul()
 {
-  statusBar()->showMessage( tr( "Creating new simulation..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->newSimul();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "newSimul", tr( "Creating new simulation..." ) );
 }
 
 void LaboWin::slotDelSimul()
 {
-  statusBar()->showMessage( tr( "Removing simulation" ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->delSimul();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "delSimul", tr( "Removing simulation" ) );
 }
 
 void LaboWin::slotEditSimul()
 {
-  statusBar()->showMessage( tr( "Editing simulation data..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->editSimul();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "editSimul", tr( "Editing simulation data..." ) );
 }
 
 void LaboWin::slotSelectSimul()
 {
-  statusBar()->showMessage( tr( "Selectiong simulation ..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->selectSimul();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "selectSimul", tr( "Selectiong simulation ..." ) );
 }
 
 
 void LaboWin::slotSetActiveSimul()
 {
-  statusBar()->showMessage( tr( "Setting active simulation ..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->setActiveSimul();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "setActiveSimul", tr( "Setting active simulation ..." ) );
 }
 
 
 void LaboWin::slotCloneSimul()
 {
-  statusBar()->showMessage( tr( "Cloning simulation ..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->cloneSimul();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "cloneSimul", tr( "Cloning simulation ..." ) );
 }
 
 
@@ -1559,57 +1370,32 @@ void LaboWin::slotCloneSimul()
 
 void LaboWin::slotEditModel()
 {
-  statusBar()->showMessage( tr( "Editing model parametrs..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->editModel();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "editModel", tr( "Editing model parametrs..." ) );
 }
 
 
 void LaboWin::slotShowTreeModel()
 {
-  statusBar()->showMessage( tr( "Show model tree..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->showTreeModel();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "showTreeModel", tr( "Show model tree..." ) );
 }
 
 
 void LaboWin::slotRunRun()
 {
-  statusBar()->showMessage( tr( "Running simple loop..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->runRun();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "runRun", tr( "Running simple loop..." ) );
 }
 
 
 void LaboWin::slotReset()
 {
-  statusBar()->showMessage( tr( "Reseting model..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->resetModel();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "resetModel", tr( "Reseting model..." ) );
 }
 
 
 
 void LaboWin::slotRunScript()
 {
-  statusBar()->showMessage( tr( "Running script..." ) );
-
-  LaboView* m =  activeMdiChild();
-  if ( m )
-    m->runScript();
-  statusBar()->showMessage( tr( "Ready." ) );
+  callLaboViewSlot( "runScript", tr( "Running script..." ) );
 }
 
 void LaboWin::setActiveSubWindow( QWidget *win )
