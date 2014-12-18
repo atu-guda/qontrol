@@ -232,6 +232,11 @@ void LaboWin::initIface()
   connect( act_editelm, &QAction::triggered, this, &LaboWin::slotEditElm );
   model_acts << act_editelm;
 
+  act_renameelm= new QAction( "Rename element", this );
+  act_renameelm->setWhatsThis( tr("Rename selected element") );
+  connect( act_renameelm, &QAction::triggered, this, &LaboWin::slotRenameElm );
+  model_acts << act_renameelm;
+
   act_qlinkelm= new QAction( QIcon::fromTheme("insert-link"), "&Quick link element", this );
   act_qlinkelm->setShortcut( Qt::CTRL+Qt::Key_L );
   act_qlinkelm->setWhatsThis( tr("Link marked to selected element") );
@@ -315,6 +320,11 @@ void LaboWin::initIface()
   connect( act_editout, &QAction::triggered, this, &LaboWin::slotEditOut);
   model_acts << act_editout;
 
+  act_renameout= new QAction( "Rename output collector", this );
+  act_renameout->setWhatsThis( tr("Rename output collector") );
+  connect( act_renameout, &QAction::triggered, this, &LaboWin::slotRenameOut );
+  model_acts << act_renameout;
+
   act_selectout = new QAction( "Select out", this );
   act_selectout->setShortcut( Qt::ALT+Qt::Key_U );
   act_selectout->setWhatsThis( tr("Select outsput collector by current level") );
@@ -352,6 +362,11 @@ void LaboWin::initIface()
   act_editgraph->setWhatsThis( tr("Edit plot with current level") );
   connect( act_editgraph, &QAction::triggered, this, &LaboWin::slotEditGraph);
   model_acts << act_editgraph;
+
+  act_renamegraph= new QAction( "Rename plot", this );
+  act_renamegraph->setWhatsThis( tr("Rename plot") );
+  connect( act_renamegraph, &QAction::triggered, this, &LaboWin::slotRenameGraph );
+  model_acts << act_renamegraph;
 
   act_selectgraph = new QAction( "select plot", this );
   act_selectgraph->setShortcut(  Qt::ALT+Qt::Key_G ); // Alt-P is busy by menu
@@ -406,6 +421,11 @@ void LaboWin::initIface()
   act_editSimul->setWhatsThis( tr("Edit simulation") );
   connect( act_editSimul, &QAction::triggered, this, &LaboWin::slotEditSimul );
   model_acts << act_editSimul;
+
+  act_renameSimul= new QAction( "Rename simulation", this );
+  act_renameSimul->setWhatsThis( tr("Rename simulation") );
+  connect( act_renameSimul, &QAction::triggered, this, &LaboWin::slotRenameSimul );
+  model_acts << act_renameSimul;
 
   act_selectSimul = new QAction( "Select Simulation", this );
   act_selectSimul->setShortcut(  Qt::ALT+Qt::Key_Y );
@@ -515,9 +535,6 @@ void LaboWin::initIface()
   act_winCascade->setWhatsThis( tr("Cascade the windows") );
   connect( act_winCascade, &QAction::triggered, this, &LaboWin::slotWindowCascade );
 
-  //act_winnew = new QAction( "&New Window", 0, this, "winnew");
-  //act_winnew->setWhatsThis( tr("Crerate new window for same model") );
-  //connect( act_winnew, &QAction::triggered, this, &LaboWin::slotWindowNewWindow );
 
   // ==== help group
 
@@ -576,6 +593,8 @@ void LaboWin::initIface()
   pElmMenu->addAction( act_delelm );
   pElmMenu->addAction( act_editelm );
   pElmMenu->addSeparator();
+  pElmMenu->addAction( act_renameelm );
+  pElmMenu->addSeparator();
   pElmMenu->addAction( act_qlinkelm );
   pElmMenu->addAction( act_qplinkelm );
   pElmMenu->addAction( act_unlinkelm );
@@ -598,6 +617,8 @@ void LaboWin::initIface()
   pOutMenu->addAction( act_delout );
   pOutMenu->addAction( act_editout );
   pOutMenu->addSeparator();
+  pOutMenu->addAction( act_renameout );
+  pOutMenu->addSeparator();
   pOutMenu->addAction( act_selectout );
   pOutMenu->addSeparator();
   pOutMenu->addAction( act_showoutdata );
@@ -609,6 +630,8 @@ void LaboWin::initIface()
   pGraphMenu->addAction( act_newgraph );
   pGraphMenu->addAction( act_delgraph );
   pGraphMenu->addAction( act_editgraph );
+  pGraphMenu->addSeparator();
+  pGraphMenu->addAction( act_renamegraph );
   pGraphMenu->addSeparator();
   pGraphMenu->addAction( act_selectgraph );
   pGraphMenu->addSeparator();
@@ -626,6 +649,8 @@ void LaboWin::initIface()
   pSimulMenu->addAction( act_newSimul );
   pSimulMenu->addAction( act_delSimul );
   pSimulMenu->addAction( act_editSimul );
+  pSimulMenu->addSeparator();
+  pSimulMenu->addAction( act_renameSimul );
   pSimulMenu->addSeparator();
   pSimulMenu->addAction( act_selectSimul );
   pSimulMenu->addSeparator();
@@ -1198,6 +1223,11 @@ void LaboWin::slotEditElm()
   callLaboViewSlot( "editElm", tr( "Editing element properties..." ) );
 }
 
+void LaboWin::slotRenameElm()
+{
+  callLaboViewSlot( "renameElm", tr( "Renaming element ..." ) );
+}
+
 
 void LaboWin::slotqLinkElm()
 {
@@ -1271,6 +1301,11 @@ void LaboWin::slotEditOut()
   callLaboViewSlot( "editOut", tr( "Editing output array..." ) );
 }
 
+void LaboWin::slotRenameOut()
+{
+  callLaboViewSlot( "renameOut", tr( "Renaming output collector ..." ) );
+}
+
 void LaboWin::slotSelectOut()
 {
   callLaboViewSlot( "selectOut", tr( "Selectting output array..." ) );
@@ -1299,6 +1334,11 @@ void LaboWin::slotDelGraph()
 void LaboWin::slotEditGraph()
 {
   callLaboViewSlot( "editGraph", tr( "Editing plot..." ) );
+}
+
+void LaboWin::slotRenameGraph()
+{
+  callLaboViewSlot( "renameGraph", tr( "Renaming plot ..." ) );
 }
 
 void LaboWin::slotSelectGraph()
@@ -1346,6 +1386,11 @@ void LaboWin::slotDelSimul()
 void LaboWin::slotEditSimul()
 {
   callLaboViewSlot( "editSimul", tr( "Editing simulation data..." ) );
+}
+
+void LaboWin::slotRenameSimul()
+{
+  callLaboViewSlot( "renameSimul", tr( "Renaming simulation ..." ) );
 }
 
 void LaboWin::slotSelectSimul()

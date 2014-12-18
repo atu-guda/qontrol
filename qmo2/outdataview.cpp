@@ -52,6 +52,10 @@ void OutDataView::init_actions()
   addAction( act_edit );
   connect( act_edit, SIGNAL(triggered()), laboview, SLOT(editOut()) );
 
+  act_rename = new QAction( "Rename", this );
+  addAction( act_rename );
+  connect( act_rename, SIGNAL(triggered()), laboview, SLOT(renameOut()) );
+
   act_setActive = new QAction( QIcon::fromTheme("checkmark"), "set &Active", this );
   addAction( act_setActive );
   //connect( act_setActive, SIGNAL(triggered()), laboview, SLOT(setActiveSimul()) );

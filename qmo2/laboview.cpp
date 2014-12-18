@@ -371,6 +371,28 @@ void LaboView::editElm()
   editObj( selObj );
 }
 
+void LaboView::renameElm()
+{
+  if( ! checkState( selCheck ) ) {
+    return;
+  }
+
+  QString old_name = selObj->objectName();
+  bool ok;
+  QString new_name = QInputDialog::getText( this, "Rename:" + selObj->getFullName(),
+      "Enter new name:", QLineEdit::Normal, old_name, &ok );
+
+  if( ok ) {
+    if( main_s->rename_obj( old_name, new_name ) ) {
+      model->setModified();
+      model->reset();
+      emit viewChanged();
+    }
+  }
+
+  // TODO: change links named
+}
+
 
 void LaboView::qlinkElm()
 {
@@ -858,6 +880,39 @@ void LaboView::editOut()
   editObj( arr );
 }
 
+void LaboView::renameOut()
+{
+  if( ! checkState( validCheck ) ) {
+    return;
+  }
+
+  QString nm = getSelName( outs_view );
+  if( nm.isEmpty() ) {
+    return;
+  }
+
+  TOutArr *arr = model->getOutArr( nm );
+  if( !arr ) {
+    return;
+  }
+
+  QString old_name = arr->objectName();
+  bool ok;
+  QString new_name = QInputDialog::getText( this, "Rename:" + arr->getFullName(),
+      "Enter new name:", QLineEdit::Normal, old_name, &ok );
+
+  if( ok ) {
+    if( outs->rename_obj( old_name, new_name ) ) {
+      model->setModified();
+      model->reset();
+      emit viewChanged();
+    }
+  }
+
+  // TODO: change graph links names
+}
+
+
 void LaboView::selectOut()
 {
   if( ! checkState( validCheck ) )
@@ -1051,6 +1106,36 @@ void LaboView::selectGraph()
   emit viewChanged();
 }
 
+void LaboView::renameGraph()
+{
+  if( ! checkState( validCheck ) ) {
+    return;
+  }
+
+  QString nm = getSelName( plots_view );
+  if( nm.isEmpty() ) {
+    return;
+  }
+
+  TGraph *gra = model->getGraph( nm );
+  if( !gra ) {
+    return;
+  }
+
+  QString old_name = gra->objectName();
+  bool ok;
+  QString new_name = QInputDialog::getText( this, "Rename:" + gra->getFullName(),
+      "Enter new name:", QLineEdit::Normal, old_name, &ok );
+
+  if( ok ) {
+    if( plots->rename_obj( old_name, new_name ) ) {
+      model->setModified();
+      model->reset();
+      emit viewChanged();
+    }
+  }
+}
+
 
 
 void LaboView::showGraph()
@@ -1234,6 +1319,38 @@ void LaboView::editSimul()
 
   editObj( sim );
 }
+
+void LaboView::renameSimul()
+{
+  if( ! checkState( validCheck ) ) {
+    return;
+  }
+
+  QString nm = getSelName( sims_view );
+  if( nm.isEmpty() ) {
+    return;
+  }
+
+  Simulation *sim = model->getSimul( nm );
+  if( !sim ) {
+    return;
+  }
+
+  QString old_name = sim->objectName();
+  bool ok;
+  QString new_name = QInputDialog::getText( this, "Rename:" + sim->getFullName(),
+      "Enter new name:", QLineEdit::Normal, old_name, &ok );
+
+  if( ok ) {
+    if( sims->rename_obj( old_name, new_name ) ) {
+      model->setModified();
+      model->reset();
+      emit viewChanged();
+    }
+  }
+
+}
+
 
 void LaboView::selectSimul() // TODO: propagate to all
 {

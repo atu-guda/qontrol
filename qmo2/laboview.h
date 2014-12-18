@@ -101,6 +101,7 @@ class LaboView : public QWidget
    void newElm();
    void delElm();
    void editElm();
+   void renameElm();
    void qlinkElm();
    void qplinkElm();
    void unlinkElm();
@@ -120,6 +121,7 @@ class LaboView : public QWidget
    void newOut();
    void delOut();
    void editOut();
+   void renameOut();
    void selectOut();
    void showOutData();
    void exportOut();
@@ -128,6 +130,7 @@ class LaboView : public QWidget
    void newGraph();
    void delGraph();
    void editGraph();
+   void renameGraph();
    void selectGraph();
    void showGraph();
    void graphAddOut();
@@ -139,6 +142,7 @@ class LaboView : public QWidget
    void newSimul();
    void delSimul();
    void editSimul();
+   void renameSimul();
    void selectSimul();
    void setActiveSimul();
    void cloneSimul();

@@ -149,6 +149,7 @@ class LaboWin : public QMainWindow
     void slotNewElm();
     void slotDelElm();
     void slotEditElm();
+    void slotRenameElm();
     void slotqLinkElm();
     void slotqpLinkElm();
     void slotUnlinkElm();
@@ -165,6 +166,7 @@ class LaboWin : public QMainWindow
     void slotNewOut();
     void slotDelOut();
     void slotEditOut();
+    void slotRenameOut();
     void slotSelectOut();
     void slotShowOutData();
     void slotExportOut();
@@ -173,6 +175,7 @@ class LaboWin : public QMainWindow
     void slotNewGraph();
     void slotDelGraph();
     void slotEditGraph();
+    void slotRenameGraph();
     void slotSelectGraph();
     void slotShowGraph();
     void slotGraphAddOut();
@@ -184,6 +187,7 @@ class LaboWin : public QMainWindow
     void slotNewSimul();
     void slotDelSimul();
     void slotEditSimul();
+    void slotRenameSimul();
     void slotSelectSimul();
     void slotSetActiveSimul();
     void slotCloneSimul();
@@ -279,20 +283,22 @@ class LaboWin : public QMainWindow
             *act_print, *act_settings, *act_savesett, *act_quit,
             *act_undo, *act_cut, *act_copy, *act_paste,
             // elm
-            *act_newelm, *act_delelm, *act_editelm,
+            *act_newelm, *act_delelm, *act_editelm, *act_renameelm,
             *act_qlinkelm, *act_qplinkelm, *act_unlinkelm,
             *act_lockelm, *act_ordelm, *act_markelm, *act_moveelm,
             *act_infoelm, *act_showtreeelm,
             *act_testelm1, *act_testelm2,
             // out
-            *act_newout, *act_delout, *act_editout, *act_selectout,
+            *act_newout, *act_delout, *act_editout, *act_selectout, *act_renameout,
             *act_showoutdata, *act_exportout,
             // graph
             *act_newgraph, *act_delgraph, *act_editgraph, *act_selectgraph,
+            *act_renamegraph,
             *act_showgraph, *act_graphaddout, *act_showgraphdata,
             *act_exportgraphdata, *act_cloneGraph,
             // simulation
             *act_newSimul, *act_delSimul, *act_editSimul, *act_selectSimul,
+            *act_renameSimul,
             *act_setActiveSimul, *act_cloneSimul,
             // model
             *act_editmodel, *act_showtreemodel,

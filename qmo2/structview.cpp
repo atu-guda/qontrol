@@ -571,6 +571,9 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     act = menu->addAction( QIcon( ":icons/delelm.png" ), "&Delete element" );
     connect( act, &QAction::triggered, mainview, &LaboView::delElm );
     menu->addSeparator();
+    act = menu->addAction( "Rename element" );
+    connect( act, &QAction::triggered, mainview, &LaboView::renameElm );
+    menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
     connect( act, &QAction::triggered, mainview, &LaboView::qlinkElm );
     act = menu->addAction(  QIcon( ":icons/orderelm.png" ), "&Reorder" );
