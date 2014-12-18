@@ -664,6 +664,39 @@ bool HolderData::getData( const QString &nm, QString &da ) const
 }
 
 
+int HolderData::getDataD( const QString &nm, int dfl ) const
+{
+  int r = dfl;
+  getData( nm, &r );
+  return r;
+}
+
+double HolderData::getDataD( const QString &nm, double dfl ) const
+{
+  double r = dfl;
+  getData( nm, &r );
+  return r;
+}
+
+QString HolderData::getDataD( const QString &nm, const QString &dfl ) const
+{
+  QString r = dfl;
+  getData( nm, r );
+  return r;
+}
+
+QColor HolderData::getDataD( const QString &nm, const QColor &dfl ) const
+{
+  QColor r = dfl;
+  int ri = 0;
+  if( getData( nm,  &ri ) ) {
+    r = QColor( QRgb( ri ) );
+  }
+  return QColor( QRgb( ri ) );
+}
+
+
+
 bool HolderData::setData( const QString &nm, const QVariant &da )
 {
   if( nm.isEmpty() ) {

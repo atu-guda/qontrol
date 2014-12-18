@@ -1,10 +1,12 @@
 LaboWin::initDirs?
 unselected types
-allow to rename flag + Rename action
+allow to rename flag (dyn?) + Rename action
+getData: direct return form with default
 Rebreand to Qontrol
 threads in run
 Sub simulation? / set of dialoged values before run
 findMdiChild not work if file opened by argv
+Object buttons: more info? but how?
 
 call parent post_set (if req). flag?
 Input/output elements/scheme properties (in0?)

@@ -234,6 +234,12 @@ class HolderData : public QAbstractItemModel {
   virtual bool getData( const QString &nm, double *da ) const;
   virtual bool getData( const QString &nm, QVariant &da ) const;
   virtual bool getData( const QString &nm, QString &da ) const;
+  // the same but with default and direct return
+  int     getDataD( const QString &nm, int dfl ) const;
+  double  getDataD( const QString &nm, double dfl ) const;
+  QString getDataD( const QString &nm, const QString &dfl ) const;
+  QColor  getDataD( const QString &nm, const QColor &dfl ) const;
+
   virtual bool setData( const QString &nm, const QVariant &da );
   //* get data from some of parent
   bool getUpData( const QString &nm, int *da ) const;
