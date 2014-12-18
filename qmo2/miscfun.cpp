@@ -88,9 +88,10 @@ int isGoodName( const QString &s )
 }
 
 QString flags2str( int fl ) {
-  static const char *lbl[7] = { "MR", "NRC", "ND", "ROD", "NS", "RO" , "?1" };
+  static const char *lbl[elm_known_flags+1]
+     { "MR", "NRC", "ND", "ROD", "NS", "RO" , "Im", "?1" };
   QString s = "";
-  for( int j=0; j<7; j++ ) {
+  for( int j=0; j<elm_known_flags; j++ ) {
     if( fl & ( 1 << j ) ) {
       s += lbl[j]; s += ",";
     };

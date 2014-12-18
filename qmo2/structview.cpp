@@ -56,6 +56,9 @@ StructView::~StructView()
 
 QSize StructView::getElemsBound() const
 {
+  if( !sch ) {
+    return QSize( 10, 10 );
+  }
   int sel_x = mainview->getSelX();
   int sel_y = mainview->getSelY();
   QSize mss = sch->getMaxXY().expandedTo( QSize( sel_x, sel_y ) );
@@ -94,8 +97,9 @@ void StructView::update()
 
 void StructView::paintEvent( QPaintEvent * /*pe*/ )
 {
-  if( ! sch )
+  if( ! sch ) {
     return;
+  }
   devTp = 0;
   QPainter p( this );
 
@@ -171,7 +175,13 @@ void StructView::drawAll( QPainter &p )
   int st_y; /* label on elems start y */
   int sel_x, sel_y /*,sel, mark*/;
   QString src_name;
+  h = height(); w = width(); nh = 1 + h / grid_sz; nw = 1 + w / grid_sz;
   TMiso *ob;
+  if( !sch ) {
+    p.setBrush( Qt::red );
+    p.drawRect( 0, 0, w, 8 );
+    return;
+  };
   TModel *model = sch->getAncestorT<TModel>();
 
   Mo2Settings *psett = LaboWin::labowin->getSettings();
@@ -179,18 +189,12 @@ void StructView::drawAll( QPainter &p )
   const QFont &strf = LaboWin::labowin->getStructFont();
   p.setFont( strf );
   const QFont &smlf = LaboWin::labowin->getSmallFont();
-  h = height(); w = width(); nh = 1 + h / grid_sz; nw = 1 + w / grid_sz;
   el_marg = (grid_sz-obj_sz)/2;
   sel_x = mainview->getSelX();
   sel_y = mainview->getSelY();
   if( nh >= MODEL_MY ) nh = MODEL_MY;
   if( nw >= MODEL_MX ) nh = MODEL_MX;
 
-  if( ! sch ) {
-    p.setBrush( Qt::red );
-    p.drawRect( 0, 0, w, 8 );
-    return;
-  };
 
   // ---------- draw grid
   if( psett->showgrid ) {
@@ -521,6 +525,9 @@ void StructView::mousePressEvent( QMouseEvent *me )
   QMenu *menu;
   TMiso *ob = 0;
   QString elmname;
+  if( !sch ) {
+    return;
+  }
   h = height(); w = width(); nh = h / grid_sz - 1; nw = w / grid_sz - 1;
   x = me->x(); y = me->y();
   ex = ( x - lm ) / grid_sz; ey = ( y - tm ) / grid_sz;

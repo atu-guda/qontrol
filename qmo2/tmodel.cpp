@@ -37,12 +37,20 @@ CTOR(TModel,TDataContainer)
   rtime = t = 0; tdt = 1; // fake
 
   schems = addObj<ContScheme>( "schems" );
+  schems->setImmutable();
   main_s = schems->addObj<Scheme>( "main_s" );
+  main_s->setImmutable();
   schems->setActiveElem( "main_s" );
+
   outs = addObj<ContOut>( "outs" );
+  outs->setImmutable();
   plots = addObj<ContGraph>( "plots" );
+  plots->setImmutable();
+
   sims = addObj<ContSimul>( "sims" );
-  sims->addObj<Simulation>( "sim0" );
+  sims->setImmutable();
+  Simulation *sim0 = sims->addObj<Simulation>( "sim0" );
+  sim0->setImmutable();
   sims->setActiveElem( "sim0" );
 
 }

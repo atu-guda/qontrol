@@ -54,11 +54,13 @@ enum _ELEM_FLAGS {
   efMustRead = 1, efNoRunChange = 2, efNRC = efNoRunChange,  /* MR, NRC */
   efNoDial = 4, efRODial = 8,                /* ND, ROD */
   efNoSave = 16, efRO = 32, efStatic = 64,   /* NS, RO, - */
+  efImmutable = 128,
   efInner = efNoDial | efNoSave | efRO,
   efOld = efNoRunChange | efNoDial | efNoSave,
   efOnlyFirst = 0x8000 /* not part, of flags, set by TMiso::fillLinks if req*/
 
 };
+const constexpr int elm_known_flags = 7;
 
 // todo: func QString elemFlagsToString( int );
 

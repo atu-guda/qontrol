@@ -191,7 +191,8 @@ class HolderData : public QAbstractItemModel {
     * returns true if this object is base or save of given type.
     * if cl_name is empty, return true in >= TDataSet */
   Q_INVOKABLE bool isObject( const QString &cl_name = QString() ) const;
-  void setFlags( int a_flags ) { flags = a_flags; }
+  // void setFlags( int a_flags ) { flags = a_flags; }
+  void setImmutable() { flags |= efImmutable; }
   Q_INVOKABLE int getFlags() const { return flags; }
   HolderData* getParent() const { return par; } // no Q_INVOKABLE: need reg HolderData
   // return ptr to ancessor of given type
@@ -305,6 +306,8 @@ class HolderData : public QAbstractItemModel {
   bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
   /** delete given object by name, returns 0 - error, !=0 = ok */
   int del_obj( const QString &ob_name );
+  //* rename object (if created dynamicaly)
+  int rename_obj( const QString &ob_name, const QString &new_name );
   // void check_guard() const;
   int getActiveIdx() const { return active_idx; }
   void setActiveIdx( int i );

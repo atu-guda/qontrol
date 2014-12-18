@@ -79,11 +79,11 @@ bool LaboDoc::newDocument()
   }
 
   rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
-  model = rootdata->addObj<TModel>( "model" );
+  model = rootdata->getElemT<TModel*>( "model" );
   if( !model ) {
     delete rootdata; rootdata = nullptr;
     QMessageBox::critical( 0, "LaboDoc::newDocument",
-      QString("Fail to insert model to root: "), 0,0,0 );
+      QString("Fail to find model in root: "), 0,0,0 );
     return false;
   }
 
@@ -150,7 +150,7 @@ bool LaboDoc::openDocumentXML(const QString &filename )
   }
   rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
 
-  model = 0;
+  model = nullptr;
   rootdata->suspendHandleStructChange();
   bool read_ok = rootdata->fromDom( obj_root, errstr );
   if( ! read_ok ) {
@@ -309,8 +309,9 @@ TRootData* LaboDoc::getRoot(void) const
 bool LaboDoc::isModified() const
 {
   int mmd;
-  if( rootdata == 0 || model == 0  )
-    return 0;
+  if( !rootdata  ||  !model  ) {
+    return false;
+  }
   mmd = model->getModified();
   return ( mmd & 1 );
 }

@@ -469,6 +469,10 @@ int HolderData::del_obj( const QString &ob_name )
     DBG2q( " object  is not created dynamicaly: ", ob_name );
     return 0;
   }
+  if( ho->getFlags() & efImmutable ) {
+    DBGx( "warn: element \"%s\" in \"%s\" is Immutable", qP(ob_name), qP(getFullName()) );
+    return 0;
+  }
 
   HolderData *act_obj = getActiveElem();
   QString act_name;
@@ -488,6 +492,37 @@ int HolderData::del_obj( const QString &ob_name )
   reportStructChanged();
   return 1;
 }
+
+int HolderData::rename_obj( const QString &ob_name, const QString &new_name )
+{
+  if( ! isGoodName( new_name ) ) {
+    DBGx( "warn: bad name \"%s\" to remame in \"%s\"", qP(new_name), qP(getFullName()) );
+    return 0;
+  }
+  HolderData *ho = getElem( ob_name );
+  if( !ho ) {
+    DBGx( "warn: not found element \"%s\" in \"%s\"", qP(ob_name), qP(getFullName()) );
+    return 0;
+  }
+  if( ho->getFlags() & efImmutable ) {
+    DBGx( "warn: element \"%s\" in \"%s\" is Immutable", qP(ob_name), qP(getFullName()) );
+    return 0;
+  }
+
+  if( getElem( new_name ) ) {
+    DBGx( "warn: element \"%s\" already exists in \"%s\"", qP(new_name), qP(getFullName()) );
+    return 0;
+  }
+  if( ! ho->isDyn() ) {
+    DBGx( "warn: object \"%s\" is not created dynamicaly: ", qP(ob_name) );
+    return 0;
+  }
+  ho->setObjectName( new_name );
+
+  reportStructChanged();
+  return 1;
+}
+
 
 
 void HolderData::setActiveIdx( int i )

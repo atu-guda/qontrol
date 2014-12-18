@@ -7,6 +7,7 @@
  ***************************************************************************/
 
 #include "rootdata.h"
+#include "tmodel.h"
 using namespace std;
 
 const char* TRootData::helpstr = "<H1>TRootData</H1>\n"
@@ -17,7 +18,11 @@ STD_CLASSINFO(TRootData,clpContainer|clpSpecial );
 
 CTOR(TRootData,TDataContainer)
 {
+  flags |= efImmutable;
   allowed_types = "TModel";
+  TModel *model = addObj<TModel>( "model" );
+  model->setImmutable();
+
 }
 
 TRootData::~TRootData()
