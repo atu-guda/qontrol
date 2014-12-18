@@ -622,7 +622,7 @@ QString HolderData::getFullName() const
   return res;
 }
 
-bool HolderData::getData( const QString &nm, QVariant &da ) const
+bool HolderData::getData( const QString &nm, QVariant &da, bool er ) const
 {
   if( nm.isEmpty() ) {
     da = get();
@@ -639,7 +639,9 @@ bool HolderData::getData( const QString &nm, QVariant &da ) const
 
   HolderData *ho = getElem( first );
   if( !ho ) {
-    DBGx( "warn: fail to find name \"%s\" in \"%s\"", qP(first), qP(getFullName()) );
+    if( er ) {
+      DBGx( "warn: fail to find name \"%s\" in \"%s\"", qP(first), qP(getFullName()) );
+    }
     return 0;
   }
   if( nm_type == simpleName ) { // first only
@@ -659,41 +661,46 @@ bool HolderData::getData( const QString &nm, QVariant &da ) const
     return 0;
   }
 
-  return ho->getData( rest, da );
+  return ho->getData( rest, da, er );
 }
 
 
-bool HolderData::getData( const QString &nm, int *da ) const
+bool HolderData::getData( const QString &nm, int *da, bool er ) const
 {
-  if( !da )
+  if( !da ) {
     return false;
+  }
   QVariant vda;
-  bool rc = getData( nm, vda );
-  if( ! rc )
+  bool rc = getData( nm, vda, er );
+  if( ! rc ) {
     return false;
+  }
   *da = vda.toInt();
   return true;
 }
 
-bool HolderData::getData( const QString &nm, double *da ) const
+bool HolderData::getData( const QString &nm, double *da, bool er ) const
 {
-  if( !da )
-    return 0;
-  QVariant vda;
-  bool rc = getData( nm, vda );
-  if( ! rc )
+  if( !da ) {
     return false;
+  }
+  QVariant vda;
+  bool rc = getData( nm, vda, er );
+  if( ! rc ) {
+    return false;
+  }
   *da = vda.toDouble();
   return 1;
 }
 
 
-bool HolderData::getData( const QString &nm, QString &da ) const
+bool HolderData::getData( const QString &nm, QString &da, bool er ) const
 {
   QVariant vda;
-  bool rc = getData( nm, vda );
-  if( ! rc )
+  bool rc = getData( nm, vda, er );
+  if( ! rc ) {
     return false;
+  }
   da = vda.toString();
   return true;
 }
@@ -777,10 +784,11 @@ bool HolderData::getUpData( const QString &nm, int *da ) const
   }
 
   for( HolderData *p = par; p; p=p->par ) {
-    if( p->getData( nm, da ) ) {
+    if( p->getData( nm, da, false ) ) {
       return true;
     }
   }
+  DBGx( "warn: fail to find name \"%s\" from \"%s\" up", qP(nm), qP(getFullName()) );
   return false;
 }
 
@@ -792,30 +800,33 @@ bool HolderData::getUpData( const QString &nm, double *da ) const
   }
 
   for( HolderData *p = par; p; p=p->par ) {
-    if( p->getData( nm, da ) ) {
+    if( p->getData( nm, da, false ) ) {
       return true;
     }
   }
+  DBGx( "warn: fail to find name \"%s\" from \"%s\" up", qP(nm), qP(getFullName()) );
   return false;
 }
 
 bool HolderData::getUpData( const QString &nm, QString &da ) const
 {
   for( HolderData *p = par; p; p=p->par ) {
-    if( p->getData( nm, da ) ) {
+    if( p->getData( nm, da, false ) ) {
       return true;
     }
   }
+  DBGx( "warn: fail to find name \"%s\" from \"%s\" up", qP(nm), qP(getFullName()) );
   return false;
 }
 
 bool HolderData::getUpData( const QString &nm, QVariant &da ) const
 {
   for( HolderData *p = par; p; p=p->par ) {
-    if( p->getData( nm, da ) ) {
+    if( p->getData( nm, da, false ) ) {
       return true;
     }
   }
+  DBGx( "warn: fail to find name \"%s\" from \"%s\" up", qP(nm), qP(getFullName()) );
   return false;
 }
 

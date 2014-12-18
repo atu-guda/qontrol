@@ -1,8 +1,10 @@
+TOutArr rework take + actions to manual fill/get + statistic
+threads in run
+
+Rebreand to Qontrol
+
 LaboWin::initDirs?
 unselected types
-allow to rename flag (dyn?) + Rename action
-Rebreand to Qontrol
-threads in run
 Sub simulation? / set of dialoged values before run
 findMdiChild not work if file opened by argv
 Object buttons: more info? but how?
