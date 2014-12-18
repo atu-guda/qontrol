@@ -106,27 +106,24 @@ int TModel::startRun()
     return 0;
   }
 
-  // copy of simulation data (need tmp var)
-  double x; int xi;
-  c_sim->getData( "T", &x ); T = x;
-  c_sim->getData( "N", &xi ); N = xi;
-  c_sim->getData( "N1", &xi ); N1 = xi;
-  c_sim->getData( "N2", &xi ); N2 = xi;
-  c_sim->getData( "n1_eff", &xi ); n1_eff = xi;
-  c_sim->getData( "n2_eff", &xi ); n2_eff = xi;
-  c_sim->getData( "n_tot", &xi ); n_tot = xi;
-  c_sim->getData( "syncRT", &xi ); syncRT = xi;
-  c_sim->getData( "prm0s", &x ); prm0s = x;
-  c_sim->getData( "prm1s", &x ); prm1s = x;
-  c_sim->getData( "prm2s", &x ); prm2s = x;
-  c_sim->getData( "prm3s", &x ); prm3s = x;
-  c_sim->getData( "prm0d", &x ); prm0d = x;
-  c_sim->getData( "prm1d", &x ); prm1d = x;
-  c_sim->getData( "seed",  &xi ); seed  = xi;
-  c_sim->getData( "seedType",  &xi ); seedType  = xi;
+  T   = c_sim->getDataD( "T", 0.0 );
+  N   = c_sim->getDataD( "N", 1 );
+  N1  = c_sim->getDataD( "N1", 1 );
+  N2  = c_sim->getDataD( "N2", 1 );
+  n1_eff = c_sim->getDataD( "n1_eff", N1 );
+  n2_eff = c_sim->getDataD( "n2_eff", N2 );
+  n_tot  = c_sim->getDataD( "n_tot", N );
+  syncRT = c_sim->getDataD( "syncRT", 0 );
+  prm0s = c_sim->getDataD( "prm0s", 0.0 );
+  prm1s = c_sim->getDataD( "prm1s", 0.0 );
+  prm2s = c_sim->getDataD( "prm2s", 0.0 );
+  prm3s = c_sim->getDataD( "prm3s", 0.0 );
+  prm0d = c_sim->getDataD( "prm0d", 0.0 );
+  prm1d = c_sim->getDataD( "prm1d", 0.0 );
+  seed = c_sim->getDataD( "seed", 1 );
+  seedType = c_sim->getDataD( "seedType",  0 );
 
-  int type = Simulation::runSingle;
-  c_sim->getData( "runType", &type );
+  int type = c_sim->getDataD( "runType", (int)Simulation::runSingle );
 
   if( type     !=  Simulation::runSingle
       &&  type !=  Simulation::runLoop
@@ -298,8 +295,7 @@ void TModel::allocOutArrs( int tp ) // TODO: common code
     if( !arr ) {
       continue;
     }
-    out_tp = -1;
-    arr->getData( "type", &out_tp );
+    out_tp = arr->getDataD( "type", -1 );
     if( out_tp < 0 || out_tp > tp ) {
       continue;
     }

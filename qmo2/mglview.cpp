@@ -310,8 +310,7 @@ void MglView::Reload( )
     QString s = scd_o->toString();
     scd->fromString( s );
   }
-  int ch = 30;
-  scd->getData( "h0", &ch );
+  int ch = scd->getDataD( "h0", 30 );
   // DBGx( "dbg: Reload()! ch=%d", ch );
 
   TModel *model = gra->getAncestorT<TModel>();
@@ -334,15 +333,11 @@ void MglView::Reload( )
       continue;
     }
 
-    int dtype = GraphElem::DataType::DataNone;
-    ge->getData( "type", &dtype );
-    int is2D = 0;
-    ge->getData( "is2D", &is2D );
-    int noColor = 0;
-    ge->getData( "noColor", &noColor );
+    int dtype = ge->getDataD( "type", (int)GraphElem::DataType::DataNone );
+    int is2D =  ge->getDataD( "is2D", 0 );
+    int noColor = ge->getDataD( "noColor", 0 );
 
-    QString src = QString();
-    ge->getData( "src", src );
+    QString src = ge->getDataD( "src", QString() );
     if( src.isEmpty() ) {
       continue;
     }
@@ -351,13 +346,11 @@ void MglView::Reload( )
       continue;
     }
 
-    int nn_c = 0;
-    arr->getData( "n", &nn_c );
+    int nn_c = arr->getDataD( "n", 0 );
     if( nn_c < 1 ) {
       continue;
     }
-    int ny_c = 1;
-    arr->getData( "ny", &ny_c );
+    int ny_c = arr->getDataD( "ny", 1 );
     if( ny_c < 1 ) {
       continue;
     }
@@ -371,9 +364,8 @@ void MglView::Reload( )
        continue;
     }
 
-    double tmin = 0, tmax = 0;
-    arr->getData( "dmin", &tmin );
-    arr->getData( "dmax", &tmax );
+    double tmin = arr->getDataD( "dmin", 0.0 );
+    double tmax = arr->getDataD( "dmax", 0.0 );
 
     if( dtype >= GraphElem::DataType::DataPlot    // TODO: combine with bottom part?
         && dtype <  GraphElem::DataType::DataC0 )
@@ -387,24 +379,19 @@ void MglView::Reload( )
       ++n_out;
     }
 
-    label_c = QString( "y_%1" ).arg( dl.size() );
-    ge->getData( "label", label_c );
-    // label_c.prepend( QSN( ng ) + ": " );
+    label_c = ge->getDataD( "label", QString( "y_%1" ).arg( dl.size() ) );
 
-    int lw = 1;
-    ge->getData( "lw", &lw );
-    int i_cc = 0;
-    ge->getData( "color", &i_cc );
-    QString extra_add = QString( "" );
-    ge->getData( "extra", extra_add );
+    int lw = ge->getDataD( "lw", 1 );
+    int i_cc = ge->getDataD( "color", 0 );
+    QString extra_add =  ge->getDataD( "extra", QString() );
+
     if( noColor ) {
       extra_c = extra_add;
     } else {
       extra_c = color2style( i_cc, lw, extra_add );
     }
 
-    opt_c = QString();
-    ge->getData( "opt", opt_c );
+    opt_c = ge->getDataD( "opt", QString() );
 
     if( dtype >= GraphElem::DataType::DataSurf && dtype < GraphElem::DataType::DataC0  )  {
       is2D = true;

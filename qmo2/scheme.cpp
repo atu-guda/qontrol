@@ -151,8 +151,7 @@ TMiso* Scheme::ord2Miso( int aord ) const
     if( !ob ) {
       continue;
     }
-    int oord = -1;
-    ob->getData( "ord", &oord );
+    int oord = ob->getDataD( "ord", -1 );
     if( aord == oord ) {
       return ob;
     }
@@ -189,9 +188,8 @@ TMiso* Scheme::xy2Miso( int avis_x, int avis_y ) const
     if( !ob ) {
       continue;
     }
-    ox = oy = -1;
-    ob->getData( "vis_x", &ox );
-    ob->getData( "vis_y", &oy );
+    ox = ob->getDataD( "vis_x", -1 );
+    oy = ob->getDataD( "vis_y", -1 );
     if( ox == avis_x && oy == avis_y ) {
       return ob;
     }
@@ -210,8 +208,8 @@ QSize Scheme::getMaxXY() const
       continue;
     }
     int ox = 0, oy =0;
-    ob->getData( "vis_x", &ox );
-    ob->getData( "vis_y", &oy );
+    ox = ob->getDataD( "vis_x", 0 );
+    oy = ob->getDataD( "vis_y", 0 );
     if( ox > mx ) {
       mx = ox;
     }
@@ -263,8 +261,7 @@ int Scheme::newOrder( const QString &name, int new_ord )
     return -1;
   }
   ob->setData( "ord", new_ord );
-  int k;
-  ob->getData( "ord", &k );
+  int k = ob->getDataD( "ord", -1 );
 
   reset();
   modified |= 1;
@@ -323,13 +320,13 @@ void Scheme::sortOrd()
 
 int Scheme::hintOrd() const
 {
-  int m = 0, mc;
+  int m = 0;
   for( auto c : children() ) {
     TMiso *ob = qobject_cast<TMiso*>(c);
     if( !ob ) {
       continue;
     }
-    ob->getData( "ord", &mc );
+    int mc = ob->getDataD( "ord", 0 );
     if( mc > m ) {
       m = mc;
     }

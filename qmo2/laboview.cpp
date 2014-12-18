@@ -278,10 +278,11 @@ void LaboView::changeSel( int x, int y, int rel )
     case 1: sel_x += x; sel_y += y; break;
     case 2:
             ob = main_s->xy2Miso( sel_x, sel_y );
-            if( !ob )
+            if( !ob ) {
               break;
-            ob->getData( "vis_x", &sel_x );
-            ob->getData( "vis_y", &sel_y );
+            }
+            sel_x = ob->getDataD( "vis_x", 0 );
+            sel_y = ob->getDataD( "vis_y", 0 );
             break;
     default: break;
   };
@@ -468,8 +469,7 @@ void LaboView::lockElm()
     return;
   }
 
-  int lck = 0;
-  selObj->getData( "locked", &lck );
+  int lck = selObj->getDataD( "locked", 0 );
   lck = !lck;
   selObj->setData( "locked", lck );
 
@@ -485,11 +485,10 @@ void LaboView::ordElm()
   }
 
   bool ok;
-  int new_ord = -1, old_ord;
-  selObj->getData( "ord", &old_ord );
-  new_ord = QInputDialog::getInt(this, "New element order",
-      "Input new element order",
-      old_ord, 0, IMAX, 1, &ok );
+  int new_ord = -1;
+  int old_ord = selObj->getDataD( "ord", 0 );
+  new_ord = QInputDialog::getInt( this, "New element order",
+      "Input new element order",  old_ord, 0, IMAX, 1, &ok );
   if( ok ) {
     main_s->newOrder( selObj->objectName(), new_ord ); // reset implied
     emit viewChanged();

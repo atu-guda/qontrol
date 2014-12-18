@@ -68,8 +68,7 @@ int TGraph::fillDatasInfo( DatasInfo *di ) const
     if( ! ge ) {
       continue;
     }
-    QString s;
-    ge->getData( "src", s );
+    QString s = ge->getDataD( "src", QString() );
     if( s.isEmpty() ) {
       continue;
     }
@@ -78,13 +77,12 @@ int TGraph::fillDatasInfo( DatasInfo *di ) const
     if( !arr ) {
       continue;
     }
-    int nn_c = 0;
-    arr->getData( "n", &nn_c );
+    int nn_c = arr->getDataD( "n", 0 );
     if( nn_c < 1 ) {
       continue;
     }
     if( ny < 1 ) {
-      arr->getData( "ny", &ny );
+      ny = arr->getDataD( "ny", 0 ); // default 0 = not found / bad
     }
     const dvector *ve = arr->getArray();
     if( !ve ) {
@@ -93,8 +91,7 @@ int TGraph::fillDatasInfo( DatasInfo *di ) const
     if( nn_c < nn ) {
       nn = nn_c;
     }
-    QString lbl = QString( "v_%1" ).arg( QSN( di->ves.size() ) );
-    ge->getData( "label", lbl );
+    QString lbl = ge->getDataD( "label",  QString( "v_%1" ).arg( QSN( di->ves.size() ) ) );
     di->labels.push_back( lbl );
     di->ves.push_back( ve );
   }
@@ -148,8 +145,7 @@ int TGraph::addOutArr( const QString &o_name )
     if( ! ge ) {
       continue;
     }
-    int dtype = GraphElem::DataType::DataNone;
-    ge->getData( "type", &dtype );
+    int dtype = ge->getDataD( "type", (int)GraphElem::DataType::DataNone );
     if( dtype == GraphElem::DataType::DataAxisX ) {
       was_x = true;
       continue;
@@ -206,11 +202,9 @@ int TGraph::addOutArr( const QString &o_name )
   if( !arr ) {
     return 1;
   }
-  QString lbl = nm;
-  arr->getData( "label", lbl );
+  QString lbl = arr->getDataD( "label", nm );
   ge->setData( "label", lbl );
-  int otype = 0;
-  arr->getData( "type", &otype );
+  int otype = arr->getDataD( "type", 0 );
   if( otype == TOutArr::OutArrType::outParm2 ) {
     ge->setData( "is2D", 1 );
   }

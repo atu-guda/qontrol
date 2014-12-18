@@ -157,19 +157,21 @@ class LaboView : public QWidget
 
  public:
    /** returns document rootdata */
-   TRootData* getRoot(void);
+   TRootData* getRoot();
    /** returns document model */
-   TModel* getModel(void);
+   TModel* getModel();
    /** returns x-coordinate for selected cell */
-   int getSelX(void) const { return sel_x; }
+   int getSelX() const { return sel_x; }
    /** returns y-coordinate for selected cell */
-   int getSelY(void) const { return sel_y; }
+   int getSelY() const { return sel_y; }
    /** returns number of selected element or -1 if none */
-   int getSel(void) const { return sel; }
+   int getSel() const { return sel; }
    /** returns ptr to selected element or nullptr if none */
-   TMiso* getSelObj(void) const { return selObj; }
+   TMiso* getSelObj() const { return selObj; }
+   /** returns ptr to marked element or nullptr if none */
+   TMiso* getMarkObj() const { return markObj; }
    /** returns level for aux objects selection */
-   int getLevel(void) const { return level; }
+   int getLevel() const { return level; }
  protected:
    virtual void closeEvent( QCloseEvent* );
    virtual void resizeEvent( QResizeEvent* );

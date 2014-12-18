@@ -168,7 +168,6 @@ void StructView::drawAll( QPainter &p )
   int i, h, w, nh, nw;
   int line_busy;
   int li_src_y, li_dst_y;
-  int line_color, line_width = 1, x_shift = 0, y_shift = 0;
   int st_y; /* label on elems start y */
   int sel_x, sel_y /*,sel, mark*/;
   QString src_name;
@@ -266,11 +265,6 @@ void StructView::drawAll( QPainter &p )
     st_y = ei.ys + line_busy*10;
 
 
-    // TODO: how?
-    // if( elnu == mark ) { // red rect around marked element // TODO: active element?
-    //   p.setBrush( Qt::NoBrush ); p.setPen( Qt::red );
-    //   p.drawRect( ei.xs0, ei.ys0, grid_sz, grid_sz );
-    // };
 
 
     if( ! psett->showLinks ) {
@@ -290,16 +284,12 @@ void StructView::drawAll( QPainter &p )
       ltype_t lt = in->getLinkType();
       const TDataSet* sobj = in->getSourceObj();
       li_dst_y = ei.ys + (i_in+1)*in_sep_sz;
-      QString lbl;
-      line_width = 1, x_shift = 0, y_shift = 0;
-      in->getData("line_w", &line_width );
-      in->getData("x_shift", &x_shift );
-      in->getData("y_shift", &y_shift );
-      if( in->getData("line_color", &line_color ) ) {
-        p.setPen( QPen( QColor(QRgb(line_color)), line_width ) );
-      } else {
-        p.setPen( QPen( Qt::black, line_width ) );
-      }
+      int line_width = in->getDataD( "line_w", 1 );
+      int x_shift    = in->getDataD( "x_shift", 0 );
+      int y_shift    = in->getDataD( "y_shift", 0 );
+      QColor lco = in->getDataD( "line_color", Qt::black );
+      p.setPen( QPen( lco, line_width ) );
+
       if( lt == LinkNone ) {
         p.drawEllipse( QPoint(ei.li_dst_x, li_dst_y), el_marg/3, el_marg/3 );
         continue;
@@ -311,7 +301,7 @@ void StructView::drawAll( QPainter &p )
       p.drawLine( ei.li_dst_x +  3*ei.flip_factor, li_dst_y-2, ei.li_dst_x, li_dst_y  );
       p.drawLine( ei.li_dst_x +  3*ei.flip_factor, li_dst_y+2, ei.li_dst_x, li_dst_y  );
 
-      in->getData("label", lbl );
+      QString lbl = in->getDataD( "label", QString() );
       if( ! lbl.isEmpty() ) {
         p.drawText( x_vert-2*ei.flip_factor, li_dst_y-2, lbl );
       }
@@ -341,12 +331,7 @@ void StructView::drawAll( QPainter &p )
 
       // get info about source and calc coords
       fill_elmInfo( so_obj, sei );
-      int so_x = -1, so_y = -1, so_flip = 0, only_lbl = 0;
-      QString so;
-      so_obj->getData( "vis_x", &so_x );
-      so_obj->getData( "vis_y", &so_y );
-      so_obj->getData( "flip", &so_flip );
-      in->getData( "source", so );
+      QString so = in->getDataD( "source", QString() );
 
       if( ei.vis_y != sei.vis_y ) {
         li_src_y = sei.yc - y_shift;
@@ -365,7 +350,7 @@ void StructView::drawAll( QPainter &p )
       p.drawLine( sei.li_src_x, li_src_y,
                   sei.li_src_x + el_marg*sei.flip_factor, li_src_y );
 
-      in->getData( "onlyLabel", &only_lbl );
+      int only_lbl = in->getDataD( "onlyLabel", 0 );
       if( only_lbl ) {
         if( ! lbl.isEmpty() ) {
           p.drawText( sei.li_src_x+(3+el_marg)*sei.flip_factor, li_src_y-2, lbl );
@@ -384,18 +369,15 @@ void StructView::drawAll( QPainter &p )
     in_sep_sz = obj_sz/(ei.n_pinp+1);
     for( const auto c : ei.pis->children() ) {
       const InputParam* ips = qobject_cast<const InputParam*>( c );
-      if( ! ips )
+      if( ! ips ) {
         continue;
-
-      line_width = 2, x_shift = 0, y_shift = 0;
-      ips->getData("line_w", &line_width );
-      ips->getData("x_shift", &x_shift );
-      ips->getData("y_shift", &y_shift );
-      if( ips->getData("line_color", &line_color ) ) {
-        p.setPen( QPen( QColor(QRgb(line_color)), line_width ) );
-      } else {
-        p.setPen( QPen( Qt::black, line_width ) );
       }
+
+      int line_width = ips->getDataD( "line_w", 2 );
+      int x_shift = ips->getDataD( "x_shift", 0 );
+      int y_shift = ips->getDataD( "y_shift", 0 );
+      QColor lco = ips->getDataD( "line_color", Qt::black );
+      p.setPen( QPen( lco, line_width ) );
 
       int li_pdst_x = ei.xs + (1+i_in) * in_sep_sz;
       QPoint p_bott { li_pdst_x, ei.li_pdst_y+el_marg };
@@ -472,9 +454,9 @@ void StructView::drawAll( QPainter &p )
       continue;
     }
     ++out_nu;
-    src_name = ""; int out_tp = -1;
-    arr->getData( "name", src_name );
-    arr->getData( "type", &out_tp );
+
+    src_name = arr->getDataD( "name", QString() );
+    int out_tp = arr->getDataD( "type", -1 );
     ltype_t lt  = LinkBad;
     const TDataSet *lob = nullptr;
     const double *fp = sch->getDoublePtr( src_name, &lt, &lob );
@@ -510,6 +492,7 @@ void StructView::drawAll( QPainter &p )
 
   } // ------------ end output marks
 
+
   // ----------- draw selection
   if( devTp != 1 ) {
     QPainter::CompositionMode old_op = p.compositionMode();
@@ -518,6 +501,15 @@ void StructView::drawAll( QPainter &p )
     p.setBrush( QColor(64,64,32) );
     p.drawRect( lm + sel_x*grid_sz, tm + sel_y*grid_sz, grid_sz, grid_sz );
     p.setCompositionMode( old_op );
+  };
+
+  // ----------- draw mark;
+  const TMiso *markObj = mainview->getMarkObj();
+  if( markObj ) { // red rect around marked element
+    if( fill_elmInfo( markObj, ei ) ) {
+      p.setBrush( Qt::NoBrush ); p.setPen( Qt::red );
+      p.drawRect( ei.xs0, ei.ys0, grid_sz, grid_sz );
+    }
   };
 
 }
@@ -529,7 +521,6 @@ void StructView::mousePressEvent( QMouseEvent *me )
   QMenu *menu;
   TMiso *ob = 0;
   QString elmname;
-  double outval = 0;
   h = height(); w = width(); nh = h / grid_sz - 1; nw = w / grid_sz - 1;
   x = me->x(); y = me->y();
   ex = ( x - lm ) / grid_sz; ey = ( y - tm ) / grid_sz;
@@ -538,9 +529,10 @@ void StructView::mousePressEvent( QMouseEvent *me )
     ob = sch->xy2Miso( ex, ey );
     if( ob ) {
       elmname = ob->getFullName();
-      ob->getData( "out0", &outval );
-      if( elmname.isEmpty() )
+      // double outval = ob->getDataD( "out0", 0.0 );
+      if( elmname.isEmpty() ) {
         elmname = "?unknown?";
+      }
     };
     switch( me->button() ) {
       case Qt::LeftButton:  break;
