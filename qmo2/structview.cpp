@@ -569,13 +569,18 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     act = menu->addAction(  QIcon( ":icons/orderelm.png" ), "&Reorder" );
     connect( act, &QAction::triggered, mainview, &LaboView::ordElm );
     menu->addSeparator();
+    act = menu->addAction( QIcon::fromTheme("edit-copy"), "&Copy" );
+    connect( act, &QAction::triggered, mainview, &LaboView::copyElm );
+    menu->addSeparator();
   } else {
     act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );
     connect( act, &QAction::triggered, mainview, &LaboView::newElm );
-    //if( mainview->getMark() >= 0 ) {
+    if( mainview->getMarkObj() ) {
       act = menu->addAction( "&Move to" );
       connect( act, &QAction::triggered, mainview, &LaboView::moveElm );
-    //}
+    }
+    act = menu->addAction( QIcon::fromTheme("edit-pase"), "&Paste" );
+    connect( act, &QAction::triggered, mainview, &LaboView::pasteElm );
   };
   menu->addSeparator();
   act = menu->addAction( QIcon( ":icons/newout.png" ), "New outp&ut" );
