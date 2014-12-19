@@ -57,7 +57,6 @@ SOURCES += \
   ../elems/tfuncpoly.cpp \
   ../elems/tfunctrans.cpp \
   ../elems/thyst.cpp \
-  ../elems/tinputany.cpp \
   ../elems/tintegrator.cpp \
   ../elems/tlatch.cpp \
   ../elems/tlinear.cpp \
@@ -121,7 +120,6 @@ HEADERS += \
   ../elems/tfuncpoly.h \
   ../elems/tfunctrans.h \
   ../elems/thyst.h \
-  ../elems/tinputany.h \
   ../elems/tintegrator.h \
   ../elems/tlatch.h \
   ../elems/tlinear.h \
