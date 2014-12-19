@@ -27,6 +27,7 @@
 #include "tgraph.h"
 #include "simul.h"
 
+class QSemaphore;
 
 /**Contains all elements of model
   *@author atu
@@ -63,6 +64,8 @@ class TModel : public TDataContainer  {
   int startRun();
   int nextSteps( int csteps );
   int stopRun( int reason );
+  //* new run with threads
+  int run( QSemaphore *sem );
  protected:
   int runOneLoop(); // TODO: to protected
   int postRun();

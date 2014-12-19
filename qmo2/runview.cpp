@@ -19,6 +19,7 @@
 
 #include <QApplication>
 #include <QtWidgets>
+#include <QSemaphore>
 
 #include "miscfun.h"
 #include "dataset.h"
@@ -68,6 +69,8 @@ void RunView::slotStartRun()
   if( !sch  ||  state != stateGood ) {
     return;
   }
+  QSemaphore sem;
+  QThread th;
   i_tot = 0;  state = stateRun;
   rc = model->startRun();
   if( !rc ) {
@@ -189,30 +192,10 @@ void RunView::drawAll( QPainter &p )
   p.drawText( 10, 14, s );
   // TODO: misc objects
   // if( syncRT ) {
-  //   drawVbar( p );
-  //   drawGbar( p );
-  //   drawLED( p );
-  //   drawCross( p );
   // };
 }
 
 
-void RunView::drawCross( QPainter & /*p*/ )
-{
-}
-
-void RunView::drawVbar( QPainter & /*p*/ )
-{
-
-}
-
-void RunView::drawGbar( QPainter & /*p*/ )
-{
-}
-
-void RunView::drawLED( QPainter & /*p*/ )
-{
-}
 
 void RunView::mousePressEvent( QMouseEvent *me )
 {
@@ -344,18 +327,25 @@ void RunView::getSchemeData()
 {
   Simulation *c_sim = model->getActiveSimulation();
   if( c_sim ) {
-    c_sim->getData( "n_tot", &n_tot );
-    c_sim->getData( "n_iosteps", &n_iosteps );
-    c_sim->getData( "syncRT", &syncRT );
-    c_sim->getData( "autoStart", &autoStart );
+    n_tot = c_sim->getDataD( "n_tot", 100 );
+    n_iosteps = c_sim->getDataD( "n_iosteps", 1 );
+    T = c_sim->getDataD( "T", 1.0 );
+    N = c_sim->getDataD( "N", 1 );
+    syncRT = c_sim->getDataD( "syncRT", 0 );
+    autoStart = c_sim->getDataD( "autoStart", 0 );
+    io_t = c_sim->getDataD( "io_t", 0.5 );
   } else {
     DBG1( "warn: no active simulation!" );
   }
 
+  if( syncRT ) {
+    io_t = T / N;
+  }
+
   state = model->getState();
   s_h = syncRT ? 520 : 40;
-  DBGx( "dbg: n_tot: %d, n_iosteps: %d syncRT: %d autoStart: %d",
-      n_tot, n_iosteps, syncRT, autoStart );
+  DBGx( "dbg: n_tot: %d, n_iosteps: %d syncRT: %d autoStart: %d io_t: %lg T: %lf N: %d",
+      n_tot, n_iosteps, syncRT, autoStart, io_t, T, N );
 }
 
 

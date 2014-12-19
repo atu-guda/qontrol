@@ -20,6 +20,8 @@
 // unistd for usleep: TODO: replace with threads
 #include <unistd.h>
 #include <algorithm>
+#include <QSemaphore>
+
 #include "miscfun.h"
 #include "tmodel.h"
 
@@ -208,6 +210,37 @@ int TModel::nextSteps( int csteps )
   }
 
   return 1;
+}
+
+int TModel::run( QSemaphore *sem )
+{
+  if( !sem || ! c_sch ) {
+    DBG1( "warn: bad init!" );
+    return 0;
+  }
+
+  int rc = 0;
+  for( il2 = 0; il2 < n2_eff; ++il2 ) {
+    prm1 = prm1s + il2 * prm1d;
+    for( il1 = 0; il1 < n1_eff; ++il1 ) {
+
+      prm0 = prm0s + il1 * prm0d;
+      sem->acquire( 1 );
+      start_time = get_real_time(); rtime = t = 0;
+      allStartLoop( il1, il2 );
+      for( int i=0; i<N; ++i, ++i_tot ) {
+        rc = runOneLoop();
+        if( !rc ) {
+          return 0;
+        }
+      }
+      allEndLoop( il1, il2 );
+      sem->release( 1 );
+
+    }
+  }
+  stopRun( 0 );
+  return i_tot;
 }
 
 int TModel::stopRun( int reason )

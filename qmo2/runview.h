@@ -21,6 +21,7 @@
 
 #include "defs.h"
 #include <QDialog>
+#include <QSemaphore>
 
 class TModel; class Scheme; class TDataSet; class TMiso; class Simulation;
 class QPaintEvent; class QMouseEvent; class QKeyEvent;
@@ -76,14 +77,6 @@ class RunView : public QDialog  {
    // --------------------- draw some parts of window
    /** draw  all parts of window, if need */
    void drawAll( QPainter &p );
-   /** draws cross-like indicators */
-   void drawCross( QPainter &p );
-   /** draws vertical bar indicators */
-   void drawVbar( QPainter &p );
-   /** draws vertical bar indicators */
-   void drawGbar( QPainter &p );
-   /** draws LED-like indicators */
-   void drawLED( QPainter &p );
  // ========================================== data ==================
   protected:
     /** pointer to model ro run */
@@ -92,9 +85,11 @@ class RunView : public QDialog  {
     Scheme *sch = nullptr;
     /** timer to send timer events */
     QTimer *timer;
+    //* for synchronisation with computation thread
+    QSemaphore sem;
     /** geometry: w_ - window, g_ - graph, c_ center, s_ - set */
     int w_w, w_h, g_w, g_h, c_x, c_y, s_h;
-    /** koefficients to transform visual and phis coorgs */
+    /** coefficients to transform visual and phis coords */
     double gkx, gky;
     /** state of computation */
     int state;
@@ -109,12 +104,18 @@ class RunView : public QDialog  {
     // some next vars filled from Scheme =========================
     /** total number of loops */
     int n_tot = 1;
+    //* iteration per loop
+    int N = 1;
     /** total counter */
     int i_tot = 0;
+    //* total time
+    double T = 1.0;
     /** number of steps per i/o action */
     int n_iosteps = 1;
-    /** flag for real and scheme time syncronization */
+    /** flag for real and scheme time synchronization */
     int syncRT = 0;
+    //* one step per I/O
+    double io_t = 1.0;
     /** flag to start w/o keyboard hit */
     int autoStart = 0;
 };
