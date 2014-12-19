@@ -86,7 +86,7 @@ class TOutArr : public TDataSet  {
    /** size of x=const block in 2-d arrays */
    PRM_INT( ny, efInner, "ny","size of x=const block in 2-d arrays", "def=1"  );
    /** each n-th data collect. def=1 */
-   PRM_INT( nq, efNoRunChange, "Every n", "each n-th data collect. ", "min=0\nmax=1000000\ndef=1" );
+   PRM_INT( nq, efNoRunChange, "Every n", "each n-th data collect. ", "min=1\nmax=1000000\ndef=1" );
    /** latch value of counter */
    PRM_INT( lnq, efNoRunChange, "Catch at n=", "latch value of counter", "min=0\nmax=1000000" );
    /** current value of counter(0..nq-1) */

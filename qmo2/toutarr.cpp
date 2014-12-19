@@ -116,12 +116,9 @@ int TOutArr::take_val()
 int TOutArr::preRun( int /*run_tp*/, int an, int anx, int any, double /*adt*/ )
 {
   reset();
-  if( any < 1 ) {
-    any = 1;
-  }
-  if( anx < 1 ) {
-    anx = 1;
-  }
+  if( any < 1 ) {  any = 1;  }
+  if( anx < 1 ) {  anx = 1;  }
+  if( nq  < 1 ) {  nq  = 1;  }
 
   arrsize = 0;
   switch( type ) {
@@ -129,10 +126,10 @@ int TOutArr::preRun( int /*run_tp*/, int an, int anx, int any, double /*adt*/ )
       arrsize = an / nq; nx = an; ny = 1;
       break;
     case OutArrType::outParm1:
-      arrsize = anx; nq = 1; nx = anx; ny = 1; // force nq=1 here
+      arrsize = anx / nq; nx = anx; ny = 1;
       break;
     case OutArrType::outParm2:
-      arrsize = anx * any; nq = 1; nx = anx; ny = any;
+      arrsize = anx * any / nq; nx = anx; ny = any;
       break;
     default:
       break;
@@ -156,7 +153,6 @@ int TOutArr::preRun( int /*run_tp*/, int an, int anx, int any, double /*adt*/ )
 int TOutArr::postRun( int /*good*/ )
 {
   return 1;
-
 }
 
 int TOutArr::startLoop( int acnx, int acny )
@@ -166,12 +162,12 @@ int TOutArr::startLoop( int acnx, int acny )
       reset();
       break;
     case OutArrType::outParm1:
-      if( acny == 0 ) {
+      if( acnx == 0 ) {
         reset();
       }
       break;
     case OutArrType::outParm2:
-      if( acnx == 0 && acny == 0 ) {
+      if( acnx == 0 && acny == 0 ) { // not much sense, as reset at preRun
         reset();
       }
       break;
