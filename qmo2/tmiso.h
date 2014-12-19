@@ -69,7 +69,7 @@ class TMiso : public TDataSet  {
    /** called before each inner param loop -- call do_startLoop */
    int startLoop( int acnx, int acny );
    /** will be called after each inner loop -- call do_endLoop */
-   int endLoop(void);
+   int endLoop();
    /** fast access to order */
    int getOrder() const { return ord; }
    /** compare objects by order - to sort before run */
@@ -90,8 +90,8 @@ class TMiso : public TDataSet  {
    virtual int do_postRun( int good );
    /** called before each inner param loop from startLoop */
    virtual int do_startLoop( int acnx, int acny );
-   /** will be called after each inner loop: called frop endLoop */
-   virtual int do_endLoop(void);
+   /** will be called after each inner loop: called from endLoop */
+   virtual int do_endLoop();
    /** description on element */
    PRM_STRING( descr, efNoRunChange, "description",
        "Object description", "max=128\nncol=-1");

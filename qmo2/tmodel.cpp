@@ -146,7 +146,14 @@ int TModel::startRun()
   tdt = T / N;
   prm2 = (double)prm2s; prm3 = (double)prm3s;
 
-  allocOutArrs( run_type );
+  // allocOutArrs( run_type );
+  rc = outs->preRun( run_type, N, n1_eff, n2_eff, tdt );
+  if( !rc ) {
+    DBG1( "warn: output arrays preRun failed" );
+    reset();
+    c_sim = nullptr; c_sch = nullptr;
+    return 0;
+  }
 
   rc = c_sch->preRun( run_type, N, n1_eff, n2_eff, tdt );
   if( !rc ) {

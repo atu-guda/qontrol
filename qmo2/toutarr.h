@@ -53,17 +53,25 @@ class TOutArr : public TDataSet  {
    virtual QIcon getIcon() const override;
 
    /** access to array value */
-   virtual const dvector* getArray();
+   virtual const dvector* getArray() const { return &arr; }
    /** request to allocate array */
    virtual int alloc( int sz, int a_ny = 1 );
    /** request to dealloc array */
    virtual int free();
    /** reset counter,  if level >= type */
    virtual int reset( int level);
-   /** push next value. pushed only if level >= type */
-   virtual int push_val( double v, int level );
+
+   //* called before all runs
+   int preRun( int run_tp, int an, int anx, int any, double adt );
+   //* will be called after all actions
+   int postRun( int good );
+   //* called before each inner param loop
+   int startLoop( int acnx, int acny );
+   /** will be called after each inner loop */
+   int endLoop( int acnx, int acny );
    /** get and push next value. pushed only if level >= type */
    virtual int take_val( int level );
+
    /** dumps data to file */
    int dump( const QString &fn, const QString &delim );
    /** fills fields in DatasInfo structure, return number of elements (nn) */
@@ -75,8 +83,10 @@ class TOutArr : public TDataSet  {
    PRM_STRING( name, efNoRunChange, "Source", "Name of element to use", "max=64" );
    /** label of data */
    PRM_STRING( label, efNoRunChange, "Label", "Label of data", "max=32" );
+   /** size of first dimensions in arrays */
+   PRM_INT( nx, efInner, "nx","size of x dimensions arrays", "def=1"  );
    /** size of x=const block in 2-d arrays */
-   PRM_INT( ny, efInner, "ny","size of x=const block in 2-d arrays", ""  );
+   PRM_INT( ny, efInner, "ny","size of x=const block in 2-d arrays", "def=1"  );
    /** each n-th data collect. def=1 */
    PRM_INT( nq, efNoRunChange, "Every n", "each n-th data collect. ", "min=0\nmax=1000000\ndef=1" );
    /** latch value of counter */

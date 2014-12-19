@@ -25,7 +25,6 @@
 const char* TOutArr::helpstr = "<H1>TOutArr</H1>\n"
  "Collector of output during simulation.\n"
  "Stores output from element, given by name\n"
- "Allowed special TModel output names like :t, #25, :parm1 \n"
  "Type selects when output be collected.";
 
 STD_CLASSINFO(TOutArr,clpSpecial);
@@ -75,11 +74,6 @@ QIcon TOutArr::getIcon() const
 
 
 
-const dvector* TOutArr::getArray()
-{
-  return &arr;
-}
-
 int TOutArr::alloc( int sz, int a_ny )
 {
   if( sz == arrsize ) {
@@ -97,8 +91,9 @@ int TOutArr::alloc( int sz, int a_ny )
   if( mod ) {
     so = mod->getSchemeDoublePtr( name, &lt, &so_ob, 0 );
   }
-  if( !so )
+  if( !so ) {
     so = &fake_so;
+  }
   return 0;
 }
 
@@ -118,27 +113,6 @@ int TOutArr::reset( int level )
 }
 
 
-int TOutArr::push_val( double v, int level )
-{
-  if( n >= arrsize )
-    return -1;
-  if( level < type )
-    return 0;
-  if( cnq == lnq ) {
-    if( n == 0 ) {
-     dmin = dmax = v;
-    } else {
-      if( v > dmax ) dmax = v;
-      if( v < dmin ) dmin = v;
-    };
-    arr[n] = v;
-    n++;
-  };
-  cnq++;
-  if( cnq >= nq )
-    cnq = 0;
-  return n;
-}
 
 int TOutArr::take_val( int level )
 {
@@ -163,6 +137,65 @@ int TOutArr::take_val( int level )
   return n;
 }
 
+int TOutArr::preRun( int /*run_tp*/, int an, int anx, int any, double /*adt*/ )
+{
+  n = 0; dmin = 0; dmax = 1; state = 2; // really reset
+  if( any < 1 ) {
+    any = 1;
+  }
+  if( anx < 1 ) {
+    anx = 1;
+  }
+
+  arrsize = 0;
+  switch( type ) {
+    case OutArrType::outSimple:
+      arrsize = an / nq; nx = an; ny = 1;
+      break;
+    case OutArrType::outParm1:
+      arrsize = anx; nx = anx; ny = 1; // ignore nq here
+      break;
+    case OutArrType::outParm2:
+      arrsize = anx * any; nx = anx; ny = any;
+      break;
+    default:
+      break;
+  }
+  if( arrsize < 1 ) {
+    arrsize = 1;
+  }
+  arr.resize( arrsize );
+
+  so = nullptr;
+  TModel *mod = getAncestorT<TModel>();
+  ltype_t lt; const TDataSet *so_ob;
+  if( mod ) {
+    so = mod->getSchemeDoublePtr( name, &lt, &so_ob, 0 );
+  }
+  if( !so ) {
+    so = &fake_so; // TODO: indicate this
+  }
+
+  return 1;
+}
+
+int TOutArr::postRun( int /*good*/ )
+{
+  return 1;
+
+}
+
+int TOutArr::startLoop( int acnx, int acny )
+{
+
+  return 1;
+}
+
+int TOutArr::endLoop( int acnx, int acny )
+{
+  return 1;
+}
+
 
 int TOutArr::fillDatasInfo( DatasInfo *di ) const
 {
@@ -177,7 +210,7 @@ int TOutArr::fillDatasInfo( DatasInfo *di ) const
     return 0;
   }
   di->nn = n; di->ny = (ny > 0) ? ny: 1;
-  di->nx = n / di->ny;
+  di->nx = nx;
   return di->nn;
 }
 

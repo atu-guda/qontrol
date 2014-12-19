@@ -20,6 +20,8 @@
 
 #include "datacont.h"
 
+class TOutArr;
+
 class ContOut : public TDataContainer {
    Q_OBJECT
   public:
@@ -27,8 +29,20 @@ class ContOut : public TDataContainer {
    virtual ~ContOut() override;
    DCL_CREATE;
    DCL_STD_INF;
+
+   //* called before all runs
+   int preRun( int run_tp, int an, int anx, int any, double adt );
+   //* will be called after all actions
+   int postRun( int good );
+   //* called before each inner param loop
+   int startLoop( int acnx, int acny );
+   /** will be called after each inner loop */
+   int endLoop( int acnx, int acny );
+
+   //* get all needed values
    void takeAllVals( int level );
   private:
+   std::vector<TOutArr*> vo;
    DCL_DEFAULT_STATIC;
 };
 
