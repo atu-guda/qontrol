@@ -35,7 +35,7 @@ CTOR(TOutArr,TDataSet)
 
 TOutArr::~TOutArr()
 {
-  n = ny = 0;
+  n = nx = ny = 0;
 }
 
 QVariant TOutArr::dataObj( int col, int role ) const
@@ -54,7 +54,8 @@ QVariant TOutArr::dataObj( int col, int role ) const
     if( col != 0 ) {
       return QVariant();
     }
-    QString s = name.cval() + " [" + QSN(n) + "]";
+    QString s = name.cval() % " [" % QSN(n) % "]\n["
+        % QSN(nx) % " x " % QSN(ny) % "]";
     return s;
   }
 
@@ -74,72 +75,47 @@ QIcon TOutArr::getIcon() const
 
 
 
-int TOutArr::alloc( int sz, int a_ny )
+int TOutArr::alloc( int anx, int any )
 {
-  if( sz == arrsize ) {
-    n = 0; dmin = 0; dmax = 1; state = 2;
+  if( type != OutArrType::outSpec ) {
     return 0;
-  };
-  ny = a_ny;
-  if( sz < 1 ) sz = 1;
-  if( ny < 1 ) ny = 1;
-  arr.resize( sz );
-  arrsize = sz; n = 0; dmin = 0; dmax = 1; cnq = 0;
+  }
+  if( any < 1 ) {
+    any = 1;
+  }
+  if( anx < 1 ) {
+    anx = 1;
+  }
+
+  nx = anx; ny = any; arrsize = nx * ny;
+  n = 0; dmin = 0; dmax = 1;
+  arr.resize( arrsize );
+  n = 0; dmin = 0; dmax = 1; cnq = 0;
   so = nullptr;
-  TModel *mod = getAncestorT<TModel>();
-  ltype_t lt; const TDataSet *so_ob;
-  if( mod ) {
-    so = mod->getSchemeDoublePtr( name, &lt, &so_ob, 0 );
-  }
-  if( !so ) {
-    so = &fake_so;
-  }
-  return 0;
+  return 1;
 }
 
-int TOutArr::free()
-{
-  // no real delete
-  arrsize = 0;  n = 0; state = 1;
-  return 0;
-}
 
-int TOutArr::reset( int level )
+int TOutArr::reset()
 {
-  if( level >= type ) {
-    n = 0; dmin = 0; dmax = 1; state = 2;
-  };
+  n = 0; cnq = 0; dmin = 0; dmax = 1;
   return 0;
 }
 
 
 
-int TOutArr::take_val( int level )
+int TOutArr::take_val()
 {
-  double v = *so;
-  if( n >= arrsize )
-    return -1;
-  if( level < type )
+  if( type != OutArrType::outSimple ) {
     return 0;
-  if( cnq == lnq ) {
-    if( n == 0 ) {
-     dmin = dmax = v;
-    } else {
-      if( v > dmax ) dmax = v;
-      if( v < dmin ) dmin = v;
-    };
-    arr[n] = v;
-    n++;
-  };
-  cnq++;
-  if( cnq >= nq )
-    cnq = 0;
+  }
+  put_next_val();
   return n;
 }
 
 int TOutArr::preRun( int /*run_tp*/, int an, int anx, int any, double /*adt*/ )
 {
-  n = 0; dmin = 0; dmax = 1; state = 2; // really reset
+  reset();
   if( any < 1 ) {
     any = 1;
   }
@@ -153,19 +129,17 @@ int TOutArr::preRun( int /*run_tp*/, int an, int anx, int any, double /*adt*/ )
       arrsize = an / nq; nx = an; ny = 1;
       break;
     case OutArrType::outParm1:
-      arrsize = anx; nx = anx; ny = 1; // ignore nq here
+      arrsize = anx; nq = 1; nx = anx; ny = 1; // force nq=1 here
       break;
     case OutArrType::outParm2:
-      arrsize = anx * any; nx = anx; ny = any;
+      arrsize = anx * any; nq = 1; nx = anx; ny = any;
       break;
     default:
       break;
   }
-  if( arrsize < 1 ) {
-    arrsize = 1;
-  }
   arr.resize( arrsize );
 
+  // TODO: move to separate functions and call hele and after struct changed
   so = nullptr;
   TModel *mod = getAncestorT<TModel>();
   ltype_t lt; const TDataSet *so_ob;
@@ -187,12 +161,42 @@ int TOutArr::postRun( int /*good*/ )
 
 int TOutArr::startLoop( int acnx, int acny )
 {
+  switch( type ) {
+    case OutArrType::outSimple:
+      reset();
+      break;
+    case OutArrType::outParm1:
+      if( acny == 0 ) {
+        reset();
+      }
+      break;
+    case OutArrType::outParm2:
+      if( acnx == 0 && acny == 0 ) {
+        reset();
+      }
+      break;
+    default:
+      break;
+  }
 
   return 1;
 }
 
-int TOutArr::endLoop( int acnx, int acny )
+int TOutArr::endLoop( int /*acnx*/, int /*acny*/ )
 {
+  switch( type ) {
+    case OutArrType::outSimple:
+      break;
+    case OutArrType::outParm1:
+      put_next_val();
+      break;
+    case OutArrType::outParm2:
+      put_next_val();
+      break;
+    default:
+      break;
+  }
+
   return 1;
 }
 
@@ -232,6 +236,31 @@ int TOutArr::dump( const QString &fn, const QString &delim )
 
   n = di.dump( os, delim );
   return n;
+}
+
+void TOutArr::put_next_val()
+{
+  if( n >= arrsize ) {
+    return;
+  }
+
+  double v = *so;
+
+  if( cnq == lnq ) {
+    if( n == 0 ) {
+     dmin = dmax = v;
+    } else {
+      if( v > dmax ) dmax = v;
+      if( v < dmin ) dmin = v;
+    };
+    arr[n] = v;
+    n++;
+  };
+  cnq++;
+  if( cnq >= nq ) {
+    cnq = 0;
+  }
+
 }
 
 DEFAULT_FUNCS_REG(TOutArr)

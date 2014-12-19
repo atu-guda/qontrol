@@ -86,16 +86,20 @@ int ContOut::endLoop( int acnx, int acny )
 }
 
 
-void ContOut::takeAllVals( int level )
+void ContOut::takeAllVals()
 {
-  for( auto o : children() ) {
-    TOutArr *arr = qobject_cast<TOutArr*>( o );
-    if( !arr ) { // unlikely
-      continue;
-    }
-    arr->take_val( level );
+  for( auto arr : vo ) {
+    arr->take_val();
   }
 }
+
+void ContOut::reset()
+{
+  for( auto arr : vo ) {
+    arr->reset();
+  }
+}
+
 
 DEFAULT_FUNCS_REG(ContOut)
 

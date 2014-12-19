@@ -1,5 +1,5 @@
-TOutArr rework take + actions to manual fill/get + statistic
 threads in run
+update views, links on change
 
 Rebreand to Qontrol
 
@@ -8,6 +8,7 @@ unselected types
 Sub simulation? / set of dialoged values before run
 findMdiChild not work if file opened by argv
 Object buttons: more info? but how?
+TOutArr:  actions to manual fill/get + statistic
 
 call parent post_set (if req). flag?
 Input/output elements/scheme properties (in0?)

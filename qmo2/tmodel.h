@@ -67,11 +67,7 @@ class TModel : public TDataContainer  {
   int runOneLoop(); // TODO: to protected
   int postRun();
   int allStartLoop( int acnx, int acny );
-  void allEndLoop();
-  /** call to allocate out arrays for given type and below */
-  void allocOutArrs( int tp );
-  /** resets all array with given level or below */
-  void resetOutArrs( int level );
+  void allEndLoop( int acnx, int acny );
 
   // interface to commands like above, but with names - to use from JS
  public slots:

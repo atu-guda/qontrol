@@ -54,12 +54,10 @@ class TOutArr : public TDataSet  {
 
    /** access to array value */
    virtual const dvector* getArray() const { return &arr; }
-   /** request to allocate array */
-   virtual int alloc( int sz, int a_ny = 1 );
-   /** request to dealloc array */
-   virtual int free();
-   /** reset counter,  if level >= type */
-   virtual int reset( int level);
+   /** request to allocate array: only for special arrays now */
+   virtual int alloc( int anx, int any = 1 );
+   /** reset counter */
+   virtual int reset();
 
    //* called before all runs
    int preRun( int run_tp, int an, int anx, int any, double adt );
@@ -70,7 +68,7 @@ class TOutArr : public TDataSet  {
    /** will be called after each inner loop */
    int endLoop( int acnx, int acny );
    /** get and push next value. pushed only if level >= type */
-   virtual int take_val( int level );
+   virtual int take_val();
 
    /** dumps data to file */
    int dump( const QString &fn, const QString &delim );
@@ -107,6 +105,8 @@ class TOutArr : public TDataSet  {
    double fake_so = 0;
    /** ptr to source */
    const double *so = &fake_so;
+
+   void put_next_val();
 
    DCL_DEFAULT_STATIC;
 };

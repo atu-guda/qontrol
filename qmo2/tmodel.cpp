@@ -89,7 +89,9 @@ int TModel::reset()
   if( c_sch ) {
     c_sch->reset();
   }
-  resetOutArrs( 1000 ); // all?
+  if( outs ) {
+    outs->reset();
+  }
   return 0;
 }
 
@@ -146,7 +148,6 @@ int TModel::startRun()
   tdt = T / N;
   prm2 = (double)prm2s; prm3 = (double)prm3s;
 
-  // allocOutArrs( run_type );
   rc = outs->preRun( run_type, N, n1_eff, n2_eff, tdt );
   if( !rc ) {
     DBG1( "warn: output arrays preRun failed" );
@@ -183,13 +184,9 @@ int TModel::nextSteps( int csteps )
     prm0 = prm0s + il1 * prm0d;
     prm1 = prm1s + il2 * prm1d;
     if( ii == 0 ) {    // --------------------- start inner loop --
-      if( il1 == 0 ) { // start prm0 loop
-        resetOutArrs( 1 );
-      };
 
-      resetOutArrs( 0 );
       start_time = get_real_time(); rtime = t = 0;
-      // set start param
+      // set start param, reset arrays(if need);
       allStartLoop( il1, il2 );
     };// end start inner loop
 
@@ -199,7 +196,7 @@ int TModel::nextSteps( int csteps )
     }
 
     if( ii >= N ) {
-      allEndLoop();
+      allEndLoop( il1, il2 );
       ii = 0; ++il1;
     };
     if( il1 >= N1 ) {
@@ -246,20 +243,13 @@ int TModel::runOneLoop()
   };
 
   IterType itype = IterMid;
-  int out_level = 0;
-  if( ii == 0 ) {
-    itype = IterFirst;
-  } else if( ii == N-1 ) {
-    itype = IterLast;
-    out_level = run_type;
-  };
 
   int rc = c_sch->runOneLoop( t, itype );
   if( !rc ) {
     end_loop = 1;
   }
 
-  outs->takeAllVals( out_level );
+  outs->takeAllVals();
 
   t += tdt; ++ii;
   return 1;
@@ -288,51 +278,22 @@ int TModel::allStartLoop( int acnx, int acny )
   if( c_sch ) {
     rc = c_sch->allStartLoop( acnx, acny );
   }
-  // TODO: outs
+  if( outs ) {
+    rc = outs->startLoop( acnx, acny );
+  }
   return rc;
 }
 
-void TModel::allEndLoop()
+void TModel::allEndLoop( int acnx, int acny )
 {
   if( c_sch ) {
     c_sch->allEndLoop();
   }
-  // TODO: outs
+  if( outs ) {
+    outs->endLoop( acnx, acny );
+  }
 }
 
-void TModel::allocOutArrs( int tp ) // TODO: common code
-{
-  int out_tp;
-  if( tp < 0 || tp > 2 )
-    return;
-  for( QObject *o: outs->children() ) { // alloc output array
-    TOutArr *arr = qobject_cast<TOutArr*>( o );
-    if( !arr ) {
-      continue;
-    }
-    out_tp = arr->getDataD( "type", -1 );
-    if( out_tp < 0 || out_tp > tp ) {
-      continue;
-    }
-    switch( out_tp ) { // TODO: move logic to TOutArr
-      case 0: arr->alloc( N, 1 ); break;
-      case 1: arr->alloc( n1_eff, 1 ); break;
-      case 2: arr->alloc( n1_eff * n2_eff, n1_eff ); break;
-      default: ; // don't allocate special arrays
-    };
-  };
-}
-
-void TModel::resetOutArrs( int level )
-{
-  for( QObject *o: outs->children() ) { // free output array
-    TOutArr *arr = qobject_cast<TOutArr*>( o );
-    if( !arr ) {
-      continue;
-    }
-    arr->reset( level );
-  };
-}
 
 
 
@@ -340,17 +301,26 @@ void TModel::resetOutArrs( int level )
 
 TOutArr* TModel::getOutArr( const QString &oname )
 {
+  if( !outs ) {
+    return nullptr;
+  }
   return outs->getElemT<TOutArr*>( oname );
 }
 
 TGraph* TModel::getGraph( const QString &name )
 {
+  if( !plots ) {
+    return nullptr;
+  }
   return plots->getElemT<TGraph*>( name );
 }
 
 
 int TModel::insOut( const QString &outname, const QString &objname )
 {
+  if( !outs ) {
+    return 0;
+  }
   TOutArr *arr = outs->addObj<TOutArr>( outname );
   if( !arr ) {
     return 0;
@@ -375,6 +345,9 @@ int TModel::insOut( const QString &outname, const QString &objname )
 
 int TModel::insGraph( const QString &gname )
 {
+  if( !plots ) {
+    return 0;
+  }
   TGraph *gra = plots->addObj<TGraph>( gname );
   if( !gra ) {
     return 0;
@@ -388,11 +361,17 @@ int TModel::insGraph( const QString &gname )
 
 int TModel::delOut( const QString &name )
 {
+  if( !outs ) {
+    return 0;
+  }
   return outs->del_obj( name );
 }
 
 int TModel::delGraph( const QString &name )
 {
+  if( !plots ) {
+    return 0;
+  }
   return plots->del_obj( name );
 }
 
@@ -411,6 +390,9 @@ int TModel::addOutToGraph( const QString &o_name, const QString &g_name )
 
 bool TModel::cloneGraph( const QString &old_name, const QString &new_name )
 {
+  if( !plots ) {
+    return 0;
+  }
   TGraph *old_gra = plots->getElemT<TGraph*>( old_name );
   if( !old_gra ) {
     DBGx( "warn: old plot \"%s\" not exist", qP( old_name ) );
@@ -431,7 +413,9 @@ bool TModel::cloneGraph( const QString &old_name, const QString &new_name )
 
 int TModel::newSimul( const QString &name )
 {
-  DBGx( "dbg: creating new simulation \"%s\"", qP(name) );
+  if( !sims ) {
+    return 0;
+  }
   Simulation *sim = sims->addObj<Simulation>( name );
   if( ! sim ) {
     DBGx( "ERR: fail to create simulation \"%s\"", qP(name) );
@@ -442,12 +426,17 @@ int TModel::newSimul( const QString &name )
 
 int TModel::delSimul( const QString &name )
 {
+  if( !sims ) {
+    return 0;
+  }
   return sims->del_obj( name );
 }
 
 QString TModel::getSimulName( int idx )
 {
-  DBGx( "dbg: requiest simulation name by idx %d", idx );
+  if( !sims ) {
+    return QString();
+  }
   Simulation* sim =  sims->getElemT<Simulation*>( idx );
   if( !sim ) {
     return QString();
@@ -457,12 +446,18 @@ QString TModel::getSimulName( int idx )
 
 Simulation* TModel::getSimul( const QString &name )
 {
+  if( !sims ) {
+    return nullptr;
+  }
   return sims->getElemT<Simulation*>( name );
 }
 
 
 bool TModel::cloneSimul( const QString &old_name, const QString &new_name )
 {
+  if( !sims ) {
+    return false;
+  }
   Simulation *old_sim = sims->getElemT<Simulation*>( old_name );
   if( !old_sim ) {
     DBGx( "warn: old simulation \"%s\" not exist", qP( old_name ) );
