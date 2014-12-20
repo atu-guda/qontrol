@@ -333,9 +333,9 @@ void RunView::getSchemeData()
     DBG1( "warn: no active simulation!" );
   }
 
-  if( syncRT ) {
-    io_t = T / N;
-  }
+  // if( syncRT ) {
+  //   io_t = T / N;
+  // }
 
   state = model->getState();
   s_h = syncRT ? 520 : 40;

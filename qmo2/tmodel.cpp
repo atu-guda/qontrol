@@ -199,6 +199,14 @@ int TModel::run( QSemaphore *sem )
           stopRun( 0 );
           return 0;
         }
+
+        rtime = get_real_time() - start_time;
+        if( syncRT ) {
+          if( t > rtime ) {
+            unsigned long wait_ms = (unsigned long)( 1000000 * ( t - rtime ) );
+            usleep( wait_ms ); // ------------------- TODO: redesign ?? ------
+          };
+        };
         sem->acquire( 1 );
 
         rc = runOneLoop();
@@ -242,13 +250,6 @@ int TModel::runOneLoop()
     return 0;
   }
 
-  rtime = get_real_time() - start_time;
-  if( syncRT ) {
-     if( t > rtime ) {
-       unsigned long wait_ms = (unsigned long)( 1000000 * ( t - rtime ) );
-       usleep( wait_ms ); // ------------------- TODO: redesign ------
-     };
-  };
 
   IterType itype = IterMid;
 
