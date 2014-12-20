@@ -64,12 +64,10 @@ class TModel : public TDataContainer  {
   /** frees output arrays and state: 2->1 */
   int reset();
   int startRun();
-  int nextSteps( int csteps );
   int stopRun( int reason );
-  //* new run with threads
   int run( QSemaphore *sem );
  protected:
-  int runOneLoop(); // TODO: to protected
+  int runOneLoop();
   int postRun();
   int allStartLoop( int acnx, int acny );
   void allEndLoop( int acnx, int acny );

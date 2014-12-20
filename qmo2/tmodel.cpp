@@ -170,47 +170,6 @@ int TModel::startRun()
   return 1;
 }
 
-int TModel::nextSteps( int csteps )
-{
-  int i, rc;
-  if( !c_sch ) {
-    DBG1( "warn: No active scheme" );
-    return 0;
-  }
-
-  if( csteps < 1 ) {
-    csteps = 1;
-  }
-
-  for( i=0; i < csteps && i_tot < n_tot && end_loop == 0; ++i, ++i_tot ) {
-    prm0 = prm0s + il1 * prm0d;
-    prm1 = prm1s + il2 * prm1d;
-    if( ii == 0 ) {    // --------------------- start inner loop --
-
-      start_time = get_real_time(); rtime = t = 0;
-      // set start param, reset arrays(if need);
-      allStartLoop( il1, il2 );
-    };// end start inner loop
-
-    rc = runOneLoop();
-    if( !rc ) {
-      return 0;
-    }
-
-    if( ii >= N ) {
-      allEndLoop( il1, il2 );
-      ii = 0; ++il1;
-    };
-    if( il1 >= N1 ) {
-      il1 = 0; ++il2;
-    };
-    if( i_tot >= n_tot ) {
-      stopRun(0);
-    }
-  }
-
-  return 1;
-}
 
 int TModel::run( QSemaphore *sem )
 {
@@ -228,17 +187,21 @@ int TModel::run( QSemaphore *sem )
       start_time = get_real_time(); rtime = t = 0;
       allStartLoop( il1, il2 );
       for( int i=0; i<N; ++i, ++i_tot ) {
-        // TODO: check for break
+        // TODO: n_io?
+
+        if ( QThread::currentThread()->isInterruptionRequested() ) { // check for break
+          stopRun( 0 );
+          return 0;
+        }
         sem->acquire( 1 );
         rc = runOneLoop();
         sem->release( 1 );
         if( !rc ) {
+          stopRun( 0 );
           return 0;
         }
       }
       allEndLoop( il1, il2 );
-      QThread::yieldCurrentThread();
-
     }
   }
   stopRun( 0 );

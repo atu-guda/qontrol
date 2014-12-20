@@ -97,11 +97,12 @@ void RunView::slotStartRun()
 
 void RunView::slotStopRun()
 {
-  // TODO: real stop!
   timer->stop();
+  if( runner ) {
+    runner->requestInterruption();
+  }
   setMouseTracking( 0 );
   state = stateBad;
-  model->stopRun( 1 );
   update();
 }
 
