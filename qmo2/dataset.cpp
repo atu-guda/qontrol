@@ -778,6 +778,22 @@ bool HolderData::setData( const QString &nm, const QVariant &da )
   }
 }
 
+bool HolderData::setD( const QString &nm, int da )
+{
+  return setData( nm, QVariant( da ) );
+}
+
+bool HolderData::setD( const QString &nm, double da )
+{
+  return setData( nm, QVariant( da ) );
+}
+
+bool HolderData::setD( const QString &nm, const QString &da )
+{
+  return setData( nm, QVariant( da ) );
+}
+
+
 bool HolderData::getUpData( const QString &nm, int *da ) const
 {
   if( !da ) {

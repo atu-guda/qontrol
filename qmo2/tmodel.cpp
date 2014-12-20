@@ -240,7 +240,20 @@ int TModel::stopRun( int reason )
     postRun();
     state = stateDone;
   }
+  run_type = -1;
   return 1;
+}
+
+int TModel::run_bg()
+{
+  QSemaphore sem_io( 1 ); // really not need, may be more?
+  int rc = startRun();
+  if( !rc ) {
+    return 0;
+  }
+
+  rc = run( &sem_io );
+  return rc;
 }
 
 int TModel::runOneLoop()

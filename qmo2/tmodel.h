@@ -61,10 +61,11 @@ class TModel : public TDataContainer  {
   // Simulation* getSimul( int idx );
   Simulation* getSimul( const QString &name );
 
-  int reset();
+  Q_INVOKABLE int reset();
   int startRun();
   int stopRun( int reason );
   int run( QSemaphore *sem );
+  Q_INVOKABLE int run_bg(); // startRun and stopRun to use w/o iface
 
   // for fast access in RunView
   double get_t() const { return t; }

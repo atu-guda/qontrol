@@ -1520,6 +1520,7 @@ void LaboView::runScript()
   dia1->resize( 80*em, 60*em );
   dia1->exec();
   delete dia1; dia1 = nullptr;
+  emit viewChanged();
 
 }
 
