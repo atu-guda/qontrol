@@ -5,6 +5,7 @@
 
 class QGridLayout;
 class QPushButton;
+class QLineEdit;
 class QCheckBox;
 
 #include "labowin.h"
@@ -24,6 +25,7 @@ class Mo2SettDlg : public QDialog
     QPushButton* btnPlotFont;
     QPushButton* btnStructFont;
     QCheckBox* chkMaximize;
+    QLineEdit  *ed_editCmd;
     QPushButton* btnOK;
     QPushButton* btnCancel;
 

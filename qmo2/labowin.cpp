@@ -1475,9 +1475,11 @@ void Mo2Settings::load()
   QFont df;
   QString dfs = df.toString();
   mainFont    = sets.value("fonts/main", dfs ).toString();
-  smallFont   = sets.value("fonts/small", "Arial,7" ).toString();
-  plotFont    = sets.value("fonts/plot", "Arial,8" ).toString();
-  structFont  = sets.value("fonts/struct", "Arial,8" ).toString();
+  smallFont   = sets.value("fonts/small", "Sans,7" ).toString();
+  plotFont    = sets.value("fonts/plot", "Sans,8" ).toString();
+  structFont  = sets.value("fonts/struct", "Sans,8" ).toString();
+  // misc
+  editCmd  = sets.value("editCmd", "gvim -f " ).toString();
   sets.endGroup();
 }
 
@@ -1497,6 +1499,8 @@ void Mo2Settings::save() const
   sets.setValue( "fonts/small", smallFont );
   sets.setValue( "fonts/plot", plotFont );
   sets.setValue( "fonts/struct", structFont );
+  // ------------- more -------------
+  sets.setValue( "editCmd", editCmd );
 
   sets.endGroup();
   sets.sync();

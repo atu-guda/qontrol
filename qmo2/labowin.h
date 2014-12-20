@@ -66,6 +66,8 @@ class Mo2Settings {
    QString plotFont;
    /** structure view font string: /fonts/struct */
    QString structFont;
+   //* cmd to exec external editor
+   QString editCmd;
 
 };
 

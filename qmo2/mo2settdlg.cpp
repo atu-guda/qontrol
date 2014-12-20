@@ -27,9 +27,15 @@ Mo2SettDlg::Mo2SettDlg( Mo2Settings &se,  QWidget* parent )
   chkMaximize->setChecked(ts.showmax);
   lay->addWidget( chkMaximize, 0, 1 );
 
+  QLabel *lbl = new QLabel( "Editor cmd" );
+  lay->addWidget( lbl, 4, 0 );
+  ed_editCmd = new QLineEdit( this );
+  ed_editCmd->setText( ts.editCmd );
+  lay->addWidget( ed_editCmd, 4, 1 );
+
   QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  lay->addWidget( bbox, 4, 0, 1, 2 );
+  lay->addWidget( bbox, 6, 0, 1, 2 );
   connect( bbox, &QDialogButtonBox::accepted, this, &QDialog::accept );
   connect( bbox, &QDialogButtonBox::rejected, this, &QDialog::reject );
 
@@ -52,6 +58,7 @@ Mo2SettDlg::~Mo2SettDlg()
 void Mo2SettDlg::accept()
 {
   ts.showmax = chkMaximize->isChecked();
+  ts.editCmd = ed_editCmd->text();
   pse = ts;
   QDialog::accept();
 }
