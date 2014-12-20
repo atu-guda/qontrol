@@ -28,7 +28,7 @@ STD_CLASSINFO(ContGraph,clpSpecial | clpContainer);
 
 CTOR(ContGraph,TDataContainer)
 {
-  allowed_types = "TGraph";
+  allowed_types = "TGraph,+SPECIAL";
 }
 
 ContGraph::~ContGraph()

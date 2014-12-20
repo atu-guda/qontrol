@@ -42,7 +42,7 @@ HolderData* ElemFactory::createElem( const QString &a_type,
   // check parent for name
   if( a_parent->getElem(obj_name) ) {
     DBGx( "WARN: name \"%s\" exists in parent \"%s\"",
-	     qP( obj_name ), qP( a_parent->getFullName() ) );
+          qP( obj_name ), qP( a_parent->getFullName() ) );
     return nullptr;
   }
 
@@ -57,11 +57,12 @@ HolderData* ElemFactory::createElem( const QString &a_type,
 
 bool ElemFactory::registerElemType( const TClassInfo *cl_info )
 {
-  if( ! cl_info )
+  if( ! cl_info ) {
     return false;
+  }
   QString cl_name = L8B( cl_info->className );
   if( str_class.contains( cl_name ) ) {
-    DBG2q( "ERR: reg: class already exists", cl_name );
+    DBGx( "ERR: reg: class \"%s\" already exists", qP(cl_name) );
     return false;
   }
   str_class.insert( cl_name, cl_info );
@@ -75,23 +76,36 @@ bool ElemFactory::registerElemType( const TClassInfo *cl_info )
 }
 
 
-QStringList ElemFactory::goodTypeNames( const QString & allows ) const
+QStringList ElemFactory::goodTypeNames( const QString & allows,
+             bool no_obj, bool no_param ) const
 {
   QStringList res;
   int mask = clpPure | clpSpecial;
-  if( allows.contains( "+SPECIAL" ) )
+  if( allows.contains( "+SPECIAL" ) ) {
     mask &= ~clpSpecial;
+  }
+
   QStringList atp = allows.split(',');
   for( auto i : str_class ) {
-    if( i->props & mask )
+    if( i->props & mask ) {
       continue;
+    }
+
     for( auto ptp : atp ) {
-      if( ptp[0] == '+' )  // ignore special names, like +SPECIAL
+      if( ptp[0] == '+' ) { // ignore special names, like +SPECIAL
         continue;
+      }
+      if( no_obj && isChildOf( i->className, "TDataSet" ) ) {
+        continue;
+      }
+      if( no_param && ( i->props & clpData ) ) {
+        continue;
+      }
       if( isChildOf( i->className, ptp ) ) {
         res << i->className;
       }
     }
+
   }
   return res;
 }

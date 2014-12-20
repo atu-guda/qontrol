@@ -29,7 +29,7 @@ STD_CLASSINFO(ContOut,clpSpecial | clpContainer);
 
 CTOR(ContOut,TDataContainer)
 {
-  allowed_types = "TOutArr";
+  allowed_types = "TOutArr,+SPECIAL";
   vo.reserve( 64 );
 }
 

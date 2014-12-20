@@ -47,14 +47,18 @@ void AddElemDialog::setupUi()
   ed_order->setText( QSN( aei->order ) );
   lay->addWidget( ed_order, 1, 1 );
   ed_order->setValidator( new QIntValidator( 0, IMAX, this ) );
+  if( allowed != "TMiso" ) { // special case
+    ed_order->setEnabled( false );
+  }
 
   QLabel *la_type = new QLabel( "Type", this );
   lay->addWidget( la_type, 2, 0 );
 
   lw = new QListWidget( this );
 
-  QStringList cl_names = EFACT.goodTypeNames( allowed );
-  QSize def_sz( 72, 50 ); // TODO: calculate;
+  QStringList cl_names = EFACT.goodTypeNames( allowed, false, true ); // obj, no_data
+  QSize def_sz( 80, 50 ); // TODO: calculate;
+  bool first_add = true;
   for( QString cname : cl_names ) {
     QString iconName = QString( ":icons/elm_" )
       + cname.toLower()
@@ -69,9 +73,10 @@ void AddElemDialog::setupUi()
     lwi->setSizeHint( def_sz );
     lwi->setToolTip( cname );
     lw->addItem( lwi );
-    if( cname == "TLinear" ) {
+    if( first_add  ||  cname == "TLinear" ) {
       lw->setCurrentItem( lwi );
     }
+    first_add = false;
   };
   lw->setViewMode( QListView::IconMode );
   lw->setUniformItemSizes( true );

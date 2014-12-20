@@ -42,9 +42,10 @@ const char* TGraph::helpstr = "<H1>TGraph</H1>\n"
 STD_CLASSINFO(TGraph,clpSpecial);
 
 CTOR(TGraph,TDataSet) ,
-     scd( new ScaleData( "scd", this, 0, "scale", "scale data", "" ) )
+     scd( new ScaleData( "scd", this, 0, "scale", "scale data", "sep=blockend" ) )
 {
   allowed_types = "GraphElem,GraphLabel,+SPECICAL";
+  scd->setImmutable();
 }
 
 

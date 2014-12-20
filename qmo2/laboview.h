@@ -202,7 +202,7 @@ class LaboView : public QWidget
 
    int sel = -1, sel_x = 0, sel_y = 0, level = 0;
    // TODO: from file (config)
-   QString scr = R"(main_s.add_obj_param("TLinear","ob","vis_x=4\nvis_y=1\na0=3.14");)";
+   QString scr = R"(main_s.add_obj_datas("TLinear","ob","vis_x=4\nvis_y=1\na0=3.14");)";
    /** prt to selected object or nullptr */
    TMiso *selObj = nullptr;
    /** prt to marked object or nullptr */

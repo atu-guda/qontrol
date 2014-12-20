@@ -351,7 +351,7 @@ STD_CLASSINFO(ContScheme,clpSpecial | clpContainer);
 
 CTOR(ContScheme,TDataContainer)
 {
-  allowed_types = "Scheme";
+  allowed_types = "Scheme,+SPECIAL";
 }
 
 ContScheme::~ContScheme()

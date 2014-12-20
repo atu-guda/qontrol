@@ -298,10 +298,10 @@ QString HolderData::getParm( const QString &name ) const
   return QString();
 }
 
-bool HolderData::setParams( const QString params )
+bool HolderData::setDatas( const QString datas )
 {
   bool was_set = false;
-  QStringList sl = params.split( "\n", QString::SkipEmptyParts);
+  QStringList sl = datas.split( "\n", QString::SkipEmptyParts );
   QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=(.+)$)" );
 
   for( QString &s : sl ) {
@@ -445,14 +445,15 @@ HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name 
   return ob;
 }
 
-bool HolderData::add_obj_param( const QString &cl_name, const QString &ob_name,
-     const QString &params )
+bool HolderData::add_obj_datas( const QString &cl_name, const QString &ob_name,
+     const QString &datas )
 {
   HolderData *ho = add_obj( cl_name, ob_name );
-  if( ! ho )
+  if( ! ho ) {
     return false;
+  }
 
-  ho->setParams( params );
+  ho->setDatas( datas );
 
   return true;
 }

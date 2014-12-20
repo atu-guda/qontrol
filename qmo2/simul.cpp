@@ -27,7 +27,8 @@ STD_CLASSINFO(Simulation,clpSpecial | clpContainer);
 CTOR(Simulation,TDataSet)
 {
   show_active = true;
-  allowed_types = "double,HolderDouble"; // double + inputs? TODO: check alias
+  // allowed_types = "double"; // double + inputs? TODO: check alias
+  allowed_types = "HolderValue"; // double + inputs? TODO: check alias
 }
 
 Simulation::~Simulation()
@@ -74,7 +75,7 @@ STD_CLASSINFO(ContSimul,clpSpecial | clpContainer);
 
 CTOR(ContSimul,TDataContainer)
 {
-  allowed_types = "Simulation";
+  allowed_types = "Simulation,+SPECIAL";
 }
 
 ContSimul::~ContSimul()

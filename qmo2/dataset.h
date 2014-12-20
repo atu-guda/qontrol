@@ -291,7 +291,7 @@ class HolderData : public QAbstractItemModel {
   QString getFullName() const;
   void setParm( const QString &name, const QString &value );
   QString getParm( const QString &name ) const;
-  bool setParams( const QString params ); //* params sep: newline
+  bool setDatas( const QString datas ); //* data sep: newline
   QString getType() const { return getTypeV(); };
   virtual const char* getHelp() const  = 0;
   virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
@@ -303,7 +303,7 @@ class HolderData : public QAbstractItemModel {
   virtual int arrSize() const { return 1; }
   int getState() const { return state; }
   /** create object with params as string */
-  bool add_obj_param( const QString &cl_name, const QString &ob_name, const QString &params );
+  bool add_obj_datas( const QString &cl_name, const QString &ob_name, const QString &datas );
   /** delete given object by name, returns 0 - error, !=0 = ok */
   int del_obj( const QString &ob_name );
   //* rename object (if created dynamicaly)
@@ -710,7 +710,8 @@ class ElemFactory {
    bool registerElemType( const TClassInfo *cl_inf );
    // bool unregisterElemType( const QString &a_type );
    QStringList allTypeNames() const { return str_class.keys(); } // TODO: criterion
-   QStringList goodTypeNames( const QString & allows ) const;
+   QStringList goodTypeNames( const QString & allows,
+                          bool no_obj = false, bool no_param = false ) const;
    const QStringList& allParamTypes() const { return param_names; }
    const TClassInfo* getInfo( const QString &a_type ) const;
    bool isChildOf( const QString &cl, const QString &par_cl ) const;

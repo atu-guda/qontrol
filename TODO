@@ -1,12 +1,10 @@
-BUG: findMdiChild not work if file opened by argv
-DataDialog: add/remove buttons, check HolderData*
-Object buttons: more info? but how?
-Propate modified flag up to root?
+Propagete modified flag up to root?
 
 Rebreand to Qontrol
+Set more data while object creation
 
+create and save plot function + js
 LaboWin::initDirs?
-unselected types
 Sub simulation? / set of dialoged values before run
 TOutArr:  actions to manual fill/get + statistic
 
@@ -27,10 +25,9 @@ TCircBuf + TDelay re*
 Hide startLoop - like fun,f
 Auto create GET/SET function for my datas, create Qt properties - scripts. ?
 order -> only hint?
-js edit widget + button/dialog
+js/large text edit widget + button/dialog + external editor?
 js preRun, preLoop
 Tests
-
 
 
 objects: TFileInput, TFileOutput, TMovingAver, TDiff

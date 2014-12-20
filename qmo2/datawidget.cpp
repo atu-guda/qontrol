@@ -832,7 +832,7 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
     pb->setDisabled( true ); // TODO: real read-only
   }
   pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
-  pb->setText( ho.objectName() );
+  pb->setText( ho.objectName() % " (" % ho.getType() % ")" );
   connect( pb, &QPushButton::clicked, this, &ObjDataWidget::edit );
 
   QHBoxLayout *lay =  new QHBoxLayout( this );
@@ -1070,19 +1070,26 @@ void DataDialog::showSimpleHelp()
 
 void DataDialog::addParam()
 {
-  QStringList ptypes = EFACT.allParamTypes();
+  QStringList prm_clss = EFACT.goodTypeNames( ds.allowTypes(), true, false ); // no_obj, data
+  if( prm_clss.isEmpty() ) {
+    return;
+  }
+
   QDialog *dia = new QDialog( this );
   QGridLayout *lay = new QGridLayout( dia );
 
   QLabel *lbl_type = new QLabel( "Type", dia );
   lay->addWidget( lbl_type, 0, 0 );
   QListWidget *lw = new QListWidget( dia );
-  for( QString ptype : ptypes ) {
+
+  bool first_add = true;
+  for( QString ptype : prm_clss ) {
     QListWidgetItem *lwi = new QListWidgetItem( ptype );
     lw->addItem( lwi );
-    if( ptype == "double" ) {
+    if( first_add  ||  ptype == "double" ) {
       lw->setCurrentItem( lwi );
     }
+    first_add = false;
   }
   lay->addWidget( lw, 1, 0, 3, 1 );
 
@@ -1098,9 +1105,9 @@ void DataDialog::addParam()
   lay->addWidget( ed_val, 3, 1 );
 
   QLabel *lbl_descr = new QLabel( "Description", dia );
-  lay->addWidget( lbl_descr, 4, 1 );
+  lay->addWidget( lbl_descr, 4, 0 );
   QLineEdit *ed_descr = new QLineEdit( this );
-  lay->addWidget( ed_descr, 5, 1 );
+  lay->addWidget( ed_descr, 5, 0, 1, 2 );
 
   QDialogButtonBox *bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dia );
@@ -1246,23 +1253,12 @@ int DataDialog::createWidgets()
 
   DataWidget *w;
 
-  // FIXME part of tmp workaround for displaing Elems in model
-  bool is_model = ds.isChildOf( "TModel" );
-
   for( auto c :  ds.children() ) {
     HolderData *ho = qobject_cast<HolderData*>(c);
     if( !ho )
       continue;
     if( ho->getFlags() & efNoDial )
       continue;
-
-    // second part of TMP workaround (FIXME)
-    if( is_model && ho->isObject() ) {
-      HolderData *ob = qobject_cast<HolderData*>(ho);
-      if( ob->isChildOf("TMiso")  ||  ob->isChildOf("TOutArr") || ob->isChildOf("TGraph") ) {
-	continue;
-      }
-    }
 
     int ncol = 1; // number of columns per widget
     QString ncol_str = ho->getParm("ncol");
@@ -1316,30 +1312,45 @@ int DataDialog::createWidgets()
 
   QHBoxLayout *lay_btn2 = new QHBoxLayout;
 
-  QPushButton *btn_addParam = new QPushButton( "Add param" );
-  connect( btn_addParam, &QPushButton::clicked, this, &DataDialog::addParam);
+  QPushButton *btn_addParam = new QPushButton( "Add parameter" );
+  connect( btn_addParam, &QPushButton::clicked, this, &DataDialog::addParam );
   lay_btn2->addWidget( btn_addParam );
 
-  // TODO: iterate over all ds.allowTypes().split(',') and check clpData ....
-  // bool can_add_params = ds.isValidType( "HolderValue" ) || ds.isValidType( "HolderDouble" );
-  // if( !can_add_params )
-  //   btn_addParam->setEnabled( false );
+
+  bool can_add_params = false;
+  QStringList prm_clss = EFACT.goodTypeNames( ds.allowTypes(), true, false ); // no_obj, data
+  if( ! prm_clss.isEmpty() ) {
+    can_add_params = true;
+  }
+  if( !can_add_params ) {
+     btn_addParam->setEnabled( false );
+  }
+
+  bool can_add_objs = false;
+  QStringList obj_clss = EFACT.goodTypeNames( ds.allowTypes(), false, true ); // obj, no_data
+  if( ! obj_clss.isEmpty() ) {
+    can_add_objs = true;
+  }
+
   QPushButton *btn_addObj = new QPushButton( "Add object" );
   connect( btn_addObj, &QPushButton::clicked, this, &DataDialog::addObj);
   lay_btn2->addWidget( btn_addObj );
-  // bool can_add_objs = ds.isValidType( "HolderData" );
-  // if( ! can_add_objs )
-  //   btn_addObj->setEnabled( false );
+  if( ! can_add_objs ) {
+    btn_addObj->setEnabled( false );
+  }
+
   QPushButton *btn_delParam = new QPushButton( "Delete param" );
-  connect( btn_delParam, &QPushButton::clicked, this, &DataDialog::delParam);
+  connect( btn_delParam, &QPushButton::clicked, this, &DataDialog::delParam );
   lay_btn2->addWidget( btn_delParam );
-  // if( !can_add_params )
-  //    btn_delParam->setEnabled( false );
+  if( !can_add_params ) {
+    btn_delParam->setEnabled( false );
+  }
   QPushButton *btn_delObj = new QPushButton( "Delete object" );
   connect( btn_delObj, &QPushButton::clicked, this, &DataDialog::delObj);
   lay_btn2->addWidget( btn_delObj );
-  // if( ! can_add_objs )
-  //   btn_delObj->setEnabled( false );
+  if( ! can_add_objs ) {
+    btn_delObj->setEnabled( false );
+  }
   lay1->addLayout( lay_btn2 );
 
   QHBoxLayout *lay_btn = new QHBoxLayout;
