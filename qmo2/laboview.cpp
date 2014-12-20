@@ -248,19 +248,10 @@ int LaboView::checkState( CheckType ctp )
 }
 
 
-TRootData* LaboView::getRoot()
-{
-  return root;
-}
-
-TModel*  LaboView::getModel()
-{
-  return model;
-}
-
 void LaboView::updateViews()
 {
   sview->update();
+  outs_view->reset();
   outs_view->update();
   plots_view->update();
   sims_view->update();
@@ -318,7 +309,7 @@ void LaboView::newElm()
     return;
 
   addElemInfo aei;
-  aei.name = QString("obj_")+ QSN( main_s->getNMiso() ) ; // TODO: fix
+  aei.name = QString("obj_")+ QSN( main_s->getNMiso() );
   aei.order = main_s->hintOrd();
   AddElemDialog *dia = new AddElemDialog( &aei, main_s, this, "TMiso" );
                                           // limit to such elements here
@@ -625,6 +616,10 @@ void LaboView::showTreeElm()
 
   int em = LaboWin::labowin->getEm();
   dia->resize( 80*em, 50*em ); // TODO: unmagic
+  treeView->setColumnWidth( 0, 35*em );
+  treeView->setColumnWidth( 1, 10*em );
+  treeView->setColumnWidth( 2, 35*em );
+  treeView->expandAll();
   dia->exec();
   delete dia;
   emit viewChanged();
@@ -944,7 +939,7 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
   TOutArr *arr;
   DatasInfo di;
 
-  if( ! checkState( doneCheck ) ) {
+  if( ! checkState( validCheck ) ) {
     return;
   }
   QString nm = getSelName( outs_view );
@@ -1013,7 +1008,7 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
 
 void LaboView::exportOut()
 {
-  if( ! checkState( doneCheck ) ) {
+  if( ! checkState( validCheck ) ) {
     return;
   }
   QString nm = getSelName( outs_view );
@@ -1186,7 +1181,7 @@ void LaboView::graphAddOut()
 
 void LaboView::showGraphData()
 {
-  if( ! checkState( doneCheck ) ) {
+  if( ! checkState( validCheck ) ) {
     return;
   }
 
@@ -1230,7 +1225,7 @@ void LaboView::showGraphData()
 
 void LaboView::exportGraphData()
 {
-  if( ! checkState( doneCheck ) ) {
+  if( ! checkState( validCheck ) ) {
     return;
   }
   QString nm = getSelName( plots_view );
@@ -1408,8 +1403,9 @@ void LaboView::cloneSimul()
 
 void LaboView::editModel()
 {
-  if( ! checkState( validCheck ) )
+  if( ! checkState( validCheck ) ) {
     return;
+  }
 
   editObj( model );
 }
@@ -1436,6 +1432,10 @@ void LaboView::showTreeModel()
 
   int em = LaboWin::labowin->getEm();
   dia->resize( 80*em, 50*em ); // TODO: unmagic
+  treeView->setColumnWidth( 0, 35*em );
+  treeView->setColumnWidth( 1, 10*em );
+  treeView->setColumnWidth( 2, 35*em );
+  treeView->expandAll();
   dia->exec();
   delete dia;
   // delete ho_mo;
@@ -1555,35 +1555,6 @@ void LaboView::resetModel()
   emit viewChanged();
 }
 
-// misc
-
-const char LaboView::helpstr[] = "<b>Hot keys:</b><br>\n"
-"<b>Ctrl-w</b> - close <br>\n"
-"<b>h/F1</b> - this help <br>\n"
-"<b>{Left, Top, Right, Bottom, Home}</b> - move selected cell <br>\n"
-"<b>0-9</b> - select out array / graph <br>\n"
-;
-
-void LaboView::showHelp()
-{
-  QDialog *dia; QLabel *la; QPushButton *bt_ok;
-  QVBoxLayout *lv;
-  dia = new QDialog( this );
-  dia->setWindowTitle( "Hot keys in structure window" );
-  lv = new QVBoxLayout( dia );
-
-  la = new QLabel( dia );
-  la->setText( helpstr );
-  lv->addWidget( la );
-
-  bt_ok = new QPushButton( "&Ok", dia );
-  bt_ok->setDefault( true );
-  lv->addWidget( bt_ok );
-
-  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  dia->exec();
-  delete dia;
-}
 
 
 // end of laboview.cpp

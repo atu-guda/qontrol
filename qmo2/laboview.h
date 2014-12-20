@@ -156,14 +156,11 @@ class LaboView : public QWidget
    void runRun();
    void resetModel();
 
-   // misc
-   void showHelp();
-
  public:
-   /** returns document rootdata */
-   TRootData* getRoot();
+   /** returns document rootdata */ // TODO: remove?
+   // TRootData* getRoot() { return root; }
    /** returns document model */
-   TModel* getModel();
+   TModel* getModel() { return model; }
    /** returns x-coordinate for selected cell */
    int getSelX() const { return sel_x; }
    /** returns y-coordinate for selected cell */
@@ -212,8 +209,6 @@ class LaboView : public QWidget
    TMiso *markObj = nullptr;
    /** name of marked element */
    QString markName;
-   /** help string */
-   static const char helpstr[];
 };
 
 #endif

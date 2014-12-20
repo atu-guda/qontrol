@@ -1,21 +1,20 @@
-fix 1D array filling
-threads in run
-update views, links on change
+BUG: findMdiChild not work if file opened by argv
+DataDialog: add/remove buttons, check HolderData*
+Object buttons: more info? but how?
+Propate modified flag up to root?
 
 Rebreand to Qontrol
 
 LaboWin::initDirs?
 unselected types
 Sub simulation? / set of dialoged values before run
-findMdiChild not work if file opened by argv
-Object buttons: more info? but how?
 TOutArr:  actions to manual fill/get + statistic
 
 call parent post_set (if req). flag?
 Input/output elements/scheme properties (in0?)
 Move TCorrAnal, TFourier direct access to arrays with post-run js?
 Command line (':')
-move some logic from LaboView to model (scheme?, runner?)
+move some logic from LaboView to model (scheme?, runner?) (ENGINE?)
 slots in TModel like cmds, but with "name", not elnu - for JS
 unify add/paste elem: param in dialog?
 unify add param/object : add_obj_param? + dialog
