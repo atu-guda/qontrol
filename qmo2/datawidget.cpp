@@ -190,6 +190,92 @@ QSize StringMLDataWidget::sizeHint() const
 }
 
 
+// ------------------- StringExtDataWidget ---------------------------
+int StringExtDataWidget::registered = StringExtDataWidget::reg();
+
+StringExtDataWidget::StringExtDataWidget( HolderData &h, QWidget *parent )
+  : DataWidget( h, parent ),
+  pb( new QPushButton( this ) )
+{
+  main_w = pb;
+  if( h.getFlags() & ( efRO | efRODial ) ) {
+    pb->setDisabled( true );
+  }
+  pb->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred );
+  pb->setText( ho.objectName() % " [text]" );
+  connect( pb, &QPushButton::clicked, this, &StringExtDataWidget::edit );
+
+  QHBoxLayout *lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
+  lay->addWidget( pb, 1 );
+  setLayout( lay );
+}
+
+bool StringExtDataWidget::set()
+{
+  ts = ho.toString();
+  return true;
+}
+
+bool StringExtDataWidget::get() const
+{
+  ho.fromString( ts );
+  return true;
+}
+
+void StringExtDataWidget::edit()
+{
+  QTemporaryFile f;
+  // f.setFileTemplate( "tmp_file_XXXXXXXX.js" );
+  if( !f.open() ) {
+    return;
+  }
+  QString fn = f.fileName();
+  QString cmd = "gvim -f ";
+  if( LaboWin::labowin ) {
+    Mo2Settings *sett = LaboWin::labowin->getSettings();
+    if( sett ) {
+      cmd = sett->editCmd;
+    }
+  }
+  cmd += " " + fn;
+
+  {
+    QTextStream os( &f );
+    os << ts << endl;
+    f.close();
+  }
+
+  QProcess proc;
+  int rc = proc.execute( cmd );
+  if( rc != 0 ) {
+    return;
+  }
+
+  if( !f.open() ) {
+    return;
+  }
+  QTextStream is( &f );
+  ts = is.readAll();
+  f.close();
+}
+
+
+DataWidget* StringExtDataWidget::create( HolderData &h, QWidget *parent  )
+{
+  return new StringExtDataWidget( h, parent );
+}
+
+int StringExtDataWidget::reg()
+{
+  static DataWidgetProp p { create, "STRING,EXT,MLINE,LARGETEXT" };
+  return FactoryDataWidget::theFactory().registerWidgetType( "StringExtDataWidget", p );
+}
+
+
+
+
 
 // ------------------- IntDataWidget ---------------------------
 int IntDataWidget::registered = IntDataWidget::reg();

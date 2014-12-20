@@ -87,6 +87,23 @@ class StringMLDataWidget: public DataWidget {
   QTextEdit *te;
 };
 
+class StringExtDataWidget: public DataWidget {
+  Q_OBJECT
+ public:
+  StringExtDataWidget( HolderData &h, QWidget *parent = 0 );
+  virtual bool set();
+  virtual bool get() const;
+  static DataWidget* create( HolderData &h, QWidget *parent  );
+ protected slots:
+   void edit();
+ protected:
+  static int reg();
+  static int registered;
+  QPushButton *pb;
+  QString ts; // temporary string;
+};
+
+
 
 class IntDataWidget: public DataWidget {
  public:

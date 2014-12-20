@@ -126,6 +126,8 @@ class TModel : public TDataContainer  {
   /** long description */
   PRM_STRING( long_descr, efNRC, "Description", "Model description",
       "props=STRING,MLINE\nncol=-1\nsep=block");
+  PRM_STRING( script, efNRC, "Script", "Model scripts",
+      "props=STRING,EXT,LARGETEXT");
   // ======================= invisible vars ======================
   /** loops counters */
   PRM_INT( ii, efInner,  "ii", "Inner index", "" );
