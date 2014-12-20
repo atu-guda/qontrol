@@ -61,11 +61,16 @@ class TModel : public TDataContainer  {
   // Simulation* getSimul( int idx );
   Simulation* getSimul( const QString &name );
 
-  /** frees output arrays and state: 2->1 */
   int reset();
   int startRun();
   int stopRun( int reason );
   int run( QSemaphore *sem );
+
+  // for fast access in RunView
+  double get_t() const { return t; }
+  int get_i_tot() const { return i_tot; }
+  int get_il1() const { return il1; }
+  int get_il2() const { return il2; }
  protected:
   int runOneLoop();
   int postRun();
@@ -108,6 +113,8 @@ class TModel : public TDataContainer  {
   ContSimul *sims = nullptr;
   Scheme* main_s = nullptr;
   // =============== iface objects ==============================
+  // copy of simulation vars - but w/o onject access - just for speed;
+  PRM_DOUBLE(     T, efInner, "T", "Total simulation time", "def=1" );
   /** Initial parametrs values */
   PRM_DOUBLE( prm0s, efInner, "prm0s", "Initial prm0 value", "sep=block" );
   PRM_DOUBLE( prm1s, efInner, "prm1s", "Initial prm1 value", "" );
@@ -155,8 +162,7 @@ class TModel : public TDataContainer  {
   /** real start time */
   double start_time;
   // copy of simulation vars - but w/o onject access - just for speed;
-  double T = 1;
-  int N = 10, N1 = 1, N2 = 1, syncRT = 0;
+  int N = 10, N1 = 1, N2 = 1, syncRT = 0, n_iosteps = 1;
 
   //* current scheme during run, else - 0
   Scheme *c_sch = nullptr;

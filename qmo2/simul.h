@@ -64,7 +64,7 @@ class Simulation : public TDataSet  {
       "min=1\nmax=200000000\nsep=col\ndef=10000"  );
   PRM_SWITCH( syncRT, efNoRunChange, "Sync RT",
       "Real and model time synchronization ", "sep=col" );
-  PRM_DOUBLE( io_t, efNRC, "I/O time", "Time per each I/O action (not in RT)", "def=0.2\nmin=1e-5" );
+  PRM_DOUBLE( io_t, efNRC, "I/O time", "Time per each I/O action", "def=0.1\nmin=1e-4" );
   PRM_INT( N1, efNoRunChange, "N1",
        "Number of inner parametric loops iterations",
        "min=1\nmax=10000\nsep=block\ndef=1" );
@@ -74,8 +74,8 @@ class Simulation : public TDataSet  {
        "min=1\nmax=10000\nsep=col\ndef=1" );
   /** number of steps per i/o action */
   PRM_INT( n_iosteps, efNoRunChange, "N IO steps",
-      "number of steps per i/o action ",
-      "min=1\nmax=100000\nsep=col\ndef=1000" );
+      "number of steps per i/o action (limited to N)",
+      "min=1\nmax=100000\nsep=col\ndef=100" );
   /** Initial parameters values */
   PRM_DOUBLE( prm0s, efNoRunChange, "prm0s", "Initial prm0 value", "sep=block" );
   PRM_DOUBLE( prm1s, efNoRunChange, "prm1s", "Initial prm1 value", "" );

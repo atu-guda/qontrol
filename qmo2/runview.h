@@ -108,8 +108,10 @@ class RunView : public QDialog  {
     int n_tot = 1;
     //* iteration per loop
     int N = 1;
-    /** total counter */
-    int i_tot = 0;
+    /** misc counters */
+    int i_tot = 0, il1 = 0, il2 = 0;
+    //* current time
+    double t;
     //* total time
     double T = 1.0;
     /** number of steps per i/o action */

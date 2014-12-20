@@ -134,6 +134,13 @@ int TModel::startRun()
   prm1d = c_sim->getDataD( "prm1d", 0.0 );
   seed = c_sim->getDataD( "seed", 1 );
   seedType = c_sim->getDataD( "seedType",  0 );
+  n_iosteps = c_sim->getDataD( "n_iosteps",  1 );
+  if( n_iosteps >= N ) {
+    n_iosteps = N/10;
+  }
+  if( n_iosteps < 1 ) {
+    n_iosteps = 1;
+  }
 
   int type = c_sim->getDataD( "runType", (int)Simulation::runSingle );
 
@@ -187,20 +194,23 @@ int TModel::run( QSemaphore *sem )
       start_time = get_real_time(); rtime = t = 0;
       allStartLoop( il1, il2 );
       for( int i=0; i<N; ++i, ++i_tot ) {
-        // TODO: n_io?
 
         if ( QThread::currentThread()->isInterruptionRequested() ) { // check for break
           stopRun( 0 );
           return 0;
         }
         sem->acquire( 1 );
+
         rc = runOneLoop();
+
         sem->release( 1 );
+
         if( !rc ) {
           stopRun( 0 );
           return 0;
         }
-      }
+      } // -- main loop
+
       allEndLoop( il1, il2 );
     }
   }

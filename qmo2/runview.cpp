@@ -116,10 +116,13 @@ void RunView::slotRunNext()
   };
 
   sem_io.acquire( 1 );
-  fillVars();
+  t = model->get_t();
+  il1 = model->get_il1();
+  il2 = model->get_il2();
+  i_tot = model->get_i_tot();
+  // fillVars();
   m_state = model->getState();
   state = m_state;
-  model->getData( "i_tot", &i_tot );
   sem_io.release( 1 );
 
   // model->nextSteps( n_iosteps );
@@ -159,8 +162,8 @@ void RunView::paintEvent( QPaintEvent * /*pe*/ )
 
 void RunView::drawAll( QPainter &p )
 {
-  int gauge_w, il1, il2;
-  double t = 0, rt;
+  int gauge_w;
+  double rt;
   QString s;
 
   gauge_w = int( double(i_tot) * g_w / n_tot );
@@ -177,15 +180,11 @@ void RunView::drawAll( QPainter &p )
     rt = 0;
   }
 
-  model->getData( "t", &t );
-  model->getData( "il1", &il1 );
-  model->getData( "il2", &il2 );
-  // int runType = -1;
-  // sim->getData( "runType", &runType );
   s.sprintf( "%5s  t: %012.3f; m: [% .2f; % .2f]; rt: %7.2f  i: %7d (%3d:%3d);",
     getStateString(state), /*runType,*/ t, mouse_x, mouse_y, rt,
     i_tot, il1, il2  );
   p.drawText( 10, 14, s );
+
   // TODO: misc objects
   // if( syncRT ) {
   // };
