@@ -82,13 +82,13 @@ class LaboDoc : public QObject
   /** returns the title of the document */
   const QString& title() const;
   /** returns pointer to model */
-  TModel *getModel(void) const;
+  TModel *getModel() const;
   /** returns ptr to rootdata */
-  TRootData *getRoot(void) const;
+  TRootData *getRoot() const;
   /** fills rootdata reg infos */
-  void fillRoot(void);
+  void fillRoot();
   /** returns nonamed status */
-  bool nonamed(void) const { return is_nonamed; }
+  bool nonamed() const { return is_nonamed; }
 
  public slots:
 

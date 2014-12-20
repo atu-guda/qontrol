@@ -31,7 +31,7 @@ ColorBtn::~ColorBtn()
 {
 }
 
-int ColorBtn::colorInt(void) const
+int ColorBtn::colorInt() const
 {
   return int( col.rgb() );
 }

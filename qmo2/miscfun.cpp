@@ -51,7 +51,7 @@ int QString2IntEx( const QString &s, bool *ok )
 
 
 
-double get_real_time(void)
+double get_real_time()
 {
   double t;
   timeval tv;

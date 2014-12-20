@@ -225,17 +225,19 @@ int TModel::run( QSemaphore *sem )
     for( il1 = 0; il1 < n1_eff; ++il1 ) {
 
       prm0 = prm0s + il1 * prm0d;
-      sem->acquire( 1 );
       start_time = get_real_time(); rtime = t = 0;
       allStartLoop( il1, il2 );
       for( int i=0; i<N; ++i, ++i_tot ) {
+        // TODO: check for break
+        sem->acquire( 1 );
         rc = runOneLoop();
+        sem->release( 1 );
         if( !rc ) {
           return 0;
         }
       }
       allEndLoop( il1, il2 );
-      sem->release( 1 );
+      QThread::yieldCurrentThread();
 
     }
   }
@@ -511,6 +513,23 @@ bool TModel::cloneSimul( const QString &old_name, const QString &new_name )
 
 
 DEFAULT_FUNCS_REG(TModel)
+
+// ------------------------------ ModelRunner --------------------------
+
+
+ModelRunner::ModelRunner( TModel *a_model, QSemaphore *a_sem, QObject *parent )
+  : QThread( parent ), model( a_model ), sem( a_sem )
+{
+}
+
+void ModelRunner::run()
+{
+  if( !model || !sem ) {
+    return;
+  }
+  int rc = model->run( sem );
+  emit resultReady( rc );
+}
 
 
 // end of tmodel.cpp

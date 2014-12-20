@@ -36,7 +36,7 @@ struct DatasInfo {
 int QString2IntEx( const QString &s, bool *ok = nullptr );
 
 /** gets real time in seconds.ms */
-double get_real_time(void);
+double get_real_time();
 
 enum NameType {
   simpleName = 1,

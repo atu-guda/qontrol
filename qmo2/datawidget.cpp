@@ -1023,7 +1023,7 @@ void DataDialog::showHelp()
 }
 
 
-void DataDialog::showSimpleHelp(void)
+void DataDialog::showSimpleHelp()
 {
   QDialog *dia;
   QTextBrowser *brow;

@@ -296,12 +296,12 @@ bool LaboDoc::canCloseFrame( LaboView* pFrame )
   return ret;
 }
 
-TModel* LaboDoc::getModel(void) const
+TModel* LaboDoc::getModel() const
 {
   return model;
 }
 
-TRootData* LaboDoc::getRoot(void) const
+TRootData* LaboDoc::getRoot() const
 {
   return rootdata;
 }
@@ -316,7 +316,7 @@ bool LaboDoc::isModified() const
   return ( mmd & 1 );
 }
 
-void LaboDoc::fillRoot(void)
+void LaboDoc::fillRoot()
 {
   if( rootdata == 0 ) {
     DBG1( "ERR: rootdata is null!!" );

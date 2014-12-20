@@ -288,7 +288,7 @@ int Scheme::moveElem( const QString &nm, int newx, int newy )
   return 0;
 }
 
-int Scheme::linkNames(void)
+int Scheme::linkNames()
 {
   QString lname, pname, nname, oname;
   v_el.clear();

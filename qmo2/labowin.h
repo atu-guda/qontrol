@@ -81,7 +81,7 @@ class LaboWin : public QMainWindow
 {
   Q_OBJECT
   public:
-    LaboWin(void);
+    LaboWin();
     ~LaboWin();
 
     /** enables/disables menu entries/toolbar items */
@@ -228,7 +228,7 @@ class LaboWin : public QMainWindow
     /** shows an aboutQt dlg*/
     void slotHelpAboutQt();
     /** test something */
-    void slotTest(void);
+    void slotTest();
     /** change the status message of the whole statusbar temporary */
     void slotStatusHelpMsg(const QString &text);
     /** gets called when the window menu is activated; recreates

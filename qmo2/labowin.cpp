@@ -29,7 +29,7 @@ using namespace std;
 
 LaboWin* LaboWin::labowin = nullptr;
 
-LaboWin::LaboWin(void)
+LaboWin::LaboWin()
 {
   setWindowTitle( PACKAGE " " VERSION );
 
@@ -1130,7 +1130,7 @@ void LaboWin::slotStatusHelpMsg(const QString &text)
   statusBar()->showMessage( text, 2000 );
 }
 
-void LaboWin::slotTest(void)
+void LaboWin::slotTest()
 {
   QString ostr( "Test called" );
   statusBar()->showMessage( tr( "Test something..." ) );

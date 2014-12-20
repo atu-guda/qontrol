@@ -31,7 +31,8 @@
 using namespace std;
 
 RunView::RunView( TModel *a_mod, QWidget *parent )
-          : QDialog( parent ), model( a_mod ), timer( new QTimer( this ) )
+          : QDialog( parent ), model( a_mod ), timer( new QTimer( this ) ),
+            sem_io( 1 )
 {
   s_h = 40;
   // setBackgroundMode( Qt::NoBackground );
@@ -56,6 +57,7 @@ RunView::RunView( TModel *a_mod, QWidget *parent )
 RunView::~RunView()
 {
   delete timer; timer = nullptr;
+  delete runner; runner = nullptr;
 }
 
 QSize RunView::sizeHint() const
@@ -69,8 +71,6 @@ void RunView::slotStartRun()
   if( !sch  ||  state != stateGood ) {
     return;
   }
-  QSemaphore sem;
-  QThread th;
   i_tot = 0;  state = stateRun;
   rc = model->startRun();
   if( !rc ) {
@@ -80,15 +80,24 @@ void RunView::slotStartRun()
     return;
   };
 
+  runner = new ModelRunner( model, &sem_io, this );
+  if( !runner ) {
+    return;
+  }
+  // connect signals
+
   if( syncRT ) {
     setMouseTracking(1);
   }
   s_time = get_real_time();
-  timer->start( 0 );
+  timer->start( (int)(io_t*1000) );
+  runner->start();
+  //runner->start( QThread::Priority::LowPriority );
 }
 
-void RunView::slotStopRun(void)
+void RunView::slotStopRun()
 {
+  // TODO: real stop!
   timer->stop();
   setMouseTracking( 0 );
   state = stateBad;
@@ -96,7 +105,7 @@ void RunView::slotStopRun(void)
   update();
 }
 
-void RunView::slotRunNext(void)
+void RunView::slotRunNext()
 {
   int m_state;
   if( !sch  ||  state != stateRun ) {
@@ -104,29 +113,16 @@ void RunView::slotRunNext(void)
     DBG1( "warn: nextRun w/o start?" );
     return;
   };
+
+  sem_io.acquire( 1 );
   fillVars();
-
-  model->nextSteps( n_iosteps );
   m_state = model->getState();
+  state = m_state;
   model->getData( "i_tot", &i_tot );
+  sem_io.release( 1 );
 
+  // model->nextSteps( n_iosteps );
   // DBGx( "dbg: m_state: %d i_tot: %d n_tot: %d", m_state, i_tot, n_tot );
-
-  switch( m_state ) {
-    case stateRun:
-      if( i_tot >= n_tot ) {
-        model->stopRun(0);
-        state = model->getState();
-        DBGx( "warn: overrrun! m_state: %d i_tot: %d n_tot: %d", m_state, i_tot, n_tot );
-      };
-      break;
-    case stateDone:
-      model->stopRun(0); state = stateDone;
-      DBG1( "dbg: done!" );
-      break;
-    default:
-      model->stopRun(1); state = stateBad;
-  };
 
   if( state != stateRun ) {
     DBGx( "dbg: final! state: %d m_state: %d", state, m_state );
@@ -137,7 +133,6 @@ void RunView::slotRunNext(void)
     }
   };
   update();
-  // repaint( 0 );
 }
 
 

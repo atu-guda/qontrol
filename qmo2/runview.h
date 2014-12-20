@@ -23,9 +23,9 @@
 #include <QDialog>
 #include <QSemaphore>
 
-class TModel; class Scheme; class TDataSet; class TMiso; class Simulation;
-class QPaintEvent; class QMouseEvent; class QKeyEvent;
-class QPainter; class QPaintDevice;
+class TModel; class Scheme; class ModelRunner;
+// class QPaintEvent; class QMouseEvent; class QKeyEvent;
+// class QPainter; class QPaintDevice;
 
 /** displays run-time information about process and
   * give feedback
@@ -85,8 +85,10 @@ class RunView : public QDialog  {
     Scheme *sch = nullptr;
     /** timer to send timer events */
     QTimer *timer;
-    //* for synchronisation with computation thread
-    QSemaphore sem;
+    //* sync with 
+    QSemaphore sem_io;
+    //* model runner in thread
+    ModelRunner *runner = nullptr;
     /** geometry: w_ - window, g_ - graph, c_ center, s_ - set */
     int w_w, w_h, g_w, g_h, c_x, c_y, s_h;
     /** coefficients to transform visual and phis coords */

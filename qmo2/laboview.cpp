@@ -248,12 +248,12 @@ int LaboView::checkState( CheckType ctp )
 }
 
 
-TRootData* LaboView::getRoot(void)
+TRootData* LaboView::getRoot()
 {
   return root;
 }
 
-TModel*  LaboView::getModel(void)
+TModel*  LaboView::getModel()
 {
   return model;
 }
@@ -1564,7 +1564,7 @@ const char LaboView::helpstr[] = "<b>Hot keys:</b><br>\n"
 "<b>0-9</b> - select out array / graph <br>\n"
 ;
 
-void LaboView::showHelp(void)
+void LaboView::showHelp()
 {
   QDialog *dia; QLabel *la; QPushButton *bt_ok;
   QVBoxLayout *lv;

@@ -27,6 +27,8 @@
 #include "tgraph.h"
 #include "simul.h"
 
+// #include <QThread>
+
 class QSemaphore;
 
 /**Contains all elements of model
@@ -164,6 +166,22 @@ class TModel : public TDataContainer  {
   Simulation *c_sim = nullptr;
   DCL_DEFAULT_STATIC;
 
+};
+
+// -------------------------- ModelRunner -----------------------------
+// class to run TModel async in sepatate thread
+
+class ModelRunner : public QThread
+{
+  Q_OBJECT;
+  public:
+   ModelRunner( TModel *a_model, QSemaphore *a_sem, QObject *parent = nullptr );
+   virtual void run() override;
+  signals:
+   void resultReady( int rc );
+  protected:
+   TModel *model;
+   QSemaphore *sem;
 };
 
 #endif
