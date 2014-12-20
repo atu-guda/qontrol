@@ -816,7 +816,8 @@ QMdiSubWindow* LaboWin::findMdiChild( const QString &fileName )
     if( !mdiChild ) {
       continue;
     }
-    if( mdiChild->currentFile() == canonicalFilePath ) {
+    QString cp = QFileInfo( mdiChild->currentFile() ).canonicalFilePath();
+    if( cp  == canonicalFilePath ) {
       return window;
     }
   }

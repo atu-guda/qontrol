@@ -10,3 +10,4 @@ qmo2/*.qol
 _ex
 tmp/
 *.log
+.*.swp
