@@ -29,7 +29,7 @@ class OutDataView : public QListView {
   private:
    HolderData *mod;
    LaboView *laboview;
-   QAction *act_new, *act_del, *act_edit, *act_rename, *act_setActive,
+   QAction *act_new, *act_del, *act_edit, *act_rename,
            *act_dump, *act_showdata, *act_graphaddout;
   private:
    void init_actions();

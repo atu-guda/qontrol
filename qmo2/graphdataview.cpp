@@ -56,10 +56,6 @@ void GraphDataView::init_actions()
   addAction( act_rename );
   connect( act_rename, SIGNAL(triggered()), laboview, SLOT(renameGraph()) );
 
-  act_setActive = new QAction( QIcon::fromTheme("checkmark"), "set &Active", this );
-  addAction( act_setActive );
-  //connect( act_setActive, SIGNAL(triggered()), laboview, SLOT(setActiveGraph()) );
-
   act_show = new QAction( "&Show", this );
   addAction( act_show );
   connect( act_show, SIGNAL(triggered()), laboview, SLOT(showGraph()) );

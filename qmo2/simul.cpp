@@ -26,6 +26,7 @@ STD_CLASSINFO(Simulation,clpSpecial | clpContainer);
 
 CTOR(Simulation,TDataSet)
 {
+  show_active = true;
   allowed_types = "double,HolderDouble"; // double + inputs? TODO: check alias
 }
 

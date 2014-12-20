@@ -340,6 +340,8 @@ class HolderData : public QAbstractItemModel {
   bool updSuspended = false;
   //* active element index
   int active_idx = -1;
+  //* flag: show active/inactive state in Qt::CheckStateRole
+  bool show_active = false;
   QSSMap parms;
   QString allowed_types = ""; // separator=','
   DCL_DEFAULT_STATIC;

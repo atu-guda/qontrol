@@ -138,7 +138,7 @@ QVariant HolderData::dataObj( int col, int role ) const
   }
 
   if( role == Qt::CheckStateRole ) {
-    if( col != 0 ) {
+    if( !show_active || col != 0 ) {
       return QVariant();
     }
     return ( par  &&  par->getActiveElem() == this );

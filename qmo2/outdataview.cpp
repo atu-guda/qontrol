@@ -56,10 +56,6 @@ void OutDataView::init_actions()
   addAction( act_rename );
   connect( act_rename, SIGNAL(triggered()), laboview, SLOT(renameOut()) );
 
-  act_setActive = new QAction( QIcon::fromTheme("checkmark"), "set &Active", this );
-  addAction( act_setActive );
-  //connect( act_setActive, SIGNAL(triggered()), laboview, SLOT(setActiveSimul()) );
-
   act_graphaddout = new QAction( "&Add to plot", this );
   addAction( act_graphaddout  );
   connect( act_graphaddout, SIGNAL(triggered()), laboview, SLOT(graphAddOut()) );
