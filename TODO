@@ -1,4 +1,4 @@
-Propagete modified flag up to root?
+Propagate modified flag up to root?
 Application config: to TDataSet?
 
 Rebreand to Qontrol
@@ -8,6 +8,8 @@ create and save plot function + js
 LaboWin::initDirs?
 Sub simulation? / set of dialoged values before run
 TOutArr:  actions to manual fill/get + statistic
+Add to model object: common params
+Add to model object: functions
 
 call parent post_set (if req). flag?
 Input/output elements/scheme properties (in0?)

@@ -177,15 +177,42 @@ int TModel::startRun()
   }
   state = stateRun;
 
+  int useScripts  = c_sim->getDataD( "useScripts", 0 );
+  int initEng = 0, execModelScript = 0;
+  if( useScripts ) {
+    initEng         = c_sim->getDataD( "initEng", 1 );
+    execModelScript = c_sim->getDataD( "execModelScript", 1 );
+  }
+  if( initEng ) {
+    initEngine();
+  }
+  if( execModelScript ) {
+    runModelScript();
+  }
+
   return 1;
 }
 
 
 int TModel::run( QSemaphore *sem )
 {
-  if( !sem || ! c_sch ) {
+  if( !sem || ! c_sch || !c_sim ) {
     DBG1( "warn: bad init!" );
     return 0;
+  }
+
+  QString scriptPreRun, scriptPostRun, scriptStartLoop, scriptEndLoop;
+
+  int useScripts  = c_sim->getDataD( "useScripts", 0 );
+  if( useScripts ) {
+    scriptPreRun    = c_sim->getDataD( "scriptPreRun", QString() );
+    scriptPostRun   = c_sim->getDataD( "scriptPostRun", QString() );
+    scriptStartLoop = c_sim->getDataD( "scriptStartLoop", QString() );
+    scriptEndLoop   = c_sim->getDataD( "scriptEndLoop", QString() );
+  }
+
+  if( ! scriptPreRun.isEmpty() ) {
+    runScript( scriptPreRun );
   }
 
   int rc = 0;
@@ -196,6 +223,10 @@ int TModel::run( QSemaphore *sem )
       prm0 = prm0s + il1 * prm0d;
       start_time = get_real_time(); rtime = t = 0;
       allStartLoop( il1, il2 );
+      if( ! scriptStartLoop.isEmpty() ) {
+        runScript( scriptStartLoop );
+      }
+
       for( int i=0; i<N; ++i, ++i_tot ) {
 
         if ( QThread::currentThread()->isInterruptionRequested() ) { // check for break
@@ -220,11 +251,19 @@ int TModel::run( QSemaphore *sem )
           stopRun( 0 );
           return 0;
         }
-      } // -- main loop
+      } // -- main loop (i)
 
       allEndLoop( il1, il2 );
-    }
+      if( ! scriptEndLoop.isEmpty() ) {
+        runScript( scriptEndLoop );
+      }
+    } // -- inner llop (il1)
+  }   // -- outer loop (il2)
+
+  if( ! scriptPostRun.isEmpty() ) {
+    runScript( scriptPostRun );
   }
+
   stopRun( 0 );
   return i_tot;
 }

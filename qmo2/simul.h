@@ -74,7 +74,7 @@ class Simulation : public TDataSet  {
        "min=1\nmax=10000\nsep=col\ndef=1" );
   /** number of steps per i/o action */
   PRM_INT( n_iosteps, efNoRunChange, "N IO steps",
-      "number of steps per i/o action (limited to N)",
+      "number of steps per i/o action (limited to N, UNUSED)",
       "min=1\nmax=100000\nsep=col\ndef=100" );
   /** Initial parameters values */
   PRM_DOUBLE( prm0s, efNoRunChange, "prm0s", "Initial prm0 value", "sep=block" );
@@ -87,10 +87,18 @@ class Simulation : public TDataSet  {
   PRM_LIST( seedType, efNoRunChange, "Seed type",  "type of seeding", "enum=SeedType" );
   PRM_SWITCH( autoStart, efNoRunChange, "auto start",
       "Start simulation without key awaiting", "sep=col" );
+  //* -------- script params -------------------------------
+  PRM_SWITCH( useScripts, efNRC, "use scripts", "Turn on all script usage", "def=0\nsep=block" );
+  PRM_SWITCH( initEng, efNRC, "Init engine", "Init engine before run", "def=1" );
+  PRM_SWITCH( execModelScript, efNRC, "Exec model script", "Execute model script before run", "def=1" );
+  PRM_STRING( scriptPreRun,  efNRC, "preRun",  "Execute this before all loops", "sep=col" );
+  PRM_STRING( scriptPostRun, efNRC, "postRun", "Execute this after all loops", "" );
+  PRM_STRING( scriptStartLoop,  efNRC, "startLoop",  "Execute this is star of loop (il1, il2)", "sep=col" );
+  PRM_STRING( scriptEndLoop, efNRC,    "endLoop", "Execute this after loop (il1, il2)", "sep=blockend" );
   // -------- TODO: input/output channels -------
   /** description */
   PRM_STRING( descr, 0, "Description", "Simulation description",
-      "props=STRING,MLINE\nncol=-1\nsep=block");
+      "props=STRING,MLINE\nncol=-1\nsep=blockend");
   //* helper values to simplify usage
   PRM_INT( n1_eff, efInner, "n1_eff", "Effective number of iteration in inner loop" , "" );
   PRM_INT( n2_eff, efInner, "n2_eff", "Effective number of iteration in outer loop" , "" );
