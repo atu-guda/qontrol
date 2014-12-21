@@ -125,11 +125,8 @@ void RunView::slotRunNext()
   state = m_state;
   sem_io.release( 1 );
 
-  // model->nextSteps( n_iosteps );
-  // DBGx( "dbg: m_state: %d i_tot: %d n_tot: %d", m_state, i_tot, n_tot );
-
   if( state != stateRun ) {
-    DBGx( "dbg: final! state: %d m_state: %d", state, m_state );
+    // DBGx( "dbg: final! state: %d m_state: %d", state, m_state );
     timer->stop();
     setMouseTracking( 0 );
     if( s_time > 0  &&  ( get_real_time() - s_time ) > 10 ) {
@@ -339,8 +336,8 @@ void RunView::getSchemeData()
 
   state = model->getState();
   s_h = syncRT ? 520 : 40;
-  DBGx( "dbg: n_tot: %d, n_iosteps: %d syncRT: %d autoStart: %d io_t: %lg T: %lf N: %d",
-      n_tot, n_iosteps, syncRT, autoStart, io_t, T, N );
+  // DBGx( "dbg: n_tot: %d, n_iosteps: %d syncRT: %d autoStart: %d io_t: %lg T: %lf N: %d",
+  //     n_tot, n_iosteps, syncRT, autoStart, io_t, T, N );
 }
 
 

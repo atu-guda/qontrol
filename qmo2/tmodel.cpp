@@ -186,6 +186,18 @@ int TModel::startRun()
   if( initEng ) {
     initEngine();
   }
+  if( useScripts ) {
+    QScriptValue v_T = eng->newVariant( (double)T );
+    eng->globalObject().setProperty( "T", v_T );
+    QScriptValue v_N = eng->newVariant( (int)N );
+    eng->globalObject().setProperty( "N", v_N );
+    QScriptValue v_N1 = eng->newVariant( (int)n1_eff );
+    eng->globalObject().setProperty( "N1", v_N1 );
+    QScriptValue v_N2 = eng->newVariant( (int)n2_eff );
+    eng->globalObject().setProperty( "N2", v_N2 );
+    QScriptValue eng_c_sim = eng->newQObject( c_sim );
+    eng->globalObject().setProperty( "c_sim", eng_c_sim );
+  }
   if( execModelScript ) {
     runModelScript();
   }
@@ -202,6 +214,7 @@ int TModel::run( QSemaphore *sem )
   }
 
   QString scriptPreRun, scriptPostRun, scriptStartLoop, scriptEndLoop;
+  QScriptValue v_il1, v_il2;
 
   int useScripts  = c_sim->getDataD( "useScripts", 0 );
   if( useScripts ) {
@@ -222,9 +235,16 @@ int TModel::run( QSemaphore *sem )
 
       prm0 = prm0s + il1 * prm0d;
       start_time = get_real_time(); rtime = t = 0;
+
       allStartLoop( il1, il2 );
-      if( ! scriptStartLoop.isEmpty() ) {
-        runScript( scriptStartLoop );
+      if( useScripts ) {
+        v_il1 = eng->newVariant( (int)(il1) );
+        eng->globalObject().setProperty( "il1", v_il1 );
+        v_il2 = eng->newVariant( (int)(il2) );
+        eng->globalObject().setProperty( "il2", v_il2 );
+        if( ! scriptStartLoop.isEmpty() ) {
+          runScript( scriptStartLoop );
+        }
       }
 
       for( int i=0; i<N; ++i, ++i_tot ) {
