@@ -289,34 +289,33 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE QStringList getEnumStrings( const QString &enum_name ) const;
  signals:
    void sigStructChanged();
- public slots:
-  /** returns full name of object: aaa.bbb.cc  */
-  QString getFullName() const;
-  void setParm( const QString &name, const QString &value );
-  QString getParm( const QString &name ) const;
-  bool setDatas( const QString datas ); //* data sep: newline
-  QString getType() const { return getTypeV(); };
-  virtual const char* getHelp() const  = 0;
-  virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
-  virtual bool set( const QVariant & x, int idx = 0 ) = 0;
-  virtual QVariant get( int idx = 0 ) const = 0;
-  virtual QString toString() const = 0;
-  virtual bool fromString( const QString &s ) = 0;
-  int size() const { return children().size(); }
-  virtual int arrSize() const { return 1; }
-  int getState() const { return state; }
-  /** create object with params as string */
-  bool add_obj_datas( const QString &cl_name, const QString &ob_name, const QString &datas );
-  /** delete given object by name, returns 0 - error, !=0 = ok */
-  int del_obj( const QString &ob_name );
-  //* rename object (if created dynamicaly)
-  int rename_obj( const QString &ob_name, const QString &new_name );
-  // void check_guard() const;
-  int getActiveIdx() const { return active_idx; }
-  void setActiveIdx( int i );
-  void setActiveElem( const QString &nm );
-  HolderData* getActiveElem() const { return getElem( active_idx ); };
  public:
+  /** returns full name of object: aaa.bbb.cc  */
+  Q_INVOKABLE QString getFullName() const;
+  Q_INVOKABLE void setParm( const QString &name, const QString &value );
+  Q_INVOKABLE QString getParm( const QString &name ) const;
+  Q_INVOKABLE bool setDatas( const QString datas ); //* data sep: newline
+  Q_INVOKABLE QString getType() const { return getTypeV(); };
+  virtual const char* getHelp() const  = 0;
+  Q_INVOKABLE virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
+  Q_INVOKABLE virtual bool set( const QVariant & x, int idx = 0 ) = 0;
+  Q_INVOKABLE virtual QVariant get( int idx = 0 ) const = 0;
+  Q_INVOKABLE virtual QString toString() const = 0;
+  Q_INVOKABLE virtual bool fromString( const QString &s ) = 0;
+  Q_INVOKABLE int size() const { return children().size(); }
+  Q_INVOKABLE virtual int arrSize() const { return 1; }
+  Q_INVOKABLE int getState() const { return state; }
+  /** create object with params as string */
+  Q_INVOKABLE bool add_obj_datas( const QString &cl_name, const QString &ob_name, const QString &datas );
+  /** delete given object by name, returns 0 - error, !=0 = ok */
+  Q_INVOKABLE int del_obj( const QString &ob_name );
+  //* rename object (if created dynamicaly)
+  Q_INVOKABLE int rename_obj( const QString &ob_name, const QString &new_name );
+  // void check_guard() const;
+  Q_INVOKABLE int getActiveIdx() const { return active_idx; }
+  Q_INVOKABLE void setActiveIdx( int i );
+  Q_INVOKABLE void setActiveElem( const QString &nm );
+  HolderData* getActiveElem() const { return getElem( active_idx ); };
   template<typename T> T getActiveElemT() const
       {
         return qobject_cast<T>( getActiveElem() );

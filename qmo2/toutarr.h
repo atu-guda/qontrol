@@ -53,11 +53,13 @@ class TOutArr : public TDataSet  {
    virtual QIcon getIcon() const override;
 
    /** access to array value */
-   virtual const dvector* getArray() const { return &arr; }
+   const dvector* getArray() const { return &arr; }
    /** request to allocate array: only for special arrays now */
-   virtual int alloc( int anx, int any = 1 );
+   Q_INVOKABLE int alloc( int anx, int any = 1 );
    /** reset counter */
    virtual int reset();
+   Q_INVOKABLE virtual int arrSize() const override { return arrsize; }
+   Q_INVOKABLE int getN() const { return n; }
 
    //* called before all runs
    int preRun( int run_tp, int an, int anx, int any, double adt );
@@ -71,9 +73,15 @@ class TOutArr : public TDataSet  {
    virtual int take_val();
 
    /** dumps data to file */
-   int dump( const QString &fn, const QString &delim );
+   Q_INVOKABLE int dump( const QString &fn, const QString &delim );
    /** fills fields in DatasInfo structure, return number of elements (nn) */
    int fillDatasInfo( DatasInfo *di ) const;
+   //* access to one element by 1 ind 2 index
+   Q_INVOKABLE double at( int i ) const;
+   Q_INVOKABLE double at( int x, int y ) const;
+   Q_INVOKABLE void put( int i, double v );
+   Q_INVOKABLE void put( int x, int y, double v );
+   Q_INVOKABLE void add( double v );
  protected:
    /** type of array: 0:simple, 1:parm1, 2:parm2, 3:special */
    PRM_LIST( type, efNoRunChange, "Type", "Type of array", "enum=OutArrType" );

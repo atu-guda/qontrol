@@ -102,8 +102,6 @@ int TOutArr::reset()
   return 0;
 }
 
-
-
 int TOutArr::take_val()
 {
   if( type != OutArrType::outSimple ) {
@@ -236,11 +234,40 @@ int TOutArr::dump( const QString &fn, const QString &delim )
 
 void TOutArr::put_next_val()
 {
+  add( *so );
+}
+
+double TOutArr::at( int i ) const
+{
+  if( i >=n || i<0 ) {
+    return 0;
+  }
+  return arr[i];
+}
+
+double TOutArr::at( int x, int y ) const
+{
+  return at( x + y * ny );
+}
+
+void TOutArr::put( int i, double v )
+{
+  if( i >=n || i<0 ) {
+    return;
+  }
+  arr[i] = v;
+}
+
+void TOutArr::put( int x, int y, double v )
+{
+  return put( x + y*ny, v );
+}
+
+void TOutArr::add( double v )
+{
   if( n >= arrsize ) {
     return;
   }
-
-  double v = *so;
 
   if( cnq == lnq ) {
     if( n == 0 ) {
