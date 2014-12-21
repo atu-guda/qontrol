@@ -189,6 +189,8 @@ int TModel::startRun()
   if( useScripts ) {
     QScriptValue v_T = eng->newVariant( (double)T );
     eng->globalObject().setProperty( "T", v_T );
+    QScriptValue v_tdt = eng->newVariant( (double)tdt );
+    eng->globalObject().setProperty( "tdt", v_tdt );
     QScriptValue v_N = eng->newVariant( (int)N );
     eng->globalObject().setProperty( "N", v_N );
     QScriptValue v_N1 = eng->newVariant( (int)n1_eff );

@@ -247,7 +247,7 @@ double TOutArr::at( int i ) const
 
 double TOutArr::at( int x, int y ) const
 {
-  return at( x + y * ny );
+  return at( x + y * nx );
 }
 
 void TOutArr::put( int i, double v )
@@ -260,7 +260,7 @@ void TOutArr::put( int i, double v )
 
 void TOutArr::put( int x, int y, double v )
 {
-  return put( x + y*ny, v );
+  return put( x + y*nx, v );
 }
 
 void TOutArr::add( double v )

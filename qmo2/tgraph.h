@@ -117,9 +117,9 @@ class TGraph : public TDataSet  {
    /** fills fields in DatasInfo structure, return number of elements (nn) */
    int fillDatasInfo( DatasInfo *di ) const;
    /** dumps data to file */
-   int  dump( const QString &fn, const QString &delim = " " );
+   Q_INVOKABLE int  dump( const QString &fn, const QString &delim = " " );
    //* add new GraphElem to given TOutArr
-   int addOutArr( const QString &o_name );
+   Q_INVOKABLE int addOutArr( const QString &o_name );
  protected:
 
    /** title of graph  */
