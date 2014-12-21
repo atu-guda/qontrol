@@ -27,9 +27,9 @@
 #include "tgraph.h"
 #include "simul.h"
 
-// #include <QThread>
 
 class QSemaphore;
+class QScriptEngine;
 
 /**Contains all elements of model
   *@author atu
@@ -104,6 +104,11 @@ class TModel : public TDataContainer  {
 
   int getNSchems() const { return schems->size(); }
 
+  void initEngine();
+  QString runScript( const QString& script );
+  //* run inner model script
+  QString runModelScript();
+
 
  protected:
   // --------------- convinience ptrs to obligatory elements
@@ -171,6 +176,10 @@ class TModel : public TDataContainer  {
   Scheme *c_sch = nullptr;
   //* current simulation during run, else - 0
   Simulation *c_sim = nullptr;
+
+  //* script engine for currne model
+  QScriptEngine *eng = nullptr;
+
   DCL_DEFAULT_STATIC;
 
 };

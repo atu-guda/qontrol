@@ -20,7 +20,6 @@
 
 // include files for Qt
 #include <QWidget>
-#include <QScriptEngine>
 
 class QResizeEvent;
 class QCloseEvent;
@@ -150,11 +149,13 @@ class LaboView : public QWidget
    // model related
    void editModel();
    void showTreeModel();
-   void runScript();
 
    // runs
    void runRun();
    void resetModel();
+   void runScript();
+   QString runModelScript();
+   void initEngine();
 
  public:
    /** returns document rootdata */ // TODO: remove?
@@ -177,7 +178,6 @@ class LaboView : public QWidget
    virtual void closeEvent( QCloseEvent* );
    virtual void resizeEvent( QResizeEvent* );
    int checkState( CheckType ctp );
-   void initEngine();
    //* call engine and returns result, casted to QString
    QString runScript( const QString& script );
  protected:
@@ -197,8 +197,6 @@ class LaboView : public QWidget
    ContOut *outs;
    ContGraph *plots;
    ContSimul *sims;
-
-   QScriptEngine eng;
 
    int sel = -1, sel_x = 0, sel_y = 0, level = 0;
    // TODO: from file (config)

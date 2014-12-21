@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <algorithm>
 #include <QSemaphore>
+#include <QScriptEngine>
 
 #include "miscfun.h"
 #include "tmodel.h"
@@ -55,10 +56,12 @@ CTOR(TModel,TDataContainer)
   sim0->setImmutable();
   sims->setActiveElem( "sim0" );
 
+  initEngine();
 }
 
 TModel::~TModel()
 {
+  delete eng; eng = nullptr; // just for...
 }
 
 const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
@@ -497,6 +500,33 @@ bool TModel::cloneSimul( const QString &old_name, const QString &new_name )
 }
 
 
+void TModel::initEngine()
+{
+  delete eng;
+  eng = new QScriptEngine( this );
+
+  QScriptValue eng_model = eng->newQObject( this );
+  eng->globalObject().setProperty( "model", eng_model );
+  QScriptValue eng_main_s = eng->newQObject( main_s );
+  eng->globalObject().setProperty( "main_s", eng_main_s );
+}
+
+QString TModel::runScript( const QString& script )
+{
+  QScriptValue res = eng->evaluate( script );
+  QString r;
+  if( eng->hasUncaughtException() ) {
+    int line = eng->uncaughtExceptionLineNumber();
+    r = "Error: uncaught exception at line " % QSN( line ) % " : \n";
+  }
+  r += res.toString();
+  return r;
+}
+
+QString TModel::runModelScript()
+{
+  return runScript( script );
+}
 
 
 DEFAULT_FUNCS_REG(TModel)

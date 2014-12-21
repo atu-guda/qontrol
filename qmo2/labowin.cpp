@@ -468,16 +468,27 @@ void LaboWin::initIface()
   connect( act_runrun, &QAction::triggered, this, &LaboWin::slotRunRun );
   model_acts << act_runrun;
 
-  act_runscript = new QAction( QIcon::fromTheme("application-x-javascript"), "run &Script", this );
-  act_runscript->setShortcut( Qt::SHIFT+Qt::Key_F9 );
-  act_runscript->setWhatsThis( tr("Run script on model") );
-  connect( act_runscript, &QAction::triggered, this, &LaboWin::slotRunScript);
-  model_acts << act_runscript;
-
-  act_reset= new QAction( "R&eset", this );
+  act_reset = new QAction( "Rese&t", this );
   act_reset->setWhatsThis( tr("Reset model state.") );
   connect( act_reset, &QAction::triggered, this, &LaboWin::slotReset );
   model_acts << act_reset;
+
+  act_initengine = new QAction( "Init engine", this );
+  act_initengine->setWhatsThis( tr("Initialize model JS engine.") );
+  connect( act_initengine, &QAction::triggered, this, &LaboWin::slotInitEngine );
+  model_acts << act_initengine;
+
+  act_runscript = new QAction( QIcon::fromTheme("application-x-javascript"), "run &Script", this );
+  act_runscript->setShortcut( Qt::SHIFT+Qt::Key_F9 );
+  act_runscript->setWhatsThis( tr("Run script on model") );
+  connect( act_runscript, &QAction::triggered, this, &LaboWin::slotRunScript );
+  model_acts << act_runscript;
+
+  act_runmodelscript = new QAction( "run &Model script", this );
+  act_runmodelscript->setWhatsThis( tr("Run inner model script") );
+  connect( act_runmodelscript, &QAction::triggered, this, &LaboWin::slotRunModelScript );
+  model_acts << act_runmodelscript;
+
   // ==== iface group
 
   act_tbar = new QAction( "View &Toolbar", this );
@@ -669,8 +680,10 @@ void LaboWin::initIface()
   pRunMenu->addAction( act_runrun );
   pRunMenu->addSeparator();
   pRunMenu->addAction( act_runscript );
+  pRunMenu->addAction( act_runmodelscript );
   pRunMenu->addSeparator();
   pRunMenu->addAction( act_reset );
+  pRunMenu->addAction( act_initengine );
 
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pViewMenu
@@ -1438,10 +1451,20 @@ void LaboWin::slotReset()
 }
 
 
+void LaboWin::slotInitEngine()
+{
+  callLaboViewSlot( "initEngine", tr( "Initializing engine..." ) );
+}
+
 
 void LaboWin::slotRunScript()
 {
   callLaboViewSlot( "runScript", tr( "Running script..." ) );
+}
+
+void LaboWin::slotRunModelScript()
+{
+  callLaboViewSlot( "runModelScript", tr( "Running model script..." ) );
 }
 
 void LaboWin::setActiveSubWindow( QWidget *win )

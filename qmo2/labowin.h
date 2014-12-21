@@ -197,11 +197,13 @@ class LaboWin : public QMainWindow
     // ==== model related
     void slotEditModel();
     void slotShowTreeModel();
-    void slotRunScript();
 
     // ==== run related
     void slotRunRun();
     void slotReset();
+    void slotInitEngine();
+    void slotRunScript();
+    void slotRunModelScript();
 
     // ==== view related
     /** toggle the toolbar*/
@@ -305,7 +307,8 @@ class LaboWin : public QMainWindow
             // model
             *act_editmodel, *act_showtreemodel,
             // run
-            *act_runrun, *act_runscript, *act_reset,
+            *act_runrun, *act_reset,
+             *act_initengine, *act_runscript, *act_runmodelscript,
             // iface
             *act_tbar, *act_sbar,
             *act_showord, *act_showgrid, *act_shownames, *act_showicons, *act_showlinks,

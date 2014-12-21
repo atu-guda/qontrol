@@ -1742,10 +1742,7 @@ void TDataSet::reset_dfl()
     HolderData *o = qobject_cast<HolderData*>( c );
     if( o ) {
       o->reset_dfl();
-    } else {
-      DBGx( "warn: non-holder element \"%s\" in \"%s\"",
-          qP( c->objectName()), qP( objectName() ) );
-    }
+    } // it may be a non-holder elements, like model.eng
   }
 }
 

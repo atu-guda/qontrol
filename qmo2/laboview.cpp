@@ -1448,23 +1448,27 @@ void LaboView::initEngine()
   if( ! model ) {
     DBG1( "ERR: no model" );
   }
-  QScriptValue eng_model = eng.newQObject( model );
-  eng.globalObject().setProperty( "model", eng_model );
-  QScriptValue eng_main_s = eng.newQObject( main_s );
-  eng.globalObject().setProperty( "main_s", eng_main_s );
+  model->initEngine();
 }
 
 QString LaboView::runScript( const QString& script )
 {
-  QScriptValue res = eng.evaluate( script );
-  QString r;
-  if( eng.hasUncaughtException() ) {
-    int line = eng.uncaughtExceptionLineNumber();
-    r = "Error: uncaught exception at line " + QSN( line ) + " : \n";
+  if( ! model ) {
+    DBG1( "ERR: no model" );
   }
-  r += res.toString();
+  QString r = model->runScript( script );
   return r;
 }
+
+QString LaboView::runModelScript()
+{
+  if( ! model ) {
+    DBG1( "ERR: no model" );
+  }
+  QString r = model->runModelScript();
+  return r;
+}
+
 
 
 // TODO: 2-pane dialog + script pool
