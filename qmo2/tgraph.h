@@ -196,8 +196,8 @@ class TGraph : public TDataSet  {
    // special elements, not in common tree, just to present missing axis/data
    GraphElem *ge_zero = nullptr, *ge_fx = nullptr, *ge_fy = nullptr;
    //* defining scale points
-   mglPoint pr_min { 0, 0, 0, 0 }, pr_max { 1, 1, 1, 1 }, pr_dlt { 1, 1, 1, 1 }; // real
-   mglPoint pv_min { 0, 0, 0, 0 }, pv_max { 1, 1, 1, 1 }, pv_dlt { 1, 1, 1, 1 }; // visua;
+   mglPoint pr_min { 0, 0, 0 }, pr_max { 1, 1, 1 }, pr_dlt { 1, 1, 1 }; // real
+   mglPoint pv_min { 0, 0, 0 }, pv_max { 1, 1, 1 }, pv_dlt { 1, 1, 1 }; // visual
 
    DCL_DEFAULT_STATIC;
 };

@@ -120,8 +120,8 @@ LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
     case GraphElem::DataType::DataError :
     case GraphElem::DataType::DataMark :
     case GraphElem::DataType::DataTube :
-      // rl = LineRole::plot; ig = igc;
-      // break;
+       rl = LineRole::plot; ig = igc;
+       break;
     case GraphElem::DataType::DataSurf :
     case GraphElem::DataType::DataSurfC :
     case GraphElem::DataType::DataSurfA :
@@ -133,6 +133,7 @@ LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
     case GraphElem::DataType::DataContF :
     case GraphElem::DataType::DataContD :
       rl = LineRole::plot; ig = igc;
+      is2D = 1;
       break;
     case GraphElem::DataType::DataC0 :
       rl = LineRole::c0;
@@ -158,6 +159,7 @@ LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
   }
 
 
+  role = rl;
   return rl;
 }
 
@@ -336,10 +338,14 @@ int TGraph::prepare()
     ++iii;
   }
 
-  pr_min = { tli[LineRole::axisX]->v_min, tli[LineRole::axisY]->v_min,
-             v_min, tli[LineRole::c0]->v_min };
-  pr_max = { tli[LineRole::axisX]->v_max, tli[LineRole::axisY]->v_max,
-             v_max, tli[LineRole::c0]->v_max };
+  if( was_2D ) {
+    pr_min = { tli[LineRole::axisX]->v_min, tli[LineRole::axisY]->v_min, v_min };
+    pr_max = { tli[LineRole::axisX]->v_max, tli[LineRole::axisY]->v_max, v_max };
+  } else {
+    pr_min = { tli[LineRole::axisX]->v_min, v_min, tli[LineRole::axisZ]->v_min  };
+    pr_max = { tli[LineRole::axisX]->v_max, v_max, tli[LineRole::axisZ]->v_max  };
+  }
+  DBGx( "dbg: pr_min= %s pr_max= %s was_2D= %d", qP(toQString(pr_min)), qP(toQString(pr_max)), was_2D );
 
   prepared = true;
   return pli.size();
@@ -367,7 +373,7 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
   int np = 0; // number of selectd points;
   const int nd0 = 4; // inifial filling delta in pixels
   double mdlt = scd->maxErr * ( v_max - v_min ) / scd->h0; // max allowd delta
-  int stp0 = nn * nd0 / scd->h0; // step for initial filling grid
+  int stp0 = nn * nd0 / scd->w0; // step for initial filling grid
 
   // initial grid
   for( int i=0; i<nn; i+=stp0 ) {
@@ -376,7 +382,8 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
   if( ! plp[nn-1] ) {
     plp[nn-1] = 1;  ++np;
   }
-  DBGx( "dbg: squeeze base: np= %d mdlt = %lf", np, mdlt );
+  DBGx( "dbg: squeeze base: np= %d mdlt= %lf h0= %d stp0= %d v_min= %lf v_max= %lf",
+        np, mdlt, (int)scd->h0, stp0, (double)v_min, (double)v_max );
 
   int was_add = 1;
   for( int n_add = 0; was_add && n_add < 10; ++n_add ) { // 10 : max iterations to split
@@ -415,14 +422,14 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
         }
       }
     }
-    // DBGx( " dbg: np mid = %d  n_add= %d was_add= %d" , np, n_add, was_add );
+    DBGx( " dbg: np mid = %d  n_add= %d was_add= %d" , np, n_add, was_add );
   }
 
   nx = np; // as ny==1 was checked
   return np;
 }
 
-void TGraph::plotTo( mglGraph *gr, const mglPoint &zoom, const ScaleData *scd )
+void TGraph::plotTo( mglGraph *gr, const mglPoint & /*zoom*/, const ScaleData *scd )
 {
   if( !gr ) { return; }
   if( !scd ) { scd = this->scd; }
@@ -447,6 +454,7 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint &zoom, const ScaleData *scd )
   // pv_max = pv_min + pv_dlt;
 
   gr->SetRanges( pv_min, pv_max );
+  gr->SetRange( 'c', tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max );
 
   gr->SetTicks( 'x', -(scd->gridX), scd->tickX );
   gr->SetTicks( 'y', -(scd->gridY), scd->tickY );
@@ -462,6 +470,7 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint &zoom, const ScaleData *scd )
   // const mglData *d_z = tli[LineRole::axisZ]->md;
   const mglData *d_c0 = tli[LineRole::c0]->md;
 
+  bool need_colorbar = false;
   for( auto pl : pli ) {
     const char *ext = pl->pl_extra.c_str();
     const char *opt = pl->pl_opt.c_str();
@@ -521,6 +530,7 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint &zoom, const ScaleData *scd )
           break;
         }
         gr->Tens( *d_x, *(pl->md), *d_c0, ext, opt );
+        need_colorbar = true;
         break;
 
       case GraphElem::DataType::DataArea :
@@ -562,6 +572,7 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint &zoom, const ScaleData *scd )
         gr->Surf( *d_x, *d_y, *(pl->md), ext, opt );
         break;
       case GraphElem::DataType::DataSurfC :
+        need_colorbar = true;
         gr->SurfC( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
         break;
       case GraphElem::DataType::DataSurfA :
@@ -598,13 +609,18 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint &zoom, const ScaleData *scd )
   gr->Box( axis_style.c_str() );
   gr->Grid( "xyz", grid_style.c_str() );
   gr->Axis( "xyzU3AKDTVISO",  axis_style.c_str() );
-  // gr->Label( 'x', label_x.c_str() );
-  // gr->Label( 'y', label_y.c_str() );
+  gr->Label( 'x', tli[LineRole::axisX]->pl_label.c_str() );
+  if( was_2D ) {
+    gr->Label( 'y', tli[LineRole::axisY]->pl_label.c_str() );
+  }
   //
   // gr->Mark( mark_point, "3r+" );
   //gr->Mark( base_point, "3B*" );
   //gr->Error( base_point, pr_dlt, "B" );
   // gr->Label( 'z', label_z.c_str() );
+  if( need_colorbar ) {
+    gr->Colorbar();
+  }
 
   if( scd->legend_pos < 4 ) {
     gr->Legend( scd->legend_pos, "#" );
