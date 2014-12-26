@@ -478,6 +478,13 @@ class HolderColor : public HolderValue {
   DCL_STD_GETSET;
   virtual QString getTypeV() const override;
   STD_CONVERSIONS(QColor);
+  int toInt() const { return (int)( v.rgb() ); };
+  int red() const { return v.red(); }
+  int green() const { return v.green(); }
+  int blue() const { return v.blue(); }
+  double redF() const { return v.redF(); }
+  double greenF() const { return v.greenF(); }
+  double blueF() const { return v.blueF(); }
  protected:
   QColor v;
   DCL_DEFAULT_STATIC;

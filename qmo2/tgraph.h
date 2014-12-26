@@ -21,15 +21,29 @@
 #include <QColor>
 #include <QString>
 
+#include <mgl2/mgl.h>
 
 #include "dataset.h"
 #include "scaledata.h"
 class DatasInfo;
+class TGraph;
+
+enum LineRole {
+  none = 0, axisX, axisY, axisZ, plot, c0, c1, c2, c3, c4, c5, sz
+};
+
+//* converts color and width to style
+QString color2style( int color, int lw = 1, const QString &extra = QString() );
+//* converts MathGL point to QString
+QString toQString( const mglPoint &p );
+//* distance beween points
+double mglLen( const mglPoint &a, const mglPoint &b );
 
 //* decription of one line in plot
 
 class GraphElem : public TDataSet {
    Q_OBJECT
+   friend class TGraph; // to direct data access while plotting
  public:
    DCL_CTOR(GraphElem);
    DCL_CREATE;
@@ -85,18 +99,48 @@ class GraphElem : public TDataSet {
    Q_CLASSINFO( "enum_DataType_34",   "C4     " );    // DataC4
    Q_CLASSINFO( "enum_DataType_35",   "C5     " );    // DataC5     
 
+ public:
+   //* fills inner data, required for plot (seed inner:)
+   LineRole fillForPlot( int &g_nn, int &g_ny, int igc );
+
  protected:
-   PRM_LIST( type,    efNRC, "Type", "Data Type", "enum=DataType" );
+   PRM_LIST(   type,  efNRC, "Type", "Data Type", "enum=DataType" );
    PRM_SWITCH( is2D,  efNRC, "2D", "Data for 2D plot", "" );
    PRM_STRING( src,   efNRC, "Source", "Name of source for values", "max=128" );
    PRM_STRING( label, efNRC, "Label", "Label", "max=128" );
    PRM_COLOR(  color, efNRC, "line color", "plot line color", "def=black" );
    PRM_INT(    lw,    efNRC, "line width", "plot line width", "def=1\nmin=0\nmax=9" );
-   PRM_SWITCH(noColor,efNRC, "NO color", "ignore color and line width", "" );
+   PRM_SWITCH( noColor,efNRC, "NO color", "ignore color and line width", "" );
    PRM_STRING( extra, efNRC, "Extra", "Extra pen params to plot", "max=128\ndef=-" );
    PRM_STRING( opt,   efNRC, "Options", "Options to plot", "max=128" );
 
+   // inner: prepare to plot
+   int ig = -1; // index
+   LineRole role = LineRole::none;
+   int nn = 0, nx = 0, ny = 1;
+   std::string pl_label = "";
+   std::string pl_extra = "";
+   std::string pl_opt = "";
+   double v_min = 0, v_max = 0;
+   mglData *md = nullptr;
+   const std::vector<double> *ve; // until md is filled
+
    DCL_DEFAULT_STATIC;
+};
+
+
+// modified copy of GraphElem
+struct DataLineInfo {
+  int type;
+  int is2D;
+  int ig;
+  int on;
+  std::string label;
+  std::string extra;
+  std::string opt;
+  double v_min, v_max;
+  mglData *md;
+  const std::vector<double> *ve; // until md is filled
 };
 
 
@@ -112,6 +156,7 @@ class TGraph : public TDataSet  {
    DCL_CTOR(TGraph);
    DCL_CREATE;
    DCL_STD_INF;
+   virtual ~TGraph() override;
 
 
    /** fills fields in DatasInfo structure, return number of elements (nn) */
@@ -120,12 +165,39 @@ class TGraph : public TDataSet  {
    Q_INVOKABLE int  dump( const QString &fn, const QString &delim = " " );
    //* add new GraphElem to given TOutArr
    Q_INVOKABLE int addOutArr( const QString &o_name );
+   //* reset inner data for plotting
+   Q_INVOKABLE int reset();
+   //* prepage inner data for plotting
+   Q_INVOKABLE  int prepare();
+   //* plot to file
+   Q_INVOKABLE void plotToPng( const QString &fn );
+
+
+   void plotTo( mglGraph *gr, const mglPoint &zoom, const ScaleData *scd = nullptr );
  protected:
+   //* remove numbner of data points to plot
+   int fillSqueeze( std::vector<uint8_t> &plp );
 
    /** title of graph  */
    PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nncol=-1\ndef=fig. " );
+   // inners
+   PRM_DOUBLE( v_min, efInner, "v_min", "Minimal plot value", "def=0.0" );
+   PRM_DOUBLE( v_max, efInner, "v_max", "Maximal plot value", "def=1.0" );
+   PRM_INT( nn, efInner, "nn", "Common number of data points", "def=0" );
+   PRM_INT( nx, efInner, "nx", "Common number of data points in X direction", "def=0" );
+   PRM_INT( ny, efInner, "ny", "Common number of data points in Y direction", "def=1" );
 
    ScaleData *scd;
+
+   bool prepared = false;
+   GraphElem* tli[LineRole::sz];  // type line ptrs
+   std::vector<GraphElem*> pli;   // data line ptrs - only plottted lines
+
+   // special elements, not in common tree, just to present missing axis/data
+   GraphElem *ge_zero = nullptr, *ge_fx = nullptr, *ge_fy = nullptr;
+   //* defining scale points
+   mglPoint pr_min { 0, 0, 0, 0 }, pr_max { 1, 1, 1, 1 }, pr_dlt { 1, 1, 1, 1 }; // real
+   mglPoint pv_min { 0, 0, 0, 0 }, pv_max { 1, 1, 1, 1 }, pv_dlt { 1, 1, 1, 1 }; // visua;
 
    DCL_DEFAULT_STATIC;
 };

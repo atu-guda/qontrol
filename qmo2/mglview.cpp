@@ -21,8 +21,6 @@
 #include <QPrinter>
 #include <QPrintDialog>
 
-#include <mgl2/mgl.h>
-
 #include "labowin.h"
 #include "toutarr.h"
 #include "tgraph.h"
@@ -32,27 +30,6 @@
 #include "mglview.h"
 
 using namespace std;
-
-QString color2style( int color, int lw, const QString &extra )
-{
-  QColor cc = QRgb( color );
-  QString s_cc;
-  s_cc.sprintf( "%d{x%02X%02X%02X}", lw, cc.red(),  cc.green(), cc.blue() );
-  s_cc += extra;
-  return s_cc;
-}
-
-QString toQString( const mglPoint &p )
-{
-  QString s = QString( "[ %1; %2; %3 ]" ).arg( p.x ).arg( p.y ).arg( p.z );
-  return s;
-}
-
-double mglLen( const mglPoint &a, const mglPoint &b )
-{
-  return sqrt( (b.x-a.x)*(b.x-a.x) +(b.y-a.y)*(b.y-a.y) +(b.z-a.z)*(b.z-a.z) );
-}
-
 // ------------------------- MglView ------------------------
 
 MglView::MglView( TGraph *agra, QWidget *parent )

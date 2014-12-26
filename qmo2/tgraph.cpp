@@ -21,14 +21,144 @@
 #include "tmodel.h"
 #include "toutarr.h"
 
+using namespace std;
 
 const char* GraphElem::helpstr = "<H1>GraphElem</H1>\n"
  "Defines one source and output type for onw  line";
+
+// only for debug: TODOremove !
+const char *role_name[] = {
+  "none", "axisX", "axisY", "axisZ", "plot", "c0", "c1", "c2", "c3", "c4", "c5", "sz", "??1"
+};
 
 STD_CLASSINFO(GraphElem,clpElem);
 
 CTOR(GraphElem,TDataSet)
 {
+}
+
+LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
+{
+  LineRole rl = LineRole::none;
+  ig = -1;
+  TModel *model = getAncestorT<TModel>();
+  if( !model ) {
+    DBGx( "warn: not found model in \"%s\"", qP(getFullName()) );
+    return rl;
+  }
+  if( src.cval().isEmpty() ) {
+    return LineRole::none;
+  }
+  TOutArr *arr = model->getOutArr( src );
+  if( !arr ) {
+    return rl;
+  }
+
+  nn = arr->getDataD( "n", 0 );
+  if( nn < 1 ) {
+    return rl;
+  }
+  ny = arr->getDataD( "ny", 1 );
+  ve = arr->getArray();
+  if( ny < 1 ) {
+    return rl;
+  }
+  nx = nn / ny;
+
+  if( g_nn == 0 ) { // first non-empty array defined all other
+    g_nn = nn; g_ny = ny;
+  }
+  if( g_nn != nn  && g_ny != ny ) {
+    return rl;
+  }
+
+  v_min = arr->getDataD( "dmin", 0.0 );
+  v_max = arr->getDataD( "dmax", 0.0 );
+
+  // QString label_c = label.isEmpty() ? ( QString( "y_%1" ).arg( dl.size() )) : label;
+  QString label_c = label.cval().isEmpty() ? QString( "y" ) : label;
+  pl_label = label_c.toStdString();
+
+  int i_cc = QColor(color).rgba();
+
+  QString extra_c;
+  if( noColor ) {
+    extra_c = extra;
+  } else {
+    extra_c = color2style( i_cc, lw, extra );
+  }
+  pl_extra = extra_c.toStdString();
+
+  pl_opt = opt.cval().toStdString();
+
+
+  switch( type ) {
+    case GraphElem::DataType::DataNone :
+      break;
+    case GraphElem::DataType::DataAxisX:
+      rl = LineRole::axisX;
+      break;
+    case GraphElem::DataType::DataAxisY :
+      rl = LineRole::axisY;
+      break;
+    case GraphElem::DataType::DataAxisZ :
+      rl = LineRole::axisZ;
+      break;
+    case GraphElem::DataType::DataPlot :
+    case GraphElem::DataType::DataStep :
+    case GraphElem::DataType::DataTape :
+    case GraphElem::DataType::DataStem :
+    case GraphElem::DataType::DataBars :
+    case GraphElem::DataType::DataBarh :
+    case GraphElem::DataType::DataTens :
+    case GraphElem::DataType::DataArea :
+    case GraphElem::DataType::DataRegion :
+    case GraphElem::DataType::DataOHLC :
+    case GraphElem::DataType::DataBoxPlot :
+    case GraphElem::DataType::DataCandle :
+    case GraphElem::DataType::DataCones :
+    case GraphElem::DataType::DataError :
+    case GraphElem::DataType::DataMark :
+    case GraphElem::DataType::DataTube :
+      // rl = LineRole::plot; ig = igc;
+      // break;
+    case GraphElem::DataType::DataSurf :
+    case GraphElem::DataType::DataSurfC :
+    case GraphElem::DataType::DataSurfA :
+    case GraphElem::DataType::DataMesh :
+    case GraphElem::DataType::DataFall :
+    case GraphElem::DataType::DataBelt :
+    case GraphElem::DataType::DataDens :
+    case GraphElem::DataType::DataCont :
+    case GraphElem::DataType::DataContF :
+    case GraphElem::DataType::DataContD :
+      rl = LineRole::plot; ig = igc;
+      break;
+    case GraphElem::DataType::DataC0 :
+      rl = LineRole::c0;
+      break;
+    case GraphElem::DataType::DataC1 :
+      rl = LineRole::c1;
+      break;
+    case GraphElem::DataType::DataC2 :
+      rl = LineRole::c2;
+      break;
+    case GraphElem::DataType::DataC3 :
+      rl = LineRole::c3;
+      break;
+    case GraphElem::DataType::DataC4 :
+      rl = LineRole::c4;
+      break;
+    case GraphElem::DataType::DataC5 :
+      rl = LineRole::c5;
+      break;
+    default:
+      DBGx( "warn: unknown type %d label \"%s\"", (int)(type), qP(label) );
+      break;
+  }
+
+
+  return rl;
 }
 
 DEFAULT_FUNCS_REG(GraphElem);
@@ -46,8 +176,449 @@ CTOR(TGraph,TDataSet) ,
 {
   allowed_types = "GraphElem,GraphLabel,+SPECICAL";
   scd->setImmutable();
+  reset();
 }
 
+TGraph::~TGraph()
+{
+  reset();
+}
+
+int TGraph::reset()
+{
+  nn = 0, nx = 0, ny = 1;    // common for all datas
+  for( auto &tl : tli ) { tl = nullptr; }
+
+  pli.clear();
+  for( auto c : children() ) {
+    GraphElem *ge = qobject_cast<GraphElem*>( c );
+    if( ! ge ) {
+      continue;
+    }
+    delete ge->md; ge->md = nullptr;
+  }
+
+  prepared = false;
+  v_min = 0, v_max = 1; // cross!
+  delete ge_zero; ge_zero = nullptr;
+  delete ge_fx;  ge_fx  = nullptr;
+  delete ge_fy;  ge_fy  = nullptr;
+  // TODO: more
+  return 1;
+}
+
+int TGraph::prepare()
+{
+  reset();
+  double vmin = DMAX, vmax = DMIN; // cross! (local copy of v_min, v_max)
+  bool was_x = false, was_y = false, was_2D = false;
+  vector<double> ve_fx, ve_fy, ze_zero; // arrays for missing data
+
+  for( auto c : children() ) {
+    GraphElem *ge = qobject_cast<GraphElem*>( c );
+    if( ! ge ) {  continue;   }
+    LineRole ro = ge->fillForPlot( nn, ny, pli.size() );
+
+    if( ro == LineRole::none ) {  continue;   }
+    tli[ro] = ge;
+
+    if( ro == LineRole::axisX ) {
+      was_x = true;  continue;
+    }
+    if( ro == LineRole::axisY ) {
+      was_y = true;  continue;
+    }
+
+    if( ro == LineRole::plot ) {
+      pli.push_back( ge );
+      if( ge->is2D ) { was_2D = true; }
+      if( ge->v_min < vmin ) {
+        vmin = ge->v_min;
+      }
+      if( ge->v_max > vmax ) {
+        vmax = ge->v_max;
+      }
+    }
+  }
+  nx = nn / ny;
+
+  if( pli.size() < 1  ||  nn < 1 || nx < 1 ) {
+    DBGx( "warn: nothing to plot: pli.size= %d nn = %d nx = %d",
+          (int)pli.size(), (int)nn, (int)nx );
+    return 0;
+  }
+
+  if( ! was_x ) { // create fake X array
+    ve_fx.resize( nn );
+    for( int j=0; j<ny; ++j ) {
+      for( int i=0; i<nx; ++i ) {
+        ve_fx[i+j*nx] = i;
+      }
+    }
+    ge_fx  = new GraphElem( "_fx",  nullptr, efInner, "fake X data", "fake X", "" );
+    ge_fx->type = GraphElem::DataType::DataAxisX;
+    ge_fx->is2D = was_2D; ge_fx->label = "X_n";
+    ge_fx->role = LineRole::axisX;
+    ge_fx->nn = nn; ge_fx->nx = nx; ge_fx->ny = ny;
+    ge_fx->pl_label = "X_n";
+    ge_fx->v_min = 0; ge_fx->v_max = nx-1.0;
+    ge_fx->ve = &ve_fx;
+
+    tli[LineRole::axisX] = ge_fx;
+  }
+
+  if( was_2D && !was_y ) { // make fake y array if at least 1 2D plot
+    ve_fy.resize( nn );
+    for( int j=0; j<ny; ++j ) {
+      for( int i=0; i<nx; ++i ) {
+        ve_fy[i+j*nx] = j;
+      }
+    }
+    ge_fy  = new GraphElem( "_fy",  nullptr, efInner, "fake Y data", "fake Y", "" );
+    ge_fy->type = GraphElem::DataType::DataAxisY;
+    ge_fy->is2D = was_2D; ge_fy->label = "Y_n";
+    ge_fy->role = LineRole::axisY;
+    ge_fy->nn = nn; ge_fy->nx = nx; ge_fy->ny = ny;
+    ge_fy->pl_label = "X_n";
+    ge_fy->v_min = 0; ge_fy->v_max = ny;
+    ge_fy->ve = &ve_fy;
+
+    tli[LineRole::axisY] = ge_fy;
+  }
+  v_min = vmin; v_max = vmax;
+
+  vector<uint8_t> plp( nn, 0 ); // flags: point worth to draw
+  int np = fillSqueeze( plp );
+  DBGx( "dbg: squeeze res nn= %d, np= %d", (int)nn, np );
+
+  // create fake zero array
+  mglData *mdz = new mglData( nx, ny );
+  for( int i=0; i<np; ++i ) { mdz->a[i] = 0.0; };
+  ge_zero  = new GraphElem( "_zero",  nullptr, efInner, "zero data", "zero", "" );
+  ge_zero->type = GraphElem::DataType::DataNone;
+  ge_zero->is2D = was_2D; ge_zero->label = "0!";
+  ge_zero->role = LineRole::none;
+  ge_zero->nn = nn; ge_zero->nx = nx; ge_zero->ny = ny;
+  ge_zero->pl_label = "0!";
+  ge_zero->v_min = 0; ge_zero->v_max = 0.1;
+  ge_zero->ve = nullptr;
+  ge_zero->md = mdz;
+
+  for( auto c : children() ) {
+    GraphElem *ge = qobject_cast<GraphElem*>( c );
+    if( !ge ) {  continue;   }
+    const dvector *ve = ge->ve;
+    if( !ve ) { continue; }
+
+    mglData *md = new mglData( nx, ny );
+    // copy squeezed data
+    for( int i=0, j=0; i<nn && j<np ; ++i ) {
+      if( plp[i] ) {
+        md->a[j] = (*(ge->ve))[i];
+      ++j;
+      }
+    }
+    ge->md = md;
+    ge->ve = nullptr; // unused from now
+  }
+  nn = np; nx = nn / ny;
+
+
+  // all unfilled set to ge_zero
+  int iii = 0;
+  for( auto &ge : tli ) {
+    if( !ge ) {
+      ge = ge_zero;
+    }
+    DBGx( "dbg: %d %s ge \"%s\" %s nx: %d ny: %d min: %lf max :%lf",
+        iii, role_name[iii], qP(ge->label), role_name[ge->role],
+        (int)ge->md->nx, (int)ge->md->ny, ge->v_min, ge->v_max );
+    ++iii;
+  }
+
+  pr_min = { tli[LineRole::axisX]->v_min, tli[LineRole::axisY]->v_min,
+             v_min, tli[LineRole::c0]->v_min };
+  pr_max = { tli[LineRole::axisX]->v_max, tli[LineRole::axisY]->v_max,
+             v_max, tli[LineRole::c0]->v_max };
+
+  prepared = true;
+  return pli.size();
+}
+
+int TGraph::fillSqueeze( vector<uint8_t> &plp )
+{
+  const int max_nn_nosqz = 2000;
+  GraphElem *ge_x = tli[LineRole::axisX];
+  if( !ge_x ) { // unlikely
+    DBGx( "warn: X axis not found!!!" );
+    return 0;
+  }
+  const dvector *ve_x = ge_x->ve;
+  if( !ge_x ) { // unlikely
+    DBGx( "warn: X axis array not found!!!" );
+    return 0;
+  }
+
+  if( nn <= max_nn_nosqz || ny != 1 ) {
+    plp.assign( nn, 1 ); // all point are good
+    return nn;
+  }
+
+  int np = 0; // number of selectd points;
+  const int nd0 = 4; // inifial filling delta in pixels
+  double mdlt = scd->maxErr * ( v_max - v_min ) / scd->h0; // max allowd delta
+  int stp0 = nn * nd0 / scd->h0; // step for initial filling grid
+
+  // initial grid
+  for( int i=0; i<nn; i+=stp0 ) {
+    plp[i] = 1;  ++np;
+  }
+  if( ! plp[nn-1] ) {
+    plp[nn-1] = 1;  ++np;
+  }
+  DBGx( "dbg: squeeze base: np= %d mdlt = %lf", np, mdlt );
+
+  int was_add = 1;
+  for( int n_add = 0; was_add && n_add < 10; ++n_add ) { // 10 : max iterations to split
+    was_add = 0;
+    for( auto c : children() ) {
+      GraphElem *ge = qobject_cast<GraphElem*>( c );
+      if( ! ge ) {  continue;   }
+      if( ge->role == LineRole::none || ge->role == LineRole::axisX ) { continue; }
+
+      const dvector* yyc = ge->ve;
+      if( ! yyc ) {
+        DBGx( "warn: no array in squeeze \"%s\"", qP(ge->label) );
+        continue;
+      }
+      for( int i0 = 0, i1 = 0; i0 < nn-1; i0 = i1 ) {
+        for( i1 = i0+1; !plp[i1] && i1 < nn; ++i1 ) /* NOP: find next set*/;
+        double x0 = (*ve_x)[i0], x1 = (*ve_x)[i1];
+        double y0 = (*yyc)[i0], y1 = (*yyc)[i1];
+        if( x0 == x1 ) {
+          continue;
+        }
+        double kxy = ( y1 - y0 ) / ( x1 - x0 );
+
+        // find point of maximum delta
+        int i_cm = 0; // index of current maximum
+        double dly_cm = 0; // value of this max
+        for( int i2=i0+1; i2<i1-1; ++i2 ) {
+          double yc = y0 + kxy * ( (*ve_x)[i2] - x0 );
+          double dly = fabs( yc - (*yyc)[i2] );
+          if( dly > dly_cm ) {
+            dly_cm = dly; i_cm = i2;
+          }
+        }
+        if( dly_cm > mdlt  && ! plp[i_cm]  ) { // may be set by other
+          plp[i_cm] = 1; ++np; ++was_add;
+        }
+      }
+    }
+    // DBGx( " dbg: np mid = %d  n_add= %d was_add= %d" , np, n_add, was_add );
+  }
+
+  nx = np; // as ny==1 was checked
+  return np;
+}
+
+void TGraph::plotTo( mglGraph *gr, const mglPoint &zoom, const ScaleData *scd )
+{
+  if( !gr ) { return; }
+  if( !scd ) { scd = this->scd; }
+  if( !prepared  && prepare() < 1 ) {
+    return;
+  }
+
+  gr->DefaultPlotParam();
+
+  gr->SetFontSize( scd->fontSise );
+  gr->SetPlotFactor( scd->plotFactor );
+  gr->Rotate( scd->phi, scd->theta );
+  gr->Light( scd->useLight );
+  gr->SetAlphaDef( scd->alpha );
+  gr->Alpha( (bool)(scd->useAlpha) );
+
+  pr_dlt = pr_max - pr_min;
+
+  // TMP: until position is setted by args TODO: fix
+  pv_min = pr_min; pv_max = pr_max; pv_dlt = pr_dlt;
+  // pv_dlt = pr_dlt / mag; // realy * by coords
+  // pv_max = pv_min + pv_dlt;
+
+  gr->SetRanges( pv_min, pv_max );
+
+  gr->SetTicks( 'x', -(scd->gridX), scd->tickX );
+  gr->SetTicks( 'y', -(scd->gridY), scd->tickY );
+
+  string axis_style = color2style( scd->axis_color.toInt(), 1 ).toStdString();
+  string grid_style = color2style( scd->grid_color.toInt(), 1, "=" ).toStdString();
+
+  QColor bg_c = scd->bgcolor;
+  gr->Clf( bg_c.redF(), bg_c.greenF(), bg_c.blueF() );
+
+  const mglData *d_x = tli[LineRole::axisX]->md;
+  const mglData *d_y = tli[LineRole::axisY]->md;
+  // const mglData *d_z = tli[LineRole::axisZ]->md;
+  const mglData *d_c0 = tli[LineRole::c0]->md;
+
+  for( auto pl : pli ) {
+    const char *ext = pl->pl_extra.c_str();
+    const char *opt = pl->pl_opt.c_str();
+
+    switch( pl->type ) {
+      case GraphElem::DataType::DataPlot :
+        if( pl->is2D ) {
+          gr->Plot( *d_x, *d_y, *(pl->md), ext, opt );
+          break;
+        }
+        gr->Plot( *d_x, *(pl->md), ext, opt );
+        break;
+
+      case GraphElem::DataType::DataStep :
+        if( pl->is2D ) {
+          gr->Step( *d_x, *d_y, *(pl->md), ext, opt );
+          break;
+        }
+        gr->Step( *d_x, *(pl->md), ext, opt );
+        break;
+
+      case GraphElem::DataType::DataTape :
+        if( pl->is2D ) {
+          gr->Tape( *d_x, *d_y, *(pl->md), ext, opt );
+          break;
+        }
+        gr->Tape( *d_x, *(pl->md), ext, opt );
+        break;
+
+      case GraphElem::DataType::DataStem :
+        if( pl->is2D ) {
+          gr->Stem( *d_x, *d_y, *(pl->md), ext, opt );
+          break;
+        }
+        gr->Stem( *d_x, *(pl->md), ext, opt );
+        break;
+
+      case GraphElem::DataType::DataBars :
+        if( pl->is2D ) {
+          gr->Bars( *d_x, *d_y, *(pl->md), ext, opt );
+          break;
+        }
+        gr->Bars( *d_x, *(pl->md), ext, opt );
+        break;
+
+      case GraphElem::DataType::DataBarh :
+        if( pl->is2D ) {
+          gr->Barh( *(pl->md), *d_x, ext, opt );
+          break;
+        }
+        gr->Barh( *(pl->md), *d_x, ext, opt );
+        break;
+
+      case GraphElem::DataType::DataTens : // C0: color
+        if( pl->is2D ) {
+          gr->Tens( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+          break;
+        }
+        gr->Tens( *d_x, *(pl->md), *d_c0, ext, opt );
+        break;
+
+      case GraphElem::DataType::DataArea :
+        if( pl->is2D ) {
+          gr->Area( *d_x, *d_y, *(pl->md), ext, opt );
+          break;
+        }
+        gr->Area( *d_x, *(pl->md), ext, opt );
+        break;
+      case GraphElem::DataType::DataRegion :
+        break; // unknown for now
+      case GraphElem::DataType::DataOHLC :
+        break; // unknown for now
+      case GraphElem::DataType::DataBoxPlot :
+        break; // unknown for now
+      case GraphElem::DataType::DataCandle :
+        break; // unknown for now
+      case GraphElem::DataType::DataCones :
+        break; // unknown for now
+      case GraphElem::DataType::DataError :
+        break; // unknown for now
+      case GraphElem::DataType::DataMark : // C0: sz
+        if( pl->is2D ) {
+          gr->Mark( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+          break;
+        }
+        gr->Mark( *d_x, *(pl->md), *d_c0, ext, opt  );
+        break;
+
+      case GraphElem::DataType::DataTube : // C0: r
+        if( pl->is2D ) {
+          gr->Tube( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+          break;
+        }
+        gr->Tube( *d_x, *(pl->md), *d_c0, ext, opt );
+        break;
+
+      case GraphElem::DataType::DataSurf :
+        gr->Surf( *d_x, *d_y, *(pl->md), ext, opt );
+        break;
+      case GraphElem::DataType::DataSurfC :
+        gr->SurfC( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+        break;
+      case GraphElem::DataType::DataSurfA :
+        gr->SurfA( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+        break;
+      case GraphElem::DataType::DataMesh :
+        gr->Mesh( *d_x, *d_y, *(pl->md), ext, opt );
+        break;
+      case GraphElem::DataType::DataFall :
+        gr->Fall( *d_x, *d_y, *(pl->md), ext, opt );
+        break;
+      case GraphElem::DataType::DataBelt :
+        gr->Belt( *d_x, *d_y, *(pl->md), ext, opt );
+        break;
+      case GraphElem::DataType::DataDens :
+        gr->Dens( *d_x, *d_y, *(pl->md), ext, opt );
+        break;
+      case GraphElem::DataType::DataCont :
+        gr->Cont( *d_x, *d_y, *(pl->md), ext, opt );
+        break;
+      case GraphElem::DataType::DataContF : // C0: v
+        gr->ContF( *d_c0, *d_x, *d_y, *(pl->md),  ext, opt );
+        break;
+      case GraphElem::DataType::DataContD : // C0: d
+        gr->ContD( *d_c0, *d_x, *d_y, *(pl->md), ext, opt );
+        break;
+      default: break;
+    }
+    gr->AddLegend( pl->pl_label.c_str(), ext );
+  }
+
+
+
+  gr->Box( axis_style.c_str() );
+  gr->Grid( "xyz", grid_style.c_str() );
+  gr->Axis( "xyzU3AKDTVISO",  axis_style.c_str() );
+  // gr->Label( 'x', label_x.c_str() );
+  // gr->Label( 'y', label_y.c_str() );
+  //
+  // gr->Mark( mark_point, "3r+" );
+  //gr->Mark( base_point, "3B*" );
+  //gr->Error( base_point, pr_dlt, "B" );
+  // gr->Label( 'z', label_z.c_str() );
+
+  if( scd->legend_pos < 4 ) {
+    gr->Legend( scd->legend_pos, "#" );
+  }
+}
+
+void TGraph::plotToPng( const QString &fn )
+{
+  mglGraph gr( 0, scd->w0, scd->h0 );
+  mglPoint z0 { 1, 1, 1 };
+  plotTo( &gr, z0, scd );
+  string fn_s = fn.toStdString();
+  gr.WritePNG( fn_s.c_str(), ((QString)title).toStdString().c_str() );
+}
 
 int TGraph::fillDatasInfo( DatasInfo *di ) const
 {
@@ -213,6 +784,29 @@ int TGraph::addOutArr( const QString &o_name )
 
   return 1;
 }
+
+// ---------------- misc funcs -------------------------- 
+
+QString color2style( int color, int lw, const QString &extra )
+{
+  QColor cc = QRgb( color );
+  QString s_cc;
+  s_cc.sprintf( "%d{x%02X%02X%02X}", lw, cc.red(),  cc.green(), cc.blue() );
+  s_cc += extra;
+  return s_cc;
+}
+
+QString toQString( const mglPoint &p )
+{
+  QString s = QString( "[ %1; %2; %3 ]" ).arg( p.x ).arg( p.y ).arg( p.z );
+  return s;
+}
+
+double mglLen( const mglPoint &a, const mglPoint &b )
+{
+  return sqrt( (b.x-a.x)*(b.x-a.x) +(b.y-a.y)*(b.y-a.y) +(b.z-a.z)*(b.z-a.z) );
+}
+
 
 
 DEFAULT_FUNCS_REG(TGraph);

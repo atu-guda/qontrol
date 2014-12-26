@@ -26,35 +26,14 @@
 #include <QWidget>
 #include <QColor>
 #include <QList>
-#include <mgl2/qt.h>
+
+#include <tgraph.h>
 
 class TGraph;
 class ScaleData;
 class mglData;
 class mglGraph;
 class mglDraw;
-
-//* converts color and width to style
-QString color2style( int color, int lw = 1, const QString &extra = QString() );
-//* converts MathGL point to QString
-QString toQString( const mglPoint &p );
-//* distance beween points
-double mglLen( const mglPoint &a, const mglPoint &b );
-
-// modified copy of GraphElem
-struct DataLineInfo {
-  int type;
-  int is2D;
-  int ig;
-  int on;
-  std::string label;
-  std::string extra;
-  std::string opt;
-  double v_min, v_max;
-  mglData *md;
-  const std::vector<double> *ve; // until md is filled
-};
-
 /**can plot graphs for TModel on info by TGraph
   *@author atu
   */
