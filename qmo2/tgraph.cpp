@@ -189,6 +189,7 @@ TGraph::~TGraph()
 int TGraph::reset()
 {
   nn = 0, nx = 0, ny = 1;    // common for all datas
+  c_nn = nn; c_nx = nx; c_ny = ny;
   for( auto &tl : tli ) { tl = nullptr; }
 
   pli.clear();
@@ -247,6 +248,7 @@ int TGraph::prepare()
     }
   }
   nx = nn / ny;
+  c_nn = nn; c_nx = nx; c_ny = ny;
 
   if( pli.size() < 1  ||  nn < 1 || nx < 1 ) {
     DBGx( "warn: nothing to plot: pli.size= %d nn = %d nx = %d",
@@ -356,6 +358,7 @@ int TGraph::prepare()
     ge_fy->ve = nullptr;
   }
   nn = np; nx = nn / ny;
+  c_nn = nn; c_nx = nx; c_ny = ny;
 
 
   // all unfilled set to ge_zero
@@ -461,7 +464,7 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
   return np;
 }
 
-void TGraph::plotTo( mglGraph *gr, const mglPoint & /*zoom*/, const ScaleData *scd )
+void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scd )
 {
   if( !gr ) { return; }
   if( !scd ) { scd = this->scd; }
@@ -480,15 +483,19 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint & /*zoom*/, const ScaleData *s
 
   pr_dlt = pr_max - pr_min;
 
-  // TMP: until position is setted by args TODO: fix
-  pv_min = pr_min; pv_max = pr_max; pv_dlt = pr_dlt;
-  // pv_dlt = pr_dlt / mag; // realy * by coords
-  // pv_max = pv_min + pv_dlt;
+  ViewData vd;
+  vd.pv_min = pr_min; vd.pv_max = pr_max;
+  if( a_vd ) {
+    vd = *a_vd;
+  }
 
-  gr->SetRanges( pv_min, pv_max );
+  vd.pv_dlt = pr_dlt / vd.mag; // realy * by coords
+  vd.pv_max = vd.pv_min + vd.pv_dlt;
+
+  gr->SetRanges( vd.pv_min, vd.pv_max );
   if( need_c_axis ) {
     gr->SetRange( 'c', tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max );
-    DBGx( "dbg: C axis: %lf %lf", tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max  );
+    // DBGx( "dbg: C axis: %lf %lf", tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max  );
   }
 
   gr->SetTicks( 'x', -(scd->gridX), scd->tickX );
@@ -505,7 +512,14 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint & /*zoom*/, const ScaleData *s
   // const mglData *d_z = tli[LineRole::axisZ]->md;
   const mglData *d_c0 = tli[LineRole::c0]->md;
 
+  int ig = 0;
   for( auto pl : pli ) {
+    uint64_t msk = 1ull << ig;
+    if( vd.off & msk ) {
+      ++ig;
+      continue;
+    }
+
     const char *ext = pl->pl_extra.c_str();
     const char *opt = pl->pl_opt.c_str();
 
@@ -634,6 +648,7 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint & /*zoom*/, const ScaleData *s
       default: break;
     }
     gr->AddLegend( pl->pl_label.c_str(), ext );
+    ++ig;
   }
 
 
@@ -671,11 +686,87 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint & /*zoom*/, const ScaleData *s
   }
 }
 
+bool TGraph::fillViewData( ViewData *da )
+{
+  if( !da || !prepared ) {
+    return false;
+  }
+  da->pv_min = pr_min; da->pv_max = pr_max; da->pv_dlt = pr_dlt;
+  da->mag = mglPoint( 1, 1, 1 );
+  da->ng = pli.size(); da->nn = nn; da->nx = nx; da->ny = ny;
+  da->off = 0;
+  return true;
+}
+
+bool TGraph::getPointAt( int ig, int ip, mglPoint *p ) const
+{
+  if( !prepared || !p || ig<0 || ig >=(int)pli.size() || ip <0 || ip >= nn ) {
+    return false;
+  }
+  double x = tli[LineRole::axisX]->md->a[ip];
+  double y = 0, z = 0;
+  if( was_2D ) {
+    y = tli[LineRole::axisY]->md->a[ip];
+    z = pli[ig]->md->a[ip];
+  } else {
+    y = pli[ig]->md->a[ip];
+  }
+
+  *p =  mglPoint( x, y, z );
+  return true;
+}
+
+int TGraph::findNearest( const mglPoint &p, int ig ) const
+{
+  if( !prepared || ig<0 || ig >=(int)pli.size() ) {
+    return -1;
+  }
+  mglPoint p0 = p, p1;
+
+  if( !was_2D ) {
+    p0.z = 0;
+  }
+
+  double l_min = DMAX; int i_min = 0;
+  const mglData *d_x = tli[LineRole::axisX]->md;
+  const mglData *d_y = tli[LineRole::axisY]->md;
+  const mglData *d_v = pli[ig]->md;
+
+  for( int i=0; i<nn; ++i ) {
+    if( was_2D ) {
+      p1 = { d_x->a[i], d_y->a[i], d_v->a[i] };
+    } else {
+      p1 = { d_x->a[i], d_v->a[i], 0 };
+    }
+    double l = mglLen( p0, p1 );
+    if( l < l_min ) {
+      l_min = l; i_min = i;
+    }
+  }
+
+  return i_min;
+}
+
+QString TGraph::getPlotLabel( int ig ) const
+{
+  if( ig < 0 || ig >= (int)pli.size() ) {
+    return QString();
+  }
+  return pli[ig]->label;
+}
+
+QString TGraph::getPrintInfo( int ig ) const
+{
+  if( ig < 0 || ig >= (int)pli.size() ) {
+    return QString();
+  }
+  return pli[ig]->md->PrintInfo();
+}
+
 void TGraph::plotToPng( const QString &fn )
 {
   mglGraph gr( 0, scd->w0, scd->h0 );
-  mglPoint z0 { 1, 1, 1 };
-  plotTo( &gr, z0, scd );
+  plotTo( &gr, nullptr, scd );
   string fn_s = fn.toStdString();
   gr.WritePNG( fn_s.c_str(), ((QString)title).toStdString().c_str() );
 }

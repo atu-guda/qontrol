@@ -59,6 +59,7 @@ class MglView : public QWidget  {
    void setZbase( double base, bool rel = false );
    void setAlpha( double al, bool rel = false );
    void zoom(); // from base to mark
+   void zoomReset();
    void printPlot();
    void exportPlot();
    void showInfo();
@@ -79,36 +80,24 @@ class MglView : public QWidget  {
    virtual void resizeEvent( QResizeEvent *e ) override;
  protected:
    void drawAll( QPainter &p );
-   int Draw( mglGraph *gr );
    void Reload();
    void resetData();
    QSize getSize0() const;
    void drawFooter( QPainter &p, int hg );
    void setMarkToLink();
-   int findNearest( const mglPoint &p, int dl_idx );//* find nearest point index
  protected:
    TGraph *gra;
+   ViewData vd;
+   mglPoint pr_min {0,0,0}, pr_max {1,1,1}, pr_dlt {1,1,1};
    mglGraph gr = mglGraph( 0,100, 100 );
-   std::vector<DataLineInfo> dl;
-   std::vector<int> dli; // convert sel -> idx in dl[], or -1
-   std::string label_x, label_y, label_z;
-   mglData *d_zero; // special data: zeros
-   mglData *d_x, *d_y, *d_z; // axiz data
-   int nn = 0, ny = 1, nx = 0; //* copy from arrays
-   mglData *d_c0, *d_c1, *d_c2, *d_c3, *d_c4, *d_c5; // aux data - not owning
    ScaleData *scd, *scd_o; // _o = ptr to original
    const QFont &pa_fnt;
    int em = 10, ex = 10, bottom_h = 40; // default only
    std::vector<uint8_t> pb; // pix buf
    int alc_x = 0, alc_y = 0; // size of allocated buffer**4
-   mglPoint mark_point { 0, 0, 0 };
-   mglPoint base_point { 0, 0, 0 };
-   mglPoint pr_min { 0, 0, 0 }, pr_max { 1, 1, 1 }, pr_dlt { 1, 1, 1 }; // real
-   mglPoint pv_min { 0, 0, 0 }, pv_max { 1, 1, 1 }, pv_dlt { 1, 1, 1 }; // visual
-   mglPoint mag { 1, 1, 1 };
    double angle_step = 5.0, mag_step = 0.707106781, scale_step = 0.10;
-   int sel = 0; //* selected plot, may be none: see dli[sel]
-   int linkPlot = -1; //* linked data index (unlike sel, dl[linkTo])
+   int sel = 0; //* selected plot, may be no plot here
+   int linkPlot = -1; //* linked data index
    int linkIdx = 0;   //* current point index in linked array
    bool data_loaded = false;
 };

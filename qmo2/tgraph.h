@@ -143,6 +143,14 @@ struct DataLineInfo {
   const std::vector<double> *ve; // until md is filled
 };
 
+// --------------------------------------------------------------------
+
+//* decription of view
+struct ViewData {
+  mglPoint mag { 1, 1, 1 }, pv_min { 0, 0, 0 }, pv_max{ 1, 1, 1 }, pv_dlt { 1, 1, 1 };
+  int ng = 0, nn = 0, nx=0, ny=1; // only from TGraph to View
+  uint64_t off = 0; // lines, not to show (from View to TGraph while plot)
+};
 
 // --------------------------------------------------------------------
 
@@ -173,7 +181,12 @@ class TGraph : public TDataSet  {
    Q_INVOKABLE void plotToPng( const QString &fn );
 
 
-   void plotTo( mglGraph *gr, const mglPoint &zoom, const ScaleData *scd = nullptr );
+   void plotTo( mglGraph *gr, const ViewData *a_vd = nullptr, const ScaleData *scd = nullptr );
+   bool fillViewData( ViewData *da );
+   bool getPointAt( int ig, int ip, mglPoint *p ) const;
+   int findNearest( const mglPoint &p, int ig ) const ;//* find nearest point index
+   QString getPlotLabel( int ig ) const;
+   QString getPrintInfo( int ig ) const;
  protected:
    //* remove numbner of data points to plot
    int fillSqueeze( std::vector<uint8_t> &plp );
@@ -183,15 +196,16 @@ class TGraph : public TDataSet  {
    // inners
    PRM_DOUBLE( v_min, efInner, "v_min", "Minimal plot value", "def=0.0" );
    PRM_DOUBLE( v_max, efInner, "v_max", "Maximal plot value", "def=1.0" );
-   PRM_INT( nn, efInner, "nn", "Common number of data points", "def=0" );
-   PRM_INT( nx, efInner, "nx", "Common number of data points in X direction", "def=0" );
-   PRM_INT( ny, efInner, "ny", "Common number of data points in Y direction", "def=1" );
+   PRM_INT( c_nn, efInner, "nn", "Common number of data points", "def=0" );
+   PRM_INT( c_nx, efInner, "nx", "Common number of data points in X direction", "def=0" );
+   PRM_INT( c_ny, efInner, "ny", "Common number of data points in Y direction", "def=1" );
 
    ScaleData *scd;
 
    bool prepared = false;
    bool was_2D = false;
    bool need_c_axis = false;
+   int nn = 0, nx = 0, ny = 1;
    GraphElem* tli[LineRole::sz];  // type line ptrs
    std::vector<GraphElem*> pli;   // data line ptrs - only plottted lines
 
@@ -199,7 +213,6 @@ class TGraph : public TDataSet  {
    GraphElem *ge_zero = nullptr, *ge_fx = nullptr, *ge_fy = nullptr;
    //* defining scale points
    mglPoint pr_min { 0, 0, 0 }, pr_max { 1, 1, 1 }, pr_dlt { 1, 1, 1 }; // real
-   mglPoint pv_min { 0, 0, 0 }, pv_max { 1, 1, 1 }, pv_dlt { 1, 1, 1 }; // visual
 
    DCL_DEFAULT_STATIC;
 };

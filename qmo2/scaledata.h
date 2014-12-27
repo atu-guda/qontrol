@@ -9,7 +9,10 @@
 #ifndef _SCALEDATA_H
 #define _SCALEDATA_H
 
+#include <mgl2/mgl.h>
+
 #include "dataset.h"
+
 
 /** Information about scale: really struct */
 class ScaleData : public TDataSet
@@ -20,6 +23,11 @@ class ScaleData : public TDataSet
    virtual ~ScaleData() override;
    DCL_CREATE;
    DCL_STD_INF;
+
+   mglPoint getMark() const { return mglPoint( markX, markY, markZ ); }
+   mglPoint getBase() const { return mglPoint( baseX, baseY, baseZ ); }
+   void setMark( const mglPoint &p ) { markX = p.x; markY = p.y; markZ = p.z; }
+   void setBase( const mglPoint &p ) { baseX = p.x; baseY = p.y; baseZ = p.z; }
 
    PRM_INT(    w0,    efNRC, "width", "Initial plot width", "def=800\nmin=100\nmax=10000" );
    PRM_INT(    h0,    efNRC, "height", "Initial plot height", "def=600\nmin=100\nmax=10000\nsep=col" );

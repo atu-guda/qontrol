@@ -149,9 +149,16 @@ struct TClassInfo {
 #define STD_CONVERSIONS(targ_type) \
   operator targ_type() const { return v; } \
   operator targ_type&()  { return v; } \
+  targ_type vc() const { return v; } \
+  const targ_type& cval() const { return v; } \
+  targ_type& val() { return v; } \
   const targ_type* caddr() const { return &v; } \
   targ_type* addr() { return &v; } \
   targ_type operator=( targ_type a ) { return v=a; }
+
+// operator= for pure data holders: copy inner part
+#define INNER_ASSIGN(clname) \
+  clname& operator=( const clname &r ) { v = r.v; return *this; }
 
 
 /** types of link - moved from tmiso.h */
@@ -375,6 +382,7 @@ class HolderInt : public HolderValue {
   DCL_STD_INF;
   DCL_STD_GETSET;
   STD_CONVERSIONS(int);
+  INNER_ASSIGN(HolderInt);
   virtual QString getTypeV() const override;
  protected:
   int v;
@@ -434,6 +442,7 @@ class HolderDouble : public HolderValue {
   DCL_STD_INF;
   DCL_STD_GETSET;
   STD_CONVERSIONS(double);
+  INNER_ASSIGN(HolderDouble);
   virtual QString getTypeV() const override;
  protected:
   double v;
@@ -455,8 +464,10 @@ class HolderString : public HolderValue {
   DCL_STD_INF;
   DCL_STD_GETSET;
   STD_CONVERSIONS(QString);
+  INNER_ASSIGN(HolderString);
   virtual QString getTypeV() const override;
-  const QString& cval() const { return v; };
+  std::string toStdString() const { return v.toStdString(); }
+  const char* c_str() const { return v.toStdString().c_str(); } // danger
  protected:
   QString v;
   DCL_DEFAULT_STATIC;
@@ -478,6 +489,7 @@ class HolderColor : public HolderValue {
   DCL_STD_GETSET;
   virtual QString getTypeV() const override;
   STD_CONVERSIONS(QColor);
+  INNER_ASSIGN(HolderColor);
   int toInt() const { return (int)( v.rgb() ); };
   int red() const { return v.red(); }
   int green() const { return v.green(); }
@@ -506,6 +518,7 @@ class HolderIntArray : public HolderValue {
   virtual int arrSize() const override { return v.size(); }
   virtual QString getTypeV() const override;
   STD_CONVERSIONS(std::vector<int>);
+  INNER_ASSIGN(HolderIntArray);
   int operator[](int i) const { return v[i]; };
   int& operator[](int i) { return v[i]; };
  protected:
@@ -529,6 +542,7 @@ class HolderDoubleArray : public HolderValue {
   virtual int arrSize() const override { return v.size(); }
   virtual QString getTypeV() const override;
   STD_CONVERSIONS(std::vector<double>);
+  INNER_ASSIGN(HolderDoubleArray);
   double operator[](int i) const { return v[i]; };
   double& operator[](int i) { return v[i]; };
  protected:
@@ -552,6 +566,7 @@ class HolderStringArray : public HolderValue {
   virtual int arrSize() const override { return v.size(); }
   virtual QString getTypeV() const override;
   STD_CONVERSIONS(QStringList);
+  INNER_ASSIGN(HolderStringArray);
   QString operator[](int i) const { return v[i]; };
   QString& operator[](int i) { return v[i]; };
  protected:
