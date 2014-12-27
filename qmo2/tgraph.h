@@ -46,8 +46,10 @@ class GraphElem : public TDataSet {
    friend class TGraph; // to direct data access while plotting
  public:
    DCL_CTOR(GraphElem);
+   virtual ~GraphElem() override;
    DCL_CREATE;
    DCL_STD_INF;
+   void reset();
 
    enum DataType {
      DataNone = 0, // just to ignore data
@@ -123,7 +125,7 @@ class GraphElem : public TDataSet {
    std::string pl_opt = "";
    double v_min = 0, v_max = 0;
    mglData *md = nullptr;
-   const std::vector<double> *ve; // until md is filled
+   const std::vector<double> *ve = nullptr; // until md is filled, but not owning
 
    DCL_DEFAULT_STATIC;
 };

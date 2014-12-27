@@ -37,6 +37,19 @@ CTOR(GraphElem,TDataSet)
 {
 }
 
+GraphElem::~GraphElem()
+{
+  reset();
+}
+
+void GraphElem::reset()
+{
+  role = LineRole::none;
+  nn = 0; nx = 0; ny = 1; ig = -1;
+  delete md; md = nullptr;
+  ve = nullptr;
+}
+
 LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
 {
   LineRole rl = LineRole::none;
@@ -198,7 +211,7 @@ int TGraph::reset()
     if( ! ge ) {
       continue;
     }
-    delete ge->md; ge->md = nullptr;
+    ge->reset(); // here md deleted
   }
 
   prepared = false; was_2D = false; need_c_axis = false;
@@ -206,7 +219,6 @@ int TGraph::reset()
   delete ge_zero; ge_zero = nullptr;
   delete ge_fx;  ge_fx  = nullptr;
   delete ge_fy;  ge_fy  = nullptr;
-  // TODO: more
   return 1;
 }
 
@@ -223,6 +235,7 @@ int TGraph::prepare()
     LineRole ro = ge->fillForPlot( nn, ny, pli.size() );
 
     if( ro == LineRole::none ) {  continue;   }
+
     tli[ro] = ge;
 
     if( ro == LineRole::axisX ) {
@@ -287,7 +300,7 @@ int TGraph::prepare()
     ge_fy->is2D = was_2D; ge_fy->label = "Y_n";
     ge_fy->role = LineRole::axisY;
     ge_fy->nn = nn; ge_fy->nx = nx; ge_fy->ny = ny;
-    ge_fy->pl_label = "X_n";
+    ge_fy->pl_label = "Y_n";
     ge_fy->v_min = 0; ge_fy->v_max = ny;
     ge_fy->ve = &ve_fy;
 
@@ -315,18 +328,21 @@ int TGraph::prepare()
   for( auto c : children() ) { // copy squeezed data
     GraphElem *ge = qobject_cast<GraphElem*>( c );
     if( !ge ) {  continue;   }
-    const dvector *ve = ge->ve;
-    if( !ve ) { continue; }
-
     mglData *md = new mglData( nx, ny );
+    ge->md = md;
+
+    const dvector *ve = ge->ve;
+    if( !ve ) {
+      DBGx( "warn: no data in \"%s\", use fake", qP(ge->getFullName())  );
+      continue;
+    }
 
     for( int i=0, j=0; i<nn && j<np ; ++i ) {
       if( plp[i] ) {
-        md->a[j] = (*(ge->ve))[i];
-      ++j;
+        md->a[j] = (*ve)[i];
+        ++j;
       }
     }
-    ge->md = md;
     ge->ve = nullptr; // unused from now
   }
   if( ge_fx ) { // the same for fake X, if exist. TODO: common array
