@@ -200,7 +200,7 @@ int TGraph::reset()
     delete ge->md; ge->md = nullptr;
   }
 
-  prepared = false;
+  prepared = false; was_2D = false; need_c_axis = false;
   v_min = 0, v_max = 1; // cross!
   delete ge_zero; ge_zero = nullptr;
   delete ge_fx;  ge_fx  = nullptr;
@@ -213,7 +213,7 @@ int TGraph::prepare()
 {
   reset();
   double vmin = DMAX, vmax = DMIN; // cross! (local copy of v_min, v_max)
-  bool was_x = false, was_y = false, was_2D = false;
+  bool was_x = false, was_y = false;
   vector<double> ve_fx, ve_fy, ze_zero; // arrays for missing data
 
   for( auto c : children() ) {
@@ -232,6 +232,10 @@ int TGraph::prepare()
     }
 
     if( ro == LineRole::plot ) {
+      if( ge->type == GraphElem::DataType::DataSurfC ||
+          ge->type == GraphElem::DataType::DataTens     ) {
+        need_c_axis = true;
+      }
       pli.push_back( ge );
       if( ge->is2D ) { was_2D = true; }
       if( ge->v_min < vmin ) {
@@ -291,7 +295,7 @@ int TGraph::prepare()
 
   vector<uint8_t> plp( nn, 0 ); // flags: point worth to draw
   int np = fillSqueeze( plp );
-  DBGx( "dbg: squeeze res nn= %d, np= %d", (int)nn, np );
+  // DBGx( "dbg: squeeze res nn= %d, np= %d", (int)nn, np );
 
   // create fake zero array
   mglData *mdz = new mglData( nx, ny );
@@ -306,14 +310,14 @@ int TGraph::prepare()
   ge_zero->ve = nullptr;
   ge_zero->md = mdz;
 
-  for( auto c : children() ) {
+  for( auto c : children() ) { // copy squeezed data
     GraphElem *ge = qobject_cast<GraphElem*>( c );
     if( !ge ) {  continue;   }
     const dvector *ve = ge->ve;
     if( !ve ) { continue; }
 
     mglData *md = new mglData( nx, ny );
-    // copy squeezed data
+
     for( int i=0, j=0; i<nn && j<np ; ++i ) {
       if( plp[i] ) {
         md->a[j] = (*(ge->ve))[i];
@@ -323,19 +327,47 @@ int TGraph::prepare()
     ge->md = md;
     ge->ve = nullptr; // unused from now
   }
+  if( ge_fx ) { // the same for fake X, if exist. TODO: common array
+    const dvector *ve = ge_fx->ve;
+    mglData *md = new mglData( nx, ny );
+    ge_fx->md = md;
+    if( ve ) {
+      for( int i=0, j=0; i<nn && j<np ; ++i ) {
+        if( plp[i] ) {
+          md->a[j] = (*(ge_fx->ve))[i];
+          ++j;
+        }
+      }
+    }
+    ge_fx->ve = nullptr;
+  }
+  if( ge_fy ) { // the same for fake X, if exist. TODO: common array
+    const dvector *ve = ge_fy->ve;
+    mglData *md = new mglData( nx, ny );
+    ge_fy->md = md;
+    if( ve ) {
+      for( int i=0, j=0; i<nn && j<np ; ++i ) {
+        if( plp[i] ) {
+          md->a[j] = (*(ge_fy->ve))[i];
+          ++j;
+        }
+      }
+    }
+    ge_fy->ve = nullptr;
+  }
   nn = np; nx = nn / ny;
 
 
   // all unfilled set to ge_zero
-  int iii = 0;
+  // int iii = 0;
   for( auto &ge : tli ) {
     if( !ge ) {
       ge = ge_zero;
     }
-    DBGx( "dbg: %d %s ge \"%s\" %s nx: %d ny: %d min: %lf max :%lf",
-        iii, role_name[iii], qP(ge->label), role_name[ge->role],
-        (int)ge->md->nx, (int)ge->md->ny, ge->v_min, ge->v_max );
-    ++iii;
+    // DBGx( "dbg: %d %s ge \"%s\" %s nx: %d ny: %d min: %lf max :%lf",
+    //     iii, role_name[iii], qP(ge->label), role_name[ge->role],
+    //     (int)ge->md->nx, (int)ge->md->ny, ge->v_min, ge->v_max );
+    // ++iii;
   }
 
   if( was_2D ) {
@@ -382,8 +414,8 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
   if( ! plp[nn-1] ) {
     plp[nn-1] = 1;  ++np;
   }
-  DBGx( "dbg: squeeze base: np= %d mdlt= %lf h0= %d stp0= %d v_min= %lf v_max= %lf",
-        np, mdlt, (int)scd->h0, stp0, (double)v_min, (double)v_max );
+  // DBGx( "dbg: squeeze base: np= %d mdlt= %lf h0= %d stp0= %d v_min= %lf v_max= %lf",
+  //       np, mdlt, (int)scd->h0, stp0, (double)v_min, (double)v_max );
 
   int was_add = 1;
   for( int n_add = 0; was_add && n_add < 10; ++n_add ) { // 10 : max iterations to split
@@ -395,7 +427,7 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
 
       const dvector* yyc = ge->ve;
       if( ! yyc ) {
-        DBGx( "warn: no array in squeeze \"%s\"", qP(ge->label) );
+        // DBGx( "warn: no array in squeeze \"%s\"", qP(ge->label) );
         continue;
       }
       for( int i0 = 0, i1 = 0; i0 < nn-1; i0 = i1 ) {
@@ -422,7 +454,7 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
         }
       }
     }
-    DBGx( " dbg: np mid = %d  n_add= %d was_add= %d" , np, n_add, was_add );
+    // DBGx( " dbg: np mid = %d  n_add= %d was_add= %d" , np, n_add, was_add );
   }
 
   nx = np; // as ny==1 was checked
@@ -454,7 +486,10 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint & /*zoom*/, const ScaleData *s
   // pv_max = pv_min + pv_dlt;
 
   gr->SetRanges( pv_min, pv_max );
-  gr->SetRange( 'c', tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max );
+  if( need_c_axis ) {
+    gr->SetRange( 'c', tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max );
+    DBGx( "dbg: C axis: %lf %lf", tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max  );
+  }
 
   gr->SetTicks( 'x', -(scd->gridX), scd->tickX );
   gr->SetTicks( 'y', -(scd->gridY), scd->tickY );
@@ -470,7 +505,6 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint & /*zoom*/, const ScaleData *s
   // const mglData *d_z = tli[LineRole::axisZ]->md;
   const mglData *d_c0 = tli[LineRole::c0]->md;
 
-  bool need_colorbar = false;
   for( auto pl : pli ) {
     const char *ext = pl->pl_extra.c_str();
     const char *opt = pl->pl_opt.c_str();
@@ -530,7 +564,6 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint & /*zoom*/, const ScaleData *s
           break;
         }
         gr->Tens( *d_x, *(pl->md), *d_c0, ext, opt );
-        need_colorbar = true;
         break;
 
       case GraphElem::DataType::DataArea :
@@ -572,7 +605,6 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint & /*zoom*/, const ScaleData *s
         gr->Surf( *d_x, *d_y, *(pl->md), ext, opt );
         break;
       case GraphElem::DataType::DataSurfC :
-        need_colorbar = true;
         gr->SurfC( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
         break;
       case GraphElem::DataType::DataSurfA :
@@ -606,19 +638,31 @@ void TGraph::plotTo( mglGraph *gr, const mglPoint & /*zoom*/, const ScaleData *s
 
 
 
-  gr->Box( axis_style.c_str() );
-  gr->Grid( "xyz", grid_style.c_str() );
-  gr->Axis( "xyzU3AKDTVISO",  axis_style.c_str() );
-  gr->Label( 'x', tli[LineRole::axisX]->pl_label.c_str() );
-  if( was_2D ) {
-    gr->Label( 'y', tli[LineRole::axisY]->pl_label.c_str() );
+  if( scd->drawBox ) { gr->Box( axis_style.c_str() ); }
+  if( scd->drawAxis ) {
+    gr->Grid( "xyz", grid_style.c_str() );
+    gr->Axis( "xyzU3AKDTVISO",  axis_style.c_str() );
+    char main_label_axis = 'y';
+    gr->Label( 'x', tli[LineRole::axisX]->pl_label.c_str() );
+    if( was_2D ) {
+      gr->Label( 'y', tli[LineRole::axisY]->pl_label.c_str() );
+      main_label_axis = 'z';
+    }
+    if( ! scd->mainLabel.cval().isEmpty() ) {
+      gr->Label( main_label_axis, scd->mainLabel.cval().toStdString().c_str() );
+    }
   }
   //
-  // gr->Mark( mark_point, "3r+" );
-  //gr->Mark( base_point, "3B*" );
-  //gr->Error( base_point, pr_dlt, "B" );
-  // gr->Label( 'z', label_z.c_str() );
-  if( need_colorbar ) {
+  if( scd->drawMark ) {
+    mglPoint mark_point( scd->markX, scd->markY, scd->markZ );
+    gr->Mark( mark_point, "3r+" );
+  }
+  if( scd->drawBase ) {
+    mglPoint base_point( scd->baseX, scd->baseY, scd->baseZ );
+    // gr->Mark( mark_point, "3r+" );
+    gr->Error( base_point, pr_dlt, "B" );
+  }
+  if( scd->drawColorbar ) {
     gr->Colorbar();
   }
 

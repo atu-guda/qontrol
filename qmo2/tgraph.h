@@ -190,6 +190,8 @@ class TGraph : public TDataSet  {
    ScaleData *scd;
 
    bool prepared = false;
+   bool was_2D = false;
+   bool need_c_axis = false;
    GraphElem* tli[LineRole::sz];  // type line ptrs
    std::vector<GraphElem*> pli;   // data line ptrs - only plottted lines
 
