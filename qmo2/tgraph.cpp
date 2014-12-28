@@ -389,14 +389,37 @@ int TGraph::prepare()
     // ++iii;
   }
 
-  if( was_2D ) {
-    pr_min = { tli[LineRole::axisX]->v_min, tli[LineRole::axisY]->v_min, v_min };
-    pr_max = { tli[LineRole::axisX]->v_max, tli[LineRole::axisY]->v_max, v_max };
-  } else {
-    pr_min = { tli[LineRole::axisX]->v_min, v_min, tli[LineRole::axisZ]->v_min  };
-    pr_max = { tli[LineRole::axisX]->v_max, v_max, tli[LineRole::axisZ]->v_max  };
+  // part to handel manual scale setting. need better place
+  double x0 = tli[LineRole::axisX]->v_min, x1= tli[LineRole::axisX]->v_max;
+  if( ! scd->autoScX ) {
+    x0 = scd->plotMinX; x1 = scd->plotMaxX;
   }
-  DBGx( "dbg: pr_min= %s pr_max= %s was_2D= %d", qP(toQString(pr_min)), qP(toQString(pr_max)), was_2D );
+  double y0 = v_min, y1 = v_max;
+  if( was_2D ) {
+    y0 = tli[LineRole::axisY]->v_min; y1= tli[LineRole::axisY]->v_max;
+  }
+  if( ! scd->autoScY ) {
+    y0 = scd->plotMinY; y1 = scd->plotMaxY;
+  }
+  double z0 = tli[LineRole::axisZ]->v_min, z1= tli[LineRole::axisZ]->v_max;
+  if( was_2D ) {
+    z0 = v_min; z1 = v_max;
+  }
+  if( ! scd->autoScZ ) {
+    z0 = scd->plotMinZ; z1 = scd->plotMaxZ;
+  }
+
+  pr_min = { x0, y0, z0 };
+  pr_max = { x1, y1, z1 };
+
+  // if( was_2D ) {
+  //   pr_min = { tli[LineRole::axisX]->v_min, tli[LineRole::axisY]->v_min, v_min };
+  //   pr_max = { tli[LineRole::axisX]->v_max, tli[LineRole::axisY]->v_max, v_max };
+  // } else {
+  //   pr_min = { tli[LineRole::axisX]->v_min, v_min, tli[LineRole::axisZ]->v_min  };
+  //   pr_max = { tli[LineRole::axisX]->v_max, v_max, tli[LineRole::axisZ]->v_max  };
+  // }
+  // DBGx( "dbg: pr_min= %s pr_max= %s was_2D= %d", qP(toQString(pr_min)), qP(toQString(pr_max)), was_2D );
 
   prepared = true;
   return pli.size();
@@ -479,6 +502,29 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
   nx = np; // as ny==1 was checked
   return np;
 }
+
+// part to handel manual scale setting. where to place?
+  // double x0 = tli[LineRole::axisX]->v_min, x1= tli[LineRole::axisX]->v_max;
+  // if( ! scd->autoScX ) {
+  //   x0 = scd->plotMinX; x1 = scd->plotMaxX;
+  // }
+  // double y0 = v_min, y1 = v_max;
+  // if( was_2D ) {
+  //   y0 = tli[LineRole::axisY]->v_min; y1= tli[LineRole::axisY]->v_max;
+  // }
+  // if( ! scd->autoScY ) {
+  //   y0 = scd->plotMinY; y1 = scd->plotMaxY;
+  // }
+  // double z0 = tli[LineRole::axisZ]->v_min, z1= tli[LineRole::axisZ]->v_max;
+  // if( was_2D ) {
+  //   z0 = v_min; z1 = v_max;
+  // }
+  // if( ! scd->autoScZ ) {
+  //   z0 = scd->plotMinZ; z1 = scd->plotMaxZ;
+  // }
+  //
+  // pr_min = { x0, y0, z0 };
+  // pr_max = { x1, y1, z1 };
 
 void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scd )
 {

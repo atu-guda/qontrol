@@ -525,6 +525,7 @@ void MglView::setScale()
   int rc = dia->exec();
   delete dia;
   if( rc == QDialog::Accepted ) {
+    zoomReset();
     update();
   };
 }

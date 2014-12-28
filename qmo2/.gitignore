@@ -8,4 +8,4 @@ ui_*.h
 .*.swp
 G?.sh
 qmo2x.cfg
-
+_o/*
