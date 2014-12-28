@@ -49,7 +49,6 @@ class GraphElem : public TDataSet {
    virtual ~GraphElem() override;
    DCL_CREATE;
    DCL_STD_INF;
-   void reset();
 
    enum DataType {
      DataNone = 0, // just to ignore data
@@ -106,6 +105,8 @@ class GraphElem : public TDataSet {
    LineRole fillForPlot( int &g_nn, int &g_ny, int igc );
 
  protected:
+   virtual void do_reset() override;
+
    PRM_LIST(   type,  efNRC, "Type", "Data Type", "enum=DataType" );
    PRM_SWITCH( is2D,  efNRC, "2D", "Data for 2D plot", "" );
    PRM_STRING( src,   efNRC, "Source", "Name of source for values", "max=128" );
@@ -175,9 +176,7 @@ class TGraph : public TDataSet  {
    Q_INVOKABLE int  dump( const QString &fn, const QString &delim = " " );
    //* add new GraphElem to given TOutArr
    Q_INVOKABLE int addOutArr( const QString &o_name );
-   //* reset inner data for plotting
-   Q_INVOKABLE int reset();
-   //* prepage inner data for plotting
+   //* prepare inner data for plotting
    Q_INVOKABLE  int prepare();
    //* plot to file
    Q_INVOKABLE void plotToPng( const QString &fn );
@@ -190,6 +189,7 @@ class TGraph : public TDataSet  {
    QString getPlotLabel( int ig ) const;
    QString getPrintInfo( int ig ) const;
  protected:
+   virtual void do_reset() override;
    //* remove numbner of data points to plot
    int fillSqueeze( std::vector<uint8_t> &plp );
 

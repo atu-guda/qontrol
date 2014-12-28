@@ -234,6 +234,8 @@ class HolderData : public QAbstractItemModel {
     { return qobject_cast<T>( getElem( oname ) ); }
   /** index of holder, if my, -1 - if not */
   int indexOfHolder( const HolderData *ho ) const;
+  //* reset object and all (sub)children, to local actions - do_reset();
+  Q_INVOKABLE void reset();
 
   /** returns modified flag */
   int getModified() const { return modified; }
@@ -334,14 +336,12 @@ class HolderData : public QAbstractItemModel {
   /** reaction to add/remove/relink of subobjects: call do_structChanged */
   void handleStructChanged();
  protected:
+  virtual void do_reset() {}; //* adjustable reset function
   void extraToParm();
   /** do real actions after structure changed */
   virtual void do_structChanged();
 
-  /** guard value: debug */
-  // static const int guard_val = 7442428;
-  // int guard = guard_val;
-  int dyn = 0; //* flag: is created dynamicaly i.e. can be deleted
+  int dyn = 0; //* flag: is created dynamically i.e. can be deleted
   int flags;   //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
   QVariant::Type tp = QVariant::Invalid;
   HolderData *par; // keep it?

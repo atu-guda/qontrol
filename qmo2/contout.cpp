@@ -93,13 +93,6 @@ void ContOut::takeAllVals()
   }
 }
 
-void ContOut::reset()
-{
-  for( auto arr : vo ) {
-    arr->reset();
-  }
-}
-
 
 DEFAULT_FUNCS_REG(ContOut)
 

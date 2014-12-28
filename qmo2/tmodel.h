@@ -61,7 +61,6 @@ class TModel : public TDataContainer  {
   // Simulation* getSimul( int idx );
   Simulation* getSimul( const QString &name );
 
-  Q_INVOKABLE int reset();
   int startRun();
   int stopRun( int reason );
   int run( QSemaphore *sem );
@@ -73,6 +72,7 @@ class TModel : public TDataContainer  {
   int get_il1() const { return il1; }
   int get_il2() const { return il2; }
  protected:
+  virtual void do_reset() override;
   int runOneLoop();
   int postRun();
   int allStartLoop( int acnx, int acny );

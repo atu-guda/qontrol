@@ -221,6 +221,17 @@ int HolderData::indexOfHolder( const HolderData *ho ) const
   return children().indexOf( const_cast<HolderData*>(ho) );
 }
 
+void HolderData::reset()
+{
+  for( auto c : children() ) {
+    HolderData *ho = qobject_cast<HolderData*>( c );
+    if( ho ) {
+      ho->reset();
+    }
+  }
+  do_reset();
+}
+
 
 bool HolderData::isChildOf( const QString &cname ) const
 {

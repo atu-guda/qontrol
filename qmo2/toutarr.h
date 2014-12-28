@@ -56,8 +56,6 @@ class TOutArr : public TDataSet  {
    const dvector* getArray() const { return &arr; }
    /** request to allocate array: only for special arrays now */
    Q_INVOKABLE int alloc( int anx, int any = 1 );
-   /** reset counter */
-   virtual int reset();
    Q_INVOKABLE virtual int arrSize() const override { return arrsize; }
    Q_INVOKABLE int getN() const { return n; }
 
@@ -83,6 +81,8 @@ class TOutArr : public TDataSet  {
    Q_INVOKABLE void put( int x, int y, double v );
    Q_INVOKABLE void add( double v );
  protected:
+   virtual void do_reset() override;
+
    /** type of array: 0:simple, 1:parm1, 2:parm2, 3:special */
    PRM_LIST( type, efNoRunChange, "Type", "Type of array", "enum=OutArrType" );
    /** name of element to use */

@@ -115,12 +115,10 @@ int Scheme::postRun()
   return 1;
 }
 
-int Scheme::reset()
+void Scheme::do_reset()
 {
   linkNames();
-
   state = stateGood; run_type = -1;
-  return 0;
 }
 
 int Scheme::allStartLoop( int acnx, int acny )

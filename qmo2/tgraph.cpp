@@ -42,7 +42,7 @@ GraphElem::~GraphElem()
   reset();
 }
 
-void GraphElem::reset()
+void GraphElem::do_reset()
 {
   role = LineRole::none;
   nn = 0; nx = 0; ny = 1; ig = -1;
@@ -199,27 +199,19 @@ TGraph::~TGraph()
   reset();
 }
 
-int TGraph::reset()
+void TGraph::do_reset()
 {
   nn = 0, nx = 0, ny = 1;    // common for all datas
   c_nn = nn; c_nx = nx; c_ny = ny;
   for( auto &tl : tli ) { tl = nullptr; }
 
   pli.clear();
-  for( auto c : children() ) {
-    GraphElem *ge = qobject_cast<GraphElem*>( c );
-    if( ! ge ) {
-      continue;
-    }
-    ge->reset(); // here md deleted
-  }
 
   prepared = false; was_2D = false; need_c_axis = false;
   v_min = 0, v_max = 1; // cross!
   delete ge_zero; ge_zero = nullptr;
   delete ge_fx;  ge_fx  = nullptr;
   delete ge_fy;  ge_fy  = nullptr;
-  return 1;
 }
 
 int TGraph::prepare()

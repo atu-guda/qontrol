@@ -36,15 +36,6 @@ ContGraph::~ContGraph()
 {
 }
 
-void ContGraph::reset()
-{
-  for( auto c : children() ) {
-    TGraph *gra = qobject_cast<TGraph*>(c);
-    if( gra ) {
-      gra->reset();
-    }
-  }
-}
 
 DEFAULT_FUNCS_REG(ContGraph)
 

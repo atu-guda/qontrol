@@ -59,8 +59,6 @@ class Scheme : public TDataContainer  {
   Q_INVOKABLE int newOrder( const QString &name, int new_ord );
   /** suggest order value for new element */
   Q_INVOKABLE int hintOrd() const;
-  /** resets elements and state: Done(2)->Good(1) */
-  Q_INVOKABLE virtual int reset();
 
   /** reimplemented from TDataSet to ensure all data filled and linked */
   virtual int checkData( int i );
@@ -83,6 +81,7 @@ class Scheme : public TDataContainer  {
   virtual int linkNames();
 
  protected:
+  virtual void do_reset() override;
   // ======================= invisible vars ======================
   /** run type */
   int run_type = -1; // reset

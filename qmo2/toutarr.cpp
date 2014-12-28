@@ -96,10 +96,9 @@ int TOutArr::alloc( int anx, int any )
 }
 
 
-int TOutArr::reset()
+void TOutArr::do_reset()
 {
   n = 0; cnq = 0; dmin = 0; dmax = 1;
-  return 0;
 }
 
 int TOutArr::take_val()

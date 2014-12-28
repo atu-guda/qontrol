@@ -38,8 +38,6 @@ class ContOut : public TDataContainer {
    int startLoop( int acnx, int acny );
    /** will be called after each inner loop */
    int endLoop( int acnx, int acny );
-   //* resets all counters
-   void reset();
 
    //* get all needed ordinary (outSimple) values
    void takeAllVals();

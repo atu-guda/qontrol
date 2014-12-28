@@ -88,19 +88,9 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
 
 
 
-int TModel::reset()
+void TModel::do_reset()
 {
   state = stateGood; run_type = -1; sgnt = int( time(0) );
-  if( c_sch ) {
-    c_sch->reset();
-  }
-  if( outs ) {
-    outs->reset();
-  }
-  if( plots ) {
-    plots->reset();
-  }
-  return 0;
 }
 
 int TModel::startRun()
