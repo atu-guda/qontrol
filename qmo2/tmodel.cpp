@@ -97,6 +97,9 @@ int TModel::reset()
   if( outs ) {
     outs->reset();
   }
+  if( plots ) {
+    plots->reset();
+  }
   return 0;
 }
 
@@ -276,6 +279,9 @@ int TModel::run( QSemaphore *sem )
       } // -- main loop (i)
 
       allEndLoop( il1, il2 );
+      if( plots ) {
+        plots->reset();
+      }
       if( ! scriptEndLoop.isEmpty() ) {
         runScript( scriptEndLoop );
       }

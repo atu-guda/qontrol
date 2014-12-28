@@ -16,6 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "tgraph.h"
 #include "contgraph.h"
 
 using namespace std;
@@ -33,6 +34,16 @@ CTOR(ContGraph,TDataContainer)
 
 ContGraph::~ContGraph()
 {
+}
+
+void ContGraph::reset()
+{
+  for( auto c : children() ) {
+    TGraph *gra = qobject_cast<TGraph*>(c);
+    if( gra ) {
+      gra->reset();
+    }
+  }
 }
 
 DEFAULT_FUNCS_REG(ContGraph)

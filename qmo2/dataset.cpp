@@ -247,6 +247,35 @@ QStringList HolderData::elemNames() const
   return cl;
 }
 
+QString HolderData::ls() const
+{
+  QString r;
+  for( const auto c : children() ) {
+    r += c->objectName() + ' ';
+    const HolderData *ho = qobject_cast<HolderData*>( c );
+    if( ho ) {
+      r += ho->getType();
+    }
+    r += '\n';
+  }
+  return r;
+}
+
+QString HolderData::lsf() const
+{
+  QString r;
+  const QMetaObject *mo = metaObject();
+  int nf = mo->methodCount();
+  for( int i=0; i<nf; ++i ) {
+    QMetaMethod mm = mo->method( i );
+    if( mm.isValid()  &&  mm.access() == QMetaMethod::Access::Public
+        && ( mm.methodType() == QMetaMethod::MethodType::Method
+          || mm.methodType() == QMetaMethod::MethodType::Slot ) ) {
+      r += mm.methodSignature() + '\n';
+    }
+  }
+  return r;
+}
 
 HolderData* HolderData::getElem( int i ) const
 {

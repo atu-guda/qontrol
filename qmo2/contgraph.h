@@ -25,6 +25,7 @@ class ContGraph : public TDataContainer {
   public:
    DCL_CTOR(ContGraph);
    virtual ~ContGraph() override;
+   void reset();
    DCL_CREATE;
    DCL_STD_INF;
   private:

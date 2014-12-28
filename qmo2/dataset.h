@@ -216,8 +216,12 @@ class HolderData : public QAbstractItemModel {
   }
   // see DCL_STD_INF, DCL_STD_GETSET for childs
   virtual const TClassInfo* getClassInfo() const = 0;
-  /** returns list of registerd (exists) clild elems names */
+  /** returns list of registerd (exists) child elems names */
   Q_INVOKABLE QStringList elemNames() const;
+  /** returns list of registerd child + type */
+  Q_INVOKABLE QString ls() const;
+  /** returns list of registerd functions + signatures */
+  Q_INVOKABLE QString lsf() const;
   /** returns holder by number */
   HolderData* getElem( int i ) const;
   /** find holder for object by name */ // TODO: +full.name.elm
