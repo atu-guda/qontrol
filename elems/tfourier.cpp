@@ -41,8 +41,9 @@ int TFourier::do_preRun( int /*run_tp*/, int /*an*/,
 
 int TFourier::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  for( int i=0; i<=ng; i++ )
+  for( int i=0; i<=ng; i++ ) {
     aa[i] = bb[i] = am[i] = 0;
+  }
   s_x2 = a0 = a1 = b1 = ampl = ampl1 = phi = qpow = qpow1 = 0;
   ii = 0; n_st = 0; n_en = model_nn;
   initVars();

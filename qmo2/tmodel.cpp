@@ -28,6 +28,33 @@
 
 using namespace std;
 
+// -------------------- helper JS functions ---------------------------------------
+static QScriptValue script_int2str( QScriptContext *ctx, QScriptEngine * /*eng*/ )
+{
+  int narg = ctx->argumentCount();
+  int n = 0;
+  if( narg > 0 ) {
+    n = ctx->argument(0).toInt32();
+  }
+  int fw = 1;
+  if( narg > 1 ) {
+    fw = ctx->argument(1).toInt32();
+  }
+  QChar fc = ' ';
+  if( narg > 2 ) {
+    fc = ctx->argument(2).toString()[0];
+  }
+  int base = 10;
+  if( narg > 3 ) {
+    base = ctx->argument(3).toInt32();
+  }
+  QString s = QString( "%1" ).arg( n, fw, base, fc );
+  return QScriptValue( s );
+}
+
+
+// ------------------------- TModel --------------------------------------
+
 const char* TModel::helpstr = "<H1>TModel</H1>\n"
  "Hold all active elements, output arrays and graph descriptions";
 
@@ -180,18 +207,13 @@ int TModel::startRun()
     initEngine();
   }
   if( useScripts ) {
-    QScriptValue v_T = eng->newVariant( (double)T );
-    eng->globalObject().setProperty( "T", v_T );
-    QScriptValue v_tdt = eng->newVariant( (double)tdt );
-    eng->globalObject().setProperty( "tdt", v_tdt );
-    QScriptValue v_N = eng->newVariant( (int)N );
-    eng->globalObject().setProperty( "N", v_N );
-    QScriptValue v_N1 = eng->newVariant( (int)n1_eff );
-    eng->globalObject().setProperty( "N1", v_N1 );
-    QScriptValue v_N2 = eng->newVariant( (int)n2_eff );
-    eng->globalObject().setProperty( "N2", v_N2 );
-    QScriptValue eng_c_sim = eng->newQObject( c_sim );
-    eng->globalObject().setProperty( "c_sim", eng_c_sim );
+    eng->globalObject().setProperty( "T", eng->newVariant( (double)T ) );
+    eng->globalObject().setProperty( "tdt", eng->newVariant( (double)tdt ) );
+    eng->globalObject().setProperty( "N", eng->newVariant( (int)N ) );
+    eng->globalObject().setProperty( "N1", eng->newVariant( (int)n1_eff ) );
+    eng->globalObject().setProperty( "N2", eng->newVariant( (int)n2_eff ) );
+    // alias objs
+    eng->globalObject().setProperty( "c_sim", eng->newQObject( c_sim ) );
   }
   if( execModelScript ) {
     runModelScript();
@@ -233,10 +255,8 @@ int TModel::run( QSemaphore *sem )
 
       allStartLoop( il1, il2 );
       if( useScripts ) {
-        v_il1 = eng->newVariant( (int)(il1) );
-        eng->globalObject().setProperty( "il1", v_il1 );
-        v_il2 = eng->newVariant( (int)(il2) );
-        eng->globalObject().setProperty( "il2", v_il2 );
+        eng->globalObject().setProperty( "il1", eng->newVariant( (int)(il1) ) );
+        eng->globalObject().setProperty( "il2", eng->newVariant( (int)(il2) ) );
         if( ! scriptStartLoop.isEmpty() ) {
           runScript( scriptStartLoop );
         }
@@ -562,10 +582,13 @@ void TModel::initEngine()
   delete eng;
   eng = new QScriptEngine( this );
 
-  QScriptValue eng_model = eng->newQObject( this );
-  eng->globalObject().setProperty( "model", eng_model );
-  QScriptValue eng_main_s = eng->newQObject( main_s );
-  eng->globalObject().setProperty( "main_s", eng_main_s );
+  eng->globalObject().setProperty( "model", eng->newQObject( this ) );
+  // aliases
+  eng->globalObject().setProperty( "main_s", eng->newQObject( main_s ) );
+  eng->globalObject().setProperty( "outs", eng->newQObject( outs ) );
+  eng->globalObject().setProperty( "plots", eng->newQObject( plots ) );
+  // funcs
+  eng->globalObject().setProperty( "int2str", eng->newFunction( script_int2str ) );
 }
 
 QString TModel::runScript( const QString& script )

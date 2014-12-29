@@ -6,12 +6,7 @@
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
-#include <fstream>
-#include <iomanip>
-#include <cstdlib>
-#include <cstdio>
 #include <cmath>
-#include <unistd.h>
 #include <sys/time.h>
 
 #include <QString>
@@ -26,8 +21,9 @@ const char* getStateString( int stat_num )
   static const char * const statStr[] = {
     "Bad", "Good", "Done", "Run", "Pre", "Post", "??6", "??7", "???"
   };
-  if( stat_num < 0 || stat_num > 8 )
+  if( stat_num < 0 || stat_num > 8 ) {
     stat_num = 8;
+  }
   return statStr[ stat_num ];
 }
 
@@ -44,8 +40,9 @@ int QString2IntEx( const QString &s, bool *ok )
       v = IMAX; r_ok = true;
     }
   }
-  if( ok != nullptr )
+  if( ok ) {
     *ok = r_ok;
+  }
   return v;
 }
 
@@ -82,8 +79,9 @@ NameType splitName( const QString &name, QString &first, QString &rest, int &idx
 int isGoodName( const QString &s )
 {
   QRegExp re( RE_NAME );
-  if( re.indexIn( s ) == -1 )
+  if( re.indexIn( s ) == -1 ) {
     return 0;
+  }
   return 1;
 }
 
@@ -112,45 +110,58 @@ double sign( double x )
 
 double deadLine( double x, double x0 )
 {
-  if( x > x0 )
+  if( x > x0 ) {
     return ( x - x0 );
-  if( x < -x0 )
+  }
+  if( x < -x0 ) {
     return ( x + x0 );
+  }
   return 0;
 }
 
 double limitLine( double x, double x0 )
 {
-  if( x0 < x0*(numeric_limits<double>::min()) )
+  if( x0 < x0*(numeric_limits<double>::min()) ) {
     return 0;
-  if( x > x0 )
+  }
+  if( x > x0 ) {
     return 1;
-  if( x < -x0 )
+  }
+  if( x < -x0 ) {
     return -1;
+  }
   return (x / x0);
 }
 
 double deadLimitLine( double x, double x0, double x1, double a )
 {
-  if( x > x1 )
+  if( x > x1 ) {
     return (x1-x0) * a;
-  if( x < -x1 )
+  }
+  if( x < -x1 ) {
     return -(x1-x0) * a;
-  if( x > x0 )
+  }
+  if( x > x0 ) {
     return (x-x0) * a;
-  if( x < - x0 )
+  }
+  if( x < - x0 ) {
     return ( x + x0 ) * a;
+  }
   return 0;
 }
 
 
 double triangleLine( double x, double x0 )
 {
-  if( x0 < 1e-15 ) x0 = 1e-15;
-  if( x > x0 || x < -x0 )
+  if( x > x0 || x < -x0 ) {
     return 0;
-  if( x < 0 )
+  }
+  if( x < 0 ) {
     x = -x;
+  }
+  if( x0 < 1e-30 ) { // just for safety
+    x0 = 1e-30;
+  }
   return ( x0 - x ) / x0;
 }
 
@@ -161,10 +172,12 @@ double rectLine( double x, double xl, double xr )
 
 double threeStateLine( double x, double x0 )
 {
-  if( x > x0 )
+  if( x > x0 ) {
     return 1;
-  if( x < -x0 )
+  }
+  if( x < -x0 ) {
     return -1;
+  }
   return 0;
 }
 
@@ -180,22 +193,25 @@ double waveMhat( double x )
 }
 
 
-int  fourier( int n , double l, const double *v,
-                     int m, double *a, double *b )
-{
-  int i , j;
-  double tc , ts , t1 , t2 , h;
-  h = l / n;
-  for( i=0; i<m; i++ ) {
-     tc = ts = 0; t1 = 2 * M_PI * i / l;
-     for( j=0; j<n; j++ ) {
-        t2 = t1 * j * h;
-        tc += v[j] * cos( t2 );  ts += v[j] * sin( t2 );
-     };
-     a[i] = 2 * h * tc / l;  b[i] = 2 * h * ts / l;
-  };
-  return 0;
-}
+// int  fourier( int n, double l, const double *v,
+//                      int m, double *a, double *b )
+// {
+//   int i , j;
+//   double tc, ts, t1, t2, h;
+//   if( !v || !a || !b || n==0 ) {
+//     return 1;
+//   }
+//   h = l / n;
+//   for( i=0; i<m; i++ ) {
+//      tc = ts = 0; t1 = 2 * M_PI * i / l;
+//      for( j=0; j<n; j++ ) {
+//         t2 = t1 * j * h;
+//         tc += v[j] * cos( t2 );  ts += v[j] * sin( t2 );
+//      };
+//      a[i] = 2 * h * tc / l;  b[i] = 2 * h * ts / l;
+//   };
+//   return 0;
+// }
 
 
 

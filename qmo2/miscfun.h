@@ -68,8 +68,8 @@ double waveMhat( double x );
 double limitAngleDeg( double a ); // limits angle to [0;360)
 
 /** fourier tranform TODO: use fft */
-int  fourier( int n , double l, const double *v,
-               int m, double *a, double *b );
+// int  fourier( int n , double l, const double *v,
+//                int m, double *a, double *b );
 /** computes length of perpendicular from point p to line s-e */
 // double perpLen( double xs, double ys, double xe, double ye,
 //                 double xp, double yp );
