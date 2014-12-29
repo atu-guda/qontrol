@@ -21,6 +21,7 @@
 #include <QPrinter>
 #include <QPrintDialog>
 
+#include "miscfun.h"
 #include "labowin.h"
 #include "toutarr.h"
 #include "tgraph.h"
@@ -385,6 +386,7 @@ void MglView::setPhi( double a_phi, bool add )
   } else {
     scd->phi  = a_phi;
   }
+  scd->phi = limitAngleDeg( scd->phi );
   update();
 }
 
@@ -395,6 +397,7 @@ void MglView::setTheta( double a_theta, bool add )
   } else {
     scd->theta  = a_theta;
   }
+  scd->theta = limitAngleDeg( scd->theta );
   update();
 }
 
@@ -686,12 +689,14 @@ QString MglView::getInfo( bool more ) const
      % "real: " % toQString( pr_min ) % " - " % toQString( pr_max ) % nl
      % QSN( sel ) % " ";
 
-  s += gra->getPlotLabel( sel );
+  s += gra->getPlotLabel( sel ) % "  ";
 
   if( linkPlot > -1 ) {
     s += "  Link: " % QSN( linkPlot) % " "
-       % gra->getPlotLabel( linkPlot ) % " [" % QSN( linkIdx ) % "]";
+       % gra->getPlotLabel( linkPlot ) % " [" % QSN( linkIdx ) % "]  ";
   }
+  s += QChar( 0x03C6 ) % ": " % QSN( scd->phi ) % " "
+     % QChar( 0x03B8 ) % ": " % QSN( scd->theta );
   return s;
 }
 

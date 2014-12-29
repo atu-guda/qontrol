@@ -357,6 +357,14 @@ double perpLen( double xs, double ys, double xe, double ye,
   return p;
 }
 
+double limitAngleDeg( double a )
+{
+  int ia = int( a / 360 );
+  if( a < 0 ) { --ia; }
+  a -= ia * 360;
+  return a;
+}
+
 // ------------- miscelanios classes -----------------------------
 
 TCircBuf::TCircBuf( unsigned nn ) :

@@ -65,6 +65,8 @@ double threeStateLine( double x, double x0 );
 double waveWave( double x );
 double waveMhat( double x );
 
+double limitAngleDeg( double a ); // limits angle to [0;360)
+
 /** fourier tranform TODO: use fft */
 int  fourier( int n , double l, const double *v,
                int m, double *a, double *b );
