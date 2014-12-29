@@ -197,125 +197,6 @@ int  fourier( int n , double l, const double *v,
   return 0;
 }
 
-int findNearIndex( int n, const double *a, double v )
-{
-  int i, imin;
-  double lmin, l;
-  if( n < 1 ) return -1;
-  if( n == 1 ) return 0;
-  lmin = fabs( v - a[0] ); imin = 0;
-  for( i=1; i<n; i++ ) {
-    l = fabs( v - a[i] );
-    if( l < lmin ) {
-      lmin = l; imin = i;
-    };
-  };
-  return imin;
-}
-
-int findNearMin( int n, const double *a, int sidx )
-{
-  int i, searchRight;
-  double dm;
-  if( n < 1 ) return -1;
-  if( n == 1 || sidx < 0 || sidx >= n )
-    return 0;
-
-  dm = a[sidx];
-  if( sidx == 0 ) {      // search from left point
-    searchRight = 1;
-  } else {
-    if( sidx == n-1 ) { // search from right point
-      searchRight = 0;
-    } else {            // general case
-      searchRight = 0;
-      if( a[sidx+1] < dm )
-        searchRight = 1;
-    };
-  };
-
-  if( searchRight ) {
-    for( i=sidx+1; i<n; i++ ) {
-      if( a[i] > dm )
-        return i-1;
-      dm = a[i];
-    };
-    return n-1;
-  };
-
-  for( i=sidx-1; i>=0; i-- ) {
-    if( a[i] > dm )
-      return i+1;
-    dm = a[i];
-  };
-  return 0;
-}
-
-
-int findNearMax( int n, const double *a, int sidx )
-{
-  int i, searchRight;
-  double dm;
-  if( n < 1 ) return -1;
-  if( n == 1 || sidx < 0 || sidx >= n )
-    return 0;
-
-  dm = a[sidx];
-  if( sidx == 0 ) {      // search from left point
-    searchRight = 1;
-  } else {
-    if( sidx == n-1 ) { // search from right point
-      searchRight = 0;
-    } else {            // general case
-      searchRight = 0;
-      if( a[sidx+1] > dm )
-        searchRight = 1;
-    };
-  };
-
-  if( searchRight ) {
-    for( i=sidx+1; i<n; i++ ) {
-      if( a[i] < dm )
-        return i-1;
-      dm = a[i];
-    };
-    return n-1;
-  };
-
-  for( i=sidx-1; i>=0; i-- ) {
-    if( a[i] < dm )
-      return i+1;
-    dm = a[i];
-  };
-  return 0;
-}
-
-int findGlobalMin( int n, const double *a )
-{
-  int i, idx;
-  double dm;
-  dm = a[0]; idx = 0;
-  for( i=1; i<n; i++ ) {
-    if( a[i] < dm ) {
-      dm = a[i]; idx = i;
-    };
-  };
-  return idx;
-}
-
-int findGlobalMax( int n, const double *a )
-{
-  int i, idx;
-  double dm;
-  dm = a[0]; idx = 0;
-  for( i=1; i<n; i++ ) {
-    if( a[i] > dm ) {
-      dm = a[i]; idx = i;
-    };
-  };
-  return idx;
-
-}
 
 
 
@@ -342,20 +223,20 @@ int DatasInfo::dump( QTextStream& os, const QString &delim )
 }
 
 
-double perpLen( double xs, double ys, double xe, double ye,
-                double xp, double yp )
-{
-  double p, r1, xf, yf;
-  xe -= xs; ye -= ys; xp -= xs; yp -= ys;
-  r1 = xe * xe + ye * ye;
-  if( r1 == 0 )
-    return 0;
-  xf = xe * ( xe * xp + ye * yp ) / r1;
-  yf = ye * ( xe * xp + ye * yp ) / r1;
-  xf -= xp; yf -= yp;
-  p = sqrt( xf * xf + yf * yf );
-  return p;
-}
+// double perpLen( double xs, double ys, double xe, double ye,
+//                 double xp, double yp )
+// {
+//   double p, r1, xf, yf;
+//   xe -= xs; ye -= ys; xp -= xs; yp -= ys;
+//   r1 = xe * xe + ye * ye;
+//   if( r1 == 0 )
+//     return 0;
+//   xf = xe * ( xe * xp + ye * yp ) / r1;
+//   yf = ye * ( xe * xp + ye * yp ) / r1;
+//   xf -= xp; yf -= yp;
+//   p = sqrt( xf * xf + yf * yf );
+//   return p;
+// }
 
 double limitAngleDeg( double a )
 {

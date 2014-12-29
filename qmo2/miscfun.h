@@ -70,19 +70,9 @@ double limitAngleDeg( double a ); // limits angle to [0;360)
 /** fourier tranform TODO: use fft */
 int  fourier( int n , double l, const double *v,
                int m, double *a, double *b );
-/** find index with minimal fabs(a[i]-v) */
-int findNearIndex( int n, const double *a, double v );
-/** find index nearest to given index with local minimum */
-int findNearMin( int n, const double *a, int sidx );
-/** find index nearest to given index with local maximum */
-int findNearMax( int n, const double *a, int sidx );
-/** find index of global minimum */
-int findGlobalMin( int n, const double *a );
-/** find index of global maximum */
-int findGlobalMax( int n, const double *a );
 /** computes length of perpendicular from point p to line s-e */
-double perpLen( double xs, double ys, double xe, double ye,
-                double xp, double yp );
+// double perpLen( double xs, double ys, double xe, double ye,
+//                 double xp, double yp );
 
 // ------------- miscelanios classes -----------------------------
 
