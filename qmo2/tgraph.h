@@ -132,20 +132,6 @@ class GraphElem : public TDataSet {
 };
 
 
-// modified copy of GraphElem
-struct DataLineInfo {
-  int type;
-  int is2D;
-  int ig;
-  int on;
-  std::string label;
-  std::string extra;
-  std::string opt;
-  double v_min, v_max;
-  mglData *md;
-  const std::vector<double> *ve; // until md is filled
-};
-
 // --------------------------------------------------------------------
 
 //* decription of view
