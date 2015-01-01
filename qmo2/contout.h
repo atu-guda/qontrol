@@ -41,7 +41,15 @@ class ContOut : public TDataContainer {
 
    //* get all needed ordinary (outSimple) values
    void takeAllVals();
-  private:
+
+   // fft tranform
+   Q_INVOKABLE int fft( const QString &nm_in, const QString &nm_omega,
+                        const QString &nm_a, const QString &nm_phi, double ome_max );
+   Q_INVOKABLE int fftc( const QString &nm_in, const QString &nm_omega,
+                        const QString &nm_re, const QString &nm_im, double ome_max );
+  protected:
+   int fftx( const QString &nm_in, const QString &nm_omega,
+             const QString &nm_a, const QString &nm_phi, double ome_max, bool cmpl );
    std::vector<TOutArr*> vo;
    DCL_DEFAULT_STATIC;
 };

@@ -15,8 +15,10 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <fftw3.h>
 
 #include "toutarr.h"
+#include "tmodel.h"
 #include "contout.h"
 
 using namespace std;
@@ -91,6 +93,126 @@ void ContOut::takeAllVals()
   for( auto arr : vo ) {
     arr->take_val();
   }
+}
+
+int ContOut::fft( const QString &nm_in, const QString &nm_omega,
+                const QString &nm_a, const QString &nm_phi, double ome_max )
+{
+  return fftx( nm_in, nm_omega, nm_a, nm_phi, ome_max, false );
+}
+
+int ContOut::fftc( const QString &nm_in, const QString &nm_omega,
+                const QString &nm_re, const QString &nm_im, double ome_max )
+{
+  return fftx( nm_in, nm_omega, nm_re, nm_im, ome_max, true );
+}
+
+
+int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
+                const QString &nm_a, const QString &nm_phi, double ome_max, bool cmpl )
+{
+  int n = 0;
+  TOutArr *in = getElemT<TOutArr*>( nm_in );
+  if( !in ) {
+    return 0;
+  }
+  n = in->getDataD( "n", 0 );
+  if( n < 2 ) {
+    return 0;
+  }
+
+  TModel *model = getAncestorT<TModel>();
+  if( !model ) {
+    DBGx( "warn: not found model in \"%s\"", qP(getFullName()) );
+    return 0;
+  }
+  double tdt = model->getDataD( "tdt", 1.0 );
+
+  // output arrays may not exist, but must be special
+  TOutArr *o_omega = getElemT<TOutArr*>( nm_omega );
+  if( o_omega ) {
+    int tp = o_omega->getDataD( "type", 0 );
+    if( tp != TOutArr::OutArrType::outSpec ) {
+      o_omega = nullptr;
+    }
+  }
+
+  TOutArr *o_a = getElemT<TOutArr*>( nm_a );
+  if( o_a ) {
+    int tp = o_a->getDataD( "type", 0 );
+    if( tp != TOutArr::OutArrType::outSpec ) {
+      o_a = nullptr;
+    }
+  }
+
+  TOutArr *o_phi = getElemT<TOutArr*>( nm_phi );
+  if( o_phi ) {
+    int tp = o_phi->getDataD( "type", 0 );
+    if( tp != TOutArr::OutArrType::outSpec ) {
+      o_phi = nullptr;
+    }
+  }
+
+  if( ome_max <= 0.0 ) {
+    ome_max = DMAX;
+  }
+
+  dvector v = *(in->getArray()); // copy, as fft may disturn data
+  double *pv = v.data();
+
+
+
+  int o_n = 1 + n/2;
+  fftw_complex *out = (fftw_complex*) fftw_malloc( (2+o_n) * sizeof( fftw_complex ) );
+  fftw_plan plan = fftw_plan_dft_r2c_1d( n, pv, out, FFTW_ESTIMATE );
+
+  fftw_execute( plan );
+  fftw_destroy_plan( plan );
+
+  int i_m = (int)( n * tdt * ome_max / ( 2*M_PI ) );
+  if( i_m > o_n ) {
+    i_m = o_n;
+  }
+
+  if( o_omega ) {
+    o_omega->reset();
+    o_omega->alloc( i_m );
+  }
+
+  if( o_a ) {
+    o_a->reset();
+    o_a->alloc( i_m );
+  }
+
+  if( o_phi ) {
+    o_phi->reset();
+    o_phi->alloc( i_m );
+  }
+
+  double scl = 2.0 / double(n); // common scale
+  for( int i=0; i<i_m ; ++i ) {
+    double ome = 2*M_PI*i/(tdt*n);
+    if( o_omega ) {
+      o_omega->add( ome );
+    }
+    if( o_a ) {
+      if( cmpl ) {
+        o_a->add( scl * out[i][0] );
+      } else {
+        o_a->add( scl * hypot( out[i][0], out[i][1] ) );
+      }
+    }
+    if( o_phi ) {
+      if( cmpl ) {
+        o_phi->add( scl * out[i][1] );
+      } else {
+        o_phi->add( atan2( out[i][1], out[i][0] ) );
+      }
+    }
+  }
+
+  fftw_free( out ); out = nullptr;
+  return i_m;
 }
 
 

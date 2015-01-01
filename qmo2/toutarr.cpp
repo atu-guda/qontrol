@@ -137,7 +137,7 @@ int TOutArr::preRun( int /*run_tp*/, int an, int anx, int any, double /*adt*/ )
   so = nullptr;
   TModel *mod = getAncestorT<TModel>();
   ltype_t lt; const TDataSet *so_ob;
-  if( mod ) {
+  if( mod  &&  type != OutArrType::outSpec ) {
     so = mod->getSchemeDoublePtr( name, &lt, &so_ob, 0 );
   }
   if( !so ) {

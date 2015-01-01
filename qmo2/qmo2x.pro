@@ -11,6 +11,7 @@ INCLUDEPATH += .. ../elems
 
 LIBS += -lgsl -lgslcblas
 LIBS += -lmgl
+LIBS += -lfftw3
 
 SOURCES += \
   addelemdia.cpp \
