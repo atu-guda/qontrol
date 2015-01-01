@@ -80,8 +80,9 @@ const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
 int Scheme::runOneLoop( double t, IterType itype )
 {
   for( auto cur_el : v_el ) {
-    if( end_loop )
+    if( end_loop ) {
       break;
+    }
 
      cur_el->fun( t, itype );  // <============ main action
   };

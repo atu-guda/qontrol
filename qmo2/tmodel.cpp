@@ -250,6 +250,7 @@ int TModel::run( QSemaphore *sem )
     prm1 = prm1s + il2 * prm1d;
     for( il1 = 0; il1 < n1_eff; ++il1 ) {
 
+
       prm0 = prm0s + il1 * prm0d;
       start_time = get_real_time(); rtime = t = 0;
 
@@ -269,6 +270,13 @@ int TModel::run( QSemaphore *sem )
           return 0;
         }
 
+        IterType itype = IterMid;
+        if( i == 0 ) {
+          itype = IterFirst;
+        } else if ( i == (N-1) ) {
+          itype = IterLast;
+        }
+
         rtime = get_real_time() - start_time;
         if( syncRT ) {
           if( t > rtime ) {
@@ -278,7 +286,7 @@ int TModel::run( QSemaphore *sem )
         };
         sem->acquire( 1 );
 
-        rc = runOneLoop();
+        rc = runOneLoop( itype );
 
         sem->release( 1 );
 
@@ -336,15 +344,12 @@ int TModel::run_bg()
   return rc;
 }
 
-int TModel::runOneLoop()
+int TModel::runOneLoop( IterType itype )
 {
   if( !c_sch ) {
     DBG1( "warn: No active scheme" );
     return 0;
   }
-
-
-  IterType itype = IterMid;
 
   int rc = c_sch->runOneLoop( t, itype );
   if( !rc ) {
