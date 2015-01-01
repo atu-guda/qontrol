@@ -238,7 +238,7 @@ int Scheme::delElem( const QString &ename )
 {
   TMiso *ob = getElemT<TMiso*>( ename );
   if( !ob ) {
-    DBG2q( "err: fail to find TMiso", ename );
+    DBGx( "err: fail to find TMiso \"%s\"", qP(ename) );
     return 0;
   }
   int rc = del_obj( ename ); // TODO: or here??

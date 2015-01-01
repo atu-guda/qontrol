@@ -115,7 +115,7 @@ const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
 {
   auto i = str_class.find( a_type );
   if( i == str_class.end() ) {
-    DBG2q( "ERR: fail to find class", a_type );
+    DBGx( "ERR: fail to find class \"%s\"", qP(a_type) );
     return nullptr;
   }
   return i.value();

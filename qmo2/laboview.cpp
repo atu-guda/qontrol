@@ -429,7 +429,7 @@ void LaboView::qplinkElm()
 
   InputParams *pis = selObj->getElemT<InputParams*>("pis");
   if( !pis ) {
-    DBG2q( "err: no pis object in ", selObj->getFullName() );
+    DBGx( "err: no pis object in \"%s\"", qP(selObj->getFullName()) );
     return;
   }
   int n_pi = pis->size();
@@ -466,7 +466,7 @@ void LaboView::unlinkElm()
 
   InputParams *pis = selObj->getElemT<InputParams*>("pis");
   if( !pis ) {
-    DBG2q( "err: no pis object in ", selObj->getFullName() );
+    DBGx( "err: no pis object in \"%s\"", qP(selObj->getFullName()) );
     return;
   }
   qDeleteAll( pis->children() );

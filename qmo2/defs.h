@@ -31,9 +31,6 @@
 /** interface to qDebug with more info q: qPrintable to last argubent, x - format*/
 #define DBG1(str)  qDebug("%s \n  in [ %s: %s %d ]\n", str, __FILE__, __PRETTY_FUNCTION__, __LINE__ )
 #define DBG1q(str)  qDebug("%s \n  in [ %s: %s %d ]\n", qPrintable(str), __FILE__, __PRETTY_FUNCTION__, __LINE__ )
-#define DBG2(str1,str2) qDebug("%s \"%s\"\n in [ %s: %s: %d ]\n", str1, str2, __FILE__, __PRETTY_FUNCTION__, __LINE__ )
-// second string is QString
-#define DBG2q(str1,str2) qDebug("%s \"%s\"\n in [ %s: %s: %d ]\n", str1, qPrintable(str2), __FILE__, __PRETTY_FUNCTION__, __LINE__ )
 #define DBGx(...) { qDebug(__VA_ARGS__); qDebug(" in %s: %s: %d\n", __FILE__, __PRETTY_FUNCTION__, __LINE__ ); }
 
 const int IMIN      { std::numeric_limits<int>::min() };

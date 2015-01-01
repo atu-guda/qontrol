@@ -949,7 +949,7 @@ void ObjDataWidget::edit()
     QDialog *dia = new DataDialog( *obj,  this );
     dia->exec();
   } else {
-    DBG2q( "ERR: Fail to convert holder to HolderData", ho.objectName() );
+    DBGx( "ERR: Fail to convert holder \"%s\" to HolderData", qP(ho.objectName()) );
   }
 }
 
@@ -1371,7 +1371,7 @@ int DataDialog::createWidgets()
 
     w = FactoryDataWidget::theFactory().createDataWidget( *ho, this );
     if( !w ) {
-      DBG2q( "warn: not found edit widget for object", name );
+      DBGx( "warn: not found edit widget for object \"%s\"", qP(name) );
       continue;
     }
 

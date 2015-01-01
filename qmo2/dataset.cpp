@@ -462,11 +462,11 @@ int HolderData::del_obj( const QString &ob_name )
 
   HolderData *ho = getElem( ob_name );
   if( !ho ) {
-    DBG2q( "warn: not found element", ob_name );
+    DBGx( "warn: not found element \"%s\" int \"%s\"", qP(ob_name), qP(getFullName()) );
     return 0;
   }
   if( ! ho->isDyn() ) {
-    DBG2q( " object  is not created dynamicaly: ", ob_name );
+    DBGx( " object \"%s\" is not created dynamicaly in \"%s\"", qP(ob_name), qP(getFullName()) );
     return 0;
   }
   if( ho->getFlags() & efImmutable ) {
@@ -749,7 +749,7 @@ bool HolderData::setData( const QString &nm, const QVariant &da )
   int idx;
   NameType nm_type = splitName( nm, first, rest, idx );
   if( nm_type == badName ) {
-    DBG2q( "warn: bad target name", nm );
+    DBGx( "warn: bad target name \"%s\"", qP(nm) );
     return 0;
   }
 
@@ -765,7 +765,7 @@ bool HolderData::setData( const QString &nm, const QVariant &da )
 
   // both part of name exists
   if( ho->getTp() != QVariant::UserType || ! ho->isObject() ) {
-    DBG2q( "warn: compound name required ", first );
+    DBGx( "warn: compound name required (set \"%s\" ) in \"%s\"", qP(first), qP(getFullName()) );
     return 0;
   }
 
@@ -1779,7 +1779,7 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
   if( nm_type == badName ) {
     if( lt )
       *lt = LinkBad;
-    DBG2q( "warn: bad target name", nmf );
+    DBGx( "warn: bad target name \"%s\" in \"%s\"", qP(nmf), qP(getFullName()) );
     return 0;
   }
 
@@ -2037,7 +2037,7 @@ void TDataSet::registerInput( InputSimple *inp )
   if( ! inp )
     return;
   if( inputs.indexOf( inp ) != -1 ) {
-    DBG2q( "warn: input \"%s\" already registered", inp->objectName() );
+    DBGx( "warn: input \"%s\" already registered", qP(inp->objectName()) );
     return;
   }
   inputs.push_back( inp );
@@ -2051,7 +2051,7 @@ void TDataSet::unregisterInput( InputSimple *inp )
   //   return;
   int idx = inputs.indexOf( inp );
   if( idx == -1 ) {
-    DBG2q( "warn: input \"%s\" not registered", inp->objectName() );
+    DBGx( "warn: input \"%s\" not registered", qP(inp->objectName()) );
     return;
   }
   inputs.remove( idx );
