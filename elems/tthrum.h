@@ -2,7 +2,7 @@
                           tthrum.h  -  description
                              -------------------
     begin                : 2013.08.17
-    copyright            : (C) 2013-2014 by atu
+    copyright            : (C) 2013-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

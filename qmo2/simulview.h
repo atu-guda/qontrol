@@ -2,7 +2,7 @@
                           simulview.h - view for simulations
                              -------------------
     begin                : 2014.10.15
-    copyright            : (C) 2014-2014 by atu
+    copyright            : (C) 2014-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

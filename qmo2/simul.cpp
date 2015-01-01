@@ -2,7 +2,7 @@
                           simul.cpp  -  description
                              -------------------
     begin                : 2013.10.05
-    copyright            : (C) 2013-2014 by atu
+    copyright            : (C) 2013-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

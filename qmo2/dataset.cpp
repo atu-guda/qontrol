@@ -2,7 +2,7 @@
                           dataset.cpp  -  description
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2014 by atu
+    copyright            : GPL (C) 2000-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -38,11 +38,6 @@ HolderData::HolderData( ARGS_CTOR_MIN )
 
 HolderData::~HolderData()
 {
-  /*
-  DBGx( "dbg:  %s par: %p %s",
-      qP( objectName() ), par,
-      par ? qP( par->objectName() ) : "NONE" );
-  */
 }
 
 HolderData* HolderData::create( const QString &, HolderData *,
@@ -81,18 +76,15 @@ int HolderData::columnCount( const QModelIndex & /*par*/ ) const
 int HolderData::rowCount( const QModelIndex &par ) const
 {
   int sz = size();
-  // DBGx( "dbg: (rC0) par: %s sz: %d this: %s", qP(idx2s(par)), sz, qP( getFullName() ) );
   if( ! par.isValid() ) { // invalid: assume self (examples: root)
     return sz;
   }
 
   HolderData *po = static_cast<HolderData*>( par.internalPointer() );
   if( !po ) {
-    // DBG1( "dbg: (rC1) po=0 sz=0" );
     return 0;
   }
   sz = po->size();
-  // DBGx( "dbg: (rC2) sz=%d %s", sz, qP( po->getFullName() ) );
   return sz;
 }
 
@@ -109,7 +101,6 @@ QVariant HolderData::data( const QModelIndex &idx, int role ) const
     return QVariant();
   }
 
-  // DBGx( "dbg: ds: %s", qP( ds->getFullName() ) );
   return ds->dataObj( c, role );
 }
 
@@ -157,59 +148,43 @@ QVariant HolderData::dataObj( int col, int role ) const
 
 QModelIndex HolderData::index( int row, int column, const QModelIndex &par ) const
 {
-  //DBGx( "dbg: row=%d column=%d this: %s par: %s", row, column, qP( getFullName() ), qP(idx2s(par)) );
 
   if( ! hasIndex( row, column, par ) ) {
-    // DBG1( "dbg: no index" );
     return QModelIndex();
   }
 
   const HolderData *d_par = static_cast<HolderData*>( par.internalPointer() );
   if( !d_par ) {
-    // DBG1( "dbg: no d_par, set from this" );
     d_par = this;
   }
-  // DBGx( "dbg: d_par: %s",  qP( d_par->getFullName() ) );
 
   const HolderData *d_t = qobject_cast<HolderData*>( d_par->getElem( row ) );
   if( ! d_t ) {
-    // DBG1( "dbg: no d_t, return X" );
     return QModelIndex();
   }
-  // DBGx( "dbg: d_t: %s",  qP( d_t->getFullName() ) );
 
   return createIndex( row, column, const_cast<HolderData*>(d_t) );
 }
 
 QModelIndex HolderData::parent( const QModelIndex & idx ) const
 {
-  // DBGx( "dbg: this: %s idx: %s", qP( getFullName() ), qP(idx2s(idx)) );
   if( ! idx.isValid() ) {
     return QModelIndex();
   }
 
   HolderData *ds = static_cast<HolderData*>( idx.internalPointer() );
   if( !ds ) {
-    // DBG1( "dbg: ds=0, return X" );
     return QModelIndex();
   }
-  // DBGx( "dbg: ds: %s", qP( ds->getFullName() ) );
 
   HolderData *ds_p = ds->getParent();
   if( !ds_p ) {
-    // DBG1( "dbg: ds_p=0, return X" );
     return QModelIndex();
   }
   if( ds_p == this ) {
-    // DBG1( "dbg: ds_p=this, return X" );
     return QModelIndex();
   }
 
-  // DBGx( "dbg: ds_p: %s", qP( ds_p->getFullName() ) );
-
-  // QModelIndex ret =  createIndex( ds_p->getMyIndexInParent(), 0, ds_p  );
-  // DBGx("dbg: ret= %s", qP(idx2s(ret) ) );
-  // return ret;
   return createIndex( ds_p->getMyIndexInParent(), 0, ds_p );
 }
 
@@ -235,17 +210,13 @@ void HolderData::reset()
 
 bool HolderData::isChildOf( const QString &cname ) const
 {
-  // DBGx( "dbg: this: \"%s\" type: \"%s\" cname: \"%s\"", qP( getFullName() ), qP( getType() ), qP( cname ) );
   const QMetaObject *mob = metaObject();
   while( mob ) {
-    // DBGx( "dbg: className(): \"%s\" cmp \"%s\"", qP( mob->className() ), qP( cname ) );
     if( cname == mob->className() ) {
-      // DBG1( "dbg: true" );
       return true;
     }
     mob = mob->superClass();
   }
-  // DBG1( "dbg: false" );
   return false;
 }
 
@@ -344,7 +315,7 @@ bool HolderData::setDatas( const QString datas )
   QStringList sl = datas.split( "\n", QString::SkipEmptyParts );
   QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=(.+)$)" );
 
-  for( QString &s : sl ) {
+  for( const auto &s : sl ) {
     if( s.isEmpty() ) {
       continue;
     }
@@ -402,13 +373,6 @@ int HolderData::checkData( int /* ni */ )
   return 0;
 }
 
-// void HolderData::check_guard() const
-// {
-//   if( guard != guard_val )  {
-//     DBG1( "ERR!!!!!!!!!! Guard value!!!");
-//     abort();
-//   }
-// }
 
 void HolderData::reportStructChanged()
 {
@@ -437,7 +401,6 @@ void HolderData::handleStructChanged()
 
 
   if( ! par ) { // root signals about changes to world? only root?
-    // DBG1( "dbg: root reports about change" );
     emit sigStructChanged();
     beginResetModel(); // ???
     endResetModel();
@@ -458,10 +421,6 @@ QIcon HolderData::getIcon() const
 // TODO: more args
 HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name )
 {
-  //DBGx( "dbg: try to add \"%s\" type \"%s\" to \"%s\"",
-  //    qP(ob_name), qP(cl_name), qP( getFullName() ) );
-  // if( ! ( allow_add & allowObject ) )
-  //   return nullptr;
   beginResetModel();
 
   HolderData *el = getElem( ob_name );
@@ -938,10 +897,10 @@ void HolderData::dumpStruct() const
     QObject *xo = o;
     DBGx( "*# [%d] (%p) %s %s ",
         i, xo, xo->metaObject()->className(), qP(xo->objectName()) );
-    if( ! xo->inherits("HolderData" )) {
+    HolderData *ho = qobject_cast<HolderData*>(xo);
+    if( !ho ) {
       continue;
     }
-    HolderData *ho = qobject_cast<HolderData*>(xo);
     DBGx( "*#    = %s", qP( ho->toString() ) );
     ++i;
   }
@@ -1768,8 +1727,7 @@ CTOR(TDataSet,HolderData)
 
 TDataSet::~TDataSet()
 {
-  // DBGx( "dbg:  %p %s", this, qP( getFullName() ));
-  state = stateBad; //  guard = 0;
+  state = stateBad;
 }
 
 

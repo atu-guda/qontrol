@@ -1,8 +1,8 @@
 /***************************************************************************
-                          defs.h  -  description
+                          defs.h  -  common definitions and desftiptions
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2014 by atu
+    copyright            : GPL (C) 2000-2015 by atu
     email                : atu@nmetau.edu.ua
  *************************************************************************/
 
@@ -17,7 +17,7 @@
 /* Name of package */
 #define PACKAGE "qmo2x"
 #define ORG "atu.atunet"
-#define COPYRIGHT "(c) 2000-2014 atu; under GPLv2+"
+#define COPYRIGHT "(c) 2000-2015 atu; under GPLv2+"
 
 /* General constants */
 #define MAX_NAMELEN   32
@@ -69,10 +69,6 @@ enum _STATE_VALUES {
   statePreRun = 4, statePostRun = 5 // not used
 };
 
-enum _LOOP_TYPES {
-  loopInnerFirst = 1, loopParmFirst = 2, loopVeryFirst = 4,
-  loopInnerLast = 16, loopParmLast = 32, loopVeryLast = 64
-};
 
 const char* getStateString( int stat_num );
 

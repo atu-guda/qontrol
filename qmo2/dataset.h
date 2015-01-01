@@ -2,7 +2,7 @@
                           dataset.h  -  description
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2014 by atu
+    copyright            : GPL (C) 2000-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

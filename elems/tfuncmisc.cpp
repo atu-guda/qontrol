@@ -2,7 +2,7 @@
                           tfuncmisc.cpp  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000-2014 by atu
+    copyright            : (C) 2000-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

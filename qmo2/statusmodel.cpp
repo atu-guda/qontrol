@@ -2,7 +2,7 @@
                           statusmodel.cpp  -  description
                              -------------------
     begin                : Sat Aug 17 2002
-    copyright            : (C) 2000-2014 by atu
+    copyright            : (C) 2000-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

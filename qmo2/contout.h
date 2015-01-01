@@ -2,7 +2,7 @@
                           contout.h  -  contrainer for TOutArr
                              -------------------
     begin                : 2014.11.14
-    copyright            : (C) 2014-2014 by atu
+    copyright            : (C) 2014-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

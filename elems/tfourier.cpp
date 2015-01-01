@@ -2,7 +2,7 @@
                           tfourier.cpp  -  description
                              -------------------
     begin                : Sat Sep 9 2000
-    copyright            : (C) 2000-2014 by atu
+    copyright            : (C) 2000-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

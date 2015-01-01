@@ -2,7 +2,7 @@
                           tlorenz.cpp  -  description
                              -------------------
     begin                : Fri Mar 09 2012
-    copyright            : (C) 2012-2014 by atu
+    copyright            : (C) 2012-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
