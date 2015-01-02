@@ -1,6 +1,5 @@
 BUG: scale in MglView (rework)
 Struct StatData1 + properties + register in JS + funcs + TStat1
-Adjustable labels on object buttons
 Move TCorrAnal, TFourier direct access to arrays with post-run js? rm TFourier
 TOutArr:  + statistic
 Output file + View

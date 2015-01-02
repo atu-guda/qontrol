@@ -643,6 +643,7 @@ class InputAbstract : public TDataSet {
  public:
   DCL_CTOR(InputAbstract);
   virtual ~InputAbstract();  // must be abstract, but in this case cannot register
+  virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
   DCL_CREATE;
   DCL_STD_INF;
   virtual void post_set() override;
@@ -702,6 +703,7 @@ class InputParam : public InputAbstract {
  public:
   DCL_CTOR(InputParam);
   virtual ~InputParam();
+  virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
   DCL_CREATE;
   DCL_STD_INF;
   virtual void post_set() override;

@@ -47,6 +47,7 @@ class GraphElem : public TDataSet {
  public:
    DCL_CTOR(GraphElem);
    virtual ~GraphElem() override;
+   virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
    DCL_CREATE;
    DCL_STD_INF;
 
@@ -154,6 +155,7 @@ class TGraph : public TDataSet  {
    DCL_CREATE;
    DCL_STD_INF;
    virtual ~TGraph() override;
+   virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
 
 
    /** fills fields in DatasInfo structure, return number of elements (nn) */

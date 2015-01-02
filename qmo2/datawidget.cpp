@@ -15,8 +15,8 @@
 using namespace std;
 
 DataWidget::DataWidget( HolderData &h, QWidget *parent )
-  : QFrame( parent ), ho( h ), main_w(0),
-    lbl( new QLabel( ho.getParm("vis_name"), this) )
+  : QFrame( parent ), ho( h ), main_w( nullptr ),
+    lbl( new QLabel( ho.getParm( "vis_name" ), this ) )
 {
   lbl->setWhatsThis( ho.getType() + " " + ho.objectName() );
   lbl->setMinimumWidth( 50 ); // TODO: from font
@@ -25,8 +25,9 @@ DataWidget::DataWidget( HolderData &h, QWidget *parent )
 
 QSize DataWidget::minimumSizeHint() const
 {
-  if( main_w )
+  if( main_w ) {
     return  main_w->minimumSizeHint() + QSize( lbl->minimumSizeHint().width(), 0 );
+  }
   DBGx( "ERR: no main widget for %s %s", qP(ho.getType()), qP(ho.objectName()) );
   return QSize( 50, 20 ); // fallback value;
 }
@@ -34,8 +35,9 @@ QSize DataWidget::minimumSizeHint() const
 
 QSize DataWidget::sizeHint() const
 {
-  if( main_w )
+  if( main_w ) {
     return  main_w->sizeHint() + QSize( lbl->sizeHint().width(), 0 );
+  }
   DBGx( "ERR: no main widget for %s %s", qP(ho.getType()), qP(ho.objectName()) );
   return QSize( 50, 20 ); // fallback value;
 }
@@ -93,14 +95,16 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
 
   int v_max { 4096 }; // not IMAX - good limit for single-line string
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() )
+  if( ! s_max.isEmpty() ) {
     v_max = s_max.toInt();
+  }
   le->setMaxLength( v_max );
 
   QString mask = h.getParm( "mask" );
   if( ! mask.isEmpty() ) {
     le->setInputMask( mask );
   }
+
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
@@ -147,6 +151,7 @@ StringMLDataWidget::StringMLDataWidget( HolderData &h, QWidget *parent )
   // setMaxLength( h.getMax() ); ???
   // TODO: min size
   te->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred );
+
   QVBoxLayout *lay =  new QVBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
@@ -288,14 +293,18 @@ IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     le->setReadOnly( true );
   }
+
   int v_min { IMIN }, v_max { IMAX };
   QString s_min = h.getParm( "min" );
-  if( ! s_min.isEmpty() )
+  if( ! s_min.isEmpty() ) {
     v_min = s_min.toInt();
+  }
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() )
+  if( ! s_max.isEmpty() ) {
     v_max = s_max.toInt();
+  }
   le->setValidator( new QIntValidator( v_min, v_max, le ) );
+
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
@@ -340,18 +349,23 @@ IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     sb->setReadOnly( true );
   }
+
   int v_min { IMIN }, v_max { IMAX };
   QString s_min = h.getParm( "min" );
-  if( ! s_min.isEmpty() )
+  if( ! s_min.isEmpty() ) {
     v_min = s_min.toInt();
+  }
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() )
+  if( ! s_max.isEmpty() ) {
     v_max = s_max.toInt();
+  }
   sb->setRange( v_min, v_max );
+
   QString prefix = h.getParm( "prefix" );
   if( ! prefix.isEmpty() ) {
     sb->setPrefix( prefix );
   }
+
   bool ok;
   int step = h.getParm( "step" ).toInt( &ok, 0 );
   if( ok ) {
@@ -562,18 +576,23 @@ DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     sb->setReadOnly( true );
   }
+
   double v_min { DMIN }, v_max { DMAX };
   QString s_min = h.getParm( "min" );
-  if( ! s_min.isEmpty() )
+  if( ! s_min.isEmpty() ) {
     v_min = s_min.toDouble();
+  }
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() )
+  if( ! s_max.isEmpty() ) {
     v_max = s_max.toDouble();
+  }
   sb->setRange( v_min, v_max );
+
   QString prefix = h.getParm( "prefix" );
   if( ! prefix.isEmpty() ) {
     sb->setPrefix( prefix );
   }
+
   bool ok;
   double step = h.getParm( "step" ).toDouble( &ok );
   if( ok ) {
@@ -680,17 +699,20 @@ IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
   // DBGx( " name= \"%s\"  n=%d", qP(h.objectName()), n );
   les.reserve(n);
   QString vn = h.getParm("v_name");
-  if( vn.isEmpty() )
+  if( vn.isEmpty() ) {
     vn = h.objectName();
+  }
   vn += '[';
 
   int v_min { IMIN }, v_max { IMAX };
   QString s_min = h.getParm( "min" );
-  if( ! s_min.isEmpty() )
+  if( ! s_min.isEmpty() ) {
     v_min = s_min.toInt();
+  }
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() )
+  if( ! s_max.isEmpty() ) {
     v_max = s_max.toInt();
+  }
 
   lbl->setText(""); // hack: hide common name
   QGridLayout *lay = new QGridLayout( pwi );
@@ -699,7 +721,6 @@ IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
     QLabel *la = new QLabel( pwi );
     la->setText( vn + QSN(i) + ']' );
     lay->addWidget( la, i, 0 );
-
 
     QLineEdit *le = new QLineEdit( pwi );
     le->setReadOnly( ro );
@@ -758,17 +779,20 @@ DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent )
 
   les.reserve(n);
   QString vn = h.getParm("v_name");
-  if( vn.isEmpty() )
+  if( vn.isEmpty() ) {
     vn = h.objectName();
+  }
   vn += '[';
 
   double v_min { DMIN }, v_max { DMAX };
   QString s_min = h.getParm( "min" );
-  if( ! s_min.isEmpty() )
+  if( ! s_min.isEmpty() ) {
     v_min = s_min.toDouble();
+  }
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() )
+  if( ! s_max.isEmpty() ) {
     v_max = s_max.toDouble();
+  }
   int decimals = 12;
   QString sdec =  h.getParm("decimals" );
   if( ! sdec.isEmpty() ) {
@@ -847,8 +871,9 @@ StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent )
 
   int len_max { 4096 }; // not IMAX - simple string in array limit
   QString s_max = h.getParm( "max" );
-  if( ! s_max.isEmpty() )
+  if( ! s_max.isEmpty() ) {
     len_max = s_max.toInt();
+  }
   QString mask = h.getParm( "mask" );
 
   lbl->setText(""); // hack: hide common name
@@ -859,12 +884,12 @@ StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent )
     la->setText( vn + QSN(i) + ']' );
     lay->addWidget( la, i, 0 );
 
-
     QLineEdit *le = new QLineEdit( pwi );
     le->setReadOnly( ro );
     le->setMaxLength( len_max );
-    if( !mask.isEmpty() )
+    if( !mask.isEmpty() ) {
       le->setInputMask( mask );
+    }
     lay->addWidget( le, i, 1 );
     les.push_back( le );
   }
@@ -918,7 +943,9 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
     pb->setDisabled( true ); // TODO: real read-only
   }
   pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
-  pb->setText( ho.objectName() % " (" % ho.getType() % ")" );
+  QString btn_text = ho.dataObj( 0, Qt::StatusTipRole ).toString();
+  pb->setText( btn_text );
+  pb->setIcon( ho.getIcon() );
   connect( pb, &QPushButton::clicked, this, &ObjDataWidget::edit );
 
   QHBoxLayout *lay =  new QHBoxLayout( this );
@@ -1012,8 +1039,9 @@ QString FactoryDataWidget::findForHolder( const HolderData &ho, int *lev ) const
     max_good = 0;
   }
 
-  if( lev != nullptr )
+  if( lev != nullptr ) {
     *lev = max_good;
+  }
 
   //DBGx( "dbg: name: \"%s\" w_type: \"%s\" max_good: %d",
   //    qP(ho.objectName()), qP(name), max_good );
@@ -1025,19 +1053,24 @@ DataWidget* FactoryDataWidget::createDataWidget( HolderData &ho, QWidget *parent
 {
   QString name = findForHolder( ho );
   if( name.isEmpty() ) {
-    return 0;
+    return nullptr;
   }
+
   DwPropMap::const_iterator i = propMap.find( name );
-  if( i == propMap.end() )
-    return 0;
+  if( i == propMap.end() ) {
+    return nullptr;
+  }
+
   return i.value().creator( ho, parent );
 }
 
 bool FactoryDataWidget::registerWidgetType( const QString &wname,
     const DataWidgetProp &prop )
 {
-  if( propMap.contains( wname ) )
+  if( propMap.contains( wname ) ) {
     return false;
+  }
+
   propMap.insert( wname, prop );
   // updateHints();
   return true;
@@ -1046,8 +1079,10 @@ bool FactoryDataWidget::registerWidgetType( const QString &wname,
 bool FactoryDataWidget::unregisterWidgetType( const QString &wname )
 {
   DwPropMap::iterator i = propMap.find( wname );
-  if( i == propMap.end() )
+  if( i == propMap.end() ) {
     return false;
+  }
+
   propMap.erase( i );
   // updateHints();
   return true;
@@ -1236,11 +1271,11 @@ void DataDialog::addObj()
 
   int rc = dia->exec();
   delete dia; dia = 0;
-  if( rc != QDialog::Accepted ) {
+
+  if( rc != QDialog::Accepted || aei.type.isEmpty() ) {
     return;
-  };
-  if( rc != QDialog::Accepted || aei.type.isEmpty() )
-    return;
+  }
+
   if( ! isGoodName( aei.name )  ) {
     QMessageBox::critical( this, "Error",
        QString("Fail to add Elem: bad object name \"") + aei.name + "\"",
@@ -1255,6 +1290,7 @@ void DataDialog::addObj()
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
+
   HolderData *ob = ds.add_obj( aei.type, aei.name );
   if( !ob  ) {
     QMessageBox::critical( this, "Error",
@@ -1262,6 +1298,7 @@ void DataDialog::addObj()
        QMessageBox::Ok, QMessageBox::NoButton );
     return;
   }
+
   createWidgets(); // recreate iface
   getAll();
   update();
@@ -1272,14 +1309,18 @@ void DataDialog::delSome( bool is_obj )
   QStringList sl;
   for( auto c :  ds.children() ) {
     HolderData *ho = qobject_cast<HolderData*>(c);
-    if( !ho  || !ho->isDyn() )
+    if( !ho  || !ho->isDyn() ) {
       continue;
-    if( (is_obj ^ ho->isObject()) )
+    }
+    if( (is_obj ^ ho->isObject()) ) {
       continue;
+    }
     sl << ho->objectName();
   }
-  if( sl.isEmpty() )
+  if( sl.isEmpty() ) {
     return;
+  }
+
   QDialog *dia = new QDialog( this );
   QVBoxLayout *lay = new QVBoxLayout( dia );
 
@@ -1300,11 +1341,15 @@ void DataDialog::delSome( bool is_obj )
 
   int rc = dia->exec();
   QString ob_name;
-  if( lw->currentItem() )
+  if( lw->currentItem() ) {
     ob_name = lw->currentItem()->text();
+  }
   delete dia;
-  if( rc != QDialog::Accepted || ob_name.isEmpty() )
+
+  if( rc != QDialog::Accepted || ob_name.isEmpty() ) {
     return;
+  }
+
   ds.del_obj( ob_name );
   createWidgets();
   getAll();
@@ -1341,10 +1386,12 @@ int DataDialog::createWidgets()
 
   for( auto c :  ds.children() ) {
     HolderData *ho = qobject_cast<HolderData*>(c);
-    if( !ho )
+    if( !ho ) {
       continue;
-    if( ho->getFlags() & efNoDial )
+    }
+    if( ho->getFlags() & efNoDial ) {
       continue;
+    }
 
     int ncol = 1; // number of columns per widget
     QString ncol_str = ho->getParm("ncol");
@@ -1376,14 +1423,19 @@ int DataDialog::createWidgets()
     }
 
     dwm[name] = w;
-    w->setWhatsThis( ho->getParm("descr") );
+    QString whats = ho->dataObj( 0, Qt::WhatsThisRole ).toString();
+    w->setWhatsThis( whats );
+    // w->setStatusTip( whats ); // TODO: just for test
+    // w->setToolTip( whats ); // TODO: just for test
     lay2->addWidget( w, nr, nc, 1, ncol );
+
     ++nr;
-    if( nr > nr_max )
+    if( nr > nr_max ) {
       nr_max = nr;
+    }
 
     was_col = was_block = 0;
-    if( ho->getParm("sep") == "colend" ||  nr >= 40 ) {
+    if( ho->getParm("sep") == "colend" ||  nr >= 20 ) { // 20: max elems in column
       was_col = 1;
     }
     if( ho->getParm("sep") == "blockend" ) {

@@ -142,6 +142,25 @@ QVariant HolderData::dataObj( int col, int role ) const
     return getIcon();
   }
 
+  if( role == Qt::WhatsThisRole ) {
+    if( col != 0 ) {
+      return QVariant();
+    }
+    QString whats = getParm("descr");
+    if( whats.isEmpty() ) {
+      whats = "Object \"" + objectName() % "\". type: " % getType();
+    }
+    return whats;
+  }
+
+  if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
+    if( col != 0 ) {
+      return QVariant();
+    }
+    QString s = objectName() % " (" % getType() % ")";
+    return s;
+  }
+
   return QVariant();
 }
 
@@ -2124,6 +2143,30 @@ void InputAbstract::set_link()
 
 }
 
+QVariant InputAbstract::dataObj( int col, int role ) const
+{
+  if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
+    if( col != 0 ) {
+      return QVariant();
+    }
+
+    QString s = source;
+    QChar ac = QChar( 0x274C ); // X
+    if( p != &fake_in ) {
+      ac = QChar( 0x27BC );
+      if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
+        ac = QChar( 0x2794 );
+      }
+    }
+    s += ac;
+    s += objectName();
+    return s;
+  }
+
+  return TDataSet::dataObj( col, role );
+}
+
+
 const char* InputAbstract::helpstr { "Abstract link" };
 
 DEFAULT_FUNCS_REG(InputAbstract);
@@ -2146,6 +2189,7 @@ InputSimple::~InputSimple()
     ds->unregisterInput( this );
   }
 }
+
 
 
 void InputSimple::post_set()
@@ -2199,6 +2243,35 @@ void InputParam::set_link()
   if( !targ ) {
     targ = &fake_target;
   }
+}
+
+QVariant InputParam::dataObj( int col, int role ) const
+{
+  if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
+    if( col != 0 ) {
+      return QVariant();
+    }
+    QString s = source;
+    QChar ac = QChar( 0x274C ); // X
+    if( p != &fake_in ) {
+      ac = QChar( 0x27BC );
+      if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
+        ac = QChar( 0x2794 );
+      }
+    }
+    s += ac;
+
+    s += objectName() % "." % tparam.cval();
+    if( targ == &fake_target ) {
+      s += QChar( 0x274C ); // X
+    }
+    if( onlyFirst ) {
+      s += QChar( 0x271D ); // +
+    }
+    return s;
+  }
+
+  return InputAbstract::dataObj( col, role );
 }
 
 

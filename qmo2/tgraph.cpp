@@ -26,9 +26,8 @@ using namespace std;
 const char* GraphElem::helpstr = "<H1>GraphElem</H1>\n"
  "Defines one source and output type for onw  line";
 
-// only for debug: TODOremove !
 const char *role_name[] = {
-  "none", "axisX", "axisY", "axisZ", "plot", "c0", "c1", "c2", "c3", "c4", "c5", "sz", "??1"
+  "none", "X axis", "Y axis", "Z axis", "Plot", "C0", "C1", "C2", "C3", "C4", "C5", "Sz", "??1"
 };
 
 STD_CLASSINFO(GraphElem,clpElem);
@@ -41,6 +40,33 @@ GraphElem::~GraphElem()
 {
   reset();
 }
+
+QVariant GraphElem::dataObj( int col, int role ) const
+{
+  if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
+    if( col != 0 ) {
+      return QVariant();
+    }
+
+    QString s = src;
+    QStringList el = getEnumStrings( "DataType" );
+    s += " (" % el.at( type );
+    if( is2D ) {
+      s += ",2D";
+    }
+    if( ! extra.cval().isEmpty() ) {
+      s += QSL("," ) % extra.cval();
+    }
+    s += ") ";
+    if( ! label.cval().isEmpty() ) {
+      s += QSL(" \"" ) % label.cval() % QSL( "\"" );
+    }
+    return s;
+  }
+
+  return TDataSet::dataObj( col, role );
+}
+
 
 void GraphElem::do_reset()
 {
@@ -197,6 +223,36 @@ CTOR(TGraph,TDataSet) ,
 TGraph::~TGraph()
 {
   reset();
+}
+
+QVariant TGraph::dataObj( int col, int role ) const
+{
+
+  if( role == Qt::ToolTipRole ) {
+    if( col != 0 ) {
+      return QVariant();
+    }
+    QString s = QSL("[" );
+
+    for( auto c : children() ) {
+      GraphElem *ge = qobject_cast<GraphElem*>( c );
+      if( ! ge ) {  continue;   }
+      if( ge->type == GraphElem::DataType::DataNone ) { continue; }
+      s += ge->src.cval() % QSL( "," );
+    }
+
+    s += QSL("]" );
+    return s;
+  }
+
+  // if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
+  //   if( col != 0 ) {
+  //     return QVariant();
+  //   }
+  //
+  // }
+
+  return TDataSet::dataObj( col, role );
 }
 
 void TGraph::do_reset()
