@@ -1,3 +1,12 @@
+BUG: scale in MglView (rework)
+Struct StatData1 + properties + register in JS + funcs + TStat1
+Adjustable labels on object buttons
+Move TCorrAnal, TFourier direct access to arrays with post-run js? rm TFourier
+TOutArr:  + statistic
+Output file + View
+Autocorrelation?
+TeX-alike simple labels LabelTeX
+
 Propagate modified flag up to root?
 Application config: to TDataSet?
 
@@ -5,17 +14,14 @@ Rebreand to Qontrol
 JS run dialog. + pr JS function
 global log?
 Set more data while object creation
-Adjustable labels on object buttons
 
 LaboWin::initDirs?
 Sub simulation? / set of dialog-ed values before run
-TOutArr:  + statistic
 Add to model object: common parameters
 Add to model object: functions
 
 Call parent post_set (if req). flag?
 Input/output elements/scheme properties (in0?)
-Move TCorrAnal, TFourier direct access to arrays with post-run js?
 Command line (':')
 unify add/paste elem: param in dialog?
 unify add param/object : add_obj_param? + dialog
@@ -39,7 +45,6 @@ objects: TFileInput, TFileOutput, TMovingAver, TDiff
 may be new field in TClassInfo to misc flags: can f() w/o preRun..., 
     class group.. etc
 implement loading objects in so.
-functions in data info
 
 Distributions analysis + plot
 vector icons (language=SVG?) (may be dynamic)

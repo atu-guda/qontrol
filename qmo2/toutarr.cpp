@@ -41,13 +41,19 @@ TOutArr::~TOutArr()
 QVariant TOutArr::dataObj( int col, int role ) const
 {
   if( role == Qt::BackgroundRole ) {
-    if( col != 0 || n < 1 ) {
+    if( col != 0 ) {
+      return QVariant();
+    }
+    if( so == &fake_so && type != OutArrType::outSpec ) {
+      return QBrush( QColor(254,128,128) ) ;
+    }
+    if( n < 1 ) {
       return QVariant();
     }
     if( n == arrsize ) {
       return QBrush( QColor(0,254,0) ) ;
     }
-    return QBrush( QColor(0,64,128) ) ;
+    return QBrush( QColor(64,64,128) ) ;
   }
 
   else if ( role == Qt::ToolTipRole ) {
@@ -99,6 +105,17 @@ int TOutArr::alloc( int anx, int any )
 void TOutArr::do_reset()
 {
   n = 0; cnq = 0; dmin = 0; dmax = 1;
+
+  // TODO: move to separate functions and call hele and after struct changed ???
+  so = nullptr;
+  TModel *mod = getAncestorT<TModel>();
+  ltype_t lt; const TDataSet *so_ob;
+  if( mod  &&  type != OutArrType::outSpec ) {
+    so = mod->getSchemeDoublePtr( name, &lt, &so_ob, 0 );
+  }
+  if( !so ) {
+    so = &fake_so; // TODO: indicate this
+  }
 }
 
 int TOutArr::take_val()
@@ -133,16 +150,6 @@ int TOutArr::preRun( int /*run_tp*/, int an, int anx, int any, double /*adt*/ )
   }
   arr.resize( arrsize );
 
-  // TODO: move to separate functions and call hele and after struct changed
-  so = nullptr;
-  TModel *mod = getAncestorT<TModel>();
-  ltype_t lt; const TDataSet *so_ob;
-  if( mod  &&  type != OutArrType::outSpec ) {
-    so = mod->getSchemeDoublePtr( name, &lt, &so_ob, 0 );
-  }
-  if( !so ) {
-    so = &fake_so; // TODO: indicate this
-  }
 
   return 1;
 }
