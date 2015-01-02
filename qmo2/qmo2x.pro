@@ -40,6 +40,7 @@ SOURCES += \
   scheme.cpp \
   simul.cpp \
   simulview.cpp \
+  statdata.cpp \
   tmiso.cpp \
   tmodel.cpp \
   datawidget.cpp \
@@ -103,6 +104,7 @@ HEADERS += \
   scheme.h \
   simul.h \
   simulview.h \
+  statdata.h \
   tmiso.h \
   tmodel.h \
   datawidget.h \
