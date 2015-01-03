@@ -30,19 +30,16 @@ class TCorrAnalysis : public TMiso  {
    DCL_CTOR(TCorrAnalysis);
    DCL_CREATE;
    DCL_STD_INF;
-   enum CallType { call_all = 0, call_time, call_u2, call_arr };
+   enum CallType { call_all = 0, call_time, call_u2 };
    Q_ENUMS(CallType);
    Q_CLASSINFO( "enum_CallType_0", "All" );     // call_all
    Q_CLASSINFO( "enum_CallType_1", "t0<t<t1" ); // call_time
-   Q_CLASSINFO( "enum_CallType_2", "u2>0" );    // call_u2
-   Q_CLASSINFO( "enum_CallType_3", "arrays" );  // call_arr
+   Q_CLASSINFO( "enum_CallType_2", "in_add>0" );// call_u2
  protected:
    /** main computation function */
    virtual double f( double t ) override;
    /** reimplemented from TMiso to reset summators */
    virtual int do_startLoop( int acnx, int acny ) override;
-   /** reimplemented from TMiso to fill out arrays */
-   virtual int do_endLoop() override;
    /* ============= function members ================== */
    /** resets collocted and computed data */
    void reset_data();
@@ -56,23 +53,13 @@ class TCorrAnalysis : public TMiso  {
    PRM_LIST( type, efNoRunChange, "Type", "Collection type", "enum=CallType" );
    PRM_SWITCH( useCalc,  efNoRunChange, "use Calc", "Use in_calc>0 as signal to calc", "" );
    PRM_SWITCH( useReset, efNoRunChange, "use Reset", "Use u_rst>0 as signal to reset", "" );
-   PRM_SWITCH( useFill,  efNoRunChange, "Fill arrays", "Fill output array", "" );
    /** time start / stop values */
    PRM_DOUBLE( t0, efNoRunChange, "t0", "Time to start on given type", "min=0\nsep=col" );
    PRM_DOUBLE( t1, efNoRunChange, "t1", "Time to stop on given type", "min=0\ndef=10000" );
-   /** Names of input arrays if type=UseArrays */
-   PRM_STRING( x_in, efNoRunChange, "in x[]", "name of input x array", "" );
-   PRM_STRING( y_in, efNoRunChange, "in y[]", "name of input y array", "" );
-   /** names of output arrays */
-   PRM_STRING( x_oname, efNoRunChange, "out x name", "name of output x array", "sep=col" );
-   PRM_STRING( y_oname, efNoRunChange, "out y name", "name of output y array", "" );
-   PRM_STRING( c_oname, efNoRunChange, "compare name", "name of array to compare with", "" );
-   /** main output source */
    /** current loop # and number of collected data,  ok state - calculated */
    PRM_INT( ii, efInner, "ii", "current loop number", "" );
    PRM_INT( n, efInner, "n", "number of collected data", "" );
    PRM_INT( ok, efInner, "ok", "ok state", "" );
-   PRM_INT( nc, efInner, "nc", "nc?", "" );
    /** collectors, out values */
    PRM_DOUBLE( s_x, efInner, "s_x", "sum(x)", "" );
    PRM_DOUBLE( s_x2, efInner, "s_x2", "sum(x^2)", "" );
@@ -91,12 +78,6 @@ class TCorrAnalysis : public TMiso  {
    PRM_DOUBLE( ave_y, efInner, "aver_y", "aver(y)", "" );
    PRM_DOUBLE( ave_x2, efInner, "aver_x2", "aver(x^2)", "" );
    PRM_DOUBLE( ave_y2, efInner, "aver_y2", "aver(y^2)", "" );
-   PRM_DOUBLE( cmp_ms, efInner, "cmp_ms", "comparison mean square", "" );
-   PRM_DOUBLE( cmp_max, efInner, "cmp_max", "max error", "" );
-   PRM_DOUBLE( cmp_min, efInner, "cmp_min", "min error", "" );
-   PRM_DOUBLE( cmp_ampl, efInner, "cmp_ampl", "error amplitude", "" );
-   PRM_DOUBLE( cmp_tmin, efInner, "cmp_tmin", "time(min error)", "" );
-   PRM_DOUBLE( cmp_tmax, efInner, "cmp_tmax", "time(max error)", "" );
 
    PRM_INPUT( in_x, 0, "x input", "First input",  "sep=block" );
    PRM_INPUT( in_y, 0, "y input", "Second input", "" );

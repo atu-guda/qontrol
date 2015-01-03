@@ -35,7 +35,7 @@ CTOR(TCorrAnalysis,TMiso)
 
 void TCorrAnalysis::reset_data()
 {
-  ok = n = ii = nc = 0;
+  ok = n = ii = 0;
   s_x = s_x2 = s_y = s_y2 = s_xy = corr = cov = a = b = dis_x = dis_y = 0;
   sigma_x = sigma_y = 0;
   ave_x = ave_y = ave_x2 = ave_y2 = 0;
@@ -45,69 +45,6 @@ int TCorrAnalysis::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   reset_data();
   return 1;
-}
-
-int TCorrAnalysis::do_endLoop()
-{
-  // TODO: move to separate fun
-  return 1;
-  // double yy, e, se2;
-  // int j, nx, nx_c, do_cmp, do_fill;
-  // const dvector *xdat, *cdat;
-  // TOutArr *arrx, *arry = 0, *arrc;
-  // cmp_ms = cmp_min = cmp_max = cmp_ampl = cmp_tmin = cmp_tmax = se2 = 0;
-  // do_cmp = do_fill = 0;
-  // if( ! par )
-  //   return 1;
-  // QString tmp = x_oname;
-  // arrx = model->getOutArr( tmp );
-  // if( !arrx )
-  //   return 1;
-  // nx = nx_c = 0;
-  // arrx->getData( "n", &nx );
-  // xdat = arrx->getArray();
-  // if( xdat == 0 || nx < 2 )
-  //   return 1;
-  // cdat = 0;
-  // tmp = c_oname;
-  // arrc = model->getOutArr( tmp );
-  // if( arrc ) {
-  //   cdat = arrc->getArray();
-  //   arrc->getData( "n", &nx_c );
-  // };
-  // if( cdat != 0 && nx_c == nx )
-  //   do_cmp = 1;
-  // if( useFill ) {
-  //   tmp = y_oname;
-  //   arry = model->getOutArr( tmp );
-  //   if( arry ) {
-  //     arry->alloc( nx, 1 );
-  //     do_fill = 1;
-  //   };
-  // };
-  // if( do_fill == 0 && do_cmp == 0 )
-  //   return 1;
-  //
-  // for( j=0; j<nx; j++ ) {
-  //   yy = a * (*xdat)[j] + b;
-  //   if( do_cmp ) {
-  //     e = (*cdat)[j] - yy;
-  //     se2 += e * e;
-  //     if( e > cmp_max ) {
-  //       cmp_max = e; cmp_tmax = (*xdat)[j];
-  //     };
-  //     if( e < cmp_min && j > 0 ) {
-  //       cmp_min = e; cmp_tmin = (*xdat)[j];
-  //     };
-  //   };
-  //   if( do_fill )
-  //     arry->push_val( yy, 100000 ); // ignore level
-  // };
-  // if( do_cmp ) {
-  //   cmp_ms = sqrt( se2 / nx );
-  //   cmp_ampl = 0.5 * ( cmp_max - cmp_min );
-  // };
-  // return 1;
 }
 
 
@@ -126,9 +63,6 @@ double TCorrAnalysis::f( double t )
       add = ( t >= t0 ) && ( t <= t1 ); break;
     case call_u2:
       add = ( in_add > 0.1 ); break;
-    case call_arr:
-      // PASS
-      // add = 0; // dont add, use arrays
     default:
       add = 0;
   };
@@ -138,56 +72,11 @@ double TCorrAnalysis::f( double t )
     n++;
   };
   if( ( ii >= model_nn-1 || ( useCalc && in_calc > 0.1 ))   ) {
-    if( type >= 3 )
-      getDataFromArrays();
     calc();
   };
   return s_x;
 }
 
-int TCorrAnalysis::getDataFromArrays()
-{
-  return 1; // TODO: rewrite
-  // double x, y;
-  // const dvector *xdat, *ydat;
-  // int nx = 0, ny = 0;
-  //
-  // reset_data();
-  // // get x array
-  // TOutArr *arrx = model->getOutArr( x_in );
-  // if( arrx ) {
-  //   arrx->getData( "n", &nx );
-  //   xdat = arrx->getArray();
-  // } else {
-  //   xdat = 0; nx = 0;
-  // };
-  // // get x array
-  // TOutArr *arry = model->getOutArr( y_in );
-  // if( arry ) {
-  //   arry->getData( "n", &ny );
-  //   ydat = arry->getArray();
-  // } else {
-  //   ydat = 0; ny = 0;
-  // };
-  // if( nx < 1 && ny < 1 )
-  //   return 1;
-  // if( nx < 1 )
-  //   n = ny;
-  // else if( ny < 1 )
-  //   n = nx;
-  // else
-  //   n = ( nx < ny ) ? nx : ny;
-  // x = y = 0;
-  // for( int i=0; i<n; i++ ) {
-  //   if( xdat )
-  //     x = (*xdat)[i];
-  //   if( ydat )
-  //     y = (*ydat)[i];
-  //   s_x += x; s_x2 += x*x; s_y += y; s_y2 += y*y;
-  //   s_xy += x * y;
-  // };
-  // return n;
-}
 
 int TCorrAnalysis::calc()
 {
@@ -196,27 +85,34 @@ int TCorrAnalysis::calc()
     ok = 0;
     return 0;
   };
+  double dn = (double)(n);
+  double dn2 = dn * dn;
 
-  nc = (int)n;
-
-  ave_x = s_x / n; ave_y = s_y / n;
-  ave_x2 = s_x2 / n; ave_y2 = s_y2 / n;
-  dis_x = ( s_x2 * n - s_x * s_x ) / ( double(n) * n );
+  ave_x  = s_x  / dn; ave_y  = s_y  / dn;
+  ave_x2 = s_x2 / dn; ave_y2 = s_y2 / dn;
+  dis_x = ( s_x2 * dn - s_x * s_x ) / dn2;
+  if( dis_x < 0 ) { // may be due to estimation error
+    dis_x = 0;
+  }
+  dis_y = ( s_y2 * dn - s_y * s_y ) / dn2;
+  if( dis_y < 0 ) {
+    dis_y = 0;
+  }
   sigma_x = sqrt( dis_x );
-  dis_y = ( n * s_y2 - s_y * s_y ) / ( n * n );
   sigma_y = sqrt( dis_y );
 
   dd = n * s_x2 - s_x * s_x;
-  cov = ( n * s_xy - s_x * s_y ) / ( n * n );
+  cov = ( n * s_xy - s_x * s_y ) / ( dn2 );
+  a = b = corr = 0; ok = 0;
   if( dd > 0 ) {
     a = ( n * s_xy - s_x * s_y ) / dd;
     b = ( s_y * s_x2 - s_x * s_xy ) / dd;
-    corr = ( n * s_xy - s_x * s_y )
-      / sqrt( ( n*s_x2 - s_x*s_x ) * ( n*s_y2 - s_y*s_y ) );
-    ok = 1;
-  } else {
-    a = b = corr = 0; ok = 0;
-  };
+    double dz = ( n*s_x2 - s_x*s_x ) * ( n*s_y2 - s_y*s_y );
+    if( dz > 0 ) {
+      corr = ( n * s_xy - s_x * s_y )  / sqrt( dz );
+      ok = 1;
+    }
+  }
   return ok;
 }
 
