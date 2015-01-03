@@ -90,7 +90,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   vlay->addWidget( stam );
   setLayout( vlay );
 
-  setWindowTitle( doc->title() );
+  setWindowTitle( doc->pathName() );
 
   connect( this, &LaboView::viewChanged, this, &LaboView::updateViews );
   connect( sview, &StructView::sig_changeSel,   this, &LaboView::changeSel );

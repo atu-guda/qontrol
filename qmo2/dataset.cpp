@@ -2128,6 +2128,9 @@ void InputAbstract::set_link()
     p = &one_in;
     return;
   }
+  if( source.val()[0] == ':' ) { // all other old ':' must be removed TODO: remove after conversion
+    source.val().remove( 0, 1 );
+  }
 
   ltype_t lt;
   const TDataSet *srct = nullptr;
