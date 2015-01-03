@@ -42,6 +42,9 @@ class ContOut : public TDataContainer {
    //* get all needed ordinary (outSimple) values
    void takeAllVals();
 
+   // just to test return pair to JS
+   Q_INVOKABLE TripleF calcTest() const { return TripleF{ 0.2, 0.5, 3.14 }; }
+
    // fft tranform
    Q_INVOKABLE int fft( const QString &nm_in, const QString &nm_omega,
                         const QString &nm_a, const QString &nm_phi, double ome_max );

@@ -759,6 +759,17 @@ class ElemFactory {
 
 #define EFACT ElemFactory::theFactory()
 
+// ----------------  misc types --------------------------------------------
+
+// struct to return 3-values from C++ to js
+// helper functions: in tmodel.cpp
+
+struct TripleF {
+  double a, b, c;
+  QString toString() const;
+};
+Q_DECLARE_METATYPE(TripleF);
+
 #endif  // _DATASET_H
 
 

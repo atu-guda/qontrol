@@ -52,6 +52,26 @@ static QScriptValue script_int2str( QScriptContext *ctx, QScriptEngine * /*eng*/
   return QScriptValue( s );
 }
 
+QString TripleF::toString() const
+{
+  return QString( "[ %1; %2; $3 ]").arg(a).arg(b).arg(c);
+}
+
+QScriptValue TripleFtoScriptValue( QScriptEngine *eng, const TripleF &s )
+{
+  QScriptValue obj = eng->newObject();
+  obj.setProperty( "a", s.a );
+  obj.setProperty( "b", s.b );
+  obj.setProperty( "c", s.c );
+  return obj;
+}
+
+void fromScriptValuetoTripleF( const QScriptValue &obj, TripleF &s )
+{
+  s.a = obj.property("a").toNumber();
+  s.b = obj.property("b").toNumber();
+  s.c = obj.property("c").toNumber();
+}
 
 // ------------------------- TModel --------------------------------------
 
@@ -589,6 +609,8 @@ void TModel::initEngine()
 {
   delete eng;
   eng = new QScriptEngine( this );
+
+  qScriptRegisterMetaType( eng, TripleFtoScriptValue, fromScriptValuetoTripleF );
 
   eng->globalObject().setProperty( "model", eng->newQObject( this ) );
   // aliases
