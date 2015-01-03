@@ -278,6 +278,8 @@ int TModel::run( QSemaphore *sem )
       if( useScripts ) {
         eng->globalObject().setProperty( "il1", eng->newVariant( (int)(il1) ) );
         eng->globalObject().setProperty( "il2", eng->newVariant( (int)(il2) ) );
+        eng->globalObject().setProperty( "prm0", eng->newVariant( (double)(prm0) ) );
+        eng->globalObject().setProperty( "prm1", eng->newVariant( (double)(prm1) ) );
         if( ! scriptStartLoop.isEmpty() ) {
           runScript( scriptStartLoop );
         }

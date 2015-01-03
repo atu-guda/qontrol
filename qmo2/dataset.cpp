@@ -1789,9 +1789,9 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
   }
   QString nmf = nm, first, rest;
 
-  if( nm[0] == ':' ) { // handle old ':name' from TModel
-    nmf.remove( 0, 1 );
-  }
+  // if( nm[0] == ':' ) { // handle old ':name' from TModel
+  //   nmf.remove( 0, 1 );
+  // }
 
   int idx;
   NameType nm_type = splitName( nmf, first, rest, idx );
@@ -2127,9 +2127,6 @@ void InputAbstract::set_link()
     linkType = LinkSpec;
     p = &one_in;
     return;
-  }
-  if( source.val()[0] == ':' ) { // all other old ':' must be removed TODO: remove after conversion
-    source.val().remove( 0, 1 );
   }
 
   ltype_t lt;
