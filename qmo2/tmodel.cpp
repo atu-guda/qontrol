@@ -303,7 +303,7 @@ int TModel::run( QSemaphore *sem )
       if( ! scriptEndLoop.isEmpty() ) {
         runScript( scriptEndLoop );
       }
-    } // -- inner llop (il1)
+    } // -- inner loop (il1)
   }   // -- outer loop (il2)
 
   if( ! scriptPostRun.isEmpty() ) {
@@ -374,6 +374,9 @@ int TModel::postRun()
   int cm = c_sch->getModified();
   if( modified == 0 || cm != 0 ) {
     modified |= 2;
+  }
+  if( outs ) {
+    outs->postRun( 1 );
   }
   return rc;
 }

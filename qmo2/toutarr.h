@@ -80,39 +80,59 @@ class TOutArr : public TDataSet  {
    Q_INVOKABLE void put( int i, double v );
    Q_INVOKABLE void put( int x, int y, double v );
    Q_INVOKABLE void add( double v );
+   // fact access to statistics. calc_stat is cheap w/o force
+   Q_INVOKABLE void calc_stat( bool force = false, bool forceAll = false );
+   Q_INVOKABLE double getMin() const   {  return dmin; }
+   Q_INVOKABLE double getMax() const   {  return dmax; }
+   Q_INVOKABLE int    getIMin() const  {  return imin; }
+   Q_INVOKABLE int    getIMax() const  {  return imax; }
+   Q_INVOKABLE double getSum() const   {  return s_x; }
+   Q_INVOKABLE double getSum2() const  {  return s_x2; }
+   Q_INVOKABLE double getAver() const  {  return a_x; }
+   Q_INVOKABLE double getAver2() const {  return a_x2; }
+   Q_INVOKABLE double getVariance() const {  return var_x; }
+   Q_INVOKABLE double getStdDev() const {  return sd_x; }
+   Q_INVOKABLE double getAbsDev() const {  return absdev_x; }
+   Q_INVOKABLE double getAutoCorr() const { return acorr; }
+   Q_INVOKABLE QString getAllStats( QString sep = "; ") const;
  protected:
    virtual void do_reset() override;
+   void reset_stat();
 
-   /** type of array: 0:simple, 1:parm1, 2:parm2, 3:special */
    PRM_LIST( type, efNoRunChange, "Type", "Type of array", "enum=OutArrType" );
-   /** name of element to use */
    PRM_STRING( name, efNoRunChange, "Source", "Name of element to use", "max=64" );
-   /** label of data */
    PRM_STRING( label, efNoRunChange, "Label", "Label of data", "max=32" );
-   /** size of first dimensions in arrays */
+   PRM_SWITCH( allStat, efNoRunChange, "All stat", "calculate all statistics", "def=0" );
    PRM_INT( nx, efInner, "nx","size of x dimensions arrays", "def=1"  );
-   /** size of x=const block in 2-d arrays */
    PRM_INT( ny, efInner, "ny","size of x=const block in 2-d arrays", "def=1"  );
-   /** each n-th data collect. def=1 */
    PRM_INT( nq, efNoRunChange, "Every n", "each n-th data collect. ", "min=1\nmax=1000000\ndef=1" );
-   /** latch value of counter */
    PRM_INT( lnq, efNoRunChange, "Catch at n=", "latch value of counter", "min=0\nmax=1000000" );
-   /** current value of counter(0..nq-1) */
    PRM_INT( cnq, efInner, "Current n", "current value of counter(0..nq-1)", "" );
-   /** min value */
+   // statistics
    PRM_DOUBLE( dmin, efInner, "min", "min value", "" );
-   /** max value */
    PRM_DOUBLE( dmax, efInner, "max", "max value", "" );
+   PRM_DOUBLE( s_x,  efInner, "s_x", "summ of elements", "" );
+   PRM_DOUBLE( s_x2,  efInner, "s_x2", "summ of x^2", "" );
+   PRM_DOUBLE( a_x,  efInner, "a_x", "average of elements", "" );
+   PRM_DOUBLE( a_x2,  efInner, "a_x2", "average of squares", "" );
+   PRM_DOUBLE( var_x,  efInner, "var_x", "Variance", "" );
+   PRM_DOUBLE( sd_x,  efInner, "sd_x", "Standard deviation", "" );
+   PRM_DOUBLE( absdev_x,  efInner, "absvar_x", "Absolute deviation", "" );
+   PRM_DOUBLE( acorr,  efInner, "acorr", "autocorrelation", "" );
    /** array size */
    PRM_INT( arrsize, efInner, "full size", "Full array size", "" );
    /** current number of datas */
    PRM_INT( n, efInner, "current size", "Current number of datas", "" );
+   PRM_INT( imin, efInner, "imin", "index of minimal element", "def=-1" );
+   PRM_INT( imax, efInner, "imax", "index of maximal element", "def=-1" );
    /** data storage */
    dvector arr;
    /** fake source */
    double fake_so = 0;
    /** ptr to source */
    const double *so = &fake_so;
+   //* flag: need to calc statistics
+   bool need_calc_stat = false;
 
    void put_next_val();
 

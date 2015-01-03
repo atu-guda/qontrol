@@ -15,6 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <gsl/gsl_statistics.h>
+
 #include <QBrush>
 
 #include "miscfun.h"
@@ -98,13 +100,15 @@ int TOutArr::alloc( int anx, int any )
   arr.resize( arrsize );
   n = 0; dmin = 0; dmax = 1; cnq = 0;
   so = nullptr;
+  reset_stat();
   return 1;
 }
 
 
 void TOutArr::do_reset()
 {
-  n = 0; cnq = 0; dmin = 0; dmax = 1;
+  n = 0; cnq = 0;
+  reset_stat();
 
   // TODO: move to separate functions and call hele and after struct changed ???
   so = nullptr;
@@ -156,6 +160,7 @@ int TOutArr::preRun( int /*run_tp*/, int an, int anx, int any, double /*adt*/ )
 
 int TOutArr::postRun( int /*good*/ )
 {
+  calc_stat(); // calc even in case of non-full array
   return 1;
 }
 
@@ -262,6 +267,7 @@ void TOutArr::put( int i, double v )
     return;
   }
   arr[i] = v;
+  need_calc_stat = true;
 }
 
 void TOutArr::put( int x, int y, double v )
@@ -276,20 +282,77 @@ void TOutArr::add( double v )
   }
 
   if( cnq == lnq ) {
-    if( n == 0 ) {
-     dmin = dmax = v;
-    } else {
-      if( v > dmax ) dmax = v;
-      if( v < dmin ) dmin = v;
-    };
     arr[n] = v;
     n++;
+    need_calc_stat = true;
   };
   cnq++;
   if( cnq >= nq ) {
     cnq = 0;
   }
+  if( n == arrsize ) {
+    calc_stat();
+  }
 
+}
+
+void TOutArr::reset_stat()
+{
+  dmin = 0; dmax = 0.5; // bad, but safe values
+  imin = imax = -1;
+  s_x = s_x2 = a_x = a_x2 = acorr = var_x = sd_x = absdev_x = 0;
+  need_calc_stat = true;
+}
+
+void TOutArr::calc_stat( bool force, bool forceAll )
+{
+  if( forceAll && acorr == 0 ) {
+    force = true;
+  }
+  if( !force && !need_calc_stat ) {
+    return;
+  }
+  reset_stat();
+  dmin = DMAX; dmax = DMIN;
+
+  for( int i=0; i<n; ++i ) {
+    double v = arr[i];
+    if( v < dmin ) {
+      dmin = v; imin = i;
+    }
+    if( v > dmax ) {
+      dmax = v; imax = i;
+    }
+    s_x += v;
+    s_x2 += v*v;
+  }
+  a_x = s_x / n;  a_x2 = s_x2 / n;
+  if( allStat || forceAll ) {
+    acorr = gsl_stats_lag1_autocorrelation_m( arr.data(), 1, n, a_x );
+    var_x =  gsl_stats_variance_m( arr.data(), 1, n, a_x );
+    sd_x = sqrt( var_x );
+    absdev_x =  gsl_stats_absdev_m( arr.data(), 1, n, a_x );
+  }
+  need_calc_stat = false;
+}
+
+QString TOutArr::getAllStats( QString sep ) const
+{
+  QChar sum( 0x03A3 ), mu( 0x03BC );
+  QString s =
+    QSL("n = ") % QSN( n ) % sep %
+    QSL("min = ") % QSN( dmin ) % QSL(" at " ) % QSN( imin ) % sep %
+    QSL("max = ") % QSN( dmax ) % QSL(" at " ) % QSN( imax ) % sep %
+    sum % QSL("x = " ) % QSN( s_x ) % sep %
+    sum % QSL("x") % QChar( 0x00B2 ) % QSL(" = " ) % QSN( s_x2 ) % sep %
+    mu  % QSL("x = " ) % QSN( a_x ) % sep %
+    mu  % QSL("x") % QChar( 0x00B2 ) % QSL(" = " ) % QSN( a_x2 ) % sep %
+    QSL("Dx = ") % QSN( var_x ) % sep %
+    QChar( 0x03C3) % QSL("x = ") % QSN( sd_x ) % sep %
+    QSL("absdev(x) = ") % QSN( absdev_x ) % sep %
+    QSL("Acorr(x) = ") % QSN( acorr );
+
+  return s;
 }
 
 DEFAULT_FUNCS_REG(TOutArr)

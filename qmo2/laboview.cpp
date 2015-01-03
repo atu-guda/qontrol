@@ -933,7 +933,7 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
   DoubleTableModel *dmod;
   QTableView *dtv;
   QGridLayout *lay;
-  QString fnq, sinf;
+  QString fnq;
   QPushButton *bt_ok;
   QLabel *lab;
   TOutArr *arr;
@@ -960,17 +960,8 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
   }
 
   // calculate statistical data TODO: separate struct and func (or/and in TOutArr)
-  double s = 0, s2 = 0, ave = 0, ave2 = 0, disp = 0, msq = 0, x;
-  double vmin = DMAX, vmax = DMIN;
-  for( int i=0; i<di.nn; i++ ) {
-    x =  (*di.ves[0])[i];
-    s += x; s2 += x * x;
-    if( x < vmin ) vmin = x;
-    if( x > vmax ) vmax = x;
-  };
-  ave = s / di.nn; ave2 = s2 / di.nn;
-  disp = ave2 - ave * ave;
-  msq = sqrt( disp );
+  arr->calc_stat( true, true ); // ensure all and fresh data
+  QString sinf = arr->getAllStats( ";\n" );
 
 
   dia = new QDialog( this );
@@ -982,15 +973,6 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
   dtv->setModel( dmod );
   lay->addWidget( dtv, 0, 0 );
 
-  sinf = QString( "n= " ) % QSN( di.nn )
-       % QString( "; \nave= " ) % QSN( ave )
-       % QString( "; \nave2= " ) % QSN( ave2 )
-       % QString( "; \nsum= " ) % QSN( s )
-       % QString( "; \nsum2= " ) % QSN( s2 )
-       % QString( ";\nD= " ) % QSN( disp )
-       % QString( "; \nsigm= " ) % QSN( msq )
-       % QString( "; \nmin= " ) % QSN( vmin )
-       % QString( "; \nmax= " ) % QSN( vmax );
   lab = new QLabel( sinf, dia );
   lab->setTextInteractionFlags( Qt::TextSelectableByMouse
        | Qt::TextSelectableByKeyboard);
