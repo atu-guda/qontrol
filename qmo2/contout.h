@@ -44,6 +44,10 @@ class ContOut : public TDataContainer {
 
    // just to test return pair to JS
    Q_INVOKABLE TripleF calcTest() const { return TripleF{ 0.2, 0.5, 3.14 }; }
+   //* returns: a: slope, b: shift, c: correlation if need
+   Q_INVOKABLE TripleF regre( const QString &nm_x, const QString &nm_y, bool need_corr ) const;
+   Q_INVOKABLE double  corr( const QString &nm_x, const QString &nm_y ) const;
+   Q_INVOKABLE double  covar( const QString &nm_x, const QString &nm_y ) const;
 
    // fft tranform
    Q_INVOKABLE int fft( const QString &nm_in, const QString &nm_omega,
@@ -51,6 +55,8 @@ class ContOut : public TDataContainer {
    Q_INVOKABLE int fftc( const QString &nm_in, const QString &nm_omega,
                         const QString &nm_re, const QString &nm_im, double ome_max );
   protected:
+   int prep_2in( const QString &nm_x, const QString &nm_y,
+                 const dvector **p_d_x, const dvector **p_d_y ) const;
    int fftx( const QString &nm_in, const QString &nm_omega,
              const QString &nm_a, const QString &nm_phi, double ome_max, bool cmpl );
    std::vector<TOutArr*> vo;

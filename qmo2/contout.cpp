@@ -16,6 +16,8 @@
  *                                                                         *
  ***************************************************************************/
 #include <fftw3.h>
+#include <gsl/gsl_statistics.h>
+#include <gsl/gsl_fit.h>
 
 #include "toutarr.h"
 #include "tmodel.h"
@@ -93,6 +95,88 @@ void ContOut::takeAllVals()
   for( auto arr : vo ) {
     arr->take_val();
   }
+}
+
+int ContOut::prep_2in( const QString &nm_x, const QString &nm_y,
+                 const dvector **p_d_x, const dvector **p_d_y ) const 
+{
+  if( !p_d_x && !p_d_y ) {
+    return 0;
+  }
+
+  TOutArr *in_x = getElemT<TOutArr*>( nm_x );
+  if( !in_x ) {
+    return 0;
+  }
+  const dvector *d_x  = in_x->getArray();
+  if( ! d_x ) {
+    return 0;
+  }
+
+  int nx = in_x->getDataD( "n", 0 );
+
+  TOutArr *in_y = getElemT<TOutArr*>( nm_y );
+  if( !in_y ) {
+    return 0;
+  }
+  const dvector *d_y  = in_y->getArray();
+  if( ! d_y ) {
+    return 0;
+  }
+  int ny = in_y->getDataD( "n", 0 );
+  int n = min( nx, ny );
+  if( n < 2 ) {
+    return 0;
+  }
+  *p_d_x = d_x;
+  *p_d_y = d_y;
+  return n;
+}
+
+TripleF ContOut::regre( const QString &nm_x, const QString &nm_y, bool need_corr ) const
+{
+  TripleF r {0.0, 0.0, 0.0};
+  const dvector *d_x = nullptr, *d_y = nullptr;
+
+  int n = prep_2in( nm_x, nm_y, &d_x, &d_y );
+
+  if( n < 2 ) {
+    return r;
+  }
+  double cov00, cov01, cov11, resid;
+
+  gsl_fit_linear( d_x->data(), 1, d_y->data(), 1, n, &r.b, &r.a,
+      &cov00, &cov01, &cov11, &resid );
+
+  if( need_corr ) {
+    r.c =  gsl_stats_correlation( d_x->data(), 1, d_y->data(), 1, n );
+  }
+
+  return r;
+}
+
+double  ContOut::corr( const QString &nm_x, const QString &nm_y ) const
+{
+  const dvector *d_x = nullptr, *d_y = nullptr;
+
+  int n = prep_2in( nm_x, nm_y, &d_x, &d_y );
+
+  if( n < 2 ) {
+    return 0;
+  }
+  return gsl_stats_correlation( d_x->data(), 1, d_y->data(), 1, n );
+}
+
+double  ContOut::covar( const QString &nm_x, const QString &nm_y ) const
+{
+  const dvector *d_x = nullptr, *d_y = nullptr;
+
+  int n = prep_2in( nm_x, nm_y, &d_x, &d_y );
+
+  if( n < 2 ) {
+    return 0;
+  }
+  return gsl_stats_covariance( d_x->data(), 1, d_y->data(), 1, n );
 }
 
 int ContOut::fft( const QString &nm_in, const QString &nm_omega,
