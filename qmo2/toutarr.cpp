@@ -42,11 +42,6 @@ TOutArr::~TOutArr()
 
 QVariant TOutArr::dataObj( int col, int role ) const
 {
-  if( role == Qt::DisplayRole  && col == 0 ) {
-    QString s = objectName() % QSL( " (" ) % QSN( getMyIndexInParent() ) % QSL( ")" );
-    return s;
-  }
-
   if( role == Qt::BackgroundRole ) {
     if( col != 0 ) {
       return QVariant();
