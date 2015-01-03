@@ -179,6 +179,43 @@ double  ContOut::covar( const QString &nm_x, const QString &nm_y ) const
   return gsl_stats_covariance( d_x->data(), 1, d_y->data(), 1, n );
 }
 
+int  ContOut::transLin( const QString &nm_in, const QString &nm_out,
+                              double a, double b )
+{
+  TOutArr *in_in = getElemT<TOutArr*>( nm_in );
+  if( !in_in ) {
+    return 0;
+  }
+  const dvector *d_in  = in_in->getArray();
+  if( ! d_in ) {
+    return 0;
+  }
+  int n = in_in->getDataD( "n", 0 );
+  if( n < 1 ) {
+    return 0;
+  }
+
+  TOutArr *in_out = getElemT<TOutArr*>( nm_out );
+  if( !in_out ) {
+    return 0;
+  }
+  int tp = in_out->getDataD( "type", 0 );
+  if( tp != TOutArr::OutArrType::outSpec ) {
+    return 0;
+  }
+
+  in_out->reset();
+  in_out->alloc( n );
+
+  for( int i=0; i<n; ++i ) {
+    in_out->add( (*d_in)[i] * a + b );
+  }
+
+  return n;
+}
+
+// ---------------------- Fourier --------------------------
+
 int ContOut::fft( const QString &nm_in, const QString &nm_omega,
                 const QString &nm_a, const QString &nm_phi, double ome_max )
 {
@@ -241,7 +278,7 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
     ome_max = DMAX;
   }
 
-  dvector v = *(in->getArray()); // copy, as fft may disturn data
+  dvector v = *(in->getArray()); // copy, as fft may disturb data
   double *pv = v.data();
 
 

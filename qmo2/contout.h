@@ -49,6 +49,10 @@ class ContOut : public TDataContainer {
    Q_INVOKABLE double  corr( const QString &nm_x, const QString &nm_y ) const;
    Q_INVOKABLE double  covar( const QString &nm_x, const QString &nm_y ) const;
 
+   //* linerar transformation from one array to other a*x+b
+   Q_INVOKABLE int  transLin( const QString &nm_in, const QString &nm_out,
+                              double a, double b );
+
    // fft tranform
    Q_INVOKABLE int fft( const QString &nm_in, const QString &nm_omega,
                         const QString &nm_a, const QString &nm_phi, double ome_max );
