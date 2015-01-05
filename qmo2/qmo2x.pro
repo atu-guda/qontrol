@@ -43,6 +43,7 @@ SOURCES += \
   tmiso.cpp \
   tmodel.cpp \
   datawidget.cpp \
+  tex2label.cpp \
   tgraph.cpp \
   toutarr.cpp \
   rand_gen.cpp \

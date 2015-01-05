@@ -1151,35 +1151,42 @@ void LaboWin::slotTest()
 
   ostr += QString(" em=" ) + QSN(em) + "\n";
 
-  for( unsigned ccode=0x03A0; ccode < 0x0400; ++ccode )  {
-    ostr += QChar( ccode );
-    if( (ccode & 0x1F) == 0x1F )
-      ostr += " <:> " + QSN(ccode,16) + "\n";
-  }
-  ostr += "\n";
+  QString lt = tex2label( "ab \\alpha \\omega{}\\Sum_{i=0}{N-1}{(a+b)} " );
+
+  ostr += lt;
+
+  // // output some codes
+  // for( unsigned ccode=0x03A0; ccode < 0x0400; ++ccode )  {
+  //   ostr += QChar( ccode );
+  //   if( (ccode & 0x1F) == 0x1F )
+  //     ostr += " <:> " + QSN(ccode,16) + "\n";
+  // }
+  // ostr += "\n";
 
   //ostr += "\nDMIN: " + QSN( DMIN );
   //ostr += " DMAX: "  + QSN( DMAX );
   //ostr += "\niDMIN: " + QSN( (int)(DMIN) );
   //ostr += " iDMAX: "  + QSN( (int)(DMAX) );
-  QString first, rest;
-  int idx, nmt;
-  const char* const tst_str[] =  {
-    "[5]",
-    "abcd",
-    "abcd[5]",
-    "abcd[5].xxx[6]",
-    "abcd.xxx[6]",
-    "abcd[5].xxx",
-    "aaa6.bbb.ccc.ddd.eee",
-    "aaa6.bbb.ccc.ddd.eee[5]"
-  };
-  for( auto s : tst_str ) {
-    QString t = s;
-    nmt = splitName( t, first, rest, idx );
-    ostr += "t=\"" + t + "\" nmt=" + QSN(nmt) + " first=\"" + first
-         + "\" rest=\"" + rest + "\" idx=" + QSN(idx) + "\n";
-  }
+
+  // // test splitName
+  // QString first, rest;
+  // int idx, nmt;
+  // const char* const tst_str[] =  {
+  //   "[5]",
+  //   "abcd",
+  //   "abcd[5]",
+  //   "abcd[5].xxx[6]",
+  //   "abcd.xxx[6]",
+  //   "abcd[5].xxx",
+  //   "aaa6.bbb.ccc.ddd.eee",
+  //   "aaa6.bbb.ccc.ddd.eee[5]"
+  // };
+  // for( auto s : tst_str ) {
+  //   QString t = s;
+  //   nmt = splitName( t, first, rest, idx );
+  //   ostr += "t=\"" + t + "\" nmt=" + QSN(nmt) + " first=\"" + first
+  //        + "\" rest=\"" + rest + "\" idx=" + QSN(idx) + "\n";
+  // }
 
 
   QMessageBox::information( this, tr( "Test" ), ostr, QMessageBox::Ok );
