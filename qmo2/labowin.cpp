@@ -1151,9 +1151,13 @@ void LaboWin::slotTest()
 
   ostr += QString(" em=" ) + QSN(em) + "\n";
 
-  QString lt = tex2label( "ab \\alpha \\omega{}\\Sum_{i=0}{N-1}{(a+b)} " );
+  QString ts = "ab\\approx \\alpha\\cdot\\phi \\omega{}\\n\\sum_{i=0}^{N-1}{(a+b+\\epsilon)} ";
 
-  ostr += lt;
+  QString ls = tex2label( ts );
+  DBGx( "dbg: ts=\"%s\"", qP(ts) );
+  DBGx( "dbg: ls=\"%s\"", qP(ls) );
+
+  ostr += ts % "\n" % ls;
 
   // // output some codes
   // for( unsigned ccode=0x03A0; ccode < 0x0400; ++ccode )  {
