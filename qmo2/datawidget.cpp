@@ -16,10 +16,11 @@ using namespace std;
 
 DataWidget::DataWidget( HolderData &h, QWidget *parent )
   : QFrame( parent ), ho( h ), main_w( nullptr ),
-    lbl( new QLabel( ho.getParm( "vis_name" ), this ) )
+    lbl( new QLabel( tex2label(ho.getParm( "vis_name" )), this ) )
 {
   lbl->setWhatsThis( ho.getType() + " " + ho.objectName() );
   lbl->setMinimumWidth( 50 ); // TODO: from font
+  lbl->setTextFormat( Qt::RichText );
   // setFrameStyle( QFrame::Panel | QFrame::Sunken );
 }
 
@@ -411,7 +412,7 @@ int SwitchDataWidget::registered = SwitchDataWidget::reg();
 
 SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
-  cb( new QCheckBox( ho.getParm("vis_name"), this ) )
+  cb( new QCheckBox( tex2label(ho.getParm("vis_name")), this ) )
 {
   main_w = cb;
   if( h.getFlags() & ( efRO | efRODial ) ) {
@@ -470,6 +471,7 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
       sl = par->getEnumStrings( enum_name );
     }
   }
+  for( auto &s : sl ) { s = tex2label( s ); }
   cb->addItems( sl );
 
   QHBoxLayout *lay =  new QHBoxLayout( this );

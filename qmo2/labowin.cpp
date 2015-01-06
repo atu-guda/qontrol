@@ -1149,15 +1149,16 @@ void LaboWin::slotTest()
   QString ostr( "Test called" );
   statusBar()->showMessage( tr( "Test something..." ) );
 
-  ostr += QString(" em=" ) + QSN(em) + "\n";
+  ostr += QString(" <b>em</b>=" ) + QSN(em) + "<br/>\n";
 
-  QString ts = "ab\\approx \\alpha\\cdot\\phi \\omega{}\\n\\sum_{i=0}^{N-1}{(a+b+\\epsilon)} ";
+  QString ts = "a_0^1{b}c\\approx \\alpha\\cdot\\phi^2 \\omega{}\\n"
+               "\\sum_{i=0}^{N-1}{(a+b+\\epsilon)} {\\Psi}^\\gamma";
 
   QString ls = tex2label( ts );
   DBGx( "dbg: ts=\"%s\"", qP(ts) );
   DBGx( "dbg: ls=\"%s\"", qP(ls) );
 
-  ostr += ts % "\n" % ls;
+  ostr += ts % "<br/>\n" % ls %"<br/>\n";
 
   // // output some codes
   // for( unsigned ccode=0x03A0; ccode < 0x0400; ++ccode )  {

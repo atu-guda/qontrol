@@ -38,17 +38,17 @@ class TSource : public TMiso  {
      so_triangle = 10, so_phase = 11
    };
    Q_ENUMS(SourceType);
-   Q_CLASSINFO( "enum_SourceType_0",  "U*sin(omega*t+phi)" );           // so_sin
-   Q_CLASSINFO( "enum_SourceType_1",  "U*sign(sin(omega*t+phi))" );     // so_sign
-   Q_CLASSINFO( "enum_SourceType_2",  "U*t/T*sin(omega*t+phi)" );       // so_sin_raise
-   Q_CLASSINFO( "enum_SourceType_3",  "U*t/T*sign(sin(omega*t+phi))" ); // so_sign_raise
-   Q_CLASSINFO( "enum_SourceType_4",  "Dirac(t-tau)" );                 // so_dirac
-   Q_CLASSINFO( "enum_SourceType_5",  "U*Thetta(t-tau)" );              // so_theta
+   Q_CLASSINFO( "enum_SourceType_0",  "U*sin(\\omega*t+phi)" );           // so_sin
+   Q_CLASSINFO( "enum_SourceType_1",  "U*sign(sin(\\omega*t+\\phi))" );     // so_sign
+   Q_CLASSINFO( "enum_SourceType_2",  "U*t/T*sin(\\omega*t+\\phi)" );       // so_sin_raise
+   Q_CLASSINFO( "enum_SourceType_3",  "U*t/T*sign(sin(\\omega*t+\\phi))" ); // so_sign_raise
+   Q_CLASSINFO( "enum_SourceType_4",  "Dirac(t-\\tau)" );                 // so_dirac
+   Q_CLASSINFO( "enum_SourceType_5",  "U*Thetta(t-\\tau)" );              // so_theta
    Q_CLASSINFO( "enum_SourceType_6",  "U*t/T" );                        // so_raise
-   Q_CLASSINFO( "enum_SourceType_7",  "U*saw(t,tau) /|/|/| " );         // so_saw
-   Q_CLASSINFO( "enum_SourceType_8",  "U*saw2(t,tau) /\\/\\ " );        // so_saw2
-   Q_CLASSINFO( "enum_SourceType_9",  "U*chaos Wave(Phi)" );            // so_chaos_wave
-   Q_CLASSINFO( "enum_SourceType_10", "U*triangle(omega*t+phi)" );      // so_triangle
+   Q_CLASSINFO( "enum_SourceType_7",  "U*saw(t,\\tau) /|/|/| " );         // so_saw
+   Q_CLASSINFO( "enum_SourceType_8",  "U*saw2(t,\\tau) /\\/\\ " );        // so_saw2
+   Q_CLASSINFO( "enum_SourceType_9",  "U*chaos Wave(\\phi)" );            // so_chaos_wave
+   Q_CLASSINFO( "enum_SourceType_10", "U*triangle(\\omega*t+\\phi)" );      // so_triangle
    Q_CLASSINFO( "enum_SourceType_11", "Phase" );                        // so_phase
 
 
@@ -74,11 +74,11 @@ class TSource : public TMiso  {
    /** Amplitude */
    PRM_DOUBLE( uu, 0, "U", "Amplitude of signal (or pulse max)", "def=1" );
    /** Frequency */
-   PRM_DOUBLE( omega, 0, "omega", "Frequency of source (or pulse width)", "def=0.7" );
+   PRM_DOUBLE( omega, 0, "\\omega", "Frequency of source (or pulse width)", "def=0.7" );
    /** constant shift */
    PRM_DOUBLE( cc, 0, "C", "Constant base", "" );
    /** phase shift */
-   PRM_DOUBLE( phi, 0, "phi", "Phase shift", "def=0" );
+   PRM_DOUBLE( phi, 0, "\\phi", "Phase shift", "def=0" );
 
    // ----------- U chaos ----------------------
    PRM_SWITCH( use_u_ch, efNRC, "use U chaos", "Use amplitude perturbations", "sep=col" );

@@ -1,7 +1,6 @@
 BUG: scale in MglView (rework)
-Output file + View
+Output file + View global log?
 Autocorrelation?
-TeX-alike simple labels LabelTeX
 Widget for link: after new hierarchy
 
 Propagate modified flag up to root?
@@ -9,7 +8,6 @@ Application config: to TDataSet?
 
 Rebreand to Qontrol
 JS run dialog. + pr JS function
-global log?
 Set more data while object creation
 
 LaboWin::initDirs?
@@ -19,7 +17,7 @@ Add to model object: functions? but what?
 
 Call parent post_set (if req). flag?
 Input/output elements/scheme properties (in0?)
-Command line (':') - or goo JS dialog.
+Command line (':') - or good JS dialog.
 unify add/paste elem: param in dialog?
 unify add param/object : add_obj_param? + dialog
 RunWindow?

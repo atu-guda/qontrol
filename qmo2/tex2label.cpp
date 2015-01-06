@@ -6,11 +6,14 @@
     copyright            : GPL (C) 2015-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
-
+#include <list>
 #include <QString>
+#include <QStringList>
 #include <QMap>
 
 #include "defs.h"
+
+using namespace std;
 
 struct TexCodeChar {
   const char *t;
@@ -128,28 +131,62 @@ MapSC init_tex_map()
 QString tex2label( const QString &t )
 {
   static MapSC tex_map = init_tex_map();
-  QString r, nm;
+  QString r, nm, post;
+  QStringList stk, stk_p;
   bool estate = false;
+  list<QChar> lt  ( t.cbegin(), t.cend() );
 
-  for( QChar c : t ) {
+  while( !lt.empty() ) {
+    QChar c = lt.front();
+    lt.pop_front();
     char cc = c.toLatin1();
 
     if( ! estate ) {
-      if( cc == '\\' ) { estate = true;  nm = ""; continue; }
-      r += c;
+      switch( cc ) {
+        case '\\':
+          estate = true;  nm = "";
+          break;
+        case '{':
+          stk.push_back( r ); r = "";
+          stk_p.push_back( post ); post = "";
+          break;
+        case '}':
+          if( ! stk.isEmpty() ) {
+            QString t = r + post;
+            post = stk_p.takeLast();
+            r = stk.takeLast()  + "<span>" + t + "</span>" + post;
+            post = "";
+          }
+          break;
+        case '^':
+          r += "<sup>"; post = "</sup>";
+          break;
+        case '_':
+          r += "<sub>"; post = "</sub>";
+          break;
+        default:
+          r += c + post; post = "";
+          break;
+      };
+      continue;
     }
     else // --------- escape state
     {
       if( c.isLetterOrNumber() ) { nm += c; continue; } // continue name collecting
       if( ! nm.isEmpty() ) {
         if( tex_map.contains(nm) ) {
-          r += tex_map.value(nm);
+          r += tex_map.value(nm) + post;
         } else {
-          r += "?:" + nm;
+          r += "?" + nm + "?" + post;
         }
-        nm = ""; 
+        nm = ""; post = "";
+
         if( cc == '\\' ) { continue; } // new name collecting
-        r += c; estate = false; continue;
+        estate = false;
+
+        lt.push_front( c ); // re-read
+        continue;
+
       }
 
       switch( cc ) {
@@ -166,6 +203,19 @@ QString tex2label( const QString &t )
 
   }
 
+  if( estate && ! nm.isEmpty() ) {
+    if( tex_map.contains(nm) ) {
+      r += tex_map.value(nm) + post;
+    } else {
+      r += "?" + nm + "?" + post;
+    }
+    nm = ""; post = "";
+  }
+
+  while( ! stk.isEmpty() ) {
+    QString t = r;
+    r = stk.takeLast()  + "<span>" + t + "</span>";
+  }
 
   return r;
 }
