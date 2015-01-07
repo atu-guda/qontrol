@@ -173,7 +173,7 @@ class TGraph : public TDataSet  {
    Q_INVOKABLE void plotToPng( const QString &fn );
 
 
-   void plotTo( mglGraph *gr, const ViewData *a_vd = nullptr, const ScaleData *scd = nullptr );
+   void plotTo( mglGraph *gr, const ViewData *a_vd = nullptr, const ScaleData *scda = nullptr );
    bool fillViewData( ViewData *da );
    bool getPointAt( int ig, int ip, mglPoint *p ) const;
    int findNearest( const mglPoint &p, int ig ) const ;//* find nearest point index

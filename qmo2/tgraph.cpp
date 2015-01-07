@@ -434,37 +434,19 @@ int TGraph::prepare()
     // ++iii;
   }
 
-  // part to handel manual scale setting. need better place
   double x0 = tli[LineRole::axisX]->v_min, x1= tli[LineRole::axisX]->v_max;
-  if( ! scd->autoScX ) {
-    x0 = scd->plotMinX; x1 = scd->plotMaxX;
-  }
   double y0 = v_min, y1 = v_max;
   if( was_2D ) {
     y0 = tli[LineRole::axisY]->v_min; y1= tli[LineRole::axisY]->v_max;
-  }
-  if( ! scd->autoScY ) {
-    y0 = scd->plotMinY; y1 = scd->plotMaxY;
   }
   double z0 = tli[LineRole::axisZ]->v_min, z1= tli[LineRole::axisZ]->v_max;
   if( was_2D ) {
     z0 = v_min; z1 = v_max;
   }
-  if( ! scd->autoScZ ) {
-    z0 = scd->plotMinZ; z1 = scd->plotMaxZ;
-  }
 
   pr_min = { x0, y0, z0 };
   pr_max = { x1, y1, z1 };
-
-  // if( was_2D ) {
-  //   pr_min = { tli[LineRole::axisX]->v_min, tli[LineRole::axisY]->v_min, v_min };
-  //   pr_max = { tli[LineRole::axisX]->v_max, tli[LineRole::axisY]->v_max, v_max };
-  // } else {
-  //   pr_min = { tli[LineRole::axisX]->v_min, v_min, tli[LineRole::axisZ]->v_min  };
-  //   pr_max = { tli[LineRole::axisX]->v_max, v_max, tli[LineRole::axisZ]->v_max  };
-  // }
-  // DBGx( "dbg: pr_min= %s pr_max= %s was_2D= %d", qP(toQString(pr_min)), qP(toQString(pr_max)), was_2D );
+  pr_dlt = pr_max - pr_min; // recalced in plot, but may be used before
 
   prepared = true;
   return pli.size();
@@ -548,55 +530,46 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
   return np;
 }
 
-// part to handel manual scale setting. where to place?
-  // double x0 = tli[LineRole::axisX]->v_min, x1= tli[LineRole::axisX]->v_max;
-  // if( ! scd->autoScX ) {
-  //   x0 = scd->plotMinX; x1 = scd->plotMaxX;
-  // }
-  // double y0 = v_min, y1 = v_max;
-  // if( was_2D ) {
-  //   y0 = tli[LineRole::axisY]->v_min; y1= tli[LineRole::axisY]->v_max;
-  // }
-  // if( ! scd->autoScY ) {
-  //   y0 = scd->plotMinY; y1 = scd->plotMaxY;
-  // }
-  // double z0 = tli[LineRole::axisZ]->v_min, z1= tli[LineRole::axisZ]->v_max;
-  // if( was_2D ) {
-  //   z0 = v_min; z1 = v_max;
-  // }
-  // if( ! scd->autoScZ ) {
-  //   z0 = scd->plotMinZ; z1 = scd->plotMaxZ;
-  // }
-  //
-  // pr_min = { x0, y0, z0 };
-  // pr_max = { x1, y1, z1 };
 
-void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scd )
+void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scda )
 {
   if( !gr ) { return; }
-  if( !scd ) { scd = this->scd; }
+  if( !scda ) { scda = scd; }
   if( !prepared  && prepare() < 1 ) {
     return;
   }
 
   gr->DefaultPlotParam();
 
-  gr->SetFontSize( scd->fontSise );
-  gr->SetPlotFactor( scd->plotFactor );
-  gr->Rotate( scd->phi, scd->theta );
-  gr->Light( scd->useLight );
-  gr->SetAlphaDef( scd->alpha );
-  gr->Alpha( (bool)(scd->useAlpha) );
+  gr->SetFontSize( scda->fontSise );
+  gr->SetPlotFactor( scda->plotFactor );
+  gr->Rotate( scda->phi, scda->theta );
+  gr->Light( scda->useLight );
+  gr->SetAlphaDef( scda->alpha );
+  gr->Alpha( (bool)(scda->useAlpha) );
 
   pr_dlt = pr_max - pr_min;
+  mglPoint pe_min = pr_min, pe_max = pr_max; // 'e' meens 'effective'
+
+  if( ! scda->autoScX ) {
+    pe_min.x = scda->plotMinX; pe_max.x = scda->plotMaxX;
+  }
+  if( ! scda->autoScY ) {
+    pe_min.y = scda->plotMinY; pe_max.y = scda->plotMaxY;
+  }
+  if( ! scda->autoScZ ) {
+    pe_min.z = scda->plotMinZ; pe_max.z = scda->plotMaxZ;
+  }
+  mglPoint pe_dlt = pe_max - pe_min;
+
 
   ViewData vd;
-  vd.pv_min = pr_min; vd.pv_max = pr_max;
+  vd.pv_min = pe_min; vd.pv_max = pe_max;
   if( a_vd ) {
     vd = *a_vd;
   }
 
-  vd.pv_dlt = pr_dlt / vd.mag; // realy * by coords
+  vd.pv_dlt = pe_dlt / vd.mag; // realy * by coords
   vd.pv_max = vd.pv_min + vd.pv_dlt;
 
   gr->SetRanges( vd.pv_min, vd.pv_max );
@@ -605,13 +578,13 @@ void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scd )
     // DBGx( "dbg: C axis: %lf %lf", tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max  );
   }
 
-  gr->SetTicks( 'x', -(scd->gridX), scd->tickX );
-  gr->SetTicks( 'y', -(scd->gridY), scd->tickY );
+  gr->SetTicks( 'x', -(scda->gridX), scda->tickX );
+  gr->SetTicks( 'y', -(scda->gridY), scda->tickY );
 
-  string axis_style = color2style( scd->axis_color.toInt(), 1 ).toStdString();
-  string grid_style = color2style( scd->grid_color.toInt(), 1, "=" ).toStdString();
+  string axis_style = color2style( scda->axis_color.toInt(), 1 ).toStdString();
+  string grid_style = color2style( scda->grid_color.toInt(), 1, "=" ).toStdString();
 
-  QColor bg_c = scd->bgcolor;
+  QColor bg_c = scda->bgcolor;
   gr->Clf( bg_c.redF(), bg_c.greenF(), bg_c.blueF() );
 
   const mglData *d_x = tli[LineRole::axisX]->md;
@@ -760,8 +733,8 @@ void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scd )
 
 
 
-  if( scd->drawBox ) { gr->Box( axis_style.c_str() ); }
-  if( scd->drawAxis ) {
+  if( scda->drawBox ) { gr->Box( axis_style.c_str() ); }
+  if( scda->drawAxis ) {
     gr->Grid( "xyz", grid_style.c_str() );
     gr->Axis( "xyzU3AKDTVISO",  axis_style.c_str() );
     char main_label_axis = 'y';
@@ -770,26 +743,25 @@ void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scd )
       gr->Label( 'y', tli[LineRole::axisY]->pl_label.c_str() );
       main_label_axis = 'z';
     }
-    if( ! scd->mainLabel.cval().isEmpty() ) {
-      gr->Label( main_label_axis, scd->mainLabel.cval().toStdString().c_str() );
+    if( ! scda->mainLabel.cval().isEmpty() ) {
+      gr->Label( main_label_axis, scda->mainLabel.c_str() );
     }
   }
-  //
-  if( scd->drawMark ) {
-    mglPoint mark_point( scd->markX, scd->markY, scd->markZ );
+
+  if( scda->drawMark ) {
+    mglPoint mark_point( scda->markX, scda->markY, scda->markZ );
     gr->Mark( mark_point, "3r+" );
   }
-  if( scd->drawBase ) {
-    mglPoint base_point( scd->baseX, scd->baseY, scd->baseZ );
-    // gr->Mark( mark_point, "3r+" );
-    gr->Error( base_point, pr_dlt, "B" );
+  if( scda->drawBase ) {
+    mglPoint base_point( scda->baseX, scda->baseY, scda->baseZ );
+    gr->Error( base_point, pe_dlt, "B" );
   }
-  if( scd->drawColorbar ) {
+  if( scda->drawColorbar ) {
     gr->Colorbar();
   }
 
-  if( scd->legend_pos < 4 ) {
-    gr->Legend( scd->legend_pos, "#" );
+  if( scda->legend_pos < 4 ) {
+    gr->Legend( scda->legend_pos, "#" );
   }
 }
 
