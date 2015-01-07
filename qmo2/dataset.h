@@ -471,6 +471,7 @@ class HolderString : public HolderValue {
   INNER_ASSIGN(HolderString);
   virtual QString getTypeV() const override;
   std::string toStdString() const { return v.toStdString(); }
+  bool isEmpty() const { return v.isEmpty(); }
   const char* c_str() const { return v.toStdString().c_str(); } // danger
  protected:
   QString v;

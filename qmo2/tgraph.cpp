@@ -54,11 +54,11 @@ QVariant GraphElem::dataObj( int col, int role ) const
     if( is2D ) {
       s += ",2D";
     }
-    if( ! extra.cval().isEmpty() ) {
+    if( ! extra.isEmpty() ) {
       s += QSL("," ) % extra.cval();
     }
     s += ") ";
-    if( ! label.cval().isEmpty() ) {
+    if( ! label.isEmpty() ) {
       s += QSL(" \"" ) % label.cval() % QSL( "\"" );
     }
     return s;
@@ -85,7 +85,7 @@ LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
     DBGx( "warn: not found model in \"%s\"", qP(getFullName()) );
     return rl;
   }
-  if( src.cval().isEmpty() ) {
+  if( src.isEmpty() ) {
     return LineRole::none;
   }
   TOutArr *arr = model->getOutArr( src );
@@ -115,7 +115,7 @@ LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
   v_max = arr->getDataD( "dmax", 0.0 );
 
   // QString label_c = label.isEmpty() ? ( QString( "y_%1" ).arg( dl.size() )) : label;
-  QString label_c = label.cval().isEmpty() ? QString( "y" ) : label;
+  QString label_c = label.isEmpty() ? QString( "y" ) : label;
   pl_label = label_c.toStdString();
 
   int i_cc = QColor(color).rgba();
@@ -128,7 +128,7 @@ LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
   }
   pl_extra = extra_c.toStdString();
 
-  pl_opt = opt.cval().toStdString();
+  pl_opt = opt.toStdString();
 
 
   switch( type ) {
@@ -447,6 +447,8 @@ int TGraph::prepare()
   pr_min = { x0, y0, z0 };
   pr_max = { x1, y1, z1 };
   pr_dlt = pr_max - pr_min; // recalced in plot, but may be used before
+  // default for effective, recalc on plot
+  pe_min = pr_min; pe_max = pr_max; pe_dlt = pr_dlt;
 
   prepared = true;
   return pli.size();
@@ -549,7 +551,7 @@ void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scda )
   gr->Alpha( (bool)(scda->useAlpha) );
 
   pr_dlt = pr_max - pr_min;
-  mglPoint pe_min = pr_min, pe_max = pr_max; // 'e' meens 'effective'
+  pe_min = pr_min; pe_max = pr_max;
 
   if( ! scda->autoScX ) {
     pe_min.x = scda->plotMinX; pe_max.x = scda->plotMaxX;
@@ -560,19 +562,21 @@ void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scda )
   if( ! scda->autoScZ ) {
     pe_min.z = scda->plotMinZ; pe_max.z = scda->plotMaxZ;
   }
-  mglPoint pe_dlt = pe_max - pe_min;
+  pe_dlt = pe_max - pe_min;
 
 
   ViewData vd;
-  vd.pv_min = pe_min; vd.pv_max = pe_max;
   if( a_vd ) {
     vd = *a_vd;
   }
+  mglPoint ve_dlt = pe_dlt / vd.mag; // realy * by coords
+  mglPoint ve_min = pe_min + pe_dlt / vd.ofs;
+  mglPoint ve_max = ve_min + ve_dlt;
 
-  vd.pv_dlt = pe_dlt / vd.mag; // realy * by coords
-  vd.pv_max = vd.pv_min + vd.pv_dlt;
+  // DBGx( "dbg: ex: [ %lf; %lf ], mag_x: %lf, dlt: %lf min: %lf max: %lf",
+  //       pe_min.x, pe_max.x, vd.mag.x, ve_dlt.x, ve_min.x, ve_max.x );
 
-  gr->SetRanges( vd.pv_min, vd.pv_max );
+  gr->SetRanges( ve_min, ve_max );
   if( need_c_axis ) {
     gr->SetRange( 'c', tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max );
     // DBGx( "dbg: C axis: %lf %lf", tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max  );
@@ -743,7 +747,7 @@ void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scda )
       gr->Label( 'y', tli[LineRole::axisY]->pl_label.c_str() );
       main_label_axis = 'z';
     }
-    if( ! scda->mainLabel.cval().isEmpty() ) {
+    if( ! scda->mainLabel.isEmpty() ) {
       gr->Label( main_label_axis, scda->mainLabel.c_str() );
     }
   }
@@ -770,10 +774,9 @@ bool TGraph::fillViewData( ViewData *da )
   if( !da || !prepared ) {
     return false;
   }
+  da->reset();
   da->pv_min = pr_min; da->pv_max = pr_max; da->pv_dlt = pr_dlt;
-  da->mag = mglPoint( 1, 1, 1 );
   da->ng = pli.size(); da->nn = nn; da->nx = nx; da->ny = ny;
-  da->off = 0;
   return true;
 }
 
@@ -826,6 +829,18 @@ int TGraph::findNearest( const mglPoint &p, int ig ) const
   return i_min;
 }
 
+void TGraph::viewForPoints( const mglPoint &p0, const mglPoint &p1, ViewData &vd ) const
+{
+  mglPoint pd = p1 - p0, p0e = p0;
+  if( pd.norm() < 1e-5  ) {
+    pd = 0.2 * pe_dlt / vd.mag;
+    p0e -= 0.5 * pd;
+  }
+  vd.mag = mglPoint( pd.x / pe_dlt.x, pd.y / pe_dlt.y, pd.z / pe_dlt.z );
+  mglPoint od = p0e - pe_min;
+  vd.ofs = mglPoint( od.x / pe_dlt.x, od.y / pe_dlt.y, od.z / pe_dlt.z );
+}
+
 QString TGraph::getPlotLabel( int ig ) const
 {
   if( ig < 0 || ig >= (int)pli.size() ) {
@@ -847,7 +862,7 @@ void TGraph::plotToPng( const QString &fn )
   mglGraph gr( 0, scd->w0, scd->h0 );
   plotTo( &gr, nullptr, scd );
   string fn_s = fn.toStdString();
-  gr.WritePNG( fn_s.c_str(), ((QString)title).toStdString().c_str() );
+  gr.WritePNG( fn_s.c_str(), title.c_str() );
 }
 
 int TGraph::fillDatasInfo( DatasInfo *di ) const

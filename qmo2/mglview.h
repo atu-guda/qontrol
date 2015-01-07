@@ -55,9 +55,6 @@ class MglView : public QWidget  {
    void setXmag( double amag, bool mul = false );
    void setYmag( double amag, bool mul = false );
    void setZmag( double amag, bool mul = false );
-   void setXbase( double base, bool rel = false );
-   void setYbase( double base, bool rel = false );
-   void setZbase( double base, bool rel = false );
    void setAlpha( double al, bool rel = false );
    void zoom(); // from base to mark
    void zoomReset();

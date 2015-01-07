@@ -140,6 +140,8 @@ class GraphElem : public TDataSet {
 //* decription of view
 struct ViewData {
   mglPoint mag { 1, 1, 1 }, pv_min { 0, 0, 0 }, pv_max{ 1, 1, 1 }, pv_dlt { 1, 1, 1 };
+  mglPoint ofs { 0, 0, 0 };
+  void reset() { mag.x = mag.y = mag.z = 1; ofs.x = ofs.y = ofs.z = 0; off = 0; };
   int ng = 0, nn = 0, nx=0, ny=1; // only from TGraph to View
   uint64_t off = 0; // lines, not to show (from View to TGraph while plot)
 };
@@ -177,6 +179,7 @@ class TGraph : public TDataSet  {
    bool fillViewData( ViewData *da );
    bool getPointAt( int ig, int ip, mglPoint *p ) const;
    int findNearest( const mglPoint &p, int ig ) const ;//* find nearest point index
+   void viewForPoints( const mglPoint &p0, const mglPoint &p1, ViewData &vd ) const;
    QString getPlotLabel( int ig ) const;
    QString getPrintInfo( int ig ) const;
  protected:
@@ -207,6 +210,7 @@ class TGraph : public TDataSet  {
    shared_GE ge_zero, ge_fx, ge_fy;
    //* defining scale points
    mglPoint pr_min { 0, 0, 0 }, pr_max { 1, 1, 1 }, pr_dlt { 1, 1, 1 }; // real
+   mglPoint pe_min { 0, 0, 0 }, pe_max { 1, 1, 1 }, pe_dlt { 1, 1, 1 }; // eff: last plot
 
    DCL_DEFAULT_STATIC;
 };

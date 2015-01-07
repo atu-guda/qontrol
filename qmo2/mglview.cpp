@@ -106,11 +106,7 @@ void MglView::zoom()
 
   mglPoint p0 = scd->getBase();
   mglPoint p1 = scd->getMark();
-  if( p0 == p1 ) {
-    p0 -= 0.25 * vd.pv_dlt; p1 += 0.25 * vd.pv_dlt;
-  }
-  vd.pv_min = p0; vd.pv_max = p1; vd.pv_dlt = vd.pv_max - vd.pv_min;
-  vd.mag = mglPoint( vd.pv_dlt.x / pr_dlt.x, vd.pv_dlt.y / pr_dlt.y, vd.pv_dlt.z / pr_dlt.z );
+  gra->viewForPoints( p0, p1, vd );
   update();
 }
 
@@ -119,9 +115,8 @@ void MglView::zoomReset()
   if( !data_loaded ) {
     return;
   }
+  vd.reset();
 
-  vd.mag = mglPoint( 1, 1, 1 );
-  vd.pv_min = pr_min; vd.pv_max = pr_max; vd.pv_dlt = vd.pv_max - vd.pv_min;
   update();
 }
 
@@ -135,7 +130,7 @@ void MglView::drawAll( QPainter &p )
 {
   int w = width(), h = height(), hg = h - bottom_h;
   gr.SetSize( w, hg );
-  gra->plotTo( &gr, &vd, scd.get() ); // TODO: get smart ptr
+  gra->plotTo( &gr, &vd, scd.get() );
 
   gr.GetBGRN( pb.data(), 4*w*hg );
 
@@ -285,22 +280,27 @@ void MglView::keyPressEvent( QKeyEvent *ke )
 
     // Shift
     case Qt::Key_Up:
-      setYbase( -vd.pv_dlt.y * scale_step, true );
+      vd.ofs.y -= vd.mag.y * scale_step;
+      update();
       break;
     case Qt::Key_Down:
-      setYbase( vd.pv_dlt.y * scale_step, true );
+      vd.ofs.y += vd.mag.y * scale_step;
+      update();
       break;
     case Qt::Key_Left:
-      setXbase( vd.pv_dlt.x * scale_step, true );
+      vd.ofs.x += vd.mag.x * scale_step;
+      update();
       break;
     case Qt::Key_Right:
-      setXbase( -vd.pv_dlt.x * scale_step, true );
+      vd.ofs.x -= vd.mag.x * scale_step;
+      update();
       break;
     case Qt::Key_PageUp:
-      setZbase( -vd.pv_dlt.z * scale_step, true );
+      vd.ofs.z -= vd.mag.z * scale_step;
+      update();
       break;
     case Qt::Key_PageDown:
-      setZbase( vd.pv_dlt.z * scale_step, true );
+      vd.ofs.z += vd.mag.z * scale_step;
       break;
 
     // Rotate
@@ -368,8 +368,7 @@ void MglView::resizeEvent( QResizeEvent *e )
 
 void MglView::resetScale()
 {
-  Reload();
-  // TODO: more
+  vd.reset();
   update();
 }
 
@@ -431,35 +430,6 @@ void MglView::setZmag( double amag, bool mul )
   update();
 }
 
-void MglView::setXbase( double base, bool rel )
-{
-  if( rel ) {
-    vd.pv_min.x += base;
-  } else {
-    vd.pv_min.x  = base;
-  }
-  update();
-}
-
-void MglView::setYbase( double base, bool rel )
-{
-  if( rel ) {
-    vd.pv_min.y += base;
-  } else {
-    vd.pv_min.y  = base;
-  }
-  update();
-}
-
-void MglView::setZbase( double base, bool rel )
-{
-  if( rel ) {
-    vd.pv_min.z += base;
-  } else {
-    vd.pv_min.z  = base;
-  }
-  update();
-}
 
 void MglView::setAlpha( double al, bool rel )
 {
@@ -682,10 +652,10 @@ QString MglView::getInfo( bool more ) const
      % "  rel: " % toQString( rel_p ) % " kyx: " % QSN( kyx ) % " kzx: " % QSN( kzx )
      % "  [ " % QSN( vd.nx ) % " x " % QSN( vd.ny ) % " ]"
      % nl
-     % "vis: " % toQString( vd.pv_min ) % " - " % toQString( vd.pv_max )
-     % nl1
-     % " D: " % toQString( vd.pv_dlt )
-     % "  mag: " % toQString( vd.mag ) % nl1
+     // % "vis: " % toQString( vd.pv_min ) % " - " % toQString( vd.pv_max )
+     // % nl1
+     // % " D: " % toQString( vd.pv_dlt )
+     % "  mag: " % toQString( vd.mag ) %  " ofs: " % toQString( vd.ofs ) % nl1
      % "real: " % toQString( pr_min ) % " - " % toQString( pr_max ) % nl
      % QSN( sel ) % " ";
 
