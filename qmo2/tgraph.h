@@ -18,6 +18,8 @@
 #ifndef TGRAPH_H
 #define TGRAPH_H
 
+#include <memory>
+
 #include <QColor>
 #include <QString>
 
@@ -156,6 +158,7 @@ class TGraph : public TDataSet  {
    DCL_STD_INF;
    virtual ~TGraph() override;
    virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
+   using shared_GE = std::shared_ptr<GraphElem>;
 
 
    /** fills fields in DatasInfo structure, return number of elements (nn) */
@@ -190,7 +193,7 @@ class TGraph : public TDataSet  {
    PRM_INT( c_nx, efInner, "nx", "Common number of data points in X direction", "def=0" );
    PRM_INT( c_ny, efInner, "ny", "Common number of data points in Y direction", "def=1" );
 
-   ScaleData *scd;
+   ScaleData *scd; // not smart ptr, as under control of Qt
 
    bool prepared = false;
    bool was_2D = false;
@@ -200,7 +203,8 @@ class TGraph : public TDataSet  {
    std::vector<GraphElem*> pli;   // data line ptrs - only plottted lines
 
    // special elements, not in common tree, just to present missing axis/data
-   GraphElem *ge_zero = nullptr, *ge_fx = nullptr, *ge_fy = nullptr;
+   // GraphElem *ge_zero = nullptr, *ge_fx = nullptr, *ge_fy = nullptr;
+   shared_GE ge_zero, ge_fx, ge_fy;
    //* defining scale points
    mglPoint pr_min { 0, 0, 0 }, pr_max { 1, 1, 1 }, pr_dlt { 1, 1, 1 }; // real
 

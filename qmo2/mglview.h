@@ -20,6 +20,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 #include <QString>
 #include <QFont>
@@ -90,7 +91,8 @@ class MglView : public QWidget  {
    ViewData vd;
    mglPoint pr_min {0,0,0}, pr_max {1,1,1}, pr_dlt {1,1,1};
    mglGraph gr = mglGraph( 0,100, 100 );
-   ScaleData *scd, *scd_o; // _o = ptr to original
+   std::shared_ptr<ScaleData> scd;
+   ScaleData *scd_o; // _o = ptr to original
    const QFont &pa_fnt;
    int em = 10, ex = 10, bottom_h = 40; // default only
    std::vector<uint8_t> pb; // pix buf

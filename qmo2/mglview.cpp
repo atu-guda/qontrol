@@ -36,7 +36,7 @@ using namespace std;
 MglView::MglView( TGraph *agra, QWidget *parent )
           : QWidget( parent ),
           gra( agra ),
-          scd ( new ScaleData( "scd", nullptr, 0, "scale", "current scale data" ) ),
+          scd ( make_shared<ScaleData>( "scd", nullptr, 0, "scale", "current scale data" ) ),
           pa_fnt ( LaboWin::labowin->getPlotFont() )
 {
   QFontMetrics fm( pa_fnt );
@@ -59,7 +59,7 @@ MglView::~MglView()
 {
   resetData();
   gra = nullptr; // not delete, we are not owner, just for debug
-  delete scd; scd = nullptr;
+  // delete scd; scd = nullptr;
 }
 
 void MglView::resetData()
@@ -135,7 +135,7 @@ void MglView::drawAll( QPainter &p )
 {
   int w = width(), h = height(), hg = h - bottom_h;
   gr.SetSize( w, hg );
-  gra->plotTo( &gr, &vd, scd );
+  gra->plotTo( &gr, &vd, scd.get() ); // TODO: get smart ptr
 
   gr.GetBGRN( pb.data(), 4*w*hg );
 

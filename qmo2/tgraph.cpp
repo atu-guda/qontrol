@@ -265,9 +265,6 @@ void TGraph::do_reset()
 
   prepared = false; was_2D = false; need_c_axis = false;
   v_min = 0, v_max = 1; // cross!
-  delete ge_zero; ge_zero = nullptr;
-  delete ge_fx;  ge_fx  = nullptr;
-  delete ge_fy;  ge_fy  = nullptr;
 }
 
 int TGraph::prepare()
@@ -324,7 +321,7 @@ int TGraph::prepare()
         ve_fx[i+j*nx] = i;
       }
     }
-    ge_fx  = new GraphElem( "_fx",  nullptr, efInner, "fake X data", "fake X", "" );
+    ge_fx  = make_shared<GraphElem>( "_fx",  nullptr, efInner, "fake X data", "fake X", "" );
     ge_fx->type = GraphElem::DataType::DataAxisX;
     ge_fx->is2D = was_2D; ge_fx->label = "X_n";
     ge_fx->role = LineRole::axisX;
@@ -333,7 +330,7 @@ int TGraph::prepare()
     ge_fx->v_min = 0; ge_fx->v_max = nx-1.0;
     ge_fx->ve = &ve_fx;
 
-    tli[LineRole::axisX] = ge_fx;
+    tli[LineRole::axisX] = ge_fx.get();
   }
 
   if( was_2D && !was_y ) { // make fake y array if at least 1 2D plot
@@ -343,7 +340,7 @@ int TGraph::prepare()
         ve_fy[i+j*nx] = j;
       }
     }
-    ge_fy  = new GraphElem( "_fy",  nullptr, efInner, "fake Y data", "fake Y", "" );
+    ge_fy  = make_shared<GraphElem>( "_fy",  nullptr, efInner, "fake Y data", "fake Y", "" );
     ge_fy->type = GraphElem::DataType::DataAxisY;
     ge_fy->is2D = was_2D; ge_fy->label = "Y_n";
     ge_fy->role = LineRole::axisY;
@@ -352,7 +349,7 @@ int TGraph::prepare()
     ge_fy->v_min = 0; ge_fy->v_max = ny;
     ge_fy->ve = &ve_fy;
 
-    tli[LineRole::axisY] = ge_fy;
+    tli[LineRole::axisY] = ge_fy.get();
   }
   v_min = vmin; v_max = vmax;
 
@@ -363,7 +360,7 @@ int TGraph::prepare()
   // create fake zero array
   mglData *mdz = new mglData( nx, ny );
   for( int i=0; i<np; ++i ) { mdz->a[i] = 0.0; };
-  ge_zero  = new GraphElem( "_zero",  nullptr, efInner, "zero data", "zero", "" );
+  ge_zero  = make_shared<GraphElem>( "_zero",  nullptr, efInner, "zero data", "zero", "" );
   ge_zero->type = GraphElem::DataType::DataNone;
   ge_zero->is2D = was_2D; ge_zero->label = "0!";
   ge_zero->role = LineRole::none;
@@ -429,7 +426,7 @@ int TGraph::prepare()
   // int iii = 0;
   for( auto &ge : tli ) {
     if( !ge ) {
-      ge = ge_zero;
+      ge = ge_zero.get();
     }
     // DBGx( "dbg: %d %s ge \"%s\" %s nx: %d ny: %d min: %lf max :%lf",
     //     iii, role_name[iii], qP(ge->label), role_name[ge->role],
