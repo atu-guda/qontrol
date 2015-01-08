@@ -106,7 +106,7 @@ void LaboWin::initDirs() // TODO: remove or rewrite
 
 
   QString env_dir;
-  const char *evar = getenv("QMO2XDIR");
+  const char *evar = getenv("QONTROL_DIR");
   if( evar ) {
     d.setPath( L8B(evar) );
     if( d.isReadable() ) {

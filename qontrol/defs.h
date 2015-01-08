@@ -75,5 +75,17 @@ constexpr char RE_NAME_IDX[] { R"!(^([_a-zA-Z][_0-9A-Za-z]*)(?:\[(\d+)\])?$)!" }
 constexpr char RE_FULLNAME[]
   { R"(^([_a-zA-Z]+[_0-9A-Za-z]*)\.([_a-zA-Z]+[_0-9A-Za-z.]*(?:\[(\d+)\])?)$)" } ;
 
+// options passed to program
+struct ProgOpts {
+  bool batch = false;           // -b
+  int dbg = 0;                  // -d - increase debug level -dN - set
+  const char *script = nullptr; // -x "JS code"
+  const char *file_script = nullptr; // -X file_with_script.js
+  const char *out_file = nullptr; // -o output_file.txt
+  const char *sim_name = nullptr; // -s sumulation name, def = sim0
+};
+
+extern ProgOpts prog_opts; // defined in main.cpp
+
 #endif // _DEFS_H
 
