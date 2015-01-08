@@ -1,2 +1,17 @@
-qmo2 - simple dynamic system modeling tool with graphiccs (qt) interface
+qontrol - simple dynamic system modeling tool with graphics (Qt) interface
 
+Dynamic system models may be created (a-la Simulink, but not the same)
+with scheme editor. Signal and parameter links may be established.
+
+Model may have a set on simulations, from simple run - to 2D loop run
+with parameters iteration and scripted run.
+
+Output and computed data collected in output arrays.
+
+Different plots may by drown on the base of output arrays data.
+
+Scripting language - Javascript.
+
+Required libraries: Qt5, gsl, MathGL, fftw.
+
+Previous names: qmo2x, qmo2, mo2.

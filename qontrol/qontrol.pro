@@ -1,11 +1,11 @@
 QT += core widgets xml script printsupport
 TEMPLATE = app
-TARGET = qmo2x
+TARGET = qontrol
 CONFIG += c++11 release warn_on qt thread
 QMAKE_CXXFLAGS += -std=gnu++11 -fgnu-keywords
 #CONFIG += debug warn_on qt thread
 
-RESOURCES = qmo2x.qrc
+RESOURCES = qontrol.qrc
 
 INCLUDEPATH += .. ../elems
 

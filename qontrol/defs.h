@@ -1,5 +1,5 @@
 /***************************************************************************
-                          defs.h  -  common definitions and desftiptions
+                          defs.h  -  common definitions and descriptions
                              -------------------
     begin                : Wed Mar 29 2000
     copyright            : GPL (C) 2000-2015 by atu
@@ -12,10 +12,10 @@
 #include <limits>
 #include <vector>
 
-#define VERSION "0.0.52"
+#define VERSION "0.0.1"
 
 /* Name of package */
-#define PACKAGE "qmo2x"
+#define PACKAGE "qontrol"
 #define ORG "atu.atunet"
 #define COPYRIGHT "(c) 2000-2015 atu; under GPLv2+"
 

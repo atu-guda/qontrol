@@ -4,9 +4,8 @@ Makefile
 moc_*.cpp
 qrc_*.cpp
 ui_*.h
-*.qrc
 Session*
-qmo2/*.qol
+qontrol/*.qol
 _ex
 tmp/
 *.log

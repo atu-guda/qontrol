@@ -1,5 +1,5 @@
 *.o
-qmo2x
+qontrol
 *.pro.user
 Makefile
 moc_*.cpp
@@ -7,5 +7,5 @@ qrc_*.cpp
 ui_*.h
 .*.swp
 G?.sh
-qmo2x.cfg
+qontrol.cfg
 _o/*

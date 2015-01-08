@@ -1,3 +1,6 @@
+* Thu Jan 08 2015 Anton Guda <atu near nmetau dot edu point ua>
+- This file is obsoleted now: use git log
+
 * Thu Mar 22 2012 Guda Anton <atu near nmetau dot edu point ua>
 - version 0.0.45
 - added DoubleTableModel, removed QDoubleTable
