@@ -327,7 +327,7 @@ class HolderData : public QAbstractItemModel {
   // void check_guard() const;
   Q_INVOKABLE int getActiveIdx() const { return active_idx; }
   Q_INVOKABLE void setActiveIdx( int i );
-  Q_INVOKABLE void setActiveElem( const QString &nm );
+  Q_INVOKABLE bool setActiveElem( const QString &nm );
   HolderData* getActiveElem() const { return getElem( active_idx ); };
   template<typename T> T getActiveElemT() const
       {

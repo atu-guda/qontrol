@@ -114,7 +114,30 @@ int batch_process( const char *model_file )
     cerr << "Fail to read file \"" << model_file << "\"" << endl;
     return 3;
   }
-  cerr << "Batch process not implemented for now! ;-(" << endl;
+  TModel *model = doc.getModel();
+  if( !model ) {
+    cerr << "Not found model in file" << endl;
+    return 5;
+  }
+
+  // TODO: sim!
+  if( prog_opts.sim_name ) {
+    QString sim_name = L8B( prog_opts.sim_name );
+    ContSimul *sims =  model->getElemT<ContSimul*>( "sims" );
+    if( !sims ) {
+      cerr << "Not found simulations in model" << endl;
+      return 5;
+    }
+    if( ! sims->setActiveElem( sim_name ) ) {
+      cerr << "Not found simulation \"" << prog_opts.sim_name << "\" in model" << endl;
+      return 4;
+    }
+    model->handleStructChanged();
+  }
+  cout << "Starintg run: " << endl;
+  model->run_bg();
+  cout << "End run: " << endl;
+
   return 10;
 }
 

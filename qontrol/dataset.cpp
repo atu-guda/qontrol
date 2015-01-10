@@ -554,13 +554,14 @@ void HolderData::setActiveIdx( int i )
   }
 };
 
-void HolderData::setActiveElem( const QString &nm )
+bool HolderData::setActiveElem( const QString &nm )
 {
   int a_idx = -1; HolderData *e = getElem( nm );
   if( e ) {
     a_idx = indexOfHolder( e );
   }
   setActiveIdx( a_idx );
+  return ( a_idx >= 0 );
 };
 
 
