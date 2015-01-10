@@ -101,6 +101,7 @@ class TModel : public TDataContainer  {
   QString getSimulName( int idx );
   int getNSimul() const { return sims->size(); }
   bool cloneSimul( const QString &old_name, const QString &new_name );
+  bool setActiveSimul( const QString &name );
 
   int getNSchems() const { return schems->size(); }
 

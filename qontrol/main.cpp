@@ -123,16 +123,10 @@ int batch_process( const char *model_file )
   // TODO: sim!
   if( prog_opts.sim_name ) {
     QString sim_name = L8B( prog_opts.sim_name );
-    ContSimul *sims =  model->getElemT<ContSimul*>( "sims" );
-    if( !sims ) {
-      cerr << "Not found simulations in model" << endl;
-      return 5;
-    }
-    if( ! sims->setActiveElem( sim_name ) ) {
+    if( ! model->setActiveSimul( sim_name ) ) {
       cerr << "Not found simulation \"" << prog_opts.sim_name << "\" in model" << endl;
       return 4;
     }
-    model->handleStructChanged();
   }
   cout << "Starintg run: " << endl;
   model->run_bg();

@@ -1355,8 +1355,7 @@ void LaboView::setActiveSimul()
     return;
   }
 
-  sims->setActiveElem( nm );
-  model->handleStructChanged();
+  model->setActiveSimul( nm );
   emit viewChanged();
 }
 

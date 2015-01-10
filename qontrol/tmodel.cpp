@@ -606,6 +606,19 @@ bool TModel::cloneSimul( const QString &old_name, const QString &new_name )
   return new_sim->fromString( s );
 }
 
+bool TModel::setActiveSimul( const QString &name )
+{
+  if( !sims || name.isEmpty() ) {
+    return false;
+  }
+
+  bool ok = sims->setActiveElem( name );
+  if( ok ) {
+    handleStructChanged();
+  }
+  return ok;
+}
+
 
 void TModel::initEngine()
 {
