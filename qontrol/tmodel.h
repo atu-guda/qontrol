@@ -46,6 +46,7 @@ class TModel : public TDataContainer  {
   //* redirects requuest to active scheme (may be more)
   const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt,
         const TDataSet **src_ob, int lev ) const override;
+  Q_INVOKABLE QString getOutValue( const QString &nm ) const;
 
   //* returns active (main) Scheme
   Scheme* getActiveScheme() const { return schems->getActiveElemT<Scheme*>(); };

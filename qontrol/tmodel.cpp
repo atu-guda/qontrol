@@ -132,6 +132,25 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
   return rv;
 }
 
+QString TModel::getOutValue( const QString &nm ) const
+{
+  QString r;
+  Scheme *sch = getActiveScheme();
+  if( sch  &&  sch->getData( nm + ".out0", r, false ) ) {
+    return r;
+  };
+  Simulation *cs = getActiveSimulation();
+  if( cs  &&  cs->getData( nm, r, false ) ) {
+    return r;
+  };
+  // may be some model params?
+  if( getData( nm, r, false ) ) {
+    return r;
+  }
+  return r;
+}
+
+
 
 
 
