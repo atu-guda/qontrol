@@ -126,12 +126,12 @@ bool LaboView::confirmDelete( const QString &obj, const QString &nm )
 
 void LaboView::showError( const QString &s )
 {
-  QMessageBox::critical( this, PACKAGE ": Error", s,  QMessageBox::Ok );
+  handleError( this, s );
 }
 
 void LaboView::showWarn( const QString &s )
 {
-  QMessageBox::warning( this, PACKAGE ": Warning", s, QMessageBox::Ok );
+  handleWarn( this, s );
 }
 
 

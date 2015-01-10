@@ -18,11 +18,11 @@
 #include <cerrno>
 #include <fstream>
 #include <iostream>
-// include files for Qt
+
 #include <QtWidgets>
 #include <QtXml>
 
-// application specific includes
+#include "miscfun.h"
 #include "labodoc.h"
 #include "labowin.h"
 #include "laboview.h"
@@ -69,6 +69,17 @@ const QString &LaboDoc::title() const
   return m_title;
 }
 
+void LaboDoc::showError( const QString &s )
+{
+  handleError( LaboWin::labowin, s ); // nullptr is ok - batch
+}
+
+void LaboDoc::showWarn( const QString &s )
+{
+  handleWarn( LaboWin::labowin, s );
+}
+
+
 
 bool LaboDoc::newDocument()
 {
@@ -82,8 +93,7 @@ bool LaboDoc::newDocument()
   model = rootdata->getElemT<TModel*>( "model" );
   if( !model ) {
     delete rootdata; rootdata = nullptr;
-    QMessageBox::critical( 0, "LaboDoc::newDocument",
-      QString("Fail to find model in root: "), 0,0,0 );
+    showError( QSL( "Fail to find model in root: " ) );
     return false;
   }
 
@@ -98,10 +108,7 @@ bool LaboDoc::openDocumentXML(const QString &filename )
 {
   QFile file( filename );
   if( !file.open( QFile::ReadOnly) ) {
-    QMessageBox::warning(LaboWin::labowin, tr( PACKAGE ),
-                         tr("Cannot read file %1:\n%2.")
-                         .arg(filename)
-                         .arg(file.errorString()));
+    showError( tr("Cannot read file %1: %2.").arg(filename).arg(file.errorString() ) );
     return false;
   }
   QTextStream in( &file );
@@ -112,10 +119,8 @@ bool LaboDoc::openDocumentXML(const QString &filename )
   int err_line, err_column;
 
   if( ! dd.setContent( textData, false, &errstr, &err_line, &err_column ) ) {
-    QMessageBox::warning(LaboWin::labowin, tr( PACKAGE ),
-                         tr("Cannot parse file %1:\n%2\nLine %3 column %4.")
-                         .arg(filename)
-                         .arg(errstr).arg(err_line).arg(err_column) );
+    showError( tr("Cannot parse file %1:\n%2\nLine %3 column %4.")
+                         .arg(filename).arg(errstr).arg(err_line).arg(err_column) );
     m_filename = "";
     return false;
   }
@@ -134,8 +139,7 @@ bool LaboDoc::openDocumentXML(const QString &filename )
         obj_root = ee;
         break;
       }
-      QMessageBox::critical( LaboWin::labowin, tr( PACKAGE ),
-        tr("Bad first element: %1 %2 ").arg(tagname).arg(elname) );
+      showError( tr("Bad first element: %1 %2 ").arg(tagname).arg(elname) );
       return false;
     }
     cnode = cnode.nextSibling();
@@ -158,9 +162,7 @@ bool LaboDoc::openDocumentXML(const QString &filename )
     // DBG1q( xxx );
     delete rootdata;
     rootdata = nullptr;
-    QMessageBox::critical( 0, "openDocumentXml Error:",
-       QString("Fail parse file: ") + filename + " : " + errstr,
-       QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
+    showError( QSL("Fail to parse file: ") % filename % " : " % errstr );
     return false;
   }
 
@@ -168,9 +170,7 @@ bool LaboDoc::openDocumentXML(const QString &filename )
 
   if( !model ) {
     delete rootdata; rootdata = 0; model = 0;
-    QMessageBox::critical( 0, "openDocumentXML Error:",
-       QString("Fail to detect model in file: ") + filename,
-       QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton );
+    showError( QSL("Fail to detect model in file: ") % filename );
     return false;
   };
 
@@ -186,15 +186,13 @@ bool LaboDoc::openDocumentXML(const QString &filename )
 
 bool LaboDoc::saveDocumentXML( const QString &filename )
 {
-  if( rootdata == 0 )
+  if( rootdata == 0 ) {
     return false;
+  }
 
   QSaveFile file( filename );
   if ( ! file.open( QFile::WriteOnly )) {
-    QMessageBox::warning( LaboWin::labowin, tr(PACKAGE),
-                         tr("Cannot write file %1:\n%2.")
-                         .arg(filename)
-                         .arg(file.errorString()));
+    showError( tr("Cannot write file %1:\n%2.").arg(filename).arg(file.errorString()) );
     return false;
   }
   file.setPermissions( QFileDevice::ReadUser | QFileDevice::WriteUser
@@ -250,48 +248,48 @@ void LaboDoc::deleteContents()
 
 bool LaboDoc::canCloseFrame( LaboView* pFrame )
 {
-  if( !isLastView()  )
+  if( prog_opts.batch || !isModified()  ||  !isLastView() ) {
     return true;
+  }
+
   bool ret = false;
-  if( isModified() ) {
-    QString saveName;
-    switch( QMessageBox::information(pFrame, title(),
-             tr("The current file has been modified.\n"
-                 "Do you want to save it?"),
-             QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel )) {
-      case QMessageBox::Yes:
-             if( is_nonamed ) {
-             saveName = QFileDialog::getSaveFileName( LaboWin::labowin, tr("Save model"),
-                 QString::null, "Model *.qol files (*.qol);;All files(*)" );
-             if(saveName.isEmpty())
-                  return false;
-           } else {
-               saveName = pathName();
-           };
-           if( ! saveDocumentXML( saveName ) ) {
-              switch(QMessageBox::critical(pFrame, tr("I/O Error !"),
-                     tr("Could not save the current document !\n" "Close anyway ?"),
-                     QMessageBox::Yes ,QMessageBox::No)) {
-                         case QMessageBox::Yes:
-                           ret=true;
-                         case QMessageBox::No:
-                           ret=false;
-              }; // switch
-           } else {
+  QString saveName;
+  switch( QMessageBox::information( pFrame, title(),
+        tr("The current file has been modified.\n"
+          "Do you want to save it?"),
+        QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel )) {
+    case QMessageBox::Yes:
+      if( is_nonamed ) {
+        saveName = QFileDialog::getSaveFileName( LaboWin::labowin, tr("Save model"),
+            QString::null, "Model *.qol files (*.qol);;All files(*)" );
+        if( saveName.isEmpty() ) {
+          return false;
+        }
+      } else {
+        saveName = pathName();
+      };
+
+      if( ! saveDocumentXML( saveName ) ) {
+        switch( QMessageBox::critical( pFrame, tr("I/O Error !"),
+              tr( "Could not save the current document !\n" "Close anyway ?" ),
+              QMessageBox::Yes ,QMessageBox::No ) ) {
+          case QMessageBox::Yes:
             ret=true;
-           };
-           break;
-      case QMessageBox::No:
-            ret=true;
-           break;
-      case QMessageBox::Cancel:
-      default:
-           ret=false;
-           break;
-    }; // switch
-  } else {
-    ret=true;
-  }; // if(isModified())
+          case QMessageBox::No:
+            ret=false;
+        }; // switch
+      } else {
+        ret=true;
+      };
+      break;
+    case QMessageBox::No:
+      ret=true;
+      break;
+    case QMessageBox::Cancel:
+    default:
+      ret=false;
+      break;
+  }; // switch
 
   return ret;
 }
@@ -323,8 +321,6 @@ void LaboDoc::fillRoot()
     return;
   }
 }
-
-
 
 
 // end of labodoc.cpp

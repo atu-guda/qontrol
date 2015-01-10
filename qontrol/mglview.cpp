@@ -620,11 +620,8 @@ void MglView::exportPlot()
 
   if( ! timg.save( fn, "PNG", 50 ) ) {
     QString err = strerror(errno);
-    QMessageBox::warning(this, "Fail to save picture",
-        QString("Fail fo save picture file: \"%1\": %2").arg( fn ).arg( err ),
-        QMessageBox::Ok );
+    handleError( this, QSL("Fail fo save picture file: \"%1\": %2").arg( fn ).arg( err ) );
   }
-
 
 }
 
@@ -693,6 +690,7 @@ static const char plot_helpstr[] = "<b>Hot keys:</b><br/>\n"
  "<b>e</b> - export image to png <br/>\n"
  "<b>b</b> - set base to mark<br/>\n"
  "<b>B</b> -hide/how base lines<br/>\n"
+ "<b>f</b> - toggle light<br/>\n"
  "<b>g</b> - set mark to given point <br/>\n"
  "<b>l/L</b> - link/Unlink to data <br/>\n"
  "<b>d</b> - data info <br/>\n"
@@ -705,8 +703,7 @@ static const char plot_helpstr[] = "<b>Hot keys:</b><br/>\n"
  "<b>[Shift]{Left, Top, Right, Bottom}</b> - Rotate <br>\n"
  "<b>Ctrl {Left, Top, Right, Bottom}</b> - shift plot <br>\n"
  "<b>- in link state: -</b>  <br>\n"
- "<b>[Shift]{Left, Top}</b> - prev/next point [more] <br>\n"
- "<b>[Shift]{Top, Bottom}}</b> - find [global] max/min <br>\n";
+ "<b>[ ] </b> - previous/next point <br>\n";
 
 void MglView::showHelp()
 {

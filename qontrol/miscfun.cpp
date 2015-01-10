@@ -11,6 +11,7 @@
 
 #include <QString>
 #include <QRegExp>
+#include <QMessageBox>
 
 #include "miscfun.h"
 
@@ -260,6 +261,24 @@ double limitAngleDeg( double a )
   if( a < 0 ) { --ia; }
   a -= ia * 360;
   return a;
+}
+
+// ------------- for iface ---------------------------------------
+
+void handleError( QWidget* par, const QString &s )
+{
+  DBGx( "err: %s", qP(s) );
+  if( ! prog_opts.batch ) {
+    QMessageBox::critical( par, PACKAGE ": Error", s,  QMessageBox::Ok );
+  }
+}
+
+void handleWarn( QWidget* par, const QString &s )
+{
+  DBGx( "warn: %s", qP(s) );
+  if( ! prog_opts.batch ) {
+    QMessageBox::warning( par, PACKAGE ": Warning", s,  QMessageBox::Ok );
+  }
 }
 
 // ------------- miscelanios classes -----------------------------

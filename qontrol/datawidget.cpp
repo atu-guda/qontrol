@@ -1251,9 +1251,7 @@ void DataDialog::addParam()
   }
   HolderData *ho = ds.add_param( ptype, nm );
   if( !ho ) {
-    QMessageBox::critical( this, "Error",
-       QString("Fail to add parameter: ") + ptype + " " + nm,
-       QMessageBox::Ok, QMessageBox::NoButton );
+    handleError( this, QSL("Fail to add parameter: ") + ptype + " " + nm );
     return;
   }
   ho->setParm( "descr", descr );
@@ -1279,25 +1277,19 @@ void DataDialog::addObj()
   }
 
   if( ! isGoodName( aei.name )  ) {
-    QMessageBox::critical( this, "Error",
-       QString("Fail to add Elem: bad object name \"") + aei.name + "\"",
-       QMessageBox::Ok, QMessageBox::NoButton );
+    handleError( this, QSL( "Fail to add Elem: bad object name \"") + aei.name + "\"" );
     return;
   }
 
   const TClassInfo *ci = EFACT.getInfo( aei.type );
   if( !ci ) {
-    QMessageBox::critical( this, "Error",
-       QString("Fail to add Elem: class \"") + aei.type + "\" not found",
-       QMessageBox::Ok, QMessageBox::NoButton );
+    handleError( this, QSL( "Fail to add Elem: class \"") + aei.type + "\" not found" );
     return;
   }
 
   HolderData *ob = ds.add_obj( aei.type, aei.name );
   if( !ob  ) {
-    QMessageBox::critical( this, "Error",
-       QString("Fail to add Elem: ") + aei.type + " " + aei.name,
-       QMessageBox::Ok, QMessageBox::NoButton );
+    handleError( this, QSL( "Fail to add Elem: ") + aei.type + " " + aei.name );
     return;
   }
 

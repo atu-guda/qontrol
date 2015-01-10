@@ -79,9 +79,9 @@ class LaboView : public QWidget
    bool editObj( HolderData *obj, bool resetModel = true );
    //* returns name of current object in given view
    QString getSelName( QAbstractItemView *view );
-   //* show std error box
+   //* show std error box/log
    void showError( const QString &s );
-   //* show std warning box
+   //* show std warning box/log
    void showWarn( const QString &s );
 
  signals:

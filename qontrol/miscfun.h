@@ -74,6 +74,10 @@ QString tex2label( const QString &t );
 // double perpLen( double xs, double ys, double xe, double ye,
 //                 double xp, double yp );
 
+// ------------- for iface ---------------------------------------
+
+void handleError( QWidget* par, const QString &s );
+void handleWarn( QWidget* par, const QString &s );
 // ------------- miscelanios classes -----------------------------
 
 class TCircBuf {

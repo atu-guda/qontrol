@@ -90,6 +90,11 @@ class LaboDoc : public QObject
   /** returns nonamed status */
   bool nonamed() const { return is_nonamed; }
 
+  //* show std error box/log
+  void showError( const QString &s );
+  //* show std warning box/log
+  void showWarn( const QString &s );
+
  public slots:
 
  private:

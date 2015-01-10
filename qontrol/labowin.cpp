@@ -910,10 +910,8 @@ void LaboWin::slotFileOpenXML()
 bool LaboWin::doFileOpenXML( const QString &fn )
 {
   LaboDoc* doc = new LaboDoc();
-  if( ! doc->openDocumentXML( fn ) ) {
-    QMessageBox::critical( this, tr("Error !"),
-                           tr("Could not read file !" ) + fn );
-    delete doc;
+  if( ! doc->openDocumentXML( fn ) ) { // message inside
+    delete doc; doc = nullptr;
     updateActions();
     statusBar()->showMessage( tr( "Open Failed." ) );
     return false;
@@ -935,9 +933,7 @@ void LaboWin::slotFileSaveXML()
     if( doc->nonamed() ) {
       slotFileSaveXMLAs();
     } else {
-      if( ! doc->saveDocumentXML( doc->pathName() ) )
-         QMessageBox::critical( this,
-           tr("I/O Error !"), tr("Could not save the current document !" ) );
+      doc->saveDocumentXML( doc->pathName() ); // message on error inside
     };
     m->update();
   };
@@ -951,8 +947,8 @@ void LaboWin::slotFileSaveXMLAs()
   statusBar()->showMessage( tr ( "Saving model file under new filename..." ) );
   LaboView* m =  activeLaboView();
   if( !m ) {
-    QMessageBox::critical ( this,
-      tr("Critical error!"), tr("Fail to find active window while saving file!") );
+    handleError( this, tr("Fail to find active window while saving file!") );
+    return;
   }
   QString fn = QFileDialog::getSaveFileName( this, tr("Save model"),
       QString::null, "Model *.qol files (*.qol);;All files(*)" );
@@ -965,12 +961,9 @@ void LaboWin::slotFileSaveXMLAs()
     fi.setFile( fn );
 
     LaboDoc* doc = m->getDocument();
-    if( ! doc->saveDocumentXML( fn ) ) {
-       QMessageBox::critical ( this,
-           tr("I/O Error !"), tr("Could not save the current model file!") );
-       return;
+    if( doc->saveDocumentXML( fn ) ) {
+       m->setWindowTitle( doc->title() );
     };
-    m->setWindowTitle( doc->title() );
   };
   updateActions();
   statusBar()->showMessage( tr( "Ready." ) );
