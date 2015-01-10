@@ -30,7 +30,7 @@ ProgOpts prog_opts;
 
 void print_usage( const char *appname );
 int  convert_model( const char *fn_old, const char *fn_new );
-int batch_process( const char *model_file, const QStringList &ovars );
+int batch_process( const char *model_file );
 
 int main( int argc, char *argv[] )
 {
@@ -39,18 +39,17 @@ int main( int argc, char *argv[] )
 
   QApplication a( argc, argv );
 
-  QStringList out_vars; // output variables in batch mode, relative to scheme
-
   int op;
-  while( ( op=getopt( argc, argv, "hvbc:o:s:u:x:X:d::" ) ) != -1 ) {
+  while( ( op=getopt( argc, argv, "hvbc:g:o:s:u:x:X:d::" ) ) != -1 ) {
     switch( op ) {
       case 'h' : print_usage( argv[0] ); return 0;
       case 'v' : cout << PACKAGE << ' ' << VERSION << endl;  return 0;
       case 'b': prog_opts.batch = true; break;
       case 'c': fn_new = optarg; prog_opts.batch = true; break;
+      case 'g': prog_opts.out_plots << L8B( optarg ); break;
       case 'o': prog_opts.out_file = optarg; break;
       case 's': prog_opts.sim_name = optarg; break;
-      case 'u': out_vars << L8B( optarg ); break;
+      case 'u': prog_opts.out_vars << L8B( optarg ); break;
       case 'x': prog_opts.script = optarg; break;
       case 'X': prog_opts.file_script = optarg; break;
       case 'd': if( optarg ) { 
@@ -87,7 +86,7 @@ int main( int argc, char *argv[] )
     return convert_model( argv[optind], fn_new );
   }
 
-  return batch_process( argv[optind], out_vars );
+  return batch_process( argv[optind] );
 
 }
 
@@ -110,7 +109,7 @@ int convert_model( const char *fn_old, const char *fn_new )
   return 0;
 }
 
-int batch_process( const char *model_file, const QStringList &ovars )
+int batch_process( const char *model_file )
 {
   LaboDoc doc;
   if( ! doc.openDocumentXML( L8B( model_file ) ) ) {
@@ -136,9 +135,20 @@ int batch_process( const char *model_file, const QStringList &ovars )
   cout << "End run, rc= " << rc << endl;
 
   if( rc ) {
-    for( auto nm : ovars ) {
+    for( auto nm : prog_opts.out_vars ) {
       QString v = model->getOutValue( nm );
       cout << qP(nm) << " = " << qP( v ) << endl;
+    };
+
+    for( auto nm : prog_opts.out_plots ) {
+      QStringList pc = nm.split( ":" );
+      if( pc.size() < 1 ) { continue; }
+      QString gname = pc[0];
+      QString gfile = gname + "_out.png";
+      if( pc.size() > 1 ) {
+        gfile = pc[1];
+      }
+      model->plotToPng( gname, gfile );
     };
   }
 

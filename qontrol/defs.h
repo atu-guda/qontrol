@@ -12,6 +12,9 @@
 #include <limits>
 #include <vector>
 
+#include <QString>
+#include <QStringList>
+
 #define VERSION "0.0.1"
 
 /* Name of package */
@@ -83,6 +86,8 @@ struct ProgOpts {
   const char *file_script = nullptr; // -X file_with_script.js
   const char *out_file = nullptr; // -o output_file.txt
   const char *sim_name = nullptr; // -s sumulation name, def = sim0
+  QStringList out_vars;           // -u T
+  QStringList out_plots;          // -g graph:file.png  or  -g graph
 };
 
 extern ProgOpts prog_opts; // defined in main.cpp

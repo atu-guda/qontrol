@@ -385,6 +385,15 @@ int TModel::run_bg()
   return rc;
 }
 
+void TModel::plotToPng( const QString &gname, const QString &fn )
+{
+  TGraph *gra = getGraph( gname );
+  if( !gra ) {
+    return;
+  }
+  gra->plotToPng( fn );
+}
+
 int TModel::runOneLoop( IterType itype )
 {
   if( !c_sch ) {

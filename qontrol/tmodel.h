@@ -66,6 +66,8 @@ class TModel : public TDataContainer  {
   int stopRun( int reason );
   int run( QSemaphore *sem );
   Q_INVOKABLE int run_bg(); // startRun and stopRun to use w/o iface
+  // pass to real TGraph
+  Q_INVOKABLE void plotToPng( const QString &gname, const QString &fn );
 
   // for fast access in RunView
   double get_t() const { return t; }
