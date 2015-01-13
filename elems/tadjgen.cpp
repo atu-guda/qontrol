@@ -29,6 +29,7 @@ const char* TAdjGen::helpstr = "<H1>TAdjGen</H1>\n"
 STD_CLASSINFO(TAdjGen,clpElem );
 
 CTOR(TAdjGen,TMiso)
+  , real_tick(0), cav(0), cav2(0)
 {
 }
 

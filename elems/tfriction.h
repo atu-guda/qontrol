@@ -52,7 +52,7 @@ class TFriction : public TMiso  {
    PRM_INPUT( in_f_mx, 0, "input f_mx", "Maximum for input (if enabled)", "sep=col" );
 
    /** old values and misc */
-   double v_old, x_old;
+   double v_old = 0, x_old = 0;
    DCL_DEFAULT_STATIC;
 };
 

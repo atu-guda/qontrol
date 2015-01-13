@@ -104,11 +104,11 @@ class TRand : public TMiso  {
    /** keeped const output value */
    double old_val = 0;
    /** start value of seed */
-   int sseed;
+   int sseed = 1;
    /** effective value of seedType */
-   int eff_seedType;
+   int eff_seedType = 0;
    /** copy valuse of base seed */
-   int bseed;
+   int bseed = 1;
    /** generator structure from GSL */
    RandGenerator rng;
 

@@ -32,8 +32,6 @@
 StructView:: StructView( Scheme *a_sch, LaboView *mview )
             : QWidget( mview ), sch( a_sch ), mainview( mview )
 {
-  devTp = 0;
-  // grid_sz = 40;
   grid_sz = 46;
   lm = tm = 4;  obj_sz = 32;
 
@@ -169,7 +167,7 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
 
 void StructView::drawAll( QPainter &p )
 {
-  int i, h, w, nh, nw;
+  int h, w, nh, nw;
   int line_busy;
   int li_src_y, li_dst_y;
   int st_y; /* label on elems start y */
@@ -199,9 +197,9 @@ void StructView::drawAll( QPainter &p )
   // ---------- draw grid
   if( psett->showgrid ) {
     p.setPen( QPen(QColor(200,220,220), 0, Qt::DotLine ) ); // TODO: config
-    for( i=0; i<nw; i++ )
+    for( int i=0; i<nw; i++ )
       p.drawLine( lm + i*grid_sz, tm, lm+i*grid_sz, h );
-    for( i=0; i<nh; i++ )
+    for( int i=0; i<nh; i++ )
       p.drawLine( lm, tm+i*grid_sz, w, tm+i*grid_sz );
   };
 
@@ -522,7 +520,6 @@ void StructView::drawAll( QPainter &p )
 void StructView::mousePressEvent( QMouseEvent *me )
 {
   int h, w, nh, nw, ex, ey, x, y;
-  QMenu *menu;
   TMiso *ob = 0;
   QString elmname;
   if( !sch ) {
@@ -531,27 +528,37 @@ void StructView::mousePressEvent( QMouseEvent *me )
   h = height(); w = width(); nh = h / grid_sz - 1; nw = w / grid_sz - 1;
   x = me->x(); y = me->y();
   ex = ( x - lm ) / grid_sz; ey = ( y - tm ) / grid_sz;
-  if( ex >= 0 && ex <= nw && ey >=0 && ey <= nh ) {
-    mainview->changeSel( ex, ey, 0 );
-    ob = sch->xy2Miso( ex, ey );
-    if( ob ) {
-      elmname = ob->getFullName();
-      // double outval = ob->getDataD( "out0", 0.0 );
-      if( elmname.isEmpty() ) {
-        elmname = "?unknown?";
-      }
-    };
-    switch( me->button() ) {
-      case Qt::LeftButton:  break;
-      case Qt::RightButton:
-            menu = createPopupMenu( elmname, ob != nullptr );
-            menu->exec( mapToGlobal(QPoint( x, y )) );
-            delete menu;
-            break;
-      case Qt::MidButton:   mainview->editElm();  break;
-      default: break;// none
-    };
+  if( ex < 0 || ex >= nw || ey < 0 || ey >= nh ) {
+    return;
+  }
+
+  mainview->changeSel( ex, ey, 0 );
+  ob = sch->xy2Miso( ex, ey );
+  if( ob ) {
+    elmname = ob->getFullName();
+    // double outval = ob->getDataD( "out0", 0.0 );
+    if( elmname.isEmpty() ) {
+      elmname = "?unknown?";
+    }
   };
+
+  switch( me->button() ) {
+    case Qt::LeftButton:
+                break;
+    case Qt::RightButton:
+                {
+                QMenu *menu = createPopupMenu( elmname, ob != nullptr );
+                menu->exec( mapToGlobal(QPoint( x, y )) );
+                delete menu;
+                }
+                break;
+    case Qt::MidButton:
+                mainview->editElm();
+                break;
+    default:
+                break;// none
+  };
+
 }
 
 QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )

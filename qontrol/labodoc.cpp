@@ -269,15 +269,13 @@ bool LaboDoc::canCloseFrame( LaboView* pFrame )
         saveName = pathName();
       };
 
+      ret = false;
       if( ! saveDocumentXML( saveName ) ) {
-        switch( QMessageBox::critical( pFrame, tr("I/O Error !"),
+        if( QMessageBox::critical( pFrame, tr("I/O Error !"),
               tr( "Could not save the current document !\n" "Close anyway ?" ),
-              QMessageBox::Yes ,QMessageBox::No ) ) {
-          case QMessageBox::Yes:
-            ret=true;
-          case QMessageBox::No:
-            ret=false;
-        }; // switch
+              QMessageBox::Yes ,QMessageBox::No ) == QMessageBox::Yes ) {
+          ret=true;
+        };
       } else {
         ret=true;
       };

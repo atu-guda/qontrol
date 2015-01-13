@@ -1404,7 +1404,6 @@ int DataDialog::createWidgets()
 
       lay2->addWidget( fr, nr_max, 0, 1, -1 );
       ++nr_max;
-      nr = nr_max;
       nr_block = nr_max; nr = nr_block; nc = 0;
     }
 

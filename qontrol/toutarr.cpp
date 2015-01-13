@@ -283,10 +283,10 @@ void TOutArr::add( double v )
 
   if( cnq == lnq ) {
     arr[n] = v;
-    n++;
+    ++n;
     need_calc_stat = true;
   };
-  cnq++;
+  ++cnq;
   if( cnq >= nq ) {
     cnq = 0;
   }

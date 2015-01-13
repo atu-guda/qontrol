@@ -60,8 +60,8 @@ class TIntegrator : public TMiso  {
    PRM_INPUT( in_fake, 0, "no in", "no input - anchient artefact",  "sep=col" );
    PRM_INPUT( in_base, 0, "Base in", "Fourth input", "sep=col" );
 
-   double v_old;
-   double t_rst;
+   double v_old = 0;
+   double t_rst = 0;
 
    DCL_DEFAULT_STATIC;
 };

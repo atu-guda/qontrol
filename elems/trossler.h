@@ -57,9 +57,6 @@ class TRossler : public TMiso  {
    PRM_INPUT( in_y, 0, "input x", "Addition to y", "sep=col" );
    PRM_INPUT( in_z, 0, "input x", "Addition to z",  "sep=col" );
 
-   /** values to store some model vars */
-   double tt;
-
    DCL_DEFAULT_STATIC;
 };
 

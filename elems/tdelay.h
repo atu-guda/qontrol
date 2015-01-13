@@ -50,13 +50,13 @@ class TDelay : public TMiso  {
 
    PRM_INPUT( in_u, 0, "input", "Single input",  "sep=block" );
 
-   double v1;
-   double v2;
-   double u00;
+   double v1 = 0;
+   double v2 = 0;
+   double u00 = 0;
    /** max and current delays indexes ... */
-   int imd, icd;
+   int imd = 0, icd = 0;
    /** data container */
-   TCircBuf *buf;
+   TCircBuf *buf = nullptr;
    DCL_DEFAULT_STATIC;
 };
 

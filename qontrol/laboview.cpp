@@ -455,13 +455,14 @@ void LaboView::unlinkElm()
   }
 
   QString lnkname;
-  QString none("");
+  QString empty_str("");
   int ni = selObj->inputsCount();
   for( int i=0; i<ni; ++i ) {
     InputSimple *in = selObj->getInput( i );
-    if( ! in )
+    if( ! in ) {
       continue;
-    in->setData( "source", none );
+    }
+    in->setData( "source", empty_str );
   }
 
   InputParams *pis = selObj->getElemT<InputParams*>("pis");
@@ -498,9 +499,8 @@ void LaboView::ordElm()
   }
 
   bool ok;
-  int new_ord = -1;
   int old_ord = selObj->getDataD( "ord", 0 );
-  new_ord = QInputDialog::getInt( this, "New element order",
+  int new_ord = QInputDialog::getInt( this, "New element order",
       "Input new element order",  old_ord, 0, IMAX, 1, &ok );
   if( ok ) {
     main_s->newOrder( selObj->objectName(), new_ord ); // reset implied
@@ -1060,9 +1060,9 @@ void LaboView::editGraph()
     return;
   }
 
-  TGraph *plot = model->getGraph( nm );
+  TGraph *gra = model->getGraph( nm );
 
-  editObj( plot, false ); // no reset if only view changed
+  editObj( gra, false ); // no reset if only view changed
 }
 
 void LaboView::selectGraph()

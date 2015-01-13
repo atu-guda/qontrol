@@ -84,7 +84,7 @@ CTOR(TModel,TDataContainer)
 {
   allowed_types = "HolderValue,"
                   "ContScheme,ContSimul,ContOut,ContGraph"; // +SPECIAL
-  rtime = t = 0; tdt = 1; // fake
+  rtime =0; t = 0; tdt =1; // fake
 
   schems = addObj<ContScheme>( "schems" );
   schems->setImmutable();

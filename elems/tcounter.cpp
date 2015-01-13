@@ -47,7 +47,7 @@ double TCounter::f( double /* t */ )
     cn = flip = 0;
   } else {
     if( du > 0.1 ) {
-      cn++;
+      ++cn;
       if( cn >= n ) {
         cn = 0; tick = 1; flip = ! flip;
       };

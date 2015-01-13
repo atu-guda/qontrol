@@ -81,7 +81,7 @@ int TRand::do_startLoop( int acnx, int acny )
 
 double TRand::f( double  t  )
 {
-  double v, du, in;
+  double du, in;
   if( inputTime ) {
     in = t;
   } else {
@@ -90,8 +90,10 @@ double TRand::f( double  t  )
 
   if( sp_time >= tau || tau <=0  ) {
     sp_time -= tau;
-    if( sp_time >= tau )
+    if( sp_time >= tau ) {
       sp_time = 0;
+    }
+    double v = 0;
     switch( (int)type ) {
       case dt_flat     :  v = rng.flat( -sigma, sigma ); break;
       case dt_gauss    :  v = rng.gaussian( sigma ); break;
@@ -103,15 +105,15 @@ double TRand::f( double  t  )
       case dt_cauchy   :  v = rng.cauchy( a ); break;
       case dt_chisq    :  v = rng.chisq( a ); break;
       case dt_erlang   :  v = rng.erlang( a, b ); break;
-      case dt_fdist    : v = rng.fdist( a, b ); break;
-      case dt_gamma    : v = rng.gamma( a, b ); break;
-      case dt_levy     : v = rng.levy( a, b ); break;
-      case dt_logistic : v = rng.logistic( a ); break;
-      case dt_lognorm  : v = rng.lognormal( a, sigma ); break;
-      case dt_pareto   : v = rng.pareto( a, b ); break;
-      case dt_rayleigh : v = rng.rayleigh( sigma ); break;
-      case dt_weibull  : v = rng.weibull( a, b ); break;
-      default: v = 0;
+      case dt_fdist    :  v = rng.fdist( a, b ); break;
+      case dt_gamma    :  v = rng.gamma( a, b ); break;
+      case dt_levy     :  v = rng.levy( a, b ); break;
+      case dt_logistic :  v = rng.logistic( a ); break;
+      case dt_lognorm  :  v = rng.lognormal( a, sigma ); break;
+      case dt_pareto   :  v = rng.pareto( a, b ); break;
+      case dt_rayleigh :  v = rng.rayleigh( sigma ); break;
+      case dt_weibull  :  v = rng.weibull( a, b ); break;
+      default: break;
     };
     old_val = zval + ampl * v;
   };

@@ -49,9 +49,9 @@ class TSourceLin : public TMiso  {
    /** slope values of each line */
    dvector slopes;
    /** number of lines, current line */
-   int n_lin, curr_lin;
+   int n_lin = 0, curr_lin = 0;
    /** start time of current line */
-   double t_start;
+   double t_start = 0;
 
    DCL_DEFAULT_STATIC;
 };

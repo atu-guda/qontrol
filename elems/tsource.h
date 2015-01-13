@@ -105,8 +105,8 @@ class TSource : public TMiso  {
    /** chaos current values */
    double u_ch_vs = 1, u_ch_ve = 1, u_ch_ts = 1, u_ch_te = 1, u_ch_k = 1,
           f_ch_vs = 1, f_ch_ve = 1, f_ch_ts = 1, f_ch_te = 1, f_ch_k = 1;
-   int sseed_u, sseed_p, bseed_u, bseed_p,
-       eff_seedType_u, eff_seedType_p;
+   int sseed_u = 1, sseed_p = 1, bseed_u =1 , bseed_p = 1,
+       eff_seedType_u = 0, eff_seedType_p = 0;
 
 
    /** generator structures */
@@ -114,7 +114,7 @@ class TSource : public TMiso  {
    /** triggers */
    int was_pulse = 0;
    /** values to store some model vars */
-   double tt;
+   double tt = 1;
 
    DCL_DEFAULT_STATIC;
 };

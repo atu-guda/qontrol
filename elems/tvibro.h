@@ -56,7 +56,7 @@ class TVibro : public TMiso  {
    /** flag for start(1,2,0)  */
    int isStart = 1;
    /** old values and misc */
-   double u_old, f_old, x_old, x_old2, tdt2;
+   double u_old = 0, f_old = 0, x_old = 0, x_old2 = 0, tdt2 = 1;
 
    DCL_DEFAULT_STATIC;
 };

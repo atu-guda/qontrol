@@ -52,7 +52,7 @@ double TCorrAnalysis::f( double t )
 {
   int add;
   double x = in_x, y = in_y;
-  ii++;
+  ++ii;
   if( useReset && in_rst > 0.1 ) { // history was < 0.1
     reset_data();
   };
@@ -69,7 +69,7 @@ double TCorrAnalysis::f( double t )
   if( add ) {
     s_x += x; s_x2 += x*x; s_y += y; s_y2 += y*y;
     s_xy += x * y;
-    n++;
+    ++n;
   };
   if( ( ii >= model_nn-1 || ( useCalc && in_calc > 0.1 ))   ) {
     calc();

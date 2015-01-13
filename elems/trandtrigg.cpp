@@ -72,7 +72,7 @@ int TRandTrigg::do_startLoop( int acnx, int acny )
 
 double TRandTrigg::f( double /* t */ )
 {
-  double du, rv, uc = in_u;
+  double du, uc = in_u;
   du = uc - u_old; u_old = uc;
   if( ns == -1 ) { du = 0; ns = 0; };
   if( useForce && in_force > 0.1 ) {
@@ -84,7 +84,7 @@ double TRandTrigg::f( double /* t */ )
     return ( currOut ) ? 1 : ( useZero ? 0 : -1 );
   };
   if( ( useLevel && uc > 0.1 ) || ( !useLevel && fabs(du) > 0.5 ) ) {
-    rv = rng.flat( 0, 1 );
+    double rv = rng.flat( 0, 1 );
     if( rv <= prob || nforce <= 1 || ns >= nforce-1 ) {
       ns = 0; currOut = !currOut;
     } else {

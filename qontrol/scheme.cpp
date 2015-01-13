@@ -124,9 +124,8 @@ void Scheme::do_reset()
 
 int Scheme::allStartLoop( int acnx, int acny )
 {
-  int rc;
   for( auto ob : v_el ) {
-    rc = ob->startLoop( acnx, acny );
+    int rc = ob->startLoop( acnx, acny );
     if( !rc ) {
       return 0;
     }

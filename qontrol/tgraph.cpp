@@ -272,7 +272,7 @@ int TGraph::prepare()
   reset();
   double vmin = DMAX, vmax = DMIN; // cross! (local copy of v_min, v_max)
   bool was_x = false, was_y = false;
-  vector<double> ve_fx, ve_fy, ze_zero; // arrays for missing data
+  vector<double> ve_fx, ve_fy; // arrays for missing data
 
   for( auto c : children() ) {
     GraphElem *ge = qobject_cast<GraphElem*>( c );
@@ -463,7 +463,7 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
     return 0;
   }
   const dvector *ve_x = ge_x->ve;
-  if( !ge_x ) { // unlikely
+  if( !ve_x ) { // unlikely
     DBGx( "warn: X axis array not found!!!" );
     return 0;
   }

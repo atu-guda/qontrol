@@ -172,7 +172,7 @@ class TModel : public TDataContainer  {
   /** end loop flag: to be set by fback() */
   int end_loop = 0;
   /** real start time */
-  double start_time;
+  double start_time = 0;
   // copy of simulation vars - but w/o onject access - just for speed;
   int N = 10, N1 = 1, N2 = 1, syncRT = 0, n_iosteps = 1;
 

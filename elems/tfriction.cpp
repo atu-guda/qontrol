@@ -53,7 +53,7 @@ int TFriction::do_startLoop( int /*acnx*/, int /*acny*/ )
 
 double TFriction::f( double /* t */ )
 {
-  double f, x, f_fv, f_fd, cf_mx;
+  double f, x, f_fd, cf_mx;
   double fx = in_u;
   if( useMf )
     cf_mx = in_f_mx;
@@ -73,7 +73,7 @@ double TFriction::f( double /* t */ )
     };
   } else { // moving
     f_fd = - sign(v_old) * cf_mx;
-    f_fv = - v_old * kfv;
+    double f_fv = - v_old * kfv;
     Ff = f = fx + f_fd + f_fv;
     v = v_old + f * tdt / mass;
     if( v * v_old > 0 )

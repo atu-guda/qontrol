@@ -770,14 +770,14 @@ bool HolderData::setData( const QString &nm, const QVariant &da )
   NameType nm_type = splitName( nm, first, rest, idx );
   if( nm_type == badName ) {
     DBGx( "warn: bad target name \"%s\"", qP(nm) );
-    return 0;
+    return false;
   }
 
   HolderData *ho = getElem( first );
   if( !ho ) {
     DBGx( "warn: fail to find name \"%s\" in \"%s\"",
           qP(first), qP(getFullName()) );
-    return 0;
+    return false;
   }
   if( nm_type == simpleName ) { // first only
     return ho->set( da, idx );
@@ -786,15 +786,10 @@ bool HolderData::setData( const QString &nm, const QVariant &da )
   // both part of name exists
   if( ho->getTp() != QVariant::UserType || ! ho->isObject() ) {
     DBGx( "warn: compound name required (set \"%s\" ) in \"%s\"", qP(first), qP(getFullName()) );
-    return 0;
+    return false;
   }
 
   return ho->setData( rest, da );
-  if( ! nm.isEmpty() ) { // only w/o name
-    DBGx( "warn: complex name \"%s\" req for simple obj %s",
-        qP(nm), qP(objectName()) )
-    return false;
-  }
 }
 
 bool HolderData::setD( const QString &nm, int da )
@@ -1414,24 +1409,30 @@ void HolderIntArray::reset_dfl()
 {
   int n = 1, v0 = 0;
   QString s = getParm("N");
-  if( ! s.isEmpty() )
+  if( ! s.isEmpty() ) {
     n = s.toInt();
+  }
   s = getParm("def");
+  if( ! s.isEmpty() ) {
+    v0 = s.toInt();
+  }
   v.assign( n, v0 );
 
   s = getParm("defs");
   if( ! s.isEmpty() ) {
     QStringList sl = s.split( " ", QString::SkipEmptyParts );
-    if( sl.size() > (int)v.size() )
+    if( sl.size() > (int)v.size() ) {
       v.assign( sl.size(), v0 );
+    }
 
-    int vc, i = 0;
+    int i = 0;
     bool ok;
     for( auto cs : sl ) {
-      vc = cs.toInt( &ok, 0 ); // 0 = auto base
-      if( ok )
+      int vc = cs.toInt( &ok, 0 ); // 0 = auto base
+      if( ok ) {
         v[i] = vc;
-      ++i;
+      }
+      i++;
     }
   }
 
@@ -1485,10 +1486,9 @@ bool HolderIntArray::fromString( const QString &s )
   bool ok;
   QStringList sl = s.split(" ", QString::SkipEmptyParts );
   v.clear(); v.reserve( sl.size() );
-  int vc;
 
   for( auto s : sl ) {
-    vc = s.toInt( &ok, 0 ); // 0 = auto base
+    int vc = s.toInt( &ok, 0 ); // 0 = auto base
     v.push_back( vc );
   }
 
@@ -1529,25 +1529,31 @@ void HolderDoubleArray::reset_dfl()
   int n = 1;
   double v0 = 0;
   QString s = getParm("N");
-  if( ! s.isEmpty() )
+  if( ! s.isEmpty() ) {
     n = s.toInt();
+  }
+
   s = getParm("def");
+  if( ! s.isEmpty() ) {
+    v0 = s.toDouble();
+  }
   v.assign( n, v0 );
 
   s = getParm("defs");
   if( ! s.isEmpty() ) {
     QStringList sl = s.split( " ", QString::SkipEmptyParts );
-    if( sl.size() > (int)v.size() )
+    if( sl.size() > (int)v.size() ) {
       v.assign( sl.size(), v0 );
+    }
 
-    double vc;
     int i = 0;
     bool ok;
     for( auto cs : sl ) {
-      vc = cs.toDouble( &ok );
-      if( ok )
+      double vc = cs.toDouble( &ok );
+      if( ok ) {
         v[i] = vc;
-      ++i;
+      }
+      i++;
     }
   }
 
@@ -1601,10 +1607,9 @@ bool HolderDoubleArray::fromString( const QString &s )
   bool ok;
   QStringList sl = s.split(" ", QString::SkipEmptyParts );
   v.clear(); v.reserve( sl.size() );
-  double vc;
 
   for( auto s : sl ) {
-    vc = s.toDouble( &ok );
+    double vc = s.toDouble( &ok );
     v.push_back( vc );
   }
 

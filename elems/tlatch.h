@@ -53,7 +53,7 @@ class TLatch : public TMiso  {
    /** current value */
    PRM_DOUBLE( v, efInner, "v", "Current value", "" );
    /** old input  */
-   double u_old;
+   double u_old = 0;
    /** flags, state */
    PRM_SWITCH( usePulse, efNRC, "use Pulse", "latch on jump of u[1] (>0.5), not level", "sep=col" );
    PRM_SWITCH( useFirst, efNRC, "use First", "count only first signal to latch", "" );

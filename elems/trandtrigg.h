@@ -77,11 +77,11 @@ class TRandTrigg : public TMiso  {
    double u_old = 0;
 
    /** start value of seed */
-   int sseed;
+   int sseed = 1;
    /** effective value of seedType */
-   int eff_seedType;
+   int eff_seedType = 0;
    /** copy valuse of base seed */
-   int bseed;
+   int bseed = 1;
    /** generator */
    RandGenerator rng;
 
