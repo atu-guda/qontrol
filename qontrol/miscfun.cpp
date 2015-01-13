@@ -285,7 +285,7 @@ void handleWarn( QWidget* par, const QString &s )
 
 TCircBuf::TCircBuf( unsigned nn ) :
   nb(nn), s(0), nf(0), ni(0), su(0),
-  d( nb + 2, 0 )
+  d( nb, 0 )
 {
   reset();
 }
@@ -298,6 +298,13 @@ TCircBuf::~TCircBuf()
 void TCircBuf::reset()
 {
   s = nf = ni = 0; su = 0;
+}
+
+void TCircBuf::resize( unsigned n )
+{
+  reset();
+  d.resize( n, 0 );
+  nb = n;
 }
 
 void TCircBuf::add( double a )

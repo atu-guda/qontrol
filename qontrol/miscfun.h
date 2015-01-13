@@ -83,10 +83,11 @@ void handleWarn( QWidget* par, const QString &s );
 class TCircBuf {
  public:
    explicit TCircBuf( unsigned nn );
-   TCircBuf( const TCircBuf &r ) = delete;
+   TCircBuf( const TCircBuf &r ) = default;
    ~TCircBuf();
-   TCircBuf& operator=( const TCircBuf &r ) = delete;
+   TCircBuf& operator=( const TCircBuf &r ) = default;
    void reset();
+   void resize( unsigned n ); // reset implied
    void add( double a );
    int getN() const { return nf; }
    double operator[]( int i ) const;

@@ -32,7 +32,6 @@ CTOR(TDelay,TMiso)
 
 TDelay::~TDelay()
 {
-  delete buf; buf = 0; // in case of do_postRun missing
 }
 
 
@@ -44,20 +43,24 @@ double TDelay::f( double t )
   }
 
   if( prm_mod ) {
-    if( mdelay < cdelay )
+    if( mdelay < cdelay ) {
       cdelay = (double)mdelay;
+    }
     double v = cdelay / tdt;
     icd = int( v );
     v2 = v - icd; v1 = 1.0 - v2;
   }
 
   double cu = in_u;
-  if( t < 1.3 * tdt )
+  if( t < 1.3 * tdt ) {
     u00 = cu;
+  }
+
   buf->add( cu );
   a1 = (*buf)[icd]; a2 = (*buf)[icd+1];
-  if( t < cdelay )
+  if( t < cdelay ) {
     return u00;
+  }
   return v1 * a1 + v2 * a2;
 }
 
@@ -65,13 +68,13 @@ int TDelay::do_preRun( int /*run_tp*/, int /*an*/,
                        int /*anx*/, int /*any*/, double /*atdt*/ )
 {
   imd = int( mdelay / tdt );
-  buf = new TCircBuf( imd );
+  buf.reset( new TCircBuf( imd ) );
   return 1;
 }
 
 int TDelay::do_postRun( int /*good*/ )
 {
-  delete buf; buf = 0;
+  buf.release();
   return 1;
 }
 

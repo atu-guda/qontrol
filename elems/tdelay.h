@@ -18,6 +18,8 @@
 #ifndef TDELAY_H
 #define TDELAY_H
 
+#include <memory>
+
 #include <tmiso.h>
 class TCircBuf;
 
@@ -56,7 +58,7 @@ class TDelay : public TMiso  {
    /** max and current delays indexes ... */
    int imd = 0, icd = 0;
    /** data container */
-   TCircBuf *buf = nullptr;
+   std::unique_ptr<TCircBuf> buf;
    DCL_DEFAULT_STATIC;
 };
 
