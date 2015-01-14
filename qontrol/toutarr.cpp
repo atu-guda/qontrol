@@ -261,6 +261,29 @@ double TOutArr::at( int x, int y ) const
   return at( x + y * nx );
 }
 
+double TOutArr::getLast() const
+{
+  if( n < 1 ) {
+    return 0;
+  }
+  return arr[n-1];
+}
+
+double TOutArr::atT( double T ) const
+{
+  if( type != OutArrType::outSimple  ||  n < 1 ) {
+    return 0;
+  }
+
+  TModel *model = getAncestorT<TModel>();
+  if( !model ) {
+    return 0;
+  }
+  double tdt = model->getDataD( "tdt", 1.0 );
+  int idx = (int)( 0.5 + T / tdt );
+  return at( idx );
+}
+
 void TOutArr::put( int i, double v )
 {
   if( i >=n || i<0 ) {

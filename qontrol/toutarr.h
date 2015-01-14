@@ -77,6 +77,8 @@ class TOutArr : public TDataSet  {
    //* access to one element by 1 ind 2 index
    Q_INVOKABLE double at( int i ) const;
    Q_INVOKABLE double at( int x, int y ) const;
+   Q_INVOKABLE double getLast() const;
+   Q_INVOKABLE double atT( double T ) const;
    Q_INVOKABLE void put( int i, double v );
    Q_INVOKABLE void put( int x, int y, double v );
    Q_INVOKABLE void add( double v );
