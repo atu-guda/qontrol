@@ -39,6 +39,9 @@ int main( int argc, char *argv[] )
 
   QApplication a( argc, argv );
 
+  prog_opts.inc_dirs << ".";
+  prog_opts.inc_dirs << "./scripts";
+
   int op;
   while( ( op=getopt( argc, argv, "hvbNMc:g:o:s:u:x:I:X:d::" ) ) != -1 ) {
     switch( op ) {
@@ -64,6 +67,8 @@ int main( int argc, char *argv[] )
       default: cerr << "Error: unknown option '" << (char)(optopt) << "'" << endl;
     }
   }
+
+  QDir::setSearchPaths( "scripts", prog_opts.inc_dirs );
 
   if( ! prog_opts.batch ) { // process with interface
     LaboWin *main_win = new LaboWin();
@@ -166,6 +171,7 @@ int batch_process( const char *model_file )
 
   for( auto f: prog_opts.s_files ) {
     if( prog_opts.dbg > 0 ) {
+      f.prepend( "scripts:" );
       cerr << "Executing script file " << qP(f) << endl;
       if( QFile::exists( f ) ) {
         QFile sf( f );

@@ -246,8 +246,6 @@ class LaboWin : public QMainWindow
     void initIface();
     /** setup the statusbar */
     void initStatusBar();
-    /** fill directories where resources reside */
-    void initDirs();
     /** recreate fonts from config */
     void setFonts();
 

@@ -47,7 +47,6 @@ LaboWin::LaboWin()
   printer = new QPrinter;
   untitledCount = 0;
 
-  initDirs();
   // call inits to invoke all other construction parts
   setFonts();
   initIface();
@@ -67,60 +66,6 @@ LaboWin::~LaboWin()
   labowin = nullptr;
 }
 
-void LaboWin::initDirs() // TODO: remove or rewrite
-{
-  QStringList dl;
-  QString app = L8B( "share/" PACKAGE );
-  QString sep = L8B( "/" );
-  QString prefix = L8B( "/usr" ); // TODO: from config
-
-  QString xbuild_dir;
-  QDir d( qApp->applicationDirPath() );
-  d.makeAbsolute();
-  xbuild_dir = d.canonicalPath() + sep + app;
-  // DBGx( "dbg: test build dir: \"%s\"", qP(xbuild_dir) );
-  if( d.exists( L8B( "main.cpp" ) )
-      && d.exists( app  ) ) {
-    dl << xbuild_dir;
-    // DBGx( "dbg: add build dir: \"%s\"", qP(xbuild_dir) );
-  };
-
-  QString global_dir;
-  d.setPath( prefix + sep + app );
-  global_dir = d.canonicalPath();
-  // DBGx( "dbg: test global dir: \"%s\"", qP(global_dir) );
-  if( d.isReadable() ) {
-    dl << global_dir;
-    // DBGx( "dbg: add global dir: \"%s\"", qP(global_dir) );
-  };
-
-  QString local_dir;
-  d.setPath( QDir::homePath() + sep + app );
-  d.makeAbsolute();
-  local_dir = d.canonicalPath();
-  // DBGx( "dbg: test local dir: \"%s\"", qP(local_dir) );
-  if( d.isReadable() ) {
-    dl << local_dir;
-    // DBGx( "dbg: add local dir: \"%s\"", qP(local_dir) );
-  };
-
-
-  QString env_dir;
-  const char *evar = getenv("QONTROL_DIR");
-  if( evar ) {
-    d.setPath( L8B(evar) );
-    if( d.isReadable() ) {
-      d.makeAbsolute();
-      env_dir = d.canonicalPath();
-      dl << env_dir;
-      DBGx( "dbg: add env dir: \"%s\"", qP(env_dir) );
-    };
-  };
-
-  QDir::setSearchPaths("app", dl );
-  // DBGx( "dbg: app dirs: \"%s\"", qP( QDir::searchPaths("app").join(" ") ) );
-
-}
 
 void LaboWin::setFonts()
 {
