@@ -1,15 +1,21 @@
+Dump TOutArr/TGraph commandline (-u/-U)
+Run script before/after run (+ file)
+Scripts dir (-I) + JS include
 Output file + View global log?
+Renew debug/messages/script output + config severity qInstallMessageHandler
+Inputs
+Outputs
+Tests
 Autocorrelation?
 Widget for link: after new hierarchy
 
 Propagate modified flag up to root?
 Application config: to TDataSet?
 
-Rebreand to Qontrol
 JS run dialog. + pr JS function
 Set more data while object creation
 
-LaboWin::initDirs?
+LaboWin::initDirs? - to main
 Sub simulation? / set of dialog-ed values before run
 Add to model object: common parameters. Is really need? Use params in model/scheme/simulation
 Add to model object: functions? but what?
@@ -22,13 +28,11 @@ unify add param/object : add_obj_param? + dialog
 RunWindow?
 Edit large arrays
 More data/controls: Font, Date, Time
-run w/o interface fun:
 TCircBuf + TDelay re*
 Hide startLoop - like fun,f
 Auto create GET/SET function for my datas, create Qt properties - scripts. ? FAIL?
 order -> only hint?
 js/large text edit widget + button/dialog + external editor (partial done)?
-Tests
 
 
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model

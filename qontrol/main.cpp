@@ -40,20 +40,23 @@ int main( int argc, char *argv[] )
   QApplication a( argc, argv );
 
   int op;
-  while( ( op=getopt( argc, argv, "hvbc:g:o:s:u:x:X:d::" ) ) != -1 ) {
+  while( ( op=getopt( argc, argv, "hvbNMc:g:o:s:u:x:I:X:d::" ) ) != -1 ) {
     switch( op ) {
       case 'h' : print_usage( argv[0] ); return 0;
       case 'v' : cout << PACKAGE << ' ' << VERSION << endl;  return 0;
       case 'b': prog_opts.batch = true; break;
+      case 'N': prog_opts.norun = true; break;
+      case 'M': prog_opts.mod_scr = true; break;
       case 'c': fn_new = optarg; prog_opts.batch = true; break;
       case 'g': prog_opts.out_plots << L8B( optarg ); break;
-      case 'o': prog_opts.out_file = optarg; break;
-      case 's': prog_opts.sim_name = optarg; break;
+      case 'o': prog_opts.out_file = L8B( optarg ); break;
+      case 's': prog_opts.sim_name = L8B( optarg ); break;
       case 'u': prog_opts.out_vars << L8B( optarg ); break;
-      case 'x': prog_opts.script = optarg; break;
-      case 'X': prog_opts.file_script = optarg; break;
-      case 'd': if( optarg ) { 
-                  prog_opts.dbg = atoi( optarg ); 
+      case 'x': prog_opts.script = L8B( optarg ); break;
+      case 'X': prog_opts.s_files << L8B( optarg ); break;
+      case 'I': prog_opts.inc_dirs << L8B( optarg ); break;
+      case 'd': if( optarg ) {
+                  prog_opts.dbg = atoi( optarg );
                 } else {
                   ++prog_opts.dbg;
                 };
@@ -92,6 +95,7 @@ int main( int argc, char *argv[] )
 
 void print_usage( const char *appname )
 {
+  // TODO: after options relaxation, fill here
   cout << "Usage: \n" << appname << " [-h] [-v] [files...]" << endl;
 }
 
@@ -122,37 +126,66 @@ int batch_process( const char *model_file )
     return 5;
   }
 
-  // TODO: sim!
-  if( prog_opts.sim_name ) {
-    QString sim_name = L8B( prog_opts.sim_name );
-    if( ! model->setActiveSimul( sim_name ) ) {
-      cerr << "Not found simulation \"" << prog_opts.sim_name << "\" in model" << endl;
+  if( ! prog_opts.sim_name.isEmpty() ) {
+    if( ! model->setActiveSimul( prog_opts.sim_name ) ) {
+      cerr << "Not found simulation \"" << qP(prog_opts.sim_name) << "\" in model" << endl;
       return 4;
     }
   }
-  cout << "Starintg run: " << endl;
-  int rc = model->run_bg();
-  cout << "End run, rc= " << rc << endl;
 
-  if( rc ) {
-    for( auto nm : prog_opts.out_vars ) {
-      QString v = model->getOutValue( nm );
-      cout << qP(nm) << " = " << qP( v ) << endl;
-    };
+  if( ! prog_opts.norun ) {
+    cout << "Starintg run: " << endl;
+    int rc = model->run_bg();
+    cout << "End run, rc= " << rc << endl;
 
-    for( auto nm : prog_opts.out_plots ) {
-      QStringList pc = nm.split( ":" );
-      if( pc.size() < 1 ) { continue; }
-      QString gname = pc[0];
-      QString gfile = gname + "_out.png";
-      if( pc.size() > 1 ) {
-        gfile = pc[1];
-      }
-      model->plotToPng( gname, gfile );
-    };
+    if( rc ) {
+      for( auto nm : prog_opts.out_vars ) {
+        QString v = model->getOutValue( nm );
+        cout << qP(nm) << " = " << qP( v ) << endl;
+      };
+
+      for( auto nm : prog_opts.out_plots ) {
+        QStringList pc = nm.split( ":" );
+        if( pc.size() < 1 ) { continue; }
+        QString gname = pc[0];
+        QString gfile = gname + "_out.png";
+        if( pc.size() > 1 ) {
+          gfile = pc[1];
+        }
+        model->plotToPng( gname, gfile );
+      };
+    }
   }
 
-  return 10;
+  if( prog_opts.mod_scr ) {
+    if( prog_opts.dbg > 0 ) {
+      cerr << "Running model script" << endl;
+    }
+    model->runModelScript();
+  }
+
+  for( auto f: prog_opts.s_files ) {
+    if( prog_opts.dbg > 0 ) {
+      cerr << "Executing script file " << qP(f) << endl;
+      if( QFile::exists( f ) ) {
+        QFile sf( f );
+        if( ! sf.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
+          cerr << "Fail to open file " << qP(f) << endl;
+          continue; // TODO: may be exit?
+        }
+        QByteArray scr = sf.readAll();
+        if( ! scr.isEmpty() ) {
+          model->runScript( scr );
+        }
+      }
+    }
+  }
+
+  if( ! prog_opts.script.isEmpty() ) {
+    model->runScript( prog_opts.script );
+  }
+
+  return 0;
 }
 
 // end of main.cpp

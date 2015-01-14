@@ -80,14 +80,17 @@ constexpr char RE_FULLNAME[]
 
 // options passed to program
 struct ProgOpts {
-  bool batch = false;           // -b
-  int dbg = 0;                  // -d - increase debug level -dN - set
-  const char *script = nullptr; // -x "JS code"
-  const char *file_script = nullptr; // -X file_with_script.js
-  const char *out_file = nullptr; // -o output_file.txt
-  const char *sim_name = nullptr; // -s sumulation name, def = sim0
-  QStringList out_vars;           // -u T
-  QStringList out_plots;          // -g graph:file.png  or  -g graph
+  bool batch = false;    // -b
+  bool norun  = false;   // -N
+  bool mod_scr = false;  // -M
+  int dbg = 0;           // -d - increase debug level -dN - set
+  QString script;        // -x "JS code"
+  QStringList s_files;   // -X file_with_script.js
+  QString out_file;      // -o output_file.txt
+  QString sim_name;      // -s sumulation name, def = sim0
+  QStringList out_vars;  // -u T
+  QStringList out_plots; // -g graph:file.png  or  -g graph
+  QStringList inc_dirs;  // -Idir
 };
 
 extern ProgOpts prog_opts; // defined in main.cpp
