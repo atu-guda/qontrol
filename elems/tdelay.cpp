@@ -17,7 +17,7 @@
 
 #include "tdelay.h"
 #include "miscfun.h"
-#include "tdelay.h"
+#include "circbuf.h"
 
 const char* TDelay::helpstr = "<H1>TDelay</H1>\n"
  "Delay signal for given time: <br>\n"

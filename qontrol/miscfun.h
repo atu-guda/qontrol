@@ -78,31 +78,6 @@ QString tex2label( const QString &t );
 
 void handleError( QWidget* par, const QString &s );
 void handleWarn( QWidget* par, const QString &s );
-// ------------- miscelanios classes -----------------------------
-
-class TCircBuf {
- public:
-   explicit TCircBuf( unsigned nn );
-   TCircBuf( const TCircBuf &r ) = default;
-   ~TCircBuf();
-   TCircBuf& operator=( const TCircBuf &r ) = default;
-   void reset();
-   void resize( unsigned n ); // reset implied
-   void add( double a );
-   int getN() const { return nf; }
-   double operator[]( int i ) const;
-   double sum() const { return su; }
-   double sumCalc(); // force recalc sum
- protected:
-   unsigned nb; //* buffer size
-   unsigned s;  //* start index
-   unsigned nf; //* number of inserted points [0;nb-1]
-   unsigned ni; //* number of insertion after sum recalc
-   double su;   //* current sum
-   std::vector<double> d;
-   static const constexpr unsigned recalc_after = 10000;
-};
-
 
 #endif
 

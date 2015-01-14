@@ -15,6 +15,7 @@ LIBS += -lfftw3
 
 SOURCES += \
   addelemdia.cpp \
+  circbuf.cpp \
   contgraph.cpp \
   contout.cpp \
   datacont.cpp \
@@ -79,6 +80,7 @@ SOURCES += \
 
 HEADERS += \
   addelemdia.h \
+  circbuf.h \
   contgraph.h \
   contout.h \
   datacont.h \
