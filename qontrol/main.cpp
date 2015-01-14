@@ -43,11 +43,12 @@ int main( int argc, char *argv[] )
   prog_opts.inc_dirs << "./scripts";
 
   int op;
-  while( ( op=getopt( argc, argv, "hvbNMc:g:o:s:u:x:I:X:d::" ) ) != -1 ) {
+  while( ( op=getopt( argc, argv, "hvbeNMc:g:o:s:u:x:I:X:d::" ) ) != -1 ) {
     switch( op ) {
       case 'h' : print_usage( argv[0] ); return 0;
       case 'v' : cout << PACKAGE << ' ' << VERSION << endl;  return 0;
       case 'b': prog_opts.batch = true; break;
+      case 'e': prog_opts.exit_st = true; break;
       case 'N': prog_opts.norun = true; break;
       case 'M': prog_opts.mod_scr = true; break;
       case 'c': fn_new = optarg; prog_opts.batch = true; break;
@@ -120,6 +121,7 @@ int convert_model( const char *fn_old, const char *fn_new )
 
 int batch_process( const char *model_file )
 {
+  int rc = 0;
   LaboDoc doc;
   if( ! doc.openDocumentXML( L8B( model_file ) ) ) {
     cerr << "Fail to read file \"" << model_file << "\"" << endl;
@@ -166,32 +168,51 @@ int batch_process( const char *model_file )
     if( prog_opts.dbg > 0 ) {
       cerr << "Running model script" << endl;
     }
-    model->runModelScript();
+    QString o = model->runModelScript();
+    cerr << "Model script result: \"" << qP(o) << "\"" << endl;
+    if( prog_opts.exit_st ) {
+      rc = (int)( o.toDouble() ); // to allow narrowing
+    }
   }
 
   for( auto f: prog_opts.s_files ) {
     if( prog_opts.dbg > 0 ) {
-      f.prepend( "scripts:" );
       cerr << "Executing script file " << qP(f) << endl;
-      if( QFile::exists( f ) ) {
-        QFile sf( f );
-        if( ! sf.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
-          cerr << "Fail to open file " << qP(f) << endl;
-          continue; // TODO: may be exit?
-        }
-        QByteArray scr = sf.readAll();
-        if( ! scr.isEmpty() ) {
-          model->runScript( scr );
+    }
+    f.prepend( "scripts:" );
+    if( QFile::exists( f ) ) {
+      QFile sf( f );
+      if( ! sf.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
+        cerr << "Fail to open file " << qP(f) << endl;
+        continue; // TODO: may be exit?
+      }
+      QByteArray scr = sf.readAll();
+      if( ! scr.isEmpty() ) {
+        QString o = model->runScript( scr );
+        cerr << "Script result: \"" << qP(o) << "\"" << endl;
+        if( prog_opts.exit_st ) {
+          rc = (int)( o.toDouble() ); // to allow narrowing
         }
       }
     }
   }
 
   if( ! prog_opts.script.isEmpty() ) {
-    model->runScript( prog_opts.script );
+    QString o = model->runScript( prog_opts.script );
+    cerr << "Script result: \"" << qP(o) << "\"" << endl;
+    if( prog_opts.exit_st ) {
+      rc = (int)( o.toDouble() ); // to allow narrowing
+      if( prog_opts.dbg > 0 ) {
+        cerr << "Script return value: " << rc <<  endl;
+      }
+    }
   }
 
-  return 0;
+  if( prog_opts.dbg > 0 ) {
+    cerr << "Batch return value: " << rc << " exit_st: " <<  prog_opts.exit_st << endl;
+  }
+
+  return rc;
 }
 
 // end of main.cpp

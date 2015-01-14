@@ -83,6 +83,7 @@ struct ProgOpts {
   bool batch = false;    // -b
   bool norun  = false;   // -N
   bool mod_scr = false;  // -M
+  bool exit_st = false;  // -e scipt exit str to exit status
   int dbg = 0;           // -d - increase debug level -dN - set
   QString script;        // -x "JS code"
   QStringList s_files;   // -X file_with_script.js
