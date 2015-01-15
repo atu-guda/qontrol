@@ -12,6 +12,7 @@
 #include <QString>
 #include <QRegExp>
 #include <QMessageBox>
+#include <QDebug>
 
 #include "miscfun.h"
 
@@ -267,7 +268,7 @@ double limitAngleDeg( double a )
 
 void handleError( QWidget* par, const QString &s )
 {
-  DBGx( "err: %s", qP(s) );
+  qCritical() << s << WHE; // TODO: macros
   if( ! prog_opts.batch ) {
     QMessageBox::critical( par, PACKAGE ": Error", s,  QMessageBox::Ok );
   }
@@ -275,7 +276,7 @@ void handleError( QWidget* par, const QString &s )
 
 void handleWarn( QWidget* par, const QString &s )
 {
-  DBGx( "warn: %s", qP(s) );
+  qWarning() << s << WHE; // TODO: macros
   if( ! prog_opts.batch ) {
     QMessageBox::warning( par, PACKAGE ": Warning", s,  QMessageBox::Ok );
   }

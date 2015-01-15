@@ -107,7 +107,6 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
 LaboView::~LaboView()
 {
-  // DBGx( "dbg: view dtor, doc=%p", doc );
   delete doc; doc = nullptr; // BUG: is here?
 }
 
@@ -403,8 +402,7 @@ void LaboView::qlinkElm()
   if( ! in )
     return;
   if( ! in->setData( "source", toname ) ) {
-    DBGx( "warn: fail to set source in \"%s\" to \"%s\"",
-          qP(in->objectName()), qP(toname) );
+    qWarning() << "fail to set source " << toname << " in " << in->getFullName() << WHE;
     return;
   }
   main_s->reportStructChanged();
@@ -429,7 +427,7 @@ void LaboView::qplinkElm()
 
   InputParams *pis = selObj->getElemT<InputParams*>("pis");
   if( !pis ) {
-    DBGx( "err: no pis object in \"%s\"", qP(selObj->getFullName()) );
+    qWarning() << "no pis object in " <<  selObj->getFullName() << WHE;
     return;
   }
   int n_pi = pis->size();
@@ -467,7 +465,7 @@ void LaboView::unlinkElm()
 
   InputParams *pis = selObj->getElemT<InputParams*>("pis");
   if( !pis ) {
-    DBGx( "err: no pis object in \"%s\"", qP(selObj->getFullName()) );
+    qWarning() << "no pis object in " <<  selObj->getFullName() << WHE;
     return;
   }
   qDeleteAll( pis->children() );
@@ -944,18 +942,18 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
   }
   QString nm = getSelName( outs_view );
   if( nm.isEmpty() ) {
-    DBGx( "warn: output array not selectd" );
+    qWarning() << "output array not selected" << WHE;
     return;
   }
   arr = model->getOutArr( nm );
   if( !arr ) {
-    DBGx( "warn: fail to find output array \"%s\"", qP(nm) );
+    qWarning() << "fail to find output array " <<  nm << WHE;
     return;
   }
 
   int k = arr->fillDatasInfo( &di );
   if( !k ) {
-    DBGx( "warn: fail to fill info about output array \"%s\" (%d)", qP(arr->getFullName()), k );
+    qWarning() << "fail to fill info about output array " <<  arr->getFullName() << WHE;
     return;
   }
 
@@ -1427,7 +1425,8 @@ void LaboView::showTreeModel()
 void LaboView::initEngine()
 {
   if( ! model ) {
-    DBG1( "ERR: no model" );
+    qCritical() << "no model" << WHE;
+    return;
   }
   model->initEngine();
 }
@@ -1435,7 +1434,8 @@ void LaboView::initEngine()
 QString LaboView::runScript( const QString& script )
 {
   if( ! model ) {
-    DBG1( "ERR: no model" );
+    qCritical() << "no model" << WHE;
+    return QString::null;
   }
   QString r = model->runScript( script );
   return r;
@@ -1444,7 +1444,8 @@ QString LaboView::runScript( const QString& script )
 QString LaboView::runModelScript()
 {
   if( ! model ) {
-    DBG1( "ERR: no model" );
+    qCritical() << "no model" << WHE;
+    return QString::null;
   }
   QString r = model->runModelScript();
   return r;
@@ -1455,8 +1456,8 @@ QString LaboView::runModelScript()
 // TODO: 2-pane dialog + script pool
 void LaboView::runScript()
 {
-  if( ! doc || ! root ) {
-    DBG1( "ERR: can run script w/o doc or root" );
+  if( ! model ) {
+    qCritical() << "no model" << WHE;
     return;
   }
   // TODO: special class to edit js and view results

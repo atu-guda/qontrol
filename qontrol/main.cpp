@@ -28,10 +28,12 @@ using namespace std;
 
 ProgOpts prog_opts;
 QString log_app;
+QTextStream *os = nullptr;
 
 void print_usage( const char *appname );
 int  convert_model( const char *fn_old, const char *fn_new );
 int batch_process( const char *model_file );
+void appMsgOut( QtMsgType type, const QMessageLogContext &ctx, const QString &msg );
 
 int main( int argc, char *argv[] )
 {
@@ -39,6 +41,7 @@ int main( int argc, char *argv[] )
   setenv( "LC_NUMERIC", "C", 1 );
 
   QApplication a( argc, argv );
+  qInstallMessageHandler( appMsgOut );
 
   prog_opts.inc_dirs << ".";
   prog_opts.inc_dirs << "./scripts";
@@ -67,7 +70,18 @@ int main( int argc, char *argv[] )
                 };
                 break;
       default: cerr << "Error: unknown option '" << (char)(optopt) << "'" << endl;
+               return 1;
     }
+  }
+
+  QFile out_file; QTextStream out_stream;
+  if( ! prog_opts.out_file.isEmpty() ) {
+    out_file.setFileName( prog_opts.out_file );
+    if( out_file.open( QIODevice::WriteOnly | QIODevice::Text ) ){
+      out_stream.setDevice( &out_file );
+      os = &out_stream;
+    }
+
   }
 
   QDir::setSearchPaths( "scripts", prog_opts.inc_dirs );
@@ -78,7 +92,11 @@ int main( int argc, char *argv[] )
     main_win->show();
 
     for( int i=optind; i<argc ; ++i ) {
-      main_win->doFileOpenXML( QString::L8B( argv[1] ) );
+      QString fn = QString::L8B( argv[i] );
+      if( prog_opts.dbg>0 ) {
+        qDebug() << "Try to open file" << fn << WHE;
+      }
+      main_win->doFileOpenXML( fn );
     }
     a.setApplicationDisplayName( PACKAGE );
 
@@ -125,31 +143,36 @@ int batch_process( const char *model_file )
   int rc = 0;
   LaboDoc doc;
   if( ! doc.openDocumentXML( L8B( model_file ) ) ) {
-    cerr << "Fail to read file \"" << model_file << "\"" << endl;
+    qCritical() << "Fail to read file " << model_file << WHE;
     return 3;
   }
   TModel *model = doc.getModel();
   if( !model ) {
-    cerr << "Not found model in file" << endl;
+    qCritical() << "Not found model in file" << model_file << WHE;
     return 5;
   }
 
   if( ! prog_opts.sim_name.isEmpty() ) {
     if( ! model->setActiveSimul( prog_opts.sim_name ) ) {
-      cerr << "Not found simulation \"" << qP(prog_opts.sim_name) << "\" in model" << endl;
+      qCritical() << "Not found simulation " << prog_opts.sim_name << " in model" << WHE;
       return 4;
     }
   }
 
   if( ! prog_opts.norun ) {
-    cout << "Starintg run: " << endl;
+    if( prog_opts.dbg > 0 ) {
+      qDebug() << "Starintg run: ";
+    }
     int rc = model->run_bg();
-    cout << "End run, rc= " << rc << endl;
+    cerr << "End run, rc= " << rc << endl;
 
     if( rc ) {
       for( auto nm : prog_opts.out_vars ) {
         QString v = model->getOutValue( nm );
         cout << qP(nm) << " = " << qP( v ) << endl;
+        if( os ) {
+          *os << nm << " = " << v << endl;
+        }
       };
 
       for( auto nm : prog_opts.out_plots ) {
@@ -214,6 +237,24 @@ int batch_process( const char *model_file )
   }
 
   return rc;
+}
+
+void appMsgOut( QtMsgType type, const QMessageLogContext & /*ctx*/, const QString &msg )
+{
+  static const char *msgStr[] = { "dbg: ", "warn:", "err: ", "Fatal!", "??5", "??6" };
+  if( type > QtFatalMsg ) {
+    type = QtCriticalMsg;
+  }
+  QByteArray lm = QByteArray(msgStr[type]) + ' ' + msg.toLocal8Bit() + '\n';
+  //      + "(" + ctx.file + ":" + QByteArray::number(ctx.line) + ", " + ctx.function + '\n';
+  cerr << lm.constData();
+  log_app.append( lm );
+  if( os ) {
+    *os << lm.constData();
+  }
+  if( type == QtFatalMsg ) {
+    abort();
+  }
 }
 
 // end of main.cpp

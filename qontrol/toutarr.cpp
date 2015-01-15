@@ -234,7 +234,7 @@ int TOutArr::dump( const QString &fn, const QString &delim )
 
   QFile of( fn );
   if( ! of.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-    DBGx( "warn: fail to open file \"%s\"", qP( fn ) );
+    qWarning() << "fail to open file "<< fn << NWHE;
     return 0;
   }
   QTextStream os( &of );

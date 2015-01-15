@@ -1136,10 +1136,12 @@ void LaboWin::slotStatusHelpMsg(const QString &text)
   statusBar()->showMessage( text, 2000 );
 }
 
+
 void LaboWin::slotTest()
 {
   QString ostr( "Test called" );
   statusBar()->showMessage( tr( "Test something..." ) );
+  qDebug() << "Test0 in " << objectName() << WHE;
 
   ostr += QString(" <b>em</b>=" ) + QSN(em) + "<br/>\n";
 
@@ -1147,8 +1149,8 @@ void LaboWin::slotTest()
                "\\sum_{i=0}^{N-1}{(a+b+\\epsilon)} {\\Psi}^\\gamma";
 
   QString ls = tex2label( ts );
-  DBGx( "dbg: ts=\"%s\"", qP(ts) );
-  DBGx( "dbg: ls=\"%s\"", qP(ls) );
+  //qDebug() <<  " ts=" << ts << WHE;
+  //qDebug() <<  " ls=" << ls << WHE;
 
   ostr += ts % "<br/>\n" % ls %"<br/>\n";
 
@@ -1187,7 +1189,6 @@ void LaboWin::slotTest()
 
 
   QMessageBox::information( this, tr( "Test" ), ostr, QMessageBox::Ok );
-  log_app.append( ostr );
   statusBar()->showMessage( tr( "Ready." ) );
 }
 

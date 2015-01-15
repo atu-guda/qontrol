@@ -36,7 +36,6 @@ LaboDoc::LaboDoc()
 
 LaboDoc::~LaboDoc()
 {
-  // DBG1( "dbg: dtor" );
   delete rootdata;
   rootdata = nullptr; model = nullptr; // model belong to rootdata
 }
@@ -84,7 +83,7 @@ void LaboDoc::showWarn( const QString &s )
 bool LaboDoc::newDocument()
 {
   if( rootdata ) {
-    DBG1( "warn: non-null rootdata while creation new doc" );
+    qWarning() << "non-null rootdata while creation new doc" << WHE;
     delete rootdata;
     rootdata = nullptr; model = nullptr;
   }
@@ -134,7 +133,6 @@ bool LaboDoc::openDocumentXML(const QString &filename )
       QDomElement ee = cnode.toElement();
       QString elname = ee.attribute( "name" );
       QString tagname = ee.tagName();
-      //DBGx( "dbg: Element tagname: \"%s\" name: \"%s\"", qP(tagname), qP(elname) );
       if( elname == "root" || tagname == "obj" ) {
         obj_root = ee;
         break;
@@ -148,7 +146,7 @@ bool LaboDoc::openDocumentXML(const QString &filename )
   m_filename = filename;
 
   if( rootdata ) {
-    DBG1( "warn: non-null rootdata while opening new doc" );
+    qWarning() << "non-null rootdata while opening new doc" << WHE;
     delete rootdata;
     rootdata = nullptr; model = nullptr;
   }
@@ -158,8 +156,6 @@ bool LaboDoc::openDocumentXML(const QString &filename )
   rootdata->suspendHandleStructChange();
   bool read_ok = rootdata->fromDom( obj_root, errstr );
   if( ! read_ok ) {
-    // QString xxx = rootdata->toString();
-    // DBG1q( xxx );
     delete rootdata;
     rootdata = nullptr;
     showError( QSL("Fail to parse file: ") % filename % " : " % errstr );
@@ -242,7 +238,6 @@ QString LaboDoc::makeXML() const
 
 void LaboDoc::deleteContents()
 {
-  DBGx( "debug: rootdata: %p model: %p", rootdata, model );
   delete rootdata; rootdata = 0; model = 0;
 }
 
@@ -315,7 +310,7 @@ bool LaboDoc::isModified() const
 void LaboDoc::fillRoot()
 {
   if( rootdata == 0 ) {
-    DBG1( "ERR: rootdata is null!!" );
+    qCritical() << "rootdata is null!!" << WHE;
     return;
   }
 }

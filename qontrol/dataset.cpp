@@ -43,7 +43,7 @@ HolderData::~HolderData()
 HolderData* HolderData::create( const QString &, HolderData *,
          int, const QString &, const QString &, const QString & )
 {
-  DBG1( "Attempt to create abstract class" );
+  qCritical() << "Attempt to create abstract class " << WHE;
   return nullptr;
 }
 
@@ -90,7 +90,6 @@ int HolderData::rowCount( const QModelIndex &par ) const
 
 QVariant HolderData::data( const QModelIndex &idx, int role ) const
 {
-  // DBGx( "dbg: idx: %s this: %s role: %d", qP(idx2s(idx)), qP( getFullName() ), role );
   if( !idx.isValid() ) {
     return QVariant();
   }
@@ -311,7 +310,7 @@ HolderData* HolderData::getElem( const QString &oname ) const
     return ho->getElem( rest );
   }
 
-  DBGx( "warn: unknown name type: %d", nt );
+  qWarning() << "unknown name type: " << nt << WHE;
   return nullptr;
 }
 
@@ -344,7 +343,7 @@ bool HolderData::setDatas( const QString datas )
       QString val = re.cap(2);
       was_set = setData( nm, val ) || was_set; // Order!
     } else {
-      DBGx( "warn: bad param string part: \"%s\"", qP( s ) );
+      qWarning() << "bad param string part: " << s << WHE;
     }
   }
   return was_set;
@@ -374,7 +373,7 @@ void HolderData::extraToParm()
       QString val = re.cap(2);
       setParm( nm, val );
     } else {
-      DBGx( "warn: bad extra string part: \"%s\"", qP( s ) );
+      qWarning() << "bad extra string part: " <<  s << WHE;
     }
   }
   if( getParm("dyn") == "1" )
@@ -444,13 +443,12 @@ HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name 
 
   HolderData *el = getElem( ob_name );
   if( el != nullptr ) {
-    DBGx( "ERR: name \"%s\" (%s)  exist in \"%s\"!",
-          qP(ob_name), qP(el->getType()), qP( getFullName() ) );
+    qWarning() <<  "name " << ob_name << el->getType() << " exist in " << getFullName() << WHE;
     return nullptr;
   }
   if( ! isValidType( cl_name ) ) {
-    DBGx( "WARN: type \"%s\" for \"%s\" not allowed in \"%s\"!",
-          qP(cl_name), qP(ob_name), qP( getFullName() ) );
+    qWarning() <<  "type " << cl_name <<  " for " << ob_name
+               << " not allowed in " << getFullName() << WHE;
     return nullptr;
   }
   HolderData *ob = EFACT.createElem( cl_name, ob_name, this );
@@ -481,15 +479,15 @@ int HolderData::del_obj( const QString &ob_name )
 
   HolderData *ho = getElem( ob_name );
   if( !ho ) {
-    DBGx( "warn: not found element \"%s\" int \"%s\"", qP(ob_name), qP(getFullName()) );
+    qWarning() << "not found element " << ob_name << " in " << getFullName() << WHE;
     return 0;
   }
   if( ! ho->isDyn() ) {
-    DBGx( " object \"%s\" is not created dynamicaly in \"%s\"", qP(ob_name), qP(getFullName()) );
+    qWarning() << "object " << ob_name << " is not created dynamicaly in " << getFullName() << WHE;
     return 0;
   }
   if( ho->getFlags() & efImmutable ) {
-    DBGx( "warn: element \"%s\" in \"%s\" is Immutable", qP(ob_name), qP(getFullName()) );
+    qWarning() << "object " << ob_name << " is Immutable in " << getFullName() << WHE;
     return 0;
   }
 
@@ -515,25 +513,25 @@ int HolderData::del_obj( const QString &ob_name )
 int HolderData::rename_obj( const QString &ob_name, const QString &new_name )
 {
   if( ! isGoodName( new_name ) ) {
-    DBGx( "warn: bad name \"%s\" to remame in \"%s\"", qP(new_name), qP(getFullName()) );
+    qWarning() << "bad name " << new_name << " to remame" << NWHE;
     return 0;
   }
   HolderData *ho = getElem( ob_name );
   if( !ho ) {
-    DBGx( "warn: not found element \"%s\" in \"%s\"", qP(ob_name), qP(getFullName()) );
+    qWarning() << "not found element " << ob_name << " to remame" << NWHE;
     return 0;
   }
   if( ho->getFlags() & efImmutable ) {
-    DBGx( "warn: element \"%s\" in \"%s\" is Immutable", qP(ob_name), qP(getFullName()) );
+    qWarning() << "element " << ob_name << " is Immutable to remame" << NWHE;
     return 0;
   }
 
   if( getElem( new_name ) ) {
-    DBGx( "warn: element \"%s\" already exists in \"%s\"", qP(new_name), qP(getFullName()) );
+    qWarning() << "element " << ob_name << " is already exists " << NWHE;
     return 0;
   }
   if( ! ho->isDyn() ) {
-    DBGx( "warn: object \"%s\" is not created dynamicaly: ", qP(ob_name) );
+    qWarning() << "element " << ob_name << " is not created dynamicaly" << NWHE;
     return 0;
   }
   ho->setObjectName( new_name );
@@ -568,7 +566,7 @@ bool HolderData::setActiveElem( const QString &nm )
 HolderData* HolderData::add_param( const QString &tp_name, const QString &ob_name )
 {
   if( getElem( ob_name ) ) {
-    DBGx( "ERR: name \"%s\" exist in %s!", qP(ob_name), qP( getFullName() ) );
+    qWarning() << " name " << ob_name << " exist" << NWHE;
     return nullptr;
   }
   if( !isValidType( tp_name ) ) {
@@ -590,7 +588,6 @@ HolderData* HolderData::add_param( const QString &tp_name, const QString &ob_nam
 
 int HolderData::isValidType(  const QString &cl_name  ) const
 {
-  // DBGx( "dbg: allowTypes: \"%s\" for %s", allowTypes(), qP(getType()) );
   const TClassInfo *ci = EFACT.getInfo( cl_name );
   if( ! ci )
     return false;
@@ -653,32 +650,27 @@ bool HolderData::getData( const QString &nm, QVariant &da, bool er ) const
   int idx;
   NameType nm_type = splitName( nm, first, rest, idx );
   if( nm_type == badName ) {
-    DBGx( "warn: bad target name \"%s\"", qP( nm ) );
-    return 0;
+    qWarning() << "bad target name " <<  nm << NWHE;
+    return false;
   }
 
   HolderData *ho = getElem( first );
   if( !ho ) {
     if( er ) {
-      DBGx( "warn: fail to find name \"%s\" in \"%s\"", qP(first), qP(getFullName()) );
+      qWarning() << "fail to find name " << first << NWHE;
     }
-    return 0;
+    return false;
   }
   if( nm_type == simpleName ) { // first only
     da = ho->get( idx ); // TODO: check for simple data?
-    return 1;
+    return true;
   }
 
   // both part of name exists
-  if( ho->getTp() != QVariant::UserType ) {
-    DBGx( "warn: compound name required (1). first: \"%s\" rest: \"%s\" tp: %d",
-        qP(first), qP(rest), (int)(ho->getTp()) );
-    return 0;
-  }
-  if( ! ho->isObject() ) {
-    DBGx( "warn: compound name required (2). first: \"%s\" rest: \"%s\" obj \"%s\" type \"%s\"",
-        qP(first), qP(rest), qP(ho->objectName()), qP(ho->getType()) );
-    return 0;
+  if( ho->getTp() != QVariant::UserType  ||  ! ho->isObject()  ) {
+    qWarning() << "compound name required. first: " << first
+               << " rest:" << rest << " tp: " << (int)(ho->getTp()) << NWHE;
+    return false;
   }
 
   return ho->getData( rest, da, er );
@@ -769,14 +761,13 @@ bool HolderData::setData( const QString &nm, const QVariant &da )
   int idx;
   NameType nm_type = splitName( nm, first, rest, idx );
   if( nm_type == badName ) {
-    DBGx( "warn: bad target name \"%s\"", qP(nm) );
+    qWarning() << "bad target name " << nm << NWHE;
     return false;
   }
 
   HolderData *ho = getElem( first );
   if( !ho ) {
-    DBGx( "warn: fail to find name \"%s\" in \"%s\"",
-          qP(first), qP(getFullName()) );
+    qWarning() << "fail to nind name " << first << NWHE;
     return false;
   }
   if( nm_type == simpleName ) { // first only
@@ -785,7 +776,8 @@ bool HolderData::setData( const QString &nm, const QVariant &da )
 
   // both part of name exists
   if( ho->getTp() != QVariant::UserType || ! ho->isObject() ) {
-    DBGx( "warn: compound name required (set \"%s\" ) in \"%s\"", qP(first), qP(getFullName()) );
+    qWarning() << "compound name required. first: " << first
+               << " rest:" << rest << " tp: " << (int)(ho->getTp()) << NWHE;
     return false;
   }
 
@@ -819,7 +811,7 @@ bool HolderData::getUpData( const QString &nm, int *da ) const
       return true;
     }
   }
-  DBGx( "warn: fail to find name \"%s\" from \"%s\" up", qP(nm), qP(getFullName()) );
+  qWarning() << "fail to find UP name " << nm << NWHE;
   return false;
 }
 
@@ -835,7 +827,7 @@ bool HolderData::getUpData( const QString &nm, double *da ) const
       return true;
     }
   }
-  DBGx( "warn: fail to find name \"%s\" from \"%s\" up", qP(nm), qP(getFullName()) );
+  qWarning() << "fail to find UP name " << nm << NWHE;
   return false;
 }
 
@@ -846,7 +838,7 @@ bool HolderData::getUpData( const QString &nm, QString &da ) const
       return true;
     }
   }
-  DBGx( "warn: fail to find name \"%s\" from \"%s\" up", qP(nm), qP(getFullName()) );
+  qWarning() << "fail to find UP name " << nm << NWHE;
   return false;
 }
 
@@ -857,7 +849,7 @@ bool HolderData::getUpData( const QString &nm, QVariant &da ) const
       return true;
     }
   }
-  DBGx( "warn: fail to find name \"%s\" from \"%s\" up", qP(nm), qP(getFullName()) );
+  qWarning() << "fail to find UP name " << nm << NWHE;
   return false;
 }
 
@@ -903,24 +895,7 @@ void HolderData::dumpStruct() const
 {
   static int dump_lev = -1;
   ++dump_lev;
-  DBGx( "* %d struct of %s %s this=%p",
-         dump_lev, qP(getType()), qP(objectName()), this );
-  // new part
-  QObjectList childs = children();
-  int i = 0;
-  for( auto o : childs ) {
-    QObject *xo = o;
-    DBGx( "*# [%d] (%p) %s %s ",
-        i, xo, xo->metaObject()->className(), qP(xo->objectName()) );
-    HolderData *ho = qobject_cast<HolderData*>(xo);
-    if( !ho ) {
-      continue;
-    }
-    DBGx( "*#    = %s", qP( ho->toString() ) );
-    ++i;
-  }
-  DBGx( "*%d END", dump_lev );
-  --dump_lev;
+  qDebug() << toString() << NWHE;
 }
 
 void HolderData::post_set()
@@ -948,36 +923,36 @@ CTOR(HolderValue,HolderData)
 
 void HolderValue::reset_dfl()
 {
-  DBG1( ERR_ABS );
+  qWarning() << ERR_ABS << WHE;
 }
 
 void HolderValue::post_set()
 {
-  DBG1( ERR_ABS );
+  qWarning() << ERR_ABS << WHE;
 }
 
 
 bool HolderValue::set( const QVariant & /*x*/, int /* idx */ )
 {
-  DBG1( ERR_ABS );
+  qWarning() << ERR_ABS << WHE;
   return false;
 }
 
 QVariant HolderValue::get( int /* idx */ ) const
 {
-  DBG1( ERR_ABS );
+  qWarning() << ERR_ABS << WHE;
   return QVariant();
 }
 
 QString HolderValue::toString() const
 {
-  DBG1( ERR_ABS );
+  qWarning() << ERR_ABS << WHE;
   return QString();
 }
 
 bool HolderValue::fromString( const QString & /*s */ )
 {
-  DBG1( ERR_ABS );
+  qWarning() << ERR_ABS << WHE;
   return false;
 }
 
@@ -1804,16 +1779,14 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
   if( nm_type == badName ) {
     if( lt )
       *lt = LinkBad;
-    DBGx( "warn: bad target name \"%s\" in \"%s\"", qP(nmf), qP(getFullName()) );
+    qWarning() << "bad target name " << nmf << NWHE;
     return 0;
   }
 
   HolderData *ho = getElem( first );
 
   if( !ho ) {
-    if( lt )
-      *lt = LinkBad;
-    // DBGx( "warn: fail to find name \"%s\" in \"%s\"", qP(first), qP(getFullName()) );
+    if( lt ) { *lt = LinkBad; }
     return 0;
   }
 
@@ -1875,12 +1848,13 @@ double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg )
   HolderDouble *hod = getElemT<HolderDouble*>( nm );
 
   if( !hod ) {
-    DBGx( "warn: fail to find name \"%s\" in \"%s\"", qP(nm), qP(getFullName()) );
+    qWarning() << "fail to find name " << nm << NWHE;
     return 0;
   }
 
-  if( flg )
+  if( flg ) {
     *flg = hod->getFlags();
+  }
   return hod->addr();
 
   return 0;
@@ -1921,8 +1895,8 @@ bool TDataSet::fromString( const QString &s )
   int err_line, err_column;
   QDomDocument x_dd;
   if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
-    DBGx( "ERR: fail to parse str: line %d col %d str: %s",
-        err_line, err_column, qP(errstr) );
+    qWarning() << "fail to parse str: line " << err_line << " col: " << err_column
+               << " str: " << errstr << NWHE;
     return false;
   }
   QDomElement domroot = x_dd.documentElement();
@@ -1979,14 +1953,12 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
     QDomElement ee = no.toElement();
     QString elname = ee.attribute( "name" );
     QString tagname = ee.tagName();
-    // DBGx( "dbg: TDataSet::fromDom: obj: %s tag: \"%s\" name: \"%s\"",
-    //   qP(getFullName()), qP(tagname), qP(elname) );
 
     if( tagname == "obj" ) {  // ------------------------------- object
       QString cl_name = ee.attribute("otype");
       if( cl_name.isEmpty() ) {
         errstr = QString( "err: element \"%1\" without type" ).arg(elname);
-        DBG1q( errstr );
+        qWarning() << errstr << NWHE;
         return false;
       }
       HolderData *ho = getElem( elname );
@@ -1994,14 +1966,14 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
         errstr = QString("err: read elem \"%1\" failed. "
             "required: \"%2\" but have \"%3\" in \"%4\"" )
                 .arg(elname).arg(tagname).arg(ho->getType()).arg( getFullName() );
-        DBG1q( errstr );
+        qWarning() << errstr << NWHE;
         return false;
       }
       if( !ho ) { // name not found
         if( ! add_obj( cl_name, elname ) ) {
           errstr = QString("TDataSet::fromDom: fail to create obj %1 %2 ")
                    .arg(cl_name).arg(elname);
-          DBG1q( errstr );
+          qWarning() << errstr << NWHE;
           continue; // for conversion: ignore unknown
           // return false;
         }
@@ -2011,7 +1983,7 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
       if( !ob ) {
         errstr = QString("TDataSet::fromDom: fail to find created obj %1 %2 in %3")
                  .arg(cl_name).arg(elname).arg( objectName() );
-        DBG1q( errstr );
+        qWarning() << errstr << NWHE;
         return false;
       }
 
@@ -2025,7 +1997,7 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
       if( ho && ho->isObject() ) {
         errstr = QString("TDataSet::fromDom: param \"%1\" is an object type \"%2\" ")
                  .arg(elname).arg(ho->getType());
-        DBG1q( errstr );
+        qWarning() << errstr << NWHE;
         return false;
       }
       if( !ho ) {
@@ -2033,7 +2005,7 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
         if( !ho  ) {
           errstr = QString("TDataSet::fromDom: fail to create param \"%1\" in \"%2\" ")
                    .arg(tp_name).arg(elname);
-          DBG1q( errstr );
+          qWarning() << errstr << NWHE;
           // return false;
           continue; // ignore unused params
         }
@@ -2043,7 +2015,7 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
     } else { // ----------- unknown element
       errstr = QString("TDataSet::fromDom: bad element %1 %2 ")
                .arg(tagname).arg(elname);
-      DBG1q( errstr );
+      qWarning() << errstr << NWHE;
       return false;
     }
   }
@@ -2062,7 +2034,7 @@ void TDataSet::registerInput( InputSimple *inp )
   if( ! inp )
     return;
   if( inputs.indexOf( inp ) != -1 ) {
-    DBGx( "warn: input \"%s\" already registered", qP(inp->objectName()) );
+    qWarning() << "input " << inp->objectName() << "is  already registered" << WHE;
     return;
   }
   inputs.push_back( inp );
@@ -2076,7 +2048,7 @@ void TDataSet::unregisterInput( InputSimple *inp )
   //   return;
   int idx = inputs.indexOf( inp );
   if( idx == -1 ) {
-    DBGx( "warn: input \"%s\" not registered", qP(inp->objectName()) );
+    qWarning() << "input " << inp->objectName() << "is not registered" << WHE;
     return;
   }
   inputs.remove( idx );
@@ -2085,8 +2057,7 @@ void TDataSet::unregisterInput( InputSimple *inp )
 InputSimple* TDataSet::getInput( int n ) const
 {
   if( n < 0 || n >= inputs.size() ) {
-    DBGx( "warn: bad input number %d, in \"%s\" size= %d",
-        n, qP(getFullName()), inputs.size() );
+    qWarning() << "bad input number " << n << " sz: " << inputs.size() << NWHE;
     return nullptr;
   }
   return inputs[n];
@@ -2140,11 +2111,8 @@ void InputAbstract::set_link()
   const double *cp = getSchemeDoublePtr( source, &lt, &srct, 0 );
   if( lt == LinkElm || lt == LinkSpec ) {
     p = cp;  src_obj = srct; linkType = lt;
-    //DBGx( "dbg: ptr set to target %p for \"%s\" in \"%s\"",
-    //   cp, qP(source), qP(getFullName())  );
   } else {
-    DBGx( "dbg: ptr not found for \"%s\" in \"%s\"",
-        qP(source), qP(getFullName()) );
+    qWarning() << "ptr not found for " << source << NWHE;
   }
 
 }

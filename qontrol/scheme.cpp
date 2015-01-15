@@ -54,7 +54,7 @@ const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
   // then try model
   TModel *mod = getAncestorT<TModel>();
   if( !mod ) {
-    DBG1( "No model detected" );
+    qWarning() << "No model detected" << NWHE;
     return nullptr;
   }
 
@@ -70,7 +70,7 @@ const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
   }
 
   if( !p ) {
-    DBGx( "warn: fail to find target \"%s\" in scheme \"%s\"", qP(nm), qP(getFullName()) );
+    qWarning() << "fail to find target " << nm << NWHE;
   }
 
   return p;
@@ -96,7 +96,7 @@ int Scheme::preRun( int run_tp, int N, int anx, int any, double tdt )
   for( auto ob : v_el ) {
     int rc = ob->preRun( run_tp, N, anx, any, tdt );
     if( !rc ) {
-      DBGx( "warn: preRun failed for object \"%s\"", qP( ob->getFullName() ) );
+      qWarning() << "preRun failed for object " << NWHE;
       return 0;
     }
   };
@@ -238,7 +238,7 @@ int Scheme::delElem( const QString &ename )
 {
   TMiso *ob = getElemT<TMiso*>( ename );
   if( !ob ) {
-    DBGx( "err: fail to find TMiso \"%s\"", qP(ename) );
+    qWarning() << "fail to find TMiso " << ename << NWHE;
     return 0;
   }
   int rc = del_obj( ename ); // TODO: or here??

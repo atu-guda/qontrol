@@ -244,7 +244,7 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
 
   TModel *model = getAncestorT<TModel>();
   if( !model ) {
-    DBGx( "warn: not found model in \"%s\"", qP(getFullName()) );
+    qWarning() << "not found model in" << getFullName() << WHE;
     return 0;
   }
   double tdt = model->getDataD( "tdt", 1.0 );

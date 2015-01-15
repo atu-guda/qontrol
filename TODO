@@ -1,13 +1,13 @@
-Dump TOutArr/TGraph commandline (-u/-U)
+Dump TOutArr/TGraph commandline (-p/-P)
 Run script before/after run (+ file)
 Scripts dir (-I) + JS include
-Output file + View global log?
-Renew debug/messages/script output + config severity qInstallMessageHandler
+LaboWin::labowin to function + macros?
+Output to log from JS
 Inputs
 Outputs
 Tests
 Autocorrelation?
-Widget for link: after new hierarchy
+Widget for link: after new hierarchy. QCompleter?
 
 Propagate modified flag up to root?
 Application config: to TDataSet?

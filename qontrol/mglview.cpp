@@ -80,7 +80,7 @@ void MglView::Reload( )
   resetData();
 
   if( !gra ) {
-    DBG1( "err: no TGraph passed to MglDrawer" );
+    qWarning() << "no TGraph passed to MglDrawer" << WHE;
     return;
   }
 
@@ -176,8 +176,6 @@ void MglView::mousePressEvent( QMouseEvent *me )
 
   int mx = me->x(), my = me->y(), btn = me->button();
   mglPoint po = gr.CalcXYZ( mx, my );
-  // DBGx( "dbg: mouse: x: %d y: %d ; graph: x: %lf y: %lf z: %lf",
-  //        mx, my, mark_point.x, mark_point.y, mark_point.z );
   switch( btn ) {
     case Qt::LeftButton:
       unlinkFromPlot();
@@ -575,7 +573,7 @@ void MglView::setMarkToLink()
   linkIdx = qBound( 0, linkIdx, vd.nn-1 );
   mglPoint targ;
   if( ! gra->getPointAt( linkPlot, linkIdx, &targ ) ) {
-    DBGx( "warn: unknown point %d line %d", linkIdx, linkPlot );
+    qWarning() << "unknown point " << linkIdx << "line " << linkPlot << WHE;
     return;
   }
   scd->setMark( targ );

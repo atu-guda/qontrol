@@ -27,28 +27,25 @@ HolderData* ElemFactory::createElem( const QString &a_type,
 {
   auto i = str_class.find( a_type );
   if( i == str_class.end() ) {
-    DBGx( "WARN: fail to find class \"%s\" for object \"%s\"",
-          qP(a_type), qP(obj_name) );
+    qWarning() << "fail to find class " << a_type << " for object " << obj_name << WHE;
     return nullptr;
   }
 
   // check for manual abstract elements
   if( i.value()->props & clpPure ) {
-    DBGx( "WARN: refuse to create object \"%s\" with abstract type \"%s\"",
-          qP(obj_name), qP(a_type) );
+    qWarning() << "refuse to create object" << obj_name << " with abstract type " << a_type << WHE;
     return nullptr;
   }
 
   // check parent for name
   if( a_parent->getElem(obj_name) ) {
-    DBGx( "WARN: name \"%s\" exists in parent \"%s\"",
-          qP( obj_name ), qP( a_parent->getFullName() ) );
+    qWarning() << "name " << obj_name << " exists in parent " <<  a_parent->getFullName() << WHE;
     return nullptr;
   }
 
   HolderData *ob =  (i.value()->creator)( ARGS_CTOR_NAMES );
   if( !ob ) {
-    DBGx( "err: fail to create obj \"%s\" type \"%s\"", qP(obj_name), qP(a_type) );
+    qWarning() << "fail to create obj " << obj_name << " type "<< a_type << WHE;
     return nullptr;
   }
   return ob;
@@ -62,7 +59,7 @@ bool ElemFactory::registerElemType( const TClassInfo *cl_info )
   }
   QString cl_name = L8B( cl_info->className );
   if( str_class.contains( cl_name ) ) {
-    DBGx( "ERR: reg: class \"%s\" already exists", qP(cl_name) );
+    qWarning() << "reg: class " << cl_name << " already exists" << WHE;
     return false;
   }
   str_class.insert( cl_name, cl_info );
@@ -71,7 +68,6 @@ bool ElemFactory::registerElemType( const TClassInfo *cl_info )
   if( ( props & clpData ) && ! ( props & clpPure ) ) {
     param_names << cl_name;
   }
-  //DBGx( "dbg:  registered \"%s\" %d", cl_info->className, cl_info->props );
   return true;
 }
 
@@ -115,7 +111,7 @@ const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
 {
   auto i = str_class.find( a_type );
   if( i == str_class.end() ) {
-    DBGx( "ERR: fail to find class \"%s\"", qP(a_type) );
+    qWarning() << "fail to find class " << a_type << WHE;
     return nullptr;
   }
   return i.value();
@@ -123,7 +119,6 @@ const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
 
 bool ElemFactory::isChildOf( const QString &cl, const QString &par_cl ) const
 {
-  // DBGx( "dbg: test: is \"%s\" a child of \"%s\"", qP(cl), qP(par_cl) );
   if( cl == par_cl ) {
     return true;
   }
@@ -140,7 +135,6 @@ bool ElemFactory::isChildOf( const QString &cl, const QString &par_cl ) const
   const QMetaObject *mob = ic.value()->meta;
   while( mob ) {
     if( par_cl == mob->className() ) {
-      // DBGx( "dbg: \"%s\" is child of \"%s\"", qP(cl), qP(par_cl) );
       return true;
     }
     mob = mob->superClass();

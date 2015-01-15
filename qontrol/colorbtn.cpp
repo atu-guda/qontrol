@@ -51,7 +51,6 @@ void ColorBtn::setColor( int ic )
 void ColorBtn::slotClicked()
 {
   QColor ncol;
-  // DBGx( "dbg: Click: \"%s\"", qP( col.name() ) );
   ncol = QColorDialog::getColor( col, this, "Choose color", QColorDialog::ShowAlphaChannel );
   if( ncol.isValid() ) {
     col = ncol;

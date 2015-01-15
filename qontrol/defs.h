@@ -31,10 +31,8 @@
 #define MODEL_MY 64
 
 #define qP(x) qPrintable(x)
-/** interface to qDebug with more info q: qPrintable to last argubent, x - format*/
-#define DBG1(str)  qDebug("%s \n  in [ %s: %s %d ]\n", str, __FILE__, __PRETTY_FUNCTION__, __LINE__ )
-#define DBG1q(str)  qDebug("%s \n  in [ %s: %s %d ]\n", qPrintable(str), __FILE__, __PRETTY_FUNCTION__, __LINE__ )
-#define DBGx(...) { qDebug(__VA_ARGS__); qDebug(" in %s: %s: %d\n", __FILE__, __PRETTY_FUNCTION__, __LINE__ ); }
+#define WHE " in " << __FILE__ << ": " <<  __PRETTY_FUNCTION__ << ": " << __LINE__
+#define NWHE " in " << getFullName() << " in " << __FILE__ << ": " <<  __PRETTY_FUNCTION__ << ": " << __LINE__
 
 const int IMIN      { std::numeric_limits<int>::min() };
 const int IMAX      { std::numeric_limits<int>::max() };

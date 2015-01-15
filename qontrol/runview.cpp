@@ -76,7 +76,7 @@ void RunView::slotStartRun()
   if( !rc ) {
     model->reset();
     state = stateBad;
-    DBG1( "warn: model->startRun failed" );
+    qWarning() << "model->startRun failed" << WHE;
     return;
   };
 
@@ -111,7 +111,7 @@ void RunView::slotRunNext()
   int m_state;
   if( !sch  ||  state != stateRun ) {
     timer->stop();
-    DBG1( "warn: nextRun w/o start?" );
+    qWarning() << " nextRun w/o start?" << WHE;
     return;
   };
 
@@ -126,7 +126,6 @@ void RunView::slotRunNext()
   sem_io.release( 1 );
 
   if( state != stateRun ) {
-    // DBGx( "dbg: final! state: %d m_state: %d", state, m_state );
     timer->stop();
     setMouseTracking( 0 );
     if( s_time > 0  &&  ( get_real_time() - s_time ) > 10 ) {
@@ -327,17 +326,11 @@ void RunView::getSchemeData()
     autoStart = c_sim->getDataD( "autoStart", 0 );
     io_t = c_sim->getDataD( "io_t", 0.5 );
   } else {
-    DBG1( "warn: no active simulation!" );
+    qWarning() << "no active simulation!" << WHE;
   }
-
-  // if( syncRT ) {
-  //   io_t = T / N;
-  // }
 
   state = model->getState();
   s_h = syncRT ? 520 : 40;
-  // DBGx( "dbg: n_tot: %d, n_iosteps: %d syncRT: %d autoStart: %d io_t: %lg T: %lf N: %d",
-  //     n_tot, n_iosteps, syncRT, autoStart, io_t, T, N );
 }
 
 

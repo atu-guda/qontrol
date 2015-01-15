@@ -440,13 +440,13 @@ void StructView::drawAll( QPainter &p )
 
   // -------------- output marks
   if( !model ) {
-    DBG1( "warn: not found model" );
+    qCritical() << "not found model" << WHE;
     return;
   }
 
   ContOut *outs = model->getElemT<ContOut*>( "outs" );
   if( !outs ) {
-    DBG1( "warn: not found 'outs' in model" );
+    qWarning() << "not found 'outs' in model" << WHE;
     return;
   }
   int out_nu = -1; // first vill be 0 (after ++)

@@ -29,7 +29,7 @@ QSize DataWidget::minimumSizeHint() const
   if( main_w ) {
     return  main_w->minimumSizeHint() + QSize( lbl->minimumSizeHint().width(), 0 );
   }
-  DBGx( "ERR: no main widget for %s %s", qP(ho.getType()), qP(ho.objectName()) );
+  qWarning() << "no main widget for " << ho.getType() <<  ho.objectName() << WHE;
   return QSize( 50, 20 ); // fallback value;
 }
 
@@ -39,7 +39,7 @@ QSize DataWidget::sizeHint() const
   if( main_w ) {
     return  main_w->sizeHint() + QSize( lbl->sizeHint().width(), 0 );
   }
-  DBGx( "ERR: no main widget for %s %s", qP(ho.getType()), qP(ho.objectName()) );
+  qWarning() << "no main widget for " << ho.getType() << ho.objectName() << WHE;
   return QSize( 50, 20 ); // fallback value;
 }
 
@@ -659,8 +659,6 @@ bool ColorDataWidget::set()
   int c_i = ho.get().toInt();
   QRgb c_r( c_i );
   QColor c( c_r );
-  // DBGx( "dbg: set: c_i: %08X c: \"%s\"", c_i, qP(c.name()) );
-  // cb->setColor( c_r ); // Int to Color inside button
   cb->setColor( c ); // Int to Color inside button
   return true;
 }
@@ -669,7 +667,6 @@ bool ColorDataWidget::get() const
 {
   QColor c = cb->color();
   int c_i = c.rgba();
-  // DBGx( "dbg: get: c_i: %08X c: \"%s\"", c_i, qP(c.name()) );
   QVariant v = c_i;
   ho.set( v );
   return true;
@@ -698,7 +695,6 @@ IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
   main_w = pwi;
   bool ro = h.getFlags() & ( efRO | efRODial );
   int n = h.arrSize();
-  // DBGx( " name= \"%s\"  n=%d", qP(h.objectName()), n );
   les.reserve(n);
   QString vn = h.getParm("v_name");
   if( vn.isEmpty() ) {
@@ -978,7 +974,7 @@ void ObjDataWidget::edit()
     QDialog *dia = new DataDialog( *obj,  this );
     dia->exec();
   } else {
-    DBGx( "ERR: Fail to convert holder \"%s\" to HolderData", qP(ho.objectName()) );
+    qWarning() << "Fail to convert holder " <<  ho.getFullName() << " to HolderData " << WHE;
   }
 }
 
@@ -1044,9 +1040,6 @@ QString FactoryDataWidget::findForHolder( const HolderData &ho, int *lev ) const
   if( lev != nullptr ) {
     *lev = max_good;
   }
-
-  //DBGx( "dbg: name: \"%s\" w_type: \"%s\" max_good: %d",
-  //    qP(ho.objectName()), qP(name), max_good );
 
   return name;
 }
@@ -1411,7 +1404,7 @@ int DataDialog::createWidgets()
 
     w = FactoryDataWidget::theFactory().createDataWidget( *ho, this );
     if( !w ) {
-      DBGx( "warn: not found edit widget for object \"%s\"", qP(name) );
+      qWarning() << "not found edit widget for object " << name << WHE;
       continue;
     }
 

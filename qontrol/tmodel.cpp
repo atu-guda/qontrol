@@ -126,7 +126,7 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
   rv =  getDoublePtr( nm, lt, src_ob, lev );
 
   if( !rv ) {
-    DBGx( "warn: fail to find target \"%s\" in model", qP(nm) );
+    qWarning() << "fail to find target " << nm << " in model" << WHE;
   }
 
   return rv;
@@ -163,20 +163,21 @@ int TModel::startRun()
 {
   int rc;
   if( run_type >= 0 ) { // in progress now
-    DBGx( "warn: run_type = %d during startRun", run_type );
+    qWarning() << "bad run_type during startRun " << run_type << NWHE;
     return 0;
   }
   reset();
 
   c_sim = getActiveSimulation();
   if( !c_sim ) {
-    DBG1( "warn: No active simulation" );
+    qWarning() << "No active simulation" << NWHE;
     return 0;
   }
 
   c_sch = getActiveScheme();
   if( !c_sch ) {
-    DBG1( "warn: No active scheme" ); c_sim = nullptr;
+    qWarning() << "No active scheme" << NWHE;
+    c_sim = nullptr;
     return 0;
   }
 
@@ -221,7 +222,7 @@ int TModel::startRun()
 
   rc = outs->preRun( run_type, N, n1_eff, n2_eff, tdt );
   if( !rc ) {
-    DBG1( "warn: output arrays preRun failed" );
+    qWarning() << "warn: output arrays preRun failed" << NWHE;
     reset();
     c_sim = nullptr; c_sch = nullptr;
     return 0;
@@ -229,7 +230,7 @@ int TModel::startRun()
 
   rc = c_sch->preRun( run_type, N, n1_eff, n2_eff, tdt );
   if( !rc ) {
-    DBG1( "warn: scheme preRun failed" );
+    qWarning() << " scheme preRun failed " << c_sch->getFullName() << WHE;
     reset();
     c_sim = nullptr; c_sch = nullptr;
     return 0;
@@ -265,7 +266,7 @@ int TModel::startRun()
 int TModel::run( QSemaphore *sem )
 {
   if( !sem || ! c_sch || !c_sim ) {
-    DBG1( "warn: bad init!" );
+    qCritical() << "bad init!" << NWHE;
     return 0;
   }
 
@@ -358,7 +359,7 @@ int TModel::run( QSemaphore *sem )
 int TModel::stopRun( int reason )
 {
   if( !c_sch ) {
-    DBG1( "warn: No active scheme" );
+    qWarning() << "No active scheme" << NWHE;
     return 0;
   }
 
@@ -397,7 +398,7 @@ void TModel::plotToPng( const QString &gname, const QString &fn )
 int TModel::runOneLoop( IterType itype )
 {
   if( !c_sch ) {
-    DBG1( "warn: No active scheme" );
+    qWarning() << "No active scheme" << NWHE;
     return 0;
   }
 
@@ -555,7 +556,7 @@ bool TModel::cloneGraph( const QString &old_name, const QString &new_name )
   }
   TGraph *old_gra = plots->getElemT<TGraph*>( old_name );
   if( !old_gra ) {
-    DBGx( "warn: old plot \"%s\" not exist", qP( old_name ) );
+    qWarning() << " old plot not exist: " << old_name << NWHE;
     return 0;
   }
 
@@ -563,7 +564,7 @@ bool TModel::cloneGraph( const QString &old_name, const QString &new_name )
 
   TGraph *new_gra = plots->addObj<TGraph>( new_name );
   if( !new_gra ) {
-    DBGx( "warn: fail to create new plot \"%s\"", qP( new_name ) );
+    qWarning() << "fail to create new plot" << new_name << NWHE;
     return 0;
   }
   return new_gra->fromString( s );
@@ -578,7 +579,7 @@ int TModel::newSimul( const QString &name )
   }
   Simulation *sim = sims->addObj<Simulation>( name );
   if( ! sim ) {
-    DBGx( "ERR: fail to create simulation \"%s\"", qP(name) );
+    qWarning() << "fail to create simulation " << name << NWHE;
     return 0;
   }
   return 1;
@@ -620,7 +621,7 @@ bool TModel::cloneSimul( const QString &old_name, const QString &new_name )
   }
   Simulation *old_sim = sims->getElemT<Simulation*>( old_name );
   if( !old_sim ) {
-    DBGx( "warn: old simulation \"%s\" not exist", qP( old_name ) );
+    qWarning() << "old simulation " << old_name << " not exist " << NWHE;
     return 0;
   }
 
@@ -628,7 +629,7 @@ bool TModel::cloneSimul( const QString &old_name, const QString &new_name )
 
   Simulation *new_sim = sims->addObj<Simulation>( new_name );
   if( !new_sim ) {
-    DBGx( "warn: fail to create new simulation \"%s\"", qP( new_name ) );
+    qWarning() << "fail to create new simulation " << new_name << NWHE;
     return 0;
   }
   return new_sim->fromString( s );

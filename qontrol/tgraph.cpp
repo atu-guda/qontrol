@@ -82,7 +82,7 @@ LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
   ig = -1;
   TModel *model = getAncestorT<TModel>();
   if( !model ) {
-    DBGx( "warn: not found model in \"%s\"", qP(getFullName()) );
+    qCritical() << "not found model " << NWHE;
     return rl;
   }
   if( src.isEmpty() ) {
@@ -193,7 +193,7 @@ LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
       rl = LineRole::c5;
       break;
     default:
-      DBGx( "warn: unknown type %d label \"%s\"", (int)(type), qP(label) );
+      qWarning() << "unknown type "<< (int)(type) << " label " << label << NWHE;
       break;
   }
 
@@ -309,8 +309,8 @@ int TGraph::prepare()
   c_nn = nn; c_nx = nx; c_ny = ny;
 
   if( pli.size() < 1  ||  nn < 1 || nx < 1 ) {
-    DBGx( "warn: nothing to plot: pli.size= %d nn = %d nx = %d",
-          (int)pli.size(), (int)nn, (int)nx );
+    qWarning() << "nothing to plot: pli.size=" << (int)pli.size()
+               << "nn=" << (int)nn << "nx=" << (int)nx << NWHE;
     return 0;
   }
 
@@ -355,7 +355,7 @@ int TGraph::prepare()
 
   vector<uint8_t> plp( nn, 0 ); // flags: point worth to draw
   int np = fillSqueeze( plp );
-  // DBGx( "dbg: squeeze res nn= %d, np= %d", (int)nn, np );
+  // qDebug() << "squeeze res nn= " << (int)nn << "np= " np << NWHE;
 
   // create fake zero array
   mglData *mdz = new mglData( nx, ny );
@@ -378,7 +378,7 @@ int TGraph::prepare()
 
     const dvector *ve = ge->ve;
     if( !ve ) {
-      DBGx( "warn: no data in \"%s\", use fake", qP(ge->getFullName())  );
+      qWarning() << " no data, used fake in " << ge->getFullName() << WHE;
       continue;
     }
 
@@ -459,12 +459,12 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
   const int max_nn_nosqz = 2000;
   GraphElem *ge_x = tli[LineRole::axisX];
   if( !ge_x ) { // unlikely
-    DBGx( "warn: X axis not found!!!" );
+    qWarning() << "warn: X axis not found!!!" << NWHE;
     return 0;
   }
   const dvector *ve_x = ge_x->ve;
   if( !ve_x ) { // unlikely
-    DBGx( "warn: X axis array not found!!!" );
+    qWarning() << "X axis array not found!!!" << NWHE;
     return 0;
   }
 
@@ -573,8 +573,6 @@ void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scda )
   mglPoint ve_min = pe_min + pe_dlt / vd.ofs;
   mglPoint ve_max = ve_min + ve_dlt;
 
-  // DBGx( "dbg: ex: [ %lf; %lf ], mag_x: %lf, dlt: %lf min: %lf max: %lf",
-  //       pe_min.x, pe_max.x, vd.mag.x, ve_dlt.x, ve_min.x, ve_max.x );
 
   gr->SetRanges( ve_min, ve_max );
   if( need_c_axis ) {
@@ -873,7 +871,7 @@ int TGraph::fillDatasInfo( DatasInfo *di ) const
 
   TModel *model = getAncestorT<TModel>();
   if( !model ) {
-    DBGx( "warn: not found model in \"%s\"", qP(getFullName()) );
+    qCritical() << "not found model " << NWHE;
     return 0;
   }
 
@@ -938,7 +936,7 @@ int  TGraph::dump( const QString &fn, const QString &delim )
 
   QFile of( fn );
   if( ! of.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-    DBGx( "warn: fail to open file \"%s\"", qP( fn ) );
+    qWarning() << "fail to open file "<< fn << NWHE;
     return 0;
   }
   QTextStream os( &of );
@@ -993,7 +991,7 @@ int TGraph::addOutArr( const QString &o_name )
 
   GraphElem *ge = addObj<GraphElem>( nm );
   if( !ge ) {
-    DBGx( "warn: Fail to create GraphElem \"%s\"", qP( nm ));
+    qWarning() << " Fail to create GraphElem " <<  nm << NWHE;
     return 0;
   }
   ge->setData( "src", o_name );
