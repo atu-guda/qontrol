@@ -27,6 +27,7 @@
 using namespace std;
 
 ProgOpts prog_opts;
+QString log_app;
 
 void print_usage( const char *appname );
 int  convert_model( const char *fn_old, const char *fn_new );

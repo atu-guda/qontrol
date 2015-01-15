@@ -95,6 +95,7 @@ struct ProgOpts {
 };
 
 extern ProgOpts prog_opts; // defined in main.cpp
+extern QString log_app;
 
 #endif // _DEFS_H
 

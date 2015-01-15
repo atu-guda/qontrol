@@ -18,6 +18,7 @@
 #include <cstdlib>
 #include <QtWidgets>
 #include <QPrinter>
+#include <QTextEdit>
 
 #include "miscfun.h"
 #include "laboview.h"
@@ -30,13 +31,21 @@ using namespace std;
 LaboWin* LaboWin::labowin = nullptr;
 
 LaboWin::LaboWin()
+  : split( new QSplitter( Qt::Vertical, this ) ),
+    mdiArea( new QMdiArea ),
+    logViewer( new QTextEdit(this) ),
+    printer( new QPrinter ),
+    log_timer( new QTimer( this ) )
 {
   setWindowTitle( PACKAGE " " VERSION );
 
-  mdiArea = new QMdiArea;
+  split->addWidget( mdiArea );
+  split->addWidget( logViewer );
+
   mdiArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAsNeeded );
   //mdiArea->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
-  setCentralWidget( mdiArea );
+
+  setCentralWidget( split );
 
   connect( mdiArea, &QMdiArea::subWindowActivated, this, &LaboWin::updateActions );
   windowMapper = new QSignalMapper(this);
@@ -44,7 +53,7 @@ LaboWin::LaboWin()
       static_cast<void (QSignalMapper::*)(QWidget*)>(&QSignalMapper::mapped),
       this, &LaboWin::setActiveSubWindow );
 
-  printer = new QPrinter;
+
   untitledCount = 0;
 
   // call inits to invoke all other construction parts
@@ -53,8 +62,18 @@ LaboWin::LaboWin()
   initStatusBar();
 
   setWindowIcon( QIcon( ":icons/app.png" ) );
-  if( sett.showmax )
+  if( sett.showmax ) {
     showMaximized();
+  }
+
+  logViewer->setReadOnly( true );
+  logViewer->setMinimumSize( 50*em, 10*em ); // TODO: fix!
+  logViewer->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Minimum );
+
+  connect( log_timer, &QTimer::timeout, this, &LaboWin::slotUpdateLog );
+  log_timer->setInterval( 1000 ); // 1 sec
+  log_timer->start();
+
   labowin = this;
   updateActions();
 }
@@ -473,6 +492,12 @@ void LaboWin::initIface()
   act_showlinks->setChecked( sett.showLinks );
   connect( act_showlinks, &QAction::triggered, this, &LaboWin::slotShowLinks );
 
+  act_logclear = new QAction( "Clear log", this );
+  connect( act_logclear, &QAction::triggered, this, &LaboWin::slotLogClear );
+
+  act_logsave = new QAction( "Save log", this );
+  connect( act_logsave, &QAction::triggered, this, &LaboWin::slotLogSave );
+
   // ==== window group
 
   act_winClose = new QAction( QIcon::fromTheme("window-close"), "Cl&ose Window", this);
@@ -642,6 +667,9 @@ void LaboWin::initIface()
   pViewMenu->addAction( act_shownames );
   pViewMenu->addAction( act_showicons );
   pViewMenu->addAction( act_showlinks );
+  pViewMenu->addSeparator();
+  pViewMenu->addAction( act_logclear );
+  pViewMenu->addAction( act_logsave );
 
   ///////////////////////////////////////////////////////////////////
   // menuBar entry window-Menu
@@ -1035,6 +1063,32 @@ void LaboWin::slotShowLinks()
   callLaboViewSlot( "update", "Updating View" );
 }
 
+void LaboWin::slotLogClear()
+{
+  log_app.clear();
+  update();
+}
+
+void LaboWin::slotLogSave()
+{
+  statusBar()->showMessage( tr ( "Saving log to file..." ) );
+
+  QString fn = QFileDialog::getSaveFileName( this, tr("Save log"),
+      PACKAGE ".log", "Log files (*.log);;All files(*)" );
+
+  if ( !fn.isEmpty() ) {
+    QFile of( fn );
+    if( ! of.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
+      handleError( this, tr("Fail to open file \"") % fn % QSL("\"") );
+      return;
+    }
+    QTextStream os( &of );
+    os << log_app << endl;
+
+  };
+
+  statusBar()->showMessage( tr( "Ready." ) );
+}
 
 void LaboWin::slotWindowClose()
 {
@@ -1133,6 +1187,7 @@ void LaboWin::slotTest()
 
 
   QMessageBox::information( this, tr( "Test" ), ostr, QMessageBox::Ok );
+  log_app.append( ostr );
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
@@ -1168,6 +1223,17 @@ void LaboWin::windowMenuAboutToShow()
 
   updateActions();
 
+}
+
+void LaboWin::slotUpdateLog()
+{
+  if( lastLogSize != log_app.size() ) {
+    logViewer->setPlainText( log_app );
+    logViewer->moveCursor( QTextCursor::End );
+    logViewer->ensureCursorVisible();
+
+    lastLogSize = log_app.size();
+  }
 }
 
 

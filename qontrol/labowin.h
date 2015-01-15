@@ -34,6 +34,9 @@ class QMenu;
 class QAction;
 class QMdiSubWindow;
 class QStatusBar;
+class QSplitter;
+class QTextEdit;
+class QTimer;
 
 // forward declaration of the LaboWin classes
 class LaboDoc;
@@ -220,6 +223,8 @@ class LaboWin : public QMainWindow
     void slotShowIcons();
     /** toggle the showLinks flag */
     void slotShowLinks();
+    void slotLogClear();
+    void slotLogSave();
     // ==== window related
     void slotWindowClose();
     void slotWindowCloseAll();
@@ -239,6 +244,9 @@ class LaboWin : public QMainWindow
         the window menu with all opened window titles. */
     void windowMenuAboutToShow();
 
+    //* called by timer to update log view
+    void slotUpdateLog();
+
   private:
     /** handle close command */
     virtual void closeEvent ( QCloseEvent *e );
@@ -249,15 +257,21 @@ class LaboWin : public QMainWindow
     /** recreate fonts from config */
     void setFonts();
 
+    QSplitter *split;
     QMdiArea *mdiArea;
+    QTextEdit *logViewer;
     QSignalMapper *windowMapper;
     /** the printer instance */
     QPrinter *printer;
+    //* timer to update log
+    QTimer *log_timer;
     /** a counter that gets increased each time the user creates
           a new document with "File"->"New" */
     int untitledCount;
     //* default width unit (and safe default value)
     int em = 10;
+    //* last log size - for update
+    int lastLogSize = 0;
     /**  settings  */
     Mo2Settings sett;
     /** common fonts */
@@ -310,6 +324,7 @@ class LaboWin : public QMainWindow
             // iface
             *act_tbar, *act_sbar,
             *act_showord, *act_showgrid, *act_shownames, *act_showicons, *act_showlinks,
+            *act_logclear, *act_logsave,
             // win
             *act_winClose, *act_winCloseAll, *act_winTile, *act_winCascade,
             // help
