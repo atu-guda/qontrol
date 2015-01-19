@@ -7,6 +7,8 @@
  ***************************************************************************/
 
 #include <QColor>
+#include <QStandardItemModel>
+
 #include "miscfun.h"
 #include "dataset.h"
 
@@ -890,6 +892,51 @@ QStringList HolderData::getEnumStrings( const QString &enum_name ) const
   return r;
 }
 
+QAbstractItemModel* HolderData::getComplModel( const QString &targ, QObject *mdl_par ) const
+{
+  QStandardItemModel *mdl = new QStandardItemModel( mdl_par );
+  qDebug() << "req: target: " << targ << NWHE;
+  if( targ == "in" ) {
+    fillComplModelForInputs( mdl );
+  } else if( targ == "prm" ) {
+    fillComplModelForParams( mdl );
+  } else if( targ == "out" ) {
+    fillComplModelForOuts( mdl );
+  }
+  return mdl;
+}
+
+void HolderData::fillComplModelForInputs( QStandardItemModel *mdl ) const
+{
+  if( par ) {
+    par->fillComplModelForInputs( mdl );
+  }
+}
+
+void HolderData::fillComplModelForParams( QStandardItemModel *mdl ) const
+{
+  if( par ) {
+    par->fillComplModelForParams( mdl );
+  }
+
+  // for( auto e: children() ) {
+  //   HolderDouble* hd = qobject_cast<HolderDouble*>(e);
+  //   if( !hd ) {
+  //     continue;
+  //   }
+  //   QStandardItem *it = new QStandardItem;
+  //   it->setText( hd->objectName() );
+  //   qDebug() << "add param name " << hd->objectName() << NWHE;
+  //   mdl->appendRow( it );
+  // }
+}
+
+void HolderData::fillComplModelForOuts( QStandardItemModel *mdl ) const
+{
+  if( par ) {
+    par->fillComplModelForOuts( mdl );
+  }
+}
 
 void HolderData::dumpStruct() const
 {

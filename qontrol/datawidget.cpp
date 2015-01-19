@@ -106,6 +106,14 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
     le->setInputMask( mask );
   }
 
+  QString cmpl_targ = h.getParm( "cmpl" );
+  if( ! cmpl_targ.isEmpty() ) {
+    QCompleter *cmpl = new QCompleter( this );
+    QAbstractItemModel *cmpl_mdl = h.getComplModel( cmpl_targ, cmpl );
+    cmpl->setModel( cmpl_mdl );
+    le->setCompleter( cmpl );
+  }
+
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );

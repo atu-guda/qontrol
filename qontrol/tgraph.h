@@ -112,7 +112,7 @@ class GraphElem : public TDataSet {
 
    PRM_LIST(   type,  efNRC, "Type", "Data Type", "enum=DataType" );
    PRM_SWITCH( is2D,  efNRC, "2D", "Data for 2D plot", "" );
-   PRM_STRING( src,   efNRC, "Source", "Name of source for values", "max=128" );
+   PRM_STRING( src,   efNRC, "Source", "Name of source for values", "max=128\ncmpl=out" );
    PRM_STRING( label, efNRC, "Label", "Label", "max=128" );
    PRM_COLOR(  color, efNRC, "line color", "plot line color", "def=black" );
    PRM_INT(    lw,    efNRC, "line width", "plot line width", "def=1\nmin=0\nmax=9" );

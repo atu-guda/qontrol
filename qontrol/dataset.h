@@ -23,6 +23,7 @@ typedef QMap<QString,QString> QSSMap;
 #include "defs.h"
 
 
+class QStandardItemModel;
 class HolderData;
 class   TDataSet;
 class InputSimple;
@@ -300,6 +301,14 @@ class HolderData : public QAbstractItemModel {
     { return ( n<size() && n >= 0 ) ? children().at( n )->objectName() : ""; }
   //* return strings for given enum
   Q_INVOKABLE QStringList getEnumStrings( const QString &enum_name ) const;
+  //* return model for completer
+  QAbstractItemModel *getComplModel( const QString &targ, QObject *mdl_par ) const;
+  //* fill model for orinary inputs: now: pass to Model/Scheme
+  virtual void fillComplModelForInputs( QStandardItemModel *mdl ) const;
+  //* fill model for params
+  virtual void fillComplModelForParams( QStandardItemModel *mdl ) const;
+  //* fill model for outputs: pass to model
+  virtual void fillComplModelForOuts( QStandardItemModel *mdl ) const;
  signals:
    void sigStructChanged();
  public:
@@ -658,7 +667,7 @@ class InputAbstract : public TDataSet {
   /** find and set link to source or fake source */
   virtual void set_link();
 
-  PRM_STRING( source, efNoRunChange, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK"  );
+  PRM_STRING( source, efNoRunChange, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
   PRM_STRING( label,  efNoRunChange, "Label", "Label to display on structure", "max=64"  );
   PRM_INT( x_shift, 0, "X shift", "Shift on x-part of link represenration", "sep=col" );
   PRM_INT( y_shift, 0, "Y shift", "Shift on y-part of link represenration", "" );
@@ -717,7 +726,7 @@ class InputParam : public InputAbstract {
   /** find and set link to  from (fake)  source to (fake) target */
   virtual void set_link() override;
 
-  PRM_STRING( tparam, efNoRunChange, "Param", "Name of param target", "max=128\nprops=STRING,SIMPLE,INNERLINK\nsep=block"  );
+  PRM_STRING( tparam, efNoRunChange, "Param", "Name of param target", "max=128\nprops=STRING,SIMPLE,INNERLINK\ncmpl=prm\nsep=block"  );
   PRM_SWITCH( onlyFirst, 0, "only First", "apply only at start of run", "" );
 
   double fake_target = 0;

@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <QSemaphore>
 #include <QScriptEngine>
+#include <QStandardItem>
 
 #include "miscfun.h"
 #include "tmodel.h"
@@ -681,6 +682,21 @@ QString TModel::runModelScript()
 {
   return runScript( script );
 }
+
+void TModel::fillComplModelForOuts( QStandardItemModel *mdl ) const
+{
+  if( ! outs ) { return; }
+
+  for( auto e: outs->children() ) {
+    TOutArr *out = qobject_cast<TOutArr*>(e);
+    if( !out ) {
+      continue;
+    }
+    QStandardItem *it = new QStandardItem( out->objectName() );
+    mdl->appendRow( it );
+  }
+}
+
 
 
 DEFAULT_FUNCS_REG(TModel)

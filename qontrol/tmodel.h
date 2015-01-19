@@ -113,6 +113,8 @@ class TModel : public TDataContainer  {
   //* run inner model script
   QString runModelScript();
 
+  virtual void fillComplModelForOuts( QStandardItemModel *mdl ) const override;
+
 
  protected:
   // --------------- convinience ptrs to obligatory elements
