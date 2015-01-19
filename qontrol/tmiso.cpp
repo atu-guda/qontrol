@@ -15,6 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <QStandardItem>
+
 #include "tmiso.h"
 
 using namespace  std;
@@ -125,3 +127,15 @@ int TMiso::do_endLoop()
   return 1;
 }
 
+void TMiso::fillComplModelForParams( QStandardItemModel *mdl ) const
+{
+  for( auto e: children() ) {
+    HolderDouble* hd = qobject_cast<HolderDouble*>(e);
+    if( !hd ) {
+      continue;
+    }
+    QStandardItem *it = new QStandardItem;
+    it->setText( hd->objectName() );
+    mdl->appendRow( it );
+  }
+}

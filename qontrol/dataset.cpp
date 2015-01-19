@@ -2111,6 +2111,7 @@ InputSimple* TDataSet::getInput( int n ) const
 }
 
 
+
 // ------------------------------------ InputAbstract ---------
 //
 STD_CLASSINFO(InputAbstract,clpInput|clpSpecial|clpPure);

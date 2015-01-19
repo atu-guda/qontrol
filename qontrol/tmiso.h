@@ -78,6 +78,7 @@ class TMiso : public TDataSet  {
    /** check, if element have given visual coords */
    bool isAtCoord( int ax, int ay ) const
      { return (vis_x == ax && vis_y == ay ); }
+   virtual void fillComplModelForParams( QStandardItemModel *mdl ) const;
  protected:
    /** main computation function
     * \param t current time
