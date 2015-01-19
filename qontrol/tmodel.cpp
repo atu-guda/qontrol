@@ -77,7 +77,7 @@ void fromScriptValuetoTripleF( const QScriptValue &obj, TripleF &s )
 // ------------------------- TModel --------------------------------------
 
 const char* TModel::helpstr = "<H1>TModel</H1>\n"
- "Hold all active elements, output arrays and graph descriptions";
+ "Hold all schems, output arrays, graph descriptions and simulations";
 
 STD_CLASSINFO(TModel,clpSpecial | clpContainer);
 
@@ -125,6 +125,7 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
   };
   // may be some model params?
   rv =  getDoublePtr( nm, lt, src_ob, lev );
+  // TODO: simulation params?
 
   if( !rv ) {
     qWarning() << "fail to find target " << nm << " in model" << WHE;
@@ -682,6 +683,32 @@ QString TModel::runModelScript()
 {
   return runScript( script );
 }
+
+void TModel::fillComplModelForInputs( QStandardItemModel *mdl ) const
+{
+  Scheme *sch = getActiveScheme();
+  if( sch ) {
+    for( auto e: sch->children() ) { // TODO: separate func
+      TMiso *el = qobject_cast<TMiso*>(e); // TODO: propagate to deep
+      if( !el ) {
+        continue;
+      }
+      QStandardItem *it = new QStandardItem(  el->objectName() );
+      mdl->appendRow( it );
+    }
+  };
+
+  // seft vars
+  for( auto e: children() ) {
+    HolderDouble* hd = qobject_cast<HolderDouble*>(e);
+    if( !hd ) {
+      continue;
+    }
+    QStandardItem *it = new QStandardItem(  hd->objectName() );
+    mdl->appendRow( it );
+  }
+}
+
 
 void TModel::fillComplModelForOuts( QStandardItemModel *mdl ) const
 {

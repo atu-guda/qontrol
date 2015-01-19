@@ -129,6 +129,7 @@ int TMiso::do_endLoop()
 
 void TMiso::fillComplModelForParams( QStandardItemModel *mdl ) const
 {
+  // TODO: scheme
   for( auto e: children() ) {
     HolderDouble* hd = qobject_cast<HolderDouble*>(e);
     if( !hd ) {
@@ -139,3 +140,4 @@ void TMiso::fillComplModelForParams( QStandardItemModel *mdl ) const
     mdl->appendRow( it );
   }
 }
+

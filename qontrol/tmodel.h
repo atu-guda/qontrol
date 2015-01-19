@@ -113,6 +113,7 @@ class TModel : public TDataContainer  {
   //* run inner model script
   QString runModelScript();
 
+  virtual void fillComplModelForInputs( QStandardItemModel *mdl ) const override;
   virtual void fillComplModelForOuts( QStandardItemModel *mdl ) const override;
 
 
