@@ -124,7 +124,6 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
   };
   // may be some model params?
   rv =  getDoublePtr( nm, lt, src_ob, lev );
-  // TODO: simulation params?
 
   if( !rv ) {
     qWarning() << "fail to find target " << nm << " in model" << WHE;
@@ -687,20 +686,37 @@ void TModel::fillComplModelForInputs( QStandardItemModel *mdl ) const
 {
   Scheme *sch = getActiveScheme();
   if( sch ) {
-    for( auto e: sch->children() ) { // TODO: separate func
-      TMiso *el = qobject_cast<TMiso*>(e); // TODO: propagate to deep
+    for( auto e: sch->children() ) {
+      TMiso *el = qobject_cast<TMiso*>(e); // TODO: propagate to deep ?
       if( !el ) {
         continue;
       }
-      QStandardItem *it = new QStandardItem(  el->objectName() );
+      auto it = new QStandardItem(  el->objectName() );
 
-      QStandardItem *it2 = new QStandardItem( "Sub_el" ); // test only
-      it->appendRow( it2 );
+      for( auto e1: el->children() ) { // may be more then 1 level?
+        HolderDouble *hd = qobject_cast<HolderDouble*>( e1 );
+        if( !hd ) { continue; }
+
+        auto it2 = new QStandardItem( hd->objectName() );
+        it->appendRow( it2 );
+      }
 
       mdl->appendRow( it );
     }
   };
-  // todo: selected simulation
+
+  //  simulation params
+  Simulation *csim = getActiveSimulation();
+  if( csim ) {
+    for( auto e: csim->children() ) {
+      HolderDouble* hd = qobject_cast<HolderDouble*>(e);
+      if( !hd ) {
+        continue;
+      }
+      QStandardItem *it = new QStandardItem(  hd->objectName() );
+      mdl->appendRow( it );
+    }
+  }
 
   // self vars
   for( auto e: children() ) {

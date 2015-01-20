@@ -1,13 +1,13 @@
 Dump TOutArr/TGraph commandline (-p/-P)
+Check getDoublePtr TModel/Scheme
 Run script before/after run (+ file)
-Scripts dir (-I) + JS include
+JS include
 LaboWin::labowin to function + macros?
-Output to log from JS
+Output to log from JS - std print?
 Inputs
 Outputs
 Tests
 Autocorrelation?
-Widget for link: after new hierarchy. QCompleter?
 
 Propagate modified flag up to root?
 Application config: to TDataSet?
@@ -15,7 +15,6 @@ Application config: to TDataSet?
 JS run dialog. + pr JS function
 Set more data while object creation
 
-LaboWin::initDirs? - to main
 Sub simulation? / set of dialog-ed values before run
 Add to model object: common parameters. Is really need? Use params in model/scheme/simulation
 Add to model object: functions? but what?
@@ -49,5 +48,5 @@ vector icons (language=SVG?) (may be dynamic)
 Hue of elements
 Label of element (or/and floating labels on structure view)
 Labels on plot view (fixed, attached to some points)
-Report with macros
+Report with macros -- overrided by scripts?
 

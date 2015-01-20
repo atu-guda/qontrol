@@ -895,7 +895,7 @@ QStringList HolderData::getEnumStrings( const QString &enum_name ) const
 QAbstractItemModel* HolderData::getComplModel( const QString &targ, QObject *mdl_par ) const
 {
   QStandardItemModel *mdl = new QStandardItemModel( mdl_par );
-  qDebug() << "req: target: " << targ << NWHE;
+  // qDebug() << "req: target: " << targ << NWHE;
   if( targ == "in" ) {
     fillComplModelForInputs( mdl );
   } else if( targ == "prm" ) {
