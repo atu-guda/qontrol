@@ -33,6 +33,7 @@ struct TripleF {
 Q_DECLARE_METATYPE(TripleF);
 
 QScriptValue script_int2str( QScriptContext *ctx, QScriptEngine *eng );
+QScriptValue script_print( QScriptContext *ctx, QScriptEngine *eng );
 QScriptValue TripleFtoScriptValue( QScriptEngine *eng, const TripleF &s );
 void fromScriptValuetoTripleF( const QScriptValue &obj, TripleF &s );
 

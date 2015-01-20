@@ -619,6 +619,7 @@ void TModel::initEngine()
   eng->globalObject().setProperty( "plots", eng->newQObject( plots ) );
   // funcs
   eng->globalObject().setProperty( "int2str", eng->newFunction( script_int2str ) );
+  eng->globalObject().setProperty( "print", eng->newFunction( script_print ) );
 }
 
 QString TModel::runScript( const QString& script )

@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "defs.h"
 #include "scriptfuncs.h"
 
 using namespace std;
@@ -41,6 +42,21 @@ QScriptValue script_int2str( QScriptContext *ctx, QScriptEngine * /*eng*/ )
   }
   QString s = QString( "%1" ).arg( n, fw, base, fc );
   return QScriptValue( s );
+}
+
+QScriptValue script_print( QScriptContext *ctx, QScriptEngine *eng )
+{
+  QString r;
+  for( int i=0; i < ctx->argumentCount(); ++i ) {
+    if (i > 0) {
+      r.append(" ");
+    }
+    r.append( ctx->argument(i).toString() );
+  }
+
+  log_app.append( r );
+
+  return eng->undefinedValue();
 }
 
 QString TripleF::toString() const
