@@ -40,6 +40,7 @@ SOURCES += \
   rootdata.cpp \
   scaledata.cpp \
   scheme.cpp \
+  scriptfuncs.cpp \
   simul.cpp \
   simulview.cpp \
   tmiso.cpp \
@@ -105,6 +106,7 @@ HEADERS += \
   rootdata.h \
   scaledata.h \
   scheme.h \
+  scriptfuncs.h \
   simul.h \
   simulview.h \
   tmiso.h \

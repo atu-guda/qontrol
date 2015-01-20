@@ -19,6 +19,7 @@
 #define _CONTOUT_H
 
 #include "datacont.h"
+#include "scriptfuncs.h"
 
 class TOutArr;
 
