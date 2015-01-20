@@ -15,6 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <cmath>
+
 #include "defs.h"
 #include "scriptfuncs.h"
 
@@ -58,6 +60,29 @@ QScriptValue script_print( QScriptContext *ctx, QScriptEngine *eng )
 
   return eng->undefinedValue();
 }
+
+
+QScriptValue script_isNear( QScriptContext *ctx, QScriptEngine * /*eng*/ )
+{
+  double a = 0, b = 0, eps = D_EPS;
+  int n = ctx->argumentCount();
+  if( n > 0 ) {
+    a = ctx->argument(0).toNumber();
+  }
+  if( n > 1 ) {
+    b = ctx->argument(1).toNumber();
+  }
+  if( n > 2 ) {
+    eps = ctx->argument(2).toNumber();
+  }
+  bool r = fabs( a-b ) < eps;
+
+  return QScriptValue( r );
+}
+
+
+
+
 
 QString TripleF::toString() const
 {

@@ -620,6 +620,7 @@ void TModel::initEngine()
   // funcs
   eng->globalObject().setProperty( "int2str", eng->newFunction( script_int2str ) );
   eng->globalObject().setProperty( "print", eng->newFunction( script_print ) );
+  eng->globalObject().setProperty( "isNear", eng->newFunction( script_isNear ) );
 }
 
 QString TModel::runScript( const QString& script )

@@ -31,11 +31,13 @@ struct TripleF {
   QString toString() const;
 };
 Q_DECLARE_METATYPE(TripleF);
+QScriptValue TripleFtoScriptValue( QScriptEngine *eng, const TripleF &s );
+void fromScriptValuetoTripleF( const QScriptValue &obj, TripleF &s );
 
 QScriptValue script_int2str( QScriptContext *ctx, QScriptEngine *eng );
 QScriptValue script_print( QScriptContext *ctx, QScriptEngine *eng );
-QScriptValue TripleFtoScriptValue( QScriptEngine *eng, const TripleF &s );
-void fromScriptValuetoTripleF( const QScriptValue &obj, TripleF &s );
+QScriptValue script_isNear( QScriptContext *ctx, QScriptEngine *eng );
+
 
 
 #endif

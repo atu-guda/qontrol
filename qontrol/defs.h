@@ -34,12 +34,13 @@
 #define WHE " in " << __FILE__ << ": " <<  __PRETTY_FUNCTION__ << ": " << __LINE__
 #define NWHE " in " << getFullName() << " in " << __FILE__ << ": " <<  __PRETTY_FUNCTION__ << ": " << __LINE__
 
-const int IMIN      { std::numeric_limits<int>::min() };
-const int IMAX      { std::numeric_limits<int>::max() };
-const unsigned UMIN { std::numeric_limits<unsigned int>::min() };
-const unsigned UMAX { std::numeric_limits<unsigned int>::max() };
-const double DMIN   { std::numeric_limits<double>::lowest() };
-const double DMAX   { std::numeric_limits<double>::max() };
+constexpr const int IMIN      { std::numeric_limits<int>::min() };
+constexpr const int IMAX      { std::numeric_limits<int>::max() };
+constexpr const unsigned UMIN { std::numeric_limits<unsigned int>::min() };
+constexpr const unsigned UMAX { std::numeric_limits<unsigned int>::max() };
+constexpr const double DMIN   { std::numeric_limits<double>::lowest() };
+constexpr const double DMAX   { std::numeric_limits<double>::max() };
+constexpr const double D_EPS  { 1.0e-6 }; // default error
 
 #define L8B QString::fromLocal8Bit
 #define QSN QString::number
