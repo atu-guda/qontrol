@@ -11,6 +11,7 @@
 #include "datawidget.h"
 #include "labowin.h"
 #include "addelemdia.h"
+#include "linkcompleter.h"
 
 using namespace std;
 
@@ -108,7 +109,7 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
 
   QString cmpl_targ = h.getParm( "cmpl" );
   if( ! cmpl_targ.isEmpty() ) {
-    QCompleter *cmpl = new QCompleter( this );
+    auto cmpl = new LinkCompleter( this );
     QAbstractItemModel *cmpl_mdl = h.getComplModel( cmpl_targ, cmpl );
     cmpl->setModel( cmpl_mdl );
     le->setCompleter( cmpl );

@@ -17,7 +17,6 @@
 
 #include <ctime>
 #include <cmath>
-// unistd for usleep: TODO: replace with threads
 #include <unistd.h>
 #include <algorithm>
 #include <QSemaphore>
@@ -694,11 +693,16 @@ void TModel::fillComplModelForInputs( QStandardItemModel *mdl ) const
         continue;
       }
       QStandardItem *it = new QStandardItem(  el->objectName() );
+
+      QStandardItem *it2 = new QStandardItem( "Sub_el" ); // test only
+      it->appendRow( it2 );
+
       mdl->appendRow( it );
     }
   };
+  // todo: selected simulation
 
-  // seft vars
+  // self vars
   for( auto e: children() ) {
     HolderDouble* hd = qobject_cast<HolderDouble*>(e);
     if( !hd ) {

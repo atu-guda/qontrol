@@ -31,6 +31,7 @@ SOURCES += \
   labodoc.cpp \
   laboview.cpp \
   labowin.cpp \
+  linkcompleter.cpp \
   mglview.cpp \
   outdataview.cpp \
   runview.cpp \
@@ -95,6 +96,7 @@ HEADERS += \
   labodoc.h \
   laboview.h \
   labowin.h \
+  linkcompleter.h \
   mglview.h \
   outdataview.h \
   runview.h \
