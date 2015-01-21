@@ -57,6 +57,7 @@ SOURCES += \
   ../elems/tdelay.cpp \
   ../elems/textrlatch.cpp \
   ../elems/tfriction.cpp \
+  ../elems/tfilesource.cpp \
   ../elems/tfuncmisc.cpp \
   ../elems/tfuncpoly.cpp \
   ../elems/tfunctrans.cpp \
@@ -121,6 +122,7 @@ HEADERS += \
   ../elems/tcriterion.h \
   ../elems/tdelay.h \
   ../elems/textrlatch.h \
+  ../elems/tfilesource.h \
   ../elems/tfriction.h \
   ../elems/tfuncmisc.h \
   ../elems/tfuncpoly.h \
