@@ -111,7 +111,7 @@ void StructView::printAll()
     return;
   }
 
-  QPrinter *pr = LaboWin::labowin->getPrinter();
+  QPrinter *pr = LaboWin::win()->getPrinter();
   if( !pr ) {
     return;
   }
@@ -182,11 +182,11 @@ void StructView::drawAll( QPainter &p )
   };
   TModel *model = sch->getAncestorT<TModel>();
 
-  Mo2Settings *psett = LaboWin::labowin->getSettings();
+  Mo2Settings *psett = LaboWin::win()->getSettings();
   int s_icons = psett->showicons;
-  const QFont &strf = LaboWin::labowin->getStructFont();
+  const QFont &strf = LaboWin::win()->getStructFont();
   p.setFont( strf );
-  const QFont &smlf = LaboWin::labowin->getSmallFont();
+  const QFont &smlf = LaboWin::win()->getSmallFont();
   el_marg = (grid_sz-obj_sz)/2;
   sel_x = mainview->getSelX();
   sel_y = mainview->getSelY();

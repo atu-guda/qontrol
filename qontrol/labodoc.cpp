@@ -70,12 +70,12 @@ const QString &LaboDoc::title() const
 
 void LaboDoc::showError( const QString &s )
 {
-  handleError( LaboWin::labowin, s ); // nullptr is ok - batch
+  handleError( LaboWin::win(), s ); // nullptr is ok - batch
 }
 
 void LaboDoc::showWarn( const QString &s )
 {
-  handleWarn( LaboWin::labowin, s );
+  handleWarn( LaboWin::win(), s );
 }
 
 
@@ -255,7 +255,7 @@ bool LaboDoc::canCloseFrame( LaboView* pFrame )
         QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel )) {
     case QMessageBox::Yes:
       if( is_nonamed ) {
-        saveName = QFileDialog::getSaveFileName( LaboWin::labowin, tr("Save model"),
+        saveName = QFileDialog::getSaveFileName( LaboWin::win(), tr("Save model"),
             QString::null, "Model *.qol files (*.qol);;All files(*)" );
         if( saveName.isEmpty() ) {
           return false;

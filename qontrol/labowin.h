@@ -102,6 +102,8 @@ class LaboWin : public QMainWindow
     const QFont& getPlotFont()   const  { return plotFont; }
     const QFont& getStructFont() const  { return structFont; }
     int getEm() const { return em; }
+    static int Em() { return ( labowin ? labowin->getEm() : 10 ); }
+    static LaboWin* win() { return labowin; }
 
   protected:
     /** overloaded for Message box on last window exit */
@@ -331,10 +333,9 @@ class LaboWin : public QMainWindow
             *act_helpabout, *act_helpaboutqt, *act_whatsthis,
             *act_test;
     QList<QAction*> model_acts; //* list of actions, depending on model
-  public:
+
     /** static pointer to main window -- the only allowed */
     static LaboWin *labowin;
-
 };
 
 

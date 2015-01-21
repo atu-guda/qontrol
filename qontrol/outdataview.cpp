@@ -30,7 +30,7 @@ OutDataView::OutDataView( HolderData *a_mod, LaboView *par )
   s_pal.setColor( QPalette::Base, QColor( 120,220,252 ) );
   setPalette( s_pal );
 
-  int em = LaboWin::labowin->getEm();
+  int em = LaboWin::Em();
   setFixedWidth( 12*em );
 
   setContextMenuPolicy( Qt::ActionsContextMenu );

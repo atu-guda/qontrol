@@ -30,7 +30,7 @@ SimulView::SimulView( HolderData *a_mod, LaboView *par )
   s_pal.setColor( QPalette::Base, QColor( 255, 200, 200 ) );
   setPalette( s_pal );
 
-  int em = LaboWin::labowin->getEm();
+  int em = LaboWin::Em();
   setFixedWidth( 8*em );
 
   setContextMenuPolicy( Qt::ActionsContextMenu );

@@ -30,7 +30,7 @@ GraphDataView::GraphDataView( HolderData *a_mod, LaboView *par )
   s_pal.setColor( QPalette::Base, QColor( 96,252,192 ) );
   setPalette( s_pal );
 
-  int em = LaboWin::labowin->getEm();
+  int em = LaboWin::Em();
   setFixedWidth( 12*em );
 
   setContextMenuPolicy( Qt::ActionsContextMenu );

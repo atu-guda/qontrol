@@ -249,8 +249,8 @@ void StringExtDataWidget::edit()
   }
   QString fn = f.fileName();
   QString cmd = "gvim -f ";
-  if( LaboWin::labowin ) {
-    Mo2Settings *sett = LaboWin::labowin->getSettings();
+  if( LaboWin::win() ) {
+    Mo2Settings *sett = LaboWin::win()->getSettings();
     if( sett ) {
       cmd = sett->editCmd;
     }

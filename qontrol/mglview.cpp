@@ -37,7 +37,7 @@ MglView::MglView( TGraph *agra, QWidget *parent )
           : QWidget( parent ),
           gra( agra ),
           scd ( make_shared<ScaleData>( "scd", nullptr, 0, "scale", "current scale data" ) ),
-          pa_fnt ( LaboWin::labowin->getPlotFont() )
+          pa_fnt ( LaboWin::win()->getPlotFont() )
 {
   QFontMetrics fm( pa_fnt );
   em = fm.width( 'W' );
@@ -583,11 +583,10 @@ void MglView::setMarkToLink()
 
 void MglView::printPlot()
 {
-  QPrinter *pr;
-  if( ! LaboWin::labowin ) {
+  if( ! LaboWin::win() ) {
     return;
   }
-  pr = LaboWin::labowin->getPrinter();
+  QPrinter *pr = LaboWin::win()->getPrinter();
   if( !pr ) {
     return;
   }
