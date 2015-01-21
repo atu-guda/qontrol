@@ -296,11 +296,13 @@ HolderData* HolderData::getElem( const QString &oname ) const
   NameType nt = splitName( oname, first, rest, idx );
 
   if( nt == badName ) {
+    qWarning() << "bad name" << oname << NWHE;
     return nullptr;
   }
 
   HolderData *ho =  findChild<HolderData*>( first, Qt::FindDirectChildrenOnly );
   if( !ho ) { // need, as here both simpleName and complexName
+    // qWarning() << "object" << oname << "not found " << NWHE; // very noisy!
     return nullptr;
   }
 
@@ -918,17 +920,6 @@ void HolderData::fillComplModelForParams( QStandardItemModel *mdl ) const
   if( par ) {
     par->fillComplModelForParams( mdl );
   }
-
-  // for( auto e: children() ) {
-  //   HolderDouble* hd = qobject_cast<HolderDouble*>(e);
-  //   if( !hd ) {
-  //     continue;
-  //   }
-  //   QStandardItem *it = new QStandardItem;
-  //   it->setText( hd->objectName() );
-  //   qDebug() << "add param name " << hd->objectName() << NWHE;
-  //   mdl->appendRow( it );
-  // }
 }
 
 void HolderData::fillComplModelForOuts( QStandardItemModel *mdl ) const
@@ -1811,60 +1802,64 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
               const TDataSet **targ, int lev  ) const
 {
   if( nm.isEmpty() ) {
-    if( lt )
-      *lt = LinkNone;
-    return 0;
+    if( lt ) { *lt = LinkNone;  }
+    return nullptr;
   }
   QString nmf = nm, first, rest;
-
-  // if( nm[0] == ':' ) { // handle old ':name' from TModel
-  //   nmf.remove( 0, 1 );
-  // }
 
   int idx;
   NameType nm_type = splitName( nmf, first, rest, idx );
   if( nm_type == badName ) {
-    if( lt )
-      *lt = LinkBad;
+    if( lt ) { *lt = LinkBad;  }
     qWarning() << "bad target name " << nmf << NWHE;
-    return 0;
+    return nullptr;
   }
 
   HolderData *ho = getElem( first );
 
   if( !ho ) {
     if( lt ) { *lt = LinkBad; }
-    return 0;
+    // qWarning() << "elem" << first << "not found, nmf= " << nmf << NWHE;
+    return nullptr;
   }
 
-  if( nm_type == simpleName ) { // first only
-    if( ho->isObject() ) {
-      TDataSet *ds= qobject_cast<TDataSet*>(ho);
+  if( nm_type == simpleName ) { // -- simple name ----- first only -----
+    TDataSet *ds= qobject_cast<TDataSet*>(ho);
+    if( ds ) {
       return ds->getDoublePtr( "out0", lt, targ, lev+1 );
     }
-    if( ho->getTp() == QVariant::Double ) {
-      HolderDouble *hod = qobject_cast<HolderDouble*>(ho);
-      if( !hod )
-        return nullptr;
-      if( lt ) {
-        *lt = ( lev == 1 ) ? LinkElm : LinkSpec;
-      }
-      if( targ ) {
-        *targ = this;
-      }
+
+    HolderDouble *hod = qobject_cast<HolderDouble*>(ho);
+    if( hod) {
+      if( lt )   {  *lt = ( lev == 1 ) ? LinkElm : LinkSpec;  }
+      if( targ ) {  *targ = this;   }
       return hod->caddr();
     }
-    // TODO: DoubleArray
+
+    auto *hoda = qobject_cast<HolderDoubleArray*>(ho);
+    if( hoda ) {
+      int na = hoda->arrSize();
+      if( idx >= na ) {
+        qWarning() << "Bad index " << idx << " while access to " << hoda->getFullName()
+                   << " size " << na << NWHE;
+        if( lt ) { *lt = LinkBad; }
+      }
+      if( lt )   {  *lt = ( lev == 1 ) ? LinkElm : LinkSpec;  }
+      if( targ ) {  *targ = this;   }
+      return & ( hoda->operator[](idx) );
+    }
+
     return nullptr;
-  }
+  } // -------------------- simple name end ----------------------------
 
   // both part of name exists
-  if( ! ho->isObject() ) {
-    if( lt )
-      *lt = LinkBad;
+  TDataSet *ds = qobject_cast<TDataSet*>(ho);
+  if( !ds ) {
+    if( lt ) {  *lt = LinkBad; }
+    qWarning() << "Complex name " << nm << " is given for simple object "
+               << ho->getFullName() << NWHE;
     return nullptr;
   }
-  TDataSet *ds = qobject_cast<TDataSet*>(ho);
   return ds->getDoublePtr( rest, lt, targ, lev+1 );
 
 }

@@ -672,16 +672,21 @@ void TModel::fillComplModelForInputs( QStandardItemModel *mdl ) const
         continue;
       }
       auto it = new QStandardItem(  el->objectName() );
+      mdl->appendRow( it );
 
       for( auto e1: el->children() ) { // may be more then 1 level?
-        HolderDouble *hd = qobject_cast<HolderDouble*>( e1 );
-        if( !hd ) { continue; }
-
-        auto it2 = new QStandardItem( hd->objectName() );
-        it->appendRow( it2 );
+        if( auto hd = qobject_cast<HolderDouble*>( e1 ) ) {
+          auto it2 = new QStandardItem( hd->objectName() );
+          it->appendRow( it2 );
+          continue;
+        }
+        if( auto hda = qobject_cast<HolderDoubleArray*>( e1 ) ) {
+          auto it2 = new QStandardItem( hda->objectName() + "[0]" );
+          it->appendRow( it2 );
+          continue;
+        }
       }
 
-      mdl->appendRow( it );
     }
   };
 
@@ -689,23 +694,31 @@ void TModel::fillComplModelForInputs( QStandardItemModel *mdl ) const
   Simulation *csim = getActiveSimulation();
   if( csim ) {
     for( auto e: csim->children() ) {
-      HolderDouble* hd = qobject_cast<HolderDouble*>(e);
-      if( !hd ) {
+      if( auto hd = qobject_cast<HolderDouble*>(e) ) {
+        QStandardItem *it = new QStandardItem(  hd->objectName() );
+        mdl->appendRow( it );
         continue;
       }
-      QStandardItem *it = new QStandardItem(  hd->objectName() );
-      mdl->appendRow( it );
+      if( auto hda = qobject_cast<HolderDoubleArray*>( e ) ) {
+        auto it2 = new QStandardItem( hda->objectName() + "[0]" );
+        mdl->appendRow( it2 );
+        continue;
+      }
     }
   }
 
   // self vars
   for( auto e: children() ) {
-    HolderDouble* hd = qobject_cast<HolderDouble*>(e);
-    if( !hd ) {
+    if( auto hd = qobject_cast<HolderDouble*>(e) ) {
+      QStandardItem *it = new QStandardItem(  hd->objectName() );
+      mdl->appendRow( it );
       continue;
     }
-    QStandardItem *it = new QStandardItem(  hd->objectName() );
-    mdl->appendRow( it );
+    if( auto hda = qobject_cast<HolderDoubleArray*>( e ) ) {
+      auto it2 = new QStandardItem( hda->objectName() + "[0]" );
+      mdl->appendRow( it2 );
+      continue;
+    }
   }
 }
 
