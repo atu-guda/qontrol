@@ -94,6 +94,7 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
   if( h.getFlags() & ( efRO | efRODial ) ) {
     le->setReadOnly( true );
   }
+  lbl->setBuddy( le );
 
   int v_max { 4096 }; // not IMAX - good limit for single-line string
   QString s_max = h.getParm( "max" );
@@ -421,7 +422,8 @@ int SwitchDataWidget::registered = SwitchDataWidget::reg();
 
 SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
-  cb( new QCheckBox( tex2label(ho.getParm("vis_name"),true), this ) )
+  // cb( new QCheckBox( tex2label(ho.getParm("vis_name"),true), this ) )
+  cb( new QCheckBox( " ", this )  )
 {
   main_w = cb;
   if( h.getFlags() & ( efRO | efRODial ) ) {
@@ -430,8 +432,10 @@ SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
 
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
-  // lay->addWidget( lbl ); // not for this widget
-  lbl->hide();
+  // try to add
+  lay->addWidget( lbl ); // not for this widget
+  // lbl->hide();
+
   lay->addWidget( cb, 1 );
   setLayout( lay );
 }

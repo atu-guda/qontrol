@@ -1,14 +1,12 @@
 Dump TOutArr/TGraph commandline (-p/-P)
-Check getDoublePtr TModel/Scheme
-Run script before/after run (+ file)
 JS include
-Switch: external label (with TeX)
+More functional labels in dialogs: go to buddy, autoset ....
 LaboWin::labowin to function + macros?
-Output to log from JS - std print?
 Inputs
 Outputs
 Tests
 Autocorrelation?
+Run script before/after run (+ file)
 
 Propagate modified flag up to root?
 Application config: to TDataSet?
@@ -51,3 +49,4 @@ Label of element (or/and floating labels on structure view)
 Labels on plot view (fixed, attached to some points)
 Report with macros -- overrided by scripts?
 
+Check getDoublePtr TModel/Scheme - checked, may be used from different levels

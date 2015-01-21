@@ -50,8 +50,8 @@ class TVibro : public TMiso  {
    /** Curent velosity dx/dt */
    PRM_DOUBLE( v, efInner, "v", "v(t)", "" );
 
-   PRM_INPUT( in_u, 0, "input u", "Main input",  "sep=block" );
-   PRM_INPUT( in_f, 0, "input f", "Force input (if enabled)", "sep=col" );
+   PRM_INPUT( in_u, 0, "u(t)", "Main input",  "sep=block" );
+   PRM_INPUT( in_f, 0, "f(x)", "Force input (if enabled)", "sep=col" );
 
    /** flag for start(1,2,0)  */
    int isStart = 1;

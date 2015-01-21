@@ -44,8 +44,8 @@ class TRelaxGen : public TMiso  {
    PRM_DOUBLE( v_1, 0, "v_1", "Charge limit", "def=2\nsep=col" );
    PRM_DOUBLE( v_2, 0, "v_2", "Discharge limit", "def=0.1" );
    /** misc flags */
-   PRM_SWITCH( useCharge, efNoRunChange, "Use i_ch", "Use i_ch as charge current", "sep=block" );
-   PRM_SWITCH( useDischarge, efNoRunChange, "Use i_dis", "Use i_dis as discharge current", "" );
+   PRM_SWITCH( useCharge, efNoRunChange, "Use i_{ch}", "Use i_ch as charge current", "sep=block" );
+   PRM_SWITCH( useDischarge, efNoRunChange, "Use i_{dis}", "Use i_dis as discharge current", "" );
    PRM_SWITCH( useTrig, efNoRunChange, "Use trig", "Use trig as signal to discharge", "" );
    PRM_SWITCH( useContCharge, efNoRunChange, "Contiguous charge", "Use contiguous charging", "sep=col" );
    PRM_SWITCH( useContDischarge, efNoRunChange, "Contiguous discharge", "Use contiguous discharging", "" );

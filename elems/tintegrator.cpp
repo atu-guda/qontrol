@@ -33,7 +33,7 @@ const char* TIntegrator::helpstr = "<H1>TIntegrator</H1>\n"
  "- <b>useHold</b> - on reset, hold old value this step;<br/>\n"
  "- <b>useAver</b> - calculate average value;<br/>\n"
  "- <b>useSqIn</b> - calculate u^2 before processing;<br/>\n"
- "- <b>useSqrOut</b> - calculate sqrt(out);<br/>\n"
+ "- <b>useSqrOut</b> - calculate \\sqrt(out);<br/>\n"
  "- <b>useMin, useMax</b> - use limits to bound value.</p>";
 
 STD_CLASSINFO(TIntegrator,clpElem );

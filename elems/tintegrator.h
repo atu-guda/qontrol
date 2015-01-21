@@ -53,7 +53,7 @@ class TIntegrator : public TMiso  {
    PRM_SWITCH( useHold,  efNRC, "Hold", "Hold output 1 tick after reset", "" );
    PRM_SWITCH( useAver,  efNRC, "Calc Aver", "Calculate average value", "" );
    PRM_SWITCH( useSqIn,  efNRC, "x^2 on input", "Calculate square on input", "");
-   PRM_SWITCH( useSqrOut,efNRC, "sqrt on output", "Calculate square root on output", "");
+   PRM_SWITCH( useSqrOut,efNRC, "\\sqrt(output)", "Calculate square root on output", "");
 
    PRM_INPUT( in_u, 0, "input", "Main input",  "sep=block" );
    PRM_INPUT( in_rst, 0, "rst in", "Reset signal", "sep=col" );

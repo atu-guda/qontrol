@@ -57,10 +57,10 @@ class TLogic : public TMiso  {
    PRM_SWITCH( useNOut, efNRC,  "Inverse out" , "Inverse input output", "sep=col"  );
    PRM_SWITCH( useMinus, efNRC, "Negative out", "Negative output is -1, not 0", "" );
 
-   PRM_INPUT( in_0, 0, "input 0", "First input",  "sep=block" );
-   PRM_INPUT( in_1, 0, "input 1", "Second input", "sep=col" );
-   PRM_INPUT( in_2, 0, "input 2", "Third input",  "sep=col" );
-   PRM_INPUT( in_3, 0, "input 3", "Fourth input", "sep=col" );
+   PRM_INPUT( in_0, 0, "u_0", "First input",  "sep=block" );
+   PRM_INPUT( in_1, 0, "u_1", "Second input", "sep=col" );
+   PRM_INPUT( in_2, 0, "u_2", "Third input",  "sep=col" );
+   PRM_INPUT( in_3, 0, "u_3", "Fourth input", "sep=col" );
 
    DCL_DEFAULT_STATIC;
 };

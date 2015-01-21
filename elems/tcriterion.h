@@ -65,7 +65,7 @@ class TCriterion : public TMiso  {
    PRM_INPUT( in_pos, 0, "input+", "Positive input",  "sep=block" );
    PRM_INPUT( in_neg, 0, "input-", "Negative input", "sep=col" );
    PRM_INPUT( in_ena, 0, "enable", "Signal to enable",  "sep=col" );
-   PRM_INPUT( in_a,   0, "input a", "Reference signal", "sep=col" );
+   PRM_INPUT( in_a,   0, "in_a", "Reference signal", "sep=col" );
 
    DCL_DEFAULT_STATIC;
 };

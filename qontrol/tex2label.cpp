@@ -199,7 +199,7 @@ QString tex2label( const QString &t, bool noSub )
       }
 
       switch( cc ) {
-        case '\\': case '{': case '}':
+        case '\\': case '{': case '}': case '_': case '^':
           r += c; estate = false; break;
         case ' ':
           r += QChar( 0x0080 );  break;
