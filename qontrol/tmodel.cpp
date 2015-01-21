@@ -664,62 +664,22 @@ QString TModel::runModelScript()
 
 void TModel::fillComplModelForInputs( QStandardItemModel *mdl ) const
 {
+  if( ! mdl ) { return; }
+  auto root_item = mdl->invisibleRootItem();
+
   Scheme *sch = getActiveScheme();
   if( sch ) {
-    for( auto e: sch->children() ) {
-      TMiso *el = qobject_cast<TMiso*>(e); // TODO: propagate to deep ?
-      if( !el ) {
-        continue;
-      }
-      auto it = new QStandardItem(  el->objectName() );
-      mdl->appendRow( it );
-
-      for( auto e1: el->children() ) { // may be more then 1 level?
-        if( auto hd = qobject_cast<HolderDouble*>( e1 ) ) {
-          auto it2 = new QStandardItem( hd->objectName() );
-          it->appendRow( it2 );
-          continue;
-        }
-        if( auto hda = qobject_cast<HolderDoubleArray*>( e1 ) ) {
-          auto it2 = new QStandardItem( hda->objectName() + "[0]" );
-          it->appendRow( it2 );
-          continue;
-        }
-      }
-
-    }
+    sch->fillComplForInputs( root_item );
   };
 
   //  simulation params
   Simulation *csim = getActiveSimulation();
   if( csim ) {
-    for( auto e: csim->children() ) {
-      if( auto hd = qobject_cast<HolderDouble*>(e) ) {
-        QStandardItem *it = new QStandardItem(  hd->objectName() );
-        mdl->appendRow( it );
-        continue;
-      }
-      if( auto hda = qobject_cast<HolderDoubleArray*>( e ) ) {
-        auto it2 = new QStandardItem( hda->objectName() + "[0]" );
-        mdl->appendRow( it2 );
-        continue;
-      }
-    }
+    csim->fillComplForInputs( root_item );
   }
 
   // self vars
-  for( auto e: children() ) {
-    if( auto hd = qobject_cast<HolderDouble*>(e) ) {
-      QStandardItem *it = new QStandardItem(  hd->objectName() );
-      mdl->appendRow( it );
-      continue;
-    }
-    if( auto hda = qobject_cast<HolderDoubleArray*>( e ) ) {
-      auto it2 = new QStandardItem( hda->objectName() + "[0]" );
-      mdl->appendRow( it2 );
-      continue;
-    }
-  }
+  fillComplForInputs( root_item );
 }
 
 
@@ -728,12 +688,11 @@ void TModel::fillComplModelForOuts( QStandardItemModel *mdl ) const
   if( ! outs ) { return; }
 
   for( auto e: outs->children() ) {
-    TOutArr *out = qobject_cast<TOutArr*>(e);
-    if( !out ) {
+    if( auto out = qobject_cast<TOutArr*>(e) ) {
+      QStandardItem *it = new QStandardItem( out->objectName() );
+      mdl->appendRow( it );
       continue;
     }
-    QStandardItem *it = new QStandardItem( out->objectName() );
-    mdl->appendRow( it );
   }
 }
 

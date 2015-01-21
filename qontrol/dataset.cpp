@@ -929,6 +929,39 @@ void HolderData::fillComplModelForOuts( QStandardItemModel *mdl ) const
   }
 }
 
+int HolderData::fillComplForInputs( QStandardItem *it0 ) const
+{
+  if( !it0 ) { return 0; }
+  int n = 0;
+
+  for( auto e: children() ) {
+
+    if( auto hd = qobject_cast<HolderDouble*>( e ) ) {
+      auto it = new QStandardItem( hd->objectName() );
+      it0->appendRow( it ); ++n;
+      continue;
+    }
+
+    if( auto hda = qobject_cast<HolderDoubleArray*>( e ) ) {
+      auto it = new QStandardItem( hda->objectName() + "[0]" );
+      it0->appendRow( it ); ++n;
+      continue;
+    }
+
+    if( auto el = qobject_cast<TDataSet*>(e) ) {
+      auto it = new QStandardItem( el->objectName() );
+      int na = el->fillComplForInputs( it );
+      if( na > 0 ) { // append row for elem only if at least one final completition
+        it0->appendRow( it ); ++n;
+      } else {
+        delete it;
+      }
+    }
+
+  }
+  return n;
+}
+
 void HolderData::dumpStruct() const
 {
   static int dump_lev = -1;

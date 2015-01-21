@@ -24,6 +24,7 @@ typedef QMap<QString,QString> QSSMap;
 
 
 class QStandardItemModel;
+class QStandardItem;
 class HolderData;
 class   TDataSet;
 class InputSimple;
@@ -309,6 +310,8 @@ class HolderData : public QAbstractItemModel {
   virtual void fillComplModelForParams( QStandardItemModel *mdl ) const;
   //* fill model for outputs: pass to model
   virtual void fillComplModelForOuts( QStandardItemModel *mdl ) const;
+  //* fill items for input: workhorse for fillComplModelForInputs
+  int fillComplForInputs( QStandardItem *it0 ) const;
  signals:
    void sigStructChanged();
  public:
