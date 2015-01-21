@@ -48,6 +48,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   plots( model->getElemT<ContGraph*>( "plots" ) ),
   sims( model->getElemT<ContSimul*>( "sims" ) )
 {
+  em = LaboWin::Em();
 
   QVBoxLayout *vlay = new QVBoxLayout( this );
   vlay->setContentsMargins( 2, 1, 2, 2 );
@@ -580,8 +581,6 @@ void LaboView::infoElm()
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
 
-  int em = LaboWin::Em();
-
   dia->resize( 72*em, 50*em ); // TODO: adjust to inner table width
   dia->exec();
   delete dia;
@@ -612,7 +611,6 @@ void LaboView::showTreeElm()
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
 
-  int em = LaboWin::Em();
   dia->resize( 80*em, 50*em ); // TODO: unmagic
   treeView->setColumnWidth( 0, 35*em );
   treeView->setColumnWidth( 1, 10*em );
@@ -653,7 +651,6 @@ void LaboView::testElm1()
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
 
-  int em = LaboWin::Em();
   dia->resize( 60*em, 30*em ); // TODO: unmagic
   dia->exec();
   delete dia;
@@ -1194,7 +1191,6 @@ void LaboView::showGraphData()
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
   lv->addWidget( bt_ok );
 
-  int em = LaboWin::Em();
   int w0 = di.size() * 12 * em;
   dia->resize( w0, em*40 );
 
@@ -1409,7 +1405,6 @@ void LaboView::showTreeModel()
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
 
-  int em = LaboWin::Em();
   dia->resize( 80*em, 50*em ); // TODO: unmagic
   treeView->setColumnWidth( 0, 35*em );
   treeView->setColumnWidth( 1, 10*em );
@@ -1475,7 +1470,6 @@ void LaboView::runScript()
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
 
-  int em = LaboWin::Em();
   dia->resize( 80*em, 60*em );
 
   int rc = dia->exec();

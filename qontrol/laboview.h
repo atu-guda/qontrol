@@ -207,6 +207,8 @@ class LaboView : public QWidget
    TMiso *markObj = nullptr;
    /** name of marked element */
    QString markName;
+   //* copy of LaboWin em;
+   int em = 10;
 };
 
 #endif
