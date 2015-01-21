@@ -2,6 +2,7 @@ Dump TOutArr/TGraph commandline (-p/-P)
 Check getDoublePtr TModel/Scheme
 Run script before/after run (+ file)
 JS include
+Switch: external label (with TeX)
 LaboWin::labowin to function + macros?
 Output to log from JS - std print?
 Inputs
@@ -12,7 +13,7 @@ Autocorrelation?
 Propagate modified flag up to root?
 Application config: to TDataSet?
 
-JS run dialog. + pr JS function
+JS run dialog. + one-line above log viewer
 Set more data while object creation
 
 Sub simulation? / set of dialog-ed values before run

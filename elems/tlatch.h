@@ -36,7 +36,7 @@ class TLatch : public TMiso  {
    };
    Q_ENUMS(LatchType);
    Q_CLASSINFO( "enum_LatchType_0", "Time" );        // latchTime
-   Q_CLASSINFO( "enum_LatchType_1", "Signal u[1]" ); // latchSignal
+   Q_CLASSINFO( "enum_LatchType_1", "in_latch" );   // latchSignal
 
  protected:
    /** main computation function */
@@ -55,9 +55,9 @@ class TLatch : public TMiso  {
    /** old input  */
    double u_old = 0;
    /** flags, state */
-   PRM_SWITCH( usePulse, efNRC, "use Pulse", "latch on jump of u[1] (>0.5), not level", "sep=col" );
+   PRM_SWITCH( usePulse, efNRC, "use Pulse", "latch on jump of (in_latch >0.5), not level", "sep=col" );
    PRM_SWITCH( useFirst, efNRC, "use First", "count only first signal to latch", "" );
-   PRM_SWITCH( useAdd,   efNRC, "use Add", "add current u[0] to value, not set", "" );
+   PRM_SWITCH( useAdd,   efNRC, "use Add", "add current in_u to value, not set", "" );
    PRM_DOUBLE( lt, efInner, "Latch Time", "Time whan latch occurs" , "" );
 
    PRM_INPUT( in_u, 0, "input", "Main input",  "sep=block" );

@@ -33,9 +33,9 @@ class TAdjGen : public TMiso  {
    DCL_STD_INF;
    enum GenType { gen_def=0, gen_mai, gen_dual };
    Q_ENUMS(GenType);
-   Q_CLASSINFO( "enum_GenType_0", "Default" );     // gen_def
-   Q_CLASSINFO( "enum_GenType_1", "MAI" );         // gen_mai
-   Q_CLASSINFO( "enum_GenType_2", "Dual(u0,u3)" ); // gen_dual
+   Q_CLASSINFO( "enum_GenType_0", "Default" );                 // gen_def
+   Q_CLASSINFO( "enum_GenType_1", "MAI" );                     // gen_mai
+   Q_CLASSINFO( "enum_GenType_2", "Dual(\\omega,\\omega_2)" ); // gen_dual
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -45,12 +45,12 @@ class TAdjGen : public TMiso  {
    /** type of averaging, */
    PRM_LIST( type, efNoRunChange, "Type", "Type of generator", "enum=GenType" );
    /** misc flags */
-   PRM_SWITCH( useReset, efNoRunChange, "u[1] is Reset", "Use u[1] as Reset signal", "" );
-   PRM_SWITCH( useLock, efNoRunChange, "u[2] is Lock", "Use u[2] as LOck signal", "" );
+   PRM_SWITCH( useReset, efNoRunChange, "use Reset", "Use in_rst  signal", "sep=col" );
+   PRM_SWITCH( useLock, efNoRunChange, "use Lock", "Use lock signal", "" );
    PRM_SWITCH( outStrobe, efNoRunChange, "Output Strobe", "Output only at switching moments", "" );
-   PRM_SWITCH( useZero, efNoRunChange, "0 is neg. out", "Negative output is 0, not -1", "" );
+   PRM_SWITCH( useZero, efNoRunChange, "0 is neg. out", "Negative output is 0, not -1", "sep=col" );
    PRM_SWITCH( useSignStrobe, efNoRunChange, "Signed strobe", "Output +1 - switch to ON, -1 - OFF", "" );
-   PRM_SWITCH( usePlusStrobe, efNoRunChange, "Only + strobe", "Output obly positive strobe", "" );
+   PRM_SWITCH( usePlusStrobe, efNoRunChange, "Only + strobe", "Output only positive strobe", "" );
    PRM_SWITCH( useF, efNoRunChange, "input F", "input is F, not omega", "sep=col" );
    PRM_INT( currOut, efInner, "Current out", "Current INT output", "");
    PRM_DOUBLE( tick, efInner, "Tick", "1 means generator ticks now", "" );
@@ -71,7 +71,7 @@ class TAdjGen : public TMiso  {
    PRM_INPUT( in_omega, 0, "\\omega", "omega input",  "sep=block" );
    PRM_INPUT( in_rst,   0, "reset", "reset input input", "sep=col" );
    PRM_INPUT( in_lock,  0, "lock", "lock input",  "sep=col" );
-   PRM_INPUT( in_omega2, 0, "\\omega 2", "seconf omega input", "sep=col" );
+   PRM_INPUT( in_omega2, 0, "\\omega_2", "second omega input", "sep=col" );
    /** real tick: exported to double tick */
    int real_tick;
    double cav, cav2; // current values for av, av2

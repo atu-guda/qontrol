@@ -53,13 +53,13 @@ class TRelaxGen : public TMiso  {
    PRM_DOUBLE( v,     efInner, "v", "voltage", "def=0" );
    PRM_DOUBLE( isDis, efInner, "isDis", "1 means generator discharges now", "def=0" );
    PRM_DOUBLE( I,     efInner, "I", "total charge/discharge current", "def=0" );
-   PRM_DOUBLE( dv_ch, efInner, "dv_ch", "charging voltage difference ", "def=0" );
-   PRM_DOUBLE( dv_dis,efInner, "dv_ch", "discharging voltage difference ", "def=0" );
+   PRM_DOUBLE( dv_ch, efInner, "dv_{ch}", "charging voltage difference ", "def=0" );
+   PRM_DOUBLE( dv_dis,efInner, "dv_{ch}", "discharging voltage difference ", "def=0" );
 
-   PRM_INPUT( v_in,  0, "v_in",  "Voltage input",     "sep=block" );
-   PRM_INPUT( i_ch,  0, "i_ch",  "Charge current",    "sep=col" );
-   PRM_INPUT( i_dis, 0, "i_dis", "Discharge current", "sep=col" );
-   PRM_INPUT( trig,  0, "trig",  "Force discharge",   "sep=col" );
+   PRM_INPUT( v_in,  0, "v_{in}",  "Voltage input",     "sep=block" );
+   PRM_INPUT( i_ch,  0, "i_{ch}",  "Charge current",    "sep=col" );
+   PRM_INPUT( i_dis, 0, "i_{dis}", "Discharge current", "sep=col" );
+   PRM_INPUT( trig,  0, "trig",    "Force discharge",   "sep=col" );
    DCL_DEFAULT_STATIC;
 };
 

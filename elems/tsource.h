@@ -38,18 +38,18 @@ class TSource : public TMiso  {
      so_triangle = 10, so_phase = 11
    };
    Q_ENUMS(SourceType);
-   Q_CLASSINFO( "enum_SourceType_0",  "U*sin(\\omega*t+phi)" );           // so_sin
+   Q_CLASSINFO( "enum_SourceType_0",  "U*sin(\\omega*t+\\phi)" );           // so_sin
    Q_CLASSINFO( "enum_SourceType_1",  "U*sign(sin(\\omega*t+\\phi))" );     // so_sign
    Q_CLASSINFO( "enum_SourceType_2",  "U*t/T*sin(\\omega*t+\\phi)" );       // so_sin_raise
    Q_CLASSINFO( "enum_SourceType_3",  "U*t/T*sign(sin(\\omega*t+\\phi))" ); // so_sign_raise
-   Q_CLASSINFO( "enum_SourceType_4",  "Dirac(t-\\tau)" );                 // so_dirac
-   Q_CLASSINFO( "enum_SourceType_5",  "U*Thetta(t-\\tau)" );              // so_theta
-   Q_CLASSINFO( "enum_SourceType_6",  "U*t/T" );                        // so_raise
-   Q_CLASSINFO( "enum_SourceType_7",  "U*saw(t,\\tau) /|/|/| " );         // so_saw
-   Q_CLASSINFO( "enum_SourceType_8",  "U*saw2(t,\\tau) /\\/\\ " );        // so_saw2
-   Q_CLASSINFO( "enum_SourceType_9",  "U*chaos Wave(\\phi)" );            // so_chaos_wave
+   Q_CLASSINFO( "enum_SourceType_4",  "Dirac(t-\\tau)" );                   // so_dirac
+   Q_CLASSINFO( "enum_SourceType_5",  "U*Thetta(t-\\tau)" );                // so_theta
+   Q_CLASSINFO( "enum_SourceType_6",  "U*t/T" );                            // so_raise
+   Q_CLASSINFO( "enum_SourceType_7",  "U*saw(t,\\tau) /|/|/| " );           // so_saw
+   Q_CLASSINFO( "enum_SourceType_8",  "U*saw2(t,\\tau) /\\\\/\\\\ " );      // so_saw2
+   Q_CLASSINFO( "enum_SourceType_9",  "U*chaos Wave(\\phi)" );              // so_chaos_wave
    Q_CLASSINFO( "enum_SourceType_10", "U*triangle(\\omega*t+\\phi)" );      // so_triangle
-   Q_CLASSINFO( "enum_SourceType_11", "Phase" );                        // so_phase
+   Q_CLASSINFO( "enum_SourceType_11", "Phase" );                            // so_phase
 
 
    enum SeedType {
@@ -91,7 +91,7 @@ class TSource : public TMiso  {
    PRM_SWITCH( addBaseSeed_u, efNRC, "U add base seed", "Add seed from base(model)", "def=1");
 
    // ----------- Phi chaos ----------------------
-   PRM_SWITCH( use_f_ch,efNRC, "use Phi chaos", "Use phase perturbations", "sep=col" );
+   PRM_SWITCH( use_f_ch,efNRC, "use \\phi chaos", "Use phase perturbations", "sep=col" );
    PRM_DOUBLE( f_ch_v0, efNRC, "vF min"       , "Minimum value of phase factor", "def=-0.2" );
    PRM_DOUBLE( f_ch_vm, efNRC, "vF max"       , "Maximum value of phase factor", "def=0.2" );
    PRM_DOUBLE( f_ch_t0, efNRC, "tF min"       , "Minimum time of change", "def=2\nmin=1e-20\nmax=1e20" );

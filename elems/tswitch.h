@@ -35,13 +35,13 @@ class TSwitch : public TMiso  {
    virtual double f( double t ) override;
 
    /** levels  */
-   PRM_DOUBLE( level1, 0, "Level 1", "Level to switch from u[0] to u[1]", "def=1" );
-   PRM_DOUBLE( level2, 0, "Level 2", "Level to switch from u[1] to u[2]", "def=2" );
+   PRM_DOUBLE( level1, 0, "Level 1", "Level to switch from in_0 to in_1", "def=1" );
+   PRM_DOUBLE( level2, 0, "Level 2", "Level to switch from in_1 to in_2", "def=2" );
 
-   PRM_INPUT( in_0, 0, "input 0", "First input",  "sep=block" );
-   PRM_INPUT( in_1, 0, "input 1", "Second input", "sep=col" );
-   PRM_INPUT( in_2, 0, "input 2", "Third input",  "sep=col" );
-   PRM_INPUT( in_3, 0, "input 3", "Fourth input", "sep=col" );
+   PRM_INPUT( in_0, 0, "input 0", "Input 0",  "sep=block" );
+   PRM_INPUT( in_1, 0, "input 1", "Input 1",  "sep=col" );
+   PRM_INPUT( in_2, 0, "input 2", "Input 2",  "sep=col" );
+   PRM_INPUT( in_3, 0, "input 3", "switch input", "sep=col" );
 
 
    DCL_DEFAULT_STATIC;

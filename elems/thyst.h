@@ -20,15 +20,6 @@
 
 #include <tmiso.h>
 
-static const char* const thyst_list =
-     "s+alpha*d"        // ht_sAlphaD
-     "alpha*d"          // ht_alphaD
-     "Thetta(d)"        // ht_thetaD
-     "sign(d)"          // ht_signD
-     "tanh(alpha*d)"    // ht_tanhAlphaD
-     "tanh(s+alpha*d)"; // ht_tanhSAlphaD
-
-
 /**basic hysteresis simulation
   *@author atu
   */
@@ -44,12 +35,12 @@ class THyst : public TMiso  {
       ht_tanhAlphaD, ht_tanhSAlphaD
    };
    Q_ENUMS(HystType);
-   Q_CLASSINFO( "enum_HystType_0", "s+alpha*d"       );   // ht_sAlphaD
-   Q_CLASSINFO( "enum_HystType_1", "alpha*d"         );   // ht_alphaD
-   Q_CLASSINFO( "enum_HystType_2", "Thetta(d)"       );   // ht_thetaD
-   Q_CLASSINFO( "enum_HystType_3", "sign(d)"         );   // ht_signD
-   Q_CLASSINFO( "enum_HystType_4", "tanh(alpha*d)"   );   // ht_tanhAlphaD
-   Q_CLASSINFO( "enum_HystType_5", "tanh(s+alpha*d)" );   // ht_tanhSAlphaD
+   Q_CLASSINFO( "enum_HystType_0", "s+\\alpha*d"       );   // ht_sAlphaD
+   Q_CLASSINFO( "enum_HystType_1", "\\alpha*d"         );   // ht_alphaD
+   Q_CLASSINFO( "enum_HystType_2", "\\Theta(d)"        );   // ht_thetaD
+   Q_CLASSINFO( "enum_HystType_3", "sign(d)"           );   // ht_signD
+   Q_CLASSINFO( "enum_HystType_4", "tanh(\\alpha*d)"   );   // ht_tanhAlphaD
+   Q_CLASSINFO( "enum_HystType_5", "tanh(s+\\alpha*d)" );   // ht_tanhSAlphaD
 
  protected:
    /** main computation function */

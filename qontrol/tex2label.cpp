@@ -128,7 +128,7 @@ MapSC init_tex_map()
   return r;
 }
 
-QString tex2label( const QString &t )
+QString tex2label( const QString &t, bool noSub )
 {
   static MapSC tex_map = init_tex_map();
   QString r, nm, post;
@@ -154,15 +154,24 @@ QString tex2label( const QString &t )
           if( ! stk.isEmpty() ) {
             QString t = r + post;
             post = stk_p.takeLast();
-            r = stk.takeLast()  + "<span>" + t + "</span>" + post;
+            // r = stk.takeLast()  + "<span>" + t + "</span>" + post;
+            r = stk.takeLast()  + t + post;
             post = "";
           }
           break;
         case '^':
-          r += "<sup>"; post = "</sup>";
+          if( noSub ) {
+            r += c + post; post = "";
+          } else {
+            r += "<sup>"; post = "</sup>";
+          }
           break;
         case '_':
-          r += "<sub>"; post = "</sub>";
+          if( noSub ) {
+            r += c + post; post = "";
+          } else {
+            r += "<sub>"; post = "</sub>";
+          }
           break;
         default:
           r += c + post; post = "";
@@ -214,7 +223,8 @@ QString tex2label( const QString &t )
 
   while( ! stk.isEmpty() ) {
     QString t = r;
-    r = stk.takeLast()  + "<span>" + t + "</span>";
+    // r = stk.takeLast()  + "<span>" + t + "</span>";
+    r = stk.takeLast()  + t;
   }
 
   return r;

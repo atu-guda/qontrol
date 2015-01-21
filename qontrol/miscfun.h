@@ -68,7 +68,7 @@ double waveMhat( double x );
 double limitAngleDeg( double a ); // limits angle to [0;360)
 
 //* implementation in tex2label.cpp
-QString tex2label( const QString &t );
+QString tex2label( const QString &t, bool noSub = false );
 
 /** computes length of perpendicular from point p to line s-e */
 // double perpLen( double xs, double ys, double xe, double ye,

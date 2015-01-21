@@ -421,7 +421,7 @@ int SwitchDataWidget::registered = SwitchDataWidget::reg();
 
 SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
-  cb( new QCheckBox( tex2label(ho.getParm("vis_name")), this ) )
+  cb( new QCheckBox( tex2label(ho.getParm("vis_name"),true), this ) )
 {
   main_w = cb;
   if( h.getFlags() & ( efRO | efRODial ) ) {
@@ -480,7 +480,10 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
       sl = par->getEnumStrings( enum_name );
     }
   }
-  for( auto &s : sl ) { s = tex2label( s ); }
+  QString noTeX = ho.getParm( "noTeX" );
+  if( noTeX != "y" ) {
+    for( auto &s : sl ) { s = tex2label( s, true ); }
+  }
   cb->addItems( sl );
 
   QHBoxLayout *lay =  new QHBoxLayout( this );

@@ -39,24 +39,24 @@ class TRand : public TMiso  {
      dt_lognorm, dt_pareto, dt_rayleigh, dt_weibull
    };
    Q_ENUMS(DistrType);
-   Q_CLASSINFO( "enum_DistrType_0" , "flat(-sigma,sigma)"     ); // dt_flat
-   Q_CLASSINFO( "enum_DistrType_1" , "gaussian(sigma)"        ); // dt_gauss
-   Q_CLASSINFO( "enum_DistrType_2" , "gaussian_tail(a,sigma)" ); // dt_gausstail
-   Q_CLASSINFO( "enum_DistrType_3" , "exponential(sigma)"     ); // dt_exp
-   Q_CLASSINFO( "enum_DistrType_4" , "laplace(a)"             ); // dt_laplace
-   Q_CLASSINFO( "enum_DistrType_5" , "exppow(a,b)"            ); // dt_exppow
-   Q_CLASSINFO( "enum_DistrType_6" , "beta(a,b)"              ); // dt_beta
-   Q_CLASSINFO( "enum_DistrType_7" , "cauchy(a)"              ); // dt_cauchy
-   Q_CLASSINFO( "enum_DistrType_8" , "chisq(a)"               ); // dt_chisq
-   Q_CLASSINFO( "enum_DistrType_9" , "erlang(a,b)"            ); // dt_erlang
-   Q_CLASSINFO( "enum_DistrType_10", "fdist(a,b)"             ); // dt_fdist
-   Q_CLASSINFO( "enum_DistrType_11", "gamma(a,b)"             ); // dt_gamma
-   Q_CLASSINFO( "enum_DistrType_12", "levy(a,b)"              ); // dt_levy
-   Q_CLASSINFO( "enum_DistrType_13", "logistic(a)"            ); // dt_logistic
-   Q_CLASSINFO( "enum_DistrType_14", "lognormal(a,sigma)"     ); // dt_lognorm
-   Q_CLASSINFO( "enum_DistrType_15", "pareto(a,b)"            ); // dt_pareto
-   Q_CLASSINFO( "enum_DistrType_16", "rayleigh(sigma)"        ); // dt_rayleigh
-   Q_CLASSINFO( "enum_DistrType_17", "weibull(a,b)"           ); // dt_weibull
+   Q_CLASSINFO( "enum_DistrType_0" , "flat(-\\sigma,\\sigma)"   ); // dt_flat
+   Q_CLASSINFO( "enum_DistrType_1" , "gaussian(\\sigma)"        ); // dt_gauss
+   Q_CLASSINFO( "enum_DistrType_2" , "gaussian_tail(a,\\sigma)" ); // dt_gausstail
+   Q_CLASSINFO( "enum_DistrType_3" , "exponential(\\sigma)"     ); // dt_exp
+   Q_CLASSINFO( "enum_DistrType_4" , "laplace(a)"               ); // dt_laplace
+   Q_CLASSINFO( "enum_DistrType_5" , "exppow(a,b)"              ); // dt_exppow
+   Q_CLASSINFO( "enum_DistrType_6" , "beta(a,b)"                ); // dt_beta
+   Q_CLASSINFO( "enum_DistrType_7" , "cauchy(a)"                ); // dt_cauchy
+   Q_CLASSINFO( "enum_DistrType_8" , "chisq(a)"                 ); // dt_chisq
+   Q_CLASSINFO( "enum_DistrType_9" , "erlang(a,b)"              ); // dt_erlang
+   Q_CLASSINFO( "enum_DistrType_10", "fdist(a,b)"               ); // dt_fdist
+   Q_CLASSINFO( "enum_DistrType_11", "gamma(a,b)"               ); // dt_gamma
+   Q_CLASSINFO( "enum_DistrType_12", "levy(a,b)"                ); // dt_levy
+   Q_CLASSINFO( "enum_DistrType_13", "logistic(a)"              ); // dt_logistic
+   Q_CLASSINFO( "enum_DistrType_14", "lognormal(a,\\sigma)"     ); // dt_lognorm
+   Q_CLASSINFO( "enum_DistrType_15", "pareto(a,b)"              ); // dt_pareto
+   Q_CLASSINFO( "enum_DistrType_16", "rayleigh(\\sigma)"        ); // dt_rayleigh
+   Q_CLASSINFO( "enum_DistrType_17", "weibull(a,b)"             ); // dt_weibull
 
    enum SeedType {
      everyRun = 0, startLoop, start2DLoop, asModel
