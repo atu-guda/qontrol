@@ -203,22 +203,12 @@ int batch_process( const char *model_file )
     if( prog_opts.dbg > 0 ) {
       cerr << "Executing script file " << qP(f) << endl;
     }
-    f.prepend( "scripts:" );
-    if( QFile::exists( f ) ) {
-      QFile sf( f );
-      if( ! sf.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
-        cerr << "Fail to open file " << qP(f) << endl;
-        continue; // TODO: may be exit?
-      }
-      QByteArray scr = sf.readAll();
-      if( ! scr.isEmpty() ) {
-        QString o = model->runScript( scr );
-        cerr << "Script result: \"" << qP(o) << "\"" << endl;
-        if( prog_opts.exit_st ) {
-          rc = (int)( o.toDouble() ); // to allow narrowing
-        }
-      }
+    QString o = model->runFileScript( f );
+    cerr << "Script result: \"" << qP(o) << "\"" << endl;
+    if( prog_opts.exit_st ) {
+      rc = (int)( o.toDouble() ); // to allow narrowing
     }
+
   }
 
   if( ! prog_opts.script.isEmpty() ) {

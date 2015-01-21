@@ -621,6 +621,7 @@ void TModel::initEngine()
   eng->globalObject().setProperty( "int2str", eng->newFunction( script_int2str ) );
   eng->globalObject().setProperty( "print", eng->newFunction( script_print ) );
   eng->globalObject().setProperty( "isNear", eng->newFunction( script_isNear ) );
+  eng->globalObject().setProperty( "include", eng->newFunction( script_include ) );
 }
 
 QString TModel::runScript( const QString& script )
@@ -633,6 +634,27 @@ QString TModel::runScript( const QString& script )
   }
   r += res.toString();
   return r;
+}
+
+QString TModel::runFileScript( const QString& sfile )
+{
+  QString f = QSL( "scripts:" ) + sfile;
+  if( ! QFile::exists( f ) ) {
+    return QString::null;
+  }
+
+  QFile sf( f );
+  if( ! sf.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
+    qWarning() << "Fail to open script file " << sfile << WHE;
+    return QString::null;
+  }
+
+  QByteArray scr = sf.readAll();
+  if( scr.isEmpty() ) {
+    return QString::null;
+  }
+
+  return runScript( scr );
 }
 
 QString TModel::runModelScript()

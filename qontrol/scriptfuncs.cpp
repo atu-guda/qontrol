@@ -16,6 +16,10 @@
  ***************************************************************************/
 
 #include <cmath>
+#include <iostream>
+
+#include <QFile>
+#include <QDebug>
 
 #include "defs.h"
 #include "scriptfuncs.h"
@@ -57,6 +61,7 @@ QScriptValue script_print( QScriptContext *ctx, QScriptEngine *eng )
   }
 
   log_app.append( r );
+  cout << qP( r );
 
   return eng->undefinedValue();
 }
@@ -78,6 +83,41 @@ QScriptValue script_isNear( QScriptContext *ctx, QScriptEngine * /*eng*/ )
   bool r = fabs( a-b ) < eps;
 
   return QScriptValue( r );
+}
+
+
+QScriptValue script_include( QScriptContext *ctx, QScriptEngine *eng )
+{
+  if( ctx->argumentCount() < 1 ) {
+    return QScriptValue( false );
+  }
+  QString sfile = ctx->argument(0).toString();
+
+  sfile.prepend( "scripts:" );
+  if( ! QFile::exists( sfile ) ) {
+    return QScriptValue( false );
+  }
+
+  QFile sf( sfile );
+  if( ! sf.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
+    qWarning() << "Fail to open script file " << sfile << WHE;
+    return QScriptValue( false );
+  }
+
+  QByteArray scr = sf.readAll();
+  if( scr.isEmpty() ) {
+    return QScriptValue( false );
+  }
+
+  QScriptValue res = eng->evaluate( scr );
+  QString r = res.toString();
+  if( eng->hasUncaughtException() ) {
+    int line = eng->uncaughtExceptionLineNumber();
+    qWarning() << "uncaught exception at line " << line <<  " file: " << sfile
+               << " error: " << r;
+  }
+
+  return QScriptValue( true );
 }
 
 

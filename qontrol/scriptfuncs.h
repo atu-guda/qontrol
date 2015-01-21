@@ -37,6 +37,7 @@ void fromScriptValuetoTripleF( const QScriptValue &obj, TripleF &s );
 QScriptValue script_int2str( QScriptContext *ctx, QScriptEngine *eng );
 QScriptValue script_print( QScriptContext *ctx, QScriptEngine *eng );
 QScriptValue script_isNear( QScriptContext *ctx, QScriptEngine *eng );
+QScriptValue script_include( QScriptContext *ctx, QScriptEngine *eng );
 
 
 

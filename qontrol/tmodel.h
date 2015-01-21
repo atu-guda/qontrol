@@ -110,6 +110,7 @@ class TModel : public TDataContainer  {
 
   void initEngine();
   QString runScript( const QString& script );
+  QString runFileScript( const QString& sfile );
   //* run inner model script
   QString runModelScript();
 
