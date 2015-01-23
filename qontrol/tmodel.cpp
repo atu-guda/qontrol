@@ -250,7 +250,10 @@ int TModel::run( QSemaphore *sem )
       prm0 = prm0s + il1 * prm0d;
       start_time = get_real_time(); rtime = t = 0;
 
-      allStartLoop( il1, il2 );
+      if( ! allStartLoop( il1, il2 ) ) {
+        stopRun( 0 );
+        return 0;
+      }
       if( useScripts ) {
         eng->globalObject().setProperty( "il1", eng->newVariant( (int)(il1) ) );
         eng->globalObject().setProperty( "il2", eng->newVariant( (int)(il2) ) );
@@ -395,6 +398,10 @@ int TModel::allStartLoop( int acnx, int acny )
   if( c_sch ) {
     rc = c_sch->allStartLoop( acnx, acny );
   }
+  if( !rc ) {
+    return 0;
+  }
+
   if( outs ) {
     rc = outs->startLoop( acnx, acny );
   }

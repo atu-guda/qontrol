@@ -19,6 +19,7 @@
 #define TFILESOURCE_H
 
 #include <QFile>
+#include <QByteArray>
 
 #include "tmiso.h"
 
@@ -29,32 +30,55 @@ class TFileSource : public TMiso  {
    DCL_CTOR(TFileSource);
    DCL_CREATE;
    DCL_STD_INF;
+   static const constexpr int max_col = 16;
+   static const constexpr int buf_sz  = 4096;
 
    enum InterpolateType {
-     no = 0, linear
+     step = 0, linear
    };
    Q_ENUMS(InterpolateType);
-   Q_CLASSINFO( "enum_InterpolateType_0", "No" );         // no
-   Q_CLASSINFO( "enum_InterpolateType_1", "Linera" );     // linear
+   Q_CLASSINFO( "enum_InterpolateType_0", "Step" );       // step
+   Q_CLASSINFO( "enum_InterpolateType_1", "Linear" );     // linear
+   struct LineData {
+     double v[max_col];
+     LineData() { reset(); }
+     void reset() { for( auto &a :v ) { a = 0.0; }; };
+   };
  protected:
 
    virtual double f( double t ) override;
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
+   virtual int do_postRun( int good ) override;
    virtual int do_startLoop( int acnx, int acny ) override;
    virtual int do_endLoop() override;
 
    PRM_STRING( filename, efNRC, "File name", "Input file name", "" );
-   PRM_STRING( sep,  efNRC, "Separator", "Input field separator", "def=," );
+   PRM_STRING( sep,  efNRC, "Separator", "Input field separator", "def= " );
+   PRM_INT( rnc,  efNRC, "N of columns", "Number of columns to read", "min=1\nmax=32\ndef=1" );
 
-   PRM_INT( greed,  efNRC, "Greed", "Number of lines to read at once, <1 = all", "def=1\nsep=col" );
+   PRM_INT( greed,  efNRC, "Greed", "Number of lines to read at once, <1 = all", "min=1\ndef=1\nsep=col" );
+   PRM_DOUBLE( tau, efNRC, "\\tau", "Manual time step before file lines, <0=from simulation", "def=0.001" );
+   PRM_INT( time_col,  efNRC, "Time column", "Determine time dy values in given column, -1 = manual", "def=-1" );
 
-   PRM_DOUBLE( tau, efNRC, "\\tau", "manual time step before file lines", "def=0.001" );
+   PRM_LIST( itype, efNRC, "Interpolate", "Interpolation type", "enum=InterpolateType\ndef=1\nsep=col" );
 
-   PRM_LIST( itype, efNRC, "Interpolate", "Interpolation type", "enum=InterpolateType\nsep=col" );
+   PRM_DOUBLE_ARR( v, efInner, "v", "Current data", "N=32\ndef=0.0" ); // 32 is max_col
 
    // NO inputs
 
    QFile file;
+   QByteArray lin;
+   LineData d0, d1, d_c;
+   std::vector<LineData> pv; // store for read-ahead values
+   double tau_e = 1; // effective tau
+   double t0 = 0.0, t1 = 1.0;
+   int n_ofs = 0; // start of buffer to file
+   int ncl = 0;   // number of lines in current buffer
+   int cl = 0;    // current line index in buffer (t0,d0)
+   bool wasEOF = false;
+
+   int readLines( int ltr ); // ltr = lines to read, ignoring empty and comments
+   int next_tau_e();
 
    DCL_DEFAULT_STATIC;
 };

@@ -1,5 +1,7 @@
 Inputs
 Dump TOutArr/TGraph commandline (-p/-P)
+Excess? error in fromDom ... and/or show last error?
+BUG: strings, which consists only from spaces, collapsed on read
 More functional labels in dialogs: go to buddy, autoset ....
 Outputs
 Tests
