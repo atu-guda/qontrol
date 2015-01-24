@@ -18,8 +18,9 @@
 #ifndef TFILESOURCE_H
 #define TFILESOURCE_H
 
+#include <cstdio>
+
 #include <QFile>
-#include <QProcess>
 #include <QByteArray>
 
 #include "tmiso.h"
@@ -71,8 +72,7 @@ class TFileSource : public TMiso  {
    // NO inputs
 
    QFile file;
-   QProcess *proc = nullptr;
-   QIODevice *idev = nullptr;
+   FILE *p_fi = nullptr;
    QByteArray lin;
    LineData d0, d1, d_c;
    std::vector<LineData> pv; // store for read-ahead values

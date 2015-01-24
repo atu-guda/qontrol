@@ -121,21 +121,21 @@ int TFileSource::do_postRun( int /*good*/ )
 int TFileSource::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   if( asProc.cval() ) {
-    proc = new QProcess;
-    proc->start( filename, QIODevice::ReadOnly | QIODevice::Text );
-    proc->closeWriteChannel();
-    if( ! proc->waitForStarted() ) {
-      qWarning() << "Fail to wait for starting program " << filename << NWHE;
+    p_fi = popen( filename.c_str(), "r" );
+    if( ! p_fi ) {
+      qWarning() << "Fail to start program " << filename << NWHE;
       return 0;
     }
-    idev = proc;
+    if( ! file.open( p_fi, QIODevice::ReadOnly | QIODevice::Text ) ) {
+      qWarning() << "Fail to open data stream " << filename << NWHE;
+      return 0;
+    }
 
   } else {
     if( ! file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
       qWarning() << "Fail to open data file " << file.fileName() << NWHE;
       return 0;
     }
-    idev = &file;
   }
 
   wasEOF = false;
@@ -177,10 +177,6 @@ int TFileSource::do_endLoop()
 
 int TFileSource::readLines( int ltr )
 {
-  if( !idev ) {
-    qWarning() << "No input device " << filename << NWHE;
-    return 0;
-  }
   if( ltr > greed && ltr > 2 ) { // 2 is for measure_tau
     ltr = greed;
   }
@@ -192,20 +188,19 @@ int TFileSource::readLines( int ltr )
   cl = 0;
 
   for( ncl=0; ncl<ltr; /*NOP*/ ) {
-    if( proc ) {
-      if( ! proc->waitForReadyRead( 10000 ) ) { // TODO: param
-        qWarning() << "Fail to wait input data " << filename
-          << " n_ofs=" <<  n_ofs << "ncl=" << ncl
-          << " state: " << proc->state() <<  "error: " << proc->error() << NWHE;
-        return 0;
-      }
-    }
-    if( idev->atEnd() ) {
+    // if( p_fi ) {
+    //   if( ! file.waitForReadyRead( 10000 ) ) { // TODO: param
+    //     qWarning() << "Fail to wait input data " << filename
+    //       << " n_ofs=" <<  n_ofs << "ncl=" << ncl << NWHE;
+    //     return 0;
+    //   }
+    // }
+    if( file.atEnd() ) {
       wasEOF = true;
       qDebug() << "EOF! n_ofs=" << n_ofs << " ncl= " << ncl << NWHE;
       break;
     }
-    lin = idev->readLine( buf_sz ).simplified();
+    lin = file.readLine( buf_sz ).simplified();
     if( lin.size() < 1 || lin[0] == '#' || lin[0] == ';' ) { // empty or comment
       continue;
     }
@@ -234,14 +229,11 @@ int TFileSource::readLines( int ltr )
 
 void TFileSource::all_close()
 {
-  if( idev ) {
-    idev->close();
+  file.close();
+  if( p_fi ) {
+    pclose( p_fi );
+    p_fi = nullptr;
   }
-  if( proc ) {
-    proc->terminate();
-    delete proc; proc = nullptr;
-  }
-  idev = nullptr;
 }
 
 DEFAULT_FUNCS_REG(TFileSource)
