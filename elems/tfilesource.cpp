@@ -32,9 +32,6 @@ double TFileSource::f( double t )
 {
   //qDebug() << "f: t= " << t << " t0= " << t0 << " t1= " << t1 << " cl = " << cl
   //         << "tau_e= " << tau_e << NWHE;
-  // if( wasEOF ) {
-  //   return v[0];
-  // }
 
   double dt;
   while( ( dt = t - t0 ) >= tau_e ) {
@@ -112,7 +109,10 @@ int TFileSource::do_preRun( int /*run_tp*/, int /*an*/,
 
 int TFileSource::do_postRun( int /*good*/ )
 {
-  file.close();
+  if( idev ) {
+    idev->close();
+  }
+  idev = nullptr;
   return 1;
 }
 
@@ -123,12 +123,13 @@ int TFileSource::do_startLoop( int /*acnx*/, int /*acny*/ )
     qWarning() << "Fail to open data file " << file.fileName() << NWHE;
     return 0;
   }
+  idev = &file;
   wasEOF = false;
   n_ofs = ncl = cl = 0;
   int rl_first = ( greed > 1 ) ? greed : 2;
   readLines( rl_first );
   if( ncl < 1 ) {
-    qWarning() << "No data found in file " << file.fileName() << NWHE;
+    qWarning() << "No data found in file " << filename << NWHE;
     return 0;
   }
 
@@ -154,7 +155,9 @@ int TFileSource::do_startLoop( int /*acnx*/, int /*acny*/ )
 
 int TFileSource::do_endLoop()
 {
-  file.close();
+  if( idev ) {
+    idev->close();
+  }
   return 1;
 }
 
@@ -162,6 +165,9 @@ int TFileSource::do_endLoop()
 
 int TFileSource::readLines( int ltr )
 {
+  if( !idev ) {
+    return 0;
+  }
   if( ltr > greed && ltr > 2 ) { // 2 is for measure_tau
     ltr = greed;
   }
@@ -173,12 +179,12 @@ int TFileSource::readLines( int ltr )
   cl = 0;
 
   for( ncl=0; ncl<ltr; /*NOP*/ ) {
-    if( file.atEnd() ) {
+    if( idev->atEnd() ) {
       wasEOF = true;
       // qDebug() << "EOF! n_ofs=" << n_ofs << " ncl= " << ncl << NWHE;
       break;
     }
-    lin = file.readLine( buf_sz ).simplified();
+    lin = idev->readLine( buf_sz ).simplified();
     if( lin.size() < 1 || lin[0] == '#' || lin[0] == ';' ) { // empty or comment
       continue;
     }
