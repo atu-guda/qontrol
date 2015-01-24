@@ -27,6 +27,10 @@ CTOR(TFileSource,TMiso)
 {
 }
 
+TFileSource::~TFileSource()
+{
+  all_close();
+}
 
 double TFileSource::f( double t )
 {
@@ -43,9 +47,9 @@ double TFileSource::f( double t )
   for( int i=0; i<rnc; ++i ) {
     switch( itype.cval() ) {
       case InterpolateType::step :
-        v[i] = d0.v[i]; break;
+        v[i] = scale * d0.v[i]; break;
       case InterpolateType::linear :
-        v[i] = d0.v[i] + d_c.v[i] * dt; break;
+        v[i] = scale * ( d0.v[i] + d_c.v[i] * dt ); break;
       default:
         v[i] = 0; break;
     }
@@ -109,21 +113,31 @@ int TFileSource::do_preRun( int /*run_tp*/, int /*an*/,
 
 int TFileSource::do_postRun( int /*good*/ )
 {
-  if( idev ) {
-    idev->close();
-  }
-  idev = nullptr;
+  all_close();
   return 1;
 }
 
 
 int TFileSource::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  if( ! file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
-    qWarning() << "Fail to open data file " << file.fileName() << NWHE;
-    return 0;
+  if( asProc.cval() ) {
+    proc = new QProcess;
+    proc->start( filename, QIODevice::ReadOnly | QIODevice::Text );
+    proc->closeWriteChannel();
+    if( ! proc->waitForStarted() ) {
+      qWarning() << "Fail to wait for starting program " << filename << NWHE;
+      return 0;
+    }
+    idev = proc;
+
+  } else {
+    if( ! file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
+      qWarning() << "Fail to open data file " << file.fileName() << NWHE;
+      return 0;
+    }
+    idev = &file;
   }
-  idev = &file;
+
   wasEOF = false;
   n_ofs = ncl = cl = 0;
   int rl_first = ( greed > 1 ) ? greed : 2;
@@ -155,9 +169,7 @@ int TFileSource::do_startLoop( int /*acnx*/, int /*acny*/ )
 
 int TFileSource::do_endLoop()
 {
-  if( idev ) {
-    idev->close();
-  }
+  all_close();
   return 1;
 }
 
@@ -166,6 +178,7 @@ int TFileSource::do_endLoop()
 int TFileSource::readLines( int ltr )
 {
   if( !idev ) {
+    qWarning() << "No input device " << filename << NWHE;
     return 0;
   }
   if( ltr > greed && ltr > 2 ) { // 2 is for measure_tau
@@ -179,9 +192,17 @@ int TFileSource::readLines( int ltr )
   cl = 0;
 
   for( ncl=0; ncl<ltr; /*NOP*/ ) {
+    if( proc ) {
+      if( ! proc->waitForReadyRead( 10000 ) ) { // TODO: param
+        qWarning() << "Fail to wait input data " << filename
+          << " n_ofs=" <<  n_ofs << "ncl=" << ncl
+          << " state: " << proc->state() <<  "error: " << proc->error() << NWHE;
+        return 0;
+      }
+    }
     if( idev->atEnd() ) {
       wasEOF = true;
-      // qDebug() << "EOF! n_ofs=" << n_ofs << " ncl= " << ncl << NWHE;
+      qDebug() << "EOF! n_ofs=" << n_ofs << " ncl= " << ncl << NWHE;
       break;
     }
     lin = idev->readLine( buf_sz ).simplified();
@@ -209,6 +230,18 @@ int TFileSource::readLines( int ltr )
   n_ofs += ncl;
   // qDebug() << "After read: n_ofs= " << n_ofs << " bcl= " << ncl << NWHE;
   return ncl;
+}
+
+void TFileSource::all_close()
+{
+  if( idev ) {
+    idev->close();
+  }
+  if( proc ) {
+    proc->terminate();
+    delete proc; proc = nullptr;
+  }
+  idev = nullptr;
 }
 
 DEFAULT_FUNCS_REG(TFileSource)
