@@ -32,9 +32,9 @@ double TFileSource::f( double t )
 {
   //qDebug() << "f: t= " << t << " t0= " << t0 << " t1= " << t1 << " cl = " << cl
   //         << "tau_e= " << tau_e << NWHE;
-  if( wasEOF ) {
-    return v[0];
-  }
+  // if( wasEOF ) {
+  //   return v[0];
+  // }
 
   double dt;
   while( ( dt = t - t0 ) >= tau_e ) {
@@ -64,7 +64,9 @@ int TFileSource::next_tau_e()
   if( cl >= ncl ) {
     readLines( greed );
   }
-  if( wasEOF ) {
+  if( ncl < 1 ) {
+    d1 = d0; t1 = tau_e = 1e100;
+    d_c.reset();
     return 0;
   }
 
@@ -177,7 +179,7 @@ int TFileSource::readLines( int ltr )
       break;
     }
     lin = file.readLine( buf_sz ).simplified();
-    if( lin.size() < 1 || lin[0] == '#' || lin[0] == '/' ) { // empty or comment
+    if( lin.size() < 1 || lin[0] == '#' || lin[0] == ';' ) { // empty or comment
       continue;
     }
 
