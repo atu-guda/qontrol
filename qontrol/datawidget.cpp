@@ -535,7 +535,7 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
     le->setReadOnly( true );
   }
 
-  int decimals = 12;
+  int decimals = 15;
   QString sdec =  h.getParm("decimals" );
   if( ! sdec.isEmpty() ) {
     decimals = sdec.toInt();
@@ -559,7 +559,7 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
 
 bool DoubleDataWidget::set()
 {
-  le->setText( QSN( ho.get().toDouble() ) );
+  le->setText( QSN( ho.get().toDouble(), 'g', 15 ) );
   return true;
 }
 
