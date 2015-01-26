@@ -696,7 +696,7 @@ void TModel::fillComplModelForOuts( QStandardItemModel *mdl ) const
 
   for( auto e: outs->children() ) {
     if( auto out = qobject_cast<TOutArr*>(e) ) {
-      QStandardItem *it = new QStandardItem( out->objectName() );
+      auto it = new QStandardItem( out->objectName() );
       mdl->appendRow( it );
       continue;
     }

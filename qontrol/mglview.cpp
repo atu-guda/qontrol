@@ -443,16 +443,16 @@ void MglView::setAlpha( double al, bool rel )
 
 void MglView::setMark()
 {
-  QDialog *dia = new QDialog( this );
+  auto dia = new QDialog( this );
   dia->setWindowTitle( "Set mark to point: " );
-  QGridLayout *lay = new QGridLayout( dia );
+  auto lay = new QGridLayout( dia );
 
-  QLineEdit *markX_ed = new QLineEdit( dia );
+  auto markX_ed = new QLineEdit( dia );
   markX_ed->setValidator( new QDoubleValidator() );
   markX_ed->setText( QSN( scd->markX ) );
   lay->addWidget( markX_ed, 0, 1 );
 
-  QLineEdit *markY_ed = new QLineEdit( dia );
+  auto markY_ed = new QLineEdit( dia );
   markY_ed->setValidator( new QDoubleValidator() );
   markY_ed->setText( QSN( scd->markY ) );
   lay->addWidget( markY_ed, 1, 1 );

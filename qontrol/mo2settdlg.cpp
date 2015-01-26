@@ -27,13 +27,13 @@ Mo2SettDlg::Mo2SettDlg( Mo2Settings &se,  QWidget* parent )
   chkMaximize->setChecked(ts.showmax);
   lay->addWidget( chkMaximize, 0, 1 );
 
-  QLabel *lbl = new QLabel( "Editor cmd" );
+  auto lbl = new QLabel( "Editor cmd" );
   lay->addWidget( lbl, 4, 0 );
   ed_editCmd = new QLineEdit( this );
   ed_editCmd->setText( ts.editCmd );
   lay->addWidget( ed_editCmd, 4, 1 );
 
-  QDialogButtonBox *bbox
+  auto bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 6, 0, 1, 2 );
   connect( bbox, &QDialogButtonBox::accepted, this, &QDialog::accept );

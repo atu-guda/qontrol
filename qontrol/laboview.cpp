@@ -50,15 +50,15 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 {
   em = LaboWin::Em();
 
-  QVBoxLayout *vlay = new QVBoxLayout( this );
+  auto vlay = new QVBoxLayout( this );
   vlay->setContentsMargins( 2, 1, 2, 2 );
 
-  QWidget *main_part = new QWidget( this );
+  auto main_part = new QWidget( this );
 
   setAttribute(Qt::WA_DeleteOnClose);
 
 
-  QGridLayout *grLay = new QGridLayout( main_part );
+  auto grLay = new QGridLayout( main_part );
   grLay->setContentsMargins( 2, 2, 2, 2 );
 
   scrollArea = new QScrollArea( main_part );
@@ -141,7 +141,7 @@ bool LaboView::editObj( HolderData *obj, bool resetModel  )
     return false;
   }
 
-  DataDialog *dia = new DataDialog( *obj, this );
+  auto dia = new DataDialog( *obj, this );
   int rc = dia->exec();
   delete dia;
   if( rc == QDialog::Accepted ) {
@@ -311,7 +311,7 @@ void LaboView::newElm()
   addElemInfo aei;
   aei.name = QString("obj_")+ QSN( main_s->getNMiso() );
   aei.order = main_s->hintOrd();
-  AddElemDialog *dia = new AddElemDialog( &aei, main_s, this, "TMiso" );
+  auto dia = new AddElemDialog( &aei, main_s, this, "TMiso" );
                                           // limit to such elements here
 
   int rc = dia->exec();
@@ -525,21 +525,16 @@ void LaboView::moveElm()
 
 void LaboView::infoElm()
 {
-  QString cbuf;
-  QDialog *dia;
-  QPushButton *bt_ok;
-  QVBoxLayout *lay;
-  QTableWidget *tv;
-  QString qs;
-  if( ! checkState( selCheck ) )
+  if( ! checkState( selCheck ) ) {
     return;
+  }
 
-  dia = new QDialog( this );
+  auto dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": Structure of ") + selObj->getFullName() );
 
-  lay = new QVBoxLayout();
+  auto lay = new QVBoxLayout();
 
-  tv = new QTableWidget( 100, 6, dia );
+  auto tv = new QTableWidget( 100, 6, dia );
   QStringList hlabels;
   hlabels << "Name" << "Type" << "Value" << "Descr" << "Target"<< "Flags";
   tv->setHorizontalHeaderLabels( hlabels );
@@ -574,7 +569,7 @@ void LaboView::infoElm()
 
   lay->addWidget( tv );
 
-  bt_ok = new QPushButton( tr("Done"), dia);
+  auto bt_ok = new QPushButton( tr("Done"), dia);
   bt_ok->setDefault( true );
   lay->addWidget( bt_ok );
   dia->setLayout( lay );
@@ -593,18 +588,18 @@ void LaboView::showTreeElm()
     return;
   }
 
-  QDialog *dia = new QDialog( this );
+  auto dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": Element tree: ") + selObj->objectName() );
 
-  QVBoxLayout *lay = new QVBoxLayout();
+  auto lay = new QVBoxLayout();
 
 
-  QTreeView *treeView = new QTreeView( dia );
+  auto treeView = new QTreeView( dia );
   treeView->setModel( selObj );
   lay->addWidget( treeView );
 
 
-  QPushButton *bt_ok = new QPushButton( tr("Done"), dia);
+  auto bt_ok = new QPushButton( tr("Done"), dia);
   bt_ok->setDefault( true );
   lay->addWidget( bt_ok );
   dia->setLayout( lay );
@@ -629,22 +624,22 @@ void LaboView::testElm1()
   if( ! checkState( selCheck ) )
     return;
 
-  QDialog *dia = new QDialog( this );
+  auto dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": test1 ") + selObj->objectName() );
 
   buf = selObj->toString();
 
 
-  QVBoxLayout *lay = new QVBoxLayout();
+  auto lay = new QVBoxLayout();
 
-  QLabel *la = new QLabel( dia );
+  auto la = new QLabel( dia );
   la->setText( buf );
-  QScrollArea *scroll = new QScrollArea( dia );
+  auto scroll = new QScrollArea( dia );
   scroll->setWidget( la );
   lay->addWidget( scroll );
 
 
-  QPushButton *bt_ok = new QPushButton( tr("Done"), dia);
+  auto bt_ok = new QPushButton( tr("Done"), dia);
   bt_ok->setDefault( true );
   lay->addWidget( bt_ok );
   dia->setLayout( lay );
@@ -726,25 +721,25 @@ void LaboView::pasteElm()
 
   int oord = main_s->hintOrd();
 
-  QDialog *dia = new QDialog( this );
-  QGridLayout *lay = new QGridLayout( dia );
+  auto dia = new QDialog( this );
+  auto lay = new QGridLayout( dia );
 
-  QLabel *la_name = new QLabel( "&Name", dia );
+  auto la_name = new QLabel( "&Name", dia );
   lay->addWidget( la_name, 0, 0 );
 
-  QLineEdit *oname_ed = new QLineEdit( dia );
+  auto oname_ed = new QLineEdit( dia );
   oname_ed->setText( elname );
   oname_ed->setFocus();
   lay->addWidget( oname_ed, 1, 0  );
 
-  QLabel *la_ord = new QLabel( "&Order", dia );
+  auto la_ord = new QLabel( "&Order", dia );
   lay->addWidget( la_ord, 0, 1 );
 
-  QLineEdit *oord_ed = new QLineEdit( dia );
+  auto oord_ed = new QLineEdit( dia );
   oord_ed->setText( QSN(oord) );
   lay->addWidget( oord_ed, 1, 1 );
 
-  QDialogButtonBox *bbox
+  auto bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 2, 0, 1, 2 );
   connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
@@ -785,9 +780,6 @@ void LaboView::newOut()
 {
   int rc;
   QString onameq, enameq;
-  QDialog *dia;
-  QLineEdit *oname_ed, *ename_ed; QLabel *lab1, *lab2;
-  QGridLayout *lay;
   if( ! checkState( validCheck ) ) {
     return;
   }
@@ -801,28 +793,28 @@ void LaboView::newOut()
     onameq = QString("out_t");
   };
 
-  dia = new QDialog( this );
+  auto dia = new QDialog( this );
   dia->setWindowTitle( "Creating new output array" );
 
-  lay = new QGridLayout( dia );
+  auto lay = new QGridLayout( dia );
 
-  lab1 = new QLabel( "Output array name", dia );
+  auto lab1 = new QLabel( "Output array name", dia );
   lay->addWidget( lab1, 0, 0 );
 
-  oname_ed = new QLineEdit( dia );
+  auto oname_ed = new QLineEdit( dia );
   oname_ed->setMaxLength( MAX_NAMELEN-1 );
   oname_ed->setText( onameq ); oname_ed->setFocus();
   lay->addWidget( oname_ed, 0, 1 );
 
-  lab2 = new QLabel( "Element name",  dia );
+  auto lab2 = new QLabel( "Element name",  dia );
   lay->addWidget( lab2, 1, 0 );
 
-  ename_ed = new QLineEdit( dia );
+  auto ename_ed = new QLineEdit( dia );
   ename_ed->setMaxLength( MAX_NAMELEN-1 );
   ename_ed->setText( enameq );
   lay->addWidget( ename_ed, 1, 1 );
 
-  QDialogButtonBox *bbox
+  auto bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 2, 0, 1, 2 );
   connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
@@ -924,14 +916,6 @@ void LaboView::selectOut()
 
 void LaboView::showOutData() // TODO: special dialog (+ for many rows)
 {
-  QDialog *dia;
-  DoubleTableModel *dmod;
-  QTableView *dtv;
-  QGridLayout *lay;
-  QString fnq;
-  QPushButton *bt_ok;
-  QLabel *lab;
-  TOutArr *arr;
   DatasInfo di;
 
   if( ! checkState( validCheck ) ) {
@@ -942,7 +926,7 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
     qWarning() << "output array not selected" << WHE;
     return;
   }
-  arr = model->getOutArr( nm );
+  auto arr = model->getOutArr( nm );
   if( !arr ) {
     qWarning() << "fail to find output array " <<  nm << WHE;
     return;
@@ -959,21 +943,21 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
   QString sinf = arr->getAllStats( ";\n" );
 
 
-  dia = new QDialog( this );
+  auto dia = new QDialog( this );
   dia->setWindowTitle( QString("Data array: ") + di.title );
-  lay = new QGridLayout( dia );
+  auto lay = new QGridLayout( dia );
 
-  dmod = new DoubleTableModel( di, dia );
-  dtv = new QTableView( dia );
+  auto dmod = new DoubleTableModel( di, dia );
+  auto dtv = new QTableView( dia );
   dtv->setModel( dmod );
   lay->addWidget( dtv, 0, 0 );
 
-  lab = new QLabel( sinf, dia );
+  auto lab = new QLabel( sinf, dia );
   lab->setTextInteractionFlags( Qt::TextSelectableByMouse
        | Qt::TextSelectableByKeyboard);
   lay->addWidget( lab, 0, 1 );
 
-  bt_ok = new QPushButton( "Done", dia );
+  auto bt_ok = new QPushButton( "Done", dia );
   bt_ok->setDefault( true );
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
   lay->addWidget( bt_ok, 1, 0, 1, 2 );
@@ -1126,10 +1110,10 @@ void LaboView::showGraph()
     return;
   }
 
-  QMainWindow *plotWnd = new QMainWindow( this );
+  auto plotWnd = new QMainWindow( this );
   plotWnd->setWindowTitle( QString( PACKAGE ": MGL ") + gra->objectName() );
   plotWnd->setAttribute( Qt::WA_DeleteOnClose );
-  MglView *pv = new MglView( gra, plotWnd );
+  auto pv = new MglView( gra, plotWnd );
 
   plotWnd->setCentralWidget( pv );
   pv->setFocus();
@@ -1177,16 +1161,16 @@ void LaboView::showGraphData()
     return;
   }
 
-  QDialog *dia = new QDialog( this );
+  auto dia = new QDialog( this );
   dia->setWindowTitle( QString("Plot data: ") + di.title );
-  QVBoxLayout *lv = new QVBoxLayout( dia );
+  auto lv = new QVBoxLayout( dia );
 
-  DoubleTableModel *dmod = new DoubleTableModel( di, dia );
-  QTableView *dtv = new QTableView( dia );
+  auto dmod = new DoubleTableModel( di, dia );
+  auto dtv = new QTableView( dia );
   dtv->setModel( dmod );
   lv->addWidget( dtv );
 
-  QPushButton *bt_ok = new QPushButton( "Done", dia );
+  auto bt_ok = new QPushButton( "Done", dia );
   bt_ok->setDefault( true );
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
   lv->addWidget( bt_ok );
@@ -1388,17 +1372,17 @@ void LaboView::editModel()
 
 void LaboView::showTreeModel()
 {
-  QDialog *dia = new QDialog( this );
+  auto dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": Model ") );
 
-  QVBoxLayout *lay = new QVBoxLayout();
+  auto lay = new QVBoxLayout();
 
-  QTreeView *treeView = new QTreeView( dia );
+  auto treeView = new QTreeView( dia );
   treeView->setModel( root );
 
   lay->addWidget( treeView );
 
-  QPushButton *bt_ok = new QPushButton( tr("Done"), dia);
+  auto bt_ok = new QPushButton( tr("Done"), dia);
   bt_ok->setDefault( true );
   lay->addWidget( bt_ok );
   dia->setLayout( lay );
@@ -1457,11 +1441,11 @@ void LaboView::runScript()
   }
   // TODO: special class to edit js and view results
 
-  auto *dia = new QDialog( this );
+  auto dia = new QDialog( this );
   dia->setWindowTitle( "Edit script" );
-  QVBoxLayout *lv = new QVBoxLayout( dia );
+  auto lv = new QVBoxLayout( dia );
 
-  auto *ted = new QTextEdit( dia );
+  auto ted = new QTextEdit( dia );
   ted->setText( scr );
   lv->addWidget( ted );
 
@@ -1483,11 +1467,11 @@ void LaboView::runScript()
 
   res = runScript( scr );
 
-  auto *dia1 = new QDialog( this );
+  auto dia1 = new QDialog( this );
   dia1->setWindowTitle( "Script result" );
-  QVBoxLayout *lv1 = new QVBoxLayout( dia1 );
+  auto lv1 = new QVBoxLayout( dia1 );
 
-  auto *ted1 = new QTextEdit( dia1 );
+  auto ted1 = new QTextEdit( dia1 );
   ted1->setText( res );
   ted1->setReadOnly( true );
   lv1->addWidget( ted1 );

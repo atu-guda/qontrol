@@ -87,7 +87,7 @@ int main( int argc, char *argv[] )
   QDir::setSearchPaths( "scripts", prog_opts.inc_dirs );
 
   if( ! prog_opts.batch ) { // process with interface
-    LaboWin *main_win = new LaboWin();
+    auto main_win = new LaboWin();
 
     main_win->show();
 

@@ -20,7 +20,7 @@ DataWidget::DataWidget( HolderData &h, QWidget *parent )
     lbl( new QLabel( tex2label(ho.getParm( "vis_name" )), this ) )
 {
   lbl->setWhatsThis( ho.getType() + " " + ho.objectName() );
-  lbl->setMinimumWidth( 50 ); // TODO: from font
+  lbl->setMinimumWidth( 5 * LaboWin::Em() );
   lbl->setTextFormat( Qt::RichText );
   // setFrameStyle( QFrame::Panel | QFrame::Sunken );
 }
@@ -53,7 +53,7 @@ DummyDataWidget::DummyDataWidget( HolderData &h, QWidget *parent )
   lbl_d( new QLabel( this ) )
 {
   main_w = lbl_d;
-  QHBoxLayout *lay =  new QHBoxLayout( this );
+  auto lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
   lay->addWidget( lbl_d );
@@ -116,7 +116,7 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
     le->setCompleter( cmpl );
   }
 
-  QHBoxLayout *lay =  new QHBoxLayout( this );
+  auto lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
   lay->addWidget( le, 1 );
@@ -163,7 +163,7 @@ StringMLDataWidget::StringMLDataWidget( HolderData &h, QWidget *parent )
   // TODO: min size
   te->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred );
 
-  QVBoxLayout *lay =  new QVBoxLayout( this );
+  auto lay =  new QVBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
   lay->addWidget( te, 1 );
@@ -221,7 +221,7 @@ StringExtDataWidget::StringExtDataWidget( HolderData &h, QWidget *parent )
   pb->setText( ho.objectName() % " [text]" );
   connect( pb, &QPushButton::clicked, this, &StringExtDataWidget::edit );
 
-  QHBoxLayout *lay =  new QHBoxLayout( this );
+  auto lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
   lay->addWidget( pb, 1 );
@@ -316,7 +316,7 @@ IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent )
   }
   le->setValidator( new QIntValidator( v_min, v_max, le ) );
 
-  QHBoxLayout *lay =  new QHBoxLayout( this );
+  auto lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
   lay->addWidget( le, 1 );
@@ -383,7 +383,7 @@ IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent )
     sb->setSingleStep( step );
   }
 
-  QHBoxLayout *lay =  new QHBoxLayout( this );
+  auto lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
   lay->addWidget( sb, 1 );
@@ -422,7 +422,6 @@ int SwitchDataWidget::registered = SwitchDataWidget::reg();
 
 SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
-  // cb( new QCheckBox( tex2label(ho.getParm("vis_name"),true), this ) )
   cb( new QCheckBox( " ", this )  )
 {
   main_w = cb;
@@ -432,9 +431,7 @@ SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
 
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
-  // try to add
-  lay->addWidget( lbl ); // not for this widget
-  // lbl->hide();
+  lay->addWidget( lbl );
 
   lay->addWidget( cb, 1 );
   setLayout( lay );
@@ -490,7 +487,7 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
   }
   cb->addItems( sl );
 
-  QHBoxLayout *lay =  new QHBoxLayout( this );
+  auto lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
   lay->addWidget( cb, 1 );
@@ -550,7 +547,7 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
 
   le->setValidator( new QDoubleValidator( v_min, v_max, decimals, le ) );
 
-  QHBoxLayout *lay =  new QHBoxLayout( this );
+  auto lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
   lay->addWidget( le );
@@ -617,7 +614,7 @@ DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent )
     sb->setSingleStep( step );
   }
 
-  QHBoxLayout *lay =  new QHBoxLayout( this );
+  auto lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
   lay->addWidget( sb, 1 );
@@ -663,7 +660,7 @@ ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent )
   }
   cb->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Expanding );
 
-  QHBoxLayout *lay =  new QHBoxLayout( this );
+  auto lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
   lay->addWidget( cb, 1 );
@@ -729,14 +726,14 @@ IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
   }
 
   lbl->setText(""); // hack: hide common name
-  QGridLayout *lay = new QGridLayout( pwi );
+  auto lay = new QGridLayout( pwi );
 
   for( int i=0; i<n; ++i ) {
-    QLabel *la = new QLabel( pwi );
+    auto la = new QLabel( pwi );
     la->setText( vn + QSN(i) + ']' );
     lay->addWidget( la, i, 0 );
 
-    QLineEdit *le = new QLineEdit( pwi );
+    auto le = new QLineEdit( pwi );
     le->setReadOnly( ro );
     le->setValidator( new QIntValidator( v_min, v_max, le ) );
     lay->addWidget( le, i, 1 );
@@ -814,15 +811,15 @@ DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent )
   }
 
   lbl->setText(""); // hack: hide common name
-  QGridLayout *lay = new QGridLayout( pwi );
+  auto lay = new QGridLayout( pwi );
 
   for( int i=0; i<n; ++i ) {
-    QLabel *la = new QLabel( pwi );
+    auto la = new QLabel( pwi );
     la->setText( vn + QSN(i) + ']' );
     lay->addWidget( la, i, 0 );
 
 
-    QLineEdit *le = new QLineEdit( pwi );
+    auto le = new QLineEdit( pwi );
     le->setReadOnly( ro );
     le->setValidator( new QDoubleValidator( v_min, v_max, decimals, le ) );
     lay->addWidget( le, i, 1 );
@@ -891,14 +888,14 @@ StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent )
   QString mask = h.getParm( "mask" );
 
   lbl->setText(""); // hack: hide common name
-  QGridLayout *lay = new QGridLayout( pwi );
+  auto lay = new QGridLayout( pwi );
 
   for( int i=0; i<n; ++i ) {
-    QLabel *la = new QLabel( pwi );
+    auto la = new QLabel( pwi );
     la->setText( vn + QSN(i) + ']' );
     lay->addWidget( la, i, 0 );
 
-    QLineEdit *le = new QLineEdit( pwi );
+    auto le = new QLineEdit( pwi );
     le->setReadOnly( ro );
     le->setMaxLength( len_max );
     if( !mask.isEmpty() ) {
@@ -962,7 +959,7 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
   pb->setIcon( ho.getIcon() );
   connect( pb, &QPushButton::clicked, this, &ObjDataWidget::edit );
 
-  QHBoxLayout *lay =  new QHBoxLayout( this );
+  auto lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
   lay->addWidget( pb, 1 );
@@ -987,7 +984,7 @@ void ObjDataWidget::edit()
 {
   HolderData *obj = qobject_cast<HolderData*>(&ho);
   if( obj ) {
-    QDialog *dia = new DataDialog( *obj,  this );
+    auto dia = new DataDialog( *obj,  this );
     dia->exec();
   } else {
     qWarning() << "Fail to convert holder " <<  ho.getFullName() << " to HolderData " << WHE;
@@ -1067,7 +1064,7 @@ DataWidget* FactoryDataWidget::createDataWidget( HolderData &ho, QWidget *parent
     return nullptr;
   }
 
-  DwPropMap::const_iterator i = propMap.find( name );
+  const auto i = propMap.find( name );
   if( i == propMap.end() ) {
     return nullptr;
   }
@@ -1089,7 +1086,7 @@ bool FactoryDataWidget::registerWidgetType( const QString &wname,
 
 bool FactoryDataWidget::unregisterWidgetType( const QString &wname )
 {
-  DwPropMap::iterator i = propMap.find( wname );
+  auto i = propMap.find( wname );
   if( i == propMap.end() ) {
     return false;
   }
@@ -1157,10 +1154,6 @@ void DataDialog::showHelp()
 
 void DataDialog::showSimpleHelp()
 {
-  QDialog *dia;
-  QTextBrowser *brow;
-  QPushButton *bt_ok;
-  QGridLayout *lay;
   const char *help;
   if( (help = ds.getHelp()) == 0 )
     return;
@@ -1179,17 +1172,17 @@ void DataDialog::showSimpleHelp()
       % ho->getParm("vis_name") % ")</p>\n";
   }
 
-  dia = new QDialog( this );
+  auto dia = new QDialog( this );
   dia->setMinimumSize( 500, 480 );
   dia->setWindowTitle( PACKAGE ": Help on element" );
 
-  lay = new QGridLayout;
+  auto lay = new QGridLayout;
 
-  brow = new QTextBrowser( this );
+  auto brow = new QTextBrowser( this );
   brow->insertHtml( help_str );
   lay->addWidget( brow, 0, 0 );
 
-  bt_ok = new QPushButton( "&Ok", dia );
+  auto bt_ok = new QPushButton( "&Ok", dia );
   lay->addWidget( bt_ok, 1, 0 );
   dia->setLayout( lay );
 
@@ -1207,16 +1200,16 @@ void DataDialog::addParam()
     return;
   }
 
-  QDialog *dia = new QDialog( this );
-  QGridLayout *lay = new QGridLayout( dia );
+  auto dia = new QDialog( this );
+  auto lay = new QGridLayout( dia );
 
-  QLabel *lbl_type = new QLabel( "Type", dia );
+  auto lbl_type = new QLabel( "Type", dia );
   lay->addWidget( lbl_type, 0, 0 );
-  QListWidget *lw = new QListWidget( dia );
+  auto lw = new QListWidget( dia );
 
   bool first_add = true;
   for( QString ptype : prm_clss ) {
-    QListWidgetItem *lwi = new QListWidgetItem( ptype );
+    auto lwi = new QListWidgetItem( ptype );
     lw->addItem( lwi );
     if( first_add  ||  ptype == "double" ) {
       lw->setCurrentItem( lwi );
@@ -1225,23 +1218,23 @@ void DataDialog::addParam()
   }
   lay->addWidget( lw, 1, 0, 3, 1 );
 
-  QLabel *lbl_name = new QLabel( "Name", dia );
+  auto lbl_name = new QLabel( "Name", dia );
   lay->addWidget( lbl_name, 0, 1 );
-  QLineEdit *ed_name = new QLineEdit( this );
+  auto ed_name = new QLineEdit( this );
   ed_name->setValidator( new QRegExpValidator( QRegExp(RE_NAME), this ) );
   lay->addWidget( ed_name, 1, 1 );
 
-  QLabel *lbl_val = new QLabel( "Value", dia );
+  auto lbl_val = new QLabel( "Value", dia );
   lay->addWidget( lbl_val, 2, 1 );
-  QLineEdit *ed_val = new QLineEdit( this );
+  auto ed_val = new QLineEdit( this );
   lay->addWidget( ed_val, 3, 1 );
 
-  QLabel *lbl_descr = new QLabel( "Description", dia );
+  auto lbl_descr = new QLabel( "Description", dia );
   lay->addWidget( lbl_descr, 4, 0 );
-  QLineEdit *ed_descr = new QLineEdit( this );
+  auto ed_descr = new QLineEdit( this );
   lay->addWidget( ed_descr, 5, 0, 1, 2 );
 
-  QDialogButtonBox *bbox
+  auto bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dia );
   lay->addWidget( bbox, 6, 0, 1, 2 );
   connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
@@ -1276,7 +1269,7 @@ void DataDialog::addObj()
   addElemInfo aei;
   aei.name = QString("obj_") + QSN( ds.size() ) ;
   aei.order = 0;
-  AddElemDialog *dia = new AddElemDialog( &aei, &ds, this );
+  auto dia = new AddElemDialog( &aei, &ds, this );
 
   int rc = dia->exec();
   delete dia; dia = 0;
@@ -1324,19 +1317,19 @@ void DataDialog::delSome( bool is_obj )
     return;
   }
 
-  QDialog *dia = new QDialog( this );
-  QVBoxLayout *lay = new QVBoxLayout( dia );
+  auto dia = new QDialog( this );
+  auto lay = new QVBoxLayout( dia );
 
-  QLabel *la = new QLabel( "Delete param", dia );
+  auto la = new QLabel( "Delete param", dia );
   lay->addWidget( la );
 
-  QListWidget *lw = new QListWidget( dia );
+  auto lw = new QListWidget( dia );
   for( QString ob_name : sl ) {
     lw->addItem( ob_name );
   };
   lay->addWidget( lw );
 
-  QDialogButtonBox *bbox
+  auto bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox );
   connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
@@ -1380,9 +1373,9 @@ int DataDialog::createWidgets()
   }
   dwm.clear();
 
-  QVBoxLayout *lay1 = new QVBoxLayout;
+  auto lay1 = new QVBoxLayout;
 
-  QGridLayout *lay2 = new QGridLayout;
+  auto lay2 = new QGridLayout;
   lay1->addLayout( lay2 );
 
   DataWidget *w;
@@ -1408,7 +1401,7 @@ int DataDialog::createWidgets()
     }
 
     if( ho->getParm("sep") == "block" || was_block) {
-      QFrame *fr = new QFrame( this );
+      auto fr = new QFrame( this );
       fr->setFrameStyle( QFrame::HLine );
 
       lay2->addWidget( fr, nr_max, 0, 1, -1 );

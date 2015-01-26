@@ -29,9 +29,9 @@ void AddElemDialog::setupUi()
   if( !aei )
     return;
 
-  QGridLayout *lay = new QGridLayout( this );
+  auto lay = new QGridLayout( this );
 
-  QLabel *la_name = new QLabel( "Name", this );
+  auto la_name = new QLabel( "Name", this );
   lay->addWidget( la_name, 0, 0 );
 
   ed_name = new QLineEdit( this );
@@ -40,7 +40,7 @@ void AddElemDialog::setupUi()
   ed_name->setFocus();
   lay->addWidget( ed_name, 1, 0  );
 
-  QLabel *la_order = new QLabel( "Order", this );
+  auto la_order = new QLabel( "Order", this );
   lay->addWidget( la_order, 0, 1 );
 
   ed_order = new QLineEdit( this );
@@ -51,7 +51,7 @@ void AddElemDialog::setupUi()
     ed_order->setEnabled( false );
   }
 
-  QLabel *la_type = new QLabel( "Type", this );
+  auto la_type = new QLabel( "Type", this );
   lay->addWidget( la_type, 2, 0 );
 
   lw = new QListWidget( this );
@@ -83,7 +83,7 @@ void AddElemDialog::setupUi()
   lw->setResizeMode ( QListView::Adjust );
   lay->addWidget( lw, 3, 0, 1, 2 );
 
-  QDialogButtonBox *bbox
+  auto bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 5, 0, 1, 2 );
   connect( bbox, &QDialogButtonBox::accepted, this, &AddElemDialog::accept );

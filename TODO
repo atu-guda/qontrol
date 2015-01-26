@@ -1,12 +1,13 @@
-Inputs
+Inputs - may be Elements? like TFileSource?
 Dump TOutArr/TGraph commandline (-p/-P)
 Excess? error in fromDom ... and/or show last error?
 BUG: strings, which consists only from spaces, collapsed on read
 More functional labels in dialogs: go to buddy, autoset ....
-Outputs
+Outputs - or even IO - for external data.
 Tests
 Autocorrelation?
 Run script before/after run (+ file)
+Shadow model while run?
 
 Propagate modified flag up to root?
 Application config: to TDataSet?

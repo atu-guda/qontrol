@@ -778,7 +778,7 @@ void LaboWin::closeEvent ( QCloseEvent *e )
 
 LaboView* LaboWin::createChild( LaboDoc* doc )
 {
-  LaboView* w = new LaboView( doc, this );
+  auto  w = new LaboView( doc, this );
   mdiArea->addSubWindow( w );
   return w;
 }
@@ -839,7 +839,7 @@ void LaboWin::slotFileNew()
 {
   statusBar()->showMessage( tr( "Creating new model file..." ) );
 
-  LaboDoc* doc = new LaboDoc();
+  auto  doc = new LaboDoc();
   ++untitledCount;
   QString fileName = QString( "untitled_%1.mo2" ).arg(untitledCount);
   doc->newDocument();
@@ -882,7 +882,7 @@ void LaboWin::slotFileOpenXML()
 
 bool LaboWin::doFileOpenXML( const QString &fn )
 {
-  LaboDoc* doc = new LaboDoc();
+  auto  doc = new LaboDoc();
   if( ! doc->openDocumentXML( fn ) ) { // message inside
     delete doc; doc = nullptr;
     updateActions();
@@ -956,7 +956,7 @@ void LaboWin::slotFileSettings()
 {
   statusBar()->showMessage( tr ( "Edit settings..." ) );
 
-  Mo2SettDlg *dia = new Mo2SettDlg( sett, this );
+  auto dia = new Mo2SettDlg( sett, this );
   if ( dia->exec() == QDialog::Accepted ) {
     setFonts();
   };
