@@ -1439,13 +1439,13 @@ int DataDialog::createWidgets()
   } // -------------- end item looo
 
   // final line and buttons
-  QFrame *frb = new QFrame( this );
+  auto frb = new QFrame( this );
   frb->setFrameStyle( QFrame::HLine );
   lay1->addWidget( frb );
 
-  QHBoxLayout *lay_btn2 = new QHBoxLayout;
+  auto lay_btn2 = new QHBoxLayout;
 
-  QPushButton *btn_addParam = new QPushButton( "Add parameter" );
+  auto btn_addParam = new QPushButton( "Add parameter" );
   connect( btn_addParam, &QPushButton::clicked, this, &DataDialog::addParam );
   lay_btn2->addWidget( btn_addParam );
 
@@ -1465,20 +1465,20 @@ int DataDialog::createWidgets()
     can_add_objs = true;
   }
 
-  QPushButton *btn_addObj = new QPushButton( "Add object" );
+  auto btn_addObj = new QPushButton( "Add object" );
   connect( btn_addObj, &QPushButton::clicked, this, &DataDialog::addObj);
   lay_btn2->addWidget( btn_addObj );
   if( ! can_add_objs ) {
     btn_addObj->setEnabled( false );
   }
 
-  QPushButton *btn_delParam = new QPushButton( "Delete param" );
+  auto btn_delParam = new QPushButton( "Delete param" );
   connect( btn_delParam, &QPushButton::clicked, this, &DataDialog::delParam );
   lay_btn2->addWidget( btn_delParam );
   if( !can_add_params ) {
     btn_delParam->setEnabled( false );
   }
-  QPushButton *btn_delObj = new QPushButton( "Delete object" );
+  auto btn_delObj = new QPushButton( "Delete object" );
   connect( btn_delObj, &QPushButton::clicked, this, &DataDialog::delObj);
   lay_btn2->addWidget( btn_delObj );
   if( ! can_add_objs ) {
@@ -1486,19 +1486,19 @@ int DataDialog::createWidgets()
   }
   lay1->addLayout( lay_btn2 );
 
-  QHBoxLayout *lay_btn = new QHBoxLayout;
-  QPushButton *btn_ok = new QPushButton( QIcon::fromTheme("dialog-ok"),"Ok" );
+  auto lay_btn = new QHBoxLayout;
+  auto btn_ok = new QPushButton( QIcon::fromTheme("dialog-ok"),"Ok" );
   btn_ok->setDefault( true );
   connect( btn_ok, &QPushButton::clicked, this, &DataDialog::accept);
   lay_btn->addWidget( btn_ok );
   //
-  QPushButton *btn_cancel = new QPushButton( QIcon::fromTheme("dialog-cancel"), "Cancel" );
+  auto btn_cancel = new QPushButton( QIcon::fromTheme("dialog-cancel"), "Cancel" );
   connect( btn_cancel, &QPushButton::clicked, this, &DataDialog::reject);
   lay_btn->addWidget( btn_cancel );
-  QPushButton *btn_check = new QPushButton( "Check?" );
+  auto btn_check = new QPushButton( "Check?" );
   connect( btn_check, &QPushButton::clicked, this, &DataDialog::checkData); // TODO:
   lay_btn->addWidget( btn_check );
-  QPushButton *btn_help = new QPushButton( QIcon::fromTheme("help-contents"), "Help" );
+  auto btn_help = new QPushButton( QIcon::fromTheme("help-contents"), "Help" );
   connect( btn_help, &QPushButton::clicked, this, &DataDialog::showHelp);
   lay_btn->addWidget( btn_help );
   lay1->addLayout( lay_btn );

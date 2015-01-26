@@ -358,7 +358,7 @@ int TGraph::prepare()
   // qDebug() << "squeeze res nn= " << (int)nn << "np= " np << NWHE;
 
   // create fake zero array
-  mglData *mdz = new mglData( nx, ny );
+  auto mdz = new mglData( nx, ny );
   for( int i=0; i<np; ++i ) { mdz->a[i] = 0.0; };
   ge_zero  = make_shared<GraphElem>( "_zero",  nullptr, efInner, "zero data", "zero", "" );
   ge_zero->type = GraphElem::DataType::DataNone;
@@ -392,7 +392,7 @@ int TGraph::prepare()
   }
   if( ge_fx ) { // the same for fake X, if exist. TODO: common array
     const dvector *ve = ge_fx->ve;
-    mglData *md = new mglData( nx, ny );
+    auto md = new mglData( nx, ny );
     ge_fx->md = md;
     if( ve ) {
       for( int i=0, j=0; i<nn && j<np ; ++i ) {
@@ -406,7 +406,7 @@ int TGraph::prepare()
   }
   if( ge_fy ) { // the same for fake X, if exist. TODO: common array
     const dvector *ve = ge_fy->ve;
-    mglData *md = new mglData( nx, ny );
+    auto md = new mglData( nx, ny );
     ge_fy->md = md;
     if( ve ) {
       for( int i=0, j=0; i<nn && j<np ; ++i ) {

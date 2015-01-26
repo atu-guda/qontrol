@@ -135,7 +135,7 @@ void TMiso::fillComplModelForParams( QStandardItemModel *mdl ) const
     if( !hd ) {
       continue;
     }
-    QStandardItem *it = new QStandardItem;
+    auto it = new QStandardItem;
     it->setText( hd->objectName() );
     mdl->appendRow( it );
   }

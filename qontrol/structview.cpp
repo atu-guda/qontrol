@@ -563,7 +563,7 @@ void StructView::mousePressEvent( QMouseEvent *me )
 
 QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
 {
-  QMenu *menu = new QMenu( this );
+  auto menu = new QMenu( this );
   QAction *act;
   (void) menu->addSeparator();
   if( title.isEmpty() ) {

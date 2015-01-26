@@ -457,22 +457,22 @@ void MglView::setMark()
   markY_ed->setText( QSN( scd->markY ) );
   lay->addWidget( markY_ed, 1, 1 );
 
-  QLineEdit *markZ_ed = new QLineEdit( dia );
+  auto markZ_ed = new QLineEdit( dia );
   markZ_ed->setValidator( new QDoubleValidator() );
   markZ_ed->setText( QSN( scd->markZ ) );
   lay->addWidget( markZ_ed, 2, 1 );
 
-  QLabel *la_x = new QLabel( "&X value", dia );
+  auto la_x = new QLabel( "&X value", dia );
   la_x->setBuddy( markX_ed );
   lay->addWidget( la_x, 0, 0 );
-  QLabel *la_y = new QLabel( "&Y value", dia );
+  auto la_y = new QLabel( "&Y value", dia );
   la_y->setBuddy( markY_ed );
   lay->addWidget( la_y, 1, 0 );
-  QLabel *la_z = new QLabel( "&Z value", dia );
+  auto la_z = new QLabel( "&Z value", dia );
   la_z->setBuddy( markZ_ed );
   lay->addWidget( la_z, 2, 0 );
 
-  QDialogButtonBox *bbox
+  auto bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
   lay->addWidget( bbox, 3, 0, 1, 2 );
   connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
@@ -491,7 +491,7 @@ void MglView::setMark()
 
 void MglView::setScale()
 {
-  DataDialog *dia = new DataDialog( *scd, this );
+  auto dia = new DataDialog( *scd, this );
 
   int rc = dia->exec();
   delete dia;
