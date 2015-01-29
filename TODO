@@ -1,7 +1,6 @@
 Inputs - may be Elements? like TFileSource?
 Dump TOutArr/TGraph commandline (-p/-P)
 Excess? error in fromDom ... and/or show last error?
-BUG: strings, which consists only from spaces, collapsed on read
 More functional labels in dialogs: go to buddy, autoset ....
 Outputs - or even IO - for external data.
 Tests
@@ -21,7 +20,6 @@ Add to model object: functions? but what?
 
 Call parent post_set (if req). flag?
 Input/output elements/scheme properties (in0?)
-Command line (':') - or good JS dialog.
 unify add/paste elem: param in dialog?
 unify add param/object : add_obj_param? + dialog
 RunWindow?

@@ -113,11 +113,15 @@ bool LaboDoc::openDocumentXML(const QString &filename )
   QTextStream in( &file );
   QString textData = in.readAll();
 
+  QXmlInputSource xml_src;
+  xml_src.setData( textData );
+  QXmlSimpleReader xml_reader;
+
   QString errstr;
   QDomDocument dd;
   int err_line, err_column;
 
-  if( ! dd.setContent( textData, false, &errstr, &err_line, &err_column ) ) {
+  if( ! dd.setContent( &xml_src, &xml_reader, &errstr, &err_line, &err_column ) ) {
     showError( tr("Cannot parse file %1:\n%2\nLine %3 column %4.")
                          .arg(filename).arg(errstr).arg(err_line).arg(err_column) );
     m_filename = "";
