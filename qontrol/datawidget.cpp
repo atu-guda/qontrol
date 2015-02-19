@@ -1234,9 +1234,19 @@ void DataDialog::addParam()
   auto ed_descr = new QLineEdit( this );
   lay->addWidget( ed_descr, 5, 0, 1, 2 );
 
+  auto lbl_vis_name = new QLabel( "Visual name", dia );
+  lay->addWidget( lbl_vis_name, 6, 0 );
+  auto ed_vis_name = new QLineEdit( this );
+  lay->addWidget( ed_vis_name, 7, 0, 1, 2 );
+
+  auto lbl_extra = new QLabel( "Extra", dia );
+  lay->addWidget( lbl_extra, 8, 0 );
+  auto ed_extra = new QLineEdit( this );
+  lay->addWidget( ed_extra, 9, 0, 1, 2 );
+
   auto bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dia );
-  lay->addWidget( bbox, 6, 0, 1, 2 );
+  lay->addWidget( bbox, 10, 0, 1, 2 );
   connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
   connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
 
@@ -1244,9 +1254,13 @@ void DataDialog::addParam()
   QString nm = ed_name->text();
   QString val = ed_val->text();
   QString descr = ed_descr->text();
+  QString vis_name = ed_vis_name->text();
+  QString extra = ed_extra->text();
   QString ptype;
-  if( lw->currentItem() )
+  if( lw->currentItem() ) {
     ptype = lw->currentItem()->text();
+  }
+
   delete dia;
   if( rc != QDialog::Accepted || nm.isEmpty() || ptype.isEmpty() ) {
     return;
@@ -1256,8 +1270,12 @@ void DataDialog::addParam()
     handleError( this, QSL("Fail to add parameter: ") + ptype + " " + nm );
     return;
   }
-  ho->setParm( "descr", descr );
+
   ho->fromString( val );
+  ho->setParm( "descr", descr );
+  ho->setParm( "vis_name", vis_name );
+  ho->setParm( "extra", extra );
+  ho->extraToParm();
 
   createWidgets(); // recreate iface
   getAll();

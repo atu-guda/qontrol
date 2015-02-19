@@ -348,9 +348,9 @@ class HolderData : public QAbstractItemModel {
       }
   /** reaction to add/remove/relink of subobjects: call do_structChanged */
   void handleStructChanged();
+  void extraToParm();
  protected:
   virtual void do_reset() {}; //* adjustable reset function
-  void extraToParm();
   /** do real actions after structure changed */
   virtual void do_structChanged();
 
@@ -620,8 +620,7 @@ class TDataSet : public HolderData {
     * valid names:
     * elmname = elmname.out0
     * elmname.parmname
-    * :parmname - only local param?
-    * parmname - try new, w/o ':'
+    * parmname
     * lt - ptr: store link type,
     * targ - ptr_pre: strore ptr to source TDataSet,
     * lev - level of recursion, not for user */

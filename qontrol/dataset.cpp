@@ -367,6 +367,7 @@ void HolderData::extraToParm()
 {
   QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=(.+)$)" );
   QStringList el = getParm("extra").split( "\n", QString::SkipEmptyParts );
+
   for( QString &s : el ) {
     if( s.isEmpty() ) {
       continue;
