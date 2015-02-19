@@ -615,6 +615,9 @@ QDomElement HolderData::toDom( QDomDocument &dd ) const
   if( dyn ) {
     de.setAttribute( "dyn", "1" );
     de.setAttribute( "otype", getType() );
+    for( auto p = parms.cbegin(); p != parms.cend(); ++p ) {
+      de.setAttribute( "prm_" + p.key(), p.value() );
+    }
   }
   QDomText tn = dd.createTextNode( toString() );
   de.appendChild( tn );
@@ -2011,8 +2014,9 @@ static QString getDomText( QDomNode &p )
 {
   QString r;
   for( QDomNode no = p.firstChild(); !no.isNull() ; no = no.nextSibling() ) {
-    if ( ! no.isText() )
+    if ( ! no.isText() ) {
       continue;
+    }
     QDomText t = no.toText();
     r += t.data();
   }
@@ -2023,8 +2027,9 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
 {
   for( QDomNode no = de.firstChild(); !no.isNull() ; no = no.nextSibling() ) {
 
-    if ( ! no.isElement() )
+    if ( ! no.isElement() ) {
       continue;
+    }
 
     QDomElement ee = no.toElement();
     QString elname = ee.attribute( "name" );
@@ -2087,6 +2092,23 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
         }
       }
       ho->fromString( getDomText(ee) );
+
+      if( ho->isDyn() ) { // restore params
+        // qDebug() << "dyn param:" << ho->objectName() <<  NWHE;
+        auto attrs = ee.attributes();
+        int asz = attrs.size();
+        for( int i=0; i<asz; ++i ) {
+          QDomNode dann = attrs.item(i);
+          QDomAttr dattr = dann.toAttr();
+          if( dattr.isNull() ) { continue; }
+          QString attr_name = dattr.name();
+          // qDebug() << "dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
+          if( ! attr_name.startsWith( "prm_" ) ) { continue; } // only special names
+          attr_name.remove( 0, 4 ); // remove "prm_";
+          ho->setParm( attr_name, dattr.value() );
+          // qDebug() << "set dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
+        }
+      }
 
     } else { // ----------- unknown element
       errstr = QString("TDataSet::fromDom: bad element %1 %2 ")
