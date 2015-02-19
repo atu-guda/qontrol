@@ -51,23 +51,28 @@ const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
     return p;
   }
 
-  // then try model
+  // get model - for simulation and model itself
   TModel *mod = getAncestorT<TModel>();
   if( !mod ) {
     qWarning() << "No model detected" << NWHE;
     return nullptr;
   }
 
+  // try active simulation
+  Simulation *csim = mod->getActiveSimulation();
+  if( csim ) {
+    p = csim->getDoublePtr( nm, lt, src_ob, lev );
+    if( p ) {
+      return p;
+    }
+  }
+
+  // then try model
   p =  mod->getDoublePtr( nm, lt, src_ob, lev );
   if( p ) {
     return p;
   }
 
-  // then - active simulation
-  Simulation *csim = mod->getActiveSimulation();
-  if( csim ) {
-    p =  csim->getDoublePtr( nm, lt, src_ob, lev );
-  }
 
   if( !p ) {
     qWarning() << "fail to find target " << nm << NWHE;

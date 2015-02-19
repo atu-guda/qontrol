@@ -70,14 +70,16 @@ TModel::~TModel()
 const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
         const TDataSet **src_ob, int lev) const
 {
-  Scheme *sch = getActiveScheme();
   const double *rv = nullptr;
+
+  Scheme *sch = getActiveScheme();
   if( sch ) {
     rv =  sch->getDoublePtr( nm, lt, src_ob, lev );
+    if( rv ) {
+      return rv;
+    };
   };
-  if( rv ) {
-    return rv;
-  };
+
   // may be some model params?
   rv =  getDoublePtr( nm, lt, src_ob, lev );
 
