@@ -1,5 +1,6 @@
 Inputs - may be Elements? like TFileSource?
 Dump TOutArr/TGraph commandline (-p/-P)
+Check/use model run status (in batch, for tests)
 Excess? error in fromDom ... and/or show last error?
 More functional labels in dialogs: go to buddy, autoset ....
 Outputs - or even IO - for external data.
@@ -34,7 +35,7 @@ js/large text edit widget + button/dialog + external editor (partial done)?
 
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
   TMovingAver, TDiff
-  -- TSum8, TDefuzzy, TQuality (TCriterion is busy/TCrit)
+  -- TDefuzzy, TQuality (TCriterion is busy/TCrit)
   -- Rastrigin and more
   -- or File Source input/output
 may be new field in TClassInfo to misc flags: can f() w/o preRun..., 

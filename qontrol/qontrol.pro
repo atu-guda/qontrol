@@ -76,6 +76,7 @@ SOURCES += \
   ../elems/trelaxgen.cpp \
   ../elems/tsource.cpp \
   ../elems/tsourcelin.cpp \
+  ../elems/tsum8.cpp \
   ../elems/tswitch.cpp \
   ../elems/tthrum.cpp \
   ../elems/ttrigger.cpp \
@@ -142,6 +143,7 @@ HEADERS += \
   ../elems/trelaxgen.h \
   ../elems/tsource.h \
   ../elems/tsourcelin.h \
+  ../elems/tsum8.h \
   ../elems/tswitch.h \
   ../elems/tthrum.h \
   ../elems/ttrigger.h \
