@@ -18,14 +18,7 @@
 #include "tswitch.h"
 
 const char* TSwitch::helpstr = "<H1>TSwitch</H1>\n"
- "<p>Connects output to one of inputs, accrding to values of u[3]: <br>\n"
- " if( u[3] &lt; level1 ) out = u[0]; <br>\n"
- " if( u[3] &gt; level2 ) out = u[2]; <br>\n"
- " else out = u[1]. <br>\n"
- "Parameters:<br>\n"
- " - <b>level1</b> -- level of in_3 to switch in_0->in_1;<br>\n"
- " - <b>level2</b> -- level of in_3 to switch in_1->in_2.<br>\n"
- "Each parameter can be changed at any time.</p>";
+ "<p>Connects output to one of inputs, accrding to values of u_s: <br>\n</p>";
 
 STD_CLASSINFO(TSwitch,clpElem);
 
@@ -36,11 +29,21 @@ CTOR(TSwitch,TMiso)
 
 double TSwitch::f( double /* t */ )
 {
-  double v;
-  v = ( in_3 < level1 ) ?
-    in_0
-    : ( ( in_3>level2 ) ? in_2 : in_1 );
-  return v;
+  double vn = qBound( 0.0, ( in_s - level_0 ) / step, double(n_max) );
+  int n = int( vn );
+  n_cur = n;
+
+  switch( n ) {
+    case 0: return in_0;
+    case 1: return in_1;
+    case 2: return in_2;
+    case 3: return in_3;
+    case 4: return in_4;
+    case 5: return in_5;
+    case 6: return in_6;
+    case 7: return in_7;
+  }
+  return 0;
 }
 
 DEFAULT_FUNCS_REG(TSwitch)
