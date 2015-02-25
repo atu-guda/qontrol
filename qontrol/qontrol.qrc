@@ -16,8 +16,9 @@
     <file>icons/editout.png</file>
     <file>icons/elm.png</file>
     <file>icons/elm_double.png</file>
+    <file>icons/elm_inputparam.png</file>
     <file>icons/elm_int.png</file>
-    <file>icons/elm_qstring.png</file>
+    <file>icons/elm_string.png</file>
     <file>icons/elm_none.png</file>
     <file>icons/elm_simul_0.png</file>
     <file>icons/elm_simul_1.png</file>
@@ -30,6 +31,7 @@
     <file>icons/elm_tfilesource.png</file>
     <file>icons/elm_tdatacontainer.png</file>
     <file>icons/elm_tdelay.png</file>
+    <file>icons/elm_tdiffin.png</file>
     <file>icons/elm_textrlatch.png</file>
     <file>icons/elm_tfourier.png</file>
     <file>icons/elm_tfriction.png</file>

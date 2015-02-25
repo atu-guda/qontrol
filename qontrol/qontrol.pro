@@ -55,6 +55,7 @@ SOURCES += \
   ../elems/tcounter.cpp \
   ../elems/tcriterion.cpp \
   ../elems/tdelay.cpp \
+  ../elems/tdiffin.cpp \
   ../elems/textrlatch.cpp \
   ../elems/tfriction.cpp \
   ../elems/tfilesource.cpp \
@@ -122,6 +123,7 @@ HEADERS += \
   ../elems/tcounter.h \
   ../elems/tcriterion.h \
   ../elems/tdelay.h \
+  ../elems/tdiffin.h \
   ../elems/textrlatch.h \
   ../elems/tfilesource.h \
   ../elems/tfriction.h \
