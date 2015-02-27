@@ -41,6 +41,7 @@ constexpr const unsigned UMAX { std::numeric_limits<unsigned int>::max() };
 constexpr const double DMIN   { std::numeric_limits<double>::lowest() };
 constexpr const double DMAX   { std::numeric_limits<double>::max() };
 constexpr const double D_EPS  { 1.0e-6 }; // default error
+constexpr const double D_AZERO  { 1.0e-100 }; // a near-zero value
 
 #define L8B QString::fromLocal8Bit
 #define QSN QString::number

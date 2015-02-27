@@ -2,7 +2,7 @@ QT += core widgets xml script printsupport
 TEMPLATE = app
 TARGET = qontrol
 CONFIG += c++11 release warn_on qt thread
-QMAKE_CXXFLAGS += -std=gnu++11 -fgnu-keywords
+QMAKE_CXXFLAGS += -std=gnu++11 -fgnu-keywords -fPIC
 #CONFIG += debug warn_on qt thread
 
 RESOURCES = qontrol.qrc
@@ -72,6 +72,7 @@ SOURCES += \
   ../elems/trossler.cpp \
   ../elems/tmultipl.cpp \
   ../elems/tpid.cpp \
+  ../elems/tquadextr.cpp \
   ../elems/trand.cpp \
   ../elems/trandtrigg.cpp \
   ../elems/trelaxgen.cpp \
@@ -140,6 +141,7 @@ HEADERS += \
   ../elems/trossler.h \
   ../elems/tmultipl.h \
   ../elems/tpid.h \
+  ../elems/tquadextr.h \
   ../elems/trand.h \
   ../elems/trandtrigg.h \
   ../elems/trelaxgen.h \
