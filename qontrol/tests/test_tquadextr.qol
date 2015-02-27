@@ -29,7 +29,7 @@
 
   v = main_s.quad4.getDataD( "out0", 1000.0 );
   print( "x_4_e = ", v, "\n" );
-  if( ! isNear( v, 2.5 ) ) {
+  if( ! isNear( v, 1.5 ) ) {
     print( "Bad Value x_4_e\n" );
     return 1;
   }
@@ -43,6 +43,7 @@
 
   return 0;
 }
+
 
 
 

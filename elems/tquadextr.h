@@ -36,7 +36,7 @@ class TQuadExtr : public TMiso  {
    virtual double f( double t ) override;
 
    PRM_SWITCH( emulC, efNRC, "Emulate C", "Make virtual linear central point", "" );
-   PRM_SWITCH( limitX, efNRC, "Limit X", "Limit X to half-width", "" );
+   PRM_SWITCH( limitX, efNRC, "Limit X", "Limit X to half-width", "def=1" );
    PRM_SWITCH( limitG, efNRC, "Limit as given", "Limit X given values", "" );
    PRM_DOUBLE( x_min,  0, "x_{min}", "Given minimal x", "sep=col\ndef=-1" );
    PRM_DOUBLE( x_max,  0, "x_{max}", "Given miximal x", "def=1" );

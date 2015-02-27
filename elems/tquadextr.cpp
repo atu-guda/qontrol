@@ -53,7 +53,7 @@ double TQuadExtr::f( double /*t*/ )
   }
 
   double denom = x_lt * x_lt * x_rt - x_lt * x_rt * x_rt;
-  if( fabs( denom ) < D_AZERO ) {
+  if( fabs( denom ) < D_AZERO ) { // x_r and x_l is to near
     return x_cn;
   }
 
@@ -61,9 +61,21 @@ double TQuadExtr::f( double /*t*/ )
   a_2 = - ( y_rt * x_lt - y_lt * x_rt ) / denom;
 
   x_cnt = - 0.5 * a_1 / a_2;
+  x_cn = x_ce + x_cnt;
 
-  if( limitX ) {
-    x_cnt = qBound( lim_x_lt, (double)(x_cnt), lim_x_rt );
+  if( ! limitX ) { // rarely need, by for more generiv usage, like tests
+    return x_cn;
+  }
+
+  if( a_2 < 0  &&  x_cnt > lim_x_lt  &&  x_cnt < lim_x_rt ) { // Min and in limits
+    return x_cn;
+  }
+
+  // else - bound to point with large y, NOT nearest to x_cn!
+  if( y_r > y_l ) {
+    x_cnt = lim_x_rt;
+  } else {
+    x_cnt = lim_x_lt;
   }
 
   x_cn = x_ce + x_cnt;
