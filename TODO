@@ -1,3 +1,5 @@
+Copy/paste plots, outs.
+Common selection elems/outs/plots?
 Inputs - may be Elements? like TFileSource?
 Dump TOutArr/TGraph commandline (-p/-P)
 Check/use model run status (in batch, for tests)

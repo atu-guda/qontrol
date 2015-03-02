@@ -37,7 +37,8 @@ class TQuadExtr : public TMiso  {
 
    PRM_SWITCH( emulC, efNRC, "Emulate C", "Make virtual linear central point", "" );
    PRM_SWITCH( limitX, efNRC, "Limit X", "Limit X to half-width", "def=1" );
-   PRM_SWITCH( limitG, efNRC, "Limit as given", "Limit X given values", "" );
+   PRM_DOUBLE( lim_s,  0, "lim_{s}", "Limit Scale", "sep=col\ndef=0.5" );
+   PRM_SWITCH( limitG, efNRC, "Limit as given", "Limit X given values", "sep=col" );
    PRM_DOUBLE( x_min,  0, "x_{min}", "Given minimal x", "sep=col\ndef=-1" );
    PRM_DOUBLE( x_max,  0, "x_{max}", "Given miximal x", "def=1" );
    // Outputs

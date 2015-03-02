@@ -70,6 +70,7 @@ SOURCES += \
   ../elems/tlogic.cpp \
   ../elems/tlorenz.cpp \
   ../elems/trossler.cpp \
+  ../elems/tmaxnum.cpp \
   ../elems/tmultipl.cpp \
   ../elems/tpid.cpp \
   ../elems/tquadextr.cpp \
@@ -139,6 +140,7 @@ HEADERS += \
   ../elems/tlogic.h \
   ../elems/tlorenz.h \
   ../elems/trossler.h \
+  ../elems/tmaxnum.h \
   ../elems/tmultipl.h \
   ../elems/tpid.h \
   ../elems/tquadextr.h \

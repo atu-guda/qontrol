@@ -1,56 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QontrolLabML>
 <QontrolLabML>
- <obj name="root" otype="TRootData">
-  <obj name="model" otype="TModel">
+ <obj otype="TRootData" name="root">
+  <obj otype="TModel" name="model">
    <param name="long_descr">Test for TQuadExrt element</param>
-   <param name="script">function test_tquadextr()
+   <param name="script">function vtst( obj, nm, val )
 {
-  var v = main_s.quad1.getDataD( "out0", 1000.0 );
-  print( "x_1_e = ", v, "\n" );
-  if( ! isNear( v, -2 ) ) {
-    print( "Bad Value x_1_e\n" );
+  var v = obj.getDataD( nm, 11111110.0 );
+  var onm = obj.getFullName();
+  print( onm, ".", nm, " = ", v, "\n" );
+  if( ! isNear( v, val ) ) {
+    print( "Bad Value " , nm, " need ", val ,"\n" );
     return 1;
   }
-
-  v = main_s.quad2.getDataD( "out0", 1000.0 );
-  print( "x_2_e = ", v, "\n" );
-  if( ! isNear( v, 0 ) ) {
-    print( "Bad Value x_2_e\n" );
-    return 1;
-  }
-
-  v = main_s.quad3.getDataD( "out0", 1000.0 );
-  print( "x_3_e = ", v, "\n" );
-  if( ! isNear( v, 0 ) ) {
-    print( "Bad Value x_3_e\n" );
-    return 1;
-  }
-
-  v = main_s.quad4.getDataD( "out0", 1000.0 );
-  print( "x_4_e = ", v, "\n" );
-  if( ! isNear( v, 1.5 ) ) {
-    print( "Bad Value x_4_e\n" );
-    return 1;
-  }
-
-  v = main_s.quad2.getDataD( "a_2", 0.0 );
-  print( "a_2_2 = ", v, "\n" );
-  if( ! isNear( v, -0.01 ) ) {
-    print( "Bad Value a_2_2\n" );
-    return 1;
-  }
-
   return 0;
 }
 
 
 
+function test0()
+{
+  var n_err = 0;
+  n_err += vtst( main_s.quad1, "out0",-2.0  );
+  n_err += vtst( main_s.quad2, "out0", 0.0 );
+  n_err += vtst( main_s.quad3, "out0", 0.0 );
+  n_err += vtst( main_s.quad4, "out0", 1.5 );
+
+  n_err += vtst( main_s.quad2, "a_2", -0.01 );
+
+  print( "Errors: ", n_err, "\n" );
+
+  return n_err;
+}
+
+
+
+
 
 </param>
-   <obj name="schems" otype="ContScheme">
-    <obj name="main_s" otype="Scheme">
-     <obj name="x0" otype="TLinear">
+   <obj otype="ContScheme" name="schems">
+    <obj otype="Scheme" name="main_s">
+     <obj otype="TLinear" name="x0">
       <param name="descr">x_0</param>
       <param name="ord">10</param>
       <param name="vis_x">1</param>
@@ -61,13 +51,13 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="a0">0</param>
       <param name="a1">0</param>
       <param name="a2">0</param>
       <param name="a3">0</param>
       <param name="b">-5</param>
-      <obj name="in_0" otype="InputSimple">
+      <obj otype="InputSimple" name="in_0">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -76,7 +66,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_1" otype="InputSimple">
+      <obj otype="InputSimple" name="in_1">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -85,7 +75,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_2" otype="InputSimple">
+      <obj otype="InputSimple" name="in_2">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -94,7 +84,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_3" otype="InputSimple">
+      <obj otype="InputSimple" name="in_3">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -104,7 +94,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="x1" otype="TLinear">
+     <obj otype="TLinear" name="x1">
       <param name="descr">x_1</param>
       <param name="ord">20</param>
       <param name="vis_x">1</param>
@@ -115,13 +105,13 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="a0">0</param>
       <param name="a1">0</param>
       <param name="a2">0</param>
       <param name="a3">0</param>
       <param name="b">-3</param>
-      <obj name="in_0" otype="InputSimple">
+      <obj otype="InputSimple" name="in_0">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -130,7 +120,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_1" otype="InputSimple">
+      <obj otype="InputSimple" name="in_1">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -139,7 +129,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_2" otype="InputSimple">
+      <obj otype="InputSimple" name="in_2">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -148,7 +138,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_3" otype="InputSimple">
+      <obj otype="InputSimple" name="in_3">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -158,7 +148,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="x2" otype="TLinear">
+     <obj otype="TLinear" name="x2">
       <param name="descr">x_2</param>
       <param name="ord">30</param>
       <param name="vis_x">1</param>
@@ -169,13 +159,13 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="a0">0</param>
       <param name="a1">0</param>
       <param name="a2">0</param>
       <param name="a3">0</param>
       <param name="b">-1</param>
-      <obj name="in_0" otype="InputSimple">
+      <obj otype="InputSimple" name="in_0">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -184,7 +174,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_1" otype="InputSimple">
+      <obj otype="InputSimple" name="in_1">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -193,7 +183,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_2" otype="InputSimple">
+      <obj otype="InputSimple" name="in_2">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -202,7 +192,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_3" otype="InputSimple">
+      <obj otype="InputSimple" name="in_3">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -212,7 +202,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="x3" otype="TLinear">
+     <obj otype="TLinear" name="x3">
       <param name="descr">x_3</param>
       <param name="ord">40</param>
       <param name="vis_x">1</param>
@@ -223,13 +213,13 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="a0">0</param>
       <param name="a1">0</param>
       <param name="a2">0</param>
       <param name="a3">0</param>
       <param name="b">1</param>
-      <obj name="in_0" otype="InputSimple">
+      <obj otype="InputSimple" name="in_0">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -238,7 +228,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_1" otype="InputSimple">
+      <obj otype="InputSimple" name="in_1">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -247,7 +237,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_2" otype="InputSimple">
+      <obj otype="InputSimple" name="in_2">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -256,7 +246,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_3" otype="InputSimple">
+      <obj otype="InputSimple" name="in_3">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -266,7 +256,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="x4" otype="TLinear">
+     <obj otype="TLinear" name="x4">
       <param name="descr">x_4</param>
       <param name="ord">50</param>
       <param name="vis_x">1</param>
@@ -277,13 +267,13 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="a0">0</param>
       <param name="a1">0</param>
       <param name="a2">0</param>
       <param name="a3">0</param>
       <param name="b">3</param>
-      <obj name="in_0" otype="InputSimple">
+      <obj otype="InputSimple" name="in_0">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -292,7 +282,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_1" otype="InputSimple">
+      <obj otype="InputSimple" name="in_1">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -301,7 +291,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_2" otype="InputSimple">
+      <obj otype="InputSimple" name="in_2">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -310,7 +300,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_3" otype="InputSimple">
+      <obj otype="InputSimple" name="in_3">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -320,7 +310,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="y0" otype="TFuncPoly">
+     <obj otype="TFuncPoly" name="y0">
       <param name="descr">y_0</param>
       <param name="ord">100</param>
       <param name="vis_x">2</param>
@@ -331,7 +321,7 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="type">1</param>
       <param name="a">-0.01</param>
       <param name="b">0</param>
@@ -340,7 +330,7 @@
       <param name="e">0</param>
       <param name="g">1</param>
       <param name="x0">0</param>
-      <obj name="in_0" otype="InputSimple">
+      <obj otype="InputSimple" name="in_0">
        <param name="source">x0</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -349,7 +339,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_1" otype="InputSimple">
+      <obj otype="InputSimple" name="in_1">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -358,7 +348,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_2" otype="InputSimple">
+      <obj otype="InputSimple" name="in_2">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -367,7 +357,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_3" otype="InputSimple">
+      <obj otype="InputSimple" name="in_3">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -377,7 +367,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="y1" otype="TFuncPoly">
+     <obj otype="TFuncPoly" name="y1">
       <param name="descr">y_1</param>
       <param name="ord">110</param>
       <param name="vis_x">2</param>
@@ -388,7 +378,7 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="type">1</param>
       <param name="a">-0.01</param>
       <param name="b">0</param>
@@ -397,7 +387,7 @@
       <param name="e">0</param>
       <param name="g">1</param>
       <param name="x0">0</param>
-      <obj name="in_0" otype="InputSimple">
+      <obj otype="InputSimple" name="in_0">
        <param name="source">x1</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -406,7 +396,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_1" otype="InputSimple">
+      <obj otype="InputSimple" name="in_1">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -415,7 +405,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_2" otype="InputSimple">
+      <obj otype="InputSimple" name="in_2">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -424,7 +414,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_3" otype="InputSimple">
+      <obj otype="InputSimple" name="in_3">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -434,7 +424,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="y2" otype="TFuncPoly">
+     <obj otype="TFuncPoly" name="y2">
       <param name="descr">y_2</param>
       <param name="ord">120</param>
       <param name="vis_x">2</param>
@@ -445,7 +435,7 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="type">1</param>
       <param name="a">-0.01</param>
       <param name="b">0</param>
@@ -454,7 +444,7 @@
       <param name="e">0</param>
       <param name="g">1</param>
       <param name="x0">0</param>
-      <obj name="in_0" otype="InputSimple">
+      <obj otype="InputSimple" name="in_0">
        <param name="source">x2</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -463,7 +453,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_1" otype="InputSimple">
+      <obj otype="InputSimple" name="in_1">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -472,7 +462,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_2" otype="InputSimple">
+      <obj otype="InputSimple" name="in_2">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -481,7 +471,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_3" otype="InputSimple">
+      <obj otype="InputSimple" name="in_3">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -491,7 +481,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="y3" otype="TFuncPoly">
+     <obj otype="TFuncPoly" name="y3">
       <param name="descr">y_3</param>
       <param name="ord">130</param>
       <param name="vis_x">2</param>
@@ -502,7 +492,7 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="type">1</param>
       <param name="a">-0.01</param>
       <param name="b">0</param>
@@ -511,7 +501,7 @@
       <param name="e">0</param>
       <param name="g">1</param>
       <param name="x0">0</param>
-      <obj name="in_0" otype="InputSimple">
+      <obj otype="InputSimple" name="in_0">
        <param name="source">x3</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -520,7 +510,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_1" otype="InputSimple">
+      <obj otype="InputSimple" name="in_1">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -529,7 +519,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_2" otype="InputSimple">
+      <obj otype="InputSimple" name="in_2">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -538,7 +528,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_3" otype="InputSimple">
+      <obj otype="InputSimple" name="in_3">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -548,7 +538,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="y4" otype="TFuncPoly">
+     <obj otype="TFuncPoly" name="y4">
       <param name="descr">y_4</param>
       <param name="ord">140</param>
       <param name="vis_x">2</param>
@@ -559,7 +549,7 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="type">1</param>
       <param name="a">-0.01</param>
       <param name="b">0</param>
@@ -568,7 +558,7 @@
       <param name="e">0</param>
       <param name="g">1</param>
       <param name="x0">0</param>
-      <obj name="in_0" otype="InputSimple">
+      <obj otype="InputSimple" name="in_0">
        <param name="source">x4</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -577,7 +567,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_1" otype="InputSimple">
+      <obj otype="InputSimple" name="in_1">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -586,7 +576,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_2" otype="InputSimple">
+      <obj otype="InputSimple" name="in_2">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -595,7 +585,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="in_3" otype="InputSimple">
+      <obj otype="InputSimple" name="in_3">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -605,7 +595,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="quad1" otype="TQuadExtr">
+     <obj otype="TQuadExtr" name="quad1">
       <param name="descr">Extr near point x0</param>
       <param name="ord">200</param>
       <param name="vis_x">4</param>
@@ -616,13 +606,14 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="emulC">0</param>
       <param name="limitX">1</param>
+      <param name="lim_s">0.5</param>
       <param name="limitG">0</param>
       <param name="x_min">-1</param>
       <param name="x_max">1</param>
-      <obj name="x_r" otype="InputSimple">
+      <obj otype="InputSimple" name="x_r">
        <param name="source">x2</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -631,7 +622,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_r" otype="InputSimple">
+      <obj otype="InputSimple" name="y_r">
        <param name="source">y2</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -640,7 +631,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="x_c" otype="InputSimple">
+      <obj otype="InputSimple" name="x_c">
        <param name="source">x1</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -649,7 +640,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_c" otype="InputSimple">
+      <obj otype="InputSimple" name="y_c">
        <param name="source">y1</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -658,7 +649,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="x_l" otype="InputSimple">
+      <obj otype="InputSimple" name="x_l">
        <param name="source">x0</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -667,7 +658,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_l" otype="InputSimple">
+      <obj otype="InputSimple" name="y_l">
        <param name="source">y0</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -677,7 +668,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="quad2" otype="TQuadExtr">
+     <obj otype="TQuadExtr" name="quad2">
       <param name="descr">Extr near point x2</param>
       <param name="ord">210</param>
       <param name="vis_x">4</param>
@@ -688,13 +679,14 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="emulC">0</param>
       <param name="limitX">1</param>
+      <param name="lim_s">0.5</param>
       <param name="limitG">0</param>
       <param name="x_min">-1</param>
       <param name="x_max">1</param>
-      <obj name="x_r" otype="InputSimple">
+      <obj otype="InputSimple" name="x_r">
        <param name="source">x3</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -703,7 +695,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_r" otype="InputSimple">
+      <obj otype="InputSimple" name="y_r">
        <param name="source">y3</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -712,7 +704,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="x_c" otype="InputSimple">
+      <obj otype="InputSimple" name="x_c">
        <param name="source">x2</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -721,7 +713,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_c" otype="InputSimple">
+      <obj otype="InputSimple" name="y_c">
        <param name="source">y2</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -730,7 +722,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="x_l" otype="InputSimple">
+      <obj otype="InputSimple" name="x_l">
        <param name="source">x1</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -739,7 +731,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_l" otype="InputSimple">
+      <obj otype="InputSimple" name="y_l">
        <param name="source">y1</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -749,7 +741,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="quad3" otype="TQuadExtr">
+     <obj otype="TQuadExtr" name="quad3">
       <param name="descr">Extr near point x2</param>
       <param name="ord">220</param>
       <param name="vis_x">4</param>
@@ -760,13 +752,14 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="emulC">0</param>
       <param name="limitX">1</param>
+      <param name="lim_s">0.5</param>
       <param name="limitG">0</param>
       <param name="x_min">-1</param>
       <param name="x_max">1</param>
-      <obj name="x_r" otype="InputSimple">
+      <obj otype="InputSimple" name="x_r">
        <param name="source">x4</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -775,7 +768,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_r" otype="InputSimple">
+      <obj otype="InputSimple" name="y_r">
        <param name="source">y4</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -784,7 +777,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="x_c" otype="InputSimple">
+      <obj otype="InputSimple" name="x_c">
        <param name="source">x3</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -793,7 +786,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_c" otype="InputSimple">
+      <obj otype="InputSimple" name="y_c">
        <param name="source">y3</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -802,7 +795,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="x_l" otype="InputSimple">
+      <obj otype="InputSimple" name="x_l">
        <param name="source">x2</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -811,7 +804,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_l" otype="InputSimple">
+      <obj otype="InputSimple" name="y_l">
        <param name="source">y2</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -821,7 +814,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="quad4" otype="TQuadExtr">
+     <obj otype="TQuadExtr" name="quad4">
       <param name="descr">Extr near point x2</param>
       <param name="ord">230</param>
       <param name="vis_x">4</param>
@@ -832,13 +825,14 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="emulC">1</param>
       <param name="limitX">1</param>
+      <param name="lim_s">0.5</param>
       <param name="limitG">0</param>
       <param name="x_min">-1</param>
       <param name="x_max">1</param>
-      <obj name="x_r" otype="InputSimple">
+      <obj otype="InputSimple" name="x_r">
        <param name="source">x4</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -847,7 +841,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_r" otype="InputSimple">
+      <obj otype="InputSimple" name="y_r">
        <param name="source">y4</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -856,7 +850,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="x_c" otype="InputSimple">
+      <obj otype="InputSimple" name="x_c">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -865,7 +859,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_c" otype="InputSimple">
+      <obj otype="InputSimple" name="y_c">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -874,7 +868,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="x_l" otype="InputSimple">
+      <obj otype="InputSimple" name="x_l">
        <param name="source">x3</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -883,7 +877,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_l" otype="InputSimple">
+      <obj otype="InputSimple" name="y_l">
        <param name="source">y3</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -893,7 +887,7 @@
        <param name="onlyLabel">0</param>
       </obj>
      </obj>
-     <obj name="quad0" otype="TQuadExtr">
+     <obj otype="TQuadExtr" name="quad0">
       <param name="descr">Extr near point x0</param>
       <param name="ord">240</param>
       <param name="vis_x">4</param>
@@ -904,13 +898,14 @@
       <param name="onlyFirst">0</param>
       <param name="onlyLast">0</param>
       <param name="noIcon">0</param>
-      <obj name="pis" otype="InputParams"/>
+      <obj otype="InputParams" name="pis"/>
       <param name="emulC">1</param>
       <param name="limitX">1</param>
+      <param name="lim_s">0.5</param>
       <param name="limitG">1</param>
       <param name="x_min">-5</param>
       <param name="x_max">-3</param>
-      <obj name="x_r" otype="InputSimple">
+      <obj otype="InputSimple" name="x_r">
        <param name="source">x1</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -919,7 +914,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_r" otype="InputSimple">
+      <obj otype="InputSimple" name="y_r">
        <param name="source">y1</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -928,7 +923,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="x_c" otype="InputSimple">
+      <obj otype="InputSimple" name="x_c">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -937,7 +932,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_c" otype="InputSimple">
+      <obj otype="InputSimple" name="y_c">
        <param name="source"></param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -946,7 +941,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="x_l" otype="InputSimple">
+      <obj otype="InputSimple" name="x_l">
        <param name="source">x0</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -955,7 +950,7 @@
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
       </obj>
-      <obj name="y_l" otype="InputSimple">
+      <obj otype="InputSimple" name="y_l">
        <param name="source">y0</param>
        <param name="label"></param>
        <param name="x_shift">0</param>
@@ -967,10 +962,10 @@
      </obj>
     </obj>
    </obj>
-   <obj name="outs" otype="ContOut"/>
-   <obj name="plots" otype="ContGraph"/>
-   <obj name="sims" otype="ContSimul">
-    <obj name="sim0" otype="Simulation">
+   <obj otype="ContOut" name="outs"/>
+   <obj otype="ContGraph" name="plots"/>
+   <obj otype="ContSimul" name="sims">
+    <obj otype="Simulation" name="sim0">
      <param name="runType">0</param>
      <param name="T">1</param>
      <param name="N">100</param>

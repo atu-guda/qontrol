@@ -4,7 +4,7 @@
  <obj otype="TRootData" name="root">
   <obj otype="TModel" name="model">
    <param name="long_descr">Test TSwitch element</param>
-   <param name="script">function test_tswitch()
+   <param name="script">function test0()
 {
   var v = outs.out_sw.atT( 9.99 );
   print( "v0 = ", v, "\n" );

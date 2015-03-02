@@ -47,7 +47,7 @@ double TQuadExtr::f( double /*t*/ )
   y_rt = y_r  - y_ce;
 
   // limit values
-  double lim_x_lt = 0.5 * x_lt, lim_x_rt = 0.5 * x_rt;
+  double lim_x_lt = lim_s * x_lt, lim_x_rt = lim_s * x_rt;
   if( limitG ) {
     lim_x_lt = x_min - x_ce; lim_x_rt = x_max - x_ce;
   }
@@ -63,7 +63,7 @@ double TQuadExtr::f( double /*t*/ )
   x_cnt = - 0.5 * a_1 / a_2;
   x_cn = x_ce + x_cnt;
 
-  if( ! limitX ) { // rarely need, by for more generiv usage, like tests
+  if( ! limitX ) { // rarely need, by for more generic usage, like tests
     return x_cn;
   }
 
