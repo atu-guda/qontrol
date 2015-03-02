@@ -1,7 +1,7 @@
 /***************************************************************************
-                          tswitch.cpp  -  description
+                          tmaxnum.cpp  -   find maximum input
                              -------------------
-    begin                : Sun Nov 19 2000
+    begin                : 2015.03.02
     copyright            : (C) 2000-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
