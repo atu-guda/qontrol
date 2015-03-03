@@ -9,3 +9,5 @@ ui_*.h
 G?.sh
 qontrol.cfg
 _o/*
+*.wav
+*.dat

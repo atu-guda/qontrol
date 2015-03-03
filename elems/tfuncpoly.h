@@ -40,7 +40,7 @@ class TFuncPoly : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_1", "a*y^2+b*y+g"                           ); // ft_square
    Q_CLASSINFO( "enum_FuncType_2", "a*y^3+b*y^2+c*y+g"                     ); // ft_cube
    Q_CLASSINFO( "enum_FuncType_3", "a*u0^2+b*u0*u1+c*u1^2+g"               ); // ft_biSquare
-   Q_CLASSINFO( "enum_FuncType_4", "a*sqrt(y)+g"                           ); // ft_sqrt
+   Q_CLASSINFO( "enum_FuncType_4", "a*sqrt(b*y+c)+g"                       ); // ft_sqrt
    Q_CLASSINFO( "enum_FuncType_5", "hypot(a*u0,b*u1)+g"                    ); // ft_hypot
    Q_CLASSINFO( "enum_FuncType_6", "a*u0^2+..+d*u3^2+g"                    ); // ft_4square
    Q_CLASSINFO( "enum_FuncType_7", "Vibro Ampl(\\omega); A=c0 B=\\omega"   ); // ft_vibro

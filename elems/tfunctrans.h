@@ -34,13 +34,14 @@ class TFuncTrans : public TMiso  {
    enum FuncType {
      ft_sin = 0, ft_signSin, ft_tanh, ft_atan2, ft_exp, ft_expM2, ft_wave, ft_mhat,
      ft_ln, ft_yExp, ft_yExp2, ft_sin2, ft_cos, ft_cos2, ft_tan, ft_exp1Msin,
-     ft_1Mexp1Msin2, ft_expM2d, ft_divMod
+     ft_1Mexp1Msin2, ft_expM2d, ft_divMod,
+     ft_expMod, ft_sinh, ft_cosh
    };
    Q_ENUMS(FuncType);
    Q_CLASSINFO( "enum_FuncType_0",  "a*sin(b*y)+g"                         ); //  ft_sin
    Q_CLASSINFO( "enum_FuncType_1",  "a*sign(sin(b*y)+c)+g"                 ); //  ft_signSin
    Q_CLASSINFO( "enum_FuncType_2",  "a*tanh(by)+g"                         ); //  ft_tanh
-   Q_CLASSINFO( "enum_FuncType_3",  "a*atan2(u0,u1(x))+g"                  ); //  ft_atan2
+   Q_CLASSINFO( "enum_FuncType_3",  "a*atan2(u0*b,u1(x))+g"                ); //  ft_atan2
    Q_CLASSINFO( "enum_FuncType_4",  "a*exp(b*y)+g"                         ); //  ft_exp
    Q_CLASSINFO( "enum_FuncType_5",  "a*exp(-b*y^2)+g"                      ); //  ft_expM2
    Q_CLASSINFO( "enum_FuncType_6",  "a*Wave(b*y)+g"                        ); //  ft_wave
@@ -56,6 +57,9 @@ class TFuncTrans : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_16", "a*(1-exp(-b*y*y))*(1-c*sin^2(dy))+g"  ); //  ft_1Mexp1Msin2
    Q_CLASSINFO( "enum_FuncType_17", "a*exp(-(y/b)^2)+g"                    ); //  ft_expM2d
    Q_CLASSINFO( "enum_FuncType_18", "a/((|y|/b+1)+g"                       ); //  ft_divMod
+   Q_CLASSINFO( "enum_FuncType_19", "a*exp(-|y|/b)+g"                      ); //  ft_expMod
+   Q_CLASSINFO( "enum_FuncType_20", "a*sinh(b*y)+g"                        ); //  ft_sinh
+   Q_CLASSINFO( "enum_FuncType_21", "a*cosh(b*y)+g"                        ); //  ft_cosh
  protected:
    /** main computation function */
    virtual double f( double t ) override;

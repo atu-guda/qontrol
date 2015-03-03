@@ -48,7 +48,8 @@ double TFuncPoly::f( double /* t */ )
     case  ft_biSquare:
       v = a * in_0 * in_0 + b * in_0 * in_1 + c * in_1 * in_1; break;
     case  ft_sqrt:
-      v = ( y > 0 ) ? a * sqrt( y ) : 0; break;
+      t1 = b * y + c;
+      v = ( t1 > 0 ) ? a * sqrt( t1 ) : 0; break;
     case  ft_hypot:
       v = hypot( a * in_0, b * in_1 ); break;
     case  ft_4square:

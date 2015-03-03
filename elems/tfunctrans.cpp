@@ -48,7 +48,7 @@ double TFuncTrans::f( double /* t */ )
     case ft_tanh:
       v = a * tanh( by ); break;
     case ft_atan2:
-      v = a * atan2( in_0, in_1 ); break;
+      v = a * atan2( in_0 * b, in_1 ); break;
     case ft_exp:
       v = a * exp( by ); break;
     case ft_expM2:
@@ -82,6 +82,12 @@ double TFuncTrans::f( double /* t */ )
       tm = y/b; v = a * exp( - tm * tm ); break;
     case ft_divMod:
       v = a / ( fabs(y)/b + 1 ); break;
+    case ft_expMod:
+      v = a * exp( - fabs(y)/ b ); break;
+    case ft_sinh:
+      v = a * sinh( y * b ); break;
+    case ft_cosh:
+      v = a * cosh( y * b ); break;
     default:  v = 0;
   };
   v += g;
