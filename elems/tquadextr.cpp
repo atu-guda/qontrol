@@ -30,7 +30,7 @@ CTOR(TQuadExtr,TMiso)
 
 double TQuadExtr::f( double /*t*/ )
 {
-  double x_ce, y_ce;
+  double x_ce, y_ce; // effective central point (need if emulC)
   if( emulC ) {
     x_ce = ( x_r + x_l ) / 2;
     y_ce = ( y_r + y_l ) / 2;
@@ -39,7 +39,7 @@ double TQuadExtr::f( double /*t*/ )
     y_ce = y_c;
   }
   // fallback values
-  a_1 = 0; a_2 = 0; x_cnt = 0; x_cn = x_ce;
+  a_1 = 0; a_2 = 0; x_cnt = 0; x_cn = x_ce;  y_cn = y_ce; dy = 0;
 
   x_lt = x_l  - x_ce;
   x_rt = x_r  - x_ce;
@@ -61,24 +61,23 @@ double TQuadExtr::f( double /*t*/ )
   a_2 = - ( y_rt * x_lt - y_lt * x_rt ) / denom;
 
   x_cnt = - 0.5 * a_1 / a_2;
-  x_cn = x_ce + x_cnt;
 
-  if( ! limitX ) { // rarely need, by for more generic usage, like tests
-    return x_cn;
-  }
+  if( limitX ) { // often need, else - for tests
 
-  if( a_2 < 0  &&  x_cnt > lim_x_lt  &&  x_cnt < lim_x_rt ) { // Min and in limits
-    return x_cn;
-  }
+    if( ! ( a_2 < 0  &&  x_cnt > lim_x_lt  &&  x_cnt < lim_x_rt ) ) { // Min and in limits
 
-  // else - bound to point with large y, NOT nearest to x_cn!
-  if( y_r > y_l ) {
-    x_cnt = lim_x_rt;
-  } else {
-    x_cnt = lim_x_lt;
+      if( y_r > y_l ) { //  bound to point with large y, NOT nearest to x_cn!
+        x_cnt = lim_x_rt;
+      } else {
+        x_cnt = lim_x_lt;
+      }
+    }
   }
 
   x_cn = x_ce + x_cnt;
+  dy = a_2 * x_cnt * x_cnt + a_1 * x_cnt;
+  y_cn = y_ce + dy;
+  dy_dx = dy / x_cnt;
   return x_cn;
 
 }
