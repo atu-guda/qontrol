@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "tquadextr.h"
+#include "miscfun.h"
 
 const char* TQuadExtr::helpstr = "<H1>TQuadExtr</H1>\n"
  "Find upper extremum in quadratic approximation by given 3 points \n"
@@ -39,7 +40,7 @@ double TQuadExtr::f( double /*t*/ )
     y_ce = y_c;
   }
   // fallback values
-  a_1 = 0; a_2 = 0; x_cnt = 0; x_cn = x_ce;  y_cn = y_ce; dy = 0;
+  a_1 = 0; a_2 = 0; x_cnt = 0; x_cn = x_ce;  y_cn = y_ce; dy = 0; dy_sx = 0;
 
   x_lt = x_l  - x_ce;
   x_rt = x_r  - x_ce;
@@ -78,6 +79,7 @@ double TQuadExtr::f( double /*t*/ )
   dy = a_2 * x_cnt * x_cnt + a_1 * x_cnt;
   y_cn = y_ce + dy;
   dy_dx = dy / x_cnt;
+  dy_sx = dy * sign( x_cnt );
   return x_cn;
 
 }
