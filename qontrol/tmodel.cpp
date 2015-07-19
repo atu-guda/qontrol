@@ -212,37 +212,8 @@ int TModel::startRun()
   tdt = T / N;
   prm2 = (double)prm2s; prm3 = (double)prm3s;
 
-  // TODO: to fun
-  QString prm_map;
-  int target_flag = 0; // unused?
-  c_sim->getData( "prm0_map", prm_map );
-  if( !prm_map.isEmpty() ) {
-    prm0_targ = c_sim->getDoublePrmPtr( prm_map, &target_flag );
-    if( !prm0_targ ) {
-      prm0_targ = getDoublePrmPtr( prm_map, &target_flag );
-    }
-    if( !prm0_targ ) {
-      prm0_targ = c_sch->getDoublePrmPtr( prm_map, &target_flag );
-    }
-    if( !prm0_targ ) {
-      prm0_targ = &fake_map_target;
-      qWarning() << "ptr not found for prm0 map target " << prm_map << NWHE;
-    }
-  }
-  c_sim->getData( "prm1_map", prm_map );
-  if( !prm_map.isEmpty() ) {
-    prm1_targ = c_sim->getDoublePrmPtr( prm_map, &target_flag );
-    if( !prm1_targ ) {
-      prm1_targ = getDoublePrmPtr( prm_map, &target_flag );
-    }
-    if( !prm1_targ ) {
-      prm1_targ = c_sch->getDoublePrmPtr( prm_map, &target_flag );
-    }
-    if( !prm1_targ ) {
-      prm1_targ = &fake_map_target;
-      qWarning() << "ptr not found for prm1 map target " << prm_map << NWHE;
-    }
-  }
+  prm0_targ = getMapDoublePtr( ">prm0_map" );
+  prm1_targ = getMapDoublePtr( ">prm1_map" );
 
   rc = outs->preRun( run_type, N, n1_eff, n2_eff, tdt );
   if( !rc ) {
