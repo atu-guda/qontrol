@@ -85,8 +85,12 @@ class Simulation : public TDataSet  {
   PRM_DOUBLE( prm1d, efNoRunChange, "prm1+=", "Parameter 1 delta", "" );
   PRM_INT( seed, efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
   PRM_LIST( seedType, efNoRunChange, "Seed type",  "type of seeding", "enum=SeedType" );
+  PRM_STRING( prm0_map,  efNRC, "Map to(0)", "Change parameter with prm0", "max=128\ncmpl=in\nsep=col" );
+  PRM_STRING( prm1_map,  efNRC, "Map to(1)", "Change parameter with prm1", "max=128\ncmpl=in" );
+  PRM_SWITCH( saveParams,efNoRunChange, "Save params",
+      "Save mapped parameters during run, adn restore after", "def=1" );
   PRM_SWITCH( autoStart, efNoRunChange, "auto start",
-      "Start simulation without key awaiting", "sep=col" );
+      "Start simulation without key awaiting", "" );
   //* -------- script params -------------------------------
   PRM_SWITCH( useScripts, efNRC, "use scripts", "Turn on all script usage", "def=0\nsep=block" );
   PRM_SWITCH( initEng, efNRC, "Init engine", "Init engine before run", "def=1" );
