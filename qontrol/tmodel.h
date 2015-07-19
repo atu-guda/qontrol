@@ -46,6 +46,7 @@ class TModel : public TDataContainer  {
   //* redirects requuest to active scheme (may be more)
   const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt,
         const TDataSet **src_ob, int lev ) const override;
+  double* getMapDoublePtr( const QString &nm );
   Q_INVOKABLE QString getOutValue( const QString &nm ) const;
 
   //* returns active (main) Scheme
@@ -179,6 +180,13 @@ class TModel : public TDataContainer  {
   double start_time = 0;
   // copy of simulation vars - but w/o onject access - just for speed;
   int N = 10, N1 = 1, N2 = 1, syncRT = 0, n_iosteps = 1;
+
+  // saved parameters
+  double prm0_save = 0, prm1_save = 1;
+  // fake map target
+  double fake_map_target = 0;
+  // ptr to mapped params
+  double *prm0_targ = &fake_map_target, *prm1_targ = &fake_map_target;
 
   //* current scheme during run, else - 0
   Scheme *c_sch = nullptr;

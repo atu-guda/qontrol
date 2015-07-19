@@ -90,6 +90,39 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
   return rv;
 }
 
+double* TModel::getMapDoublePtr( const QString &nm )
+{
+  double *r = &fake_map_target;
+  if( nm.isEmpty() ) {
+    return r;
+  }
+  QString nm1 = nm;
+  QString prm_map = nm;
+  int target_flag = 0; // unused?
+  Simulation *sim = getActiveSimulation();
+  if( sim ) {
+    if( nm1[0] == '>' ) {
+      nm1.remove( 0, 1 );
+      sim->getData( nm1, prm_map );
+    }
+    if( prm_map.isEmpty() ) {
+      return r;
+    }
+    r = sim->getDoublePrmPtr( prm_map, &target_flag );
+    if( r ) { return r;  }
+  }
+
+  r = getDoublePrmPtr( prm_map, &target_flag );
+  if( r ) { return r;  }
+
+  Scheme *sch = getActiveScheme();
+  r = sch->getDoublePrmPtr( prm_map, &target_flag );
+  if( r ) { return r;  }
+  r = &fake_map_target;
+  qWarning() << "ptr not found for prm0 map target " << prm_map << NWHE;
+  return r;
+}
+
 QString TModel::getOutValue( const QString &nm ) const
 {
   QString r;
@@ -115,6 +148,7 @@ QString TModel::getOutValue( const QString &nm ) const
 void TModel::do_reset()
 {
   state = stateGood; run_type = -1; sgnt = int( time(0) );
+  prm0_targ = &fake_map_target; prm1_targ = &fake_map_target;
 }
 
 int TModel::startRun()
@@ -178,6 +212,38 @@ int TModel::startRun()
   tdt = T / N;
   prm2 = (double)prm2s; prm3 = (double)prm3s;
 
+  // TODO: to fun
+  QString prm_map;
+  int target_flag = 0; // unused?
+  c_sim->getData( "prm0_map", prm_map );
+  if( !prm_map.isEmpty() ) {
+    prm0_targ = c_sim->getDoublePrmPtr( prm_map, &target_flag );
+    if( !prm0_targ ) {
+      prm0_targ = getDoublePrmPtr( prm_map, &target_flag );
+    }
+    if( !prm0_targ ) {
+      prm0_targ = c_sch->getDoublePrmPtr( prm_map, &target_flag );
+    }
+    if( !prm0_targ ) {
+      prm0_targ = &fake_map_target;
+      qWarning() << "ptr not found for prm0 map target " << prm_map << NWHE;
+    }
+  }
+  c_sim->getData( "prm1_map", prm_map );
+  if( !prm_map.isEmpty() ) {
+    prm1_targ = c_sim->getDoublePrmPtr( prm_map, &target_flag );
+    if( !prm1_targ ) {
+      prm1_targ = getDoublePrmPtr( prm_map, &target_flag );
+    }
+    if( !prm1_targ ) {
+      prm1_targ = c_sch->getDoublePrmPtr( prm_map, &target_flag );
+    }
+    if( !prm1_targ ) {
+      prm1_targ = &fake_map_target;
+      qWarning() << "ptr not found for prm1 map target " << prm_map << NWHE;
+    }
+  }
+
   rc = outs->preRun( run_type, N, n1_eff, n2_eff, tdt );
   if( !rc ) {
     qWarning() << "warn: output arrays preRun failed" << NWHE;
@@ -228,6 +294,8 @@ int TModel::run( QSemaphore *sem )
     return 0;
   }
 
+  prm0_save = *prm0_targ; prm1_save = *prm1_targ;
+
   QString scriptPreRun, scriptPostRun, scriptStartLoop, scriptEndLoop;
   QScriptValue v_il1, v_il2;
 
@@ -246,10 +314,12 @@ int TModel::run( QSemaphore *sem )
   int rc = 0;
   for( il2 = 0; il2 < n2_eff; ++il2 ) {
     prm1 = prm1s + il2 * prm1d;
+    *prm1_targ = prm1;
     for( il1 = 0; il1 < n1_eff; ++il1 ) {
 
 
       prm0 = prm0s + il1 * prm0d;
+      *prm0_targ = prm0;
       start_time = get_real_time(); rtime = t = 0;
 
       if( ! allStartLoop( il1, il2 ) ) {
@@ -331,6 +401,12 @@ int TModel::stopRun( int reason )
     postRun();
     state = stateDone;
   }
+
+  int saveParams = c_sim->getDataD( "saveParams", 1 );
+  if( saveParams ) {
+    *prm0_targ = prm0_save;  *prm1_targ = prm1_save;
+  }
+
   run_type = -1;
   return 1;
 }

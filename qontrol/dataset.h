@@ -634,10 +634,10 @@ class TDataSet : public HolderData {
    int inputsCount() const { return inputs.size(); };
    /** returns input by number */
    InputSimple* getInput( int n ) const;
- protected:
-   /** gets pointer to parameter, near to getDoublePrmPtr
+   /** gets pointer to parameter, near to getDoublePtr
     * for param mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
+ protected:
    /** register input (call by ctor) in inputs */
    void registerInput( InputSimple *inp );
    /** unregister input (call by dtor) from inputs */
@@ -709,7 +709,7 @@ class InputSimple : public InputAbstract {
   InputSimple name = { #name, this, flags, vname, descr, extra  } ;
 
 // ----------------------------------------------------------------
-/** Special holder link - paramitric input,
+/** Special holder link - parametric input,
  * like simple, but with local param target */
 class InputParam : public InputAbstract {
   Q_OBJECT

@@ -1927,7 +1927,7 @@ double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg )
   HolderDouble *hod = getElemT<HolderDouble*>( nm );
 
   if( !hod ) {
-    qWarning() << "fail to find name " << nm << NWHE;
+    // qWarning() << "fail to find name " << nm << NWHE;
     return 0;
   }
 
@@ -2303,7 +2303,7 @@ void InputParam::post_set()
 void InputParam::set_link()
 {
   InputAbstract::set_link();
-  target_flag = 0;;
+  target_flag = 0;
   targ = &fake_target;
   if( !par ) // par seems to be InputParams, but may be dangling objects
     return;
@@ -2314,6 +2314,7 @@ void InputParam::set_link()
 
   targ = el->getDoublePrmPtr( tparam, &target_flag );
   if( !targ ) {
+    qWarning() << "fail to find target " << tparam <<  " for " << source << NWHE;
     targ = &fake_target;
   }
 }
