@@ -94,6 +94,12 @@ class LaboView : public QWidget
    void changeSel( int x, int y, int rel );
    /** change level for selecting aux objects */
    void changeLevel( int lev );
+   /** change selected output */
+   void changeSelOut( int n );
+   int getSelOut() const { return sel_out; };
+   /** change selected plot */
+   void changeSelGraph( int n );
+   int getSelGraph() const { return sel_graph; };
    /** contains the implementation for printing functionality  */
    void print();
    // element related
@@ -198,7 +204,7 @@ class LaboView : public QWidget
    ContGraph *plots;
    ContSimul *sims;
 
-   int sel = -1, sel_x = 0, sel_y = 0, level = 0;
+   int sel = -1, sel_x = 0, sel_y = 0, level = 0, sel_out = -1, sel_graph = -1;
    // TODO: from file (config)
    QString scr = R"(main_s.add_obj_datas("TLinear","ob","vis_x=4\nvis_y=1\na0=3.14");)";
    /** prt to selected object or nullptr */

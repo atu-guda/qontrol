@@ -301,6 +301,18 @@ void LaboView::changeLevel( int lev )
   emit viewChanged();
 }
 
+void LaboView::changeSelOut( int n )
+{
+  sel_out = n;
+  emit viewChanged();
+}
+
+void LaboView::changeSelGraph( int n )
+{
+  sel_graph = n;
+  emit viewChanged();
+}
+
 // ==== element related
 
 void LaboView::newElm()

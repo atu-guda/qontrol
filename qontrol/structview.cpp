@@ -110,18 +110,21 @@ void StructView::printAll()
 
   QPrinter *pr = LaboWin::win()->getPrinter();
   if( !pr ) {
+    qWarning() << "Printer not found!";
     return;
   }
 
   QPrintDialog pr_dialog( pr, this );
-  if( pr_dialog.exec() ) {
-    devTp = 1;
-    pr->setFullPage( false );
-    pr->newPage();
-    QPainter p( pr );
-    drawAll( p );
-    p.end();
-  };
+  if( ! pr_dialog.exec() ) {
+    return;
+  }
+
+  devTp = 1;
+  pr->setFullPage( false );
+  pr->newPage();
+  QPainter p( pr );
+  drawAll( p );
+  p.end();
 }
 
 bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
@@ -194,13 +197,19 @@ void StructView::drawAll( QPainter &p )
   if( nw >= MODEL_MX ) nh = MODEL_MX;
 
 
+  p.setBrush( Qt::white );
+  p.drawRect( 0, 0, w, h );
   // ---------- draw grid
   if( psett->showgrid ) {
-    p.setPen( QPen(QColor(200,220,220), 0, Qt::DotLine ) ); // TODO: config
-    for( int i=0; i<nw; i++ )
-      p.drawLine( lm + i*grid_sz, tm, lm+i*grid_sz, h );
-    for( int i=0; i<nh; i++ )
-      p.drawLine( lm, tm+i*grid_sz, w, tm+i*grid_sz );
+    p.setPen( QPen(QColor(190,210,210), 0, Qt::DotLine ) ); // TODO: config
+    for( int i=0; i<nw; i++ ) {
+      int x = lm + i*grid_sz;
+      p.drawLine( x, tm, x, h );
+    }
+    for( int i=0; i<nh; i++ ) {
+      int y = tm + i*grid_sz;
+      p.drawLine( lm, y, w, y );
+    }
   };
 
   p.setPen( Qt::black );
@@ -216,11 +225,13 @@ void StructView::drawAll( QPainter &p )
       continue;
     }
 
-    if( ! fill_elmInfo( ob, ei ) )
+    if( ! fill_elmInfo( ob, ei ) ) {
       continue;
+    }
     line_busy = 0;
-    if( ei.vis_x < 0 || ei.vis_y < 0  )
+    if( ei.vis_x < 0 || ei.vis_y < 0  ) {
       continue;
+    }
     p.setPen( Qt::black );
 
     // --------------------- draw element icon or frame
@@ -245,26 +256,26 @@ void StructView::drawAll( QPainter &p )
     if( psett->showord ) {
       if( s_icons && ! ei.noIcon )  {
         p.setPen( Qt::NoPen ); p.setBrush( QColor(240,240,255) );
-        p.drawRect( ei.xs, ei.ys, 31,11);
+        p.drawRect( ei.xs, ei.ys, obj_sz-1, ex_small );
       };
       p.setPen( Qt::black );
-      p.drawText( ei.xs + 2, ei.ys + 10, QSN(ei.ord) );
+      p.drawText( ei.xs + 2, ei.ys + ex_small, QSN( ei.ord ) );
       line_busy++;
     };
     // --------------------- draw element name
     if( psett->shownames || ei.noIcon || !s_icons ) {
-      st_y = ei.ys + line_busy*10;
+      st_y = ei.ys + line_busy*ex_small;
       if( s_icons && ! ei.noIcon )  {
         p.setPen( Qt::NoPen ); p.setBrush( QColor(255,255,225) );
-        p.drawRect( ei.xs, st_y, 31,11);
+        p.drawRect( ei.xs, st_y, obj_sz-1, ex_small );
       };
       p.setPen( Qt::black );
-      p.drawText( ei.xs + 2, st_y+10, ei.name );
+      p.drawText( ei.xs + 2, st_y+ex_small, ei.name );
       line_busy++;
     };
     // TODO: vector icon here
     p.setBrush( Qt::NoBrush ); p.setPen( QPen(Qt::black,1) );
-    st_y = ei.ys + line_busy*10;
+    st_y = ei.ys + line_busy*ex_small;
 
 
 
@@ -280,9 +291,10 @@ void StructView::drawAll( QPainter &p )
 
     // ordinary inputs
     for( int i_in=0; i_in < ei.n_inp; ++i_in ) {
-      const InputSimple *in = ob->getInput(i_in);
-      if( ! in )
+      const InputSimple *in = ob->getInput( i_in );
+      if( ! in ) {
         continue;
+      }
       ltype_t lt = in->getLinkType();
       const TDataSet* sobj = in->getSourceObj();
       li_dst_y = ei.ys + (i_in+1)*in_sep_sz;
@@ -449,13 +461,14 @@ void StructView::drawAll( QPainter &p )
     qWarning() << "not found 'outs' in model" << WHE;
     return;
   }
-  int out_nu = -1; // first vill be 0 (after ++)
+
+  int sel_out = mainview->getSelOut();
   for( auto c : outs->children() ) {
     TOutArr *arr = qobject_cast<TOutArr*>( c );
     if( ! arr ) {
       continue;
     }
-    ++out_nu;
+    int out_nu = arr->getMyIndexInParent();
 
     src_name = arr->getDataD( "name", QString() );
     int out_tp = arr->getDataD( "type", -1 );
@@ -475,6 +488,13 @@ void StructView::drawAll( QPainter &p )
     if( sei.vis_x < 0 || sei.vis_y < 0 ) {
       continue;
     }
+
+    if( sel_out == out_nu ) {
+      p.setPen( QPen(QColor(100,100,255), 3, Qt::SolidLine ) );
+      p.setBrush( Qt::NoBrush );
+      p.drawRect( sei.xs0+lm-1, sei.ys0+tm-1, obj_sz+4, obj_sz+4 );
+    }
+    p.setPen( Qt::black );
 
     switch( out_tp ) {
       case 0: p.setBrush( Qt::white ); break; // TODO: named colors
@@ -623,7 +643,6 @@ void StructView::keyPressEvent( QKeyEvent *ke )
   int k, /*h, w, nh, nw,*/ st, btnShift, /*btnCtrl,*/ xy_delta;
   k = ke->key(); st = ke->modifiers();
   btnShift = ( ( st & Qt::ShiftModifier ) != 0 );
-  QMenu* menu;
   QString title;
   TMiso *ob = mainview->getSelObj();
   if( ob ) {
@@ -655,9 +674,11 @@ void StructView::keyPressEvent( QKeyEvent *ke )
     case Qt::Key_9:     emit sig_changeLevel(9); break;
 
     case Qt::Key_F10:
-            menu = createPopupMenu( title, ob != nullptr ); // FIXME: use
-            menu->exec( mapToGlobal( getSelCoords() )  );
-            delete menu;
+            {
+              QMenu* menu = createPopupMenu( title, ob != nullptr ); // FIXME: use
+              menu->exec( mapToGlobal( getSelCoords() )  );
+              delete menu;
+            }
             break;
     default: ke->ignore();
   };
