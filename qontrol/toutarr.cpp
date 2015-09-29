@@ -62,7 +62,8 @@ QVariant TOutArr::dataObj( int col, int role ) const
     if( col != 0 ) {
       return QVariant();
     }
-    QString s = name.cval() % " [" % QSN(n) % "]\n["
+    int idx = getMyIndexInParent();
+    QString s = "(" % QSN(idx) % ") " % name.cval() % " [" % QSN(n) % "]\n["
         % QSN(nx) % " x " % QSN(ny) % "]";
     return s;
   }
@@ -110,7 +111,7 @@ void TOutArr::do_reset()
   n = 0; cnq = 0;
   reset_stat();
 
-  // TODO: move to separate functions and call hele and after struct changed ???
+  // TODO: move to separate functions and call here and after struct changed ???
   so = nullptr;
   TModel *mod = getAncestorT<TModel>();
   ltype_t lt; const TDataSet *so_ob;
@@ -118,7 +119,7 @@ void TOutArr::do_reset()
     so = mod->getSchemeDoublePtr( name, &lt, &so_ob, 0 );
   }
   if( !so ) {
-    so = &fake_so; // TODO: indicate this
+    so = &fake_so;
   }
 }
 

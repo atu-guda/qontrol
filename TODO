@@ -1,4 +1,8 @@
-Map prm0, prm1 to any param
+Subschemes.
+Check: update link values pnly after step - prep for multi-threading
+Update link marks on buttons after change.
+Show output number in hint (this done, but may be in name too?).
+Indicate corresponding outs for selected plot, element for out ...
 Copy/paste plots, outs.
 Common selection elems/outs/plots?
 Inputs - may be Elements? like TFileSource?
@@ -52,4 +56,4 @@ Label of element (or/and floating labels on structure view)
 Labels on plot view (fixed, attached to some points)
 Report with macros -- overrided by scripts?
 
-Check getDoublePtr TModel/Scheme - checked, may be used from different levels
+

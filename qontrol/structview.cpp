@@ -32,9 +32,6 @@
 StructView:: StructView( Scheme *a_sch, LaboView *mview )
             : QWidget( mview ), sch( a_sch ), mainview( mview )
 {
-  grid_sz = 46;
-  lm = tm = 4;  obj_sz = 32;
-
   QPalette pal;
   pal.setBrush( QPalette::Window, QBrush( Qt::white ) );
   setPalette( pal );
@@ -187,7 +184,10 @@ void StructView::drawAll( QPainter &p )
   const QFont &strf = LaboWin::win()->getStructFont();
   p.setFont( strf );
   const QFont &smlf = LaboWin::win()->getSmallFont();
-  el_marg = (grid_sz-obj_sz)/2;
+  QFontMetrics small_fm( smlf );
+  em_small = small_fm.width( 'W' );
+  ex_small = small_fm.height();
+  el_marg = (grid_sz-obj_sz) / 2;
   sel_x = mainview->getSelX();
   sel_y = mainview->getSelY();
   if( nh >= MODEL_MY ) nh = MODEL_MY;
@@ -477,18 +477,19 @@ void StructView::drawAll( QPainter &p )
     }
 
     switch( out_tp ) {
-      case 0: p.setBrush( Qt::white ); break;
+      case 0: p.setBrush( Qt::white ); break; // TODO: named colors
       case 1: p.setBrush( Qt::green ); break;
       case 2: p.setBrush( Qt::cyan ); break;
       case 3: p.setBrush( Qt::gray ); break;
       default: p.setBrush( Qt::red ); break;
     };
-    int omark_x = sei.xs0 + obj_sz - 10 - out_nu*2;
+    int l_out_nu = 1 + em_small * ( 1 + (int)log10( out_nu + 0.7 ) );
+    int omark_x = sei.xs0 + obj_sz - l_out_nu  - 2 * ( out_nu & 7 );
     int omark_y = sei.ys0 +  1;
-    p.drawRect( omark_x, omark_y, 10, 10 );
+    p.drawRect( omark_x, omark_y, l_out_nu, ex_small );
     if( src_name.contains('.') ) { // inner link mark
       p.setBrush( Qt::red );
-      p.drawRect( omark_x, omark_y+9, 10, 2 );
+      p.drawRect( omark_x, omark_y+9, l_out_nu, 2 );
     }
     p.drawText( omark_x+2, omark_y+9,  QSN( out_nu ) );
 

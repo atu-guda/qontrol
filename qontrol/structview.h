@@ -90,7 +90,7 @@ class StructView : public QWidget  {
     /** type of output device */
     int devTp = 0;
     /** grid size, left, top margin size, object size,  elements margin */
-    int grid_sz = 46, lm = 4, tm = 4, obj_sz = 32, el_marg = 1;
+    int grid_sz = 46, lm = 4, tm = 4, obj_sz = 32, el_marg = 1, em_small = 10, ex_small = 10;
 };
 
 #endif
