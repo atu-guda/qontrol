@@ -72,8 +72,10 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   scrollArea->setFocusProxy( sview );
 
   outs_view = new OutDataView( outs, this );
+  outs_selmod = outs_view->selectionModel();
 
   plots_view = new GraphDataView( plots, this );
+  plots_selmod = plots_view->selectionModel();
 
   sims_view = new SimulView( sims, this );
 
@@ -93,14 +95,17 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   setWindowTitle( doc->pathName() );
 
-  connect( this, &LaboView::viewChanged, this, &LaboView::updateViews );
-  connect( sview, &StructView::sig_changeSel,   this, &LaboView::changeSel );
-  connect( sview, &StructView::sig_changeLevel, this, &LaboView::changeLevel );
-
   // default: select object 0
   selectOut();
   selectGraph();
   selectSimul();
+
+  connect( this, &LaboView::viewChanged, this, &LaboView::updateViews );
+  connect( sview, &StructView::sig_changeSel,   this, &LaboView::changeSel );
+  connect( sview, &StructView::sig_changeLevel, this, &LaboView::changeLevel );
+
+  connect( outs_selmod, &QItemSelectionModel::currentChanged, this, &LaboView::changeSelOut );
+  connect( plots_selmod, &QItemSelectionModel::currentChanged, this, &LaboView::changeSelGraph );
 
   initEngine();
 
@@ -251,7 +256,7 @@ int LaboView::checkState( CheckType ctp )
 void LaboView::updateViews()
 {
   sview->update();
-  outs_view->reset();
+  // outs_view->reset();
   outs_view->update();
   plots_view->update();
   sims_view->update();
@@ -301,15 +306,15 @@ void LaboView::changeLevel( int lev )
   emit viewChanged();
 }
 
-void LaboView::changeSelOut( int n )
+void LaboView::changeSelOut( const QModelIndex &cur, const QModelIndex & )
 {
-  sel_out = n;
+  sel_out = cur.row();
   emit viewChanged();
 }
 
-void LaboView::changeSelGraph( int n )
+void LaboView::changeSelGraph( const QModelIndex &cur, const QModelIndex & )
 {
-  sel_graph = n;
+  sel_graph = cur.row();
   emit viewChanged();
 }
 
@@ -317,8 +322,9 @@ void LaboView::changeSelGraph( int n )
 
 void LaboView::newElm()
 {
-  if( !checkState( noselCheck ) )
+  if( !checkState( noselCheck ) ) {
     return;
+  }
 
   addElemInfo aei;
   aei.name = QString("obj_")+ QSN( main_s->getNMiso() );

@@ -24,6 +24,7 @@
 class QResizeEvent;
 class QCloseEvent;
 class QAbstractItemView;
+class QItemSelectionModel;
 
 class LaboDoc;
 class StructView;
@@ -95,10 +96,10 @@ class LaboView : public QWidget
    /** change level for selecting aux objects */
    void changeLevel( int lev );
    /** change selected output */
-   void changeSelOut( int n );
+   void changeSelOut( const QModelIndex &cur, const QModelIndex & );
    int getSelOut() const { return sel_out; };
    /** change selected plot */
-   void changeSelGraph( int n );
+   void changeSelGraph( const QModelIndex &cur, const QModelIndex & );
    int getSelGraph() const { return sel_graph; };
    /** contains the implementation for printing functionality  */
    void print();
@@ -203,6 +204,9 @@ class LaboView : public QWidget
    ContOut *outs;
    ContGraph *plots;
    ContSimul *sims;
+
+   QItemSelectionModel *outs_selmod = nullptr;
+   QItemSelectionModel *plots_selmod = nullptr;
 
    int sel = -1, sel_x = 0, sel_y = 0, level = 0, sel_out = -1, sel_graph = -1;
    // TODO: from file (config)
