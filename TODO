@@ -2,8 +2,8 @@ Subschemes.
 Check: update link values only after step - prep for multi-threading
 Update link marks on buttons after change.
 Show output number in hint (this done, but may be in name too?).
-Indicate corresponding outs for selected plot, element for out ...
-Customized colors: stuct view...
+Indicate corresponding outs for selected plot
+Customized colors: struct view...
 Copy/paste plots, outs.
 Common selection elems/outs/plots?
 Inputs - may be Elements? like TFileSource?

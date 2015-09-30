@@ -49,13 +49,23 @@ QVariant TOutArr::dataObj( int col, int role ) const
     if( so == &fake_so && type != OutArrType::outSpec ) {
       return QBrush( QColor(254,128,128) ) ;
     }
+
+    const QString &nm = name.cval();
+    bool isPrm = nm == "t" || nm == "prm0" || nm == "prm1" ;
     if( n < 1 ) {
+      if( isPrm ) {
+        return QBrush( QColor( 120,220,252 ).darker( 130 ) );
+      }
       return QVariant();
     }
+    QColor bgc{ 64, 64, 128 }; // not filled to top
     if( n == arrsize ) {
-      return QBrush( QColor(0,254,0) ) ;
+      bgc = QColor( 0, 255, 0 );
     }
-    return QBrush( QColor(64,64,128) ) ;
+    if( isPrm ) {
+      bgc = bgc.darker( 130 );
+    }
+    return QBrush( bgc );
   }
 
   else if ( role == Qt::ToolTipRole ) {
