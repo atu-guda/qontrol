@@ -954,9 +954,7 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
     pb->setDisabled( true ); // TODO: real read-only
   }
   pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
-  QString btn_text = ho.dataObj( 0, Qt::StatusTipRole ).toString();
-  pb->setText( btn_text );
-  pb->setIcon( ho.getIcon() );
+  updateLabel();
   connect( pb, &QPushButton::clicked, this, &ObjDataWidget::edit );
 
   auto lay =  new QHBoxLayout( this );
@@ -980,12 +978,21 @@ bool ObjDataWidget::get() const
   return true;
 }
 
+void ObjDataWidget::updateLabel()
+{
+  QString btn_text = ho.dataObj( 0, Qt::StatusTipRole ).toString();
+  pb->setText( btn_text );
+  pb->setShortcut( QKeySequence() );
+  pb->setIcon( ho.getIcon() );
+}
+
 void ObjDataWidget::edit()
 {
   HolderData *obj = qobject_cast<HolderData*>(&ho);
   if( obj ) {
     auto dia = new DataDialog( *obj,  this );
     dia->exec();
+    updateLabel();
   } else {
     qWarning() << "Fail to convert holder " <<  ho.getFullName() << " to HolderData " << WHE;
   }

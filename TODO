@@ -1,6 +1,6 @@
 Subschemes.
 Check: update link values only after step - prep for multi-threading
-Update link marks on buttons after change.
+New buttons for ObjDataWidget: need better (simple) labels.
 Show output number in hint (this done, but may be in name too?).
 Indicate corresponding outs for selected plot
 Customized colors: struct view...

@@ -240,8 +240,9 @@ class ObjDataWidget: public DataWidget {
   virtual bool set();
   virtual bool get() const;
   static DataWidget* create( HolderData &h, QWidget *parent  );
+  void updateLabel();
  protected slots:
-   void edit();
+  void edit();
  protected:
   static int reg();
   static int registered;
