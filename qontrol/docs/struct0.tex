@@ -1,0 +1,86 @@
+\documentclass[a4paper,12pt]{article}
+
+%\usepackage[T2A]{fontenc}
+%\usepackage[utf8]{inputenc}
+\usepackage{fontspec}
+\usepackage{luatextra}
+\usepackage{xunicode}
+
+
+\usepackage[verbose,dvips,a4paper,tmargin=20mm,bmargin=20mm,lmargin=20mm,rmargin=20mm,headsep=4pt,includeheadfoot]{geometry}
+
+
+%\usepackage{dejavu}
+\usepackage{verbatim}
+
+\setmainfont[Ligatures=TeX]{DejaVu Serif}
+%\setmainfont{SchoolBook}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+
+%\usepackage{polyglossia}
+%\setmainlanguage{russian}
+
+\usepackage[english,ukraineb,russian]{babel}
+
+\usepackage{tikz}
+\usetikzlibrary{graphs}
+\usetikzlibrary{graphdrawing}
+\usegdlibrary{trees,layered,force}
+%\usetikzlibrary{graphdrawing}
+
+\title{Название}
+\author{А.И.~Гуда}
+
+\begin{document}
+
+% \maketitle
+
+\section{Структура -- верхний уровень}
+
+%\begin{tikzpicture}[thick,scale=0.7]
+
+\begin{tikzpicture}[thick]
+%\graph[layered layout, nodes=draw, edges=rounded corners]
+\graph[tree layout, nodes=draw, edges=rounded corners]
+{
+  "root {\scriptsize TRootData}" -> {
+    "model {\scriptsize TModel}" -> {
+      "schems {\scriptsize ContScheme}" -> {
+        "main\_s {\scriptsize Scheme}"
+      },
+      "sims {\scriptsize ContSimul}" -> {
+        "sim0 {\scriptsize Simulation}"
+      },
+      "outs {\scriptsize ContOut}",
+      "plots {\scriptsize ContGraph}",
+      "prm0 \ldots"
+    }
+  }
+};
+\end{tikzpicture}
+
+
+
+
+\vfill
+Основной шрифт \textit{италик \textbf{оба}} \textbf{жирный} ...
+
+% {\sffamily Сансериф шрифт \textit{италик \textbf{оба}} \textbf{жирный} ...}
+%
+% \texttt{TT шрифт \textit{италик \textbf{оба}} \textbf{жирный} ...}
+%
+% \begin{equation}
+%   F(x) = \frac{1}{\pi} \sum\limits_{a=0}^{a=z\textit{я}z} 
+%   \sin \left( \omega_{a} \Theta \right)
+%   \tg[ 0.15 ]
+%   .
+%   \label{atu:eq:xxx}
+% \end{equation}
+%
+%
+% \tableofcontents
+
+
+\end{document}
+

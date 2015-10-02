@@ -10,3 +10,8 @@ _ex
 tmp/
 *.log
 .*.swp
+*.aux
+*.toc
+*.pdf
+w0.txt
+*.wav
