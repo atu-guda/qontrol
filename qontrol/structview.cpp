@@ -174,7 +174,6 @@ void StructView::drawAll( QPainter &p )
   int sel_x, sel_y /*,sel, mark*/;
   QString src_name;
   h = height(); w = width(); nh = 1 + h / grid_sz; nw = 1 + w / grid_sz;
-  TMiso *ob;
   if( !sch ) {
     p.setBrush( Qt::red );
     p.drawRect( 0, 0, w, 8 );
@@ -219,13 +218,9 @@ void StructView::drawAll( QPainter &p )
   QPoint p_crm { -cr_diff, cr_diff };
 
   ElemInfo ei, sei;
-  for( auto o : sch->children() ) {
-    ob = qobject_cast<TMiso*>( o );
-    if( !ob ) {
-      continue;
-    }
-
+  for( auto ob : sch->TCHILD(TMiso*) ) {
     if( ! fill_elmInfo( ob, ei ) ) {
+      qWarning() << "Fail fo fill info for " << ob->getFullName() << WHE;
       continue;
     }
     line_busy = 0;
@@ -381,11 +376,7 @@ void StructView::drawAll( QPainter &p )
     // ----------- parametric inputs
     int i_in=0;
     in_sep_sz = obj_sz/(ei.n_pinp+1);
-    for( const auto c : ei.pis->children() ) {
-      const InputParam* ips = qobject_cast<const InputParam*>( c );
-      if( ! ips ) {
-        continue;
-      }
+    for( const auto ips : ei.pis->TCHILD(const InputParam*) ) { // const? TODO: check
 
       int line_width = ips->getDataD( "line_w", 2 );
       int x_shift = ips->getDataD( "x_shift", 0 );
@@ -463,11 +454,7 @@ void StructView::drawAll( QPainter &p )
   }
 
   int sel_out = mainview->getSelOut();
-  for( auto c : outs->children() ) {
-    TOutArr *arr = qobject_cast<TOutArr*>( c );
-    if( ! arr ) {
-      continue;
-    }
+  for( auto arr : outs->TCHILD(TOutArr*) ) {
     int out_nu = arr->getMyIndexInParent();
 
     src_name = arr->getDataD( "name", QString() );

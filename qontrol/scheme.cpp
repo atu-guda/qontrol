@@ -149,11 +149,7 @@ void Scheme::allEndLoop()
 
 TMiso* Scheme::ord2Miso( int aord ) const
 {
-  for( auto c : children() ) {
-    TMiso *ob = qobject_cast<TMiso*>(c);
-    if( !ob ) {
-      continue;
-    }
+  for( auto ob : TCHILD(TMiso*) ) {
     int oord = ob->getDataD( "ord", -1 );
     if( aord == oord ) {
       return ob;
@@ -184,13 +180,7 @@ int Scheme::checkData( int n )
 TMiso* Scheme::xy2Miso( int avis_x, int avis_y ) const
 {
   int  ox, oy;
-  for( auto ho : children() ) {
-    if( !ho )
-      continue;
-    TMiso *ob = qobject_cast<TMiso*>( ho );
-    if( !ob ) {
-      continue;
-    }
+  for( auto ob : TCHILD(TMiso*) ) {
     ox = ob->getDataD( "vis_x", -1 );
     oy = ob->getDataD( "vis_y", -1 );
     if( ox == avis_x && oy == avis_y ) {
@@ -203,13 +193,7 @@ TMiso* Scheme::xy2Miso( int avis_x, int avis_y ) const
 QSize Scheme::getMaxXY() const
 {
   int mx = 0, my = 0;
-  for( auto ho : children() ) {
-    if( !ho )
-      continue;
-    TMiso *ob = qobject_cast<TMiso*>( ho );
-    if( !ob ) {
-      continue;
-    }
+  for( auto ob : TCHILD(TMiso*) ) {
     int ox = 0, oy =0;
     ox = ob->getDataD( "vis_x", 0 );
     oy = ob->getDataD( "vis_y", 0 );
@@ -296,11 +280,7 @@ int Scheme::linkNames()
   QString lname, pname, nname, oname;
   v_el.clear();
 
-  for( auto c : children() ) {
-    TMiso *ob = qobject_cast<TMiso*>(c);
-    if( !ob ) {
-      continue;
-    }
+  for( auto ob : TCHILD(TMiso*) ) {
     v_el.push_back( ob );
   };
 
@@ -324,11 +304,7 @@ void Scheme::sortOrd()
 int Scheme::hintOrd() const
 {
   int m = 0;
-  for( auto c : children() ) {
-    TMiso *ob = qobject_cast<TMiso*>(c);
-    if( !ob ) {
-      continue;
-    }
+  for( auto ob : TCHILD(TMiso*) ) {
     int mc = ob->getDataD( "ord", 0 );
     if( mc > m ) {
       m = mc;

@@ -46,11 +46,7 @@ int ContOut::preRun( int run_tp, int an, int anx, int any, double adt )
   vo.clear();
 
   // fill array for pure TOutArr entries: for fast access later
-  for( auto o : children() ) {
-    TOutArr *arr = qobject_cast<TOutArr*>( o );
-    if( !arr ) { // unlikely
-      continue;
-    }
+  for( auto arr : TCHILD(TOutArr*) ) {
     vo.push_back( arr );
     if( ! arr->preRun( run_tp, an, anx, any, adt ) ) {
       vo.clear();

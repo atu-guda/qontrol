@@ -743,12 +743,10 @@ void TModel::fillComplModelForOuts( QStandardItemModel *mdl ) const
 {
   if( ! outs ) { return; }
 
-  for( auto e: outs->children() ) {
-    if( auto out = qobject_cast<TOutArr*>(e) ) {
-      auto it = new QStandardItem( out->objectName() );
-      mdl->appendRow( it );
-      continue;
-    }
+  for( auto out: outs->TCHILD(TOutArr*) ) {
+    auto it = new QStandardItem( out->objectName() );
+    mdl->appendRow( it );
+    continue;
   }
 }
 

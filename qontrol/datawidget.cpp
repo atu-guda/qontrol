@@ -1169,10 +1169,7 @@ void DataDialog::showSimpleHelp()
   help_str += help;
   help_str += "<hr/>\n";
 
-  for( auto c : ds.children() ) {
-    HolderData *ho = qobject_cast<HolderData*>(c);
-    if( !ho )
-      continue;
+  for( auto ho : ds.TCHILD(HolderData*) ) {
     help_str += "<p>" % ho->getType()
       % " <b> " % ho->objectName() % " </b>; // "
       % ho->getParm("descr")  % " ("
@@ -1328,9 +1325,8 @@ void DataDialog::addObj()
 void DataDialog::delSome( bool is_obj )
 {
   QStringList sl;
-  for( auto c :  ds.children() ) {
-    HolderData *ho = qobject_cast<HolderData*>(c);
-    if( !ho  || !ho->isDyn() ) {
+  for( auto ho :  ds.TCHILD(HolderData*) ) {
+    if( ! ho->isDyn() ) {
       continue;
     }
     if( (is_obj ^ ho->isObject()) ) {
@@ -1405,11 +1401,7 @@ int DataDialog::createWidgets()
 
   DataWidget *w;
 
-  for( auto c :  ds.children() ) {
-    HolderData *ho = qobject_cast<HolderData*>(c);
-    if( !ho ) {
-      continue;
-    }
+  for( auto ho :  ds.TCHILD(HolderData*) ) {
     if( ho->getFlags() & efNoDial ) {
       continue;
     }

@@ -234,9 +234,7 @@ QVariant TGraph::dataObj( int col, int role ) const
     }
     QString s = QSL("[" );
 
-    for( auto c : children() ) {
-      GraphElem *ge = qobject_cast<GraphElem*>( c );
-      if( ! ge ) {  continue;   }
+    for( auto ge : TCHILD(GraphElem*) ) {
       if( ge->type == GraphElem::DataType::DataNone ) { continue; }
       s += ge->src.cval() % QSL( "," );
     }
@@ -274,9 +272,7 @@ int TGraph::prepare()
   bool was_x = false, was_y = false;
   vector<double> ve_fx, ve_fy; // arrays for missing data
 
-  for( auto c : children() ) {
-    GraphElem *ge = qobject_cast<GraphElem*>( c );
-    if( ! ge ) {  continue;   }
+  for( auto ge : TCHILD(GraphElem*) ) {
     LineRole ro = ge->fillForPlot( nn, ny, pli.size() );
 
     if( ro == LineRole::none ) {  continue;   }
@@ -370,9 +366,7 @@ int TGraph::prepare()
   ge_zero->ve = nullptr;
   ge_zero->md = mdz;
 
-  for( auto c : children() ) { // copy squeezed data
-    GraphElem *ge = qobject_cast<GraphElem*>( c );
-    if( !ge ) {  continue;   }
+  for( auto ge : TCHILD(GraphElem*) ) { // copy squeezed data
     mglData *md = new mglData( nx, ny );
     ge->md = md;
 
@@ -491,9 +485,7 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
   int was_add = 1;
   for( int n_add = 0; was_add && n_add < 10; ++n_add ) { // 10 : max iterations to split
     was_add = 0;
-    for( auto c : children() ) {
-      GraphElem *ge = qobject_cast<GraphElem*>( c );
-      if( ! ge ) {  continue;   }
+    for( auto ge : TCHILD(GraphElem*) ) {
       if( ge->role == LineRole::none || ge->role == LineRole::axisX ) { continue; }
 
       const dvector* yyc = ge->ve;
@@ -878,11 +870,7 @@ int TGraph::fillDatasInfo( DatasInfo *di ) const
   di->reset();
   int nn = IMAX, ny = 0; // 0 is special: not found
 
-  for( auto c : children() ) {
-    GraphElem *ge = qobject_cast<GraphElem*>( c );
-    if( ! ge ) {
-      continue;
-    }
+  for( auto ge : TCHILD(GraphElem*) ) {
     QString s = ge->getDataD( "src", QString() );
     if( s.isEmpty() ) {
       continue;
@@ -955,11 +943,7 @@ int TGraph::addOutArr( const QString &o_name )
   bool was_x = false, was_y = false;
 
   int ne = 0; // plot elements
-  for( auto c : children() ) {
-    GraphElem *ge = qobject_cast<GraphElem*>( c );
-    if( ! ge ) {
-      continue;
-    }
+  for( auto ge : TCHILD(GraphElem*) ) {
     int dtype = ge->getDataD( "type", (int)GraphElem::DataType::DataNone );
     if( dtype == GraphElem::DataType::DataAxisX ) {
       was_x = true;

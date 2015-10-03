@@ -218,11 +218,8 @@ int HolderData::indexOfHolder( const HolderData *ho ) const
 
 void HolderData::reset()
 {
-  for( auto c : children() ) {
-    HolderData *ho = qobject_cast<HolderData*>( c );
-    if( ho ) {
-      ho->reset();
-    }
+  for( auto ho : TCHILD(HolderData*) ) {
+    ho->reset();
   }
   do_reset();
 }
@@ -410,13 +407,11 @@ void HolderData::reportStructChanged()
 
 void HolderData::handleStructChanged()
 {
-  if( updSuspended )
+  if( updSuspended ) {
     return;
+  }
 
-  for( auto c : children() ) {
-    HolderData *ds = qobject_cast<HolderData*>(c);
-    if( ! ds )
-      continue; // what?
+  for( auto ds : TCHILD(HolderData*) ) {
     ds->handleStructChanged();
   }
 
@@ -976,10 +971,7 @@ void HolderData::dumpStruct() const
 void HolderData::post_set()
 {
   // check_guard();
-  for( auto e: children() ) { // propagate to childs
-    HolderData* ho = qobject_cast<HolderData*>(e);
-    if( !ho )
-      continue;
+  for( auto ho: TCHILD(HolderData*) ) { // propagate to childs
     ho->post_set();
   }
 }
@@ -1811,11 +1803,9 @@ TDataSet::~TDataSet()
 
 void TDataSet::reset_dfl()
 {
-  for( auto c : children() ) {
-    HolderData *o = qobject_cast<HolderData*>( c );
-    if( o ) {
-      o->reset_dfl();
-    } // it may be a non-holder elements, like model.eng
+  for( auto o : TCHILD(HolderData*) ) {
+    o->reset_dfl();
+    // it may be a non-holder elements, like model.eng?
   }
 }
 
@@ -1989,11 +1979,7 @@ QDomElement TDataSet::toDom( QDomDocument &dd ) const
   de.setAttribute( "name", objectName() );
   de.setAttribute( "otype", getType() );
 
-  for( auto ch : children() ) {
-    HolderData *ho = qobject_cast<HolderData*>(ch);
-    if( !ho ) {
-      continue; // but how?
-    }
+  for( auto ho : TCHILD(HolderData*) ) {
     if( ho->getFlags() & efNoSave ) {
       continue;
     }

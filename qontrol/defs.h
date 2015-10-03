@@ -34,6 +34,8 @@
 #define WHE " in " << __FILE__ << ": " <<  __PRETTY_FUNCTION__ << ": " << __LINE__
 #define NWHE " in " << getFullName() << " in " << __FILE__ << ": " <<  __PRETTY_FUNCTION__ << ": " << __LINE__
 
+#define TCHILD(T) findChildren<T>( QString(), Qt::FindDirectChildrenOnly )
+
 constexpr const int IMIN      { std::numeric_limits<int>::min() };
 constexpr const int IMAX      { std::numeric_limits<int>::max() };
 constexpr const unsigned UMIN { std::numeric_limits<unsigned int>::min() };

@@ -40,10 +40,7 @@ void InputParams::prepare()
   srcs.clear(); targets.clear();
   srcs_p.clear(); targets_p.clear();
   int flg;
-  for( auto c: children() ) {
-    InputParam* inp = qobject_cast<InputParam*>(c);
-    if( ! inp )
-      continue;
+  for( auto inp: TCHILD(InputParam*) ) {
     flg = inp->getOnlyFirst();
     // force only-first of noRunChange target
     if( inp->getTargetFlag() & efNoRunChange )
