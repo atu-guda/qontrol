@@ -409,7 +409,7 @@ void LaboWin::initIface()
   connect( act_cloneSimul, &QAction::triggered, this, &LaboWin::slotCloneSimul );
   model_acts << act_cloneSimul;
 
-  // ==== model group
+  // ==== model/Scheme group
 
   act_editmodel = new QAction( QIcon( ":icons/editmodel.png" ), "&Edit Model", this );
   // act_editmodel->setShortcut(  Qt::CTRL+Qt::Key_Enter );
@@ -423,6 +423,32 @@ void LaboWin::initIface()
   act_showtreemodel->setWhatsThis( tr("Show tree-like model structure") );
   connect( act_showtreemodel, &QAction::triggered, this, &LaboWin::slotShowTreeModel);
   model_acts << act_showtreemodel;
+
+  //
+  act_newScheme = new QAction( "&New Scheme", this );
+  act_newScheme->setWhatsThis( tr("Create new scheme") );
+  connect( act_newScheme, &QAction::triggered, this, &LaboWin::slotNewScheme );
+  model_acts << act_newScheme;
+
+  act_delScheme = new QAction( "&Delete Scheme", this );
+  act_delScheme->setWhatsThis( tr("Delete scheme") );
+  connect( act_delScheme, &QAction::triggered, this, &LaboWin::slotDelScheme );
+  model_acts << act_delScheme;
+
+  act_editScheme = new QAction( "&Edit Scheme", this );
+  act_editScheme->setWhatsThis( tr("Edit scheme") );
+  connect( act_editScheme, &QAction::triggered, this, &LaboWin::slotEditScheme );
+  model_acts << act_editScheme;
+
+  act_renameScheme= new QAction( "Rename scheme", this );
+  act_renameScheme->setWhatsThis( tr("Rename scheme") );
+  connect( act_renameScheme, &QAction::triggered, this, &LaboWin::slotRenameScheme );
+  model_acts << act_renameScheme;
+
+  act_cloneScheme = new QAction( "Clone Scheme", this );
+  act_cloneScheme->setWhatsThis( tr("Cone current scheme") );
+  connect( act_cloneScheme, &QAction::triggered, this, &LaboWin::slotCloneScheme );
+  model_acts << act_cloneScheme;
 
   // ====  run group
 
@@ -643,6 +669,14 @@ void LaboWin::initIface()
   pModelMenu = menuBar()->addMenu( tr("&Model") );
   pModelMenu->addAction( act_editmodel );
   pModelMenu->addAction( act_showtreemodel );
+  //
+  pModelMenu->addSeparator();
+  pModelMenu->addAction( act_newScheme );
+  pModelMenu->addAction( act_delScheme );
+  pModelMenu->addAction( act_editScheme );
+  pModelMenu->addSeparator();
+  pModelMenu->addAction( act_renameScheme );
+  pModelMenu->addAction( act_cloneScheme );
 
   ///////////////////////////////////////////////////////////////////
   // menuBar entry pRunMenu
@@ -1442,7 +1476,7 @@ void LaboWin::slotCloneSimul()
 }
 
 
-// ------- model -----------
+// ------- model / scheme -----------
 
 void LaboWin::slotEditModel()
 {
@@ -1455,6 +1489,34 @@ void LaboWin::slotShowTreeModel()
   callLaboViewSlot( "showTreeModel", tr( "Show model tree..." ) );
 }
 
+void LaboWin::slotNewScheme()
+{
+  callLaboViewSlot( "newScheme", tr( "Creating new Scheme..." ) );
+}
+
+void LaboWin::slotDelScheme()
+{
+  callLaboViewSlot( "delScheme", tr( "Removing Scheme" ) );
+}
+
+void LaboWin::slotEditScheme()
+{
+  callLaboViewSlot( "editScheme", tr( "Editing Scheme data..." ) );
+}
+
+void LaboWin::slotRenameScheme()
+{
+  callLaboViewSlot( "renameScheme", tr( "Renaming Scheme ..." ) );
+}
+
+
+void LaboWin::slotCloneScheme()
+{
+  callLaboViewSlot( "cloneScheme", tr( "Cloning Scheme ..." ) );
+}
+
+
+// -------------------------- run ------------------------------
 
 void LaboWin::slotRunRun()
 {

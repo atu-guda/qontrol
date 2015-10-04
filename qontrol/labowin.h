@@ -199,9 +199,14 @@ class LaboWin : public QMainWindow
     void slotSetActiveSimul();
     void slotCloneSimul();
 
-    // ==== model related
+    // ==== model/scheme related
     void slotEditModel();
     void slotShowTreeModel();
+    void slotNewScheme();
+    void slotDelScheme();
+    void slotEditScheme();
+    void slotRenameScheme();
+    void slotCloneScheme();
 
     // ==== run related
     void slotRunRun();
@@ -318,8 +323,10 @@ class LaboWin : public QMainWindow
             *act_newSimul, *act_delSimul, *act_editSimul, *act_selectSimul,
             *act_renameSimul,
             *act_setActiveSimul, *act_cloneSimul,
-            // model
+            // model/scheme
             *act_editmodel, *act_showtreemodel,
+            *act_newScheme, *act_delScheme, *act_editScheme,
+            *act_renameScheme, *act_cloneScheme,
             // run
             *act_runrun, *act_reset,
              *act_initengine, *act_runscript, *act_runmodelscript,
