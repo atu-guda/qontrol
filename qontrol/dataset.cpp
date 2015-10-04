@@ -2202,13 +2202,26 @@ void InputAbstract::do_structChanged()
 void InputAbstract::set_link()
 {
   p = &fake_in; src_obj = nullptr; linkType = LinkBad;
-  if ( source.cval().isEmpty() ) {
-    linkType = LinkNone;
-    return;
+  if( source.cval().isEmpty() ) {
+    linkType = LinkNone; return;
   }
-  if ( source.cval() == ":one" ) { // special local case
-    linkType = LinkSpec;
-    p = &one_in;
+  if( source.cval() == ":one" ) { // special local case
+    linkType = LinkSpec;  p = &one_in;  return;
+  }
+
+  if( source.cval() == ":ein0" ) { // special input
+    TDataSet *el = qobject_cast<TDataSet*>( par ); // par may by TMiso, but ...
+    if( !el ) {
+      qWarning() << "No good parent for " << NWHE;
+      linkType = LinkNone;  return;
+    }
+    const double *cp = el->getDoublePtr( "ein0", nullptr, nullptr, 0 );
+    if( !cp ) {
+      qWarning() << "No 'ein0' in " << el->getFullName() << " for " << NWHE;
+      linkType = LinkBad;  return;
+    }
+
+    p = cp; linkType = LinkSpec;
     return;
   }
 
@@ -2294,6 +2307,8 @@ STD_CLASSINFO(InputParam,clpInput|clpSpecial);
 
 CTOR(InputParam,InputAbstract)
 {
+  line_color.setParm( "def", "red" );
+  line_w.setParm( "def", "2" );
 }
 
 InputParam::~InputParam()

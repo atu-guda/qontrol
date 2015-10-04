@@ -1,5 +1,7 @@
 Subschemes.
 Check: update link values only after step - prep for multi-threading
+Hint for new element names
+Hide some types in new element dialog
 New buttons for ObjDataWidget: need better (simple) labels.
 Show output number in hint (this done, but may be in name too?).
 Indicate corresponding outs for selected plot
