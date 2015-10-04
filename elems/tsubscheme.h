@@ -41,14 +41,15 @@ class TSubScheme : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
    virtual int do_endLoop() override;
    // TODO: all do_ -- pass to cheme
+   virtual void post_set() override;
 
    /** Scheme name */
    PRM_STRING( sch_name, efNRC, "Scheme", "Scheme name", "" );
 
-   PRM_INPUT( in_u, 0, "input", "Single input",  "sep=block" );
-
    //* ptr to shadow scheme copy
    Scheme *sch = nullptr;
+   //* ptr to scheme prototype
+   Scheme *sch_proto = nullptr;
    static constexpr const char* const sch_ename = "sch";
 
    DCL_DEFAULT_STATIC;

@@ -24,7 +24,7 @@ STD_CLASSINFO(TSubScheme,clpElem );
 
 CTOR(TSubScheme,TMiso)
 {
-  allowed_types = "Scheme";
+  allowed_types = "Scheme,InputSimple,+SPECIAL";
 }
 
 TSubScheme::~TSubScheme()
@@ -40,6 +40,10 @@ double TSubScheme::f( double t )
 int TSubScheme::do_preRun( int run_tp, int an,
                            int anx, int any, double atdt )
 {
+  if( !sch_proto ) {
+    qWarning() << "Subscheme prototype is not available" << sch_name <<NWHE;
+    return 0;
+  }
   if( getElem( sch_ename ) ) {
     del_obj( sch_ename );
   }
@@ -48,6 +52,13 @@ int TSubScheme::do_preRun( int run_tp, int an,
     qWarning() << "Fail to create subscheme " << NWHE;
     return 0;
   }
+
+  QString ss = sch_proto->toString();
+  if( ! sch->fromString( ss ) ) {
+    qWarning() << "Fail to copy prototype " << sch_name << NWHE;
+    return 0;
+  }
+
   return sch->preRun( run_tp, an, anx, any, atdt );
 }
 
@@ -70,10 +81,19 @@ int TSubScheme::do_endLoop()
 {
   if( sch ) {
     sch->allEndLoop();
+    return 1;
   }
-  return 1;
+  return 0;
 }
 
+void TSubScheme::post_set()
+{
+  sch_proto = getElemOfAncessorT<Scheme*>( sch_name );
+  // if( !sch_proto ) {
+  //   qWarning() << "Fail to find prototype cheme " << sch_name << NWHE; // Not here!
+  // }
+  return TDataSet::post_set();
+}
 
 DEFAULT_FUNCS_REG(TSubScheme)
 

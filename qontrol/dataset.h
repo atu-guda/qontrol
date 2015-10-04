@@ -227,12 +227,25 @@ class HolderData : public QAbstractItemModel {
   HolderData* getElem( int i ) const;
   /** find holder for object by name */ // TODO: +full.name.elm
   HolderData* getElem( const QString &oname ) const;
-  /** find holder for object by insex, safely cast to type T */
+  /** find holder for object by index, safely cast to type T */
   template<typename T> T getElemT( int idx ) const
     {  return qobject_cast<T>( getElem( idx ) );  }
   /** find holder for object by name, safely cast to type T */
   template<typename T> T getElemT( const QString &oname ) const
     { return qobject_cast<T>( getElem( oname ) ); }
+  /** find element of ancessor by name and type T */
+  template<typename T> T getElemOfAncessorT( const QString &oname ) const
+    {
+      HolderData *pa = par;
+      while( pa ) {
+        T el = pa->getElemT<T>( oname );
+        if( el ) {
+          return el;
+        }
+        pa = pa->getParent();
+      }
+      return nullptr;
+    }
   /** index of holder, if my, -1 - if not */
   int indexOfHolder( const HolderData *ho ) const;
   //* reset object and all (sub)children, to local actions - do_reset();
