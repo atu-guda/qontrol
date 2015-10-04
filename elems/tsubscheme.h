@@ -39,6 +39,7 @@ class TSubScheme : public TMiso  {
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    virtual int do_postRun( int good ) override;
    virtual int do_startLoop( int acnx, int acny ) override;
+   virtual int do_endLoop() override;
    // TODO: all do_ -- pass to cheme
 
    /** Scheme name */
@@ -48,6 +49,7 @@ class TSubScheme : public TMiso  {
 
    //* ptr to shadow scheme copy
    Scheme *sch = nullptr;
+   static constexpr const char* const sch_ename = "sch";
 
    DCL_DEFAULT_STATIC;
 };

@@ -643,9 +643,8 @@ class TDataSet : public HolderData {
    /** unregister input (call by dtor) from inputs */
    void unregisterInput( InputSimple *inp );
  protected:
-   /** place for inputs */
+   /** Place for inputs. Parametric inputs is in the TMiso::pis */
    QVector<InputSimple*> inputs;
-   /** place for parametric inputs */
    DCL_DEFAULT_STATIC;
 };
 

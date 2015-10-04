@@ -1828,16 +1828,17 @@ DEFAULT_FUNCS_REG(TDataSet);
 const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
               const TDataSet **targ, int lev  ) const
 {
+  static ltype_t clt;
+  ltype_t *plt = lt ? lt : &clt;
   if( nm.isEmpty() ) {
-    if( lt ) { *lt = LinkNone;  }
-    return nullptr;
+    *plt = LinkNone; return nullptr;
   }
   QString nmf = nm, first, rest;
 
   int idx;
   NameType nm_type = splitName( nmf, first, rest, idx );
   if( nm_type == badName ) {
-    if( lt ) { *lt = LinkBad;  }
+    *plt = LinkBad;
     qWarning() << "bad target name " << nmf << NWHE;
     return nullptr;
   }
@@ -1845,7 +1846,7 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
   HolderData *ho = getElem( first );
 
   if( !ho ) {
-    if( lt ) { *lt = LinkBad; }
+    *plt = LinkBad;
     // qWarning() << "elem" << first << "not found, nmf= " << nmf << NWHE;
     return nullptr;
   }
@@ -1853,25 +1854,26 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
   if( nm_type == simpleName ) { // -- simple name ----- first only -----
     TDataSet *ds= qobject_cast<TDataSet*>(ho);
     if( ds ) {
-      return ds->getDoublePtr( "out0", lt, targ, lev+1 );
+      return ds->getDoublePtr( "out0", plt, targ, lev+1 ); // defailt output
     }
 
     HolderDouble *hod = qobject_cast<HolderDouble*>(ho);
-    if( hod) {
-      if( lt )   {  *lt = ( lev == 1 ) ? LinkElm : LinkSpec;  }
+    if( hod ) {
+      *plt = ( lev == 1 ) ? LinkElm : LinkSpec;
       if( targ ) {  *targ = this;   }
       return hod->caddr();
     }
 
-    auto *hoda = qobject_cast<HolderDoubleArray*>(ho);
+    auto *hoda = qobject_cast<HolderDoubleArray*>(ho); // array special case
     if( hoda ) {
       int na = hoda->arrSize();
       if( idx >= na ) {
         qWarning() << "Bad index " << idx << " while access to " << hoda->getFullName()
                    << " size " << na << NWHE;
-        if( lt ) { *lt = LinkBad; }
+        *plt = LinkBad;
+        return nullptr;
       }
-      if( lt )   {  *lt = ( lev == 1 ) ? LinkElm : LinkSpec;  }
+      *plt = ( lev == 1 ) ? LinkElm : LinkSpec;
       if( targ ) {  *targ = this;   }
       return & ( hoda->operator[](idx) );
     }
@@ -1882,14 +1884,15 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
   // both part of name exists
   TDataSet *ds = qobject_cast<TDataSet*>(ho);
   if( !ds ) {
-    if( lt ) {  *lt = LinkBad; }
+    *plt = LinkBad;
     qWarning() << "Complex name " << nm << " is given for simple object "
                << ho->getFullName() << NWHE;
     return nullptr;
   }
-  return ds->getDoublePtr( rest, lt, targ, lev+1 );
+  return ds->getDoublePtr( rest, plt, targ, lev+1 ); // pass to child
 
 }
+
 
 const double* TDataSet::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
         const TDataSet **src_ob, int lev) const
@@ -1911,8 +1914,9 @@ const double* TDataSet::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
 // not const - change param
 double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg )
 {
-  if( nm.isEmpty() )
+  if( nm.isEmpty() ) {
     return nullptr;
+  }
 
   HolderDouble *hod = getElemT<HolderDouble*>( nm );
 
@@ -1925,8 +1929,6 @@ double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg )
     *flg = hod->getFlags();
   }
   return hod->addr();
-
-  return 0;
 }
 
 
@@ -2115,8 +2117,9 @@ void TDataSet::post_set() {
 
 void TDataSet::registerInput( InputSimple *inp )
 {
-  if( ! inp )
+  if( ! inp ) {
     return;
+  }
   if( inputs.indexOf( inp ) != -1 ) {
     qWarning() << "input " << inp->objectName() << "is  already registered" << WHE;
     return;
@@ -2126,10 +2129,10 @@ void TDataSet::registerInput( InputSimple *inp )
 
 void TDataSet::unregisterInput( InputSimple *inp )
 {
-  if( ! inp )
+  if( ! inp ) {
     return;
-  // if( ! guard ) // BUG: bad order of destruction
-  //   return;
+  }
+
   int idx = inputs.indexOf( inp );
   if( idx == -1 ) {
     qWarning() << "input " << inp->objectName() << "is not registered" << WHE;
@@ -2212,9 +2215,9 @@ QVariant InputAbstract::dataObj( int col, int role ) const
     QString s = source;
     QChar ac = QChar( 0x274C ); // X
     if( p != &fake_in ) {
-      ac = QChar( 0x27BC );
+      ac = QChar( 0x27BC ); // >>->
       if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
-        ac = QChar( 0x2794 );
+        ac = QChar( 0x2794 ); // ->
       }
     }
     s += ac;
@@ -2291,12 +2294,14 @@ void InputParam::set_link()
   InputAbstract::set_link();
   target_flag = 0;
   targ = &fake_target;
-  if( !par ) // par seems to be InputParams, but may be dangling objects
+  if( !par ) { // par seems to be InputParams, but may be dangling objects
     return;
+  }
 
-  TDataSet *el = qobject_cast<TDataSet*>( par->getParent() ); // grang par may by TMiso, but ...
-  if( !el )
+  TDataSet *el = qobject_cast<TDataSet*>( par->getParent() ); // grand par may by TMiso, but ...
+  if( !el ) {
     return;
+  }
 
   targ = el->getDoublePrmPtr( tparam, &target_flag );
   if( !targ ) {
@@ -2314,9 +2319,9 @@ QVariant InputParam::dataObj( int col, int role ) const
     QString s = source;
     QChar ac = QChar( 0x274C ); // X
     if( p != &fake_in ) {
-      ac = QChar( 0x27BC );
+      ac = QChar( 0x27BC );     // >>->
       if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
-        ac = QChar( 0x2794 );
+        ac = QChar( 0x2794 );   // ->
       }
     }
     s += ac;

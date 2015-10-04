@@ -24,11 +24,11 @@ STD_CLASSINFO(TSubScheme,clpElem );
 
 CTOR(TSubScheme,TMiso)
 {
+  allowed_types = "Scheme";
 }
 
 TSubScheme::~TSubScheme()
 {
-  delete[] sch; sch = nullptr;
 }
 
 
@@ -37,25 +37,40 @@ double TSubScheme::f( double t )
   return t; // TMP
 }
 
-int TSubScheme::do_preRun( int /*run_tp*/, int /*an*/,
-                       int /*anx*/, int /*any*/, double /*atdt*/ )
+int TSubScheme::do_preRun( int run_tp, int an,
+                           int anx, int any, double atdt )
 {
-  if( sch ) {
-    delete[] sch;
+  if( getElem( sch_ename ) ) {
+    del_obj( sch_ename );
   }
-  sch = new Scheme( "sch", this );
-  return 1;
+  sch = addObj<Scheme>( sch_ename );
+  if( ! sch ) {
+    qWarning() << "Fail to create subscheme " << NWHE;
+    return 0;
+  }
+  return sch->preRun( run_tp, an, anx, any, atdt );
 }
 
 int TSubScheme::do_postRun( int /*good*/ )
 {
-  delete[] sch; sch = nullptr;
+  sch->postRun();
+  del_obj( sch_ename );
   return 1;
 }
 
-int TSubScheme::do_startLoop( int /*acnx*/, int /*acny*/ )
+int TSubScheme::do_startLoop( int acnx, int acny )
 {
-  // sch->startLoop
+  if( sch ) {
+    return sch->allStartLoop( acnx, acny );
+  }
+  return 0;
+}
+
+int TSubScheme::do_endLoop()
+{
+  if( sch ) {
+    sch->allEndLoop();
+  }
   return 1;
 }
 
