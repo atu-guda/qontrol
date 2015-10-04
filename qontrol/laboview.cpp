@@ -27,6 +27,8 @@
 #include "structview.h"
 #include "outdataview.h"
 #include "graphdataview.h"
+#include "simulview.h"
+#include "schemeview.h"
 #include "statusmodel.h"
 #include "doubletable.h"
 #include "runview.h"
@@ -79,13 +81,16 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   sims_view = new SimulView( sims, this );
 
+  schems_view = new SchemeView( schems, this );
+
 
   stam = new StatusModel( this, this );
 
-  grLay->addWidget( scrollArea, 0, 0 );
+  grLay->addWidget( scrollArea, 0, 0, 2, 1 );
   grLay->addWidget( outs_view, 0, 1 );
   grLay->addWidget( plots_view, 0, 2 );
-  grLay->addWidget( sims_view, 0, 3 );
+  grLay->addWidget( sims_view, 1, 1 );
+  grLay->addWidget( schems_view, 1, 2 );
 
   main_part->setLayout( grLay );
 
@@ -99,6 +104,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   selectOut();
   selectGraph();
   selectSimul();
+  // selectSheme();
 
   connect( this, &LaboView::viewChanged, this, &LaboView::updateViews );
   connect( sview, &StructView::sig_changeSel,   this, &LaboView::changeSel );
@@ -1418,6 +1424,108 @@ void LaboView::showTreeModel()
   emit viewChanged();
   return;
 }
+
+void LaboView::newScheme()
+{
+  bool ok;
+  if( ! checkState( validCheck ) ) {
+    return;
+  }
+  QString schName = QString("sch_"); // + QSN( model->getNScheme() ); // TODO: count
+  schName = QInputDialog::getText( this, "Creating new Scheme",
+      "Enter name of new scheme:", QLineEdit::Normal,
+      schName, &ok );
+  if( !ok ) { return; }
+
+  if( ! isGoodName( schName ) ) {
+    showError( QString("Bad scheme name: \"%1\"").arg(schName) );
+  }
+  ok = model->newScheme( schName );
+  if( !ok ) {
+    showError( QString("Fail to create scheme: \"%1\"").arg(schName) );
+  }
+  emit viewChanged();
+}
+
+void LaboView::delScheme()
+{
+  QString nm = getSelName( schems_view );
+  if( nm.isEmpty() ) {
+    return;
+  }
+
+  if( confirmDelete( "scheme", nm ) ) {
+    model->delScheme( nm );
+    emit viewChanged();
+  }
+}
+
+void LaboView::editScheme()
+{
+  QString nm = getSelName( schems_view );
+  if( nm.isEmpty() ) {
+    return;
+  }
+  Scheme *sch = model->getScheme( nm );
+  if( sch ) {
+    emit viewChanged();
+  }
+
+  // editObj( sch );
+}
+
+void LaboView::renameScheme()
+{
+  if( ! checkState( validCheck ) ) {
+    return;
+  }
+
+  QString nm = getSelName( schems_view );
+  if( nm.isEmpty() ) {
+    return;
+  }
+
+  Scheme *sch = model->getScheme( nm );
+  if( !sch ) {
+    return;
+  }
+
+  QString old_name = sch->objectName();
+  bool ok;
+  QString new_name = QInputDialog::getText( this, "Rename:" + sch->getFullName(),
+      "Enter new name:", QLineEdit::Normal, old_name, &ok );
+
+  if( !ok ) { return; }
+
+  if( schems->rename_obj( old_name, new_name ) ) {
+    model->setModified();
+    model->reset();
+    emit viewChanged();
+  }
+
+}
+
+void LaboView::cloneScheme()
+{
+  QString nm = getSelName( schems_view );
+  if( nm.isEmpty() ) {
+    return;
+  }
+
+  QString nn = nm + "_1";
+  bool ok;
+  QString new_name = QInputDialog::getText(
+      this, tr( "New scheme name" ), tr( "Scheme name:" ), QLineEdit::Normal,
+      nn, &ok );
+
+  if( ok ) {
+    model->cloneScheme( nm, new_name );
+    model->handleStructChanged();
+    emit viewChanged();
+  }
+}
+
+
 
 void LaboView::initEngine()
 {

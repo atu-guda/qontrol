@@ -531,16 +531,16 @@ int HolderData::del_obj( const QString &ob_name )
 int HolderData::rename_obj( const QString &ob_name, const QString &new_name )
 {
   if( ! isGoodName( new_name ) ) {
-    qWarning() << "bad name " << new_name << " to remame" << NWHE;
+    qWarning() << "bad name " << new_name << " to rename" << NWHE;
     return 0;
   }
   HolderData *ho = getElem( ob_name );
   if( !ho ) {
-    qWarning() << "not found element " << ob_name << " to remame" << NWHE;
+    qWarning() << "not found element " << ob_name << " to rename" << NWHE;
     return 0;
   }
   if( ho->getFlags() & efImmutable ) {
-    qWarning() << "element " << ob_name << " is Immutable to remame" << NWHE;
+    qWarning() << "element " << ob_name << " is Immutable to rename" << NWHE;
     return 0;
   }
 

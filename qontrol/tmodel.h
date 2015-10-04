@@ -49,8 +49,9 @@ class TModel : public TDataSet  {
   double* getMapDoublePtr( const QString &nm );
   Q_INVOKABLE QString getOutValue( const QString &nm ) const;
 
-  //* returns active (main) Scheme
-  Scheme* getActiveScheme() const { return schems->getActiveElemT<Scheme*>(); };
+  //* returns active (main) Scheme // TODO: delete? use param in Simulation?
+  // Scheme* getActiveScheme() const { return schems->getActiveElemT<Scheme*>(); };
+  Scheme* getActiveScheme() const { return schems->getElemT<Scheme*>( "main_s" ); };
   //* returns active Simulation
   Simulation* getActiveSimulation() const { return sims->getActiveElemT<Simulation*>(); };
 
@@ -62,6 +63,7 @@ class TModel : public TDataSet  {
 
   // Simulation* getSimul( int idx );
   Simulation* getSimul( const QString &name );
+  Scheme* getScheme( const QString &name );
 
   int startRun();
   int stopRun( int reason );
@@ -107,6 +109,10 @@ class TModel : public TDataSet  {
   bool cloneSimul( const QString &old_name, const QString &new_name );
   bool setActiveSimul( const QString &name );
 
+  int newScheme( const QString &name );
+  int delScheme( const QString &name );
+  QString getSchemeName( int idx );
+  bool cloneScheme( const QString &old_name, const QString &new_name );
   int getNSchems() const { return schems->size(); }
 
   void initEngine();

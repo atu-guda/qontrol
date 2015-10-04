@@ -39,6 +39,7 @@ SOURCES += \
   rootdata.cpp \
   scaledata.cpp \
   scheme.cpp \
+  schemeview.cpp \
   scriptfuncs.cpp \
   simul.cpp \
   simulview.cpp \
@@ -110,6 +111,7 @@ HEADERS += \
   rootdata.h \
   scaledata.h \
   scheme.h \
+  schemeview.h \
   scriptfuncs.h \
   simul.h \
   simulview.h \

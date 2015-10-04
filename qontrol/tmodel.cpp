@@ -67,6 +67,7 @@ TModel::~TModel()
   delete eng; eng = nullptr; // just for...
 }
 
+
 const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
         const TDataSet **src_ob, int lev) const
 {
@@ -659,6 +660,73 @@ bool TModel::setActiveSimul( const QString &name )
   }
   return ok;
 }
+
+// ------------------------------------------
+
+int TModel::newScheme( const QString &name )
+{
+  if( !schems ) {
+    return 0;
+  }
+  Scheme *sch = schems->addObj<Scheme>( name );
+  if( ! sch ) {
+    qWarning() << "fail to create scheme " << name << NWHE;
+    return 0;
+  }
+  return 1;
+}
+
+int TModel::delScheme( const QString &name )
+{
+  if( !schems ) {
+    return 0;
+  }
+  return schems->del_obj( name );
+}
+
+QString TModel::getSchemeName( int idx )
+{
+  if( !schems ) {
+    return QString();
+  }
+  Scheme* sch =  schems->getElemT<Scheme*>( idx );
+  if( !sch ) {
+    return QString();
+  }
+  return sch->objectName();
+}
+
+Scheme* TModel::getScheme( const QString &name )
+{
+  if( !schems ) {
+    return nullptr;
+  }
+  return schems->getElemT<Scheme*>( name );
+}
+
+
+bool TModel::cloneScheme( const QString &old_name, const QString &new_name )
+{
+  if( !schems ) {
+    return false;
+  }
+  Scheme *old_sch = schems->getElemT<Scheme*>( old_name );
+  if( !old_sch ) {
+    qWarning() << "old scheme " << old_name << " not exist " << NWHE;
+    return 0;
+  }
+
+  QString s = old_sch->toString();
+
+  Scheme *new_sch = schems->addObj<Scheme>( new_name );
+  if( !new_sch ) {
+    qWarning() << "fail to create new scheme " << new_name << NWHE;
+    return 0;
+  }
+  return new_sch->fromString( s );
+}
+
+
 
 
 void TModel::initEngine()

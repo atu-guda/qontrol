@@ -39,6 +39,7 @@ class QScrollArea;
 class QTreeView;
 class QListView;
 class SimulView;
+class SchemeView;
 class ContScheme;
 class Scheme;
 class ContOut;
@@ -153,9 +154,14 @@ class LaboView : public QWidget
    void setActiveSimul();
    void cloneSimul();
 
-   // model related
+   // model/scheme related
    void editModel();
    void showTreeModel();
+   void newScheme();
+   void delScheme();
+   void editScheme();
+   void renameScheme();
+   void cloneScheme();
 
    // runs
    void runRun();
@@ -193,6 +199,7 @@ class LaboView : public QWidget
    OutDataView *outs_view = nullptr;
    GraphDataView *plots_view = nullptr;
    SimulView *sims_view = nullptr;
+   SchemeView *schems_view = nullptr;
    StatusModel *stam = nullptr;
 
    // document and its main parts
