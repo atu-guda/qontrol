@@ -31,7 +31,7 @@ const char* ContOut::helpstr = "<H1>ContOut</H1>\n"
 
 STD_CLASSINFO(ContOut,clpSpecial | clpContainer);
 
-CTOR(ContOut,TDataContainer)
+CTOR(ContOut,TDataSet)
 {
   allowed_types = "TOutArr,+SPECIAL";
   vo.reserve( 64 );

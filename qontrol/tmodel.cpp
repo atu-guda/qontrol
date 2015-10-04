@@ -36,7 +36,7 @@ const char* TModel::helpstr = "<H1>TModel</H1>\n"
 
 STD_CLASSINFO(TModel,clpSpecial | clpContainer);
 
-CTOR(TModel,TDataContainer)
+CTOR(TModel,TDataSet)
 {
   allowed_types = "HolderValue,"
                   "ContScheme,ContSimul,ContOut,ContGraph"; // +SPECIAL

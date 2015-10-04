@@ -27,7 +27,7 @@ const char* ContGraph::helpstr = "<H1>ContGraph</H1>\n"
 
 STD_CLASSINFO(ContGraph,clpSpecial | clpContainer);
 
-CTOR(ContGraph,TDataContainer)
+CTOR(ContGraph,TDataSet)
 {
   allowed_types = "TGraph,+SPECIAL";
 }

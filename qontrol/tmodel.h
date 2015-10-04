@@ -35,7 +35,7 @@ class QScriptEngine;
   *@author atu
   */
 
-class TModel : public TDataContainer  {
+class TModel : public TDataSet  {
   Q_OBJECT
  public:
   DCL_CTOR(TModel);

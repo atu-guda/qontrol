@@ -24,7 +24,7 @@ const char* InputParams::helpstr = "<H1>InputParams</H1>\n"
 
 STD_CLASSINFO(InputParams,clpSpecial | clpContainer);
 
-CTOR(InputParams,TDataContainer)
+CTOR(InputParams,TDataSet)
 {
   allowed_types = "InputParam,+SPECIAL";
 }

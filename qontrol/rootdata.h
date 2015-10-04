@@ -9,12 +9,12 @@
 #ifndef _ROOTDATA_H
 #define _ROOTDATA_H
 
-#include "datacont.h"
+#include "dataset.h"
 
 /** class holding other classes descriptions
     so can create all registered class objects
 */
-class TRootData : public TDataContainer {
+class TRootData : public TDataSet {
   Q_OBJECT
  public:
    DCL_CTOR(TRootData);

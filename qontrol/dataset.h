@@ -37,7 +37,6 @@ typedef HolderData* (*PFHolderData)(
     int a_flags, const QString &a_v_name,
     const QString& a_descr, const QString& a_extra );
 typedef PTDataSet (*PFDataSet)( PTDataSet aparent );
-class   TDataContainer;
 // typedef QVector<HolderData*> QHoVect;
 
 /** properties of class -- bitfield */

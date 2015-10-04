@@ -18,12 +18,12 @@
 #ifndef _CONTOUT_H
 #define _CONTOUT_H
 
-#include "datacont.h"
+#include "dataset.h"
 #include "scriptfuncs.h"
 
 class TOutArr;
 
-class ContOut : public TDataContainer {
+class ContOut : public TDataSet {
    Q_OBJECT
   public:
    DCL_CTOR(ContOut);

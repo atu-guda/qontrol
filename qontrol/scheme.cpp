@@ -31,7 +31,7 @@ const char* Scheme::helpstr = "<H1>Scheme</H1>\n"
 
 STD_CLASSINFO(Scheme,clpSpecial | clpContainer);
 
-CTOR(Scheme,TDataContainer)
+CTOR(Scheme,TDataSet)
 {
   allowed_types = "TMiso";
   const int ELM_RES = 64;
@@ -172,7 +172,7 @@ int Scheme::checkData( int n )
   if( n < 0 ) {
     linkNames();
   }
-  return TDataContainer::checkData( n );
+  return TDataSet::checkData( n );
 }
 
 
@@ -291,7 +291,7 @@ int Scheme::linkNames()
 
 void Scheme::do_structChanged()
 {
-  TDataContainer::do_structChanged();
+  TDataSet::do_structChanged();
   linkNames();
 }
 
@@ -328,7 +328,7 @@ const char* ContScheme::helpstr = "<H1>ContScheme</H1>\n"
 
 STD_CLASSINFO(ContScheme,clpSpecial | clpContainer);
 
-CTOR(ContScheme,TDataContainer)
+CTOR(ContScheme,TDataSet)
 {
   allowed_types = "Scheme,+SPECIAL";
 }

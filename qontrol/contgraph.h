@@ -18,9 +18,9 @@
 #ifndef _CONTGRAPH_H
 #define _CONTGRAPH_H
 
-#include "datacont.h"
+#include "dataset.h"
 
-class ContGraph : public TDataContainer {
+class ContGraph : public TDataSet {
    Q_OBJECT
   public:
    DCL_CTOR(ContGraph);

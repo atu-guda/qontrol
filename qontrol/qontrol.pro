@@ -18,7 +18,6 @@ SOURCES += \
   circbuf.cpp \
   contgraph.cpp \
   contout.cpp \
-  datacont.cpp \
   dataset.cpp \
   elemfact.cpp \
   inputparams.cpp \
@@ -91,7 +90,6 @@ HEADERS += \
   circbuf.h \
   contgraph.h \
   contout.h \
-  datacont.h \
   dataset.h \
   defs.h \
   inputparams.h \

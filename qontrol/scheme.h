@@ -27,7 +27,7 @@
   *@author atu
   */
 
-class Scheme : public TDataContainer  {
+class Scheme : public TDataSet  {
   Q_OBJECT
  public:
   DCL_CTOR(Scheme);
@@ -98,7 +98,7 @@ class Scheme : public TDataContainer  {
 
 // ------------------ container of Schemes --------------
 
-class ContScheme : public TDataContainer {
+class ContScheme : public TDataSet {
    Q_OBJECT
   public:
    DCL_CTOR(ContScheme);

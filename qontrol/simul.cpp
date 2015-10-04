@@ -73,7 +73,7 @@ const char* ContSimul::helpstr = "<H1>ContSimul</H1>\n"
 
 STD_CLASSINFO(ContSimul,clpSpecial | clpContainer);
 
-CTOR(ContSimul,TDataContainer)
+CTOR(ContSimul,TDataSet)
 {
   allowed_types = "Simulation,+SPECIAL";
 }

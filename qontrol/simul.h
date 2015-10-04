@@ -19,7 +19,6 @@
 #define SIMUL_H
 
 #include "dataset.h"
-#include "datacont.h"
 
 
 /** Description of simulation
@@ -114,7 +113,7 @@ class Simulation : public TDataSet  {
 
 // ------------------ container of Simulations --------------
 
-class ContSimul : public TDataContainer {
+class ContSimul : public TDataSet {
    Q_OBJECT
   public:
    DCL_CTOR(ContSimul);

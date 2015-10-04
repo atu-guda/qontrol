@@ -16,7 +16,7 @@ const char* TRootData::helpstr = "<H1>TRootData</H1>\n"
 STD_CLASSINFO(TRootData,clpContainer|clpSpecial );
 
 
-CTOR(TRootData,TDataContainer)
+CTOR(TRootData,TDataSet)
 {
   flags |= efImmutable;
   allowed_types = "TModel";
