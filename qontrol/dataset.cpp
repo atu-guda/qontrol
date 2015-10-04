@@ -249,13 +249,31 @@ QStringList HolderData::elemNames() const
 QString HolderData::ls() const
 {
   QString r;
+  r = getFullName() + " : " + getType() + " dyn: " + QSN(dyn) + " flags: 0x" + QSNX(flags);
+  if( ! isObject() ) {
+    r += " = \"" + toString() + "\"";
+  }
+  r += "\n;------------------------------------\n";
+  int n_el = 0;
   for( const auto c : children() ) {
     r += c->objectName() + ' ';
+    ++n_el;
     const HolderData *ho = qobject_cast<HolderData*>( c );
     if( ho ) {
       r += ho->getType();
+      if( ! ho->isObject() ) {
+        QString vs = ho->toString();
+        vs.truncate( 80 );
+        r += " = \"" + vs + "\"";
+      }
     }
     r += '\n';
+  }
+  r += "\n;------------------------------------";
+
+  r += "\n;n_el = " + QSN(n_el) + "\n;Params:\n";
+  for( auto i= parms.constBegin(); i != parms.constEnd(); ++i ) {
+    r += i.key() + " = \"" + i.value() + "\"\n";
   }
   return r;
 }

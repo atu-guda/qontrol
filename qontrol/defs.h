@@ -47,6 +47,7 @@ constexpr const double D_AZERO  { 1.0e-100 }; // a near-zero value
 
 #define L8B QString::fromLocal8Bit
 #define QSN QString::number
+#define QSNX(n) QString::number((n),16)
 #define QSL QStringLiteral
 
 using dvector = std::vector<double>;

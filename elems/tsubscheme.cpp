@@ -34,6 +34,13 @@ TSubScheme::~TSubScheme()
 
 double TSubScheme::f( double t )
 {
+  // TODO: inputs
+  if( sch ) {
+    sch->runOneLoop( t, iter_c );
+  } else {
+    qWarning() << "No scheme?" << NWHE;
+  }
+  // TODO: outputs
   return t; // TMP
 }
 

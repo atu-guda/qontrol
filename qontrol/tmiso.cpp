@@ -46,6 +46,7 @@ DEFAULT_FUNCS_REG(TMiso);
 double TMiso::fun( double t, IterType itype )
 {
   int v;
+  iter_c = itype;
   if( locked ) {
     return out0 = (double)out0_init;
   }
@@ -74,6 +75,7 @@ double TMiso::f( double /* t */ )
 int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
 {
   tdt = adt; model_nn = an;
+  iter_c = IterMid; // fake
   pis->prepare();
   int rc =  do_preRun( run_tp, an, anx, any, adt );
   if( !rc ) {
@@ -94,6 +96,7 @@ int TMiso::postRun( int good )
 {
   int rc = do_postRun( good );
   state = good ? stateDone : stateGood;
+  iter_c = IterMid; // fake
   return rc;
 }
 

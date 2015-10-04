@@ -122,6 +122,8 @@ class TMiso : public TDataSet  {
    int model_nn = 0;
    /** parameters modified during run flag */
    int prm_mod = 0;
+   //* Current itration type: to propagete to subschemes...
+   IterType iter_c = IterMid;
 
    DCL_DEFAULT_STATIC;
 

@@ -97,6 +97,7 @@ int Scheme::runOneLoop( double t, IterType itype )
 
 int Scheme::preRun( int run_tp, int N, int anx, int any, double tdt )
 {
+  reset();
   state = stateRun;
   for( auto ob : v_el ) {
     int rc = ob->preRun( run_tp, N, anx, any, tdt );
