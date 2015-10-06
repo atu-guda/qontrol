@@ -16,7 +16,7 @@
 #include <QTextStream>
 #include "defs.h"
 
-
+class HolderData;
 
 //* describe data arrays for dump, show....
 struct DatasInfo {
@@ -78,6 +78,8 @@ QString tex2label( const QString &t, bool noSub = false );
 
 void handleError( QWidget* par, const QString &s );
 void handleWarn( QWidget* par, const QString &s );
+bool confirmDelete( QWidget *par, const QString &obj, const QString &nm );
+bool editObj( QWidget *par, HolderData *obj );
 
 #endif
 

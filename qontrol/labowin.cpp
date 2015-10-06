@@ -855,7 +855,7 @@ void LaboWin::callLaboViewSlot( const char *slot, const QString &mess )
 {
   statusBar()->showMessage( mess );
 
-  LaboView* m =  activeLaboView();
+  QWidget* m = activeLaboView();
   if ( m ) {
     QMetaObject::invokeMethod( m, slot, Qt::DirectConnection );
     m->update();

@@ -36,6 +36,7 @@
 #include "simulview.h"
 #include "datawidget.h"
 #include "addelemdia.h"
+#include "miscfun.h"
 
 using namespace std;
 
@@ -65,14 +66,6 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   scrollArea = new QScrollArea( main_part );
 
-
-  sview = new StructView( main_s, this );
-  scrollArea->setWidget( sview );
-  scrollArea->setLineWidth( 1 );
-  scrollArea->setMidLineWidth( 1 );
-  scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
-  scrollArea->setFocusProxy( sview );
-
   outs_view = new OutDataView( outs, this );
   outs_selmod = outs_view->selectionModel();
 
@@ -82,6 +75,14 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   sims_view = new SimulView( sims, this );
 
   schems_view = new SchemeView( schems, this );
+
+  sview = new StructView( main_s, this, outs_view );
+  scrollArea->setWidget( sview );
+  scrollArea->setLineWidth( 1 );
+  scrollArea->setMidLineWidth( 1 );
+  scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
+  scrollArea->setFocusProxy( sview );
+
 
 
   stam = new StatusModel( this, this );
@@ -106,9 +107,9 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   selectSimul();
   // selectSheme();
 
-  connect( this, &LaboView::viewChanged, this, &LaboView::updateViews );
-  connect( sview, &StructView::sig_changeSel,   this, &LaboView::changeSel );
-  connect( sview, &StructView::sig_changeLevel, this, &LaboView::changeLevel );
+  connect( this, &LaboView::viewChanged, this, &LaboView::updateViews ); // todo: from sview
+  // connect( sview, &StructView::sig_changeSel,   this, &LaboView::changeSel );
+  // connect( sview, &StructView::sig_changeLevel, this, &LaboView::changeLevel );
 
   connect( outs_selmod, &QItemSelectionModel::currentChanged, this, &LaboView::changeSelOut );
   connect( plots_selmod, &QItemSelectionModel::currentChanged, this, &LaboView::changeSelGraph );
@@ -128,13 +129,6 @@ const QString& LaboView::currentFile() const
   return doc->pathName();
 }
 
-bool LaboView::confirmDelete( const QString &obj, const QString &nm )
-{
-  int rpl = QMessageBox::question( this, PACKAGE " delete confirmation",
-       QString("Do you really want to delete %1 \"%2\"?").arg(obj).arg(nm) );
-  return rpl == QMessageBox::Yes;
-}
-
 void LaboView::showError( const QString &s )
 {
   handleError( this, s );
@@ -145,31 +139,39 @@ void LaboView::showWarn( const QString &s )
   handleWarn( this, s );
 }
 
-
-bool LaboView::editObj( HolderData *obj, bool resetModel  )
+int LaboView::getSelX() const
 {
-  if( !obj ) {
-    return false;
-  }
+  return sview->getSelX();
+}
 
-  auto dia = new DataDialog( *obj, this );
-  int rc = dia->exec();
-  delete dia;
-  if( rc == QDialog::Accepted ) {
+int LaboView::getSelY() const
+{
+  return sview->getSelY();
+}
 
-    // model->setModified(); TODO: check
-    if( resetModel ) {
-      model->reset();
-    }
-    emit viewChanged();
-    return true;
-  };
-  return false;
+int LaboView::getSel() const
+{
+  return sview->getSel();
+}
+
+TMiso* LaboView::getSelObj() const
+{
+  return sview->getSelObj();
+}
+
+TMiso* LaboView::getMarkObj() const
+{
+  return sview->getMarkObj();
+}
+
+int LaboView::getLevel() const
+{
+  return sview->getLevel();
 }
 
 QString LaboView::getSelName( QAbstractItemView *view )
 {
-  if( !view  ||  ! checkState( validCheck ) ) {
+  if( !view ) {
     return QString();
   }
 
@@ -218,45 +220,16 @@ void LaboView::resizeEvent( QResizeEvent *e )
   QWidget::resizeEvent( e );
 }
 
-int LaboView::checkState( CheckType ctp )
-{
-  QString msg;
-  int state;
-  if( !model  || !root  || !schems  || !outs || !plots || !sims ) {
-    showError( "Some part of model don't exist!" );
-    return 0;
-  };
-  switch( ctp ) {
-    case validCheck: break;
-    case selCheck:
-                     if( !selObj )
-                       msg = "You must select object to do this";
-                     break;
-    case linkToCheck:
-                     if( !selObj || !markObj || level < 0  || level >=4 )
-                       msg = "You need selected and marked objects to link";
-                     break;
-    case noselCheck: if( selObj != nullptr )
-                       msg = "You heed empty sell to do this";
-                     break;
-    case moveCheck: if( selObj != nullptr || !markObj )
-                      msg = "You need marked object and empty cell to move";
-                    break;
-    case doneCheck:
-                    state = main_s->getState();
-                    if( state < stateDone ) {
-                      msg = QString("Nothing to plot: state '%1', not 'Done' !").arg(
-                          getStateString(state)  );
-                    };
-                    break;
-    default: msg = "Unknown check?";
-  };
-  if( ! msg.isEmpty() ) {
-    showWarn( msg );
-    return 0;
-  };
-  return 1;
-}
+// int LaboView::checkState( CheckType ctp ) // TODO: delete?
+// {
+//   QString msg;
+//   int state;
+//   if( !model  || !root  || !schems  || !outs || !plots || !sims ) {
+//     showError( "Some part of model don't exist!" );
+//     return 0;
+//   };
+//   return sview->checkState( (int)ctp );
+// }
 
 
 void LaboView::updateViews()
@@ -270,51 +243,52 @@ void LaboView::updateViews()
 }
 
 
-void LaboView::changeSel( int x, int y, int rel )
+// void LaboView::changeSel( int x, int y, int rel )
+// {
+//   TMiso *ob;
+//
+//   selObj = nullptr;
+//   switch( rel ) {
+//     case 0: sel_x = x; sel_y = y; break;
+//     case 1: sel_x += x; sel_y += y; break;
+//     case 2:
+//             ob = main_s->xy2Miso( sel_x, sel_y );
+//             if( !ob ) {
+//               break;
+//             }
+//             sel_x = ob->getDataD( "vis_x", 0 );
+//             sel_y = ob->getDataD( "vis_y", 0 );
+//             break;
+//     default: break;
+//   };
+//   if( sel_x >= MODEL_MX ) sel_x = MODEL_MX-1;
+//   if( sel_y >= MODEL_MY ) sel_y = MODEL_MY-1;
+//   if( sel_x < 0 ) sel_x = 0;
+//   if( sel_y < 0 ) sel_y = 0;
+//   sel = -1;
+//   ob = main_s->xy2Miso( sel_x, sel_y );
+//   if( ob ) {
+//     selObj = ob;
+//     sel = ob->getMyIndexInParent();
+//   }
+//   QPoint seco = sview->getSelCoords();
+//   scrollArea->ensureVisible( seco.x(), seco.y() );
+//   emit viewChanged();
+// }
+
+
+// void LaboView::changeLevel( int lev )
+// {
+//   level = lev;
+//   if( level < 0 || level >= 64 ) {
+//     level = 0;
+//   }
+//   emit viewChanged();
+// }
+
+void LaboView::changeSelOut( const QModelIndex & /*cur*/, const QModelIndex & )
 {
-  TMiso *ob;
-
-  selObj = nullptr;
-  switch( rel ) {
-    case 0: sel_x = x; sel_y = y; break;
-    case 1: sel_x += x; sel_y += y; break;
-    case 2:
-            ob = main_s->xy2Miso( sel_x, sel_y );
-            if( !ob ) {
-              break;
-            }
-            sel_x = ob->getDataD( "vis_x", 0 );
-            sel_y = ob->getDataD( "vis_y", 0 );
-            break;
-    default: break;
-  };
-  if( sel_x >= MODEL_MX ) sel_x = MODEL_MX-1;
-  if( sel_y >= MODEL_MY ) sel_y = MODEL_MY-1;
-  if( sel_x < 0 ) sel_x = 0;
-  if( sel_y < 0 ) sel_y = 0;
-  sel = -1;
-  ob = main_s->xy2Miso( sel_x, sel_y );
-  if( ob ) {
-    selObj = ob;
-    sel = ob->getMyIndexInParent();
-  }
-  QPoint seco = sview->getSelCoords();
-  scrollArea->ensureVisible( seco.x(), seco.y() );
-  emit viewChanged();
-}
-
-
-void LaboView::changeLevel( int lev )
-{
-  level = lev;
-  if( level < 0 || level >= 64 )
-    level = 0;
-  emit viewChanged();
-}
-
-void LaboView::changeSelOut( const QModelIndex &cur, const QModelIndex & )
-{
-  sel_out = cur.row();
+  // sel_out = cur.row();
   emit viewChanged();
 }
 
@@ -328,368 +302,80 @@ void LaboView::changeSelGraph( const QModelIndex &cur, const QModelIndex & )
 
 void LaboView::newElm()
 {
-  if( !checkState( noselCheck ) ) {
-    return;
-  }
-
-  addElemInfo aei;
-  aei.name = QString("obj_")+ QSN( main_s->getNMiso() );
-  aei.order = main_s->hintOrd();
-  auto dia = new AddElemDialog( &aei, main_s, this, "TMiso" );
-                                          // limit to such elements here
-
-  int rc = dia->exec();
-  delete dia; dia = 0;
-
-  if( rc != QDialog::Accepted || aei.type.isEmpty() ) {
-    return;
-  }
-  if( ! isGoodName( aei.name )  ) {
-    showError( QString("Fail to add Elem: bad object name \"%1\"").arg(aei.name) );
-    return;
-  }
-
-  TMiso *ob = main_s->insElem( aei.type, aei.name, aei.order, sel_x, sel_y );
-  if( !ob  ) {
-    showError( QString("Fail to add Elem: type \"%1\" \"%2\"").arg(aei.type).arg(aei.name) );
-    return;
-  }
-  changeSel( 0, 0, 1 ); // update sel
-  editElm();
+  return sview->newElm();
 }
 
 void LaboView::delElm()
 {
-  if( ! checkState( selCheck ) )
-    return;
-
-  QString oname = selObj->objectName();
-
-  bool sel_is_mark = ( selObj == markObj );
-
-  if( confirmDelete( "element", oname) ) {
-    main_s->delElem( oname );
-    if( sel_is_mark ) {
-      markObj = nullptr;
-    }
-
-    changeSel( 0, 0, 1 ); // update sel
-    emit viewChanged();
-  };
+  return sview->delElm();
 }
 
 void LaboView::editElm()
 {
-  if( ! checkState( selCheck ) ) {
-    return;
-  }
-  editObj( selObj );
+  return sview->editElm();
 }
 
 void LaboView::renameElm()
 {
-  if( ! checkState( selCheck ) ) {
-    return;
-  }
-
-  QString old_name = selObj->objectName();
-  bool ok;
-  QString new_name = QInputDialog::getText( this, "Rename:" + selObj->getFullName(),
-      "Enter new name:", QLineEdit::Normal, old_name, &ok );
-
-  if( ok ) {
-    if( main_s->rename_obj( old_name, new_name ) ) {
-      // model->setModified(); // TODO: check auto
-      model->reset();
-      emit viewChanged();
-    }
-  }
-
-  // TODO: change links named
+  return sview->renameElm();
 }
 
 
 void LaboView::qlinkElm()
 {
-  QString toname;
-  if( ! checkState( linkToCheck ) ) {
-    return;
-  }
-
-  if( !selObj || !markObj ) {
-    return;
-  }
-  toname = markObj->objectName();
-
-  // TODO: its model action. really? model dont know about selected and marked.
-
-  InputSimple *in = selObj->getInput( level );
-  if( ! in )
-    return;
-  if( ! in->setData( "source", toname ) ) {
-    qWarning() << "fail to set source " << toname << " in " << in->getFullName() << WHE;
-    return;
-  }
-  main_s->reportStructChanged();
-  main_s->reset();
-  // main_s->setModified();
-  emit viewChanged();
+  return sview->qlinkElm();
 }
 
 
 void LaboView::qplinkElm()
 {
-  QString oldlink;
-  if( ! checkState( linkToCheck ) ) {
-    return;
-  }
-
-  if( !selObj || !markObj  ) {
-    return;
-  }
-
-  QString toname = markObj->objectName();
-
-  InputParams *pis = selObj->getElemT<InputParams*>("pis");
-  if( !pis ) {
-    qWarning() << "no pis object in " <<  selObj->getFullName() << WHE;
-    return;
-  }
-  int n_pi = pis->size();
-  QString pi_name = QString("pi_") + QSN(n_pi);
-  InputParam *pi = pis->addObj<InputParam>( pi_name );
-  if( !pi ) {
-    return;
-  }
-
-  pi->setData( "source", toname );
-  pi->setData( "line_w", 2 );
-  pi->setData( "line_color", "red" );
-
-  main_s->reportStructChanged();
-  main_s->reset();
-  // main_s->setModified(); // TODO: check
-  emit viewChanged();
+  return sview->qplinkElm();
 }
 
 void LaboView::unlinkElm()
 {
-  if( ! checkState( selCheck ) ) { // no need marked to unlink
-    return;
-  }
-
-  QString lnkname;
-  QString empty_str("");
-  int ni = selObj->inputsCount();
-  for( int i=0; i<ni; ++i ) {
-    InputSimple *in = selObj->getInput( i );
-    if( ! in ) {
-      continue;
-    }
-    in->setData( "source", empty_str );
-  }
-
-  InputParams *pis = selObj->getElemT<InputParams*>("pis");
-  if( !pis ) {
-    qWarning() << "no pis object in " <<  selObj->getFullName() << WHE;
-    return;
-  }
-  qDeleteAll( pis->children() );
-
-  main_s->reportStructChanged();
-  main_s->reset();
-  // main_s->setModified(); // TODO: check
-  emit viewChanged();
+  return sview->unlinkElm();
 }
 
 void LaboView::lockElm()
 {
-  if( ! checkState( selCheck ) ) {
-    return;
-  }
-
-  int lck = selObj->getDataD( "locked", 0 );
-  lck = !lck;
-  selObj->setData( "locked", lck );
-
-  main_s->reset();
-  // main_s->setModified();
-  emit viewChanged();
+  return sview->lockElm();
 }
 
 void LaboView::ordElm()
 {
-  if( ! checkState( selCheck ) ) {
-    return;
-  }
-
-  bool ok;
-  int old_ord = selObj->getDataD( "ord", 0 );
-  int new_ord = QInputDialog::getInt( this, "New element order",
-      "Input new element order",  old_ord, 0, IMAX, 1, &ok );
-  if( ok ) {
-    main_s->newOrder( selObj->objectName(), new_ord ); // reset implied
-    emit viewChanged();
-  };
+  return sview->ordElm();
 }
 
 void LaboView::markElm()
 {
-  markObj = selObj;
-  emit viewChanged();
+  return sview->markElm();
 }
 
 void LaboView::moveElm()
 {
-  if( ! checkState( moveCheck )  ||  !markObj  ) {
-    return;
-  }
-
-  main_s->moveElem( markObj->objectName(), sel_x, sel_y );
-  emit viewChanged();
+  return sview->moveElm();
 }
 
 void LaboView::infoElm()
 {
-  if( ! checkState( selCheck ) ) {
-    return;
-  }
-
-  auto dia = new QDialog( this );
-  dia->setWindowTitle( QString( PACKAGE ": Structure of ") + selObj->getFullName() );
-
-  auto lay = new QVBoxLayout();
-
-  auto tv = new QTableWidget( 100, 6, dia );
-  QStringList hlabels;
-  hlabels << "Name" << "Type" << "Value" << "Descr" << "Target"<< "Flags";
-  tv->setHorizontalHeaderLabels( hlabels );
-
-  QObjectList childs = selObj->children();
-
-  int i = 0;
-  for( auto o :  childs ) {
-    QObject *ob = o;
-    tv->setItem( i, 0, new  QTableWidgetItem( ob->objectName() ) );
-    if( ob->inherits("TDataSet" ) ) {
-      TDataSet *ds = qobject_cast<TDataSet*>(ob);
-      tv->setItem( i, 1, new QTableWidgetItem(ds->getType()) );
-      tv->setItem( i, 2, new QTableWidgetItem( ds->toString() ) );
-    } else if( ob->inherits("HolderData" ) ) {
-      HolderData *ho = qobject_cast<HolderData*>(ob);
-      tv->setItem( i, 1, new QTableWidgetItem(ho->getType() ) );
-      tv->setItem( i, 2, new QTableWidgetItem(ho->toString() ) );
-      tv->setItem( i, 3, new QTableWidgetItem(ho->getParm("vis_name") + " \""
-                    + ho->getParm("descr" ) + "\"" ) );
-      tv->setItem( i, 4, new QTableWidgetItem( ho->objectName() ) );
-      tv->setItem( i, 5, new QTableWidgetItem( flags2str(ho->getFlags()) ) );
-
-    } else { // unknown
-      tv->setItem( i, 1, new QTableWidgetItem("???unknown???" ) );
-      tv->setItem( i, 2, new QTableWidgetItem(ob->metaObject()->className() ) );
-    }
-    ++i;
-  }
-
-
-
-  lay->addWidget( tv );
-
-  auto bt_ok = new QPushButton( tr("Done"), dia);
-  bt_ok->setDefault( true );
-  lay->addWidget( bt_ok );
-  dia->setLayout( lay );
-
-  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-
-  dia->resize( 72*em, 50*em ); // TODO: adjust to inner table width
-  dia->exec();
-  delete dia;
-  emit viewChanged();
+  return sview->infoElm();
 }
 
 void LaboView::showTreeElm()
 {
-  if( ! checkState( selCheck ) ) {
-    return;
-  }
-
-  auto dia = new QDialog( this );
-  dia->setWindowTitle( QString( PACKAGE ": Element tree: ") + selObj->objectName() );
-
-  auto lay = new QVBoxLayout();
-
-
-  auto treeView = new QTreeView( dia );
-  treeView->setModel( selObj );
-  lay->addWidget( treeView );
-
-
-  auto bt_ok = new QPushButton( tr("Done"), dia);
-  bt_ok->setDefault( true );
-  lay->addWidget( bt_ok );
-  dia->setLayout( lay );
-
-  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-
-  dia->resize( 86*em, 50*em ); // TODO: unmagic
-  treeView->setColumnWidth( 0, 35*em );
-  treeView->setColumnWidth( 1, 10*em );
-  treeView->setColumnWidth( 2, 35*em );
-  treeView->setColumnWidth( 3,  6*em );
-  treeView->expandAll();
-  dia->exec();
-  delete dia;
-  emit viewChanged();
-  return;
+  return sview->showTreeElm();
 }
 
 
 void LaboView::testElm1()
 {
-  QString buf;
-  if( ! checkState( selCheck ) )
-    return;
-
-  auto dia = new QDialog( this );
-  dia->setWindowTitle( QString( PACKAGE ": test1 ") + selObj->objectName() );
-
-  buf = selObj->toString();
-
-
-  auto lay = new QVBoxLayout();
-
-  auto la = new QLabel( dia );
-  la->setText( buf );
-  auto scroll = new QScrollArea( dia );
-  scroll->setWidget( la );
-  lay->addWidget( scroll );
-
-
-  auto bt_ok = new QPushButton( tr("Done"), dia);
-  bt_ok->setDefault( true );
-  lay->addWidget( bt_ok );
-  dia->setLayout( lay );
-
-  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-
-  dia->resize( 60*em, 30*em ); // TODO: unmagic
-  dia->exec();
-  delete dia;
-  emit viewChanged();
+  return sview->testElm1();
 }
 
 void LaboView::testElm2()
 {
-  if( ! checkState( selCheck ) ) {
-    return;
-  }
-  if( selObj == 0 ) {
-    return;
-  }
-  // place for action here
-
-  return;
+  return sview->testElm2();
 }
 
 void LaboView::cutElm()
@@ -700,105 +386,12 @@ void LaboView::cutElm()
 
 void LaboView::copyElm()
 {
-  if( !selObj ) {
-    return;
-  }
-  QString s = selObj->toString();
-  QClipboard *clp = QApplication::clipboard();
-  if( clp ) {
-    clp->setText( s );
-  }
+  return sview->copyElm();
 }
 
 void LaboView::pasteElm()
 {
-  if( selObj )
-    return;
-  QClipboard *clp = QApplication::clipboard();
-  if( !clp )
-    return;
-  QString s = clp->text();
-  int err_line, err_column;
-  QString errstr;
-  QDomDocument x_dd;
-  if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
-    showWarn( tr("Cannot parse clipboard string:\n%2\nLine %3 column %4.")
-                .arg(errstr).arg(err_line).arg(err_column) );
-    return;
-  }
-  QDomElement ee = x_dd.documentElement();
-
-  QString tagname = ee.tagName();
-  if( tagname != "obj" ) {
-    showWarn( tr("element tag is not 'obj':  %2").arg( tagname ) );
-    return;
-  }
-
-  QString eltype = ee.attribute( "otype" );
-  QString elname = ee.attribute( "name" );
-  QString elname_base = elname;
-  int suff_n = 1;
-  while( main_s->getElem( elname ) && suff_n < 50 ) { // guess good name
-    elname = elname_base + "_" + QSN( suff_n );
-    suff_n++;
-    if( suff_n > 20 ) {
-      elname += "_x";
-    }
-  }
-
-  int oord = main_s->hintOrd();
-
-  auto dia = new QDialog( this );
-  auto lay = new QGridLayout( dia );
-
-  auto la_name = new QLabel( "&Name", dia );
-  lay->addWidget( la_name, 0, 0 );
-
-  auto oname_ed = new QLineEdit( dia );
-  oname_ed->setText( elname );
-  oname_ed->setFocus();
-  lay->addWidget( oname_ed, 1, 0  );
-
-  auto la_ord = new QLabel( "&Order", dia );
-  lay->addWidget( la_ord, 0, 1 );
-
-  auto oord_ed = new QLineEdit( dia );
-  oord_ed->setText( QSN(oord) );
-  lay->addWidget( oord_ed, 1, 1 );
-
-  auto bbox
-    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  lay->addWidget( bbox, 2, 0, 1, 2 );
-  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
-  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
-
-  int rc = dia->exec();
-  elname = oname_ed->text();
-  oord = oord_ed->text().toInt();
-  delete dia;
-
-  if( rc != QDialog::Accepted ) {
-    return;
-  };
-
-  if( ! isGoodName( elname )  ) {
-    showError( QString("Fail to add Elem: bad object name \"%1\"").arg(elname) );
-    return;
-  }
-
-  TMiso *ob = main_s->insElem( eltype, elname, oord, sel_x, sel_y) ; // reset() implied
-  if( !ob  ) {
-    showError( QString("Fail to add Elem: %1 %2").arg(eltype).arg(elname) );
-    return;
-  }
-  if( !ob->fromDom( ee, errstr ) ) {
-    showWarn( tr("fail to set params:  %1").arg( errstr ) );
-  }
-  ob->setData( "vis_x", sel_x );
-  ob->setData( "vis_y", sel_y );
-  ob->setData( "ord", oord );
-  changeSel( 0, 0, 1 ); // update sel
-
+  return sview->pasteElm();
 }
 
 // ==== outs related
@@ -807,12 +400,12 @@ void LaboView::newOut()
 {
   int rc;
   QString onameq, enameq;
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
+  TMiso *selObj = sview->getSelObj();
 
-  if( selObj  )
-  {
+  if( selObj ) {
     enameq = selObj->objectName();
     onameq = QString("out_") + QString(enameq);
   } else {
@@ -871,7 +464,7 @@ void LaboView::delOut()
     return;
   }
 
-  if( confirmDelete( "output array", nm ) ) {
+  if( confirmDelete( this, "output array", nm ) ) {
     model->delOut( nm );
     emit viewChanged();
   }
@@ -886,14 +479,18 @@ void LaboView::editOut()
   }
 
   TOutArr *arr = model->getOutArr( nm );
-  editObj( arr );
+  bool ok = editObj( this, arr );
+  if( ok ) {
+    model->reset();
+    emit viewChanged();
+  }
 }
 
 void LaboView::renameOut()
 {
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
 
   QString nm = getSelName( outs_view );
   if( nm.isEmpty() ) {
@@ -924,13 +521,14 @@ void LaboView::renameOut()
 
 void LaboView::selectOut()
 {
-  if( ! checkState( validCheck ) )
-    return;
+  // if( ! checkState( validCheck ) )
+  //   return;
 
   QItemSelectionModel *selMod = outs_view->selectionModel();
   if( !selMod ) {
     return;
   }
+  int level = sview->getLevel();
 
   QModelIndex s_idx = outs->index( level, 0, QModelIndex() );
 
@@ -945,9 +543,9 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
 {
   DatasInfo di;
 
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
   QString nm = getSelName( outs_view );
   if( nm.isEmpty() ) {
     qWarning() << "output array not selected" << WHE;
@@ -996,9 +594,9 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
 
 void LaboView::exportOut()
 {
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
   QString nm = getSelName( outs_view );
   if( nm.isEmpty() ) {
     return;
@@ -1024,8 +622,8 @@ void LaboView::newGraph()
 {
   QString grnameq, aname;
   bool ok;
-  if( ! checkState( validCheck ) )
-    return;
+  // if( ! checkState( validCheck ) )
+  //   return;
   int no = model->getNGraph();
   grnameq = QString("plot_") + QSN( no );
   aname = QInputDialog::getText( this, "Creating new plot",
@@ -1052,7 +650,7 @@ void LaboView::delGraph()
     return;
   }
 
-  if( confirmDelete( "plot", nm ) ) {
+  if( confirmDelete( this, "plot", nm ) ) {
     model->delGraph( nm );
     emit viewChanged();
   }
@@ -1068,19 +666,24 @@ void LaboView::editGraph()
 
   TGraph *gra = model->getGraph( nm );
 
-  editObj( gra, false ); // no reset if only view changed
+  bool ok = editObj( this, qobject_cast<HolderData*>(gra) );
+  if( ok ) {
+    // no reset if only view changed // model->reset();
+    emit viewChanged();
+  }
 }
 
 void LaboView::selectGraph()
 {
-  if( ! checkState( validCheck ) )
-    return;
+  // if( ! checkState( validCheck ) )
+  //   return;
 
   QItemSelectionModel *selMod = plots_view->selectionModel();
   if( !selMod ) {
     return;
   }
 
+  int level = sview->getLevel();
   QModelIndex s_idx = plots->index( level, 0, QModelIndex() );
 
   selMod->clear();
@@ -1091,9 +694,9 @@ void LaboView::selectGraph()
 
 void LaboView::renameGraph()
 {
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
 
   QString nm = getSelName( plots_view );
   if( nm.isEmpty() ) {
@@ -1123,9 +726,9 @@ void LaboView::renameGraph()
 
 void LaboView::showGraph()
 {
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
 
   QString nm = getSelName( plots_view );
   if( nm.isEmpty() ) {
@@ -1149,9 +752,9 @@ void LaboView::showGraph()
 
 void LaboView::graphAddOut()
 {
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
 
   QString nm_o = getSelName( outs_view );
   if( nm_o.isEmpty() ) {
@@ -1169,9 +772,9 @@ void LaboView::graphAddOut()
 
 void LaboView::showGraphData()
 {
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
 
   QString nm = getSelName( plots_view );
   if( nm.isEmpty() ) {
@@ -1212,9 +815,9 @@ void LaboView::showGraphData()
 
 void LaboView::exportGraphData()
 {
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
   QString nm = getSelName( plots_view );
   if( nm.isEmpty() ) {
     return;
@@ -1260,8 +863,8 @@ void LaboView::cloneGraph()
 void LaboView::newSimul()
 {
   bool ok;
-  if( ! checkState( validCheck ) )
-    return;
+  // if( ! checkState( validCheck ) )
+  //   return;
   QString simName = QString("sim") + QSN( model->getNSimul() );
   simName = QInputDialog::getText( this, "Creating new Simulation",
       "Enter name of new simulation:", QLineEdit::Normal,
@@ -1285,7 +888,7 @@ void LaboView::delSimul()
     return;
   }
 
-  if( confirmDelete( "simulation", nm ) ) {
+  if( confirmDelete( this, "simulation", nm ) ) {
     model->delSimul( nm );
     emit viewChanged();
   }
@@ -1299,14 +902,18 @@ void LaboView::editSimul()
   }
   Simulation *sim = model->getSimul( nm );
 
-  editObj( sim );
+  bool ok = editObj( this, sim );
+  if( ok ) {
+    model->reset();
+    emit viewChanged();
+  }
 }
 
 void LaboView::renameSimul()
 {
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
 
   QString nm = getSelName( sims_view );
   if( nm.isEmpty() ) {
@@ -1336,15 +943,16 @@ void LaboView::renameSimul()
 
 void LaboView::selectSimul() // TODO: propagate to all
 {
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
 
   QItemSelectionModel *selMod = sims_view->selectionModel();
   if( !selMod ) {
     return;
   }
 
+  int level = sview->getLevel();
   QModelIndex s_idx = sims->index( level, 0, QModelIndex() );
 
   selMod->clear();
@@ -1389,11 +997,15 @@ void LaboView::cloneSimul()
 
 void LaboView::editModel()
 {
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
 
-  editObj( model );
+  bool ok = editObj( this, model );
+  if( ok ) {
+    model->reset();
+    emit viewChanged();
+  }
 }
 
 
@@ -1432,9 +1044,9 @@ void LaboView::showTreeModel()
 void LaboView::newScheme()
 {
   bool ok;
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
   QString schName = QString("sch_"); // + QSN( model->getNScheme() ); // TODO: count
   schName = QInputDialog::getText( this, "Creating new Scheme",
       "Enter name of new scheme:", QLineEdit::Normal,
@@ -1458,7 +1070,7 @@ void LaboView::delScheme()
     return;
   }
 
-  if( confirmDelete( "scheme", nm ) ) {
+  if( confirmDelete( this, "scheme", nm ) ) {
     model->delScheme( nm );
     emit viewChanged();
   }
@@ -1475,7 +1087,7 @@ void LaboView::editScheme()
     auto schWnd = new QMainWindow( this );
     schWnd->setWindowTitle( QString( PACKAGE ": Scheme ") + sch->objectName() );
     schWnd->setAttribute( Qt::WA_DeleteOnClose );
-    auto sv = new StructView( sch, this );
+    auto sv = new StructView( sch, this, nullptr );
 
     schWnd->setCentralWidget( sv );
     sv->setFocus();
@@ -1483,14 +1095,13 @@ void LaboView::editScheme()
     // emit viewChanged();
   }
 
-  // editObj( sch );
 }
 
 void LaboView::renameScheme()
 {
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
 
   QString nm = getSelName( schems_view );
   if( nm.isEmpty() ) {
@@ -1633,9 +1244,9 @@ void LaboView::runScript()
 void LaboView::runRun()
 {
   RunView *rv;
-  if( ! checkState( validCheck ) ) {
-    return;
-  }
+  // if( ! checkState( validCheck ) ) {
+  //   return;
+  // }
 
   Simulation *sim = sims->getActiveElemT<Simulation*>();
   if( !sim ) {
@@ -1652,8 +1263,8 @@ void LaboView::runRun()
 
 void LaboView::resetModel()
 {
-  if( ! checkState( validCheck ) )
-    return;
+  // if( ! checkState( validCheck ) )
+  //   return;
   model->reset();
   emit viewChanged();
 }

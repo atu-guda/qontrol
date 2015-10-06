@@ -75,10 +75,8 @@ class LaboView : public QWidget
 
    const QString& currentFile() const;
 
-   //* requiest confirmation to delete, true = ok;
-   bool confirmDelete( const QString &obj, const QString &nm );
    //* edit some model object
-   bool editObj( HolderData *obj, bool resetModel = true );
+   // bool editObj( HolderData *obj, bool resetModel = true );
    //* returns name of current object in given view
    QString getSelName( QAbstractItemView *view );
    //* show std error box/log
@@ -92,13 +90,8 @@ class LaboView : public QWidget
  public slots:
    /** called whan we need to update views */
    void updateViews();
-   /** change selection rel: 0-abs 1-rel 2-next elm */
-   void changeSel( int x, int y, int rel );
-   /** change level for selecting aux objects */
-   void changeLevel( int lev );
    /** change selected output */
    void changeSelOut( const QModelIndex &cur, const QModelIndex & );
-   int getSelOut() const { return sel_out; };
    /** change selected plot */
    void changeSelGraph( const QModelIndex &cur, const QModelIndex & );
    int getSelGraph() const { return sel_graph; };
@@ -176,21 +169,21 @@ class LaboView : public QWidget
    /** returns document model */
    TModel* getModel() { return model; }
    /** returns x-coordinate for selected cell */
-   int getSelX() const { return sel_x; }
+   int getSelX() const;
    /** returns y-coordinate for selected cell */
-   int getSelY() const { return sel_y; }
+   int getSelY() const;
    /** returns number of selected element or -1 if none */
-   int getSel() const { return sel; }
+   int getSel() const;
    /** returns ptr to selected element or nullptr if none */
-   TMiso* getSelObj() const { return selObj; }
+   TMiso* getSelObj() const;
    /** returns ptr to marked element or nullptr if none */
-   TMiso* getMarkObj() const { return markObj; }
+   TMiso* getMarkObj() const;
    /** returns level for aux objects selection */
-   int getLevel() const { return level; }
+   int getLevel() const;
  protected:
    virtual void closeEvent( QCloseEvent* );
    virtual void resizeEvent( QResizeEvent* );
-   int checkState( CheckType ctp );
+   // int checkState( CheckType ctp );
    //* call engine and returns result, casted to QString
    QString runScript( const QString& script );
  protected:
@@ -215,15 +208,9 @@ class LaboView : public QWidget
    QItemSelectionModel *outs_selmod = nullptr;
    QItemSelectionModel *plots_selmod = nullptr;
 
-   int sel = -1, sel_x = 0, sel_y = 0, level = 0, sel_out = -1, sel_graph = -1;
+   int sel_graph = -1;
    // TODO: from file (config)
    QString scr = R"(main_s.add_obj_datas("TLinear","ob","vis_x=4\nvis_y=1\na0=3.14");)";
-   /** prt to selected object or nullptr */
-   TMiso *selObj = nullptr;
-   /** prt to marked object or nullptr */
-   TMiso *markObj = nullptr;
-   /** name of marked element */
-   QString markName;
    //* copy of LaboWin em;
    int em = 10;
 };

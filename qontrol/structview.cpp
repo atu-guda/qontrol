@@ -26,12 +26,15 @@
 #include "labodoc.h"
 #include "laboview.h"
 #include "runview.h"
+#include "outdataview.h"
+#include "addelemdia.h"
 
 
 
-StructView:: StructView( Scheme *a_sch, LaboView *mview )
-            : QWidget( mview ), sch( a_sch ), mainview( mview )
+StructView:: StructView( Scheme *a_sch, LaboView *mview, OutDataView *a_oview )
+            : QWidget( mview ), sch( a_sch ), mainview( mview ), oview( a_oview )
 {
+  em = LaboWin::Em();
   QPalette pal;
   pal.setBrush( QPalette::Window, QBrush( Qt::white ) );
   setPalette( pal );
@@ -54,8 +57,8 @@ QSize StructView::getElemsBound() const
   if( !sch ) {
     return QSize( 10, 10 );
   }
-  int sel_x = mainview->getSelX();
-  int sel_y = mainview->getSelY();
+  // int sel_x = mainview->getSelX();
+  // int sel_y = mainview->getSelY();
   QSize mss = sch->getMaxXY().expandedTo( QSize( sel_x, sel_y ) );
   mss += QSize( 3, 3 ); // free bound
   mss *= grid_sz;       // to grid scale
@@ -77,8 +80,8 @@ QSize StructView::sizeHint() const
 
 QPoint StructView::getSelCoords() const
 {
-  int sel_x = mainview->getSelX();
-  int sel_y = mainview->getSelY();
+  // int sel_x = mainview->getSelX();
+  // int sel_y = mainview->getSelY();
   return QPoint( sel_x * grid_sz + grid_sz/2, sel_y * grid_sz + grid_sz/2 );
 }
 
@@ -88,6 +91,61 @@ void StructView::update()
   resize( getElemsBound() );
   QWidget::update();
 }
+
+void StructView::print()
+{
+  printAll();
+}
+
+
+void StructView::changeSel( int x, int y, int rel )
+{
+  TMiso *ob;
+  if( ! sch ) {
+    return;
+  }
+
+  selObj = nullptr;
+  switch( rel ) {
+    case 0: sel_x = x; sel_y = y; break;
+    case 1: sel_x += x; sel_y += y; break;
+    case 2:
+            ob = sch->xy2Miso( sel_x, sel_y );
+            if( !ob ) {
+              break;
+            }
+            sel_x = ob->getDataD( "vis_x", 0 );
+            sel_y = ob->getDataD( "vis_y", 0 );
+            break;
+    default: break;
+  };
+  if( sel_x >= MODEL_MX ) sel_x = MODEL_MX-1;
+  if( sel_y >= MODEL_MY ) sel_y = MODEL_MY-1;
+  if( sel_x < 0 ) sel_x = 0;
+  if( sel_y < 0 ) sel_y = 0;
+  sel = -1;
+  ob = sch->xy2Miso( sel_x, sel_y );
+  if( ob ) {
+    selObj = ob;
+    sel = ob->getMyIndexInParent();
+  }
+  // QPoint seco = getSelCoords();
+  // scrollArea->ensureVisible( seco.x(), seco.y() );
+  update();
+  // emit viewChanged();
+}
+
+
+void StructView::changeLevel( int lev )
+{
+  level = lev;
+  if( level < 0 || level >= 64 ) {
+    level = 0;
+  }
+  update();
+  // emit viewChanged();
+}
+
 
 
 void StructView::paintEvent( QPaintEvent * /*pe*/ )
@@ -171,7 +229,6 @@ void StructView::drawAll( QPainter &p )
   int line_busy;
   int li_src_y, li_dst_y;
   int st_y; /* label on elems start y */
-  int sel_x, sel_y /*,sel, mark*/;
   QString src_name;
   h = height(); w = width(); nh = 1 + h / grid_sz; nw = 1 + w / grid_sz;
   if( !sch ) {
@@ -179,7 +236,6 @@ void StructView::drawAll( QPainter &p )
     p.drawRect( 0, 0, w, 8 );
     return;
   };
-  TModel *model = sch->getAncestorT<TModel>();
 
   Mo2Settings *psett = LaboWin::win()->getSettings();
   int s_icons = psett->showicons;
@@ -190,8 +246,8 @@ void StructView::drawAll( QPainter &p )
   em_small = small_fm.width( 'W' );
   ex_small = small_fm.height();
   el_marg = (grid_sz-obj_sz) / 2;
-  sel_x = mainview->getSelX();
-  sel_y = mainview->getSelY();
+  // sel_x = mainview->getSelX();
+  // sel_y = mainview->getSelY();
   if( nh >= MODEL_MY ) nh = MODEL_MY;
   if( nw >= MODEL_MX ) nh = MODEL_MX;
 
@@ -442,65 +498,63 @@ void StructView::drawAll( QPainter &p )
   p.setFont( smlf );
 
   // -------------- output marks
-  if( !model ) {
-    qCritical() << "not found model" << WHE;
-    return;
+
+  if( oview ) {
+    ContOut *outs = qobject_cast<ContOut*>( oview->model() );
+    if( !outs ) {
+      qWarning() << "not found 'outs' in model" << WHE;
+      return;
+    }
+    auto sel_mod = oview->currentIndex();
+    int sel_out = sel_mod.row();
+    for( auto arr : outs->TCHILD(TOutArr*) ) {
+      int out_nu = arr->getMyIndexInParent();
+
+      src_name = arr->getDataD( "name", QString() );
+      int out_tp = arr->getDataD( "type", -1 );
+      ltype_t lt  = LinkBad;
+      const TDataSet *lob = nullptr;
+      const double *fp = sch->getDoublePtr( src_name, &lt, &lob );
+
+      if( !fp || lt != LinkElm || !lob ) {
+        continue;
+      }
+      const TMiso *src_obj = qobject_cast<const TMiso*>(lob);
+      if( ! src_obj ) {
+        continue;
+      }
+      fill_elmInfo( src_obj, sei );
+
+      if( sei.vis_x < 0 || sei.vis_y < 0 ) {
+        continue;
+      }
+
+      if( sel_out == out_nu ) {
+        p.setPen( QPen(QColor(100,100,255), 3, Qt::SolidLine ) );
+        p.setBrush( Qt::NoBrush );
+        p.drawRect( sei.xs0+lm-1, sei.ys0+tm-1, obj_sz+4, obj_sz+4 );
+      }
+      p.setPen( Qt::black );
+
+      switch( out_tp ) {
+        case 0: p.setBrush( Qt::white ); break; // TODO: named colors
+        case 1: p.setBrush( Qt::green ); break;
+        case 2: p.setBrush( Qt::cyan ); break;
+        case 3: p.setBrush( Qt::gray ); break;
+        default: p.setBrush( Qt::red ); break;
+      };
+      int l_out_nu = 1 + em_small * ( 1 + (int)log10( out_nu + 0.7 ) );
+      int omark_x = sei.xs0 + obj_sz - l_out_nu  - 2 * ( out_nu & 7 );
+      int omark_y = sei.ys0 +  1;
+      p.drawRect( omark_x, omark_y, l_out_nu, ex_small );
+      if( src_name.contains('.') ) { // inner link mark
+        p.setBrush( Qt::red );
+        p.drawRect( omark_x, omark_y+9, l_out_nu, 2 );
+      }
+      p.drawText( omark_x+2, omark_y+9,  QSN( out_nu ) );
+
+    } // ------------ end output marks
   }
-
-  ContOut *outs = model->getElemT<ContOut*>( "outs" );
-  if( !outs ) {
-    qWarning() << "not found 'outs' in model" << WHE;
-    return;
-  }
-
-  int sel_out = mainview->getSelOut();
-  for( auto arr : outs->TCHILD(TOutArr*) ) {
-    int out_nu = arr->getMyIndexInParent();
-
-    src_name = arr->getDataD( "name", QString() );
-    int out_tp = arr->getDataD( "type", -1 );
-    ltype_t lt  = LinkBad;
-    const TDataSet *lob = nullptr;
-    const double *fp = sch->getDoublePtr( src_name, &lt, &lob );
-
-    if( !fp || lt != LinkElm || !lob ) {
-      continue;
-    }
-    const TMiso *src_obj = qobject_cast<const TMiso*>(lob);
-    if( ! src_obj ) {
-      continue;
-    }
-    fill_elmInfo( src_obj, sei );
-
-    if( sei.vis_x < 0 || sei.vis_y < 0 ) {
-      continue;
-    }
-
-    if( sel_out == out_nu ) {
-      p.setPen( QPen(QColor(100,100,255), 3, Qt::SolidLine ) );
-      p.setBrush( Qt::NoBrush );
-      p.drawRect( sei.xs0+lm-1, sei.ys0+tm-1, obj_sz+4, obj_sz+4 );
-    }
-    p.setPen( Qt::black );
-
-    switch( out_tp ) {
-      case 0: p.setBrush( Qt::white ); break; // TODO: named colors
-      case 1: p.setBrush( Qt::green ); break;
-      case 2: p.setBrush( Qt::cyan ); break;
-      case 3: p.setBrush( Qt::gray ); break;
-      default: p.setBrush( Qt::red ); break;
-    };
-    int l_out_nu = 1 + em_small * ( 1 + (int)log10( out_nu + 0.7 ) );
-    int omark_x = sei.xs0 + obj_sz - l_out_nu  - 2 * ( out_nu & 7 );
-    int omark_y = sei.ys0 +  1;
-    p.drawRect( omark_x, omark_y, l_out_nu, ex_small );
-    if( src_name.contains('.') ) { // inner link mark
-      p.setBrush( Qt::red );
-      p.drawRect( omark_x, omark_y+9, l_out_nu, 2 );
-    }
-    p.drawText( omark_x+2, omark_y+9,  QSN( out_nu ) );
-
-  } // ------------ end output marks
 
 
   // ----------- draw selection
@@ -514,7 +568,6 @@ void StructView::drawAll( QPainter &p )
   };
 
   // ----------- draw mark;
-  const TMiso *markObj = mainview->getMarkObj();
   if( markObj ) { // red rect around marked element
     if( fill_elmInfo( markObj, ei ) ) {
       p.setBrush( Qt::NoBrush ); p.setPen( Qt::red );
@@ -523,6 +576,529 @@ void StructView::drawAll( QPainter &p )
   };
 
 }
+
+int StructView::checkState( CheckType ctp )
+{
+  QString msg;
+  int state;
+  if( !sch ) {
+    handleError( this, "Scheme is absent!" );
+    return 0;
+  };
+  switch( ctp ) {
+    case validCheck: break;
+    case selCheck:
+                     if( !selObj )
+                       msg = "You must select object to do this";
+                     break;
+    case linkToCheck:
+                     if( !selObj || !markObj || level < 0  || level >=4 )
+                       msg = "You need selected and marked objects to link";
+                     break;
+    case noselCheck: if( selObj != nullptr )
+                       msg = "You heed empty sell to do this";
+                     break;
+    case moveCheck: if( selObj != nullptr || !markObj )
+                      msg = "You need marked object and empty cell to move";
+                    break;
+    case doneCheck:
+                    state = sch->getState();
+                    if( state < stateDone ) {
+                      msg = QString("Nothing to plot: state '%1', not 'Done' !").arg(
+                          getStateString(state)  );
+                    };
+                    break;
+    default: msg = "Unknown check?";
+  };
+  if( ! msg.isEmpty() ) {
+    handleWarn( this, msg );
+    return 0;
+  };
+  return 1;
+}
+
+
+// ==== element related
+
+void StructView::newElm()
+{
+  if( !checkState( noselCheck ) ) {
+    return;
+  }
+
+  addElemInfo aei;
+  aei.name = QString("obj_")+ QSN( sch->getNMiso() );
+  aei.order = sch->hintOrd();
+  auto dia = new AddElemDialog( &aei, sch, this, "TMiso" );
+                                          // limit to such elements here
+
+  int rc = dia->exec();
+  delete dia; dia = 0;
+
+  if( rc != QDialog::Accepted || aei.type.isEmpty() ) {
+    return;
+  }
+  if( ! isGoodName( aei.name )  ) {
+    handleError( this, QString("Fail to add Elem: bad object name \"%1\"").arg(aei.name) );
+    return;
+  }
+
+  TMiso *ob = sch->insElem( aei.type, aei.name, aei.order, sel_x, sel_y );
+  if( !ob  ) {
+    handleError( this, QString("Fail to add Elem: type \"%1\" \"%2\"").arg(aei.type).arg(aei.name) );
+    return;
+  }
+  changeSel( 0, 0, 1 ); // update sel
+  editElm();
+}
+
+void StructView::delElm()
+{
+  if( ! checkState( selCheck ) )
+    return;
+
+  QString oname = selObj->objectName();
+
+  bool sel_is_mark = ( selObj == markObj );
+
+  if( confirmDelete( this, "element", oname) ) {
+    sch->delElem( oname );
+    if( sel_is_mark ) {
+      markObj = nullptr;
+    }
+
+    changeSel( 0, 0, 1 ); // update sel
+    // emit viewChanged();
+  };
+}
+
+void StructView::editElm()
+{
+  if( ! checkState( selCheck ) ) {
+    return;
+  }
+  bool ok = editObj( this, selObj );
+  if( ok ) {
+    update();
+    // model->reset();
+    // emit viewChanged();
+  }
+}
+
+void StructView::renameElm()
+{
+  if( ! checkState( selCheck ) ) {
+    return;
+  }
+
+  QString old_name = selObj->objectName();
+  bool ok;
+  QString new_name = QInputDialog::getText( this, "Rename:" + selObj->getFullName(),
+      "Enter new name:", QLineEdit::Normal, old_name, &ok );
+
+  if( ok ) {
+    if( sch->rename_obj( old_name, new_name ) ) {
+      // model->setModified(); // TODO: check auto
+      // model->reset();
+      // emit viewChanged();
+    }
+  }
+
+  // TODO: change links named
+}
+
+
+void StructView::qlinkElm()
+{
+  QString toname;
+  if( ! checkState( linkToCheck ) ) {
+    return;
+  }
+
+  if( !selObj || !markObj ) {
+    return;
+  }
+  toname = markObj->objectName();
+
+  // TODO: its model action. really? model dont know about selected and marked.
+
+  InputSimple *in = selObj->getInput( level );
+  if( ! in )
+    return;
+  if( ! in->setData( "source", toname ) ) {
+    qWarning() << "fail to set source " << toname << " in " << in->getFullName() << WHE;
+    return;
+  }
+  sch->reportStructChanged();
+  sch->reset();
+  // sch->setModified();
+  // emit viewChanged();
+}
+
+
+void StructView::qplinkElm()
+{
+  QString oldlink;
+  if( ! checkState( linkToCheck ) ) {
+    return;
+  }
+
+  if( !selObj || !markObj  ) {
+    return;
+  }
+
+  QString toname = markObj->objectName();
+
+  InputParams *pis = selObj->getElemT<InputParams*>("pis");
+  if( !pis ) {
+    qWarning() << "no pis object in " <<  selObj->getFullName() << WHE;
+    return;
+  }
+  int n_pi = pis->size();
+  QString pi_name = QString("pi_") + QSN(n_pi);
+  InputParam *pi = pis->addObj<InputParam>( pi_name );
+  if( !pi ) {
+    return;
+  }
+
+  pi->setData( "source", toname );
+  pi->setData( "line_w", 2 );
+  pi->setData( "line_color", "red" );
+
+  sch->reportStructChanged();
+  sch->reset();
+  // emit viewChanged();
+}
+
+void StructView::unlinkElm()
+{
+  if( ! checkState( selCheck ) ) { // no need marked to unlink
+    return;
+  }
+
+  QString lnkname;
+  QString empty_str("");
+  int ni = selObj->inputsCount();
+  for( int i=0; i<ni; ++i ) {
+    InputSimple *in = selObj->getInput( i );
+    if( ! in ) {
+      continue;
+    }
+    in->setData( "source", empty_str );
+  }
+
+  InputParams *pis = selObj->getElemT<InputParams*>("pis");
+  if( !pis ) {
+    qWarning() << "no pis object in " <<  selObj->getFullName() << WHE;
+    return;
+  }
+  qDeleteAll( pis->children() );
+
+  sch->reportStructChanged();
+  sch->reset();
+  // sch->setModified(); // TODO: check
+  // emit viewChanged();
+}
+
+void StructView::lockElm()
+{
+  if( ! checkState( selCheck ) ) {
+    return;
+  }
+
+  int lck = selObj->getDataD( "locked", 0 );
+  lck = !lck;
+  selObj->setData( "locked", lck );
+
+  sch->reset();
+  // sch->setModified();
+  // emit viewChanged();
+}
+
+void StructView::ordElm()
+{
+  if( ! checkState( selCheck ) ) {
+    return;
+  }
+
+  bool ok;
+  int old_ord = selObj->getDataD( "ord", 0 );
+  int new_ord = QInputDialog::getInt( this, "New element order",
+      "Input new element order",  old_ord, 0, IMAX, 1, &ok );
+  if( ok ) {
+    sch->newOrder( selObj->objectName(), new_ord ); // reset implied
+    // emit viewChanged();
+  };
+}
+
+void StructView::markElm()
+{
+  markObj = selObj;
+  // emit viewChanged();
+}
+
+void StructView::moveElm()
+{
+  if( ! checkState( moveCheck )  ||  !markObj  ) {
+    return;
+  }
+
+  sch->moveElem( markObj->objectName(), sel_x, sel_y );
+  // emit viewChanged();
+}
+
+void StructView::infoElm()
+{
+  if( ! checkState( selCheck ) ) {
+    return;
+  }
+
+  auto dia = new QDialog( this );
+  dia->setWindowTitle( QString( PACKAGE ": Structure of ") + selObj->getFullName() );
+
+  auto lay = new QVBoxLayout();
+
+  auto tv = new QTableWidget( 100, 6, dia );
+  QStringList hlabels;
+  hlabels << "Name" << "Type" << "Value" << "Descr" << "Target"<< "Flags";
+  tv->setHorizontalHeaderLabels( hlabels );
+
+  QObjectList childs = selObj->children();
+
+  int i = 0;
+  for( auto o :  childs ) {
+    QObject *ob = o;
+    tv->setItem( i, 0, new  QTableWidgetItem( ob->objectName() ) );
+    if( ob->inherits("TDataSet" ) ) {
+      TDataSet *ds = qobject_cast<TDataSet*>(ob);
+      tv->setItem( i, 1, new QTableWidgetItem(ds->getType()) );
+      tv->setItem( i, 2, new QTableWidgetItem( ds->toString() ) );
+    } else if( ob->inherits("HolderData" ) ) {
+      HolderData *ho = qobject_cast<HolderData*>(ob);
+      tv->setItem( i, 1, new QTableWidgetItem(ho->getType() ) );
+      tv->setItem( i, 2, new QTableWidgetItem(ho->toString() ) );
+      tv->setItem( i, 3, new QTableWidgetItem(ho->getParm("vis_name") + " \""
+                    + ho->getParm("descr" ) + "\"" ) );
+      tv->setItem( i, 4, new QTableWidgetItem( ho->objectName() ) );
+      tv->setItem( i, 5, new QTableWidgetItem( flags2str(ho->getFlags()) ) );
+
+    } else { // unknown
+      tv->setItem( i, 1, new QTableWidgetItem("???unknown???" ) );
+      tv->setItem( i, 2, new QTableWidgetItem(ob->metaObject()->className() ) );
+    }
+    ++i;
+  }
+
+
+
+  lay->addWidget( tv );
+
+  auto bt_ok = new QPushButton( tr("Done"), dia);
+  bt_ok->setDefault( true );
+  lay->addWidget( bt_ok );
+  dia->setLayout( lay );
+
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
+
+  dia->resize( 72*em, 50*em ); // TODO: adjust to inner table width
+  dia->exec();
+  delete dia;
+  // emit viewChanged();
+}
+
+void StructView::showTreeElm()
+{
+  if( ! checkState( selCheck ) ) {
+    return;
+  }
+
+  auto dia = new QDialog( this );
+  dia->setWindowTitle( QString( PACKAGE ": Element tree: ") + selObj->objectName() );
+
+  auto lay = new QVBoxLayout();
+
+
+  auto treeView = new QTreeView( dia );
+  treeView->setModel( selObj );
+  lay->addWidget( treeView );
+
+
+  auto bt_ok = new QPushButton( tr("Done"), dia);
+  bt_ok->setDefault( true );
+  lay->addWidget( bt_ok );
+  dia->setLayout( lay );
+
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
+
+  dia->resize( 86*em, 50*em ); // TODO: unmagic
+  treeView->setColumnWidth( 0, 35*em );
+  treeView->setColumnWidth( 1, 10*em );
+  treeView->setColumnWidth( 2, 35*em );
+  treeView->setColumnWidth( 3,  6*em );
+  treeView->expandAll();
+  dia->exec();
+  delete dia;
+  // emit viewChanged();
+  return;
+}
+
+
+void StructView::testElm1()
+{
+  QString buf;
+  if( ! checkState( selCheck ) )
+    return;
+
+  auto dia = new QDialog( this );
+  dia->setWindowTitle( QString( PACKAGE ": test1 ") + selObj->objectName() );
+
+  buf = selObj->toString();
+
+
+  auto lay = new QVBoxLayout();
+
+  auto la = new QLabel( dia );
+  la->setText( buf );
+  auto scroll = new QScrollArea( dia );
+  scroll->setWidget( la );
+  lay->addWidget( scroll );
+
+
+  auto bt_ok = new QPushButton( tr("Done"), dia);
+  bt_ok->setDefault( true );
+  lay->addWidget( bt_ok );
+  dia->setLayout( lay );
+
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
+
+  dia->resize( 60*em, 30*em ); // TODO: unmagic
+  dia->exec();
+  delete dia;
+  // emit viewChanged();
+}
+
+void StructView::testElm2()
+{
+  if( ! checkState( selCheck ) ) {
+    return;
+  }
+  if( selObj == 0 ) {
+    return;
+  }
+  // place for action here
+
+  return;
+}
+
+void StructView::cutElm()
+{
+  copyElm();
+  delElm();
+}
+
+void StructView::copyElm()
+{
+  if( !selObj ) {
+    return;
+  }
+  QString s = selObj->toString();
+  QClipboard *clp = QApplication::clipboard();
+  if( clp ) {
+    clp->setText( s );
+  }
+}
+
+void StructView::pasteElm()
+{
+  if( selObj )
+    return;
+  QClipboard *clp = QApplication::clipboard();
+  if( !clp )
+    return;
+  QString s = clp->text();
+  int err_line, err_column;
+  QString errstr;
+  QDomDocument x_dd;
+  if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
+    handleWarn( this, tr("Cannot parse clipboard string:\n%2\nLine %3 column %4.")
+                .arg(errstr).arg(err_line).arg(err_column) );
+    return;
+  }
+  QDomElement ee = x_dd.documentElement();
+
+  QString tagname = ee.tagName();
+  if( tagname != "obj" ) {
+    handleWarn( this, tr("element tag is not 'obj':  %2").arg( tagname ) );
+    return;
+  }
+
+  QString eltype = ee.attribute( "otype" );
+  QString elname = ee.attribute( "name" );
+  QString elname_base = elname;
+  int suff_n = 1;
+  while( sch->getElem( elname ) && suff_n < 50 ) { // guess good name
+    elname = elname_base + "_" + QSN( suff_n );
+    suff_n++;
+    if( suff_n > 20 ) {
+      elname += "_x";
+    }
+  }
+
+  int oord = sch->hintOrd();
+
+  auto dia = new QDialog( this );
+  auto lay = new QGridLayout( dia );
+
+  auto la_name = new QLabel( "&Name", dia );
+  lay->addWidget( la_name, 0, 0 );
+
+  auto oname_ed = new QLineEdit( dia );
+  oname_ed->setText( elname );
+  oname_ed->setFocus();
+  lay->addWidget( oname_ed, 1, 0  );
+
+  auto la_ord = new QLabel( "&Order", dia );
+  lay->addWidget( la_ord, 0, 1 );
+
+  auto oord_ed = new QLineEdit( dia );
+  oord_ed->setText( QSN(oord) );
+  lay->addWidget( oord_ed, 1, 1 );
+
+  auto bbox
+    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+  lay->addWidget( bbox, 2, 0, 1, 2 );
+  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
+
+  int rc = dia->exec();
+  elname = oname_ed->text();
+  oord = oord_ed->text().toInt();
+  delete dia;
+
+  if( rc != QDialog::Accepted ) {
+    return;
+  };
+
+  if( ! isGoodName( elname )  ) {
+    handleError( this, QString("Fail to add Elem: bad object name \"%1\"").arg(elname) );
+    return;
+  }
+
+  TMiso *ob = sch->insElem( eltype, elname, oord, sel_x, sel_y) ; // reset() implied
+  if( !ob  ) {
+    handleError( this, QString("Fail to add Elem: %1 %2").arg(eltype).arg(elname) );
+    return;
+  }
+  if( !ob->fromDom( ee, errstr ) ) {
+    handleWarn( this, tr("fail to set params:  %1").arg( errstr ) );
+  }
+  ob->setData( "vis_x", sel_x );
+  ob->setData( "vis_y", sel_y );
+  ob->setData( "ord", oord );
+  changeSel( 0, 0, 1 ); // update sel
+
+}
+
 
 
 void StructView::mousePressEvent( QMouseEvent *me )
@@ -540,7 +1116,7 @@ void StructView::mousePressEvent( QMouseEvent *me )
     return;
   }
 
-  mainview->changeSel( ex, ey, 0 );
+  changeSel( ex, ey, 0 );
   ob = sch->xy2Miso( ex, ey );
   if( ob ) {
     elmname = ob->getFullName();
@@ -561,7 +1137,7 @@ void StructView::mousePressEvent( QMouseEvent *me )
                 }
                 break;
     case Qt::MidButton:
-                mainview->editElm();
+                editElm();
                 break;
     default:
                 break;// none
@@ -582,46 +1158,49 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
   if( has_elem ) {
     menu->addSeparator();
     act = menu->addAction( QIcon( ":icons/editelm.png" ), "&Edit element" );
-    connect( act, &QAction::triggered, mainview, &LaboView::editElm );
+    connect( act, &QAction::triggered, this, &StructView::editElm );
     act = menu->addAction( QIcon( ":icons/delelm.png" ), "&Delete element" );
-    connect( act, &QAction::triggered, mainview, &LaboView::delElm );
+    connect( act, &QAction::triggered, this, &StructView::delElm );
     menu->addSeparator();
     act = menu->addAction( "Rename element" );
-    connect( act, &QAction::triggered, mainview, &LaboView::renameElm );
+    connect( act, &QAction::triggered, this, &StructView::renameElm );
     menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
-    connect( act, &QAction::triggered, mainview, &LaboView::qlinkElm );
+    connect( act, &QAction::triggered, this, &StructView::qlinkElm );
     act = menu->addAction(  QIcon( ":icons/orderelm.png" ), "&Reorder" );
-    connect( act, &QAction::triggered, mainview, &LaboView::ordElm );
+    connect( act, &QAction::triggered, this, &StructView::ordElm );
     menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("edit-copy"), "&Copy" );
-    connect( act, &QAction::triggered, mainview, &LaboView::copyElm );
+    connect( act, &QAction::triggered, this, &StructView::copyElm );
     menu->addSeparator();
   } else {
     act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );
-    connect( act, &QAction::triggered, mainview, &LaboView::newElm );
-    if( mainview->getMarkObj() ) {
+    connect( act, &QAction::triggered, this, &StructView::newElm );
+    if( markObj ) {
       act = menu->addAction( "&Move to" );
-      connect( act, &QAction::triggered, mainview, &LaboView::moveElm );
+      connect( act, &QAction::triggered, this, &StructView::moveElm );
     }
     act = menu->addAction( QIcon::fromTheme("edit-pase"), "&Paste" );
-    connect( act, &QAction::triggered, mainview, &LaboView::pasteElm );
+    connect( act, &QAction::triggered, this, &StructView::pasteElm );
   };
-  menu->addSeparator();
-  act = menu->addAction( QIcon( ":icons/newout.png" ), "New outp&ut" );
-  connect( act, &QAction::triggered, mainview, &LaboView::newOut );
-  menu->addSeparator();
-  act = menu->addAction( QIcon( ":icons/editmodel.png" ), "Edit model" );
-  connect( act, &QAction::triggered, mainview, &LaboView::editModel );
+  if( oview != nullptr && mainview != nullptr ) {
+    menu->addSeparator(); //TODO: revive if need
+    act = menu->addAction( QIcon( ":icons/newout.png" ), "New outp&ut" );
+    connect( act, &QAction::triggered, mainview, &LaboView::newOut );
+    menu->addSeparator();
+    act = menu->addAction( QIcon( ":icons/editmodel.png" ), "Edit model" );
+    connect( act, &QAction::triggered, mainview, &LaboView::editModel );
+  }
+  menu->addSeparator(); //TODO: revive if need
   act = menu->addAction( QIcon::fromTheme("document-print"),"Print model" );
-  connect( act, &QAction::triggered, mainview, &LaboView::print );
+  connect( act, &QAction::triggered, this, &StructView::print );
 
   return menu;
 }
 
 void StructView::mouseDoubleClickEvent( QMouseEvent * /*me*/ )
 {
-  mainview->editElm();
+  editElm();
 }
 
 
@@ -631,9 +1210,8 @@ void StructView::keyPressEvent( QKeyEvent *ke )
   k = ke->key(); st = ke->modifiers();
   btnShift = ( ( st & Qt::ShiftModifier ) != 0 );
   QString title;
-  TMiso *ob = mainview->getSelObj();
-  if( ob ) {
-    title = ob->getFullName();
+  if( selObj ) {
+    title = selObj->getFullName();
   }
   // btnCtrl = ( ( st & Qt::ControlModifier ) != 0 );
   // h = height();
@@ -642,27 +1220,27 @@ void StructView::keyPressEvent( QKeyEvent *ke )
   // nw = w / grid_sz - 1;
   xy_delta = btnShift ? 5 : 1;
   switch( k ) {
-    case Qt::Key_Return: mainview->editElm(); break; // to catch both keys
-    case Qt::Key_Home:  emit sig_changeSel( 0, 0, 0 ); break;
-    case Qt::Key_Left:  emit sig_changeSel( -xy_delta, 0, 1 );  break;
-    case Qt::Key_Right: emit sig_changeSel( xy_delta, 0, 1 );  break;
-    case Qt::Key_Up:    emit sig_changeSel( 0, -xy_delta, 1 );  break;
-    case Qt::Key_Down:  emit sig_changeSel( 0, xy_delta, 1 );  break;
-    case Qt::Key_N:     emit sig_changeSel( 1, 0, 2 ); break;
-    case Qt::Key_0:     emit sig_changeLevel(0); break;
-    case Qt::Key_1:     emit sig_changeLevel(1); break;
-    case Qt::Key_2:     emit sig_changeLevel(2); break;
-    case Qt::Key_3:     emit sig_changeLevel(3); break;
-    case Qt::Key_4:     emit sig_changeLevel(4); break;
-    case Qt::Key_5:     emit sig_changeLevel(5); break;
-    case Qt::Key_6:     emit sig_changeLevel(6); break;
-    case Qt::Key_7:     emit sig_changeLevel(7); break;
-    case Qt::Key_8:     emit sig_changeLevel(8); break;
-    case Qt::Key_9:     emit sig_changeLevel(9); break;
+    case Qt::Key_Return: editElm(); break; // to catch both keys
+    case Qt::Key_Home:  changeSel( 0, 0, 0 ); break;
+    case Qt::Key_Left:  changeSel( -xy_delta, 0, 1 );  break;
+    case Qt::Key_Right: changeSel( xy_delta, 0, 1 );  break;
+    case Qt::Key_Up:    changeSel( 0, -xy_delta, 1 );  break;
+    case Qt::Key_Down:  changeSel( 0, xy_delta, 1 );  break;
+    case Qt::Key_N:     changeSel( 1, 0, 2 ); break;
+    case Qt::Key_0:     changeLevel(0); break;
+    case Qt::Key_1:     changeLevel(1); break;
+    case Qt::Key_2:     changeLevel(2); break;
+    case Qt::Key_3:     changeLevel(3); break;
+    case Qt::Key_4:     changeLevel(4); break;
+    case Qt::Key_5:     changeLevel(5); break;
+    case Qt::Key_6:     changeLevel(6); break;
+    case Qt::Key_7:     changeLevel(7); break;
+    case Qt::Key_8:     changeLevel(8); break;
+    case Qt::Key_9:     changeLevel(9); break;
 
     case Qt::Key_F10:
             {
-              QMenu* menu = createPopupMenu( title, ob != nullptr ); // FIXME: use
+              QMenu* menu = createPopupMenu( title, selObj != nullptr ); // FIXME: use
               menu->exec( mapToGlobal( getSelCoords() )  );
               delete menu;
             }

@@ -15,6 +15,7 @@
 #include <QDebug>
 
 #include "miscfun.h"
+#include "datawidget.h"
 
 using namespace std;
 
@@ -280,6 +281,25 @@ void handleWarn( QWidget* par, const QString &s )
   if( ! prog_opts.batch ) {
     QMessageBox::warning( par, PACKAGE ": Warning", s,  QMessageBox::Ok );
   }
+}
+
+bool confirmDelete( QWidget *par, const QString &obj, const QString &nm )
+{
+  int rpl = QMessageBox::question( par, PACKAGE " delete confirmation",
+       QString("Do you really want to delete %1 \"%2\"?").arg(obj).arg(nm) );
+  return rpl == QMessageBox::Yes;
+}
+
+bool editObj( QWidget *par, HolderData *obj )
+{
+  if( !obj ) {
+    return false;
+  }
+
+  auto dia = new DataDialog( *obj, par );
+  int rc = dia->exec();
+  delete dia;
+  return( rc == QDialog::Accepted );
 }
 
 
