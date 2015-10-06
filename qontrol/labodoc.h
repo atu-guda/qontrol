@@ -55,12 +55,9 @@ class LaboDoc : public QObject
       * document is modified, the user gets asked if he wants to save the
       * document. Not const: can save document if need.*/
   bool canCloseFrame( LaboView* pFrame );
-  /** sets the modified flag for the document after a modifying action
-      on the view connected to the document. */
-  void setModified( bool _m = true ){ modified=_m; }
   /** returns if the document is modified or not. Use this to determine
       if your document needs saving by the user on closing.*/
-  bool isModified() const; // { return modified; };
+  bool isModified() const;
   /** deletes the document's contents */
   void deleteContents();
   /** initializes the document generally */
@@ -98,8 +95,6 @@ class LaboDoc : public QObject
  public slots:
 
  private:
-   /** the modified flag of the current document */
-   bool modified = false;
    QString m_title = "? unknown ";
    QString m_filename;
  protected:

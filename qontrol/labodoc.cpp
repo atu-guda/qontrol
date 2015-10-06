@@ -98,7 +98,7 @@ bool LaboDoc::newDocument()
 
 
   // rootdata->dumpStruct();
-  modified = false; is_nonamed = true;
+  is_nonamed = true;
   rootdata->setUnModified();
 
   return true;
@@ -212,7 +212,6 @@ bool LaboDoc::saveDocumentXML( const QString &filename )
     return false;
   }
 
-  modified = false;
   rootdata->setUnModified();
   m_filename = filename;
   m_title = QFileInfo(filename).fileName();
