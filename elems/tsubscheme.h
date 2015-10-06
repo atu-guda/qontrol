@@ -41,7 +41,7 @@ class TSubScheme : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
    virtual int do_endLoop() override;
    // TODO: all do_ -- pass to cheme
-   virtual void post_set() override;
+   virtual void do_post_set() override;
 
    /** Scheme name */
    PRM_STRING( sch_name, efNRC, "Scheme", "Scheme name", "" );

@@ -1,4 +1,7 @@
 Subschemes.
+Shadow main scheme.
+Check: when to reset model?
+modified flag fomr LoboDoc to rootdata
 Check: update link values only after step - prep for multi-threading
 Hint for new element names
 Hide some types in new element dialog

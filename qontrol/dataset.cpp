@@ -52,7 +52,7 @@ HolderData* HolderData::create( const QString &, HolderData *,
 // QAbstractItemModel part
 int HolderData::columnCount( const QModelIndex & /*par*/ ) const
 {
-  return 3;
+  return 4;
 }
 
 // //* function to debug model indexes
@@ -119,9 +119,17 @@ QVariant HolderData::dataObj( int col, int role ) const
       case 2:
         if( size() == 0 ) {
           getData( "", s );
+          int ls;
+          if( (ls = s.size()) > 80 ) {
+            s.truncate( 72 );
+            s += QSL( "... [" ) + QSN( ls ) + QSL( "]" );
+          }
         } else {
           s = QSL("[") + QSN( size() ) + QSL("]");
         }
+        break;
+      case 3:
+        s = getStateStr();
         break;
       default:
         break;
@@ -214,6 +222,35 @@ int HolderData::indexOfHolder( const HolderData *ho ) const
 {
   // children holds <QObject*>, but indexOf dont touch *it
   return children().indexOf( const_cast<HolderData*>(ho) );
+}
+
+
+QString HolderData::getStateStr() const
+{
+  QString s;
+  if( modified ) { s += "*"; };
+  if( dyn ) { s += "."; };
+  s += getStateString( state );
+  s += " ";
+  s += QSNX( flags );
+  return s;
+}
+
+void HolderData::setModified()
+{
+  // qWarning() << "SET: " << NWHE;
+  if( !modified && ( par != nullptr ) ) { // limit propogation to already modified
+    par->setModified();
+  }
+  modified |= 1;
+}
+
+void HolderData::setUnModified()
+{
+  modified = 0;
+  for( auto ho : TCHILD(HolderData*) ) {
+    ho->setUnModified();
+  }
 }
 
 void HolderData::reset()
@@ -329,7 +366,7 @@ HolderData* HolderData::getElem( const QString &oname ) const
     return ho->getElem( rest );
   }
 
-  qWarning() << "unknown name type: " << nt << WHE;
+  qWarning() << "unknown name type: " << nt << NWHE;
   return nullptr;
 }
 
@@ -362,7 +399,7 @@ bool HolderData::setDatas( const QString datas )
       QString val = re.cap(2);
       was_set = setData( nm, val ) || was_set; // Order!
     } else {
-      qWarning() << "bad param string part: " << s << WHE;
+      qWarning() << "bad param string part: " << s << NWHE;
     }
   }
   return was_set;
@@ -393,7 +430,7 @@ void HolderData::extraToParm()
       QString val = re.cap(2);
       setParm( nm, val );
     } else {
-      qWarning() << "bad extra string part: " <<  s << WHE;
+      qWarning() << "bad extra string part: " <<  s << NWHE;
     }
   }
   if( getParm("dyn") == "1" )
@@ -461,18 +498,19 @@ HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name 
 
   HolderData *el = getElem( ob_name );
   if( el != nullptr ) {
-    qWarning() <<  "name " << ob_name << el->getType() << " exist in " << getFullName() << WHE;
+    qWarning() <<  "name " << ob_name << el->getType() << " exist in " << NWHE;
     return nullptr;
   }
   if( ! isValidType( cl_name ) ) {
     qWarning() <<  "type " << cl_name <<  " for " << ob_name
-               << " not allowed in " << getFullName() << WHE;
+               << " not allowed in " << NWHE;
     return nullptr;
   }
   HolderData *ob = EFACT.createElem( cl_name, ob_name, this );
   if( !ob ) {
     return nullptr;
   }
+  setModified();
   endResetModel();
   reportStructChanged();
 
@@ -488,6 +526,7 @@ bool HolderData::add_obj_datas( const QString &cl_name, const QString &ob_name,
   }
 
   ho->setDatas( datas );
+  setModified();
 
   return true;
 }
@@ -497,15 +536,15 @@ int HolderData::del_obj( const QString &ob_name )
 
   HolderData *ho = getElem( ob_name );
   if( !ho ) {
-    qWarning() << "not found element " << ob_name << " in " << getFullName() << WHE;
+    qWarning() << "not found element " << ob_name << " in " << NWHE;
     return 0;
   }
   if( ! ho->isDyn() ) {
-    qWarning() << "object " << ob_name << " is not created dynamicaly in " << getFullName() << WHE;
+    qWarning() << "object " << ob_name << " is not created dynamicaly in " << getFullName() << NWHE;
     return 0;
   }
   if( ho->getFlags() & efImmutable ) {
-    qWarning() << "object " << ob_name << " is Immutable in " << getFullName() << WHE;
+    qWarning() << "object " << ob_name << " is Immutable in " << getFullName() << NWHE;
     return 0;
   }
 
@@ -522,6 +561,7 @@ int HolderData::del_obj( const QString &ob_name )
     setActiveElem( act_name );
   }
 
+  setModified();
   endResetModel();
 
   reportStructChanged();
@@ -553,6 +593,7 @@ int HolderData::rename_obj( const QString &ob_name, const QString &new_name )
     return 0;
   }
   ho->setObjectName( new_name );
+  setModified();
 
   reportStructChanged();
   return 1;
@@ -596,6 +637,7 @@ HolderData* HolderData::add_param( const QString &tp_name, const QString &ob_nam
   if( !ho ) {
     return nullptr;
   }
+  setModified();
   endResetModel();
 
   reportStructChanged();
@@ -988,10 +1030,15 @@ void HolderData::dumpStruct() const
 
 void HolderData::post_set()
 {
-  // check_guard();
+  do_post_set();
   for( auto ho: TCHILD(HolderData*) ) { // propagate to childs
     ho->post_set();
   }
+}
+
+void HolderData::do_post_set()
+{
+  qWarning() << ERR_ABS << NWHE;
 }
 
 
@@ -1008,36 +1055,36 @@ CTOR(HolderValue,HolderData)
 
 void HolderValue::reset_dfl()
 {
-  qWarning() << ERR_ABS << WHE;
+  qWarning() << ERR_ABS << NWHE;
 }
 
-void HolderValue::post_set()
+void HolderValue::do_post_set()
 {
-  qWarning() << ERR_ABS << WHE;
+  qWarning() << ERR_ABS << NWHE;
 }
 
 
 bool HolderValue::set( const QVariant & /*x*/, int /* idx */ )
 {
-  qWarning() << ERR_ABS << WHE;
+  qWarning() << ERR_ABS << NWHE;
   return false;
 }
 
 QVariant HolderValue::get( int /* idx */ ) const
 {
-  qWarning() << ERR_ABS << WHE;
+  qWarning() << ERR_ABS << NWHE;
   return QVariant();
 }
 
 QString HolderValue::toString() const
 {
-  qWarning() << ERR_ABS << WHE;
+  qWarning() << ERR_ABS << NWHE;
   return QString();
 }
 
 bool HolderValue::fromString( const QString & /*s */ )
 {
-  qWarning() << ERR_ABS << WHE;
+  qWarning() << ERR_ABS << NWHE;
   return false;
 }
 
@@ -1073,24 +1120,32 @@ HolderInt::~HolderInt()
 
 void HolderInt::reset_dfl()
 {
+  auto v0 = v;
   v = 0;
   QString s = getParm( "def" );
   if( ! s.isEmpty() ) {
     v = QString2IntEx( s );
   }
   post_set();
+  if( v != v0 ) {
+    setModified();
+  }
 }
 
 
 bool HolderInt::set( const QVariant & x, int /* idx */ )
 {
+  auto v0 = v;
   bool ok;
   if( x.type() == QVariant::Int ) {
     v = x.toInt( &ok );
-    post_set();
-    return ok;
+  } else {
+    v = QString2IntEx( x.toString(), &ok );
   }
-  v = QString2IntEx( x.toString(), &ok );
+  post_set();
+  if( v != v0 ) {
+    setModified();
+  }
   return ok;
 }
 
@@ -1099,7 +1154,7 @@ QVariant HolderInt::get( int /* idx */ ) const
   return QVariant( v );
 }
 
-void HolderInt::post_set()
+void HolderInt::do_post_set()
 {
   int v_min { IMIN }, v_max { IMAX };
   QString s_min = getParm( "min" );
@@ -1118,11 +1173,15 @@ QString HolderInt::toString() const
 
 bool HolderInt::fromString( const QString &s )
 {
+  auto v0 = v;
   bool ok = true;
   int vc = QString2IntEx( s, &ok );
   if( ok ) {
     v = vc;
     post_set();
+  }
+  if( v != v0 ) {
+    setModified();
   }
   return ok;
 }
@@ -1156,7 +1215,7 @@ HolderSwitch::~HolderSwitch()
   // NOP
 }
 
-void HolderSwitch::post_set()
+void HolderSwitch::do_post_set()
 {
   v = v ? 1 : 0;
 }
@@ -1199,9 +1258,9 @@ HolderList::~HolderList()
   // NOP
 }
 
-void HolderList::post_set()
+void HolderList::do_post_set()
 {
-  HolderInt::post_set();
+  HolderInt::do_post_set();
 }
 
 
@@ -1235,20 +1294,28 @@ HolderDouble::~HolderDouble()
 
 void HolderDouble::reset_dfl()
 {
+  auto v0 = v;
   v = 0;
   QString s = getParm( "def" );
   if( ! s.isEmpty() ) {
     v = s.toDouble();
   }
   post_set();
+  if( v != v0 ) {
+    setModified();
+  }
 }
 
 
 bool HolderDouble::set( const QVariant & x, int /* idx */ )
 {
   bool ok;
+  auto v0 = v;
   v = x.toDouble( &ok );
   post_set();
+  if( v != v0 ) {
+    setModified();
+  }
   return ok;
 }
 
@@ -1257,7 +1324,7 @@ QVariant HolderDouble::get( int /* idx */ ) const
   return QVariant( v );
 }
 
-void HolderDouble::post_set()
+void HolderDouble::do_post_set()
 {
   double v_min { DMIN }, v_max { DMAX };
   QString s_min = getParm( "min" );
@@ -1271,16 +1338,20 @@ void HolderDouble::post_set()
 
 QString HolderDouble::toString() const
 {
-  return QSN( v, 'g', 16 ); // TODO? format
+  return QSN( v, 'g', 18 ); // TODO? format
 }
 
 bool HolderDouble::fromString( const QString &s )
 {
+  auto v0 = v;
   bool ok;
   double vx = s.toDouble( &ok );
   if( ok ) {
     v = vx;
     post_set();
+  }
+  if( v != v0 ) {
+    setModified();
   }
   return ok;
 }
@@ -1315,6 +1386,7 @@ HolderString::~HolderString()
 
 void HolderString::reset_dfl()
 {
+  auto v0 = v;
   QString s = getParm( "def" );
   if( ! s.isEmpty() ) {
     v = s;
@@ -1322,12 +1394,19 @@ void HolderString::reset_dfl()
     v = "";
   }
   post_set();
+  if( v != v0 ) {
+    setModified();
+  }
 }
 
 bool HolderString::set( const QVariant & x, int /* idx */  )
 {
+  auto v0 = v;
   v = x.toString();
   post_set();
+  if( v != v0 ) {
+    setModified();
+  }
   return true;
 }
 
@@ -1336,12 +1415,13 @@ QVariant HolderString::get( int /* idx */ ) const
   return QVariant( v );
 }
 
-void HolderString::post_set()
+void HolderString::do_post_set()
 {
   int v_max { IMAX };
   QString s_max = getParm( "max" );
-  if( ! s_max.isEmpty() )
+  if( ! s_max.isEmpty() ) {
     v_max = s_max.toInt();
+  }
   v.truncate( v_max );
 }
 
@@ -1352,8 +1432,12 @@ QString HolderString::toString() const
 
 bool HolderString::fromString( const QString &s )
 {
+  auto v0 = v;
   v = s;
   post_set();
+  if( v != v0 ) {
+    setModified();
+  }
   return true;
 }
 
@@ -1386,7 +1470,8 @@ HolderColor::~HolderColor()
 
 void HolderColor::reset_dfl()
 {
-  v=QColor();
+  auto v0 = v;
+  v = QColor();
   QString s = getParm( "def" );
   if( ! s.isEmpty() ) {
     v = QColor( s );
@@ -1395,11 +1480,15 @@ void HolderColor::reset_dfl()
     }
   }
   post_set();
+  if( v != v0 ) {
+    setModified();
+  }
 }
 
 
 bool HolderColor::set( const QVariant & x, int /* idx */  )
 {
+  auto v0 = v;
   QString s = x.toString();
   v = QColor( s );
   if( ! v.isValid() ) {
@@ -1407,6 +1496,9 @@ bool HolderColor::set( const QVariant & x, int /* idx */  )
     v.setRgba( rgba );
   }
   post_set();
+  if( v != v0 ) {
+    setModified();
+  }
   return true;
 }
 
@@ -1415,10 +1507,11 @@ QVariant HolderColor::get( int /* idx */ ) const
   return QVariant( (int)(v.rgba()) );
 }
 
-void HolderColor::post_set()
+void HolderColor::do_post_set()
 {
-  if( ! v.isValid() )
+  if( ! v.isValid() ) {
     v = QColor(Qt::red);
+  }
 }
 
 QString HolderColor::toString() const
@@ -1429,12 +1522,16 @@ QString HolderColor::toString() const
 
 bool HolderColor::fromString( const QString &s )
 {
+  auto v0 = v;
   v = QColor( s );
   if( ! v.isValid() ) {
     QRgb rgba = s.toInt();
     v.setRgba( rgba );
   }
   post_set();
+  if( v != v0 ) {
+    setModified();
+  }
   return true;
 }
 
@@ -1467,22 +1564,23 @@ HolderIntArray::~HolderIntArray()
 
 void HolderIntArray::reset_dfl()
 {
-  int n = 1, v0 = 0;
+  auto v0 = v;
+  int n = 1, v1 = 0;
   QString s = getParm("N");
   if( ! s.isEmpty() ) {
     n = s.toInt();
   }
   s = getParm("def");
   if( ! s.isEmpty() ) {
-    v0 = s.toInt();
+    v1 = s.toInt();
   }
-  v.assign( n, v0 );
+  v.assign( n, v1 );
 
   s = getParm("defs");
   if( ! s.isEmpty() ) {
     QStringList sl = s.split( " ", QString::SkipEmptyParts );
     if( sl.size() > (int)v.size() ) {
-      v.assign( sl.size(), v0 );
+      v.assign( sl.size(), v1 );
     }
 
     int i = 0;
@@ -1497,27 +1595,36 @@ void HolderIntArray::reset_dfl()
   }
 
   post_set();
+  if( v != v0 ) {
+    setModified();
+  }
 }
 
 
 bool HolderIntArray::set( const QVariant & x, int idx )
 {
   bool ok;
-  if( idx < 0 || (unsigned)(idx) >= v.size() ) // slow, but safe - not for fast code
+  if( idx < 0 || (unsigned)(idx) >= v.size() ) { // slow, but safe - not for fast code
     return false;
+  }
+  auto v0 = v[idx];
   v[idx] = x.toInt( &ok );
   post_set();
+  if( v[idx] != v0 ) {
+    setModified();
+  }
   return ok;
 }
 
 QVariant HolderIntArray::get( int idx ) const
 {
-  if( idx < 0 || (unsigned)idx >= v.size() ) // slow, but safe - not for fast code
+  if( idx < 0 || (unsigned)idx >= v.size() ) { // slow, but safe - not for fast code
     return QVariant();
+  }
   return QVariant( v[idx] );
 }
 
-void HolderIntArray::post_set()
+void HolderIntArray::do_post_set()
 {
   int v_min { IMIN }, v_max { IMAX };
   QString s_min = getParm( "min" );
@@ -1545,6 +1652,7 @@ bool HolderIntArray::fromString( const QString &s )
 {
   bool ok;
   QStringList sl = s.split(" ", QString::SkipEmptyParts );
+  auto v0 = v;
   v.clear(); v.reserve( sl.size() );
 
   for( auto s : sl ) {
@@ -1553,6 +1661,9 @@ bool HolderIntArray::fromString( const QString &s )
   }
 
   post_set();
+  if( v != v0 ) { // slow
+    setModified();
+  }
   return ok; // ? only last
 }
 
@@ -1587,7 +1698,8 @@ HolderDoubleArray::~HolderDoubleArray()
 void HolderDoubleArray::reset_dfl()
 {
   int n = 1;
-  double v0 = 0;
+  double v1 = 0;
+  auto v0 = v;
   QString s = getParm("N");
   if( ! s.isEmpty() ) {
     n = s.toInt();
@@ -1595,15 +1707,15 @@ void HolderDoubleArray::reset_dfl()
 
   s = getParm("def");
   if( ! s.isEmpty() ) {
-    v0 = s.toDouble();
+    v1 = s.toDouble();
   }
-  v.assign( n, v0 );
+  v.assign( n, v1 );
 
   s = getParm("defs");
   if( ! s.isEmpty() ) {
     QStringList sl = s.split( " ", QString::SkipEmptyParts );
     if( sl.size() > (int)v.size() ) {
-      v.assign( sl.size(), v0 );
+      v.assign( sl.size(), v1 );
     }
 
     int i = 0;
@@ -1618,16 +1730,24 @@ void HolderDoubleArray::reset_dfl()
   }
 
   post_set();
+  if( v != v0 ) { // slow
+    setModified();
+  }
 }
 
 
 bool HolderDoubleArray::set( const QVariant & x, int idx )
 {
   bool ok;
-  if( idx < 0 || (unsigned)(idx) >= v.size() ) // slow, but safe - not for fast code
+  if( idx < 0 || (unsigned)(idx) >= v.size() ) { // slow, but safe - not for fast code
     return false;
+  }
+  auto v0 = v[idx];
   v[idx] = x.toDouble( &ok );
   post_set();
+  if( v[idx] != v0 ) {
+    setModified();
+  }
   return ok;
 }
 
@@ -1638,7 +1758,7 @@ QVariant HolderDoubleArray::get( int idx ) const
   return QVariant( v[idx] );
 }
 
-void HolderDoubleArray::post_set()
+void HolderDoubleArray::do_post_set()
 {
   double v_min { DMIN }, v_max { DMAX };
   QString s_min = getParm( "min" );
@@ -1666,6 +1786,7 @@ bool HolderDoubleArray::fromString( const QString &s )
 {
   bool ok;
   QStringList sl = s.split(" ", QString::SkipEmptyParts );
+  auto v0 = v;
   v.clear(); v.reserve( sl.size() );
 
   for( auto s : sl ) {
@@ -1674,6 +1795,9 @@ bool HolderDoubleArray::fromString( const QString &s )
   }
 
   post_set();
+  if( v != v0 ) {
+    setModified();
+  }
   return ok; // ? only last
 }
 
@@ -1708,51 +1832,64 @@ HolderStringArray::~HolderStringArray()
 void HolderStringArray::reset_dfl()
 {
   int n = 1;
+  auto v0 = v;
   QString s = getParm("N");
-  if( ! s.isEmpty() )
+  if( ! s.isEmpty() ) {
     n = s.toInt();
+  }
   QString sd = getParm("def");
 
   QStringList sl;
   s = getParm("defs");
   if( ! s.isEmpty() ) {
     sl = s.split( '\x01', QString::KeepEmptyParts ); // keep here
-    if( sl.size() > n )
+    if( sl.size() > n ) {
       n = sl.size();
+    }
   }
 
   v.clear();
   int nds = sl.size();
   for( int i=0; i<n; ++i ) {
     QString vc;
-    if( i < nds )
+    if( i < nds ) {
       vc = sl[i];
-    else
+    } else {
       vc = sd;
+    }
     v.append( vc );
   }
 
   post_set();
+  if( v != v0 ) {
+    setModified();
+  }
 }
 
 
 bool HolderStringArray::set( const QVariant & x, int idx )
 {
-  if( idx < 0 || idx >= v.size() ) // slow, but safe - not for fast code
+  if( idx < 0 || idx >= v.size() )  { // slow, but safe - not for fast code
     return false;
+  }
+  auto v0 = v[idx];
   v[idx] = x.toString();
   post_set();
+  if( v[idx] != v0 ) {
+    setModified();
+  }
   return ! v[idx].isEmpty();
 }
 
 QVariant HolderStringArray::get( int idx ) const
 {
-  if( idx < 0 || idx >= v.size() ) // slow, but safe - not for fast code
+  if( idx < 0 || idx >= v.size() ) { // slow, but safe - not for fast code
     return QVariant();
+  }
   return QVariant( v[idx] );
 }
 
-void HolderStringArray::post_set()
+void HolderStringArray::do_post_set()
 {
   int len_max = IMAX;
   QString s_max = getParm( "max" );
@@ -1771,6 +1908,7 @@ QString HolderStringArray::toString() const
 
 bool HolderStringArray::fromString( const QString &s )
 {
+  auto v0 = v;
   if( s.contains( QChar(0x2400) ) ) {
     v = s.split( QChar(0x2400), QString::KeepEmptyParts );
   } else {
@@ -1778,6 +1916,9 @@ bool HolderStringArray::fromString( const QString &s )
   }
 
   post_set();
+  if( v != v0 ) {
+    setModified();
+  }
   return !v.isEmpty();
 }
 
@@ -1842,7 +1983,7 @@ DEFAULT_FUNCS_REG(TDataSet);
 
 
 
-
+// TODO: down to ierarch
 const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
               const TDataSet **targ, int lev  ) const
 {
@@ -1954,19 +2095,18 @@ double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg )
 
 bool TDataSet::set( const QVariant & x, int /* idx */  )
 {
-  // check_guard();
-  return fromString( x.toString() );
+  bool ok =  fromString( x.toString() );
+  post_set();
+  return ok;
 }
 
 QVariant TDataSet::get( int /* idx */ ) const
 {
-  // check_guard();
   return QVariant( this->toString() );
 }
 
 QString TDataSet::toString() const
 {
-  // check_guard();
   QString buf;
   buf.reserve(4096); // TODO ?
   QTextStream tstr( &buf, QIODevice::WriteOnly );
@@ -1980,6 +2120,7 @@ QString TDataSet::toString() const
 
 bool TDataSet::fromString( const QString &s )
 {
+  // modified flag is set by low-level element chenges?
   QString errstr;
   int err_line, err_column;
   QDomDocument x_dd;
@@ -2129,8 +2270,9 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
   return true;
 }
 
-void TDataSet::post_set() {
-  return HolderData::post_set();
+void TDataSet::do_post_set()
+{
+  // do nothing
 };
 
 void TDataSet::registerInput( InputSimple *inp )
@@ -2139,7 +2281,7 @@ void TDataSet::registerInput( InputSimple *inp )
     return;
   }
   if( inputs.indexOf( inp ) != -1 ) {
-    qWarning() << "input " << inp->objectName() << "is  already registered" << WHE;
+    qWarning() << "input " << inp->objectName() << "is  already registered" << NWHE;
     return;
   }
   inputs.push_back( inp );
@@ -2153,7 +2295,7 @@ void TDataSet::unregisterInput( InputSimple *inp )
 
   int idx = inputs.indexOf( inp );
   if( idx == -1 ) {
-    qWarning() << "input " << inp->objectName() << "is not registered" << WHE;
+    qWarning() << "input " << inp->objectName() << "is not registered" << NWHE;
     return;
   }
   inputs.remove( idx );
@@ -2188,9 +2330,8 @@ InputAbstract::~InputAbstract()
 }
 
 
-void InputAbstract::post_set()
+void InputAbstract::do_post_set()
 {
-  HolderData::post_set();
   reportStructChanged(); // changed link means changes structure
 }
 
@@ -2285,9 +2426,9 @@ InputSimple::~InputSimple()
 
 
 
-void InputSimple::post_set()
+void InputSimple::do_post_set()
 {
-  InputAbstract::post_set(); // report is here
+  InputAbstract::do_post_set(); // report is here
 }
 
 
@@ -2316,9 +2457,9 @@ InputParam::~InputParam()
 }
 
 
-void InputParam::post_set()
+void InputParam::do_post_set()
 {
-  InputAbstract::post_set(); // report is here
+  InputAbstract::do_post_set(); // report is here
 }
 
 

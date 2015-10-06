@@ -279,8 +279,8 @@ class DataDialog : public QDialog {
   Q_OBJECT
   public:
    DataDialog( HolderData &a_ds, QWidget *parent = 0 );
-   int getAll();
-   int setAll();
+   int getAll(); // from object to wigets
+   int setAll(); // from widgets to object
   public slots:
    virtual void accept();
    void showHelp();

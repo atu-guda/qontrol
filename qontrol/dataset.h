@@ -107,7 +107,7 @@ struct TClassInfo {
   virtual void reset_dfl() override; \
   virtual bool set( const QVariant & x, int idx = 0 ) override; \
   virtual QVariant get( int idx = 0 ) const override; \
-  virtual void post_set() override; \
+  virtual void do_post_set() override; \
   virtual QString toString() const override; \
   virtual bool fromString( const QString &s ) override;
 
@@ -194,6 +194,7 @@ class HolderData : public QAbstractItemModel {
   virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const;
 
   QVariant::Type getTp() const { return tp; }
+  QString getStateStr() const;
   int isDyn() const { return dyn; }
    /**  returns false for simple data holders
     * returns true if this object is base or save of given type.
@@ -251,13 +252,10 @@ class HolderData : public QAbstractItemModel {
   //* reset object and all (sub)children, to local actions - do_reset();
   Q_INVOKABLE void reset();
 
-  /** returns modified flag */
-  int getModified() const { return modified; }
-  /** set modified flag */
-  void setModified() { modified |= 1; }
-  /** drop modified flag */
-  void setUnModified() { modified = 0; }
-  virtual void post_set() = 0;
+  int getModified() const { return modified; } //* returns modified flag
+  void setModified();/** set modified flag : and to parents*/
+  void setUnModified(); //* drop modified flag: and from childs
+  void post_set();
   virtual bool getData( const QString &nm, int *da, bool er = true ) const;
   virtual bool getData( const QString &nm, double *da, bool er = true ) const;
   virtual bool getData( const QString &nm, QVariant &da, bool er = true ) const;
@@ -362,6 +360,7 @@ class HolderData : public QAbstractItemModel {
   void handleStructChanged();
   void extraToParm();
  protected:
+  virtual void do_post_set() = 0;
   virtual void do_reset() {}; //* adjustable reset function
   /** do real actions after structure changed */
   virtual void do_structChanged();
@@ -430,10 +429,10 @@ class HolderSwitch : public HolderInt {
   DCL_CREATE;
   DCL_STD_INF;
   // most functions from HolderInt
-  virtual void post_set() override;
   int operator=( int a ) { v=a; post_set(); return v; }
   virtual QString getTypeV() const override;
  protected:
+  virtual void do_post_set() override;
   DCL_DEFAULT_STATIC;
 };
 
@@ -450,10 +449,10 @@ class HolderList : public HolderInt {
   DCL_CREATE;
   DCL_STD_INF;
   // most functions from HolderInt
-  virtual void post_set() override;
   int operator=( int a ) { v=a; post_set(); return v; }
   virtual QString getTypeV() const;
  protected:
+  virtual void do_post_set() override;
   DCL_DEFAULT_STATIC;
 };
 
@@ -670,12 +669,12 @@ class InputAbstract : public TDataSet {
   virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
   DCL_CREATE;
   DCL_STD_INF;
-  virtual void post_set() override;
   //* return ptr to TDataSet, which holds element or nullptr;
   const TDataSet* getSourceObj() const { return src_obj; };
   //* returns type of link
   ltype_t getLinkType() const { return linkType; };
  protected:
+  virtual void do_post_set() override;
   /** do real actions after structure changed */
   virtual void do_structChanged();
   /** find and set link to source or fake source */
@@ -705,11 +704,11 @@ class InputSimple : public InputAbstract {
   virtual ~InputSimple();
   DCL_CREATE;
   DCL_STD_INF;
-  virtual void post_set() override;
   // less operators for double: const only
   operator double() const { return *p; };
   const double* caddr() const { return p; };
  protected:
+  virtual void do_post_set() override;
   /** find and set link to source or fake source */
   virtual void set_link() override;
 
@@ -730,13 +729,13 @@ class InputParam : public InputAbstract {
   virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
   DCL_CREATE;
   DCL_STD_INF;
-  virtual void post_set() override;
   operator double() const { return *p; };
   const double* caddr() const { return p; };
   double* targ_addr() const { return targ; };
   int getOnlyFirst() const { return onlyFirst; }
   int getTargetFlag() const { return target_flag; }
  protected:
+  virtual void do_post_set() override;
   /** find and set link to  from (fake)  source to (fake) target */
   virtual void set_link() override;
 

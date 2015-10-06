@@ -93,13 +93,13 @@ int TSubScheme::do_endLoop()
   return 0;
 }
 
-void TSubScheme::post_set()
+void TSubScheme::do_post_set()
 {
   sch_proto = getElemOfAncessorT<Scheme*>( sch_name );
   // if( !sch_proto ) {
   //   qWarning() << "Fail to find prototype cheme " << sch_name << NWHE; // Not here!
   // }
-  return TDataSet::post_set();
+  return TDataSet::do_post_set();
 }
 
 DEFAULT_FUNCS_REG(TSubScheme)

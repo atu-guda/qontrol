@@ -47,9 +47,9 @@ QIcon Simulation::getIcon() const
 }
 
 
-void Simulation::post_set()
+void Simulation::do_post_set()
 {
-  TDataSet::post_set();
+  TDataSet::do_post_set();
 
   n1_eff = n2_eff = 1;
   if( runType > Simulation::runSingle ) {

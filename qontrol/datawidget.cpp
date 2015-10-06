@@ -1109,13 +1109,16 @@ DataDialog::DataDialog( HolderData &a_ds, QWidget *parent )
   : QDialog( parent ), ds( a_ds)
 {
   QString s = ds.getType()  %  ' ' %  ds.getFullName();
+  if( ds.getModified() ) {
+    s += " *";
+  }
   setWindowTitle( s );
   createWidgets();
   getAll();
 
 }
 
-int DataDialog::getAll()
+int DataDialog::getAll() // from object to wigets
 {
   int ng = 0;
 
@@ -1127,7 +1130,7 @@ int DataDialog::getAll()
   return ng;
 }
 
-int DataDialog::setAll()
+int DataDialog::setAll() // from widgets to object
 {
   int ns = 0;
 
@@ -1136,7 +1139,7 @@ int DataDialog::setAll()
     ++ns;
   }
   ds.post_set();
-  ds.setModified();
+  // ds.setModified(); // TODO: check: must be set by low-level elements
 
   return ns;
 }

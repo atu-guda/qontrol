@@ -53,7 +53,7 @@ class Simulation : public TDataSet  {
   //virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
   virtual QIcon getIcon() const override;
 
-  virtual void post_set() override;
+  virtual void do_post_set() override;
 
  protected:
   // simulation parameters, borrowed/renamed from TModel

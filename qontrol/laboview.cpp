@@ -157,7 +157,7 @@ bool LaboView::editObj( HolderData *obj, bool resetModel  )
   delete dia;
   if( rc == QDialog::Accepted ) {
 
-    model->setModified();
+    // model->setModified(); TODO: check
     if( resetModel ) {
       model->reset();
     }
@@ -399,7 +399,7 @@ void LaboView::renameElm()
 
   if( ok ) {
     if( main_s->rename_obj( old_name, new_name ) ) {
-      model->setModified();
+      // model->setModified(); // TODO: check auto
       model->reset();
       emit viewChanged();
     }
@@ -432,7 +432,7 @@ void LaboView::qlinkElm()
   }
   main_s->reportStructChanged();
   main_s->reset();
-  main_s->setModified();
+  // main_s->setModified();
   emit viewChanged();
 }
 
@@ -467,7 +467,8 @@ void LaboView::qplinkElm()
   pi->setData( "line_color", "red" );
 
   main_s->reportStructChanged();
-  main_s->reset(); main_s->setModified();
+  main_s->reset();
+  // main_s->setModified(); // TODO: check
   emit viewChanged();
 }
 
@@ -496,7 +497,8 @@ void LaboView::unlinkElm()
   qDeleteAll( pis->children() );
 
   main_s->reportStructChanged();
-  main_s->reset(); main_s->setModified();
+  main_s->reset();
+  // main_s->setModified(); // TODO: check
   emit viewChanged();
 }
 
@@ -511,7 +513,7 @@ void LaboView::lockElm()
   selObj->setData( "locked", lck );
 
   main_s->reset();
-  main_s->setModified();
+  // main_s->setModified();
   emit viewChanged();
 }
 
@@ -630,10 +632,11 @@ void LaboView::showTreeElm()
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
 
-  dia->resize( 80*em, 50*em ); // TODO: unmagic
+  dia->resize( 86*em, 50*em ); // TODO: unmagic
   treeView->setColumnWidth( 0, 35*em );
   treeView->setColumnWidth( 1, 10*em );
   treeView->setColumnWidth( 2, 35*em );
+  treeView->setColumnWidth( 3,  6*em );
   treeView->expandAll();
   dia->exec();
   delete dia;
@@ -909,7 +912,7 @@ void LaboView::renameOut()
 
   if( ok ) {
     if( outs->rename_obj( old_name, new_name ) ) {
-      model->setModified();
+      // model->setModified();
       model->reset();
       emit viewChanged();
     }
@@ -1109,7 +1112,7 @@ void LaboView::renameGraph()
 
   if( ok ) {
     if( plots->rename_obj( old_name, new_name ) ) {
-      model->setModified();
+      // model->setModified();
       model->reset();
       emit viewChanged();
     }
@@ -1322,7 +1325,7 @@ void LaboView::renameSimul()
 
   if( ok ) {
     if( sims->rename_obj( old_name, new_name ) ) {
-      model->setModified();
+      // model->setModified();
       model->reset();
       emit viewChanged();
     }
@@ -1413,10 +1416,11 @@ void LaboView::showTreeModel()
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
 
-  dia->resize( 80*em, 50*em ); // TODO: unmagic
+  dia->resize( 86*em, 50*em ); // TODO: unmagic
   treeView->setColumnWidth( 0, 35*em );
   treeView->setColumnWidth( 1, 10*em );
   treeView->setColumnWidth( 2, 35*em );
+  treeView->setColumnWidth( 3,  6*em );
   treeView->expandAll();
   dia->exec();
   delete dia;
@@ -1468,7 +1472,15 @@ void LaboView::editScheme()
   }
   Scheme *sch = model->getScheme( nm );
   if( sch ) {
-    emit viewChanged();
+    auto schWnd = new QMainWindow( this );
+    schWnd->setWindowTitle( QString( PACKAGE ": Scheme ") + sch->objectName() );
+    schWnd->setAttribute( Qt::WA_DeleteOnClose );
+    auto sv = new StructView( sch, this );
+
+    schWnd->setCentralWidget( sv );
+    sv->setFocus();
+    schWnd->show();
+    // emit viewChanged();
   }
 
   // editObj( sch );
@@ -1498,7 +1510,7 @@ void LaboView::renameScheme()
   if( !ok ) { return; }
 
   if( schems->rename_obj( old_name, new_name ) ) {
-    model->setModified();
+    // model->setModified();
     model->reset();
     emit viewChanged();
   }
