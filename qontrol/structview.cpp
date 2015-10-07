@@ -617,6 +617,13 @@ int StructView::checkState( CheckType ctp )
   return 1;
 }
 
+QString StructView::getSchemeName() const
+{
+  if( !sch ) {
+    return "? No Scheme! ?";
+  }
+  return sch->getFullName();
+}
 
 // ==== element related
 

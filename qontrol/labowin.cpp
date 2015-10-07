@@ -22,6 +22,7 @@
 
 #include "miscfun.h"
 #include "laboview.h"
+#include "structview.h"
 #include "labodoc.h"
 #include "labowin.h"
 #include "mo2settdlg.h"
@@ -810,21 +811,19 @@ void LaboWin::closeEvent ( QCloseEvent *e )
   }
 }
 
-LaboView* LaboWin::createChild( LaboDoc* doc )
+QMdiSubWindow* LaboWin::addChild( QWidget *subw )
 {
-  auto  w = new LaboView( doc, this );
-  mdiArea->addSubWindow( w );
-  return w;
+  return mdiArea->addSubWindow( subw );
 }
 
 
 bool LaboWin::queryExit()
 {
-  int exit = QMessageBox::information( this,
-      tr("Quit..."), tr("Do your really want to quit?"),
-      QMessageBox::Ok, QMessageBox::Cancel);
+  int rc = QMessageBox::information( this,
+      tr( "Quit..." ), tr( "Do your really want to quit?" ),
+      QMessageBox::Ok, QMessageBox::Cancel );
 
-  return ( exit==1 );
+  return ( rc == QMessageBox::Ok );
 }
 
 QMdiSubWindow* LaboWin::findMdiChild( const QString &fileName )
@@ -846,16 +845,31 @@ QMdiSubWindow* LaboWin::findMdiChild( const QString &fileName )
 
 LaboView* LaboWin::activeLaboView()
 {
-  if( QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow() )
-    return qobject_cast<LaboView *>( activeSubWindow->widget() );
+  if( QMdiSubWindow *subw = mdiArea->activeSubWindow() ) {
+    return qobject_cast<LaboView *>( subw->widget() );
+  }
+  return nullptr;
+}
+
+QWidget* LaboWin::activeView()
+{
+  if( QMdiSubWindow *subw = mdiArea->activeSubWindow() ) {
+    return subw->widget();
+  }
   return nullptr;
 }
 
 void LaboWin::callLaboViewSlot( const char *slot, const QString &mess )
 {
+  QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow();
+  if( !activeSubWindow ) { return; }
+  QWidget *m = activeSubWindow->widget();
+  if( !m ) { return; };
+
+  // TODO: check type
+
   statusBar()->showMessage( mess );
 
-  QWidget* m = activeLaboView();
   if ( m ) {
     QMetaObject::invokeMethod( m, slot, Qt::DirectConnection );
     m->update();
@@ -880,7 +894,8 @@ void LaboWin::slotFileNew()
   doc->setPathName(fileName);
   doc->setTitle(fileName);
 
-  LaboView *cw = createChild( doc );
+  auto  cw = new LaboView( doc, this );
+  mdiArea->addSubWindow( cw );
   updateActions();
   cw->show();
   statusBar()->showMessage( tr( "Ready." ) );
@@ -892,7 +907,8 @@ void LaboWin::slotFileOpenXML()
   statusBar()->showMessage( tr( "Opening model file..." ) );
   QString fileName =
     QFileDialog::getOpenFileName( this, tr("Open model file"),
-        "", "Model *.qol files (*.qol);;All files(*)" );
+        ".", "Model qol files (*.qol);;All files(*)" );
+
   if ( fileName.isEmpty() ) {
      statusBar()->showMessage( tr( "Open canceled." ) );
      updateActions();
@@ -924,7 +940,8 @@ bool LaboWin::doFileOpenXML( const QString &fn )
     return false;
   };
 
-  LaboView *cw = createChild( doc );
+  auto  cw = new LaboView( doc, this );
+  mdiArea->addSubWindow( cw );
   cw->show();
   updateActions();
   return true;
@@ -958,7 +975,7 @@ void LaboWin::slotFileSaveXMLAs()
     return;
   }
   QString fn = QFileDialog::getSaveFileName( this, tr("Save model"),
-      QString::null, "Model *.qol files (*.qol);;All files(*)" );
+      QString::null, "Model qol files (*.qol);;All files(*)" );
 
   if ( !fn.isEmpty() ) {
     QFileInfo fi( fn );
@@ -1038,7 +1055,7 @@ void LaboWin::slotViewToolBar()
   ///////////////////////////////////////////////////////////////////
   // turn Toolbar on or off
 
-  if (fileToolbar->isVisible()) {
+  if( fileToolbar->isVisible() ) {
     fileToolbar->hide();
     elmToolbar->hide();
     act_tbar->setChecked( false );
@@ -1056,7 +1073,7 @@ void LaboWin::slotViewStatusBar()
   ///////////////////////////////////////////////////////////////////
   //turn Statusbar on or off
 
-  if (statusBar()->isVisible()) {
+  if( statusBar()->isVisible() ) {
     statusBar()->hide();
     act_sbar->setChecked( false );
   } else {
@@ -1238,22 +1255,39 @@ void LaboWin::windowMenuAboutToShow()
 
   // add windows to menu
   QList<QMdiSubWindow *> windows = mdiArea->subWindowList();
+  QMdiSubWindow *aswin = mdiArea->activeSubWindow();
+
   for( int i = 0; i < windows.size(); ++i ) {
-    LaboView *child = qobject_cast<LaboView *>(windows.at(i)->widget());
+    QMdiSubWindow *swin = windows.at(i);
+    QWidget *child = swin->widget();
+    if( !child ) {
+      qWarning() << "Null child i=" << QSN(i) << WHE;
+      continue;
+    }
+    LaboView *lv = qobject_cast<LaboView *>( child ); // TODO: common widget for subwindows
+    StructView *sv = qobject_cast<StructView *>( child );
 
     QString text;
-    if (i < 9) {
-      text = tr("&%1 %2").arg(i + 1).arg(child->currentFile());
-    } else {
-      text = tr("%1 %2").arg(i + 1).arg(child->currentFile());
+    if( i < 9 ) {
+      text = QSL( "&" );
     }
+    text += QSN( i+1 ) + QSL( " " );
+    if( lv ) {
+      text += QSL( "mdl: " ) + lv->currentFile();
+    } else if( sv ) {
+      text += QSL( "sch: " ) + sv->getSchemeName();
+    } else {
+      text += QSL( " ? Unknown " );
+    }
+    text += QSL( " " ) + QSNX( (unsigned long)swin ) + QSL( " " ) + QSNX( (unsigned long)aswin );
+
     QAction *action  = pWindowMenu->addAction( text );
-    action->setCheckable(true);
-    action->setChecked( child == activeLaboView() );
+    action->setCheckable( true );
+    action->setChecked( swin == aswin );
     // cast to fight unbiguity:
     connect( action, &QAction::triggered, windowMapper,
         static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map) );
-    windowMapper->setMapping( action, windows.at(i) );
+    windowMapper->setMapping( action, swin );
   }
 
   updateActions();
@@ -1548,9 +1582,18 @@ void LaboWin::slotRunModelScript()
 
 void LaboWin::setActiveSubWindow( QWidget *win )
 {
-  if( !win )
+  if( !win ) {
+    qWarning() << "win == nullptr " << WHE;
     return;
-  mdiArea->setActiveSubWindow( qobject_cast<QMdiSubWindow *>(win) );
+  }
+  QMdiSubWindow *swin =  qobject_cast<QMdiSubWindow *>(win);
+  if( !swin ) {
+    qWarning() << "swin == nullptr " << WHE;
+    return;
+  }
+  mdiArea->setActiveSubWindow( swin );
+  qWarning() << "swin=  " << QSNX( (unsigned long)(swin) );
+  qWarning() << "aswin= " << QSNX( (unsigned long)( mdiArea->activeSubWindow() ) );
   updateActions();
 }
 

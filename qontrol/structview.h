@@ -80,6 +80,7 @@ class StructView : public QWidget  {
     /** returns level for aux objects selection */
     int getLevel() const { return level; }
     int checkState( CheckType ctp );
+    QString getSchemeName() const;
   public slots:
     void update();
     void print();

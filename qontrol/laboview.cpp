@@ -1082,16 +1082,20 @@ void LaboView::editScheme()
   if( nm.isEmpty() ) {
     return;
   }
+  LaboWin *mwin = LaboWin::win();
+  if( !mwin ) {
+    return;
+  }
+
   Scheme *sch = model->getScheme( nm );
   if( sch ) {
-    auto schWnd = new QMainWindow( this );
-    schWnd->setWindowTitle( QString( PACKAGE ": Scheme ") + sch->objectName() );
-    schWnd->setAttribute( Qt::WA_DeleteOnClose );
     auto sv = new StructView( sch, this, nullptr );
+    sv->setAttribute( Qt::WA_DeleteOnClose );
+    sv->setWindowTitle( QString( PACKAGE ": Scheme ") + sch->objectName() );
+    mwin->addChild( sv );
 
-    schWnd->setCentralWidget( sv );
     sv->setFocus();
-    schWnd->show();
+    sv->show();
     // emit viewChanged();
   }
 
@@ -1099,10 +1103,6 @@ void LaboView::editScheme()
 
 void LaboView::renameScheme()
 {
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
-
   QString nm = getSelName( schems_view );
   if( nm.isEmpty() ) {
     return;
@@ -1121,7 +1121,6 @@ void LaboView::renameScheme()
   if( !ok ) { return; }
 
   if( schems->rename_obj( old_name, new_name ) ) {
-    // model->setModified();
     model->reset();
     emit viewChanged();
   }
