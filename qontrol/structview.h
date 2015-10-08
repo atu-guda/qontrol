@@ -111,6 +111,7 @@ class StructView : public QWidget  {
   signals:
     void sig_changeSel(int,int,int);
     void sig_changeLevel(int);
+    void viewChanged();
   protected:
     /** fill and calc info about element */
     bool fill_elmInfo( const TMiso *ob, ElemInfo &el ) const;

@@ -3,8 +3,8 @@ Shadow main scheme.
 BUG: hang while File::open. ??
 BUG: must close scheme... windows if closed model.
 BUG: model marked modified while run with submodels. (add shadow flag?)
+BUG: hints failed in subschemes
 Check: when to reset model?
-modified flag fomr LoboDoc to rootdata
 Check: update link values only after step - prep for multi-threading
 Hint for new element names
 Hide some types in new element dialog

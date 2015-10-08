@@ -95,34 +95,34 @@ void StructView::changeSel( int x, int y, int rel )
     return;
   }
 
-  selObj = nullptr;
+  selObj = nullptr; int n_obj = -1;
   switch( rel ) {
-    case 0: sel_x = x; sel_y = y; break;
-    case 1: sel_x += x; sel_y += y; break;
-    case 2:
+    case 0: sel_x = x; sel_y = y; break;   // absolute
+    case 1: sel_x += x; sel_y += y; break; // relative
+    case 2:                                // next elem
             ob = sch->xy2Miso( sel_x, sel_y );
-            if( !ob ) {
-              break;
+            if( ob ) {
+              n_obj = ob->getMyIndexInParent();
             }
-            sel_x = ob->getDataD( "vis_x", 0 );
-            sel_y = ob->getDataD( "vis_y", 0 );
+            ++n_obj;
+            ob = qobject_cast<TMiso*>( sch->getElem( n_obj ) );
+            if( ob ) {
+              sel_x = ob->getDataD( "vis_x", 0 );
+              sel_y = ob->getDataD( "vis_y", 0 );
+            };
             break;
     default: break;
   };
-  if( sel_x >= MODEL_MX ) sel_x = MODEL_MX-1;
-  if( sel_y >= MODEL_MY ) sel_y = MODEL_MY-1;
-  if( sel_x < 0 ) sel_x = 0;
-  if( sel_y < 0 ) sel_y = 0;
+  sel_x = qBound( 0, sel_x, MODEL_MX-1 );
+  sel_y = qBound( 0, sel_y, MODEL_MY-1 );
   sel = -1;
   ob = sch->xy2Miso( sel_x, sel_y );
   if( ob ) {
     selObj = ob;
     sel = ob->getMyIndexInParent();
   }
-  // QPoint seco = getSelCoords();
-  // scrollArea->ensureVisible( seco.x(), seco.y() );
   update();
-  // emit viewChanged();
+  emit viewChanged();
 }
 
 
@@ -133,7 +133,7 @@ void StructView::changeLevel( int lev )
     level = 0;
   }
   update();
-  // emit viewChanged();
+  emit viewChanged();
 }
 
 
@@ -668,7 +668,7 @@ void StructView::delElm()
     }
 
     changeSel( 0, 0, 1 ); // update sel
-    // emit viewChanged();
+    emit viewChanged();
   };
 }
 
@@ -681,7 +681,7 @@ void StructView::editElm()
   if( ok ) {
     update();
     // model->reset();
-    // emit viewChanged();
+    emit viewChanged();
   }
 }
 
@@ -698,9 +698,8 @@ void StructView::renameElm()
 
   if( ok ) {
     if( sch->rename_obj( old_name, new_name ) ) {
-      // model->setModified(); // TODO: check auto
       // model->reset();
-      // emit viewChanged();
+      emit viewChanged();
     }
   }
 
@@ -723,16 +722,16 @@ void StructView::qlinkElm()
   // TODO: its model action. really? model dont know about selected and marked.
 
   InputSimple *in = selObj->getInput( level );
-  if( ! in )
+  if( ! in ) {
     return;
+  }
   if( ! in->setData( "source", toname ) ) {
     qWarning() << "fail to set source " << toname << " in " << in->getFullName() << WHE;
     return;
   }
   sch->reportStructChanged();
   sch->reset();
-  // sch->setModified();
-  // emit viewChanged();
+  emit viewChanged();
 }
 
 
@@ -767,7 +766,7 @@ void StructView::qplinkElm()
 
   sch->reportStructChanged();
   sch->reset();
-  // emit viewChanged();
+  emit viewChanged();
 }
 
 void StructView::unlinkElm()
@@ -796,8 +795,7 @@ void StructView::unlinkElm()
 
   sch->reportStructChanged();
   sch->reset();
-  // sch->setModified(); // TODO: check
-  // emit viewChanged();
+  emit viewChanged();
 }
 
 void StructView::lockElm()
@@ -811,8 +809,7 @@ void StructView::lockElm()
   selObj->setData( "locked", lck );
 
   sch->reset();
-  // sch->setModified();
-  // emit viewChanged();
+  emit viewChanged();
 }
 
 void StructView::ordElm()
@@ -827,14 +824,14 @@ void StructView::ordElm()
       "Input new element order",  old_ord, 0, IMAX, 1, &ok );
   if( ok ) {
     sch->newOrder( selObj->objectName(), new_ord ); // reset implied
-    // emit viewChanged();
+    emit viewChanged();
   };
 }
 
 void StructView::markElm()
 {
   markObj = selObj;
-  // emit viewChanged();
+  emit viewChanged();
 }
 
 void StructView::moveElm()
@@ -844,7 +841,8 @@ void StructView::moveElm()
   }
 
   sch->moveElem( markObj->objectName(), sel_x, sel_y );
-  // emit viewChanged();
+  changeSel( 0, 0, 1 ); // update sel
+  emit viewChanged();
 }
 
 void StructView::infoElm()
@@ -903,7 +901,7 @@ void StructView::infoElm()
   dia->resize( 72*em, 50*em ); // TODO: adjust to inner table width
   dia->exec();
   delete dia;
-  // emit viewChanged();
+  emit viewChanged();
 }
 
 void StructView::showTreeElm()
@@ -938,7 +936,7 @@ void StructView::showTreeElm()
   treeView->expandAll();
   dia->exec();
   delete dia;
-  // emit viewChanged();
+  emit viewChanged();
   return;
 }
 
@@ -974,7 +972,7 @@ void StructView::testElm1()
   dia->resize( 60*em, 30*em ); // TODO: unmagic
   dia->exec();
   delete dia;
-  // emit viewChanged();
+  emit viewChanged();
 }
 
 void StructView::testElm2()

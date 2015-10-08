@@ -81,7 +81,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   scrollArea->setLineWidth( 1 );
   scrollArea->setMidLineWidth( 1 );
   scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
-  // scrollArea->setFocusProxy( sview );
+  scrollArea->setFocusProxy( sview );
 
   stam = new StatusModel( this, this );
 
@@ -106,6 +106,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   // selectSheme();
 
   connect( this, &LaboView::viewChanged, this, &LaboView::updateViews ); // todo: from sview
+  connect( sview, &StructView::viewChanged, this, &LaboView::updateViews ); // todo: from sview
   // connect( sview, &StructView::sig_changeSel,   this, &LaboView::changeSel );
   // connect( sview, &StructView::sig_changeLevel, this, &LaboView::changeLevel );
 
@@ -232,6 +233,8 @@ void LaboView::resizeEvent( QResizeEvent *e )
 
 void LaboView::updateViews()
 {
+  QPoint seco = sview->getSelCoords();
+  scrollArea->ensureVisible( seco.x(), seco.y() );
   sview->update();
   // outs_view->reset();
   outs_view->update();
@@ -241,52 +244,9 @@ void LaboView::updateViews()
 }
 
 
-// void LaboView::changeSel( int x, int y, int rel )
-// {
-//   TMiso *ob;
-//
-//   selObj = nullptr;
-//   switch( rel ) {
-//     case 0: sel_x = x; sel_y = y; break;
-//     case 1: sel_x += x; sel_y += y; break;
-//     case 2:
-//             ob = main_s->xy2Miso( sel_x, sel_y );
-//             if( !ob ) {
-//               break;
-//             }
-//             sel_x = ob->getDataD( "vis_x", 0 );
-//             sel_y = ob->getDataD( "vis_y", 0 );
-//             break;
-//     default: break;
-//   };
-//   if( sel_x >= MODEL_MX ) sel_x = MODEL_MX-1;
-//   if( sel_y >= MODEL_MY ) sel_y = MODEL_MY-1;
-//   if( sel_x < 0 ) sel_x = 0;
-//   if( sel_y < 0 ) sel_y = 0;
-//   sel = -1;
-//   ob = main_s->xy2Miso( sel_x, sel_y );
-//   if( ob ) {
-//     selObj = ob;
-//     sel = ob->getMyIndexInParent();
-//   }
-//   QPoint seco = sview->getSelCoords();
-//   scrollArea->ensureVisible( seco.x(), seco.y() );
-//   emit viewChanged();
-// }
-
-
-// void LaboView::changeLevel( int lev )
-// {
-//   level = lev;
-//   if( level < 0 || level >= 64 ) {
-//     level = 0;
-//   }
-//   emit viewChanged();
-// }
 
 void LaboView::changeSelOut( const QModelIndex & /*cur*/, const QModelIndex & )
 {
-  // sel_out = cur.row();
   emit viewChanged();
 }
 
@@ -713,7 +673,6 @@ void LaboView::renameGraph()
 
   if( ok ) {
     if( plots->rename_obj( old_name, new_name ) ) {
-      // model->setModified();
       model->reset();
       emit viewChanged();
     }
