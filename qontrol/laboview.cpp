@@ -76,14 +76,12 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   schems_view = new SchemeView( schems, this );
 
-  sview = new StructView( main_s, this, outs_view );
+  sview = new StructView( main_s, this, this, outs_view );
   scrollArea->setWidget( sview );
   scrollArea->setLineWidth( 1 );
   scrollArea->setMidLineWidth( 1 );
   scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
-  scrollArea->setFocusProxy( sview );
-
-
+  // scrollArea->setFocusProxy( sview );
 
   stam = new StatusModel( this, this );
 
@@ -99,7 +97,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   vlay->addWidget( stam );
   setLayout( vlay );
 
-  setWindowTitle( doc->pathName() );
+  setWindowTitle( "model: " + doc->pathName() );
 
   // default: select object 0
   selectOut();
@@ -740,8 +738,8 @@ void LaboView::showGraph()
     return;
   }
 
-  auto plotWnd = new QMainWindow( this );
-  plotWnd->setWindowTitle( QString( PACKAGE ": MGL ") + gra->objectName() );
+  auto plotWnd = new QMainWindow( this ); // TODO: to MDI
+  plotWnd->setWindowTitle( QString( "MGL: ") + gra->objectName() );
   plotWnd->setAttribute( Qt::WA_DeleteOnClose );
   auto pv = new MglView( gra, plotWnd );
 
@@ -1028,11 +1026,11 @@ void LaboView::showTreeModel()
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
 
-  dia->resize( 86*em, 50*em ); // TODO: unmagic
+  dia->resize( 90*em, 50*em ); // TODO: unmagic
   treeView->setColumnWidth( 0, 35*em );
   treeView->setColumnWidth( 1, 10*em );
   treeView->setColumnWidth( 2, 35*em );
-  treeView->setColumnWidth( 3,  6*em );
+  treeView->setColumnWidth( 3,  8*em );
   treeView->expandAll();
   dia->exec();
   delete dia;
@@ -1089,13 +1087,11 @@ void LaboView::editScheme()
 
   Scheme *sch = model->getScheme( nm );
   if( sch ) {
-    auto sv = new StructView( sch, this, nullptr );
-    sv->setAttribute( Qt::WA_DeleteOnClose );
-    sv->setWindowTitle( QString( PACKAGE ": Scheme ") + sch->objectName() );
+    auto sv = new StructView( sch, mwin, this, nullptr );
+    // sv->setAttribute( Qt::WA_DeleteOnClose ); // in addChild
+    sv->setWindowTitle( QString( "Scheme: ") + sch->objectName() );
     mwin->addChild( sv );
 
-    sv->setFocus();
-    sv->show();
     // emit viewChanged();
   }
 

@@ -56,7 +56,7 @@ class StructView : public QWidget  {
     enum CheckType { validCheck = 0, selCheck, linkToCheck,
                      noselCheck, moveCheck, doneCheck
     };
-    StructView( Scheme *a_sch, LaboView *mview, OutDataView *a_oview );
+    StructView( Scheme *a_sch, QWidget *a_par, LaboView *mview, OutDataView *a_oview );
     virtual ~StructView();
     /** print contents */
     void printAll();

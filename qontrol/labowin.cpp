@@ -48,7 +48,7 @@ LaboWin::LaboWin()
 
   setCentralWidget( split );
 
-  connect( mdiArea, &QMdiArea::subWindowActivated, this, &LaboWin::updateActions );
+  connect( mdiArea, &QMdiArea::subWindowActivated, this, &LaboWin::slotHandleSubWindowActivated );
   windowMapper = new QSignalMapper(this);
   connect( windowMapper,
       static_cast<void (QSignalMapper::*)(QWidget*)>(&QSignalMapper::mapped),
@@ -543,6 +543,15 @@ void LaboWin::initIface()
   act_winCascade->setWhatsThis( tr("Cascade the windows") );
   connect( act_winCascade, &QAction::triggered, this, &LaboWin::slotWindowCascade );
 
+  act_winNext = new QAction( "Next window",  this );
+  act_winNext->setShortcut( Qt::Key_F6 );
+  act_winNext->setWhatsThis( tr("Activate next window") );
+  connect( act_winNext, &QAction::triggered, mdiArea, &QMdiArea::activateNextSubWindow );
+
+  act_winPrev = new QAction( "Previous window",  this );
+  act_winPrev->setWhatsThis( tr("Activate previous window") );
+  connect( act_winPrev, &QAction::triggered, mdiArea, &QMdiArea::activatePreviousSubWindow );
+
 
   // ==== help group
 
@@ -766,6 +775,20 @@ void LaboWin::initStatusBar()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
+void LaboWin::slotHandleSubWindowActivated( QMdiSubWindow *swin )
+{
+  updateActions();
+  if( !swin ) {
+    setWindowTitle( PACKAGE " " VERSION );
+    // qWarning() << "swin == nullptr " << WHE;
+    return;
+  }
+  QString tit = swin->windowTitle() + QSL( " " PACKAGE );
+  setWindowTitle( tit );
+  // qWarning() << "swin: " << tit << WHE;
+
+}
+
 
 void LaboWin::enableActions( bool ena, int id_ )
 {
@@ -782,13 +805,14 @@ void LaboWin::enableActions( bool ena, int id_ )
 
 void LaboWin::updateActions()
 {
-  if( mdiArea->currentSubWindow() != 0 ) { // TODO: different windows
-    enableActions( true, 0 );
-  } else {
+  auto cswin = mdiArea->currentSubWindow();
+  if( !cswin ) {
     enableActions( false, 0 );
-  };
-  setWndTitle( this ); // "this" is fake
+    return;
+  }
 
+  enableActions( true, 0 );
+  setWndTitle( this ); // "this" is fake
 }
 
 void LaboWin::setWndTitle( QWidget* )
@@ -811,9 +835,23 @@ void LaboWin::closeEvent ( QCloseEvent *e )
   }
 }
 
-QMdiSubWindow* LaboWin::addChild( QWidget *subw )
+QMdiSubWindow* LaboWin::addChild( QWidget *w )
 {
-  return mdiArea->addSubWindow( subw );
+  if( !w ) {
+    qWarning() << "w is nullptr in " << WHE;
+    return nullptr;
+  }
+  w->setAttribute( Qt::WA_DeleteOnClose );
+
+  QMdiSubWindow *subw = mdiArea->addSubWindow( w );
+  if( !subw ) {
+    qWarning() << "subw us nullptr in " << WHE;
+    return nullptr;
+  }
+  subw->show();
+  // subw->setFocus();
+  // updateActions();
+  return subw;
 }
 
 
@@ -889,15 +927,13 @@ void LaboWin::slotFileNew()
 
   auto  doc = new LaboDoc();
   ++untitledCount;
-  QString fileName = QString( "untitled_%1.mo2" ).arg(untitledCount);
+  QString fileName = QString( "untitled_%1.qol" ).arg(untitledCount);
   doc->newDocument();
   doc->setPathName(fileName);
   doc->setTitle(fileName);
 
   auto  cw = new LaboView( doc, this );
-  mdiArea->addSubWindow( cw );
-  updateActions();
-  cw->show();
+  addChild( cw );
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
@@ -941,9 +977,8 @@ bool LaboWin::doFileOpenXML( const QString &fn )
   };
 
   auto  cw = new LaboView( doc, this );
-  mdiArea->addSubWindow( cw );
-  cw->show();
-  updateActions();
+  // mdiArea->addSubWindow( cw );
+  addChild( cw );
   return true;
 }
 
@@ -986,7 +1021,7 @@ void LaboWin::slotFileSaveXMLAs()
 
     LaboDoc* doc = m->getDocument();
     if( doc->saveDocumentXML( fn ) ) {
-       m->setWindowTitle( doc->title() );
+       m->setWindowTitle( QSL( "mdl: " ) + doc->title() );
     };
   };
   updateActions();
@@ -1252,6 +1287,9 @@ void LaboWin::windowMenuAboutToShow()
   pWindowMenu->addAction( act_winTile );
   pWindowMenu->addAction( act_winCascade );
   pWindowMenu->addSeparator();
+  pWindowMenu->addAction( act_winNext );
+  pWindowMenu->addAction( act_winPrev );
+  pWindowMenu->addSeparator();
 
   // add windows to menu
   QList<QMdiSubWindow *> windows = mdiArea->subWindowList();
@@ -1264,22 +1302,21 @@ void LaboWin::windowMenuAboutToShow()
       qWarning() << "Null child i=" << QSN(i) << WHE;
       continue;
     }
-    LaboView *lv = qobject_cast<LaboView *>( child ); // TODO: common widget for subwindows
-    StructView *sv = qobject_cast<StructView *>( child );
+    // LaboView *lv = qobject_cast<LaboView *>( child ); // TODO: common widget for subwindows
+    // StructView *sv = qobject_cast<StructView *>( child );
 
     QString text;
     if( i < 9 ) {
       text = QSL( "&" );
     }
-    text += QSN( i+1 ) + QSL( " " );
-    if( lv ) {
-      text += QSL( "mdl: " ) + lv->currentFile();
-    } else if( sv ) {
-      text += QSL( "sch: " ) + sv->getSchemeName();
-    } else {
-      text += QSL( " ? Unknown " );
-    }
-    text += QSL( " " ) + QSNX( (unsigned long)swin ) + QSL( " " ) + QSNX( (unsigned long)aswin );
+    text += QSN( i+1 ) + QSL( " " ) + child->windowTitle();
+    // if( lv ) {
+    //   text += QSL( "mdl: " ) + lv->currentFile();
+    // } else if( sv ) {
+    //   text += QSL( "sch: " ) + sv->getSchemeName();
+    // } else {
+    //   text += QSL( " ? Unknown " );
+    // }
 
     QAction *action  = pWindowMenu->addAction( text );
     action->setCheckable( true );
@@ -1583,17 +1620,18 @@ void LaboWin::slotRunModelScript()
 void LaboWin::setActiveSubWindow( QWidget *win )
 {
   if( !win ) {
-    qWarning() << "win == nullptr " << WHE;
+    // qWarning() << "win == nullptr " << WHE;
     return;
   }
   QMdiSubWindow *swin =  qobject_cast<QMdiSubWindow *>(win);
   if( !swin ) {
-    qWarning() << "swin == nullptr " << WHE;
+    // qWarning() << "swin == nullptr " << WHE;
     return;
   }
   mdiArea->setActiveSubWindow( swin );
-  qWarning() << "swin=  " << QSNX( (unsigned long)(swin) );
-  qWarning() << "aswin= " << QSNX( (unsigned long)( mdiArea->activeSubWindow() ) );
+  // debug
+  // qWarning() << "swin=  " << swin->widget()->windowTitle()
+  //            << " aswin= " << mdiArea->activeSubWindow()->widget()->windowTitle() << WHE;
   updateActions();
 }
 

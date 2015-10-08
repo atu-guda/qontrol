@@ -31,8 +31,8 @@
 
 
 
-StructView:: StructView( Scheme *a_sch, LaboView *mview, OutDataView *a_oview )
-            : QWidget( mview ), sch( a_sch ), mainview( mview ), oview( a_oview )
+StructView:: StructView( Scheme *a_sch, QWidget *a_par, LaboView *mview, OutDataView *a_oview )
+            : QWidget( a_par ), sch( a_sch ), mainview( mview ), oview( a_oview )
 {
   em = LaboWin::Em();
   QPalette pal;
@@ -44,7 +44,7 @@ StructView:: StructView( Scheme *a_sch, LaboView *mview, OutDataView *a_oview )
   // setMinimumSize( grid_sz*MODEL_MX, grid_sz*MODEL_MY ); // debug
   setMinimumSize( grid_sz*8, grid_sz*6 );
   setFocusPolicy( Qt::StrongFocus );
-  setFocus();
+  // setFocus();
 }
 
 StructView::~StructView()
@@ -57,20 +57,12 @@ QSize StructView::getElemsBound() const
   if( !sch ) {
     return QSize( 10, 10 );
   }
-  // int sel_x = mainview->getSelX();
-  // int sel_y = mainview->getSelY();
   QSize mss = sch->getMaxXY().expandedTo( QSize( sel_x, sel_y ) );
   mss += QSize( 3, 3 ); // free bound
   mss *= grid_sz;       // to grid scale
 
   return mss;
-  // TODO: revive
-  // QSize pas = mainview->svSize() - QSize(16,16);
-  // if( mx > pas.width() ) 
-  //   pas.setWidth( mx );
-  // if( my > pas.height() ) 
-  //   pas.setHeight( my );
-  // return pas;
+  // TODO: rethink size
 }
 
 QSize StructView::sizeHint() const
@@ -80,8 +72,6 @@ QSize StructView::sizeHint() const
 
 QPoint StructView::getSelCoords() const
 {
-  // int sel_x = mainview->getSelX();
-  // int sel_y = mainview->getSelY();
   return QPoint( sel_x * grid_sz + grid_sz/2, sel_y * grid_sz + grid_sz/2 );
 }
 
@@ -246,14 +236,17 @@ void StructView::drawAll( QPainter &p )
   em_small = small_fm.width( 'W' );
   ex_small = small_fm.height();
   el_marg = (grid_sz-obj_sz) / 2;
-  // sel_x = mainview->getSelX();
-  // sel_y = mainview->getSelY();
-  if( nh >= MODEL_MY ) nh = MODEL_MY;
-  if( nw >= MODEL_MX ) nh = MODEL_MX;
+  if( nh >= MODEL_MY ) { nh = MODEL_MY-1; };
+  if( nw >= MODEL_MX ) { nh = MODEL_MX-1; };
 
 
+  // if( isActiveWindow() ) {
   p.setBrush( Qt::white );
+  // } else {
+  //   p.setBrush( QColor( 200, 200, 200 ) );
+  // }
   p.drawRect( 0, 0, w, h );
+
   // ---------- draw grid
   if( psett->showgrid ) {
     p.setPen( QPen(QColor(190,210,210), 0, Qt::DotLine ) ); // TODO: config
@@ -1198,7 +1191,7 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     act = menu->addAction( QIcon( ":icons/editmodel.png" ), "Edit model" );
     connect( act, &QAction::triggered, mainview, &LaboView::editModel );
   }
-  menu->addSeparator(); //TODO: revive if need
+  menu->addSeparator();
   act = menu->addAction( QIcon::fromTheme("document-print"),"Print model" );
   connect( act, &QAction::triggered, this, &StructView::print );
 

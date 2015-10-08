@@ -102,7 +102,7 @@ class LaboWin : public QMainWindow
     const QFont& getPlotFont()   const  { return plotFont; }
     const QFont& getStructFont() const  { return structFont; }
     int getEm() const { return em; }
-    QMdiSubWindow* addChild( QWidget* subw );
+    QMdiSubWindow* addChild( QWidget* w );
     static int Em() { return ( labowin ? labowin->getEm() : 10 ); }
     static LaboWin* win() { return labowin; }
 
@@ -239,6 +239,7 @@ class LaboWin : public QMainWindow
     void slotWindowTile();
     void slotWindowCascade();
     void setActiveSubWindow( QWidget *win );
+    void slotHandleSubWindowActivated( QMdiSubWindow *swin );
     // ==== help related
     /** shows an about dlg*/
     void slotHelpAbout();
@@ -337,6 +338,7 @@ class LaboWin : public QMainWindow
             *act_logclear, *act_logsave,
             // win
             *act_winClose, *act_winCloseAll, *act_winTile, *act_winCascade,
+            *act_winNext, *act_winPrev,
             // help
             *act_helpabout, *act_helpaboutqt, *act_whatsthis,
             *act_test;
