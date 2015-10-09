@@ -32,7 +32,8 @@ STD_CLASSINFO(TMiso,clpSpecial|clpPure);
 
 
 CTOR(TMiso,TDataSet) ,
-       pis( new InputParams( "pis", this, 0, "param links", "object paramitric links", "sep=blockend") )
+       pis( new InputParams( "pis", this, 0, "param links",
+                             "object paramitric links", "sep=blockend") )
 {
 }
 
@@ -59,10 +60,9 @@ double TMiso::fun( double t, IterType itype )
     return out0;
   }
 
-  prm_mod = pis->apply();
+  prm_mod |= pis->apply();
 
   v = out0 = f( t );
-  prm_mod = 0;
   return v;
 }
 
@@ -75,8 +75,9 @@ double TMiso::f( double /* t */ )
 int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
 {
   tdt = adt; model_nn = an;
-  iter_c = IterMid; // fake
+  iter_c = IterNo;
   pis->prepare();
+  prm_mod = 0;
   int rc =  do_preRun( run_tp, an, anx, any, adt );
   if( !rc ) {
     return 0;
@@ -96,7 +97,10 @@ int TMiso::postRun( int good )
 {
   int rc = do_postRun( good );
   state = good ? stateDone : stateGood;
-  iter_c = IterMid; // fake
+  iter_c = IterNo;
+  if( prm_mod ) {
+    modified |= modifAuto;
+  }
   return rc;
 }
 
@@ -109,8 +113,7 @@ int TMiso::startLoop( int acnx, int acny )
 {
   state = stateRun;
   out0 = (double)out0_init;
-  pis->apply_pre();
-  prm_mod = 0;
+  prm_mod |= pis->apply_pre();
   return do_startLoop( acnx, acny );
 }
 

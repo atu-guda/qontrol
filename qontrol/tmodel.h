@@ -46,6 +46,7 @@ class TModel : public TDataSet  {
   //* redirects requuest to active scheme (may be more)
   const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt,
         const TDataSet **src_ob, int lev ) const override;
+  // to automaticaly copy prm[10] to other parameters
   double* getMapDoublePtr( const QString &nm );
   Q_INVOKABLE QString getOutValue( const QString &nm ) const;
 

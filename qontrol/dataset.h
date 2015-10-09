@@ -52,6 +52,15 @@ enum ClassProps {
   clpObsolete = 256  //* obsolesed class, should not writed
 };
 
+enum ModificationBits {
+  modifManual = 1,
+  modifAuto = 2,
+  modifMask = 3
+};
+
+//                               none  man  auto both extra......
+const char *const modificationChar[] = { "", "+", "#", "*", "?", ".", ",", "X" };
+
 
 /** describes class and it's creator
    used for class registration
@@ -200,7 +209,7 @@ class HolderData : public QAbstractItemModel {
     * returns true if this object is base or save of given type.
     * if cl_name is empty, return true in >= TDataSet */
   Q_INVOKABLE bool isObject( const QString &cl_name = QString() ) const;
-  // void setFlags( int a_flags ) { flags = a_flags; }
+  void addFlags( int a_flags ) { flags |= a_flags; }
   void setImmutable() { flags |= efImmutable; }
   Q_INVOKABLE int getFlags() const { return flags; }
   HolderData* getParent() const { return par; } // no Q_INVOKABLE: need reg HolderData
@@ -252,7 +261,7 @@ class HolderData : public QAbstractItemModel {
   //* reset object and all (sub)children, to local actions - do_reset();
   Q_INVOKABLE void reset();
 
-  int getModified() const { return modified; } //* returns modified flag
+  int getModified() const { return modified & modifMask; } //* returns modified flag
   void setModified();/** set modified flag : and to parents*/
   void setUnModified(); //* drop modified flag: and from childs
   void post_set();
@@ -277,14 +286,12 @@ class HolderData : public QAbstractItemModel {
   bool getUpData( const QString &nm, QString &da ) const;
   bool getUpData( const QString &nm, QVariant &da ) const;
 
-  /** corrects data, if ni==-1 -- all elements -- now empty, see setData */
-  virtual int checkData( int ni );
   /** add new object and it's description (new)*/
-  virtual HolderData* add_obj( const QString &cl_name, const QString &ob_name );
+  virtual HolderData* add_obj( const QString &cl_name, const QString &ob_name, bool ignoreMod = false );
   /** type-cast interface to add_obj */
   template <typename T>
-    T* addObj( const QString &ob_name ) {
-      return qobject_cast<T*>( add_obj( T::staticMetaObject.className(), ob_name ) );
+    T* addObj( const QString &ob_name, bool ignoreMod = false  ) {
+      return qobject_cast<T*>( add_obj( T::staticMetaObject.className(), ob_name, ignoreMod ) );
     }
   /** add new param and it's description */
   virtual HolderData* add_param( const QString &tp_name, const QString &ob_name );
@@ -344,7 +351,7 @@ class HolderData : public QAbstractItemModel {
   /** create object with params as string */
   Q_INVOKABLE bool add_obj_datas( const QString &cl_name, const QString &ob_name, const QString &datas );
   /** delete given object by name, returns 0 - error, !=0 = ok */
-  Q_INVOKABLE int del_obj( const QString &ob_name );
+  Q_INVOKABLE int del_obj( const QString &ob_name, bool ignoreMod = false  );
   //* rename object (if created dynamicaly)
   Q_INVOKABLE int rename_obj( const QString &ob_name, const QString &new_name );
   // void check_guard() const;

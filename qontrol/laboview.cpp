@@ -1036,7 +1036,7 @@ void LaboView::delScheme()
 void LaboView::editScheme()
 {
   QString nm = getSelName( schems_view );
-  if( nm.isEmpty() ) {
+  if( nm.isEmpty()  || nm == QSL( "main_s" ) ) {
     return;
   }
   LaboWin *mwin = LaboWin::win();
@@ -1047,7 +1047,6 @@ void LaboView::editScheme()
   Scheme *sch = model->getScheme( nm );
   if( sch ) {
     auto sv = new StructView( sch, mwin, this, nullptr );
-    // sv->setAttribute( Qt::WA_DeleteOnClose ); // in addChild
     sv->setWindowTitle( QString( "Scheme: ") + sch->objectName() );
     mwin->addChild( sv );
 

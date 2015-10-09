@@ -1,8 +1,7 @@
 Subschemes.
-Shadow main scheme.
+Shadow main scheme?
 BUG: hang while File::open. ??
 BUG: must close scheme... windows if closed model.
-BUG: model marked modified while run with submodels. (add shadow flag?)
 BUG: hints failed in subschemes
 Check: when to reset model?
 Check: update link values only after step - prep for multi-threading
@@ -24,9 +23,7 @@ Outputs - or even IO - for external data.
 Tests
 Autocorrelation?
 Run script before/after run (+ file)
-Shadow model while run?
 
-Propagate modified flag up to root?
 Application config: to TDataSet?
 
 JS run dialog. + one-line above log viewer

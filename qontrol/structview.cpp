@@ -289,12 +289,16 @@ void StructView::drawAll( QPainter &p )
     p.setPen( Qt::black );  p.setBrush( Qt::red );
 
     // special marks: TODO: icons
-    if( ei.locked )
+    if( ei.locked ) {
       p.drawRect( ei.xs + 4, ei.ys + 8, 20, 8 );
-    if( ei.onlyFirst )
+    }
+    if( ei.onlyFirst ) {
       p.drawRect( ei.xs + 4, ei.ys + 14, 6, 6 );
-    if( ei.onlyLast )
+    }
+    if( ei.onlyLast ) {
       p.drawRect( ei.xs + 20, ei.ys +14, 6, 6 );
+    }
+
 
     // order mark
     if( psett->showord ) {
@@ -317,6 +321,16 @@ void StructView::drawAll( QPainter &p )
       p.drawText( ei.xs + 2, st_y+ex_small, ei.name );
       line_busy++;
     };
+
+    int mod = ob->getModified(); // ---------- modification marks
+    if( mod & modifManual ) {
+      p.setPen( Qt::NoPen );  p.setBrush( QColor( 255, 150, 150, 128 ) );
+      p.drawRect( ei.xs, ei.ys+1, obj_sz-3, obj_sz/2 );
+    }
+    if( mod & modifAuto ) {
+      p.setPen( Qt::NoPen );  p.setBrush( QColor( 255, 255, 100, 128 ) );
+      p.drawRect( ei.xs+1, ei.ys+obj_sz/2, obj_sz-3, obj_sz/3 );
+    }
     // TODO: vector icon here
     p.setBrush( Qt::NoBrush ); p.setPen( QPen(Qt::black,1) );
     st_y = ei.ys + line_busy*ex_small;

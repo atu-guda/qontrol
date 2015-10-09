@@ -28,9 +28,10 @@
 
 /** iteration type */
 enum IterType {
-  IterMid = 0,     // not-first and not-last iteration
+  IterMid   = 0,   // not-first and not-last iteration
   IterFirst = 1,   // first iteration in i inner loop
-  IterLast = 2     // last iteration in inner loop
+  IterLast  = 2,   // last iteration in inner loop
+  IterNo    = 3,   // before or after run
 };
 
 class TModel; class Scheme;
@@ -124,7 +125,7 @@ class TMiso : public TDataSet  {
    /** parameters modified during run flag */
    int prm_mod = 0;
    //* Current itration type: to propagate to subschemes...
-   IterType iter_c = IterMid;
+   IterType iter_c = IterNo;
 
    DCL_DEFAULT_STATIC;
 

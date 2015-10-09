@@ -166,7 +166,7 @@ QVariant HolderData::dataObj( int col, int role ) const
     if( col != 0 ) {
       return QVariant();
     }
-    QString s = objectName() % " (" % getType() % ")";
+    QString s = objectName() % " (" % getType() % ") " % getStateStr();
     return s;
   }
 
@@ -227,8 +227,7 @@ int HolderData::indexOfHolder( const HolderData *ho ) const
 
 QString HolderData::getStateStr() const
 {
-  QString s;
-  if( modified ) { s += "*"; };
+  QString s = modificationChar[ getModified() ];
   if( dyn ) { s += "."; };
   s += getStateString( state );
   s += " ";
@@ -239,10 +238,16 @@ QString HolderData::getStateStr() const
 void HolderData::setModified()
 {
   // qWarning() << "SET: " << NWHE;
-  if( !modified && ( par != nullptr ) ) { // limit propogation to already modified
+  if( modified & modifManual ) {  // do not repeat on alread modified
+    return;
+  }
+  modified |= modifManual;
+  if( flags & efNoSave ) {    // ignore shadow and so on
+    return;
+  }
+  if( par != nullptr ) {
     par->setModified();
   }
-  modified |= 1;
 }
 
 void HolderData::setUnModified()
@@ -443,11 +448,6 @@ QString HolderData::getTypeV() const // = 0;
   return "None";
 }
 
-int HolderData::checkData( int /* ni */ )
-{
-  return 0;
-}
-
 
 void HolderData::reportStructChanged()
 {
@@ -492,7 +492,7 @@ QIcon HolderData::getIcon() const
 }
 
 // TODO: more args
-HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name )
+HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name, bool ignoreMod )
 {
   beginResetModel();
 
@@ -510,7 +510,9 @@ HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name 
   if( !ob ) {
     return nullptr;
   }
-  setModified();
+  if( !ignoreMod ) {
+    setModified();
+  }
   endResetModel();
   reportStructChanged();
 
@@ -531,7 +533,7 @@ bool HolderData::add_obj_datas( const QString &cl_name, const QString &ob_name,
   return true;
 }
 
-int HolderData::del_obj( const QString &ob_name )
+int HolderData::del_obj( const QString &ob_name, bool ignoreMod )
 {
 
   HolderData *ho = getElem( ob_name );
@@ -561,7 +563,9 @@ int HolderData::del_obj( const QString &ob_name )
     setActiveElem( act_name );
   }
 
-  setModified();
+  if( !ignoreMod ) {
+    setModified();
+  }
   endResetModel();
 
   reportStructChanged();
@@ -2120,7 +2124,6 @@ QString TDataSet::toString() const
 
 bool TDataSet::fromString( const QString &s )
 {
-  // modified flag is set by low-level element chenges?
   QString errstr;
   int err_line, err_column;
   QDomDocument x_dd;

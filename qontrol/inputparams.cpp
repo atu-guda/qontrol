@@ -43,8 +43,9 @@ void InputParams::prepare()
   for( auto inp: TCHILD(InputParam*) ) {
     flg = inp->getOnlyFirst();
     // force only-first of noRunChange target
-    if( inp->getTargetFlag() & efNoRunChange )
+    if( inp->getTargetFlag() & efNoRunChange ) {
       flg = 1;
+    }
 
     if( flg ) {
       srcs_p.push_back( inp->caddr() );
@@ -60,7 +61,7 @@ int InputParams::apply()
 {
   int n = targets.size();
   int nmod = 0;
-  for( int i=0; i<n; ++i ) {
+  for( int i=0; i<n; ++i ) { // TODO: count only real links
     *targets[i] = *srcs[i];
     ++nmod;
   }

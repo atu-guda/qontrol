@@ -52,13 +52,15 @@ int TSubScheme::do_preRun( int run_tp, int an,
     return 0;
   }
   if( getElem( sch_ename ) ) {
-    del_obj( sch_ename );
+    del_obj( sch_ename, true ); // ignoreMod
   }
-  sch = addObj<Scheme>( sch_ename );
+
+  sch = addObj<Scheme>( sch_ename, true );
   if( ! sch ) {
     qWarning() << "Fail to create subscheme " << NWHE;
     return 0;
   }
+  sch->addFlags( efNoSave );
 
   QString ss = sch_proto->toString();
   if( ! sch->fromString( ss ) ) {
@@ -72,7 +74,7 @@ int TSubScheme::do_preRun( int run_tp, int an,
 int TSubScheme::do_postRun( int /*good*/ )
 {
   sch->postRun();
-  del_obj( sch_ename );
+  del_obj( sch_ename, true );
   return 1;
 }
 

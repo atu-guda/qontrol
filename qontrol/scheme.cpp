@@ -117,8 +117,10 @@ int Scheme::postRun()
     cm |= ob->getModified();
   };
 
-  if( modified == 0 || cm != 0 )
-    modified |= 2;
+  if( modified == 0 && cm != 0 ) {
+    modified |= modifAuto;
+  }
+  state = stateDone; // TODO: or state Bad?
   return 1;
 }
 
@@ -168,14 +170,6 @@ int Scheme::fback( int code, int /* aord */, const QString & /* tdescr */ )
   return 0;
 }
 
-int Scheme::checkData( int n )
-{
-  if( n < 0 ) {
-    linkNames();
-  }
-  return TDataSet::checkData( n );
-}
-
 
 
 TMiso* Scheme::xy2Miso( int avis_x, int avis_y ) const
@@ -213,14 +207,14 @@ TMiso* Scheme::insElem( const QString &cl_name, const QString &ob_name,
                      int aord, int avis_x, int avis_y )
 {
   // not add_obj, downcast
-  TMiso *ob = qobject_cast<TMiso*>( add_obj( cl_name, ob_name ) ); 
-  if( !ob )
+  TMiso *ob = qobject_cast<TMiso*>( add_obj( cl_name, ob_name ) );
+  if( !ob ) {
     return nullptr;
+  }
   ob->setData( "ord", aord );
   ob->setData( "vis_x", avis_x );
   ob->setData( "vis_y", avis_y );
   reset();
-  modified |= 1;
   return ob;
 }
 
@@ -231,10 +225,9 @@ int Scheme::delElem( const QString &ename )
     qWarning() << "fail to find TMiso " << ename << NWHE;
     return 0;
   }
-  int rc = del_obj( ename ); // TODO: or here??
+  int rc = del_obj( ename );
   if( rc ) {
     reset();
-    modified |= 1; // TODO: auto by reportStructChanged or ???
   }
   return rc;
 }
@@ -243,8 +236,9 @@ int Scheme::delElem( const QString &ename )
 int Scheme::newOrder( const QString &name, int new_ord )
 {
   TMiso *ob = getElemT<TMiso*>( name );
-  if( !ob )
+  if( !ob ) {
     return -1;
+  }
   if( ord2Miso( new_ord ) != nullptr ) {
     return -1;
   }
@@ -252,18 +246,19 @@ int Scheme::newOrder( const QString &name, int new_ord )
   int k = ob->getDataD( "ord", -1 );
 
   reset();
-  modified |= 1;
   return ( k == new_ord ) ? 0 : -1;
 }
 
 int Scheme::moveElem( const QString &nm, int newx, int newy )
 {
   TMiso *ob, *ob1;
-  if( newx < 0 || newy < 0 )
+  if( newx < 0 || newy < 0 ) {
     return -1;
+  }
   ob = getElemT<TMiso*>( nm );
-  if( !ob )
+  if( !ob ) {
     return -1;
+  }
 
   ob1 = xy2Miso( newx, newy );
   if( ob1 ) {
@@ -278,7 +273,6 @@ int Scheme::moveElem( const QString &nm, int newx, int newy )
 
 int Scheme::linkNames()
 {
-  QString lname, pname, nname, oname;
   v_el.clear();
 
   for( auto ob : TCHILD(TMiso*) ) {

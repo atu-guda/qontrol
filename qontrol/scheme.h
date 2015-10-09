@@ -60,9 +60,6 @@ class Scheme : public TDataSet  {
   /** suggest order value for new element */
   Q_INVOKABLE int hintOrd() const;
 
-  /** reimplemented from TDataSet to ensure all data filled and linked */
-  virtual int checkData( int i );
-
   /** reimplemented to real Elems, TODO: separate containers */
   virtual void do_structChanged();
   /** sorts elements on its order */

@@ -34,7 +34,7 @@ class InputParams : public TDataSet  {
   DCL_STD_INF;
 
   void prepare();
-  int apply();
+  int apply(); // returns number of modified params
   int apply_pre();
 
  protected:

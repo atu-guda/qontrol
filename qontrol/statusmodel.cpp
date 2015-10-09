@@ -75,38 +75,35 @@ StatusModel::~StatusModel()
 
 void StatusModel::update()
 {
-  static const char* modChar[] = { " ", "+", "#", "*", "?", "." };
   QString ob_nm_tp;
   int mod, stat = 0;
-  TModel *model;
-  TMiso *ob;
-  QString s_nums("");
   l_level->setText( QSN( mainview->getLevel() ) );
   l_name->setText( "." );  l_desc->setText( "." );  l_val->setText( "" );
-  model = mainview->getModel();
+  TModel *model = mainview->getModel();
   if( !model ) {
     l_mod->setText( "X" );
     l_stat->setText( "Error" );
     return;
   }
 
-  s_nums.sprintf( "[%d;%d] ",  mainview->getSelX(), mainview->getSelY() );
+  QString s_nums = QSL("[") % QSN(mainview->getSelX()) % QSL(";")
+      % QSN( mainview->getSelY() ) % QSL("]");
   l_nums->setText( s_nums );
 
   stat = model->getState();
   l_stat->setText( getStateString( stat ) );
   mod = model->getModified();
-  l_mod->setText( modChar[mod] );
-  ob = mainview->getSelObj();
-  if( ob != 0 ) {
-    ob_nm_tp = ob->objectName()
-      % "  (" % ob->getType() % ")";
+  l_mod->setText( modificationChar[mod] );
+
+  TMiso *ob = mainview->getSelObj();
+  if( ob ) {
+    ob_nm_tp = ob->dataObj( 0, Qt::StatusTipRole ).toString();
     l_name->setText( ob_nm_tp );
     QString ob_descr = ob->getDataD( "descr", QString() );
     l_desc->setText( ob_descr );
     if( stat > 1 ) {
-      double val = ob->getDataD( "out0", 0.0 );
-      l_val->setText( QSN( val, 'g', 12 ) );
+      double val = ob->getDataD( "out0", 0.0 ); // TODO: StatusTipRole(col=1)
+      l_val->setText( QSN( val, 'g', 18 ) );
     };
   };
 

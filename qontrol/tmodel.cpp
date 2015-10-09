@@ -81,7 +81,7 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
     };
   };
 
-  // may be some model params?
+  // may be some model params? // overkill ? called by scheme?
   rv =  getDoublePtr( nm, lt, src_ob, lev );
 
   if( !rv ) {
@@ -100,6 +100,7 @@ double* TModel::getMapDoublePtr( const QString &nm )
   QString nm1 = nm;
   QString prm_map = nm;
   int target_flag = 0; // unused?
+
   Simulation *sim = getActiveSimulation();
   if( sim ) {
     if( nm1[0] == '>' ) {
@@ -110,17 +111,24 @@ double* TModel::getMapDoublePtr( const QString &nm )
       return r;
     }
     r = sim->getDoublePrmPtr( prm_map, &target_flag );
-    if( r ) { return r;  }
+    if( r ) { // Good
+      return r;
+    }
   }
 
   r = getDoublePrmPtr( prm_map, &target_flag );
-  if( r ) { return r;  }
+  if( r ) { // Good
+    return r;
+  }
 
   Scheme *sch = getActiveScheme();
   r = sch->getDoublePrmPtr( prm_map, &target_flag );
-  if( r ) { return r;  }
+  if( r ) { // Good too
+    return r;
+  }
+
   r = &fake_map_target;
-  qWarning() << "ptr not found for prm0 map target " << prm_map << NWHE;
+  qWarning() << "ptr not found for " << nm << " map target " << prm_map << NWHE;
   return r;
 }
 
@@ -432,8 +440,8 @@ int TModel::postRun()
   int rc = c_sch->postRun();
 
   int cm = c_sch->getModified();
-  if( modified == 0 || cm != 0 ) {
-    modified |= 2;
+  if( modified == 0 && cm != 0 ) {
+    modified |= modifAuto;
   }
   if( outs ) {
     outs->postRun( 1 );
@@ -511,7 +519,6 @@ int TModel::insOut( const QString &outname, const QString &objname )
   arr->setData( "label", lbl );
 
   reset();
-  modified |= 1;
   return 1;
 }
 
@@ -527,7 +534,6 @@ int TModel::insGraph( const QString &gname )
     return 0;
   }
   reset();
-  modified |= 1;
   return 1;
 }
 
