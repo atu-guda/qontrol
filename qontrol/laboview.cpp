@@ -206,11 +206,24 @@ void LaboView::print()
 
 void LaboView::closeEvent( QCloseEvent *e )
 {
-  if( doc == 0 || doc->canCloseFrame( this ) ) {
+  if( !doc ) { // close bad window
     e->accept();
-  } else {
-    e->ignore();
+    return;
   }
+  if( !doc->canCloseFrame( this ) ) {
+    e->ignore();
+    return;
+  }
+
+  // close windows, related to current, if LaboView closed
+  LaboWin *lw = LaboWin::win();
+  if( lw ) {
+    QString fp = property( "filePath" ).toString();
+    lw->closeRelated( fp );
+  }
+
+
+  e->accept();
 }
 
 void LaboView::resizeEvent( QResizeEvent *e )
@@ -1049,7 +1062,8 @@ void LaboView::editScheme()
     return;
   }
 
-  QString wtit = QSL( "Scheme: " ) % sch->getFullName() % QSL(" in " ) % doc->pathName();
+  QString fileName = doc->pathName();
+  QString wtit = QSL( "Scheme: " ) % sch->getFullName() % QSL(" in " ) % fileName;
   QMdiSubWindow *swin = mwin->findMdiByTitle( wtit, true ); // true = activate
   if( swin ) {
     return;
@@ -1057,6 +1071,8 @@ void LaboView::editScheme()
 
   auto sv = new StructView( sch, mwin, this, nullptr );
   sv->setWindowTitle( wtit );
+  QString fullPath = QFileInfo( fileName ).canonicalFilePath();
+  sv->setProperty( "filePath", fullPath );
   mwin->addChild( sv );
 
     // emit viewChanged();

@@ -105,6 +105,7 @@ class LaboWin : public QMainWindow
     QMdiSubWindow* addChild( QWidget* w );
     QMdiSubWindow* findMdiByTitle( const QString &tit, bool activate = false );
     QMdiSubWindow* findMdiChild( const QString &fileName );
+    int closeRelated( const QString &fp );
     static int Em() { return ( labowin ? labowin->getEm() : 10 ); }
     static LaboWin* win() { return labowin; }
 

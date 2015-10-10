@@ -891,6 +891,27 @@ QMdiSubWindow* LaboWin::findMdiByTitle( const QString &tit, bool activate )
   return 0;
 }
 
+int LaboWin::closeRelated( const QString &fp )
+{
+  int n_closed = 0;
+  for( QMdiSubWindow *subw : mdiArea->subWindowList() ) {
+    QWidget *mdiChild = subw->widget();
+    if( !mdiChild ) {
+      continue;
+    }
+    LaboView *lv = qobject_cast<LaboView*>( mdiChild );
+    if( lv ) { // ignore LaboView
+      continue;
+    }
+    QString wfp = mdiChild->property( "filePath" ).toString();
+    if( wfp  == fp ) {
+     qWarning() << "Close window" << mdiChild->windowTitle() << " with path " << fp;
+     subw->close();
+    }
+  }
+  return n_closed;
+}
+
 LaboView* LaboWin::activeLaboView()
 {
   if( QMdiSubWindow *subw = mdiArea->activeSubWindow() ) {
@@ -943,6 +964,7 @@ void LaboWin::slotFileNew()
   doc->setTitle(fileName);
 
   auto  cw = new LaboView( doc, this );
+  cw->setProperty( "filePath", fileName ); // TMP untill save
   addChild( cw );
   statusBar()->showMessage( tr( "Ready." ) );
 }
@@ -987,7 +1009,8 @@ bool LaboWin::doFileOpenXML( const QString &fn )
   };
 
   auto  cw = new LaboView( doc, this );
-  // mdiArea->addSubWindow( cw );
+  QString fullPath = QFileInfo( doc->pathName() ).canonicalFilePath();
+  cw->setProperty( "filePath", fullPath );
   addChild( cw );
   return true;
 }
@@ -1019,19 +1042,23 @@ void LaboWin::slotFileSaveXMLAs()
     handleError( this, tr("Fail to find active window while saving file!") );
     return;
   }
+
   QString fn = QFileDialog::getSaveFileName( this, tr("Save model"),
       QString::null, "Model qol files (*.qol);;All files(*)" );
 
-  if ( !fn.isEmpty() ) {
+  if( !fn.isEmpty() ) {
     QFileInfo fi( fn );
     QString pfn = fi.fileName();
-    if( ! pfn.contains('.') )
+    if( ! pfn.contains('.') ) {
       fn += ".qol";
+    }
     fi.setFile( fn );
 
     LaboDoc* doc = m->getDocument();
     if( doc->saveDocumentXML( fn ) ) {
-       m->setWindowTitle( QSL( "mdl: " ) + doc->title() );
+       m->setWindowTitle( QSL( "model: " ) + doc->pathName() );
+       QString fullPath = QFileInfo( doc->pathName() ).canonicalFilePath();
+       m->setProperty( "filePath", fullPath );
     };
   };
   updateActions();

@@ -1,6 +1,5 @@
 Subschemes.
 Shadow main scheme?
-BUG: must close scheme... windows if closed model.
 BUG: hints failed in subschemes
 Check: when to reset model?
 Check: update link values only after step - prep for multi-threading
