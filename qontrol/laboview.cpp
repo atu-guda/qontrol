@@ -1045,14 +1045,21 @@ void LaboView::editScheme()
   }
 
   Scheme *sch = model->getScheme( nm );
-  if( sch ) {
-    auto sv = new StructView( sch, mwin, this, nullptr );
-    sv->setWindowTitle( QString( "Scheme: ") + sch->objectName() );
-    mwin->addChild( sv );
-
-    // emit viewChanged();
+  if( !sch ) {
+    return;
   }
 
+  QString wtit = QSL( "Scheme: " ) % sch->getFullName() % QSL(" in " ) % doc->pathName();
+  QMdiSubWindow *swin = mwin->findMdiByTitle( wtit, true ); // true = activate
+  if( swin ) {
+    return;
+  }
+
+  auto sv = new StructView( sch, mwin, this, nullptr );
+  sv->setWindowTitle( wtit );
+  mwin->addChild( sv );
+
+    // emit viewChanged();
 }
 
 void LaboView::renameScheme()

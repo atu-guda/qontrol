@@ -103,13 +103,12 @@ class LaboWin : public QMainWindow
     const QFont& getStructFont() const  { return structFont; }
     int getEm() const { return em; }
     QMdiSubWindow* addChild( QWidget* w );
+    QMdiSubWindow* findMdiByTitle( const QString &tit, bool activate = false );
+    QMdiSubWindow* findMdiChild( const QString &fileName );
     static int Em() { return ( labowin ? labowin->getEm() : 10 ); }
     static LaboWin* win() { return labowin; }
 
   protected:
-    /** overloaded for Message box on last window exit */
-    // bool queryExit();
-    QMdiSubWindow* findMdiChild( const QString &fileName );
     QWidget* activeView();
     LaboView* activeLaboView();
     //* call gives simple slot from active LaboView

@@ -827,7 +827,7 @@ void LaboWin::setWndTitle( QWidget* )
 void LaboWin::closeEvent ( QCloseEvent *e )
 {
   mdiArea->closeAllSubWindows();
-  if (mdiArea->currentSubWindow()) {
+  if( mdiArea->currentSubWindow() ) {
     e->ignore();
   } else {
     // writeSettings();
@@ -868,6 +868,24 @@ QMdiSubWindow* LaboWin::findMdiChild( const QString &fileName )
     QString cp = QFileInfo( mdiChild->currentFile() ).canonicalFilePath();
     if( cp  == canonicalFilePath ) {
       return window;
+    }
+  }
+  return 0;
+}
+
+QMdiSubWindow* LaboWin::findMdiByTitle( const QString &tit, bool activate )
+{
+  for( QMdiSubWindow *subw : mdiArea->subWindowList() ) {
+    QWidget *mdiChild = subw->widget();
+    if( !mdiChild ) {
+      continue;
+    }
+    QString wtit = mdiChild->windowTitle();
+    if( wtit  == tit ) {
+      if( activate ) {
+        mdiArea->setActiveSubWindow( subw );
+      }
+      return subw;
     }
   }
   return 0;
