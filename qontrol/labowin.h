@@ -108,7 +108,7 @@ class LaboWin : public QMainWindow
 
   protected:
     /** overloaded for Message box on last window exit */
-    bool queryExit();
+    // bool queryExit();
     QMdiSubWindow* findMdiChild( const QString &fileName );
     QWidget* activeView();
     LaboView* activeLaboView();

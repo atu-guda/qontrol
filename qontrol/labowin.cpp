@@ -849,20 +849,12 @@ QMdiSubWindow* LaboWin::addChild( QWidget *w )
     return nullptr;
   }
   subw->show();
-  // subw->setFocus();
+  // subw->setFocus(); // BEWARE: may be bug here!
   // updateActions();
   return subw;
 }
 
 
-bool LaboWin::queryExit()
-{
-  int rc = QMessageBox::information( this,
-      tr( "Quit..." ), tr( "Do your really want to quit?" ),
-      QMessageBox::Ok, QMessageBox::Cancel );
-
-  return ( rc == QMessageBox::Ok );
-}
 
 QMdiSubWindow* LaboWin::findMdiChild( const QString &fileName )
 {
@@ -1310,13 +1302,6 @@ void LaboWin::windowMenuAboutToShow()
       text = QSL( "&" );
     }
     text += QSN( i+1 ) + QSL( " " ) + child->windowTitle();
-    // if( lv ) {
-    //   text += QSL( "mdl: " ) + lv->currentFile();
-    // } else if( sv ) {
-    //   text += QSL( "sch: " ) + sv->getSchemeName();
-    // } else {
-    //   text += QSL( " ? Unknown " );
-    // }
 
     QAction *action  = pWindowMenu->addAction( text );
     action->setCheckable( true );
@@ -1620,18 +1605,13 @@ void LaboWin::slotRunModelScript()
 void LaboWin::setActiveSubWindow( QWidget *win )
 {
   if( !win ) {
-    // qWarning() << "win == nullptr " << WHE;
     return;
   }
   QMdiSubWindow *swin =  qobject_cast<QMdiSubWindow *>(win);
   if( !swin ) {
-    // qWarning() << "swin == nullptr " << WHE;
     return;
   }
   mdiArea->setActiveSubWindow( swin );
-  // debug
-  // qWarning() << "swin=  " << swin->widget()->windowTitle()
-  //            << " aswin= " << mdiArea->activeSubWindow()->widget()->windowTitle() << WHE;
   updateActions();
 }
 

@@ -62,8 +62,9 @@ StatusModel::StatusModel( LaboView *mview, QWidget *parent )
   addWidget( l_desc, 2 );
 
   l_val = new QLabel( "val", this );
-  l_val->setFixedWidth( 16 * mw + label_sep );
+  l_val->setFixedWidth( (18+2) * mw + label_sep );
   l_val->setLineWidth( label_lw ); l_val->setFrameStyle( label_fs );
+  l_val->setTextInteractionFlags( Qt::TextSelectableByMouse );
   addWidget( l_val );
 
   setFixedHeight( fm.height() + 12 );
@@ -75,8 +76,6 @@ StatusModel::~StatusModel()
 
 void StatusModel::update()
 {
-  QString ob_nm_tp;
-  int mod, stat = 0;
   l_level->setText( QSN( mainview->getLevel() ) );
   l_name->setText( "." );  l_desc->setText( "." );  l_val->setText( "" );
   TModel *model = mainview->getModel();
@@ -90,18 +89,18 @@ void StatusModel::update()
       % QSN( mainview->getSelY() ) % QSL("]");
   l_nums->setText( s_nums );
 
-  stat = model->getState();
-  l_stat->setText( getStateString( stat ) );
-  mod = model->getModified();
+  int state = model->getState();
+  l_stat->setText( getStateString( state ) );
+  int mod = model->getModified();
   l_mod->setText( modificationChar[mod] );
 
   TMiso *ob = mainview->getSelObj();
   if( ob ) {
-    ob_nm_tp = ob->dataObj( 0, Qt::StatusTipRole ).toString();
+    QString ob_nm_tp = ob->dataObj( 0, Qt::StatusTipRole ).toString();
     l_name->setText( ob_nm_tp );
     QString ob_descr = ob->getDataD( "descr", QString() );
     l_desc->setText( ob_descr );
-    if( stat > 1 ) {
+    if( state > stateGood ) {
       double val = ob->getDataD( "out0", 0.0 ); // TODO: StatusTipRole(col=1)
       l_val->setText( QSN( val, 'g', 18 ) );
     };
