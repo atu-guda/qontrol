@@ -22,6 +22,33 @@
 #include "scheme.h"
 
 
+// helper element - get value from inner subscheme
+class SubOutput : public TDataSet {
+  Q_OBJECT
+ public:
+  DCL_CTOR(SubOutput);
+  virtual ~SubOutput();
+  // virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
+  DCL_CREATE;
+  DCL_STD_INF;
+  void getInput() { out0 = *p; };
+  double value() const { return *p; }
+  bool set_link();
+ protected:
+
+  PRM_STRING( source, efNoRunChange, "Source", "Address of signal source from subscheme", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
+
+  PRM_DOUBLE( out0, efInner, "input", "Outout value from subscheme", "" );
+
+  static const double fake_in;
+  const double *p = &fake_in;
+  const TDataSet *src_obj = nullptr;
+  ltype_t linkType = LinkBad;
+
+  DCL_DEFAULT_STATIC;
+};
+
+
 /** Provides interface to Subscheme
   *@author atu
   */
@@ -50,6 +77,8 @@ class TSubScheme : public TMiso  {
    Scheme *sch = nullptr;
    //* ptr to scheme prototype
    Scheme *sch_proto = nullptr;
+   //* ptrs to outputs
+   QList<SubOutput*> subouts;
    static constexpr const char* const sch_ename = "sch";
 
    DCL_DEFAULT_STATIC;

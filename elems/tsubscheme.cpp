@@ -17,6 +17,62 @@
 
 #include "tsubscheme.h"
 
+// --------------------- SubOutput --------------------------------- 
+
+STD_CLASSINFO(SubOutput,clpSpecial);
+const double SubOutput::fake_in {0};
+
+CTOR(SubOutput,TDataSet)
+{
+}
+
+SubOutput::~SubOutput()
+{
+}
+
+
+bool SubOutput::set_link()
+{
+  p = &fake_in; src_obj = nullptr; linkType = LinkBad;
+  if( source.cval().isEmpty() ) {
+    linkType = LinkNone;
+    return true; // really?
+  }
+
+  if( !par ) {
+    return false;
+  }
+  Scheme *sch = par->getElemT<Scheme*>( "sch" );
+  if( !sch ) {
+    qWarning() << "scheme not found " << NWHE;
+    return false;
+  }
+
+  ltype_t lt;
+  const TDataSet *srct = nullptr;
+  const double *cp = sch->getDoublePtr( source, &lt, &srct, 0 );
+  if( lt == LinkElm || lt == LinkSpec ) {
+    p = cp;  src_obj = srct; linkType = lt;
+  } else {
+    qWarning() << "ptr not found for output " << source << NWHE;
+    return false;
+  }
+  return true;
+}
+
+// QVariant SubOutput::dataObj( int col, int role ) const
+// {
+//   return TDataSet::dataObj( col, role );
+// }
+
+
+const char* SubOutput::helpstr { "Gets value from given subscheme element and outputs to current scheme" };
+
+DEFAULT_FUNCS_REG(SubOutput);
+
+
+// --------------------- TSubScheme --------------------------------- 
+
 const char* TSubScheme::helpstr = "<H1>TSubScheme</H1>\n"
  "Interface to subscheme <br>\n";
 
@@ -24,7 +80,7 @@ STD_CLASSINFO(TSubScheme,clpElem );
 
 CTOR(TSubScheme,TMiso)
 {
-  allowed_types = "Scheme,InputSimple,+SPECIAL";
+  allowed_types = "Scheme,InputSimple,SubOutput,+SPECIAL";
 }
 
 TSubScheme::~TSubScheme()
@@ -45,13 +101,27 @@ double TSubScheme::f( double t )
   } else {
     qWarning() << "No scheme?" << NWHE;
   }
-  // TODO: outputs
+
+  int i=0;
+  for( auto so : subouts ) {
+    so->getInput();
+    if( i == 0 ) { // first output is out0;
+      v = so->value();
+    }
+    ++i;
+  }
+
   return v; // TMP
 }
 
 int TSubScheme::do_preRun( int run_tp, int an,
                            int anx, int any, double atdt )
 {
+  subouts.clear();
+  for( auto so : TCHILD(SubOutput*) ) {
+    subouts.append( so );
+  }
+
   if( !sch_proto ) {
     qWarning() << "Subscheme prototype is not available" << sch_name <<NWHE;
     return 0;
@@ -71,6 +141,10 @@ int TSubScheme::do_preRun( int run_tp, int an,
   if( ! sch->fromString( ss ) ) {
     qWarning() << "Fail to copy prototype " << sch_name << NWHE;
     return 0;
+  }
+
+  for( auto so : subouts ) {
+    so->set_link();
   }
   sch->handleStructChanged();
 
