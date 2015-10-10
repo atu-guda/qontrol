@@ -1997,10 +1997,6 @@ DEFAULT_FUNCS_REG(TDataSet);
 
 
 
-
-
-
-// TODO: down to ierarch
 const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
               const TDataSet **targ, int lev  ) const
 {
@@ -2015,7 +2011,7 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
   NameType nm_type = splitName( nmf, first, rest, idx );
   if( nm_type == badName ) {
     *plt = LinkBad;
-    qWarning() << "bad target name " << nmf << NWHE;
+    qWarning() << "bad source name " << nmf << NWHE;
     return nullptr;
   }
 
@@ -2076,12 +2072,14 @@ const double* TDataSet::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
   ltype_t clt = LinkNone;
   ltype_t *plt = ( lt ) ? lt : &clt;  // failsafe link
 
-  if( !par ) {  // parent-less object or root
-    *plt = LinkBad;
+  if( nm.isEmpty() ) {
+    *plt = LinkNone;
     return nullptr;
   }
-  TDataSet *ds = qobject_cast<TDataSet*>( par );
+
+  TDataSet *ds = qobject_cast<TDataSet*>( par );  // parent-less object or root
   if( !ds ) {
+    *plt = LinkBad;
     return nullptr;
   }
   return ds->getSchemeDoublePtr( nm, lt, src_ob, lev );
@@ -2366,22 +2364,6 @@ void InputAbstract::set_link()
     linkType = LinkSpec;  p = &one_in;  return;
   }
 
-  if( source.cval() == ":ein0" ) { // special input
-    TDataSet *el = qobject_cast<TDataSet*>( par ); // par may by TMiso, but ...
-    if( !el ) {
-      qWarning() << "No good parent for " << NWHE;
-      linkType = LinkNone;  return;
-    }
-    const double *cp = el->getDoublePtr( "ein0", nullptr, nullptr, 0 );
-    if( !cp ) {
-      qWarning() << "No 'ein0' in " << el->getFullName() << " for " << NWHE;
-      linkType = LinkBad;  return;
-    }
-
-    p = cp; linkType = LinkSpec;
-    return;
-  }
-
   ltype_t lt;
   const TDataSet *srct = nullptr;
   const double *cp = getSchemeDoublePtr( source, &lt, &srct, 0 );
@@ -2395,10 +2377,7 @@ void InputAbstract::set_link()
 
 QVariant InputAbstract::dataObj( int col, int role ) const
 {
-  if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
-    if( col != 0 ) {
-      return QVariant();
-    }
+  if( role == Qt::StatusTipRole && col == 0 ) { // used for button labels in dialogs
 
     QString s = source;
     QChar ac = QChar( 0x274C ); // X
@@ -2502,10 +2481,7 @@ void InputParam::set_link()
 
 QVariant InputParam::dataObj( int col, int role ) const
 {
-  if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
-    if( col != 0 ) {
-      return QVariant();
-    }
+  if( role == Qt::StatusTipRole && col == 0 ) { // used for button labels in dialogs
     QString s = source;
     QChar ac = QChar( 0x274C ); // X
     if( p != &fake_in ) {

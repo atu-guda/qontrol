@@ -905,7 +905,7 @@ int LaboWin::closeRelated( const QString &fp )
     }
     QString wfp = mdiChild->property( "filePath" ).toString();
     if( wfp  == fp ) {
-     qWarning() << "Close window" << mdiChild->windowTitle() << " with path " << fp;
+     // qWarning() << "Close window" << mdiChild->windowTitle() << " with path " << fp;
      subw->close();
     }
   }

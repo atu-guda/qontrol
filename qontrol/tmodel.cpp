@@ -73,7 +73,7 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
 {
   const double *rv = nullptr;
 
-  Scheme *sch = getActiveScheme();
+  Scheme *sch = getActiveScheme(); // for upside call, double useless work if called from scheme.
   if( sch ) {
     rv =  sch->getDoublePtr( nm, lt, src_ob, lev );
     if( rv ) {

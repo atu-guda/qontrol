@@ -114,7 +114,6 @@ class TMiso : public TDataSet  {
    PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "sep=col");
 
    PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
-   PRM_DOUBLE( ein0, efInner, "ExtInput", "External input", "" );
 
    /** pointer to param inputs container */
    InputParams *pis;

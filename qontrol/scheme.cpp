@@ -45,6 +45,27 @@ Scheme::~Scheme()
 const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
         const TDataSet **src_ob, int lev) const
 {
+  static ltype_t clt;
+  static const double fake_src = 0.123456; // ptr here for non- main_s scheles uplinks
+  ltype_t *plt = lt ? lt : &clt;
+
+  if( nm.startsWith( '^' ) ) { // direct to parent
+    QString nnm = nm.mid( 1 );
+    TDataSet *pds = qobject_cast<TDataSet*>( par );
+    if( !pds ) {
+      *plt = LinkBad; return nullptr;
+    }
+    if( pds->isChildOf( "ContScheme" ) ) {
+      *plt = LinkSpec;
+      return &fake_src;
+    }
+    // qWarning() << "^ detected in " << nm << " nnm= " << nnm << NWHE;
+    const double* rv =  pds->getDoublePtr( nnm, lt, src_ob, lev );
+    // qWarning() << "lt= " << *lt << "rv=" << ( (rv==nullptr) ? "nullptr" : "V") << " pds: " << pds->getFullName() << NWHE;
+    return rv;
+    // return pds->getDoublePtr( nnm, lt, src_ob, lev );
+  }
+
   // own names: elements (no local vars?)
   const double *p =  getDoublePtr( nm, lt, src_ob, lev );
   if( p ) {
@@ -102,7 +123,7 @@ int Scheme::preRun( int run_tp, int N, int anx, int any, double tdt )
   for( auto ob : v_el ) {
     int rc = ob->preRun( run_tp, N, anx, any, tdt );
     if( !rc ) {
-      qWarning() << "preRun failed for object " << NWHE;
+      qWarning() << "preRun failed for object " << ob->getFullName() << NWHE;
       return 0;
     }
   };

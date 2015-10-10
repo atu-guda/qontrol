@@ -34,14 +34,19 @@ TSubScheme::~TSubScheme()
 
 double TSubScheme::f( double t )
 {
-  // TODO: inputs
+  double v = 0;
+  for( auto in : inputs ) {
+    in->readInput();
+    v = *in; // TMP: check
+  }
+
   if( sch ) {
     sch->runOneLoop( t, iter_c );
   } else {
     qWarning() << "No scheme?" << NWHE;
   }
   // TODO: outputs
-  return t; // TMP
+  return v; // TMP
 }
 
 int TSubScheme::do_preRun( int run_tp, int an,
@@ -67,6 +72,7 @@ int TSubScheme::do_preRun( int run_tp, int an,
     qWarning() << "Fail to copy prototype " << sch_name << NWHE;
     return 0;
   }
+  sch->handleStructChanged();
 
   return sch->preRun( run_tp, an, anx, any, atdt );
 }

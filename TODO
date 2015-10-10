@@ -5,7 +5,7 @@ Common view subwindow: filePath, available actions..., titleStr
 Plot window may by subwindow too
 StatusModel link to StructView, not to LaboView?
 Check: when to reset model?
-Check: update link values only after step - prep for multi-threading
+Check: update link values only after step - prep for multi-threading (see TSubScheme)
 Hint for new element names
 Hide some types in new element dialog
 Combine list views

@@ -684,6 +684,7 @@ class InputAbstract : public TDataSet {
   ltype_t getLinkType() const { return linkType; };
   double* targ_addr() const { return targ; };
   int getTargetFlag() const { return target_flag; }
+  void readInput() { out0 = *p; };
  protected:
   virtual void do_post_set() override;
   /** do real actions after structure changed */
@@ -699,6 +700,8 @@ class InputAbstract : public TDataSet {
   PRM_INT( line_w,  0, "Line width", "Line width on scheme", "def=1\nmin=0\nmax=20" );
   PRM_COLOR( line_color,  0, "Line color", "Line color on scheme", "def=black" );
   PRM_SWITCH( onlyLabel, 0, "only Label", "draw only label of link on scheme", "" );
+
+  PRM_DOUBLE( out0, efInner, "input", "Readed by readInput for subschemes", "" );
 
   static const double fake_in;
   static const double one_in;
