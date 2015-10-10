@@ -641,7 +641,7 @@ void StructView::newElm()
   }
 
   addElemInfo aei;
-  aei.name = QString("obj_")+ QSN( sch->getNMiso() );
+  aei.name = QSL("obj_")+ QSN( sch->countElemsOfType( QSL("TMiso"), QSL("obj_") ) );
   aei.order = sch->hintOrd();
   auto dia = new AddElemDialog( &aei, sch, this, "TMiso" );
                                           // limit to such elements here

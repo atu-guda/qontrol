@@ -119,7 +119,7 @@ class LaboWin : public QMainWindow
 
     /** sets the main application window title each time
       * the active MDI child window changes. */
-    void setWndTitle( QWidget* );
+    void setWndTitle();
     /** automaticaly enables/disable actions */
     void updateActions();
 

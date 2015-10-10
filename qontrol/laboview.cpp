@@ -232,17 +232,6 @@ void LaboView::resizeEvent( QResizeEvent *e )
   QWidget::resizeEvent( e );
 }
 
-// int LaboView::checkState( CheckType ctp ) // TODO: delete?
-// {
-//   QString msg;
-//   int state;
-//   if( !model  || !root  || !schems  || !outs || !plots || !sims ) {
-//     showError( "Some part of model don't exist!" );
-//     return 0;
-//   };
-//   return sview->checkState( (int)ctp );
-// }
-
 
 void LaboView::updateViews()
 {
@@ -371,9 +360,7 @@ void LaboView::newOut()
 {
   int rc;
   QString onameq, enameq;
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
+
   TMiso *selObj = sview->getSelObj();
 
   if( selObj ) {
@@ -414,18 +401,21 @@ void LaboView::newOut()
   rc = dia->exec();
   onameq = oname_ed->text(); enameq = ename_ed->text();
   delete dia;
-  if( rc != QDialog::Accepted )
-    return;
-
-  if( isGoodName( onameq ) ) {
-    int irc = model->insOut( onameq, enameq );
-    if( !irc  ) {
-      showError( QString("Fail to add Output: \"%1\"").arg(onameq) );
-    }
-    emit viewChanged();
+  if( rc != QDialog::Accepted ) {
     return;
   }
-  showError( QString("Bad output name: \"%1\"").arg(onameq) );
+
+  if( ! isGoodName( onameq ) ) {
+    showError( QString("Bad output name: \"%1\"").arg(onameq) );
+    return;
+  }
+
+  int irc = model->insOut( onameq, enameq );
+  if( !irc  ) {
+    showError( QString("Fail to add Output: \"%1\"").arg(onameq) );
+  }
+  emit viewChanged();
+  return;
 }
 
 void LaboView::delOut()
@@ -459,10 +449,6 @@ void LaboView::editOut()
 
 void LaboView::renameOut()
 {
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
-
   QString nm = getSelName( outs_view );
   if( nm.isEmpty() ) {
     return;
@@ -492,9 +478,6 @@ void LaboView::renameOut()
 
 void LaboView::selectOut()
 {
-  // if( ! checkState( validCheck ) )
-  //   return;
-
   QItemSelectionModel *selMod = outs_view->selectionModel();
   if( !selMod ) {
     return;
@@ -514,9 +497,6 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
 {
   DatasInfo di;
 
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
   QString nm = getSelName( outs_view );
   if( nm.isEmpty() ) {
     qWarning() << "output array not selected" << WHE;
@@ -565,9 +545,6 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
 
 void LaboView::exportOut()
 {
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
   QString nm = getSelName( outs_view );
   if( nm.isEmpty() ) {
     return;
@@ -593,24 +570,23 @@ void LaboView::newGraph()
 {
   QString grnameq, aname;
   bool ok;
-  // if( ! checkState( validCheck ) )
-  //   return;
-  int no = model->getNGraph();
-  grnameq = QString("plot_") + QSN( no );
+
+  grnameq = QSL("plot_") + QSN( plots->countElemsOfType( "TGraph", QSL("plot_") ) );
   aname = QInputDialog::getText( this, "Creating new plot",
       "Enter name of new plot:", QLineEdit::Normal,
       grnameq, &ok );
-  if( ok ) {
-    if( ! isGoodName( aname ) ) {
-      showError( QString("Bad plot name: \"%1\"").arg(aname) );
-      return;
-    }
-    if( ! model->insGraph( aname ) ) {
-      showError( QString("Fail to add plot: \"%1\"").arg(aname) );
-      return;
-    }
-    emit viewChanged();
-  };
+  if( !ok ) {
+    return;
+  }
+  if( ! isGoodName( aname ) ) {
+    showError( QString("Bad plot name: \"%1\"").arg(aname) );
+    return;
+  }
+  if( ! model->insGraph( aname ) ) {
+    showError( QString("Fail to add plot: \"%1\"").arg(aname) );
+    return;
+  }
+  emit viewChanged();
 }
 
 
@@ -646,9 +622,6 @@ void LaboView::editGraph()
 
 void LaboView::selectGraph()
 {
-  // if( ! checkState( validCheck ) )
-  //   return;
-
   QItemSelectionModel *selMod = plots_view->selectionModel();
   if( !selMod ) {
     return;
@@ -665,10 +638,6 @@ void LaboView::selectGraph()
 
 void LaboView::renameGraph()
 {
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
-
   QString nm = getSelName( plots_view );
   if( nm.isEmpty() ) {
     return;
@@ -696,10 +665,6 @@ void LaboView::renameGraph()
 
 void LaboView::showGraph()
 {
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
-
   QString nm = getSelName( plots_view );
   if( nm.isEmpty() ) {
     return;
@@ -722,10 +687,6 @@ void LaboView::showGraph()
 
 void LaboView::graphAddOut()
 {
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
-
   QString nm_o = getSelName( outs_view );
   if( nm_o.isEmpty() ) {
     return;
@@ -742,10 +703,6 @@ void LaboView::graphAddOut()
 
 void LaboView::showGraphData()
 {
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
-
   QString nm = getSelName( plots_view );
   if( nm.isEmpty() ) {
     return;
@@ -785,9 +742,6 @@ void LaboView::showGraphData()
 
 void LaboView::exportGraphData()
 {
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
   QString nm = getSelName( plots_view );
   if( nm.isEmpty() ) {
     return;
@@ -833,22 +787,22 @@ void LaboView::cloneGraph()
 void LaboView::newSimul()
 {
   bool ok;
-  // if( ! checkState( validCheck ) )
-  //   return;
-  QString simName = QString("sim") + QSN( model->getNSimul() );
+  QString simName = QSL("sim") + QSN( sims->countElemsOfType( QSL("Simulation"), QSL("sim") ) );
   simName = QInputDialog::getText( this, "Creating new Simulation",
       "Enter name of new simulation:", QLineEdit::Normal,
       simName, &ok );
-  if( ok ) {
-    if( ! isGoodName( simName ) ) {
-      showError( QString("Bad simulation name: \"%1\"").arg(simName) );
-    }
-    ok = model->newSimul( simName );
-    if( !ok ) {
-      showError( QString("Fail to create simulation: \"%1\"").arg(simName) );
-    }
-    emit viewChanged();
-  };
+  if( !ok ) {
+    return;
+  }
+  if( ! isGoodName( simName ) ) {
+    showError( QString("Bad simulation name: \"%1\"").arg(simName) );
+    return;
+  }
+  ok = model->newSimul( simName );
+  if( !ok ) {
+    showError( QString("Fail to create simulation: \"%1\"").arg(simName) );
+  }
+  emit viewChanged();
 }
 
 void LaboView::delSimul()
@@ -881,10 +835,6 @@ void LaboView::editSimul()
 
 void LaboView::renameSimul()
 {
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
-
   QString nm = getSelName( sims_view );
   if( nm.isEmpty() ) {
     return;
@@ -902,7 +852,6 @@ void LaboView::renameSimul()
 
   if( ok ) {
     if( sims->rename_obj( old_name, new_name ) ) {
-      // model->setModified();
       model->reset();
       emit viewChanged();
     }
@@ -913,10 +862,6 @@ void LaboView::renameSimul()
 
 void LaboView::selectSimul() // TODO: propagate to all
 {
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
-
   QItemSelectionModel *selMod = sims_view->selectionModel();
   if( !selMod ) {
     return;
@@ -967,10 +912,6 @@ void LaboView::cloneSimul()
 
 void LaboView::editModel()
 {
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
-
   bool ok = editObj( this, model );
   if( ok ) {
     model->reset();
@@ -1006,7 +947,6 @@ void LaboView::showTreeModel()
   treeView->expandAll();
   dia->exec();
   delete dia;
-  // delete ho_mo;
   emit viewChanged();
   return;
 }
@@ -1014,10 +954,7 @@ void LaboView::showTreeModel()
 void LaboView::newScheme()
 {
   bool ok;
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
-  QString schName = QString("sch_"); // + QSN( model->getNScheme() ); // TODO: count
+  QString schName = QSL("sch_") + QSN( schems->countElemsOfType( "Scheme", QSL("sch_") ) ); // TODO: suggestName
   schName = QInputDialog::getText( this, "Creating new Scheme",
       "Enter name of new scheme:", QLineEdit::Normal,
       schName, &ok );
@@ -1110,8 +1047,8 @@ void LaboView::cloneScheme()
   if( nm.isEmpty() ) {
     return;
   }
+  QString nn = nm + QSN( schems->countElemsOfType( "Scheme", nm ) ); // TODO: suggestName
 
-  QString nn = nm + "_1";
   bool ok;
   QString new_name = QInputDialog::getText(
       this, tr( "New scheme name" ), tr( "Scheme name:" ), QLineEdit::Normal,
@@ -1219,18 +1156,13 @@ void LaboView::runScript()
 
 void LaboView::runRun()
 {
-  RunView *rv;
-  // if( ! checkState( validCheck ) ) {
-  //   return;
-  // }
-
   Simulation *sim = sims->getActiveElemT<Simulation*>();
   if( !sim ) {
     showError( "No active simulations" );
     return;
   }
 
-  rv = new RunView( model, this );
+  RunView *rv = new RunView( model, this );
   rv->exec();
   emit viewChanged();
   sview->setFocus();
@@ -1239,8 +1171,6 @@ void LaboView::runRun()
 
 void LaboView::resetModel()
 {
-  // if( ! checkState( validCheck ) )
-  //   return;
   model->reset();
   emit viewChanged();
 }

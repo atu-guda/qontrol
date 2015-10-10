@@ -209,6 +209,8 @@ class HolderData : public QAbstractItemModel {
     * returns true if this object is base or save of given type.
     * if cl_name is empty, return true in >= TDataSet */
   Q_INVOKABLE bool isObject( const QString &cl_name = QString() ) const;
+  // count number of elements of given type, optionaly with named started with nm_start
+  Q_INVOKABLE int countElemsOfType( const QString &tp, const QString &nm_start = QString() ) const;
   void addFlags( int a_flags ) { flags |= a_flags; }
   void setImmutable() { flags |= efImmutable; }
   Q_INVOKABLE int getFlags() const { return flags; }

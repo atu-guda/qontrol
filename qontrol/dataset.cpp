@@ -420,6 +420,19 @@ bool HolderData::isObject( const QString & cl_name ) const
   return isChildOf( cn );
 }
 
+int HolderData::countElemsOfType( const QString &tp, const QString &nm_start ) const
+{
+  int n_el = 0, l_nm = nm_start.size();
+  for( auto ho : TCHILD(HolderData*) ) {
+    if( ho->isChildOf( tp ) ) {
+      if( l_nm < 1 || ho->objectName().startsWith( nm_start ) ) {
+        ++n_el;
+      }
+    }
+  }
+  return n_el;
+}
+
 void HolderData::extraToParm()
 {
   QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=(.+)$)" );

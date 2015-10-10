@@ -1,6 +1,9 @@
 Subschemes.
 Shadow main scheme?
 BUG: hints failed in subschemes
+Common view subwindow: filePath, available actions..., titleStr
+Plot window may by subwindow too
+StatusModel link to StructView, not to LaboView?
 Check: when to reset model?
 Check: update link values only after step - prep for multi-threading
 Hint for new element names

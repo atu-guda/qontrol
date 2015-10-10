@@ -812,10 +812,10 @@ void LaboWin::updateActions()
   }
 
   enableActions( true, 0 );
-  setWndTitle( this ); // "this" is fake
+  setWndTitle();
 }
 
-void LaboWin::setWndTitle( QWidget* )
+void LaboWin::setWndTitle()
 {
   if( mdiArea->currentSubWindow() != 0 ) {
     setWindowTitle( mdiArea->currentSubWindow()->windowTitle() + " " PACKAGE );
