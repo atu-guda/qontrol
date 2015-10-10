@@ -291,7 +291,8 @@ QStringList HolderData::elemNames() const
 QString HolderData::ls() const
 {
   QString r;
-  r = getFullName() + " : " + getType() + " dyn: " + QSN(dyn) + " flags: 0x" + QSNX(flags);
+  r = getFullName() + " : " + getType() + " dyn: " + QSN(dyn)
+    + " flags: 0x" + QSNX(flags) + " ptr: " + QSNX( (unsigned long)(this));
   if( ! isObject() ) {
     r += " = \"" + toString() + "\"";
   }
@@ -451,8 +452,9 @@ void HolderData::extraToParm()
       qWarning() << "bad extra string part: " <<  s << NWHE;
     }
   }
-  if( getParm("dyn") == "1" )
+  if( getParm("dyn") == "1" ) {
     dyn = 1;
+  }
 }
 
 
@@ -2186,6 +2188,8 @@ static QString getDomText( QDomNode &p )
 
 bool TDataSet::fromDom( QDomElement &de, QString &errstr )
 {
+  suspendHandleStructChange();
+
   for( QDomNode no = de.firstChild(); !no.isNull() ; no = no.nextSibling() ) {
 
     if ( ! no.isElement() ) {
@@ -2201,6 +2205,7 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
       if( cl_name.isEmpty() ) {
         errstr = QString( "err: element \"%1\" without type" ).arg(elname);
         qWarning() << errstr << NWHE;
+        resumeHandleStructChange();
         return false;
       }
       HolderData *ho = getElem( elname );
@@ -2209,6 +2214,7 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
             "required: \"%2\" but have \"%3\" in \"%4\"" )
                 .arg(elname).arg(tagname).arg(ho->getType()).arg( getFullName() );
         qWarning() << errstr << NWHE;
+        resumeHandleStructChange();
         return false;
       }
       if( !ho ) { // name not found
@@ -2226,10 +2232,12 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
         errstr = QString("TDataSet::fromDom: fail to find created obj %1 %2 in %3")
                  .arg(cl_name).arg(elname).arg( objectName() );
         qWarning() << errstr << NWHE;
+        resumeHandleStructChange();
         return false;
       }
 
       if( ! ob->fromDom( ee, errstr ) ) {
+        resumeHandleStructChange();
         return false;
       }
 
@@ -2240,6 +2248,7 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
         errstr = QString("TDataSet::fromDom: param \"%1\" is an object type \"%2\" ")
                  .arg(elname).arg(ho->getType());
         qWarning() << errstr << NWHE;
+        resumeHandleStructChange();
         return false;
       }
       if( !ho ) {
@@ -2275,10 +2284,12 @@ bool TDataSet::fromDom( QDomElement &de, QString &errstr )
       errstr = QString("TDataSet::fromDom: bad element %1 %2 ")
                .arg(tagname).arg(elname);
       qWarning() << errstr << NWHE;
+      resumeHandleStructChange();
       return false;
     }
   }
   post_set();
+  resumeHandleStructChange();
   reportStructChanged();
 
   return true;
@@ -2475,6 +2486,7 @@ void InputParam::set_link()
   targ = el->getDoublePrmPtr( tparam, &target_flag );
   if( !targ ) {
     qWarning() << "fail to find target " << tparam <<  " for " << source << NWHE;
+    // qWarning() << this->ls();
     targ = &fake_target;
   }
 }

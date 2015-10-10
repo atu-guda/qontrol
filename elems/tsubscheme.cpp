@@ -80,7 +80,7 @@ int TSubScheme::do_preRun( int run_tp, int an,
 int TSubScheme::do_postRun( int /*good*/ )
 {
   sch->postRun();
-  del_obj( sch_ename, true );
+  del_obj( sch_ename, true ); // tmp nodel
   return 1;
 }
 
