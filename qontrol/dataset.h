@@ -658,6 +658,8 @@ class TDataSet : public HolderData {
     * for param mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
  protected:
+   //* real part of fromDom */
+   bool fromDom_real( QDomElement &de, QString &errstr );
    /** register input (call by ctor) in inputs */
    void registerInput( InputSimple *inp );
    /** unregister input (call by dtor) from inputs */
