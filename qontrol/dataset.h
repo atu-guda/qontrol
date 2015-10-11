@@ -331,7 +331,7 @@ class HolderData : public QAbstractItemModel {
   //* fill model for outputs: pass to model
   virtual void fillComplModelForOuts( QStandardItemModel *mdl ) const;
   //* fill items for input: workhorse for fillComplModelForInputs
-  int fillComplForInputs( QStandardItem *it0 ) const;
+  int fillComplForInputs( QStandardItem *it0, const QString &prefix = QString()  ) const;
  signals:
    void sigStructChanged();
  public:

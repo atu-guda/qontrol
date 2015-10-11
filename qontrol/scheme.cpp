@@ -20,6 +20,8 @@
 // unistd for usleep: TODO: replace with threads
 #include <unistd.h>
 #include <algorithm>
+#include <QStandardItem>
+
 #include "miscfun.h"
 #include "scheme.h"
 #include "tmodel.h"
@@ -42,11 +44,12 @@ Scheme::~Scheme()
 {
 }
 
+// must be similar to fillComplModelForInputs
 const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
         const TDataSet **src_ob, int lev) const
 {
   static ltype_t clt;
-  static const double fake_src = 0.123456; // ptr here for non- main_s scheles uplinks
+  static const double fake_src = 0.123456; // ptr here for non- main_s schemes uplinks
   ltype_t *plt = lt ? lt : &clt;
 
   if( nm.startsWith( '^' ) ) { // direct to parent
@@ -101,6 +104,36 @@ const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
 
   return p;
 }
+
+// must be in correspondence with getSchemeDoublePtr
+void Scheme::fillComplModelForInputs( QStandardItemModel *mdl ) const
+{
+  if( ! mdl ) { return; }
+  auto root_item = mdl->invisibleRootItem();
+
+
+  fillComplForInputs( root_item );
+
+  // if( !par ) { return; }
+  // if( par->isObject( "TSubScheme" ) ) {  // ^ - TSubScheme -- no way to get anchor element
+  //    par->fillComplForInputs( root_item, "^" );
+  // }
+
+
+  // get model - for simulation and model itself
+  TModel *mod = getAncestorT<TModel>();
+  if( !mod ) { return;  }
+
+  // try active simulation
+  Simulation *csim = mod->getActiveSimulation();
+  if( csim ) {
+     csim->fillComplForInputs( root_item );
+  }
+
+  // then model
+  mod->fillComplForInputs( root_item );
+}
+
 
 
 int Scheme::runOneLoop( double t, IterType itype )

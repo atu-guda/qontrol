@@ -1007,28 +1007,32 @@ void HolderData::fillComplModelForOuts( QStandardItemModel *mdl ) const
   }
 }
 
-int HolderData::fillComplForInputs( QStandardItem *it0 ) const
+int HolderData::fillComplForInputs( QStandardItem *it0, const QString &prefix ) const
 {
   if( !it0 ) { return 0; }
   int n = 0;
 
+  // // debug: special fake name ==Full.name
+  // auto it = new QStandardItem( QSL("==") % prefix % getFullName() );
+  // it0->appendRow( it );
+
   for( auto e: children() ) {
 
     if( auto hd = qobject_cast<HolderDouble*>( e ) ) {
-      auto it = new QStandardItem( hd->objectName() );
+      auto it = new QStandardItem( prefix % hd->objectName() );
       it0->appendRow( it ); ++n;
       continue;
     }
 
     if( auto hda = qobject_cast<HolderDoubleArray*>( e ) ) {
-      auto it = new QStandardItem( hda->objectName() + "[0]" );
+      auto it = new QStandardItem( prefix % hda->objectName() + "[0]" );
       it0->appendRow( it ); ++n;
       continue;
     }
 
     if( auto el = qobject_cast<TDataSet*>(e) ) {
-      auto it = new QStandardItem( el->objectName() );
-      int na = el->fillComplForInputs( it );
+      auto it = new QStandardItem( prefix % el->objectName() );
+      int na = el->fillComplForInputs( it, prefix );
       if( na > 0 ) { // append row for elem only if at least one final completition
         it0->appendRow( it ); ++n;
       } else {

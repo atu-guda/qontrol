@@ -1,8 +1,8 @@
 Subschemes.
 Shadow main scheme?
-BUG: hints failed in subschemes
 Common view subwindow: filePath, available actions..., titleStr
 Plot window may by subwindow too
+Whan to [re]create shadow objects?
 StatusModel link to StructView, not to LaboView?
 Check: when to reset model?
 Check: update link values only after step - prep for multi-threading (see TSubScheme)

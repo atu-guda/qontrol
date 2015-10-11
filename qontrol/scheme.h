@@ -77,6 +77,8 @@ class Scheme : public TDataSet  {
   /** links input & parm names -> indexses in ptrs TODO: drop */
   virtual int linkNames();
 
+  virtual void fillComplModelForInputs( QStandardItemModel *mdl ) const override;
+
  protected:
   virtual void do_reset() override;
   // ======================= invisible vars ======================

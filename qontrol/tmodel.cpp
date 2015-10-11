@@ -68,6 +68,7 @@ TModel::~TModel()
 }
 
 
+// must be in correspondence with fillComplModelForInputs
 const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
         const TDataSet **src_ob, int lev) const
 {
@@ -792,6 +793,7 @@ QString TModel::runModelScript()
   return runScript( script );
 }
 
+// must be in correspondence with getSchemeDoublePtr
 void TModel::fillComplModelForInputs( QStandardItemModel *mdl ) const
 {
   if( ! mdl ) { return; }
