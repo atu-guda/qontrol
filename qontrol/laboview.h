@@ -18,8 +18,7 @@
 #ifndef LABOVIEW_H
 #define LABOVIEW_H
 
-// include files for Qt
-#include <QWidget>
+#include "commonsubwin.h"
 
 class QResizeEvent;
 class QCloseEvent;
@@ -53,7 +52,7 @@ class SimulModel;
 /**
  * This class provides an base for LaboDoc view.
  */
-class LaboView : public QWidget
+class LaboView : public CommonSubwin
 {
    Q_OBJECT
    friend class LaboDoc;

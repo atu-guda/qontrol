@@ -22,7 +22,7 @@
 #include <QMainWindow>
 #include <QString>
 
-#include "defs.h"
+#include "commonsubwin.h"
 
 class QToolBar;
 class QPrinter;
@@ -343,6 +343,11 @@ class LaboWin : public QMainWindow
             *act_helpabout, *act_helpaboutqt, *act_whatsthis,
             *act_test;
     QList<QAction*> model_acts; //* list of actions, depending on model
+    QList<QAction*> file_acts;  //* list of actions, depending on file
+    QList<QAction*> elem_acts;  //* list of actions, depending on element
+    QList<QAction*> out_acts;   //* list of actions, depending on output array
+    QList<QAction*> plot_acts;  //* list of actions, depending on plot descriptions
+    QList<QAction*> plotWin_acts;  //* list of actions, corresponding to plot window
 
     /** static pointer to main window -- the only allowed */
     static LaboWin *labowin;

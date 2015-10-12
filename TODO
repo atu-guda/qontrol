@@ -2,15 +2,17 @@ Subschemes.
 Shadow main scheme?
 Common view subwindow: filePath, available actions..., titleStr
 Plot window may by subwindow too
+Special "TDescription" element.
+Split AddElemDialog to (selectTypeDialog, selectNamePlus...)
+Add hintNewName and default names for class (where? Q_CLASSINFO?)
+Libriares.
 Whan to [re]create shadow objects?
 StatusModel link to StructView, not to LaboView?
 Check: when to reset model?
 Check: update link values only after step - prep for multi-threading (see TSubScheme)
-Hint for new element names
 Hide some types in new element dialog
 Combine list views
 New buttons for ObjDataWidget: need better (simple) labels.
-Show output number in hint (this done, but may be in name too?).
 Indicate corresponding outs for selected plot
 Customized colors: struct view...
 Copy/paste plots, outs.

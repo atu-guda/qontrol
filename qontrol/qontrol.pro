@@ -16,6 +16,7 @@ LIBS += -lfftw3
 SOURCES += \
   addelemdia.cpp \
   circbuf.cpp \
+  commonsubwin.cpp \
   contgraph.cpp \
   contout.cpp \
   dataset.cpp \
@@ -84,11 +85,12 @@ SOURCES += \
   ../elems/tswitch.cpp \
   ../elems/tthrum.cpp \
   ../elems/ttrigger.cpp \
-  ../elems/tvibro.cpp 
+  ../elems/tvibro.cpp
 
 HEADERS += \
   addelemdia.h \
   circbuf.h \
+  commonsubwin.h \
   contgraph.h \
   contout.h \
   dataset.h \

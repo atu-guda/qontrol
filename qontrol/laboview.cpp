@@ -42,7 +42,7 @@ using namespace std;
 
 
 LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
-: QWidget( parent ), doc( pDoc ),
+: CommonSubwin( parent, QString() ), doc( pDoc ),
   root( doc->getRoot() ),
   model( doc->getModel() ),
   schems( model->getElemT<ContScheme*>( "schems" ) ),
@@ -51,6 +51,9 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   plots( model->getElemT<ContGraph*>( "plots" ) ),
   sims( model->getElemT<ContSimul*>( "sims" ) )
 {
+  main_win = true;
+  title_prefix = QSL("model");
+  act_group_flags = agfFile | agfElem | agfOut | agfPlot;
   em = LaboWin::Em();
 
   auto vlay = new QVBoxLayout( this );
@@ -98,6 +101,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   setLayout( vlay );
 
   setWindowTitle( "model: " + doc->pathName() );
+  setFilePath( doc->pathName() );
 
   // default: select object 0
   selectOut();
