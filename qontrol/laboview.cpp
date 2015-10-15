@@ -53,7 +53,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 {
   main_win = true;
   title_prefix = QSL("model");
-  act_group_flags = agfFile | agfElem | agfOut | agfPlot;
+
   em = LaboWin::Em();
 
   auto vlay = new QVBoxLayout( this );
@@ -126,20 +126,32 @@ LaboView::~LaboView()
   delete doc; doc = nullptr; // BUG: is here?
 }
 
+bool LaboView::callSlot( const char *nm )
+{
+  return QMetaObject::invokeMethod( this, nm, Qt::AutoConnection );
+}
+
+
+bool LaboView::checkSlot( const char *nm )
+{
+  vector<QWidget*> svs { this, sview, outs_view, plots_view, sims_view, schems_view };
+  for( auto w : svs ) {
+    if( checkSlotSub( w, nm ) ) {
+      return true;
+    }
+  }
+
+  // tmp hack: move action to view
+  QByteArray snm { nm };
+  if( snm == "fileSave" || snm == "fileSaveAs" || snm == "fileClose" ) {
+    return true;
+  }
+  return false;
+}
 
 const QString& LaboView::currentFile() const
 {
-  return doc->pathName();
-}
-
-void LaboView::showError( const QString &s )
-{
-  handleError( this, s );
-}
-
-void LaboView::showWarn( const QString &s )
-{
-  handleWarn( this, s );
+  return doc->pathName(); // TODO: remove, use getFilePath
 }
 
 int LaboView::getSelX() const
@@ -410,13 +422,13 @@ void LaboView::newOut()
   }
 
   if( ! isGoodName( onameq ) ) {
-    showError( QString("Bad output name: \"%1\"").arg(onameq) );
+    handleError( this, QString("Bad output name: \"%1\"").arg(onameq) );
     return;
   }
 
   int irc = model->insOut( onameq, enameq );
   if( !irc  ) {
-    showError( QString("Fail to add Output: \"%1\"").arg(onameq) );
+    handleError( this, QString("Fail to add Output: \"%1\"").arg(onameq) );
   }
   emit viewChanged();
   return;
@@ -583,11 +595,11 @@ void LaboView::newGraph()
     return;
   }
   if( ! isGoodName( aname ) ) {
-    showError( QString("Bad plot name: \"%1\"").arg(aname) );
+    handleError( this, QString("Bad plot name: \"%1\"").arg(aname) );
     return;
   }
   if( ! model->insGraph( aname ) ) {
-    showError( QString("Fail to add plot: \"%1\"").arg(aname) );
+    handleError( this, QString("Fail to add plot: \"%1\"").arg(aname) );
     return;
   }
   emit viewChanged();
@@ -799,12 +811,12 @@ void LaboView::newSimul()
     return;
   }
   if( ! isGoodName( simName ) ) {
-    showError( QString("Bad simulation name: \"%1\"").arg(simName) );
+    handleError( this, QString("Bad simulation name: \"%1\"").arg(simName) );
     return;
   }
   ok = model->newSimul( simName );
   if( !ok ) {
-    showError( QString("Fail to create simulation: \"%1\"").arg(simName) );
+    handleError( this, QString("Fail to create simulation: \"%1\"").arg(simName) );
   }
   emit viewChanged();
 }
@@ -965,11 +977,11 @@ void LaboView::newScheme()
   if( !ok ) { return; }
 
   if( ! isGoodName( schName ) ) {
-    showError( QString("Bad scheme name: \"%1\"").arg(schName) );
+    handleError( this, QString("Bad scheme name: \"%1\"").arg(schName) );
   }
   ok = model->newScheme( schName );
   if( !ok ) {
-    showError( QString("Fail to create scheme: \"%1\"").arg(schName) );
+    handleError( this, QString("Fail to create scheme: \"%1\"").arg(schName) );
   }
   emit viewChanged();
 }
@@ -1010,11 +1022,11 @@ void LaboView::editScheme()
     return;
   }
 
-  auto sv = new StructView( sch, mwin, this, nullptr );
-  sv->setWindowTitle( wtit );
+  auto sw = new StructSubwin( sch, mwin, this, nullptr );
+  // sv->setWindowTitle( wtit );
   QString fullPath = QFileInfo( fileName ).canonicalFilePath();
-  sv->setProperty( "filePath", fullPath );
-  mwin->addChild( sv );
+  sw->setProperty( "filePath", fullPath );
+  mwin->addChild( sw );
 
     // emit viewChanged();
 }
@@ -1162,7 +1174,7 @@ void LaboView::runRun()
 {
   Simulation *sim = sims->getActiveElemT<Simulation*>();
   if( !sim ) {
-    showError( "No active simulations" );
+    handleError( this, "No active simulations" );
     return;
   }
 

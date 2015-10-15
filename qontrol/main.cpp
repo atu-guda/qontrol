@@ -96,7 +96,7 @@ int main( int argc, char *argv[] )
       if( prog_opts.dbg>0 ) {
         qDebug() << "Try to open file" << fn << WHE;
       }
-      main_win->doFileOpenXML( fn );
+      main_win->doFileOpen( fn );
     }
     a.setApplicationDisplayName( PACKAGE );
 
@@ -127,11 +127,11 @@ void print_usage( const char *appname )
 int convert_model( const char *fn_old, const char *fn_new )
 {
   LaboDoc doc;
-  if( ! doc.openDocumentXML( L8B( fn_old ) ) ) {
+  if( ! doc.openDocument( L8B( fn_old ) ) ) {
     cerr << "Fail to read file \"" << fn_old << "\"" << endl;
     return 3;
   }
-  if( ! doc.saveDocumentXML( L8B( fn_new ) ) ) {
+  if( ! doc.saveDocument( L8B( fn_new ) ) ) {
     cerr << "Fail to save file \"" << fn_new << "\"" << endl;
     return 3;
   }
@@ -142,7 +142,7 @@ int batch_process( const char *model_file )
 {
   int rc = 0;
   LaboDoc doc;
-  if( ! doc.openDocumentXML( L8B( model_file ) ) ) {
+  if( ! doc.openDocument( L8B( model_file ) ) ) {
     qCritical() << "Fail to read file " << model_file << WHE;
     return 3;
   }

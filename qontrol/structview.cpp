@@ -1261,6 +1261,32 @@ void StructView::keyPressEvent( QKeyEvent *ke )
   };
 }
 
+// ============================== StructSubwin =======================================
+
+StructSubwin::StructSubwin( Scheme *a_sch, QWidget *a_par, LaboView *mview, OutDataView *a_oview  )
+    : CommonSubwin( a_par, a_sch->getFullName()),
+      sview( new StructView( a_sch, this, mview, a_oview ) )
+{
+  main_win = false;
+  title_prefix = QSL("scheme");
+}
+
+StructSubwin::~StructSubwin()
+{
+}
+
+bool StructSubwin::callSlot( const char *nm )
+{
+  return QMetaObject::invokeMethod( sview, nm, Qt::AutoConnection );
+}
+
+bool StructSubwin::checkSlot( const char *nm )
+{
+  return checkSlotSub( sview, nm );
+}
+
+
+
 // end of structview.cpp
 
 

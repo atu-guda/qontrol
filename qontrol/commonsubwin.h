@@ -21,13 +21,13 @@
 #include "defs.h"
 #include <QWidget>
 
-enum ActionGroupFlag {
-  agfNone = 0,
-  agfFile = 1,
-  agfElem = 2,
-  agfOut  = 4,
-  agfPlot = 8,
-  agfPltWin = 0x10
+enum SelectedObjNums {
+  selElem  = 0,
+  selOut   = 1,
+  selPlot  = 2,
+  selSimul = 3,
+  selSheme = 4,
+  selNums
 };
 
 
@@ -39,14 +39,18 @@ class CommonSubwin : public QWidget  {
    void setFilePath( const QString &fp );
    QString getFilePath() const { return filePath; };
    bool isMainWin() const { return main_win; }
-   unsigned getActGroups() const { return act_group_flags; }
+   int getSelNum( unsigned sn ) const;
+   virtual bool callSlot( const char *nm ) = 0;
+   virtual bool checkSlot( const char *nm ) = 0;
  public slots:
 
   protected:
+   bool checkSlotSub( QWidget *w, const char *nm );
+
    QString filePath, objName;
    QString title_prefix = QSL( "Unk" );
    bool main_win = false; //* flag of close this close all non-main windows with same filePath
-   unsigned act_group_flags = 0;
+   std::vector<int> sels; //* selection numbers, -1 = no select
 };
 
 #endif

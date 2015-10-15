@@ -29,6 +29,7 @@ class OutDataView;
 
 #include "scheme.h"
 #include "laboview.h"
+#include "commonsubwin.h"
 
 class QPainter;
 
@@ -143,6 +144,16 @@ class StructView : public QWidget  {
     TMiso *selObj = nullptr; //* prt to selected object or nullptr
     TMiso *markObj = nullptr; //** prt to marked object or nullptr
     int em = 10;
+};
+
+class StructSubwin : public CommonSubwin {
+  public:
+   StructSubwin( Scheme *a_sch, QWidget *a_par, LaboView *mview, OutDataView *a_oview  );
+   ~StructSubwin();
+   virtual bool callSlot( const char *nm );
+   virtual bool checkSlot( const char *nm );
+  protected:
+   StructView *sview;
 };
 
 #endif

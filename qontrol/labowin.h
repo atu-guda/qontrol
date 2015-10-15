@@ -21,6 +21,7 @@
 // include files for QT
 #include <QMainWindow>
 #include <QString>
+#include <QMap>
 
 #include "commonsubwin.h"
 
@@ -89,20 +90,17 @@ class LaboWin : public QMainWindow
     LaboWin();
     ~LaboWin();
 
-    /** enables/disables menu entries/toolbar items */
-    void enableActions( bool ena, int id_ );
     /** returns apps printer */
     QPrinter* getPrinter() { return printer; }
     /** returns pointer to settings object */
     Mo2Settings* getSettings() { return &sett; }
-    /** reads new XML file: to use from slot and commanline */
-    bool doFileOpenXML( const QString &fn );
+    bool doFileOpen( const QString &fn );
     const QFont& getMainFont()   const  { return mainFont; }
     const QFont& getSmallFont()  const  { return smallFont; }
     const QFont& getPlotFont()   const  { return plotFont; }
     const QFont& getStructFont() const  { return structFont; }
     int getEm() const { return em; }
-    QMdiSubWindow* addChild( QWidget* w );
+    QMdiSubWindow* addChild( CommonSubwin* w );
     QMdiSubWindow* findMdiByTitle( const QString &tit, bool activate = false );
     QMdiSubWindow* findMdiChild( const QString &fileName );
     int closeRelated( const QString &fp );
@@ -110,8 +108,7 @@ class LaboWin : public QMainWindow
     static LaboWin* win() { return labowin; }
 
   protected:
-    QWidget* activeView();
-    LaboView* activeLaboView();
+    CommonSubwin* activeView();
     //* call gives simple slot from active LaboView
     void callLaboViewSlot( const char *slot, const QString &mess );
 
@@ -125,12 +122,12 @@ class LaboWin : public QMainWindow
 
     /** generate a new document in the actual view */
     void slotFileNew();
-    /** open a XML document */
-    void slotFileOpenXML();
-    /** save a document as XML */
-    void slotFileSaveXML();
-    /** save a document as XML under a different filename*/
-    void slotFileSaveXMLAs();
+    /** open a document */
+    void slotFileOpen();
+    /** save a document as */
+    void slotFileSave();
+    /** save a document as under a different filename*/
+    void slotFileSaveAs();
     /** close the actual file */
     void slotFileClose();
     /** print the actual file */
@@ -265,6 +262,8 @@ class LaboWin : public QMainWindow
     void initStatusBar();
     /** recreate fonts from config */
     void setFonts();
+    /** register action in 'acts' and set name */
+    void registerAction( QAction *act, const char *nm );
 
     QSplitter *split;
     QMdiArea *mdiArea;
@@ -340,14 +339,9 @@ class LaboWin : public QMainWindow
             *act_winClose, *act_winCloseAll, *act_winTile, *act_winCascade,
             *act_winNext, *act_winPrev,
             // help
-            *act_helpabout, *act_helpaboutqt, *act_whatsthis,
+            *act_helpabout, *act_helpaboutqt, // *act_whatsthis,
             *act_test;
-    QList<QAction*> model_acts; //* list of actions, depending on model
-    QList<QAction*> file_acts;  //* list of actions, depending on file
-    QList<QAction*> elem_acts;  //* list of actions, depending on element
-    QList<QAction*> out_acts;   //* list of actions, depending on output array
-    QList<QAction*> plot_acts;  //* list of actions, depending on plot descriptions
-    QList<QAction*> plotWin_acts;  //* list of actions, corresponding to plot window
+    QMap<QByteArray,QAction*> acts;
 
     /** static pointer to main window -- the only allowed */
     static LaboWin *labowin;

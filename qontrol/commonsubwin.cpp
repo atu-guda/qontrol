@@ -23,7 +23,8 @@
 using namespace std;
 
 CommonSubwin::CommonSubwin( QWidget *parent, const QString &o_name )
-          : QWidget( parent ), objName( o_name )
+          : QWidget( parent ), objName( o_name ),
+            sels( selNums, -1 )
 {
 }
 
@@ -36,6 +37,31 @@ void CommonSubwin::setFilePath( const QString &fp )
   filePath = QFileInfo( fp ).canonicalFilePath();
   setWindowTitle( title_prefix + QSL(": ") + objName + QSL(" ") + filePath );
 }
+
+int CommonSubwin::getSelNum( unsigned sn ) const
+{
+  if( sn >= selNums ) {
+    return -1;
+  }
+  return sels[sn];
+}
+
+bool CommonSubwin::checkSlotSub( QWidget *w, const char *nm )
+{
+  if( !w ) {
+    return false;
+  }
+
+  const QMetaObject *mo = w->metaObject();
+  if( !mo ) {
+    return false;
+  }
+  QByteArray  nnm ( nm );
+  nnm.append( "()" );
+  int idx = mo->indexOfMethod( nnm.data() );
+  return ( idx >= 0);
+}
+
 
 // end of commonsubwin.cpp
 

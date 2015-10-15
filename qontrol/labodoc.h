@@ -47,8 +47,6 @@ class LaboDoc : public QObject
   /** Destructor for the fileclass of the application */
   ~LaboDoc();
 
-  /** returns true, if the requested view is the last view of the document */
-  bool isLastView() const;
   /** This method gets called when the user is about to close a frame window.
       * It checks, if more than one view is connected to the document
       * (then the frame can be closed), if pFrame is the last view and the
@@ -58,20 +56,18 @@ class LaboDoc : public QObject
   /** returns if the document is modified or not. Use this to determine
       if your document needs saving by the user on closing.*/
   bool isModified() const;
-  /** deletes the document's contents */
-  void deleteContents();
   /** initializes the document generally */
   bool newDocument();
-  /** loads the XML model document by filename  */
-  bool openDocumentXML( const QString &filename );
-  /** saves the XML model document under filename */
-  bool saveDocumentXML( const QString &filename );
+  /** loads the model document by filename  */
+  bool openDocument( const QString &filename );
+  /** saves the model document under filename */
+  bool saveDocument( const QString &filename );
   /** sets the path to the file connected with the document */
   void setPathName( const QString &name );
   /** returns the pathname of the current document file*/
   const QString& pathName() const;
-  /** create XML representation */
-  QString makeXML() const;
+  /** create representation */
+  QString toString() const;
 
 
   /** sets the filename of the document */

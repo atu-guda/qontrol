@@ -41,12 +41,6 @@ LaboDoc::~LaboDoc()
 }
 
 
-bool LaboDoc::isLastView() const
-{
-  return true; // now the only view exist
-}
-
-
 void LaboDoc::setPathName( const QString &name )
 {
   m_filename = name;
@@ -104,7 +98,7 @@ bool LaboDoc::newDocument()
   return true;
 }
 
-bool LaboDoc::openDocumentXML(const QString &filename )
+bool LaboDoc::openDocument(const QString &filename )
 {
   QFile file( filename );
   if( !file.open( QFile::ReadOnly) ) {
@@ -186,7 +180,7 @@ bool LaboDoc::openDocumentXML(const QString &filename )
 }
 
 
-bool LaboDoc::saveDocumentXML( const QString &filename )
+bool LaboDoc::saveDocument( const QString &filename )
 {
   if( rootdata == 0 ) {
     return false;
@@ -204,7 +198,7 @@ bool LaboDoc::saveDocumentXML( const QString &filename )
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
   QString textData;
-  textData = makeXML();
+  textData = toString();
   out << textData;
   QApplication::restoreOverrideCursor();
 
@@ -220,7 +214,7 @@ bool LaboDoc::saveDocumentXML( const QString &filename )
   return true;
 }
 
-QString LaboDoc::makeXML() const
+QString LaboDoc::toString() const
 {
   if( ! rootdata  )
     return QString();
@@ -241,14 +235,9 @@ QString LaboDoc::makeXML() const
 }
 
 
-void LaboDoc::deleteContents()
-{
-  delete rootdata; rootdata = 0; model = 0;
-}
-
 bool LaboDoc::canCloseFrame( LaboView* pFrame )
 {
-  if( prog_opts.batch || !isModified()  ||  !isLastView() ) {
+  if( prog_opts.batch || !isModified()  ) {
     return true;
   }
 
@@ -270,7 +259,7 @@ bool LaboDoc::canCloseFrame( LaboView* pFrame )
       };
 
       ret = false;
-      if( ! saveDocumentXML( saveName ) ) {
+      if( ! saveDocument( saveName ) ) {
         if( QMessageBox::critical( pFrame, tr("I/O Error !"),
               tr( "Could not save the current document !\n" "Close anyway ?" ),
               QMessageBox::Yes ,QMessageBox::No ) == QMessageBox::Yes ) {
