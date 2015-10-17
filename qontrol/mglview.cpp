@@ -53,13 +53,13 @@ MglView::MglView( TGraph *agra, QWidget *parent )
 
   setMinimumSize( 480, 420 );
   setCursor( Qt::CrossCursor );
+  setFocusPolicy( Qt::StrongFocus );
 }
 
 MglView::~MglView()
 {
   resetData();
   gra = nullptr; // not delete, we are not owner, just for debug
-  // delete scd; scd = nullptr;
 }
 
 void MglView::resetData()
@@ -230,13 +230,14 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       toggleAllPlots();
       break;
     case Qt::Key_Q:
-      parentWidget()->close();
+      emit closeMe();
+      // parentWidget()->parentWidget()->close();
       break;
     case Qt::Key_R | Sh:
       resetScale();
       break;
     case Qt::Key_P | Ct:
-      printPlot();
+      print();
       break;
     case Qt::Key_E:
       exportPlot();
@@ -581,7 +582,7 @@ void MglView::setMarkToLink()
 }
 
 
-void MglView::printPlot()
+void MglView::print()
 {
   if( ! LaboWin::win() ) {
     return;
@@ -706,4 +707,35 @@ void MglView::showHelp()
 {
   QMessageBox::information( this,"Hot keys in plot window", plot_helpstr );
 }
+
+// ============================== MglSubwin =======================================
+
+
+MglSubwin::MglSubwin( QWidget *a_par, LaboDoc *a_doc, TGraph *a_gra  )
+    : CommonSubwin( a_par, a_doc, a_gra->objectName() )
+{
+  main_win = false;
+  title_prefix = QSL("plot");
+
+  mview = new MglView( a_gra, this );
+
+  connect( mview, &MglView::closeMe, this, &MglSubwin::closeMe );
+
+  setCentralWidget( mview );
+}
+
+MglSubwin::~MglSubwin()
+{
+}
+
+bool MglSubwin::callSlot( const char *nm )
+{
+  return QMetaObject::invokeMethod( mview, nm, Qt::AutoConnection );
+}
+
+bool MglSubwin::checkSlot( const char *nm )
+{
+  return checkSlotSub( mview, nm );
+}
+
 

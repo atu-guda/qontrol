@@ -28,7 +28,8 @@
 #include <QColor>
 #include <QList>
 
-#include <tgraph.h>
+#include "tgraph.h"
+#include "commonsubwin.h"
 
 class TGraph;
 class ScaleData;
@@ -58,7 +59,7 @@ class MglView : public QWidget  {
    void setAlpha( double al, bool rel = false );
    void zoom(); // from base to mark
    void zoomReset();
-   void printPlot();
+   void print();
    void exportPlot();
    void showInfo();
    void showHelp();
@@ -70,6 +71,9 @@ class MglView : public QWidget  {
    void linkToPlot();
    void unlinkFromPlot();
    void nextPointInPlot( int step = 1 );
+
+ signals:
+   void closeMe(); // ask main window to close me
 
  protected:
    virtual void paintEvent( QPaintEvent *pe ) override;
@@ -100,6 +104,19 @@ class MglView : public QWidget  {
    int linkIdx = 0;   //* current point index in linked array
    bool data_loaded = false;
 };
+
+// ============================== MglSubwin =======================================
+
+class MglSubwin : public CommonSubwin {
+  public:
+   MglSubwin( QWidget *a_par, LaboDoc *a_doc, TGraph *a_gra  );
+   ~MglSubwin();
+   virtual bool callSlot( const char *nm );
+   virtual bool checkSlot( const char *nm );
+  protected:
+   MglView *mview = nullptr;
+};
+
 
 #endif
 

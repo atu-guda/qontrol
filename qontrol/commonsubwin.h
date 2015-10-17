@@ -46,6 +46,8 @@ class CommonSubwin : public QMainWindow  {
    virtual bool callSlot( const char *nm ) = 0;
    virtual bool checkSlot( const char *nm ) = 0;
  public slots:
+ signals:
+   void closeMe(); // ask main window to close me
 
  protected:
    bool checkSlotSub( QWidget *w, const char *nm );

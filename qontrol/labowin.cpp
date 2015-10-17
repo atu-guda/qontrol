@@ -893,6 +893,7 @@ QMdiSubWindow* LaboWin::addChild( CommonSubwin *w )
     return nullptr;
   }
   w->updateTitle();
+  connect( w, &CommonSubwin::closeMe, this, &LaboWin::slotWindowClose );
   subw->show();
   // subw->setFocus(); // BEWARE: may be bug here!
   // updateActions();
@@ -939,7 +940,6 @@ QMdiSubWindow* LaboWin::findMdiByTitle( const QString &tit, bool activate )
 int LaboWin::closeRelated( const QString &fp )
 {
   int n_closed = 0;
-  // qWarning() << "fp=" << fp << WHE;
   for( QMdiSubWindow *subw : mdiArea->subWindowList() ) {
     CommonSubwin *chi = qobject_cast<CommonSubwin*>( subw->widget() );
     if( !chi ) {
@@ -949,9 +949,7 @@ int LaboWin::closeRelated( const QString &fp )
       continue;
     }
     QString wfp = chi->getFilePath();
-    // qWarning() << "win:" << chi->windowTitle() << " path: " << wfp;
     if( wfp  == fp ) {
-     // qWarning() << "Close window" << mdiChild->windowTitle() << " with path " << fp;
      subw->close();
     }
   }

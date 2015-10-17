@@ -689,15 +689,19 @@ void LaboView::showGraph()
   if( !gra ) {
     return;
   }
+  LaboWin *mwin = LaboWin::win();
+  if( !mwin ) { return;  }
 
-  auto plotWnd = new QMainWindow( this ); // TODO: to MDI
-  plotWnd->setWindowTitle( QString( "MGL: ") + gra->objectName() );
-  plotWnd->setAttribute( Qt::WA_DeleteOnClose );
-  auto pv = new MglView( gra, plotWnd );
+  QString fileName = doc->pathName();
+  // like CommonSubwin
+  QString wtit = QSL( "plot: " ) % gra->objectName() % QSL(" - " ) % fileName;
+  QMdiSubWindow *swin = mwin->findMdiByTitle( wtit, true ); // true = activate
+  if( swin ) {
+    return;
+  }
 
-  plotWnd->setCentralWidget( pv );
-  pv->setFocus();
-  plotWnd->show();
+  auto plotWnd = new MglSubwin( this, doc, gra );
+  mwin->addChild( plotWnd );
 }
 
 void LaboView::graphAddOut()

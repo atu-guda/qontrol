@@ -1,10 +1,8 @@
-Subschemes.
+Subscheme libs.
 Shadow main scheme?
-Common view subwindow: filePath, available actions..., titleStr
-Plot window may by subwindow too
 Create Action fun + subclass QAction? (menu to place, flags)
 Controlled Scheme size.
-Special "TDescription" element?
+Long descriptions in schems, plots .... (button)
 Split AddElemDialog to (selectTypeDialog, selectNamePlus...)
 Add hintNewName and default names for class (where? Q_CLASSINFO?)
 Libriares.
