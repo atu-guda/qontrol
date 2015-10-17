@@ -56,10 +56,11 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   em = LaboWin::Em();
 
-  auto vlay = new QVBoxLayout( this );
-  vlay->setContentsMargins( 2, 1, 2, 2 );
+  // auto vlay = new QVBoxLayout( this );
+  // vlay->setContentsMargins( 2, 1, 2, 2 );
 
   auto main_part = new QWidget( this );
+  setCentralWidget( main_part );
 
   setAttribute(Qt::WA_DeleteOnClose);
 
@@ -96,9 +97,10 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   main_part->setLayout( grLay );
 
-  vlay->addWidget( main_part );
-  vlay->addWidget( stam );
-  setLayout( vlay );
+  // vlay->addWidget( main_part );
+  // vlay->addWidget( stam );
+  // setLayout( vlay );
+  setStatusBar( stam );
 
   // default: select object 0
   selectOut();
@@ -231,7 +233,7 @@ void LaboView::closeEvent( QCloseEvent *e )
   // close windows, related to current, if LaboView closed
   LaboWin *lw = LaboWin::win();
   if( lw ) {
-    QString fp = property( "filePath" ).toString();
+    QString fp = getFilePath();
     lw->closeRelated( fp );
   }
 

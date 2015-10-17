@@ -23,7 +23,7 @@
 using namespace std;
 
 CommonSubwin::CommonSubwin( QWidget *parent, LaboDoc *a_doc, const QString &o_name )
-          : QWidget( parent ), doc( a_doc ), objName( o_name ),
+          : QMainWindow( parent ), doc( a_doc ), objName( o_name ),
             sels( selNums, -1 )
 {
 }

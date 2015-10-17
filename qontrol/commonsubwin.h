@@ -20,7 +20,7 @@
 
 
 #include "defs.h"
-#include <QWidget>
+#include <QMainWindow>
 #include "labodoc.h"
 
 enum SelectedObjNums {
@@ -33,7 +33,7 @@ enum SelectedObjNums {
 };
 
 
-class CommonSubwin : public QWidget  {
+class CommonSubwin : public QMainWindow  {
  Q_OBJECT
  public:
    CommonSubwin( QWidget *parent, LaboDoc *a_doc, const QString &o_name );

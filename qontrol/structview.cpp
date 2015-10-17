@@ -1269,16 +1269,13 @@ StructSubwin::StructSubwin( QWidget *a_par, LaboDoc *a_doc, Scheme *a_sch,  Labo
   main_win = false;
   title_prefix = QSL("scheme");
 
-  auto vlay = new QVBoxLayout( this );
-  // vlay->setContentsMargins( 2, 1, 2, 2 );
-
   scrollArea = new QScrollArea( this );
   scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
-  vlay->addWidget( scrollArea );
 
   sview = new StructView( this, a_sch, mview, a_oview );
 
   scrollArea->setWidget( sview );
+  setCentralWidget( scrollArea );
 }
 
 StructSubwin::~StructSubwin()

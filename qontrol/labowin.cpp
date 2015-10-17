@@ -68,7 +68,7 @@ LaboWin::LaboWin()
   }
 
   logViewer->setReadOnly( true );
-  logViewer->setMinimumSize( 50*em, 10*em ); // TODO: fix!
+  logViewer->setMinimumSize( 50*em, 8*em ); // TODO: fix!
   logViewer->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Minimum );
 
   connect( log_timer, &QTimer::timeout, this, &LaboWin::slotUpdateLog );
@@ -939,6 +939,7 @@ QMdiSubWindow* LaboWin::findMdiByTitle( const QString &tit, bool activate )
 int LaboWin::closeRelated( const QString &fp )
 {
   int n_closed = 0;
+  // qWarning() << "fp=" << fp << WHE;
   for( QMdiSubWindow *subw : mdiArea->subWindowList() ) {
     CommonSubwin *chi = qobject_cast<CommonSubwin*>( subw->widget() );
     if( !chi ) {
@@ -948,6 +949,7 @@ int LaboWin::closeRelated( const QString &fp )
       continue;
     }
     QString wfp = chi->getFilePath();
+    // qWarning() << "win:" << chi->windowTitle() << " path: " << wfp;
     if( wfp  == fp ) {
      // qWarning() << "Close window" << mdiChild->windowTitle() << " with path " << fp;
      subw->close();
