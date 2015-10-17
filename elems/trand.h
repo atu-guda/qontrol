@@ -113,6 +113,7 @@ class TRand : public TMiso  {
    RandGenerator rng;
 
    DCL_DEFAULT_STATIC;
+   Q_CLASSINFO( "nameHintBase",  "rnd_" );
 };
 
 #endif

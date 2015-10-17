@@ -57,6 +57,7 @@ class TDiffIn : public TMiso  {
    PRM_INPUT( x_l,   0, "x_l", "Coordinate on left point",  "sep=col" );
    PRM_INPUT( y_l,   0, "y_l", "Value on left point",  "" );
 
+   Q_CLASSINFO( "nameHintBase",  "dif_" );
    DCL_DEFAULT_STATIC;
 };
 

@@ -47,6 +47,7 @@ class TMultipl : public TMiso  {
    PRM_INPUT( in_2, 0, "input 2", "Third input",  "sep=col" );
    PRM_INPUT( in_3, 0, "input 3", "Fourth input", "sep=col" );
 
+   Q_CLASSINFO( "nameHintBase",  "mul_" );
    DCL_DEFAULT_STATIC;
 };
 

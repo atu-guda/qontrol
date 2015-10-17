@@ -85,6 +85,7 @@ class TRandTrigg : public TMiso  {
    /** generator */
    RandGenerator rng;
 
+   Q_CLASSINFO( "nameHintBase",  "rtrig_" );
    DCL_DEFAULT_STATIC;
 };
 

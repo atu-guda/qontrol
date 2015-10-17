@@ -51,7 +51,7 @@ class TSwitch : public TMiso  {
    PRM_INPUT( in_7, 0, "in_7", "Input 7",  "" );
    PRM_INPUT( in_s, 0, "in_s", "switch input", "sep=col" );
 
-
+   Q_CLASSINFO( "nameHintBase",  "swi_" );
    DCL_DEFAULT_STATIC;
 };
 

@@ -57,6 +57,7 @@ class TLinP1Q0 : public TMiso  {
    /** old value of x  */
    double x_old = 0;
 
+   Q_CLASSINFO( "nameHintBase",  "lp1_" );
    DCL_DEFAULT_STATIC;
 };
 

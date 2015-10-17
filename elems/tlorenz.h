@@ -60,6 +60,7 @@ class TLorenz : public TMiso  {
    /** values to store some model vars */
    double tt;
 
+   Q_CLASSINFO( "nameHintBase",  "lot_" );
    DCL_DEFAULT_STATIC;
 };
 

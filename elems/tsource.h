@@ -116,6 +116,7 @@ class TSource : public TMiso  {
    /** values to store some model vars */
    double tt = 1;
 
+   Q_CLASSINFO( "nameHintBase",  "so_" );
    DCL_DEFAULT_STATIC;
 };
 

@@ -57,6 +57,7 @@ class TRossler : public TMiso  {
    PRM_INPUT( in_y, 0, "input x", "Addition to y", "sep=col" );
    PRM_INPUT( in_z, 0, "input x", "Addition to z",  "sep=col" );
 
+   Q_CLASSINFO( "nameHintBase",  "ross_" );
    DCL_DEFAULT_STATIC;
 };
 

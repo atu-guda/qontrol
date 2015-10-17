@@ -59,6 +59,8 @@ class TCounter : public TMiso  {
    int flip;
    /** old value of input */
    double u_old = DMAX;
+
+   Q_CLASSINFO( "nameHintBase",  "cnt_" );
    DCL_DEFAULT_STATIC;
 };
 

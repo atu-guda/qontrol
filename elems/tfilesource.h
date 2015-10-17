@@ -87,6 +87,7 @@ class TFileSource : public TMiso  {
    int next_tau_e();
    void all_close();
 
+   Q_CLASSINFO( "nameHintBase",  "file_" );
    DCL_DEFAULT_STATIC;
 };
 

@@ -62,6 +62,7 @@ class TLogic : public TMiso  {
    PRM_INPUT( in_2, 0, "u_2", "Third input",  "sep=col" );
    PRM_INPUT( in_3, 0, "u_3", "Fourth input", "sep=col" );
 
+   Q_CLASSINFO( "nameHintBase",  "lgc_" );
    DCL_DEFAULT_STATIC;
 };
 

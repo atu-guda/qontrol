@@ -65,6 +65,7 @@ class TLatch : public TMiso  {
 
    int wasLatch = -1;
 
+   Q_CLASSINFO( "nameHintBase",  "latch_" );
    DCL_DEFAULT_STATIC;
 };
 

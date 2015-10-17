@@ -45,9 +45,7 @@ class TDelay : public TMiso  {
    /** reimplemented from TMiso to reset array */
    virtual int do_startLoop( int acnx, int acny ) override;
 
-   /** max delay */
    PRM_DOUBLE( mdelay, efNRC, "Max. delay", "Maximum delay", "min=0\nmax=1e20\ndef=1.5");
-   /** current delay */
    PRM_DOUBLE( cdelay, 0, "Current delay", "Current delay", "min=0\nmax=1e20\ndef=1.0\nsep=col" );
 
    PRM_INPUT( in_u, 0, "input", "Single input",  "sep=block" );
@@ -59,6 +57,8 @@ class TDelay : public TMiso  {
    int imd = 0, icd = 0;
    /** data container */
    std::unique_ptr<TCircBuf> buf;
+
+   Q_CLASSINFO( "nameHintBase",  "dly_" );
    DCL_DEFAULT_STATIC;
 };
 

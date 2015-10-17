@@ -62,6 +62,7 @@ class TThrum : public TMiso  {
    PRM_INPUT( in1, 0, "input 1", "Second input", "sep=col" );
    PRM_INPUT( in2, 0, "input 2", "Third input",  "sep=col" );
 
+   Q_CLASSINFO( "nameHintBase",  "thrum_" );
    DCL_DEFAULT_STATIC;
 };
 

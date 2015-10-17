@@ -58,6 +58,7 @@ class TVibro : public TMiso  {
    /** old values and misc */
    double u_old = 0, f_old = 0, x_old = 0, x_old2 = 0, tdt2 = 1;
 
+   Q_CLASSINFO( "nameHintBase",  "vi_" );
    DCL_DEFAULT_STATIC;
 };
 

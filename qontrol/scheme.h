@@ -91,6 +91,7 @@ class Scheme : public TDataSet  {
   /** vector of ptrs to active elements, my be sorted on ord */
   std::vector<TMiso*> v_el;
 
+  Q_CLASSINFO( "nameHintBase",  "sch_" );
   DCL_DEFAULT_STATIC;
 
 };

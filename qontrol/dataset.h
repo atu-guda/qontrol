@@ -390,6 +390,7 @@ class HolderData : public QAbstractItemModel {
   bool show_active = false;
   QSSMap parms;
   QString allowed_types = ""; // separator=','
+  Q_CLASSINFO( "nameHintBase",  "holder_" );
   DCL_DEFAULT_STATIC;
 };
 
@@ -404,6 +405,7 @@ class HolderValue : public HolderData {
   DCL_STD_GETSET; // just for working create (need for register)
   virtual QString getTypeV() const override;
  protected:
+  Q_CLASSINFO( "nameHintBase",  "data_" );
   DCL_DEFAULT_STATIC;
 };
 
@@ -423,6 +425,7 @@ class HolderInt : public HolderValue {
   virtual QString getTypeV() const override;
  protected:
   int v;
+  Q_CLASSINFO( "nameHintBase",  "iv_" );
   DCL_DEFAULT_STATIC;
 };
 
@@ -442,6 +445,7 @@ class HolderSwitch : public HolderInt {
   virtual QString getTypeV() const override;
  protected:
   virtual void do_post_set() override;
+  Q_CLASSINFO( "nameHintBase",  "sw_" );
   DCL_DEFAULT_STATIC;
 };
 
@@ -462,6 +466,7 @@ class HolderList : public HolderInt {
   virtual QString getTypeV() const;
  protected:
   virtual void do_post_set() override;
+  Q_CLASSINFO( "nameHintBase",  "list_" );
   DCL_DEFAULT_STATIC;
 };
 
@@ -483,6 +488,7 @@ class HolderDouble : public HolderValue {
   virtual QString getTypeV() const override;
  protected:
   double v;
+  Q_CLASSINFO( "nameHintBase",  "dv_" );
   DCL_DEFAULT_STATIC;
 };
 
@@ -508,6 +514,7 @@ class HolderString : public HolderValue {
   const char* c_str() const { return v.toStdString().c_str(); } // danger
  protected:
   QString v;
+  Q_CLASSINFO( "nameHintBase",  "str_" );
   DCL_DEFAULT_STATIC;
 };
 
@@ -537,6 +544,7 @@ class HolderColor : public HolderValue {
   double blueF() const { return v.blueF(); }
  protected:
   QColor v;
+  Q_CLASSINFO( "nameHintBase",  "color_" );
   DCL_DEFAULT_STATIC;
 };
 
@@ -561,6 +569,7 @@ class HolderIntArray : public HolderValue {
   int& operator[](int i) { return v[i]; };
  protected:
   std::vector<int> v;
+  Q_CLASSINFO( "nameHintBase",  "ia_" );
   DCL_DEFAULT_STATIC;
 };
 
@@ -585,6 +594,7 @@ class HolderDoubleArray : public HolderValue {
   double& operator[](int i) { return v[i]; };
  protected:
   std::vector<double> v;
+  Q_CLASSINFO( "nameHintBase",  "da_" );
   DCL_DEFAULT_STATIC;
 };
 
@@ -609,6 +619,7 @@ class HolderStringArray : public HolderValue {
   QString& operator[](int i) { return v[i]; };
  protected:
   QStringList v;
+  Q_CLASSINFO( "nameHintBase",  "sa_" );
   DCL_DEFAULT_STATIC;
 };
 
@@ -667,6 +678,7 @@ class TDataSet : public HolderData {
  protected:
    /** Place for inputs. Parametric inputs is in the TMiso::pis */
    QVector<InputSimple*> inputs;
+  Q_CLASSINFO( "nameHintBase",  "obj_" );
    DCL_DEFAULT_STATIC;
 };
 
@@ -714,6 +726,8 @@ class InputAbstract : public TDataSet {
   double fake_target = 0;
   double *targ = &fake_target;
   int target_flag = 0;
+
+  Q_CLASSINFO( "nameHintBase",  "inx_" );
   DCL_DEFAULT_STATIC;
 };
 
@@ -734,6 +748,7 @@ class InputSimple : public InputAbstract {
   /** find and set link to source or fake source */
   virtual void set_link() override;
 
+  Q_CLASSINFO( "nameHintBase",  "in_" );
   DCL_DEFAULT_STATIC;
 };
 
@@ -762,6 +777,7 @@ class InputParam : public InputAbstract {
   PRM_SWITCH( onlyFirst, 0, "only First", "apply only at start of run", "" );
 
 
+  Q_CLASSINFO( "nameHintBase",  "p_" );
   DCL_DEFAULT_STATIC;
 };
 

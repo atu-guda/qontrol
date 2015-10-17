@@ -138,6 +138,7 @@ class TOutArr : public TDataSet  {
 
    void put_next_val();
 
+   Q_CLASSINFO( "nameHintBase",  "out_" );
    DCL_DEFAULT_STATIC;
 };
 typedef TOutArr *PTOutArr;

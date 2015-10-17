@@ -75,6 +75,8 @@ class TAdjGen : public TMiso  {
    /** real tick: exported to double tick */
    int real_tick;
    double cav, cav2; // current values for av, av2
+
+   Q_CLASSINFO( "nameHintBase",  "gen_" );
    DCL_DEFAULT_STATIC;
 };
 

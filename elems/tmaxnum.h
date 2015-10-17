@@ -70,6 +70,7 @@ class TMaxNum : public TMiso  {
 
    InputSimple *ins[m_n_in];
 
+   Q_CLASSINFO( "nameHintBase",  "maxn_" );
    DCL_DEFAULT_STATIC;
 };
 

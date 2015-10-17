@@ -54,6 +54,7 @@ class TPid : public TMiso  {
    /** flag for special handling initial steps */
    int start = 0;
 
+   Q_CLASSINFO( "nameHintBase",  "pid_" );
    DCL_DEFAULT_STATIC;
 };
 

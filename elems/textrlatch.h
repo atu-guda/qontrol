@@ -74,6 +74,8 @@ class TExtrLatch : public TMiso  {
    PRM_INPUT( in_rst, 0, "rst signal", "Signal to reset", "sep=col" );
 
    double  u_old = 0, u_old2 = 0, t_old = 0;
+
+   Q_CLASSINFO( "nameHintBase",  "extr_" );
    DCL_DEFAULT_STATIC;
 };
 

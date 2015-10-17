@@ -66,6 +66,7 @@ class THyst : public TMiso  {
 
    PRM_INPUT( in_u, 0, "input", "Single input",  "sep=block" );
 
+   Q_CLASSINFO( "nameHintBase",  "hyst_" );
    DCL_DEFAULT_STATIC;
 };
 

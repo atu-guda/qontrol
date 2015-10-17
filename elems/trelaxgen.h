@@ -60,6 +60,8 @@ class TRelaxGen : public TMiso  {
    PRM_INPUT( i_ch,  0, "i_{ch}",  "Charge current",    "sep=col" );
    PRM_INPUT( i_dis, 0, "i_{dis}", "Discharge current", "sep=col" );
    PRM_INPUT( trig,  0, "trig",    "Force discharge",   "sep=col" );
+
+   Q_CLASSINFO( "nameHintBase",  "relax_" );
    DCL_DEFAULT_STATIC;
 };
 

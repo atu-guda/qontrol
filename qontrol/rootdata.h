@@ -22,6 +22,7 @@ class TRootData : public TDataSet {
    DCL_CREATE;
    DCL_STD_INF;
  protected:
+   Q_CLASSINFO( "nameHintBase",  "root" );
    DCL_DEFAULT_STATIC;
 };
 

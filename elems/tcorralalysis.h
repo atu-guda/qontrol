@@ -85,6 +85,7 @@ class TCorrAnalysis : public TMiso  {
    PRM_INPUT( in_rst, 0, "rst signal", "Reset signal", "" );
    PRM_INPUT( in_calc, 0, "calc signal", "Calc signal", "sep=col" );
 
+   Q_CLASSINFO( "nameHintBase",  "corr_" );
    DCL_DEFAULT_STATIC;
 };
 

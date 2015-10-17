@@ -53,6 +53,7 @@ class TSourceLin : public TMiso  {
    /** start time of current line */
    double t_start = 0;
 
+   Q_CLASSINFO( "nameHintBase",  "solin_" );
    DCL_DEFAULT_STATIC;
 };
 

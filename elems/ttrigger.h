@@ -77,6 +77,7 @@ class TTrigger : public TMiso  {
    /** old u[2] value */
    double u2_old = 0;
 
+   Q_CLASSINFO( "nameHintBase",  "trig_" );
    DCL_DEFAULT_STATIC;
 };
 

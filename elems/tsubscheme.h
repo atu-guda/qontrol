@@ -81,6 +81,7 @@ class TSubScheme : public TMiso  {
    QList<SubOutput*> subouts;
    static constexpr const char* const sch_ename = "sch";
 
+   Q_CLASSINFO( "nameHintBase",  "subs_" );
    DCL_DEFAULT_STATIC;
 };
 

@@ -53,6 +53,7 @@ class TSum8 : public TMiso  {
    PRM_INPUT( u_6, 0, "input 6", "Input 6",  "sep=col" );
    PRM_INPUT( u_7, 0, "input 7", "Input 7", "" );
 
+   Q_CLASSINFO( "nameHintBase",  "sum_" );
    DCL_DEFAULT_STATIC;
 };
 

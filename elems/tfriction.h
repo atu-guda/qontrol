@@ -53,6 +53,8 @@ class TFriction : public TMiso  {
 
    /** old values and misc */
    double v_old = 0, x_old = 0;
+
+   Q_CLASSINFO( "nameHintBase",  "fric_" );
    DCL_DEFAULT_STATIC;
 };
 

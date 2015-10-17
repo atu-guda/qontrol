@@ -203,6 +203,7 @@ class TModel : public TDataSet  {
   //* script engine for currne model
   QScriptEngine *eng = nullptr;
 
+  Q_CLASSINFO( "nameHintBase",  "model" );
   DCL_DEFAULT_STATIC;
 
 };

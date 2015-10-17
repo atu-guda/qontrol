@@ -212,6 +212,7 @@ class TGraph : public TDataSet  {
    mglPoint pr_min { 0, 0, 0 }, pr_max { 1, 1, 1 }, pr_dlt { 1, 1, 1 }; // real
    mglPoint pe_min { 0, 0, 0 }, pe_max { 1, 1, 1 }, pe_dlt { 1, 1, 1 }; // eff: last plot
 
+   Q_CLASSINFO( "nameHintBase",  "plot_" );
    DCL_DEFAULT_STATIC;
 };
 typedef TGraph *PTGraph;

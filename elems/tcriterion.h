@@ -67,6 +67,7 @@ class TCriterion : public TMiso  {
    PRM_INPUT( in_ena, 0, "enable", "Signal to enable",  "sep=col" );
    PRM_INPUT( in_a,   0, "in_a", "Reference signal", "sep=col" );
 
+   Q_CLASSINFO( "nameHintBase",  "crit_" );
    DCL_DEFAULT_STATIC;
 };
 
