@@ -70,10 +70,6 @@ class LaboDoc : public QObject
   QString toString() const;
 
 
-  /** sets the filename of the document */
-  void setTitle( const QString &title );
-  /** returns the title of the document */
-  const QString& title() const;
   /** returns ptr to rootdata */
   TRootData *getRoot() const { return rootdata; }
   /** returns nonamed status */
@@ -82,7 +78,6 @@ class LaboDoc : public QObject
  public slots:
 
  private:
-   QString m_title = "? unknown ";
    QString m_filename;
  protected:
    TRootData *rootdata = nullptr;

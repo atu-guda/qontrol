@@ -892,6 +892,7 @@ QMdiSubWindow* LaboWin::addChild( CommonSubwin *w )
     qWarning() << "subw is nullptr in " << WHE;
     return nullptr;
   }
+  w->updateTitle();
   subw->show();
   // subw->setFocus(); // BEWARE: may be bug here!
   // updateActions();
@@ -991,11 +992,9 @@ void LaboWin::slotFileNew()
   ++untitledCount;
   QString fileName = QString( "untitled_" ) % QSN( untitledCount ) % model_file_suff;
   doc->newDocument();
-  doc->setPathName(fileName);
-  doc->setTitle(fileName);
+  doc->setPathName( fileName );
 
   auto  cw = new LaboView( doc, this );
-  cw->setProperty( "filePath", fileName ); // TMP untill save
   addChild( cw );
   statusBar()->showMessage( tr( "Ready." ) );
 }
@@ -1040,8 +1039,6 @@ bool LaboWin::doFileOpen( const QString &fn )
   };
 
   auto  cw = new LaboView( doc, this );
-  QString fullPath = QFileInfo( doc->pathName() ).canonicalFilePath();
-  cw->setProperty( "filePath", fullPath );
   addChild( cw );
   return true;
 }
@@ -1057,6 +1054,7 @@ void LaboWin::slotFileSave()
       return;
     }
     doc->saveDocument( false );
+    m->updateTitle();
     m->update();
   };
   updateActions();
@@ -1079,11 +1077,9 @@ void LaboWin::slotFileSaveAs()
     return;
   }
 
-  if( doc->saveDocument( true ) ) {
-    QString fullPath = QFileInfo( doc->pathName() ).canonicalFilePath();
-    m->setProperty( "filePath", fullPath );
-  };
+  doc->saveDocument( true );
 
+  m->updateTitle();
   updateActions();
   statusBar()->showMessage( tr( "Ready." ) );
 }

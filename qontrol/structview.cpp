@@ -31,7 +31,7 @@
 
 
 
-StructView:: StructView( Scheme *a_sch, QWidget *a_par, LaboView *mview, OutDataView *a_oview )
+StructView::StructView( QWidget *a_par, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview )
             : QWidget( a_par ), sch( a_sch ), mainview( mview ), oview( a_oview )
 {
   em = LaboWin::Em();
@@ -1263,12 +1263,22 @@ void StructView::keyPressEvent( QKeyEvent *ke )
 
 // ============================== StructSubwin =======================================
 
-StructSubwin::StructSubwin( Scheme *a_sch, QWidget *a_par, LaboView *mview, OutDataView *a_oview  )
-    : CommonSubwin( a_par, a_sch->getFullName()),
-      sview( new StructView( a_sch, this, mview, a_oview ) )
+StructSubwin::StructSubwin( QWidget *a_par, LaboDoc *a_doc, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview )
+    : CommonSubwin( a_par, a_doc, a_sch->objectName() )
 {
   main_win = false;
   title_prefix = QSL("scheme");
+
+  auto vlay = new QVBoxLayout( this );
+  // vlay->setContentsMargins( 2, 1, 2, 2 );
+
+  scrollArea = new QScrollArea( this );
+  scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
+  vlay->addWidget( scrollArea );
+
+  sview = new StructView( this, a_sch, mview, a_oview );
+
+  scrollArea->setWidget( sview );
 }
 
 StructSubwin::~StructSubwin()

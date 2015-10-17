@@ -42,7 +42,7 @@ using namespace std;
 
 
 LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
-: CommonSubwin( parent, QString() ), doc( pDoc ),
+: CommonSubwin( parent, pDoc, QString() ),
   root( doc->getRoot() ),
   model( root->getElemT<TModel*>( "model" ) ),
   schems( model->getElemT<ContScheme*>( "schems" ) ),
@@ -79,7 +79,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   schems_view = new SchemeView( schems, this );
 
-  sview = new StructView( main_s, this, this, outs_view );
+  sview = new StructView( this, main_s, this, outs_view );
   scrollArea->setWidget( sview );
   scrollArea->setLineWidth( 1 );
   scrollArea->setMidLineWidth( 1 );
@@ -99,9 +99,6 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   vlay->addWidget( main_part );
   vlay->addWidget( stam );
   setLayout( vlay );
-
-  setWindowTitle( "model: " + doc->pathName() );
-  setFilePath( doc->pathName() );
 
   // default: select object 0
   selectOut();
@@ -1016,16 +1013,14 @@ void LaboView::editScheme()
   }
 
   QString fileName = doc->pathName();
-  QString wtit = QSL( "Scheme: " ) % sch->getFullName() % QSL(" in " ) % fileName;
+  // like CommonSubwin
+  QString wtit = QSL( "scheme: " ) % sch->objectName() % QSL(" - " ) % fileName;
   QMdiSubWindow *swin = mwin->findMdiByTitle( wtit, true ); // true = activate
   if( swin ) {
     return;
   }
 
-  auto sw = new StructSubwin( sch, mwin, this, nullptr );
-  // sv->setWindowTitle( wtit );
-  QString fullPath = QFileInfo( fileName ).canonicalFilePath();
-  sw->setProperty( "filePath", fullPath );
+  auto sw = new StructSubwin( mwin, doc, sch, this, nullptr );
   mwin->addChild( sw );
 
     // emit viewChanged();

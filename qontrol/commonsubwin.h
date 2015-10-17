@@ -18,15 +18,17 @@
 #ifndef COMMONSUBWIN_H
 #define COMMONSUBWIN_H
 
+
 #include "defs.h"
 #include <QWidget>
+#include "labodoc.h"
 
 enum SelectedObjNums {
-  selElem  = 0,
-  selOut   = 1,
-  selPlot  = 2,
-  selSimul = 3,
-  selSheme = 4,
+  selElem   = 0,
+  selOut    = 1,
+  selPlot   = 2,
+  selSimul  = 3,
+  selScheme = 4,
   selNums
 };
 
@@ -34,19 +36,21 @@ enum SelectedObjNums {
 class CommonSubwin : public QWidget  {
  Q_OBJECT
  public:
-   CommonSubwin( QWidget *parent, const QString &o_name );
+   CommonSubwin( QWidget *parent, LaboDoc *a_doc, const QString &o_name );
    ~CommonSubwin();
-   void setFilePath( const QString &fp );
-   QString getFilePath() const { return filePath; };
+   QString getFilePath() const;
+   void updateTitle();
    bool isMainWin() const { return main_win; }
    int getSelNum( unsigned sn ) const;
+   LaboDoc *getDocument() const { return  doc; };
    virtual bool callSlot( const char *nm ) = 0;
    virtual bool checkSlot( const char *nm ) = 0;
  public slots:
 
-  protected:
+ protected:
    bool checkSlotSub( QWidget *w, const char *nm );
 
+   LaboDoc *doc;
    QString filePath, objName;
    QString title_prefix = QSL( "Unk" );
    bool main_win = false; //* flag of close this close all non-main windows with same filePath

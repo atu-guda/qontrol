@@ -22,8 +22,8 @@
 
 using namespace std;
 
-CommonSubwin::CommonSubwin( QWidget *parent, const QString &o_name )
-          : QWidget( parent ), objName( o_name ),
+CommonSubwin::CommonSubwin( QWidget *parent, LaboDoc *a_doc, const QString &o_name )
+          : QWidget( parent ), doc( a_doc ), objName( o_name ),
             sels( selNums, -1 )
 {
 }
@@ -32,10 +32,18 @@ CommonSubwin::~CommonSubwin()
 {
 }
 
-void CommonSubwin::setFilePath( const QString &fp )
+QString CommonSubwin::getFilePath() const
 {
-  filePath = QFileInfo( fp ).canonicalFilePath();
-  setWindowTitle( title_prefix + QSL(": ") + objName + QSL(" ") + filePath );
+  if( !doc ) { return QString(); }
+  return QFileInfo( doc->pathName() ).canonicalFilePath();
+}
+
+void CommonSubwin::updateTitle()
+{
+  if( !doc ) {
+    setWindowTitle( "NO_DOC" );
+  }
+  setWindowTitle( title_prefix % QSL(": ") % objName % QSL(" - ") % doc->pathName() );
 }
 
 int CommonSubwin::getSelNum( unsigned sn ) const

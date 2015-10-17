@@ -57,7 +57,8 @@ class StructView : public QWidget  {
     enum CheckType { validCheck = 0, selCheck, linkToCheck,
                      noselCheck, moveCheck, doneCheck
     };
-    StructView( Scheme *a_sch, QWidget *a_par, LaboView *mview, OutDataView *a_oview );
+
+    StructView( QWidget *a_par, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview );
     virtual ~StructView();
     /** print contents */
     void printAll();
@@ -141,19 +142,23 @@ class StructView : public QWidget  {
     int grid_sz = 46, lm = 4, tm = 4, obj_sz = 32, el_marg = 1, em_small = 10, ex_small = 10;
     // selections
     int sel = -1, sel_x = 0, sel_y = 0, level = 0;
-    TMiso *selObj = nullptr; //* prt to selected object or nullptr
-    TMiso *markObj = nullptr; //** prt to marked object or nullptr
+    TMiso *selObj = nullptr;  //* ptr to selected object or nullptr
+    TMiso *markObj = nullptr; //* prt to marked object or nullptr
     int em = 10;
 };
 
+
+// ============================== StructSubwin =======================================
+
 class StructSubwin : public CommonSubwin {
   public:
-   StructSubwin( Scheme *a_sch, QWidget *a_par, LaboView *mview, OutDataView *a_oview  );
+   StructSubwin( QWidget *a_par, LaboDoc *a_doc, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview  );
    ~StructSubwin();
    virtual bool callSlot( const char *nm );
    virtual bool checkSlot( const char *nm );
   protected:
-   StructView *sview;
+   QScrollArea *scrollArea = nullptr; // null only for forrect layout create
+   StructView *sview = nullptr;
 };
 
 #endif

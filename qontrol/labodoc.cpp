@@ -44,24 +44,13 @@ LaboDoc::~LaboDoc()
 void LaboDoc::setPathName( const QString &name )
 {
   m_filename = name;
-  m_title = QFileInfo(name).fileName();
+  // m_title = QFileInfo(name).fileName();
 }
 
 const QString& LaboDoc::pathName() const
 {
   return m_filename;
 }
-
-void LaboDoc::setTitle( const QString &title )
-{
-  m_title = title;
-}
-
-const QString &LaboDoc::title() const
-{
-  return m_title;
-}
-
 
 
 bool LaboDoc::newDocument()
@@ -148,7 +137,7 @@ bool LaboDoc::openDocument( const QString &filename )
   rootdata->reset();
 
   m_filename = filename;
-  m_title = QFileInfo(filename).fileName();
+  // m_title = QFileInfo(filename).fileName();
   is_nonamed = false;
 
   return true;
@@ -181,7 +170,7 @@ bool LaboDoc::saveDocument( bool forceNewName )
   if( isNewName ) {
     QFileInfo fi( fn );
     if( fi.exists() ) {
-      auto rc =  QMessageBox::information( mwin, title(),
+      auto rc =  QMessageBox::information( mwin, "Save model",
           tr("The file \"%1\" already exists.\n"
             "Do you want to overwrite it it?").arg( fn ),
           QMessageBox::Yes, QMessageBox::No );
@@ -216,7 +205,7 @@ bool LaboDoc::saveDocument( bool forceNewName )
 
   rootdata->setUnModified();
   m_filename = fn;
-  m_title = QFileInfo( fn ).fileName();
+  // m_title = QFileInfo( fn ).fileName();
   is_nonamed = false;
 
   return true;
@@ -251,7 +240,7 @@ bool LaboDoc::canCloseFrame( LaboView* pFrame )
   }
 
   bool ret = false;
-  auto rc =  QMessageBox::information( pFrame, title(),
+  auto rc =  QMessageBox::information( pFrame, "Close model",
         tr("The current file has been modified.\n"
           "Do you want to save it?"),
         QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel );

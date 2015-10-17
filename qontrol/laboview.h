@@ -55,16 +55,14 @@ class SimulModel;
 class LaboView : public CommonSubwin
 {
    Q_OBJECT
-   friend class LaboDoc;
+   friend class LaboDoc; // TODO: remove
  public:
-   /** enumeration for chate checking */
+   /** enumeration for state checking */
    enum CheckType { validCheck = 0, selCheck, linkToCheck,
                      noselCheck, moveCheck, doneCheck
    };
    LaboView( LaboDoc* pDoc, QWidget* parent );
    ~LaboView();
-   /** returns a pointer to the document connected to the view*/
-   LaboDoc *getDocument() const { return  doc; };
    /** gets called to redraw the document contents if it has been modified */
    void update();
    // /** implement preferred size */
@@ -161,8 +159,6 @@ class LaboView : public CommonSubwin
    void initEngine();
 
  public:
-   /** returns document rootdata */ // TODO: remove?
-   // TRootData* getRoot() { return root; }
    /** returns document model */
    TModel* getModel() { return model; }
    /** returns x-coordinate for selected cell */
@@ -192,8 +188,6 @@ class LaboView : public CommonSubwin
    SchemeView *schems_view = nullptr;
    StatusModel *stam = nullptr;
 
-   // document and its main parts
-   LaboDoc *doc;
    TRootData *root;
    TModel *model;
    ContScheme *schems;
