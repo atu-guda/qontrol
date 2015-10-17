@@ -38,13 +38,14 @@ class SubOutput : public TDataSet {
 
   PRM_STRING( source, efNoRunChange, "Source", "Address of signal source from subscheme", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
 
-  PRM_DOUBLE( out0, efInner, "input", "Outout value from subscheme", "" );
+  PRM_DOUBLE( out0, efInner, "input", "Output value from subscheme", "" );
 
   static const double fake_in;
   const double *p = &fake_in;
   const TDataSet *src_obj = nullptr;
   ltype_t linkType = LinkBad;
 
+  Q_CLASSINFO( "nameHintBase",  "o_" );
   DCL_DEFAULT_STATIC;
 };
 

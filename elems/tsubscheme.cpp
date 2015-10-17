@@ -81,6 +81,7 @@ STD_CLASSINFO(TSubScheme,clpElem );
 CTOR(TSubScheme,TMiso)
 {
   allowed_types = "Scheme,InputSimple,SubOutput,+SPECIAL";
+  setParm( "bad_types", "Scheme" );
 }
 
 TSubScheme::~TSubScheme()

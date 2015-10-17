@@ -1291,32 +1291,15 @@ void DataDialog::addParam()
 
 void DataDialog::addObj()
 {
-  addElemInfo aei;
-  aei.name = QString("obj_") + QSN( ds.size() ) ;
-  aei.order = 0;
-  auto dia = new AddElemDialog( &aei, &ds, this );
-
-  int rc = dia->exec();
-  delete dia; dia = 0;
-
-  if( rc != QDialog::Accepted || aei.type.isEmpty() ) {
+  QString objName;
+  QString tp = SelectTypeDialog::getTypeAndName( &ds, this, objName );
+  if( tp.isEmpty() ) {
     return;
   }
 
-  if( ! isGoodName( aei.name )  ) {
-    handleError( this, QSL( "Fail to add Elem: bad object name \"") + aei.name + "\"" );
-    return;
-  }
-
-  const TClassInfo *ci = EFACT.getInfo( aei.type );
-  if( !ci ) {
-    handleError( this, QSL( "Fail to add Elem: class \"") + aei.type + "\" not found" );
-    return;
-  }
-
-  HolderData *ob = ds.add_obj( aei.type, aei.name );
+  HolderData *ob = ds.add_obj( tp, objName );
   if( !ob  ) {
-    handleError( this, QSL( "Fail to add Elem: ") + aei.type + " " + aei.name );
+    handleError( this, QSL( "Fail to add Elem: ") + tp + " " + objName );
     return;
   }
 
@@ -1397,7 +1380,7 @@ int DataDialog::createWidgets()
   }
   dwm.clear();
 
-  auto lay1 = new QVBoxLayout;
+  auto lay1 = new QVBoxLayout; // TODO: recreate layouts
 
   auto lay2 = new QGridLayout;
   lay1->addLayout( lay2 );

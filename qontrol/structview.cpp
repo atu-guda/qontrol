@@ -640,26 +640,41 @@ void StructView::newElm()
     return;
   }
 
-  addElemInfo aei;
-  aei.name = QSL("obj_")+ QSN( sch->countElemsOfType( QSL("TMiso"), QSL("obj_") ) );
-  aei.order = sch->hintOrd();
-  auto dia = new AddElemDialog( &aei, sch, this, "TMiso" );
-                                          // limit to such elements here
-
-  int rc = dia->exec();
-  delete dia; dia = 0;
-
-  if( rc != QDialog::Accepted || aei.type.isEmpty() ) {
-    return;
-  }
-  if( ! isGoodName( aei.name )  ) {
-    handleError( this, QString("Fail to add Elem: bad object name \"%1\"").arg(aei.name) );
+  // sch->setParm( "bad_types", "TLorenz" ); // to test bad
+  QString objName;
+  QString tp = SelectTypeDialog::getTypeAndName( sch, this, objName, "TMiso" );
+  if( tp.isEmpty() ) {
     return;
   }
 
-  TMiso *ob = sch->insElem( aei.type, aei.name, aei.order, sel_x, sel_y );
+  int hint_order = sch->hintOrd(); // TODO: to dialog?
+  bool ok;
+  int order = QInputDialog::getInt( this, "New element order",
+      "Input element order",  hint_order, 0, IMAX, 1, &ok );
+  if( !ok ) {
+    return;
+  }
+
+  // addElemInfo aei;
+  // aei.name = QSL("obj_")+ QSN( sch->countElemsOfType( QSL("TMiso"), QSL("obj_") ) );
+  // aei.order = sch->hintOrd();
+  // auto dia = new AddElemDialog( &aei, sch, this, "TMiso" );
+  //                                         // limit to such elements here
+  //
+  // int rc = dia->exec();
+  // delete dia; dia = 0;
+  //
+  // if( rc != QDialog::Accepted || aei.type.isEmpty() ) {
+  //   return;
+  // }
+  // if( ! isGoodName( objName )  ) {
+  //   handleError( this, QString("Fail to add Elem: bad object name \"%1\"").arg(objName) );
+  //   return;
+  // }
+
+  TMiso *ob = sch->insElem( tp, objName, order, sel_x, sel_y );
   if( !ob  ) {
-    handleError( this, QString("Fail to add Elem: type \"%1\" \"%2\"").arg(aei.type).arg(aei.name) );
+    handleError( this, QString("Fail to add Elem: type \"%1\" \"%2\"").arg(tp).arg(objName) );
     return;
   }
   changeSel( 0, 0, 1 ); // update sel

@@ -79,7 +79,7 @@ bool ElemFactory::registerElemType( const TClassInfo *cl_info )
 
 
 QStringList ElemFactory::goodTypeNames( const QString & allows,
-             bool no_obj, bool no_param ) const
+             bool no_obj, bool no_param, const QString &bad_types ) const
 {
   QStringList res;
   int mask = clpPure | clpSpecial;
@@ -88,8 +88,13 @@ QStringList ElemFactory::goodTypeNames( const QString & allows,
   }
 
   QStringList atp = allows.split(',');
+  QStringList btp = bad_types.split(',');
+
   for( auto i : str_class ) {
     if( i->props & mask ) {
+      continue;
+    }
+    if( btp.contains( i->className ) ) {
       continue;
     }
 

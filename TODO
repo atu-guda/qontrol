@@ -6,7 +6,6 @@ Move inputs to TMiso or parent of TMiso, Scheme....
 Create Action fun + subclass QAction? (menu to place, flags)
 Controlled Scheme size.
 Long descriptions in schems, plots .... (button)
-Split AddElemDialog to (selectTypeDialog, selectNamePlus...)
 Libriares.
 Whan to [re]create shadow objects?
 StatusModel link to StructView, not to LaboView?
