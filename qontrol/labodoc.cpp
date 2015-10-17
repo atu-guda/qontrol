@@ -155,20 +155,52 @@ bool LaboDoc::openDocument( const QString &filename )
 }
 
 
-bool LaboDoc::saveDocument( const QString &filename )
+bool LaboDoc::saveDocument( bool forceNewName )
 {
   if( rootdata == 0 ) {
     return false;
   }
+  QWidget *mwin = LaboWin::win();
 
-  QSaveFile file( filename );
+  QString fn = m_filename;
+  bool isNewName = false;
+  if( ( is_nonamed || forceNewName )  &&  ! prog_opts.batch ) {
+    fn = QFileDialog::getSaveFileName( mwin, tr("Save model"),
+           QString::null, model_files_sel );
+    if( fn.isEmpty() ) {
+      return false;
+    }
+    QFileInfo fi( fn );
+    QString pfn = fi.fileName();
+    if( ! pfn.contains('.') ) {
+      fn += model_file_suff;
+    }
+    isNewName = true;
+  }
+
+  if( isNewName ) {
+    QFileInfo fi( fn );
+    if( fi.exists() ) {
+      auto rc =  QMessageBox::information( mwin, title(),
+          tr("The file \"%1\" already exists.\n"
+            "Do you want to overwrite it it?").arg( fn ),
+          QMessageBox::Yes, QMessageBox::No );
+
+      if( rc == QMessageBox::No ) { // exit w/o save
+        return false;
+      }
+    }
+  }
+
+  QSaveFile file( fn );
   if ( ! file.open( QFile::WriteOnly )) {
-    handleError( LaboWin::win(), tr("Cannot write file %1:\n%2.").arg(filename).arg(file.errorString()) );
+    handleError( mwin, tr("Cannot write file %1:\n%2.").arg(fn).arg(file.errorString()) );
     return false;
   }
-  file.setPermissions( QFileDevice::ReadUser | QFileDevice::WriteUser
-           | QFileDevice::ReadGroup | QFileDevice::ReadOther );
-  QTextStream out(&file);
+  auto perms =  file.permissions() | QFileDevice::ReadUser | QFileDevice::WriteUser;
+  perms &= ~( QFileDevice::ExeUser | QFileDevice::ExeGroup | QFileDevice::ExeOther );
+  file.setPermissions( perms );
+  QTextStream out( &file );
   out.setCodec("UTF-8");
   QApplication::setOverrideCursor(Qt::WaitCursor);
 
@@ -178,12 +210,13 @@ bool LaboDoc::saveDocument( const QString &filename )
   QApplication::restoreOverrideCursor();
 
   if( ! file.commit() ) {
+    handleError( mwin, tr("Cannot write file %1:\n%2.").arg(fn).arg(file.errorString()) );
     return false;
   }
 
   rootdata->setUnModified();
-  m_filename = filename;
-  m_title = QFileInfo(filename).fileName();
+  m_filename = fn;
+  m_title = QFileInfo( fn ).fileName();
   is_nonamed = false;
 
   return true;
@@ -230,19 +263,8 @@ bool LaboDoc::canCloseFrame( LaboView* pFrame )
     return false;
   }
 
-  QString saveName;
-  if( is_nonamed ) {
-    saveName = QFileDialog::getSaveFileName( LaboWin::win(), tr("Save model"),
-        QString::null, model_files_sel );
-    if( saveName.isEmpty() ) {
-      return false;
-    }
-  } else {
-    saveName = pathName();
-  };
-
   ret = false;
-  if( ! saveDocument( saveName ) ) {
+  if( ! saveDocument( false ) ) {
     if( QMessageBox::critical( pFrame, tr("I/O Error !"),
           tr( "Could not save the current document !\n" "Close anyway ?" ),
           QMessageBox::Yes ,QMessageBox::No ) == QMessageBox::Yes ) {

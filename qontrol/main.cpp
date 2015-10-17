@@ -131,7 +131,8 @@ int convert_model( const char *fn_old, const char *fn_new )
     cerr << "Fail to read file \"" << fn_old << "\"" << endl;
     return 3;
   }
-  if( ! doc.saveDocument( L8B( fn_new ) ) ) {
+  doc.setPathName( L8B( fn_new ) );
+  if( ! doc.saveDocument( false ) ) {
     cerr << "Fail to save file \"" << fn_new << "\"" << endl;
     return 3;
   }

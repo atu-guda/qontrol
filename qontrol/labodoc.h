@@ -60,8 +60,8 @@ class LaboDoc : public QObject
   bool newDocument();
   /** loads the model document by filename  */
   bool openDocument( const QString &filename );
-  /** saves the model document under filename */
-  bool saveDocument( const QString &filename );
+  /** saves the model document */
+  bool saveDocument( bool forceNewName = false );
   /** sets the path to the file connected with the document */
   void setPathName( const QString &name );
   /** returns the pathname of the current document file*/

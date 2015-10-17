@@ -1053,11 +1053,10 @@ void LaboWin::slotFileSave()
   LaboView* m =  qobject_cast<LaboView*>( activeView() );
   if( m ) {
     LaboDoc* doc = m->getDocument();
-    if( doc->nonamed() ) {
-      slotFileSaveAs();
-    } else {
-      doc->saveDocument( doc->pathName() ); // message on error inside
-    };
+    if( !doc ) {
+      return;
+    }
+    doc->saveDocument( false );
     m->update();
   };
   updateActions();
@@ -1074,24 +1073,13 @@ void LaboWin::slotFileSaveAs()
     return;
   }
 
-  QString fn = QFileDialog::getSaveFileName( this, tr("Save model"),
-      QString::null, model_files_sel );
-
-  if( fn.isEmpty() ) {
-    statusBar()->showMessage( tr( "Canceled." ) );
+  LaboDoc* doc = m->getDocument();
+  if( !doc ) {
+    handleError( this, tr("Fail to get document!") );
     return;
   }
 
-  QFileInfo fi( fn );
-  QString pfn = fi.fileName();
-  if( ! pfn.contains('.') ) {
-    fn += model_file_suff;
-  }
-  fi.setFile( fn );
-
-  LaboDoc* doc = m->getDocument();
-  if( doc->saveDocument( fn ) ) {
-    // m->setWindowTitle( QSL( "model: " ) + doc->pathName() );
+  if( doc->saveDocument( true ) ) {
     QString fullPath = QFileInfo( doc->pathName() ).canonicalFilePath();
     m->setProperty( "filePath", fullPath );
   };
