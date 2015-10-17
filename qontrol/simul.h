@@ -107,7 +107,7 @@ class Simulation : public TDataSet  {
   PRM_INT( n2_eff, efInner, "n2_eff", "Effective number of iteration in outer loop" , "" );
   PRM_INT( n_tot, efInner, "n_tot", "Total number of iterations" , "" );
 
-  Q_CLASSINFO( "nameHintBase",  "sim_" );
+  Q_CLASSINFO( "nameHintBase",  "sim" );
   DCL_DEFAULT_STATIC;
 
 };

@@ -1022,11 +1022,13 @@ void StructView::copyElm()
 
 void StructView::pasteElm()
 {
-  if( selObj )
+  if( selObj ) {
     return;
+  }
   QClipboard *clp = QApplication::clipboard();
-  if( !clp )
+  if( !clp ) {
     return;
+  }
   QString s = clp->text();
   int err_line, err_column;
   QString errstr;
@@ -1046,15 +1048,7 @@ void StructView::pasteElm()
 
   QString eltype = ee.attribute( "otype" );
   QString elname = ee.attribute( "name" );
-  QString elname_base = elname;
-  int suff_n = 1;
-  while( sch->getElem( elname ) && suff_n < 50 ) { // guess good name
-    elname = elname_base + "_" + QSN( suff_n );
-    suff_n++;
-    if( suff_n > 20 ) {
-      elname += "_x";
-    }
-  }
+  elname = sch->hintName( eltype, elname );
 
   int oord = sch->hintOrd();
 

@@ -421,6 +421,48 @@ bool HolderData::isObject( const QString & cl_name ) const
   return isChildOf( cn );
 }
 
+QString HolderData::hintName( const QString &tp, const QString &nm_start ) const
+{
+  QString nm = nm_start;
+
+  if( nm.isEmpty() ) {
+    nm = "xx_";
+    const TClassInfo *ci = EFACT.getInfo( tp );
+    if( ci ) {
+      const QMetaObject *mci = ci->meta;
+      int ci_idx = mci->indexOfClassInfo( "nameHintBase" );
+      if( ci_idx >= 0 ) {
+        nm = mci->classInfo( ci_idx ).value();
+      }
+    }
+  }
+
+  //             nameDIGITS
+  QRegExp re( "^([_a-zA-Z][_a-zA-Z0-9]*[_a-zA-Z])([0-9]+)$" );
+  QString bname = nm;
+  int ne = 0;
+
+  if( re.indexIn( nm ) != -1 ) {
+    bname  = re.cap( 1 );
+    ne     = re.cap( 2 ).toInt();
+    // qWarning() << "bname= " << bname << " ne " << ne << NWHE;
+  }
+
+  int neo = countElemsOfType( tp, bname );
+  if( neo > ne ) {
+    ne = neo;
+  }
+
+  for( int i=ne; i<ne+1000; ++i ) {
+    nm = bname + QSN( i );
+    if( !getElem( nm ) ) {
+      return nm;
+    }
+  }
+
+  return bname + QSL(" _xx_");
+}
+
 int HolderData::countElemsOfType( const QString &tp, const QString &nm_start ) const
 {
   int n_el = 0, l_nm = nm_start.size();
@@ -521,6 +563,7 @@ HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name,
                << " not allowed in " << NWHE;
     return nullptr;
   }
+
   HolderData *ob = EFACT.createElem( cl_name, ob_name, this );
   if( !ob ) {
     return nullptr;
@@ -668,10 +711,12 @@ HolderData* HolderData::add_param( const QString &tp_name, const QString &ob_nam
 int HolderData::isValidType(  const QString &cl_name  ) const
 {
   const TClassInfo *ci = EFACT.getInfo( cl_name );
-  if( ! ci )
+  if( ! ci ) {
     return false;
-  if( ci->props & clpPure )
+  }
+  if( ci->props & clpPure ) {
     return false;
+  }
 
   QStringList atp = QString(allowTypes()).split(',');
   for( auto c : atp ) {

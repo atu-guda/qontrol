@@ -8,6 +8,7 @@
 
 #include <QStringBuilder>
 #include "dataset.h"
+#include "miscfun.h"
 
 
 
@@ -40,6 +41,11 @@ HolderData* ElemFactory::createElem( const QString &a_type,
   // check parent for name
   if( a_parent->getElem(obj_name) ) {
     qWarning() << "name " << obj_name << " exists in parent " <<  a_parent->getFullName() << WHE;
+    return nullptr;
+  }
+
+  if( ! isGoodName( obj_name ) ) {
+    qWarning() << " bad object name " << obj_name << " in parent " <<  a_parent->getFullName() << WHE;
     return nullptr;
   }
 

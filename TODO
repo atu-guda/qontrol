@@ -1,11 +1,12 @@
 Subscheme libs.
 Selections in views/document
+Common code in LaboView (new.clone...)
 Shadow main scheme?
+Move inputs to TMiso or parent of TMiso, Scheme....
 Create Action fun + subclass QAction? (menu to place, flags)
 Controlled Scheme size.
 Long descriptions in schems, plots .... (button)
 Split AddElemDialog to (selectTypeDialog, selectNamePlus...)
-Add hintNewName and default names for class (where? Q_CLASSINFO?)
 Libriares.
 Whan to [re]create shadow objects?
 StatusModel link to StructView, not to LaboView?

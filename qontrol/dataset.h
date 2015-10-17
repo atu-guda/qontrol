@@ -211,6 +211,7 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE bool isObject( const QString &cl_name = QString() ) const;
   // count number of elements of given type, optionaly with named started with nm_start
   Q_INVOKABLE int countElemsOfType( const QString &tp, const QString &nm_start = QString() ) const;
+  Q_INVOKABLE QString hintName( const QString &tp, const QString &nm_start = QString() ) const;
   void addFlags( int a_flags ) { flags |= a_flags; }
   void setImmutable() { flags |= efImmutable; }
   Q_INVOKABLE int getFlags() const { return flags; }

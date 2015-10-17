@@ -56,9 +56,6 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   em = LaboWin::Em();
 
-  // auto vlay = new QVBoxLayout( this );
-  // vlay->setContentsMargins( 2, 1, 2, 2 );
-
   auto main_part = new QWidget( this );
   setCentralWidget( main_part );
 
@@ -97,9 +94,6 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   main_part->setLayout( grLay );
 
-  // vlay->addWidget( main_part );
-  // vlay->addWidget( stam );
-  // setLayout( vlay );
   setStatusBar( stam );
 
   // default: select object 0
@@ -148,10 +142,6 @@ bool LaboView::checkSlot( const char *nm )
   return false;
 }
 
-const QString& LaboView::currentFile() const
-{
-  return doc->pathName(); // TODO: remove, use getFilePath
-}
 
 int LaboView::getSelX() const
 {
@@ -236,7 +226,6 @@ void LaboView::closeEvent( QCloseEvent *e )
     QString fp = getFilePath();
     lw->closeRelated( fp );
   }
-
 
   e->accept();
 }
@@ -583,22 +572,21 @@ void LaboView::exportOut()
 
 void LaboView::newGraph()
 {
-  QString grnameq, aname;
   bool ok;
 
-  grnameq = QSL("plot_") + QSN( plots->countElemsOfType( "TGraph", QSL("plot_") ) );
-  aname = QInputDialog::getText( this, "Creating new plot",
+  QString grnameq = plots->hintName( "TGraph" );
+  QString aname = QInputDialog::getText( this, "Creating new plot",
       "Enter name of new plot:", QLineEdit::Normal,
       grnameq, &ok );
   if( !ok ) {
     return;
   }
   if( ! isGoodName( aname ) ) {
-    handleError( this, QString("Bad plot name: \"%1\"").arg(aname) );
+    handleError( this, QString("Bad plot name: %1").arg(aname) );
     return;
   }
   if( ! model->insGraph( aname ) ) {
-    handleError( this, QString("Fail to add plot: \"%1\"").arg(aname) );
+    handleError( this, QString("Fail to add plot: %1").arg(aname) );
     return;
   }
   emit viewChanged();
@@ -787,7 +775,7 @@ void LaboView::cloneGraph()
     return;
   }
 
-  QString nn = nm + "_1";
+  QString nn = plots->hintName( "TGraph", nm );
   bool ok;
   QString new_name = QInputDialog::getText(
       this, tr( "New plot name" ), tr( "Plot name:" ), QLineEdit::Normal,
@@ -806,7 +794,7 @@ void LaboView::cloneGraph()
 void LaboView::newSimul()
 {
   bool ok;
-  QString simName = QSL("sim") + QSN( sims->countElemsOfType( QSL("Simulation"), QSL("sim") ) );
+  QString simName = sims->hintName( QSL("Simulation") );
   simName = QInputDialog::getText( this, "Creating new Simulation",
       "Enter name of new simulation:", QLineEdit::Normal,
       simName, &ok );
@@ -913,7 +901,7 @@ void LaboView::cloneSimul()
     return;
   }
 
-  QString nn = nm + "_1";
+  QString nn = sims->hintName( "Simulation", nm );
   bool ok;
   QString new_name = QInputDialog::getText(
       this, tr( "New simulation name" ), tr( "Simulation name:" ), QLineEdit::Normal,
@@ -973,7 +961,7 @@ void LaboView::showTreeModel()
 void LaboView::newScheme()
 {
   bool ok;
-  QString schName = QSL("sch_") + QSN( schems->countElemsOfType( "Scheme", QSL("sch_") ) ); // TODO: suggestName
+  QString schName = schems->hintName( "Scheme" );
   schName = QInputDialog::getText( this, "Creating new Scheme",
       "Enter name of new scheme:", QLineEdit::Normal,
       schName, &ok );
@@ -1064,7 +1052,7 @@ void LaboView::cloneScheme()
   if( nm.isEmpty() ) {
     return;
   }
-  QString nn = nm + QSN( schems->countElemsOfType( "Scheme", nm ) ); // TODO: suggestName
+  QString nn = schems->hintName( "Scheme", nm );
 
   bool ok;
   QString new_name = QInputDialog::getText(

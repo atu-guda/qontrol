@@ -70,8 +70,6 @@ class LaboView : public CommonSubwin
    /** inner size for structure view */
    QSize svSize() const;
 
-   const QString& currentFile() const;
-
    //* edit some model object
    // bool editObj( HolderData *obj, bool resetModel = true );
    //* returns name of current object in given view
