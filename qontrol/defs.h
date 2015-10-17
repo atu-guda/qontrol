@@ -45,6 +45,9 @@ constexpr const double DMAX   { std::numeric_limits<double>::max() };
 constexpr const double D_EPS  { 1.0e-6 }; // default error
 constexpr const double D_AZERO  { 1.0e-100 }; // a near-zero value
 
+constexpr const char *const model_file_suff { ".qol" };
+constexpr const char *const model_files_sel { "Model *.qol files (*.qol);;All files(*)" };
+
 #define L8B QString::fromLocal8Bit
 #define QSN QString::number
 #define QSNX(n) QString::number((n),16)

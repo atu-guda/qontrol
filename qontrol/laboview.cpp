@@ -44,7 +44,7 @@ using namespace std;
 LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 : CommonSubwin( parent, QString() ), doc( pDoc ),
   root( doc->getRoot() ),
-  model( doc->getModel() ),
+  model( root->getElemT<TModel*>( "model" ) ),
   schems( model->getElemT<ContScheme*>( "schems" ) ),
   main_s( schems->getElemT<Scheme*>("main_s") ),
   outs( model->getElemT<ContOut*>( "outs" ) ),

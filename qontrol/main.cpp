@@ -146,7 +146,7 @@ int batch_process( const char *model_file )
     qCritical() << "Fail to read file " << model_file << WHE;
     return 3;
   }
-  TModel *model = doc.getModel();
+  TModel *model = doc.getRoot()->getElemT<TModel*>( "model" );
   if( !model ) {
     qCritical() << "Not found model in file" << model_file << WHE;
     return 5;

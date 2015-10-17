@@ -37,7 +37,7 @@ LaboDoc::LaboDoc()
 LaboDoc::~LaboDoc()
 {
   delete rootdata;
-  rootdata = nullptr; model = nullptr; // model belong to rootdata
+  rootdata = nullptr;
 }
 
 
@@ -62,16 +62,6 @@ const QString &LaboDoc::title() const
   return m_title;
 }
 
-void LaboDoc::showError( const QString &s )
-{
-  handleError( LaboWin::win(), s ); // nullptr is ok - batch
-}
-
-void LaboDoc::showWarn( const QString &s )
-{
-  handleWarn( LaboWin::win(), s );
-}
-
 
 
 bool LaboDoc::newDocument()
@@ -79,17 +69,10 @@ bool LaboDoc::newDocument()
   if( rootdata ) {
     qWarning() << "non-null rootdata while creation new doc" << WHE;
     delete rootdata;
-    rootdata = nullptr; model = nullptr;
+    rootdata = nullptr;
   }
 
   rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
-  model = rootdata->getElemT<TModel*>( "model" );
-  if( !model ) {
-    delete rootdata; rootdata = nullptr;
-    showError( QSL( "Fail to find model in root: " ) );
-    return false;
-  }
-
 
   // rootdata->dumpStruct();
   is_nonamed = true;
@@ -98,11 +81,11 @@ bool LaboDoc::newDocument()
   return true;
 }
 
-bool LaboDoc::openDocument(const QString &filename )
+bool LaboDoc::openDocument( const QString &filename )
 {
   QFile file( filename );
   if( !file.open( QFile::ReadOnly) ) {
-    showError( tr("Cannot read file %1: %2.").arg(filename).arg(file.errorString() ) );
+    handleError( LaboWin::win(), tr("Cannot read file %1: %2.").arg(filename).arg(file.errorString() ) );
     return false;
   }
   QTextStream in( &file );
@@ -117,7 +100,7 @@ bool LaboDoc::openDocument(const QString &filename )
   int err_line, err_column;
 
   if( ! dd.setContent( &xml_src, &xml_reader, &errstr, &err_line, &err_column ) ) {
-    showError( tr("Cannot parse file %1:\n%2\nLine %3 column %4.")
+    handleError( LaboWin::win(), tr("Cannot parse file %1:\n%2\nLine %3 column %4.")
                          .arg(filename).arg(errstr).arg(err_line).arg(err_column) );
     m_filename = "";
     return false;
@@ -136,7 +119,7 @@ bool LaboDoc::openDocument(const QString &filename )
         obj_root = ee;
         break;
       }
-      showError( tr("Bad first element: %1 %2 ").arg(tagname).arg(elname) );
+      handleError( LaboWin::win(), tr("Bad first element: %1 %2 ").arg(tagname).arg(elname) );
       return false;
     }
     cnode = cnode.nextSibling();
@@ -147,31 +130,23 @@ bool LaboDoc::openDocument(const QString &filename )
   if( rootdata ) {
     qWarning() << "non-null rootdata while opening new doc" << WHE;
     delete rootdata;
-    rootdata = nullptr; model = nullptr;
+    rootdata = nullptr;
   }
   rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
 
-  model = nullptr;
   rootdata->suspendHandleStructChange();
   bool read_ok = rootdata->fromDom( obj_root, errstr );
   if( ! read_ok ) {
     delete rootdata;
     rootdata = nullptr;
-    showError( QSL("Fail to parse file: ") % filename % " : " % errstr );
+    handleError( LaboWin::win(), QSL("Fail to parse file: ") % filename % " : " % errstr );
     return false;
   }
 
-  model = rootdata->getElemT<TModel*>( "model" );
-
-  if( !model ) {
-    delete rootdata; rootdata = 0; model = 0;
-    showError( QSL("Fail to detect model in file: ") % filename );
-    return false;
-  };
-
   rootdata->resumeHandleStructChange();
   rootdata->setUnModified();
-  model->reset();
+  rootdata->reset();
+
   m_filename = filename;
   m_title = QFileInfo(filename).fileName();
   is_nonamed = false;
@@ -188,7 +163,7 @@ bool LaboDoc::saveDocument( const QString &filename )
 
   QSaveFile file( filename );
   if ( ! file.open( QFile::WriteOnly )) {
-    showError( tr("Cannot write file %1:\n%2.").arg(filename).arg(file.errorString()) );
+    handleError( LaboWin::win(), tr("Cannot write file %1:\n%2.").arg(filename).arg(file.errorString()) );
     return false;
   }
   file.setPermissions( QFileDevice::ReadUser | QFileDevice::WriteUser
@@ -216,8 +191,9 @@ bool LaboDoc::saveDocument( const QString &filename )
 
 QString LaboDoc::toString() const
 {
-  if( ! rootdata  )
+  if( ! rootdata  ) {
     return QString();
+  }
 
   QDomDocument dd("QontrolLabML");
   QDomNode pre_node = dd.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
@@ -242,71 +218,51 @@ bool LaboDoc::canCloseFrame( LaboView* pFrame )
   }
 
   bool ret = false;
-  QString saveName;
-  switch( QMessageBox::information( pFrame, title(),
+  auto rc =  QMessageBox::information( pFrame, title(),
         tr("The current file has been modified.\n"
           "Do you want to save it?"),
-        QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel )) {
-    case QMessageBox::Yes:
-      if( is_nonamed ) {
-        saveName = QFileDialog::getSaveFileName( LaboWin::win(), tr("Save model"),
-            QString::null, "Model *.qol files (*.qol);;All files(*)" );
-        if( saveName.isEmpty() ) {
-          return false;
-        }
-      } else {
-        saveName = pathName();
-      };
+        QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel );
 
-      ret = false;
-      if( ! saveDocument( saveName ) ) {
-        if( QMessageBox::critical( pFrame, tr("I/O Error !"),
-              tr( "Could not save the current document !\n" "Close anyway ?" ),
-              QMessageBox::Yes ,QMessageBox::No ) == QMessageBox::Yes ) {
-          ret=true;
-        };
-      } else {
-        ret=true;
-      };
-      break;
-    case QMessageBox::No:
+  if( rc == QMessageBox::No ) { // exit w/o save
+    return true;
+  }
+  if( rc == QMessageBox::Cancel ) { // no exit
+    return false;
+  }
+
+  QString saveName;
+  if( is_nonamed ) {
+    saveName = QFileDialog::getSaveFileName( LaboWin::win(), tr("Save model"),
+        QString::null, model_files_sel );
+    if( saveName.isEmpty() ) {
+      return false;
+    }
+  } else {
+    saveName = pathName();
+  };
+
+  ret = false;
+  if( ! saveDocument( saveName ) ) {
+    if( QMessageBox::critical( pFrame, tr("I/O Error !"),
+          tr( "Could not save the current document !\n" "Close anyway ?" ),
+          QMessageBox::Yes ,QMessageBox::No ) == QMessageBox::Yes ) {
       ret=true;
-      break;
-    case QMessageBox::Cancel:
-    default:
-      ret=false;
-      break;
-  }; // switch
+    };
+  } else {
+    ret=true;
+  };
 
   return ret;
 }
 
-TModel* LaboDoc::getModel() const
-{
-  return model;
-}
-
-TRootData* LaboDoc::getRoot() const
-{
-  return rootdata;
-}
 
 bool LaboDoc::isModified() const
 {
-  int mmd;
-  if( !rootdata  ||  !model  ) {
+  if( !rootdata ) {
     return false;
   }
-  mmd = model->getModified();
-  return ( mmd & 1 );
-}
-
-void LaboDoc::fillRoot()
-{
-  if( rootdata == 0 ) {
-    qCritical() << "rootdata is null!!" << WHE;
-    return;
-  }
+  int mmd = rootdata->getModified();
+  return ( mmd & modifManual );
 }
 
 

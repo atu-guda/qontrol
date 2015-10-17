@@ -74,19 +74,10 @@ class LaboDoc : public QObject
   void setTitle( const QString &title );
   /** returns the title of the document */
   const QString& title() const;
-  /** returns pointer to model */
-  TModel *getModel() const;
   /** returns ptr to rootdata */
-  TRootData *getRoot() const;
-  /** fills rootdata reg infos */
-  void fillRoot();
+  TRootData *getRoot() const { return rootdata; }
   /** returns nonamed status */
   bool nonamed() const { return is_nonamed; }
-
-  //* show std error box/log
-  void showError( const QString &s );
-  //* show std warning box/log
-  void showWarn( const QString &s );
 
  public slots:
 
@@ -95,7 +86,6 @@ class LaboDoc : public QObject
    QString m_filename;
  protected:
    TRootData *rootdata = nullptr;
-   TModel *model = nullptr;
    bool is_nonamed = true;
 };
 

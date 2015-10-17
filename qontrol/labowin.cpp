@@ -989,7 +989,7 @@ void LaboWin::slotFileNew()
 
   auto  doc = new LaboDoc();
   ++untitledCount;
-  QString fileName = QString( "untitled_%1.qol" ).arg(untitledCount);
+  QString fileName = QString( "untitled_" ) % QSN( untitledCount ) % model_file_suff;
   doc->newDocument();
   doc->setPathName(fileName);
   doc->setTitle(fileName);
@@ -1006,7 +1006,7 @@ void LaboWin::slotFileOpen()
   statusBar()->showMessage( tr( "Opening model file..." ) );
   QString fileName =
     QFileDialog::getOpenFileName( this, tr("Open model file"),
-        ".", "Model qol files (*.qol);;All files(*)" );
+        ".", model_files_sel );
 
   if ( fileName.isEmpty() ) {
      statusBar()->showMessage( tr( "Open canceled." ) );
@@ -1075,23 +1075,27 @@ void LaboWin::slotFileSaveAs()
   }
 
   QString fn = QFileDialog::getSaveFileName( this, tr("Save model"),
-      QString::null, "Model qol files (*.qol);;All files(*)" );
+      QString::null, model_files_sel );
 
-  if( !fn.isEmpty() ) {
-    QFileInfo fi( fn );
-    QString pfn = fi.fileName();
-    if( ! pfn.contains('.') ) {
-      fn += ".qol";
-    }
-    fi.setFile( fn );
+  if( fn.isEmpty() ) {
+    statusBar()->showMessage( tr( "Canceled." ) );
+    return;
+  }
 
-    LaboDoc* doc = m->getDocument();
-    if( doc->saveDocument( fn ) ) {
-       // m->setWindowTitle( QSL( "model: " ) + doc->pathName() );
-       QString fullPath = QFileInfo( doc->pathName() ).canonicalFilePath();
-       m->setProperty( "filePath", fullPath );
-    };
+  QFileInfo fi( fn );
+  QString pfn = fi.fileName();
+  if( ! pfn.contains('.') ) {
+    fn += model_file_suff;
+  }
+  fi.setFile( fn );
+
+  LaboDoc* doc = m->getDocument();
+  if( doc->saveDocument( fn ) ) {
+    // m->setWindowTitle( QSL( "model: " ) + doc->pathName() );
+    QString fullPath = QFileInfo( doc->pathName() ).canonicalFilePath();
+    m->setProperty( "filePath", fullPath );
   };
+
   updateActions();
   statusBar()->showMessage( tr( "Ready." ) );
 }
