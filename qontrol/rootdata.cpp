@@ -20,7 +20,7 @@ CTOR(TRootData,TDataSet)
 {
   flags |= efImmutable;
   allowed_types = "TModel";
-  TModel *model = addElemT<TModel>( "model" );
+  TModel *model = addObjT<TModel>( "model" );
   model->setImmutable(); // TODO: need check?
 
 }

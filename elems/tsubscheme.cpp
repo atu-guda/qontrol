@@ -42,7 +42,7 @@ bool SubOutput::set_link()
   if( !par ) {
     return false;
   }
-  Scheme *sch = par->getElemT<Scheme*>( "sch" );
+  Scheme *sch = par->getObjT<Scheme*>( "sch" );
   if( !sch ) {
     qWarning() << "scheme not found " << NWHE;
     return false;
@@ -127,11 +127,11 @@ int TSubScheme::do_preRun( int run_tp, int an,
     qWarning() << "Subscheme prototype is not available" << sch_name <<NWHE;
     return 0;
   }
-  if( getElem( sch_ename ) ) {
-    del_obj( sch_ename, true ); // ignoreMod
+  if( getObj( sch_ename ) ) {
+    delObj( sch_ename, true ); // ignoreMod
   }
 
-  sch = addElemT<Scheme>( sch_ename, true );
+  sch = addObjT<Scheme>( sch_ename, true );
   if( ! sch ) {
     qWarning() << "Fail to create subscheme " << NWHE;
     return 0;
@@ -155,7 +155,7 @@ int TSubScheme::do_preRun( int run_tp, int an,
 int TSubScheme::do_postRun( int /*good*/ )
 {
   sch->postRun();
-  del_obj( sch_ename, true ); // tmp nodel
+  delObj( sch_ename, true ); // tmp nodel
   return 1;
 }
 
@@ -178,7 +178,7 @@ int TSubScheme::do_endLoop()
 
 void TSubScheme::do_post_set()
 {
-  sch_proto = getElemOfAncessorT<Scheme*>( sch_name );
+  sch_proto = getObjOfAncessorT<Scheme*>( sch_name );
   // if( !sch_proto ) {
   //   qWarning() << "Fail to find prototype cheme " << sch_name << NWHE; // Not here!
   // }

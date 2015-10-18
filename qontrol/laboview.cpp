@@ -44,12 +44,12 @@ using namespace std;
 LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 : CommonSubwin( parent, pDoc, QString() ),
   root( doc->getRoot() ),
-  model( root->getElemT<TModel*>( "model" ) ),
-  schems( model->getElemT<ContScheme*>( "schems" ) ),
-  main_s( schems->getElemT<Scheme*>("main_s") ),
-  outs( model->getElemT<ContOut*>( "outs" ) ),
-  plots( model->getElemT<ContGraph*>( "plots" ) ),
-  sims( model->getElemT<ContSimul*>( "sims" ) )
+  model( root->getObjT<TModel*>( "model" ) ),
+  schems( model->getObjT<ContScheme*>( "schems" ) ),
+  main_s( schems->getObjT<Scheme*>("main_s") ),
+  outs( model->getObjT<ContOut*>( "outs" ) ),
+  plots( model->getObjT<ContGraph*>( "plots" ) ),
+  sims( model->getObjT<ContSimul*>( "sims" ) )
 {
   main_win = true;
   title_prefix = QSL("model");
@@ -469,7 +469,7 @@ void LaboView::renameOut()
       "Enter new name:", QLineEdit::Normal, old_name, &ok );
 
   if( ok ) {
-    if( outs->rename_obj( old_name, new_name ) ) {
+    if( outs->renameObj( old_name, new_name ) ) {
       // model->setModified();
       model->reset();
       emit viewChanged();
@@ -657,7 +657,7 @@ void LaboView::renameGraph()
       "Enter new name:", QLineEdit::Normal, old_name, &ok );
 
   if( ok ) {
-    if( plots->rename_obj( old_name, new_name ) ) {
+    if( plots->renameObj( old_name, new_name ) ) {
       model->reset();
       emit viewChanged();
     }
@@ -858,7 +858,7 @@ void LaboView::renameSimul()
       "Enter new name:", QLineEdit::Normal, old_name, &ok );
 
   if( ok ) {
-    if( sims->rename_obj( old_name, new_name ) ) {
+    if( sims->renameObj( old_name, new_name ) ) {
       model->reset();
       emit viewChanged();
     }
@@ -1039,7 +1039,7 @@ void LaboView::renameScheme()
 
   if( !ok ) { return; }
 
-  if( schems->rename_obj( old_name, new_name ) ) {
+  if( schems->renameObj( old_name, new_name ) ) {
     model->reset();
     emit viewChanged();
   }
@@ -1161,7 +1161,7 @@ void LaboView::runScript()
 
 void LaboView::runRun()
 {
-  Simulation *sim = sims->getActiveElemT<Simulation*>();
+  Simulation *sim = sims->getActiveObjT<Simulation*>();
   if( !sim ) {
     handleError( this, "No active simulations" );
     return;

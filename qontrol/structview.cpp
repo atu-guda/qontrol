@@ -105,7 +105,7 @@ void StructView::changeSel( int x, int y, int rel )
               n_obj = ob->getMyIndexInParent();
             }
             ++n_obj;
-            ob = qobject_cast<TMiso*>( sch->getElem( n_obj ) );
+            ob =  sch->getObjT<TMiso*>( n_obj );
             if( ob ) {
               sel_x = ob->getDataD( "vis_x", 0 );
               sel_y = ob->getDataD( "vis_y", 0 );
@@ -207,7 +207,7 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   ei.li_src_x = ei.xc - ei.flip_factor*(obj_sz/2);
   ei.li_pdst_y = ei.yc + (obj_sz/2);
 
-  ei.pis = ob->getElemT<const InputParams*>("pis");
+  ei.pis = ob->getObjT<const InputParams*>("pis");
   ei.n_pinp = ei.pis->size();
 
   return true;
@@ -673,7 +673,7 @@ void StructView::delElm()
   bool sel_is_mark = ( selObj == markObj );
 
   if( confirmDelete( this, "element", oname) ) {
-    sch->delElem( oname );
+    sch->delObj( oname );
     if( sel_is_mark ) {
       markObj = nullptr;
     }
@@ -708,7 +708,7 @@ void StructView::renameElm()
       "Enter new name:", QLineEdit::Normal, old_name, &ok );
 
   if( ok ) {
-    if( sch->rename_obj( old_name, new_name ) ) {
+    if( sch->renameObj( old_name, new_name ) ) {
       // model->reset();
       emit viewChanged();
     }
@@ -759,14 +759,14 @@ void StructView::qplinkElm()
 
   QString toname = markObj->objectName();
 
-  InputParams *pis = selObj->getElemT<InputParams*>("pis");
+  InputParams *pis = selObj->getObjT<InputParams*>("pis");
   if( !pis ) {
     qWarning() << "no pis object in " <<  selObj->getFullName() << WHE;
     return;
   }
   int n_pi = pis->size();
   QString pi_name = QString("pi_") + QSN(n_pi);
-  InputParam *pi = pis->addElemT<InputParam>( pi_name );
+  InputParam *pi = pis->addObjT<InputParam>( pi_name );
   if( !pi ) {
     return;
   }
@@ -797,7 +797,7 @@ void StructView::unlinkElm()
     in->setData( "source", empty_str );
   }
 
-  InputParams *pis = selObj->getElemT<InputParams*>("pis");
+  InputParams *pis = selObj->getObjT<InputParams*>("pis");
   if( !pis ) {
     qWarning() << "no pis object in " <<  selObj->getFullName() << WHE;
     return;

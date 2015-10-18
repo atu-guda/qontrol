@@ -100,7 +100,7 @@ int ContOut::prep_2in( const QString &nm_x, const QString &nm_y,
     return 0;
   }
 
-  TOutArr *in_x = getElemT<TOutArr*>( nm_x );
+  TOutArr *in_x = getObjT<TOutArr*>( nm_x );
   if( !in_x ) {
     return 0;
   }
@@ -111,7 +111,7 @@ int ContOut::prep_2in( const QString &nm_x, const QString &nm_y,
 
   int nx = in_x->getDataD( "n", 0 );
 
-  TOutArr *in_y = getElemT<TOutArr*>( nm_y );
+  TOutArr *in_y = getObjT<TOutArr*>( nm_y );
   if( !in_y ) {
     return 0;
   }
@@ -178,7 +178,7 @@ double  ContOut::covar( const QString &nm_x, const QString &nm_y ) const
 int  ContOut::transLin( const QString &nm_in, const QString &nm_out,
                               double a, double b )
 {
-  TOutArr *in_in = getElemT<TOutArr*>( nm_in );
+  TOutArr *in_in = getObjT<TOutArr*>( nm_in );
   if( !in_in ) {
     return 0;
   }
@@ -191,7 +191,7 @@ int  ContOut::transLin( const QString &nm_in, const QString &nm_out,
     return 0;
   }
 
-  TOutArr *in_out = getElemT<TOutArr*>( nm_out );
+  TOutArr *in_out = getObjT<TOutArr*>( nm_out );
   if( !in_out ) {
     return 0;
   }
@@ -229,7 +229,7 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
                 const QString &nm_a, const QString &nm_phi, double ome_max, bool cmpl )
 {
   int n = 0;
-  TOutArr *in = getElemT<TOutArr*>( nm_in );
+  TOutArr *in = getObjT<TOutArr*>( nm_in );
   if( !in ) {
     return 0;
   }
@@ -246,7 +246,7 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
   double tdt = model->getDataD( "tdt", 1.0 );
 
   // output arrays may not exist, but must be special
-  TOutArr *o_omega = getElemT<TOutArr*>( nm_omega );
+  TOutArr *o_omega = getObjT<TOutArr*>( nm_omega );
   if( o_omega ) {
     int tp = o_omega->getDataD( "type", 0 );
     if( tp != TOutArr::OutArrType::outSpec ) {
@@ -254,7 +254,7 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
     }
   }
 
-  TOutArr *o_a = getElemT<TOutArr*>( nm_a );
+  TOutArr *o_a = getObjT<TOutArr*>( nm_a );
   if( o_a ) {
     int tp = o_a->getDataD( "type", 0 );
     if( tp != TOutArr::OutArrType::outSpec ) {
@@ -262,7 +262,7 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
     }
   }
 
-  TOutArr *o_phi = getElemT<TOutArr*>( nm_phi );
+  TOutArr *o_phi = getObjT<TOutArr*>( nm_phi );
   if( o_phi ) {
     int tp = o_phi->getDataD( "type", 0 );
     if( tp != TOutArr::OutArrType::outSpec ) {

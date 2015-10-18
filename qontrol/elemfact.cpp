@@ -12,18 +12,18 @@
 
 
 
-ElemFactory::ElemFactory()
+ObjFactory::ObjFactory()
 {
 }
 
-ElemFactory& ElemFactory::theFactory()
+ObjFactory& ObjFactory::theFactory()
 {
-  static ElemFactory instance;
+  static ObjFactory instance;
   return instance;
 }
 
 
-HolderData* ElemFactory::createElem( const QString &a_type,
+HolderData* ObjFactory::createObj( const QString &a_type,
              ARGS_CTOR_MIN ) const
 {
   auto i = str_class.find( a_type );
@@ -39,7 +39,7 @@ HolderData* ElemFactory::createElem( const QString &a_type,
   }
 
   // check parent for name
-  if( a_parent->getElem(obj_name) ) {
+  if( a_parent->getObj(obj_name) ) {
     qWarning() << "name " << obj_name << " exists in parent " <<  a_parent->getFullName() << WHE;
     return nullptr;
   }
@@ -58,7 +58,7 @@ HolderData* ElemFactory::createElem( const QString &a_type,
 }
 
 
-bool ElemFactory::registerElemType( const TClassInfo *cl_info )
+bool ObjFactory::registerObjType( const TClassInfo *cl_info )
 {
   if( ! cl_info ) {
     return false;
@@ -78,7 +78,7 @@ bool ElemFactory::registerElemType( const TClassInfo *cl_info )
 }
 
 
-QStringList ElemFactory::goodTypeNames( const QString & allows,
+QStringList ObjFactory::goodTypeNames( const QString & allows,
              bool no_obj, bool no_param, const QString &bad_types ) const
 {
   QStringList res;
@@ -118,7 +118,7 @@ QStringList ElemFactory::goodTypeNames( const QString & allows,
 }
 
 
-const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
+const TClassInfo* ObjFactory::getInfo( const QString &a_type ) const
 {
   auto i = str_class.find( a_type );
   if( i == str_class.end() ) {
@@ -128,7 +128,7 @@ const TClassInfo* ElemFactory::getInfo( const QString &a_type ) const
   return i.value();
 }
 
-bool ElemFactory::isChildOf( const QString &cl, const QString &par_cl ) const
+bool ObjFactory::isChildOf( const QString &cl, const QString &par_cl ) const
 {
   if( cl == par_cl ) {
     return true;

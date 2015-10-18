@@ -260,8 +260,8 @@ QSize Scheme::getMaxXY() const
 TMiso* Scheme::insElem( const QString &cl_name, const QString &ob_name,
                      int aord, int avis_x, int avis_y )
 {
-  // not addElemT, downcast
-  TMiso *ob = qobject_cast<TMiso*>( addElemP( cl_name, ob_name ) );
+  // not addObjT, downcast
+  TMiso *ob = qobject_cast<TMiso*>( addObjP( cl_name, ob_name ) );
   if( !ob ) {
     return nullptr;
   }
@@ -274,12 +274,12 @@ TMiso* Scheme::insElem( const QString &cl_name, const QString &ob_name,
 
 int Scheme::delElem( const QString &ename )
 {
-  TMiso *ob = getElemT<TMiso*>( ename );
+  TMiso *ob = getObjT<TMiso*>( ename );
   if( !ob ) {
     qWarning() << "fail to find TMiso " << ename << NWHE;
     return 0;
   }
-  int rc = del_obj( ename );
+  int rc = delObj( ename );
   if( rc ) {
     reset();
   }
@@ -289,7 +289,7 @@ int Scheme::delElem( const QString &ename )
 
 int Scheme::newOrder( const QString &name, int new_ord )
 {
-  TMiso *ob = getElemT<TMiso*>( name );
+  TMiso *ob = getObjT<TMiso*>( name );
   if( !ob ) {
     return -1;
   }
@@ -309,7 +309,7 @@ int Scheme::moveElem( const QString &nm, int newx, int newy )
   if( newx < 0 || newy < 0 ) {
     return -1;
   }
-  ob = getElemT<TMiso*>( nm );
+  ob = getObjT<TMiso*>( nm );
   if( !ob ) {
     return -1;
   }

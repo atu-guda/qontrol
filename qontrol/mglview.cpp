@@ -84,7 +84,7 @@ void MglView::Reload( )
     return;
   }
 
-  scd_o =  gra->getElemT<ScaleData*>( "scd" );
+  scd_o =  gra->getObjT<ScaleData*>( "scd" );
   if( scd_o ) {
     QString s = scd_o->toString();// terrble copy
     scd->fromString( s );

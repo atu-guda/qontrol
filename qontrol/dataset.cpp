@@ -141,7 +141,7 @@ QVariant HolderData::dataObj( int col, int role ) const
     if( !show_active || col != 0 ) {
       return QVariant();
     }
-    return ( par  &&  par->getActiveElem() == this );
+    return ( par  &&  par->getActiveObj() == this );
   }
 
   if( role == Qt::DecorationRole ) {
@@ -186,7 +186,7 @@ QModelIndex HolderData::index( int row, int column, const QModelIndex &par ) con
     d_par = this;
   }
 
-  const HolderData *d_t = qobject_cast<HolderData*>( d_par->getElem( row ) );
+  const HolderData *d_t = qobject_cast<HolderData*>( d_par->getObj( row ) );
   if( ! d_t ) {
     return QModelIndex();
   }
@@ -337,7 +337,7 @@ QString HolderData::lsf() const
   return r;
 }
 
-HolderData* HolderData::getElem( int i ) const
+HolderData* HolderData::getObj( int i ) const
 {
   if( i < size() && i >=0 ) {
     return qobject_cast<HolderData*>(children().at(i));
@@ -346,7 +346,7 @@ HolderData* HolderData::getElem( int i ) const
 }
 
 
-HolderData* HolderData::getElem( const QString &oname ) const
+HolderData* HolderData::getObj( const QString &oname ) const
 {
   QString first, rest;
   int idx = 0;
@@ -369,7 +369,7 @@ HolderData* HolderData::getElem( const QString &oname ) const
   }
 
   if( nt == complexName ) {
-    return ho->getElem( rest );
+    return ho->getObj( rest );
   }
 
   qWarning() << "unknown name type: " << nt << NWHE;
@@ -448,14 +448,14 @@ QString HolderData::hintName( const QString &tp, const QString &nm_start ) const
     // qWarning() << "bname= " << bname << " ne " << ne << NWHE;
   }
 
-  int neo = countElemsOfType( tp, bname );
+  int neo = countObjsOfType( tp, bname );
   if( neo > ne ) {
     ne = neo;
   }
 
   for( int i=ne; i<ne+1000; ++i ) {
     nm = bname + QSN( i );
-    if( !getElem( nm ) ) {
+    if( !getObj( nm ) ) {
       return nm;
     }
   }
@@ -463,7 +463,7 @@ QString HolderData::hintName( const QString &tp, const QString &nm_start ) const
   return bname + QSL(" _xx_");
 }
 
-int HolderData::countElemsOfType( const QString &tp, const QString &nm_start ) const
+int HolderData::countObjsOfType( const QString &tp, const QString &nm_start ) const
 {
   int n_el = 0, l_nm = nm_start.size();
   for( auto ho : TCHILD(HolderData*) ) {
@@ -548,10 +548,10 @@ QIcon HolderData::getIcon() const
   return el_ico;
 }
 
-HolderData* HolderData::addElemP( const QString &cl_name, const QString &ob_name, bool ignoreMod )
+HolderData* HolderData::addObjP( const QString &cl_name, const QString &ob_name, bool ignoreMod )
 {
 
-  HolderData *el = getElem( ob_name );
+  HolderData *el = getObj( ob_name );
   if( el != nullptr ) {
     qWarning() <<  "name " << ob_name << el->getType() << " exist in " << NWHE;
     return nullptr;
@@ -563,7 +563,7 @@ HolderData* HolderData::addElemP( const QString &cl_name, const QString &ob_name
   }
   beginResetModel();
 
-  HolderData *ob = EFACT.createElem( cl_name, ob_name, this );
+  HolderData *ob = EFACT.createObj( cl_name, ob_name, this );
   if( !ob ) {
     return nullptr;
   }
@@ -576,16 +576,16 @@ HolderData* HolderData::addElemP( const QString &cl_name, const QString &ob_name
   return ob;
 }
 
-bool HolderData::addElem( const QString &cl_name, const QString &ob_name )
+bool HolderData::addObj( const QString &cl_name, const QString &ob_name )
 {
-  HolderData *ho = addElemP( cl_name, ob_name );
+  HolderData *ho = addObjP( cl_name, ob_name );
   return ( ho != nullptr );
 }
 
-bool HolderData::addElemDatas( const QString &cl_name, const QString &ob_name,
+bool HolderData::addObjDatas( const QString &cl_name, const QString &ob_name,
      const QString &datas )
 {
-  HolderData *ho = addElemP( cl_name, ob_name );
+  HolderData *ho = addObjP( cl_name, ob_name );
   if( ! ho ) {
     return false;
   }
@@ -596,10 +596,10 @@ bool HolderData::addElemDatas( const QString &cl_name, const QString &ob_name,
   return true;
 }
 
-int HolderData::del_obj( const QString &ob_name, bool ignoreMod )
+int HolderData::delObj( const QString &ob_name, bool ignoreMod )
 {
 
-  HolderData *ho = getElem( ob_name );
+  HolderData *ho = getObj( ob_name );
   if( !ho ) {
     qWarning() << "not found element " << ob_name << " in " << NWHE;
     return 0;
@@ -613,7 +613,7 @@ int HolderData::del_obj( const QString &ob_name, bool ignoreMod )
     return 0;
   }
 
-  HolderData *act_obj = getActiveElem();
+  HolderData *act_obj = getActiveObj();
   QString act_name;
   if( act_obj ) {
     act_name = act_obj->objectName();
@@ -623,7 +623,7 @@ int HolderData::del_obj( const QString &ob_name, bool ignoreMod )
 
   delete ho; // auto remove object and from parent lists
   if( !act_name.isEmpty() ) {
-    setActiveElem( act_name );
+    setActiveObj( act_name );
   }
 
   if( !ignoreMod ) {
@@ -635,13 +635,13 @@ int HolderData::del_obj( const QString &ob_name, bool ignoreMod )
   return 1;
 }
 
-int HolderData::rename_obj( const QString &ob_name, const QString &new_name )
+int HolderData::renameObj( const QString &ob_name, const QString &new_name )
 {
   if( ! isGoodName( new_name ) ) {
     qWarning() << "bad name " << new_name << " to rename" << NWHE;
     return 0;
   }
-  HolderData *ho = getElem( ob_name );
+  HolderData *ho = getObj( ob_name );
   if( !ho ) {
     qWarning() << "not found element " << ob_name << " to rename" << NWHE;
     return 0;
@@ -651,7 +651,7 @@ int HolderData::rename_obj( const QString &ob_name, const QString &new_name )
     return 0;
   }
 
-  if( getElem( new_name ) ) {
+  if( getObj( new_name ) ) {
     qWarning() << "element " << ob_name << " is already exists " << NWHE;
     return 0;
   }
@@ -678,9 +678,9 @@ void HolderData::setActiveIdx( int i )
   }
 };
 
-bool HolderData::setActiveElem( const QString &nm )
+bool HolderData::setActiveObj( const QString &nm )
 {
-  int a_idx = -1; HolderData *e = getElem( nm );
+  int a_idx = -1; HolderData *e = getObj( nm );
   if( e ) {
     a_idx = indexOfHolder( e );
   }
@@ -755,7 +755,7 @@ bool HolderData::fromDom_real( QDomElement &de, QString &errstr )
         qWarning() << errstr << NWHE;
         return false;
       }
-      HolderData *ho = getElem( elname );
+      HolderData *ho = getObj( elname );
       if( ho && ! ho->isObject() ) {
         errstr = QString("err: read elem \"%1\" failed. "
             "required: \"%2\" but have \"%3\" in \"%4\"" )
@@ -764,7 +764,7 @@ bool HolderData::fromDom_real( QDomElement &de, QString &errstr )
         return false;
       }
       if( !ho ) { // name not found
-        if( ! addElem( cl_name, elname ) ) {
+        if( ! addObj( cl_name, elname ) ) {
           errstr = QString("TDataSet::fromDom: fail to create obj %1 %2 ")
                    .arg(cl_name).arg(elname);
           qWarning() << errstr << NWHE;
@@ -773,7 +773,7 @@ bool HolderData::fromDom_real( QDomElement &de, QString &errstr )
         }
       }
 
-      TDataSet* ob = getElemT<TDataSet*>( elname );
+      TDataSet* ob = getObjT<TDataSet*>( elname );
       if( !ob ) {
         errstr = QString("TDataSet::fromDom: fail to find created obj %1 %2 in %3")
                  .arg(cl_name).arg(elname).arg( objectName() );
@@ -787,7 +787,7 @@ bool HolderData::fromDom_real( QDomElement &de, QString &errstr )
 
     } else if( tagname == "param" ) {  // ---------------- simple param
       QString tp_name = ee.attribute("otype");
-      HolderData *ho = getElem( elname );
+      HolderData *ho = getObj( elname );
       if( ho && ho->isObject() ) {
         errstr = QString("TDataSet::fromDom: param \"%1\" is an object type \"%2\" ")
                  .arg(elname).arg(ho->getType());
@@ -795,7 +795,7 @@ bool HolderData::fromDom_real( QDomElement &de, QString &errstr )
         return false;
       }
       if( !ho ) {
-        ho =  addElemP( tp_name, elname );
+        ho =  addObjP( tp_name, elname );
         if( !ho  ) {
           errstr = QString("TDataSet::fromDom: fail to create param \"%1\" in \"%2\" ")
                    .arg(tp_name).arg(elname);
@@ -874,7 +874,7 @@ bool HolderData::getData( const QString &nm, QVariant &da, bool er ) const
     return false;
   }
 
-  HolderData *ho = getElem( first );
+  HolderData *ho = getObj( first );
   if( !ho ) {
     if( er ) {
       qWarning() << "fail to find name " << first << NWHE;
@@ -985,7 +985,7 @@ bool HolderData::setData( const QString &nm, const QVariant &da )
     return false;
   }
 
-  HolderData *ho = getElem( first );
+  HolderData *ho = getObj( first );
   if( !ho ) {
     qWarning() << "fail to nind name " << first << NWHE;
     return false;
@@ -1110,31 +1110,31 @@ QStringList HolderData::getEnumStrings( const QString &enum_name ) const
   return r;
 }
 
-HolderData* HolderData::addElemToSubP( const QString &subname, const QString &tp, const QString &ob_name )
+HolderData* HolderData::addObjToSubP( const QString &subname, const QString &tp, const QString &ob_name )
 {
-  HolderData *sub = getElem( subname );
+  HolderData *sub = getObj( subname );
   if( !sub ) {
     // warn
     return nullptr;
   }
-  HolderData *ob = sub->addElemP( tp, ob_name );
+  HolderData *ob = sub->addObjP( tp, ob_name );
   return ob;
 }
 
-bool HolderData::addElemToSub( const QString &subname, const QString &tp, const QString &ob_name )
+bool HolderData::addObjToSub( const QString &subname, const QString &tp, const QString &ob_name )
 {
-  HolderData *ho = addElemToSubP( subname, tp, ob_name );
+  HolderData *ho = addObjToSubP( subname, tp, ob_name );
   return ( ho != nullptr );
 }
 
-bool HolderData::delElemFromSub( const QString &subname, const QString &ob_name )
+bool HolderData::delObjFromSub( const QString &subname, const QString &ob_name )
 {
-  HolderData *sub = getElem( subname );
+  HolderData *sub = getObj( subname );
   if( !sub ) {
     // warn
     return false;
   }
-  return sub->del_obj( ob_name );
+  return sub->delObj( ob_name );
 }
 
 QAbstractItemModel* HolderData::getComplModel( const QString &targ, QObject *mdl_par ) const
@@ -2186,7 +2186,7 @@ const double* TDataSet::getDoublePtr( const QString &nm, ltype_t *lt,
     return nullptr;
   }
 
-  HolderData *ho = getElem( first );
+  HolderData *ho = getObj( first );
 
   if( !ho ) {
     *plt = LinkBad;
@@ -2263,7 +2263,7 @@ double* TDataSet::getDoublePrmPtr( const QString &nm, int *flg )
     return nullptr;
   }
 
-  HolderDouble *hod = getElemT<HolderDouble*>( nm );
+  HolderDouble *hod = getObjT<HolderDouble*>( nm );
 
   if( !hod ) {
     // qWarning() << "fail to find name " << nm << NWHE;

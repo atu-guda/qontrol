@@ -123,7 +123,7 @@ struct TClassInfo {
 // default actions in cpp file to register class in factory
 #define REGISTER_CLASS(clname) \
  int clname::registered = reg(); \
- int clname::reg() { return EFACT.registerElemType( &class_info  ); }
+ int clname::reg() { return EFACT.registerObjType( &class_info  ); }
 
 // definition in cpp file of common functions
 #define DEFAULT_FUNCS(clname) \
@@ -210,7 +210,7 @@ class HolderData : public QAbstractItemModel {
     * if cl_name is empty, return true in >= TDataSet */
   Q_INVOKABLE bool isObject( const QString &cl_name = QString() ) const;
   // count number of elements of given type, optionaly with named started with nm_start
-  Q_INVOKABLE int countElemsOfType( const QString &tp, const QString &nm_start = QString() ) const;
+  Q_INVOKABLE int countObjsOfType( const QString &tp, const QString &nm_start = QString() ) const;
   Q_INVOKABLE QString hintName( const QString &tp, const QString &nm_start = QString() ) const;
   void addFlags( int a_flags ) { flags |= a_flags; }
   void setImmutable() { flags |= efImmutable; }
@@ -237,21 +237,21 @@ class HolderData : public QAbstractItemModel {
   /** returns list of registerd functions + signatures */
   Q_INVOKABLE QString lsf() const;
   /** returns holder by number */
-  HolderData* getElem( int i ) const;
+  HolderData* getObj( int i ) const;
   /** find holder for object by name */ // TODO: +full.name.elm
-  HolderData* getElem( const QString &oname ) const;
+  HolderData* getObj( const QString &oname ) const;
   /** find holder for object by index, safely cast to type T */
-  template<typename T> T getElemT( int idx ) const
-    {  return qobject_cast<T>( getElem( idx ) );  }
+  template<typename T> T getObjT( int idx ) const
+    {  return qobject_cast<T>( getObj( idx ) );  }
   /** find holder for object by name, safely cast to type T */
-  template<typename T> T getElemT( const QString &oname ) const
-    { return qobject_cast<T>( getElem( oname ) ); }
+  template<typename T> T getObjT( const QString &oname ) const
+    { return qobject_cast<T>( getObj( oname ) ); }
   /** find element of ancessor by name and type T */
-  template<typename T> T getElemOfAncessorT( const QString &oname ) const
+  template<typename T> T getObjOfAncessorT( const QString &oname ) const
     {
       HolderData *pa = par;
       while( pa ) {
-        T el = pa->getElemT<T>( oname );
+        T el = pa->getObjT<T>( oname );
         if( el ) {
           return el;
         }
@@ -290,13 +290,13 @@ class HolderData : public QAbstractItemModel {
   bool getUpData( const QString &nm, QVariant &da ) const;
 
   /** add new object and it's description (new)*/
-  virtual HolderData* addElemP( const QString &cl_name, const QString &ob_name, bool ignoreMod = false );
-  /** type-cast interface to addElem */
+  virtual HolderData* addObjP( const QString &cl_name, const QString &ob_name, bool ignoreMod = false );
+  /** type-cast interface to addObj */
   template <typename T>
-    T* addElemT( const QString &ob_name, bool ignoreMod = false  ) {
-      return qobject_cast<T*>( addElemP( T::staticMetaObject.className(), ob_name, ignoreMod ) );
+    T* addObjT( const QString &ob_name, bool ignoreMod = false  ) {
+      return qobject_cast<T*>( addObjP( T::staticMetaObject.className(), ob_name, ignoreMod ) );
     }
-  Q_INVOKABLE bool addElem( const QString &cl_name, const QString &ob_name );
+  Q_INVOKABLE bool addObj( const QString &cl_name, const QString &ob_name );
   /** is given type of subelement valid for this object */
   virtual int isValidType( const QString &cl_name ) const;
   void dumpStruct() const;
@@ -310,13 +310,13 @@ class HolderData : public QAbstractItemModel {
   virtual QIcon getIcon() const;
 
   // functions to work with substructure
-  HolderData* addElemToSubP( const QString &subname, const QString &tp, const QString &ob_name );
-  Q_INVOKABLE bool addElemToSub( const QString &subname, const QString &tp, const QString &ob_name );
+  HolderData* addObjToSubP( const QString &subname, const QString &tp, const QString &ob_name );
+  Q_INVOKABLE bool addObjToSub( const QString &subname, const QString &tp, const QString &ob_name );
   template <typename T>
-    T* addElemToSubT( const QString &subname, const QString &ob_name ) {
-      return qobject_cast<T*>( addElemToSubP( subname, T::staticMetaObject.className(), ob_name ) );
+    T* addObjToSubT( const QString &subname, const QString &ob_name ) {
+      return qobject_cast<T*>( addObjToSubP( subname, T::staticMetaObject.className(), ob_name ) );
     }
-  Q_INVOKABLE bool delElemFromSub( const QString &subname, const QString &ob_name );
+  Q_INVOKABLE bool delObjFromSub( const QString &subname, const QString &ob_name );
 
 
   virtual QDomElement toDom( QDomDocument &dd ) const;
@@ -361,19 +361,19 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE virtual int arrSize() const { return 1; }
   Q_INVOKABLE int getState() const { return state; }
   /** create object with params as string */
-  Q_INVOKABLE bool addElemDatas( const QString &cl_name, const QString &ob_name, const QString &datas );
+  Q_INVOKABLE bool addObjDatas( const QString &cl_name, const QString &ob_name, const QString &datas );
   /** delete given object by name, returns 0 - error, !=0 = ok */
-  Q_INVOKABLE int del_obj( const QString &ob_name, bool ignoreMod = false  );
+  Q_INVOKABLE int delObj( const QString &ob_name, bool ignoreMod = false  );
   //* rename object (if created dynamicaly)
-  Q_INVOKABLE int rename_obj( const QString &ob_name, const QString &new_name );
+  Q_INVOKABLE int renameObj( const QString &ob_name, const QString &new_name );
   // void check_guard() const;
   Q_INVOKABLE int getActiveIdx() const { return active_idx; }
   Q_INVOKABLE void setActiveIdx( int i );
-  Q_INVOKABLE bool setActiveElem( const QString &nm );
-  HolderData* getActiveElem() const { return getElem( active_idx ); };
-  template<typename T> T getActiveElemT() const
+  Q_INVOKABLE bool setActiveObj( const QString &nm );
+  HolderData* getActiveObj() const { return getObj( active_idx ); };
+  template<typename T> T getActiveObjT() const
       {
-        return qobject_cast<T>( getActiveElem() );
+        return qobject_cast<T>( getActiveObj() );
       }
   /** reaction to add/remove/relink of subobjects: call do_structChanged */
   void handleStructChanged();
@@ -794,13 +794,13 @@ class InputParam : public InputAbstract {
 
 /** creator of TDataSet childs by name
  * */
-class ElemFactory {
+class ObjFactory {
  typedef QMap<QString,const TClassInfo*> MapStrClass;
   public:
-   static ElemFactory& theFactory();
-   HolderData* createElem( const QString &a_type, ARGS_CTOR ) const;
-   bool registerElemType( const TClassInfo *cl_inf );
-   // bool unregisterElemType( const QString &a_type );
+   static ObjFactory& theFactory();
+   HolderData* createObj( const QString &a_type, ARGS_CTOR ) const;
+   bool registerObjType( const TClassInfo *cl_inf );
+   // bool unregisterObjType( const QString &a_type );
    QStringList allTypeNames() const { return str_class.keys(); } // TODO: criterion
    QStringList goodTypeNames( const QString & allows,
                           bool no_obj = false, bool no_param = false,
@@ -810,17 +810,17 @@ class ElemFactory {
    bool isChildOf( const QString &cl, const QString &par_cl ) const;
 
   private:
-   ElemFactory();
-   ElemFactory( const ElemFactory& r ) = delete;
-   ElemFactory( ElemFactory &&r ) = delete;
-   ElemFactory& operator=( const ElemFactory& r ) = delete;
-   ElemFactory& operator=( ElemFactory&& r ) = delete;
+   ObjFactory();
+   ObjFactory( const ObjFactory& r ) = delete;
+   ObjFactory( ObjFactory &&r ) = delete;
+   ObjFactory& operator=( const ObjFactory& r ) = delete;
+   ObjFactory& operator=( ObjFactory&& r ) = delete;
 
    MapStrClass str_class;
    QStringList param_names;
 };
 
-#define EFACT ElemFactory::theFactory()
+#define EFACT ObjFactory::theFactory()
 
 
 #endif  // _DATASET_H

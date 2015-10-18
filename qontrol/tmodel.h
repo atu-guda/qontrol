@@ -50,11 +50,9 @@ class TModel : public TDataSet  {
   double* getMapDoublePtr( const QString &nm );
   Q_INVOKABLE QString getOutValue( const QString &nm ) const;
 
-  //* returns active (main) Scheme // TODO: delete? use param in Simulation?
-  // Scheme* getActiveScheme() const { return schems->getActiveElemT<Scheme*>(); };
-  Scheme* getActiveScheme() const { return schems->getElemT<Scheme*>( "main_s" ); };
+  Scheme* getActiveScheme() const { return schems->getObjT<Scheme*>( "main_s" ); };
   //* returns active Simulation
-  Simulation* getActiveSimulation() const { return sims->getActiveElemT<Simulation*>(); };
+  Simulation* getActiveSimulation() const { return sims->getActiveObjT<Simulation*>(); };
 
 
   /** returns ptr to TOutArr by name */

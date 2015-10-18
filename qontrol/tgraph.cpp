@@ -967,13 +967,13 @@ int TGraph::addOutArr( const QString &o_name )
   }
 
   for( int j=1; j<100; ++j ) {
-    if( ! getElemT<GraphElem*>( nm ) ) {
+    if( ! getObjT<GraphElem*>( nm ) ) {
       break;
     }
     nm = nm0 + QSN( j );
   }
 
-  GraphElem *ge = addElemT<GraphElem>( nm );
+  GraphElem *ge = addObjT<GraphElem>( nm );
   if( !ge ) {
     qWarning() << " Fail to create GraphElem " <<  nm << NWHE;
     return 0;
