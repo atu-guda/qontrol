@@ -42,7 +42,7 @@ void GraphDataView::init_actions()
 {
   act_new = new QAction( QIcon::fromTheme("list-add"), "&New", this );
   addAction( act_new );
-  connect( act_new, SIGNAL(triggered()), laboview, SLOT(newGraph()) );
+  connect( act_new, SIGNAL(triggered()), laboview, SLOT(addGraph()) );
 
   act_del = new QAction( QIcon::fromTheme("list-remove"), "&Delete", this );
   addAction( act_del );

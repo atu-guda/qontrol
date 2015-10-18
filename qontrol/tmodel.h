@@ -85,26 +85,26 @@ class TModel : public TDataSet  {
 
   // interface to commands like above, but with names - to use from JS
  public slots:
-  //* inserts new out array @returns: 0 - bad, !=0 - Ok
-  int insOut( const  QString &outname, const QString &objname );
+  //* adderts new out array @returns: 0 - bad, !=0 - Ok
+  int addOut( const  QString &outname, const QString &objname );
   //* delete outs by name, return !=0 id success
   int delOut( const QString &name );
 
-  //* inserts new graph @returns: 0 - bad, !=0 Ok
-  int insGraph( const QString &gname );
+  //* adds new graph @returns: 0 - bad, !=0 Ok
+  int addGraph( const QString &gname );
   //* delete graph by name, retrns !=0 -  success
   int delGraph( const QString &name );
   //* add output array to graph
   int addOutToGraph( const QString &o_name, const QString &g_name );
   bool cloneGraph( const QString &old_name, const QString &new_name );
 
-  int newSimul( const QString &name );
+  int addSimul( const QString &name );
   int delSimul( const QString &name );
   QString getSimulName( int idx );
   bool cloneSimul( const QString &old_name, const QString &new_name );
   bool setActiveSimul( const QString &name );
 
-  int newScheme( const QString &name );
+  int addScheme( const QString &name );
   int delScheme( const QString &name );
   QString getSchemeName( int idx );
   bool cloneScheme( const QString &old_name, const QString &new_name );

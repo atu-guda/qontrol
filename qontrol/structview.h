@@ -91,7 +91,7 @@ class StructView : public QWidget  {
     /** change level for selecting aux objects */
     void changeLevel( int lev );
     // element related
-    void newElm();
+    void addElm();
     void delElm();
     void editElm();
     void renameElm();

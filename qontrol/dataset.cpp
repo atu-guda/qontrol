@@ -666,6 +666,25 @@ int HolderData::renameObj( const QString &ob_name, const QString &new_name )
   return 1;
 }
 
+bool HolderData::cloneObj( const QString &old_name, const QString &new_name )
+{
+  HolderData *old_obj = getObj( old_name );
+  if( !old_obj ) {
+    qWarning() << " old plot not exist: " << old_name << NWHE;
+    return 0;
+  }
+
+  QString tp = old_obj->getType();
+  QString s = old_obj->toString();
+
+  HolderData *new_obj = addObjP( tp, new_name );
+  if( !new_obj ) {
+    qWarning() << "fail to create new object" << new_name << " type " << tp << NWHE;
+    return 0;
+  }
+  return new_obj->fromString( s );
+}
+
 
 
 void HolderData::setActiveIdx( int i )
@@ -1135,6 +1154,28 @@ bool HolderData::delObjFromSub( const QString &subname, const QString &ob_name )
     return false;
   }
   return sub->delObj( ob_name );
+}
+
+bool HolderData::cloneObjInSub( const QString &subname,
+       const QString &old_name, const QString &new_name )
+{
+  HolderData *sub = getObj( subname );
+  if( !sub ) {
+    // warn
+    return false;
+  }
+  return sub->cloneObj( old_name, new_name );
+}
+
+bool HolderData::renameObjInSub( const QString &subname,
+       const QString &old_name, const QString &new_name )
+{
+  HolderData *sub = getObj( subname );
+  if( !sub ) {
+    // warn
+    return false;
+  }
+  return sub->renameObj( old_name, new_name );
 }
 
 QAbstractItemModel* HolderData::getComplModel( const QString &targ, QObject *mdl_par ) const

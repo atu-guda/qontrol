@@ -634,7 +634,7 @@ QString StructView::getSchemeName() const
 
 // ==== element related
 
-void StructView::newElm()
+void StructView::addElm()
 {
   if( !checkState( noselCheck ) ) {
     return;
@@ -654,7 +654,7 @@ void StructView::newElm()
     return;
   }
 
-  TMiso *ob = sch->insElem( tp, objName, order, sel_x, sel_y );
+  TMiso *ob = sch->addElem( tp, objName, order, sel_x, sel_y );
   if( !ob  ) {
     handleError( this, QString("Fail to add Elem: type \"%1\" \"%2\"").arg(tp).arg(objName) );
     return;
@@ -1087,7 +1087,7 @@ void StructView::pasteElm()
     return;
   }
 
-  TMiso *ob = sch->insElem( eltype, elname, oord, sel_x, sel_y) ; // reset() implied
+  TMiso *ob = sch->addElem( eltype, elname, oord, sel_x, sel_y) ; // reset() implied
   if( !ob  ) {
     handleError( this, QString("Fail to add Elem: %1 %2").arg(eltype).arg(elname) );
     return;
@@ -1178,7 +1178,7 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     menu->addSeparator();
   } else {
     act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );
-    connect( act, &QAction::triggered, this, &StructView::newElm );
+    connect( act, &QAction::triggered, this, &StructView::addElm );
     if( markObj ) {
       act = menu->addAction( "&Move to" );
       connect( act, &QAction::triggered, this, &StructView::moveElm );
@@ -1189,7 +1189,7 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
   if( oview != nullptr && mainview != nullptr ) {
     menu->addSeparator(); //TODO: revive if need
     act = menu->addAction( QIcon( ":icons/newout.png" ), "New outp&ut" );
-    connect( act, &QAction::triggered, mainview, &LaboView::newOut );
+    connect( act, &QAction::triggered, mainview, &LaboView::addOut );
     menu->addSeparator();
     act = menu->addAction( QIcon( ":icons/editmodel.png" ), "Edit model" );
     connect( act, &QAction::triggered, mainview, &LaboView::editModel );

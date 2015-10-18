@@ -43,7 +43,7 @@ void SimulView::init_actions()
 {
   act_new = new QAction( QIcon::fromTheme("list-add"), "New", this );
   addAction( act_new );
-  connect( act_new, SIGNAL(triggered()), laboview, SLOT(newSimul()) );
+  connect( act_new, SIGNAL(triggered()), laboview, SLOT(addSimul()) );
 
   act_del = new QAction( QIcon::fromTheme("list-remove"), "Delete", this );
   addAction( act_del );

@@ -42,7 +42,7 @@ void OutDataView::init_actions()
 {
   act_new = new QAction( QIcon::fromTheme("list-add"), "&New", this );
   addAction( act_new );
-  connect( act_new, SIGNAL(triggered()), laboview, SLOT(newOut()) );
+  connect( act_new, SIGNAL(triggered()), laboview, SLOT(addOut()) );
 
   act_del = new QAction( QIcon::fromTheme("list-remove"), "&Delete", this );
   addAction( act_del );

@@ -262,11 +262,124 @@ void LaboView::changeSelGraph( const QModelIndex &cur, const QModelIndex & )
   emit viewChanged();
 }
 
+bool LaboView::prepareSomething( QAbstractItemView *view, QString &subname, QString &nm,
+    HolderData **a_ob, HolderData **a_co, QString *a_newname )
+{
+  if( !view || !model ) {
+    return false;
+  }
+  subname = view->model()->objectName();
+  nm = getSelName( view );
+  if( nm.isEmpty() ) {
+    return false;
+  }
+
+  HolderData *co = model->getObj( subname );
+  if( !co ) {
+    return false;
+  }
+  if( a_co ) { *a_co = co; };
+
+  HolderData *obj = co->getObj( nm );
+  if( !obj ) {
+    return false;
+  }
+  if( a_ob ) { *a_ob = obj; }
+
+  if( a_newname ) {
+    QString new_name = co->hintName( obj->getType(), nm );
+    bool ok;
+    new_name = QInputDialog::getText( this, "Object:" + obj->getFullName(),
+        "Enter new name:", QLineEdit::Normal, new_name, &ok );
+
+    if( !ok ) {
+      return false;
+    }
+    *a_newname = new_name;
+  }
+  return true;
+}
+
+
+bool LaboView::editSomething( QAbstractItemView *view, bool noReset )
+{
+  QString nm, subname;
+  HolderData *obj, *co;
+  if( !prepareSomething( view, subname, nm, &obj, &co, nullptr ) ) {
+    return false;
+  }
+
+  bool ok = editObj( this, obj );
+  if( ok ) {
+    if( !noReset ) {
+      model->reset();
+    }
+    emit viewChanged();
+    return true;
+  }
+  return false;
+}
+
+bool LaboView::delSomething( QAbstractItemView *view )
+{
+  QString nm, subname;
+  HolderData *obj, *co;
+  if( !prepareSomething( view, subname, nm, &obj, &co, nullptr ) ) {
+    return false;
+  }
+
+  if( !confirmDelete( this, "object", nm ) ) {
+    return false;
+  }
+
+  if( co->delObj( nm ) ) {
+    model->reset();
+    emit viewChanged();
+    return true;
+  }
+  return false;
+}
+
+
+bool LaboView::renameSomething( QAbstractItemView *view )
+{
+  QString nm, subname, new_name;
+  HolderData *obj, *co;
+  if( !prepareSomething( view, subname, nm, &obj, &co, &new_name ) ) {
+    return false;
+  }
+
+  if( co->renameObj( nm, new_name ) ) {
+    model->reset();
+    emit viewChanged();
+    return true;
+  }
+  return false;
+}
+
+bool LaboView::cloneSomething( QAbstractItemView *view )
+{
+  QString nm, subname, new_name;
+  HolderData *obj, *co;
+  if( !prepareSomething( view, subname, nm, &obj, &co, &new_name ) ) {
+    return false;
+  }
+
+  if( co->cloneObj( nm, new_name ) ) {
+    model->reset();
+    emit viewChanged();
+    return true;
+  }
+  return false;
+}
+
+
+
 // ==== element related
 
-void LaboView::newElm()
+void LaboView::addElm()
 {
-  return sview->newElm();
+  return sview->addElm();
 }
 
 void LaboView::delElm()
@@ -360,7 +473,7 @@ void LaboView::pasteElm()
 
 // ==== outs related
 
-void LaboView::newOut()
+void LaboView::addOut() // TODO: common
 {
   int rc;
   QString onameq, enameq;
@@ -414,7 +527,7 @@ void LaboView::newOut()
     return;
   }
 
-  int irc = model->insOut( onameq, enameq );
+  int irc = model->addOut( onameq, enameq );
   if( !irc  ) {
     handleError( this, QString("Fail to add Output: \"%1\"").arg(onameq) );
   }
@@ -424,59 +537,20 @@ void LaboView::newOut()
 
 void LaboView::delOut()
 {
-  QString nm = getSelName( outs_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  if( confirmDelete( this, "output array", nm ) ) {
-    model->delOut( nm );
-    emit viewChanged();
-  }
+  delSomething( outs_view );
 }
 
 
 void LaboView::editOut()
 {
-  QString nm = getSelName( outs_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  TOutArr *arr = model->getOutArr( nm );
-  bool ok = editObj( this, arr );
-  if( ok ) {
-    model->reset();
-    emit viewChanged();
-  }
+  editSomething( outs_view );
 }
+
 
 void LaboView::renameOut()
 {
-  QString nm = getSelName( outs_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  TOutArr *arr = model->getOutArr( nm );
-  if( !arr ) {
-    return;
-  }
-
-  QString old_name = arr->objectName();
-  bool ok;
-  QString new_name = QInputDialog::getText( this, "Rename:" + arr->getFullName(),
-      "Enter new name:", QLineEdit::Normal, old_name, &ok );
-
-  if( ok ) {
-    if( outs->renameObj( old_name, new_name ) ) {
-      // model->setModified();
-      model->reset();
-      emit viewChanged();
-    }
-  }
-
-  // TODO: change graph links names
+  renameSomething( outs_view );
+  // // TODO: change graph links names
 }
 
 
@@ -570,7 +644,7 @@ void LaboView::exportOut()
 
 // ==== graph related
 
-void LaboView::newGraph()
+void LaboView::addGraph()
 {
   bool ok;
 
@@ -585,7 +659,7 @@ void LaboView::newGraph()
     handleError( this, QString("Bad plot name: %1").arg(aname) );
     return;
   }
-  if( ! model->insGraph( aname ) ) {
+  if( ! model->addGraph( aname ) ) {
     handleError( this, QString("Fail to add plot: %1").arg(aname) );
     return;
   }
@@ -595,32 +669,13 @@ void LaboView::newGraph()
 
 void LaboView::delGraph()
 {
-  QString nm = getSelName( plots_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  if( confirmDelete( this, "plot", nm ) ) {
-    model->delGraph( nm );
-    emit viewChanged();
-  }
+  delSomething( plots_view );
 }
 
 
 void LaboView::editGraph()
 {
-  QString nm = getSelName( plots_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  TGraph *gra = model->getGraph( nm );
-
-  bool ok = editObj( this, qobject_cast<HolderData*>(gra) );
-  if( ok ) {
-    // no reset if only view changed // model->reset();
-    emit viewChanged();
-  }
+  editSomething( plots_view, true ); // no reset
 }
 
 void LaboView::selectGraph()
@@ -641,27 +696,7 @@ void LaboView::selectGraph()
 
 void LaboView::renameGraph()
 {
-  QString nm = getSelName( plots_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  TGraph *gra = model->getGraph( nm );
-  if( !gra ) {
-    return;
-  }
-
-  QString old_name = gra->objectName();
-  bool ok;
-  QString new_name = QInputDialog::getText( this, "Rename:" + gra->getFullName(),
-      "Enter new name:", QLineEdit::Normal, old_name, &ok );
-
-  if( ok ) {
-    if( plots->renameObj( old_name, new_name ) ) {
-      model->reset();
-      emit viewChanged();
-    }
-  }
+  renameSomething( plots_view );
 }
 
 
@@ -770,28 +805,13 @@ void LaboView::exportGraphData()
 
 void LaboView::cloneGraph()
 {
-  QString nm = getSelName( plots_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  QString nn = plots->hintName( "TGraph", nm );
-  bool ok;
-  QString new_name = QInputDialog::getText(
-      this, tr( "New plot name" ), tr( "Plot name:" ), QLineEdit::Normal,
-      nn, &ok );
-
-  if( ok ) {
-    model->cloneGraph( nm, new_name );
-    model->handleStructChanged();
-    emit viewChanged();
-  }
+  cloneSomething( plots_view );
 }
 
 
 // ==== simulation related
 
-void LaboView::newSimul()
+void LaboView::addSimul()
 {
   bool ok;
   QString simName = sims->hintName( QSL("Simulation") );
@@ -805,7 +825,7 @@ void LaboView::newSimul()
     handleError( this, QString("Bad simulation name: \"%1\"").arg(simName) );
     return;
   }
-  ok = model->newSimul( simName );
+  ok = model->addSimul( simName );
   if( !ok ) {
     handleError( this, QString("Fail to create simulation: \"%1\"").arg(simName) );
   }
@@ -814,56 +834,17 @@ void LaboView::newSimul()
 
 void LaboView::delSimul()
 {
-  QString nm = getSelName( sims_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  if( confirmDelete( this, "simulation", nm ) ) {
-    model->delSimul( nm );
-    emit viewChanged();
-  }
+  delSomething( sims_view );
 }
 
 void LaboView::editSimul()
 {
-  QString nm = getSelName( sims_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-  Simulation *sim = model->getSimul( nm );
-
-  bool ok = editObj( this, sim );
-  if( ok ) {
-    model->reset();
-    emit viewChanged();
-  }
+  editSomething( sims_view );
 }
 
 void LaboView::renameSimul()
 {
-  QString nm = getSelName( sims_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  Simulation *sim = model->getSimul( nm );
-  if( !sim ) {
-    return;
-  }
-
-  QString old_name = sim->objectName();
-  bool ok;
-  QString new_name = QInputDialog::getText( this, "Rename:" + sim->getFullName(),
-      "Enter new name:", QLineEdit::Normal, old_name, &ok );
-
-  if( ok ) {
-    if( sims->renameObj( old_name, new_name ) ) {
-      model->reset();
-      emit viewChanged();
-    }
-  }
-
+  renameSomething( sims_view );
 }
 
 
@@ -896,22 +877,7 @@ void LaboView::setActiveSimul()
 
 void LaboView::cloneSimul()
 {
-  QString nm = getSelName( sims_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  QString nn = sims->hintName( "Simulation", nm );
-  bool ok;
-  QString new_name = QInputDialog::getText(
-      this, tr( "New simulation name" ), tr( "Simulation name:" ), QLineEdit::Normal,
-      nn, &ok );
-
-  if( ok ) {
-    model->cloneSimul( nm, new_name );
-    model->handleStructChanged();
-    emit viewChanged();
-  }
+  cloneSomething( sims_view );
 }
 
 
@@ -958,7 +924,7 @@ void LaboView::showTreeModel()
   return;
 }
 
-void LaboView::newScheme()
+void LaboView::addScheme()
 {
   bool ok;
   QString schName = schems->hintName( "Scheme" );
@@ -970,7 +936,7 @@ void LaboView::newScheme()
   if( ! isGoodName( schName ) ) {
     handleError( this, QString("Bad scheme name: \"%1\"").arg(schName) );
   }
-  ok = model->newScheme( schName );
+  ok = model->addScheme( schName );
   if( !ok ) {
     handleError( this, QString("Fail to create scheme: \"%1\"").arg(schName) );
   }
@@ -979,18 +945,10 @@ void LaboView::newScheme()
 
 void LaboView::delScheme()
 {
-  QString nm = getSelName( schems_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  if( confirmDelete( this, "scheme", nm ) ) {
-    model->delScheme( nm );
-    emit viewChanged();
-  }
+  delSomething( schems_view );
 }
 
-void LaboView::editScheme()
+void LaboView::editScheme() // special: separate window
 {
   QString nm = getSelName( schems_view );
   if( nm.isEmpty()  || nm == QSL( "main_s" ) ) {
@@ -1022,48 +980,12 @@ void LaboView::editScheme()
 
 void LaboView::renameScheme()
 {
-  QString nm = getSelName( schems_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  Scheme *sch = model->getScheme( nm );
-  if( !sch ) {
-    return;
-  }
-
-  QString old_name = sch->objectName();
-  bool ok;
-  QString new_name = QInputDialog::getText( this, "Rename:" + sch->getFullName(),
-      "Enter new name:", QLineEdit::Normal, old_name, &ok );
-
-  if( !ok ) { return; }
-
-  if( schems->renameObj( old_name, new_name ) ) {
-    model->reset();
-    emit viewChanged();
-  }
-
+  renameSomething( schems_view );
 }
 
 void LaboView::cloneScheme()
 {
-  QString nm = getSelName( schems_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-  QString nn = schems->hintName( "Scheme", nm );
-
-  bool ok;
-  QString new_name = QInputDialog::getText(
-      this, tr( "New scheme name" ), tr( "Scheme name:" ), QLineEdit::Normal,
-      nn, &ok );
-
-  if( ok ) {
-    model->cloneScheme( nm, new_name );
-    model->handleStructChanged();
-    emit viewChanged();
-  }
+  cloneSomething( schems_view );
 }
 
 

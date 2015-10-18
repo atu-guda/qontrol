@@ -257,7 +257,7 @@ QSize Scheme::getMaxXY() const
 }
 
 
-TMiso* Scheme::insElem( const QString &cl_name, const QString &ob_name,
+TMiso* Scheme::addElem( const QString &cl_name, const QString &ob_name,
                      int aord, int avis_x, int avis_y )
 {
   // not addObjT, downcast
@@ -274,11 +274,6 @@ TMiso* Scheme::insElem( const QString &cl_name, const QString &ob_name,
 
 int Scheme::delElem( const QString &ename )
 {
-  TMiso *ob = getObjT<TMiso*>( ename );
-  if( !ob ) {
-    qWarning() << "fail to find TMiso " << ename << NWHE;
-    return 0;
-  }
   int rc = delObj( ename );
   if( rc ) {
     reset();

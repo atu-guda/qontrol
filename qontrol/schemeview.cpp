@@ -43,7 +43,7 @@ void SchemeView::init_actions()
 {
   act_new = new QAction( QIcon::fromTheme("list-add"), "New", this );
   addAction( act_new );
-  connect( act_new, SIGNAL(triggered()), laboview, SLOT(newScheme()) );
+  connect( act_new, SIGNAL(triggered()), laboview, SLOT(addScheme()) );
 
   act_del = new QAction( QIcon::fromTheme("list-remove"), "Delete", this );
   addAction( act_del );

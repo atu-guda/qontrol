@@ -201,7 +201,7 @@ void LaboWin::initIface()
   act_newelm= new QAction( QIcon( ":icons/newelm.png" ), "&New element", this );
   act_newelm->setShortcut( Qt::Key_Insert );
   act_newelm->setWhatsThis( tr("Create new element") );
-  registerAction( act_newelm, "newElm" );
+  registerAction( act_newelm, "addElm" );
   connect( act_newelm, &QAction::triggered, this, &LaboWin::slotNewElm );
 
   act_delelm= new QAction( QIcon( ":icons/delelm.png" ), "&Delete element", this );
@@ -289,7 +289,7 @@ void LaboWin::initIface()
   act_newout = new QAction( QIcon( ":icons/newout.png" ), "&New Out", this );
   act_newout->setShortcut( Qt::Key_U );
   act_newout->setWhatsThis( tr("Create output collector") );
-  registerAction( act_newout, "newOut" );
+  registerAction( act_newout, "addOut" );
   connect( act_newout, &QAction::triggered, this, &LaboWin::slotNewOut );
 
   act_delout = new QAction( QIcon( ":icons/delout.png" ), "&Delete out", this );
@@ -332,7 +332,7 @@ void LaboWin::initIface()
   act_newgraph = new QAction( QIcon( ":icons/newgraph.png" ), "&New Plot", this );
   act_newgraph->setShortcut( Qt::Key_P );
   act_newgraph->setWhatsThis( tr("Create new plot") );
-  registerAction( act_newgraph, "newGraph" );
+  registerAction( act_newgraph, "addGraph" );
   connect( act_newgraph, &QAction::triggered, this, &LaboWin::slotNewGraph );
 
   act_delgraph = new QAction( QIcon( ":icons/delgraph.png" ), "&Delete plot", this );
@@ -392,7 +392,7 @@ void LaboWin::initIface()
 
   act_newSimul = new QAction( "&New Simulation", this );
   act_newSimul->setWhatsThis( tr("Create new simulation") );
-  registerAction( act_newSimul, "newSimul" );
+  registerAction( act_newSimul, "addSimul" );
   connect( act_newSimul, &QAction::triggered, this, &LaboWin::slotNewSimul );
 
   act_delSimul = new QAction( "&Delete Simulation", this );
@@ -446,7 +446,7 @@ void LaboWin::initIface()
   //
   act_newScheme = new QAction( "&New Scheme", this );
   act_newScheme->setWhatsThis( tr("Create new scheme") );
-  registerAction( act_newScheme, "newScheme" );
+  registerAction( act_newScheme, "addScheme" );
   connect( act_newScheme, &QAction::triggered, this, &LaboWin::slotNewScheme );
 
   act_delScheme = new QAction( "&Delete Scheme", this );
@@ -1393,7 +1393,7 @@ void LaboWin::slotUpdateLog()
 
 void LaboWin::slotNewElm()
 {
-  callLaboViewSlot( "newElm", tr( "Inserting new element..." ) );
+  callLaboViewSlot( "addElm", tr( "Inserting new element..." ) );
 }
 
 void LaboWin::slotDelElm()
@@ -1471,7 +1471,7 @@ void LaboWin::slotTestElm2()
 
 void LaboWin::slotNewOut()
 {
-  callLaboViewSlot( "newOut", tr( "Inserting output array..." ) );
+  callLaboViewSlot( "addOut", tr( "Inserting output array..." ) );
 }
 
 void LaboWin::slotDelOut()
@@ -1506,7 +1506,7 @@ void LaboWin::slotExportOut()
 
 void LaboWin::slotNewGraph()
 {
-  callLaboViewSlot( "newGraph", tr( "Inserting new plot..." ) );
+  callLaboViewSlot( "addGraph", tr( "Inserting new plot..." ) );
 }
 
 void LaboWin::slotDelGraph()
@@ -1558,7 +1558,7 @@ void LaboWin::slotCloneGraph()
 
 void LaboWin::slotNewSimul()
 {
-  callLaboViewSlot( "newSimul", tr( "Creating new simulation..." ) );
+  callLaboViewSlot( "addSimul", tr( "Creating new simulation..." ) );
 }
 
 void LaboWin::slotDelSimul()
@@ -1609,7 +1609,7 @@ void LaboWin::slotShowTreeModel()
 
 void LaboWin::slotNewScheme()
 {
-  callLaboViewSlot( "newScheme", tr( "Creating new Scheme..." ) );
+  callLaboViewSlot( "addScheme", tr( "Creating new Scheme..." ) );
 }
 
 void LaboWin::slotDelScheme()

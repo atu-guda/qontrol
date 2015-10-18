@@ -499,7 +499,7 @@ TGraph* TModel::getGraph( const QString &name )
 }
 
 
-int TModel::insOut( const QString &outname, const QString &objname )
+int TModel::addOut( const QString &outname, const QString &objname )
 {
   if( !outs ) {
     return 0;
@@ -525,35 +525,25 @@ int TModel::insOut( const QString &outname, const QString &objname )
 
 // ------------------------------------------
 
-int TModel::insGraph( const QString &gname )
+int TModel::addGraph( const QString &gname )
 {
-  if( !plots ) {
-    return 0;
+  if( addObjToSub( "plots", "TGraph", gname ) ) {
+    reset();
+    return 1;
   }
-  TGraph *gra = plots->addObjT<TGraph>( gname );
-  if( !gra ) {
-    return 0;
-  }
-  reset();
-  return 1;
+  return 0;
 }
 
 
 
 int TModel::delOut( const QString &name )
 {
-  if( !outs ) {
-    return 0;
-  }
-  return outs->delObj( name );
+  return delObjFromSub( "outs", name );
 }
 
 int TModel::delGraph( const QString &name )
 {
-  if( !plots ) {
-    return 0;
-  }
-  return plots->delObj( name );
+  return delObjFromSub( "plots", name );
 }
 
 int TModel::addOutToGraph( const QString &o_name, const QString &g_name )
@@ -571,46 +561,19 @@ int TModel::addOutToGraph( const QString &o_name, const QString &g_name )
 
 bool TModel::cloneGraph( const QString &old_name, const QString &new_name )
 {
-  if( !plots ) {
-    return 0;
-  }
-  TGraph *old_gra = plots->getObjT<TGraph*>( old_name );
-  if( !old_gra ) {
-    qWarning() << " old plot not exist: " << old_name << NWHE;
-    return 0;
-  }
-
-  QString s = old_gra->toString();
-
-  TGraph *new_gra = plots->addObjT<TGraph>( new_name );
-  if( !new_gra ) {
-    qWarning() << "fail to create new plot" << new_name << NWHE;
-    return 0;
-  }
-  return new_gra->fromString( s );
+  return cloneObjInSub( "plots", old_name, new_name );
 }
 
 // ------------------------------------------
 
-int TModel::newSimul( const QString &name )
+int TModel::addSimul( const QString &name )
 {
-  if( !sims ) {
-    return 0;
-  }
-  Simulation *sim = sims->addObjT<Simulation>( name );
-  if( ! sim ) {
-    qWarning() << "fail to create simulation " << name << NWHE;
-    return 0;
-  }
-  return 1;
+  return addObjToSub( "sims", "Simulation", name );
 }
 
 int TModel::delSimul( const QString &name )
 {
-  if( !sims ) {
-    return 0;
-  }
-  return sims->delObj( name );
+  return delObjFromSub( "sims", name );
 }
 
 QString TModel::getSimulName( int idx )
@@ -618,11 +581,7 @@ QString TModel::getSimulName( int idx )
   if( !sims ) {
     return QString();
   }
-  Simulation* sim =  sims->getObjT<Simulation*>( idx );
-  if( !sim ) {
-    return QString();
-  }
-  return sim->objectName();
+  return sims->childName( idx );
 }
 
 Simulation* TModel::getSimul( const QString &name )
@@ -636,23 +595,7 @@ Simulation* TModel::getSimul( const QString &name )
 
 bool TModel::cloneSimul( const QString &old_name, const QString &new_name )
 {
-  if( !sims ) {
-    return false;
-  }
-  Simulation *old_sim = sims->getObjT<Simulation*>( old_name );
-  if( !old_sim ) {
-    qWarning() << "old simulation " << old_name << " not exist " << NWHE;
-    return 0;
-  }
-
-  QString s = old_sim->toString();
-
-  Simulation *new_sim = sims->addObjT<Simulation>( new_name );
-  if( !new_sim ) {
-    qWarning() << "fail to create new simulation " << new_name << NWHE;
-    return 0;
-  }
-  return new_sim->fromString( s );
+  return cloneObjInSub( "sims", old_name, new_name );
 }
 
 bool TModel::setActiveSimul( const QString &name )
@@ -670,25 +613,14 @@ bool TModel::setActiveSimul( const QString &name )
 
 // ------------------------------------------
 
-int TModel::newScheme( const QString &name )
+int TModel::addScheme( const QString &name )
 {
-  if( !schems ) {
-    return 0;
-  }
-  Scheme *sch = schems->addObjT<Scheme>( name );
-  if( ! sch ) {
-    qWarning() << "fail to create scheme " << name << NWHE;
-    return 0;
-  }
-  return 1;
+  return addObjToSub( "schems", "Scheme", name );
 }
 
 int TModel::delScheme( const QString &name )
 {
-  if( !schems ) {
-    return 0;
-  }
-  return schems->delObj( name );
+  return delObjFromSub( "schems", name );
 }
 
 QString TModel::getSchemeName( int idx )
@@ -696,11 +628,7 @@ QString TModel::getSchemeName( int idx )
   if( !schems ) {
     return QString();
   }
-  Scheme* sch =  schems->getObjT<Scheme*>( idx );
-  if( !sch ) {
-    return QString();
-  }
-  return sch->objectName();
+  return schems->childName( idx );
 }
 
 Scheme* TModel::getScheme( const QString &name )
@@ -714,23 +642,7 @@ Scheme* TModel::getScheme( const QString &name )
 
 bool TModel::cloneScheme( const QString &old_name, const QString &new_name )
 {
-  if( !schems ) {
-    return false;
-  }
-  Scheme *old_sch = schems->getObjT<Scheme*>( old_name );
-  if( !old_sch ) {
-    qWarning() << "old scheme " << old_name << " not exist " << NWHE;
-    return 0;
-  }
-
-  QString s = old_sch->toString();
-
-  Scheme *new_sch = schems->addObjT<Scheme>( new_name );
-  if( !new_sch ) {
-    qWarning() << "fail to create new scheme " << new_name << NWHE;
-    return 0;
-  }
-  return new_sch->fromString( s );
+  return cloneObjInSub( "schems", old_name, new_name );
 }
 
 

@@ -91,7 +91,7 @@ class LaboView : public CommonSubwin
    /** contains the implementation for printing functionality  */
    void print();
    // element related
-   void newElm();
+   void addElm();
    void delElm();
    void editElm();
    void renameElm();
@@ -111,7 +111,7 @@ class LaboView : public CommonSubwin
    void pasteElm();
 
    // outs related
-   void newOut();
+   void addOut();
    void delOut();
    void editOut();
    void renameOut();
@@ -120,7 +120,7 @@ class LaboView : public CommonSubwin
    void exportOut();
 
    // graphs related
-   void newGraph();
+   void addGraph();
    void delGraph();
    void editGraph();
    void renameGraph();
@@ -132,7 +132,7 @@ class LaboView : public CommonSubwin
    void cloneGraph();
 
    // simulation releated
-   void newSimul();
+   void addSimul();
    void delSimul();
    void editSimul();
    void renameSimul();
@@ -143,7 +143,7 @@ class LaboView : public CommonSubwin
    // model/scheme related
    void editModel();
    void showTreeModel();
-   void newScheme();
+   void addScheme();
    void delScheme();
    void editScheme();
    void renameScheme();
@@ -177,6 +177,13 @@ class LaboView : public CommonSubwin
    // int checkState( CheckType ctp );
    //* call engine and returns result, casted to QString
    QString runScript( const QString& script );
+
+   bool prepareSomething( QAbstractItemView *view, QString &subname, QString &nm,
+      HolderData **a_ob, HolderData **a_co, QString *a_newname );
+   bool editSomething( QAbstractItemView *view, bool noReset = false );
+   bool delSomething( QAbstractItemView *view );
+   bool renameSomething( QAbstractItemView *view );
+   bool cloneSomething( QAbstractItemView *view );
  protected:
    QScrollArea *scrollArea;
    StructView *sview = nullptr;

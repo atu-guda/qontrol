@@ -49,7 +49,7 @@ class Scheme : public TDataSet  {
   //* return number of elements of TMiso-alike
   Q_INVOKABLE int getNMiso() const { return v_el.size(); }
   /** inserts active element @returns: nullptr - bad  else - ptr to inserted element */
-  TMiso* insElem( const QString &cl_name, const QString &ob_name,
+  TMiso* addElem( const QString &cl_name, const QString &ob_name,
                        int aord, int avis_x, int avis_y );
   /** delete active element by name !0 = sucess */
   Q_INVOKABLE int delElem( const QString &ename );

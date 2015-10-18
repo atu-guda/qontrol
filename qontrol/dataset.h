@@ -309,16 +309,6 @@ class HolderData : public QAbstractItemModel {
   //* return icon for visualization
   virtual QIcon getIcon() const;
 
-  // functions to work with substructure
-  HolderData* addObjToSubP( const QString &subname, const QString &tp, const QString &ob_name );
-  Q_INVOKABLE bool addObjToSub( const QString &subname, const QString &tp, const QString &ob_name );
-  template <typename T>
-    T* addObjToSubT( const QString &subname, const QString &ob_name ) {
-      return qobject_cast<T*>( addObjToSubP( subname, T::staticMetaObject.className(), ob_name ) );
-    }
-  Q_INVOKABLE bool delObjFromSub( const QString &subname, const QString &ob_name );
-
-
   virtual QDomElement toDom( QDomDocument &dd ) const;
   bool fromDom( QDomElement &de, QString &errstr );
   Q_INVOKABLE QString allowTypes() const { return allowed_types; }
@@ -332,19 +322,7 @@ class HolderData : public QAbstractItemModel {
     { return ( n<size() && n >= 0 ) ? children().at( n )->objectName() : ""; }
   //* return strings for given enum
   Q_INVOKABLE QStringList getEnumStrings( const QString &enum_name ) const;
-  //* return model for completer
-  QAbstractItemModel *getComplModel( const QString &targ, QObject *mdl_par ) const;
-  //* fill model for orinary inputs: now: pass to Model/Scheme
-  virtual void fillComplModelForInputs( QStandardItemModel *mdl ) const;
-  //* fill model for params
-  virtual void fillComplModelForParams( QStandardItemModel *mdl ) const;
-  //* fill model for outputs: pass to model
-  virtual void fillComplModelForOuts( QStandardItemModel *mdl ) const;
-  //* fill items for input: workhorse for fillComplModelForInputs
-  int fillComplForInputs( QStandardItem *it0, const QString &prefix = QString()  ) const;
- signals:
-   void sigStructChanged();
- public:
+
   /** returns full name of object: aaa.bbb.cc  */
   Q_INVOKABLE QString getFullName() const;
   Q_INVOKABLE void setParm( const QString &name, const QString &value );
@@ -364,6 +342,7 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE bool addObjDatas( const QString &cl_name, const QString &ob_name, const QString &datas );
   /** delete given object by name, returns 0 - error, !=0 = ok */
   Q_INVOKABLE int delObj( const QString &ob_name, bool ignoreMod = false  );
+  Q_INVOKABLE bool cloneObj( const QString &old_name, const QString &new_name );
   //* rename object (if created dynamicaly)
   Q_INVOKABLE int renameObj( const QString &ob_name, const QString &new_name );
   // void check_guard() const;
@@ -378,6 +357,30 @@ class HolderData : public QAbstractItemModel {
   /** reaction to add/remove/relink of subobjects: call do_structChanged */
   void handleStructChanged();
   void extraToParm();
+
+  // functions to work with substructure
+  HolderData* addObjToSubP( const QString &subname, const QString &tp, const QString &ob_name );
+  Q_INVOKABLE bool addObjToSub( const QString &subname, const QString &tp, const QString &ob_name );
+  template <typename T>
+    T* addObjToSubT( const QString &subname, const QString &ob_name ) {
+      return qobject_cast<T*>( addObjToSubP( subname, T::staticMetaObject.className(), ob_name ) );
+    }
+  Q_INVOKABLE bool delObjFromSub( const QString &subname, const QString &ob_name );
+  Q_INVOKABLE bool cloneObjInSub( const QString &subname, const QString &old_name, const QString &new_name );
+  Q_INVOKABLE bool renameObjInSub( const QString &subname, const QString &old_name, const QString &new_name );
+
+  //* return model for completer
+  QAbstractItemModel *getComplModel( const QString &targ, QObject *mdl_par ) const;
+  //* fill model for orinary inputs: now: pass to Model/Scheme
+  virtual void fillComplModelForInputs( QStandardItemModel *mdl ) const;
+  //* fill model for params
+  virtual void fillComplModelForParams( QStandardItemModel *mdl ) const;
+  //* fill model for outputs: pass to model
+  virtual void fillComplModelForOuts( QStandardItemModel *mdl ) const;
+  //* fill items for input: workhorse for fillComplModelForInputs
+  int fillComplForInputs( QStandardItem *it0, const QString &prefix = QString()  ) const;
+ signals:
+   void sigStructChanged();
  protected:
   virtual void do_post_set() = 0;
   virtual void do_reset() {}; //* adjustable reset function
