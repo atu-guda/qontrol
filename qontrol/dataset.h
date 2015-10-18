@@ -312,6 +312,7 @@ class HolderData : public QAbstractItemModel {
 
 
   virtual QDomElement toDom( QDomDocument &dd ) const;
+  bool fromDom( QDomElement &de, QString &errstr );
   Q_INVOKABLE QString allowTypes() const { return allowed_types; }
   /** is this class child of given or the same by name */
   Q_INVOKABLE bool isChildOf( const QString &cname ) const;
@@ -340,7 +341,7 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE QString getFullName() const;
   Q_INVOKABLE void setParm( const QString &name, const QString &value );
   Q_INVOKABLE QString getParm( const QString &name ) const;
-  Q_INVOKABLE bool setDatas( const QString datas ); //* data sep: newline
+  Q_INVOKABLE bool setDatas( const QString &datas ); //* data sep: newline
   Q_INVOKABLE QString getType() const { return getTypeV(); };
   virtual const char* getHelp() const  = 0;
   Q_INVOKABLE virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
@@ -374,6 +375,8 @@ class HolderData : public QAbstractItemModel {
   virtual void do_reset() {}; //* adjustable reset function
   /** do real actions after structure changed */
   virtual void do_structChanged();
+  //* real part of fromDom */
+  bool fromDom_real( QDomElement &de, QString &errstr );
 
   int dyn = 0; //* flag: is created dynamically i.e. can be deleted
   int flags;   //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
@@ -645,8 +648,7 @@ class TDataSet : public HolderData {
 
    virtual QString getTypeV() const override;
 
-   QDomElement toDom( QDomDocument &dd ) const;
-   bool fromDom( QDomElement &de, QString &errstr );
+   QDomElement toDom( QDomDocument &dd ) const override;
    // special part - TODO: remove or ifdef in separate lib
    /** returns pointer to given parameter, checking if valid
     * valid names:
@@ -670,8 +672,6 @@ class TDataSet : public HolderData {
     * for param mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
  protected:
-   //* real part of fromDom */
-   bool fromDom_real( QDomElement &de, QString &errstr );
    /** register input (call by ctor) in inputs */
    void registerInput( InputSimple *inp );
    /** unregister input (call by dtor) from inputs */

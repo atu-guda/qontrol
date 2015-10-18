@@ -640,7 +640,6 @@ void StructView::newElm()
     return;
   }
 
-  // sch->setParm( "bad_types", "TLorenz" ); // to test bad
   QString objName;
   QString tp = SelectTypeDialog::getTypeAndName( sch, this, objName, "TMiso" );
   if( tp.isEmpty() ) {
@@ -654,23 +653,6 @@ void StructView::newElm()
   if( !ok ) {
     return;
   }
-
-  // addElemInfo aei;
-  // aei.name = QSL("obj_")+ QSN( sch->countElemsOfType( QSL("TMiso"), QSL("obj_") ) );
-  // aei.order = sch->hintOrd();
-  // auto dia = new AddElemDialog( &aei, sch, this, "TMiso" );
-  //                                         // limit to such elements here
-  //
-  // int rc = dia->exec();
-  // delete dia; dia = 0;
-  //
-  // if( rc != QDialog::Accepted || aei.type.isEmpty() ) {
-  //   return;
-  // }
-  // if( ! isGoodName( objName )  ) {
-  //   handleError( this, QString("Fail to add Elem: bad object name \"%1\"").arg(objName) );
-  //   return;
-  // }
 
   TMiso *ob = sch->insElem( tp, objName, order, sel_x, sel_y );
   if( !ob  ) {

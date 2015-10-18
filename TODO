@@ -11,7 +11,6 @@ Whan to [re]create shadow objects?
 StatusModel link to StructView, not to LaboView?
 Check: when to reset model?
 Check: update link values only after step - prep for multi-threading (see TSubScheme)
-Hide some types in new element dialog
 Combine list views
 New buttons for ObjDataWidget: need better (simple) labels.
 Indicate corresponding outs for selected plot
@@ -45,8 +44,6 @@ RunWindow?
 Edit large arrays
 More data/controls: Font, Date, Time
 TCircBuf + TDelay re*
-Hide startLoop - like fun,f
-Auto create GET/SET function for my datas, create Qt properties - scripts. ? FAIL?
 order -> only hint?
 js/large text edit widget + button/dialog + external editor (partial done)?
 

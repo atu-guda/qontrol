@@ -389,7 +389,7 @@ QString HolderData::getParm( const QString &name ) const
   return QString();
 }
 
-bool HolderData::setDatas( const QString datas )
+bool HolderData::setDatas( const QString &datas )
 {
   bool was_set = false;
   QStringList sl = datas.split( "\n", QString::SkipEmptyParts );
@@ -2235,20 +2235,17 @@ static QString getDomText( QDomNode &p )
   return r;
 }
 
-bool TDataSet::fromDom( QDomElement &de, QString &errstr )
+bool HolderData::fromDom( QDomElement &de, QString &errstr )
 {
   auto old_updSuspended = updSuspended;
   updSuspended = true;
   bool ok = fromDom_real( de, errstr );
 
   updSuspended = old_updSuspended;
-  // if( ! updSuspended ) {
-  //   handleStructChanged();
-  // }
   return ok;
 }
 
-bool TDataSet::fromDom_real( QDomElement &de, QString &errstr )
+bool HolderData::fromDom_real( QDomElement &de, QString &errstr )
 {
   for( QDomNode no = de.firstChild(); !no.isNull() ; no = no.nextSibling() ) {
 

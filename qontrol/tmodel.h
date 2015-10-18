@@ -87,14 +87,11 @@ class TModel : public TDataSet  {
 
   // interface to commands like above, but with names - to use from JS
  public slots:
-  int getNOuts() const { return outs->size(); }
   //* inserts new out array @returns: 0 - bad, !=0 - Ok
   int insOut( const  QString &outname, const QString &objname );
   //* delete outs by name, return !=0 id success
   int delOut( const QString &name );
 
-  //* return number of plots
-  int getNGraph() const { return plots->size(); }
   //* inserts new graph @returns: 0 - bad, !=0 Ok
   int insGraph( const QString &gname );
   //* delete graph by name, retrns !=0 -  success
@@ -106,7 +103,6 @@ class TModel : public TDataSet  {
   int newSimul( const QString &name );
   int delSimul( const QString &name );
   QString getSimulName( int idx );
-  int getNSimul() const { return sims->size(); }
   bool cloneSimul( const QString &old_name, const QString &new_name );
   bool setActiveSimul( const QString &name );
 
@@ -114,7 +110,6 @@ class TModel : public TDataSet  {
   int delScheme( const QString &name );
   QString getSchemeName( int idx );
   bool cloneScheme( const QString &old_name, const QString &new_name );
-  int getNSchems() const { return schems->size(); }
 
   void initEngine();
   QString runScript( const QString& script );
