@@ -766,7 +766,7 @@ void StructView::qplinkElm()
   }
   int n_pi = pis->size();
   QString pi_name = QString("pi_") + QSN(n_pi);
-  InputParam *pi = pis->addObj<InputParam>( pi_name );
+  InputParam *pi = pis->addElemT<InputParam>( pi_name );
   if( !pi ) {
     return;
   }

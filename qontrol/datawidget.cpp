@@ -1272,7 +1272,7 @@ void DataDialog::addParam()
   if( rc != QDialog::Accepted || nm.isEmpty() || ptype.isEmpty() ) {
     return;
   }
-  HolderData *ho = ds.add_param( ptype, nm );
+  HolderData *ho = ds.addElemP( ptype, nm );
   if( !ho ) {
     handleError( this, QSL("Fail to add parameter: ") + ptype + " " + nm );
     return;
@@ -1297,7 +1297,7 @@ void DataDialog::addObj()
     return;
   }
 
-  HolderData *ob = ds.add_obj( tp, objName );
+  HolderData *ob = ds.addElemP( tp, objName );
   if( !ob  ) {
     handleError( this, QSL( "Fail to add Elem: ") + tp + " " + objName );
     return;

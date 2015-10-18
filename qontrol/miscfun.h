@@ -74,6 +74,9 @@ QString tex2label( const QString &t, bool noSub = false );
 // double perpLen( double xs, double ys, double xe, double ye,
 //                 double xp, double yp );
 
+class QDomNode;
+QString getDomText( QDomNode &p );
+
 // ------------- for iface ---------------------------------------
 
 void handleError( QWidget* par, const QString &s );

@@ -131,7 +131,7 @@ int TSubScheme::do_preRun( int run_tp, int an,
     del_obj( sch_ename, true ); // ignoreMod
   }
 
-  sch = addObj<Scheme>( sch_ename, true );
+  sch = addElemT<Scheme>( sch_ename, true );
   if( ! sch ) {
     qWarning() << "Fail to create subscheme " << NWHE;
     return 0;

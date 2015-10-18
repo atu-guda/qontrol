@@ -290,14 +290,13 @@ class HolderData : public QAbstractItemModel {
   bool getUpData( const QString &nm, QVariant &da ) const;
 
   /** add new object and it's description (new)*/
-  virtual HolderData* add_obj( const QString &cl_name, const QString &ob_name, bool ignoreMod = false );
-  /** type-cast interface to add_obj */
+  virtual HolderData* addElemP( const QString &cl_name, const QString &ob_name, bool ignoreMod = false );
+  /** type-cast interface to addElem */
   template <typename T>
-    T* addObj( const QString &ob_name, bool ignoreMod = false  ) {
-      return qobject_cast<T*>( add_obj( T::staticMetaObject.className(), ob_name, ignoreMod ) );
+    T* addElemT( const QString &ob_name, bool ignoreMod = false  ) {
+      return qobject_cast<T*>( addElemP( T::staticMetaObject.className(), ob_name, ignoreMod ) );
     }
-  /** add new param and it's description */
-  virtual HolderData* add_param( const QString &tp_name, const QString &ob_name );
+  Q_INVOKABLE bool addElem( const QString &cl_name, const QString &ob_name );
   /** is given type of subelement valid for this object */
   virtual int isValidType( const QString &cl_name ) const;
   void dumpStruct() const;
@@ -309,6 +308,15 @@ class HolderData : public QAbstractItemModel {
   void resumeHandleStructChange() { updSuspended = false; handleStructChanged(); }
   //* return icon for visualization
   virtual QIcon getIcon() const;
+
+  // functions to work with substructure
+  HolderData* addElemToSubP( const QString &subname, const QString &tp, const QString &ob_name );
+  Q_INVOKABLE bool addElemToSub( const QString &subname, const QString &tp, const QString &ob_name );
+  template <typename T>
+    T* addElemToSubT( const QString &subname, const QString &ob_name ) {
+      return qobject_cast<T*>( addElemToSubP( subname, T::staticMetaObject.className(), ob_name ) );
+    }
+  Q_INVOKABLE bool delElemFromSub( const QString &subname, const QString &ob_name );
 
 
   virtual QDomElement toDom( QDomDocument &dd ) const;
@@ -353,7 +361,7 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE virtual int arrSize() const { return 1; }
   Q_INVOKABLE int getState() const { return state; }
   /** create object with params as string */
-  Q_INVOKABLE bool add_obj_datas( const QString &cl_name, const QString &ob_name, const QString &datas );
+  Q_INVOKABLE bool addElemDatas( const QString &cl_name, const QString &ob_name, const QString &datas );
   /** delete given object by name, returns 0 - error, !=0 = ok */
   Q_INVOKABLE int del_obj( const QString &ob_name, bool ignoreMod = false  );
   //* rename object (if created dynamicaly)

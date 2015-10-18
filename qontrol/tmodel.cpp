@@ -42,20 +42,20 @@ CTOR(TModel,TDataSet)
                   "ContScheme,ContSimul,ContOut,ContGraph"; // +SPECIAL
   rtime =0; t = 0; tdt =1; // fake
 
-  schems = addObj<ContScheme>( "schems" );
+  schems = addElemT<ContScheme>( "schems" );
   schems->setImmutable();
-  main_s = schems->addObj<Scheme>( "main_s" );
+  main_s = schems->addElemT<Scheme>( "main_s" );
   main_s->setImmutable();
   schems->setActiveElem( "main_s" );
 
-  outs = addObj<ContOut>( "outs" );
+  outs = addElemT<ContOut>( "outs" );
   outs->setImmutable();
-  plots = addObj<ContGraph>( "plots" );
+  plots = addElemT<ContGraph>( "plots" );
   plots->setImmutable();
 
-  sims = addObj<ContSimul>( "sims" );
+  sims = addElemT<ContSimul>( "sims" );
   sims->setImmutable();
-  Simulation *sim0 = sims->addObj<Simulation>( "sim0" );
+  Simulation *sim0 = sims->addElemT<Simulation>( "sim0" );
   sim0->setImmutable();
   sims->setActiveElem( "sim0" );
 
@@ -504,7 +504,7 @@ int TModel::insOut( const QString &outname, const QString &objname )
   if( !outs ) {
     return 0;
   }
-  TOutArr *arr = outs->addObj<TOutArr>( outname );
+  TOutArr *arr = outs->addElemT<TOutArr>( outname );
   if( !arr ) {
     return 0;
   }
@@ -530,7 +530,7 @@ int TModel::insGraph( const QString &gname )
   if( !plots ) {
     return 0;
   }
-  TGraph *gra = plots->addObj<TGraph>( gname );
+  TGraph *gra = plots->addElemT<TGraph>( gname );
   if( !gra ) {
     return 0;
   }
@@ -582,7 +582,7 @@ bool TModel::cloneGraph( const QString &old_name, const QString &new_name )
 
   QString s = old_gra->toString();
 
-  TGraph *new_gra = plots->addObj<TGraph>( new_name );
+  TGraph *new_gra = plots->addElemT<TGraph>( new_name );
   if( !new_gra ) {
     qWarning() << "fail to create new plot" << new_name << NWHE;
     return 0;
@@ -597,7 +597,7 @@ int TModel::newSimul( const QString &name )
   if( !sims ) {
     return 0;
   }
-  Simulation *sim = sims->addObj<Simulation>( name );
+  Simulation *sim = sims->addElemT<Simulation>( name );
   if( ! sim ) {
     qWarning() << "fail to create simulation " << name << NWHE;
     return 0;
@@ -647,7 +647,7 @@ bool TModel::cloneSimul( const QString &old_name, const QString &new_name )
 
   QString s = old_sim->toString();
 
-  Simulation *new_sim = sims->addObj<Simulation>( new_name );
+  Simulation *new_sim = sims->addElemT<Simulation>( new_name );
   if( !new_sim ) {
     qWarning() << "fail to create new simulation " << new_name << NWHE;
     return 0;
@@ -675,7 +675,7 @@ int TModel::newScheme( const QString &name )
   if( !schems ) {
     return 0;
   }
-  Scheme *sch = schems->addObj<Scheme>( name );
+  Scheme *sch = schems->addElemT<Scheme>( name );
   if( ! sch ) {
     qWarning() << "fail to create scheme " << name << NWHE;
     return 0;
@@ -725,7 +725,7 @@ bool TModel::cloneScheme( const QString &old_name, const QString &new_name )
 
   QString s = old_sch->toString();
 
-  Scheme *new_sch = schems->addObj<Scheme>( new_name );
+  Scheme *new_sch = schems->addElemT<Scheme>( new_name );
   if( !new_sch ) {
     qWarning() << "fail to create new scheme " << new_name << NWHE;
     return 0;

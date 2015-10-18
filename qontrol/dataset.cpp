@@ -548,10 +548,8 @@ QIcon HolderData::getIcon() const
   return el_ico;
 }
 
-// TODO: more args
-HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name, bool ignoreMod )
+HolderData* HolderData::addElemP( const QString &cl_name, const QString &ob_name, bool ignoreMod )
 {
-  beginResetModel();
 
   HolderData *el = getElem( ob_name );
   if( el != nullptr ) {
@@ -563,6 +561,7 @@ HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name,
                << " not allowed in " << NWHE;
     return nullptr;
   }
+  beginResetModel();
 
   HolderData *ob = EFACT.createElem( cl_name, ob_name, this );
   if( !ob ) {
@@ -577,10 +576,16 @@ HolderData* HolderData::add_obj( const QString &cl_name, const QString &ob_name,
   return ob;
 }
 
-bool HolderData::add_obj_datas( const QString &cl_name, const QString &ob_name,
+bool HolderData::addElem( const QString &cl_name, const QString &ob_name )
+{
+  HolderData *ho = addElemP( cl_name, ob_name );
+  return ( ho != nullptr );
+}
+
+bool HolderData::addElemDatas( const QString &cl_name, const QString &ob_name,
      const QString &datas )
 {
-  HolderData *ho = add_obj( cl_name, ob_name );
+  HolderData *ho = addElemP( cl_name, ob_name );
   if( ! ho ) {
     return false;
   }
@@ -684,29 +689,6 @@ bool HolderData::setActiveElem( const QString &nm )
 };
 
 
-HolderData* HolderData::add_param( const QString &tp_name, const QString &ob_name )
-{
-  if( getElem( ob_name ) ) {
-    qWarning() << " name " << ob_name << " exist" << NWHE;
-    return nullptr;
-  }
-  if( !isValidType( tp_name ) ) {
-    return nullptr;
-  }
-
-  beginResetModel();
-  HolderData *ho = EFACT.createElem( tp_name, ob_name, this );
-  if( !ho ) {
-    return nullptr;
-  }
-  setModified();
-  endResetModel();
-
-  reportStructChanged();
-  return ho;
-}
-
-
 
 int HolderData::isValidType(  const QString &cl_name  ) const
 {
@@ -727,6 +709,7 @@ int HolderData::isValidType(  const QString &cl_name  ) const
   return false;
 }
 
+
 QDomElement HolderData::toDom( QDomDocument &dd ) const
 {
   QDomElement de = dd.createElement( "param" );
@@ -741,6 +724,116 @@ QDomElement HolderData::toDom( QDomDocument &dd ) const
   QDomText tn = dd.createTextNode( toString() );
   de.appendChild( tn );
   return de;
+}
+
+bool HolderData::fromDom( QDomElement &de, QString &errstr )
+{
+  auto old_updSuspended = updSuspended;
+  updSuspended = true;
+  bool ok = fromDom_real( de, errstr );
+
+  updSuspended = old_updSuspended;
+  return ok;
+}
+
+bool HolderData::fromDom_real( QDomElement &de, QString &errstr )
+{
+  for( QDomNode no = de.firstChild(); !no.isNull() ; no = no.nextSibling() ) {
+
+    if ( ! no.isElement() ) {
+      continue;
+    }
+
+    QDomElement ee = no.toElement();
+    QString elname = ee.attribute( "name" );
+    QString tagname = ee.tagName();
+
+    if( tagname == "obj" ) {  // ------------------------------- object
+      QString cl_name = ee.attribute("otype");
+      if( cl_name.isEmpty() ) {
+        errstr = QString( "err: element \"%1\" without type" ).arg(elname);
+        qWarning() << errstr << NWHE;
+        return false;
+      }
+      HolderData *ho = getElem( elname );
+      if( ho && ! ho->isObject() ) {
+        errstr = QString("err: read elem \"%1\" failed. "
+            "required: \"%2\" but have \"%3\" in \"%4\"" )
+                .arg(elname).arg(tagname).arg(ho->getType()).arg( getFullName() );
+        qWarning() << errstr << NWHE;
+        return false;
+      }
+      if( !ho ) { // name not found
+        if( ! addElem( cl_name, elname ) ) {
+          errstr = QString("TDataSet::fromDom: fail to create obj %1 %2 ")
+                   .arg(cl_name).arg(elname);
+          qWarning() << errstr << NWHE;
+          continue; // for conversion: ignore unknown
+          // return false;
+        }
+      }
+
+      TDataSet* ob = getElemT<TDataSet*>( elname );
+      if( !ob ) {
+        errstr = QString("TDataSet::fromDom: fail to find created obj %1 %2 in %3")
+                 .arg(cl_name).arg(elname).arg( objectName() );
+        qWarning() << errstr << NWHE;
+        return false;
+      }
+
+      if( ! ob->fromDom( ee, errstr ) ) {
+        return false;
+      }
+
+    } else if( tagname == "param" ) {  // ---------------- simple param
+      QString tp_name = ee.attribute("otype");
+      HolderData *ho = getElem( elname );
+      if( ho && ho->isObject() ) {
+        errstr = QString("TDataSet::fromDom: param \"%1\" is an object type \"%2\" ")
+                 .arg(elname).arg(ho->getType());
+        qWarning() << errstr << NWHE;
+        return false;
+      }
+      if( !ho ) {
+        ho =  addElemP( tp_name, elname );
+        if( !ho  ) {
+          errstr = QString("TDataSet::fromDom: fail to create param \"%1\" in \"%2\" ")
+                   .arg(tp_name).arg(elname);
+          qWarning() << errstr << NWHE;
+          // return false;
+          continue; // ignore unused params
+        }
+      }
+      ho->fromString( getDomText(ee) );
+
+      if( ho->isDyn() ) { // restore params
+        // qDebug() << "dyn param:" << ho->objectName() <<  NWHE;
+        auto attrs = ee.attributes();
+        int asz = attrs.size();
+        for( int i=0; i<asz; ++i ) {
+          QDomNode dann = attrs.item(i);
+          QDomAttr dattr = dann.toAttr();
+          if( dattr.isNull() ) { continue; }
+          QString attr_name = dattr.name();
+          // qDebug() << "dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
+          if( ! attr_name.startsWith( "prm_" ) ) { continue; } // only special names
+          attr_name.remove( 0, 4 ); // remove "prm_";
+          ho->setParm( attr_name, dattr.value() );
+          // qDebug() << "set dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
+        }
+      }
+
+    } else { // ----------- unknown element
+      errstr = QString("TDataSet::fromDom: bad element %1 %2 ")
+               .arg(tagname).arg(elname);
+      qWarning() << errstr << NWHE;
+      return false;
+    }
+  }
+  post_set();
+  reportStructChanged();
+
+  return true;
 }
 
 int HolderData::getMyIndexInParent() const
@@ -1015,6 +1108,33 @@ QStringList HolderData::getEnumStrings( const QString &enum_name ) const
   }
 
   return r;
+}
+
+HolderData* HolderData::addElemToSubP( const QString &subname, const QString &tp, const QString &ob_name )
+{
+  HolderData *sub = getElem( subname );
+  if( !sub ) {
+    // warn
+    return nullptr;
+  }
+  HolderData *ob = sub->addElemP( tp, ob_name );
+  return ob;
+}
+
+bool HolderData::addElemToSub( const QString &subname, const QString &tp, const QString &ob_name )
+{
+  HolderData *ho = addElemToSubP( subname, tp, ob_name );
+  return ( ho != nullptr );
+}
+
+bool HolderData::delElemFromSub( const QString &subname, const QString &ob_name )
+{
+  HolderData *sub = getElem( subname );
+  if( !sub ) {
+    // warn
+    return false;
+  }
+  return sub->del_obj( ob_name );
 }
 
 QAbstractItemModel* HolderData::getComplModel( const QString &targ, QObject *mdl_par ) const
@@ -2222,128 +2342,6 @@ QDomElement TDataSet::toDom( QDomDocument &dd ) const
   return de;
 }
 
-static QString getDomText( QDomNode &p )
-{
-  QString r;
-  for( QDomNode no = p.firstChild(); !no.isNull() ; no = no.nextSibling() ) {
-    if ( ! no.isText() ) {
-      continue;
-    }
-    QDomText t = no.toText();
-    r += t.data();
-  }
-  return r;
-}
-
-bool HolderData::fromDom( QDomElement &de, QString &errstr )
-{
-  auto old_updSuspended = updSuspended;
-  updSuspended = true;
-  bool ok = fromDom_real( de, errstr );
-
-  updSuspended = old_updSuspended;
-  return ok;
-}
-
-bool HolderData::fromDom_real( QDomElement &de, QString &errstr )
-{
-  for( QDomNode no = de.firstChild(); !no.isNull() ; no = no.nextSibling() ) {
-
-    if ( ! no.isElement() ) {
-      continue;
-    }
-
-    QDomElement ee = no.toElement();
-    QString elname = ee.attribute( "name" );
-    QString tagname = ee.tagName();
-
-    if( tagname == "obj" ) {  // ------------------------------- object
-      QString cl_name = ee.attribute("otype");
-      if( cl_name.isEmpty() ) {
-        errstr = QString( "err: element \"%1\" without type" ).arg(elname);
-        qWarning() << errstr << NWHE;
-        return false;
-      }
-      HolderData *ho = getElem( elname );
-      if( ho && ! ho->isObject() ) {
-        errstr = QString("err: read elem \"%1\" failed. "
-            "required: \"%2\" but have \"%3\" in \"%4\"" )
-                .arg(elname).arg(tagname).arg(ho->getType()).arg( getFullName() );
-        qWarning() << errstr << NWHE;
-        return false;
-      }
-      if( !ho ) { // name not found
-        if( ! add_obj( cl_name, elname ) ) {
-          errstr = QString("TDataSet::fromDom: fail to create obj %1 %2 ")
-                   .arg(cl_name).arg(elname);
-          qWarning() << errstr << NWHE;
-          continue; // for conversion: ignore unknown
-          // return false;
-        }
-      }
-
-      TDataSet* ob = getElemT<TDataSet*>( elname );
-      if( !ob ) {
-        errstr = QString("TDataSet::fromDom: fail to find created obj %1 %2 in %3")
-                 .arg(cl_name).arg(elname).arg( objectName() );
-        qWarning() << errstr << NWHE;
-        return false;
-      }
-
-      if( ! ob->fromDom( ee, errstr ) ) {
-        return false;
-      }
-
-    } else if( tagname == "param" ) {  // ---------------- simple param
-      QString tp_name = ee.attribute("otype");
-      HolderData *ho = getElem( elname );
-      if( ho && ho->isObject() ) {
-        errstr = QString("TDataSet::fromDom: param \"%1\" is an object type \"%2\" ")
-                 .arg(elname).arg(ho->getType());
-        qWarning() << errstr << NWHE;
-        return false;
-      }
-      if( !ho ) {
-        ho =  add_param( tp_name, elname );
-        if( !ho  ) {
-          errstr = QString("TDataSet::fromDom: fail to create param \"%1\" in \"%2\" ")
-                   .arg(tp_name).arg(elname);
-          qWarning() << errstr << NWHE;
-          // return false;
-          continue; // ignore unused params
-        }
-      }
-      ho->fromString( getDomText(ee) );
-
-      if( ho->isDyn() ) { // restore params
-        // qDebug() << "dyn param:" << ho->objectName() <<  NWHE;
-        auto attrs = ee.attributes();
-        int asz = attrs.size();
-        for( int i=0; i<asz; ++i ) {
-          QDomNode dann = attrs.item(i);
-          QDomAttr dattr = dann.toAttr();
-          if( dattr.isNull() ) { continue; }
-          QString attr_name = dattr.name();
-          // qDebug() << "dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
-          if( ! attr_name.startsWith( "prm_" ) ) { continue; } // only special names
-          attr_name.remove( 0, 4 ); // remove "prm_";
-          ho->setParm( attr_name, dattr.value() );
-          // qDebug() << "set dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
-        }
-      }
-
-    } else { // ----------- unknown element
-      errstr = QString("TDataSet::fromDom: bad element %1 %2 ")
-               .arg(tagname).arg(elname);
-      qWarning() << errstr << NWHE;
-      return false;
-    }
-  }
-  post_set();
-  reportStructChanged();
-
-  return true;
-}
 
 void TDataSet::do_post_set()
 {

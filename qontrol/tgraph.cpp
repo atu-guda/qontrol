@@ -973,7 +973,7 @@ int TGraph::addOutArr( const QString &o_name )
     nm = nm0 + QSN( j );
   }
 
-  GraphElem *ge = addObj<GraphElem>( nm );
+  GraphElem *ge = addElemT<GraphElem>( nm );
   if( !ge ) {
     qWarning() << " Fail to create GraphElem " <<  nm << NWHE;
     return 0;

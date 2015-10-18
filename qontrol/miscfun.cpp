@@ -12,6 +12,7 @@
 #include <QString>
 #include <QRegExp>
 #include <QMessageBox>
+#include <QDomNode>
 #include <QDebug>
 
 #include "miscfun.h"
@@ -301,6 +302,20 @@ bool editObj( QWidget *par, HolderData *obj )
   delete dia;
   return( rc == QDialog::Accepted );
 }
+
+QString getDomText( QDomNode &p )
+{
+  QString r;
+  for( QDomNode no = p.firstChild(); !no.isNull() ; no = no.nextSibling() ) {
+    if ( ! no.isText() ) {
+      continue;
+    }
+    QDomText t = no.toText();
+    r += t.data();
+  }
+  return r;
+}
+
 
 
 // ****************************************
