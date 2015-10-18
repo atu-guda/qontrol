@@ -697,8 +697,6 @@ class InputAbstract : public TDataSet {
   const TDataSet* getSourceObj() const { return src_obj; };
   //* returns type of link
   ltype_t getLinkType() const { return linkType; };
-  double* targ_addr() const { return targ; };
-  int getTargetFlag() const { return target_flag; }
   void readInput() { out0 = *p; };
  protected:
   virtual void do_post_set() override;
@@ -709,13 +707,11 @@ class InputAbstract : public TDataSet {
 
   PRM_STRING( source, efNoRunChange, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
   PRM_STRING( label,  efNoRunChange, "Label", "Label to display on structure", "max=64"  );
-  PRM_STRING( tparam, efNoRunChange, "Target", "Name of target (depends of type)", "max=128\nprops=STRING,SIMPLE,INNERLINK\ncmpl=prm"  );
   PRM_INT( x_shift, 0, "X shift", "Shift on x-part of link represenration", "sep=col" );
   PRM_INT( y_shift, 0, "Y shift", "Shift on y-part of link represenration", "" );
   PRM_INT( line_w,  0, "Line width", "Line width on scheme", "def=1\nmin=0\nmax=20" );
   PRM_COLOR( line_color,  0, "Line color", "Line color on scheme", "def=black" );
   PRM_SWITCH( onlyLabel, 0, "only Label", "draw only label of link on scheme", "" );
-
   PRM_DOUBLE( out0, efInner, "input", "Readed by readInput for subschemes", "" );
 
   static const double fake_in;
@@ -723,10 +719,6 @@ class InputAbstract : public TDataSet {
   const double *p = &fake_in;
   const TDataSet *src_obj = nullptr;
   ltype_t linkType = LinkBad;
-
-  double fake_target = 0;
-  double *targ = &fake_target;
-  int target_flag = 0;
 
   Q_CLASSINFO( "nameHintBase",  "inx_" );
   DCL_DEFAULT_STATIC;
@@ -769,14 +761,20 @@ class InputParam : public InputAbstract {
   DCL_STD_INF;
   operator double() const { return *p; };
   const double* caddr() const { return p; };
+  double* targ_addr() const { return targ; };
   int getOnlyFirst() const { return onlyFirst; }
+  int getTargetFlag() const { return target_flag; }
  protected:
   virtual void do_post_set() override;
   /** find and set link to  from (fake)  source to (fake) target */
   virtual void set_link() override;
 
+  PRM_STRING( tparam, efNoRunChange, "Param", "Name of param target", "max=128\nprops=STRING,SIMPLE,INNERLINK\ncmpl=prm\nsep=block"  );
   PRM_SWITCH( onlyFirst, 0, "only First", "apply only at start of run", "" );
 
+  double fake_target = 0;
+  double *targ = &fake_target;
+  int target_flag = 0;
 
   Q_CLASSINFO( "nameHintBase",  "p_" );
   DCL_DEFAULT_STATIC;
