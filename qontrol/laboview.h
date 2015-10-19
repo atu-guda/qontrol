@@ -73,7 +73,8 @@ class LaboView : public CommonSubwin
    //* edit some model object
    // bool editObj( HolderData *obj, bool resetModel = true );
    //* returns name of current object in given view
-   QString getSelName( QAbstractItemView *view );
+   QString getViewSelName( QAbstractItemView *view ) const;
+   HolderData* getViewSelObj( QAbstractItemView *view ) const;
    virtual bool callSlot( const char *nm );
    virtual bool checkSlot( const char *nm );
 

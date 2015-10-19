@@ -173,7 +173,7 @@ int LaboView::getLevel() const
   return sview->getLevel();
 }
 
-QString LaboView::getSelName( QAbstractItemView *view )
+QString LaboView::getViewSelName( QAbstractItemView *view ) const
 {
   if( !view ) {
     return QString();
@@ -191,11 +191,29 @@ QString LaboView::getSelName( QAbstractItemView *view )
   return cs.data( Qt::DisplayRole ).toString();
 }
 
+HolderData* LaboView::getViewSelObj( QAbstractItemView *view ) const
+{
+  QString nm = getViewSelName( view );
+  if( nm.isEmpty() ) {
+    return nullptr;
+  }
+  HolderData *po = qobject_cast<HolderData*>( view->model() );
+  if( !po ) {
+    return nullptr;
+  }
+  HolderData *obj =  po->getObj( nm );
+  if( obj ) {
+    return obj;
+  }
+  qWarning() << "not found object " << nm << " in " << po->getFullName() << WHE;
+  return nullptr;
+}
+
+
 QSize LaboView::svSize() const
 {
   return scrollArea->size();
 }
-
 
 
 void LaboView::update()
@@ -269,7 +287,7 @@ bool LaboView::prepareSomething( QAbstractItemView *view, QString &subname, QStr
     return false;
   }
   subname = view->model()->objectName();
-  nm = getSelName( view );
+  nm = getViewSelName( view );
   if( nm.isEmpty() ) {
     return false;
   }
@@ -575,14 +593,8 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
 {
   DatasInfo di;
 
-  QString nm = getSelName( outs_view );
-  if( nm.isEmpty() ) {
-    qWarning() << "output array not selected" << WHE;
-    return;
-  }
-  auto arr = model->getOutArr( nm );
+  TOutArr *arr = qobject_cast<TOutArr*>( getViewSelObj( outs_view ) );
   if( !arr ) {
-    qWarning() << "fail to find output array " <<  nm << WHE;
     return;
   }
 
@@ -623,12 +635,7 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
 
 void LaboView::exportOut()
 {
-  QString nm = getSelName( outs_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  TOutArr *arr = model->getOutArr( nm );
+  TOutArr *arr = qobject_cast<TOutArr*>( getViewSelObj( outs_view ) );
   if( !arr ) {
     return;
   }
@@ -703,15 +710,11 @@ void LaboView::renameGraph()
 
 void LaboView::showGraph()
 {
-  QString nm = getSelName( plots_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  TGraph *gra = model->getGraph( nm );
+  TGraph *gra = qobject_cast<TGraph*>( getViewSelObj( plots_view ) );
   if( !gra ) {
     return;
   }
+
   LaboWin *mwin = LaboWin::win();
   if( !mwin ) { return;  }
 
@@ -729,12 +732,12 @@ void LaboView::showGraph()
 
 void LaboView::graphAddOut()
 {
-  QString nm_o = getSelName( outs_view );
+  QString nm_o = getViewSelName( outs_view );
   if( nm_o.isEmpty() ) {
     return;
   }
 
-  QString nm_g = getSelName( plots_view );
+  QString nm_g = getViewSelName( plots_view );
   if( nm_g.isEmpty() ) {
     return;
   }
@@ -745,11 +748,7 @@ void LaboView::graphAddOut()
 
 void LaboView::showGraphData()
 {
-  QString nm = getSelName( plots_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-  TGraph *gra = model->getGraph( nm );
+  TGraph *gra = qobject_cast<TGraph*>( getViewSelObj( plots_view ) );
   if( !gra ) {
     return;
   }
@@ -784,15 +783,11 @@ void LaboView::showGraphData()
 
 void LaboView::exportGraphData()
 {
-  QString nm = getSelName( plots_view );
-  if( nm.isEmpty() ) {
+  TGraph *gra = qobject_cast<TGraph*>( getViewSelObj( plots_view ) );
+  if( !gra ) {
     return;
   }
 
-  TGraph *gra = model->getGraph( nm );
-  if( !gra  ) {
-    return;
-  }
   QString fnq = QFileDialog::getSaveFileName( this, tr("Export data"), "",
       "Data files (*.txt *.dat *.csv);;All files (*)" );
   if( fnq.isEmpty() ) {
@@ -866,7 +861,7 @@ void LaboView::selectSimul() // TODO: propagate to all
 
 void LaboView::setActiveSimul()
 {
-  QString nm = getSelName( sims_view );
+  QString nm = getViewSelName( sims_view );
   if( nm.isEmpty() ) {
     return;
   }
@@ -950,17 +945,13 @@ void LaboView::delScheme()
 
 void LaboView::editScheme() // special: separate window
 {
-  QString nm = getSelName( schems_view );
-  if( nm.isEmpty()  || nm == QSL( "main_s" ) ) {
-    return;
-  }
-  LaboWin *mwin = LaboWin::win();
-  if( !mwin ) {
+  Scheme *sch = qobject_cast<Scheme*>( getViewSelObj( schems_view ) );
+  if( !sch || sch->objectName() == QSL("main_s") ) {
     return;
   }
 
-  Scheme *sch = model->getScheme( nm );
-  if( !sch ) {
+  LaboWin *mwin = LaboWin::win();
+  if( !mwin ) {
     return;
   }
 
