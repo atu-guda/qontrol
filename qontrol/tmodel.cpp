@@ -499,28 +499,30 @@ TGraph* TModel::getGraph( const QString &name )
 }
 
 
-int TModel::addOut( const QString &outname, const QString &objname )
+TOutArr* TModel::addOut( const QString &outname, const QString &objname )
 {
   if( !outs ) {
-    return 0;
+    return nullptr;
   }
   TOutArr *arr = outs->addObjT<TOutArr>( outname );
   if( !arr ) {
-    return 0;
+    return nullptr;
   }
 
   arr->setData( "name", objname );
 
   QString lbl = objname;
-  if( lbl.left(4) == "out_" )
-    lbl.remove(0,4);
-  if( lbl.left(1) == ":" )
-    lbl.remove(0,1);
+  if( lbl.left( 4 ) == QSL("out_") ) {
+    lbl.remove( 0, 4 );
+  }
+  if( lbl.left( 1 ) == ":" ) {
+    lbl.remove( 0, 1 );
+  }
 
   arr->setData( "label", lbl );
 
   reset();
-  return 1;
+  return arr;
 }
 
 // ------------------------------------------

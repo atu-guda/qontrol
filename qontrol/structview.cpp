@@ -627,7 +627,7 @@ int StructView::checkState( CheckType ctp )
 QString StructView::getSchemeName() const
 {
   if( !sch ) {
-    return "? No Scheme! ?";
+    return QString();
   }
   return sch->getFullName();
 }
@@ -665,8 +665,9 @@ void StructView::addElm()
 
 void StructView::delElm()
 {
-  if( ! checkState( selCheck ) )
+  if( ! checkState( selCheck ) ) {
     return;
+  }
 
   QString oname = selObj->objectName();
 
@@ -691,7 +692,7 @@ void StructView::editElm()
   bool ok = editObj( this, selObj );
   if( ok ) {
     update();
-    // model->reset();
+    // model->reset(); // TODO: when need?
     emit viewChanged();
   }
 }
@@ -772,8 +773,6 @@ void StructView::qplinkElm()
   }
 
   pi->setData( "source", toname );
-  pi->setData( "line_w", 2 );
-  pi->setData( "line_color", "red" );
 
   sch->reportStructChanged();
   sch->reset();

@@ -85,8 +85,8 @@ class TModel : public TDataSet  {
 
   // interface to commands like above, but with names - to use from JS
  public slots:
-  //* adderts new out array @returns: 0 - bad, !=0 - Ok
-  int addOut( const  QString &outname, const QString &objname );
+  //* adderts new out array
+  TOutArr* addOut( const  QString &outname, const QString &objname );
   //* delete outs by name, return !=0 id success
   int delOut( const QString &name );
 

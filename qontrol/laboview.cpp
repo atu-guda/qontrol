@@ -158,14 +158,14 @@ int LaboView::getSel() const
   return sview->getSel();
 }
 
-TMiso* LaboView::getSelObj() const
+TMiso* LaboView::getSelElm() const
 {
-  return sview->getSelObj();
+  return sview->getSelElm();
 }
 
-TMiso* LaboView::getMarkObj() const
+TMiso* LaboView::getMarkElm() const
 {
-  return sview->getMarkObj();
+  return sview->getMarkElm();
 }
 
 int LaboView::getLevel() const
@@ -493,63 +493,31 @@ void LaboView::pasteElm()
 
 void LaboView::addOut() // TODO: common
 {
-  int rc;
-  QString onameq, enameq;
+  QString tgt_nm, out_nm;
 
-  TMiso *selObj = sview->getSelObj();
+  TMiso *selElm = sview->getSelElm();
 
-  if( selObj ) {
-    enameq = selObj->objectName();
-    onameq = QString("out_") + QString(enameq);
+  if( selElm ) {
+    tgt_nm = selElm->objectName();
+    out_nm = QSL("out_") % tgt_nm;
   } else {
-    enameq = "t";
-    onameq = QString("out_t");
+    tgt_nm = QSL("t");
+    out_nm = QSL("out_t");
   };
 
-  auto dia = new QDialog( this );
-  dia->setWindowTitle( "Creating new output array" );
-
-  auto lay = new QGridLayout( dia );
-
-  auto lab1 = new QLabel( "Output array name", dia );
-  lay->addWidget( lab1, 0, 0 );
-
-  auto oname_ed = new QLineEdit( dia );
-  oname_ed->setMaxLength( MAX_NAMELEN-1 );
-  oname_ed->setText( onameq ); oname_ed->setFocus();
-  lay->addWidget( oname_ed, 0, 1 );
-
-  auto lab2 = new QLabel( "Element name",  dia );
-  lay->addWidget( lab2, 1, 0 );
-
-  auto ename_ed = new QLineEdit( dia );
-  ename_ed->setMaxLength( MAX_NAMELEN-1 );
-  ename_ed->setText( enameq );
-  lay->addWidget( ename_ed, 1, 1 );
-
-  auto bbox
-    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  lay->addWidget( bbox, 2, 0, 1, 2 );
-  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
-  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
-
-  rc = dia->exec();
-  onameq = oname_ed->text(); enameq = ename_ed->text();
-  delete dia;
-  if( rc != QDialog::Accepted ) {
+  bool ok;
+  out_nm = QInputDialog::getText( this, "Creating new output array",
+      "Enter optput array name:", QLineEdit::Normal,
+       out_nm, &ok );
+  if( !ok ) {
     return;
   }
 
-  if( ! isGoodName( onameq ) ) {
-    handleError( this, QString("Bad output name: \"%1\"").arg(onameq) );
-    return;
+  TOutArr *arr;
+  if( (arr = model->addOut( out_nm, tgt_nm ) ) != nullptr ) {
+    editObj( this, arr );
+    emit viewChanged();
   }
-
-  int irc = model->addOut( onameq, enameq );
-  if( !irc  ) {
-    handleError( this, QString("Fail to add Output: \"%1\"").arg(onameq) );
-  }
-  emit viewChanged();
   return;
 }
 
@@ -660,10 +628,6 @@ void LaboView::addGraph()
       "Enter name of new plot:", QLineEdit::Normal,
       grnameq, &ok );
   if( !ok ) {
-    return;
-  }
-  if( ! isGoodName( aname ) ) {
-    handleError( this, QString("Bad plot name: %1").arg(aname) );
     return;
   }
   if( ! model->addGraph( aname ) ) {

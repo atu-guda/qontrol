@@ -94,7 +94,7 @@ void StatusModel::update()
   int mod = model->getModified();
   l_mod->setText( modificationChar[mod] );
 
-  TMiso *ob = mainview->getSelObj();
+  TMiso *ob = mainview->getSelElm();
   if( ob ) {
     QString ob_nm_tp = ob->dataObj( 0, Qt::StatusTipRole ).toString();
     l_name->setText( ob_nm_tp );

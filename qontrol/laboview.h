@@ -167,9 +167,9 @@ class LaboView : public CommonSubwin
    /** returns number of selected element or -1 if none */
    int getSel() const;
    /** returns ptr to selected element or nullptr if none */
-   TMiso* getSelObj() const;
+   TMiso* getSelElm() const;
    /** returns ptr to marked element or nullptr if none */
-   TMiso* getMarkObj() const;
+   TMiso* getMarkElm() const;
    /** returns level for aux objects selection */
    int getLevel() const;
  protected:

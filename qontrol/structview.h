@@ -76,9 +76,9 @@ class StructView : public QWidget  {
     /** returns number of selected element or -1 if none */
     int getSel() const { return sel; }
     /** returns ptr to selected element or nullptr if none */
-    TMiso* getSelObj() const { return selObj; }
+    TMiso* getSelElm() const { return selObj; }
     /** returns ptr to marked element or nullptr if none */
-    TMiso* getMarkObj() const { return markObj; }
+    TMiso* getMarkElm() const { return markObj; }
     /** returns level for aux objects selection */
     int getLevel() const { return level; }
     int checkState( CheckType ctp );
