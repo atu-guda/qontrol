@@ -2389,42 +2389,6 @@ void TDataSet::do_post_set()
   // do nothing
 };
 
-void TDataSet::registerInput( InputSimple *inp )
-{
-  if( ! inp ) {
-    return;
-  }
-  if( inputs.indexOf( inp ) != -1 ) {
-    qWarning() << "input " << inp->objectName() << "is  already registered" << NWHE;
-    return;
-  }
-  inputs.push_back( inp );
-}
-
-void TDataSet::unregisterInput( InputSimple *inp )
-{
-  if( ! inp ) {
-    return;
-  }
-
-  int idx = inputs.indexOf( inp );
-  if( idx == -1 ) {
-    qWarning() << "input " << inp->objectName() << "is not registered" << NWHE;
-    return;
-  }
-  inputs.remove( idx );
-}
-
-InputSimple* TDataSet::getInput( int n ) const
-{
-  if( n < 0 || n >= inputs.size() ) {
-    qWarning() << "bad input number " << n << " sz: " << inputs.size() << NWHE;
-    return nullptr;
-  }
-  return inputs[n];
-}
-
-
 
 // ------------------------------------ InputAbstract ---------
 //
@@ -2435,12 +2399,10 @@ const double InputAbstract::one_in {1.0};
 
 CTOR(InputAbstract,TDataSet)
 {
-  // child may register itself to parent
 }
 
 InputAbstract::~InputAbstract()
 {
-  // child may unregister itself from parent
 }
 
 
@@ -2505,18 +2467,10 @@ STD_CLASSINFO(InputSimple,clpInput|clpSpecial);
 
 CTOR(InputSimple,InputAbstract)
 {
-  TDataSet *ds = qobject_cast<TDataSet*>( par );
-  if( ds ) {
-    ds->registerInput( this );
-  }
 }
 
 InputSimple::~InputSimple()
 {
-  TDataSet *ds = qobject_cast<TDataSet*>( par );
-  if( ds ) {
-    ds->unregisterInput( this );
-  }
 }
 
 

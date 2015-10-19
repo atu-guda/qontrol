@@ -1,17 +1,16 @@
 Subscheme libs.
 Selections in views/document
-Common code in LaboView (new.clone...)
 Shadow main scheme?
 Move inputs to TMiso or parent of TMiso, Scheme....
 Create Action fun + subclass QAction? (menu to place, flags)
 Controlled Scheme size.
 Long descriptions in schems, plots .... (button)
-Libriares.
 Whan to [re]create shadow objects?
 StatusModel link to StructView, not to LaboView?
 Check: when to reset model?
 Check: update link values only after step - prep for multi-threading (see TSubScheme)
 Combine list views
+Error handling (from inner to iface)
 New buttons for ObjDataWidget: need better (simple) labels.
 Indicate corresponding outs for selected plot
 Customized colors: struct view...

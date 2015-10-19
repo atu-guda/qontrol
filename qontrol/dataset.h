@@ -648,8 +648,6 @@ class HolderStringArray : public HolderValue {
 /** base class for all non-trivial data objects */
 class TDataSet : public HolderData {
   Q_OBJECT
-  friend class InputSimple; // for register
-  friend class InputParam; //  same
  public:
    DCL_CTOR(TDataSet);
    virtual ~TDataSet() override;
@@ -675,18 +673,9 @@ class TDataSet : public HolderData {
    // via getDoublePtr
    virtual const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt = nullptr,
         const TDataSet **src_ob = nullptr, int lev = 0 ) const;
-   /** return number of inputs */
-   int inputsCount() const { return inputs.size(); };
-   /** returns input by number */
-   InputSimple* getInput( int n ) const;
    /** gets pointer to parameter, near to getDoublePtr
     * for param mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
- protected:
-   /** register input (call by ctor) in inputs */
-   void registerInput( InputSimple *inp );
-   /** unregister input (call by dtor) from inputs */
-   void unregisterInput( InputSimple *inp );
  protected:
    /** Place for inputs. Parametric inputs is in the TMiso::pis */
    QVector<InputSimple*> inputs;

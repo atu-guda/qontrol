@@ -194,7 +194,7 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   ob->getData( "flip", &ei.flip );
   ob->getData( "noIcon", &ei.noIcon );
   ei.flip_factor = ei.flip ? 1 : -1;
-  ei.n_inp = ob->inputsCount();
+  ei.n_inp = ob->countObjsOfType( QSL("InputSimple") );
 
   ei.xs0 = lm + ei.vis_x * grid_sz;
   ei.ys0 = lm + ei.vis_y * grid_sz;
@@ -348,14 +348,15 @@ void StructView::drawAll( QPainter &p )
     p.setBrush( Qt::NoBrush );
 
     // ordinary inputs
-    for( int i_in=0; i_in < ei.n_inp; ++i_in ) {
-      const InputSimple *in = ob->getInput( i_in );
+    int i_in=0;
+    for( const InputSimple *in : ob->TCHILD(const InputSimple*) ) {
+      ++i_in;
       if( ! in ) {
         continue;
       }
       ltype_t lt = in->getLinkType();
       const TDataSet* sobj = in->getSourceObj();
-      li_dst_y = ei.ys + (i_in+1)*in_sep_sz;
+      li_dst_y = ei.ys + i_in*in_sep_sz;
       int line_width = in->getDataD( "line_w", 1 );
       int x_shift    = in->getDataD( "x_shift", 0 );
       int y_shift    = in->getDataD( "y_shift", 0 );
@@ -437,7 +438,7 @@ void StructView::drawAll( QPainter &p )
 
 
     // ----------- parametric inputs
-    int i_in=0;
+    i_in=0;
     in_sep_sz = obj_sz/(ei.n_pinp+1);
     for( const auto ips : ei.pis->TCHILD(const InputParam*) ) { // const? TODO: check
 
@@ -599,7 +600,7 @@ int StructView::checkState( CheckType ctp )
                        msg = "You must select object to do this";
                      break;
     case linkToCheck:
-                     if( !selObj || !markObj || level < 0  || level >=4 )
+                     if( !selObj || !markObj || level < 0 )
                        msg = "You need selected and marked objects to link";
                      break;
     case noselCheck: if( selObj != nullptr )
@@ -733,8 +734,14 @@ void StructView::qlinkElm()
 
   // TODO: its model action. really? model dont know about selected and marked.
 
-  InputSimple *in = selObj->getInput( level );
+  auto inputs =  selObj->TCHILD(InputSimple*);
+  if( level < 0 || level >= inputs.size() ) {
+    qWarning() << "bad level " << level << " to link " << selObj->getFullName() << WHE;
+    return;
+  }
+  InputSimple *in = inputs[ level ];
   if( ! in ) {
+    qWarning() << "in == nullptr in " << selObj->getFullName() << WHE;
     return;
   }
   if( ! in->setData( "source", toname ) ) {
@@ -786,14 +793,11 @@ void StructView::unlinkElm()
   }
 
   QString lnkname;
-  QString empty_str("");
-  int ni = selObj->inputsCount();
-  for( int i=0; i<ni; ++i ) {
-    InputSimple *in = selObj->getInput( i );
+  for( InputSimple *in : selObj->TCHILD(InputSimple*) ) {
     if( ! in ) {
       continue;
     }
-    in->setData( "source", empty_str );
+    in->setData( "source", QSL("") );
   }
 
   InputParams *pis = selObj->getObjT<InputParams*>("pis");
