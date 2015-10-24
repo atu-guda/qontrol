@@ -22,7 +22,7 @@
 STD_CLASSINFO(SubOutput,clpSpecial);
 const double SubOutput::fake_in {0};
 
-CTOR(SubOutput,TDataSet)
+CTOR(SubOutput,LinkedObj)
 {
 }
 
@@ -49,7 +49,7 @@ bool SubOutput::set_link()
   }
 
   ltype_t lt;
-  const TDataSet *srct = nullptr;
+  const LinkedObj *srct = nullptr;
   const double *cp = sch->getDoublePtr( source, &lt, &srct, 0 );
   if( lt == LinkElm || lt == LinkSpec ) {
     p = cp;  src_obj = srct; linkType = lt;
@@ -62,7 +62,7 @@ bool SubOutput::set_link()
 
 // QVariant SubOutput::dataObj( int col, int role ) const
 // {
-//   return TDataSet::dataObj( col, role );
+//   return LinkedObj::dataObj( col, role );
 // }
 
 
@@ -92,7 +92,7 @@ TSubScheme::~TSubScheme()
 double TSubScheme::f( double t )
 {
   double v = 0;
-  for( auto in : inputs ) {
+  for( auto in : TCHILD(InputSimple*) ) {
     in->readInput();
     v = *in; // TMP: check
   }
@@ -182,7 +182,7 @@ void TSubScheme::do_post_set()
   // if( !sch_proto ) {
   //   qWarning() << "Fail to find prototype cheme " << sch_name << NWHE; // Not here!
   // }
-  return TDataSet::do_post_set();
+  return LinkedObj::do_post_set();
 }
 
 DEFAULT_FUNCS_REG(TSubScheme)

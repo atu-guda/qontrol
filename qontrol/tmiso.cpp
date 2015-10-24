@@ -31,7 +31,7 @@ const char* TMiso::helpstr = "<H1>TMiso</H1>\n"
 STD_CLASSINFO(TMiso,clpSpecial|clpPure);
 
 
-CTOR(TMiso,TDataSet) ,
+CTOR(TMiso,LinkedObj) ,
        pis( new InputParams( "pis", this, 0, "param links",
                              "object paramitric links", "sep=blockend") )
 {

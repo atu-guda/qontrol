@@ -24,7 +24,7 @@ const char* Simulation::helpstr = "<H1>Simulation</H1>\n"
 
 STD_CLASSINFO(Simulation,clpSpecial | clpContainer);
 
-CTOR(Simulation,TDataSet)
+CTOR(Simulation,LinkedObj)
 {
   show_active = true;
   // allowed_types = "double"; // double + inputs? TODO: check alias
@@ -49,7 +49,7 @@ QIcon Simulation::getIcon() const
 
 void Simulation::do_post_set()
 {
-  TDataSet::do_post_set();
+  LinkedObj::do_post_set();
 
   n1_eff = n2_eff = 1;
   if( runType > Simulation::runSingle ) {

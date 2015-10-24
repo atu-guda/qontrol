@@ -33,7 +33,7 @@ const char* Scheme::helpstr = "<H1>Scheme</H1>\n"
 
 STD_CLASSINFO(Scheme,clpSpecial | clpContainer);
 
-CTOR(Scheme,TDataSet)
+CTOR(Scheme,LinkedObj)
 {
   allowed_types = "TMiso";
   const int ELM_RES = 64;
@@ -46,7 +46,7 @@ Scheme::~Scheme()
 
 // must be similar to fillComplModelForInputs
 const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
-        const TDataSet **src_ob, int lev) const
+        const LinkedObj **src_ob, int lev) const
 {
   static ltype_t clt;
   static const double fake_src = 0.123456; // ptr here for non- main_s schemes uplinks
@@ -54,7 +54,7 @@ const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
 
   if( nm.startsWith( '^' ) ) { // direct to parent
     QString nnm = nm.mid( 1 );
-    TDataSet *pds = qobject_cast<TDataSet*>( par );
+    LinkedObj *pds = qobject_cast<LinkedObj*>( par );
     if( !pds ) {
       *plt = LinkBad; return nullptr;
     }
@@ -335,7 +335,7 @@ int Scheme::linkNames()
 
 void Scheme::do_structChanged()
 {
-  TDataSet::do_structChanged();
+  LinkedObj::do_structChanged();
   linkNames();
 }
 
@@ -372,7 +372,7 @@ const char* ContScheme::helpstr = "<H1>ContScheme</H1>\n"
 
 STD_CLASSINFO(ContScheme,clpSpecial | clpContainer);
 
-CTOR(ContScheme,TDataSet)
+CTOR(ContScheme,LinkedObj)
 {
   allowed_types = "Scheme,+SPECIAL";
 }

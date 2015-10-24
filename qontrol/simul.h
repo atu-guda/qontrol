@@ -18,14 +18,14 @@
 #ifndef SIMUL_H
 #define SIMUL_H
 
-#include "dataset.h"
+#include "linkedobj.h"
 
 
 /** Description of simulation
   *@author atu
   */
 
-class Simulation : public TDataSet  {
+class Simulation : public LinkedObj  {
   Q_OBJECT
  public:
   DCL_CTOR(Simulation);

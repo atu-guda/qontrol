@@ -22,6 +22,7 @@ SOURCES += \
   dataset.cpp \
   elemfact.cpp \
   inputparams.cpp \
+  linkedobj.cpp \
   main.cpp \
   miscfun.cpp \
   mo2settdlg.cpp \
@@ -96,6 +97,7 @@ HEADERS += \
   dataset.h \
   defs.h \
   inputparams.h \
+  linkedobj.h \
   miscfun.h \
   mo2settdlg.h \
   colorbtn.h \

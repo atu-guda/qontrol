@@ -23,7 +23,7 @@
 #ifndef TMISO_H
 #define TMISO_H
 
-#include "dataset.h"
+#include "linkedobj.h"
 #include "inputparams.h"
 
 /** iteration type */
@@ -43,7 +43,7 @@ class TModel; class Scheme;
  *
  */
 
-class TMiso : public TDataSet  {
+class TMiso : public LinkedObj  {
   Q_OBJECT
  public:
    DCL_CTOR(TMiso);

@@ -124,7 +124,7 @@ void TOutArr::do_reset()
   // TODO: move to separate functions and call here and after struct changed ???
   so = nullptr;
   TModel *mod = getAncestorT<TModel>();
-  ltype_t lt; const TDataSet *so_ob;
+  ltype_t lt; const LinkedObj *so_ob;
   if( mod  &&  type != OutArrType::outSpec ) {
     so = mod->getSchemeDoublePtr( name, &lt, &so_ob, 0 );
   }

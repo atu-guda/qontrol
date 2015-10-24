@@ -521,7 +521,7 @@ void StructView::drawAll( QPainter &p )
       src_name = arr->getDataD( "name", QString() );
       int out_tp = arr->getDataD( "type", -1 );
       ltype_t lt  = LinkBad;
-      const TDataSet *lob = nullptr;
+      const LinkedObj *lob = nullptr;
       const double *fp = sch->getDoublePtr( src_name, &lt, &lob );
 
       if( !fp || lt != LinkElm || !lob ) {

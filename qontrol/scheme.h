@@ -18,6 +18,7 @@
 #ifndef SCHEME_H
 #define SCHEME_H
 
+#include "linkedobj.h"
 #include "tmiso.h"
 #include "toutarr.h"
 #include "simul.h"
@@ -27,7 +28,7 @@
   *@author atu
   */
 
-class Scheme : public TDataSet  {
+class Scheme : public LinkedObj  {
   Q_OBJECT
  public:
   DCL_CTOR(Scheme);
@@ -36,7 +37,7 @@ class Scheme : public TDataSet  {
   DCL_STD_INF;
 
   const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt,
-        const TDataSet **src_ob, int lev ) const override;
+        const LinkedObj **src_ob, int lev ) const override;
   /** function to call from elem.f() to signal something */
   virtual int fback( int code, int aord, const QString &tdescr );
 
@@ -98,7 +99,7 @@ class Scheme : public TDataSet  {
 
 // ------------------ container of Schemes --------------
 
-class ContScheme : public TDataSet {
+class ContScheme : public LinkedObj {
    Q_OBJECT
   public:
    DCL_CTOR(ContScheme);

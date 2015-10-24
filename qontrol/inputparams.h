@@ -18,14 +18,14 @@
 #ifndef INPUTPARAMS_H
 #define INPUTPARAMS_H
 
-#include "dataset.h"
+#include "linkedobj.h"
 
 
 /**Contains parametric inputs of element
   *@author atu
   */
 
-class InputParams : public TDataSet  {
+class InputParams : public LinkedObj  {
   Q_OBJECT
  public:
   DCL_CTOR(InputParams);

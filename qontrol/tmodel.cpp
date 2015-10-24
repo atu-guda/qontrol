@@ -36,7 +36,7 @@ const char* TModel::helpstr = "<H1>TModel</H1>\n"
 
 STD_CLASSINFO(TModel,clpSpecial | clpContainer);
 
-CTOR(TModel,TDataSet)
+CTOR(TModel,LinkedObj)
 {
   allowed_types = "HolderValue,"
                   "ContScheme,ContSimul,ContOut,ContGraph"; // +SPECIAL
@@ -70,7 +70,7 @@ TModel::~TModel()
 
 // must be in correspondence with fillComplModelForInputs
 const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
-        const TDataSet **src_ob, int lev) const
+        const LinkedObj **src_ob, int lev) const
 {
   const double *rv = nullptr;
 

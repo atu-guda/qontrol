@@ -23,7 +23,7 @@
 
 
 // helper element - get value from inner subscheme
-class SubOutput : public TDataSet {
+class SubOutput : public LinkedObj {
   Q_OBJECT
  public:
   DCL_CTOR(SubOutput);
@@ -42,7 +42,7 @@ class SubOutput : public TDataSet {
 
   static const double fake_in;
   const double *p = &fake_in;
-  const TDataSet *src_obj = nullptr;
+  const LinkedObj *src_obj = nullptr;
   ltype_t linkType = LinkBad;
 
   Q_CLASSINFO( "nameHintBase",  "o_" );
