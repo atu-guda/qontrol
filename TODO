@@ -1,7 +1,9 @@
 Subscheme libs.
+Document: cmdline options, common workflow.
 Selections in views/document
 Shadow main scheme?
 Move inputs to TMiso or parent of TMiso, Scheme....
+QScintilla? Dialog or SubWindow?
 Create Action fun + subclass QAction? (menu to place, flags)
 Controlled Scheme size.
 Long descriptions in schems, plots .... (button)

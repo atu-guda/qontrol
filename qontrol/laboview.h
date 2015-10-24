@@ -207,7 +207,7 @@ class LaboView : public CommonSubwin
 
    int sel_graph = -1;
    // TODO: from file (config)
-   QString scr = R"(main_s.add_obj_datas("TLinear","ob","vis_x=4\nvis_y=1\na0=3.14");)";
+   QString scr = R"(main_s.addObjDatas("TLinear","ob","vis_x=4\nvis_y=1\na0=3.14");)";
    //* copy of LaboWin em;
    int em = 10;
 };
