@@ -25,7 +25,6 @@ const char* TLatch::helpstr = "<H1>TLatch</H1>\n"
  "Parameters: <br>\n"
  "- <b>type</b>. - latch at given time t0 or by in_latch signal;<br>\n"
  "- <b>t0</b>. - time to latch (if type=0);<br>\n"
- "- <b>v_st</b>. - start value;<br>\n"
  "- <b>usePulse</b>. - latch on jump of in_latch (>0.5), not level;<br>\n"
  "- <b>useFirst</b>. - count only first signal to latch, ignore all other;<br>\n"
  "- <b>useAdd</b>. - add current u[0] to value, not set.<br>\n</p>";
@@ -39,7 +38,7 @@ CTOR(TLatch,TMiso)
 
 int TLatch::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  v = (double)v_st; u_old = lt = 0;  wasLatch = -1;
+  v = (double)out0_init; u_old = lt = 0;  wasLatch = -1;
   return 1;
 }
 
@@ -56,14 +55,16 @@ double TLatch::f( double t )
   switch( (int)type ) {
     case latchTime:
       if( t >= t0 ) {
-        if( wasLatch )
+        if( wasLatch ) {
           break;
+        }
         wasLatch = 1; lt = t; v = bv + in_u;
       };
       break;
     case latchSignal:
-      if( useFirst && (wasLatch > 0) )
+      if( useFirst && (wasLatch > 0) ) {
         break;
+      }
       if( usePulse ) {
         ok = ( dv > 0.5 );
       } else {

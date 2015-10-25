@@ -31,10 +31,19 @@ CTOR(TIntegrator,TMiso)
 }
 
 
+void TIntegrator::do_post_set()
+{
+  if( ( out0_init == 0.0 ) && (s_val != 0.0 ) ) {
+    out0_init = (double)s_val; // migration
+  }
+  TMiso::do_post_set();
+}
+
+
 
 int TIntegrator::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  v_old = v = v_a = (double)s_val; // TODO: what about out0_init ?
+  v_old = v = v_a = (double)out0_init;
   t_rst = 0;
   return 1;
 }
@@ -47,7 +56,7 @@ double TIntegrator::f( double /* t */ )
     base = in_base;
   }
   if( useAdd ) {
-    base += s_val;
+    base += out0_init;
   }
   if( useSqIn ) {
     in = in_u * in_u;
@@ -64,7 +73,7 @@ double TIntegrator::f( double /* t */ )
     if( useAver ) {
       v = 0;  v_ret = v_a = in;
     } else {
-      v = v_ret = v_a = s_val;
+      v = v_ret = v_a = out0_init;
     };
     if( useHold ) {
       v_ret = v_old;

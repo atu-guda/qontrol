@@ -48,8 +48,6 @@ class TLatch : public TMiso  {
    PRM_LIST( type, efNRC, "Type", "Latch type", "enum=LatchType" );
    /** time to latch */
    PRM_DOUBLE( t0, efNRC, "Time", "Time to latch" , "sep=col" );
-   /** start value */
-   PRM_DOUBLE( v_st, efNRC, "Start val", "Start value", "" );
    /** current value */
    PRM_DOUBLE( v, efInner, "v", "Current value", "" );
    /** old input  */
