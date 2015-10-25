@@ -22,19 +22,7 @@ using namespace std;
 
 const char* TIntegrator::helpstr = "<H1>TIntegrator</H1>\n"
  "<p>Realistic integrator: <br>\n"
- "Can has limits, discharge, reset, floating base.<br>\n"
- "- <b>ki</b> - coefficient of integration;<br/>\n"
- "- <b>s_val</b> - initial value, may be added to base;<br/>\n"
- "- <b>vmin, vmax</b> - limits. Used if checked flags <b>useMin, UseMax</b>;<br/>\n"
- "- <b>dis</b> - coefficient of discharge.Used if checked flag <b>useDis</b>;<br/>\n"
- "- <b>useReset</b> - set value to <b>base</b> if u[1] > 0.1;<br/>\n"
- "- <b>useBase</b> - use u[3] as base for reset and discharge, def=0;<br/>\n"
- "- <b>useAdd</b> - add <b>s_val</b> to base;<br/>\n"
- "- <b>useHold</b> - on reset, hold old value this step;<br/>\n"
- "- <b>useAver</b> - calculate average value;<br/>\n"
- "- <b>useSqIn</b> - calculate u^2 before processing;<br/>\n"
- "- <b>useSqrOut</b> - calculate \\sqrt(out);<br/>\n"
- "- <b>useMin, useMax</b> - use limits to bound value.</p>";
+ "Can has limits, discharge, reset, floating base.<br></p>\n";
 
 STD_CLASSINFO(TIntegrator,clpElem );
 
@@ -46,7 +34,7 @@ CTOR(TIntegrator,TMiso)
 
 int TIntegrator::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  v_old = v = (double)s_val; // TODO: what about out0_init ?
+  v_old = v = v_a = (double)s_val; // TODO: what about out0_init ?
   t_rst = 0;
   return 1;
 }
@@ -55,14 +43,17 @@ int TIntegrator::do_startLoop( int /*acnx*/, int /*acny*/ )
 double TIntegrator::f( double /* t */ )
 {
   double v_ret, base = 0, in;
-  if( useBase )
+  if( useBase ) {
     base = in_base;
-  if( useAdd )
+  }
+  if( useAdd ) {
     base += s_val;
-  if( useSqIn )
+  }
+  if( useSqIn ) {
     in = in_u * in_u;
-  else
+  }  else {
     in = in_u;
+  }
 
   if( useReset && in_rst > 0.1 ) {
     t_rst = 0;
@@ -71,36 +62,35 @@ double TIntegrator::f( double /* t */ )
   if( t_rst < (tdt/2) ) {  // start or reset case
     v_ret = v;
     if( useAver ) {
-      v = 0;
-      v_ret = in;
-      if( useHold )
-        v_ret = v_old ;
+      v = 0;  v_ret = v_a = in;
     } else {
-      v = v_ret = s_val;
-      if( useHold )
-        v_ret = v_old;
+      v = v_ret = v_a = s_val;
     };
+    if( useHold ) {
+      v_ret = v_old;
+    }
   } else {
     v += in * tdt * ki;
     if( useDis ) {
       v -= tdt * ( v - base ) * dis;
     };
-    if( useMin  &&  v < vmin )
+    if( useMin  &&  v < vmin ) {
       v = (double)vmin;
-    if( useMax  &&  v > vmax )
+    }
+    if( useMax  &&  v > vmax ) {
       v = (double)vmax;
+    }
     v_ret = v;
+    v_a = v_ret  / t_rst;
     if( useAver ) {
-       v_ret = v_ret  / t_rst;
+       v_ret = v_a;
     };
   };
+
   t_rst += tdt; v_old = v_ret;
   if( useSqrOut ) {
-    if( v_ret > 0 )
-      v_ret = sqrt( v_ret );
-    else
-      v_ret = 0;
-  };
+    v_ret = ( v_ret > 0 ) ? sqrt( v_ret ) : 0.0;
+  }
   return v_ret;
 }
 

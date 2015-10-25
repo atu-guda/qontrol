@@ -4,6 +4,7 @@ Selections in views/document
 Shadow main scheme?
 QScintilla? Dialog or SubWindow?
 Create Action fun + subclass QAction? (menu to place, flags)
+TIntergrator: combine s0 and init_out0 (require resave all)
 Controlled Scheme size.
 Long descriptions in schems, plots .... (button)
 Whan to [re]create shadow objects?

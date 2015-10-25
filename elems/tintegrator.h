@@ -38,11 +38,13 @@ class TIntegrator : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    PRM_DOUBLE( ki, 0, "k_i",  "Factor before integral", "def=1" );
-   PRM_DOUBLE( s_val, 0, "Start", "Start value", "" );
+   PRM_DOUBLE( s_val, 0, "Start", "Start value", "" ); // TODO: combine with out0_init
    PRM_DOUBLE( dis, 0, "Disc coeff", "Discharde coeff (if enabled)", "def=1e-4" );
    PRM_DOUBLE( vmin, 0, "Min limit", "Limit min value", "def=-10000" );
    PRM_DOUBLE( vmax, 0, "Max limit", "Limit max value", "def=10000" );
    PRM_DOUBLE( v, efInner, "v", "Current value", "" );
+   PRM_DOUBLE( t_rst, efInner, "t_{rst}", "time from last reset", "" );
+   PRM_DOUBLE( v_a, efInner, "v_a", "Average value", "" );
    /** flags */
    PRM_SWITCH( useMin,   efNRC, "use Min value", "limit output to minimum value", "sep=col" );
    PRM_SWITCH( useMax,   efNRC, "use Max value", "limit output to maximum value", "" );
@@ -57,11 +59,9 @@ class TIntegrator : public TMiso  {
 
    PRM_INPUT( in_u, 0, "input", "Main input",  "sep=block" );
    PRM_INPUT( in_rst, 0, "rst in", "Reset signal", "sep=col" );
-   PRM_INPUT( in_fake, 0, "no in", "no input - anchient artefact",  "sep=col" );
    PRM_INPUT( in_base, 0, "Base in", "Fourth input", "sep=col" );
 
    double v_old = 0;
-   double t_rst = 0;
 
    Q_CLASSINFO( "nameHintBase",  "int_" );
    DCL_DEFAULT_STATIC;
