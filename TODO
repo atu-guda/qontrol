@@ -44,18 +44,23 @@ RunWindow?
 Edit large arrays
 More data/controls: Font, Date, Time
 TCircBuf + TDelay re*
-order -> only hint?
+order -> only hint? or not use at all
 js/large text edit widget + button/dialog + external editor (partial done)?
 
 
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
-  TMovingAver, TDiff
-  -- TDefuzzy, TQuality (TCriterion is busy/TCrit)
+  -- TSumN - variable number of inputs, common factor - to TDefuzzy
+  -- TMovingAver 
+  -- TDiff - TDiffIn?
+  -- TDefuzzy (fixed/variable number of inputs)
+  -- TQuality (TCriterion is busy/TCrit)
   -- Rastrigin and more
-  -- or File Source input/output
+  -- or File Source input/output: TFileSource
+  -- array of similar elements
 may be new field in TClassInfo to misc flags: can f() w/o preRun..., 
     class group.. etc
 implement loading objects in so.
+Abort simulation option in TCriterion
 
 Distributions analysis + plot
 vector icons (language=SVG?) (may be dynamic)
