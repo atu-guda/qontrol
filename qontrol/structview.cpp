@@ -240,11 +240,11 @@ void StructView::drawAll( QPainter &p )
   if( nw >= MODEL_MX ) { nh = MODEL_MX-1; };
 
 
-  // if( isActiveWindow() ) {
-  p.setBrush( Qt::white );
-  // } else {
-  //   p.setBrush( QColor( 200, 200, 200 ) );
-  // }
+  if( hasFocus() ) {
+    p.setBrush( Qt::white );
+  } else {
+    p.setBrush( QColor( 200, 200, 200 ) );
+  }
   p.drawRect( 0, 0, w, h );
 
   // ---------- draw grid

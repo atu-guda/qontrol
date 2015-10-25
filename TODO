@@ -1,4 +1,6 @@
 Subscheme libs.
+Copy/paste schems (for libs), plots, outs. -- may be common code
+Common menu 'Object' with common actions - dispatch to focused
 Document: cmdline options, common workflow.
 Selections in views/document
 Shadow main scheme?
@@ -15,7 +17,6 @@ Error handling (from inner to iface)
 New buttons for ObjDataWidget: need better (simple) labels.
 Indicate corresponding outs for selected plot
 Customized colors: struct view...
-Copy/paste plots, outs.
 Common selection elems/outs/plots?
 Inputs - may be Elements? like TFileSource?
 Dump TOutArr/TGraph commandline (-p/-P)
