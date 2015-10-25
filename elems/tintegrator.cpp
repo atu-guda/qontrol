@@ -31,14 +31,6 @@ CTOR(TIntegrator,TMiso)
 }
 
 
-void TIntegrator::do_post_set()
-{
-  if( ( out0_init == 0.0 ) && (s_val != 0.0 ) ) {
-    out0_init = (double)s_val; // migration
-  }
-  TMiso::do_post_set();
-}
-
 
 
 int TIntegrator::do_startLoop( int /*acnx*/, int /*acny*/ )

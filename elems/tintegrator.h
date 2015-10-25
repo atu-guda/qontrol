@@ -36,11 +36,8 @@ class TIntegrator : public TMiso  {
    virtual double f( double t ) override;
    /** reimplemented from TMiso to init state */
    virtual int do_startLoop( int acnx, int acny ) override;
-   //* TMP: to migrate s_val -> out0_init
-   virtual void do_post_set() override;
 
    PRM_DOUBLE( ki, 0, "k_i",  "Factor before integral", "def=1" );
-   PRM_DOUBLE( s_val, efOld, "Start", "Start value", "" ); // TODO: combine with out0_init
    PRM_DOUBLE( dis, 0, "Disc coeff", "Discharde coeff (if enabled)", "def=1e-4" );
    PRM_DOUBLE( vmin, 0, "Min limit", "Limit min value", "def=-10000" );
    PRM_DOUBLE( vmax, 0, "Max limit", "Limit max value", "def=10000" );
