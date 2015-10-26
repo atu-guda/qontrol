@@ -109,714 +109,766 @@ void LaboWin::registerAction( QAction *act, const char *nm )
 
 void LaboWin::initIface()
 {
-  // first 'X' in name means active always
+  // make manu beforehand
+  pFileMenu = menuBar()->addMenu( tr("&File") );
+  pEditMenu = menuBar()->addMenu( tr("&Edit") );
+  pElmMenu = menuBar()->addMenu( tr("E&lement") );
+  pOutMenu = menuBar()->addMenu( tr("&Out") );
+  pGraphMenu = menuBar()->addMenu( tr("&Plot") );
+  pSimulMenu = menuBar()->addMenu( tr("&Simulation") );
+  pModelMenu = menuBar()->addMenu( tr("&Model") );
+  pRunMenu = menuBar()->addMenu( tr("&Run") );
+  pViewMenu = menuBar()->addMenu( tr("&View") );
+  pWindowMenu = menuBar()->addMenu( tr("&Window") );
+  pHelpMenu = menuBar()->addMenu( tr("&Help") );
+
+  // and toolbars make too
+  fileToolbar = addToolBar( tr("File") );
+  elmToolbar = addToolBar( tr("Element") );
+
   // Actions
   // File group
 
-  act_new = new QAction( QIcon( ":icons/filenew.png" ), "&New model", this );
-  act_new->setShortcuts( QKeySequence::New );
-  act_new->setWhatsThis( tr("Click this button to create a new model file.") );
-  act_new->setProperty( "alwaysVisible", true );
-  registerAction( act_new, "fileNew" );
-  connect( act_new, &QAction::triggered, this, &LaboWin::slotFileNew );
+  {
+    auto a = new QAction( QIcon( ":icons/filenew.png" ), "&New model", this );
+    a->setShortcuts( QKeySequence::New );
+    a->setWhatsThis( tr("Click this button to create a new model file.") );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "fileNew" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotFileNew );
+    pFileMenu->addAction( a );
+    pFileMenu->addSeparator();
+    fileToolbar->addAction( a );
+  }
 
-  act_openxml = new QAction( QIcon::fromTheme("document-open"), "Open model", this );
-  act_openxml->setShortcuts( QKeySequence::Open );
-  act_openxml->setWhatsThis( tr("Click this button to open a model file." ) );
-  act_openxml->setProperty( "alwaysVisible", true );
-  registerAction( act_openxml, "fileOpen" );
-  connect( act_openxml, &QAction::triggered, this, &LaboWin::slotFileOpen );
+  {
+    auto a = new QAction( QIcon::fromTheme("document-open"), "Open model", this );
+    a->setShortcuts( QKeySequence::Open );
+    a->setWhatsThis( tr("Click this button to open a model file." ) );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "fileOpen" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotFileOpen );
+    pFileMenu->addAction( a );
+    fileToolbar->addAction( a );
+  }
 
-  act_close = new QAction( "&Close", this );
-  act_close->setWhatsThis( tr("Close active window") );
-  connect( act_close, &QAction::triggered, this, &LaboWin::slotFileClose );
-  registerAction( act_close, "fileClose" );
+  {
+    auto a = new QAction( QIcon::fromTheme("document-save"), "Save model",  this );
+    a->setShortcuts( QKeySequence::Save );
+    a->setWhatsThis( tr("Click this button to save the model file you are "
+          "editing. You will be prompted for a file name." ) );
+    registerAction( a, "fileSave" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotFileSave );
+    pFileMenu->addAction( a );
+    fileToolbar->addAction( a );
+    fileToolbar->addSeparator();
+  }
 
-  act_savexml = new QAction( QIcon::fromTheme("document-save"), "Save model",  this );
-  act_savexml->setShortcuts( QKeySequence::Save );
-  act_savexml->setWhatsThis( tr("Click this button to save the model file you are "
-                  "editing. You will be prompted for a file name." ) );
-  registerAction( act_savexml, "fileSave" );
-  connect( act_savexml, &QAction::triggered, this, &LaboWin::slotFileSave );
+  {
+    auto a = new QAction(QIcon::fromTheme("document-save-as"), "Save model As", this );
+    a->setWhatsThis( tr("Save current model with another filename") );
+    registerAction( a, "fileSaveAs" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotFileSaveAs );
+    pFileMenu->addAction( a );
+    pFileMenu->addSeparator();
+  }
 
-  act_savexmlas = new QAction(QIcon::fromTheme("document-save-as"), "Save model As", this );
-  act_savexmlas->setWhatsThis( tr("Save current model with another filename") );
-  registerAction( act_savexmlas, "fileSaveAs" );
-  connect( act_savexmlas, &QAction::triggered, this, &LaboWin::slotFileSaveAs );
+  {
+    auto a = new QAction(  QIcon::fromTheme("document-print"), "&Print", this );
+    a->setShortcuts( QKeySequence::Print );
+    a->setWhatsThis( tr("Print current model") );
+    registerAction( a, "print" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotFilePrint );
+    pFileMenu->addAction( a );
+    pFileMenu->addSeparator();
+  }
 
-  act_print = new QAction(  QIcon::fromTheme("document-print"), "&Print", this );
-  act_print->setShortcuts( QKeySequence::Print );
-  act_print->setWhatsThis( tr("Print current model") );
-  registerAction( act_print, "print" );
-  connect( act_print, &QAction::triggered, this, &LaboWin::slotFilePrint );
+  {
+    auto a = new QAction( "&Close", this );
+    a->setWhatsThis( tr("Close active window") );
+    connect( a, &QAction::triggered, this, &LaboWin::slotFileClose );
+    registerAction( a, "fileClose" );
+    pFileMenu->addSeparator();
+    pFileMenu->addAction( a );
+  }
 
-  act_settings = new QAction( "Sett&ings", this );
-  act_settings ->setWhatsThis( "Edit application settings" );
-  act_settings->setProperty( "alwaysVisible", true );
-  registerAction( act_settings, "fileSettings" );
-  connect( act_settings, &QAction::triggered, this, &LaboWin::slotFileSettings );
+  {
+    auto a = new QAction( "Sett&ings", this );
+    a ->setWhatsThis( "Edit application settings" );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "fileSettings" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotFileSettings );
+    pFileMenu->addAction( a );
+  }
 
-  act_savesett = new QAction( "Save s&ettings", this );
-  act_savesett ->setWhatsThis( "Save application settings" );
-  act_savesett->setProperty( "alwaysVisible", true );
-  registerAction( act_savesett, "fileSaveSett" );
-  connect( act_savesett, &QAction::triggered, this, &LaboWin::slotFileSaveSett );
+  {
+    auto a = new QAction( "Save s&ettings", this );
+    a ->setWhatsThis( "Save application settings" );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "fileSaveSett" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotFileSaveSett );
+    pFileMenu->addAction( a );
+    pFileMenu->addSeparator();
+  }
 
 
-  act_quit = new QAction(  QIcon::fromTheme("application-exit"), "&Quit", this );
-  act_quit->setShortcuts( QKeySequence::Quit );
-  act_quit->setWhatsThis( tr("Click this button to quit application.") );
-  act_quit->setProperty( "alwaysVisible", true );
-  registerAction( act_quit, "fileQuit" );
-  connect( act_quit, &QAction::triggered, this, &LaboWin::slotFileQuit );
+  {
+    auto a = new QAction(  QIcon::fromTheme("application-exit"), "&Quit", this );
+    a->setShortcuts( QKeySequence::Quit );
+    a->setWhatsThis( tr("Click this button to quit application.") );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "fileQuit" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotFileQuit );
+    pFileMenu->addAction( a );
+  }
 
-  // ==== Edit group
+  // ==== Edit + Object group
+  {
+    auto a = new QAction( QIcon::fromTheme("edit-undo"), "&Undo", this );
+    a->setShortcuts( QKeySequence::Undo );
+    a->setWhatsThis( tr("Undo last action") + " EMPTY" );
+    registerAction( a, "editUndo" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotEditUndo );
+    pEditMenu->addAction( a );
+  }
+  {
+    auto a = new QAction(  QIcon::fromTheme("edit-cut"),"Cut", this );
+    a->setShortcuts( QKeySequence::Cut );
+    a->setWhatsThis( tr("Cut selected") );
+    registerAction( a, "cutElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotEditCut );
+    pEditMenu->addSeparator();
+    pEditMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( QIcon::fromTheme("edit-copy"), "Copy", this );
+    a->setShortcuts( QKeySequence::Copy );
+    a->setWhatsThis( tr("Copy selected") );
+    registerAction( a, "copyElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotEditCopy );
+    pEditMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( QIcon::fromTheme("edit-paste"), "Paste", this );
+    a->setShortcuts( QKeySequence::Paste );
+    a->setWhatsThis( tr("Paste selected") );
+    registerAction( a, "pasteElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotEditPaste );
+    pEditMenu->addAction( a );
+    pEditMenu->addSeparator();
+  }
 
-  act_undo = new QAction( QIcon::fromTheme("edit-undo"), "&Undo", this );
-  act_undo->setShortcuts( QKeySequence::Undo );
-  act_undo->setWhatsThis( tr("Undo last action") + " EMPTY" );
-  registerAction( act_undo, "editUndo" );
-  connect( act_undo, &QAction::triggered, this, &LaboWin::slotEditUndo );
+  // -- object part
 
-  act_cut = new QAction(  QIcon::fromTheme("edit-cut"),"Cut", this );
-  act_cut->setShortcuts( QKeySequence::Cut );
-  act_cut->setWhatsThis( tr("Cut selected") );
-  registerAction( act_cut, "cutElm" );
-  connect( act_cut, &QAction::triggered, this, &LaboWin::slotEditCut );
-
-  act_copy = new QAction( QIcon::fromTheme("edit-copy"), "Copy", this );
-  act_copy->setShortcuts( QKeySequence::Copy );
-  act_copy->setWhatsThis( tr("Copy selected") );
-  registerAction( act_copy, "copyElm" );
-  connect( act_copy, &QAction::triggered, this, &LaboWin::slotEditCopy );
-
-  act_paste= new QAction( QIcon::fromTheme("edit-paste"), "Paste", this );
-  act_paste->setShortcuts( QKeySequence::Paste );
-  act_paste->setWhatsThis( tr("Paste selected") );
-  registerAction( act_paste, "pasteElm" );
-  connect( act_paste, &QAction::triggered, this, &LaboWin::slotEditPaste );
 
   // ==== Element group
-
-  act_newelm= new QAction( QIcon( ":icons/newelm.png" ), "&New element", this );
-  act_newelm->setShortcut( Qt::Key_Insert );
-  act_newelm->setWhatsThis( tr("Create new element") );
-  registerAction( act_newelm, "addElm" );
-  connect( act_newelm, &QAction::triggered, this, &LaboWin::slotNewElm );
-
-  act_delelm= new QAction( QIcon( ":icons/delelm.png" ), "&Delete element", this );
-  act_delelm->setShortcut( Qt::Key_Delete );
-  act_delelm->setWhatsThis( tr("Delete selected element") );
-  registerAction( act_delelm, "delElm" );
-  connect( act_delelm, &QAction::triggered, this, &LaboWin::slotDelElm );
-
-  act_editelm= new QAction( QIcon( ":icons/editelm.png" ), "&Edit element", this );
-  act_editelm->setShortcut( Qt::Key_Enter );
-  act_editelm->setWhatsThis( tr("Edit selected element") );
-  registerAction( act_editelm, "editElm" );
-  connect( act_editelm, &QAction::triggered, this, &LaboWin::slotEditElm );
-
-  act_renameelm= new QAction( "Rename element", this );
-  act_renameelm->setWhatsThis( tr("Rename selected element") );
-  registerAction( act_renameelm, "renameElm" );
-  connect( act_renameelm, &QAction::triggered, this, &LaboWin::slotRenameElm );
-
-  act_qlinkelm= new QAction( QIcon::fromTheme("insert-link"), "&Quick link element", this );
-  act_qlinkelm->setShortcut( Qt::CTRL+Qt::Key_L );
-  act_qlinkelm->setWhatsThis( tr("Link marked to selected element") );
-  registerAction( act_qlinkelm, "qlinkElm" );
-  connect( act_qlinkelm, &QAction::triggered, this, &LaboWin::slotqLinkElm );
-
-  act_qplinkelm= new QAction( "&Parametr link element", this );
-  act_qplinkelm->setShortcut(  Qt::SHIFT+Qt::CTRL+Qt::Key_L );
-  act_qplinkelm->setWhatsThis( tr("Link marked to selected element "
-                                  "(parameter input)") );
-  registerAction( act_qplinkelm, "qplinkElm" );
-  connect( act_qplinkelm, &QAction::triggered, this, &LaboWin::slotqpLinkElm );
-
-  act_unlinkelm= new QAction( "&Unlink element", this );
-  act_unlinkelm->setWhatsThis( tr("Remove links of selected element") );
-  registerAction( act_unlinkelm, "unlinkElm" );
-  connect( act_unlinkelm, &QAction::triggered, this, &LaboWin::slotUnlinkElm );
-
-  act_lockelm= new QAction( QIcon( ":icons/lockelm.png" ), "Loc&k element",  this );
-  act_lockelm->setShortcut( Qt::CTRL+Qt::Key_K );
-  act_lockelm->setWhatsThis( tr("Lock current element") );
-  registerAction( act_lockelm, "lockElm" );
-  connect( act_lockelm, &QAction::triggered, this, &LaboWin::slotLockElm );
-
-  act_ordelm= new QAction( QIcon( ":icons/orderelm.png" ), "Change &Orger", this );
-  act_ordelm->setShortcut( Qt::Key_O );
-  act_ordelm->setWhatsThis( tr("Change order numper of selected element") );
-  registerAction( act_ordelm, "ordElm" );
-  connect( act_ordelm, &QAction::triggered, this, &LaboWin::slotOrdElm );
-
-  act_markelm= new QAction( QIcon( ":icons/markelm.png" ), "&Mark element", this );
-  act_markelm->setShortcut( Qt::Key_M );
-  act_markelm->setWhatsThis( tr("Mark selected element") );
-  registerAction( act_markelm, "markElm" );
-  connect( act_markelm, &QAction::triggered, this, &LaboWin::slotMarkElm );
-
-  act_moveelm= new QAction( "Move element", this );
-  act_moveelm->setShortcut( Qt::SHIFT+Qt::Key_M );
-  act_moveelm->setWhatsThis( tr("Move marked element to selected cell") );
-  registerAction( act_moveelm, "moveElm" );
-  connect( act_moveelm, &QAction::triggered, this, &LaboWin::slotMoveElm );
-
-  act_infoelm= new QAction( QIcon( ":icons/infoelm.png" ), "show &Info", this );
-  act_infoelm->setShortcut( Qt::Key_I );
-  act_infoelm->setWhatsThis( tr("Show information about element structure") );
-  registerAction( act_infoelm, "infoElm" );
-  connect( act_infoelm, &QAction::triggered, this, &LaboWin::slotInfoElm );
-
-  act_showtreeelm = new QAction( "show element tree", this );
-  act_showtreeelm->setWhatsThis( tr("Show tree-like element structure") );
-  registerAction( act_showtreeelm, "showTreeElm" );
-  connect( act_showtreeelm, &QAction::triggered, this, &LaboWin::slotShowTreeElm );
-
-  act_testelm1= new QAction( "test element 1", this );
-  act_testelm1->setWhatsThis( tr("Test something in element") );
-  registerAction( act_testelm1, "testElm1" );
-  connect( act_testelm1, &QAction::triggered, this, &LaboWin::slotTestElm1 );
-
-  act_testelm2= new QAction( "test element 2", this );
-  act_testelm2->setWhatsThis( tr("Test something in element") );
-  registerAction( act_testelm2, "testElm2" );
-  connect( act_testelm2, &QAction::triggered, this, &LaboWin::slotTestElm2 );
+  {
+    auto a = new QAction( QIcon( ":icons/newelm.png" ), "&New element", this );
+    a->setShortcut( Qt::Key_Insert );
+    a->setWhatsThis( tr("Create new element") );
+    registerAction( a, "addElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotNewElm );
+    pElmMenu->addAction( a );
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a = new QAction( QIcon( ":icons/delelm.png" ), "&Delete element", this );
+    a->setShortcut( Qt::Key_Delete );
+    a->setWhatsThis( tr("Delete selected element") );
+    registerAction( a, "delElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotDelElm );
+    pElmMenu->addAction( a );
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a = new QAction( QIcon( ":icons/editelm.png" ), "&Edit element", this );
+    a->setShortcut( Qt::Key_Enter );
+    a->setWhatsThis( tr("Edit selected element") );
+    registerAction( a, "editElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotEditElm );
+    pElmMenu->addAction( a );
+    pElmMenu->addSeparator();
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a = new QAction( "Rename element", this );
+    a->setWhatsThis( tr("Rename selected element") );
+    registerAction( a, "renameElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotRenameElm );
+    pElmMenu->addAction( a );
+    pElmMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( QIcon::fromTheme("insert-link"), "&Quick link element", this );
+    a->setShortcut( Qt::CTRL+Qt::Key_L );
+    a->setWhatsThis( tr("Link marked to selected element") );
+    registerAction( a, "qlinkElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotqLinkElm );
+    pElmMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "&Parametr link element", this );
+    a->setShortcut(  Qt::SHIFT+Qt::CTRL+Qt::Key_L );
+    a->setWhatsThis( tr("Link marked to selected element "
+          "(parameter input)") );
+    registerAction( a, "qplinkElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotqpLinkElm );
+    pElmMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "&Unlink element", this );
+    a->setWhatsThis( tr("Remove links of selected element") );
+    registerAction( a, "unlinkElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotUnlinkElm );
+    pElmMenu->addAction( a );
+    pElmMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( QIcon( ":icons/lockelm.png" ), "Loc&k element",  this );
+    a->setShortcut( Qt::CTRL+Qt::Key_K );
+    a->setWhatsThis( tr("Lock current element") );
+    registerAction( a, "lockElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotLockElm );
+    pElmMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( QIcon( ":icons/orderelm.png" ), "Change &Orger", this );
+    a->setShortcut( Qt::Key_O );
+    a->setWhatsThis( tr("Change order numper of selected element") );
+    registerAction( a, "ordElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotOrdElm );
+    pElmMenu->addAction( a );
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a= new QAction( QIcon( ":icons/markelm.png" ), "&Mark element", this );
+    a->setShortcut( Qt::Key_M );
+    a->setWhatsThis( tr("Mark selected element") );
+    registerAction( a, "markElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotMarkElm );
+    pElmMenu->addAction( a );
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a = new QAction( "Move element", this );
+    a->setShortcut( Qt::SHIFT+Qt::Key_M );
+    a->setWhatsThis( tr("Move marked element to selected cell") );
+    registerAction( a, "moveElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotMoveElm );
+    pElmMenu->addAction( a );
+    pElmMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( QIcon( ":icons/infoelm.png" ), "show &Info", this );
+    a->setShortcut( Qt::Key_I );
+    a->setWhatsThis( tr("Show information about element structure") );
+    registerAction( a, "infoElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotInfoElm );
+    pElmMenu->addAction( a );
+    elmToolbar->addAction( a );
+    elmToolbar->addSeparator();
+  }
+  {
+    auto a = new QAction( "show element tree", this );
+    a->setWhatsThis( tr("Show tree-like element structure") );
+    registerAction( a, "showTreeElm" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotShowTreeElm );
+    pElmMenu->addAction( a );
+    pElmMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( "test element 1", this );
+    a->setWhatsThis( tr("Test something in element") );
+    registerAction( a, "testElm1" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotTestElm1 );
+    pElmMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "test element 2", this );
+    a->setWhatsThis( tr("Test something in element") );
+    registerAction( a, "testElm2" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotTestElm2 );
+    pElmMenu->addAction( a );
+  }
 
   // ==== out group
-
-  act_newout = new QAction( QIcon( ":icons/newout.png" ), "&New Out", this );
-  act_newout->setShortcut( Qt::Key_U );
-  act_newout->setWhatsThis( tr("Create output collector") );
-  registerAction( act_newout, "addOut" );
-  connect( act_newout, &QAction::triggered, this, &LaboWin::slotNewOut );
-
-  act_delout = new QAction( QIcon( ":icons/delout.png" ), "&Delete out", this );
-  // act_delout->setShortcut( Qt::Key_X );
-  act_delout->setWhatsThis( tr("Delete output collector with current level") );
-  registerAction( act_delout, "delOut" );
-  connect( act_delout, &QAction::triggered, this, &LaboWin::slotDelOut );
-
-  act_editout = new QAction( QIcon( ":icons/editout.png" ), "&Edit out", this );
-  act_editout->setShortcut( Qt::SHIFT+Qt::Key_U );
-  act_editout->setWhatsThis( tr("Edit outsput collector with current level") );
-  registerAction( act_editout, "editOut" );
-  connect( act_editout, &QAction::triggered, this, &LaboWin::slotEditOut );
-
-  act_renameout= new QAction( "Rename output collector", this );
-  act_renameout->setWhatsThis( tr("Rename output collector") );
-  connect( act_renameout, &QAction::triggered, this, &LaboWin::slotRenameOut );
-  registerAction( act_renameout, "renameOut" );
-
-  act_selectout = new QAction( "Select out", this );
-  act_selectout->setShortcut( Qt::ALT+Qt::Key_U );
-  act_selectout->setWhatsThis( tr("Select output collector by current level") );
-  registerAction( act_selectout, "selectOut" );
-  connect( act_selectout, &QAction::triggered, this, &LaboWin::slotSelectOut );
-
-  act_showoutdata = new QAction( QIcon( ":icons/showoutdata.png" ), "&Show out data", this );
-  // act_showoutdata->setShortcut( Qt::Key_D );
-  act_showoutdata->setWhatsThis( tr("Show data collected by output.") );
-  registerAction( act_showoutdata, "showOutData" );
-  connect( act_showoutdata, &QAction::triggered, this, &LaboWin::slotShowOutData );
-
-  act_exportout = new QAction( "E&xport out data", this );
-  // act_exportout->setShortcut( Qt::Key_E );
-  act_exportout->setWhatsThis( tr("Export data collected by output to text file.") );
-  registerAction( act_exportout, "exportOut" );
-  connect( act_exportout, &QAction::triggered, this, &LaboWin::slotExportOut );
+  {
+    auto a = new QAction( QIcon( ":icons/newout.png" ), "&New Out", this );
+    a->setShortcut( Qt::Key_U );
+    a->setWhatsThis( tr("Create output collector") );
+    registerAction( a, "addOut" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotNewOut );
+    pOutMenu->addAction( a );
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a = new QAction( QIcon( ":icons/delout.png" ), "&Delete out", this );
+    a->setWhatsThis( tr("Delete output collector with current level") );
+    registerAction( a, "delOut" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotDelOut );
+    pOutMenu->addAction( a );
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a = new QAction( QIcon( ":icons/editout.png" ), "&Edit out", this );
+    a->setShortcut( Qt::SHIFT+Qt::Key_U );
+    a->setWhatsThis( tr("Edit outsput collector with current level") );
+    registerAction( a, "editOut" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotEditOut );
+    pOutMenu->addAction( a );
+    pOutMenu->addSeparator();
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a = new QAction( "Rename output collector", this );
+    a->setWhatsThis( tr("Rename output collector") );
+    connect( a, &QAction::triggered, this, &LaboWin::slotRenameOut );
+    registerAction( a, "renameOut" );
+    pOutMenu->addAction( a );
+    pOutMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( "Select out", this );
+    a->setShortcut( Qt::ALT+Qt::Key_U );
+    a->setWhatsThis( tr("Select output collector by current level") );
+    registerAction( a, "selectOut" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotSelectOut );
+    pOutMenu->addAction( a );
+    pOutMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( QIcon( ":icons/showoutdata.png" ), "&Show out data", this );
+    a->setWhatsThis( tr("Show data collected by output.") );
+    registerAction( a, "showOutData" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotShowOutData );
+    pOutMenu->addAction( a );
+    elmToolbar->addAction( a );
+    elmToolbar->addSeparator();
+  }
+  {
+    auto a = new QAction( "E&xport out data", this );
+    a->setShortcut( Qt::CTRL+Qt::Key_E );
+    a->setWhatsThis( tr("Export data collected by output to text file.") );
+    registerAction( a, "exportOut" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotExportOut );
+    pOutMenu->addAction( a );
+  }
 
   // ==== graph=plot group
+  {
+    auto a = new QAction( QIcon( ":icons/newgraph.png" ), "&New Plot", this );
+    a->setShortcut( Qt::Key_P );
+    a->setWhatsThis( tr("Create new plot") );
+    registerAction( a, "addGraph" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotNewGraph );
+    pGraphMenu->addAction( a );
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a = new QAction( QIcon( ":icons/delgraph.png" ), "&Delete plot", this );
+    a->setWhatsThis( tr("Delete plot with selected level") );
+    registerAction( a, "delGraph" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotDelGraph );
+    pGraphMenu->addAction( a );
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a = new QAction( QIcon( ":icons/editgraph.png" ), "&Edit plot", this );
+    a->setShortcut(  Qt::SHIFT+Qt::Key_P );
+    a->setWhatsThis( tr("Edit plot") );
+    registerAction( a, "editGraph" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotEditGraph );
+    pGraphMenu->addAction( a );
+    pGraphMenu->addSeparator();
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a = new QAction( "Rename plot", this );
+    a->setWhatsThis( tr("Rename plot") );
+    registerAction( a, "renameGraph" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotRenameGraph );
+    pGraphMenu->addAction( a );
+    pGraphMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( "select plot", this );
+    a->setShortcut(  Qt::ALT+Qt::Key_G ); // Alt-P is busy by menu
+    a->setWhatsThis( tr("Select plot by current level") );
+    registerAction( a, "selectGraph" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotSelectGraph );
+    pGraphMenu->addAction( a );
+    pGraphMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( QIcon( ":icons/showgraph.png" ), "&Show plot", this );
+    a->setShortcut( Qt::Key_S );
+    a->setWhatsThis( tr("Show plot") );
+    registerAction( a, "showGraph" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotShowGraph );
+    pGraphMenu->addAction( a );
+    pGraphMenu->addSeparator();
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a = new QAction( "Add out to plot", this );
+    a->setShortcut( Qt::CTRL | Qt::Key_U );
+    a->setWhatsThis( tr("Add current output array to plot") );
+    registerAction( a, "graphAddOut" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotGraphAddOut );
+    pGraphMenu->addAction( a );
+    pGraphMenu->addSeparator();
+  }
 
-  act_newgraph = new QAction( QIcon( ":icons/newgraph.png" ), "&New Plot", this );
-  act_newgraph->setShortcut( Qt::Key_P );
-  act_newgraph->setWhatsThis( tr("Create new plot") );
-  registerAction( act_newgraph, "addGraph" );
-  connect( act_newgraph, &QAction::triggered, this, &LaboWin::slotNewGraph );
-
-  act_delgraph = new QAction( QIcon( ":icons/delgraph.png" ), "&Delete plot", this );
-  // act_delgraph->setShortcut( Qt::SHIFT+Qt::Key_X );
-  act_delgraph->setWhatsThis( tr("Delete plot with selected level") );
-  registerAction( act_delgraph, "delGraph" );
-  connect( act_delgraph, &QAction::triggered, this, &LaboWin::slotDelGraph );
-
-  act_editgraph = new QAction( QIcon( ":icons/editgraph.png" ), "&Edit plot", this );
-  act_editgraph->setShortcut(  Qt::SHIFT+Qt::Key_P );
-  act_editgraph->setWhatsThis( tr("Edit plot") );
-  registerAction( act_editgraph, "editGraph" );
-  connect( act_editgraph, &QAction::triggered, this, &LaboWin::slotEditGraph );
-
-  act_renamegraph= new QAction( "Rename plot", this );
-  act_renamegraph->setWhatsThis( tr("Rename plot") );
-  registerAction( act_renamegraph, "renameGraph" );
-  connect( act_renamegraph, &QAction::triggered, this, &LaboWin::slotRenameGraph );
-
-  act_selectgraph = new QAction( "select plot", this );
-  act_selectgraph->setShortcut(  Qt::ALT+Qt::Key_G ); // Alt-P is busy by menu
-  act_selectgraph->setWhatsThis( tr("Select plot by current level") );
-  registerAction( act_selectgraph, "selectGraph" );
-  connect( act_selectgraph, &QAction::triggered, this, &LaboWin::slotSelectGraph );
-
-  act_showgraph = new QAction( QIcon( ":icons/showgraph.png" ), "&Show plot", this );
-  act_showgraph->setShortcut( Qt::Key_S );
-  act_showgraph->setWhatsThis( tr("Show plot") );
-  registerAction( act_showgraph, "showGraph" );
-  connect( act_showgraph, &QAction::triggered, this, &LaboWin::slotShowGraph );
-
-  act_graphaddout = new QAction( "Add out to plot", this );
-  act_graphaddout->setShortcut( Qt::CTRL | Qt::Key_U );
-  act_graphaddout->setWhatsThis( tr("Add current output array to plot") );
-  registerAction( act_graphaddout, "graphAddOut" );
-  connect( act_graphaddout, &QAction::triggered, this, &LaboWin::slotGraphAddOut );
-
-
-  act_showgraphdata = new QAction( QIcon( ":icons/showgraphdata.png" ), "show plot Data", this );
-  act_showgraphdata->setShortcut(  Qt::SHIFT+Qt::Key_D );
-  act_showgraphdata->setWhatsThis( tr("Show plot data") );
-  registerAction( act_showgraphdata, "showGraphData" );
-  connect( act_showgraphdata, &QAction::triggered, this, &LaboWin::slotShowGraphData );
-
-  act_exportgraphdata = new QAction( "E&xport plot data", this );
-  act_exportgraphdata->setShortcut( Qt::SHIFT+Qt::Key_E );
-  act_exportgraphdata->setWhatsThis( tr("Export plot data to text file") );
-  registerAction( act_exportgraphdata, "exportGraphData" );
-  connect( act_exportgraphdata, &QAction::triggered, this, &LaboWin::slotExportGraphData);
-
-  act_cloneGraph = new QAction( "Clone plot", this );
-  act_cloneGraph->setWhatsThis( tr("Clone current plot") );
-  registerAction( act_cloneGraph, "cloneGraph" );
-  connect( act_cloneGraph, &QAction::triggered, this, &LaboWin::slotCloneGraph );
+  {
+    auto a = new QAction( QIcon( ":icons/showgraphdata.png" ), "show plot Data", this );
+    a->setShortcut(  Qt::SHIFT+Qt::Key_D );
+    a->setWhatsThis( tr("Show plot data") );
+    registerAction( a, "showGraphData" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotShowGraphData );
+    pGraphMenu->addAction( a );
+    elmToolbar->addAction( a );
+    elmToolbar->addSeparator();
+  }
+  {
+    auto a = new QAction( "E&xport plot data", this );
+    a->setShortcut( Qt::SHIFT+Qt::Key_E );
+    a->setWhatsThis( tr("Export plot data to text file") );
+    registerAction( a, "exportGraphData" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotExportGraphData);
+    pGraphMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "Clone plot", this );
+    a->setWhatsThis( tr("Clone current plot") );
+    registerAction( a, "cloneGraph" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotCloneGraph );
+    pGraphMenu->addAction( a );
+  }
 
   // ==== simulation group
+  {
+    auto a = new QAction( "&New Simulation", this );
+    a->setWhatsThis( tr("Create new simulation") );
+    registerAction( a, "addSimul" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotNewSimul );
+    pSimulMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "&Delete Simulation", this );
+    a->setWhatsThis( tr("Delete simulation") );
+    registerAction( a, "delSimul" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotDelSimul );
+    pSimulMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "&Edit Simulation", this );
+    a->setShortcut(  Qt::SHIFT+Qt::Key_Y );
+    a->setWhatsThis( tr("Edit simulation") );
+    registerAction( a, "editSimul" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotEditSimul );
+    pSimulMenu->addAction( a );
+    pSimulMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( "Rename simulation", this );
+    a->setWhatsThis( tr("Rename simulation") );
+    registerAction( a, "renameSimul" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotRenameSimul );
+    pSimulMenu->addAction( a );
+    pSimulMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( "Select Simulation", this );
+    a->setShortcut(  Qt::ALT+Qt::Key_Y );
+    a->setWhatsThis( tr("Setect simulation") );
+    registerAction( a, "selectSimul" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotSelectSimul );
+    pSimulMenu->addAction( a );
+    pSimulMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( "Set Active Simulation", this );
+    a->setShortcut( Qt::ALT+Qt::CTRL+Qt::Key_Y );
+    a->setWhatsThis( tr("Set current simulation to be active") );
+    registerAction( a, "setActiveSimul" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotSetActiveSimul );
+    pSimulMenu->addAction( a );
+  }
 
-  act_newSimul = new QAction( "&New Simulation", this );
-  act_newSimul->setWhatsThis( tr("Create new simulation") );
-  registerAction( act_newSimul, "addSimul" );
-  connect( act_newSimul, &QAction::triggered, this, &LaboWin::slotNewSimul );
-
-  act_delSimul = new QAction( "&Delete Simulation", this );
-  act_delSimul->setWhatsThis( tr("Delete simulation") );
-  registerAction( act_delSimul, "delSimul" );
-  connect( act_delSimul, &QAction::triggered, this, &LaboWin::slotDelSimul );
-
-  act_editSimul = new QAction( "&Edit Simulation", this );
-  act_editSimul->setShortcut(  Qt::SHIFT+Qt::Key_Y );
-  act_editSimul->setWhatsThis( tr("Edit simulation") );
-  registerAction( act_editSimul, "editSimul" );
-  connect( act_editSimul, &QAction::triggered, this, &LaboWin::slotEditSimul );
-
-  act_renameSimul= new QAction( "Rename simulation", this );
-  act_renameSimul->setWhatsThis( tr("Rename simulation") );
-  registerAction( act_renameSimul, "renameSimul" );
-  connect( act_renameSimul, &QAction::triggered, this, &LaboWin::slotRenameSimul );
-
-  act_selectSimul = new QAction( "Select Simulation", this );
-  act_selectSimul->setShortcut(  Qt::ALT+Qt::Key_Y );
-  act_selectSimul->setWhatsThis( tr("Setect simulation") );
-  registerAction( act_selectSimul, "selectSimul" );
-  connect( act_selectSimul, &QAction::triggered, this, &LaboWin::slotSelectSimul );
-
-  act_setActiveSimul = new QAction( "Set Active Simulation", this );
-  act_setActiveSimul->setShortcut( Qt::ALT+Qt::CTRL+Qt::Key_Y );
-  act_setActiveSimul->setWhatsThis( tr("Set current simulation to be active") );
-  registerAction( act_setActiveSimul, "setActiveSimul" );
-  connect( act_setActiveSimul, &QAction::triggered, this, &LaboWin::slotSetActiveSimul );
-
-
-  act_cloneSimul = new QAction( "Clone Simulation", this );
-  act_cloneSimul->setWhatsThis( tr("Clone current simulation") );
-  registerAction( act_cloneSimul, "cloneSimul" );
-  connect( act_cloneSimul, &QAction::triggered, this, &LaboWin::slotCloneSimul );
+  {
+    auto a = new QAction( "Clone Simulation", this );
+    a->setWhatsThis( tr("Clone current simulation") );
+    registerAction( a, "cloneSimul" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotCloneSimul );
+    pSimulMenu->addAction( a );
+  }
 
   // ==== model/Scheme group
-
-  act_editmodel = new QAction( QIcon( ":icons/editmodel.png" ), "&Edit Model", this );
-  act_editmodel->setShortcut(  Qt::CTRL+Qt::Key_R );
-  act_editmodel->setWhatsThis( tr("Edit model parameters.") );
-  registerAction( act_editmodel, "editModel" );
-  connect( act_editmodel, &QAction::triggered, this, &LaboWin::slotEditModel );
-
-  act_showtreemodel = new QAction( "show model tree", this );
-  act_showtreemodel->setShortcut( Qt::CTRL+Qt::Key_T );
-  act_showtreemodel->setWhatsThis( tr("Show tree-like model structure") );
-  registerAction( act_showtreemodel, "showTreeModel" );
-  connect( act_showtreemodel, &QAction::triggered, this, &LaboWin::slotShowTreeModel );
-
+  {
+    auto a = new QAction( QIcon( ":icons/editmodel.png" ), "&Edit Model", this );
+    a->setShortcut(  Qt::CTRL+Qt::Key_R );
+    a->setWhatsThis( tr("Edit model parameters.") );
+    registerAction( a, "editModel" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotEditModel );
+    pModelMenu->addAction( a );
+    elmToolbar->addAction( a );
+    elmToolbar->addSeparator();
+  }
+  {
+    auto a = new QAction( "show model tree", this );
+    a->setShortcut( Qt::CTRL+Qt::Key_T );
+    a->setWhatsThis( tr("Show tree-like model structure") );
+    registerAction( a, "showTreeModel" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotShowTreeModel );
+    pModelMenu->addAction( a );
+    pModelMenu->addSeparator();
+  }
   //
-  act_newScheme = new QAction( "&New Scheme", this );
-  act_newScheme->setWhatsThis( tr("Create new scheme") );
-  registerAction( act_newScheme, "addScheme" );
-  connect( act_newScheme, &QAction::triggered, this, &LaboWin::slotNewScheme );
-
-  act_delScheme = new QAction( "&Delete Scheme", this );
-  act_delScheme->setWhatsThis( tr("Delete scheme") );
-  registerAction( act_delScheme, "delScheme" );
-  connect( act_delScheme, &QAction::triggered, this, &LaboWin::slotDelScheme );
-
-  act_editScheme = new QAction( "&Edit Scheme", this );
-  act_editScheme->setWhatsThis( tr("Edit scheme") );
-  registerAction( act_editScheme, "editScheme" );
-  connect( act_editScheme, &QAction::triggered, this, &LaboWin::slotEditScheme );
-
-  act_renameScheme= new QAction( "Rename scheme", this );
-  act_renameScheme->setWhatsThis( tr("Rename scheme") );
-  registerAction( act_renameScheme, "renameScheme" );
-  connect( act_renameScheme, &QAction::triggered, this, &LaboWin::slotRenameScheme );
-
-  act_cloneScheme = new QAction( "Clone Scheme", this );
-  act_cloneScheme->setWhatsThis( tr("Cone current scheme") );
-  registerAction( act_cloneScheme, "cloneScheme" );
-  connect( act_cloneScheme, &QAction::triggered, this, &LaboWin::slotCloneScheme );
+  {
+    auto a = new QAction( "&New Scheme", this );
+    a->setWhatsThis( tr("Create new scheme") );
+    registerAction( a, "addScheme" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotNewScheme );
+    pModelMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "&Delete Scheme", this );
+    a->setWhatsThis( tr("Delete scheme") );
+    registerAction( a, "delScheme" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotDelScheme );
+    pModelMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "&Edit Scheme", this );
+    a->setWhatsThis( tr("Edit scheme") );
+    registerAction( a, "editScheme" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotEditScheme );
+    pModelMenu->addAction( a );
+    pModelMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( "Rename scheme", this );
+    a->setWhatsThis( tr("Rename scheme") );
+    registerAction( a, "renameScheme" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotRenameScheme );
+    pModelMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "Clone Scheme", this );
+    a->setWhatsThis( tr("Cone current scheme") );
+    registerAction( a, "cloneScheme" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotCloneScheme );
+    pModelMenu->addAction( a );
+  }
 
   // ====  run group
-
-  act_runrun = new QAction( QIcon( ":icons/run.png" ), "&Run", this );
-  act_runrun->setShortcut( Qt::Key_F9 );
-  act_runrun->setWhatsThis( tr("Click this button to start simulation.") );
-  registerAction( act_runrun, "runRun" );
-  connect( act_runrun, &QAction::triggered, this, &LaboWin::slotRunRun );
-
-  act_reset = new QAction( "Rese&t", this );
-  act_reset->setWhatsThis( tr("Reset model state.") );
-  registerAction( act_reset, "reset" );
-  connect( act_reset, &QAction::triggered, this, &LaboWin::slotReset );
-
-  act_initengine = new QAction( "Init engine", this );
-  act_initengine->setWhatsThis( tr("Initialize model JS engine.") );
-  registerAction( act_initengine, "initEngine" );
-  connect( act_initengine, &QAction::triggered, this, &LaboWin::slotInitEngine );
-
-  act_runscript = new QAction( QIcon::fromTheme("application-x-javascript"), "run &Script", this );
-  act_runscript->setShortcut( Qt::SHIFT+Qt::Key_F9 );
-  act_runscript->setWhatsThis( tr("Run script on model") );
-  connect( act_runscript, &QAction::triggered, this, &LaboWin::slotRunScript );
-
-  act_runmodelscript = new QAction( "run &Model script", this );
-  act_runmodelscript->setWhatsThis( tr("Run inner model script") );
-  registerAction( act_runmodelscript, "runModelScript" );
-  connect( act_runmodelscript, &QAction::triggered, this, &LaboWin::slotRunModelScript );
+  {
+    auto a = new QAction( QIcon( ":icons/run.png" ), "&Run", this );
+    a->setShortcut( Qt::Key_F9 );
+    a->setWhatsThis( tr("Click this button to start simulation.") );
+    registerAction( a, "runRun" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotRunRun );
+    pRunMenu->addAction( a );
+    pRunMenu->addSeparator();
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a = new QAction( "Rese&t", this );
+    a->setWhatsThis( tr("Reset model state.") );
+    registerAction( a, "reset" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotReset );
+    pRunMenu->addSeparator();
+    pRunMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "Init engine", this );
+    a->setWhatsThis( tr("Initialize model JS engine.") );
+    registerAction( a, "initEngine" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotInitEngine );
+    pRunMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( QIcon::fromTheme("application-x-javascript"), "run &Script", this );
+    a->setShortcut( Qt::SHIFT+Qt::Key_F9 );
+    a->setWhatsThis( tr("Run script on model") );
+    connect( a, &QAction::triggered, this, &LaboWin::slotRunScript );
+    pRunMenu->addAction( a );
+    elmToolbar->addAction( a );
+  }
+  {
+    auto a = new QAction( "run &Model script", this );
+    a->setWhatsThis( tr("Run inner model script") );
+    registerAction( a, "runModelScript" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotRunModelScript );
+    pRunMenu->addAction( a );
+  }
 
   // ==== iface group
-
-  act_tbar = new QAction( "View &Toolbar", this );
-  act_tbar->setCheckable( true );
-  act_tbar->setChecked( true );
-  act_tbar->setProperty( "alwaysVisible", true );
-  registerAction( act_tbar, "viewToolBar" );
-  connect( act_tbar, &QAction::triggered, this, &LaboWin::slotViewToolBar );
-
-  act_sbar = new QAction( "View &Statusbar", this );
-  act_sbar->setCheckable( true );
-  act_sbar->setChecked( true );
-  act_sbar->setProperty( "alwaysVisible", true );
-  registerAction( act_sbar, "viewStatusBar" );
-  connect( act_sbar, &QAction::triggered, this, &LaboWin::slotViewStatusBar );
-
-  act_showord = new QAction( "Show &Orders", this );
-  act_showord->setCheckable( true );
-  act_showord->setChecked( sett.showord );
-  act_showord->setProperty( "alwaysVisible", true );
-  registerAction( act_showord, "showOrd" );
-  connect( act_showord, &QAction::triggered, this, &LaboWin::slotShowOrd );
-
-  act_showgrid = new QAction( "Show &Grid", this );
-  act_showgrid->setCheckable( true );
-  act_showgrid->setChecked( sett.showgrid );
-  act_showgrid->setProperty( "alwaysVisible", true );
-  registerAction( act_showgrid, "showGrid" );
-  connect( act_showgrid, &QAction::triggered, this, &LaboWin::slotShowGrid );
-
-  act_shownames = new QAction( "Show &Names", this );
-  act_shownames->setCheckable( true );
-  act_shownames->setChecked( sett.shownames );
-  act_shownames->setProperty( "alwaysVisible", true );
-  registerAction( act_shownames, "showNames" );
-  connect( act_shownames, &QAction::triggered, this, &LaboWin::slotShowNames );
-
-  act_showicons = new QAction( "Show &Icons", this );
-  act_showicons->setCheckable( true );
-  act_showicons->setChecked( sett.showicons );
-  act_showicons->setProperty( "alwaysVisible", true );
-  registerAction( act_showicons, "showIcons" );
-  connect( act_showicons, &QAction::triggered, this, &LaboWin::slotShowIcons );
-
-  act_showlinks = new QAction( "Show &Links", this );
-  act_showlinks->setCheckable( true );
-  act_showlinks->setChecked( sett.showLinks );
-  act_showlinks->setProperty( "alwaysVisible", true );
-  registerAction( act_showlinks, "showLinks" );
-  connect( act_showlinks, &QAction::triggered, this, &LaboWin::slotShowLinks );
-
-  act_logclear = new QAction( "Clear log", this );
-  act_logclear->setProperty( "alwaysVisible", true );
-  registerAction( act_logclear, "logClear" );
-  connect( act_logclear, &QAction::triggered, this, &LaboWin::slotLogClear );
-
-  act_logsave = new QAction( "Save log", this );
-  act_logsave->setProperty( "alwaysVisible", true );
-  registerAction( act_logsave, "logSave" );
-  connect( act_logsave, &QAction::triggered, this, &LaboWin::slotLogSave );
+  {
+    auto a = new QAction( "View &Toolbar", this );
+    a->setCheckable( true );
+    a->setChecked( true );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "viewToolBar" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotViewToolBar );
+    act_tbar = a; // to on/off
+  }
+  {
+    auto a = new QAction( "View &Statusbar", this );
+    a->setCheckable( true );
+    a->setChecked( true );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "viewStatusBar" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotViewStatusBar );
+    pViewMenu->addAction( a );
+    pViewMenu->addSeparator();
+    act_sbar = a;
+  }
+  {
+    auto a = new QAction( "Show &Orders", this );
+    a->setCheckable( true );
+    a->setChecked( sett.showord );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "showOrd" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotShowOrd );
+    pViewMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "Show &Grid", this );
+    a->setCheckable( true );
+    a->setChecked( sett.showgrid );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "showGrid" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotShowGrid );
+    pViewMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "Show &Names", this );
+    a->setCheckable( true );
+    a->setChecked( sett.shownames );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "showNames" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotShowNames );
+    pViewMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "Show &Icons", this );
+    a->setCheckable( true );
+    a->setChecked( sett.showicons );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "showIcons" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotShowIcons );
+    pViewMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "Show &Links", this );
+    a->setCheckable( true );
+    a->setChecked( sett.showLinks );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "showLinks" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotShowLinks );
+    pViewMenu->addAction( a );
+    pViewMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( "Clear log", this );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "logClear" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotLogClear );
+    pViewMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "Save log", this );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "logSave" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotLogSave );
+    pViewMenu->addAction( a );
+  }
 
   // ==== window group
-
-  act_winClose = new QAction( QIcon::fromTheme("window-close"), "Cl&ose Window", this);
-  act_winClose->setWhatsThis( tr("Close this window") );
-  act_winClose->setProperty( "alwaysVisible", true );
-  registerAction( act_winClose, "windowClose" );
-  connect( act_winClose, &QAction::triggered, this, &LaboWin::slotWindowClose );
-
-  act_winCloseAll = new QAction( "Close &All Windows",  this );
-  act_winCloseAll->setWhatsThis( tr("Close all windoww") );
-  act_winCloseAll->setProperty( "alwaysVisible", true );
-  registerAction( act_winCloseAll, "windowCloseAll" );
-  connect( act_winCloseAll, &QAction::triggered, this, &LaboWin::slotWindowCloseAll );
-
-  act_winTile = new QAction( "&Tile Windows",  this );
-  act_winTile->setWhatsThis( tr("Tile the windows") );
-  act_winTile->setProperty( "alwaysVisible", true );
-  registerAction( act_winTile, "windowTile" );
-  connect( act_winTile, &QAction::triggered, this, &LaboWin::slotWindowTile );
-
-  act_winCascade = new QAction( "&Cascade Windows",  this );
-  act_winCascade->setWhatsThis( tr("Cascade the windows") );
-  act_winCascade->setProperty( "alwaysVisible", true );
-  registerAction( act_winCascade, "windowCascase" );
-  connect( act_winCascade, &QAction::triggered, this, &LaboWin::slotWindowCascade );
-
-  act_winNext = new QAction( "Next window",  this );
-  act_winNext->setShortcut( Qt::Key_F6 );
-  act_winNext->setWhatsThis( tr("Activate next window") );
-  act_winNext->setProperty( "alwaysVisible", true );
-  registerAction( act_winNext, "nextSubWindow" );
-  connect( act_winNext, &QAction::triggered, mdiArea, &QMdiArea::activateNextSubWindow );
-
-  act_winPrev = new QAction( "Previous window",  this );
-  act_winPrev->setWhatsThis( tr("Activate previous window") );
-  act_winPrev->setProperty( "alwaysVisible", true );
-  registerAction( act_winPrev, "prevSubWindow" );
-  connect( act_winPrev, &QAction::triggered, mdiArea, &QMdiArea::activatePreviousSubWindow );
+  {
+    auto a = new QAction( QIcon::fromTheme("window-close"), "Cl&ose Window", this);
+    a->setWhatsThis( tr("Close this window") );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "windowClose" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotWindowClose );
+    act_winClose = a;
+  }
+  {
+    auto a = new QAction( "Close &All Windows",  this );
+    a->setWhatsThis( tr("Close all windoww") );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "windowCloseAll" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotWindowCloseAll );
+    act_winCloseAll = a;
+  }
+  {
+    auto a = new QAction( "&Tile Windows",  this );
+    a->setWhatsThis( tr("Tile the windows") );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "windowTile" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotWindowTile );
+    act_winTile = a;
+  }
+  {
+    auto a = new QAction( "&Cascade Windows",  this );
+    a->setWhatsThis( tr("Cascade the windows") );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "windowCascase" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotWindowCascade );
+    act_winCascade = a;
+  }
+  {
+    auto a = new QAction( "Next window",  this );
+    a->setShortcut( Qt::Key_F6 );
+    a->setWhatsThis( tr("Activate next window") );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "nextSubWindow" );
+    connect( a, &QAction::triggered, mdiArea, &QMdiArea::activateNextSubWindow );
+    act_winNext = a;
+  }
+  {
+    auto a = new QAction( "Previous window",  this );
+    a->setWhatsThis( tr("Activate previous window") );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "prevSubWindow" );
+    connect( a, &QAction::triggered, mdiArea, &QMdiArea::activatePreviousSubWindow );
+    act_winPrev = a;
+  }
 
 
   // ==== help group
+  {
+    auto a = new QAction( QIcon::fromTheme("help-about"), "&About", this );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "helpAbout" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotHelpAbout );
+    pHelpMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "About &Qt", this );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "helpAboutQt" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotHelpAboutQt );
+    pHelpMenu->addAction( a );
+  }
 
-  act_helpabout = new QAction( QIcon::fromTheme("help-about"), "&About", this );
-  act_helpabout->setProperty( "alwaysVisible", true );
-  registerAction( act_helpabout, "helpAbout" );
-  connect( act_helpabout, &QAction::triggered, this, &LaboWin::slotHelpAbout );
+  {
+    auto a = new QAction( QIcon( ":icons/test.png" ), "&Test", this );
+    a->setWhatsThis( tr("Click this button to test something.") );
+    a->setProperty( "alwaysVisible", true );
+    registerAction( a, "test" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotTest );
+    pEditMenu->addAction( a );
+    fileToolbar->addAction( a );
+    fileToolbar->addSeparator();
+  }
 
-  act_helpaboutqt = new QAction( "About &Qt", this );
-  act_helpaboutqt->setProperty( "alwaysVisible", true );
-  // act_helpabout->setWhatsThis( tr("") );
-  registerAction( act_helpaboutqt, "helpAboutQt" );
-  connect( act_helpaboutqt, &QAction::triggered, this, &LaboWin::slotHelpAboutQt );
-
-  // act_whatsthis = new QAction( "&What's This", this );
-  // act_whatsthis->setWhatsThis( tr("") );
-  // TODO:
-  //connect( act_whatsthis, &QAction::triggered, this, &LaboWin::slotWhatsThis );
-
-  act_test = new QAction( QIcon( ":icons/test.png" ), "&Test", this );
-  act_test->setWhatsThis( tr("Click this button to test something.") );
-  act_test->setProperty( "alwaysVisible", true );
-  registerAction( act_test, "test" );
-  connect( act_test, &QAction::triggered, this, &LaboWin::slotTest );
-
-
-  ///////////////////////////////////////////////////////////////////
-  // menuBar entry pFileMenu
-
-  pFileMenu = menuBar()->addMenu( tr("&File") );
-  pFileMenu->addAction( act_new );
-  pFileMenu->addSeparator();
-  pFileMenu->addAction( act_openxml );
-  pFileMenu->addAction( act_savexml );
-  pFileMenu->addAction( act_savexmlas );
-  pFileMenu->addSeparator();
-  pFileMenu->addAction( act_print );
-  pFileMenu->addSeparator();
-  pFileMenu->addAction( act_close );
-  pFileMenu->addSeparator();
-  pFileMenu->addAction( act_settings );
-  pFileMenu->addAction( act_savesett );
-  pFileMenu->addSeparator();
-  pFileMenu->addAction( act_quit );
-
-  ///////////////////////////////////////////////////////////////////
-  // menuBar entry pEditMenu
-  pEditMenu = menuBar()->addMenu( tr("&Edit") );
-  pEditMenu->addAction( act_undo );
-  pEditMenu->addSeparator();
-  pEditMenu->addAction( act_cut );
-  pEditMenu->addAction( act_copy );
-  pEditMenu->addAction( act_paste );
-  pEditMenu->addSeparator();
-  pEditMenu->addAction( act_test );
-
-  ///////////////////////////////////////////////////////////////////
-  // menuBar entry pElmMenu
-  pElmMenu = menuBar()->addMenu( tr("E&lement") );
-  pElmMenu->addAction( act_newelm );
-  pElmMenu->addAction( act_delelm );
-  pElmMenu->addAction( act_editelm );
-  pElmMenu->addSeparator();
-  pElmMenu->addAction( act_renameelm );
-  pElmMenu->addSeparator();
-  pElmMenu->addAction( act_qlinkelm );
-  pElmMenu->addAction( act_qplinkelm );
-  pElmMenu->addAction( act_unlinkelm );
-  pElmMenu->addSeparator();
-  pElmMenu->addAction( act_lockelm );
-  pElmMenu->addAction( act_ordelm );
-  pElmMenu->addAction( act_markelm );
-  pElmMenu->addAction( act_moveelm );
-  pElmMenu->addSeparator();
-  pElmMenu->addAction( act_infoelm );
-  pElmMenu->addAction( act_showtreeelm );
-  pElmMenu->addSeparator();
-  pElmMenu->addAction( act_testelm1 );
-  pElmMenu->addAction( act_testelm2 );
-
-  ///////////////////////////////////////////////////////////////////
-  // menuBar entry pOutMenu
-  pOutMenu = menuBar()->addMenu( tr("&Out") );
-  pOutMenu->addAction( act_newout );
-  pOutMenu->addAction( act_delout );
-  pOutMenu->addAction( act_editout );
-  pOutMenu->addSeparator();
-  pOutMenu->addAction( act_renameout );
-  pOutMenu->addSeparator();
-  pOutMenu->addAction( act_selectout );
-  pOutMenu->addSeparator();
-  pOutMenu->addAction( act_showoutdata );
-  pOutMenu->addAction( act_exportout );
-
-  ///////////////////////////////////////////////////////////////////
-  // menuBar entry pGraphMenu
-  pGraphMenu = menuBar()->addMenu( tr("&Plot") );
-  pGraphMenu->addAction( act_newgraph );
-  pGraphMenu->addAction( act_delgraph );
-  pGraphMenu->addAction( act_editgraph );
-  pGraphMenu->addSeparator();
-  pGraphMenu->addAction( act_renamegraph );
-  pGraphMenu->addSeparator();
-  pGraphMenu->addAction( act_selectgraph );
-  pGraphMenu->addSeparator();
-  pGraphMenu->addAction( act_showgraph );
-  pGraphMenu->addSeparator();
-  pGraphMenu->addAction( act_graphaddout );
-  pGraphMenu->addSeparator();
-  pGraphMenu->addAction( act_showgraphdata );
-  pGraphMenu->addAction( act_exportgraphdata );
-  pGraphMenu->addAction( act_cloneGraph );
-
-  ///////////////////////////////////////////////////////////////////
-  // menuBar entry pSimulMenu
-  pSimulMenu = menuBar()->addMenu( tr("&Simulation") );
-  pSimulMenu->addAction( act_newSimul );
-  pSimulMenu->addAction( act_delSimul );
-  pSimulMenu->addAction( act_editSimul );
-  pSimulMenu->addSeparator();
-  pSimulMenu->addAction( act_renameSimul );
-  pSimulMenu->addSeparator();
-  pSimulMenu->addAction( act_selectSimul );
-  pSimulMenu->addSeparator();
-  pSimulMenu->addAction( act_setActiveSimul );
-  pSimulMenu->addAction( act_cloneSimul );
-
-  ///////////////////////////////////////////////////////////////////
-  // menuBar entry pModelMenu
-  pModelMenu = menuBar()->addMenu( tr("&Model") );
-  pModelMenu->addAction( act_editmodel );
-  pModelMenu->addAction( act_showtreemodel );
-  //
-  pModelMenu->addSeparator();
-  pModelMenu->addAction( act_newScheme );
-  pModelMenu->addAction( act_delScheme );
-  pModelMenu->addAction( act_editScheme );
-  pModelMenu->addSeparator();
-  pModelMenu->addAction( act_renameScheme );
-  pModelMenu->addAction( act_cloneScheme );
-
-  ///////////////////////////////////////////////////////////////////
-  // menuBar entry pRunMenu
-  pRunMenu = menuBar()->addMenu( tr("&Run") );
-  pRunMenu->addAction( act_runrun );
-  pRunMenu->addSeparator();
-  pRunMenu->addAction( act_runscript );
-  pRunMenu->addAction( act_runmodelscript );
-  pRunMenu->addSeparator();
-  pRunMenu->addAction( act_reset );
-  pRunMenu->addAction( act_initengine );
-
-  ///////////////////////////////////////////////////////////////////
-  // menuBar entry pViewMenu
-  pViewMenu = menuBar()->addMenu( tr("&View") );
-  // pViewMenu->setCheckable(true); TODO: what?
-  pViewMenu->addAction( act_tbar );
-  pViewMenu->addAction( act_sbar );
-  pViewMenu->addSeparator();
-  pViewMenu->addAction( act_showord );
-  pViewMenu->addAction( act_showgrid );
-  pViewMenu->addAction( act_shownames );
-  pViewMenu->addAction( act_showicons );
-  pViewMenu->addAction( act_showlinks );
-  pViewMenu->addSeparator();
-  pViewMenu->addAction( act_logclear );
-  pViewMenu->addAction( act_logsave );
-
-  ///////////////////////////////////////////////////////////////////
-  // menuBar entry window-Menu
-  pWindowMenu = menuBar()->addMenu( tr("&Window") );
-  // all to separate function windowMenuAboutToShow
-
-  ///////////////////////////////////////////////////////////////////
-  // menuBar entry pHelpMenu
-  pHelpMenu = menuBar()->addMenu( tr("&Help") );
-  pHelpMenu->addAction( act_helpabout );
-  pHelpMenu->addAction( act_helpaboutqt );
-  // pHelpMenu->addSeparator();
-  // pHelpMenu->addAction( act_whatsthis );
 
   // Connect the submenu slots with signals
 
   connect( pWindowMenu, &QMenu::aboutToShow, this, &LaboWin::windowMenuAboutToShow );
 
-  ///////////////////////////////////////////////////////////////////
-  // TOOLBARS
-
-  fileToolbar = addToolBar( tr("File") );
-  fileToolbar->addAction( act_new );
-  fileToolbar->addAction( act_openxml );
-  fileToolbar->addAction( act_savexml );
-    fileToolbar->addSeparator();
-  fileToolbar->addAction( act_test );
-    fileToolbar->addSeparator();
-
-  elmToolbar = addToolBar( tr("Element") );
-  elmToolbar->addAction( act_newelm );
-  elmToolbar->addAction( act_delelm );
-  elmToolbar->addAction( act_editelm );
-  // elmToolbar->addAction( act_lockelm );
-  elmToolbar->addAction( act_ordelm );
-  elmToolbar->addAction( act_markelm );
-  elmToolbar->addAction( act_infoelm );
-    elmToolbar->addSeparator();
-  elmToolbar->addAction( act_newout );
-  elmToolbar->addAction( act_delout );
-  elmToolbar->addAction( act_editout );
-  elmToolbar->addAction( act_showoutdata );
-    elmToolbar->addSeparator();
-  elmToolbar->addAction( act_newgraph );
-  elmToolbar->addAction( act_delgraph );
-  elmToolbar->addAction( act_editgraph );
-  elmToolbar->addAction( act_showgraph );
-  elmToolbar->addAction( act_showgraphdata );
-    elmToolbar->addSeparator();
-  elmToolbar->addAction( act_editmodel );
-    elmToolbar->addSeparator();
-  elmToolbar->addAction( act_runrun );
-  elmToolbar->addAction( act_runscript );
 
 }
 

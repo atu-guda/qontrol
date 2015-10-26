@@ -301,46 +301,11 @@ class LaboWin : public QMainWindow
     QToolBar *fileToolbar;
     QToolBar *elmToolbar;
 
-    /** actions */
-    QAction *act_new, *act_openxml, *act_close,
-            *act_savexml, *act_savexmlas,
-            *act_print, *act_settings, *act_savesett, *act_quit,
-            *act_undo, *act_cut, *act_copy, *act_paste,
-            // elm
-            *act_newelm, *act_delelm, *act_editelm, *act_renameelm,
-            *act_qlinkelm, *act_qplinkelm, *act_unlinkelm,
-            *act_lockelm, *act_ordelm, *act_markelm, *act_moveelm,
-            *act_infoelm, *act_showtreeelm,
-            *act_testelm1, *act_testelm2,
-            // out
-            *act_newout, *act_delout, *act_editout, *act_selectout, *act_renameout,
-            *act_showoutdata, *act_exportout,
-            // graph
-            *act_newgraph, *act_delgraph, *act_editgraph, *act_selectgraph,
-            *act_renamegraph,
-            *act_showgraph, *act_graphaddout, *act_showgraphdata,
-            *act_exportgraphdata, *act_cloneGraph,
-            // simulation
-            *act_newSimul, *act_delSimul, *act_editSimul, *act_selectSimul,
-            *act_renameSimul,
-            *act_setActiveSimul, *act_cloneSimul,
-            // model/scheme
-            *act_editmodel, *act_showtreemodel,
-            *act_newScheme, *act_delScheme, *act_editScheme,
-            *act_renameScheme, *act_cloneScheme,
-            // run
-            *act_runrun, *act_reset,
-             *act_initengine, *act_runscript, *act_runmodelscript,
-            // iface
-            *act_tbar, *act_sbar,
-            *act_showord, *act_showgrid, *act_shownames, *act_showicons, *act_showlinks,
-            *act_logclear, *act_logsave,
+    /** actions: only special */
+    QAction *act_tbar, *act_sbar,
             // win
             *act_winClose, *act_winCloseAll, *act_winTile, *act_winCascade,
-            *act_winNext, *act_winPrev,
-            // help
-            *act_helpabout, *act_helpaboutqt, // *act_whatsthis,
-            *act_test;
+            *act_winNext, *act_winPrev;
     QMap<QByteArray,QAction*> acts;
 
     /** static pointer to main window -- the only allowed */
