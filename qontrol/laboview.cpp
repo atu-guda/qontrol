@@ -479,15 +479,39 @@ void LaboView::cutElm()
   delElm();
 }
 
+void LaboView::cutObj()
+{
+  copyObj();
+  // delObj(); // TODO: implement
+}
+
 void LaboView::copyElm()
 {
   return sview->copyElm();
 }
 
+void LaboView::copyObj()
+{
+  QWidget *fw = focusWidget();
+  if( fw ) { // TODO: use common parent
+    QMetaObject::invokeMethod( fw, "copyObj", Qt::AutoConnection );
+  }
+}
+
+
 void LaboView::pasteElm()
 {
   return sview->pasteElm();
 }
+
+void LaboView::pasteObj()
+{
+  QWidget *fw = focusWidget();
+  if( fw ) { // TODO: use common parent
+    QMetaObject::invokeMethod( fw, "pasteObj", Qt::AutoConnection );
+  }
+}
+
 
 // ==== outs related
 

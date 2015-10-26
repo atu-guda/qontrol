@@ -1002,13 +1002,23 @@ void StructView::testElm2()
   return;
 }
 
-void StructView::cutElm()
+void StructView::cutElm() // TODO: delete
 {
-  copyElm();
+  cutObj();
+}
+
+void StructView::cutObj()
+{
+  copyObj();
   delElm();
 }
 
-void StructView::copyElm()
+void StructView::copyElm() // TODO: delete
+{
+  copyObj();
+}
+
+void StructView::copyObj()
 {
   if( !selObj ) {
     return;
@@ -1020,7 +1030,12 @@ void StructView::copyElm()
   }
 }
 
-void StructView::pasteElm()
+void StructView::pasteElm() // TODO: delete
+{
+  pasteObj();
+}
+
+void StructView::pasteObj()
 {
   if( selObj ) {
     return;

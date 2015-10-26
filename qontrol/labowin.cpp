@@ -233,7 +233,7 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction(  QIcon::fromTheme("edit-cut"),"Cut", this );
-    a->setShortcuts( QKeySequence::Cut );
+    // a->setShortcuts( QKeySequence::Cut );
     a->setWhatsThis( tr("Cut selected") );
     registerAction( a, "cutElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotEditCut );
@@ -242,7 +242,7 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( QIcon::fromTheme("edit-copy"), "Copy", this );
-    a->setShortcuts( QKeySequence::Copy );
+    // a->setShortcuts( QKeySequence::Copy );
     a->setWhatsThis( tr("Copy selected") );
     registerAction( a, "copyElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotEditCopy );
@@ -250,7 +250,7 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( QIcon::fromTheme("edit-paste"), "Paste", this );
-    a->setShortcuts( QKeySequence::Paste );
+    // a->setShortcuts( QKeySequence::Paste );
     a->setWhatsThis( tr("Paste selected") );
     registerAction( a, "pasteElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotEditPaste );
@@ -259,6 +259,32 @@ void LaboWin::initIface()
   }
 
   // -- object part
+  {
+    auto a = new QAction(  QIcon::fromTheme("edit-cut"),"Cut Object", this );
+    a->setShortcuts( QKeySequence::Cut );
+    a->setWhatsThis( tr("Cut selected object") );
+    registerAction( a, "cutObj" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotCutObj );
+    pEditMenu->addSeparator();
+    pEditMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( QIcon::fromTheme("edit-copy"), "Copy Object", this );
+    a->setShortcuts( QKeySequence::Copy );
+    a->setWhatsThis( tr("Copy selected object") );
+    registerAction( a, "copyObj" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotCopyObj );
+    pEditMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( QIcon::fromTheme("edit-paste"), "Paste Object", this );
+    a->setShortcuts( QKeySequence::Paste );
+    a->setWhatsThis( tr("Paste selected object") );
+    registerAction( a, "pasteObj" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotPasteObj );
+    pEditMenu->addAction( a );
+    pEditMenu->addSeparator();
+  }
 
 
   // ==== Element group
@@ -1189,6 +1215,22 @@ void LaboWin::slotEditCopy()
 void LaboWin::slotEditPaste()
 {
   callLaboViewSlot( "pasteElm", tr( "Inserting clipboard contents..." ) );
+}
+
+
+void LaboWin::slotCutObj()
+{
+  callLaboViewSlot( "cutObj", tr( "Cutting object..." ) );
+}
+
+void LaboWin::slotCopyObj()
+{
+  callLaboViewSlot( "copyObj", tr( "Copying selected object to clipboard..." ) );
+}
+
+void LaboWin::slotPasteObj()
+{
+  callLaboViewSlot( "pasteObj", tr( "Inserting clipboard contents to object" ) );
 }
 
 

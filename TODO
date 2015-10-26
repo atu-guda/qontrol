@@ -1,5 +1,6 @@
-Subscheme libs.
+Common parent for most views: and place for actions.
 Copy/paste schems (for libs), plots, outs. -- may be common code
+Subscheme libs.
 Common menu 'Object' with common actions - dispatch to focused
 Document: cmdline options, common workflow.
 Selections in views/document

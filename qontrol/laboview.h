@@ -110,6 +110,10 @@ class LaboView : public CommonSubwin
    void cutElm();
    void copyElm();
    void pasteElm();
+   // common object
+   void cutObj();
+   void copyObj();
+   void pasteObj();
 
    // outs related
    void addOut();

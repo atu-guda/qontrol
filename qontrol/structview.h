@@ -109,6 +109,10 @@ class StructView : public QWidget  {
     void cutElm();
     void copyElm();
     void pasteElm();
+    // common object slots
+    void cutObj();
+    void copyObj();
+    void pasteObj();
 
   signals:
     void sig_changeSel(int,int,int);

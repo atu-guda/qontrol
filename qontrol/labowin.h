@@ -148,7 +148,11 @@ class LaboWin : public QMainWindow
     void slotEditCopy();
     /** paste the clipboard into the document*/
     void slotEditPaste();
-    // atu start:
+
+    // ==== genetic object related
+    void slotCutObj();
+    void slotCopyObj();
+    void slotPasteObj();
 
     // ==== element related
     void slotNewElm();
