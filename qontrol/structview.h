@@ -30,6 +30,7 @@ class OutDataView;
 #include "scheme.h"
 #include "laboview.h"
 #include "commonsubwin.h"
+#include "cmdview.h"
 
 class QPainter;
 
@@ -38,7 +39,7 @@ class QPainter;
   *@author atu
   */
 
-class StructView : public QWidget  {
+class StructView : public CmdView  {
   Q_OBJECT
   public:
     //* information about element to draw
@@ -110,14 +111,21 @@ class StructView : public QWidget  {
     void copyElm();
     void pasteElm();
     // common object slots
-    void cutObj();
-    void copyObj();
-    void pasteObj();
+    virtual void addObj() override;
+    virtual void delObj() override;
+    virtual void editObj() override;
+    virtual void renameObj() override;
+    virtual void cloneObj() override;
+    virtual void cutObj() override;
+    virtual void copyObj() override;
+    virtual void pasteObj() override;
+    virtual void infoObj() override;
+    virtual void showTreeObj() override;
+    virtual void testObj() override;
 
   signals:
     void sig_changeSel(int,int,int);
     void sig_changeLevel(int);
-    void viewChanged();
   protected:
     /** fill and calc info about element */
     bool fill_elmInfo( const TMiso *ob, ElemInfo &el ) const;

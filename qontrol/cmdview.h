@@ -36,6 +36,8 @@ class CmdView : public QWidget {
     virtual void infoObj();
     virtual void showTreeObj();
     virtual void testObj();
+  signals:
+    void viewChanged();
   protected:
 };
 

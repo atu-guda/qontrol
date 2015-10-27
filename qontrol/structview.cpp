@@ -32,7 +32,7 @@
 
 
 StructView::StructView( QWidget *a_par, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview )
-            : QWidget( a_par ), sch( a_sch ), mainview( mview ), oview( a_oview )
+            : CmdView( a_par ), sch( a_sch ), mainview( mview ), oview( a_oview )
 {
   em = LaboWin::Em();
   QPalette pal;
@@ -637,86 +637,22 @@ QString StructView::getSchemeName() const
 
 void StructView::addElm()
 {
-  if( !checkState( noselCheck ) ) {
-    return;
-  }
-
-  QString objName;
-  QString tp = SelectTypeDialog::getTypeAndName( sch, this, objName, "TMiso" );
-  if( tp.isEmpty() ) {
-    return;
-  }
-
-  int hint_order = sch->hintOrd(); // TODO: to dialog?
-  bool ok;
-  int order = QInputDialog::getInt( this, "New element order",
-      "Input element order",  hint_order, 0, IMAX, 1, &ok );
-  if( !ok ) {
-    return;
-  }
-
-  TMiso *ob = sch->addElem( tp, objName, order, sel_x, sel_y );
-  if( !ob  ) {
-    handleError( this, QString("Fail to add Elem: type \"%1\" \"%2\"").arg(tp).arg(objName) );
-    return;
-  }
-  changeSel( 0, 0, 1 ); // update sel
-  editElm();
+  addObj();
 }
 
 void StructView::delElm()
 {
-  if( ! checkState( selCheck ) ) {
-    return;
-  }
-
-  QString oname = selObj->objectName();
-
-  bool sel_is_mark = ( selObj == markObj );
-
-  if( confirmDelete( this, "element", oname) ) {
-    sch->delObj( oname );
-    if( sel_is_mark ) {
-      markObj = nullptr;
-    }
-
-    changeSel( 0, 0, 1 ); // update sel
-    emit viewChanged();
-  };
+  delObj();
 }
 
 void StructView::editElm()
 {
-  if( ! checkState( selCheck ) ) {
-    return;
-  }
-  bool ok = editObj( this, selObj );
-  if( ok ) {
-    update();
-    // model->reset(); // TODO: when need?
-    emit viewChanged();
-  }
+  editObj();
 }
 
 void StructView::renameElm()
 {
-  if( ! checkState( selCheck ) ) {
-    return;
-  }
-
-  QString old_name = selObj->objectName();
-  bool ok;
-  QString new_name = QInputDialog::getText( this, "Rename:" + selObj->getFullName(),
-      "Enter new name:", QLineEdit::Normal, old_name, &ok );
-
-  if( ok ) {
-    if( sch->renameObj( old_name, new_name ) ) {
-      // model->reset();
-      emit viewChanged();
-    }
-  }
-
-  // TODO: change links named
+  renameObj();
 }
 
 
@@ -861,6 +797,126 @@ void StructView::moveElm()
 
 void StructView::infoElm()
 {
+  infoObj();
+}
+
+void StructView::showTreeElm()
+{
+  showTreeObj();
+}
+
+
+void StructView::testElm1()
+{
+  testObj();
+}
+
+void StructView::testElm2()
+{
+  if( ! checkState( selCheck ) ) {
+    return;
+  }
+  if( selObj == 0 ) {
+    return;
+  }
+  // place for action here
+
+  return;
+}
+
+
+void StructView::addObj()
+{
+  if( !checkState( noselCheck ) ) {
+    return;
+  }
+
+  QString objName;
+  QString tp = SelectTypeDialog::getTypeAndName( sch, this, objName, "TMiso" );
+  if( tp.isEmpty() ) {
+    return;
+  }
+
+  int hint_order = sch->hintOrd(); // TODO: to dialog?
+  bool ok;
+  int order = QInputDialog::getInt( this, "New element order",
+      "Input element order",  hint_order, 0, IMAX, 1, &ok );
+  if( !ok ) {
+    return;
+  }
+
+  TMiso *ob = sch->addElem( tp, objName, order, sel_x, sel_y );
+  if( !ob  ) {
+    handleError( this, QString("Fail to add Elem: type \"%1\" \"%2\"").arg(tp).arg(objName) );
+    return;
+  }
+  changeSel( 0, 0, 1 ); // update sel
+  editObj();
+
+}
+
+void StructView::delObj()
+{
+  if( ! checkState( selCheck ) ) {
+    return;
+  }
+
+  QString oname = selObj->objectName();
+
+  bool sel_is_mark = ( selObj == markObj );
+
+  if( confirmDelete( this, "element", oname) ) {
+    sch->delObj( oname );
+    if( sel_is_mark ) {
+      markObj = nullptr;
+    }
+
+    changeSel( 0, 0, 1 ); // update sel
+    emit viewChanged();
+  };
+}
+
+void StructView::editObj()
+{
+  if( ! checkState( selCheck ) ) {
+    return;
+  }
+  bool ok = ::editObj( this, selObj );
+  if( ok ) {
+    update();
+    // model->reset(); // TODO: when need?
+    emit viewChanged();
+  }
+}
+
+void StructView::renameObj()
+{
+  if( ! checkState( selCheck ) ) {
+    return;
+  }
+
+  QString old_name = selObj->objectName();
+  bool ok;
+  QString new_name = QInputDialog::getText( this, "Rename:" + selObj->getFullName(),
+      "Enter new name:", QLineEdit::Normal, old_name, &ok );
+
+  if( ok ) {
+    if( sch->renameObj( old_name, new_name ) ) {
+      // model->reset();
+      emit viewChanged();
+    }
+  }
+
+  // TODO: change links named
+}
+
+void StructView::cloneObj()
+{
+
+}
+
+void StructView::infoObj() // TODO: common
+{
   if( ! checkState( selCheck ) ) {
     return;
   }
@@ -916,9 +972,10 @@ void StructView::infoElm()
   dia->exec();
   delete dia;
   emit viewChanged();
+
 }
 
-void StructView::showTreeElm()
+void StructView::showTreeObj() // TODO: common
 {
   if( ! checkState( selCheck ) ) {
     return;
@@ -952,10 +1009,10 @@ void StructView::showTreeElm()
   delete dia;
   emit viewChanged();
   return;
+
 }
 
-
-void StructView::testElm1()
+void StructView::testObj()
 {
   QString buf;
   if( ! checkState( selCheck ) )
@@ -989,18 +1046,6 @@ void StructView::testElm1()
   emit viewChanged();
 }
 
-void StructView::testElm2()
-{
-  if( ! checkState( selCheck ) ) {
-    return;
-  }
-  if( selObj == 0 ) {
-    return;
-  }
-  // place for action here
-
-  return;
-}
 
 void StructView::cutElm() // TODO: delete
 {
