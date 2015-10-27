@@ -16,6 +16,7 @@ LIBS += -lfftw3
 SOURCES += \
   addelemdia.cpp \
   circbuf.cpp \
+  cmdview.cpp \
   commonsubwin.cpp \
   contgraph.cpp \
   contout.cpp \
@@ -91,6 +92,7 @@ SOURCES += \
 HEADERS += \
   addelemdia.h \
   circbuf.h \
+  cmdview.h \
   commonsubwin.h \
   contgraph.h \
   contout.h \
