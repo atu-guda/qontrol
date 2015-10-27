@@ -20,25 +20,30 @@
 
 #include <QWidget>
 
+class TDataSet;
+
 class CmdView : public QWidget {
   Q_OBJECT
   public:
-    CmdView( QWidget *a_par );
+    CmdView( QWidget *a_par, TDataSet *a_storage );
+    virtual TDataSet* getSelObj() const = 0;
+    virtual void handleSelChange() = 0;
   public slots:
-    virtual void addObj();
-    virtual void delObj();
-    virtual void editObj();
-    virtual void renameObj();
-    virtual void cloneObj();
-    virtual void cutObj();
-    virtual void copyObj();
-    virtual void pasteObj();
-    virtual void infoObj();
-    virtual void showTreeObj();
-    virtual void testObj();
+    virtual bool addObj();
+    virtual bool delObj();
+    virtual bool editObj();
+    virtual bool renameObj();
+    virtual bool cloneObj();
+    virtual bool cutObj();
+    virtual bool copyObj();
+    virtual bool pasteObj();
+    virtual bool infoObj();
+    virtual bool showTreeObj();
+    virtual bool testObj();
   signals:
     void viewChanged();
   protected:
+    TDataSet* storage;
 };
 
 #endif // CMDVIEW_H

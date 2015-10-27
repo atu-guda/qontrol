@@ -32,7 +32,7 @@
 
 
 StructView::StructView( QWidget *a_par, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview )
-            : CmdView( a_par ), sch( a_sch ), mainview( mview ), oview( a_oview )
+            : CmdView( a_par, a_sch ), sch( a_sch ), mainview( mview ), oview( a_oview )
 {
   em = LaboWin::Em();
   QPalette pal;
@@ -87,6 +87,19 @@ void StructView::print()
   printAll();
 }
 
+void StructView::handleSelChange()
+{
+  selObj = nullptr;
+  sel_x = qBound( 0, sel_x, MODEL_MX-1 );
+  sel_y = qBound( 0, sel_y, MODEL_MY-1 );
+  sel = -1;
+  auto ob = sch->xy2Miso( sel_x, sel_y );
+  if( ob ) {
+    selObj = ob;
+    sel = ob->getMyIndexInParent();
+  }
+}
+
 
 void StructView::changeSel( int x, int y, int rel )
 {
@@ -113,15 +126,8 @@ void StructView::changeSel( int x, int y, int rel )
             break;
     default: break;
   };
-  sel_x = qBound( 0, sel_x, MODEL_MX-1 );
-  sel_y = qBound( 0, sel_y, MODEL_MY-1 );
-  sel = -1;
-  ob = sch->xy2Miso( sel_x, sel_y );
-  if( ob ) {
-    selObj = ob;
-    sel = ob->getMyIndexInParent();
-  }
-  update();
+  handleSelChange();
+  // update();
   emit viewChanged();
 }
 
@@ -132,7 +138,7 @@ void StructView::changeLevel( int lev )
   if( level < 0 || level >= 64 ) {
     level = 0;
   }
-  update();
+  // update();
   emit viewChanged();
 }
 
@@ -816,25 +822,22 @@ void StructView::testElm2()
   if( ! checkState( selCheck ) ) {
     return;
   }
-  if( selObj == 0 ) {
-    return;
-  }
   // place for action here
 
   return;
 }
 
 
-void StructView::addObj()
+bool StructView::addObj()
 {
   if( !checkState( noselCheck ) ) {
-    return;
+    return false;
   }
 
   QString objName;
   QString tp = SelectTypeDialog::getTypeAndName( sch, this, objName, "TMiso" );
   if( tp.isEmpty() ) {
-    return;
+    return false;
   }
 
   int hint_order = sch->hintOrd(); // TODO: to dialog?
@@ -842,57 +845,53 @@ void StructView::addObj()
   int order = QInputDialog::getInt( this, "New element order",
       "Input element order",  hint_order, 0, IMAX, 1, &ok );
   if( !ok ) {
-    return;
+    return false;
   }
 
   TMiso *ob = sch->addElem( tp, objName, order, sel_x, sel_y );
   if( !ob  ) {
     handleError( this, QString("Fail to add Elem: type \"%1\" \"%2\"").arg(tp).arg(objName) );
-    return;
+    return false;
   }
   changeSel( 0, 0, 1 ); // update sel
   editObj();
-
+  return true;
 }
 
-void StructView::delObj()
+bool StructView::delObj()
 {
-  if( ! checkState( selCheck ) ) {
-    return;
-  }
-
-  QString oname = selObj->objectName();
-
   bool sel_is_mark = ( selObj == markObj );
 
-  if( confirmDelete( this, "element", oname) ) {
-    sch->delObj( oname );
-    if( sel_is_mark ) {
-      markObj = nullptr;
-    }
+  if( !CmdView::delObj() ) {
+    return false;
+  }
+  if( sel_is_mark ) {
+    markObj = nullptr;
+  }
+  changeSel( 0, 0, 1 ); // update sel
 
-    changeSel( 0, 0, 1 ); // update sel
-    emit viewChanged();
-  };
+  return false;
 }
 
-void StructView::editObj()
+bool StructView::editObj()
 {
   if( ! checkState( selCheck ) ) {
-    return;
+    return false;
   }
   bool ok = ::editObj( this, selObj );
   if( ok ) {
-    update();
+    // update();
     // model->reset(); // TODO: when need?
     emit viewChanged();
+    return true;
   }
+  return false;
 }
 
-void StructView::renameObj()
+bool StructView::renameObj()
 {
   if( ! checkState( selCheck ) ) {
-    return;
+    return false;
   }
 
   QString old_name = selObj->objectName();
@@ -904,21 +903,23 @@ void StructView::renameObj()
     if( sch->renameObj( old_name, new_name ) ) {
       // model->reset();
       emit viewChanged();
+      // TODO: change links named
+      return true;
     }
   }
+  return false;
 
-  // TODO: change links named
 }
 
-void StructView::cloneObj()
+bool StructView::cloneObj()
 {
-
+  return CmdView::cloneObj();
 }
 
-void StructView::infoObj() // TODO: common
+bool StructView::infoObj() // TODO: common
 {
   if( ! checkState( selCheck ) ) {
-    return;
+    return false;
   }
 
   auto dia = new QDialog( this );
@@ -972,13 +973,14 @@ void StructView::infoObj() // TODO: common
   dia->exec();
   delete dia;
   emit viewChanged();
+  return true;
 
 }
 
-void StructView::showTreeObj() // TODO: common
+bool StructView::showTreeObj() // TODO: common
 {
   if( ! checkState( selCheck ) ) {
-    return;
+    return false;
   }
 
   auto dia = new QDialog( this );
@@ -1008,15 +1010,15 @@ void StructView::showTreeObj() // TODO: common
   dia->exec();
   delete dia;
   emit viewChanged();
-  return;
-
+  return true;
 }
 
-void StructView::testObj()
+bool StructView::testObj()
 {
   QString buf;
-  if( ! checkState( selCheck ) )
-    return;
+  if( ! checkState( selCheck ) ) {
+    return false;
+  }
 
   auto dia = new QDialog( this );
   dia->setWindowTitle( QString( PACKAGE ": test1 ") + selObj->objectName() );
@@ -1044,6 +1046,7 @@ void StructView::testObj()
   dia->exec();
   delete dia;
   emit viewChanged();
+  return true;
 }
 
 
@@ -1052,10 +1055,12 @@ void StructView::cutElm() // TODO: delete
   cutObj();
 }
 
-void StructView::cutObj()
+bool StructView::cutObj()
 {
-  copyObj();
-  delElm();
+  if( copyObj() ) {
+    return delObj();
+  }
+  return false;
 }
 
 void StructView::copyElm() // TODO: delete
@@ -1063,16 +1068,15 @@ void StructView::copyElm() // TODO: delete
   copyObj();
 }
 
-void StructView::copyObj()
+bool StructView::copyObj()
 {
-  if( !selObj ) {
-    return;
+  QClipboard *clp = QApplication::clipboard();
+  if( !selObj || !clp ) {
+    return false;
   }
   QString s = selObj->toString();
-  QClipboard *clp = QApplication::clipboard();
-  if( clp ) {
-    clp->setText( s );
-  }
+  clp->setText( s );
+  return true;
 }
 
 void StructView::pasteElm() // TODO: delete
@@ -1080,14 +1084,11 @@ void StructView::pasteElm() // TODO: delete
   pasteObj();
 }
 
-void StructView::pasteObj()
+bool StructView::pasteObj()
 {
-  if( selObj ) {
-    return;
-  }
   QClipboard *clp = QApplication::clipboard();
-  if( !clp ) {
-    return;
+  if( selObj || !clp ) {
+    return false;
   }
   QString s = clp->text();
   int err_line, err_column;
@@ -1096,14 +1097,14 @@ void StructView::pasteObj()
   if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
     handleWarn( this, tr("Cannot parse clipboard string:\n%2\nLine %3 column %4.")
                 .arg(errstr).arg(err_line).arg(err_column) );
-    return;
+    return false;
   }
   QDomElement ee = x_dd.documentElement();
 
   QString tagname = ee.tagName();
   if( tagname != "obj" ) {
     handleWarn( this, tr("element tag is not 'obj':  %2").arg( tagname ) );
-    return;
+    return false;
   }
 
   QString eltype = ee.attribute( "otype" );
@@ -1142,18 +1143,14 @@ void StructView::pasteObj()
   delete dia;
 
   if( rc != QDialog::Accepted ) {
-    return;
+    return false;
   };
 
-  if( ! isGoodName( elname )  ) {
-    handleError( this, QString("Fail to add Elem: bad object name \"%1\"").arg(elname) );
-    return;
-  }
 
   TMiso *ob = sch->addElem( eltype, elname, oord, sel_x, sel_y) ; // reset() implied
   if( !ob  ) {
     handleError( this, QString("Fail to add Elem: %1 %2").arg(eltype).arg(elname) );
-    return;
+    return false;
   }
   if( !ob->fromDom( ee, errstr ) ) {
     handleWarn( this, tr("fail to set params:  %1").arg( errstr ) );
@@ -1162,7 +1159,7 @@ void StructView::pasteObj()
   ob->setData( "vis_y", sel_y );
   ob->setData( "ord", oord );
   changeSel( 0, 0, 1 ); // update sel
-
+  return true;
 }
 
 

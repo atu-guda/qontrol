@@ -17,78 +17,102 @@
 
 #include <QDebug>
 
-#include "defs.h"
+#include "dataset.h"
 #include "cmdview.h"
+#include "miscfun.h"
 
-CmdView::CmdView( QWidget *a_par )
-  : QWidget( a_par )
+CmdView::CmdView( QWidget *a_par, TDataSet *a_storage )
+  : QWidget( a_par ), storage( a_storage )
 {
 }
 
 
-void CmdView::addObj()
+bool CmdView::addObj()
 {
   qWarning() << "Unimplemented " << WHE;
+  return false;
 }
 
 
-void CmdView::delObj()
+bool CmdView::delObj()
 {
-  qWarning() << "Unimplemented " << WHE;
+  TDataSet *ob = getSelObj();
+  if( ! ob ) {
+    return false;
+  }
+
+  QString oname = ob->objectName();
+
+  if( confirmDelete( this, ob->getType(), oname ) ) {
+    storage->delObj( oname );
+    handleSelChange();
+    emit viewChanged();
+    return true;
+  };
+  return false;
 }
 
 
-void CmdView::editObj()
+bool CmdView::editObj()
 {
   qWarning() << "Unimplemented " << WHE;
+  return false;
 }
 
 
-void CmdView::renameObj()
+bool CmdView::renameObj()
 {
   qWarning() << "Unimplemented " << WHE;
+  return false;
 }
 
 
-void CmdView::cloneObj()
+bool CmdView::cloneObj()
 {
   qWarning() << "Unimplemented " << WHE;
+  return false;
 }
 
 
-void CmdView::cutObj()
+bool CmdView::cutObj()
 {
   qWarning() << "Unimplemented " << WHE;
+  return false;
 }
 
 
-void CmdView::copyObj()
+bool CmdView::copyObj()
 {
   qWarning() << "Unimplemented " << WHE;
+  return false;
 }
 
 
-void CmdView::pasteObj()
+bool CmdView::pasteObj()
 {
   qWarning() << "Unimplemented " << WHE;
+  return false;
 }
 
 
-void CmdView::infoObj()
+bool CmdView::infoObj()
 {
   qWarning() << "Unimplemented " << WHE;
+  return false;
 }
 
 
-void CmdView::showTreeObj()
+bool CmdView::showTreeObj()
 {
   qWarning() << "Unimplemented " << WHE;
+  return false;
 }
 
 
-void CmdView::testObj()
+bool CmdView::testObj()
 {
   qWarning() << "Unimplemented " << WHE;
+  return false;
 }
 
 

@@ -78,6 +78,8 @@ class StructView : public CmdView  {
     int getSel() const { return sel; }
     /** returns ptr to selected element or nullptr if none */
     TMiso* getSelElm() const { return selObj; }
+    virtual void handleSelChange() override;
+    virtual TDataSet* getSelObj() const override { return selObj; };
     /** returns ptr to marked element or nullptr if none */
     TMiso* getMarkElm() const { return markObj; }
     /** returns level for aux objects selection */
@@ -111,17 +113,17 @@ class StructView : public CmdView  {
     void copyElm();
     void pasteElm();
     // common object slots
-    virtual void addObj() override;
-    virtual void delObj() override;
-    virtual void editObj() override;
-    virtual void renameObj() override;
-    virtual void cloneObj() override;
-    virtual void cutObj() override;
-    virtual void copyObj() override;
-    virtual void pasteObj() override;
-    virtual void infoObj() override;
-    virtual void showTreeObj() override;
-    virtual void testObj() override;
+    virtual bool addObj() override;
+    virtual bool delObj() override;
+    virtual bool editObj() override;
+    virtual bool renameObj() override;
+    virtual bool cloneObj() override;
+    virtual bool cutObj() override;
+    virtual bool copyObj() override;
+    virtual bool pasteObj() override;
+    virtual bool infoObj() override;
+    virtual bool showTreeObj() override;
+    virtual bool testObj() override;
 
   signals:
     void sig_changeSel(int,int,int);
