@@ -9,6 +9,7 @@
 #include <cmath>
 #include <sys/time.h>
 
+#include <QWidget>
 #include <QString>
 #include <QRegExp>
 #include <QMessageBox>
@@ -301,6 +302,45 @@ bool editObj( QWidget *par, HolderData *obj )
   int rc = dia->exec();
   delete dia;
   return( rc == QDialog::Accepted );
+}
+
+bool showTree( QWidget *par, HolderData *obj )
+{
+  if( !par || !obj ) {
+    return false;
+  }
+
+  auto dia = new QDialog( par );
+  dia->setWindowTitle( QString( PACKAGE ": Element tree: ") + obj->objectName() );
+
+  QFontMetrics fm( dia->font() );
+  int em = fm.width( 'W' );
+
+  auto lay = new QVBoxLayout();
+
+
+  auto treeView = new QTreeView( dia );
+  treeView->setModel( obj );
+  lay->addWidget( treeView );
+
+
+  auto bt_ok = new QPushButton( "Done", dia );
+  bt_ok->setDefault( true );
+  lay->addWidget( bt_ok );
+  dia->setLayout( lay );
+
+  par->connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
+
+  dia->resize( 86*em, 50*em ); // TODO: unmagic
+  treeView->setColumnWidth( 0, 35*em );
+  treeView->setColumnWidth( 1, 10*em );
+  treeView->setColumnWidth( 2, 35*em );
+  treeView->setColumnWidth( 3,  6*em );
+  treeView->expandAll();
+  dia->exec();
+  delete dia;
+
+  return true;
 }
 
 QString getDomText( QDomNode &p )

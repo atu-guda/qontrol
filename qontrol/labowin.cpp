@@ -231,34 +231,32 @@ void LaboWin::initIface()
     connect( a, &QAction::triggered, this, &LaboWin::slotEditUndo );
     pEditMenu->addAction( a );
   }
-  {
-    auto a = new QAction(  QIcon::fromTheme("edit-cut"),"Cut", this );
-    // a->setShortcuts( QKeySequence::Cut );
-    a->setWhatsThis( tr("Cut selected") );
-    registerAction( a, "cutElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotEditCut );
-    pEditMenu->addSeparator();
-    pEditMenu->addAction( a );
-  }
-  {
-    auto a = new QAction( QIcon::fromTheme("edit-copy"), "Copy", this );
-    // a->setShortcuts( QKeySequence::Copy );
-    a->setWhatsThis( tr("Copy selected") );
-    registerAction( a, "copyElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotEditCopy );
-    pEditMenu->addAction( a );
-  }
-  {
-    auto a = new QAction( QIcon::fromTheme("edit-paste"), "Paste", this );
-    // a->setShortcuts( QKeySequence::Paste );
-    a->setWhatsThis( tr("Paste selected") );
-    registerAction( a, "pasteElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotEditPaste );
-    pEditMenu->addAction( a );
-    pEditMenu->addSeparator();
-  }
 
   // -- object part
+  {
+    auto a = new QAction(  QIcon::fromTheme("document-new"),"New object", this ); // icon?
+    a->setShortcut( Qt::Key_Insert );
+    a->setWhatsThis( tr("Create new object") );
+    registerAction( a, "newObj" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotNewObj );
+    pEditMenu->addAction( a );
+  }
+  {
+    auto a = new QAction(  QIcon::fromTheme("edit-delete"),"Delete object", this );
+    a->setShortcut( Qt::Key_Delete );
+    a->setWhatsThis( tr("Delete object") );
+    registerAction( a, "delObj" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotDelObj );
+    pEditMenu->addAction( a );
+  }
+  {
+    auto a = new QAction(  QIcon::fromTheme("edit-node"),"Edit object", this );
+    a->setShortcut( Qt::Key_Enter );
+    a->setWhatsThis( tr("Edit object") );
+    registerAction( a, "editObj" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotEditObj );
+    pEditMenu->addAction( a );
+  }
   {
     auto a = new QAction(  QIcon::fromTheme("edit-cut"),"Cut Object", this );
     a->setShortcuts( QKeySequence::Cut );
@@ -285,12 +283,45 @@ void LaboWin::initIface()
     pEditMenu->addAction( a );
     pEditMenu->addSeparator();
   }
+  {
+    auto a = new QAction( "Rename object", this );
+    a->setWhatsThis( tr("Rename selected object") );
+    registerAction( a, "renameObj" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotRenameObj );
+    pEditMenu->addAction( a );
+  }
+  {
+    auto a = new QAction( "Clone object", this );
+    a->setWhatsThis( tr("Clone selected object") );
+    registerAction( a, "cloneObj" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotCloneObj );
+    pEditMenu->addAction( a );
+    pEditMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( QIcon( ":icons/infoelm.png" ), "show &Info", this );
+    a->setShortcut( Qt::Key_I );
+    a->setWhatsThis( tr("Show information about object structure") );
+    registerAction( a, "infoObj" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotInfoObj );
+    pEditMenu->addAction( a );
+    elmToolbar->addAction( a );
+    elmToolbar->addSeparator();
+  }
+  {
+    auto a = new QAction( "show object tree", this );
+    a->setWhatsThis( tr("Show tree-like object structure") );
+    registerAction( a, "showTreeObj" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotShowTreeObj );
+    pEditMenu->addAction( a );
+    pEditMenu->addSeparator();
+  }
 
 
   // ==== Element group
   {
     auto a = new QAction( QIcon( ":icons/newelm.png" ), "&New element", this );
-    a->setShortcut( Qt::Key_Insert );
+    // a->setShortcut( Qt::Key_Insert );
     a->setWhatsThis( tr("Create new element") );
     registerAction( a, "addElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotNewElm );
@@ -299,7 +330,7 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( QIcon( ":icons/delelm.png" ), "&Delete element", this );
-    a->setShortcut( Qt::Key_Delete );
+    // a->setShortcut( Qt::Key_Delete );
     a->setWhatsThis( tr("Delete selected element") );
     registerAction( a, "delElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotDelElm );
@@ -308,7 +339,7 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( QIcon( ":icons/editelm.png" ), "&Edit element", this );
-    a->setShortcut( Qt::Key_Enter );
+    // a->setShortcut( Qt::Key_Enter );
     a->setWhatsThis( tr("Edit selected element") );
     registerAction( a, "editElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotEditElm );
@@ -1218,6 +1249,21 @@ void LaboWin::slotEditPaste()
 }
 
 
+void LaboWin::slotNewObj()
+{
+  callLaboViewSlot( "newObj", tr( "Creating object..." ) );
+}
+
+void LaboWin::slotDelObj()
+{
+  callLaboViewSlot( "delObj", tr( "Deleting object..." ) );
+}
+
+void LaboWin::slotEditObj()
+{
+  callLaboViewSlot( "editObj", tr( "Editing object..." ) );
+}
+
 void LaboWin::slotCutObj()
 {
   callLaboViewSlot( "cutObj", tr( "Cutting object..." ) );
@@ -1231,6 +1277,26 @@ void LaboWin::slotCopyObj()
 void LaboWin::slotPasteObj()
 {
   callLaboViewSlot( "pasteObj", tr( "Inserting clipboard contents to object" ) );
+}
+
+void LaboWin::slotRenameObj()
+{
+  callLaboViewSlot( "renameObj", tr( "Renaming object..." ) );
+}
+
+void LaboWin::slotCloneObj()
+{
+  callLaboViewSlot( "cloneObj", tr( "Cloning object..." ) );
+}
+
+void LaboWin::slotInfoObj()
+{
+  callLaboViewSlot( "infoObj", tr( "Information about object..." ) );
+}
+
+void LaboWin::slotShowTreeObj()
+{
+  callLaboViewSlot( "showTreeObj", tr( "Object tree..." ) );
 }
 
 

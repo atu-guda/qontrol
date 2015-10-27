@@ -102,13 +102,9 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   selectSimul();
   // selectSheme();
 
-  connect( this, &LaboView::viewChanged, this, &LaboView::updateViews ); // todo: from sview
-  connect( sview, &StructView::viewChanged, this, &LaboView::updateViews ); // todo: from sview
-  // connect( sview, &StructView::sig_changeSel,   this, &LaboView::changeSel );
-  // connect( sview, &StructView::sig_changeLevel, this, &LaboView::changeLevel );
-
-  // connect( outs_selmod, &QItemSelectionModel::currentChanged, this, &LaboView::changeSelOut );
-  connect( plots_selmod, &QItemSelectionModel::currentChanged, this, &LaboView::changeSelGraph );
+  connect( this, &LaboView::viewChanged, this, &LaboView::updateViews ); // todo: from sview ?
+  connect( sview, &StructView::viewChanged, this, &LaboView::updateViews );
+  connect( outs_view, &OutDataView::viewChanged, this, &LaboView::updateViews );
 
   initEngine();
 
@@ -269,16 +265,6 @@ void LaboView::updateViews()
 
 
 
-void LaboView::changeSelOut( const QModelIndex & /*cur*/, const QModelIndex & )
-{
-  emit viewChanged();
-}
-
-void LaboView::changeSelGraph( const QModelIndex &cur, const QModelIndex & )
-{
-  sel_graph = cur.row();
-  emit viewChanged();
-}
 
 bool LaboView::prepareSomething( QAbstractItemView *view, QString &subname, QString &nm,
     HolderData **a_ob, HolderData **a_co, QString *a_newname )
@@ -871,7 +857,7 @@ void LaboView::cloneSimul()
 
 void LaboView::editModel()
 {
-  bool ok = editObj( this, model );
+  bool ok = ::editObj( this, model );
   if( ok ) {
     model->reset();
     emit viewChanged();
@@ -881,31 +867,7 @@ void LaboView::editModel()
 
 void LaboView::showTreeModel()
 {
-  auto dia = new QDialog( this );
-  dia->setWindowTitle( QString( PACKAGE ": Model ") );
-
-  auto lay = new QVBoxLayout();
-
-  auto treeView = new QTreeView( dia );
-  treeView->setModel( root );
-
-  lay->addWidget( treeView );
-
-  auto bt_ok = new QPushButton( tr("Done"), dia);
-  bt_ok->setDefault( true );
-  lay->addWidget( bt_ok );
-  dia->setLayout( lay );
-
-  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-
-  dia->resize( 90*em, 50*em ); // TODO: unmagic
-  treeView->setColumnWidth( 0, 35*em );
-  treeView->setColumnWidth( 1, 10*em );
-  treeView->setColumnWidth( 2, 35*em );
-  treeView->setColumnWidth( 3,  8*em );
-  treeView->expandAll();
-  dia->exec();
-  delete dia;
+  ::showTree( this, root );
   emit viewChanged();
   return;
 }

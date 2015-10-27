@@ -83,6 +83,7 @@ void handleError( QWidget* par, const QString &s );
 void handleWarn( QWidget* par, const QString &s );
 bool confirmDelete( QWidget *par, const QString &obj, const QString &nm );
 bool editObj( QWidget *par, HolderData *obj );
+bool showTree( QWidget *par, HolderData *obj );
 
 #endif
 

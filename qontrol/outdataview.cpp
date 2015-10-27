@@ -39,6 +39,9 @@ OutDataView::OutDataView( HolderData *a_mod, LaboView *par )
   lv->setContextMenuPolicy( Qt::ActionsContextMenu );
 
   lv->setModel( storage );
+
+  auto selmod = lv->selectionModel();
+  connect( selmod, &QItemSelectionModel::currentChanged, this, &OutDataView::viewChanged );
 }
 
 HolderData* OutDataView::getSelObj() const
@@ -59,7 +62,6 @@ HolderData* OutDataView::getSelObj() const
   // HolderData *oxx = static_cast<HolderData*>( cs.internalPointer() );
   QString nm =  cs.data( Qt::DisplayRole ).toString(); // TODO: make better
   HolderData *ob = storage->getObjT<HolderData*>( nm );
-  // qWarning() << "nm= " << nm << " xnm = " << oxx->getFullName() << WHE;
   return ob;
 }
 
@@ -91,9 +93,36 @@ void OutDataView::init_actions()
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(editObj()) );
 
+  a = new QAction( QIcon::fromTheme("edit-cut"), "Cu&t", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(cutObj()) );
+
+  a = new QAction( QIcon::fromTheme("edit-copy"), "&Copy", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(copyObj()) );
+
+  a = new QAction( QIcon::fromTheme("edit-paste"), "&Paste", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(pasteObj()) );
+
   a = new QAction( "Rename", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(renameObj()) );
+
+  a = new QAction( "Clone", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(cloneObj()) );
+
+  a = new QAction( "Info", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(infoObj()) );
+
+  a = new QAction( "Show Tree", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(showTreeObj()) );
+
+  a = new QAction( "", this ); a->setSeparator( true );
+  lv->addAction( a );
 
   a = new QAction( "&Add to plot", this );
   lv->addAction( a  );
@@ -108,5 +137,5 @@ void OutDataView::init_actions()
   connect( a, SIGNAL(triggered()), laboview, SLOT(showOutData()) );
 
   connect( lv, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editObj()) );
-
 }
+

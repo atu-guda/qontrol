@@ -84,10 +84,6 @@ class LaboView : public CommonSubwin
  public slots:
    /** called whan we need to update views */
    void updateViews();
-   /** change selected output */
-   void changeSelOut( const QModelIndex &cur, const QModelIndex & );
-   /** change selected plot */
-   void changeSelGraph( const QModelIndex &cur, const QModelIndex & );
    int getSelGraph() const { return sel_graph; };
    /** contains the implementation for printing functionality  */
    void print();

@@ -880,102 +880,7 @@ bool StructView::cloneObj()
   return CmdView::cloneObj();
 }
 
-bool StructView::infoObj() // TODO: common
-{
-  if( ! checkState( selCheck ) ) {
-    return false;
-  }
 
-  auto dia = new QDialog( this );
-  dia->setWindowTitle( QString( PACKAGE ": Structure of ") + selObj->getFullName() );
-
-  auto lay = new QVBoxLayout();
-
-  auto tv = new QTableWidget( 100, 6, dia );
-  QStringList hlabels;
-  hlabels << "Name" << "Type" << "Value" << "Descr" << "Target"<< "Flags";
-  tv->setHorizontalHeaderLabels( hlabels );
-
-  QObjectList childs = selObj->children();
-
-  int i = 0;
-  for( auto o :  childs ) {
-    QObject *ob = o;
-    tv->setItem( i, 0, new  QTableWidgetItem( ob->objectName() ) );
-    if( ob->inherits("TDataSet" ) ) {
-      TDataSet *ds = qobject_cast<TDataSet*>(ob);
-      tv->setItem( i, 1, new QTableWidgetItem(ds->getType()) );
-      tv->setItem( i, 2, new QTableWidgetItem( ds->toString() ) );
-    } else if( ob->inherits("HolderData" ) ) {
-      HolderData *ho = qobject_cast<HolderData*>(ob);
-      tv->setItem( i, 1, new QTableWidgetItem(ho->getType() ) );
-      tv->setItem( i, 2, new QTableWidgetItem(ho->toString() ) );
-      tv->setItem( i, 3, new QTableWidgetItem(ho->getParm("vis_name") + " \""
-                    + ho->getParm("descr" ) + "\"" ) );
-      tv->setItem( i, 4, new QTableWidgetItem( ho->objectName() ) );
-      tv->setItem( i, 5, new QTableWidgetItem( flags2str(ho->getFlags()) ) );
-
-    } else { // unknown
-      tv->setItem( i, 1, new QTableWidgetItem("???unknown???" ) );
-      tv->setItem( i, 2, new QTableWidgetItem(ob->metaObject()->className() ) );
-    }
-    ++i;
-  }
-
-
-
-  lay->addWidget( tv );
-
-  auto bt_ok = new QPushButton( tr("Done"), dia);
-  bt_ok->setDefault( true );
-  lay->addWidget( bt_ok );
-  dia->setLayout( lay );
-
-  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-
-  dia->resize( 72*em, 50*em ); // TODO: adjust to inner table width
-  dia->exec();
-  delete dia;
-  emit viewChanged();
-  return true;
-
-}
-
-bool StructView::showTreeObj() // TODO: common
-{
-  if( ! checkState( selCheck ) ) {
-    return false;
-  }
-
-  auto dia = new QDialog( this );
-  dia->setWindowTitle( QString( PACKAGE ": Element tree: ") + selObj->objectName() );
-
-  auto lay = new QVBoxLayout();
-
-
-  auto treeView = new QTreeView( dia );
-  treeView->setModel( selObj );
-  lay->addWidget( treeView );
-
-
-  auto bt_ok = new QPushButton( tr("Done"), dia);
-  bt_ok->setDefault( true );
-  lay->addWidget( bt_ok );
-  dia->setLayout( lay );
-
-  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-
-  dia->resize( 86*em, 50*em ); // TODO: unmagic
-  treeView->setColumnWidth( 0, 35*em );
-  treeView->setColumnWidth( 1, 10*em );
-  treeView->setColumnWidth( 2, 35*em );
-  treeView->setColumnWidth( 3,  6*em );
-  treeView->expandAll();
-  dia->exec();
-  delete dia;
-  emit viewChanged();
-  return true;
-}
 
 bool StructView::testObj()
 {
@@ -1019,29 +924,12 @@ void StructView::cutElm() // TODO: delete
   cutObj();
 }
 
-bool StructView::cutObj()
-{
-  if( copyObj() ) {
-    return delObj();
-  }
-  return false;
-}
 
 void StructView::copyElm() // TODO: delete
 {
   copyObj();
 }
 
-bool StructView::copyObj()
-{
-  QClipboard *clp = QApplication::clipboard();
-  if( !selObj || !clp ) {
-    return false;
-  }
-  QString s = selObj->toString();
-  clp->setText( s );
-  return true;
-}
 
 void StructView::pasteElm() // TODO: delete
 {
@@ -1185,12 +1073,12 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
   if( has_elem ) {
     menu->addSeparator();
     act = menu->addAction( QIcon( ":icons/editelm.png" ), "&Edit element" );
-    connect( act, &QAction::triggered, this, &StructView::editElm );
+    connect( act, &QAction::triggered, this, &StructView::editObj );
     act = menu->addAction( QIcon( ":icons/delelm.png" ), "&Delete element" );
-    connect( act, &QAction::triggered, this, &StructView::delElm );
+    connect( act, &QAction::triggered, this, &StructView::delObj );
     menu->addSeparator();
     act = menu->addAction( "Rename element" );
-    connect( act, &QAction::triggered, this, &StructView::renameElm );
+    connect( act, &QAction::triggered, this, &StructView::renameObj );
     menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
     connect( act, &QAction::triggered, this, &StructView::qlinkElm );
@@ -1198,7 +1086,7 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     connect( act, &QAction::triggered, this, &StructView::ordElm );
     menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("edit-copy"), "&Copy" );
-    connect( act, &QAction::triggered, this, &StructView::copyElm );
+    connect( act, &QAction::triggered, this, &StructView::copyObj );
     menu->addSeparator();
   } else {
     act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );

@@ -114,15 +114,15 @@ class StructView : public CmdView  {
     void pasteElm();
     // common object slots
     virtual bool addObj() override;
-    virtual bool delObj() override;
+    virtual bool delObj() override; // handle mark == select
     // virtual bool editObj() override;
     // virtual bool renameObj() override;
     virtual bool cloneObj() override;
-    virtual bool cutObj() override;
-    virtual bool copyObj() override;
+    // virtual bool cutObj() override;
+    // virtual bool copyObj() override;
     virtual bool pasteObj() override;
-    virtual bool infoObj() override;
-    virtual bool showTreeObj() override;
+    // virtual bool infoObj() override;
+    // virtual bool showTreeObj() override;
     virtual bool testObj() override;
 
   signals:
