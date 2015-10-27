@@ -514,60 +514,60 @@ void StructView::drawAll( QPainter &p )
   // -------------- output marks
 
   if( oview ) {
-    ContOut *outs = qobject_cast<ContOut*>( oview->model() );
+    ContOut *outs = qobject_cast<ContOut*>( oview->getStorage() );
     if( !outs ) {
-      qWarning() << "not found 'outs' in model" << WHE;
-      return;
+      qWarning() << "not found 'outs' in model"  << WHE;
+    } else {
+      auto sel_mod = oview->currentIndex();
+      int sel_out = sel_mod.row();
+      for( auto arr : outs->TCHILD(TOutArr*) ) {
+        int out_nu = arr->getMyIndexInParent();
+
+        src_name = arr->getDataD( "name", QString() );
+        int out_tp = arr->getDataD( "type", -1 );
+        ltype_t lt  = LinkBad;
+        const LinkedObj *lob = nullptr;
+        const double *fp = sch->getDoublePtr( src_name, &lt, &lob );
+
+        if( !fp || lt != LinkElm || !lob ) {
+          continue;
+        }
+        const TMiso *src_obj = qobject_cast<const TMiso*>(lob);
+        if( ! src_obj ) {
+          continue;
+        }
+        fill_elmInfo( src_obj, sei );
+
+        if( sei.vis_x < 0 || sei.vis_y < 0 ) {
+          continue;
+        }
+
+        if( sel_out == out_nu ) {
+          p.setPen( QPen(QColor(100,100,255), 3, Qt::SolidLine ) );
+          p.setBrush( Qt::NoBrush );
+          p.drawRect( sei.xs0+lm-1, sei.ys0+tm-1, obj_sz+4, obj_sz+4 );
+        }
+        p.setPen( Qt::black );
+
+        switch( out_tp ) {
+          case 0: p.setBrush( Qt::white ); break; // TODO: named colors
+          case 1: p.setBrush( Qt::green ); break;
+          case 2: p.setBrush( Qt::cyan ); break;
+          case 3: p.setBrush( Qt::gray ); break;
+          default: p.setBrush( Qt::red ); break;
+        };
+        int l_out_nu = 1 + em_small * ( 1 + (int)log10( out_nu + 0.7 ) );
+        int omark_x = sei.xs0 + obj_sz - l_out_nu  - 2 * ( out_nu & 7 );
+        int omark_y = sei.ys0 +  1;
+        p.drawRect( omark_x, omark_y, l_out_nu, ex_small );
+        if( src_name.contains('.') ) { // inner link mark
+          p.setBrush( Qt::red );
+          p.drawRect( omark_x, omark_y+9, l_out_nu, 2 );
+        }
+        p.drawText( omark_x+2, omark_y+9,  QSN( out_nu ) );
+
+      } // ------------ end output marks
     }
-    auto sel_mod = oview->currentIndex();
-    int sel_out = sel_mod.row();
-    for( auto arr : outs->TCHILD(TOutArr*) ) {
-      int out_nu = arr->getMyIndexInParent();
-
-      src_name = arr->getDataD( "name", QString() );
-      int out_tp = arr->getDataD( "type", -1 );
-      ltype_t lt  = LinkBad;
-      const LinkedObj *lob = nullptr;
-      const double *fp = sch->getDoublePtr( src_name, &lt, &lob );
-
-      if( !fp || lt != LinkElm || !lob ) {
-        continue;
-      }
-      const TMiso *src_obj = qobject_cast<const TMiso*>(lob);
-      if( ! src_obj ) {
-        continue;
-      }
-      fill_elmInfo( src_obj, sei );
-
-      if( sei.vis_x < 0 || sei.vis_y < 0 ) {
-        continue;
-      }
-
-      if( sel_out == out_nu ) {
-        p.setPen( QPen(QColor(100,100,255), 3, Qt::SolidLine ) );
-        p.setBrush( Qt::NoBrush );
-        p.drawRect( sei.xs0+lm-1, sei.ys0+tm-1, obj_sz+4, obj_sz+4 );
-      }
-      p.setPen( Qt::black );
-
-      switch( out_tp ) {
-        case 0: p.setBrush( Qt::white ); break; // TODO: named colors
-        case 1: p.setBrush( Qt::green ); break;
-        case 2: p.setBrush( Qt::cyan ); break;
-        case 3: p.setBrush( Qt::gray ); break;
-        default: p.setBrush( Qt::red ); break;
-      };
-      int l_out_nu = 1 + em_small * ( 1 + (int)log10( out_nu + 0.7 ) );
-      int omark_x = sei.xs0 + obj_sz - l_out_nu  - 2 * ( out_nu & 7 );
-      int omark_y = sei.ys0 +  1;
-      p.drawRect( omark_x, omark_y, l_out_nu, ex_small );
-      if( src_name.contains('.') ) { // inner link mark
-        p.setBrush( Qt::red );
-        p.drawRect( omark_x, omark_y+9, l_out_nu, 2 );
-      }
-      p.drawText( omark_x+2, omark_y+9,  QSN( out_nu ) );
-
-    } // ------------ end output marks
   }
 
 
@@ -873,43 +873,7 @@ bool StructView::delObj()
   return false;
 }
 
-bool StructView::editObj()
-{
-  if( ! checkState( selCheck ) ) {
-    return false;
-  }
-  bool ok = ::editObj( this, selObj );
-  if( ok ) {
-    // update();
-    // model->reset(); // TODO: when need?
-    emit viewChanged();
-    return true;
-  }
-  return false;
-}
 
-bool StructView::renameObj()
-{
-  if( ! checkState( selCheck ) ) {
-    return false;
-  }
-
-  QString old_name = selObj->objectName();
-  bool ok;
-  QString new_name = QInputDialog::getText( this, "Rename:" + selObj->getFullName(),
-      "Enter new name:", QLineEdit::Normal, old_name, &ok );
-
-  if( ok ) {
-    if( sch->renameObj( old_name, new_name ) ) {
-      // model->reset();
-      emit viewChanged();
-      // TODO: change links named
-      return true;
-    }
-  }
-  return false;
-
-}
 
 bool StructView::cloneObj()
 {

@@ -68,7 +68,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   scrollArea = new QScrollArea( main_part );
 
   outs_view = new OutDataView( outs, this );
-  outs_selmod = outs_view->selectionModel();
+  // outs_selmod = outs_view->selectionModel();
 
   plots_view = new GraphDataView( plots, this );
   plots_selmod = plots_view->selectionModel();
@@ -107,7 +107,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   // connect( sview, &StructView::sig_changeSel,   this, &LaboView::changeSel );
   // connect( sview, &StructView::sig_changeLevel, this, &LaboView::changeLevel );
 
-  connect( outs_selmod, &QItemSelectionModel::currentChanged, this, &LaboView::changeSelOut );
+  // connect( outs_selmod, &QItemSelectionModel::currentChanged, this, &LaboView::changeSelOut );
   connect( plots_selmod, &QItemSelectionModel::currentChanged, this, &LaboView::changeSelGraph );
 
   initEngine();
@@ -547,45 +547,47 @@ void LaboView::addOut() // TODO: common
 
 void LaboView::delOut()
 {
-  delSomething( outs_view );
+  // delSomething( outs_view );
 }
 
 
 void LaboView::editOut()
 {
-  editSomething( outs_view );
+  // editSomething( outs_view );
 }
 
 
 void LaboView::renameOut()
 {
-  renameSomething( outs_view );
+  // renameSomething( outs_view );
   // // TODO: change graph links names
 }
 
 
 void LaboView::selectOut()
 {
-  QItemSelectionModel *selMod = outs_view->selectionModel();
-  if( !selMod ) {
-    return;
-  }
-  int level = sview->getLevel();
-
-  QModelIndex s_idx = outs->index( level, 0, QModelIndex() );
-
-  selMod->clear();
-  selMod->select( s_idx, QItemSelectionModel::Select );
-  selMod->setCurrentIndex( s_idx, QItemSelectionModel::Select );
+  // QItemSelectionModel *selMod = outs_view->selectionModel();
+  // if( !selMod ) {
+  //   return;
+  // }
+  // int level = sview->getLevel();
+  //
+  // QModelIndex s_idx = outs->index( level, 0, QModelIndex() );
+  //
+  // selMod->clear();
+  // selMod->select( s_idx, QItemSelectionModel::Select );
+  // selMod->setCurrentIndex( s_idx, QItemSelectionModel::Select );
   emit viewChanged();
 }
 
 
+// TODO: to OutDataView
 void LaboView::showOutData() // TODO: special dialog (+ for many rows)
 {
   DatasInfo di;
 
-  TOutArr *arr = qobject_cast<TOutArr*>( getViewSelObj( outs_view ) );
+  // TOutArr *arr = qobject_cast<TOutArr*>( getViewSelObj( outs_view ) );
+  TOutArr *arr = qobject_cast<TOutArr*>( outs_view->getSelObj() );
   if( !arr ) {
     return;
   }
@@ -627,7 +629,8 @@ void LaboView::showOutData() // TODO: special dialog (+ for many rows)
 
 void LaboView::exportOut()
 {
-  TOutArr *arr = qobject_cast<TOutArr*>( getViewSelObj( outs_view ) );
+  // TOutArr *arr = qobject_cast<TOutArr*>( getViewSelObj( outs_view ) );
+  TOutArr *arr = qobject_cast<TOutArr*>( outs_view->getSelObj() );
   if( !arr ) {
     return;
   }
@@ -720,7 +723,7 @@ void LaboView::showGraph()
 
 void LaboView::graphAddOut()
 {
-  QString nm_o = getViewSelName( outs_view );
+  QString nm_o = outs_view->getSelName();;
   if( nm_o.isEmpty() ) {
     return;
   }

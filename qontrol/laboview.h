@@ -206,7 +206,7 @@ class LaboView : public CommonSubwin
    ContGraph *plots;
    ContSimul *sims;
 
-   QItemSelectionModel *outs_selmod = nullptr;
+   // QItemSelectionModel *outs_selmod = nullptr;
    QItemSelectionModel *plots_selmod = nullptr;
 
    int sel_graph = -1;

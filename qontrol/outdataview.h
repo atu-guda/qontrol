@@ -20,18 +20,20 @@
 
 #include <QtWidgets>
 
+#include "cmdview.h"
 #include "laboview.h"
 
-class OutDataView : public QListView {
+class OutDataView : public CmdView {
   Q_OBJECT
   public:
    OutDataView( HolderData *a_mod, LaboView *par );
-  private:
-   HolderData *mod;
+   virtual HolderData* getSelObj() const override;
+   virtual void handleSelChange() override;
+   virtual QModelIndex currentIndex() const override;
+  protected:
+   QListView *lv = nullptr;
    LaboView *laboview;
-   QAction *act_new, *act_del, *act_edit, *act_rename,
-           *act_dump, *act_showdata, *act_graphaddout;
-  private:
+  protected:
    void init_actions();
 };
 

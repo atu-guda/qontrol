@@ -21,8 +21,11 @@
 
 
 OutDataView::OutDataView( HolderData *a_mod, LaboView *par )
-  : QListView( par ), mod( a_mod ), laboview( par )
+  : CmdView( par, a_mod ), laboview( par )
 {
+  auto lay = new QVBoxLayout( this );
+  lv = new QListView( this );
+  lay->addWidget( lv );
 
   init_actions();
 
@@ -33,41 +36,77 @@ OutDataView::OutDataView( HolderData *a_mod, LaboView *par )
   int em = LaboWin::Em();
   setFixedWidth( 12*em );
 
-  setContextMenuPolicy( Qt::ActionsContextMenu );
+  lv->setContextMenuPolicy( Qt::ActionsContextMenu );
 
-  setModel( mod );
+  lv->setModel( storage );
 }
+
+HolderData* OutDataView::getSelObj() const
+{
+  if( !lv ) {
+    return nullptr;
+  }
+
+  QItemSelectionModel *selMod = lv->selectionModel();
+  if( !selMod ) {
+    return nullptr;
+  }
+
+  QModelIndex cs = selMod->currentIndex();
+  if( !cs.isValid() ) {
+    return nullptr;
+  }
+  // HolderData *oxx = static_cast<HolderData*>( cs.internalPointer() );
+  QString nm =  cs.data( Qt::DisplayRole ).toString(); // TODO: make better
+  HolderData *ob = storage->getObjT<HolderData*>( nm );
+  // qWarning() << "nm= " << nm << " xnm = " << oxx->getFullName() << WHE;
+  return ob;
+}
+
+void OutDataView::handleSelChange()
+{
+
+}
+
+QModelIndex OutDataView::currentIndex() const
+{
+  if( !lv ) {
+    return QModelIndex();
+  }
+  return lv->currentIndex();
+}
+
 
 void OutDataView::init_actions()
 {
-  act_new = new QAction( QIcon::fromTheme("list-add"), "&New", this );
-  addAction( act_new );
-  connect( act_new, SIGNAL(triggered()), laboview, SLOT(addOut()) );
+  auto a = new QAction( QIcon::fromTheme("list-add"), "&New", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), laboview, SLOT(addOut()) );
 
-  act_del = new QAction( QIcon::fromTheme("list-remove"), "&Delete", this );
-  addAction( act_del );
-  connect( act_del, SIGNAL(triggered()), laboview, SLOT(delOut()) );
+  a = new QAction( QIcon::fromTheme("list-remove"), "&Delete", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(delObj()) );
 
-  act_edit = new QAction( QIcon::fromTheme("document-properties"), "&Edit", this );
-  addAction( act_edit );
-  connect( act_edit, SIGNAL(triggered()), laboview, SLOT(editOut()) );
+  a = new QAction( QIcon::fromTheme("document-properties"), "&Edit", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(editObj()) );
 
-  act_rename = new QAction( "Rename", this );
-  addAction( act_rename );
-  connect( act_rename, SIGNAL(triggered()), laboview, SLOT(renameOut()) );
+  a = new QAction( "Rename", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(renameObj()) );
 
-  act_graphaddout = new QAction( "&Add to plot", this );
-  addAction( act_graphaddout  );
-  connect( act_graphaddout, SIGNAL(triggered()), laboview, SLOT(graphAddOut()) );
+  a = new QAction( "&Add to plot", this );
+  lv->addAction( a  );
+  connect( a, SIGNAL(triggered()), laboview, SLOT(graphAddOut()) );
 
-  act_dump = new QAction( "D&ump", this );
-  addAction( act_dump );
-  connect( act_dump, SIGNAL(triggered()), laboview, SLOT(exportOut()) );
+  a = new QAction( "D&ump", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), laboview, SLOT(exportOut()) );
 
-  act_showdata = new QAction( "&Show data", this );
-  addAction( act_showdata );
-  connect( act_showdata, SIGNAL(triggered()), laboview, SLOT(showOutData()) );
+  a = new QAction( "&Show data", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), laboview, SLOT(showOutData()) );
 
-  connect( this, SIGNAL(doubleClicked(QModelIndex)), laboview, SLOT(editOut()) );
+  connect( lv, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editObj()) );
 
 }

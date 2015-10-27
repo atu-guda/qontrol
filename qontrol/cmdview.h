@@ -20,14 +20,17 @@
 
 #include <QWidget>
 
-class TDataSet;
+class HolderData;
 
 class CmdView : public QWidget {
   Q_OBJECT
   public:
-    CmdView( QWidget *a_par, TDataSet *a_storage );
-    virtual TDataSet* getSelObj() const = 0;
+    CmdView( QWidget *a_par, HolderData *a_storage );
+    virtual HolderData* getSelObj() const = 0;
+    QString getSelName() const;
     virtual void handleSelChange() = 0;
+    HolderData* getStorage() { return storage; }
+    virtual QModelIndex currentIndex() const;
   public slots:
     virtual bool addObj();
     virtual bool delObj();
@@ -43,7 +46,7 @@ class CmdView : public QWidget {
   signals:
     void viewChanged();
   protected:
-    TDataSet* storage;
+    HolderData* storage;
 };
 
 #endif // CMDVIEW_H
