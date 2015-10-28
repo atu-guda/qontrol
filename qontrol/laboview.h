@@ -107,9 +107,18 @@ class LaboView : public CommonSubwin
    void copyElm();
    void pasteElm();
    // common object
-   void cutObj();
-   void copyObj();
-   void pasteObj();
+   bool actionObj( const char *action ); // common actions: not slot?
+   bool addObj();
+   bool delObj();
+   bool editObj();
+   bool cutObj();
+   bool copyObj();
+   bool pasteObj();
+   bool renameObj();
+   bool cloneObj();
+   bool infoObj();
+   bool showTreeObj();
+   bool testObj();
 
    // outs related
    void addOut();

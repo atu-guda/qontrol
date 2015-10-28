@@ -68,16 +68,20 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   scrollArea = new QScrollArea( main_part );
 
   outs_view = new OutDataView( outs, this );
-  // outs_selmod = outs_view->selectionModel();
+  outs_view->setObjectName( "outs_view" );
 
   plots_view = new GraphDataView( plots, this );
+  plots_view->setObjectName( "plots_view" );
   plots_selmod = plots_view->selectionModel();
 
   sims_view = new SimulView( sims, this );
+  sims_view->setObjectName( "sims_view" );
 
   schems_view = new SchemeView( schems, this );
+  schems_view->setObjectName( "schems_view" );
 
   sview = new StructView( this, main_s, this, outs_view );
+  sview->setObjectName( "sview" );
   scrollArea->setWidget( sview );
   scrollArea->setLineWidth( 1 );
   scrollArea->setMidLineWidth( 1 );
@@ -85,6 +89,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   scrollArea->setFocusProxy( sview );
 
   stam = new StatusModel( this, this );
+  stam->setObjectName( "stam" );
 
   grLay->addWidget( scrollArea, 0, 0, 2, 1 );
   grLay->addWidget( outs_view, 0, 1 );
@@ -169,7 +174,7 @@ int LaboView::getLevel() const
   return sview->getLevel();
 }
 
-QString LaboView::getViewSelName( QAbstractItemView *view ) const
+QString LaboView::getViewSelName( QAbstractItemView *view ) const // TODO: remove
 {
   if( !view ) {
     return QString();
@@ -187,7 +192,7 @@ QString LaboView::getViewSelName( QAbstractItemView *view ) const
   return cs.data( Qt::DisplayRole ).toString();
 }
 
-HolderData* LaboView::getViewSelObj( QAbstractItemView *view ) const
+HolderData* LaboView::getViewSelObj( QAbstractItemView *view ) const // TODO: remove
 {
   QString nm = getViewSelName( view );
   if( nm.isEmpty() ) {
@@ -313,7 +318,7 @@ bool LaboView::editSomething( QAbstractItemView *view, bool noReset )
     return false;
   }
 
-  bool ok = editObj( this, obj );
+  bool ok = ::editObj( this, obj );
   if( ok ) {
     if( !noReset ) {
       model->reset();
@@ -465,23 +470,86 @@ void LaboView::cutElm()
   delElm();
 }
 
-void LaboView::cutObj()
+bool LaboView::actionObj( const char *action )
 {
-  copyObj();
-  // delObj(); // TODO: implement
+  QWidget *fw = focusWidget();
+  if( !fw ) {
+    return false;
+  }
+  CmdView *cv = qobject_cast<CmdView*>( fw );
+  if( !cv ) {
+    cv = qobject_cast<CmdView*>( fw->parent() ); // may by view in parent
+  }
+  if( !cv ) {
+    qWarning() << "Bad focused widget " << fw->objectName() << WHE;
+    return false;
+  }
+  return QMetaObject::invokeMethod( cv, action, Qt::AutoConnection );
 }
+
+
+bool LaboView::addObj()
+{
+  return actionObj( "addObj" );
+}
+
+bool LaboView::delObj()
+{
+  return actionObj( "delObj" );
+}
+
+bool LaboView::editObj()
+{
+  return actionObj( "editObj" );
+}
+
+bool LaboView::cutObj()
+{
+  return actionObj( "cutObj" );
+}
+
+bool LaboView::copyObj()
+{
+  return actionObj( "copyObj" );
+}
+
+bool LaboView::pasteObj()
+{
+  return actionObj( "pasteObj" );
+}
+
+bool LaboView::renameObj()
+{
+  return actionObj( "renameObj" );
+}
+
+bool LaboView::cloneObj()
+{
+  return actionObj( "cloneObj" );
+}
+
+bool LaboView::infoObj()
+{
+  return actionObj( "infoObj" );
+}
+
+bool LaboView::showTreeObj()
+{
+  return actionObj( "showTreeObj" );
+}
+
+bool LaboView::testObj()
+{
+  return actionObj( "testObj" );
+}
+
+// ---------------- old elem --------------
+
+
 
 void LaboView::copyElm()
 {
   return sview->copyElm();
-}
-
-void LaboView::copyObj()
-{
-  QWidget *fw = focusWidget();
-  if( fw ) { // TODO: use common parent
-    QMetaObject::invokeMethod( fw, "copyObj", Qt::AutoConnection );
-  }
 }
 
 
@@ -490,13 +558,6 @@ void LaboView::pasteElm()
   return sview->pasteElm();
 }
 
-void LaboView::pasteObj()
-{
-  QWidget *fw = focusWidget();
-  if( fw ) { // TODO: use common parent
-    QMetaObject::invokeMethod( fw, "pasteObj", Qt::AutoConnection );
-  }
-}
 
 
 // ==== outs related
@@ -525,7 +586,7 @@ void LaboView::addOut() // TODO: common
 
   TOutArr *arr;
   if( (arr = model->addOut( out_nm, tgt_nm ) ) != nullptr ) {
-    editObj( this, arr );
+    ::editObj( this, arr );
     emit viewChanged();
   }
   return;

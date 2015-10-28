@@ -150,7 +150,7 @@ class LaboWin : public QMainWindow
     void slotEditPaste();
 
     // ==== genetic object related
-    void slotNewObj();
+    void slotAddObj();
     void slotDelObj();
     void slotCutObj();
     void slotEditObj();
@@ -160,6 +160,7 @@ class LaboWin : public QMainWindow
     void slotCloneObj();
     void slotInfoObj();
     void slotShowTreeObj();
+    void slotTestObj();
 
     // ==== element related
     void slotNewElm();

@@ -234,11 +234,11 @@ void LaboWin::initIface()
 
   // -- object part
   {
-    auto a = new QAction(  QIcon::fromTheme("document-new"),"New object", this ); // icon?
+    auto a = new QAction(  QIcon::fromTheme("document-new"),"Add object", this ); // icon?
     a->setShortcut( Qt::Key_Insert );
     a->setWhatsThis( tr("Create new object") );
-    registerAction( a, "newObj" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotNewObj );
+    registerAction( a, "addObj" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotAddObj );
     pEditMenu->addAction( a );
   }
   {
@@ -313,6 +313,14 @@ void LaboWin::initIface()
     a->setWhatsThis( tr("Show tree-like object structure") );
     registerAction( a, "showTreeObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowTreeObj );
+    pEditMenu->addAction( a );
+    pEditMenu->addSeparator();
+  }
+  {
+    auto a = new QAction( "test object", this );
+    a->setWhatsThis( tr("Test something on object") );
+    registerAction( a, "testObj" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotTestObj );
     pEditMenu->addAction( a );
     pEditMenu->addSeparator();
   }
@@ -1249,9 +1257,9 @@ void LaboWin::slotEditPaste()
 }
 
 
-void LaboWin::slotNewObj()
+void LaboWin::slotAddObj()
 {
-  callLaboViewSlot( "newObj", tr( "Creating object..." ) );
+  callLaboViewSlot( "addObj", tr( "Creating object..." ) );
 }
 
 void LaboWin::slotDelObj()
@@ -1298,6 +1306,12 @@ void LaboWin::slotShowTreeObj()
 {
   callLaboViewSlot( "showTreeObj", tr( "Object tree..." ) );
 }
+
+void LaboWin::slotTestObj()
+{
+  callLaboViewSlot( "testObj", tr( "Test object..." ) );
+}
+
 
 
 void LaboWin::slotViewToolBar()
