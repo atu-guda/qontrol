@@ -112,8 +112,8 @@ class LaboWin : public QMainWindow
     CommonSubwin* activeView();
     //* call gives simple slot from active LaboView
     void callLaboViewSlot( const char *slot, const QString &mess );
-    //* just test argument type
-    void tstArg( SlotVV p ) {};
+    //* make action and link to slot, set property
+    QAction* makeAction( const QString &text, const char *actName, SlotVV targetSlot );
 
   private slots:
 

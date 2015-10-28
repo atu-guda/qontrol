@@ -107,6 +107,19 @@ void LaboWin::registerAction( QAction *act, const char *nm )
   acts[ nm ] = act;
 }
 
+QAction* LaboWin::makeAction( const QString &text, const char *actName, SlotVV targetSlot )
+{
+  auto a = new QAction( text, this );
+  // a->setShortcuts( QKeySequence::New );
+  // a->setProperty( "alwaysVisible", true );
+  registerAction( a, actName );
+  connect( a, &QAction::triggered, this, targetSlot );
+  // pFileMenu->addAction( a );
+  // pFileMenu->addSeparator();
+  // fileToolbar->addAction( a );
+  return a;
+}
+
 void LaboWin::initIface()
 {
   // make manu beforehand
@@ -126,19 +139,14 @@ void LaboWin::initIface()
   fileToolbar = addToolBar( tr("File") );
   elmToolbar = addToolBar( tr("Element") );
 
-  // test
-  tstArg( &LaboWin::slotFileNew );
-
   // Actions
   // File group
 
   {
-    auto a = new QAction( QIcon( ":icons/filenew.png" ), "&New model", this );
+    auto a = makeAction( "&New model", "fileNew", &LaboWin::slotFileNew );
     a->setShortcuts( QKeySequence::New );
-    a->setWhatsThis( tr("Click this button to create a new model file.") );
+    a->setIcon( QIcon( ":icons/filenew.png" ) );
     a->setProperty( "alwaysVisible", true );
-    registerAction( a, "fileNew" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotFileNew );
     pFileMenu->addAction( a );
     pFileMenu->addSeparator();
     fileToolbar->addAction( a );
@@ -147,7 +155,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon::fromTheme("document-open"), "Open model", this );
     a->setShortcuts( QKeySequence::Open );
-    a->setWhatsThis( tr("Click this button to open a model file." ) );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "fileOpen" );
     connect( a, &QAction::triggered, this, &LaboWin::slotFileOpen );
@@ -158,8 +165,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon::fromTheme("document-save"), "Save model",  this );
     a->setShortcuts( QKeySequence::Save );
-    a->setWhatsThis( tr("Click this button to save the model file you are "
-          "editing. You will be prompted for a file name." ) );
     registerAction( a, "fileSave" );
     connect( a, &QAction::triggered, this, &LaboWin::slotFileSave );
     pFileMenu->addAction( a );
@@ -169,7 +174,6 @@ void LaboWin::initIface()
 
   {
     auto a = new QAction(QIcon::fromTheme("document-save-as"), "Save model As", this );
-    a->setWhatsThis( tr("Save current model with another filename") );
     registerAction( a, "fileSaveAs" );
     connect( a, &QAction::triggered, this, &LaboWin::slotFileSaveAs );
     pFileMenu->addAction( a );
@@ -179,7 +183,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction(  QIcon::fromTheme("document-print"), "&Print", this );
     a->setShortcuts( QKeySequence::Print );
-    a->setWhatsThis( tr("Print current model") );
     registerAction( a, "print" );
     connect( a, &QAction::triggered, this, &LaboWin::slotFilePrint );
     pFileMenu->addAction( a );
@@ -188,7 +191,6 @@ void LaboWin::initIface()
 
   {
     auto a = new QAction( "&Close", this );
-    a->setWhatsThis( tr("Close active window") );
     connect( a, &QAction::triggered, this, &LaboWin::slotFileClose );
     registerAction( a, "fileClose" );
     pFileMenu->addSeparator();
@@ -197,7 +199,6 @@ void LaboWin::initIface()
 
   {
     auto a = new QAction( "Sett&ings", this );
-    a ->setWhatsThis( "Edit application settings" );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "fileSettings" );
     connect( a, &QAction::triggered, this, &LaboWin::slotFileSettings );
@@ -206,7 +207,6 @@ void LaboWin::initIface()
 
   {
     auto a = new QAction( "Save s&ettings", this );
-    a ->setWhatsThis( "Save application settings" );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "fileSaveSett" );
     connect( a, &QAction::triggered, this, &LaboWin::slotFileSaveSett );
@@ -218,7 +218,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction(  QIcon::fromTheme("application-exit"), "&Quit", this );
     a->setShortcuts( QKeySequence::Quit );
-    a->setWhatsThis( tr("Click this button to quit application.") );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "fileQuit" );
     connect( a, &QAction::triggered, this, &LaboWin::slotFileQuit );
@@ -229,7 +228,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon::fromTheme("edit-undo"), "&Undo", this );
     a->setShortcuts( QKeySequence::Undo );
-    a->setWhatsThis( tr("Undo last action") + " EMPTY" );
     registerAction( a, "editUndo" );
     connect( a, &QAction::triggered, this, &LaboWin::slotEditUndo );
     pEditMenu->addAction( a );
@@ -239,7 +237,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction(  QIcon::fromTheme("document-new"),"Add object", this ); // icon?
     a->setShortcut( Qt::Key_Insert );
-    a->setWhatsThis( tr("Create new object") );
     registerAction( a, "addObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotAddObj );
     pEditMenu->addAction( a );
@@ -247,7 +244,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction(  QIcon::fromTheme("edit-delete"),"Delete object", this );
     a->setShortcut( Qt::Key_Delete );
-    a->setWhatsThis( tr("Delete object") );
     registerAction( a, "delObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotDelObj );
     pEditMenu->addAction( a );
@@ -255,7 +251,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction(  QIcon::fromTheme("edit-node"),"Edit object", this );
     a->setShortcut( Qt::Key_Enter );
-    a->setWhatsThis( tr("Edit object") );
     registerAction( a, "editObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotEditObj );
     pEditMenu->addAction( a );
@@ -263,7 +258,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction(  QIcon::fromTheme("edit-cut"),"Cut Object", this );
     a->setShortcuts( QKeySequence::Cut );
-    a->setWhatsThis( tr("Cut selected object") );
     registerAction( a, "cutObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotCutObj );
     pEditMenu->addSeparator();
@@ -272,7 +266,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon::fromTheme("edit-copy"), "Copy Object", this );
     a->setShortcuts( QKeySequence::Copy );
-    a->setWhatsThis( tr("Copy selected object") );
     registerAction( a, "copyObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotCopyObj );
     pEditMenu->addAction( a );
@@ -280,7 +273,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon::fromTheme("edit-paste"), "Paste Object", this );
     a->setShortcuts( QKeySequence::Paste );
-    a->setWhatsThis( tr("Paste selected object") );
     registerAction( a, "pasteObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotPasteObj );
     pEditMenu->addAction( a );
@@ -288,14 +280,12 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "Rename object", this );
-    a->setWhatsThis( tr("Rename selected object") );
     registerAction( a, "renameObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotRenameObj );
     pEditMenu->addAction( a );
   }
   {
     auto a = new QAction( "Clone object", this );
-    a->setWhatsThis( tr("Clone selected object") );
     registerAction( a, "cloneObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotCloneObj );
     pEditMenu->addAction( a );
@@ -304,7 +294,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/infoelm.png" ), "show &Info", this );
     a->setShortcut( Qt::Key_I );
-    a->setWhatsThis( tr("Show information about object structure") );
     registerAction( a, "infoObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotInfoObj );
     pEditMenu->addAction( a );
@@ -313,7 +302,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "show object tree", this );
-    a->setWhatsThis( tr("Show tree-like object structure") );
     registerAction( a, "showTreeObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowTreeObj );
     pEditMenu->addAction( a );
@@ -321,7 +309,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "test object", this );
-    a->setWhatsThis( tr("Test something on object") );
     registerAction( a, "testObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotTestObj );
     pEditMenu->addAction( a );
@@ -333,7 +320,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/newelm.png" ), "&New element", this );
     // a->setShortcut( Qt::Key_Insert );
-    a->setWhatsThis( tr("Create new element") );
     registerAction( a, "addElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotNewElm );
     pElmMenu->addAction( a );
@@ -342,7 +328,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/delelm.png" ), "&Delete element", this );
     // a->setShortcut( Qt::Key_Delete );
-    a->setWhatsThis( tr("Delete selected element") );
     registerAction( a, "delElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotDelElm );
     pElmMenu->addAction( a );
@@ -351,7 +336,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/editelm.png" ), "&Edit element", this );
     // a->setShortcut( Qt::Key_Enter );
-    a->setWhatsThis( tr("Edit selected element") );
     registerAction( a, "editElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotEditElm );
     pElmMenu->addAction( a );
@@ -360,7 +344,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "Rename element", this );
-    a->setWhatsThis( tr("Rename selected element") );
     registerAction( a, "renameElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotRenameElm );
     pElmMenu->addAction( a );
@@ -369,7 +352,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon::fromTheme("insert-link"), "&Quick link element", this );
     a->setShortcut( Qt::CTRL+Qt::Key_L );
-    a->setWhatsThis( tr("Link marked to selected element") );
     registerAction( a, "qlinkElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotqLinkElm );
     pElmMenu->addAction( a );
@@ -377,15 +359,12 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "&Parametr link element", this );
     a->setShortcut(  Qt::SHIFT+Qt::CTRL+Qt::Key_L );
-    a->setWhatsThis( tr("Link marked to selected element "
-          "(parameter input)") );
     registerAction( a, "qplinkElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotqpLinkElm );
     pElmMenu->addAction( a );
   }
   {
     auto a = new QAction( "&Unlink element", this );
-    a->setWhatsThis( tr("Remove links of selected element") );
     registerAction( a, "unlinkElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotUnlinkElm );
     pElmMenu->addAction( a );
@@ -394,7 +373,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/lockelm.png" ), "Loc&k element",  this );
     a->setShortcut( Qt::CTRL+Qt::Key_K );
-    a->setWhatsThis( tr("Lock current element") );
     registerAction( a, "lockElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotLockElm );
     pElmMenu->addAction( a );
@@ -402,7 +380,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/orderelm.png" ), "Change &Orger", this );
     a->setShortcut( Qt::Key_O );
-    a->setWhatsThis( tr("Change order numper of selected element") );
     registerAction( a, "ordElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotOrdElm );
     pElmMenu->addAction( a );
@@ -411,7 +388,6 @@ void LaboWin::initIface()
   {
     auto a= new QAction( QIcon( ":icons/markelm.png" ), "&Mark element", this );
     a->setShortcut( Qt::Key_M );
-    a->setWhatsThis( tr("Mark selected element") );
     registerAction( a, "markElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotMarkElm );
     pElmMenu->addAction( a );
@@ -420,7 +396,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "Move element", this );
     a->setShortcut( Qt::SHIFT+Qt::Key_M );
-    a->setWhatsThis( tr("Move marked element to selected cell") );
     registerAction( a, "moveElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotMoveElm );
     pElmMenu->addAction( a );
@@ -429,7 +404,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/infoelm.png" ), "show &Info", this );
     a->setShortcut( Qt::Key_I );
-    a->setWhatsThis( tr("Show information about element structure") );
     registerAction( a, "infoElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotInfoElm );
     pElmMenu->addAction( a );
@@ -438,7 +412,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "show element tree", this );
-    a->setWhatsThis( tr("Show tree-like element structure") );
     registerAction( a, "showTreeElm" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowTreeElm );
     pElmMenu->addAction( a );
@@ -446,14 +419,12 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "test element 1", this );
-    a->setWhatsThis( tr("Test something in element") );
     registerAction( a, "testElm1" );
     connect( a, &QAction::triggered, this, &LaboWin::slotTestElm1 );
     pElmMenu->addAction( a );
   }
   {
     auto a = new QAction( "test element 2", this );
-    a->setWhatsThis( tr("Test something in element") );
     registerAction( a, "testElm2" );
     connect( a, &QAction::triggered, this, &LaboWin::slotTestElm2 );
     pElmMenu->addAction( a );
@@ -463,7 +434,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/newout.png" ), "&New Out", this );
     a->setShortcut( Qt::Key_U );
-    a->setWhatsThis( tr("Create output collector") );
     registerAction( a, "addOut" );
     connect( a, &QAction::triggered, this, &LaboWin::slotNewOut );
     pOutMenu->addAction( a );
@@ -471,7 +441,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( QIcon( ":icons/delout.png" ), "&Delete out", this );
-    a->setWhatsThis( tr("Delete output collector with current level") );
     registerAction( a, "delOut" );
     connect( a, &QAction::triggered, this, &LaboWin::slotDelOut );
     pOutMenu->addAction( a );
@@ -480,7 +449,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/editout.png" ), "&Edit out", this );
     a->setShortcut( Qt::SHIFT+Qt::Key_U );
-    a->setWhatsThis( tr("Edit outsput collector with current level") );
     registerAction( a, "editOut" );
     connect( a, &QAction::triggered, this, &LaboWin::slotEditOut );
     pOutMenu->addAction( a );
@@ -489,7 +457,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "Rename output collector", this );
-    a->setWhatsThis( tr("Rename output collector") );
     connect( a, &QAction::triggered, this, &LaboWin::slotRenameOut );
     registerAction( a, "renameOut" );
     pOutMenu->addAction( a );
@@ -498,7 +465,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "Select out", this );
     a->setShortcut( Qt::ALT+Qt::Key_U );
-    a->setWhatsThis( tr("Select output collector by current level") );
     registerAction( a, "selectOut" );
     connect( a, &QAction::triggered, this, &LaboWin::slotSelectOut );
     pOutMenu->addAction( a );
@@ -506,7 +472,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( QIcon( ":icons/showoutdata.png" ), "&Show out data", this );
-    a->setWhatsThis( tr("Show data collected by output.") );
     registerAction( a, "showOutData" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowOutData );
     pOutMenu->addAction( a );
@@ -516,7 +481,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "E&xport out data", this );
     a->setShortcut( Qt::CTRL+Qt::Key_E );
-    a->setWhatsThis( tr("Export data collected by output to text file.") );
     registerAction( a, "exportOut" );
     connect( a, &QAction::triggered, this, &LaboWin::slotExportOut );
     pOutMenu->addAction( a );
@@ -526,7 +490,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/newgraph.png" ), "&New Plot", this );
     a->setShortcut( Qt::Key_P );
-    a->setWhatsThis( tr("Create new plot") );
     registerAction( a, "addGraph" );
     connect( a, &QAction::triggered, this, &LaboWin::slotNewGraph );
     pGraphMenu->addAction( a );
@@ -534,7 +497,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( QIcon( ":icons/delgraph.png" ), "&Delete plot", this );
-    a->setWhatsThis( tr("Delete plot with selected level") );
     registerAction( a, "delGraph" );
     connect( a, &QAction::triggered, this, &LaboWin::slotDelGraph );
     pGraphMenu->addAction( a );
@@ -543,7 +505,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/editgraph.png" ), "&Edit plot", this );
     a->setShortcut(  Qt::SHIFT+Qt::Key_P );
-    a->setWhatsThis( tr("Edit plot") );
     registerAction( a, "editGraph" );
     connect( a, &QAction::triggered, this, &LaboWin::slotEditGraph );
     pGraphMenu->addAction( a );
@@ -552,7 +513,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "Rename plot", this );
-    a->setWhatsThis( tr("Rename plot") );
     registerAction( a, "renameGraph" );
     connect( a, &QAction::triggered, this, &LaboWin::slotRenameGraph );
     pGraphMenu->addAction( a );
@@ -561,7 +521,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "select plot", this );
     a->setShortcut(  Qt::ALT+Qt::Key_G ); // Alt-P is busy by menu
-    a->setWhatsThis( tr("Select plot by current level") );
     registerAction( a, "selectGraph" );
     connect( a, &QAction::triggered, this, &LaboWin::slotSelectGraph );
     pGraphMenu->addAction( a );
@@ -570,7 +529,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/showgraph.png" ), "&Show plot", this );
     a->setShortcut( Qt::Key_S );
-    a->setWhatsThis( tr("Show plot") );
     registerAction( a, "showGraph" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowGraph );
     pGraphMenu->addAction( a );
@@ -580,7 +538,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "Add out to plot", this );
     a->setShortcut( Qt::CTRL | Qt::Key_U );
-    a->setWhatsThis( tr("Add current output array to plot") );
     registerAction( a, "graphAddOut" );
     connect( a, &QAction::triggered, this, &LaboWin::slotGraphAddOut );
     pGraphMenu->addAction( a );
@@ -590,7 +547,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/showgraphdata.png" ), "show plot Data", this );
     a->setShortcut(  Qt::SHIFT+Qt::Key_D );
-    a->setWhatsThis( tr("Show plot data") );
     registerAction( a, "showGraphData" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowGraphData );
     pGraphMenu->addAction( a );
@@ -600,14 +556,12 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "E&xport plot data", this );
     a->setShortcut( Qt::SHIFT+Qt::Key_E );
-    a->setWhatsThis( tr("Export plot data to text file") );
     registerAction( a, "exportGraphData" );
     connect( a, &QAction::triggered, this, &LaboWin::slotExportGraphData);
     pGraphMenu->addAction( a );
   }
   {
     auto a = new QAction( "Clone plot", this );
-    a->setWhatsThis( tr("Clone current plot") );
     registerAction( a, "cloneGraph" );
     connect( a, &QAction::triggered, this, &LaboWin::slotCloneGraph );
     pGraphMenu->addAction( a );
@@ -616,14 +570,12 @@ void LaboWin::initIface()
   // ==== simulation group
   {
     auto a = new QAction( "&New Simulation", this );
-    a->setWhatsThis( tr("Create new simulation") );
     registerAction( a, "addSimul" );
     connect( a, &QAction::triggered, this, &LaboWin::slotNewSimul );
     pSimulMenu->addAction( a );
   }
   {
     auto a = new QAction( "&Delete Simulation", this );
-    a->setWhatsThis( tr("Delete simulation") );
     registerAction( a, "delSimul" );
     connect( a, &QAction::triggered, this, &LaboWin::slotDelSimul );
     pSimulMenu->addAction( a );
@@ -631,7 +583,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "&Edit Simulation", this );
     a->setShortcut(  Qt::SHIFT+Qt::Key_Y );
-    a->setWhatsThis( tr("Edit simulation") );
     registerAction( a, "editSimul" );
     connect( a, &QAction::triggered, this, &LaboWin::slotEditSimul );
     pSimulMenu->addAction( a );
@@ -639,7 +590,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "Rename simulation", this );
-    a->setWhatsThis( tr("Rename simulation") );
     registerAction( a, "renameSimul" );
     connect( a, &QAction::triggered, this, &LaboWin::slotRenameSimul );
     pSimulMenu->addAction( a );
@@ -648,7 +598,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "Select Simulation", this );
     a->setShortcut(  Qt::ALT+Qt::Key_Y );
-    a->setWhatsThis( tr("Setect simulation") );
     registerAction( a, "selectSimul" );
     connect( a, &QAction::triggered, this, &LaboWin::slotSelectSimul );
     pSimulMenu->addAction( a );
@@ -657,7 +606,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "Set Active Simulation", this );
     a->setShortcut( Qt::ALT+Qt::CTRL+Qt::Key_Y );
-    a->setWhatsThis( tr("Set current simulation to be active") );
     registerAction( a, "setActiveSimul" );
     connect( a, &QAction::triggered, this, &LaboWin::slotSetActiveSimul );
     pSimulMenu->addAction( a );
@@ -665,7 +613,6 @@ void LaboWin::initIface()
 
   {
     auto a = new QAction( "Clone Simulation", this );
-    a->setWhatsThis( tr("Clone current simulation") );
     registerAction( a, "cloneSimul" );
     connect( a, &QAction::triggered, this, &LaboWin::slotCloneSimul );
     pSimulMenu->addAction( a );
@@ -675,7 +622,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/editmodel.png" ), "&Edit Model", this );
     a->setShortcut(  Qt::CTRL+Qt::Key_R );
-    a->setWhatsThis( tr("Edit model parameters.") );
     registerAction( a, "editModel" );
     connect( a, &QAction::triggered, this, &LaboWin::slotEditModel );
     pModelMenu->addAction( a );
@@ -685,7 +631,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "show model tree", this );
     a->setShortcut( Qt::CTRL+Qt::Key_T );
-    a->setWhatsThis( tr("Show tree-like model structure") );
     registerAction( a, "showTreeModel" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowTreeModel );
     pModelMenu->addAction( a );
@@ -694,21 +639,18 @@ void LaboWin::initIface()
   //
   {
     auto a = new QAction( "&New Scheme", this );
-    a->setWhatsThis( tr("Create new scheme") );
     registerAction( a, "addScheme" );
     connect( a, &QAction::triggered, this, &LaboWin::slotNewScheme );
     pModelMenu->addAction( a );
   }
   {
     auto a = new QAction( "&Delete Scheme", this );
-    a->setWhatsThis( tr("Delete scheme") );
     registerAction( a, "delScheme" );
     connect( a, &QAction::triggered, this, &LaboWin::slotDelScheme );
     pModelMenu->addAction( a );
   }
   {
     auto a = new QAction( "&Edit Scheme", this );
-    a->setWhatsThis( tr("Edit scheme") );
     registerAction( a, "editScheme" );
     connect( a, &QAction::triggered, this, &LaboWin::slotEditScheme );
     pModelMenu->addAction( a );
@@ -716,14 +658,12 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "Rename scheme", this );
-    a->setWhatsThis( tr("Rename scheme") );
     registerAction( a, "renameScheme" );
     connect( a, &QAction::triggered, this, &LaboWin::slotRenameScheme );
     pModelMenu->addAction( a );
   }
   {
     auto a = new QAction( "Clone Scheme", this );
-    a->setWhatsThis( tr("Cone current scheme") );
     registerAction( a, "cloneScheme" );
     connect( a, &QAction::triggered, this, &LaboWin::slotCloneScheme );
     pModelMenu->addAction( a );
@@ -733,7 +673,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon( ":icons/run.png" ), "&Run", this );
     a->setShortcut( Qt::Key_F9 );
-    a->setWhatsThis( tr("Click this button to start simulation.") );
     registerAction( a, "runRun" );
     connect( a, &QAction::triggered, this, &LaboWin::slotRunRun );
     pRunMenu->addAction( a );
@@ -742,7 +681,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "Rese&t", this );
-    a->setWhatsThis( tr("Reset model state.") );
     registerAction( a, "reset" );
     connect( a, &QAction::triggered, this, &LaboWin::slotReset );
     pRunMenu->addSeparator();
@@ -750,7 +688,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "Init engine", this );
-    a->setWhatsThis( tr("Initialize model JS engine.") );
     registerAction( a, "initEngine" );
     connect( a, &QAction::triggered, this, &LaboWin::slotInitEngine );
     pRunMenu->addAction( a );
@@ -758,14 +695,12 @@ void LaboWin::initIface()
   {
     auto a = new QAction( QIcon::fromTheme("application-x-javascript"), "run &Script", this );
     a->setShortcut( Qt::SHIFT+Qt::Key_F9 );
-    a->setWhatsThis( tr("Run script on model") );
     connect( a, &QAction::triggered, this, &LaboWin::slotRunScript );
     pRunMenu->addAction( a );
     elmToolbar->addAction( a );
   }
   {
     auto a = new QAction( "run &Model script", this );
-    a->setWhatsThis( tr("Run inner model script") );
     registerAction( a, "runModelScript" );
     connect( a, &QAction::triggered, this, &LaboWin::slotRunModelScript );
     pRunMenu->addAction( a );
@@ -856,7 +791,6 @@ void LaboWin::initIface()
   // ==== window group
   {
     auto a = new QAction( QIcon::fromTheme("window-close"), "Cl&ose Window", this);
-    a->setWhatsThis( tr("Close this window") );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "windowClose" );
     connect( a, &QAction::triggered, this, &LaboWin::slotWindowClose );
@@ -864,7 +798,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "Close &All Windows",  this );
-    a->setWhatsThis( tr("Close all windoww") );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "windowCloseAll" );
     connect( a, &QAction::triggered, this, &LaboWin::slotWindowCloseAll );
@@ -872,7 +805,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "&Tile Windows",  this );
-    a->setWhatsThis( tr("Tile the windows") );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "windowTile" );
     connect( a, &QAction::triggered, this, &LaboWin::slotWindowTile );
@@ -880,7 +812,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "&Cascade Windows",  this );
-    a->setWhatsThis( tr("Cascade the windows") );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "windowCascase" );
     connect( a, &QAction::triggered, this, &LaboWin::slotWindowCascade );
@@ -889,7 +820,6 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "Next window",  this );
     a->setShortcut( Qt::Key_F6 );
-    a->setWhatsThis( tr("Activate next window") );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "nextSubWindow" );
     connect( a, &QAction::triggered, mdiArea, &QMdiArea::activateNextSubWindow );
@@ -897,7 +827,6 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "Previous window",  this );
-    a->setWhatsThis( tr("Activate previous window") );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "prevSubWindow" );
     connect( a, &QAction::triggered, mdiArea, &QMdiArea::activatePreviousSubWindow );
@@ -923,7 +852,6 @@ void LaboWin::initIface()
 
   {
     auto a = new QAction( QIcon( ":icons/test.png" ), "&Test", this );
-    a->setWhatsThis( tr("Click this button to test something.") );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "test" );
     connect( a, &QAction::triggered, this, &LaboWin::slotTest );
