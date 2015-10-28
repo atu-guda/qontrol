@@ -89,6 +89,7 @@ class LaboWin : public QMainWindow
   public:
     LaboWin();
     ~LaboWin();
+    using SlotVV = void (LaboWin::*)();
 
     /** returns apps printer */
     QPrinter* getPrinter() { return printer; }
@@ -111,6 +112,8 @@ class LaboWin : public QMainWindow
     CommonSubwin* activeView();
     //* call gives simple slot from active LaboView
     void callLaboViewSlot( const char *slot, const QString &mess );
+    //* just test argument type
+    void tstArg( SlotVV p ) {};
 
   private slots:
 

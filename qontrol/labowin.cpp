@@ -126,6 +126,9 @@ void LaboWin::initIface()
   fileToolbar = addToolBar( tr("File") );
   elmToolbar = addToolBar( tr("Element") );
 
+  // test
+  tstArg( &LaboWin::slotFileNew );
+
   // Actions
   // File group
 
