@@ -163,10 +163,14 @@ QVariant HolderData::dataObj( int col, int role ) const
   }
 
   if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
-    if( col != 0 ) {
+    if( col > 1 ) {
       return QVariant();
     }
-    QString s = objectName() % " (" % getType() % ") " % getStateStr();
+    QString s = objectName() % " (" % getType() % ") ";
+    if( col == 1 ) {  // for button
+      return s;
+    }
+    s += getStateStr(); // 0: real status tip
     return s;
   }
 

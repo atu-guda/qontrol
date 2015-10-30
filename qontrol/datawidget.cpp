@@ -15,6 +15,9 @@
 
 using namespace std;
 
+static const int MAX_COLS_PER_WIDGET  = 20;
+static const int MAX_WIDGETS_PER_COL  = 16;
+
 DataWidget::DataWidget( HolderData &h, QWidget *parent )
   : QFrame( parent ), ho( h ), main_w( nullptr ),
     lbl( new QLabel( tex2label(ho.getParm( "vis_name" )), this ) )
@@ -980,7 +983,7 @@ bool ObjDataWidget::get() const
 
 void ObjDataWidget::updateLabel()
 {
-  QString btn_text = ho.dataObj( 0, Qt::StatusTipRole ).toString();
+  QString btn_text = ho.dataObj( 1, Qt::StatusTipRole ).toString(); // col 1: for button
   pb->setText( btn_text );
   pb->setShortcut( QKeySequence() );
   pb->setIcon( ho.getIcon() );
@@ -1380,10 +1383,14 @@ int DataDialog::createWidgets()
   }
   dwm.clear();
 
-  auto lay1 = new QVBoxLayout; // TODO: recreate layouts
+  if( auto old_lay = layout() ) {
+    delete old_lay;
+  }
+  auto lay1 = new QVBoxLayout;
 
   auto lay2 = new QGridLayout;
   lay1->addLayout( lay2 );
+  lay2->setSpacing( 2 );
 
   DataWidget *w;
 
@@ -1396,7 +1403,7 @@ int DataDialog::createWidgets()
     QString ncol_str = ho->getParm("ncol");
     if( ! ncol_str.isEmpty() ) {
       ncol = ncol_str.toInt();
-      ncol = qBound( -1, ncol, 20 );
+      ncol = qBound( -1, ncol, MAX_COLS_PER_WIDGET );
     }
 
     if( ho->getParm("sep") == "col" || was_col ) {
@@ -1433,7 +1440,7 @@ int DataDialog::createWidgets()
     }
 
     was_col = was_block = 0;
-    if( ho->getParm("sep") == "colend" ||  nr >= 20 ) { // 20: max elems in column
+    if( ho->getParm("sep") == "colend" ||  nr >= MAX_WIDGETS_PER_COL ) {
       was_col = 1;
     }
     if( ho->getParm("sep") == "blockend" ) {
