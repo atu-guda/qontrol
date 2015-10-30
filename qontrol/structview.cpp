@@ -24,15 +24,14 @@
 #include "doubletable.h"
 #include "labowin.h"
 #include "labodoc.h"
-#include "laboview.h"
 #include "runview.h"
 #include "outdataview.h"
 #include "addelemdia.h"
 
 
 
-StructView::StructView( CommonSubwin *a_par, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview )
-            : CmdView( a_par, a_sch ), sch( a_sch ), mainview( mview ), oview( a_oview )
+StructView::StructView( CommonSubwin *a_par, Scheme *a_sch )
+            : CmdView( a_par, a_sch ), sch( a_sch )
 {
   em = LaboWin::Em();
   QPalette pal;
@@ -249,7 +248,7 @@ void StructView::drawAll( QPainter &p )
   if( hasFocus() ) {
     p.setBrush( Qt::white );
   } else {
-    p.setBrush( QColor( 200, 200, 200 ) );
+    p.setBrush( QColor( 230, 230, 230 ) );
   }
   p.drawRect( 0, 0, w, h );
 
@@ -513,12 +512,13 @@ void StructView::drawAll( QPainter &p )
 
   // -------------- output marks
 
-  if( oview ) {
-    ContOut *outs = qobject_cast<ContOut*>( oview->getStorage() );
+  CmdView *outs_view = par->getView( "outs_view" );
+  if( outs_view ) {
+    ContOut *outs = qobject_cast<ContOut*>( outs_view->getStorage() );
     if( !outs ) {
       qWarning() << "not found 'outs' in model"  << WHE;
     } else {
-      auto sel_mod = oview->currentIndex();
+      auto sel_mod = outs_view->currentIndex();
       int sel_out = sel_mod.row();
       for( auto arr : outs->TCHILD(TOutArr*) ) {
         int out_nu = arr->getMyIndexInParent();
@@ -1061,16 +1061,21 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     act = menu->addAction( QIcon::fromTheme("edit-pase"), "&Paste" );
     connect( act, &QAction::triggered, this, &StructView::pasteElm );
   };
-  if( oview != nullptr && mainview != nullptr ) {
-    menu->addSeparator(); //TODO: revive if need
+
+  CmdView *outs_view = par->getView( "outs_view" );
+  if( outs_view ) {
+    menu->addSeparator();
     act = menu->addAction( QIcon( ":icons/newout.png" ), "New outp&ut" );
-    connect( act, &QAction::triggered, mainview, &LaboView::addOut );
+    connect( act, SIGNAL(triggered()), outs_view, SLOT(addObj()) );
+  }
+  if( par->isMainWin() ) {
     menu->addSeparator();
     act = menu->addAction( QIcon( ":icons/editmodel.png" ), "Edit model" );
-    connect( act, &QAction::triggered, mainview, &LaboView::editModel );
+    connect( act, SIGNAL(triggered()), par, SLOT(editModel()) );
   }
+
   menu->addSeparator();
-  act = menu->addAction( QIcon::fromTheme("document-print"),"Print model" );
+  act = menu->addAction( QIcon::fromTheme("document-print"),"Print scheme" );
   connect( act, &QAction::triggered, this, &StructView::print );
 
   return menu;
@@ -1129,7 +1134,7 @@ void StructView::keyPressEvent( QKeyEvent *ke )
 
 // ============================== StructSubwin =======================================
 
-StructSubwin::StructSubwin( QWidget *a_par, LaboDoc *a_doc, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview )
+StructSubwin::StructSubwin( QWidget *a_par, LaboDoc *a_doc, Scheme *a_sch )
     : CommonSubwin( a_par, a_doc, a_sch->objectName() )
 {
   main_win = false;
@@ -1138,7 +1143,7 @@ StructSubwin::StructSubwin( QWidget *a_par, LaboDoc *a_doc, Scheme *a_sch,  Labo
   scrollArea = new QScrollArea( this );
   scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
 
-  sview = new StructView( this, a_sch, mview, a_oview );
+  sview = new StructView( this, a_sch );
   vmap["sview"] = sview;
 
   scrollArea->setWidget( sview );

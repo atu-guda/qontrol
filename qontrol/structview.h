@@ -24,11 +24,11 @@ class QPaintEvent;
 class QMouseEvent;
 class QKeyEvent;
 class QMenu;
+class QScrollArea;
 
 class OutDataView;
 
 #include "scheme.h"
-#include "laboview.h"
 #include "commonsubwin.h"
 #include "cmdview.h"
 
@@ -59,7 +59,7 @@ class StructView : public CmdView  {
                      noselCheck, moveCheck, doneCheck
     };
 
-    StructView( CommonSubwin *a_par, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview );
+    StructView( CommonSubwin *a_par, Scheme *a_sch );
     virtual ~StructView();
     /** print contents */
     void printAll();
@@ -150,9 +150,6 @@ class StructView : public CmdView  {
   protected:
     /** pointer to TModel to be drawed */
     Scheme *sch;
-    /** main view (parent) TODO: replace with less */
-    LaboView *mainview;
-    OutDataView *oview; // pointer to releted view or nullptr
     /** type of output device */
     int devTp = 0;
     /** grid size, left, top margin size, object size,  elements margin */
@@ -169,7 +166,7 @@ class StructView : public CmdView  {
 
 class StructSubwin : public CommonSubwin {
   public:
-   StructSubwin( QWidget *a_par, LaboDoc *a_doc, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview  );
+   StructSubwin( QWidget *a_par, LaboDoc *a_doc, Scheme *a_sch );
    ~StructSubwin();
    virtual bool callSlot( const char *nm );
    virtual bool checkSlot( const char *nm );

@@ -84,7 +84,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   schems_view->setObjectName( "schems_view" );
   // vmap["schems_view"] = schems_view;
 
-  sview = new StructView( this, main_s, this, outs_view );
+  sview = new StructView( this, main_s );
   sview->setObjectName( "sview" );
   vmap["sview"] = sview;
 
@@ -882,7 +882,7 @@ void LaboView::editScheme() // special: separate window
     return;
   }
 
-  auto sw = new StructSubwin( mwin, doc, sch, this, nullptr );
+  auto sw = new StructSubwin( mwin, doc, sch );
   mwin->addChild( sw );
 
     // emit viewChanged();
