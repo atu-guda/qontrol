@@ -7,6 +7,7 @@
  ***************************************************************************/
 
 #include <QStringBuilder>
+#include <QInputDialog>
 #include "miscfun.h"
 #include "datawidget.h"
 #include "labowin.h"
@@ -1327,32 +1328,10 @@ void DataDialog::delSome( bool is_obj )
     return;
   }
 
-  auto dia = new QDialog( this );
-  auto lay = new QVBoxLayout( dia );
-
-  auto la = new QLabel( "Delete param", dia );
-  lay->addWidget( la );
-
-  auto lw = new QListWidget( dia );
-  for( QString ob_name : sl ) {
-    lw->addItem( ob_name );
-  };
-  lay->addWidget( lw );
-
-  auto bbox
-    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  lay->addWidget( bbox );
-  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
-  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
-
-  int rc = dia->exec();
-  QString ob_name;
-  if( lw->currentItem() ) {
-    ob_name = lw->currentItem()->text();
-  }
-  delete dia;
-
-  if( rc != QDialog::Accepted || ob_name.isEmpty() ) {
+  bool ok;
+  QString ob_name = QInputDialog::getItem( this, "Delete object",
+      "Select object to delete", sl, 0, false, &ok );
+  if( !ok ) {
     return;
   }
 
