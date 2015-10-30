@@ -123,7 +123,7 @@ class StructView : public CmdView  {
     virtual bool pasteObj() override;
     // virtual bool infoObj() override;
     // virtual bool showTreeObj() override;
-    virtual bool testObj() override;
+    // virtual bool testObj() override;
 
   signals:
     void sig_changeSel(int,int,int);
@@ -171,7 +171,7 @@ class StructSubwin : public CommonSubwin {
    virtual bool callSlot( const char *nm );
    virtual bool checkSlot( const char *nm );
   protected:
-   QScrollArea *scrollArea = nullptr; // null only for forrect layout create
+   QScrollArea *scrollArea = nullptr; // null only for correct layout create
    StructView *sview = nullptr;
 };
 

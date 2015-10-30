@@ -697,7 +697,7 @@ void LaboView::addGraph()
 {
   bool ok;
 
-  QString grnameq = plots->hintName( "TGraph" );
+  QString grnameq = plots->hintName( "" );
   QString aname = QInputDialog::getText( this, "Creating new plot",
       "Enter name of new plot:", QLineEdit::Normal,
       grnameq, &ok );
@@ -847,7 +847,7 @@ void LaboView::cloneGraph()
 void LaboView::addSimul()
 {
   bool ok;
-  QString simName = sims->hintName( QSL("Simulation") );
+  QString simName = sims->hintName( QString() );
   simName = QInputDialog::getText( this, "Creating new Simulation",
       "Enter name of new simulation:", QLineEdit::Normal,
       simName, &ok );
@@ -936,7 +936,7 @@ void LaboView::showTreeModel()
 void LaboView::addScheme()
 {
   bool ok;
-  QString schName = schems->hintName( "Scheme" );
+  QString schName = schems->hintName( QString() );
   schName = QInputDialog::getText( this, "Creating new Scheme",
       "Enter name of new scheme:", QLineEdit::Normal,
       schName, &ok );

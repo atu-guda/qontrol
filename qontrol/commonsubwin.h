@@ -23,14 +23,14 @@
 #include <QMainWindow>
 #include "labodoc.h"
 
-enum SelectedObjNums {
-  selElem   = 0,
-  selOut    = 1,
-  selPlot   = 2,
-  selSimul  = 3,
-  selScheme = 4,
-  selNums
-};
+// enum SelectedObjNums {
+//   selElem   = 0,
+//   selOut    = 1,
+//   selPlot   = 2,
+//   selSimul  = 3,
+//   selScheme = 4,
+//   selNums
+// };
 
 
 class CommonSubwin : public QMainWindow  {
@@ -41,7 +41,6 @@ class CommonSubwin : public QMainWindow  {
    QString getFilePath() const;
    void updateTitle();
    bool isMainWin() const { return main_win; }
-   int getSelNum( unsigned sn ) const;
    LaboDoc *getDocument() const { return  doc; };
    virtual bool callSlot( const char *nm ) = 0;
    virtual bool checkSlot( const char *nm ) = 0;
@@ -56,7 +55,6 @@ class CommonSubwin : public QMainWindow  {
    QString filePath, objName;
    QString title_prefix = QSL( "Unk" );
    bool main_win = false; //* flag of close this close all non-main windows with same filePath
-   std::vector<int> sels; //* selection numbers, -1 = no select
 };
 
 #endif

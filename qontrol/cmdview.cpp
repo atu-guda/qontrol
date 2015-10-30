@@ -222,6 +222,57 @@ bool CmdView::showTreeObj()
 
 bool CmdView::testObj()
 {
+  HolderData *selObj = getSelObj();
+  if( !selObj ) {
+    return false;
+  }
+  QString buf;
+
+  auto dia = new QDialog( this );
+  dia->setWindowTitle( QString( PACKAGE ": test1 ") + selObj->objectName() );
+
+  QFontMetrics fm( dia->font() );
+  int em = fm.width( 'W' );
+
+  buf = selObj->toString();
+
+  auto lay = new QVBoxLayout();
+
+  auto la = new QLabel( dia );
+  la->setText( buf );
+  auto scroll = new QScrollArea( dia );
+  scroll->setWidget( la );
+  lay->addWidget( scroll );
+
+  auto bt_ok = new QPushButton( tr("Done"), dia);
+  bt_ok->setDefault( true );
+  lay->addWidget( bt_ok );
+  dia->setLayout( lay );
+
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
+
+  dia->resize( 60*em, 30*em ); // TODO: unmagic
+  dia->exec();
+  delete dia;
+  emit viewChanged();
+  return true;
+}
+
+
+bool CmdView::showObj()
+{
+  qWarning() << "Unimplemented " << WHE;
+  return false;
+}
+
+bool CmdView::showDataObj()
+{
+  qWarning() << "Unimplemented " << WHE;
+  return false;
+}
+
+bool CmdView::exportObj()
+{
   qWarning() << "Unimplemented " << WHE;
   return false;
 }

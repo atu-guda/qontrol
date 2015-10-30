@@ -428,10 +428,18 @@ bool HolderData::isObject( const QString & cl_name ) const
 QString HolderData::hintName( const QString &tp, const QString &nm_start ) const
 {
   QString nm = nm_start;
+  QString tpx = tp;
 
   if( nm.isEmpty() ) {
     nm = "xx_";
-    const TClassInfo *ci = EFACT.getInfo( tp );
+    if( tpx.isEmpty() ) {
+      tpx = allowTypes();
+      int coma_idx = tpx.indexOf( ',' );
+      if( coma_idx > 0 ) { // first ',' do not have any sense
+        tpx = tpx.left( coma_idx );
+      }
+    }
+    const TClassInfo *ci = EFACT.getInfo( tpx );
     if( ci ) {
       const QMetaObject *mci = ci->meta;
       int ci_idx = mci->indexOfClassInfo( "nameHintBase" );

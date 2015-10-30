@@ -30,6 +30,18 @@ class OutDataView : public CmdView {
    virtual HolderData* getSelObj() const override;
    virtual void handleSelChange() override;
    virtual QModelIndex currentIndex() const override;
+  public slots:
+    // virtual bool addObj() override;
+    // virtual bool delObj() override;
+    // virtual bool editObj() override;
+    // virtual bool renameObj() override;
+    // virtual bool cloneObj() override;
+    // virtual bool cutObj() override;
+    // virtual bool copyObj() override;
+    // virtual bool pasteObj() override;
+    // virtual bool infoObj() override;
+    // virtual bool showTreeObj() override;
+    // virtual bool testObj() override;
   protected:
    QListView *lv = nullptr;
    LaboView *laboview;

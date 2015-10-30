@@ -23,8 +23,7 @@
 using namespace std;
 
 CommonSubwin::CommonSubwin( QWidget *parent, LaboDoc *a_doc, const QString &o_name )
-          : QMainWindow( parent ), doc( a_doc ), objName( o_name ),
-            sels( selNums, -1 )
+          : QMainWindow( parent ), doc( a_doc ), objName( o_name )
 {
 }
 
@@ -46,13 +45,6 @@ void CommonSubwin::updateTitle()
   setWindowTitle( title_prefix % QSL(": ") % objName % QSL(" - ") % doc->pathName() );
 }
 
-int CommonSubwin::getSelNum( unsigned sn ) const
-{
-  if( sn >= selNums ) {
-    return -1;
-  }
-  return sels[sn];
-}
 
 bool CommonSubwin::checkSlotSub( QWidget *w, const char *nm )
 {

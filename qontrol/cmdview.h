@@ -43,6 +43,9 @@ class CmdView : public QWidget {
     virtual bool infoObj();
     virtual bool showTreeObj();
     virtual bool testObj();
+    virtual bool showObj();
+    virtual bool showDataObj();
+    virtual bool exportObj();
   signals:
     void viewChanged();
   protected:
