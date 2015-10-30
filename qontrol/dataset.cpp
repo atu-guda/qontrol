@@ -696,6 +696,7 @@ bool HolderData::cloneObj( const QString &old_name, const QString &new_name )
   }
   bool ok =  new_obj->fromString( s );
   new_obj->reportStructChanged();
+  new_obj->reset();
   return ok;
 }
 

@@ -877,7 +877,28 @@ bool StructView::delObj()
 
 bool StructView::cloneObj()
 {
-  return CmdView::cloneObj();
+  if( ! CmdView::cloneObj() ) {
+    return false;
+  }
+  QString nm = getLastObjName();
+  HolderData *ob = storage->getObj( nm ); // TMiso
+  if( !ob ) {
+    return false; // unli
+  }
+  int ox = ob->getDataD( "vis_x", 0 );
+  int oy = ob->getDataD( "vis_y", 0 );
+
+  // new place: TODO: better search
+  for( int nox=ox; nox< MODEL_MX; ++nox ) {
+    for( int noy=oy+1; noy< MODEL_MY; ++noy ) {
+      TMiso *oob = sch->xy2Miso( nox, noy );
+      if( oob ) { continue; } // place busy
+      ob->setData( "vis_x", nox );
+      ob->setData( "vis_y", noy );
+      return true;
+    }
+  }
+  return true;
 }
 
 
@@ -1050,6 +1071,8 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("edit-copy"), "&Copy" );
     connect( act, &QAction::triggered, this, &StructView::copyObj );
+    act = menu->addAction( "Clone" );
+    connect( act, &QAction::triggered, this, &StructView::cloneObj );
     menu->addSeparator();
   } else {
     act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );

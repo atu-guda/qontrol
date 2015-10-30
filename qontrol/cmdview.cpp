@@ -60,6 +60,7 @@ bool CmdView::delObj()
 
   if( confirmDelete( this, ob->getType(), oname ) ) {
     storage->delObj( oname );
+    lastObjName = oname;
     handleSelChange();
     emit viewChanged();
     return true;
@@ -76,6 +77,7 @@ bool CmdView::editObj()
   }
   bool ok = ::editObj( this, selObj );
   if( ok ) {
+    lastObjName = selObj->objectName();
     emit viewChanged();
     return true;
   }
@@ -97,6 +99,7 @@ bool CmdView::renameObj()
 
   if( ok ) {
     if( storage->renameObj( old_name, new_name ) ) {
+      lastObjName = new_name;
       emit viewChanged();
       return true;
     }
@@ -107,7 +110,30 @@ bool CmdView::renameObj()
 
 bool CmdView::cloneObj()
 {
-  qWarning() << "Unimplemented " << WHE;
+  HolderData *selObj = getSelObj();
+  if( !selObj ) {
+    return false;
+  }
+
+  QString nm = selObj->objectName();
+  QString new_name = storage->hintName( selObj->getType(), nm );
+  bool ok;
+  new_name = QInputDialog::getText( this, "Object:" + selObj->getFullName(),
+      "Enter new name:", QLineEdit::Normal, new_name, &ok );
+
+  if( !ok ) {
+    return false;
+  }
+
+  if( storage->cloneObj( nm, new_name ) ) {
+    lastObjName = new_name;
+    // TODO: post_clone( obj )
+    // model->reset();
+    //
+    emit viewChanged();
+    return true;
+  }
+
   return false;
 }
 
@@ -255,6 +281,7 @@ bool CmdView::testObj()
   dia->resize( 60*em, 30*em ); // TODO: unmagic
   dia->exec();
   delete dia;
+  lastObjName = selObj->objectName();
   emit viewChanged();
   return true;
 }
