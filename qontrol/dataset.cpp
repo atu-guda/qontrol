@@ -683,7 +683,7 @@ bool HolderData::cloneObj( const QString &old_name, const QString &new_name )
   HolderData *old_obj = getObj( old_name );
   if( !old_obj ) {
     qWarning() << " old plot not exist: " << old_name << NWHE;
-    return 0;
+    return false;
   }
 
   QString tp = old_obj->getType();
@@ -692,9 +692,11 @@ bool HolderData::cloneObj( const QString &old_name, const QString &new_name )
   HolderData *new_obj = addObjP( tp, new_name );
   if( !new_obj ) {
     qWarning() << "fail to create new object" << new_name << " type " << tp << NWHE;
-    return 0;
+    return false;
   }
-  return new_obj->fromString( s );
+  bool ok =  new_obj->fromString( s );
+  new_obj->reportStructChanged();
+  return ok;
 }
 
 
