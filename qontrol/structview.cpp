@@ -888,15 +888,17 @@ bool StructView::cloneObj()
   int ox = ob->getDataD( "vis_x", 0 );
   int oy = ob->getDataD( "vis_y", 0 );
 
-  // new place: TODO: better search
-  for( int nox=ox; nox< MODEL_MX; ++nox ) {
-    for( int noy=oy+1; noy< MODEL_MY; ++noy ) {
-      TMiso *oob = sch->xy2Miso( nox, noy );
-      if( oob ) { continue; } // place busy
-      ob->setData( "vis_x", nox );
-      ob->setData( "vis_y", noy );
-      return true;
-    }
+  // find new good place near
+  for( unsigned v=1; v<128; ++v ) {
+    unsigned adx = ( (v&2) >> 1 ) | ( (v&8) >> 2 );
+    unsigned ady = ( (v&1) ) | ( (v&4) >> 1 ) | ( (v & 0xFFF0) >> 2 );
+    int nox = ox + adx;
+    int noy = oy + ady;
+    TMiso *oob = sch->xy2Miso( nox, noy );
+    if( oob ) { continue; } // place busy
+    ob->setData( "vis_x", nox );
+    ob->setData( "vis_y", noy );
+    return true;
   }
   return true;
 }
