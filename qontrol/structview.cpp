@@ -31,7 +31,7 @@
 
 
 
-StructView::StructView( QWidget *a_par, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview )
+StructView::StructView( CommonSubwin *a_par, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview )
             : CmdView( a_par, a_sch ), sch( a_sch ), mainview( mview ), oview( a_oview )
 {
   em = LaboWin::Em();
@@ -1139,6 +1139,7 @@ StructSubwin::StructSubwin( QWidget *a_par, LaboDoc *a_doc, Scheme *a_sch,  Labo
   scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
 
   sview = new StructView( this, a_sch, mview, a_oview );
+  vmap["sview"] = sview;
 
   scrollArea->setWidget( sview );
   setCentralWidget( scrollArea );

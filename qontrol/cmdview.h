@@ -21,11 +21,12 @@
 #include <QWidget>
 
 class HolderData;
+class CommonSubwin;
 
 class CmdView : public QWidget {
   Q_OBJECT
   public:
-    CmdView( QWidget *a_par, HolderData *a_storage );
+    CmdView( CommonSubwin *a_par, HolderData *a_storage );
     virtual HolderData* getSelObj() const = 0;
     QString getSelName() const;
     virtual void handleSelChange() = 0;
@@ -50,6 +51,7 @@ class CmdView : public QWidget {
     void viewChanged();
   protected:
     HolderData* storage;
+    CommonSubwin *par;
 };
 
 #endif // CMDVIEW_H

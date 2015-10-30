@@ -20,10 +20,11 @@
 
 #include "dataset.h"
 #include "cmdview.h"
+#include "commonsubwin.h"
 #include "miscfun.h"
 
-CmdView::CmdView( QWidget *a_par, HolderData *a_storage )
-  : QWidget( a_par ), storage( a_storage )
+CmdView::CmdView( CommonSubwin *a_par, HolderData *a_storage )
+  : QWidget( a_par ), storage( a_storage ), par( a_par )
 {
 }
 

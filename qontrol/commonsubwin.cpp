@@ -18,6 +18,7 @@
 #include <QFileInfo>
 
 #include "commonsubwin.h"
+#include "cmdview.h"
 
 
 using namespace std;
@@ -62,6 +63,53 @@ bool CommonSubwin::checkSlotSub( QWidget *w, const char *nm )
   return ( idx >= 0);
 }
 
+CmdView* CommonSubwin::getView( const QString& view_name ) const
+{
+  auto it = vmap.find( view_name );
+  if( it == vmap.end() ) {
+    return nullptr;
+  }
+  return it.value();
+}
 
-// end of commonsubwin.cpp
+HolderData* CommonSubwin::getSelectedInView( const QString& view_name ) const
+{
+  CmdView *vi = getView( view_name );
+  if( !vi ) {
+    return nullptr;
+  }
+  return vi->getSelObj();
+}
+
+QString CommonSubwin::getSelNameInView( const QString& view_name ) const
+{
+  CmdView *vi = getView( view_name );
+  if( !vi ) {
+    return nullptr;
+  }
+  return vi->getSelName();
+}
+
+HolderData* CommonSubwin::getSelectedInFocus() const
+{
+  QWidget *w = focusWidget();
+  CmdView *vi = qobject_cast<CmdView*>( w );
+  if( !vi ) {
+    return nullptr;
+  }
+  return vi->getSelObj();
+}
+
+QString CommonSubwin::getSelNameInFocus() const
+{
+  QWidget *w = focusWidget();
+  CmdView *vi = qobject_cast<CmdView*>( w );
+  if( !vi ) {
+    return nullptr;
+  }
+  return vi->getSelName();
+}
+
+
+ // end of commonsubwin.cpp
 

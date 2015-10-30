@@ -21,16 +21,10 @@
 
 #include "defs.h"
 #include <QMainWindow>
+#include <QMap>
 #include "labodoc.h"
 
-// enum SelectedObjNums {
-//   selElem   = 0,
-//   selOut    = 1,
-//   selPlot   = 2,
-//   selSimul  = 3,
-//   selScheme = 4,
-//   selNums
-// };
+class CmdView;
 
 
 class CommonSubwin : public QMainWindow  {
@@ -44,6 +38,12 @@ class CommonSubwin : public QMainWindow  {
    LaboDoc *getDocument() const { return  doc; };
    virtual bool callSlot( const char *nm ) = 0;
    virtual bool checkSlot( const char *nm ) = 0;
+   using ViewNameMap = QMap<QString,CmdView*>;
+   CmdView* getView( const QString& view_name ) const;
+   HolderData* getSelectedInView( const QString& view_name ) const;
+   QString getSelNameInView( const QString& view_name ) const;
+   HolderData* getSelectedInFocus() const;
+   QString getSelNameInFocus() const;
  public slots:
  signals:
    void closeMe(); // ask main window to close me
@@ -55,6 +55,7 @@ class CommonSubwin : public QMainWindow  {
    QString filePath, objName;
    QString title_prefix = QSL( "Unk" );
    bool main_win = false; //* flag of close this close all non-main windows with same filePath
+   ViewNameMap vmap;
 };
 
 #endif

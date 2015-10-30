@@ -21,17 +21,17 @@
 #include <QtWidgets>
 
 #include "cmdview.h"
-#include "laboview.h"
+#include "commonsubwin.h"
 
 class OutDataView : public CmdView {
   Q_OBJECT
   public:
-   OutDataView( HolderData *a_mod, LaboView *par );
+   OutDataView( HolderData *a_mod, CommonSubwin *a_par );
    virtual HolderData* getSelObj() const override;
    virtual void handleSelChange() override;
    virtual QModelIndex currentIndex() const override;
   public slots:
-    // virtual bool addObj() override;
+    virtual bool addObj() override;
     // virtual bool delObj() override;
     // virtual bool editObj() override;
     // virtual bool renameObj() override;
@@ -42,9 +42,13 @@ class OutDataView : public CmdView {
     // virtual bool infoObj() override;
     // virtual bool showTreeObj() override;
     // virtual bool testObj() override;
+    // virtual bool showObj() override;
+    virtual bool showDataObj() override;
+    virtual bool exportObj() override;
+    // specific functions
+    bool addToPlot();
   protected:
    QListView *lv = nullptr;
-   LaboView *laboview;
   protected:
    void init_actions();
 };

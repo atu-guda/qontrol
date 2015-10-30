@@ -59,7 +59,7 @@ class StructView : public CmdView  {
                      noselCheck, moveCheck, doneCheck
     };
 
-    StructView( QWidget *a_par, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview );
+    StructView( CommonSubwin *a_par, Scheme *a_sch,  LaboView *mview, OutDataView *a_oview );
     virtual ~StructView();
     /** print contents */
     void printAll();
@@ -124,6 +124,9 @@ class StructView : public CmdView  {
     // virtual bool infoObj() override;
     // virtual bool showTreeObj() override;
     // virtual bool testObj() override;
+    // virtual bool showObj() override;
+    // virtual bool showDataObj() override;
+    // virtual bool exportObj() override;
 
   signals:
     void sig_changeSel(int,int,int);

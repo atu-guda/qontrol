@@ -69,19 +69,25 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   outs_view = new OutDataView( outs, this );
   outs_view->setObjectName( "outs_view" );
+  vmap["outs_view"] = outs_view;
 
   plots_view = new GraphDataView( plots, this );
   plots_view->setObjectName( "plots_view" );
-  plots_selmod = plots_view->selectionModel();
+  // vmap["plots_view"] = plots_view;
+  plots_selmod = plots_view->selectionModel(); // ?? delete
 
   sims_view = new SimulView( sims, this );
   sims_view->setObjectName( "sims_view" );
+  // vmap["sims_view"] = sims_view;
 
   schems_view = new SchemeView( schems, this );
   schems_view->setObjectName( "schems_view" );
+  // vmap["schems_view"] = schems_view;
 
   sview = new StructView( this, main_s, this, outs_view );
   sview->setObjectName( "sview" );
+  vmap["sview"] = sview;
+
   scrollArea->setWidget( sview );
   scrollArea->setLineWidth( 1 );
   scrollArea->setMidLineWidth( 1 );
@@ -549,7 +555,7 @@ bool LaboView::testObj()
 
 void LaboView::copyElm()
 {
-  return sview->copyElm();
+  sview->copyObj();
 }
 
 
@@ -564,130 +570,40 @@ void LaboView::pasteElm()
 
 void LaboView::addOut() // TODO: common
 {
-  QString tgt_nm, out_nm;
-
-  TMiso *selElm = sview->getSelElm();
-
-  if( selElm ) {
-    tgt_nm = selElm->objectName();
-    out_nm = QSL("out_") % tgt_nm;
-  } else {
-    tgt_nm = QSL("t");
-    out_nm = QSL("out_t");
-  };
-
-  bool ok;
-  out_nm = QInputDialog::getText( this, "Creating new output array",
-      "Enter optput array name:", QLineEdit::Normal,
-       out_nm, &ok );
-  if( !ok ) {
-    return;
-  }
-
-  TOutArr *arr;
-  if( (arr = model->addOut( out_nm, tgt_nm ) ) != nullptr ) {
-    ::editObj( this, arr );
-    emit viewChanged();
-  }
-  return;
+  outs_view->addObj();
 }
 
 void LaboView::delOut()
 {
-  // delSomething( outs_view );
+  outs_view->delObj();
 }
 
 
 void LaboView::editOut()
 {
-  // editSomething( outs_view );
+  outs_view->editObj();
 }
 
 
 void LaboView::renameOut()
 {
-  // renameSomething( outs_view );
-  // // TODO: change graph links names
+  outs_view->renameObj();
 }
 
 
-void LaboView::selectOut()
+void LaboView::selectOut() // delete
 {
-  // QItemSelectionModel *selMod = outs_view->selectionModel();
-  // if( !selMod ) {
-  //   return;
-  // }
-  // int level = sview->getLevel();
-  //
-  // QModelIndex s_idx = outs->index( level, 0, QModelIndex() );
-  //
-  // selMod->clear();
-  // selMod->select( s_idx, QItemSelectionModel::Select );
-  // selMod->setCurrentIndex( s_idx, QItemSelectionModel::Select );
-  emit viewChanged();
 }
 
 
-// TODO: to OutDataView
-void LaboView::showOutData() // TODO: special dialog (+ for many rows)
+void LaboView::showOutData()
 {
-  DatasInfo di;
-
-  // TOutArr *arr = qobject_cast<TOutArr*>( getViewSelObj( outs_view ) );
-  TOutArr *arr = qobject_cast<TOutArr*>( outs_view->getSelObj() );
-  if( !arr ) {
-    return;
-  }
-
-  int k = arr->fillDatasInfo( &di );
-  if( !k ) {
-    qWarning() << "fail to fill info about output array " <<  arr->getFullName() << WHE;
-    return;
-  }
-
-  // calculate statistical data TODO: separate struct and func (or/and in TOutArr)
-  arr->calc_stat( true, true ); // ensure all and fresh data
-  QString sinf = arr->getAllStats( ";\n" );
-
-
-  auto dia = new QDialog( this );
-  dia->setWindowTitle( QString("Data array: ") + di.title );
-  auto lay = new QGridLayout( dia );
-
-  auto dmod = new DoubleTableModel( di, dia );
-  auto dtv = new QTableView( dia );
-  dtv->setModel( dmod );
-  lay->addWidget( dtv, 0, 0 );
-
-  auto lab = new QLabel( sinf, dia );
-  lab->setTextInteractionFlags( Qt::TextSelectableByMouse
-       | Qt::TextSelectableByKeyboard);
-  lay->addWidget( lab, 0, 1 );
-
-  auto bt_ok = new QPushButton( "Done", dia );
-  bt_ok->setDefault( true );
-  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  lay->addWidget( bt_ok, 1, 0, 1, 2 );
-  dia->setLayout( lay );
-
-  dia->exec();
-  delete dia;
+  outs_view->showDataObj();
 }
 
 void LaboView::exportOut()
 {
-  // TOutArr *arr = qobject_cast<TOutArr*>( getViewSelObj( outs_view ) );
-  TOutArr *arr = qobject_cast<TOutArr*>( outs_view->getSelObj() );
-  if( !arr ) {
-    return;
-  }
-
-  QString fnq = QFileDialog::getSaveFileName( this, tr("Export data"), "",
-      "Data files (*.txt *.dat *.csv);;All files (*)" );
-  if( fnq.isEmpty() ) {
-    return;
-  }
-  arr->dump( fnq, " " );
+  outs_view->exportObj();
 }
 
 
@@ -725,18 +641,18 @@ void LaboView::editGraph()
 
 void LaboView::selectGraph()
 {
-  QItemSelectionModel *selMod = plots_view->selectionModel();
-  if( !selMod ) {
-    return;
-  }
-
-  int level = sview->getLevel();
-  QModelIndex s_idx = plots->index( level, 0, QModelIndex() );
-
-  selMod->clear();
-  selMod->select( s_idx, QItemSelectionModel::Select );
-  selMod->setCurrentIndex( s_idx, QItemSelectionModel::Select );
-  emit viewChanged();
+  // QItemSelectionModel *selMod = plots_view->selectionModel();
+  // if( !selMod ) {
+  //   return;
+  // }
+  //
+  // int level = sview->getLevel();
+  // QModelIndex s_idx = plots->index( level, 0, QModelIndex() );
+  //
+  // selMod->clear();
+  // selMod->select( s_idx, QItemSelectionModel::Select );
+  // selMod->setCurrentIndex( s_idx, QItemSelectionModel::Select );
+  // emit viewChanged();
 }
 
 void LaboView::renameGraph()
@@ -770,18 +686,7 @@ void LaboView::showGraph()
 
 void LaboView::graphAddOut()
 {
-  QString nm_o = outs_view->getSelName();;
-  if( nm_o.isEmpty() ) {
-    return;
-  }
-
-  QString nm_g = getViewSelName( plots_view );
-  if( nm_g.isEmpty() ) {
-    return;
-  }
-
-  model->addOutToGraph( nm_o, nm_g );
-  emit viewChanged();
+  outs_view->addToPlot();
 }
 
 void LaboView::showGraphData()
