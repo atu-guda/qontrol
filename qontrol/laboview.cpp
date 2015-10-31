@@ -1,5 +1,5 @@
 /***************************************************************************
-  laboview.cpp  -  description
+  laboview.cpp  - combined model view
   begin                : Mon Jul 31 16:51:57 EEST 2000
   copyright            : (C) 2000-2015 by atu
   email                : atu@nmetau.edu.ua
@@ -436,11 +436,6 @@ void LaboView::renameOut()
 }
 
 
-void LaboView::selectOut() // delete
-{
-}
-
-
 void LaboView::showOutData()
 {
   outs_view->showDataObj();
@@ -456,20 +451,7 @@ void LaboView::exportOut()
 
 void LaboView::addGraph()
 {
-  bool ok;
-
-  QString grnameq = plots->hintName( "" );
-  QString aname = QInputDialog::getText( this, "Creating new plot",
-      "Enter name of new plot:", QLineEdit::Normal,
-      grnameq, &ok );
-  if( !ok ) {
-    return;
-  }
-  if( ! model->addGraph( aname ) ) {
-    handleError( this, QString("Fail to add plot: %1").arg(aname) );
-    return;
-  }
-  emit viewChanged();
+  plots_view->addObj();
 }
 
 
@@ -483,10 +465,6 @@ void LaboView::editGraph()
 {
   plots_view->editObj(); // TODO: no reset
   // editSomething( plots_view, true );
-}
-
-void LaboView::selectGraph()
-{
 }
 
 void LaboView::renameGraph()
@@ -527,23 +505,7 @@ void LaboView::cloneGraph()
 
 void LaboView::addSimul()
 {
-  bool ok;
-  QString simName = sims->hintName( QString() );
-  simName = QInputDialog::getText( this, "Creating new Simulation",
-      "Enter name of new simulation:", QLineEdit::Normal,
-      simName, &ok );
-  if( !ok ) {
-    return;
-  }
-  if( ! isGoodName( simName ) ) {
-    handleError( this, QString("Bad simulation name: \"%1\"").arg(simName) );
-    return;
-  }
-  ok = model->addSimul( simName );
-  if( !ok ) {
-    handleError( this, QString("Fail to create simulation: \"%1\"").arg(simName) );
-  }
-  emit viewChanged();
+  sims_view->addObj();
 }
 
 void LaboView::delSimul()
@@ -561,10 +523,6 @@ void LaboView::renameSimul()
   sims_view->renameObj();
 }
 
-
-void LaboView::selectSimul() // TODO: propagate to all
-{
-}
 
 void LaboView::setActiveSimul()
 {
@@ -598,21 +556,7 @@ void LaboView::showTreeModel()
 
 void LaboView::addScheme()
 {
-  bool ok;
-  QString schName = schems->hintName( QString() );
-  schName = QInputDialog::getText( this, "Creating new Scheme",
-      "Enter name of new scheme:", QLineEdit::Normal,
-      schName, &ok );
-  if( !ok ) { return; }
-
-  if( ! isGoodName( schName ) ) {
-    handleError( this, QString("Bad scheme name: \"%1\"").arg(schName) );
-  }
-  ok = model->addScheme( schName );
-  if( !ok ) {
-    handleError( this, QString("Fail to create scheme: \"%1\"").arg(schName) );
-  }
-  emit viewChanged();
+  schems_view->addObj();
 }
 
 void LaboView::delScheme()

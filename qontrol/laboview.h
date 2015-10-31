@@ -119,7 +119,6 @@ class LaboView : public CommonSubwin
    void delOut();
    void editOut();
    void renameOut();
-   void selectOut();
    void showOutData();
    void exportOut();
 
@@ -128,7 +127,6 @@ class LaboView : public CommonSubwin
    void delGraph();
    void editGraph();
    void renameGraph();
-   void selectGraph();
    void showGraph();
    void graphAddOut();
    void showGraphData();
@@ -140,7 +138,6 @@ class LaboView : public CommonSubwin
    void delSimul();
    void editSimul();
    void renameSimul();
-   void selectSimul();
    void setActiveSimul();
    void cloneSimul();
 

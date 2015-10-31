@@ -1,9 +1,5 @@
-Common parent for most views: and place for actions.
-Copy/paste schems (for libs), plots, outs. -- may be common code
 Subscheme libs.
-Common menu 'Object' with common actions - dispatch to focused
 Document: cmdline options, common workflow.
-Selections in views/document
 Shadow main scheme?
 QScintilla? Dialog or SubWindow?
 Create Action fun + subclass QAction? (menu to place, flags)
@@ -18,7 +14,6 @@ Error handling (from inner to iface)
 New buttons for ObjDataWidget: need better (simple) labels.
 Indicate corresponding outs for selected plot
 Customized colors: struct view...
-Common selection elems/outs/plots?
 Inputs - may be Elements? like TFileSource?
 Dump TOutArr/TGraph commandline (-p/-P)
 Check/use model run status (in batch, for tests)

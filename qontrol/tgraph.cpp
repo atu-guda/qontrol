@@ -44,10 +44,14 @@ GraphElem::~GraphElem()
 QVariant GraphElem::dataObj( int col, int role ) const
 {
   if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
-    if( col != 0 ) {
+    if( col > 1 ) {
       return QVariant();
     }
+    // if( col == 1 ) {
+    //   return TDataSet::dataObj( col, role ); // for buttons
+    // }
 
+    // real statustip + buttons
     QString s = src;
     QStringList el = getEnumStrings( "DataType" );
     s += " (" % el.at( type );

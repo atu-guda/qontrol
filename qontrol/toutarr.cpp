@@ -42,6 +42,7 @@ TOutArr::~TOutArr()
 
 QVariant TOutArr::dataObj( int col, int role ) const
 {
+  int idx = getMyIndexInParent();
   if( role == Qt::BackgroundRole ) {
     if( col != 0 ) {
       return QVariant();
@@ -72,9 +73,16 @@ QVariant TOutArr::dataObj( int col, int role ) const
     if( col != 0 ) {
       return QVariant();
     }
-    int idx = getMyIndexInParent();
-    QString s = "(" % QSN(idx) % ") " % name.cval() % " [" % QSN(n) % "]\n["
-        % QSN(nx) % " x " % QSN(ny) % "]";
+    QString s = QSL("(") % QSN(idx) % QSL(") ") % name.cval() % QSL(" [") % QSN(n)
+      % QSL("]\n[")  % QSN(nx) % " x " % QSN(ny) % QSL("]");
+    return s;
+  }
+
+  else if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
+    if( col > 1 ) {
+      return QVariant();
+    }
+    QString s = QSL("(") % QSN(idx) % QSL(") ") % objectName() % QSL(" <- ") %  name.cval();
     return s;
   }
 
