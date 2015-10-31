@@ -318,38 +318,6 @@ void LaboWin::initIface()
 
   // ==== Element group
   {
-    auto a = new QAction( QIcon( ":icons/newelm.png" ), "&New element", this );
-    // a->setShortcut( Qt::Key_Insert );
-    registerAction( a, "addElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotNewElm );
-    pElmMenu->addAction( a );
-    elmToolbar->addAction( a );
-  }
-  {
-    auto a = new QAction( QIcon( ":icons/delelm.png" ), "&Delete element", this );
-    // a->setShortcut( Qt::Key_Delete );
-    registerAction( a, "delElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotDelElm );
-    pElmMenu->addAction( a );
-    elmToolbar->addAction( a );
-  }
-  {
-    auto a = new QAction( QIcon( ":icons/editelm.png" ), "&Edit element", this );
-    // a->setShortcut( Qt::Key_Enter );
-    registerAction( a, "editElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotEditElm );
-    pElmMenu->addAction( a );
-    pElmMenu->addSeparator();
-    elmToolbar->addAction( a );
-  }
-  {
-    auto a = new QAction( "Rename element", this );
-    registerAction( a, "renameElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotRenameElm );
-    pElmMenu->addAction( a );
-    pElmMenu->addSeparator();
-  }
-  {
     auto a = new QAction( QIcon::fromTheme("insert-link"), "&Quick link element", this );
     a->setShortcut( Qt::CTRL+Qt::Key_L );
     registerAction( a, "qlinkElm" );
@@ -401,35 +369,6 @@ void LaboWin::initIface()
     pElmMenu->addAction( a );
     pElmMenu->addSeparator();
   }
-  {
-    auto a = new QAction( QIcon( ":icons/infoelm.png" ), "show &Info", this );
-    a->setShortcut( Qt::Key_I );
-    registerAction( a, "infoElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotInfoElm );
-    pElmMenu->addAction( a );
-    elmToolbar->addAction( a );
-    elmToolbar->addSeparator();
-  }
-  {
-    auto a = new QAction( "show element tree", this );
-    registerAction( a, "showTreeElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotShowTreeElm );
-    pElmMenu->addAction( a );
-    pElmMenu->addSeparator();
-  }
-  {
-    auto a = new QAction( "test element 1", this );
-    registerAction( a, "testElm1" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotTestElm1 );
-    pElmMenu->addAction( a );
-  }
-  {
-    auto a = new QAction( "test element 2", this );
-    registerAction( a, "testElm2" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotTestElm2 );
-    pElmMenu->addAction( a );
-  }
-
   // ==== out group
   {
     auto a = new QAction( QIcon( ":icons/newout.png" ), "&New Out", this );
@@ -438,37 +377,6 @@ void LaboWin::initIface()
     connect( a, &QAction::triggered, this, &LaboWin::slotNewOut );
     pOutMenu->addAction( a );
     elmToolbar->addAction( a );
-  }
-  {
-    auto a = new QAction( QIcon( ":icons/delout.png" ), "&Delete out", this );
-    registerAction( a, "delOut" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotDelOut );
-    pOutMenu->addAction( a );
-    elmToolbar->addAction( a );
-  }
-  {
-    auto a = new QAction( QIcon( ":icons/editout.png" ), "&Edit out", this );
-    a->setShortcut( Qt::SHIFT+Qt::Key_U );
-    registerAction( a, "editOut" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotEditOut );
-    pOutMenu->addAction( a );
-    pOutMenu->addSeparator();
-    elmToolbar->addAction( a );
-  }
-  {
-    auto a = new QAction( "Rename output collector", this );
-    connect( a, &QAction::triggered, this, &LaboWin::slotRenameOut );
-    registerAction( a, "renameOut" );
-    pOutMenu->addAction( a );
-    pOutMenu->addSeparator();
-  }
-  {
-    auto a = new QAction( "Select out", this );
-    a->setShortcut( Qt::ALT+Qt::Key_U );
-    registerAction( a, "selectOut" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotSelectOut );
-    pOutMenu->addAction( a );
-    pOutMenu->addSeparator();
   }
   {
     auto a = new QAction( QIcon( ":icons/showoutdata.png" ), "&Show out data", this );
@@ -494,37 +402,6 @@ void LaboWin::initIface()
     connect( a, &QAction::triggered, this, &LaboWin::slotNewGraph );
     pGraphMenu->addAction( a );
     elmToolbar->addAction( a );
-  }
-  {
-    auto a = new QAction( QIcon( ":icons/delgraph.png" ), "&Delete plot", this );
-    registerAction( a, "delGraph" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotDelGraph );
-    pGraphMenu->addAction( a );
-    elmToolbar->addAction( a );
-  }
-  {
-    auto a = new QAction( QIcon( ":icons/editgraph.png" ), "&Edit plot", this );
-    a->setShortcut(  Qt::SHIFT+Qt::Key_P );
-    registerAction( a, "editGraph" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotEditGraph );
-    pGraphMenu->addAction( a );
-    pGraphMenu->addSeparator();
-    elmToolbar->addAction( a );
-  }
-  {
-    auto a = new QAction( "Rename plot", this );
-    registerAction( a, "renameGraph" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotRenameGraph );
-    pGraphMenu->addAction( a );
-    pGraphMenu->addSeparator();
-  }
-  {
-    auto a = new QAction( "select plot", this );
-    a->setShortcut(  Qt::ALT+Qt::Key_G ); // Alt-P is busy by menu
-    registerAction( a, "selectGraph" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotSelectGraph );
-    pGraphMenu->addAction( a );
-    pGraphMenu->addSeparator();
   }
   {
     auto a = new QAction( QIcon( ":icons/showgraph.png" ), "&Show plot", this );
@@ -560,13 +437,6 @@ void LaboWin::initIface()
     connect( a, &QAction::triggered, this, &LaboWin::slotExportGraphData);
     pGraphMenu->addAction( a );
   }
-  {
-    auto a = new QAction( "Clone plot", this );
-    registerAction( a, "cloneGraph" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotCloneGraph );
-    pGraphMenu->addAction( a );
-  }
-
   // ==== simulation group
   {
     auto a = new QAction( "&New Simulation", this );
@@ -575,46 +445,10 @@ void LaboWin::initIface()
     pSimulMenu->addAction( a );
   }
   {
-    auto a = new QAction( "&Delete Simulation", this );
-    registerAction( a, "delSimul" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotDelSimul );
-    pSimulMenu->addAction( a );
-  }
-  {
-    auto a = new QAction( "&Edit Simulation", this );
-    a->setShortcut(  Qt::SHIFT+Qt::Key_Y );
-    registerAction( a, "editSimul" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotEditSimul );
-    pSimulMenu->addAction( a );
-    pSimulMenu->addSeparator();
-  }
-  {
-    auto a = new QAction( "Rename simulation", this );
-    registerAction( a, "renameSimul" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotRenameSimul );
-    pSimulMenu->addAction( a );
-    pSimulMenu->addSeparator();
-  }
-  {
-    auto a = new QAction( "Select Simulation", this );
-    a->setShortcut(  Qt::ALT+Qt::Key_Y );
-    registerAction( a, "selectSimul" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotSelectSimul );
-    pSimulMenu->addAction( a );
-    pSimulMenu->addSeparator();
-  }
-  {
     auto a = new QAction( "Set Active Simulation", this );
     a->setShortcut( Qt::ALT+Qt::CTRL+Qt::Key_Y );
     registerAction( a, "setActiveSimul" );
     connect( a, &QAction::triggered, this, &LaboWin::slotSetActiveSimul );
-    pSimulMenu->addAction( a );
-  }
-
-  {
-    auto a = new QAction( "Clone Simulation", this );
-    registerAction( a, "cloneSimul" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotCloneSimul );
     pSimulMenu->addAction( a );
   }
 
@@ -641,31 +475,6 @@ void LaboWin::initIface()
     auto a = new QAction( "&New Scheme", this );
     registerAction( a, "addScheme" );
     connect( a, &QAction::triggered, this, &LaboWin::slotNewScheme );
-    pModelMenu->addAction( a );
-  }
-  {
-    auto a = new QAction( "&Delete Scheme", this );
-    registerAction( a, "delScheme" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotDelScheme );
-    pModelMenu->addAction( a );
-  }
-  {
-    auto a = new QAction( "&Edit Scheme", this );
-    registerAction( a, "editScheme" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotEditScheme );
-    pModelMenu->addAction( a );
-    pModelMenu->addSeparator();
-  }
-  {
-    auto a = new QAction( "Rename scheme", this );
-    registerAction( a, "renameScheme" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotRenameScheme );
-    pModelMenu->addAction( a );
-  }
-  {
-    auto a = new QAction( "Clone Scheme", this );
-    registerAction( a, "cloneScheme" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotCloneScheme );
     pModelMenu->addAction( a );
   }
 
@@ -1496,27 +1305,6 @@ void LaboWin::slotUpdateLog()
 
 
 
-void LaboWin::slotNewElm()
-{
-  callLaboViewSlot( "addElm", tr( "Inserting new element..." ) );
-}
-
-void LaboWin::slotDelElm()
-{
-  callLaboViewSlot( "delElm", tr( "Deleting selected element..." ) );
-}
-
-void LaboWin::slotEditElm()
-{
-  callLaboViewSlot( "editElm", tr( "Editing element properties..." ) );
-}
-
-void LaboWin::slotRenameElm()
-{
-  callLaboViewSlot( "renameElm", tr( "Renaming element ..." ) );
-}
-
-
 void LaboWin::slotqLinkElm()
 {
   callLaboViewSlot( "qlinkElm", tr( "Quick linking element..." ) );
@@ -1553,50 +1341,10 @@ void LaboWin::slotMoveElm()
   callLaboViewSlot( "moveElm", tr( "Moving element..." ) );
 }
 
-void LaboWin::slotInfoElm()
-{
-  callLaboViewSlot( "infoElm", tr( "Information about element..." ) );
-}
-
-void LaboWin::slotShowTreeElm()
-{
-  callLaboViewSlot( "showTreeElm", tr( "Show element tree..." ) );
-}
-
-void LaboWin::slotTestElm1()
-{
-  callLaboViewSlot( "testElm1", tr( "Test element 1..." ) );
-}
-
-void LaboWin::slotTestElm2()
-{
-  callLaboViewSlot( "testElm2", tr( "Test element 2..." ) );
-}
-
 
 void LaboWin::slotNewOut()
 {
   callLaboViewSlot( "addOut", tr( "Inserting output array..." ) );
-}
-
-void LaboWin::slotDelOut()
-{
-  callLaboViewSlot( "delOut", tr( "Deleting output array..." ) );
-}
-
-void LaboWin::slotEditOut()
-{
-  callLaboViewSlot( "editOut", tr( "Editing output array..." ) );
-}
-
-void LaboWin::slotRenameOut()
-{
-  callLaboViewSlot( "renameOut", tr( "Renaming output collector ..." ) );
-}
-
-void LaboWin::slotSelectOut()
-{
-  callLaboViewSlot( "selectOut", tr( "Selectting output array..." ) );
 }
 
 void LaboWin::slotShowOutData()
@@ -1612,26 +1360,6 @@ void LaboWin::slotExportOut()
 void LaboWin::slotNewGraph()
 {
   callLaboViewSlot( "addGraph", tr( "Inserting new plot..." ) );
-}
-
-void LaboWin::slotDelGraph()
-{
-  callLaboViewSlot( "delGraph", tr( "Deleting plot..." ) );
-}
-
-void LaboWin::slotEditGraph()
-{
-  callLaboViewSlot( "editGraph", tr( "Editing plot..." ) );
-}
-
-void LaboWin::slotRenameGraph()
-{
-  callLaboViewSlot( "renameGraph", tr( "Renaming plot ..." ) );
-}
-
-void LaboWin::slotSelectGraph()
-{
-  callLaboViewSlot( "selectGraph", tr( "Selecting plot..." ) );
 }
 
 void LaboWin::slotShowGraph()
@@ -1654,11 +1382,6 @@ void LaboWin::slotExportGraphData()
   callLaboViewSlot( "exportGraphData", tr( "Exporting plot data..." ) );
 }
 
-void LaboWin::slotCloneGraph()
-{
-  callLaboViewSlot( "cloneGraph", tr( "Cloning plot ..." ) );
-}
-
 
 
 void LaboWin::slotNewSimul()
@@ -1666,37 +1389,11 @@ void LaboWin::slotNewSimul()
   callLaboViewSlot( "addSimul", tr( "Creating new simulation..." ) );
 }
 
-void LaboWin::slotDelSimul()
-{
-  callLaboViewSlot( "delSimul", tr( "Removing simulation" ) );
-}
-
-void LaboWin::slotEditSimul()
-{
-  callLaboViewSlot( "editSimul", tr( "Editing simulation data..." ) );
-}
-
-void LaboWin::slotRenameSimul()
-{
-  callLaboViewSlot( "renameSimul", tr( "Renaming simulation ..." ) );
-}
-
-void LaboWin::slotSelectSimul()
-{
-  callLaboViewSlot( "selectSimul", tr( "Selectiong simulation ..." ) );
-}
-
-
 void LaboWin::slotSetActiveSimul()
 {
   callLaboViewSlot( "setActiveSimul", tr( "Setting active simulation ..." ) );
 }
 
-
-void LaboWin::slotCloneSimul()
-{
-  callLaboViewSlot( "cloneSimul", tr( "Cloning simulation ..." ) );
-}
 
 
 // ------- model / scheme -----------
@@ -1715,27 +1412,6 @@ void LaboWin::slotShowTreeModel()
 void LaboWin::slotNewScheme()
 {
   callLaboViewSlot( "addScheme", tr( "Creating new Scheme..." ) );
-}
-
-void LaboWin::slotDelScheme()
-{
-  callLaboViewSlot( "delScheme", tr( "Removing Scheme" ) );
-}
-
-void LaboWin::slotEditScheme()
-{
-  callLaboViewSlot( "editScheme", tr( "Editing Scheme data..." ) );
-}
-
-void LaboWin::slotRenameScheme()
-{
-  callLaboViewSlot( "renameScheme", tr( "Renaming Scheme ..." ) );
-}
-
-
-void LaboWin::slotCloneScheme()
-{
-  callLaboViewSlot( "cloneScheme", tr( "Cloning Scheme ..." ) );
 }
 
 

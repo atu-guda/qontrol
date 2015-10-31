@@ -166,10 +166,6 @@ class LaboWin : public QMainWindow
     void slotTestObj();
 
     // ==== element related
-    void slotNewElm();
-    void slotDelElm();
-    void slotEditElm();
-    void slotRenameElm();
     void slotqLinkElm();
     void slotqpLinkElm();
     void slotUnlinkElm();
@@ -177,49 +173,27 @@ class LaboWin : public QMainWindow
     void slotOrdElm();
     void slotMarkElm();
     void slotMoveElm();
-    void slotInfoElm();
-    void slotShowTreeElm();
-    void slotTestElm1();
-    void slotTestElm2();
 
     // ==== outs related
     void slotNewOut();
-    void slotDelOut();
-    void slotEditOut();
-    void slotRenameOut();
-    void slotSelectOut();
     void slotShowOutData();
     void slotExportOut();
 
     // ==== graphs related
     void slotNewGraph();
-    void slotDelGraph();
-    void slotEditGraph();
-    void slotRenameGraph();
-    void slotSelectGraph();
     void slotShowGraph();
     void slotGraphAddOut();
     void slotShowGraphData();
     void slotExportGraphData();
-    void slotCloneGraph();
 
     // ==== simulation related
     void slotNewSimul();
-    void slotDelSimul();
-    void slotEditSimul();
-    void slotRenameSimul();
-    void slotSelectSimul();
     void slotSetActiveSimul();
-    void slotCloneSimul();
 
     // ==== model/scheme related
     void slotEditModel();
     void slotShowTreeModel();
     void slotNewScheme();
-    void slotDelScheme();
-    void slotEditScheme();
-    void slotRenameScheme();
-    void slotCloneScheme();
 
     // ==== run related
     void slotRunRun();
