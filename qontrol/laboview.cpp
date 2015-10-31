@@ -81,7 +81,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   schems_view = new SchemeView( schems, this );
   schems_view->setObjectName( "schems_view" );
-  // vmap["schems_view"] = schems_view;
+  vmap["schems_view"] = schems_view;
 
   sview = new StructView( this, main_s );
   sview->setObjectName( "sview" );
@@ -106,18 +106,14 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   setStatusBar( stam );
 
-  // default: select object 0
-  selectOut();
-  selectGraph();
-  selectSimul();
-  // selectSheme();
-
   connect( this, &LaboView::viewChanged, this, &LaboView::updateViews ); // todo: from sview ?
   connect( sview, &StructView::viewChanged, this, &LaboView::updateViews );
   connect( outs_view, &OutDataView::viewChanged, this, &LaboView::updateViews );
+  connect( plots_view, &OutDataView::viewChanged, this, &LaboView::updateViews );
+  connect( sims_view, &OutDataView::viewChanged, this, &LaboView::updateViews );
+  connect( schems_view, &OutDataView::viewChanged, this, &LaboView::updateViews );
 
   initEngine();
-
 }
 
 LaboView::~LaboView()
@@ -771,43 +767,22 @@ void LaboView::addScheme()
 
 void LaboView::delScheme()
 {
-  delSomething( schems_view );
+  schems_view->delObj();
 }
 
 void LaboView::editScheme() // special: separate window
 {
-  Scheme *sch = qobject_cast<Scheme*>( getViewSelObj( schems_view ) );
-  if( !sch || sch->objectName() == QSL("main_s") ) {
-    return;
-  }
-
-  LaboWin *mwin = LaboWin::win();
-  if( !mwin ) {
-    return;
-  }
-
-  QString fileName = doc->pathName();
-  // like CommonSubwin
-  QString wtit = QSL( "scheme: " ) % sch->objectName() % QSL(" - " ) % fileName;
-  QMdiSubWindow *swin = mwin->findMdiByTitle( wtit, true ); // true = activate
-  if( swin ) {
-    return;
-  }
-
-  auto sw = new StructSubwin( mwin, doc, sch );
-  mwin->addChild( sw );
-
-    // emit viewChanged();
+  schems_view->editObj();
 }
 
 void LaboView::renameScheme()
 {
-  renameSomething( schems_view );
+  schems_view->renameObj();
 }
 
 void LaboView::cloneScheme()
 {
-  cloneSomething( schems_view );
+  schems_view->cloneObj();
 }
 
 

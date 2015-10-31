@@ -26,6 +26,7 @@ class GraphDataView : public CmdListView {
   Q_OBJECT
   public:
     GraphDataView( HolderData *a_mod, CommonSubwin *a_par );
+  public slots:
     // virtual bool addObj() override;
     // virtual bool delObj() override;
     // virtual bool editObj() override;

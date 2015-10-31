@@ -20,18 +20,28 @@
 
 #include <QtWidgets>
 
-#include "laboview.h"
+#include "cmdlistview.h"
 
-class SchemeView : public QListView {
+class SchemeView : public CmdListView {
   Q_OBJECT
   public:
-   SchemeView( HolderData *a_mod, LaboView *par );
-  private:
-   HolderData *mod;
-   LaboView *laboview;
-   QAction *act_new, *act_del, *act_edit, *act_rename,
-           *act_clone;
-  private:
+   SchemeView( HolderData *a_mod, CommonSubwin *a_par );
+  public slots:
+    // virtual bool addObj() override;
+    // virtual bool delObj() override;
+    virtual bool editObj() override;
+    // virtual bool renameObj() override;
+    // virtual bool cloneObj() override;
+    // virtual bool cutObj() override;
+    // virtual bool copyObj() override;
+    // virtual bool pasteObj() override;
+    // virtual bool infoObj() override;
+    // virtual bool showTreeObj() override;
+    // virtual bool testObj() override;
+    // virtual bool showObj() override;
+    // virtual bool showDataObj() override;
+    // virtual bool exportObj() override;
+  protected:
    void init_actions();
 };
 
