@@ -85,6 +85,7 @@ SOURCES += \
   ../elems/tsourcelin.cpp \
   ../elems/tsubscheme.cpp \
   ../elems/tsum8.cpp \
+  ../elems/tsumn.cpp \
   ../elems/tswitch.cpp \
   ../elems/tthrum.cpp \
   ../elems/ttrigger.cpp \
@@ -160,6 +161,7 @@ HEADERS += \
   ../elems/tsourcelin.h \
   ../elems/tsubscheme.h \
   ../elems/tsum8.h \
+  ../elems/tsumn.h \
   ../elems/tswitch.h \
   ../elems/tthrum.h \
   ../elems/ttrigger.h \

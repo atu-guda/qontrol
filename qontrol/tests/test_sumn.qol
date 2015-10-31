@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QontrolLabML>
+<QontrolLabML>
+ <obj name="root" otype="TRootData">
+  <obj name="model" otype="TModel">
+   <param name="long_descr">Test TSumN element</param>
+   <param name="script">function vtst( obj, nm, val )
+{
+  var v = obj.getDataD( nm, 0.0 );
+  var onm = obj.getFullName();
+  print( onm, ".", nm, " = ", v, "\n" );
+  if( ! isNear( v, val ) ) {
+    print( "Bad Value " , nm, " need ", val ,"\n" );
+    return 1;
+  }
+  return 0;
+}
+
+function test0()
+{
+  var n_err = 0;
+  n_err += vtst( main_s.sumn,  "out0", 7.0 );
+  n_err += vtst( main_s.sumn1, "out0", 5.0 );
+
+  print( "Errors: ", n_err, "\n" );
+
+  return n_err;
+}
+
+
+</param>
+   <obj name="schems" otype="ContScheme">
+    <obj name="main_s" otype="Scheme">
+     <obj name="so1" otype="TLinear">
+      <param name="descr">1</param>
+      <param name="ord">10</param>
+      <param name="vis_x">1</param>
+      <param name="vis_y">1</param>
+      <param name="out0_init">0</param>
+      <param name="locked">0</param>
+      <param name="flip">0</param>
+      <param name="onlyFirst">0</param>
+      <param name="onlyLast">0</param>
+      <param name="noIcon">0</param>
+      <obj name="pis" otype="InputParams"/>
+      <param name="a0">0</param>
+      <param name="a1">0</param>
+      <param name="a2">0</param>
+      <param name="a3">0</param>
+      <param name="b">1</param>
+      <param name="a">1</param>
+      <obj name="in_0" otype="InputSimple">
+       <param name="source"></param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+      <obj name="in_1" otype="InputSimple">
+       <param name="source"></param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+      <obj name="in_2" otype="InputSimple">
+       <param name="source"></param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+      <obj name="in_3" otype="InputSimple">
+       <param name="source"></param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+     </obj>
+     <obj name="so2" otype="TLinear">
+      <param name="descr">2</param>
+      <param name="ord">12</param>
+      <param name="vis_x">1</param>
+      <param name="vis_y">2</param>
+      <param name="out0_init">0</param>
+      <param name="locked">0</param>
+      <param name="flip">0</param>
+      <param name="onlyFirst">0</param>
+      <param name="onlyLast">0</param>
+      <param name="noIcon">0</param>
+      <obj name="pis" otype="InputParams"/>
+      <param name="a0">0</param>
+      <param name="a1">0</param>
+      <param name="a2">0</param>
+      <param name="a3">0</param>
+      <param name="b">2</param>
+      <param name="a">1</param>
+      <obj name="in_0" otype="InputSimple">
+       <param name="source"></param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+      <obj name="in_1" otype="InputSimple">
+       <param name="source"></param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+      <obj name="in_2" otype="InputSimple">
+       <param name="source"></param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+      <obj name="in_3" otype="InputSimple">
+       <param name="source"></param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+     </obj>
+     <obj name="so3" otype="TLinear">
+      <param name="descr">4</param>
+      <param name="ord">15</param>
+      <param name="vis_x">1</param>
+      <param name="vis_y">3</param>
+      <param name="out0_init">0</param>
+      <param name="locked">0</param>
+      <param name="flip">0</param>
+      <param name="onlyFirst">0</param>
+      <param name="onlyLast">0</param>
+      <param name="noIcon">0</param>
+      <obj name="pis" otype="InputParams"/>
+      <param name="a0">0</param>
+      <param name="a1">0</param>
+      <param name="a2">0</param>
+      <param name="a3">0</param>
+      <param name="b">4</param>
+      <param name="a">1</param>
+      <obj name="in_0" otype="InputSimple">
+       <param name="source"></param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+      <obj name="in_1" otype="InputSimple">
+       <param name="source"></param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+      <obj name="in_2" otype="InputSimple">
+       <param name="source"></param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+      <obj name="in_3" otype="InputSimple">
+       <param name="source"></param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+     </obj>
+     <obj name="sumn" otype="TSumN">
+      <param name="descr"></param>
+      <param name="ord">100</param>
+      <param name="vis_x">3</param>
+      <param name="vis_y">2</param>
+      <param name="out0_init">0</param>
+      <param name="locked">0</param>
+      <param name="flip">0</param>
+      <param name="onlyFirst">0</param>
+      <param name="onlyLast">0</param>
+      <param name="noIcon">0</param>
+      <obj name="pis" otype="InputParams"/>
+      <param name="a">1</param>
+      <param name="b">0</param>
+      <obj name="in_0" otype="InputSimple">
+       <param name="source">so1</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+      <obj name="in_1" otype="InputSimple">
+       <param name="source">so2</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+      <obj name="in_2" otype="InputSimple">
+       <param name="source">so3</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+     </obj>
+     <obj name="sumn1" otype="TSumN">
+      <param name="descr"></param>
+      <param name="ord">100</param>
+      <param name="vis_x">3</param>
+      <param name="vis_y">3</param>
+      <param name="out0_init">0</param>
+      <param name="locked">0</param>
+      <param name="flip">0</param>
+      <param name="onlyFirst">0</param>
+      <param name="onlyLast">0</param>
+      <param name="noIcon">0</param>
+      <obj name="pis" otype="InputParams"/>
+      <param name="a">1</param>
+      <param name="b">0</param>
+      <obj name="in_0" otype="InputSimple">
+       <param name="source">so1</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+      <obj name="in_2" otype="InputSimple">
+       <param name="source">so3</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#000000</param>
+       <param name="onlyLabel">0</param>
+      </obj>
+     </obj>
+    </obj>
+   </obj>
+   <obj name="outs" otype="ContOut"/>
+   <obj name="plots" otype="ContGraph"/>
+   <obj name="sims" otype="ContSimul">
+    <obj name="sim0" otype="Simulation">
+     <param name="runType">0</param>
+     <param name="T">10</param>
+     <param name="N">1000</param>
+     <param name="syncRT">0</param>
+     <param name="io_t">0.100000000000000006</param>
+     <param name="N1">1</param>
+     <param name="N2">1</param>
+     <param name="n_iosteps">100</param>
+     <param name="prm0s">0</param>
+     <param name="prm1s">0</param>
+     <param name="prm2s">0</param>
+     <param name="prm3s">0</param>
+     <param name="prm0d">0</param>
+     <param name="prm1d">0</param>
+     <param name="seed">719891374</param>
+     <param name="seedType">0</param>
+     <param name="prm0_map"></param>
+     <param name="prm1_map"></param>
+     <param name="saveParams">1</param>
+     <param name="autoStart">0</param>
+     <param name="useScripts">0</param>
+     <param name="initEng">1</param>
+     <param name="execModelScript">1</param>
+     <param name="scriptPreRun"></param>
+     <param name="scriptPostRun"></param>
+     <param name="scriptStartLoop"></param>
+     <param name="scriptEndLoop"></param>
+     <param name="descr"></param>
+    </obj>
+   </obj>
+  </obj>
+ </obj>
+</QontrolLabML>
