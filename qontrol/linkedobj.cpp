@@ -198,7 +198,7 @@ void InputAbstract::set_link()
 
 QVariant InputAbstract::dataObj( int col, int role ) const
 {
-  if( role == Qt::StatusTipRole && col == 0 ) { // used for button labels in dialogs
+  if( role == Qt::StatusTipRole && col < 2 ) { // used for button labels in dialogs
 
     QString s = source;
     QChar ac = QChar( 0x274C ); // X
@@ -295,7 +295,7 @@ void InputParam::set_link()
 
 QVariant InputParam::dataObj( int col, int role ) const
 {
-  if( role == Qt::StatusTipRole && col == 0 ) { // used for button labels in dialogs
+  if( role == Qt::StatusTipRole && col < 2 ) { // used for button labels in dialogs
     QString s = source;
     QChar ac = QChar( 0x274C ); // X
     if( p != &fake_in ) {
