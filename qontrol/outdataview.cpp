@@ -147,13 +147,7 @@ void OutDataView::init_actions()
 bool OutDataView::addObj()
 {
   QString tgt_nm = par->getSelNameInView( "sview" );
-
   QString out_nm;
-
-  QString tp = SelectTypeDialog::getType( storage, this );
-  if( tp.isEmpty() ) {
-    return false;
-  }
 
   if( !tgt_nm.isEmpty() ) {
     out_nm = QSL("out_") % tgt_nm;
@@ -161,22 +155,21 @@ bool OutDataView::addObj()
     tgt_nm = QSL("t");
     out_nm = QSL("out_t");
   };
+  sugg_name = out_nm;
 
-  bool ok;
-  out_nm = QInputDialog::getText( this, "Creating new output array",
-      "Enter output array name:", QLineEdit::Normal,
-       out_nm, &ok );
-  if( !ok ) {
+  if( ! CmdView::addObj() ) {
     return false;
   }
 
-  HolderData *obj = storage->addObjP( tp, out_nm );
-  if( !obj ) {
+  QString nm = getLastObjName();
+  HolderData *ob = storage->getObj( nm );
+  if( !ob ) {
     return false;
   }
-  obj->setData( QSL("name"), tgt_nm ); // really source
-  ::editObj( this, obj );
-  obj->reset();
+
+  ob->setData( QSL("name"), tgt_nm ); // really source
+  ::editObj( this, ob );
+  ob->reset();
   emit viewChanged();
   return true;
 }

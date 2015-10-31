@@ -22,6 +22,7 @@
 #include "cmdview.h"
 #include "commonsubwin.h"
 #include "miscfun.h"
+#include "addelemdia.h"
 
 CmdView::CmdView( CommonSubwin *a_par, HolderData *a_storage )
   : QWidget( a_par ), storage( a_storage ), par( a_par )
@@ -44,8 +45,21 @@ QModelIndex CmdView::currentIndex() const
 
 bool CmdView::addObj()
 {
-  qWarning() << "Unimplemented " << WHE;
-  return false;
+  QString objName = sugg_name;
+  sugg_name = QString(); // reset at once
+
+  QString tp = SelectTypeDialog::getTypeAndName( storage, this, objName );
+  if( tp.isEmpty() ) {
+    return false;
+  }
+
+  HolderData *ob = storage->addObjP( tp, objName );
+  if( !ob  ) {
+    handleError( this, QString("Fail to add Object: type \"%1\" \"%2\"").arg(tp).arg(objName) );
+    return false;
+  }
+  lastObjName = objName;
+  return true;
 }
 
 
@@ -166,8 +180,48 @@ bool CmdView::copyObj()
 
 bool CmdView::pasteObj()
 {
-  qWarning() << "Unimplemented " << WHE;
-  return false;
+  QClipboard *clp = QApplication::clipboard();
+  if( !clp ) {
+    return false;
+  }
+  QString s = clp->text();
+  int err_line, err_column;
+  QString errstr;
+  QDomDocument x_dd;
+  if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
+    handleWarn( this, tr("Cannot parse clipboard string:\n%2\nLine %3 column %4.")
+                .arg(errstr).arg(err_line).arg(err_column) );
+    return false;
+  }
+  QDomElement ee = x_dd.documentElement();
+
+  QString tagname = ee.tagName();
+  if( tagname != "obj" ) {
+    handleWarn( this, tr("element tag is not 'obj':  %2").arg( tagname ) );
+    return false;
+  }
+
+  QString otype = ee.attribute( "otype" );
+  QString oname = ee.attribute( "name" );
+  oname = storage->hintName( otype, oname );
+
+  bool ok;
+  oname = QInputDialog::getText( this, "Object: " + oname,
+      "Enter new name:", QLineEdit::Normal, oname, &ok );
+  if( !ok ) {
+    return false;
+  }
+
+  HolderData *ob = storage->addObjP( otype, oname );
+  if( !ob  ) {
+    handleError( this, QString("Fail to add Obj: %1 %2").arg(otype).arg(oname) );
+    return false;
+  }
+  lastObjName = oname;
+  if( !ob->fromDom( ee, errstr ) ) {
+    handleWarn( this, tr("fail to set params:  %1").arg( errstr ) );
+  }
+  return true;
 }
 
 

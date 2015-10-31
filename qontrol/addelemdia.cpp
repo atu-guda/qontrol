@@ -111,7 +111,7 @@ QString SelectTypeDialog::getTypeAndName( HolderData *pobj, QWidget *aparent, QS
     return tp;
   }
 
-  QString nm1 = pobj->hintName( tp );
+  QString nm1 = pobj->hintName( tp, nm );
   bool ok;
   QString objName = QInputDialog::getText( aparent, "Creating new Object",
       "Enter name of new element:", QLineEdit::Normal,

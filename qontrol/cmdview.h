@@ -54,6 +54,7 @@ class CmdView : public QWidget {
     HolderData* storage;
     CommonSubwin *par;
     QString lastObjName;
+    QString sugg_name;
 };
 
 #endif // CMDVIEW_H

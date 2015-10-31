@@ -833,26 +833,25 @@ bool StructView::addObj()
   if( !checkState( noselCheck ) ) {
     return false;
   }
-
-  QString objName;
-  QString tp = SelectTypeDialog::getTypeAndName( sch, this, objName, "TMiso" );
-  if( tp.isEmpty() ) {
+  if( ! CmdView::addObj() ) {
     return false;
   }
 
-  int hint_order = sch->hintOrd(); // TODO: to dialog?
+  QString nm = getLastObjName();
+  TMiso *ob = sch->getObjT<TMiso*>( nm );
+  if( !ob ) {
+    return false;
+  }
+
+  int oord = sch->hintOrd();
   bool ok;
   int order = QInputDialog::getInt( this, "New element order",
-      "Input element order",  hint_order, 0, IMAX, 1, &ok );
-  if( !ok ) {
-    return false;
-  }
+      "Input element order",  oord, 0, IMAX, 1, &ok ); // no check ok - too late
 
-  TMiso *ob = sch->addElem( tp, objName, order, sel_x, sel_y );
-  if( !ob  ) {
-    handleError( this, QString("Fail to add Elem: type \"%1\" \"%2\"").arg(tp).arg(objName) );
-    return false;
-  }
+  ob->setData( "vis_x", sel_x );
+  ob->setData( "vis_y", sel_y );
+  ob->setData( "ord", order );
+
   changeSel( 0, 0, 1 ); // update sel
   editObj();
   return true;
@@ -924,75 +923,20 @@ void StructView::pasteElm() // TODO: delete
 
 bool StructView::pasteObj()
 {
-  QClipboard *clp = QApplication::clipboard();
-  if( selObj || !clp ) {
+  if( selObj ) {
     return false;
   }
-  QString s = clp->text();
-  int err_line, err_column;
-  QString errstr;
-  QDomDocument x_dd;
-  if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
-    handleWarn( this, tr("Cannot parse clipboard string:\n%2\nLine %3 column %4.")
-                .arg(errstr).arg(err_line).arg(err_column) );
+  if( ! CmdView::pasteObj() ) {
     return false;
   }
-  QDomElement ee = x_dd.documentElement();
-
-  QString tagname = ee.tagName();
-  if( tagname != "obj" ) {
-    handleWarn( this, tr("element tag is not 'obj':  %2").arg( tagname ) );
+  QString nm = getLastObjName();
+  TMiso *ob = sch->getObjT<TMiso*>( nm );
+  if( !ob ) {
     return false;
   }
-
-  QString eltype = ee.attribute( "otype" );
-  QString elname = ee.attribute( "name" );
-  elname = sch->hintName( eltype, elname );
 
   int oord = sch->hintOrd();
 
-  auto dia = new QDialog( this );
-  auto lay = new QGridLayout( dia );
-
-  auto la_name = new QLabel( "&Name", dia );
-  lay->addWidget( la_name, 0, 0 );
-
-  auto oname_ed = new QLineEdit( dia );
-  oname_ed->setText( elname );
-  oname_ed->setFocus();
-  lay->addWidget( oname_ed, 1, 0  );
-
-  auto la_ord = new QLabel( "&Order", dia );
-  lay->addWidget( la_ord, 0, 1 );
-
-  auto oord_ed = new QLineEdit( dia );
-  oord_ed->setText( QSN(oord) );
-  lay->addWidget( oord_ed, 1, 1 );
-
-  auto bbox
-    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-  lay->addWidget( bbox, 2, 0, 1, 2 );
-  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
-  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
-
-  int rc = dia->exec();
-  elname = oname_ed->text();
-  oord = oord_ed->text().toInt();
-  delete dia;
-
-  if( rc != QDialog::Accepted ) {
-    return false;
-  };
-
-
-  TMiso *ob = sch->addElem( eltype, elname, oord, sel_x, sel_y) ; // reset() implied
-  if( !ob  ) {
-    handleError( this, QString("Fail to add Elem: %1 %2").arg(eltype).arg(elname) );
-    return false;
-  }
-  if( !ob->fromDom( ee, errstr ) ) {
-    handleWarn( this, tr("fail to set params:  %1").arg( errstr ) );
-  }
   ob->setData( "vis_x", sel_x );
   ob->setData( "vis_y", sel_y );
   ob->setData( "ord", oord );
