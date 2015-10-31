@@ -70,9 +70,6 @@ class LaboView : public CommonSubwin
    /** inner size for structure view */
    QSize svSize() const;
 
-   //* returns name of current object in given view
-   QString getViewSelName( QAbstractItemView *view ) const;
-   HolderData* getViewSelObj( QAbstractItemView *view ) const;
    virtual bool callSlot( const char *nm );
    virtual bool checkSlot( const char *nm );
 
@@ -82,7 +79,6 @@ class LaboView : public CommonSubwin
  public slots:
    /** called whan we need to update views */
    void updateViews();
-   int getSelGraph() const { return sel_graph; };
    /** contains the implementation for printing functionality  */
    void print();
    // element related
@@ -166,7 +162,7 @@ class LaboView : public CommonSubwin
 
  public:
    /** returns document model */
-   TModel* getModel() { return model; }
+   TModel* getModel() { return model; } // TODO: remove?
    /** returns x-coordinate for selected cell */
    int getSelX() const;
    /** returns y-coordinate for selected cell */
@@ -186,12 +182,6 @@ class LaboView : public CommonSubwin
    //* call engine and returns result, casted to QString
    QString runScript( const QString& script );
 
-   bool prepareSomething( QAbstractItemView *view, QString &subname, QString &nm,
-      HolderData **a_ob, HolderData **a_co, QString *a_newname );
-   bool editSomething( QAbstractItemView *view, bool noReset = false );
-   bool delSomething( QAbstractItemView *view );
-   bool renameSomething( QAbstractItemView *view );
-   bool cloneSomething( QAbstractItemView *view );
  protected:
    QScrollArea *scrollArea;
    StructView *sview = nullptr;
@@ -209,7 +199,6 @@ class LaboView : public CommonSubwin
    ContGraph *plots;
    ContSimul *sims;
 
-   int sel_graph = -1;
    // TODO: from file (config)
    QString scr = R"(main_s.addObjDatas("TLinear","ob","vis_x=4\nvis_y=1\na0=3.14");)";
    //* copy of LaboWin em;
