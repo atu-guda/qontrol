@@ -77,7 +77,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   sims_view = new SimulView( sims, this );
   sims_view->setObjectName( "sims_view" );
-  // vmap["sims_view"] = sims_view;
+  vmap["sims_view"] = sims_view;
 
   schems_view = new SchemeView( schems, this );
   schems_view->setObjectName( "schems_view" );
@@ -702,50 +702,32 @@ void LaboView::addSimul()
 
 void LaboView::delSimul()
 {
-  delSomething( sims_view );
+  sims_view->delObj();
 }
 
 void LaboView::editSimul()
 {
-  editSomething( sims_view );
+  sims_view->editObj();
 }
 
 void LaboView::renameSimul()
 {
-  renameSomething( sims_view );
+  sims_view->renameObj();
 }
 
 
 void LaboView::selectSimul() // TODO: propagate to all
 {
-  QItemSelectionModel *selMod = sims_view->selectionModel();
-  if( !selMod ) {
-    return;
-  }
-
-  int level = sview->getLevel();
-  QModelIndex s_idx = sims->index( level, 0, QModelIndex() );
-
-  selMod->clear();
-  selMod->select( s_idx, QItemSelectionModel::Select );
-  selMod->setCurrentIndex( s_idx, QItemSelectionModel::Select );
-  emit viewChanged();
 }
 
 void LaboView::setActiveSimul()
 {
-  QString nm = getViewSelName( sims_view );
-  if( nm.isEmpty() ) {
-    return;
-  }
-
-  model->setActiveSimul( nm );
-  emit viewChanged();
+  sims_view->setActive();
 }
 
 void LaboView::cloneSimul()
 {
-  cloneSomething( sims_view );
+  sims_view->cloneObj();
 }
 
 

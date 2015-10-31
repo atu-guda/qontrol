@@ -20,51 +20,31 @@
 #include "labowin.h"
 
 
-SimulView::SimulView( HolderData *a_mod, LaboView *par )
-  : QListView( par ), mod( a_mod ), laboview( par )
+SimulView::SimulView( HolderData *a_mod, CommonSubwin *a_par )
+  : CmdListView( a_mod, a_par )
 {
-
   init_actions();
 
   QPalette s_pal = palette();
   s_pal.setColor( QPalette::Base, QColor( 255, 200, 200 ) );
   setPalette( s_pal );
-
-  int em = LaboWin::Em();
-  setFixedWidth( 12*em );
-  // setPreferredWidth( 12*em );
-
-  setContextMenuPolicy( Qt::ActionsContextMenu );
-
-  setModel( mod );
 }
 
 void SimulView::init_actions()
 {
-  act_new = new QAction( QIcon::fromTheme("list-add"), "New", this );
-  addAction( act_new );
-  connect( act_new, SIGNAL(triggered()), laboview, SLOT(addSimul()) );
-
-  act_del = new QAction( QIcon::fromTheme("list-remove"), "Delete", this );
-  addAction( act_del );
-  connect( act_del, SIGNAL(triggered()), laboview, SLOT(delSimul()) );
-
-  act_edit = new QAction( QIcon::fromTheme("document-properties"), "Edit", this );
-  addAction( act_edit );
-  connect( act_edit, SIGNAL(triggered()), laboview, SLOT(editSimul()) );
-
-  act_rename = new QAction( "Rename", this );
-  addAction( act_rename );
-  connect( act_rename, SIGNAL(triggered()), laboview, SLOT(renameSimul()) );
-
-  act_setActive = new QAction( QIcon::fromTheme("checkmark"), "set Active", this );
-  addAction( act_setActive );
-  connect( act_setActive, SIGNAL(triggered()), laboview, SLOT(setActiveSimul()) );
-
-  act_clone = new QAction( "Clone", this );
-  addAction( act_clone );
-  connect( act_clone, SIGNAL(triggered()), laboview, SLOT(cloneSimul()) );
-
-  connect( this, SIGNAL(doubleClicked(QModelIndex)), laboview, SLOT(editSimul()) );
-
+  auto a = new QAction( QIcon::fromTheme("checkmark"), "set Active", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(setActive()) );
 }
+
+bool SimulView::setActive()
+{
+  Simulation *sim = qobject_cast<Simulation*>( getSelObj() );
+  if( !sim ) {
+    return false;
+  }
+  storage->setActiveObj( sim->objectName() );
+  emit viewChanged();
+  return true;
+}
+
