@@ -128,6 +128,7 @@ class StructView : public CmdView  {
     // virtual bool showDataObj() override;
     // virtual bool exportObj() override;
 
+
   signals:
     void sig_changeSel(int,int,int);
     void sig_changeLevel(int);
@@ -165,11 +166,14 @@ class StructView : public CmdView  {
 // ============================== StructSubwin =======================================
 
 class StructSubwin : public CommonSubwin {
+  Q_OBJECT
   public:
    StructSubwin( QWidget *a_par, LaboDoc *a_doc, Scheme *a_sch );
    ~StructSubwin();
    virtual bool callSlot( const char *nm );
    virtual bool checkSlot( const char *nm );
+  public slots:
+   virtual int getLevel() const override;
   protected:
    QScrollArea *scrollArea = nullptr; // null only for correct layout create
    StructView *sview = nullptr;

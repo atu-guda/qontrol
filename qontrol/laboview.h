@@ -157,6 +157,9 @@ class LaboView : public CommonSubwin
    QString runModelScript();
    void initEngine();
 
+   /** returns level for aux objects selection */
+   virtual int getLevel() const override;
+
  public:
    /** returns document model */
    TModel* getModel() { return model; } // TODO: remove?
@@ -170,8 +173,6 @@ class LaboView : public CommonSubwin
    TMiso* getSelElm() const;
    /** returns ptr to marked element or nullptr if none */
    TMiso* getMarkElm() const;
-   /** returns level for aux objects selection */
-   int getLevel() const;
  protected:
    virtual void closeEvent( QCloseEvent* );
    virtual void resizeEvent( QResizeEvent* );

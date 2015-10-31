@@ -43,8 +43,9 @@ class CommonSubwin : public QMainWindow  {
    HolderData* getSelectedInView( const QString& view_name ) const;
    QString getSelNameInView( const QString& view_name ) const;
    HolderData* getSelectedInFocus() const;
-   QString getSelNameInFocus() const;
  public slots:
+   QString getSelNameInFocus() const;
+   virtual int getLevel() const = 0;
  signals:
    void closeMe(); // ask main window to close me
 

@@ -1,5 +1,7 @@
-Subscheme libs.
-Document: cmdline options, common workflow.
+Subscheme libs (and dirs).
+Documenation: cmdline options, common workflow.
+LaboDoc: getModel + use in StatusModel
+StausTip(col=2) for StatusModel
 Shadow main scheme?
 QScintilla? Dialog or SubWindow?
 Create Action fun + subclass QAction? (menu to place, flags)
@@ -46,8 +48,7 @@ js/large text edit widget + button/dialog + external editor (partial done)?
 
 
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
-  -- TSumN - variable number of inputs, common factor - to TDefuzzy
-  -- TMovingAver 
+  -- TMovingAver
   -- TDiff - TDiffIn?
   -- TDefuzzy (fixed/variable number of inputs)
   -- TQuality (TCriterion is busy/TCrit)

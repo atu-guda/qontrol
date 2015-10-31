@@ -21,8 +21,7 @@
 
 #include <QStatusBar>
 
-#include "tmodel.h"
-#include "laboview.h"
+#include "commonsubwin.h"
 
 class QLabel;
 
@@ -33,12 +32,12 @@ class QLabel;
 class StatusModel : public QStatusBar  {
  Q_OBJECT
  public:
-   StatusModel( LaboView* mview, QWidget *parent );
+   StatusModel( CommonSubwin *a_up_view );
    ~StatusModel();
    void update();
 
  protected:
-   LaboView *mainview;
+   CommonSubwin *up_view;
    QLabel *l_mod, *l_level, *l_stat, *l_nums, *l_name,  *l_desc, *l_val;
 };
 

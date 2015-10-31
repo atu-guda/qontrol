@@ -62,6 +62,7 @@ MglView::~MglView()
   gra = nullptr; // not delete, we are not owner, just for debug
 }
 
+
 void MglView::resetData()
 {
   data_loaded = false;
@@ -736,6 +737,11 @@ bool MglSubwin::callSlot( const char *nm )
 bool MglSubwin::checkSlot( const char *nm )
 {
   return checkSlotSub( mview, nm );
+}
+
+int MglSubwin::getLevel() const
+{
+  return mview->getSelNum();
 }
 
 

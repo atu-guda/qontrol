@@ -19,11 +19,11 @@
 
 #include "miscfun.h"
 #include "statusmodel.h"
+#include "labodoc.h"
 
-StatusModel::StatusModel( LaboView *mview, QWidget *parent )
-           : QStatusBar( parent )
+StatusModel::StatusModel( CommonSubwin *a_up_view )
+           : QStatusBar( a_up_view ), up_view( a_up_view )
 {
-  mainview = mview;
   const int label_lw = 1;
   const int label_sep = 6;
   // const int label_fs = QFrame::Box | QFrame::Raised;
@@ -76,33 +76,46 @@ StatusModel::~StatusModel()
 
 void StatusModel::update()
 {
-  l_level->setText( QSN( mainview->getLevel() ) );
+  l_level->setText( QSN( up_view->getLevel() ) );
   l_name->setText( "." );  l_desc->setText( "." );  l_val->setText( "" );
-  TModel *model = mainview->getModel();
-  if( !model ) {
-    l_mod->setText( "X" );
-    l_stat->setText( "Error" );
+
+  // QString s_nums = QSL("[") % QSN(up_view->getSelX()) % QSL(";")
+  //     % QSN( up_view->getSelY() ) % QSL("]");
+  // l_nums->setText( s_nums );
+
+  LaboDoc *doc = up_view->getDocument();
+  if( !doc ) {
+    l_stat->setText( QSL("NO Doc!") );
     return;
   }
-
-  QString s_nums = QSL("[") % QSN(mainview->getSelX()) % QSL(";")
-      % QSN( mainview->getSelY() ) % QSL("]");
-  l_nums->setText( s_nums );
+  TRootData *root = doc->getRoot();
+  if( !root ) {
+    l_stat->setText( QSL("NO root!") );
+    return;
+  }
+  TModel *model = root->getObjT<TModel*>( "model" );
+  if( !model ) {
+    l_stat->setText( QSL("NO model!") );
+    return;
+  }
 
   int state = model->getState();
   l_stat->setText( getStateString( state ) );
   int mod = model->getModified();
   l_mod->setText( modificationChar[mod] );
 
-  TMiso *ob = mainview->getSelElm();
+  HolderData *ob = up_view->getSelectedInFocus();
   if( ob ) {
     QString ob_nm_tp = ob->dataObj( 0, Qt::StatusTipRole ).toString();
     l_name->setText( ob_nm_tp );
     QString ob_descr = ob->getDataD( "descr", QString() );
     l_desc->setText( ob_descr );
     if( state > stateGood ) {
-      double val = ob->getDataD( "out0", 0.0 ); // TODO: StatusTipRole(col=1)
-      l_val->setText( QSN( val, 'g', 18 ) );
+      TMiso *el = qobject_cast<TMiso*>( ob );
+      if( el ) {
+        double val = el->getDataD( "out0", 0.0 ); // TODO: StatusTipRole(col=2)
+        l_val->setText( QSN( val, 'g', 18 ) );
+      }
     };
   };
 

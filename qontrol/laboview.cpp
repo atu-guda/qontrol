@@ -93,7 +93,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
   scrollArea->setFocusProxy( sview );
 
-  stam = new StatusModel( this, this );
+  stam = new StatusModel( this );
   stam->setObjectName( "stam" );
 
   grLay->addWidget( scrollArea, 0, 0, 2, 1 );

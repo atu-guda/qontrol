@@ -71,6 +71,7 @@ class MglView : public QWidget  {
    void linkToPlot();
    void unlinkFromPlot();
    void nextPointInPlot( int step = 1 );
+   int getSelNum() const { return sel; }
 
  signals:
    void closeMe(); // ask main window to close me
@@ -108,11 +109,14 @@ class MglView : public QWidget  {
 // ============================== MglSubwin =======================================
 
 class MglSubwin : public CommonSubwin {
+  Q_OBJECT
   public:
    MglSubwin( QWidget *a_par, LaboDoc *a_doc, TGraph *a_gra  );
    ~MglSubwin();
    virtual bool callSlot( const char *nm );
    virtual bool checkSlot( const char *nm );
+  public slots:
+   virtual int getLevel() const override;
   protected:
    MglView *mview = nullptr;
 };

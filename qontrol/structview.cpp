@@ -1134,6 +1134,10 @@ bool StructSubwin::checkSlot( const char *nm )
   return checkSlotSub( sview, nm );
 }
 
+int StructSubwin::getLevel() const
+{
+  return sview->getLevel();
+}
 
 
 // end of structview.cpp
