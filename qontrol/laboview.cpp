@@ -73,8 +73,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 
   plots_view = new GraphDataView( plots, this );
   plots_view->setObjectName( "plots_view" );
-  // vmap["plots_view"] = plots_view;
-  plots_selmod = plots_view->selectionModel(); // ?? delete
+  vmap["plots_view"] = plots_view;
 
   sims_view = new SimulView( sims, this );
   sims_view->setObjectName( "sims_view" );
@@ -630,58 +629,30 @@ void LaboView::addGraph()
 
 void LaboView::delGraph()
 {
-  delSomething( plots_view );
+  plots_view->delObj();
 }
 
 
 void LaboView::editGraph()
 {
-  editSomething( plots_view, true ); // no reset
+  plots_view->editObj(); // TODO: no reset
+  // editSomething( plots_view, true );
 }
 
 void LaboView::selectGraph()
 {
-  // QItemSelectionModel *selMod = plots_view->selectionModel();
-  // if( !selMod ) {
-  //   return;
-  // }
-  //
-  // int level = sview->getLevel();
-  // QModelIndex s_idx = plots->index( level, 0, QModelIndex() );
-  //
-  // selMod->clear();
-  // selMod->select( s_idx, QItemSelectionModel::Select );
-  // selMod->setCurrentIndex( s_idx, QItemSelectionModel::Select );
-  // emit viewChanged();
 }
 
 void LaboView::renameGraph()
 {
-  renameSomething( plots_view );
+  plots_view->renameObj();
 }
 
 
 
 void LaboView::showGraph()
 {
-  TGraph *gra = qobject_cast<TGraph*>( getViewSelObj( plots_view ) );
-  if( !gra ) {
-    return;
-  }
-
-  LaboWin *mwin = LaboWin::win();
-  if( !mwin ) { return;  }
-
-  QString fileName = doc->pathName();
-  // like CommonSubwin
-  QString wtit = QSL( "plot: " ) % gra->objectName() % QSL(" - " ) % fileName;
-  QMdiSubWindow *swin = mwin->findMdiByTitle( wtit, true ); // true = activate
-  if( swin ) {
-    return;
-  }
-
-  auto plotWnd = new MglSubwin( this, doc, gra );
-  mwin->addChild( plotWnd );
+  plots_view->showObj();
 }
 
 void LaboView::graphAddOut()
@@ -691,59 +662,18 @@ void LaboView::graphAddOut()
 
 void LaboView::showGraphData()
 {
-  TGraph *gra = qobject_cast<TGraph*>( getViewSelObj( plots_view ) );
-  if( !gra ) {
-    return;
-  }
-
-  DatasInfo di;
-  int k = gra->fillDatasInfo( &di );
-  if( !k ) {
-    return;
-  }
-
-  auto dia = new QDialog( this );
-  dia->setWindowTitle( QString("Plot data: ") + di.title );
-  auto lv = new QVBoxLayout( dia );
-
-  auto dmod = new DoubleTableModel( di, dia );
-  auto dtv = new QTableView( dia );
-  dtv->setModel( dmod );
-  lv->addWidget( dtv );
-
-  auto bt_ok = new QPushButton( "Done", dia );
-  bt_ok->setDefault( true );
-  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  lv->addWidget( bt_ok );
-
-  int w0 = di.size() * 12 * em;
-  dia->resize( w0, em*40 );
-
-  dia->exec();
-  delete dia;
-
+  plots_view->showDataObj();
 }
 
 void LaboView::exportGraphData()
 {
-  TGraph *gra = qobject_cast<TGraph*>( getViewSelObj( plots_view ) );
-  if( !gra ) {
-    return;
-  }
-
-  QString fnq = QFileDialog::getSaveFileName( this, tr("Export data"), "",
-      "Data files (*.txt *.dat *.csv);;All files (*)" );
-  if( fnq.isEmpty() ) {
-    return;
-  }
-
-  gra->dump( fnq, " " );
+  plots_view->exportObj();
 }
 
 
 void LaboView::cloneGraph()
 {
-  cloneSomething( plots_view );
+  plots_view->cloneObj();
 }
 
 

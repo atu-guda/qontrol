@@ -32,10 +32,6 @@ CmdListView::CmdListView( HolderData *a_mod, CommonSubwin *a_par )
 
   init_base_actions();
 
-  // QPalette s_pal = palette();
-  // s_pal.setColor( QPalette::Base, QColor( 120,220,252 ) );
-  // setPalette( s_pal );
-
   int em = LaboWin::Em();
   setFixedWidth( 12*em );
 
@@ -43,8 +39,12 @@ CmdListView::CmdListView( HolderData *a_mod, CommonSubwin *a_par )
 
   lv->setModel( storage );
 
-  auto selmod = lv->selectionModel();
-  connect( selmod, &QItemSelectionModel::currentChanged, this, &CmdListView::viewChanged );
+  auto selMod = lv->selectionModel();
+  QModelIndex s_idx = storage->index( 0, 0, QModelIndex() );
+  selMod->clear();
+  selMod->select( s_idx, QItemSelectionModel::Select );
+  selMod->setCurrentIndex( s_idx, QItemSelectionModel::Select );
+  connect( selMod, &QItemSelectionModel::currentChanged, this, &CmdListView::viewChanged );
 }
 
 HolderData* CmdListView::getSelObj() const

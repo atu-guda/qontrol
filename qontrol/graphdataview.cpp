@@ -18,60 +18,117 @@
 #include "dataset.h"
 #include "graphdataview.h"
 #include "labowin.h"
+#include "mglview.h"
+#include "miscfun.h"
+#include "doubletable.h"
 
 
-GraphDataView::GraphDataView( HolderData *a_mod, LaboView *par )
-  : QListView( par ), mod( a_mod ), laboview( par )
+GraphDataView::GraphDataView( HolderData *a_mod, CommonSubwin *a_par )
+  : CmdListView( a_mod, a_par )
 {
-
   init_actions();
 
   QPalette s_pal = palette();
   s_pal.setColor( QPalette::Base, QColor( 96,252,192 ) );
   setPalette( s_pal );
-
-  int em = LaboWin::Em();
-  setFixedWidth( 12*em );
-
-  setContextMenuPolicy( Qt::ActionsContextMenu );
-
-  setModel( mod );
 }
 
 void GraphDataView::init_actions()
 {
-  act_new = new QAction( QIcon::fromTheme("list-add"), "&New", this );
-  addAction( act_new );
-  connect( act_new, SIGNAL(triggered()), laboview, SLOT(addGraph()) );
+  auto a = new QAction( "&Show", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(showObj()) );
 
-  act_del = new QAction( QIcon::fromTheme("list-remove"), "&Delete", this );
-  addAction( act_del );
-  connect( act_del, SIGNAL(triggered()), laboview, SLOT(delGraph()) );
+  a = new QAction( "D&ump", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(exportObj()) );
 
-  act_edit = new QAction( QIcon::fromTheme("document-properties"), "&Edit", this );
-  addAction( act_edit );
-  connect( act_edit, SIGNAL(triggered()), laboview, SLOT(editGraph()) );
-
-  act_rename = new QAction( "Rename", this );
-  addAction( act_rename );
-  connect( act_rename, SIGNAL(triggered()), laboview, SLOT(renameGraph()) );
-
-  act_show = new QAction( "&Show", this );
-  addAction( act_show );
-  connect( act_show, SIGNAL(triggered()), laboview, SLOT(showGraph()) );
-
-  act_dump = new QAction( "D&ump", this );
-  addAction( act_dump );
-  connect( act_dump, SIGNAL(triggered()), laboview, SLOT(exportGraphData()) );
-
-  act_showdata = new QAction( "&Show data", this );
-  addAction( act_showdata );
-  connect( act_showdata, SIGNAL(triggered()), laboview, SLOT(showGraphData()) );
-
-  act_clone = new QAction( "Clone", this );
-  addAction( act_clone );
-  connect( act_clone, SIGNAL(triggered()), laboview, SLOT(cloneGraph()) );
-
-  connect( this, SIGNAL(doubleClicked(QModelIndex)), laboview, SLOT(editGraph()) );
+  a = new QAction( "&Show data", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(showDataObj()) );
 
 }
+
+bool GraphDataView::showObj()
+{
+  TGraph *gra = qobject_cast<TGraph*>( getSelObj() );
+  if( !gra ) {
+    return false;
+  }
+
+  LaboWin *mwin = LaboWin::win();
+  if( !mwin ) { return false;  }
+
+  LaboDoc *doc = par->getDocument();
+  if( !doc ) { return false;  }
+
+  QString fileName = doc->pathName();
+  // like CommonSubwin
+  QString wtit = QSL( "plot: " ) % gra->objectName() % QSL(" - " ) % fileName;
+  QMdiSubWindow *swin = mwin->findMdiByTitle( wtit, true ); // true = activate
+  if( swin ) {
+    return false;
+  }
+
+  auto plotWnd = new MglSubwin( mwin, doc, gra );
+  mwin->addChild( plotWnd );
+  return true;
+}
+
+bool GraphDataView::showDataObj()
+{
+  TGraph *gra = qobject_cast<TGraph*>( getSelObj() );
+  if( !gra ) {
+    return false;
+  }
+
+  DatasInfo di;
+  int k = gra->fillDatasInfo( &di );
+  if( !k ) {
+    return false;
+  }
+
+  auto dia = new QDialog( this );
+
+  QFontMetrics fm( dia->font() );
+  int em = fm.width( 'W' );
+
+  dia->setWindowTitle( QString("Plot data: ") + di.title );
+  auto lv = new QVBoxLayout( dia );
+
+  auto dmod = new DoubleTableModel( di, dia );
+  auto dtv = new QTableView( dia );
+  dtv->setModel( dmod );
+  lv->addWidget( dtv );
+
+  auto bt_ok = new QPushButton( "Done", dia );
+  bt_ok->setDefault( true );
+  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
+  lv->addWidget( bt_ok );
+
+  int w0 = di.size() * 12 * em;
+  dia->resize( w0, em*40 );
+
+  dia->exec();
+  delete dia;
+
+  return false;
+}
+
+bool GraphDataView::exportObj()
+{
+  TGraph *gra = qobject_cast<TGraph*>( getSelObj() );
+  if( !gra ) {
+    return false;
+  }
+
+  QString fnq = QFileDialog::getSaveFileName( this, tr("Export data"), "",
+      "Data files (*.txt *.dat *.csv);;All files (*)" );
+  if( fnq.isEmpty() ) {
+    return false;
+  }
+
+  gra->dump( fnq, " " );
+  return true;
+}
+
