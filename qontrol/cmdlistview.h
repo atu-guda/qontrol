@@ -1,8 +1,8 @@
 /***************************************************************************
-                          outdataview.h - view for outs
+                      cmdlistview.h - common base for list-alike viewvs
                              -------------------
-    begin                : 2014.11.15
-    copyright            : (C) 2014-2015 by atu
+    begin                : 2015.10.31
+    copyright            : (C) 2015-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -15,23 +15,23 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _OUTDATAVIEW_H
-#define _OUTDATAVIEW_H
+#ifndef _CMDLISTVIEW_H
+#define _CMDLISTVIEW_H
 
 #include <QtWidgets>
 
-#include "cmdlistview.h"
+#include "cmdview.h"
 #include "commonsubwin.h"
 
-class OutDataView : public CmdListView {
+class CmdListView : public CmdView {
   Q_OBJECT
   public:
-   OutDataView( HolderData *a_mod, CommonSubwin *a_par );
-   // virtual HolderData* getSelObj() const override;
-   // virtual void handleSelChange() override;
-   // virtual QModelIndex currentIndex() const override;
+   CmdListView( HolderData *a_mod, CommonSubwin *a_par );
+   virtual HolderData* getSelObj() const override;
+   virtual void handleSelChange() override;
+   virtual QModelIndex currentIndex() const override;
   public slots:
-    virtual bool addObj() override;
+    // virtual bool addObj() override;
     // virtual bool delObj() override;
     // virtual bool editObj() override;
     // virtual bool renameObj() override;
@@ -43,12 +43,12 @@ class OutDataView : public CmdListView {
     // virtual bool showTreeObj() override;
     // virtual bool testObj() override;
     // virtual bool showObj() override;
-    virtual bool showDataObj() override;
-    virtual bool exportObj() override;
-    // specific functions
-    bool addToPlot();
+    // virtual bool showDataObj() override;
+    // virtual bool exportObj() override;
   protected:
-   void init_actions();
+   QListView *lv = nullptr;
+  protected:
+   void init_base_actions();
 };
 
 #endif

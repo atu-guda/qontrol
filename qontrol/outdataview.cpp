@@ -26,110 +26,18 @@
 
 
 OutDataView::OutDataView( HolderData *a_mod, CommonSubwin *a_par )
-  : CmdView( a_par, a_mod )
+  : CmdListView( a_mod, a_par )
 {
-  auto lay = new QVBoxLayout( this );
-  lv = new QListView( this );
-  lay->addWidget( lv );
-
   init_actions();
 
   QPalette s_pal = palette();
   s_pal.setColor( QPalette::Base, QColor( 120,220,252 ) );
   setPalette( s_pal );
-
-  int em = LaboWin::Em();
-  setFixedWidth( 12*em );
-
-  lv->setContextMenuPolicy( Qt::ActionsContextMenu );
-
-  lv->setModel( storage );
-
-  auto selmod = lv->selectionModel();
-  connect( selmod, &QItemSelectionModel::currentChanged, this, &OutDataView::viewChanged );
 }
-
-HolderData* OutDataView::getSelObj() const
-{
-  if( !lv ) {
-    return nullptr;
-  }
-
-  QItemSelectionModel *selMod = lv->selectionModel();
-  if( !selMod ) {
-    return nullptr;
-  }
-
-  QModelIndex cs = selMod->currentIndex();
-  if( !cs.isValid() ) {
-    return nullptr;
-  }
-  // HolderData *oxx = static_cast<HolderData*>( cs.internalPointer() );
-  QString nm =  cs.data( Qt::DisplayRole ).toString(); // TODO: make better
-  HolderData *ob = storage->getObjT<HolderData*>( nm );
-  return ob;
-}
-
-void OutDataView::handleSelChange()
-{
-
-}
-
-QModelIndex OutDataView::currentIndex() const
-{
-  if( !lv ) {
-    return QModelIndex();
-  }
-  return lv->currentIndex();
-}
-
 
 void OutDataView::init_actions()
 {
-  auto a = new QAction( QIcon::fromTheme("list-add"), "&New", this );
-  lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(addObj()) );
-
-  a = new QAction( QIcon::fromTheme("list-remove"), "&Delete", this );
-  lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(delObj()) );
-
-  a = new QAction( QIcon::fromTheme("document-properties"), "&Edit", this );
-  lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(editObj()) );
-
-  a = new QAction( QIcon::fromTheme("edit-cut"), "Cu&t", this );
-  lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(cutObj()) );
-
-  a = new QAction( QIcon::fromTheme("edit-copy"), "&Copy", this );
-  lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(copyObj()) );
-
-  a = new QAction( QIcon::fromTheme("edit-paste"), "&Paste", this );
-  lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(pasteObj()) );
-
-  a = new QAction( "Rename", this );
-  lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(renameObj()) );
-
-  a = new QAction( "Clone", this );
-  lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(cloneObj()) );
-
-  a = new QAction( "Info", this );
-  lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(infoObj()) );
-
-  a = new QAction( "Show Tree", this );
-  lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(showTreeObj()) );
-
-  a = new QAction( "", this ); a->setSeparator( true );
-  lv->addAction( a );
-
-  a = new QAction( "&Add to plot", this );
+  auto a = new QAction( "&Add to plot", this );
   lv->addAction( a  );
   connect( a, SIGNAL(triggered()), this, SLOT(addToPlot()) );
 
@@ -140,8 +48,6 @@ void OutDataView::init_actions()
   a = new QAction( "&Show data", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(showDataObj()) );
-
-  connect( lv, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editObj()) );
 }
 
 bool OutDataView::addObj()

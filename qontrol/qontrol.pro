@@ -17,6 +17,7 @@ SOURCES += \
   addelemdia.cpp \
   circbuf.cpp \
   cmdview.cpp \
+  cmdlistview.cpp \
   commonsubwin.cpp \
   contgraph.cpp \
   contout.cpp \
@@ -93,6 +94,7 @@ HEADERS += \
   addelemdia.h \
   circbuf.h \
   cmdview.h \
+  cmdlistview.h \
   commonsubwin.h \
   contgraph.h \
   contout.h \
