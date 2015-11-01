@@ -119,7 +119,10 @@ LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
   v_max = arr->getDataD( "dmax", 0.0 );
 
   // QString label_c = label.isEmpty() ? ( QString( "y_%1" ).arg( dl.size() )) : label;
-  QString label_c = label.isEmpty() ? QString( "y" ) : label;
+  // QString label_c = label.isEmpty() ? QString( "y" ) : label;
+  QString label_c = QSL("\\big\\i{");
+  label_c += label.isEmpty() ? QString( "y" ) : label;
+  label_c += QSL("}");
   pl_label = label_c.toStdString();
 
   int i_cc = QColor(color).rgba();
