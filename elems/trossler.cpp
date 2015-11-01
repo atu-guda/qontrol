@@ -46,6 +46,7 @@ double TRossler::f( double /*t*/ )
   vx = -y - z;
   vy = x  + a*y;
   vz = b + z*(x-c);
+  v = sqrt( vx*vx + vy*vy + vz*vz );
 
   x += tdt * vx + in_x;
   y += tdt * vy + in_y;

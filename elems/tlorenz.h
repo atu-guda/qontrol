@@ -52,6 +52,7 @@ class TLorenz : public TMiso  {
    PRM_DOUBLE( vx, efInner, "vx", "dx/dt", "" );
    PRM_DOUBLE( vy, efInner, "vy", "dy/dt", ""  );
    PRM_DOUBLE( vz, efInner, "vz", "dz/dt", ""  );
+   PRM_DOUBLE( v,  efInner, "v",  "dr/dt", ""  );
 
    PRM_INPUT( in_x, 0, "input x", "X additional input",  "sep=block" );
    PRM_INPUT( in_y, 0, "input y", "Y additional input", "sep=col" );

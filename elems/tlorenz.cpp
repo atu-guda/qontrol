@@ -47,6 +47,7 @@ double TLorenz::f( double /*t*/ )
   vx = ( sigma * (y-x) );
   vy = ( x * (r-z) - y );
   vz = ( x*y - b*z );
+  v = sqrt( vx*vx + vy*vy + vz*vz );
 
   x += tdt * vx + in_x;
   y += tdt * vy + in_y;

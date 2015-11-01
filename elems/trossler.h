@@ -48,10 +48,11 @@ class TRossler : public TMiso  {
    PRM_DOUBLE( x, efInner, "x", "x value", "" );
    PRM_DOUBLE( y, efInner, "y", "y value", "" );
    PRM_DOUBLE( z, efInner, "z", "z value", "" );
-   //* deribates
+   //* derivates
    PRM_DOUBLE( vx, efInner, "vx", "dx/dt", "" );
    PRM_DOUBLE( vy, efInner, "vy", "dy/dt", "" );
    PRM_DOUBLE( vz, efInner, "vz", "dz/dt", "" );
+   PRM_DOUBLE( v,  efInner, "v",  "dr/dt", ""  );
 
    PRM_INPUT( in_x, 0, "input x", "Addition to x",  "sep=block" );
    PRM_INPUT( in_y, 0, "input x", "Addition to y", "sep=col" );

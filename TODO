@@ -25,6 +25,7 @@ Outputs - or even IO - for external data.
 Tests
 Autocorrelation?
 Run script before/after run (+ file)
+Placeholder object: param is the type of real object?
 
 Application config: to TDataSet?
 
