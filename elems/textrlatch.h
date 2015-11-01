@@ -34,7 +34,7 @@ class TExtrLatch : public TMiso  {
    DCL_STD_INF;
 
    enum ExtrType {
-     extrMin, extrMax, extrModMax, extrAver, extrAmpl
+     extrMax, extrMin, extrModMax, extrAver, extrAmpl
    };
    Q_ENUMS(ExtrType);
    Q_CLASSINFO( "enum_ExtrType_0", "Max" );        // extrMax
@@ -47,6 +47,7 @@ class TExtrLatch : public TMiso  {
    virtual double f( double t ) override;
    /** reimplemented from TMiso to reset */
    virtual int do_startLoop( int acnx, int acny ) override;
+   void reset_vars();
 
    /** type of extremum */
    PRM_LIST( type, efNRC, "Type", "Type of catching extremum", "enum=ExtrType" );
@@ -59,7 +60,7 @@ class TExtrLatch : public TMiso  {
    /** start time */
    PRM_DOUBLE( tStart, efNRC, "Time start", "Time start", "sep=col");
    /** fuzzy level for local extr */
-   PRM_DOUBLE( fuzzy, efNRC, "Fuzzy level", "Fuzzy level for local extremum catcher", "" );
+   PRM_DOUBLE( fuzzy, efOld, "Fuzzy level", "Fuzzy level for local extremum catcher", "min=0" );
    /** holders for extr levels and old values */
    PRM_DOUBLE( u_max, efInner, "u_max", "u_max", "");
    PRM_DOUBLE( t_max, efInner, "t_max", "t_max", "");
