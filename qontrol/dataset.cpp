@@ -449,6 +449,14 @@ QString HolderData::hintName( const QString &tp, const QString &nm_start ) const
     }
   }
 
+  // 'name!' - try to force name w/o index: TOutArr for example
+  if( nm.endsWith( "!" ) ) {
+    nm = nm.left( nm.size() - 1 );
+    if( !getObj( nm ) ) {
+      return nm;
+    }
+  }
+
   //             nameDIGITS
   QRegExp re( "^([_a-zA-Z][_a-zA-Z0-9]*[_a-zA-Z])([0-9]+)$" );
   QString bname = nm;

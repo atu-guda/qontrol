@@ -1,7 +1,6 @@
 BUG: need relink for new schemes!
 Subscheme libs (and dirs).
 Documenation: cmdline options, common workflow.
-TOutArr new name w/o 0
 LaboDoc: getModel + use in StatusModel
 StausTip(col=2) for StatusModel
 Shadow main scheme?

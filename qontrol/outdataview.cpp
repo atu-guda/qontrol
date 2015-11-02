@@ -56,10 +56,10 @@ bool OutDataView::addObj()
   QString out_nm;
 
   if( !tgt_nm.isEmpty() ) {
-    out_nm = QSL("out_") % tgt_nm;
+    out_nm = QSL("out_") % tgt_nm % QSL("!");
   } else {
     tgt_nm = QSL("t");
-    out_nm = QSL("out_t");
+    out_nm = QSL("out_t!");
   };
   sugg_name = out_nm;
 
