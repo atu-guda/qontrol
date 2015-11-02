@@ -74,6 +74,10 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
 {
   const double *rv = nullptr;
 
+  if( nm.isEmpty() ) { // special null-case: empty string is no error
+    return rv;
+  }
+
   Scheme *sch = getActiveScheme(); // for upside call, double useless work if called from scheme.
   if( sch ) {
     rv =  sch->getDoublePtr( nm, lt, src_ob, lev );
@@ -86,7 +90,7 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
   rv =  getDoublePtr( nm, lt, src_ob, lev );
 
   if( !rv ) {
-    qWarning() << "fail to find target " << nm << " in model" << WHE;
+    qWarning() << "fail to find target " << nm << " in model" << WHE;  // TODO: only users
   }
 
   return rv;
@@ -183,6 +187,9 @@ int TModel::startRun()
     return 0;
   }
 
+  // TODO: remove debug?
+  c_sim->post_set();
+
   T   = c_sim->getDataD( "T", 0.0 );
   N   = c_sim->getDataD( "N", 1 );
   N1  = c_sim->getDataD( "N1", 1 );
@@ -206,6 +213,7 @@ int TModel::startRun()
   if( n_iosteps < 1 ) {
     n_iosteps = 1;
   }
+  // qWarning() << "pre: n2_eff= " << n2_eff << " n1_eff= " << n1_eff << " N= " << N << WHE;
 
   int type = c_sim->getDataD( "runType", (int)Simulation::runSingle );
 
@@ -288,9 +296,7 @@ int TModel::run( QSemaphore *sem )
     scriptEndLoop   = c_sim->getDataD( "scriptEndLoop", QString() );
   }
 
-  if( ! scriptPreRun.isEmpty() ) {
-    runScript( scriptPreRun );
-  }
+  runScript( scriptPreRun ); // test for empty - inside
 
   int rc = 0;
   for( il2 = 0; il2 < n2_eff; ++il2 ) {
@@ -312,9 +318,7 @@ int TModel::run( QSemaphore *sem )
         eng->globalObject().setProperty( "il2", eng->newVariant( (int)(il2) ) );
         eng->globalObject().setProperty( "prm0", eng->newVariant( (double)(prm0) ) );
         eng->globalObject().setProperty( "prm1", eng->newVariant( (double)(prm1) ) );
-        if( ! scriptStartLoop.isEmpty() ) {
-          runScript( scriptStartLoop );
-        }
+        runScript( scriptStartLoop );
       }
 
       for( int i=0; i<N; ++i, ++i_tot ) {
@@ -354,15 +358,11 @@ int TModel::run( QSemaphore *sem )
       if( plots ) {
         plots->reset();
       }
-      if( ! scriptEndLoop.isEmpty() ) {
-        runScript( scriptEndLoop );
-      }
+      runScript( scriptEndLoop );
     } // -- inner loop (il1)
   }   // -- outer loop (il2)
 
-  if( ! scriptPostRun.isEmpty() ) {
-    runScript( scriptPostRun );
-  }
+  runScript( scriptPostRun );
 
   stopRun( 0 );
   return i_tot;
@@ -671,6 +671,9 @@ void TModel::initEngine()
 
 QString TModel::runScript( const QString& script )
 {
+  if( script.isEmpty() ) {
+    return QString();
+  }
   QScriptValue res = eng->evaluate( script );
   QString r;
   if( eng->hasUncaughtException() ) {

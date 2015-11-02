@@ -92,8 +92,8 @@ QVariant TOutArr::dataObj( int col, int role ) const
 QIcon TOutArr::getIcon() const
 {
   int xtype = type;
-  if( xtype >= 4 ) { // bad type
-    xtype = 4;
+  if( xtype >= OutArrType::outSpec ) { // bad type
+    xtype = OutArrType::outSpec + 1;
   }
   QString iconName = QString( ":icons/elm_toutarr_" ) + QSN(xtype) + ".png";
   QIcon el_ico( iconName );
@@ -115,11 +115,8 @@ int TOutArr::alloc( int anx, int any )
   }
 
   nx = anx; ny = any; arrsize = nx * ny;
-  n = 0; dmin = 0; dmax = 1;
   arr.resize( arrsize );
-  n = 0; dmin = 0; dmax = 1; cnq = 0;
-  so = nullptr;
-  reset_stat();
+  reset();
   return 1;
 }
 
@@ -129,7 +126,16 @@ void TOutArr::do_reset()
   n = 0; cnq = 0;
   reset_stat();
 
-  // TODO: move to separate functions and call here and after struct changed ???
+  set_link();
+}
+
+void TOutArr::do_structChanged()
+{
+  set_link();
+}
+
+void TOutArr::set_link()
+{
   so = nullptr;
   TModel *mod = getAncestorT<TModel>();
   ltype_t lt; const LinkedObj *so_ob;
@@ -138,6 +144,7 @@ void TOutArr::do_reset()
   }
   if( !so ) {
     so = &fake_so;
+    // qWarning() << "Fake source used for " << name << NWHE;
   }
 }
 
@@ -320,6 +327,7 @@ void TOutArr::put( int x, int y, double v )
 void TOutArr::add( double v )
 {
   if( n >= arrsize ) {
+    qWarning() << " n (" << n << ") >= arrsize (" << arrsize << ") " << NWHE;
     return;
   }
 

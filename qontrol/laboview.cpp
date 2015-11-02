@@ -413,7 +413,7 @@ void LaboView::pasteElm()
 
 // ==== outs related
 
-void LaboView::addOut() // TODO: common
+void LaboView::addOut()
 {
   outs_view->addObj();
 }

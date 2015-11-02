@@ -99,6 +99,8 @@ class TOutArr : public TDataSet  {
    Q_INVOKABLE QString getAllStats( QString sep = "; ") const;
  protected:
    virtual void do_reset() override;
+   virtual void do_structChanged() override;
+   void set_link();
    void reset_stat();
 
    PRM_LIST( type, efNoRunChange, "Type", "Type of array", "enum=OutArrType" );

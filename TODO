@@ -1,8 +1,7 @@
-BUG: need relink for new schemes!
 Subscheme libs (and dirs).
 Documenation: cmdline options, common workflow.
 LaboDoc: getModel + use in StatusModel
-StausTip(col=2) for StatusModel
+StatusTip(col=2) for StatusModel
 Shadow main scheme?
 QScintilla? Dialog or SubWindow?
 Create Action fun + subclass QAction? (menu to place, flags)
@@ -12,15 +11,15 @@ Whan to [re]create shadow objects?
 StatusModel link to StructView, not to LaboView?
 Check: when to reset model?
 Check: update link values only after step - prep for multi-threading (see TSubScheme)
-Combine list views
 Error handling (from inner to iface)
+Store script errors (and data?)
+Excess? error in fromDom ... and/or show last error?
 New buttons for ObjDataWidget: need better (simple) labels.
 Indicate corresponding outs for selected plot
 Customized colors: struct view...
 Inputs - may be Elements? like TFileSource?
 Dump TOutArr/TGraph commandline (-p/-P)
 Check/use model run status (in batch, for tests)
-Excess? error in fromDom ... and/or show last error?
 More functional labels in dialogs: go to buddy, autoset ....
 Outputs - or even IO - for external data.
 Tests
