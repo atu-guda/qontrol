@@ -112,6 +112,8 @@ class TOutArr : public TDataSet  {
    PRM_INT( nq, efNoRunChange, "Every n", "each n-th data collect. ", "min=1\nmax=1000000\ndef=1" );
    PRM_INT( lnq, efNoRunChange, "Catch at n=", "latch value of counter", "min=0\nmax=1000000" );
    PRM_INT( cnq, efInner, "Current n", "current value of counter(0..nq-1)", "" );
+   PRM_DOUBLE( scale, efNoRunChange, "Scale", "input factor", "def=1" );
+   PRM_DOUBLE( shift, efNoRunChange, "Shift", "input shift", "" );
    // statistics
    PRM_DOUBLE( dmin, efInner, "min", "min value", "" );
    PRM_DOUBLE( dmax, efInner, "max", "max value", "" );

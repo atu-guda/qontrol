@@ -1,14 +1,12 @@
 Subscheme libs (and dirs).
 Documenation: cmdline options, common workflow.
+Refresh (set/get) in DataDialog
 LaboDoc: getModel + use in StatusModel
 StatusTip(col=2) for StatusModel
-Shadow main scheme?
-QScintilla? Dialog or SubWindow?
 Create Action fun + subclass QAction? (menu to place, flags)
 Controlled Scheme size.
 Long descriptions in schems, plots .... (button)
-Whan to [re]create shadow objects?
-StatusModel link to StructView, not to LaboView?
+When to [re]create shadow objects?
 Check: when to reset model?
 Check: update link values only after step - prep for multi-threading (see TSubScheme)
 Error handling (from inner to iface)
@@ -22,10 +20,13 @@ Dump TOutArr/TGraph commandline (-p/-P)
 Check/use model run status (in batch, for tests)
 More functional labels in dialogs: go to buddy, autoset ....
 Outputs - or even IO - for external data.
+Custom legeng/labels/axis(scale factor) in Mgl
 Tests
 Autocorrelation?
 Run script before/after run (+ file)
 Placeholder object: param is the type of real object?
+QScintilla? Dialog or SubWindow?
+Shadow main scheme?
 
 Application config: to TDataSet?
 
@@ -37,7 +38,6 @@ Add to model object: common parameters. Is really need? Use params in model/sche
 Add to model object: functions? but what?
 
 Call parent post_set (if req). flag?
-Input/output elements/scheme properties (in0?)
 unify add/paste elem: param in dialog?
 unify add param/object : add_obj_param? + dialog
 RunWindow?
@@ -50,13 +50,12 @@ js/large text edit widget + button/dialog + external editor (partial done)?
 
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
   -- TMovingAver
-  -- TDiff - TDiffIn?
   -- TDefuzzy (fixed/variable number of inputs)
   -- TQuality (TCriterion is busy/TCrit)
   -- Rastrigin and more
   -- or File Source input/output: TFileSource
   -- array of similar elements
-may be new field in TClassInfo to misc flags: can f() w/o preRun..., 
+may be new field in TClassInfo to misc flags: can f() w/o preRun...,
     class group.. etc
 implement loading objects in so.
 Abort simulation option in TCriterion

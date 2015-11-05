@@ -271,7 +271,7 @@ int TOutArr::dump( const QString &fn, const QString &delim )
 
 void TOutArr::put_next_val()
 {
-  add( *so );
+  add( *so ); // scale inside
 }
 
 double TOutArr::at( int i ) const
@@ -312,6 +312,7 @@ double TOutArr::atT( double T ) const
 
 void TOutArr::put( int i, double v )
 {
+  v *= scale;  v += shift;
   if( i >=n || i<0 ) {
     return;
   }
@@ -326,6 +327,7 @@ void TOutArr::put( int x, int y, double v )
 
 void TOutArr::add( double v )
 {
+  v *= scale;  v += shift;
   if( n >= arrsize ) {
     qWarning() << " n (" << n << ") >= arrsize (" << arrsize << ") " << NWHE;
     return;
