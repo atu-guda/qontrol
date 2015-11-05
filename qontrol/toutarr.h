@@ -104,7 +104,7 @@ class TOutArr : public TDataSet  {
    void reset_stat();
 
    PRM_LIST( type, efNoRunChange, "Type", "Type of array", "enum=OutArrType" );
-   PRM_STRING( name, efNoRunChange, "Source", "Name of element to use", "max=64" );
+   PRM_STRING( name, efNoRunChange, "Source", "Name of element to use", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in" );
    PRM_STRING( label, efNoRunChange, "Label", "Label of data", "max=32" );
    PRM_SWITCH( allStat, efNoRunChange, "All stat", "calculate all statistics", "def=0" );
    PRM_INT( nx, efInner, "nx","size of x dimensions arrays", "def=1"  );
