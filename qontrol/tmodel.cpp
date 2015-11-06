@@ -69,7 +69,7 @@ TModel::~TModel()
 
 
 // must be in correspondence with fillComplModelForInputs
-const double* TModel::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
+const double* TModel::getSchemeDoublePtr( const QString &nm, int *lt,
         const LinkedObj **src_ob, int lev) const
 {
   const double *rv = nullptr;

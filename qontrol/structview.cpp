@@ -359,7 +359,7 @@ void StructView::drawAll( QPainter &p )
       if( ! in ) {
         continue;
       }
-      ltype_t lt = in->getLinkType();
+      int lt = in->getDataD( "linkType", LinkBad );
       const TDataSet* sobj = in->getSourceObj();
       li_dst_y = ei.ys + i_in*in_sep_sz;
       int line_width = in->getDataD( "line_w", 1 );
@@ -462,9 +462,9 @@ void StructView::drawAll( QPainter &p )
       p.drawLine( p_dst+p_crp, p_dst );
       p.drawLine( p_dst+p_crm, p_dst );
 
-      ltype_t lt = ips->getLinkType();
+      int lt = ips->getDataD( "linkType", LinkBad );
       if( lt == LinkNone ) {
-        // unlike signal input, must be unlikly
+        // unlike signal input, must be unlikely
         p.drawEllipse( p_bott, el_marg/3, el_marg/3 );
         continue;
       }
@@ -525,7 +525,7 @@ void StructView::drawAll( QPainter &p )
 
         src_name = arr->getDataD( "name", QString() );
         int out_tp = arr->getDataD( "type", -1 );
-        ltype_t lt  = LinkBad;
+        int lt  = LinkBad;
         const LinkedObj *lob = nullptr;
         const double *fp = sch->getDoublePtr( src_name, &lt, &lob );
 

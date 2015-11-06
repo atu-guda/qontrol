@@ -48,7 +48,7 @@ bool SubOutput::set_link()
     return false;
   }
 
-  ltype_t lt;
+  int lt;
   const LinkedObj *srct = nullptr;
   const double *cp = sch->getDoublePtr( source, &lt, &srct, 0 );
   if( lt == LinkElm || lt == LinkSpec ) {
@@ -92,9 +92,9 @@ TSubScheme::~TSubScheme()
 double TSubScheme::f( double t )
 {
   double v = 0;
-  for( auto in : TCHILD(InputSimple*) ) {
+  for( auto in : inputs ) {
     in->readInput();
-    v = *in; // TMP: check
+    // v = *in; // TMP: check
   }
 
   if( sch ) {
@@ -118,6 +118,11 @@ double TSubScheme::f( double t )
 int TSubScheme::do_preRun( int run_tp, int an,
                            int anx, int any, double atdt )
 {
+  inputs.clear();
+  for( auto in : TCHILD(InputSimple*) ) {
+    inputs.append( in );
+  }
+
   subouts.clear();
   for( auto so : TCHILD(SubOutput*) ) {
     subouts.append( so );

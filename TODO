@@ -1,3 +1,5 @@
+BUG: only First flag dont work in TSubScheme.
+Edit Object props? (on add?)
 Subscheme libs (and dirs).
 Documenation: cmdline options, common workflow.
 Refresh (set/get) in DataDialog

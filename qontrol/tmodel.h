@@ -44,7 +44,7 @@ class TModel : public LinkedObj  {
   DCL_STD_INF;
 
   //* redirects requuest to active scheme (may be more)
-  const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt,
+  const double* getSchemeDoublePtr( const QString &nm, int *lt,
         const LinkedObj **src_ob, int lev ) const override;
   // to automaticaly copy prm[10] to other parameters
   double* getMapDoublePtr( const QString &nm );

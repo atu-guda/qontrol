@@ -45,12 +45,12 @@ Scheme::~Scheme()
 }
 
 // must be similar to fillComplModelForInputs
-const double* Scheme::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
+const double* Scheme::getSchemeDoublePtr( const QString &nm, int *lt,
         const LinkedObj **src_ob, int lev) const
 {
-  static ltype_t clt;
+  static int clt;
   static const double fake_src = 0.123456; // ptr here for non- main_s schemes uplinks
-  ltype_t *plt = lt ? lt : &clt;
+  int *plt = lt ? lt : &clt;
 
   if( nm.startsWith( '^' ) ) { // direct to parent
     QString nnm = nm.mid( 1 );
@@ -228,10 +228,9 @@ int Scheme::fback( int code, int /* aord */, const QString & /* tdescr */ )
 
 TMiso* Scheme::xy2Miso( int avis_x, int avis_y ) const
 {
-  int  ox, oy;
   for( auto ob : TCHILD(TMiso*) ) {
-    ox = ob->getDataD( "vis_x", -1 );
-    oy = ob->getDataD( "vis_y", -1 );
+    int ox = ob->getDataD( "vis_x", -1 );
+    int oy = ob->getDataD( "vis_y", -1 );
     if( ox == avis_x && oy == avis_y ) {
       return ob;
     }
@@ -243,9 +242,8 @@ QSize Scheme::getMaxXY() const
 {
   int mx = 0, my = 0;
   for( auto ob : TCHILD(TMiso*) ) {
-    int ox = 0, oy =0;
-    ox = ob->getDataD( "vis_x", 0 );
-    oy = ob->getDataD( "vis_y", 0 );
+    int ox = ob->getDataD( "vis_x", 0 );
+    int oy = ob->getDataD( "vis_y", 0 );
     if( ox > mx ) {
       mx = ox;
     }

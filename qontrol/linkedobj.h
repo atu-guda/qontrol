@@ -30,17 +30,25 @@ class LinkedObj : public TDataSet {
     * lt - ptr: store link type,
     * targ - ptr_pre: strore ptr to source LinkedObj,
     * lev - level of recursion, not for user */
-   virtual const double* getDoublePtr( const QString &nm, ltype_t *lt = nullptr,
+   virtual const double* getDoublePtr( const QString &nm, int *lt = nullptr,
         const LinkedObj **src_ob = nullptr, int lev = 0 ) const;
    //* transmit this requues to parent, untill scheme detected, where work done
    // via getDoublePtr
-   virtual const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt = nullptr,
+   virtual const double* getSchemeDoublePtr( const QString &nm, int *lt = nullptr,
         const LinkedObj **src_ob = nullptr, int lev = 0 ) const;
    /** gets pointer to parameter, near to getDoublePtr
     * for param mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
  protected:
    DCL_DEFAULT_STATIC;
+};
+
+/** types of link */
+enum ltype_t {
+  LinkNone = 0, // not linked
+  LinkElm,      // linked to element
+  LinkSpec,     // linked to special name, like 'prm1', 't'
+  LinkBad       // link source or target not found
 };
 
 // ---------------------------------------------------------------------
@@ -55,8 +63,6 @@ class InputAbstract : public LinkedObj {
   DCL_STD_INF;
   //* return ptr to LinkedObj, which holds element or nullptr;
   const LinkedObj* getSourceObj() const { return src_obj; };
-  //* returns type of link
-  ltype_t getLinkType() const { return linkType; };
   void readInput() { out0 = *p; };
  protected:
   virtual void do_post_set() override;
@@ -73,12 +79,12 @@ class InputAbstract : public LinkedObj {
   PRM_COLOR( line_color,  0, "Line color", "Line color on scheme", "def=black" );
   PRM_SWITCH( onlyLabel, 0, "only Label", "draw only label of link on scheme", "" );
   PRM_DOUBLE( out0, efInner, "input", "Readed by readInput for subschemes", "" );
+  PRM_INT( linkType,  efInner | efRO, "Link type", "Describes tye of link", "def=3" );
 
   static const double fake_in;
   static const double one_in;
   const double *p = &fake_in;
   const LinkedObj *src_obj = nullptr;
-  ltype_t linkType = LinkBad;
 
   Q_CLASSINFO( "nameHintBase",  "inx_" );
   DCL_DEFAULT_STATIC;

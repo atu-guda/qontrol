@@ -37,11 +37,11 @@ DEFAULT_FUNCS_REG(LinkedObj);
 
 
 
-const double* LinkedObj::getDoublePtr( const QString &nm, ltype_t *lt,
+const double* LinkedObj::getDoublePtr( const QString &nm, int *lt,
               const LinkedObj **targ, int lev  ) const
 {
-  static ltype_t clt;
-  ltype_t *plt = lt ? lt : &clt;
+  static int clt;
+  int *plt = lt ? lt : &clt;
   if( nm.isEmpty() ) {
     *plt = LinkNone; return nullptr;
   }
@@ -106,11 +106,11 @@ const double* LinkedObj::getDoublePtr( const QString &nm, ltype_t *lt,
 }
 
 
-const double* LinkedObj::getSchemeDoublePtr( const QString &nm, ltype_t *lt,
+const double* LinkedObj::getSchemeDoublePtr( const QString &nm, int *lt,
         const LinkedObj **src_ob, int lev) const
 {
-  ltype_t clt = LinkNone;
-  ltype_t *plt = ( lt ) ? lt : &clt;  // failsafe link
+  int clt = LinkNone;
+  int *plt = ( lt ) ? lt : &clt;  // failsafe link
 
   if( nm.isEmpty() ) {
     *plt = LinkNone;
@@ -184,7 +184,7 @@ void InputAbstract::set_link()
     linkType = LinkSpec;  p = &one_in;  return;
   }
 
-  ltype_t lt;
+  int lt;
   const LinkedObj *srct = nullptr;
 
   const double *cp = getSchemeDoublePtr( source, &lt, &srct, 0 );

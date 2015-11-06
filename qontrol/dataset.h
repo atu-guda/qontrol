@@ -171,13 +171,6 @@ struct TClassInfo {
   clname& operator=( const clname &r ) { v = r.v; return *this; }
 
 
-/** types of link - moved from tmiso.h */
-enum ltype_t {
-  LinkNone = 0, // not linked
-  LinkElm,      // linked to element
-  LinkSpec,     // linked to special name, like ':prm1', ':t'
-  LinkBad       // link source or target not found
-};
 
 
 // -------------------------- HOLDERS ------------------------------------

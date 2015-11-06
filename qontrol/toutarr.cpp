@@ -138,7 +138,7 @@ void TOutArr::set_link()
 {
   so = nullptr;
   TModel *mod = getAncestorT<TModel>();
-  ltype_t lt; const LinkedObj *so_ob;
+  int lt; const LinkedObj *so_ob;
   if( mod  &&  type != OutArrType::outSpec ) {
     so = mod->getSchemeDoublePtr( name, &lt, &so_ob, 0 );
   }

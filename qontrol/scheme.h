@@ -18,7 +18,6 @@
 #ifndef SCHEME_H
 #define SCHEME_H
 
-#include "linkedobj.h"
 #include "tmiso.h"
 #include "toutarr.h"
 #include "simul.h"
@@ -36,7 +35,7 @@ class Scheme : public LinkedObj  {
   DCL_CREATE;
   DCL_STD_INF;
 
-  const double* getSchemeDoublePtr( const QString &nm, ltype_t *lt,
+  const double* getSchemeDoublePtr( const QString &nm, int *lt,
         const LinkedObj **src_ob, int lev ) const override;
   /** function to call from elem.f() to signal something */
   virtual int fback( int code, int aord, const QString &tdescr );
