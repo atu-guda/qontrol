@@ -80,6 +80,7 @@ class InputAbstract : public LinkedObj {
   PRM_SWITCH( onlyLabel, 0, "only Label", "draw only label of link on scheme", "" );
   PRM_DOUBLE( out0, efInner, "input", "Readed by readInput for subschemes", "" );
   PRM_INT( linkType,  efInner | efRO, "Link type", "Describes tye of link", "def=3" );
+  PRM_STRING( srcobj, efInner | efRO, "Source object", "Name of the source object", ""  );
 
   static const double fake_in;
   static const double one_in;

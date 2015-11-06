@@ -118,16 +118,6 @@ double TSubScheme::f( double t )
 int TSubScheme::do_preRun( int run_tp, int an,
                            int anx, int any, double atdt )
 {
-  inputs.clear();
-  for( auto in : TCHILD(InputSimple*) ) {
-    inputs.append( in );
-  }
-
-  subouts.clear();
-  for( auto so : TCHILD(SubOutput*) ) {
-    subouts.append( so );
-  }
-
   if( !sch_proto ) {
     qWarning() << "Subscheme prototype is not available" << sch_name <<NWHE;
     return 0;
@@ -149,10 +139,21 @@ int TSubScheme::do_preRun( int run_tp, int an,
     return 0;
   }
 
+  sch->handleStructChanged();
+
+  inputs.clear();
+  for( auto in : TCHILD(InputSimple*) ) {
+    inputs.append( in );
+  }
+
+  subouts.clear();
+  for( auto so : TCHILD(SubOutput*) ) {
+    subouts.append( so );
+  }
+
   for( auto so : subouts ) {
     so->set_link();
   }
-  sch->handleStructChanged();
 
   return sch->preRun( run_tp, an, anx, any, atdt );
 }
@@ -160,7 +161,7 @@ int TSubScheme::do_preRun( int run_tp, int an,
 int TSubScheme::do_postRun( int /*good*/ )
 {
   sch->postRun();
-  delObj( sch_ename, true ); // tmp nodel
+  // delObj( sch_ename, true ); // tmp: for debug: or forever?
   return 1;
 }
 

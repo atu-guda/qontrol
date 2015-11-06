@@ -336,7 +336,8 @@ bool showTree( QWidget *par, HolderData *obj )
   treeView->setColumnWidth( 1, 10*em );
   treeView->setColumnWidth( 2, 35*em );
   treeView->setColumnWidth( 3,  6*em );
-  treeView->expandAll();
+  treeView->collapseAll();
+  treeView->expand( obj->index( 0, 0, QModelIndex() ) );
   dia->exec();
   delete dia;
 

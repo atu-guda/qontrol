@@ -176,12 +176,12 @@ void InputAbstract::do_structChanged()
 
 void InputAbstract::set_link()
 {
-  p = &fake_in; src_obj = nullptr; linkType = LinkBad;
+  p = &fake_in; src_obj = nullptr; linkType = LinkBad; srcobj = QSL(":BAD:");
   if( source.cval().isEmpty() ) {
-    linkType = LinkNone; return;
+    linkType = LinkNone; srcobj = QSL(":NONE:"); return;
   }
   if( source.cval() == ":one" ) { // special local case
-    linkType = LinkSpec;  p = &one_in;  return;
+    linkType = LinkSpec;  p = &one_in;  srcobj = QSL(":ONE:");return;
   }
 
   int lt;
@@ -190,6 +190,11 @@ void InputAbstract::set_link()
   const double *cp = getSchemeDoublePtr( source, &lt, &srct, 0 );
   if( lt == LinkElm || lt == LinkSpec ) {
     p = cp;  src_obj = srct; linkType = lt;
+    if( srct ) {
+      srcobj = srct->getFullName();
+    } else {
+      srcobj = QSL("$");
+    }
   } else {
     qWarning() << "ptr not found for " << source << NWHE;
   }

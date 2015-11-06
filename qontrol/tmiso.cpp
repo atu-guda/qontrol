@@ -76,6 +76,7 @@ int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
 {
   tdt = adt; model_nn = an;
   iter_c = IterNo;
+  // handleStructChanged(); // to relink. may by in startLoop, in relinking allowed ???
   pis->prepare();
   prm_mod = 0;
   int rc =  do_preRun( run_tp, an, anx, any, adt );

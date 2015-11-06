@@ -1,4 +1,6 @@
-BUG: only First flag dont work in TSubScheme.
+BUG: only First flag dont work in TSubScheme: only to out0/init params
+Subscheme param link ^
+correct places for reset, set_link, *structChange..
 Edit Object props? (on add?)
 Subscheme libs (and dirs).
 Documenation: cmdline options, common workflow.

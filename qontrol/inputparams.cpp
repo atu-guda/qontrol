@@ -55,6 +55,7 @@ void InputParams::prepare()
       targets.push_back( inp->targ_addr() );
     }
   }
+  // qWarning() << "prep: ord=" << srcs.size() << " 1st= " << srcs_p.size()   << NWHE;
 }
 
 int InputParams::apply()
@@ -74,6 +75,7 @@ int InputParams::apply_pre()
   int nmod = 0;
   for( int i=0; i<n; ++i ) {
     *targets_p[i] = *srcs_p[i];
+    // qWarning() << "PRE: i=" << i << " src= " << *srcs_p[i] << NWHE;
     ++nmod;
   }
   return nmod;
