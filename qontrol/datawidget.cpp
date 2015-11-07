@@ -1172,6 +1172,7 @@ void DataDialog::revertData()
   ds.suspendHandleStructChange();
   ds.delAllDyn(); // TODO: supress errors during recreate.
   ds.fromString( saved_data );
+  ds.setUnModified();
   ds.resumeHandleStructChange();
   getAll();
 }
@@ -1223,86 +1224,84 @@ void DataDialog::showSimpleHelp()
 
 bool DataDialog::addParam()
 {
-  // TMP: try to use common
   QString tp = SelectTypeDialog::getType( &ds, this );
-
-  QStringList prm_clss = EFACT.goodTypeNames( ds.allowTypes(), true, false ); // no_obj, data
-  if( prm_clss.isEmpty() ) {
-    qWarning() << "No allowed parameter types in " << ds.getFullName() << WHE;
+  if( tp.isEmpty() ) {
     return false;
   }
 
+  QString nm1 = ds.hintName( tp );
+
   auto dia = new QDialog( this );
-  auto lay = new QGridLayout( dia );
+  auto lay = new QVBoxLayout( dia );
 
-  auto lbl_type = new QLabel( "Type", dia );
-  lay->addWidget( lbl_type, 0, 0 );
-  auto lw = new QListWidget( dia );
-
-  bool first_add = true;
-  for( QString ptype : prm_clss ) {
-    auto lwi = new QListWidgetItem( ptype );
-    lw->addItem( lwi );
-    if( first_add  ||  ptype == "double" ) {
-      lw->setCurrentItem( lwi );
-    }
-    first_add = false;
-  }
-  lay->addWidget( lw, 1, 0, 3, 1 );
+  auto lbl_tp = new QLabel( QSL( "Creating object with type <b>") % tp % QSL("</b>"), dia );
+  lay->addWidget( lbl_tp );
+  auto fr = new QFrame( this );
+  fr->setFrameStyle( QFrame::HLine );
+  lay->addWidget( fr );
 
   auto lbl_name = new QLabel( "Name", dia );
-  lay->addWidget( lbl_name, 0, 1 );
+  lay->addWidget( lbl_name );
   auto ed_name = new QLineEdit( this );
   ed_name->setValidator( new QRegExpValidator( QRegExp(RE_NAME), this ) );
-  lay->addWidget( ed_name, 1, 1 );
+  ed_name->setText( nm1 );
+  lay->addWidget( ed_name );
 
-  auto lbl_val = new QLabel( "Value", dia );
-  lay->addWidget( lbl_val, 2, 1 );
-  auto ed_val = new QLineEdit( this );
-  lay->addWidget( ed_val, 3, 1 );
+  auto lbl_val = new QLabel( "Value(s)", dia );
+  lay->addWidget( lbl_val );
+  auto ed_val = new QTextEdit( this );
+  lay->addWidget( ed_val );
 
   auto lbl_descr = new QLabel( "Description", dia );
-  lay->addWidget( lbl_descr, 4, 0 );
+  lay->addWidget( lbl_descr );
   auto ed_descr = new QLineEdit( this );
-  lay->addWidget( ed_descr, 5, 0, 1, 2 );
+  lay->addWidget( ed_descr );
 
   auto lbl_vis_name = new QLabel( "Visual name", dia );
-  lay->addWidget( lbl_vis_name, 6, 0 );
+  lay->addWidget( lbl_vis_name );
   auto ed_vis_name = new QLineEdit( this );
-  lay->addWidget( ed_vis_name, 7, 0, 1, 2 );
+  lay->addWidget( ed_vis_name );
+
+  auto lbl_sep = new QLabel( "End current", dia );
+  lay->addWidget( lbl_sep );
+  auto lws = new QComboBox( dia );
+  lws->addItem( QSL("None"), QSL("") );
+  lws->addItem( QSL("Column"), QSL("\nsep=col") );
+  lws->addItem( QSL("Block"), QSL("\nsep=block") );
+  lws->addItem( QSL("Column after"), QSL("\nsep=col") );
+  lws->addItem( QSL("Block afer"), QSL("\nsep=blockend") );
+  lay->addWidget( lws );
 
   auto lbl_extra = new QLabel( "Extra", dia );
-  lay->addWidget( lbl_extra, 8, 0 );
-  auto ed_extra = new QLineEdit( this );
-  lay->addWidget( ed_extra, 9, 0, 1, 2 );
+  lay->addWidget( lbl_extra );
+  auto ed_extra = new QTextEdit( this );
+  lay->addWidget( ed_extra );
 
   auto bbox
     = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dia );
-  lay->addWidget( bbox, 10, 0, 1, 2 );
+  lay->addWidget( bbox );
   connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
   connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
 
   int rc = dia->exec();
   QString nm = ed_name->text();
-  QString val = ed_val->text();
+  QString val = ed_val->toPlainText();
   QString descr = ed_descr->text();
   QString vis_name = ed_vis_name->text();
   if( vis_name.isEmpty() ) {
     vis_name = QSL("<div>") % nm % QSL("</div>" );
   }
-  QString extra = ed_extra->text();
-  QString ptype;
-  if( lw->currentItem() ) {
-    ptype = lw->currentItem()->text();
-  }
+  QString sep = lws->currentData().toString();
+  QString extra = ed_extra->toPlainText();
+  extra += sep;
 
   delete dia;
-  if( rc != QDialog::Accepted || nm.isEmpty() || ptype.isEmpty() ) {
+  if( rc != QDialog::Accepted || nm.isEmpty() ) {
     return false;
   }
-  HolderData *ho = ds.addObjP( ptype, nm );
+  HolderData *ho = ds.addObjP( tp, nm );
   if( !ho ) {
-    handleError( this, QSL("Fail to add parameter: ") + ptype + " " + nm );
+    handleError( this, QSL("Fail to add parameter: ") + tp + " " + nm );
     return false;
   }
 
