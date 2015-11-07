@@ -285,7 +285,9 @@ class DataDialog : public QDialog {
    virtual void accept();
    void showHelp();
    void checkData();
-   void addParam();
+   void refreshData();
+   void revertData();
+   bool addParam();
    void addObj();
    void delParam();
    void delObj();
@@ -295,6 +297,7 @@ class DataDialog : public QDialog {
    void delSome( bool is_obj );
    HolderData &ds;
    DaWiMap dwm;
+   QString saved_data;
 };
 
 #endif  // _DATAWIDGET_H

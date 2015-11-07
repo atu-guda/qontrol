@@ -8,6 +8,7 @@
 
 #include <QStringBuilder>
 #include <QInputDialog>
+
 #include "miscfun.h"
 #include "datawidget.h"
 #include "labowin.h"
@@ -713,7 +714,7 @@ IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
   bool ro = h.getFlags() & ( efRO | efRODial );
   int n = h.arrSize();
   les.reserve(n);
-  QString vn = h.getParm("v_name");
+  QString vn = h.getParm("vis_name");
   if( vn.isEmpty() ) {
     vn = h.objectName();
   }
@@ -793,7 +794,7 @@ DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent )
   int n = h.arrSize();
 
   les.reserve(n);
-  QString vn = h.getParm("v_name");
+  QString vn = h.getParm("vis_name");
   if( vn.isEmpty() ) {
     vn = h.objectName();
   }
@@ -879,9 +880,10 @@ StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent )
   int n = h.arrSize();
 
   les.reserve(n);
-  QString vn = h.getParm("v_name");
-  if( vn.isEmpty() )
+  QString vn = h.getParm("vis_name");
+  if( vn.isEmpty() ) {
     vn = h.objectName();
+  }
   vn += '[';
 
   int len_max { 4096 }; // not IMAX - simple string in array limit
@@ -1112,20 +1114,21 @@ bool FactoryDataWidget::unregisterWidgetType( const QString &wname )
 DataDialog::DataDialog( HolderData &a_ds, QWidget *parent )
   : QDialog( parent ), ds( a_ds)
 {
+  getAll();
+  saved_data = ds.toString();
+}
+
+int DataDialog::getAll() // from object to wigets
+{
   QString s = ds.getType()  %  ' ' %  ds.getFullName();
   if( ds.getModified() ) {
     s += " *";
   }
   setWindowTitle( s );
-  createWidgets();
-  getAll();
 
-}
+  createWidgets(); // recreate iface
 
-int DataDialog::getAll() // from object to wigets
-{
   int ng = 0;
-
   for( auto w : dwm  ) {
     w->set();
     ++ng;
@@ -1143,8 +1146,6 @@ int DataDialog::setAll() // from widgets to object
     ++ns;
   }
   ds.post_set();
-  // ds.setModified(); // TODO: check: must be set by low-level elements
-
   return ns;
 }
 
@@ -1157,6 +1158,22 @@ void DataDialog::accept()
 void DataDialog::checkData()
 {
   // TODO:
+}
+
+void DataDialog::refreshData()
+{
+  setAll();
+  ds.post_set();
+  getAll();
+}
+
+void DataDialog::revertData()
+{
+  ds.suspendHandleStructChange();
+  ds.delAllDyn(); // TODO: supress errors during recreate.
+  ds.fromString( saved_data );
+  ds.resumeHandleStructChange();
+  getAll();
 }
 
 void DataDialog::showHelp()
@@ -1204,11 +1221,12 @@ void DataDialog::showSimpleHelp()
 
 }
 
-void DataDialog::addParam()
+bool DataDialog::addParam()
 {
   QStringList prm_clss = EFACT.goodTypeNames( ds.allowTypes(), true, false ); // no_obj, data
   if( prm_clss.isEmpty() ) {
-    return;
+    qWarning() << "No allowed parameter types in " << ds.getFullName() << WHE;
+    return false;
   }
 
   auto dia = new QDialog( this );
@@ -1266,6 +1284,9 @@ void DataDialog::addParam()
   QString val = ed_val->text();
   QString descr = ed_descr->text();
   QString vis_name = ed_vis_name->text();
+  if( vis_name.isEmpty() ) {
+    vis_name = QSL("<div>") % nm % QSL("</div>" );
+  }
   QString extra = ed_extra->text();
   QString ptype;
   if( lw->currentItem() ) {
@@ -1274,23 +1295,24 @@ void DataDialog::addParam()
 
   delete dia;
   if( rc != QDialog::Accepted || nm.isEmpty() || ptype.isEmpty() ) {
-    return;
+    return false;
   }
   HolderData *ho = ds.addObjP( ptype, nm );
   if( !ho ) {
     handleError( this, QSL("Fail to add parameter: ") + ptype + " " + nm );
-    return;
+    return false;
   }
 
-  ho->fromString( val );
   ho->setParm( "descr", descr );
   ho->setParm( "vis_name", vis_name );
   ho->setParm( "extra", extra );
   ho->extraToParm();
+  ho->fromString( val );
 
   createWidgets(); // recreate iface
   getAll();
   update();
+  return true;
 }
 
 void DataDialog::addObj()
@@ -1484,9 +1506,15 @@ int DataDialog::createWidgets()
   auto btn_cancel = new QPushButton( QIcon::fromTheme("dialog-cancel"), "Cancel" );
   connect( btn_cancel, &QPushButton::clicked, this, &DataDialog::reject);
   lay_btn->addWidget( btn_cancel );
-  auto btn_check = new QPushButton( "Check?" );
-  connect( btn_check, &QPushButton::clicked, this, &DataDialog::checkData); // TODO:
-  lay_btn->addWidget( btn_check );
+  //
+  auto btn_refresh = new QPushButton( "Refresh" );
+  connect( btn_refresh, &QPushButton::clicked, this, &DataDialog::refreshData );
+  lay_btn->addWidget( btn_refresh );
+  //
+  auto btn_revert = new QPushButton( "Revert" );
+  connect( btn_revert, &QPushButton::clicked, this, &DataDialog::revertData );
+  lay_btn->addWidget( btn_revert );
+  //
   auto btn_help = new QPushButton( QIcon::fromTheme("help-contents"), "Help" );
   connect( btn_help, &QPushButton::clicked, this, &DataDialog::showHelp);
   lay_btn->addWidget( btn_help );

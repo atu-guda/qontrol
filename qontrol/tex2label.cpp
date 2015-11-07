@@ -131,6 +131,12 @@ MapSC init_tex_map()
 QString tex2label( const QString &t, bool noSub )
 {
   static MapSC tex_map = init_tex_map();
+
+  // way to ignore comversion
+  if( t.startsWith( QSL("<div") ) ) {
+    return t;
+  }
+
   QString r, nm, post;
   QStringList stk, stk_p;
   bool estate = false;

@@ -28,8 +28,8 @@ HolderData::HolderData( ARGS_CTOR_MIN )
 {
   setObjectName( obj_name );
 
-  if( a_v_name.isNull() )  {
-    setParm( "vis_name", obj_name );
+  if( a_v_name.isEmpty() )  {
+    setParm( "vis_name", QSL("<div>") % obj_name % QSL("</div>") );
   } else {
     setParm( "vis_name", a_v_name );
   }
@@ -528,6 +528,10 @@ QString HolderData::getTypeV() const // = 0;
 
 void HolderData::reportStructChanged()
 {
+  if( updSuspended ) {
+    return;
+  }
+
   HolderData *p = this, *np;
   while( (np = p->getParent()) != nullptr ) { // find root
     p = np;
@@ -653,6 +657,24 @@ int HolderData::delObj( const QString &ob_name, bool ignoreMod )
 
   reportStructChanged();
   return 1;
+}
+
+int HolderData::delAllDyn()
+{
+  QStringList nms;
+  for( auto ho: TCHILD(HolderData*) ) {
+    ho->delAllDyn();
+    if( ! ho->isDyn() || ( ho->getFlags() && efImmutable ) ) {
+      continue;
+    }
+    nms << ho->objectName();
+  }
+
+  int n = 0;
+  for( const auto nm : nms ) {
+    n += delObj( nm );
+  }
+  return n;
 }
 
 int HolderData::renameObj( const QString &ob_name, const QString &new_name )

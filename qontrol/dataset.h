@@ -335,6 +335,7 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE bool addObjDatas( const QString &cl_name, const QString &ob_name, const QString &datas );
   /** delete given object by name, returns 0 - error, !=0 = ok */
   Q_INVOKABLE int delObj( const QString &ob_name, bool ignoreMod = false  );
+  Q_INVOKABLE int delAllDyn();
   Q_INVOKABLE bool cloneObj( const QString &old_name, const QString &new_name );
   //* rename object (if created dynamicaly)
   Q_INVOKABLE int renameObj( const QString &ob_name, const QString &new_name );
