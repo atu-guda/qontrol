@@ -287,14 +287,11 @@ class DataDialog : public QDialog {
    void checkData();
    void refreshData();
    void revertData();
-   bool addParam();
-   void addObj();
-   void delParam();
-   void delObj();
+   bool addObj();
+   bool delObj();
   protected:
    virtual int createWidgets();
    void showSimpleHelp();
-   void delSome( bool is_obj );
    HolderData &ds;
    DaWiMap dwm;
    QString saved_data;

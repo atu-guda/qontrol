@@ -1222,94 +1222,25 @@ void DataDialog::showSimpleHelp()
 
 }
 
-bool DataDialog::addParam()
+
+bool DataDialog::addObj()
 {
-  QString tp = SelectTypeDialog::getType( &ds, this );
-  if( tp.isEmpty() ) {
+  AddObjParams prm;
+  if( ! SelectTypeDialog::getTypeAndParams( &ds, this, prm ) ) {
     return false;
   }
 
-  QString nm1 = ds.hintName( tp );
-
-  auto dia = new QDialog( this );
-  auto lay = new QVBoxLayout( dia );
-
-  auto lbl_tp = new QLabel( QSL( "Creating object with type <b>") % tp % QSL("</b>"), dia );
-  lay->addWidget( lbl_tp );
-  auto fr = new QFrame( this );
-  fr->setFrameStyle( QFrame::HLine );
-  lay->addWidget( fr );
-
-  auto lbl_name = new QLabel( "Name", dia );
-  lay->addWidget( lbl_name );
-  auto ed_name = new QLineEdit( this );
-  ed_name->setValidator( new QRegExpValidator( QRegExp(RE_NAME), this ) );
-  ed_name->setText( nm1 );
-  lay->addWidget( ed_name );
-
-  auto lbl_val = new QLabel( "Value(s)", dia );
-  lay->addWidget( lbl_val );
-  auto ed_val = new QTextEdit( this );
-  lay->addWidget( ed_val );
-
-  auto lbl_descr = new QLabel( "Description", dia );
-  lay->addWidget( lbl_descr );
-  auto ed_descr = new QLineEdit( this );
-  lay->addWidget( ed_descr );
-
-  auto lbl_vis_name = new QLabel( "Visual name", dia );
-  lay->addWidget( lbl_vis_name );
-  auto ed_vis_name = new QLineEdit( this );
-  lay->addWidget( ed_vis_name );
-
-  auto lbl_sep = new QLabel( "End current", dia );
-  lay->addWidget( lbl_sep );
-  auto lws = new QComboBox( dia );
-  lws->addItem( QSL("None"), QSL("") );
-  lws->addItem( QSL("Column"), QSL("\nsep=col") );
-  lws->addItem( QSL("Block"), QSL("\nsep=block") );
-  lws->addItem( QSL("Column after"), QSL("\nsep=col") );
-  lws->addItem( QSL("Block afer"), QSL("\nsep=blockend") );
-  lay->addWidget( lws );
-
-  auto lbl_extra = new QLabel( "Extra", dia );
-  lay->addWidget( lbl_extra );
-  auto ed_extra = new QTextEdit( this );
-  lay->addWidget( ed_extra );
-
-  auto bbox
-    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dia );
-  lay->addWidget( bbox );
-  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
-  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
-
-  int rc = dia->exec();
-  QString nm = ed_name->text();
-  QString val = ed_val->toPlainText();
-  QString descr = ed_descr->text();
-  QString vis_name = ed_vis_name->text();
-  if( vis_name.isEmpty() ) {
-    vis_name = QSL("<div>") % nm % QSL("</div>" );
-  }
-  QString sep = lws->currentData().toString();
-  QString extra = ed_extra->toPlainText();
-  extra += sep;
-
-  delete dia;
-  if( rc != QDialog::Accepted || nm.isEmpty() ) {
-    return false;
-  }
-  HolderData *ho = ds.addObjP( tp, nm );
+  HolderData *ho = ds.addObjP( prm.tp, prm.name );
   if( !ho ) {
-    handleError( this, QSL("Fail to add parameter: ") + tp + " " + nm );
+    handleError( this, QSL("Fail to add parameter: ") + prm.tp + " " + prm.name );
     return false;
   }
 
-  ho->setParm( "descr", descr );
-  ho->setParm( "vis_name", vis_name );
-  ho->setParm( "extra", extra );
+  ho->setParm( "descr", prm.descr );
+  ho->setParm( "vis_name", prm.vis_name );
+  ho->setParm( "extra", prm.extra );
   ho->extraToParm();
-  ho->fromString( val );
+  ho->setDatas( prm.values );
 
   createWidgets(); // recreate iface
   getAll();
@@ -1317,63 +1248,33 @@ bool DataDialog::addParam()
   return true;
 }
 
-void DataDialog::addObj()
-{
-  QString objName;
-  QString tp = SelectTypeDialog::getTypeAndName( &ds, this, objName );
-  if( tp.isEmpty() ) {
-    return;
-  }
-
-  HolderData *ob = ds.addObjP( tp, objName );
-  if( !ob  ) {
-    handleError( this, QSL( "Fail to add Elem: ") + tp + " " + objName );
-    return;
-  }
-
-  createWidgets(); // recreate iface
-  getAll();
-  update();
-}
-
-void DataDialog::delSome( bool is_obj )
+bool DataDialog::delObj()
 {
   QStringList sl;
   for( auto ho :  ds.TCHILD(HolderData*) ) {
     if( ! ho->isDyn() ) {
       continue;
     }
-    if( (is_obj ^ ho->isObject()) ) {
-      continue;
-    }
     sl << ho->objectName();
   }
   if( sl.isEmpty() ) {
-    return;
+    return false;
   }
 
   bool ok;
   QString ob_name = QInputDialog::getItem( this, "Delete object",
       "Select object to delete", sl, 0, false, &ok );
   if( !ok ) {
-    return;
+    return false;
   }
 
-  ds.delObj( ob_name );
+  ok = ds.delObj( ob_name );
   createWidgets();
   getAll();
   update();
+  return ok;
 }
 
-void DataDialog::delParam()
-{
-  delSome( false );
-}
-
-void DataDialog::delObj()
-{
-  delSome( true );
-}
 
 int DataDialog::createWidgets()
 {
@@ -1458,43 +1359,23 @@ int DataDialog::createWidgets()
 
   auto lay_btn2 = new QHBoxLayout;
 
-  auto btn_addParam = new QPushButton( "Add parameter" );
-  connect( btn_addParam, &QPushButton::clicked, this, &DataDialog::addParam );
-  lay_btn2->addWidget( btn_addParam );
-
-
-  bool can_add_params = false;
-  QStringList prm_clss = EFACT.goodTypeNames( ds.allowTypes(), true, false ); // no_obj, data
-  if( ! prm_clss.isEmpty() ) {
-    can_add_params = true;
-  }
-  if( !can_add_params ) {
-     btn_addParam->setEnabled( false );
-  }
-
   bool can_add_objs = false;
-  QStringList obj_clss = EFACT.goodTypeNames( ds.allowTypes(), false, true ); // obj, no_data
+  QStringList obj_clss = EFACT.goodTypeNames( ds.allowTypes() );
   if( ! obj_clss.isEmpty() ) {
     can_add_objs = true;
   }
 
   auto btn_addObj = new QPushButton( "Add object" );
-  connect( btn_addObj, &QPushButton::clicked, this, &DataDialog::addObj);
+  connect( btn_addObj, &QPushButton::clicked, this, &DataDialog::addObj );
   lay_btn2->addWidget( btn_addObj );
-  if( ! can_add_objs ) {
+  if( !can_add_objs ) {
     btn_addObj->setEnabled( false );
   }
 
-  auto btn_delParam = new QPushButton( "Delete param" );
-  connect( btn_delParam, &QPushButton::clicked, this, &DataDialog::delParam );
-  lay_btn2->addWidget( btn_delParam );
-  if( !can_add_params ) {
-    btn_delParam->setEnabled( false );
-  }
   auto btn_delObj = new QPushButton( "Delete object" );
-  connect( btn_delObj, &QPushButton::clicked, this, &DataDialog::delObj);
+  connect( btn_delObj, &QPushButton::clicked, this, &DataDialog::delObj );
   lay_btn2->addWidget( btn_delObj );
-  if( ! can_add_objs ) {
+  if( !can_add_objs ) {
     btn_delObj->setEnabled( false );
   }
   lay1->addLayout( lay_btn2 );

@@ -395,6 +395,10 @@ QString HolderData::getParm( const QString &name ) const
 
 bool HolderData::setDatas( const QString &datas )
 {
+  if( ! isObject() ) {
+    return fromString( datas );
+  }
+
   bool was_set = false;
   QStringList sl = datas.split( "\n", QString::SkipEmptyParts );
   QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=(.+)$)" );

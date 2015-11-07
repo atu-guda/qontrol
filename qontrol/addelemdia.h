@@ -12,6 +12,15 @@
 #include <QtWidgets>
 #include "dataset.h"
 
+struct AddObjParams {
+  QString tp;
+  QString name;
+  QString descr;
+  QString values;
+  QString vis_name;
+  QString extra;
+};
+
 // ---------------------------- SelectTypeDialog --------------------------------------
 
 class SelectTypeDialog : public QDialog {
@@ -23,6 +32,8 @@ class SelectTypeDialog : public QDialog {
    static QString getType( HolderData *pobj, QWidget *aparent,
        const QString& allowed_types = QString() );
    static QString getTypeAndName( HolderData *pobj, QWidget *aparent, QString &nm,
+       const QString& allowed_types = QString() );
+   static bool getTypeAndParams( HolderData *pobj, QWidget *aparent, AddObjParams &prm,
        const QString& allowed_types = QString() );
    int countTypes() const { return cl_names.size(); }
    QString getTypeN( int n ) const

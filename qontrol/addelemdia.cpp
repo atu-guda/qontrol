@@ -24,8 +24,7 @@ SelectTypeDialog::SelectTypeDialog( HolderData *a_pobj,  QWidget *aparent,
     allowed = allowed_types;
   }
   QString btp = pobj->getParm( "bad_types" );
-  // cl_names = EFACT.goodTypeNames( allowed, false, true, btp ); // obj, no_data
-  cl_names = EFACT.goodTypeNames( allowed, false, false, btp ); // obj, data
+  cl_names = EFACT.goodTypeNames( allowed, btp ); // obj, data
 
   sel_type = QString();
   setupUi();
@@ -123,5 +122,90 @@ QString SelectTypeDialog::getTypeAndName( HolderData *pobj, QWidget *aparent, QS
 
   nm = objName;
   return tp;
+}
+
+
+bool SelectTypeDialog::getTypeAndParams( HolderData *pobj, QWidget *aparent, AddObjParams &prm,
+    const QString& allowed_types )
+{
+  if( !pobj ) { return false; }
+  QString tp = getType( pobj, aparent, allowed_types );
+  if( tp.isEmpty() ) {
+    return false;
+  }
+
+  prm.tp = tp;
+  prm.name = pobj->hintName( tp, prm.name );
+
+  auto dia = new QDialog( aparent );
+  auto lay = new QVBoxLayout( dia );
+
+  auto lbl_tp = new QLabel( QSL( "Creating object with type <b>") % tp % QSL("</b>"), dia );
+  lay->addWidget( lbl_tp );
+  auto fr = new QFrame( aparent );
+  fr->setFrameStyle( QFrame::HLine );
+  lay->addWidget( fr );
+
+  auto lbl_name = new QLabel( "Name", dia );
+  lay->addWidget( lbl_name );
+  auto ed_name = new QLineEdit( aparent );
+  ed_name->setValidator( new QRegExpValidator( QRegExp(RE_NAME), aparent ) );
+  ed_name->setText( prm.name );
+  lay->addWidget( ed_name );
+
+  auto lbl_val = new QLabel( "Value(s)", dia );
+  lay->addWidget( lbl_val );
+  auto ed_val = new QTextEdit( aparent );
+  ed_val->setText( prm.values );
+  lay->addWidget( ed_val );
+
+  auto lbl_descr = new QLabel( "Description", dia );
+  lay->addWidget( lbl_descr );
+  auto ed_descr = new QLineEdit( aparent );
+  lay->addWidget( ed_descr );
+
+  auto lbl_vis_name = new QLabel( "Visual name", dia );
+  lay->addWidget( lbl_vis_name );
+  auto ed_vis_name = new QLineEdit( aparent );
+  lay->addWidget( ed_vis_name );
+
+  auto lbl_sep = new QLabel( "End current", dia );
+  lay->addWidget( lbl_sep );
+  auto lws = new QComboBox( dia );
+  lws->addItem( QSL("None"), QSL("") );
+  lws->addItem( QSL("Column"), QSL("\nsep=col") );
+  lws->addItem( QSL("Block"), QSL("\nsep=block") );
+  lws->addItem( QSL("Column after"), QSL("\nsep=col") );
+  lws->addItem( QSL("Block afer"), QSL("\nsep=blockend") );
+  lay->addWidget( lws );
+
+  auto lbl_extra = new QLabel( "Extra", dia );
+  lay->addWidget( lbl_extra );
+  auto ed_extra = new QTextEdit( aparent );
+  ed_extra->setText( prm.extra );
+  lay->addWidget( ed_extra );
+
+  auto bbox
+    = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dia );
+  lay->addWidget( bbox );
+  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
+
+  int rc = dia->exec();
+  prm.name = ed_name->text();
+  prm.values = ed_val->toPlainText();
+  prm.descr = ed_descr->text();
+  prm.vis_name = ed_vis_name->text();
+  if( prm.vis_name.isEmpty() ) {
+    prm.vis_name = QSL("<div>") % prm.name % QSL("</div>" );
+  }
+  QString sep = lws->currentData().toString();
+  prm.extra = ed_extra->toPlainText() % sep;
+
+  delete dia;
+  if( rc != QDialog::Accepted || prm.name.isEmpty() ) {
+    return false;
+  }
+  return true;
 }
 

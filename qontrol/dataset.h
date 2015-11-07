@@ -672,8 +672,7 @@ class ObjFactory {
    // bool unregisterObjType( const QString &a_type );
    QStringList allTypeNames() const { return str_class.keys(); } // TODO: criterion
    QStringList goodTypeNames( const QString & allows,
-                          bool no_obj = false, bool no_param = false,
-                          const QString &bad_types = QString() ) const;
+                          const QString &hidden_types = QString() ) const;
    const QStringList& allParamTypes() const { return param_names; }
    const TClassInfo* getInfo( const QString &a_type ) const;
    bool isChildOf( const QString &cl, const QString &par_cl ) const;
