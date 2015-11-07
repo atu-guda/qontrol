@@ -833,25 +833,24 @@ bool StructView::addObj()
   if( !checkState( noselCheck ) ) {
     return false;
   }
-  if( ! CmdView::addObj() ) {
-    return false;
-  }
+  // like if( ! CmdView::addObj() ) {
 
-  QString nm = getLastObjName();
-  TMiso *ob = sch->getObjT<TMiso*>( nm );
-  if( !ob ) {
-    return false;
-  }
+  QString objName = sugg_name;
+  sugg_name = QString(); // reset at once
 
+  AddObjParams prm;
+  prm.name = objName;
   int oord = sch->hintOrd();
-  bool ok;
-  int order = QInputDialog::getInt( this, "New element order",
-      "Input element order",  oord, 0, IMAX, 1, &ok ); // no check ok - too late
+  prm.values = QSL("vis_x=") % QSN( sel_x ) % QSL("\n") %
+               QSL("vis_y=") % QSN( sel_y ) % QSL("\n") %
+               QSL("ord=") % QSN( oord );
 
-  ob->setData( "vis_x", sel_x );
-  ob->setData( "vis_y", sel_y );
-  ob->setData( "ord", order );
+  HolderData *ho = SelectTypeDialog::askAndCreateObj( storage, this, prm );
+  if( !ho ) {
+    return false;
+  }
 
+  lastObjName = prm.name;
   changeSel( 0, 0, 1 ); // update sel
   editObj();
   return true;

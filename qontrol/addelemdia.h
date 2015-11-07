@@ -31,9 +31,9 @@ class SelectTypeDialog : public QDialog {
    QString getSelType() const { return sel_type; }
    static QString getType( HolderData *pobj, QWidget *aparent,
        const QString& allowed_types = QString() );
-   static QString getTypeAndName( HolderData *pobj, QWidget *aparent, QString &nm,
-       const QString& allowed_types = QString() );
    static bool getTypeAndParams( HolderData *pobj, QWidget *aparent, AddObjParams &prm,
+       const QString& allowed_types = QString() );
+   static HolderData* askAndCreateObj( HolderData *pobj, QWidget *aparent, AddObjParams &prm,
        const QString& allowed_types = QString() );
    int countTypes() const { return cl_names.size(); }
    QString getTypeN( int n ) const

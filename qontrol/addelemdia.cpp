@@ -105,25 +105,6 @@ QString SelectTypeDialog::getType( HolderData *pobj, QWidget *aparent,
   return tp;
 }
 
-QString SelectTypeDialog::getTypeAndName( HolderData *pobj, QWidget *aparent, QString &nm,
-    const QString& allowed_types )
-{
-  QString tp = getType( pobj, aparent, allowed_types );
-  if( tp.isEmpty() ) {
-    return tp;
-  }
-
-  QString nm1 = pobj->hintName( tp, nm );
-  bool ok;
-  QString objName = QInputDialog::getText( aparent, "Creating new Object",
-      "Enter name of new element:", QLineEdit::Normal,
-      nm1, &ok );
-  if( !ok ) { return QString(); }
-
-  nm = objName;
-  return tp;
-}
-
 
 bool SelectTypeDialog::getTypeAndParams( HolderData *pobj, QWidget *aparent, AddObjParams &prm,
     const QString& allowed_types )
@@ -209,3 +190,30 @@ bool SelectTypeDialog::getTypeAndParams( HolderData *pobj, QWidget *aparent, Add
   return true;
 }
 
+HolderData* SelectTypeDialog::askAndCreateObj( HolderData *pobj, QWidget *aparent, AddObjParams &prm,
+    const QString& allowed_types )
+{
+  if( !pobj ) { return nullptr; }
+  if( ! SelectTypeDialog::getTypeAndParams( pobj, aparent, prm, allowed_types ) ) {
+    return nullptr;
+  }
+
+  HolderData *ho = pobj->addObjP( prm.tp, prm.name );
+  if( !ho ) {
+    qWarning() <<  QSL("Fail to add object: type ") << prm.tp << QSL(" name ") << prm.name
+       << QSL(" in " ) << pobj->getFullName() << WHE;
+    return nullptr;
+  }
+
+  HolderString *o_dsc = ho->getObjT<HolderString*>( "descr" );
+  if( o_dsc ) {
+    o_dsc->set( prm.descr );
+  } else {
+    ho->setParm( "descr", prm.descr );
+  }
+  ho->setParm( "vis_name", prm.vis_name );
+  ho->setParm( "extra", prm.extra );
+  ho->extraToParm();
+  ho->setDatas( prm.values );
+  return ho;
+}

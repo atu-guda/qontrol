@@ -1226,21 +1226,11 @@ void DataDialog::showSimpleHelp()
 bool DataDialog::addObj()
 {
   AddObjParams prm;
-  if( ! SelectTypeDialog::getTypeAndParams( &ds, this, prm ) ) {
-    return false;
-  }
 
-  HolderData *ho = ds.addObjP( prm.tp, prm.name );
+  HolderData *ho = SelectTypeDialog::askAndCreateObj( &ds, this, prm );
   if( !ho ) {
-    handleError( this, QSL("Fail to add parameter: ") + prm.tp + " " + prm.name );
     return false;
   }
-
-  ho->setParm( "descr", prm.descr );
-  ho->setParm( "vis_name", prm.vis_name );
-  ho->setParm( "extra", prm.extra );
-  ho->extraToParm();
-  ho->setDatas( prm.values );
 
   createWidgets(); // recreate iface
   getAll();

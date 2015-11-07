@@ -48,17 +48,15 @@ bool CmdView::addObj()
   QString objName = sugg_name;
   sugg_name = QString(); // reset at once
 
-  QString tp = SelectTypeDialog::getTypeAndName( storage, this, objName );
-  if( tp.isEmpty() ) {
+  AddObjParams prm;
+  prm.name = objName;
+
+  HolderData *ho = SelectTypeDialog::askAndCreateObj( storage, this, prm );
+  if( !ho ) {
     return false;
   }
 
-  HolderData *ob = storage->addObjP( tp, objName );
-  if( !ob  ) {
-    handleError( this, QString("Fail to add Object: type \"%1\" \"%2\"").arg(tp).arg(objName) );
-    return false;
-  }
-  lastObjName = objName;
+  lastObjName = prm.name;
   return true;
 }
 
