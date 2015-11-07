@@ -3,7 +3,6 @@ Edit Object props? (on add?)
 Subscheme libs (and dirs).
 Documenation: cmdline options, common workflow.
 Show HolderData props
-Refresh (set/get) in DataDialog + reload (tmp object?)
 LaboDoc: getModel + use in StatusModel
 StatusTip(col=2) for StatusModel
 Create Action fun + subclass QAction? (menu to place, flags)

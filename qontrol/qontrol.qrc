@@ -15,11 +15,16 @@
     <file>icons/editmodel.png</file>
     <file>icons/editout.png</file>
     <file>icons/elm.png</file>
+    <file>icons/elm_color.png</file>
     <file>icons/elm_double.png</file>
+    <file>icons/elm_double_arr.png</file>
     <file>icons/elm_inputparam.png</file>
     <file>icons/elm_inputsimple.png</file>
     <file>icons/elm_int.png</file>
+    <file>icons/elm_int_arr.png</file>
+    <file>icons/elm_list.png</file>
     <file>icons/elm_string.png</file>
+    <file>icons/elm_string_arr.png</file>
     <file>icons/elm_none.png</file>
     <file>icons/elm_scheme.png</file>
     <file>icons/elm_simul_0.png</file>
@@ -27,6 +32,7 @@
     <file>icons/elm_simul_2.png</file>
     <file>icons/elm_simul_3.png</file>
     <file>icons/elm_suboutput.png</file>
+    <file>icons/elm_switch.png</file>
     <file>icons/elm_tadjgen.png</file>
     <file>icons/elm_tcorranalysis.png</file>
     <file>icons/elm_tcounter.png</file>

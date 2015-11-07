@@ -24,7 +24,8 @@ SelectTypeDialog::SelectTypeDialog( HolderData *a_pobj,  QWidget *aparent,
     allowed = allowed_types;
   }
   QString btp = pobj->getParm( "bad_types" );
-  cl_names = EFACT.goodTypeNames( allowed, false, true, btp ); // obj, no_data
+  // cl_names = EFACT.goodTypeNames( allowed, false, true, btp ); // obj, no_data
+  cl_names = EFACT.goodTypeNames( allowed, false, false, btp ); // obj, data
 
   sel_type = QString();
   setupUi();
@@ -38,24 +39,26 @@ void SelectTypeDialog::setupUi()
 
   lw = new QListWidget( this );
 
-  QSize def_sz( 80, 50 ); // TODO: calculate;
+  QSize def_sz( 80, 60 ); // TODO: calculate;
 
   bool first_add = true;
   for( QString cname : cl_names ) {
-    QString iconName = QString( ":icons/elm_" )
-      + cname.toLower()
-      + ".png";
+    QString fcname = cname.toLower();
+    if( fcname.endsWith( QSL("[]" ) ) ) {
+      fcname.chop( 2 );
+      fcname += QSL("_arr");
+    }
+    QString iconName = QSL( ":icons/elm_" ) % fcname % QSL(".png" );
     QListWidgetItem *lwi;
     QFileInfo fi( iconName );
-    if( fi.isFile() ) {
-      lwi = new QListWidgetItem( QIcon(iconName), cname );
-    } else {
-      lwi = new QListWidgetItem( QIcon(":icons/elm_unknown.png"), cname );
+    if( ! fi.isFile() ) {
+      iconName = QSL(":icons/elm_unknown.png");
     }
+    lwi = new QListWidgetItem( QIcon(iconName), cname );
     lwi->setSizeHint( def_sz );
     lwi->setToolTip( cname );
     lw->addItem( lwi );
-    if( first_add  ||  cname == "TLinear" ) {
+    if( first_add  ||  cname == QSL("TLinear")  || cname == QSL("double") ) {
       lw->setCurrentItem( lwi );
     }
     first_add = false;

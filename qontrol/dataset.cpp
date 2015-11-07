@@ -1642,7 +1642,7 @@ DEFAULT_FUNCS_REG(HolderDouble);
 
 
 // ---------------- HolderString ---------
-STD_CLASSINFO_ALIAS(HolderString,clpData,QString);
+STD_CLASSINFO_ALIAS(HolderString,clpData,string);
 
 CTOR(HolderString,HolderValue)
 {
@@ -1727,7 +1727,7 @@ DEFAULT_FUNCS_REG(HolderString);
 
 
 // ---------------- HolderColor ---------
-STD_CLASSINFO_ALIAS(HolderColor,clpData,QColor);
+STD_CLASSINFO_ALIAS(HolderColor,clpData,color);
 
 CTOR(HolderColor,HolderValue)
 {

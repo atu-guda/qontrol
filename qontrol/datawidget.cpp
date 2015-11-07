@@ -1223,6 +1223,9 @@ void DataDialog::showSimpleHelp()
 
 bool DataDialog::addParam()
 {
+  // TMP: try to use common
+  QString tp = SelectTypeDialog::getType( &ds, this );
+
   QStringList prm_clss = EFACT.goodTypeNames( ds.allowTypes(), true, false ); // no_obj, data
   if( prm_clss.isEmpty() ) {
     qWarning() << "No allowed parameter types in " << ds.getFullName() << WHE;

@@ -92,7 +92,7 @@ QVariant TOutArr::dataObj( int col, int role ) const
 QIcon TOutArr::getIcon() const
 {
   int xtype = type;
-  if( xtype >= OutArrType::outSpec ) { // bad type
+  if( xtype > OutArrType::outSpec ) { // bad type
     xtype = OutArrType::outSpec + 1;
   }
   QString iconName = QString( ":icons/elm_toutarr_" ) + QSN(xtype) + ".png";
