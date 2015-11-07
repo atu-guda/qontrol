@@ -101,7 +101,7 @@ class Simulation : public LinkedObj  {
   // -------- TODO: input/output channels -------
   /** description */
   PRM_STRING( descr, 0, "Description", "Simulation description",
-      "props=STRING,MLINE\nncol=-1\nsep=blockend");
+      "props=STRING,MLINE\nncol=-1\nsep=tabend\ntabname=Parameters");
   //* helper values to simplify usage
   PRM_INT( n1_eff, efInner, "n1_eff", "Effective number of iteration in inner loop" , "" );
   PRM_INT( n2_eff, efInner, "n2_eff", "Effective number of iteration in outer loop" , "" );

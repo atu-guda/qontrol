@@ -155,9 +155,11 @@ bool SelectTypeDialog::getTypeAndParams( HolderData *pobj, QWidget *aparent, Add
   auto lws = new QComboBox( dia );
   lws->addItem( QSL("None"), QSL("") );
   lws->addItem( QSL("Column"), QSL("\nsep=col") );
-  lws->addItem( QSL("Block"), QSL("\nsep=block") );
   lws->addItem( QSL("Column after"), QSL("\nsep=col") );
+  lws->addItem( QSL("Block"), QSL("\nsep=block") );
   lws->addItem( QSL("Block afer"), QSL("\nsep=blockend") );
+  lws->addItem( QSL("Tab"), QSL("\nsep=tab") );
+  lws->addItem( QSL("Tab afer"), QSL("\nsep=tabend") );
   lay->addWidget( lws );
 
   auto lbl_extra = new QLabel( "Extra", dia );

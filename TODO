@@ -1,5 +1,6 @@
 correct places for reset, set_link, *structChange..
 Edit Object props? (on add?)
+sep prop: bitfield?
 Subscheme libs (and dirs).
 Documenation: cmdline options, common workflow.
 Show HolderData props

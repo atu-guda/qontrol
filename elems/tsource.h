@@ -72,16 +72,16 @@ class TSource : public TMiso  {
    /** type of input and misc flags */
    PRM_LIST( type, efNRC, "Type", "Source type", "enum=SourceType" ); //TODO
    /** Amplitude */
-   PRM_DOUBLE( uu, 0, "U", "Amplitude of signal (or pulse max)", "def=1" );
+   PRM_DOUBLE( uu, 0, "U", "Amplitude of signal (or pulse max)", "def=1\nsep=col" );
    /** Frequency */
    PRM_DOUBLE( omega, 0, "\\omega", "Frequency of source (or pulse width)", "def=0.7" );
    /** constant shift */
-   PRM_DOUBLE( cc, 0, "C", "Constant base", "" );
+   PRM_DOUBLE( cc, 0, "C", "Constant base", "sep=col" );
    /** phase shift */
    PRM_DOUBLE( phi, 0, "\\phi", "Phase shift", "def=0" );
 
    // ----------- U chaos ----------------------
-   PRM_SWITCH( use_u_ch, efNRC, "use U chaos", "Use amplitude perturbations", "sep=col" );
+   PRM_SWITCH( use_u_ch, efNRC, "use U chaos", "Use amplitude perturbations", "sep=tab\ntabname=Chaos" );
    PRM_DOUBLE(  u_ch_v0, efNRC, "vU min"     , "Minimum value of amplitule factor", "def=0.5" );
    PRM_DOUBLE(  u_ch_vm, efNRC, "vU max"     , "Maximum value of amplitule factor", "def=1.5" );
    PRM_DOUBLE(  u_ch_t0, efNRC, "tU min"     , "Minimum time of change", "def=2\nmin=1e-20\nmax=1e20" );

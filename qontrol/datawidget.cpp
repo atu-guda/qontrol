@@ -1268,8 +1268,8 @@ bool DataDialog::delObj()
 
 int DataDialog::createWidgets()
 {
-  int nr = 0, nc = 0, nr_max = 0, nr_block = 0;
-  int was_block = 0, was_col = 0;
+  int nr = 0, nc = 0, nr_max = 0, nr_block = 0, n_tab = 0;
+  bool was_block = 0, was_col = 0, was_tab = 0;
 
   // remove existent- if recreate need
   for( QObject *child : children() ) {
@@ -1282,9 +1282,14 @@ int DataDialog::createWidgets()
   }
   auto lay1 = new QVBoxLayout;
 
-  auto lay2 = new QGridLayout;
-  lay1->addLayout( lay2 );
-  lay2->setSpacing( 2 );
+  auto tw = new QTabWidget( this );
+  tw->setTabBarAutoHide( true );
+  lay1->addWidget( tw );
+
+  QWidget *wmain = nullptr;
+  QGridLayout *lay2 = nullptr;
+  QString tabname = QSL("Main");
+  was_tab = true;
 
   DataWidget *w;
 
@@ -1293,6 +1298,11 @@ int DataDialog::createWidgets()
       continue;
     }
 
+    QString sep =  ho->getParm("sep");
+    QString ctn =  ho->getParm("tabname");
+    if( !ctn.isEmpty() ) {
+      tabname = ctn;
+    }
     int ncol = 1; // number of columns per widget
     QString ncol_str = ho->getParm("ncol");
     if( ! ncol_str.isEmpty() ) {
@@ -1300,17 +1310,31 @@ int DataDialog::createWidgets()
       ncol = qBound( -1, ncol, MAX_COLS_PER_WIDGET );
     }
 
-    if( ho->getParm("sep") == "col" || was_col ) {
-      nr = nr_block; ++nc;
+    if( sep == "tab" || was_tab ) {
+      if( lay2 ) {
+        lay2->setRowStretch( nr_max, 1 );
+      }
+      nc = nr = nr_max = nr_block = 0;
+      wmain = new QWidget();
+      tw->addTab( wmain, tabname );
+
+      lay2 = new QGridLayout( wmain );
+      lay2->setSpacing( 2 );
+      ++n_tab;
+      tabname = QSL("Tab &") % QSN( n_tab ); // next tab, in not overrided
     }
 
-    if( ho->getParm("sep") == "block" || was_block) {
+    if( sep == "block" || was_block ) {
       auto fr = new QFrame( this );
       fr->setFrameStyle( QFrame::HLine );
 
       lay2->addWidget( fr, nr_max, 0, 1, -1 );
       ++nr_max;
       nr_block = nr_max; nr = nr_block; nc = 0;
+    }
+
+    if( sep == "col" || was_col ) {
+      nr = nr_block; ++nc;
     }
 
     QString name = ho->objectName();
@@ -1333,14 +1357,17 @@ int DataDialog::createWidgets()
       nr_max = nr;
     }
 
-    was_col = was_block = 0;
-    if( ho->getParm("sep") == "colend" ||  nr >= MAX_WIDGETS_PER_COL ) {
-      was_col = 1;
+    was_col = was_block = was_tab = false;
+    if( sep == "colend" ||  nr >= MAX_WIDGETS_PER_COL ) {
+      was_col = true;
     }
-    if( ho->getParm("sep") == "blockend" ) {
-      was_block = 1;
+    if( sep == "blockend" ) {
+      was_block = true;
     }
-  } // -------------- end item looo
+    if( sep == "tabend" ) {
+      was_tab = true;
+    }
+  } // -------------- end item loop
 
   // final line and buttons
   auto frb = new QFrame( this );
@@ -1355,20 +1382,16 @@ int DataDialog::createWidgets()
     can_add_objs = true;
   }
 
-  auto btn_addObj = new QPushButton( "Add object" );
-  connect( btn_addObj, &QPushButton::clicked, this, &DataDialog::addObj );
-  lay_btn2->addWidget( btn_addObj );
-  if( !can_add_objs ) {
-    btn_addObj->setEnabled( false );
+  if( can_add_objs ) {
+    auto btn_addObj = new QPushButton( "Add object" );
+    connect( btn_addObj, &QPushButton::clicked, this, &DataDialog::addObj );
+    lay_btn2->addWidget( btn_addObj );
+    // btn_addObj->setEnabled( false );
+    auto btn_delObj = new QPushButton( "Delete object" );
+    connect( btn_delObj, &QPushButton::clicked, this, &DataDialog::delObj );
+    lay_btn2->addWidget( btn_delObj );
+    lay1->addLayout( lay_btn2 );
   }
-
-  auto btn_delObj = new QPushButton( "Delete object" );
-  connect( btn_delObj, &QPushButton::clicked, this, &DataDialog::delObj );
-  lay_btn2->addWidget( btn_delObj );
-  if( !can_add_objs ) {
-    btn_delObj->setEnabled( false );
-  }
-  lay1->addLayout( lay_btn2 );
 
   auto lay_btn = new QHBoxLayout;
   auto btn_ok = new QPushButton( QIcon::fromTheme("dialog-ok"),"Ok" );

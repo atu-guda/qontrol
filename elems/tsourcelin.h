@@ -42,7 +42,7 @@ class TSourceLin : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    // time 0 means end of sequence - to start
-   PRM_DOUBLE_ARR( t_int, efNoRunChange, "t_int", "Time intervals", "N=16\ndef=0\nmin=0\ndefs=1 1 1  1  1 0\nsep=block" );
+   PRM_DOUBLE_ARR( t_int, efNoRunChange, "t_int", "Time intervals", "N=16\ndef=0\nmin=0\ndefs=1 1 1  1  1 0\nsep=tab\ntabname=Arrays" );
    PRM_DOUBLE_ARR( vs, efNoRunChange, "vs", "start value",                 "N=16\ndef=0\ndefs=0 0 1 -1 -1 0\nsep=col" );
    PRM_DOUBLE_ARR( ve, efNoRunChange, "ve", "end value",                   "N=16\ndef=0\ndefs=0 1 1 -1  0 0\nsep=col" );
 
