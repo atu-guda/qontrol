@@ -43,6 +43,8 @@ CTOR(TModel,LinkedObj)
   rtime =0; t = 0; tdt =1; // fake
 
   schems = addObjT<ContScheme>( "schems" );
+  schems->setParm( "sep", "tab" );
+  schems->setParm( "tabname", "Containers" );
   schems->setImmutable();
   main_s = schems->addObjT<Scheme>( "main_s" );
   main_s->setImmutable();
@@ -50,10 +52,14 @@ CTOR(TModel,LinkedObj)
 
   outs = addObjT<ContOut>( "outs" );
   outs->setImmutable();
+
   plots = addObjT<ContGraph>( "plots" );
+  plots->setParm( "sep", "col" );
   plots->setImmutable();
 
   sims = addObjT<ContSimul>( "sims" );
+  sims->setParm( "sep", "tabend" );
+  sims->setParm( "tabname", "Params" );
   sims->setImmutable();
   Simulation *sim0 = sims->addObjT<Simulation>( "sim0" );
   sim0->setImmutable();

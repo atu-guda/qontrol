@@ -1368,6 +1368,9 @@ int DataDialog::createWidgets()
       was_tab = true;
     }
   } // -------------- end item loop
+  if( lay2 ) { // last tab: add stretch
+    lay2->setRowStretch( nr_max, 1 );
+  }
 
   // final line and buttons
   auto frb = new QFrame( this );
@@ -1383,11 +1386,10 @@ int DataDialog::createWidgets()
   }
 
   if( can_add_objs ) {
-    auto btn_addObj = new QPushButton( "Add object" );
+    auto btn_addObj = new QPushButton( QIcon::fromTheme("list-add"), QSL("Add object") );
     connect( btn_addObj, &QPushButton::clicked, this, &DataDialog::addObj );
     lay_btn2->addWidget( btn_addObj );
-    // btn_addObj->setEnabled( false );
-    auto btn_delObj = new QPushButton( "Delete object" );
+    auto btn_delObj = new QPushButton( QIcon::fromTheme("edit-delete"), QSL("Delete object") );
     connect( btn_delObj, &QPushButton::clicked, this, &DataDialog::delObj );
     lay_btn2->addWidget( btn_delObj );
     lay1->addLayout( lay_btn2 );
@@ -1403,11 +1405,11 @@ int DataDialog::createWidgets()
   connect( btn_cancel, &QPushButton::clicked, this, &DataDialog::reject);
   lay_btn->addWidget( btn_cancel );
   //
-  auto btn_refresh = new QPushButton( "Refresh" );
+  auto btn_refresh = new QPushButton( QIcon::fromTheme("view-refresh"), "Refresh" );
   connect( btn_refresh, &QPushButton::clicked, this, &DataDialog::refreshData );
   lay_btn->addWidget( btn_refresh );
   //
-  auto btn_revert = new QPushButton( "Revert" );
+  auto btn_revert = new QPushButton( QIcon::fromTheme("document-revert"), "Revert" );
   connect( btn_revert, &QPushButton::clicked, this, &DataDialog::revertData );
   lay_btn->addWidget( btn_revert );
   //

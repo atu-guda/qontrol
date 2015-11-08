@@ -1006,7 +1006,7 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     act = menu->addAction( QIcon( ":icons/delelm.png" ), "&Delete element" );
     connect( act, &QAction::triggered, this, &StructView::delObj );
     menu->addSeparator();
-    act = menu->addAction( "Rename element" );
+    act = menu->addAction( QIcon::fromTheme("edit-rename"), "Rename element" );
     connect( act, &QAction::triggered, this, &StructView::renameObj );
     menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
@@ -1019,6 +1019,11 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     act = menu->addAction( "Clone" );
     connect( act, &QAction::triggered, this, &StructView::cloneObj );
     menu->addSeparator();
+    act = menu->addAction( QIcon( ":icons/infoelm.png" ), "show &Info" );
+    connect( act, &QAction::triggered, this, &StructView::infoObj );
+    act = menu->addAction( QIcon::fromTheme("view-list-tree"), "show object tree" );
+    connect( act, &QAction::triggered, this, &StructView::showTreeObj );
+    menu->addSeparator();
   } else {
     act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );
     connect( act, &QAction::triggered, this, &StructView::addElm );
@@ -1026,7 +1031,7 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
       act = menu->addAction( "&Move to" );
       connect( act, &QAction::triggered, this, &StructView::moveElm );
     }
-    act = menu->addAction( QIcon::fromTheme("edit-pase"), "&Paste" );
+    act = menu->addAction( QIcon::fromTheme("edit-paste"), "&Paste" );
     connect( act, &QAction::triggered, this, &StructView::pasteElm );
   };
 

@@ -235,7 +235,7 @@ void LaboWin::initIface()
 
   // -- object part
   {
-    auto a = new QAction(  QIcon::fromTheme("document-new"),"Add object", this ); // icon?
+    auto a = new QAction(  QIcon::fromTheme("list-add"),"Add object", this ); // icon?
     a->setShortcut( Qt::Key_Insert );
     registerAction( a, "addObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotAddObj );
@@ -249,7 +249,7 @@ void LaboWin::initIface()
     pEditMenu->addAction( a );
   }
   {
-    auto a = new QAction(  QIcon::fromTheme("edit-node"),"Edit object", this );
+    auto a = new QAction(  QIcon::fromTheme("document-properties"),"Edit object", this );
     a->setShortcut( Qt::Key_Enter );
     registerAction( a, "editObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotEditObj );
@@ -279,7 +279,7 @@ void LaboWin::initIface()
     pEditMenu->addSeparator();
   }
   {
-    auto a = new QAction( "Rename object", this );
+    auto a = new QAction( QIcon::fromTheme("edit-rename"), "Rename object", this );
     registerAction( a, "renameObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotRenameObj );
     pEditMenu->addAction( a );
@@ -301,7 +301,7 @@ void LaboWin::initIface()
     elmToolbar->addSeparator();
   }
   {
-    auto a = new QAction( "show object tree", this );
+    auto a = new QAction( QIcon::fromTheme("view-list-tree"), "show object tree", this );
     registerAction( a, "showTreeObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowTreeObj );
     pEditMenu->addAction( a );
@@ -379,6 +379,14 @@ void LaboWin::initIface()
     elmToolbar->addAction( a );
   }
   {
+    auto a = new QAction( QIcon::fromTheme("arrow-right"), "Add out to plot", this );
+    a->setShortcut( Qt::CTRL | Qt::Key_U );
+    registerAction( a, "graphAddOut" );
+    connect( a, &QAction::triggered, this, &LaboWin::slotGraphAddOut );
+    pOutMenu->addAction( a );
+    pOutMenu->addSeparator();
+  }
+  {
     auto a = new QAction( QIcon( ":icons/showoutdata.png" ), "&Show out data", this );
     registerAction( a, "showOutData" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowOutData );
@@ -387,7 +395,7 @@ void LaboWin::initIface()
     elmToolbar->addSeparator();
   }
   {
-    auto a = new QAction( "E&xport out data", this );
+    auto a = new QAction( QIcon::fromTheme("document-export"), "E&xport out data", this );
     a->setShortcut( Qt::CTRL+Qt::Key_E );
     registerAction( a, "exportOut" );
     connect( a, &QAction::triggered, this, &LaboWin::slotExportOut );
@@ -412,14 +420,6 @@ void LaboWin::initIface()
     pGraphMenu->addSeparator();
     elmToolbar->addAction( a );
   }
-  {
-    auto a = new QAction( "Add out to plot", this );
-    a->setShortcut( Qt::CTRL | Qt::Key_U );
-    registerAction( a, "graphAddOut" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotGraphAddOut );
-    pGraphMenu->addAction( a );
-    pGraphMenu->addSeparator();
-  }
 
   {
     auto a = new QAction( QIcon( ":icons/showgraphdata.png" ), "show plot Data", this );
@@ -431,7 +431,7 @@ void LaboWin::initIface()
     elmToolbar->addSeparator();
   }
   {
-    auto a = new QAction( "E&xport plot data", this );
+    auto a = new QAction( QIcon::fromTheme("document-export"), "E&xport plot data", this );
     a->setShortcut( Qt::SHIFT+Qt::Key_E );
     registerAction( a, "exportGraphData" );
     connect( a, &QAction::triggered, this, &LaboWin::slotExportGraphData);
@@ -439,7 +439,7 @@ void LaboWin::initIface()
   }
   // ==== simulation group
   {
-    auto a = new QAction( "&New Simulation", this );
+    auto a = new QAction( QIcon::fromTheme("list-add"), "&New Simulation", this );
     registerAction( a, "addSimul" );
     connect( a, &QAction::triggered, this, &LaboWin::slotNewSimul );
     pSimulMenu->addAction( a );
@@ -472,7 +472,7 @@ void LaboWin::initIface()
   }
   //
   {
-    auto a = new QAction( "&New Scheme", this );
+    auto a = new QAction( QIcon::fromTheme("list-add"), "&New Scheme", this );
     registerAction( a, "addScheme" );
     connect( a, &QAction::triggered, this, &LaboWin::slotNewScheme );
     pModelMenu->addAction( a );

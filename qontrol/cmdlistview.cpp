@@ -108,7 +108,7 @@ void CmdListView::init_base_actions()
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(pasteObj()) );
 
-  a = new QAction( "Rename", this );
+  a = new QAction( QIcon::fromTheme("edit-rename"), "Rename", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(renameObj()) );
 
@@ -120,7 +120,7 @@ void CmdListView::init_base_actions()
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(infoObj()) );
 
-  a = new QAction( "Show Tree", this );
+  a = new QAction( QIcon::fromTheme("view-list-tree"), "Show Tree", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(showTreeObj()) );
 

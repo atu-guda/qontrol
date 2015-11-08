@@ -37,7 +37,7 @@ OutDataView::OutDataView( HolderData *a_mod, CommonSubwin *a_par )
 
 void OutDataView::init_actions()
 {
-  auto a = new QAction( "&Add to plot", this );
+  auto a = new QAction( QIcon::fromTheme("arrow-right"), "&Add to plot", this );
   lv->addAction( a  );
   connect( a, SIGNAL(triggered()), this, SLOT(addToPlot()) );
 
