@@ -15,18 +15,16 @@
 #include <QString>
 #include <QStringList>
 
-#define VERSION "0.0.1"
+#define VERSION "0.0.2"
 
 /* Name of package */
 #define PACKAGE "qontrol"
 #define ORG "atu.atunet"
 #define COPYRIGHT "(c) 2000-2015 atu; under GPLv2+"
 
-/* General constants */
-#define MAX_NAMELEN   32
-
 /* Model constants */
 
+#define DOUBLE_PREC 17
 #define MODEL_MX 64
 #define MODEL_MY 64
 
@@ -50,8 +48,11 @@ constexpr const char *const model_files_sel { "Model *.qol files (*.qol);;All fi
 
 #define L8B QString::fromLocal8Bit
 #define QSN QString::number
-#define QSNX(n) QString::number((n),16)
+#define QSNX(n) QString::number((n),DOUBLE_PREC)
 #define QSL QStringLiteral
+
+#define SCRIPT_DIR "scripts"
+#define LIB_DIR    "lib"
 
 using dvector = std::vector<double>;
 
@@ -97,7 +98,8 @@ struct ProgOpts {
   QString sim_name;      // -s sumulation name, def = sim0
   QStringList out_vars;  // -u T
   QStringList out_plots; // -g graph:file.png  or  -g graph
-  QStringList inc_dirs;  // -Idir
+  QStringList inc_dirs;  // -Idir : where to find scripts
+  QStringList lib_dirs;  // -Ldir : where to find models, used as libs
 };
 
 extern ProgOpts prog_opts; // defined in main.cpp

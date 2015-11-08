@@ -1606,17 +1606,19 @@ void HolderDouble::do_post_set()
 {
   double v_min { DMIN }, v_max { DMAX };
   QString s_min = getParm( "min" );
-  if( ! s_min.isEmpty() )
+  if( ! s_min.isEmpty() ) {
     v_min = s_min.toDouble();
+  }
   QString s_max = getParm( "max" );
-  if( ! s_max.isEmpty() )
+  if( ! s_max.isEmpty() ) {
     v_max = s_max.toDouble();
+  }
   v = qBound( v_min, v, v_max );
 }
 
 QString HolderDouble::toString() const
 {
-  return QSN( v, 'g', 18 ); // TODO? format
+  return QSN( v, 'g', DOUBLE_PREC ); // TODO? format
 }
 
 bool HolderDouble::fromString( const QString &s )
@@ -2054,7 +2056,7 @@ QString HolderDoubleArray::toString() const
 {
   QString s, sep = "";
   for( double vc : v ) {
-    s += sep + QSN( vc );
+    s += sep + QSN( vc, 'g', DOUBLE_PREC  );
     sep = " ";
   }
   return s;

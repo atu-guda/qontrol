@@ -1,7 +1,9 @@
 correct places for reset, set_link, *structChange..
 Edit Object props? (on add?)
-sep prop: bitfield?
+props: v_min, v_max: precalculate?
 Subscheme libs (and dirs).
+sep prop: bitfield?
+Decoration objects.
 Documenation: cmdline options, common workflow.
 Show HolderData props
 LaboDoc: getModel + use in StatusModel

@@ -62,7 +62,7 @@ StatusModel::StatusModel( CommonSubwin *a_up_view )
   addWidget( l_desc, 2 );
 
   l_val = new QLabel( "val", this );
-  l_val->setFixedWidth( (18+2) * mw + label_sep );
+  l_val->setFixedWidth( (DOUBLE_PREC+6) * mw + label_sep );
   l_val->setLineWidth( label_lw ); l_val->setFrameStyle( label_fs );
   l_val->setTextInteractionFlags( Qt::TextSelectableByMouse );
   addWidget( l_val );
@@ -114,7 +114,7 @@ void StatusModel::update()
       TMiso *el = qobject_cast<TMiso*>( ob );
       if( el ) {
         double val = el->getDataD( "out0", 0.0 ); // TODO: StatusTipRole(col=2)
-        l_val->setText( QSN( val, 'g', 18 ) );
+        l_val->setText( QSN( val, 'g', DOUBLE_PREC ) );
       }
     };
   };

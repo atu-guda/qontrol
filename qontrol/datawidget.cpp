@@ -561,7 +561,7 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
 
 bool DoubleDataWidget::set()
 {
-  le->setText( QSN( ho.get().toDouble(), 'g', 15 ) );
+  le->setText( QSN( ho.get().toDouble(), 'g', DOUBLE_PREC ) );
   return true;
 }
 
@@ -839,7 +839,7 @@ bool DoubleArrayDataWidget::set()
 {
   int n = les.size();
   for( int i=0; i<n; ++i ) {
-    les[i]->setText( QSN( ho.get(i).toDouble() ) );
+    les[i]->setText( QSN( ho.get(i).toDouble(), 'g', DOUBLE_PREC ) );
   }
   return true;
 }
@@ -1321,7 +1321,7 @@ int DataDialog::createWidgets()
       lay2 = new QGridLayout( wmain );
       lay2->setSpacing( 2 );
       ++n_tab;
-      tabname = QSL("Tab &") % QSN( n_tab ); // next tab, in not overrided
+      tabname = QSL("Tab &") % QSN( n_tab ); // next tab, if not overrided
     }
 
     if( sep == "block" || was_block ) {

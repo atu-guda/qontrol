@@ -959,6 +959,7 @@ void LaboWin::slotFileSettings()
   if ( dia->exec() == QDialog::Accepted ) {
     setFonts();
   };
+  delete dia;
 
   statusBar()->showMessage( tr ( "Ready." ) );
 }
@@ -1202,21 +1203,13 @@ void LaboWin::slotTest()
   ostr += QString(" <b>em</b>=" ) + QSN(em) + "<br/>\n";
 
   QString ts = "a_0^1{b}c\\approx \\alpha\\cdot\\phi^2 \\omega{}\\n"
-               "\\sum_{i=0}^{N-1}{(a+b+\\epsilon)} {\\Psi}^\\gamma";
+               "\\sum_{i=0}^{N-1}{(a+b+\\epsilon)} {\\Psi}^\\gamma \\Bad" % QChar(0x2222);
 
   QString ls = tex2label( ts );
   //qDebug() <<  " ts=" << ts << WHE;
   //qDebug() <<  " ls=" << ls << WHE;
 
   ostr += ts % "<br/>\n" % ls %"<br/>\n";
-
-  // // output some codes
-  // for( unsigned ccode=0x03A0; ccode < 0x0400; ++ccode )  {
-  //   ostr += QChar( ccode );
-  //   if( (ccode & 0x1F) == 0x1F )
-  //     ostr += " <:> " + QSN(ccode,16) + "\n";
-  // }
-  // ostr += "\n";
 
   //ostr += "\nDMIN: " + QSN( DMIN );
   //ostr += " DMAX: "  + QSN( DMAX );
@@ -1243,6 +1236,14 @@ void LaboWin::slotTest()
   //        + "\" rest=\"" + rest + "\" idx=" + QSN(idx) + "\n";
   // }
 
+  ostr += QSL("<hr/>\n");
+  auto scriptsDirs = QDir::searchPaths( SCRIPT_DIR );
+  ostr += "<b>Scripts dirs</b>: <br/>\n";
+  for( auto s: scriptsDirs ) { ostr += QSL(" \"") % s % QSL("\"<br>\n"); }
+  auto libDirs = QDir::searchPaths( LIB_DIR );
+  ostr += "<b>Lib dirs</b>: <br/>\n";
+  for( auto s: libDirs ) { ostr += QSL(" \"") % s % QSL("\"<br>\n"); }
+  // ostr += QSL("<br>\n");
 
   QMessageBox::information( this, tr( "Test" ), ostr, QMessageBox::Ok );
   statusBar()->showMessage( tr( "Ready." ) );

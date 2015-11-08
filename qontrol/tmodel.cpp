@@ -686,7 +686,7 @@ QString TModel::runScript( const QString& script )
 
 QString TModel::runFileScript( const QString& sfile )
 {
-  QString f = QSL( "scripts:" ) + sfile;
+  QString f = QSL( SCRIPT_DIR ":" ) + sfile;
   if( ! QFile::exists( f ) ) {
     return QString::null;
   }
