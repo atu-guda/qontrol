@@ -1267,6 +1267,12 @@ int HolderData::fillComplForInputs( QStandardItem *it0, const QString &prefix ) 
   if( !it0 ) { return 0; }
   int n = 0;
 
+  int ign = 0;
+  getData( "ignored", &ign, false );
+  if( ign ) {
+    return 0;
+  }
+
   // // debug: special fake name ==Full.name
   // auto it = new QStandardItem( QSL("==") % prefix % getFullName() );
   // it0->appendRow( it );

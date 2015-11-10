@@ -323,6 +323,11 @@ int Scheme::linkNames()
   v_el.clear();
 
   for( auto ob : TCHILD(TMiso*) ) {
+    int ign = 0;
+    ob->getData( "ignored", &ign, false );
+    if( ign ) {
+      continue;
+    }
     v_el.push_back( ob );
   };
 

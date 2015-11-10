@@ -194,6 +194,7 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   ob->getData( "vis_y", &ei.vis_y );
   ob->getData( "ord", &ei.ord );
   ob->getData( "locked", &ei.locked );
+  ob->getData( "ignored", &ei.ignored );
   ob->getData( "onlyFirst", &ei.onlyFirst );
   ob->getData( "onlyLast", &ei.onlyLast );
   ob->getData( "flip", &ei.flip );
@@ -243,6 +244,9 @@ void StructView::drawAll( QPainter &p )
   el_marg = (grid_sz-obj_sz) / 2;
   if( nh >= MODEL_MY ) { nh = MODEL_MY-1; };
   if( nw >= MODEL_MX ) { nh = MODEL_MX-1; };
+
+  auto lockedIcon  = QIcon( ":icons/state-locked.png" );
+  auto ignoredIcon = QIcon( ":icons/state-ignored.png" );
 
 
   if( hasFocus() ) {
@@ -295,7 +299,11 @@ void StructView::drawAll( QPainter &p )
 
     // special marks: TODO: icons
     if( ei.locked ) {
-      p.drawRect( ei.xs + 4, ei.ys + 8, 20, 8 );
+      // p.drawRect( ei.xs + 4, ei.ys + 8, 20, 8 );
+      lockedIcon.paint( &p, ei.xs, ei.ys, obj_sz, obj_sz );
+    }
+    if( ei.ignored ) {
+      ignoredIcon.paint( &p, ei.xs, ei.ys, obj_sz, obj_sz );
     }
     if( ei.onlyFirst ) {
       p.drawRect( ei.xs + 4, ei.ys + 14, 6, 6 );
@@ -871,6 +879,14 @@ bool StructView::delObj()
   return false;
 }
 
+bool StructView::editObj()
+{
+  if( !CmdView::editObj() ) {
+    return false;
+  }
+  sch->reportStructChanged();
+  return true;
+}
 
 
 bool StructView::cloneObj()
@@ -1016,7 +1032,7 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("edit-copy"), "&Copy" );
     connect( act, &QAction::triggered, this, &StructView::copyObj );
-    act = menu->addAction( "Clone" );
+    act = menu->addAction( QIcon( ":icons/edit-clone.png" ), "Clone" );
     connect( act, &QAction::triggered, this, &StructView::cloneObj );
     menu->addSeparator();
     act = menu->addAction( QIcon( ":icons/infoelm.png" ), "show &Info" );

@@ -48,7 +48,7 @@ double TMiso::fun( double t, IterType itype )
 {
   int v;
   iter_c = itype;
-  if( locked ) {
+  if( locked || ignored ) {
     return out0 = (double)out0_init;
   }
 
@@ -74,6 +74,9 @@ double TMiso::f( double /* t */ )
 
 int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
 {
+  if( ignored ) {
+    return 0;
+  }
   tdt = adt; model_nn = an;
   iter_c = IterNo;
   // handleStructChanged(); // to relink. may by in startLoop, in relinking allowed ???
@@ -96,6 +99,9 @@ int TMiso::do_preRun( int /*run_tp*/, int /*an*/, int /*anx*/,
 
 int TMiso::postRun( int good )
 {
+  if( ignored ) {
+    return 0;
+  }
   int rc = do_postRun( good );
   state = good ? stateDone : stateGood;
   iter_c = IterNo;
@@ -112,6 +118,9 @@ int TMiso::do_postRun( int /*good*/ )
 
 int TMiso::startLoop( int acnx, int acny )
 {
+  if( ignored ) {
+    return 0;
+  }
   state = stateRun;
   out0 = (double)out0_init;
   prm_mod |= pis->apply_pre();
@@ -125,6 +134,9 @@ int TMiso::do_startLoop( int /* acnx */, int /* acny */ )
 
 int TMiso::endLoop()
 {
+  if( ignored ) {
+    return 0;
+  }
   state = stateGood;
   return do_endLoop();
 }

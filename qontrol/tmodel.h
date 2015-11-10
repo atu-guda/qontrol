@@ -143,6 +143,8 @@ class TModel : public LinkedObj  {
       "props=STRING,MLINE\nncol=-1\nsep=block");
   PRM_STRING( script, efNRC, "Script", "Model scripts",
       "props=STRING,EXT,LARGETEXT");
+  PRM_STRING( imports, efNRC, "Imports", "From where to get schems: file:scheme",
+      "props=STRING,MLINE\nncol=-1\nsep=tab\ntabname=libs");
   // ======================= invisible vars ======================
   /** loops counters */
   PRM_INT( ii, efInner,  "ii", "Inner index", "" );

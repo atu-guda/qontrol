@@ -112,7 +112,7 @@ void CmdListView::init_base_actions()
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(renameObj()) );
 
-  a = new QAction( "Clone", this );
+  a = new QAction( QIcon( ":icons/edit-clone.png" ), "Clone", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(cloneObj()) );
 

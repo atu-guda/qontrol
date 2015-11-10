@@ -107,11 +107,12 @@ class TMiso : public LinkedObj  {
        "Y-coordinate of element in scheme", "min=0\nmax=64" );
    PRM_DOUBLE( out0_init, efNoRunChange, "Init value",
        "Initial value of output", "" );
-   PRM_SWITCH( locked, efNoRunChange, "Locked", "Bypass u[0] to output", "sep=col"  );
-   PRM_SWITCH( flip, efNoRunChange, "flip image", "flip left-right element icon", "");
-   PRM_SWITCH( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", "cep=col");
-   PRM_SWITCH( onlyLast, efNoRunChange , "only Last", "Process element only at last iteration", "");
-   PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "sep=col");
+   PRM_SWITCH( locked, efNoRunChange, "Locked", "Bypass out0_init to output", "sep=col"  );
+   PRM_SWITCH( ignored, efNoRunChange, "Ignored", "Ignore element while run", ""  );
+   PRM_SWITCH( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", "" );
+   PRM_SWITCH( onlyLast, efNoRunChange , "only Last", "Process element only at last iteration", "" );
+   PRM_SWITCH( flip, efNoRunChange, "flip image", "flip left-right element icon", "sep=col" );
+   PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "" );
 
    PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
 

@@ -45,6 +45,12 @@ const double* LinkedObj::getDoublePtr( const QString &nm, int *lt,
   if( nm.isEmpty() ) {
     *plt = LinkNone; return nullptr;
   }
+  int ign = 0;
+  getData( "ignored", &ign, false ); // not direct access, TMiso+... property
+  if( ign ) {
+    *plt = LinkBad;
+    return nullptr;
+  }
   QString nmf = nm, first, rest;
 
   int idx;

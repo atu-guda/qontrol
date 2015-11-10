@@ -10,6 +10,7 @@
     <file>icons/delelm.png</file>
     <file>icons/delgraph.png</file>
     <file>icons/delout.png</file>
+    <file>icons/edit-clone.png</file>
     <file>icons/editelm.png</file>
     <file>icons/editgraph.png</file>
     <file>icons/editmodel.png</file>
@@ -122,6 +123,8 @@
     <file>icons/showgraph.png</file>
     <file>icons/showgraphdata.png</file>
     <file>icons/showoutdata.png</file>
+    <file>icons/state-ignored.png</file>
+    <file>icons/state-locked.png</file>
     <file>icons/struct.png</file>
     <file>icons/test.png</file>
 </qresource>

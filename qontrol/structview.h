@@ -46,7 +46,7 @@ class StructView : public CmdView  {
     struct ElemInfo {
       // from element
       QString name, type;
-      int vis_x, vis_y, ord, locked, onlyFirst, onlyLast, flip, noIcon;
+      int vis_x, vis_y, ord, locked, ignored, onlyFirst, onlyLast, flip, noIcon;
       // number of signal and parametric inputs
       int n_inp, n_pinp;
       // calculated
@@ -115,7 +115,7 @@ class StructView : public CmdView  {
     // common object slots
     virtual bool addObj() override;
     virtual bool delObj() override; // handle mark == select
-    // virtual bool editObj() override;
+    virtual bool editObj() override; // ask relink after
     // virtual bool renameObj() override;
     virtual bool cloneObj() override;
     // virtual bool cutObj() override;

@@ -285,7 +285,7 @@ void LaboWin::initIface()
     pEditMenu->addAction( a );
   }
   {
-    auto a = new QAction( "Clone object", this );
+    auto a = new QAction( QIcon( ":icons/edit-clone.png" ), "Clone object", this );
     registerAction( a, "cloneObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotCloneObj );
     pEditMenu->addAction( a );
