@@ -24,7 +24,7 @@
 
 /* Model constants */
 
-#define DOUBLE_PREC 17
+#define DOUBLE_PREC 16
 #define MODEL_MX 64
 #define MODEL_MY 64
 
@@ -58,16 +58,16 @@ using dvector = std::vector<double>;
 
 
 enum _ELEM_FLAGS {
-  efMustRead = 1, efNoRunChange = 2, efNRC = efNoRunChange,  /* MR, NRC */
+  efMustRead = 1, // MR, really unused
+  efNoRunChange = 2, efNRC = efNoRunChange,  //  NRC
   efNoDial = 4, efRODial = 8,                /* ND, ROD */
-  efNoSave = 16, efRO = 32, efStatic = 64,   /* NS, RO, - */
-  efImmutable = 128,
+  efNoSave = 0x10, efRO = 0x20, efStatic = 0x40,   /* NS, RO, St */
+  efImmutable = 0x80,  // Im
+  efCalcParent = 0x100, // Ca
   efInner = efNoDial | efNoSave | efRO,
-  efOld = efNoRunChange | efNoDial | efNoSave,
-  efOnlyFirst = 0x8000 /* not part, of flags, set by TMiso::fillLinks if req*/
-
+  efOld = efNoRunChange | efNoDial | efNoSave
 };
-const constexpr int elm_known_flags = 7;
+const constexpr int elm_known_flags = 9;
 
 // todo: func QString elemFlagsToString( int );
 

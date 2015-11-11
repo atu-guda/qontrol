@@ -2,6 +2,7 @@ correct places for reset, set_link, *structChange..
 add Flag: call parent post_set if changed.
 Edit Object props? (on add?)
 QCommandline
+R/O + nosave for schems
 props: v_min, v_max: precalculate?
 Subscheme libs (and dirs).
 sep prop: bitfield?
