@@ -115,6 +115,9 @@ class TModel : public LinkedObj  {
   //* run inner model script
   QString runModelScript();
 
+  Q_INVOKABLE bool includeScheme( const QString &fn, const QString &schName );
+  Q_INVOKABLE bool includeAllSchemes();
+
   virtual void fillComplModelForInputs( QStandardItemModel *mdl ) const override;
   virtual void fillComplModelForOuts( QStandardItemModel *mdl ) const override;
 

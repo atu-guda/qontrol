@@ -26,6 +26,7 @@
 #include "miscfun.h"
 #include "tmodel.h"
 #include "scriptfuncs.h"
+#include "labodoc.h"
 
 using namespace std;
 
@@ -714,6 +715,61 @@ QString TModel::runFileScript( const QString& sfile )
 QString TModel::runModelScript()
 {
   return runScript( script );
+}
+
+bool TModel::includeScheme( const QString &fn, const QString &schName )
+{
+  LaboDoc incDoc;
+
+  if( !incDoc.openDocument( fn ) ) {
+    return false;
+  }
+
+  TRootData *iroot = incDoc.getRoot();
+  if( ! iroot ) {
+    return false;
+  }
+  Scheme *sch = iroot->getObjT<Scheme*>( QSL("model.schems.") % schName );
+  if( ! sch ) {
+    qWarning() << "Fail to find scheme " << schName << " in " << fn << WHE;
+    return false;
+  }
+  QString s = sch->toString();
+
+  Scheme *newScheme = addObjToSubT<Scheme>( QSL("schems"), schName );
+  if( ! newScheme ) {
+    qWarning() << "Fail to add scheme " << schName << " from " << fn << WHE;
+    return false;
+  }
+  if( ! newScheme->fromString( s ) ) {
+    qWarning() << "Fail to copy scheme " << schName << " from " << fn << WHE;
+    return false;
+  }
+  newScheme->addFlags( efRO | efNoSave );
+
+  return true;
+}
+
+bool TModel::includeAllSchemes()
+{
+  // TODO: remove old imported schemes
+  bool only_good = true;
+  QStringList incs = imports.cval().split( QSL("\n" ) );
+  for( auto s : incs ) {
+    QStringList sl = s.split( QSL(":") );
+    if( sl.size() < 2 ) {
+      qWarning() << "Bad import string: " << s << NWHE;
+      only_good = false;
+      continue;
+    }
+    QString fn = QSL( "lib:" ) % sl[0];
+    QString schName = sl[1];
+    qWarning() << "import: file: " << fn << " scheme: " << schName << NWHE;
+    if( ! includeScheme( fn, schName ) ) {
+      only_good = false;
+    }
+  }
+  return only_good;
 }
 
 // must be in correspondence with getSchemeDoublePtr

@@ -3,6 +3,8 @@ add Flag: call parent post_set if changed.
 Edit Object props? (on add?)
 QCommandline
 R/O + nosave for schems
+No links to ignored object.
+Mutable flag (noSave?)
 props: v_min, v_max: precalculate?
 Subscheme libs (and dirs).
 sep prop: bitfield?
