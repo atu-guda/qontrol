@@ -1,5 +1,7 @@
 correct places for reset, set_link, *structChange..
+add Flag: call parent post_set if changed.
 Edit Object props? (on add?)
+QCommandline
 props: v_min, v_max: precalculate?
 Subscheme libs (and dirs).
 sep prop: bitfield?
@@ -32,6 +34,7 @@ Placeholder object: param is the type of real object?
 QScintilla? Dialog or SubWindow?
 Shadow main scheme?
 BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params
+More stylesheets
 
 Application config: to TDataSet?
 

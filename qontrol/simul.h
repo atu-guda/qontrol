@@ -61,6 +61,7 @@ class Simulation : public LinkedObj  {
   PRM_DOUBLE( T, efNoRunChange, "T", "Full Run Time", "min=0\nmax=1e300\ndef=100" );
   PRM_INT( N, efNoRunChange, "N", "Number of steps in one run",
       "min=1\nmax=200000000\nsep=col\ndef=10000"  );
+  PRM_DOUBLE( tdt, efNoRunChange | efRODial | efNoSave, "\\tau", "step time", "def=1" );
   PRM_SWITCH( syncRT, efNoRunChange, "Sync RT",
       "Real and model time synchronization ", "sep=col" );
   PRM_DOUBLE( io_t, efNRC, "I/O time", "Time per each I/O action", "def=0.1\nmin=1e-4" );

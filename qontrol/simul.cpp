@@ -50,6 +50,7 @@ QIcon Simulation::getIcon() const
 void Simulation::do_post_set()
 {
   LinkedObj::do_post_set();
+  tdt = T / N;
 
   n1_eff = n2_eff = 1;
   if( runType > Simulation::runSingle ) {

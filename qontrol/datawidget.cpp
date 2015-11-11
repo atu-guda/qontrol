@@ -1112,8 +1112,14 @@ bool FactoryDataWidget::unregisterWidgetType( const QString &wname )
 // ======================= DataDialog ===========================
 
 DataDialog::DataDialog( HolderData &a_ds, QWidget *parent )
-  : QDialog( parent ), ds( a_ds)
+  : QDialog( parent ), ds( a_ds )
 {
+  setStyleSheet( "*[readOnly=\"true\"] {"
+      "color: #000000;"
+      "background-color: #C0C0C0;"
+      "border: 1px solid #909090;"
+      "border-radius: 2px; }");
+
   getAll();
   saved_data = ds.toString();
 }
