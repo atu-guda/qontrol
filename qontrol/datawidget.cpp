@@ -1457,9 +1457,10 @@ void DataDialog::addFinalSpace( QGridLayout *lay )
 {
   int xnr = lay->rowCount();
   auto frb = new QFrame( this );
-  // frb->setFrameStyle( QFrame::HLine );
+  frb->setFrameStyle( QFrame::HLine );
   frb->setFrameStyle( QFrame::Box );
   frb->setMinimumSize( 1, 1 );
+  frb->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
   lay->addWidget( frb, xnr, 0, 1, -1 );
   lay->setRowMinimumHeight( xnr, 1 );
   lay->setRowStretch( xnr, 2 );

@@ -45,9 +45,7 @@ const double* LinkedObj::getDoublePtr( const QString &nm, int *lt,
   if( nm.isEmpty() ) {
     *plt = LinkNone; return nullptr;
   }
-  int ign = 0;
-  getData( "ignored", &ign, false ); // not direct access, TMiso+... property
-  if( ign ) {
+  if( isIgnored() ) {
     *plt = LinkBad;
     return nullptr;
   }
@@ -118,7 +116,7 @@ const double* LinkedObj::getSchemeDoublePtr( const QString &nm, int *lt,
   int clt = LinkNone;
   int *plt = ( lt ) ? lt : &clt;  // failsafe link
 
-  if( nm.isEmpty() ) {
+  if( isIgnored() || nm.isEmpty() ) {
     *plt = LinkNone;
     return nullptr;
   }
@@ -149,6 +147,18 @@ double* LinkedObj::getDoublePrmPtr( const QString &nm, int *flg )
     *flg = hod->getFlags();
   }
   return hod->addr();
+}
+
+bool LinkedObj::isIgnored() const
+{
+  int ign = 0;
+  for( const HolderData *p = this; p; p=p->getParent() ) {
+    p->getData( "ignored", &ign, false ); // not direct access, TMiso+... property
+    if( ign ) {
+      return true;
+    }
+  }
+  return false;
 }
 
 
@@ -183,7 +193,7 @@ void InputAbstract::do_structChanged()
 void InputAbstract::set_link()
 {
   p = &fake_in; src_obj = nullptr; linkType = LinkBad; srcobj = QSL(":BAD:");
-  if( source.cval().isEmpty() ) {
+  if( isIgnored() || source.cval().isEmpty() ) {
     linkType = LinkNone; srcobj = QSL(":NONE:"); return;
   }
   if( source.cval() == ":one" ) { // special local case
@@ -287,7 +297,7 @@ void InputParam::set_link()
   InputAbstract::set_link();
   target_flag = 0;
   targ = &fake_target;
-  if( !par ) { // par seems to be InputParams, but may be dangling objects
+  if( isIgnored() || !par ) { // par seems to be InputParams, but may be dangling objects
     return;
   }
 

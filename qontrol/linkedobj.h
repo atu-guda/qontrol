@@ -39,6 +39,7 @@ class LinkedObj : public TDataSet {
    /** gets pointer to parameter, near to getDoublePtr
     * for param mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
+   bool isIgnored() const; // self or parents...
  protected:
    DCL_DEFAULT_STATIC;
 };
