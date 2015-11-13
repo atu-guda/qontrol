@@ -205,9 +205,12 @@ class HolderData : public QAbstractItemModel {
   // count number of elements of given type, optionaly with named started with nm_start
   Q_INVOKABLE int countObjsOfType( const QString &tp, const QString &nm_start = QString() ) const;
   Q_INVOKABLE QString hintName( const QString &tp, const QString &nm_start = QString() ) const;
-  void addFlags( int a_flags ) { flags |= a_flags; }
-  void setImmutable() { flags |= efImmutable; }
-  Q_INVOKABLE int getFlags() const { return flags; }
+  Q_INVOKABLE void addFlags( int a_flags ) { flags |= a_flags; }
+  Q_INVOKABLE void setImmutable() { flags |= efImmutable; }
+  Q_INVOKABLE int  getFlags() const { return flags; }
+  Q_INVOKABLE bool hasAllFlags( int flg ) const { return ( flags & flg ) == flg; };
+  Q_INVOKABLE bool hasAnyFlags( int flg ) const { return ( flags & flg ); };
+  Q_INVOKABLE bool isRoTree( int flg = efRO ) const;
   HolderData* getParent() const { return par; } // no Q_INVOKABLE: need reg HolderData
   // return ptr to ancessor of given type
   template<typename T> T* getAncestorT() const {

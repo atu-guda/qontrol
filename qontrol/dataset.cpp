@@ -487,6 +487,17 @@ QString HolderData::hintName( const QString &tp, const QString &nm_start ) const
   return bname + QSL(" _xx_");
 }
 
+
+bool HolderData::isRoTree( int flg ) const
+{
+  for( auto p = this; p; p=p->getParent() ) {
+    if( p->hasAnyFlags( flg ) ) {
+      return true;
+    }
+  }
+  return false;
+}
+
 int HolderData::countObjsOfType( const QString &tp, const QString &nm_start ) const
 {
   int n_el = 0, l_nm = nm_start.size();
@@ -636,7 +647,7 @@ int HolderData::delObj( const QString &ob_name, bool ignoreMod )
     qWarning() << "object " << ob_name << " is not created dynamicaly in " << getFullName() << NWHE;
     return 0;
   }
-  if( ho->getFlags() & efImmutable ) {
+  if( ho->hasAnyFlags( efImmutable ) ) {
     qWarning() << "object " << ob_name << " is Immutable in " << getFullName() << NWHE;
     return 0;
   }
@@ -668,7 +679,7 @@ int HolderData::delAllDyn()
   QStringList nms;
   for( auto ho: TCHILD(HolderData*) ) {
     ho->delAllDyn();
-    if( ! ho->isDyn() || ( ho->getFlags() && efImmutable ) ) {
+    if( ! ho->isDyn() || ho->hasAnyFlags( efImmutable ) ) {
       continue;
     }
     nms << ho->objectName();
@@ -692,7 +703,7 @@ int HolderData::renameObj( const QString &ob_name, const QString &new_name )
     qWarning() << "not found element " << ob_name << " to rename" << NWHE;
     return 0;
   }
-  if( ho->getFlags() & efImmutable ) {
+  if( ho->hasAnyFlags( efImmutable ) ) {
     qWarning() << "element " << ob_name << " is Immutable to rename" << NWHE;
     return 0;
   }
@@ -2311,7 +2322,7 @@ QDomElement TDataSet::toDom( QDomDocument &dd ) const
   de.setAttribute( "otype", getType() );
 
   for( auto ho : TCHILD(HolderData*) ) {
-    if( ho->getFlags() & efNoSave ) {
+    if( ho->hasAnyFlags( efNoSave ) ) {
       continue;
     }
 

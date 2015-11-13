@@ -295,6 +295,7 @@ class DataDialog : public QDialog {
    HolderData &ds;
    DaWiMap dwm;
    QString saved_data;
+   bool ro;
 };
 
 #endif  // _DATAWIDGET_H

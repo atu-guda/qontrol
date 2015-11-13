@@ -160,6 +160,7 @@ class StructView : public CmdView  {
     TMiso *selObj = nullptr;  //* ptr to selected object or nullptr
     TMiso *markObj = nullptr; //* prt to marked object or nullptr
     int em = 10;
+    bool ro;
 };
 
 

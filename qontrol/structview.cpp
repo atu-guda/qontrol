@@ -31,7 +31,7 @@
 
 
 StructView::StructView( CommonSubwin *a_par, Scheme *a_sch )
-            : CmdView( a_par, a_sch ), sch( a_sch )
+            : CmdView( a_par, a_sch ), sch( a_sch ), ro( sch->isRoTree( efROAny ) )
 {
   em = LaboWin::Em();
   QPalette pal;
@@ -249,16 +249,16 @@ void StructView::drawAll( QPainter &p )
   auto ignoredIcon = QIcon( ":icons/state-ignored.png" );
 
 
-  if( hasFocus() ) {
-    p.setBrush( Qt::white );
-  } else {
-    p.setBrush( QColor( 230, 230, 230 ) );
+  QColor bgCol { ro ? QColor(255,240,240) : Qt::white };
+  if( ! hasFocus() ) {
+    bgCol = bgCol.darker( 110 );
   }
+  p.setBrush( bgCol );
   p.drawRect( 0, 0, w, h );
 
   // ---------- draw grid
   if( psett->showgrid ) {
-    p.setPen( QPen(QColor(190,210,210), 0, Qt::DotLine ) ); // TODO: config
+    p.setPen( QPen( bgCol.darker(150), 0, Qt::DotLine ) ); // TODO: config
     for( int i=0; i<nw; i++ ) {
       int x = lm + i*grid_sz;
       p.drawLine( x, tm, x, h );
@@ -349,9 +349,7 @@ void StructView::drawAll( QPainter &p )
     st_y = ei.ys + line_busy*ex_small;
 
 
-
-
-    if( ! psett->showLinks ) {
+    if( ! psett->showLinks || ei.ignored ) {
       continue;
     }
 
@@ -672,6 +670,10 @@ void StructView::renameElm()
 
 void StructView::qlinkElm()
 {
+  if( storage->isRoTree() ) {
+    return;
+  }
+
   QString toname;
   if( ! checkState( linkToCheck ) ) {
     return;
@@ -706,6 +708,10 @@ void StructView::qlinkElm()
 
 void StructView::qplinkElm()
 {
+  if( storage->isRoTree() ) {
+    return;
+  }
+
   QString oldlink;
   if( ! checkState( linkToCheck ) ) {
     return;
@@ -738,6 +744,10 @@ void StructView::qplinkElm()
 
 void StructView::unlinkElm()
 {
+  if( storage->isRoTree() ) {
+    return;
+  }
+
   if( ! checkState( selCheck ) ) { // no need marked to unlink
     return;
   }
@@ -764,6 +774,10 @@ void StructView::unlinkElm()
 
 void StructView::lockElm()
 {
+  if( storage->isRoTree() ) {
+    return;
+  }
+
   if( ! checkState( selCheck ) ) {
     return;
   }
@@ -778,6 +792,10 @@ void StructView::lockElm()
 
 void StructView::ordElm()
 {
+  if( storage->isRoTree() ) {
+    return;
+  }
+
   if( ! checkState( selCheck ) ) {
     return;
   }
@@ -800,6 +818,10 @@ void StructView::markElm()
 
 void StructView::moveElm()
 {
+  if( storage->isRoTree() ) {
+    return;
+  }
+
   if( ! checkState( moveCheck )  ||  !markObj  ) {
     return;
   }
@@ -838,6 +860,10 @@ void StructView::testElm2()
 
 bool StructView::addObj()
 {
+  if( storage->isRoTree() ) {
+    return false;
+  }
+
   if( !checkState( noselCheck ) ) {
     return false;
   }
@@ -1019,16 +1045,18 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     menu->addSeparator();
     act = menu->addAction( QIcon( ":icons/editelm.png" ), "&Edit element" );
     connect( act, &QAction::triggered, this, &StructView::editObj );
-    act = menu->addAction( QIcon( ":icons/delelm.png" ), "&Delete element" );
-    connect( act, &QAction::triggered, this, &StructView::delObj );
-    menu->addSeparator();
-    act = menu->addAction( QIcon::fromTheme("edit-rename"), "Rename element" );
-    connect( act, &QAction::triggered, this, &StructView::renameObj );
-    menu->addSeparator();
-    act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
-    connect( act, &QAction::triggered, this, &StructView::qlinkElm );
-    act = menu->addAction(  QIcon( ":icons/orderelm.png" ), "&Reorder" );
-    connect( act, &QAction::triggered, this, &StructView::ordElm );
+    if( !ro ) {
+      act = menu->addAction( QIcon( ":icons/delelm.png" ), "&Delete element" );
+      connect( act, &QAction::triggered, this, &StructView::delObj );
+      menu->addSeparator();
+      act = menu->addAction( QIcon::fromTheme("edit-rename"), "Rename element" );
+      connect( act, &QAction::triggered, this, &StructView::renameObj );
+      menu->addSeparator();
+      act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
+      connect( act, &QAction::triggered, this, &StructView::qlinkElm );
+      act = menu->addAction(  QIcon( ":icons/orderelm.png" ), "&Reorder" );
+      connect( act, &QAction::triggered, this, &StructView::ordElm );
+    }
     menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("edit-copy"), "&Copy" );
     connect( act, &QAction::triggered, this, &StructView::copyObj );
@@ -1041,14 +1069,16 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     connect( act, &QAction::triggered, this, &StructView::showTreeObj );
     menu->addSeparator();
   } else {
-    act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );
-    connect( act, &QAction::triggered, this, &StructView::addElm );
-    if( markObj ) {
-      act = menu->addAction( "&Move to" );
-      connect( act, &QAction::triggered, this, &StructView::moveElm );
+    if( !ro ) {
+      act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );
+      connect( act, &QAction::triggered, this, &StructView::addElm );
+      if( markObj ) {
+        act = menu->addAction( "&Move to" );
+        connect( act, &QAction::triggered, this, &StructView::moveElm );
+      }
+      act = menu->addAction( QIcon::fromTheme("edit-paste"), "&Paste" );
+      connect( act, &QAction::triggered, this, &StructView::pasteElm );
     }
-    act = menu->addAction( QIcon::fromTheme("edit-paste"), "&Paste" );
-    connect( act, &QAction::triggered, this, &StructView::pasteElm );
   };
 
   CmdView *outs_view = par->getView( "outs_view" );

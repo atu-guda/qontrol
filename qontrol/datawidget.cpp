@@ -96,7 +96,7 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
   le( new QLineEdit( this ) )
 {
   main_w = le;
-  if( h.getFlags() & ( efRO | efRODial ) ) {
+  if( h.isRoTree( efROAny ) ) {
     le->setReadOnly( true );
   }
   lbl->setBuddy( le );
@@ -161,7 +161,7 @@ StringMLDataWidget::StringMLDataWidget( HolderData &h, QWidget *parent )
   te( new QTextEdit( this ) )
 {
   main_w = te;
-  if( h.getFlags() & ( efRO | efRODial ) ) {
+  if( h.isRoTree( efROAny ) ) {
     te->setReadOnly( true );
   }
   // setMaxLength( h.getMax() ); ???
@@ -219,7 +219,7 @@ StringExtDataWidget::StringExtDataWidget( HolderData &h, QWidget *parent )
   pb( new QPushButton( this ) )
 {
   main_w = pb;
-  if( h.getFlags() & ( efRO | efRODial ) ) {
+  if( h.isRoTree( efROAny ) ) {
     pb->setDisabled( true );
   }
   pb->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred );
@@ -306,7 +306,7 @@ IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent )
   le( new QLineEdit( this ) )
 {
   main_w = le;
-  if( h.getFlags() & ( efRO | efRODial ) ) {
+  if( h.isRoTree( efROAny ) ) {
     le->setReadOnly( true );
   }
 
@@ -362,7 +362,7 @@ IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent )
   sb( new QSpinBox( this ) )
 {
   main_w = sb;
-  if( h.getFlags() & ( efRO | efRODial ) ) {
+  if( h.isRoTree( efROAny ) ) {
     sb->setReadOnly( true );
   }
 
@@ -430,7 +430,7 @@ SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
   cb( new QCheckBox( " ", this )  )
 {
   main_w = cb;
-  if( h.getFlags() & ( efRO | efRODial ) ) {
+  if( h.isRoTree( efROAny ) ) {
     cb->setDisabled( true );
   }
 
@@ -475,7 +475,7 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
   cb( new QComboBox( this ) )
 {
   main_w = cb;
-  if( h.getFlags() & ( efRO | efRODial ) ) {
+  if( h.isRoTree( efROAny ) ) {
     cb->setDisabled( true );
   }
   QString enum_name = ho.getParm( "enum" );
@@ -533,7 +533,7 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
   le( new QLineEdit ( this ) )
 {
   main_w = le;
-  if( h.getFlags() & ( efRO | efRODial ) ) {
+  if( h.isRoTree( efROAny ) ) {
     le->setReadOnly( true );
   }
 
@@ -593,7 +593,7 @@ DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent )
    sb( new QDoubleSpinBox( this ) )
 {
   main_w = sb;
-  if( h.getFlags() & ( efRO | efRODial ) ) {
+  if( h.isRoTree( efROAny ) ) {
     sb->setReadOnly( true );
   }
 
@@ -660,7 +660,7 @@ ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent )
    cb( new ColorBtn( this ) )
 {
   main_w = cb;
-  if( h.getFlags() & ( efRO | efRODial ) ) {
+  if( h.isRoTree( efROAny ) ) {
     cb->setDisabled( true ); // TODO: real read-only
   }
   cb->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Expanding );
@@ -711,7 +711,7 @@ IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
   pwi( new QWidget( this ) )
 {
   main_w = pwi;
-  bool ro = h.getFlags() & ( efRO | efRODial );
+  bool ro = h.isRoTree( efROAny );
   int n = h.arrSize();
   les.reserve(n);
   QString vn = h.getParm("vis_name");
@@ -790,7 +790,7 @@ DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent )
   pwi( new QWidget( this ) )
 {
   main_w = pwi;
-  bool ro = h.getFlags() & ( efRO | efRODial );
+  bool ro = h.isRoTree( efROAny );
   int n = h.arrSize();
 
   les.reserve(n);
@@ -876,7 +876,7 @@ StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent )
   pwi( new QWidget( this ) )
 {
   main_w = pwi;
-  bool ro = h.getFlags() & ( efRO | efRODial );
+  bool ro = h.isRoTree( efROAny );
   int n = h.arrSize();
 
   les.reserve(n);
@@ -956,9 +956,9 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
    pb( new QPushButton( this ) )
 {
   main_w = pb;
-  if( h.getFlags() & ( efRO | efRODial ) ) {
-    pb->setDisabled( true ); // TODO: real read-only
-  }
+  // if( h.isRoTree( efROAny ) ) {
+  //   pb->setDisabled( true ); // TODO: real read-only
+  // }
   pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   updateLabel();
   connect( pb, &QPushButton::clicked, this, &ObjDataWidget::edit );
@@ -1112,7 +1112,7 @@ bool FactoryDataWidget::unregisterWidgetType( const QString &wname )
 // ======================= DataDialog ===========================
 
 DataDialog::DataDialog( HolderData &a_ds, QWidget *parent )
-  : QDialog( parent ), ds( a_ds )
+  : QDialog( parent ), ds( a_ds ), ro( ds.isRoTree( efROAny ) )
 {
   setStyleSheet( "*[readOnly=\"true\"] {"
       "color: #000000;"
@@ -1145,6 +1145,9 @@ int DataDialog::getAll() // from object to wigets
 
 int DataDialog::setAll() // from widgets to object
 {
+  if( ro ) {
+    return 0;
+  }
   int ns = 0;
 
   for( auto w : dwm ) {
@@ -1175,6 +1178,9 @@ void DataDialog::refreshData()
 
 void DataDialog::revertData()
 {
+  if( ro ) {
+    return;
+  }
   ds.suspendHandleStructChange();
   ds.delAllDyn(); // TODO: supress errors during recreate.
   ds.fromString( saved_data );
@@ -1231,6 +1237,9 @@ void DataDialog::showSimpleHelp()
 
 bool DataDialog::addObj()
 {
+  if( ro ) {
+    return false;
+  }
   AddObjParams prm;
 
   HolderData *ho = SelectTypeDialog::askAndCreateObj( &ds, this, prm );
@@ -1246,6 +1255,9 @@ bool DataDialog::addObj()
 
 bool DataDialog::delObj()
 {
+  if( ro ) {
+    return false;
+  }
   QStringList sl;
   for( auto ho :  ds.TCHILD(HolderData*) ) {
     if( ! ho->isDyn() ) {
@@ -1300,7 +1312,7 @@ int DataDialog::createWidgets()
   DataWidget *w;
 
   for( auto ho :  ds.TCHILD(HolderData*) ) {
-    if( ho->getFlags() & efNoDial ) {
+    if( ho->hasAnyFlags( efNoDial ) ) {
       continue;
     }
 
@@ -1387,7 +1399,7 @@ int DataDialog::createWidgets()
 
   bool can_add_objs = false;
   QStringList obj_clss = EFACT.goodTypeNames( ds.allowTypes() );
-  if( ! obj_clss.isEmpty() ) {
+  if( ! obj_clss.isEmpty() && !ro ) {
     can_add_objs = true;
   }
 
@@ -1403,8 +1415,12 @@ int DataDialog::createWidgets()
 
   auto lay_btn = new QHBoxLayout;
   auto btn_ok = new QPushButton( QIcon::fromTheme("dialog-ok"),"Ok" );
-  btn_ok->setDefault( true );
-  connect( btn_ok, &QPushButton::clicked, this, &DataDialog::accept);
+  if( ro ) {
+    btn_ok->setDisabled( true );
+  } else {
+    btn_ok->setDefault( true );
+    connect( btn_ok, &QPushButton::clicked, this, &DataDialog::accept);
+  }
   lay_btn->addWidget( btn_ok );
   //
   auto btn_cancel = new QPushButton( QIcon::fromTheme("dialog-cancel"), "Cancel" );
@@ -1412,11 +1428,19 @@ int DataDialog::createWidgets()
   lay_btn->addWidget( btn_cancel );
   //
   auto btn_refresh = new QPushButton( QIcon::fromTheme("view-refresh"), "Refresh" );
-  connect( btn_refresh, &QPushButton::clicked, this, &DataDialog::refreshData );
+  if( ro ) {
+    btn_refresh->setDisabled( true );
+  } else {
+    connect( btn_refresh, &QPushButton::clicked, this, &DataDialog::refreshData );
+  }
   lay_btn->addWidget( btn_refresh );
   //
   auto btn_revert = new QPushButton( QIcon::fromTheme("document-revert"), "Revert" );
-  connect( btn_revert, &QPushButton::clicked, this, &DataDialog::revertData );
+  if( ro ) {
+    btn_revert->setDisabled( true );
+  } else {
+    connect( btn_revert, &QPushButton::clicked, this, &DataDialog::revertData );
+  }
   lay_btn->addWidget( btn_revert );
   //
   auto btn_help = new QPushButton( QIcon::fromTheme("help-contents"), "Help" );

@@ -45,6 +45,10 @@ QModelIndex CmdView::currentIndex() const
 
 bool CmdView::addObj()
 {
+  if( storage->isRoTree() ) {
+    return false;
+  }
+
   QString objName = sugg_name;
   sugg_name = QString(); // reset at once
 
@@ -63,6 +67,10 @@ bool CmdView::addObj()
 
 bool CmdView::delObj()
 {
+  if( storage->isRoTree() ) {
+    return false;
+  }
+
   HolderData *ob = getSelObj();
   if( ! ob ) {
     return false;
@@ -83,6 +91,11 @@ bool CmdView::delObj()
 
 bool CmdView::editObj()
 {
+  // allow to view
+  // if( storage->isRoTree() ) {
+  //   return false;
+  // }
+
   HolderData *selObj = getSelObj();
   if( !selObj ) {
     return false;
@@ -99,6 +112,10 @@ bool CmdView::editObj()
 
 bool CmdView::renameObj()
 {
+  if( storage->isRoTree() ) {
+    return false;
+  }
+
   HolderData *selObj = getSelObj();
   if( !selObj ) {
     return false;
@@ -122,6 +139,10 @@ bool CmdView::renameObj()
 
 bool CmdView::cloneObj()
 {
+  if( storage->isRoTree() ) {
+    return false;
+  }
+
   HolderData *selObj = getSelObj();
   if( !selObj ) {
     return false;
@@ -178,6 +199,10 @@ bool CmdView::copyObj()
 
 bool CmdView::pasteObj()
 {
+  if( storage->isRoTree() ) {
+    return false;
+  }
+
   QClipboard *clp = QApplication::clipboard();
   if( !clp ) {
     return false;

@@ -64,7 +64,9 @@ enum _ELEM_FLAGS {
   efNoSave = 0x10, efRO = 0x20, efStatic = 0x40,   /* NS, RO, St */
   efImmutable = 0x80,  // Im
   efCalcParent = 0x100, // Ca
+  efROAny = efRO | efRODial,
   efInner = efNoDial | efNoSave | efRO,
+  efTmp = efNoSave | efRO,
   efOld = efNoRunChange | efNoDial | efNoSave
 };
 const constexpr int elm_known_flags = 9;

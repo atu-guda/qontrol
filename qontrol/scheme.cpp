@@ -44,6 +44,27 @@ Scheme::~Scheme()
 {
 }
 
+QVariant Scheme::dataObj( int col, int role ) const
+{
+  if( role == Qt::BackgroundRole ) {
+    if( col != 0 ) {
+      return TDataSet::dataObj( col, role );
+    }
+    if( hasAllFlags( efTmp )  ) { // transient schemes
+      return QBrush( QColor(128,128,128) ) ;
+    }
+    return TDataSet::dataObj( col, role );
+
+  }
+  // else if ( role == Qt::ToolTipRole ) {
+  // }
+  // else if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
+  // }
+
+  return TDataSet::dataObj( col, role );
+}
+
+
 // must be similar to fillComplModelForInputs
 const double* Scheme::getSchemeDoublePtr( const QString &nm, int *lt,
         const LinkedObj **src_ob, int lev) const

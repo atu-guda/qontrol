@@ -45,7 +45,7 @@ QVariant TOutArr::dataObj( int col, int role ) const
   int idx = getMyIndexInParent();
   if( role == Qt::BackgroundRole ) {
     if( col != 0 ) {
-      return QVariant();
+      return TDataSet::dataObj( col, role );
     }
     if( so == &fake_so && type != OutArrType::outSpec ) {
       return QBrush( QColor(254,128,128) ) ;
@@ -57,7 +57,7 @@ QVariant TOutArr::dataObj( int col, int role ) const
       if( isPrm ) {
         return QBrush( QColor( 120,220,252 ).darker( 130 ) );
       }
-      return QVariant();
+      return TDataSet::dataObj( col, role );
     }
     QColor bgc{ 64, 64, 128 }; // not filled to top
     if( n == arrsize ) {
@@ -71,7 +71,7 @@ QVariant TOutArr::dataObj( int col, int role ) const
 
   else if ( role == Qt::ToolTipRole ) {
     if( col != 0 ) {
-      return QVariant();
+      return TDataSet::dataObj( col, role );
     }
     QString s = QSL("(") % QSN(idx) % QSL(") ") % name.cval() % QSL(" [") % QSN(n)
       % QSL("]\n[")  % QSN(nx) % " x " % QSN(ny) % QSL("]");
@@ -80,7 +80,7 @@ QVariant TOutArr::dataObj( int col, int role ) const
 
   else if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
     if( col > 1 ) {
-      return QVariant();
+      return TDataSet::dataObj( col, role );
     }
     QString s = QSL("(") % QSN(idx) % QSL(") ") % objectName() % QSL(" <- ") %  name.cval();
     return s;

@@ -35,6 +35,8 @@ class Scheme : public LinkedObj  {
   DCL_CREATE;
   DCL_STD_INF;
 
+  virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
+
   const double* getSchemeDoublePtr( const QString &nm, int *lt,
         const LinkedObj **src_ob, int lev ) const override;
   /** function to call from elem.f() to signal something */
