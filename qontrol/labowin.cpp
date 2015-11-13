@@ -477,6 +477,12 @@ void LaboWin::initIface()
     connect( a, &QAction::triggered, this, &LaboWin::slotNewScheme );
     pModelMenu->addAction( a );
   }
+  {
+    auto a = new QAction( QIcon::fromTheme("document-import"), "Import Schemes", this );
+    registerAction( a, "importAllSchemes" );
+    connect( a, &QAction::triggered, this, &LaboWin::importAllSchemes );
+    pModelMenu->addAction( a );
+  }
 
   // ====  run group
   {
@@ -1415,6 +1421,11 @@ void LaboWin::slotNewScheme()
   callLaboViewSlot( "addScheme", tr( "Creating new Scheme..." ) );
 }
 
+
+void LaboWin::importAllSchemes()
+{
+  callLaboViewSlot( "importAllSchemes", tr( "Importing required schemes..." ) );
+}
 
 // -------------------------- run ------------------------------
 

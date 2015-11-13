@@ -580,6 +580,14 @@ void LaboView::cloneScheme()
 }
 
 
+void LaboView::importAllSchemes()
+{
+  if( ! model ) {
+    qCritical() << "no model" << WHE;
+    return;
+  }
+  model->importAllSchemes();
+}
 
 void LaboView::initEngine()
 {

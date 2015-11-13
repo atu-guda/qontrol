@@ -149,6 +149,7 @@ class LaboView : public CommonSubwin
    void editScheme();
    void renameScheme();
    void cloneScheme();
+   void importAllSchemes();
 
    // runs
    void runRun();

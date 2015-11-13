@@ -115,8 +115,8 @@ class TModel : public LinkedObj  {
   //* run inner model script
   QString runModelScript();
 
-  Q_INVOKABLE bool includeScheme( const QString &fn, const QString &schName );
-  Q_INVOKABLE bool includeAllSchemes();
+  Q_INVOKABLE bool importScheme( const QString &fn, const QString &schName );
+  Q_INVOKABLE bool importAllSchemes();
 
   virtual void fillComplModelForInputs( QStandardItemModel *mdl ) const override;
   virtual void fillComplModelForOuts( QStandardItemModel *mdl ) const override;
@@ -131,7 +131,7 @@ class TModel : public LinkedObj  {
   ContSimul *sims = nullptr;
   Scheme* main_s = nullptr;
   // =============== iface objects ==============================
-  // copy of simulation vars - but w/o onject access - just for speed;
+  // copy of simulation vars - just for speed;
   PRM_DOUBLE(     T, efInner, "T", "Total simulation time", "def=1" );
   /** Initial parametrs values */
   PRM_DOUBLE( prm0s, efInner, "prm0s", "Initial prm0 value", "sep=block" );
@@ -146,8 +146,10 @@ class TModel : public LinkedObj  {
       "props=STRING,MLINE\nncol=-1\nsep=block");
   PRM_STRING( script, efNRC, "Script", "Model scripts",
       "props=STRING,EXT,LARGETEXT");
+  PRM_SWITCH( autoImport, efNRC, "Auto Import", "Automaticaly import schemes before run",
+      "sep=tab\ntabname=libs");
   PRM_STRING( imports, efNRC, "Imports", "From where to get schems: file:scheme",
-      "props=STRING,MLINE\nncol=-1\nsep=tab\ntabname=libs");
+      "props=STRING,MLINE\nncol=-1");
   // ======================= invisible vars ======================
   /** loops counters */
   PRM_INT( ii, efInner,  "ii", "Inner index", "" );

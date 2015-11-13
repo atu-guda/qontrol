@@ -194,6 +194,10 @@ int TModel::startRun()
     return 0;
   }
 
+  if( autoImport ) {
+    importAllSchemes(); // TODO: check?
+  }
+
   // TODO: remove debug?
   c_sim->post_set();
 
@@ -717,7 +721,7 @@ QString TModel::runModelScript()
   return runScript( script );
 }
 
-bool TModel::includeScheme( const QString &fn, const QString &schName )
+bool TModel::importScheme( const QString &fn, const QString &schName )
 {
   IGNORE_MOD_HERE;
   LaboDoc incDoc;
@@ -751,13 +755,14 @@ bool TModel::includeScheme( const QString &fn, const QString &schName )
     qWarning() << "Fail to copy scheme " << schName << " from " << fn << WHE;
     return false;
   }
-  newScheme->handleStructChanged();
+  reportStructChanged();
+  // handleStructChanged();
   newScheme->addFlags( efRO | efNoSave );
 
   return true;
 }
 
-bool TModel::includeAllSchemes()
+bool TModel::importAllSchemes()
 {
   // TODO: remove old imported schemes
   bool only_good = true;
@@ -772,7 +777,7 @@ bool TModel::includeAllSchemes()
     QString fn = QSL( "lib:" ) % sl[0];
     QString schName = sl[1];
     qWarning() << "import: file: " << fn << " scheme: " << schName << NWHE;
-    if( ! includeScheme( fn, schName ) ) {
+    if( ! importScheme( fn, schName ) ) {
       only_good = false;
     }
   }

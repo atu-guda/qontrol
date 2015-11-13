@@ -194,6 +194,7 @@ class LaboWin : public QMainWindow
     void slotEditModel();
     void slotShowTreeModel();
     void slotNewScheme();
+    void importAllSchemes();
 
     // ==== run related
     void slotRunRun();
