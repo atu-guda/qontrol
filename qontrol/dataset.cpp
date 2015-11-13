@@ -242,6 +242,9 @@ QString HolderData::getStateStr() const
 void HolderData::setModified()
 {
   // qWarning() << "SET: " << NWHE;
+  if( ignoreMod ) {
+    return;
+  }
   if( modified & modifManual ) {  // do not repeat on alread modified
     return;
   }
@@ -587,7 +590,7 @@ QIcon HolderData::getIcon() const
   return el_ico;
 }
 
-HolderData* HolderData::addObjP( const QString &cl_name, const QString &ob_name, bool ignoreMod )
+HolderData* HolderData::addObjP( const QString &cl_name, const QString &ob_name )
 {
 
   HolderData *el = getObj( ob_name );
@@ -606,9 +609,7 @@ HolderData* HolderData::addObjP( const QString &cl_name, const QString &ob_name,
   if( !ob ) {
     return nullptr;
   }
-  if( !ignoreMod ) {
-    setModified();
-  }
+  setModified();
   endResetModel();
   reportStructChanged();
 
@@ -635,9 +636,8 @@ bool HolderData::addObjDatas( const QString &cl_name, const QString &ob_name,
   return true;
 }
 
-int HolderData::delObj( const QString &ob_name, bool ignoreMod )
+int HolderData::delObj( const QString &ob_name )
 {
-
   HolderData *ho = getObj( ob_name );
   if( !ho ) {
     qWarning() << "not found element " << ob_name << " in " << NWHE;
@@ -665,9 +665,7 @@ int HolderData::delObj( const QString &ob_name, bool ignoreMod )
     setActiveObj( act_name );
   }
 
-  if( !ignoreMod ) {
-    setModified();
-  }
+  setModified();
   endResetModel();
 
   reportStructChanged();

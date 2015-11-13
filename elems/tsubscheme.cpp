@@ -122,13 +122,15 @@ int TSubScheme::do_preRun( int run_tp, int an,
     qWarning() << "Subscheme prototype is not available" << sch_name <<NWHE;
     return 0;
   }
+  ++ignoreMod;
   if( getObj( sch_ename ) ) {
-    delObj( sch_ename, true ); // ignoreMod
+    delObj( sch_ename );
   }
 
-  sch = addObjT<Scheme>( sch_ename, true );
+  sch = addObjT<Scheme>( sch_ename );
   if( ! sch ) {
     qWarning() << "Fail to create subscheme " << NWHE;
+    --ignoreMod;
     return 0;
   }
   sch->addFlags( efNoSave );
@@ -136,6 +138,7 @@ int TSubScheme::do_preRun( int run_tp, int an,
   QString ss = sch_proto->toString();
   if( ! sch->fromString( ss ) ) {
     qWarning() << "Fail to copy prototype " << sch_name << NWHE;
+    --ignoreMod;
     return 0;
   }
 
@@ -155,6 +158,7 @@ int TSubScheme::do_preRun( int run_tp, int an,
     so->set_link();
   }
 
+  --ignoreMod;
   return sch->preRun( run_tp, an, anx, any, atdt );
 }
 

@@ -286,11 +286,11 @@ class HolderData : public QAbstractItemModel {
   bool getUpData( const QString &nm, QVariant &da ) const;
 
   /** add new object and it's description (new)*/
-  virtual HolderData* addObjP( const QString &cl_name, const QString &ob_name, bool ignoreMod = false );
+  virtual HolderData* addObjP( const QString &cl_name, const QString &ob_name );
   /** type-cast interface to addObj */
   template <typename T>
-    T* addObjT( const QString &ob_name, bool ignoreMod = false  ) {
-      return qobject_cast<T*>( addObjP( T::staticMetaObject.className(), ob_name, ignoreMod ) );
+    T* addObjT( const QString &ob_name ) {
+      return qobject_cast<T*>( addObjP( T::staticMetaObject.className(), ob_name ) );
     }
   Q_INVOKABLE bool addObj( const QString &cl_name, const QString &ob_name );
   /** is given type of subelement valid for this object */
@@ -337,7 +337,7 @@ class HolderData : public QAbstractItemModel {
   /** create object with params as string */
   Q_INVOKABLE bool addObjDatas( const QString &cl_name, const QString &ob_name, const QString &datas );
   /** delete given object by name, returns 0 - error, !=0 = ok */
-  Q_INVOKABLE int delObj( const QString &ob_name, bool ignoreMod = false  );
+  Q_INVOKABLE int delObj( const QString &ob_name );
   Q_INVOKABLE int delAllDyn();
   Q_INVOKABLE bool cloneObj( const QString &old_name, const QString &new_name );
   //* rename object (if created dynamicaly)
@@ -394,6 +394,7 @@ class HolderData : public QAbstractItemModel {
   int state = stateGood;
   /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
   int modified = 0;
+  int ignoreMod = 0; // ignore modifcation during tmp object handling
   /** flag: suspend reaction to structure update: use only in mass changes */
   bool updSuspended = false;
   //* active element index

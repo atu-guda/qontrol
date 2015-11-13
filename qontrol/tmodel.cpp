@@ -720,7 +720,6 @@ QString TModel::runModelScript()
 bool TModel::includeScheme( const QString &fn, const QString &schName )
 {
   LaboDoc incDoc;
-  bool mdf = getModified();
 
   if( !incDoc.openDocument( fn ) ) {
     return false;
@@ -737,7 +736,7 @@ bool TModel::includeScheme( const QString &fn, const QString &schName )
   }
   QString s = sch->toString();
 
-  // del if old is auto-imported
+  ++ignoreMod;
   Scheme *old_sch = getObjT<Scheme*>( QSL("schems.") % schName );
   if( old_sch && old_sch->hasAllFlags( efTmp ) ) {
     delObjFromSub( QSL("schems"), schName );
@@ -747,17 +746,16 @@ bool TModel::includeScheme( const QString &fn, const QString &schName )
   if( ! newScheme ) {
     qWarning() << "Fail to add scheme " << schName << " from " << fn << WHE;
     return false;
+    --ignoreMod;
   }
   if( ! newScheme->fromString( s ) ) {
     qWarning() << "Fail to copy scheme " << schName << " from " << fn << WHE;
+    --ignoreMod;
     return false;
   }
   newScheme->reportStructChanged();
   newScheme->addFlags( efRO | efNoSave );
-
-  if( !mdf ) { // revert modification flag if was not set at start
-    setUnModified();
-  }
+  --ignoreMod;
 
   return true;
 }
