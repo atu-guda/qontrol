@@ -1,4 +1,5 @@
 correct places for reset, set_link, *structChange..
+BUG: mofified state (i.e. after autocreated scheme removal)
 add Flag: call parent post_set if changed.
 Edit Object props? (on add?)
 No links to ignored object.

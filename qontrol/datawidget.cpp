@@ -1330,7 +1330,7 @@ int DataDialog::createWidgets()
 
     if( sep == "tab" || was_tab ) {
       if( lay2 ) {
-        lay2->setRowStretch( nr_max, 1 );
+        addFinalSpace( lay2 );
       }
       nc = nr = nr_max = nr_block = 0;
       wmain = new QWidget();
@@ -1387,7 +1387,7 @@ int DataDialog::createWidgets()
     }
   } // -------------- end item loop
   if( lay2 ) { // last tab: add stretch
-    lay2->setRowStretch( nr_max, 1 );
+    addFinalSpace( lay2 );
   }
 
   // final line and buttons
@@ -1395,7 +1395,6 @@ int DataDialog::createWidgets()
   frb->setFrameStyle( QFrame::HLine );
   lay1->addWidget( frb );
 
-  auto lay_btn2 = new QHBoxLayout;
 
   bool can_add_objs = false;
   QStringList obj_clss = EFACT.goodTypeNames( ds.allowTypes() );
@@ -1404,6 +1403,7 @@ int DataDialog::createWidgets()
   }
 
   if( can_add_objs ) {
+    auto lay_btn2 = new QHBoxLayout;
     auto btn_addObj = new QPushButton( QIcon::fromTheme("list-add"), QSL("Add object") );
     connect( btn_addObj, &QPushButton::clicked, this, &DataDialog::addObj );
     lay_btn2->addWidget( btn_addObj );
@@ -1453,3 +1453,14 @@ int DataDialog::createWidgets()
   return nr;
 }
 
+void DataDialog::addFinalSpace( QGridLayout *lay )
+{
+  int xnr = lay->rowCount();
+  auto frb = new QFrame( this );
+  // frb->setFrameStyle( QFrame::HLine );
+  frb->setFrameStyle( QFrame::Box );
+  frb->setMinimumSize( 1, 1 );
+  lay->addWidget( frb, xnr, 0, 1, -1 );
+  lay->setRowMinimumHeight( xnr, 1 );
+  lay->setRowStretch( xnr, 2 );
+}

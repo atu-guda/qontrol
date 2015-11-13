@@ -292,6 +292,7 @@ class DataDialog : public QDialog {
   protected:
    virtual int createWidgets();
    void showSimpleHelp();
+   void addFinalSpace( QGridLayout *lay );
    HolderData &ds;
    DaWiMap dwm;
    QString saved_data;
