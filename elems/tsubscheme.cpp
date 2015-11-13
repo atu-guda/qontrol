@@ -119,6 +119,7 @@ int TSubScheme::do_preRun( int run_tp, int an,
                            int anx, int any, double atdt )
 {
   IGNORE_MOD_HERE;
+  sch_proto = getObjOfAncessorT<Scheme*>( sch_name );
   if( !sch_proto ) {
     qWarning() << "Subscheme prototype is not available" << sch_name <<NWHE;
     return 0;

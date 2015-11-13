@@ -179,6 +179,9 @@ int TModel::startRun()
     qWarning() << "bad run_type during startRun " << run_type << NWHE;
     return 0;
   }
+  if( autoImport ) {
+    importAllSchemes(); // TODO: check?
+  }
   reset();
 
   c_sim = getActiveSimulation();
@@ -194,9 +197,6 @@ int TModel::startRun()
     return 0;
   }
 
-  if( autoImport ) {
-    importAllSchemes(); // TODO: check?
-  }
 
   // TODO: remove debug?
   c_sim->post_set();
