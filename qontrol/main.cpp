@@ -19,8 +19,6 @@
 #include <QApplication>
 #include <QFont>
 
-#include "getopt.h"
-
 #include "labowin.h"
 #include "labodoc.h"
 
@@ -30,15 +28,14 @@ ProgOpts prog_opts;
 QString log_app;
 QTextStream *os = nullptr;
 
-void print_usage( const char *appname );
-int  convert_model( const char *fn_old, const char *fn_new );
-int batch_process( const char *model_file );
+bool parse_cmdline( QApplication &app );
+int  convert_model( const QString &fn_old, const QString &fn_new );
+int batch_process( const QString &model_file );
 void appMsgOut( QtMsgType type, const QMessageLogContext &ctx, const QString &msg );
 void initAppDirs();
 
 int main( int argc, char *argv[] )
 {
-  char *fn_new = nullptr;
   setenv( "LC_NUMERIC", "C", 1 );
 
   QApplication a( argc, argv );
@@ -50,34 +47,7 @@ int main( int argc, char *argv[] )
 
   initAppDirs();
 
-  int op;
-  while( ( op=getopt( argc, argv, "hvbeNMc:g:o:s:u:x:I:L:X:d::" ) ) != -1 ) {
-    switch( op ) {
-      case 'h' : print_usage( argv[0] ); return 0;
-      case 'v' : cout << PACKAGE << ' ' << VERSION << endl;  return 0;
-      case 'b': prog_opts.batch = true; break;
-      case 'e': prog_opts.exit_st = true; break; // convert scripts result to int -> status
-      case 'N': prog_opts.norun = true; break;   // no run, only load (for batch)
-      case 'M': prog_opts.mod_scr = true; break; // run model script (for batch)
-      case 'c': fn_new = optarg; prog_opts.batch = true; break; // convert to this
-      case 'g': prog_opts.out_plots << L8B( optarg ); break; // see defs.h
-      case 'o': prog_opts.out_file = L8B( optarg ); break;
-      case 's': prog_opts.sim_name = L8B( optarg ); break;
-      case 'u': prog_opts.out_vars << L8B( optarg ); break;
-      case 'x': prog_opts.script = L8B( optarg ); break;
-      case 'X': prog_opts.s_files << L8B( optarg ); break;
-      case 'I': prog_opts.inc_dirs << L8B( optarg ); break;
-      case 'L': prog_opts.lib_dirs << L8B( optarg ); break;
-      case 'd': if( optarg ) {
-                  prog_opts.dbg = atoi( optarg );
-                } else {
-                  ++prog_opts.dbg;
-                };
-                break;
-      default: cerr << "Error: unknown option '" << (char)(optopt) << "'" << endl;
-               return 1;
-    }
-  }
+  parse_cmdline( a );
 
   QFile out_file; QTextStream out_stream;
   if( ! prog_opts.out_file.isEmpty() ) {
@@ -86,7 +56,6 @@ int main( int argc, char *argv[] )
       out_stream.setDevice( &out_file );
       os = &out_stream;
     }
-
   }
 
   QDir::setSearchPaths( LIB_DIR,    prog_opts.lib_dirs );
@@ -97,8 +66,7 @@ int main( int argc, char *argv[] )
 
     main_win->show();
 
-    for( int i=optind; i<argc ; ++i ) {
-      QString fn = QString::L8B( argv[i] );
+    for( auto fn : prog_opts.models ) {
       if( prog_opts.dbg>0 ) {
         qDebug() << "Try to open file" << fn << WHE;
       }
@@ -110,45 +78,45 @@ int main( int argc, char *argv[] )
 
 
   // batch processing -- the only filename requires
-  if( (argc-optind) != 1 ) { // only one positional allowed here
-    cerr << "Single input filename required for batch procession" << endl;
+  if( prog_opts.models.size() != 1 ) { // only one positional allowed here
+    cerr << "Single input filename required for batch procession, "
+         << prog_opts.models.size() << " is given" << endl;
+    for( auto fn : prog_opts.models ) {
+      cerr << qP( fn ) << endl;
+    }
     return 2;
   }
+  QString in_file = prog_opts.models[0];
 
-  if( fn_new ) { // conversion requested
-    return convert_model( argv[optind], fn_new );
+  if( ! prog_opts.fn_new.isEmpty() ) { // conversion requested
+    return convert_model( in_file, prog_opts.fn_new );
   }
 
-  return batch_process( argv[optind] );
+  return batch_process( in_file );
 
 }
 
-void print_usage( const char *appname )
-{
-  // TODO: after options relaxation, fill here
-  cout << "Usage: \n" << appname << " [-h] [-v] [files...]" << endl;
-}
 
-int convert_model( const char *fn_old, const char *fn_new )
+int  convert_model( const QString &fn_old, const QString &fn_new )
 {
   LaboDoc doc;
-  if( ! doc.openDocument( L8B( fn_old ) ) ) {
-    cerr << "Fail to read file \"" << fn_old << "\"" << endl;
+  if( ! doc.openDocument( fn_old ) ) {
+    cerr << "Fail to read file \"" << qP(fn_old) << "\"" << endl;
     return 3;
   }
-  doc.setPathName( L8B( fn_new ) );
+  doc.setPathName( fn_new );
   if( ! doc.saveDocument( false ) ) {
-    cerr << "Fail to save file \"" << fn_new << "\"" << endl;
+    cerr << "Fail to save file \"" << qP(fn_new) << "\"" << endl;
     return 3;
   }
   return 0;
 }
 
-int batch_process( const char *model_file )
+int batch_process( const QString &model_file )
 {
   int rc = 0;
   LaboDoc doc;
-  if( ! doc.openDocument( L8B( model_file ) ) ) {
+  if( ! doc.openDocument( model_file ) ) {
     qCritical() << "Fail to read file " << model_file << WHE;
     return 3;
   }
@@ -279,6 +247,78 @@ void initAppDirs()
       prog_opts.inc_dirs << s;
     }
   }
+}
+
+bool parse_cmdline( QApplication &app )
+{
+  QCommandLineParser prs;
+  prs.setApplicationDescription( QSL( PACKAGE " - dynamic systems simulation application" ) );
+  prs.addOptions( {
+      { QSL("b"), QSL("Batch file procession") },
+      { QSL("c"), QSL("converts file to current format (adds -b)"), QSL("out_file") },
+      { QSL("d"), QSL("debug level"), QSL("N") },
+      { QSL("e"), QSL("convert script Exit status to program exit status") },
+      { QSL("g"), QSL("output graph file after run..."), QSL("graph[:file_name]")  },
+      { QSL("I"), QSL("add scripts include dir..."), QSL("directory") },
+      { QSL("L"), QSL("add model libs dir..."), QSL("directory") },
+      { QSL("M"), QSL("Run model script (for batch run)") },
+      { QSL("N"), QSL("No-Run - only load (for batch run)") },
+      { QSL("o"), QSL("messages output file"), QSL("file") },
+      { QSL("P"), QSL("dump graph to file... (TODO)"), QSL("graph[:file_name]") },
+      { QSL("p"), QSL("dump output array to file... (TODO)"), QSL("out[:file_name]")  },
+      { QSL("s"), QSL("simulation name (for batch run)"), QSL("simulation"), QSL("sim0")  },
+      { QSL("u"), QSL("output after run (for batch run)..."), QSL("var") },
+      { QSL("X"), QSL("execute files (for batch run)..."), QSL("file") },
+      { QSL("x"), QSL("JS code to execute (for batch run)"), QSL("script")  },
+  } );
+  prs.addHelpOption();
+  prs.addVersionOption();
+
+  prs.process( app );
+
+  if( prs.isSet( QSL("b") ) ) {  prog_opts.batch = true;  }
+
+  prog_opts.fn_new = prs.value( QSL("c") );
+  if( !prog_opts.fn_new.isEmpty() ) {
+    prog_opts.batch = true;
+  }
+
+  prog_opts.dbg = prs.value( QSL("d") ).toInt();
+
+  if( prs.isSet( QSL("e") ) ) { prog_opts.exit_st = true;  }
+
+  prog_opts.out_plots = prs.values( QSL("g") );
+  prog_opts.inc_dirs  += prs.values( QSL("I") );
+  prog_opts.lib_dirs  += prs.values( QSL("L") );
+
+  if( prs.isSet( QSL("M") ) ) {  prog_opts.mod_scr= true;  }
+
+  if( prs.isSet( QSL("N") ) ) {  prog_opts.norun = true;   }
+
+  prog_opts.out_file = prs.value( QSL("o") );
+
+  prog_opts.grdata_outs  = prs.values( QSL("P") );
+  prog_opts.out_outs  = prs.values( QSL("p") );
+
+  prog_opts.sim_name = prs.value( QSL("s") );
+
+  prog_opts.out_vars  = prs.values( QSL("u") );
+  prog_opts.s_files   = prs.values( QSL("X") );
+
+  prog_opts.script  = prs.value( QSL("x") );
+
+  prog_opts.models = prs.positionalArguments();
+
+  if( prog_opts.dbg > 0 ) {
+    cerr << "dbg = " << prog_opts.dbg << endl;
+    cerr << "Found options:" << endl;
+    for( auto nm : prs.optionNames() ) {
+      cerr << qP(nm) << ' ';
+    }
+    cerr << endl;
+  }
+
+  return true;
 }
 
 // end of main.cpp

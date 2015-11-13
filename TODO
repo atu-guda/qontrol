@@ -1,22 +1,17 @@
 correct places for reset, set_link, *structChange..
 add Flag: call parent post_set if changed.
 Edit Object props? (on add?)
-QCommandline
-R/O + nosave for schems
 No links to ignored object.
-Mutable flag (noSave?)
 props: v_min, v_max: precalculate?
-Subscheme libs (and dirs).
 sep prop: bitfield?
 Decoration objects.
-Documenation: cmdline options, common workflow.
+Documenation: cmdline options (partial), common workflow.
 Show HolderData props
 LaboDoc: getModel + use in StatusModel
 StatusTip(col=2) for StatusModel
 Create Action fun + subclass QAction? (menu to place, flags)
 Controlled Scheme size.
 Long descriptions in schems, plots .... (button)
-When to [re]create shadow objects?
 Check: update link values only after step - prep for multi-threading (see TSubScheme)
 Error handling (from inner to iface)
 Store script errors (and data?)
@@ -26,31 +21,23 @@ Indicate corresponding outs for selected plot
 Customized colors: struct view...
 Inputs - may be Elements? like TFileSource?
 Dump TOutArr/TGraph commandline (-p/-P)
-Check/use model run status (in batch, for tests)
 More functional labels in dialogs: go to buddy, autoset ....
 Outputs - or even IO - for external data.
 Custom legeng/labels/axis(scale factor) in Mgl
 Tests
 Autocorrelation?
-Run script before/after run (+ file)
 Placeholder object: param is the type of real object?
 QScintilla? Dialog or SubWindow?
-Shadow main scheme?
+Shadow/backup/undo main scheme?
 BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params
 More stylesheets
 
 Application config: to TDataSet?
 
 JS run dialog. + one-line above log viewer
-Set more data while object creation
 
 Sub simulation? / set of dialog-ed values before run
-Add to model object: common parameters. Is really need? Use params in model/scheme/simulation
-Add to model object: functions? but what?
 
-Call parent post_set (if req). flag?
-unify add/paste elem: param in dialog?
-unify add param/object : add_obj_param? + dialog
 RunWindow?
 Edit large arrays
 More data/controls: Font, Date, Time

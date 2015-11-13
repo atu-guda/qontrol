@@ -95,13 +95,17 @@ struct ProgOpts {
   bool exit_st = false;  // -e scipt exit str to exit status
   int dbg = 0;           // -d - increase debug level -dN - set
   QString script;        // -x "JS code"
+  QString fn_new;        // -c "new_file"
   QStringList s_files;   // -X file_with_script.js
   QString out_file;      // -o output_file.txt
   QString sim_name;      // -s sumulation name, def = sim0
   QStringList out_vars;  // -u T
   QStringList out_plots; // -g graph:file.png  or  -g graph
+  QStringList out_outs;  // -p out[:file.txt]
+  QStringList grdata_outs;  // -P graph[:file.txt]
   QStringList inc_dirs;  // -Idir : where to find scripts
   QStringList lib_dirs;  // -Ldir : where to find models, used as libs
+  QStringList models;    // positional parameters
 };
 
 extern ProgOpts prog_opts; // defined in main.cpp
