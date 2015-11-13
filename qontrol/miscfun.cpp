@@ -198,27 +198,6 @@ double waveMhat( double x )
 }
 
 
-// int  fourier( int n, double l, const double *v,
-//                      int m, double *a, double *b )
-// {
-//   int i , j;
-//   double tc, ts, t1, t2, h;
-//   if( !v || !a || !b || n==0 ) {
-//     return 1;
-//   }
-//   h = l / n;
-//   for( i=0; i<m; i++ ) {
-//      tc = ts = 0; t1 = 2 * M_PI * i / l;
-//      for( j=0; j<n; j++ ) {
-//         t2 = t1 * j * h;
-//         tc += v[j] * cos( t2 );  ts += v[j] * sin( t2 );
-//      };
-//      a[i] = 2 * h * tc / l;  b[i] = 2 * h * ts / l;
-//   };
-//   return 0;
-// }
-
-
 
 
 int DatasInfo::dump( QTextStream& os, const QString &delim )
@@ -243,21 +222,6 @@ int DatasInfo::dump( QTextStream& os, const QString &delim )
   return no;
 }
 
-
-// double perpLen( double xs, double ys, double xe, double ye,
-//                 double xp, double yp )
-// {
-//   double p, r1, xf, yf;
-//   xe -= xs; ye -= ys; xp -= xs; yp -= ys;
-//   r1 = xe * xe + ye * ye;
-//   if( r1 == 0 )
-//     return 0;
-//   xf = xe * ( xe * xp + ye * yp ) / r1;
-//   yf = ye * ( xe * xp + ye * yp ) / r1;
-//   xf -= xp; yf -= yp;
-//   p = sqrt( xf * xf + yf * yf );
-//   return p;
-// }
 
 double limitAngleDeg( double a )
 {

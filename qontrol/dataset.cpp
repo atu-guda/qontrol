@@ -234,8 +234,9 @@ QString HolderData::getStateStr() const
   QString s = modificationChar[ getModified() ];
   if( dyn ) { s += "."; };
   s += getStateString( state );
-  s += " ";
+  s += QSL(" 0x");
   s += QSNX( flags );
+  s += QSL(" iM=" ) % QSN( ignoreMod );
   return s;
 }
 
@@ -245,9 +246,9 @@ void HolderData::setModified()
   if( ignoreMod ) {
     return;
   }
-  if( modified & modifManual ) {  // do not repeat on alread modified
-    return;
-  }
+  // if( modified & modifManual ) {  // do not repeat on alread modified
+  //   return;
+  // }
   modified |= modifManual;
   if( flags & efNoSave ) {    // ignore shadow and so on
     return;
@@ -631,7 +632,6 @@ bool HolderData::addObjDatas( const QString &cl_name, const QString &ob_name,
   }
 
   ho->setDatas( datas );
-  setModified();
 
   return true;
 }
@@ -658,6 +658,7 @@ int HolderData::delObj( const QString &ob_name )
     act_name = act_obj->objectName();
   }
 
+  bool ignored_obj = ho->hasAnyFlags( efNoSave );
   beginResetModel();
 
   delete ho; // auto remove object and from parent lists
@@ -665,7 +666,9 @@ int HolderData::delObj( const QString &ob_name )
     setActiveObj( act_name );
   }
 
-  setModified();
+  if( !ignored_obj ) {
+    setModified();
+  }
   endResetModel();
 
   reportStructChanged();

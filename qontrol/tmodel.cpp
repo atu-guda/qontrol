@@ -719,6 +719,7 @@ QString TModel::runModelScript()
 
 bool TModel::includeScheme( const QString &fn, const QString &schName )
 {
+  IGNORE_MOD_HERE;
   LaboDoc incDoc;
 
   if( !incDoc.openDocument( fn ) ) {
@@ -736,7 +737,6 @@ bool TModel::includeScheme( const QString &fn, const QString &schName )
   }
   QString s = sch->toString();
 
-  ++ignoreMod;
   Scheme *old_sch = getObjT<Scheme*>( QSL("schems.") % schName );
   if( old_sch && old_sch->hasAllFlags( efTmp ) ) {
     delObjFromSub( QSL("schems"), schName );
@@ -746,16 +746,13 @@ bool TModel::includeScheme( const QString &fn, const QString &schName )
   if( ! newScheme ) {
     qWarning() << "Fail to add scheme " << schName << " from " << fn << WHE;
     return false;
-    --ignoreMod;
   }
   if( ! newScheme->fromString( s ) ) {
     qWarning() << "Fail to copy scheme " << schName << " from " << fn << WHE;
-    --ignoreMod;
     return false;
   }
-  newScheme->reportStructChanged();
+  newScheme->handleStructChanged();
   newScheme->addFlags( efRO | efNoSave );
-  --ignoreMod;
 
   return true;
 }

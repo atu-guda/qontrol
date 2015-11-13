@@ -61,6 +61,16 @@ enum ModificationBits {
 //                               none  man  auto both extra......
 const char *const modificationChar[] = { "", "+", "#", "*", "?", ".", ",", "X" };
 
+// helper class to auto decrement values at function exit
+class AutoIncDec {
+  public:
+   AutoIncDec( int &av ) : v(av) { ++v; }
+   ~AutoIncDec() { --v; };
+  private:
+   int &v;
+};
+
+#define IGNORE_MOD_HERE  AutoIncDec __imod { ignoreMod };
 
 /** describes class and it's creator
    used for class registration
