@@ -1043,10 +1043,10 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
   }
   if( has_elem ) {
     menu->addSeparator();
-    act = menu->addAction( QIcon( ":icons/editelm.png" ), "&Edit element" );
+    act = menu->addAction( QIcon::fromTheme("document-properties"), "&Edit element" );
     connect( act, &QAction::triggered, this, &StructView::editObj );
     if( !ro ) {
-      act = menu->addAction( QIcon( ":icons/delelm.png" ), "&Delete element" );
+      act = menu->addAction( QIcon::fromTheme("list-remove"), "&Delete element" );
       connect( act, &QAction::triggered, this, &StructView::delObj );
       menu->addSeparator();
       act = menu->addAction( QIcon::fromTheme("edit-rename"), "Rename element" );
@@ -1063,14 +1063,17 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     act = menu->addAction( QIcon( ":icons/edit-clone.png" ), "Clone" );
     connect( act, &QAction::triggered, this, &StructView::cloneObj );
     menu->addSeparator();
-    act = menu->addAction( QIcon( ":icons/infoelm.png" ), "show &Info" );
+    act = menu->addAction( QIcon( ":icons/markelm.png" ), "Mark" );
+    connect( act, &QAction::triggered, this, &StructView::markElm );
+    menu->addSeparator();
+    act = menu->addAction( QIcon( ":icons/info-obj.png" ), "show &Info" );
     connect( act, &QAction::triggered, this, &StructView::infoObj );
     act = menu->addAction( QIcon::fromTheme("view-list-tree"), "show object tree" );
     connect( act, &QAction::triggered, this, &StructView::showTreeObj );
     menu->addSeparator();
   } else {
     if( !ro ) {
-      act = menu->addAction(  QIcon( ":icons/newelm.png" ), "&New element" );
+      act = menu->addAction( QIcon::fromTheme("list-add"), "&New element" );
       connect( act, &QAction::triggered, this, &StructView::addElm );
       if( markObj ) {
         act = menu->addAction( "&Move to" );

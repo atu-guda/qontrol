@@ -292,7 +292,7 @@ void LaboWin::initIface()
     pEditMenu->addSeparator();
   }
   {
-    auto a = new QAction( QIcon( ":icons/infoelm.png" ), "show &Info", this );
+    auto a = new QAction( QIcon( ":icons/info-obj.png" ), "show &Info", this );
     a->setShortcut( Qt::Key_I );
     registerAction( a, "infoObj" );
     connect( a, &QAction::triggered, this, &LaboWin::slotInfoObj );
@@ -445,7 +445,7 @@ void LaboWin::initIface()
     pSimulMenu->addAction( a );
   }
   {
-    auto a = new QAction( "Set Active Simulation", this );
+    auto a = new QAction( QIcon::fromTheme("checkmark"), "Set Active Simulation", this );
     a->setShortcut( Qt::ALT+Qt::CTRL+Qt::Key_Y );
     registerAction( a, "setActiveSimul" );
     connect( a, &QAction::triggered, this, &LaboWin::slotSetActiveSimul );
@@ -463,7 +463,7 @@ void LaboWin::initIface()
     elmToolbar->addSeparator();
   }
   {
-    auto a = new QAction( "show model tree", this );
+    auto a = new QAction( QIcon::fromTheme("view-list-tree"), "show model tree", this );
     a->setShortcut( Qt::CTRL+Qt::Key_T );
     registerAction( a, "showTreeModel" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowTreeModel );

@@ -41,11 +41,11 @@ void OutDataView::init_actions()
   lv->addAction( a  );
   connect( a, SIGNAL(triggered()), this, SLOT(addToPlot()) );
 
-  a = new QAction( "D&ump", this );
+  a = new QAction( QIcon::fromTheme("document-export"), "Export", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(exportObj()) );
 
-  a = new QAction( "&Show data", this );
+  a = new QAction(  QIcon( ":icons/showoutdata.png" ), "&Show data", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(showDataObj()) );
 }
@@ -133,9 +133,10 @@ bool OutDataView::exportObj()
     return false;
   }
 
-  QString fnq = QFileDialog::getSaveFileName( this, tr("Export data"),
-       arr->objectName() % QSL(".dat"),
-      "Data files (*.txt *.dat *.csv);;All files (*)" );
+  QString fnq = QFileDialog::getSaveFileName( this,
+      QSL("Export data from \"") % arr->objectName() % QSL("\""),
+      arr->objectName() % QSL(".dat"),
+      QSL("Data files (*.txt *.dat *.csv);;All files (*)") );
   if( fnq.isEmpty() ) {
     return false;
   }

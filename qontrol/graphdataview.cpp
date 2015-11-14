@@ -35,15 +35,15 @@ GraphDataView::GraphDataView( HolderData *a_mod, CommonSubwin *a_par )
 
 void GraphDataView::init_actions()
 {
-  auto a = new QAction( "&Show", this );
+  auto a = new QAction( QIcon( ":icons/showgraph.png" ), "&Show", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(showObj()) );
 
-  a = new QAction( "D&ump", this );
+  a = new QAction(  QIcon::fromTheme("document-export"), "Export", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(exportObj()) );
 
-  a = new QAction( "&Show data", this );
+  a = new QAction( QIcon( ":icons/showgraphdata.png" ), "show Data", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(showDataObj()) );
 
@@ -122,7 +122,9 @@ bool GraphDataView::exportObj()
     return false;
   }
 
-  QString fnq = QFileDialog::getSaveFileName( this, tr("Export data"), "",
+  QString fnq = QFileDialog::getSaveFileName( this,
+      QSL("Export data from \"") % gra->objectName() % QSL("\""),
+      gra->objectName() % QSL(".dat"),
       "Data files (*.txt *.dat *.csv);;All files (*)" );
   if( fnq.isEmpty() ) {
     return false;

@@ -1,5 +1,6 @@
 correct places for reset, set_link, *structChange..
 BUG: mofified state (i.e. after autocreated scheme removal)
+Long descriptions in schems, plots .... (button)
 add Flag: call parent post_set if changed.
 sep prop: bitfield?
 Decoration objects.
@@ -9,7 +10,6 @@ LaboDoc: getModel + use in StatusModel
 StatusTip(col=2) for StatusModel More: clarify 'col' meaning for objects
 Create Action fun + subclass QAction? (menu to place, flags)
 Controlled Scheme size.
-Long descriptions in schems, plots .... (button)
 Check: update link values only after step - prep for multi-threading (see TSubScheme)
 Error handling (from inner to iface)
 Store script errors (and data?)

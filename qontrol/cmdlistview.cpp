@@ -84,17 +84,17 @@ QModelIndex CmdListView::currentIndex() const
 
 void CmdListView::init_base_actions()
 {
-  auto a = new QAction( QIcon::fromTheme("list-add"), "&New", this );
+  auto a = new QAction( QIcon::fromTheme("document-properties"), "&Edit", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(editObj()) );
+
+  a = new QAction( QIcon::fromTheme("list-add"), "&New", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(addObj()) );
 
   a = new QAction( QIcon::fromTheme("list-remove"), "&Delete", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(delObj()) );
-
-  a = new QAction( QIcon::fromTheme("document-properties"), "&Edit", this );
-  lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(editObj()) );
 
   a = new QAction( QIcon::fromTheme("edit-cut"), "Cu&t", this );
   lv->addAction( a );
@@ -116,7 +116,7 @@ void CmdListView::init_base_actions()
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(cloneObj()) );
 
-  a = new QAction( "Info", this );
+  a = new QAction( QIcon( ":icons/info-obj.png" ), "Info", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(infoObj()) );
 
