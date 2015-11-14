@@ -33,7 +33,8 @@ class TFuncPoly : public TMiso  {
 
    enum FuncType {
      ft_lin = 0, ft_square, ft_cube, ft_biSquare, ft_sqrt, ft_hypot, ft_4square,
-     ft_vibro, ft_msquare, ft_xExp, ft_lin2, ft_linAbs
+     ft_vibro, ft_msquare, ft_xExp, ft_lin2, ft_linAbs,
+     ft_pow4, ft_pow5, ft_pow, ft_pows,
    };
    Q_ENUMS(FuncType);
    Q_CLASSINFO( "enum_FuncType_0", "a*y+g"                                 ); // ft_lin
@@ -48,6 +49,10 @@ class TFuncPoly : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_9", "1-exp(-a*((u0^2+u1^2-1)^2-b*u0-c*u1))" ); // ft_xExp
    Q_CLASSINFO( "enum_FuncType_10","a*(1+b*y)+g"                           ); // ft_lin2
    Q_CLASSINFO( "enum_FuncType_11","a*(b*y+c*abs(y))+g"                    ); // ft_linAbs
+   Q_CLASSINFO( "enum_FuncType_12","a*y^4+b*y^3+c*y^2+d*y+g"               ); // ft_pow4
+   Q_CLASSINFO( "enum_FuncType_13","a*y^5+b*y^4+c*y^3+d*y^2+e*y+g"         ); // ft_pow5
+   Q_CLASSINFO( "enum_FuncType_14","a*pow(b*y,in_2)+g"                     ); // ft_pow
+   Q_CLASSINFO( "enum_FuncType_15","a*pow(b*|y|,in_2)*sign(y)+g"           ); // ft_pows
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -63,9 +68,12 @@ class TFuncPoly : public TMiso  {
    PRM_DOUBLE( g,  0, "g", "Parameter g", "" );
    PRM_DOUBLE( x0, 0, "x0", "Input shift: y = in_0 - in_1 - x0;", "" );
 
+   PRM_DOUBLE( y,  efInner, "y",   "in_0 - in_1 - x0", "" );
+   PRM_DOUBLE( y2, efInner, "y^2", "y^2", "" );
+
    PRM_INPUT( in_0, 0, "input 0", "First input",  "sep=block" );
    PRM_INPUT( in_1, 0, "input 1", "Second input", "sep=col" );
-   PRM_INPUT( in_2, 0, "input 2", "Third input",  "sep=col" );
+   PRM_INPUT( in_2, 0, "input 2", "Third input",  "sep=block" );
    PRM_INPUT( in_3, 0, "input 3", "Fourth input", "sep=col" );
 
    Q_CLASSINFO( "nameHintBase",  "fp_" );

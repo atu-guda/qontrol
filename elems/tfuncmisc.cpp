@@ -19,6 +19,8 @@
 #include "miscfun.h"
 #include "tfuncmisc.h"
 
+using namespace std;
+
 const char* TFuncMisc::helpstr = "<H1>TFuncMisc</H1>\n"
  "Miscelenios nonlinear functions: <br>\n"
  "Argument <b>y</b> calculates as:<br>\n"
@@ -44,7 +46,7 @@ double TFuncMisc::f( double /* t */ )
     case ft_dealLimitLine: v = a * deadLimitLine( y, b, c, d ); break;
     case ft_sign         : v = a * sign( y ); break;
     case ft_theta        : v = a * thetta( y ); break;
-    case ft_diod         : v = ( y > 0 ) ? y : 0; v *= a; break;
+    case ft_diod         : v = a * posval( y ); break;
     case ft_threeState   : v = a * threeStateLine( y, b ); break;
     case ft_triangle     : v = a * triangleLine( y , b ); break;
     case ft_reactLine    : v = a * rectLine( y, b, c ); break;

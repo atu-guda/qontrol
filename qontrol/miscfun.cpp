@@ -102,17 +102,6 @@ QString flags2str( int fl ) {
   return s;
 }
 
-double thetta( double x )
-{
-  return ( x>0 ) ? 1 : 0;
-}
-
-
-double sign( double x )
-{
-  return ( x>0 ) ? 1 : ( ( x<0 ) ? -1 : 0 );
-}
-
 double deadLine( double x, double x0 )
 {
   if( x > x0 ) {

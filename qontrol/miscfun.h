@@ -53,9 +53,10 @@ int isGoodName( const QString &s );
 QString flags2str( int fl );
 
 /** signum function y = -1:0:1 */
-double sign( double x );
+inline double sign( double x ) {  return ( x>0 ) ? 1 : ( ( x<0 ) ? -1 : 0 ); };
 /** Heaviside */
-double thetta( double x );
+inline double thetta( double x ) { return ( x>0 ) ? 1 : 0; };
+inline double posval( double x ) { return ( x>=0 ) ? x : 0; };
 double deadLine( double x, double x0 );
 double limitLine( double x, double x0 );
 double deadLimitLine( double x, double x0, double x1, double a );

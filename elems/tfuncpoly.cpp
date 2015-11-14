@@ -16,6 +16,8 @@
  ***************************************************************************/
 
 #include <cmath>
+
+#include "miscfun.h"
 #include "tfuncpoly.h"
 
 using namespace std;
@@ -36,7 +38,7 @@ CTOR(TFuncPoly,TMiso)
 
 double TFuncPoly::f( double /* t */ )
 {
-  double v, y, y2, t1, t2;
+  double v, t1, t2;
   y = in_0 - in_1 - x0; y2 = y*y;
   switch( (int)type ) {
     case  ft_lin:
@@ -49,12 +51,12 @@ double TFuncPoly::f( double /* t */ )
       v = a * in_0 * in_0 + b * in_0 * in_1 + c * in_1 * in_1; break;
     case  ft_sqrt:
       t1 = b * y + c;
-      v = ( t1 > 0 ) ? a * sqrt( t1 ) : 0; break;
+      v = a * sqrt( posval(t1) ); break;
     case  ft_hypot:
       v = hypot( a * in_0, b * in_1 ); break;
     case  ft_4square:
-      v = a * in_0* in_0 + b * in_1 * in_1
-        + c * in_2* in_2 + d * in_3 * in_3; break;
+      v = a * in_0* in_0  +  b * in_1 * in_1
+        + c * in_2* in_2  +  d * in_3 * in_3; break;
     case  ft_vibro:
       t1 = b*b - y2; t1 *= t1;
       v = 1 / sqrt( t1 + a * a *y2 ); break;
@@ -71,6 +73,14 @@ double TFuncPoly::f( double /* t */ )
       v = a * ( 1 + b*y ) ; break;
     case  ft_linAbs:
       v = a * ( b * y + c * fabs(y) ) ; break;
+    case  ft_pow4:
+      v = a*y2*y2 + b*y*y2 + c*y2 + d*y; break;
+    case  ft_pow5:
+      v = a*y2*y2*y + b*y2*y2 + c*y2*y + d*y2 + e*y; break;
+    case  ft_pow:
+      v = a * pow( b * posval(y), posval(in_2) ); break;
+    case  ft_pows:
+      v = a * pow( b * fabs(y), posval(in_2) ) * sign( y ); break;
     default: v = 0;
   };
   v += g;
