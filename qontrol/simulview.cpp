@@ -44,6 +44,7 @@ bool SimulView::setActive()
     return false;
   }
   storage->setActiveObj( sim->objectName() );
+  storage->reportStructChanged();
   emit viewChanged();
   return true;
 }

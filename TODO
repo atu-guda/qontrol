@@ -1,8 +1,8 @@
 correct places for reset, set_link, *structChange..
 BUG: mofified state (i.e. after autocreated scheme removal)
+No plot if NaN, Inf present
 add Flag: call parent post_set if changed.
 Edit Object props? (on add?)
-No links to ignored object.
 props: v_min, v_max: precalculate?
 sep prop: bitfield?
 Decoration objects.

@@ -200,6 +200,7 @@ int TModel::startRun()
 
   // TODO: remove debug?
   c_sim->post_set();
+  reportStructChanged();
 
   T   = c_sim->getDataD( "T", 0.0 );
   N   = c_sim->getDataD( "N", 1 );
