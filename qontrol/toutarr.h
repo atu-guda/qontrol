@@ -97,6 +97,7 @@ class TOutArr : public TDataSet  {
    Q_INVOKABLE double getAbsDev() const {  return absdev_x; }
    Q_INVOKABLE double getAutoCorr() const { return acorr; }
    Q_INVOKABLE QString getAllStats( QString sep = "; ") const;
+   Q_INVOKABLE bool isAllFinite() const { return isfin; };
  protected:
    virtual void do_reset() override;
    virtual void do_structChanged() override;
@@ -131,6 +132,7 @@ class TOutArr : public TDataSet  {
    PRM_INT( n, efInner, "current size", "Current number of datas", "" );
    PRM_INT( imin, efInner, "imin", "index of minimal element", "def=-1" );
    PRM_INT( imax, efInner, "imax", "index of maximal element", "def=-1" );
+   PRM_INT( isfin, efInner, "isfin", "Flag: all values was finite", "def=1" );
    /** data storage */
    dvector arr;
    /** fake source */

@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <cmath>
 #include <gsl/gsl_statistics.h>
 
 #include <QBrush>
@@ -22,6 +23,8 @@
 #include "miscfun.h"
 #include "toutarr.h"
 #include "tmodel.h"
+
+using namespace std;
 
 
 const char* TOutArr::helpstr = "<H1>TOutArr</H1>\n"
@@ -46,6 +49,9 @@ QVariant TOutArr::dataObj( int col, int role ) const
   if( role == Qt::BackgroundRole ) {
     if( col != 0 ) {
       return TDataSet::dataObj( col, role );
+    }
+    if( !isfin ) {
+      return QBrush( QColor(254,0,0) ) ;
     }
     if( so == &fake_so && type != OutArrType::outSpec ) {
       return QBrush( QColor(254,128,128) ) ;
@@ -124,6 +130,7 @@ int TOutArr::alloc( int anx, int any )
 void TOutArr::do_reset()
 {
   n = 0; cnq = 0;
+  isfin = 1;
   reset_stat();
 
   set_link();
@@ -317,6 +324,9 @@ void TOutArr::put( int i, double v )
     return;
   }
   arr[i] = v;
+  if( v != v /*!isfinite( v )*/ ) {
+    isfin = 0;
+  }
   need_calc_stat = true;
 }
 
@@ -336,6 +346,9 @@ void TOutArr::add( double v )
   if( cnq == lnq ) {
     arr[n] = v;
     ++n;
+    if( /* !isfinite( v ) || */ (v != v) ) {
+      isfin = 0;
+    }
     need_calc_stat = true;
   };
   ++cnq;

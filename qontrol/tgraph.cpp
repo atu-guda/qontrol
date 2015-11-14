@@ -96,6 +96,9 @@ LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
   if( !arr ) {
     return rl;
   }
+  if( ! arr->isAllFinite() ) {
+    return LineRole::none;
+  }
 
   nn = arr->getDataD( "n", 0 );
   if( nn < 1 ) {

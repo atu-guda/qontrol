@@ -1,15 +1,12 @@
 correct places for reset, set_link, *structChange..
 BUG: mofified state (i.e. after autocreated scheme removal)
-No plot if NaN, Inf present
 add Flag: call parent post_set if changed.
-Edit Object props? (on add?)
-props: v_min, v_max: precalculate?
 sep prop: bitfield?
 Decoration objects.
 Documenation: cmdline options (partial), common workflow.
-Show HolderData props
+Show(edit?) HolderData props
 LaboDoc: getModel + use in StatusModel
-StatusTip(col=2) for StatusModel
+StatusTip(col=2) for StatusModel More: clarify 'col' meaning for objects
 Create Action fun + subclass QAction? (menu to place, flags)
 Controlled Scheme size.
 Long descriptions in schems, plots .... (button)
@@ -32,6 +29,7 @@ QScintilla? Dialog or SubWindow?
 Shadow/backup/undo main scheme?
 BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params
 More stylesheets
+props: v_min, v_max: precalculate?
 
 Application config: to TDataSet?
 
