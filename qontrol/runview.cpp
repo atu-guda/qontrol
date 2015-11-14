@@ -319,7 +319,6 @@ void RunView::getSchemeData()
   Simulation *c_sim = model->getActiveSimulation();
   if( c_sim ) {
     n_tot = c_sim->getDataD( "n_tot", 100 );
-    n_iosteps = c_sim->getDataD( "n_iosteps", 1 );
     T = c_sim->getDataD( "T", 1.0 );
     N = c_sim->getDataD( "N", 1 );
     syncRT = c_sim->getDataD( "syncRT", 0 );

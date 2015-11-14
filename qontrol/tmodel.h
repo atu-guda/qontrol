@@ -186,7 +186,7 @@ class TModel : public LinkedObj  {
   /** real start time */
   double start_time = 0;
   // copy of simulation vars - but w/o onject access - just for speed;
-  int N = 10, N1 = 1, N2 = 1, syncRT = 0, n_iosteps = 1;
+  int N = 10, N1 = 1, N2 = 1, syncRT = 0;
 
   // saved parameters
   double prm0_save = 0, prm1_save = 1;

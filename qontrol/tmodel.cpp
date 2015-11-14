@@ -218,13 +218,6 @@ int TModel::startRun()
   prm1d = c_sim->getDataD( "prm1d", 0.0 );
   seed = c_sim->getDataD( "seed", 1 );
   seedType = c_sim->getDataD( "seedType",  0 );
-  n_iosteps = c_sim->getDataD( "n_iosteps",  1 );
-  if( n_iosteps >= N ) {
-    n_iosteps = N/10;
-  }
-  if( n_iosteps < 1 ) {
-    n_iosteps = 1;
-  }
   // qWarning() << "pre: n2_eff= " << n2_eff << " n1_eff= " << n1_eff << " N= " << N << WHE;
 
   int type = c_sim->getDataD( "runType", (int)Simulation::runSingle );

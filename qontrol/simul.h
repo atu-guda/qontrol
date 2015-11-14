@@ -65,32 +65,29 @@ class Simulation : public LinkedObj  {
   PRM_SWITCH( syncRT, efNoRunChange, "Sync RT",
       "Real and model time synchronization ", "sep=col" );
   PRM_DOUBLE( io_t, efNRC, "I/O time", "Time per each I/O action", "def=0.1\nmin=1e-4" );
+  /** number of steps per i/o action */
+  PRM_INT( n_iosteps, efOld, "N IO steps", "UNUSED", "def=1" );
+  /** Loop parameter values */
   PRM_INT( N1, efNoRunChange, "N1",
        "Number of inner parametric loops iterations",
        "min=1\nmax=10000\nsep=block\ndef=1" );
-  /** number of outer parametric loops iterations */
+  PRM_DOUBLE( prm0s, efNoRunChange, "prm0s", "Initial prm0 value", "" );
+  PRM_DOUBLE( prm0d, efNoRunChange, "prm0+=", "Parameter 0 delta", "" );
+  PRM_STRING( prm0_map,  efNRC, "Map to(0)", "Change parameter with prm0", "max=128\ncmpl=in" );
   PRM_INT( N2, efNoRunChange, "N2",
        "Number of outer parametric loops iterations",
-       "min=1\nmax=10000\nsep=col\ndef=1" );
-  /** number of steps per i/o action */
-  PRM_INT( n_iosteps, efNoRunChange, "N IO steps",
-      "number of steps per i/o action (limited to N, UNUSED)",
-      "min=1\nmax=100000\nsep=col\ndef=100" );
-  /** Initial parameters values */
-  PRM_DOUBLE( prm0s, efNoRunChange, "prm0s", "Initial prm0 value", "sep=block" );
+       "min=1\nmax=10000\nsep=col\ndef=1\nsep=col" );
   PRM_DOUBLE( prm1s, efNoRunChange, "prm1s", "Initial prm1 value", "" );
-  PRM_DOUBLE( prm2s, efNoRunChange, "prm2s", "Initial prm2 value", ""  );
-  PRM_DOUBLE( prm3s, efNoRunChange, "prm3s", "Initial prm3 value", ""  );
-  PRM_DOUBLE( prm0d, efNoRunChange, "prm0+=", "Parameter 0 delta", "sep=col" );
   PRM_DOUBLE( prm1d, efNoRunChange, "prm1+=", "Parameter 1 delta", "" );
-  PRM_INT( seed, efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
-  PRM_LIST( seedType, efNoRunChange, "Seed type",  "type of seeding", "enum=SeedType" );
-  PRM_STRING( prm0_map,  efNRC, "Map to(0)", "Change parameter with prm0", "max=128\ncmpl=in\nsep=col" );
   PRM_STRING( prm1_map,  efNRC, "Map to(1)", "Change parameter with prm1", "max=128\ncmpl=in" );
+  PRM_DOUBLE( prm2s, efInner, "prm2s", "Initial prm2 value", ""  );
+  PRM_DOUBLE( prm3s, efInner, "prm3s", "Initial prm3 value", ""  );
   PRM_SWITCH( saveParams,efNoRunChange, "Save params",
-      "Save mapped parameters during run, adn restore after", "def=1" );
+      "Save mapped parameters during run, and restore after", "def=1\nsep=col" );
   PRM_SWITCH( autoStart, efNoRunChange, "auto start",
       "Start simulation without key awaiting", "" );
+  PRM_INT( seed, efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
+  PRM_LIST( seedType, efNoRunChange, "Seed type",  "type of seeding", "enum=SeedType" );
   //* -------- script params -------------------------------
   PRM_SWITCH( useScripts, efNRC, "use scripts", "Turn on all script usage", "def=0\nsep=block" );
   PRM_SWITCH( initEng, efNRC, "Init engine", "Init engine before run", "def=1" );

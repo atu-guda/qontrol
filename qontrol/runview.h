@@ -44,7 +44,7 @@ class RunView : public QDialog  {
    void slotStartRun();
    /** interrupts computation */
    void slotStopRun();
-   /** do n_iosteps computations (by timer(0)) */
+   /** do some computations (by timer(0)) */
    void slotRunNext();
 
   protected:
@@ -114,8 +114,6 @@ class RunView : public QDialog  {
     double t;
     //* total time
     double T = 1.0;
-    /** number of steps per i/o action */
-    int n_iosteps = 1;
     /** flag for real and scheme time synchronization */
     int syncRT = 0;
     //* one step per I/O
