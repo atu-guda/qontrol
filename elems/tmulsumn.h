@@ -26,6 +26,9 @@
 
 class TMulsumN : public TMiso  {
   Q_OBJECT
+  struct ChInSim2 {
+    InputSimple *in_p = nullptr, *in_f = nullptr;
+  };
  public:
    DCL_CTOR(TMulsumN);
    DCL_CREATE;
@@ -37,16 +40,18 @@ class TMulsumN : public TMiso  {
 
    PRM_DOUBLE( spf,   efInner, "spf",  "Summ of p_i * f_i", "" );
    PRM_DOUBLE( sp,    efInner, "sp",   "Summ of p_i", "" );
+   PRM_DOUBLE( sf,    efInner, "sf",   "Summ of f_i", "" );
    PRM_DOUBLE( pge,   efInner, "pge",  "Computed extremum (p)", "" );
-   PRM_DOUBLE( lspf,  efInner, "lspf", "Local summ of p_i * f_i", "" );
-   PRM_DOUBLE( lsp,   efInner, "lsp",  "Local summ of p_i", "" );
-   PRM_DOUBLE( lpge,  efInner, "lpge", "Local computed extremum (p)", "" );
+   PRM_DOUBLE( spfl,  efInner, "spfl", "Local summ of p_i * f_i", "" );
+   PRM_DOUBLE( spl,   efInner, "spl",  "Local summ of p_i", "" );
+   PRM_DOUBLE( sfl,   efInner, "sfl",  "Local summ of f_i", "" );
+   PRM_DOUBLE( ple,   efInner, "ple",  "Local computed extremum (p)", "" );
    PRM_DOUBLE( ne,    efInner, "ne",   "Index of point near extremum", "" );
    PRM_DOUBLE( pe,    efInner, "pe",   "Coorditate of point near extremum (p)", "" );
    PRM_DOUBLE( fe,    efInner, "fe",   "Value at point near extremum (f)", "" );
    PRM_DOUBLE( np,    efInner, "np",   "Number of detected points", "" );
 
-   QVector<InputSimple*> inputs, p_ins, f_ins;
+   QVector<ChInSim2> pf_ins;
 
    Q_CLASSINFO( "nameHintBase",  "msum_" );
    DCL_DEFAULT_STATIC;
