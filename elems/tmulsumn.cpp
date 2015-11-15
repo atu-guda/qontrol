@@ -26,6 +26,7 @@ const char* TMulsumN::helpstr = "<h1>TMulsumN</h1>\n"
  "sp  = \\sum_i p_i ;<br>\n"
  "pge = spf / sp ;<br>\n"
  "ple,spfl,spl - local (near extremum variant);<br>\n"
+ "pee,fee, - quadratic approximation;<br>\n"
  "ne - index of extremal point <br>\n"
  "pe - coordinate in extremal point <br>\n"
  "fe - function in extremal point <br>\n";
@@ -59,9 +60,8 @@ double TMulsumN::f( double /* t */ )
   }
 
   int n = pf_ins.size(); // local ?? np?
-  if( ne == 0  || ne == n-1 ) { // boundary
-    ple = pe; spfl = fe * pe; spl = pe; sfl = fe;
-  } else {
+  ple = pee = pe; spfl = fe * pe; spl = pe; fee = sfl = fe; // fallback
+  if( ne > 0  &&  ne < n-1 ) { // not boundary
     double pl = *(pf_ins[ne-1].in_p);
     double pc = *(pf_ins[ne  ].in_p);
     double pr = *(pf_ins[ne+1].in_p);
@@ -72,6 +72,20 @@ double TMulsumN::f( double /* t */ )
     sfl = fl + fc + fr;
     spfl = pl*fl + pc*fc + pr*fr;
     ple = spfl / sfl;
+    // a-la tquadexrt
+    double p_lt = pl - pc;
+    double p_rt = pr - pc;
+    double f_lt = fl - fc;
+    double f_rt = fr - fc;
+    double denom = p_lt * p_lt * p_rt - p_lt * p_rt * p_rt;
+    if( fabs( denom ) > D_AZERO ) {
+      double a_1 = ( f_rt * p_lt * p_lt - f_lt * p_rt * p_rt ) / denom;
+      double a_2 = - ( f_rt * p_lt - f_lt * p_rt ) / denom;
+      pee = pc - 0.5 * a_1 / a_2; // rel
+      pee = qBound( pl, (double)pee, pr );
+      double pee_t = pee - pc;
+      fee = fc + a_2 * pee_t * pee_t + a_1 * pee_t;
+    }
   }
   return spf;
 }

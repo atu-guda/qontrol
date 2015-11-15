@@ -185,7 +185,7 @@ QSize LaboView::svSize() const
 
 void LaboView::update()
 {
-  updateViews();
+  // updateViews();
   QWidget::update();
 }
 
@@ -217,7 +217,7 @@ void LaboView::closeEvent( QCloseEvent *e )
 
 void LaboView::resizeEvent( QResizeEvent *e )
 {
-  updateViews();
+  // updateViews();
   QWidget::resizeEvent( e );
 }
 

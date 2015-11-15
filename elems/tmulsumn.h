@@ -46,6 +46,8 @@ class TMulsumN : public TMiso  {
    PRM_DOUBLE( spl,   efInner, "spl",  "Local summ of p_i", "" );
    PRM_DOUBLE( sfl,   efInner, "sfl",  "Local summ of f_i", "" );
    PRM_DOUBLE( ple,   efInner, "ple",  "Local computed extremum (p)", "" );
+   PRM_DOUBLE( pee,   efInner, "pee",  "quadratic extremum approximation (p)", "" );
+   PRM_DOUBLE( fee,   efInner, "fee",  "quadratic extremum approximation (f)", "" );
    PRM_DOUBLE( ne,    efInner, "ne",   "Index of point near extremum", "" );
    PRM_DOUBLE( pe,    efInner, "pe",   "Coorditate of point near extremum (p)", "" );
    PRM_DOUBLE( fe,    efInner, "fe",   "Value at point near extremum (f)", "" );
