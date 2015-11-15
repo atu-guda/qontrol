@@ -51,8 +51,8 @@ class TFuncPoly : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_11","a*(b*y+c*abs(y))+g"                    ); // ft_linAbs
    Q_CLASSINFO( "enum_FuncType_12","a*y^4+b*y^3+c*y^2+d*y+g"               ); // ft_pow4
    Q_CLASSINFO( "enum_FuncType_13","a*y^5+b*y^4+c*y^3+d*y^2+e*y+g"         ); // ft_pow5
-   Q_CLASSINFO( "enum_FuncType_14","a*pow(b*y,in_2)+g"                     ); // ft_pow
-   Q_CLASSINFO( "enum_FuncType_15","a*pow(b*|y|,in_2)*sign(y)+g"           ); // ft_pows
+   Q_CLASSINFO( "enum_FuncType_14","a*pow(b*y,c)+g"                        ); // ft_pow
+   Q_CLASSINFO( "enum_FuncType_15","a*pow(b*|y|,c)*sign(y)+g"              ); // ft_pows
  protected:
    /** main computation function */
    virtual double f( double t ) override;

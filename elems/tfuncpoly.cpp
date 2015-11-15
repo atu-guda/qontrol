@@ -78,9 +78,9 @@ double TFuncPoly::f( double /* t */ )
     case  ft_pow5:
       v = a*y2*y2*y + b*y2*y2 + c*y2*y + d*y2 + e*y; break;
     case  ft_pow:
-      v = a * pow( b * posval(y), posval(in_2) ); break;
+      v = a * pow( b * posval(y), posval(c) ); break;
     case  ft_pows:
-      v = a * pow( b * fabs(y), posval(in_2) ) * sign( y ); break;
+      v = a * pow( b * fabs(y), posval(c) )  *  sign( y ); break;
     default: v = 0;
   };
   v += g;
