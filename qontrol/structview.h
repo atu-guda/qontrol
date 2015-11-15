@@ -94,10 +94,6 @@ class StructView : public CmdView  {
     /** change level for selecting aux objects */
     void changeLevel( int lev );
     // element related
-    void addElm();
-    void delElm();
-    void editElm();
-    void renameElm();
     void qlinkElm();
     void qplinkElm();
     void unlinkElm();
@@ -105,13 +101,7 @@ class StructView : public CmdView  {
     void ordElm();
     void markElm();
     void moveElm();
-    void infoElm();
-    void showTreeElm();
-    void testElm1();
     void testElm2();
-    void cutElm();
-    void copyElm();
-    void pasteElm();
     // common object slots
     virtual bool addObj() override;
     virtual bool delObj() override; // handle mark == select

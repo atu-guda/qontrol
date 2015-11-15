@@ -237,25 +237,6 @@ void LaboView::updateViews()
 
 // ==== element related
 
-void LaboView::addElm()
-{
-  return sview->addElm();
-}
-
-void LaboView::delElm()
-{
-  return sview->delElm();
-}
-
-void LaboView::editElm()
-{
-  return sview->editElm();
-}
-
-void LaboView::renameElm()
-{
-  return sview->renameElm();
-}
 
 
 void LaboView::qlinkElm()
@@ -294,32 +275,13 @@ void LaboView::moveElm()
   return sview->moveElm();
 }
 
-void LaboView::infoElm()
-{
-  return sview->infoElm();
-}
 
-void LaboView::showTreeElm()
-{
-  return sview->showTreeElm();
-}
-
-
-void LaboView::testElm1()
-{
-  return sview->testElm1();
-}
 
 void LaboView::testElm2()
 {
   return sview->testElm2();
 }
 
-void LaboView::cutElm()
-{
-  copyElm();
-  delElm();
-}
 
 bool LaboView::actionObj( const char *action )
 {
@@ -394,20 +356,7 @@ bool LaboView::testObj()
   return actionObj( "testObj" );
 }
 
-// ---------------- old elem --------------
 
-
-
-void LaboView::copyElm()
-{
-  sview->copyObj();
-}
-
-
-void LaboView::pasteElm()
-{
-  return sview->pasteElm();
-}
 
 
 
@@ -418,22 +367,6 @@ void LaboView::addOut()
   outs_view->addObj();
 }
 
-void LaboView::delOut()
-{
-  outs_view->delObj();
-}
-
-
-void LaboView::editOut()
-{
-  outs_view->editObj();
-}
-
-
-void LaboView::renameOut()
-{
-  outs_view->renameObj();
-}
 
 
 void LaboView::showOutData()
@@ -452,24 +385,6 @@ void LaboView::exportOut()
 void LaboView::addGraph()
 {
   plots_view->addObj();
-}
-
-
-void LaboView::delGraph()
-{
-  plots_view->delObj();
-}
-
-
-void LaboView::editGraph()
-{
-  plots_view->editObj(); // TODO: no reset
-  // editSomething( plots_view, true );
-}
-
-void LaboView::renameGraph()
-{
-  plots_view->renameObj();
 }
 
 
@@ -495,12 +410,6 @@ void LaboView::exportGraphData()
 }
 
 
-void LaboView::cloneGraph()
-{
-  plots_view->cloneObj();
-}
-
-
 // ==== simulation related
 
 void LaboView::addSimul()
@@ -508,30 +417,10 @@ void LaboView::addSimul()
   sims_view->addObj();
 }
 
-void LaboView::delSimul()
-{
-  sims_view->delObj();
-}
-
-void LaboView::editSimul()
-{
-  sims_view->editObj();
-}
-
-void LaboView::renameSimul()
-{
-  sims_view->renameObj();
-}
-
 
 void LaboView::setActiveSimul()
 {
   sims_view->setActive();
-}
-
-void LaboView::cloneSimul()
-{
-  sims_view->cloneObj();
 }
 
 
@@ -557,26 +446,6 @@ void LaboView::showTreeModel()
 void LaboView::addScheme()
 {
   schems_view->addObj();
-}
-
-void LaboView::delScheme()
-{
-  schems_view->delObj();
-}
-
-void LaboView::editScheme() // special: separate window
-{
-  schems_view->editObj();
-}
-
-void LaboView::renameScheme()
-{
-  schems_view->renameObj();
-}
-
-void LaboView::cloneScheme()
-{
-  schems_view->cloneObj();
 }
 
 

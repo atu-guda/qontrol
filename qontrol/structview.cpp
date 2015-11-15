@@ -647,26 +647,6 @@ QString StructView::getSchemeName() const
 
 // ==== element related
 
-void StructView::addElm()
-{
-  addObj();
-}
-
-void StructView::delElm()
-{
-  delObj();
-}
-
-void StructView::editElm()
-{
-  editObj();
-}
-
-void StructView::renameElm()
-{
-  renameObj();
-}
-
 
 void StructView::qlinkElm()
 {
@@ -831,21 +811,6 @@ void StructView::moveElm()
   emit viewChanged();
 }
 
-void StructView::infoElm()
-{
-  infoObj();
-}
-
-void StructView::showTreeElm()
-{
-  showTreeObj();
-}
-
-
-void StructView::testElm1()
-{
-  testObj();
-}
 
 void StructView::testElm2()
 {
@@ -945,23 +910,6 @@ bool StructView::cloneObj()
 
 
 
-void StructView::cutElm() // TODO: delete
-{
-  cutObj();
-}
-
-
-void StructView::copyElm() // TODO: delete
-{
-  copyObj();
-}
-
-
-void StructView::pasteElm() // TODO: delete
-{
-  pasteObj();
-}
-
 bool StructView::pasteObj()
 {
   if( selObj ) {
@@ -981,6 +929,7 @@ bool StructView::pasteObj()
   ob->setData( "vis_x", sel_x );
   ob->setData( "vis_y", sel_y );
   ob->setData( "ord", oord );
+  ob->reportStructChanged();
   changeSel( 0, 0, 1 ); // update sel
   return true;
 }
@@ -1023,7 +972,7 @@ void StructView::mousePressEvent( QMouseEvent *me )
                 }
                 break;
     case Qt::MidButton:
-                editElm();
+                editObj();
                 break;
     default:
                 break;// none
@@ -1074,13 +1023,13 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
   } else {
     if( !ro ) {
       act = menu->addAction( QIcon::fromTheme("list-add"), "&New element" );
-      connect( act, &QAction::triggered, this, &StructView::addElm );
+      connect( act, &QAction::triggered, this, &StructView::addObj );
       if( markObj ) {
         act = menu->addAction( "&Move to" );
         connect( act, &QAction::triggered, this, &StructView::moveElm );
       }
       act = menu->addAction( QIcon::fromTheme("edit-paste"), "&Paste" );
-      connect( act, &QAction::triggered, this, &StructView::pasteElm );
+      connect( act, &QAction::triggered, this, &StructView::pasteObj );
     }
   };
 
@@ -1105,7 +1054,7 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
 
 void StructView::mouseDoubleClickEvent( QMouseEvent * /*me*/ )
 {
-  editElm();
+  editObj();
 }
 
 
@@ -1125,7 +1074,7 @@ void StructView::keyPressEvent( QKeyEvent *ke )
   // nw = w / grid_sz - 1;
   xy_delta = btnShift ? 5 : 1;
   switch( k ) {
-    case Qt::Key_Return: editElm(); break; // to catch both keys
+    case Qt::Key_Return: editObj(); break; // to catch both keys
     case Qt::Key_Home:  changeSel( 0, 0, 0 ); break;
     case Qt::Key_Left:  changeSel( -xy_delta, 0, 1 );  break;
     case Qt::Key_Right: changeSel( xy_delta, 0, 1 );  break;

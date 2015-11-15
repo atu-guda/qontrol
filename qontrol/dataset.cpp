@@ -246,9 +246,9 @@ void HolderData::setModified()
   if( ignoreMod ) {
     return;
   }
-  // if( modified & modifManual ) {  // do not repeat on alread modified
-  //   return;
-  // }
+  if( modified & modifManual ) {  // do not repeat on alread modified
+    return;
+  }
   modified |= modifManual;
   if( flags & efNoSave ) {    // ignore shadow and so on
     return;

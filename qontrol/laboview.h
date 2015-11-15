@@ -82,10 +82,6 @@ class LaboView : public CommonSubwin
    /** contains the implementation for printing functionality  */
    void print();
    // element related
-   void addElm();
-   void delElm();
-   void editElm();
-   void renameElm();
    void qlinkElm();
    void qplinkElm();
    void unlinkElm();
@@ -93,13 +89,7 @@ class LaboView : public CommonSubwin
    void ordElm();
    void markElm();
    void moveElm();
-   void infoElm();
-   void showTreeElm();
-   void testElm1();
    void testElm2();
-   void cutElm();
-   void copyElm();
-   void pasteElm();
    // common object
    bool actionObj( const char *action ); // common actions: not slot?
    bool addObj();
@@ -116,39 +106,24 @@ class LaboView : public CommonSubwin
 
    // outs related
    void addOut();
-   void delOut();
-   void editOut();
-   void renameOut();
    void showOutData();
    void exportOut();
 
    // graphs related
    void addGraph();
-   void delGraph();
-   void editGraph();
-   void renameGraph();
    void showGraph();
    void graphAddOut();
    void showGraphData();
    void exportGraphData();
-   void cloneGraph();
 
    // simulation releated
    void addSimul();
-   void delSimul();
-   void editSimul();
-   void renameSimul();
    void setActiveSimul();
-   void cloneSimul();
 
    // model/scheme related
    void editModel();
    void showTreeModel();
    void addScheme();
-   void delScheme();
-   void editScheme();
-   void renameScheme();
-   void cloneScheme();
    void importAllSchemes();
 
    // runs

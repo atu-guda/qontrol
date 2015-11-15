@@ -1,7 +1,7 @@
 correct places for reset, set_link, *structChange..
 BUG: mofified state (i.e. after autocreated scheme removal)
 BUG: 'sep' property is not saved / restored
-BUG: relink required after element paste.
+BUG: huge time on model params edit. May be containers must have hodialedit flag?
 Long descriptions in schems, plots .... (button)
 add Flag: call parent post_set if changed.
 sep prop: bitfield?
