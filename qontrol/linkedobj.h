@@ -74,13 +74,15 @@ class InputAbstract : public LinkedObj {
 
   PRM_STRING( source, efNoRunChange, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
   PRM_STRING( label,  efNoRunChange, "Label", "Label to display on structure", "max=64"  );
+  PRM_INT( channel, efNRC, "Channel", "Channel number of this input", "" );
+  PRM_INT( subchannel, efNRC, "Subchannel", "Subchannel number of this input", "" );
   PRM_INT( x_shift, 0, "X shift", "Shift on x-part of link represenration", "sep=col" );
   PRM_INT( y_shift, 0, "Y shift", "Shift on y-part of link represenration", "" );
   PRM_INT( line_w,  0, "Line width", "Line width on scheme", "def=1\nmin=0\nmax=20" );
   PRM_COLOR( line_color,  0, "Line color", "Line color on scheme", "def=black" );
-  PRM_SWITCH( onlyLabel, 0, "only Label", "draw only label of link on scheme", "" );
+  PRM_SWITCH( onlyLabel, 0, "only Label", "draw only link label on scheme", "" );
   PRM_DOUBLE( out0, efInner, "input", "Readed by readInput for subschemes", "" );
-  PRM_INT( linkType,  efInner | efRO, "Link type", "Describes tye of link", "def=3" );
+  PRM_INT( linkType,  efInner | efRO, "Link type", "Describes link type", "def=3" );
   PRM_STRING( srcobj, efInner | efRO, "Source object", "Name of the source object", ""  );
 
   static const double fake_in;
