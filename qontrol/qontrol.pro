@@ -76,6 +76,7 @@ SOURCES += \
   ../elems/trossler.cpp \
   ../elems/tmaxnum.cpp \
   ../elems/tmultipl.cpp \
+  ../elems/tmulsumn.cpp \
   ../elems/tpid.cpp \
   ../elems/tquadextr.cpp \
   ../elems/trand.cpp \
@@ -152,6 +153,7 @@ HEADERS += \
   ../elems/trossler.h \
   ../elems/tmaxnum.h \
   ../elems/tmultipl.h \
+  ../elems/tmulsumn.h \
   ../elems/tpid.h \
   ../elems/tquadextr.h \
   ../elems/trand.h \
