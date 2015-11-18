@@ -1,10 +1,11 @@
 correct places for reset, set_link, *structChange..
 BUG: mofified state (i.e. after autocreated scheme removal)
-BUG: 'sep' property is not saved / restored
 BUG: huge time on model params edit. May be containers must have hodialedit flag?
 Long descriptions in schems, plots .... (button)
-add Flag: call parent post_set if changed.
+add Flag: call parent post_set if changed. and supress for mass changes
 sep prop: bitfield?
+updSuspended: like setModified
+Create arrays in dialogs.
 Decoration objects.
 Documenation: cmdline options (partial), common workflow.
 Show(edit?) HolderData props

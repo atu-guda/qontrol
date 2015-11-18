@@ -395,6 +395,8 @@ class HolderData : public QAbstractItemModel {
   virtual void do_structChanged();
   //* real part of fromDom */
   bool fromDom_real( QDomElement &de, QString &errstr );
+  bool restoreParmsFromDom( QDomElement &de );
+  void saveParmsToDom( QDomElement &de ) const;
 
   int dyn = 0; //* flag: is created dynamically i.e. can be deleted
   int flags;   //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...

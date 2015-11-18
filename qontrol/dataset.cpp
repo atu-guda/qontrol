@@ -797,13 +797,18 @@ QDomElement HolderData::toDom( QDomDocument &dd ) const
   if( dyn ) {
     de.setAttribute( "dyn", "1" );
     de.setAttribute( "otype", getType() );
-    for( auto p = parms.cbegin(); p != parms.cend(); ++p ) {
-      de.setAttribute( "prm_" + p.key(), p.value() );
-    }
+    saveParmsToDom( de );
   }
   QDomText tn = dd.createTextNode( toString() );
   de.appendChild( tn );
   return de;
+}
+
+void HolderData::saveParmsToDom( QDomElement &de ) const
+{
+  for( auto p = parms.cbegin(); p != parms.cend(); ++p ) {
+    de.setAttribute( "prm_" + p.key(), p.value() );
+  }
 }
 
 bool HolderData::fromDom( QDomElement &de, QString &errstr )
@@ -884,24 +889,8 @@ bool HolderData::fromDom_real( QDomElement &de, QString &errstr )
           continue; // ignore unused params
         }
       }
-      ho->fromString( getDomText(ee) );
-
-      if( ho->isDyn() ) { // restore params
-        // qDebug() << "dyn param:" << ho->objectName() <<  NWHE;
-        auto attrs = ee.attributes();
-        int asz = attrs.size();
-        for( int i=0; i<asz; ++i ) {
-          QDomNode dann = attrs.item(i);
-          QDomAttr dattr = dann.toAttr();
-          if( dattr.isNull() ) { continue; }
-          QString attr_name = dattr.name();
-          // qDebug() << "dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
-          if( ! attr_name.startsWith( "prm_" ) ) { continue; } // only special names
-          attr_name.remove( 0, 4 ); // remove "prm_";
-          ho->setParm( attr_name, dattr.value() );
-          // qDebug() << "set dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
-        }
-      }
+      ho->fromString( getDomText( ee ) );
+      ho->restoreParmsFromDom( ee );
 
     } else { // ----------- unknown element
       errstr = QString("TDataSet::fromDom: bad element %1 %2 ")
@@ -910,9 +899,32 @@ bool HolderData::fromDom_real( QDomElement &de, QString &errstr )
       return false;
     }
   }
+  restoreParmsFromDom( de );
   post_set();
   reportStructChanged();
 
+  return true;
+}
+
+bool HolderData::restoreParmsFromDom( QDomElement &de )
+{
+  if( ! isDyn() ) { // not for static objects
+    return false;
+  }
+  // qDebug() << "dyn param:" << ho->objectName() <<  NWHE;
+  auto attrs = de.attributes();
+  int asz = attrs.size();
+  for( int i=0; i<asz; ++i ) {
+    QDomNode dann = attrs.item(i);
+    QDomAttr dattr = dann.toAttr();
+    if( dattr.isNull() ) { continue; }
+    QString attr_name = dattr.name();
+    // qDebug() << "dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
+    if( ! attr_name.startsWith( "prm_" ) ) { continue; } // only special names
+    attr_name.remove( 0, 4 ); // remove "prm_";
+    setParm( attr_name, dattr.value() );
+    // qDebug() << "set dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
+  }
   return true;
 }
 
@@ -2321,6 +2333,10 @@ QDomElement TDataSet::toDom( QDomDocument &dd ) const
   QDomElement de = dd.createElement( "obj" );
   de.setAttribute( "name", objectName() );
   de.setAttribute( "otype", getType() );
+  if( dyn ) { // func
+    de.setAttribute( "dyn", "1" );
+    saveParmsToDom( de );
+  }
 
   for( auto ho : TCHILD(HolderData*) ) {
     if( ho->hasAnyFlags( efNoSave ) ) {
