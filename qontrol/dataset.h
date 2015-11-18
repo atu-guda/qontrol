@@ -27,9 +27,6 @@ class QStandardItemModel;
 class QStandardItem;
 class HolderData;
 class   TDataSet;
-class InputSimple;
-class InputParam;
-typedef HolderData* PHolderData;
 typedef TDataSet* PTDataSet;
 typedef const TDataSet* CPTDataSet;
 typedef HolderData* (*PFHolderData)(

@@ -1,6 +1,7 @@
 correct places for reset, set_link, *structChange..
 BUG: mofified state (i.e. after autocreated scheme removal)
-BUG: huge time on model params edit. May be containers must have hodialedit flag?
+BUG: huge time on model params edit. May be containers must have nodialedit flag or depth limit?
+  What about redo?
 Long descriptions in schems, plots .... (button)
 add Flag: call parent post_set if changed. and supress for mass changes
 sep prop: bitfield?
@@ -13,7 +14,7 @@ LaboDoc: getModel + use in StatusModel
 StatusTip(col=2) for StatusModel More: clarify 'col' meaning for objects
 Create Action fun + subclass QAction? (menu to place, flags)
 Controlled Scheme size.
-Check: update link values only after step - prep for multi-threading (see TSubScheme)
+!Check: update link values only after step - prep for multi-threading (see TSubScheme)
 Error handling (from inner to iface)
 Store script errors (and data?)
 Excess? error in fromDom ... and/or show last error?
