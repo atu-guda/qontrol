@@ -1889,8 +1889,7 @@ void HolderFont::reset_dfl()
 bool HolderFont::set( const QVariant & x, int /* idx */  )
 {
   auto v0 = v;
-  QString s = x.toString();
-  v = QFont( s );
+  v.fromString( x.toString() );
   post_set();
   if( v != v0 ) {
     setModified();
@@ -1900,7 +1899,7 @@ bool HolderFont::set( const QVariant & x, int /* idx */  )
 
 QVariant HolderFont::get( int /* idx */ ) const
 {
-  return QVariant( v );
+  return QVariant( v.key() );
 }
 
 void HolderFont::do_post_set()
@@ -1909,7 +1908,7 @@ void HolderFont::do_post_set()
 
 QString HolderFont::toString() const
 {
-  return v.toString();
+  return v.key();
 }
 
 bool HolderFont::fromString( const QString &s )

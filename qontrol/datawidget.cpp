@@ -731,7 +731,7 @@ bool FontDataWidget::set()
 bool FontDataWidget::get() const
 {
   QFont c = cb->font();
-  ho.set( c.toString() );
+  ho.set( c.key() );
   return true;
 }
 

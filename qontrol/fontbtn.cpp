@@ -56,15 +56,10 @@ void FontBtn::slotClicked()
 void FontBtn::paintEvent( QPaintEvent * ev )
 {
   setFont( cfont );
-  QString s = cfont.toString();
+  QString s = cfont.key();
   s.truncate( 16 );
   setText( s );
   QPushButton::paintEvent( ev );
-  // int bor_w = 2; // border width
-  // QFont fillCol = isEnabled() ? Qt::white : Qt::gray; // TODO: style
-  // QPainter p( this );
-  // p.setFont( font );
-  // p.end();
 }
 
 // end of fontbtn.cpp
