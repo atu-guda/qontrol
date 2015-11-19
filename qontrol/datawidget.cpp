@@ -702,6 +702,51 @@ int ColorDataWidget::reg()
 }
 
 
+// ------------------- FontDataWidget ---------------------------
+int FontDataWidget::registered = FontDataWidget::reg();
+
+FontDataWidget::FontDataWidget( HolderData &h, QWidget *parent )
+  : DataWidget( h, parent ),
+   cb( new FontBtn( this ) )
+{
+  main_w = cb;
+  if( h.isRoTree( efROAny ) ) {
+    cb->setDisabled( true );
+  }
+  cb->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Expanding );
+
+  auto lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
+  lay->addWidget( cb, 1 );
+  setLayout( lay );
+}
+
+bool FontDataWidget::set()
+{
+  cb->set_Font( ho.get().toString() );
+  return true;
+}
+
+bool FontDataWidget::get() const
+{
+  QFont c = cb->font();
+  ho.set( c.toString() );
+  return true;
+}
+
+DataWidget* FontDataWidget::create( HolderData &h, QWidget *parent  )
+{
+  return new FontDataWidget( h, parent );
+}
+
+int FontDataWidget::reg()
+{
+  static DataWidgetProp p { create, "FONT" };
+  return FactoryDataWidget::theFactory().registerWidgetType( "FontDataWidget", p );
+}
+
+
 
 // ------------------- IntArrayDataWidget ---------------------------
 int IntArrayDataWidget::registered = IntArrayDataWidget::reg();

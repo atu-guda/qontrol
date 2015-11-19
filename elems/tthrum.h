@@ -51,8 +51,9 @@ class TThrum : public TMiso  {
    PRM_DOUBLE( p_dou,  0, "Double", "factor in input 0", "def=0.123\nmin=1e-10\nsep=col" );
    PRM_DOUBLE( p_dous,  0, "Double S", "Spin test", "props=DOUBLE,SPIN\ndef=-5.\nmin=10\nmax=100\nstep=0.5" );
    PRM_DOUBLE( p_doun, efNoRunChange, "Double N", "test noRunChange", "def=1.1\nmax=1e10" );
-   PRM_COLOR( p_col, 0, "Color", "Color value", "def=silver" );
-   PRM_STRING( p_str, 0, "&String", "some string", u8"sep=col\nncol=2\ndef=\"a b c d f\"" );
+   PRM_STRING( p_str, 0, "&String", "some string", u8"ncol=2\ndef=\"a b c d f\"" );
+   PRM_COLOR( p_col, 0, "Color", "Color value", "sep=col\ndef=silver" );
+   PRM_FONT( p_font, 0, "Font", "Font value", "def=Sans" );
 
    PRM_INPUT( in0, 0, "input 0", "First input",  "sep=block" );
    PRM_INPUT( in1, 0, "input 1", "Second input", "sep=col" );

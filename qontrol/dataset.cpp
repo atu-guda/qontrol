@@ -1855,6 +1855,85 @@ const char* HolderColor::helpstr { "Contains QColor data" };
 
 DEFAULT_FUNCS_REG(HolderColor);
 
+// ---------------- HolderFont ---------
+STD_CLASSINFO_ALIAS(HolderFont,clpData,font);
+
+CTOR(HolderFont,HolderValue)
+{
+  tp=QVariant::Font;
+  post_set();
+  if( getParm("props").isEmpty() ) {
+    setParm( "props", "FONT,STRING" );
+  }
+}
+
+HolderFont::~HolderFont()
+{
+}
+
+void HolderFont::reset_dfl()
+{
+  auto v0 = v;
+  v = QFont();
+  QString s = getParm( "def" );
+  if( ! s.isEmpty() ) {
+    v.fromString( s );
+  }
+  post_set();
+  if( v != v0 ) {
+    setModified();
+  }
+}
+
+
+bool HolderFont::set( const QVariant & x, int /* idx */  )
+{
+  auto v0 = v;
+  QString s = x.toString();
+  v = QFont( s );
+  post_set();
+  if( v != v0 ) {
+    setModified();
+  }
+  return true;
+}
+
+QVariant HolderFont::get( int /* idx */ ) const
+{
+  return QVariant( v );
+}
+
+void HolderFont::do_post_set()
+{
+}
+
+QString HolderFont::toString() const
+{
+  return v.toString();
+}
+
+bool HolderFont::fromString( const QString &s )
+{
+  auto v0 = v;
+  v.fromString( s );
+  post_set();
+  if( v != v0 ) {
+    setModified();
+  }
+  return true;
+}
+
+
+QString HolderFont::getTypeV() const
+{
+  return "font";
+}
+
+const char* HolderFont::helpstr { "Contains QFont data" };
+
+DEFAULT_FUNCS_REG(HolderFont);
+
+
 // ---------------- HolderIntArray ---------
 STD_CLASSINFO_ALIAS(HolderIntArray,clpData|clpArray,int[]);
 

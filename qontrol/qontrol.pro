@@ -30,6 +30,7 @@ SOURCES += \
   mo2settdlg.cpp \
   colorbtn.cpp \
   doubletable.cpp \
+  fontbtn.cpp \
   graphdataview.cpp \
   labodoc.cpp \
   laboview.cpp \
@@ -108,6 +109,7 @@ HEADERS += \
   mo2settdlg.h \
   colorbtn.h \
   doubletable.h \
+  fontbtn.h \
   graphdataview.h \
   labodoc.h \
   laboview.h \

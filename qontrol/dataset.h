@@ -12,6 +12,7 @@
 #include <QObject>
 #include <QString>
 #include <QColor>
+#include <QFont>
 #include <QIcon>
 #include <QStringList>
 #include <QVariant>
@@ -572,6 +573,30 @@ class HolderColor : public HolderValue {
 
 #define PRM_COLOR( name, flags, vname, descr, extra ) \
  HolderColor name = { #name, this, flags, vname, descr, extra  } ;
+
+
+// ----------------------------------------------------------------
+/** Holder of QFont values */
+class HolderFont : public HolderValue {
+  Q_OBJECT
+ public:
+  DCL_CTOR(HolderFont);
+  virtual ~HolderFont();
+  DCL_CREATE;
+  DCL_STD_INF;
+  DCL_STD_GETSET;
+  virtual QString getTypeV() const override;
+  STD_CONVERSIONS(QFont);
+  INNER_ASSIGN(HolderFont);
+ protected:
+  QFont v;
+  Q_CLASSINFO( "nameHintBase",  "fnt_" );
+  DCL_DEFAULT_STATIC;
+};
+
+#define PRM_FONT( name, flags, vname, descr, extra ) \
+ HolderFont name = { #name, this, flags, vname, descr, extra  } ;
+
 
 // ----------------------------------------------------------------
 /** Holder: array of int */

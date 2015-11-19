@@ -3,7 +3,7 @@ BUG: mofified state (i.e. after autocreated scheme removal)
 BUG: huge time on model params edit. May be containers must have nodialedit flag or depth limit?
   What about redo?
 Long descriptions in schems, plots .... (button)
-add Flag: call parent post_set if changed. and supress for mass changes
+add Flag: call parent post_set if changed. and supress for mass changes. set/do_set?
 sep prop: bitfield?
 updSuspended: like setModified
 Create arrays in dialogs.

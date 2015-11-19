@@ -15,6 +15,7 @@
 
 #include "dataset.h"
 #include "colorbtn.h"
+#include "fontbtn.h"
 
 class DataWidget;
 
@@ -190,6 +191,19 @@ class ColorDataWidget: public DataWidget {
   static int reg();
   static int registered;
   ColorBtn *cb;
+};
+
+
+class FontDataWidget: public DataWidget {
+ public:
+  FontDataWidget( HolderData &h, QWidget *parent = 0 );
+  virtual bool set();
+  virtual bool get() const;
+  static DataWidget* create( HolderData &h, QWidget *parent  );
+ protected:
+  static int reg();
+  static int registered;
+  FontBtn *cb;
 };
 
 class IntArrayDataWidget: public DataWidget {

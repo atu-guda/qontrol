@@ -1,8 +1,8 @@
 /***************************************************************************
-                          colorbtn.h  -  description
+  fontbtn.h - widget to edit font by button
                              -------------------
-    begin                : Sat Aug 5 2000
-    copyright            : (C) 2000-2015 by atu
+    begin                : 2015.11.19
+    copyright            : (C) 2015-2015 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -15,35 +15,33 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef COLORBTN_H
-#define COLORBTN_H
+#ifndef FONTBTN_H
+#define FONTBTN_H
 
 #include <QWidget>
 #include <QPushButton>
-#include <QColor>
+#include <QFont>
 
-/**allow select color by pressing button
+/**allow select font by pressing button
   *@author atu
   */
 
-class ColorBtn : public QPushButton  {
+class FontBtn : public QPushButton  {
  Q_OBJECT
  public:
-   explicit ColorBtn( QWidget *parent );
-   virtual ~ColorBtn();
-   const QColor& color() const { return col; }
-   int colorInt() const;
-   void setColor( const QColor &c );
-   void setColor( int ic );
+   explicit FontBtn( QWidget *parent );
+   virtual ~FontBtn();
+   const QFont& font() const { return cfont; }
+   void set_Font( const QFont &c );
+   void set_Font( const QString &s );
  signals:
-   void changed( const QColor &newColor );
+   void changed( const QFont &newFont );
  protected slots:
-   /** called if clicked */
    void slotClicked();
  protected:
    virtual void paintEvent( QPaintEvent *ev );
  protected:
-   QColor col;
+   QFont cfont;
 };
 
 #endif
