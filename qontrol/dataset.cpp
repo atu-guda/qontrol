@@ -381,24 +381,21 @@ HolderData* HolderData::getObj( const QString &oname ) const
   return nullptr;
 }
 
-void HolderData::setParm( const QString &name, const QString &value )
+void HolderData::setParm( const QString &pname, const QString &value )
 {
-  parms[name] = value;
+  parms[pname] = value;
 }
 
 
-QString HolderData::getParm( const QString &name, const QString &dfl ) const
+QString HolderData::getParm( const QString &pname, const QString &dfl ) const
 {
-  if( parms.contains( name ) ) {
-    return parms[name];
-  }
-  return dfl;
+  return parms.value( pname, dfl );
 }
 
-int HolderData::getParmInt( const QString &name, int dfl ) const
+int HolderData::getParmInt( const QString &pname, int dfl ) const
 {
-  if( parms.contains( name ) ) {
-    const QString &p = parms[name];
+  if( parms.contains( pname ) ) {
+    const QString &p = parms[pname];
     bool ok;
     int v = p.toInt( &ok, 0 );
     if( ok ) {
@@ -408,10 +405,10 @@ int HolderData::getParmInt( const QString &name, int dfl ) const
   return dfl;
 }
 
-double HolderData::getParmDouble( const QString &name, double dfl ) const
+double HolderData::getParmDouble( const QString &pname, double dfl ) const
 {
-  if( parms.contains( name ) ) {
-    const QString &p = parms[name];
+  if( parms.contains( pname ) ) {
+    const QString &p = parms[pname];
     bool ok;
     double v = p.toDouble( &ok );
     if( ok ) {
@@ -419,6 +416,13 @@ double HolderData::getParmDouble( const QString &name, double dfl ) const
     }
   }
   return dfl;
+}
+
+void HolderData::setParmIfEmpty( const QString &pname, const QString &val )
+{
+  if( getParm( pname ).isEmpty() ) {
+    setParm( pname, val );
+  }
 }
 
 bool HolderData::setDatas( const QString &datas )
@@ -1426,9 +1430,7 @@ STD_CLASSINFO_ALIAS(HolderInt,clpData,int);
 CTOR(HolderInt,HolderValue) , v(0)
 {
   tp=QVariant::Int;
-  if( getParm( QSL("props") ).isEmpty() ) {
-    setParm( QSL("props"), QSL("INT,SIMPLE") );
-  }
+  setParmIfEmpty( QSL("props"), QSL("INT,SIMPLE") );
   post_set();
 }
 
@@ -1492,9 +1494,7 @@ STD_CLASSINFO_ALIAS(HolderSwitch,clpData,switch);
 
 CTOR(HolderSwitch,HolderInt)
 {
-  if( getParm( QSL("props") ) == QSL("INT,SIMPLE") ) {
-    setParm( QSL("props"), QSL("INT,SWITCH") );
-  }
+  setParmIfEmpty( QSL("props"), QSL("INT,SWITCH") );
   setParm( QSL("min"), QSL("0") ); setParm( QSL("max"), QSL("1") );
   post_set();
 }
@@ -1520,9 +1520,7 @@ STD_CLASSINFO_ALIAS(HolderList,clpData,list);
 CTOR(HolderList,HolderInt)
 {
   setParm( QSL("min"), QSL("0") ); setParm( QSL("max"), QSL("0") );
-  if( getParm(QSL("props")) == QSL("INT,SIMPLE") ) {
-    setParm( QSL("props"), QSL("INT,LIST") );
-  }
+  setParmIfEmpty( QSL("props"), QSL("INT,LIST") );
 
   // may be overkill, but one cone - one place
   QString enum_name = getParm( QSL("enum") );
@@ -1561,9 +1559,7 @@ CTOR(HolderDouble,HolderValue), v(0)
 {
   tp=QVariant::Double;
   post_set();
-  if( getParm(QSL("props")).isEmpty() ) {
-    setParm( QSL("props"), QSL("DOUBLE,SIMPLE") );
-  }
+  setParmIfEmpty( QSL("props"), QSL("DOUBLE,SIMPLE") );
 }
 
 HolderDouble::~HolderDouble()
@@ -1624,9 +1620,7 @@ CTOR(HolderString,HolderValue)
 {
   tp=QVariant::String;
   post_set();
-  if( getParm(QSL("props")).isEmpty() ) {
-    setParm( QSL("props"), QSL("STRING,SIMPLE") );
-  }
+  setParmIfEmpty( QSL("props"), QSL("STRING,SIMPLE") );
 }
 
 HolderString::~HolderString()
@@ -1683,10 +1677,8 @@ STD_CLASSINFO_ALIAS(HolderColor,clpData,color);
 CTOR(HolderColor,HolderValue)
 {
   tp=QVariant::Color;
-  post_set();
-  if( getParm(QSL("props")).isEmpty() ) {
-    setParm( QSL("props"), QSL("COLOR,INT") );
-  }
+  v = QColor(Qt::red);
+  setParmIfEmpty( QSL("props"), QSL("COLOR,INT") );
 }
 
 HolderColor::~HolderColor()
@@ -1749,10 +1741,7 @@ STD_CLASSINFO_ALIAS(HolderFont,clpData,font);
 CTOR(HolderFont,HolderValue)
 {
   tp=QVariant::Font;
-  post_set();
-  if( getParm(QSL("props")).isEmpty() ) {
-    setParm( QSL("props"), QSL("FONT,STRING") );
-  }
+  setParmIfEmpty( QSL("props"), QSL("FONT,STRING") );
 }
 
 HolderFont::~HolderFont()
@@ -1812,9 +1801,7 @@ CTOR(HolderDate,HolderValue)
 {
   tp=QVariant::Date;
   post_set();
-  if( getParm(QSL("props")).isEmpty() ) {
-    setParm( QSL("props"), QSL("DATE,STRING") );
-  }
+  setParmIfEmpty( QSL("props"), QSL("DATE,STRING") );
 }
 
 HolderDate::~HolderDate()
@@ -1889,9 +1876,7 @@ CTOR(HolderTime,HolderValue)
 {
   tp=QVariant::Time;
   post_set();
-  if( getParm(QSL("props")).isEmpty() ) {
-    setParm( QSL("props"), QSL("TIME,STRING") );
-  }
+  setParmIfEmpty( QSL("props"), QSL("TIME,STRING") );
 }
 
 HolderTime::~HolderTime()
@@ -1964,9 +1949,7 @@ STD_CLASSINFO_ALIAS(HolderIntArray,clpData|clpArray,int[]);
 CTOR(HolderIntArray,HolderValue)
 {
   tp=QVariant::UserType;
-  if( getParm(QSL("props")).isEmpty() ) {
-    setParm( QSL("props"), QSL("ARRAY_INT") );
-  }
+  setParmIfEmpty( QSL("props"), QSL("ARRAY_INT") );
   // all done by reset_dfl
 }
 
@@ -2081,9 +2064,7 @@ STD_CLASSINFO_ALIAS(HolderDoubleArray,clpData|clpArray,double[]);
 CTOR(HolderDoubleArray,HolderValue)
 {
   tp=QVariant::UserType;
-  if( getParm(QSL("props")).isEmpty() ) {
-    setParm( QSL("props"), QSL("ARRAY_DOUBLE") );
-  }
+  setParmIfEmpty( QSL("props"), QSL("ARRAY_DOUBLE") );
 }
 
 HolderDoubleArray::~HolderDoubleArray()
@@ -2197,9 +2178,7 @@ STD_CLASSINFO_ALIAS(HolderStringArray,clpData|clpArray,string[]);
 CTOR(HolderStringArray,HolderValue)
 {
   tp=QVariant::UserType;
-  if( getParm(QSL("props")).isEmpty() ) {
-    setParm( QSL("props"), QSL("ARRAY_STRING") );
-  }
+  setParmIfEmpty( QSL("props"), QSL("ARRAY_STRING") );
 }
 
 HolderStringArray::~HolderStringArray()
@@ -2313,9 +2292,7 @@ const char* TDataSet::helpstr =
 CTOR(TDataSet,HolderData)
 {
   tp=QVariant::UserType;
-  if( getParm(QSL("props")).isEmpty() ) {
-    setParm( QSL("props"), QSL("OBJ") );
-  }
+  setParmIfEmpty( QSL("props"), QSL("OBJ") );
 }
 
 TDataSet::~TDataSet()

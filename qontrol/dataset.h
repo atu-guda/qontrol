@@ -326,10 +326,11 @@ class HolderData : public QAbstractItemModel {
 
   /** returns full name of object: aaa.bbb.cc  */
   Q_INVOKABLE QString getFullName() const;
-  Q_INVOKABLE void setParm( const QString &name, const QString &value );
-  Q_INVOKABLE QString getParm( const QString &name, const QString &dfl = QString() ) const;
-  Q_INVOKABLE int getParmInt( const QString &name, int dfl = 0 ) const;
-  Q_INVOKABLE double getParmDouble( const QString &name, double dfl = 0 ) const;
+  Q_INVOKABLE void setParm( const QString &pname, const QString &value );
+  Q_INVOKABLE void setParmIfEmpty( const QString &pname, const QString &val );
+  Q_INVOKABLE QString getParm( const QString &pname, const QString &dfl = QString() ) const;
+  Q_INVOKABLE int getParmInt( const QString &pname, int dfl = 0 ) const;
+  Q_INVOKABLE double getParmDouble( const QString &pname, double dfl = 0 ) const;
   Q_INVOKABLE bool setDatas( const QString &datas ); //* data sep: newline
   Q_INVOKABLE QString getType() const { return getClassInfo()->className; };
   virtual const char* getHelp() const  = 0;
