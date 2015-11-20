@@ -43,7 +43,6 @@ Sub simulation? / set of dialog-ed values before run
 
 RunWindow?
 Edit large arrays
-More data/controls: Date, Time
 TCircBuf + TDelay re*
 order -> only hint? or not use at all
 js/large text edit widget + button/dialog + external editor (partial done)?

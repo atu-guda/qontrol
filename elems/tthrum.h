@@ -46,15 +46,17 @@ class TThrum : public TMiso  {
 
    PRM_INT( p_int, 0, "Int", "integer value", "min=-2\nmax=12\ndef=1" );
    PRM_SWITCH( p_sw, 0, "switch", "simple switch", "def=1" );
-   PRM_LIST( p_list, 0, "LIst", "ListElement", "def=2\nenum=ListType" );
-   PRM_INT( p_intsp, 0, "Int_sp", "spin test", "props=INT,SPIN\nmin=-2\nmax=12\ndef=1" );
+   PRM_LIST( p_list, 0, "List", "ListElement", "def=2\nenum=ListType" );
+   PRM_INT( p_intsp, 0, "Int_sp", "spin test", "props=INT,SPIN\nvis_name=<div>int_sp</div>\nmin=-2\nmax=12\ndef=1" );
    PRM_DOUBLE( p_dou,  0, "Double", "factor in input 0", "def=0.123\nmin=1e-10\nsep=col" );
    PRM_DOUBLE( p_dous,  0, "Double S", "Spin test", "props=DOUBLE,SPIN\ndef=-5.\nmin=10\nmax=100\nstep=0.5" );
    PRM_DOUBLE( p_doun, efNoRunChange, "Double N", "test noRunChange", "def=1.1\nmax=1e10" );
-   PRM_STRING( p_str, 0, "&String", "some string", u8"ncol=2\ndef=\"a b c d f\"" );
    PRM_COLOR( p_col, 0, "Color", "Color value", "sep=col\ndef=silver" );
    PRM_FONT( p_font, 0, "Font", "Font value", "def=Sans" );
    PRM_DATE( p_date, 0, "Date", "Date value", "def=2015.11.20\nmin=1010.10.10" );
+   PRM_TIME( p_time, 0, "Time", "Time value", "def=23:59:59.001\nmin=00:13:00.000" );
+
+   PRM_STRING( p_str, 0, "&String", "some string", u8"sep=block\nncol=2\ndef=\"a b c d f\"" );
 
    PRM_INPUT( in0, 0, "input 0", "First input",  "sep=block" );
    PRM_INPUT( in1, 0, "input 1", "Second input", "sep=col" );

@@ -1840,7 +1840,7 @@ bool HolderDate::set( const QVariant & x, int /* idx */  )
 
 QVariant HolderDate::get( int /* idx */ ) const
 {
-  return QVariant( v.toString( DATE_FORMAT ) );
+  return QVariant( v );
 }
 
 void HolderDate::do_post_set()
@@ -1848,7 +1848,16 @@ void HolderDate::do_post_set()
   if( ! v.isValid() ) {
     v = QDate( 1970, 0, 0 );
   }
-  // TODO: min. max
+  QString s_min = getParm( "min" );
+  if( ! s_min.isEmpty() ) {
+    QDate d_min =  QDate::fromString( s_min, DATE_FORMAT );
+    if( v < d_min ) { v = d_min; }
+  }
+  QString s_max = getParm( "max" );
+  if( ! s_max.isEmpty() ) {
+    QDate d_max =  QDate::fromString( s_max, DATE_FORMAT );
+    if( v > d_max ) { v = d_max; }
+  }
 }
 
 QString HolderDate::toString() const
@@ -1865,6 +1874,83 @@ bool HolderDate::fromString( const QString &s )
 const char* HolderDate::helpstr { "Contains QDate data" };
 
 DEFAULT_FUNCS_REG(HolderDate);
+
+
+
+// ---------------- HolderTime ---------
+STD_CLASSINFO_ALIAS(HolderTime,clpData,time);
+
+CTOR(HolderTime,HolderValue)
+{
+  tp=QVariant::Time;
+  post_set();
+  if( getParm("props").isEmpty() ) {
+    setParm( "props", "TIME,STRING" );
+  }
+}
+
+HolderTime::~HolderTime()
+{
+}
+
+void HolderTime::reset_dfl()
+{
+  HolderValue::reset_dfl();
+}
+
+bool HolderTime::set( const QVariant & x, int /* idx */  )
+{
+  auto v0 = v;
+  if( x.type() == QVariant::Time ) {
+    v = x.toTime();
+  } else if( x.type() == QVariant::Int ) {
+    v = QTime::fromMSecsSinceStartOfDay( x.toInt() );
+  } else {
+    v = QTime::fromString( x.toString(), TIME_FORMAT );
+  }
+  post_set();
+  if( v != v0 ) {
+    setModified();
+  }
+  return true;
+}
+
+QVariant HolderTime::get( int /* idx */ ) const
+{
+  return QVariant( v );
+}
+
+void HolderTime::do_post_set()
+{
+  if( ! v.isValid() ) {
+    v = QTime( 0, 0, 0 );
+  }
+  QString s_min = getParm( "min" );
+  if( ! s_min.isEmpty() ) {
+    QTime t_min =  QTime::fromString( s_min, TIME_FORMAT );
+    if( v < t_min ) { v = t_min; }
+  }
+  QString s_max = getParm( "max" );
+  if( ! s_max.isEmpty() ) {
+    QTime t_max =  QTime::fromString( s_max, TIME_FORMAT );
+    if( v > t_max ) { v = t_max; }
+  }
+}
+
+QString HolderTime::toString() const
+{
+  return v.toString( TIME_FORMAT );
+}
+
+bool HolderTime::fromString( const QString &s )
+{
+  return set( s );
+}
+
+
+const char* HolderTime::helpstr { "Contains QTime data" };
+
+DEFAULT_FUNCS_REG(HolderTime);
 
 
 // ---------------- HolderIntArray ---------

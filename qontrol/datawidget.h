@@ -220,6 +220,19 @@ class DateDataWidget: public DataWidget {
 };
 
 
+class TimeDataWidget: public DataWidget {
+ public:
+  TimeDataWidget( HolderData &h, QWidget *parent = 0 );
+  virtual bool set();
+  virtual bool get() const;
+  static DataWidget* create( HolderData &h, QWidget *parent  );
+ protected:
+  static int reg();
+  static int registered;
+  QTimeEdit *te;
+};
+
+
 
 class IntArrayDataWidget: public DataWidget {
  public:

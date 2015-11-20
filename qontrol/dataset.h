@@ -613,6 +613,33 @@ class HolderDate : public HolderValue {
 
 
 
+/** Holder of QTime values */
+class HolderTime : public HolderValue {
+  Q_OBJECT
+ public:
+  DCL_CTOR(HolderTime);
+  virtual ~HolderTime();
+  DCL_CREATE;
+  DCL_STD_INF;
+  DCL_STD_GETSET;
+  STD_CONVERSIONS(QTime);
+  INNER_ASSIGN(HolderTime);
+  int toInt() const { return (int)( v.msecsSinceStartOfDay() ); };
+  int msec() const { return v.msec(); }
+  int second() const { return v.second(); }
+  int minute() const { return v.minute(); }
+  int hour() const { return v.hour(); }
+ protected:
+  QTime v;
+  Q_CLASSINFO( "nameHintBase",  "time_" );
+  DCL_DEFAULT_STATIC;
+};
+
+#define PRM_TIME( name, flags, vname, descr, extra ) \
+ HolderTime name = { #name, this, flags, vname, descr, extra  } ;
+
+
+
 
 // ----------------------------------------------------------------
 /** Holder: array of int */

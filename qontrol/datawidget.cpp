@@ -765,7 +765,7 @@ DateDataWidget::DateDataWidget( HolderData &h, QWidget *parent )
     de->setMinimumDate( QDate::fromString( s_min, DATE_FORMAT ) );
   }
   QString s_max = h.getParm( "max" );
-  if( ! s_min.isEmpty() ) {
+  if( ! s_max.isEmpty() ) {
     de->setMaximumDate( QDate::fromString( s_max, DATE_FORMAT ) );
   }
 
@@ -782,14 +782,13 @@ DateDataWidget::DateDataWidget( HolderData &h, QWidget *parent )
 
 bool DateDataWidget::set()
 {
-  de->setDate(  QDate::fromString( ho.get().toString(), DATE_FORMAT ) );
+  de->setDate( ho.get().toDate() );
   return true;
 }
 
 bool DateDataWidget::get() const
 {
-  QString v = de->date().toString( DATE_FORMAT );
-  ho.set( v );
+  ho.set( de->date() );
   return true;
 }
 
@@ -802,6 +801,62 @@ int DateDataWidget::reg()
 {
   static DataWidgetProp p { create, "DATE" };
   return FactoryDataWidget::theFactory().registerWidgetType( "DateDataWidget", p );
+}
+
+
+
+// ------------------- TimeDataWidget ---------------------------
+int TimeDataWidget::registered = TimeDataWidget::reg();
+
+TimeDataWidget::TimeDataWidget( HolderData &h, QWidget *parent )
+  : DataWidget( h, parent ),
+  te( new QTimeEdit( this ) )
+{
+  main_w = te;
+  if( h.isRoTree( efROAny ) ) {
+    te->setDisabled( true );
+  }
+
+  QString s_min = h.getParm( "min" );
+  if( ! s_min.isEmpty() ) {
+    te->setMinimumTime( QTime::fromString( s_min, TIME_FORMAT ) );
+  }
+  QString s_max = h.getParm( "max" );
+  if( ! s_max.isEmpty() ) {
+    te->setMaximumTime( QTime::fromString( s_max, TIME_FORMAT ) );
+  }
+
+  te->setDisplayFormat( TIME_FORMAT );
+
+  auto lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
+  lay->addWidget( te, 1 );
+  setLayout( lay );
+
+}
+
+bool TimeDataWidget::set()
+{
+  te->setTime( ho.get().toTime() );
+  return true;
+}
+
+bool TimeDataWidget::get() const
+{
+  ho.set( te->time() );
+  return true;
+}
+
+DataWidget* TimeDataWidget::create( HolderData &h, QWidget *parent  )
+{
+  return new TimeDataWidget( h, parent );
+}
+
+int TimeDataWidget::reg()
+{
+  static DataWidgetProp p { create, "TIME" };
+  return FactoryDataWidget::theFactory().registerWidgetType( "TimeDataWidget", p );
 }
 
 
