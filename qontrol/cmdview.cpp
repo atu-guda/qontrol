@@ -282,8 +282,8 @@ bool CmdView::infoObj()
       HolderData *ho = qobject_cast<HolderData*>(ob);
       tv->setItem( i, 1, new QTableWidgetItem(ho->getType() ) );
       tv->setItem( i, 2, new QTableWidgetItem(ho->toString() ) );
-      tv->setItem( i, 3, new QTableWidgetItem(ho->getParm("vis_name") + " \""
-                    + ho->getParm("descr" ) + "\"" ) );
+      tv->setItem( i, 3, new QTableWidgetItem(ho->getParm( QSL("vis_name") ) + " \""
+                    + ho->getParm( QSL("descr") ) + "\"" ) );
       tv->setItem( i, 4, new QTableWidgetItem( ho->objectName() ) );
       tv->setItem( i, 5, new QTableWidgetItem( flags2str(ho->getFlags()) ) );
 

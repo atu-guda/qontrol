@@ -23,7 +23,7 @@ SelectTypeDialog::SelectTypeDialog( HolderData *a_pobj,  QWidget *aparent,
   if( ! allowed_types.isEmpty() ) {
     allowed = allowed_types;
   }
-  QString btp = pobj->getParm( "bad_types" );
+  QString btp = pobj->getParm( QSL("bad_types") );
   cl_names = EFACT.goodTypeNames( allowed, btp ); // obj, data
 
   sel_type = QString();

@@ -29,12 +29,12 @@ HolderData::HolderData( ARGS_CTOR_MIN )
   setObjectName( obj_name );
 
   if( a_v_name.isEmpty() )  {
-    setParm( "vis_name", QSL("<div>") % obj_name % QSL("</div>") );
+    setParm( QSL("vis_name"), QSL("<div>") % obj_name % QSL("</div>") );
   } else {
-    setParm( "vis_name", a_v_name );
+    setParm( QSL("vis_name"), a_v_name );
   }
-  setParm( "descr", a_descr );
-  setParm( "extra", a_extra );
+  setParm( QSL("descr"), a_descr );
+  setParm( QSL("extra"), a_extra );
   extraToParm();
 }
 
@@ -58,20 +58,20 @@ int HolderData::columnCount( const QModelIndex & /*par*/ ) const
 // //* function to debug model indexes
 // QString idx2s( const QModelIndex &idx )
 // {
-//   QString r = "[ ";
+//   QString r = QSL("[ ");
 //   if( idx.isValid() ) {
-//     r += "V ";
+//     r += QSL("V ");
 //   } else {
-//     r += "X ";
+//     r += QSL("X ");
 //   }
 //   void *p = idx.internalPointer();
-//   r += QSN( idx.row() ) + " " + QSN( idx.column() ) + " " + QSN( (uint64_t)(p) );
+//   r += QSN( idx.row() ) + QSL(" ") + QSN( idx.column() ) + QSL(" ") + QSN( (uint64_t)(p) );
 //   if( p ) {
 //     const HolderData *ho = static_cast<HolderData*>(p);
-//     r += "=\"" + ho->getFullName() + "\"";
+//     r += QSL("=\")" + ho->getFullName() + "\"";
 //   }
 //
-//   r += " ]";
+//   r += QSL(" ]");
 //   return r;
 // }
 
@@ -110,7 +110,7 @@ QVariant HolderData::dataObj( int col, int role ) const
   // no switch: too complex
   if( role == Qt::DisplayRole ) {
     QString s;
-    s = QString( "c " ) + QSN( col ); // fallback value
+    s = QSL( "c " ) + QSN( col ); // fallback value
     switch( col ) {
       case 0:
         s = objectName(); break;
@@ -155,18 +155,15 @@ QVariant HolderData::dataObj( int col, int role ) const
     if( col != 0 ) {
       return QVariant();
     }
-    QString whats = getParm("descr");
-    if( whats.isEmpty() ) {
-      whats = "Object \"" + objectName() % "\". type: " % getType();
-    }
-    return whats;
+    return getParm( QSL("descr"),
+        QSL("Object \"") % objectName() % QSL("\". type: ") % getType() );
   }
 
   if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
     if( col > 1 ) {
       return QVariant();
     }
-    QString s = objectName() % " (" % getType() % ") ";
+    QString s = objectName() % QSL(" (") % getType() % QSL(") ");
     if( col == 1 ) {  // for button
       return s;
     }
@@ -232,7 +229,7 @@ int HolderData::indexOfHolder( const HolderData *ho ) const
 QString HolderData::getStateStr() const
 {
   QString s = modificationChar[ getModified() ];
-  if( dyn ) { s += "."; };
+  if( dyn ) { s += QSL("."); };
   s += getStateString( state );
   s += QSL(" 0x");
   s += QSNX( flags );
@@ -299,12 +296,12 @@ QStringList HolderData::elemNames() const
 QString HolderData::ls() const
 {
   QString r;
-  r = getFullName() + " : " + getType() + " dyn: " + QSN(dyn)
-    + " flags: 0x" + QSNX(flags) + " ptr: " + QSNX( (unsigned long)(this));
+  r = getFullName() % QSL(" : ") % getType() % QSL(" dyn: ") % QSN(dyn)
+    + QSL(" flags: 0x") % QSNX(flags) % QSL(" ptr: ") % QSNX( (unsigned long)(this));
   if( ! isObject() ) {
-    r += " = \"" + toString() + "\"";
+    r += QSL(" = \"") % toString() % QSL("\"");
   }
-  r += "\n;------------------------------------\n";
+  r += QSL("\n;------------------------------------\n");
   int n_el = 0;
   for( const auto c : children() ) {
     r += c->objectName() + ' ';
@@ -315,16 +312,16 @@ QString HolderData::ls() const
       if( ! ho->isObject() ) {
         QString vs = ho->toString();
         vs.truncate( 80 );
-        r += " = \"" + vs + "\"";
+        r += QSL(" = \"") % vs + QSL("\"");
       }
     }
     r += '\n';
   }
-  r += "\n;------------------------------------";
+  r += QSL("\n;------------------------------------");
 
-  r += "\n;n_el = " + QSN(n_el) + "\n;Params:\n";
+  r += QSL("\n;n_el = ") + QSN(n_el) + QSL("\n;Params:\n");
   for( auto i= parms.constBegin(); i != parms.constEnd(); ++i ) {
-    r += i.key() + " = \"" + i.value() + "\"\n";
+    r += i.key() + QSL(" = \"") + i.value() + QSL("\"\n");
   }
   return r;
 }
@@ -390,12 +387,38 @@ void HolderData::setParm( const QString &name, const QString &value )
 }
 
 
-QString HolderData::getParm( const QString &name ) const
+QString HolderData::getParm( const QString &name, const QString &dfl ) const
 {
   if( parms.contains( name ) ) {
     return parms[name];
   }
-  return QString();
+  return dfl;
+}
+
+int HolderData::getParmInt( const QString &name, int dfl ) const
+{
+  if( parms.contains( name ) ) {
+    const QString &p = parms[name];
+    bool ok;
+    int v = p.toInt( &ok, 0 );
+    if( ok ) {
+      return v;
+    }
+  }
+  return dfl;
+}
+
+double HolderData::getParmDouble( const QString &name, double dfl ) const
+{
+  if( parms.contains( name ) ) {
+    const QString &p = parms[name];
+    bool ok;
+    double v = p.toDouble( &ok );
+    if( ok ) {
+      return v;
+    }
+  }
+  return dfl;
 }
 
 bool HolderData::setDatas( const QString &datas )
@@ -405,7 +428,7 @@ bool HolderData::setDatas( const QString &datas )
   }
 
   bool was_set = false;
-  QStringList sl = datas.split( "\n", QString::SkipEmptyParts );
+  QStringList sl = datas.split( QSL("\n"), QString::SkipEmptyParts );
   QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=(.+)$)" );
 
   for( const auto &s : sl ) {
@@ -440,7 +463,7 @@ QString HolderData::hintName( const QString &tp, const QString &nm_start ) const
   QString tpx = tp;
 
   if( nm.isEmpty() ) {
-    nm = "xx_";
+    nm = QSL("xx_");
     if( tpx.isEmpty() ) {
       tpx = allowTypes();
       int coma_idx = tpx.indexOf( ',' );
@@ -459,7 +482,7 @@ QString HolderData::hintName( const QString &tp, const QString &nm_start ) const
   }
 
   // 'name!' - try to force name w/o index: TOutArr for example
-  if( nm.endsWith( "!" ) ) {
+  if( nm.endsWith( QSL("!") ) ) {
     nm = nm.left( nm.size() - 1 );
     if( !getObj( nm ) ) {
       return nm;
@@ -519,7 +542,7 @@ int HolderData::countObjsOfType( const QString &tp, const QString &nm_start ) co
 void HolderData::extraToParm()
 {
   QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=(.+)$)" );
-  QStringList el = getParm("extra").split( "\n", QString::SkipEmptyParts );
+  QStringList el = getParm( QSL("extra") ).split( QSL("\n"), QString::SkipEmptyParts );
 
   for( QString &s : el ) {
     if( s.isEmpty() ) {
@@ -534,9 +557,7 @@ void HolderData::extraToParm()
       qWarning() << "bad extra string part: " <<  s << NWHE;
     }
   }
-  if( getParm("dyn") == "1" ) {
-    dyn = 1;
-  }
+  dyn = getParmInt( QSL("dyn"), 0 );
 }
 
 
@@ -581,7 +602,7 @@ void HolderData::do_structChanged()
 
 QIcon HolderData::getIcon() const
 {
-  QString iconName = QString( ":icons/elm_" ) + getType().toLower() + ".png";
+  QString iconName = QSL( ":icons/elm_" ) % getType().toLower() % QSL(".png");
   QIcon el_ico( iconName );
   return el_ico;
 }
@@ -787,11 +808,11 @@ int HolderData::isValidType(  const QString &cl_name  ) const
 
 QDomElement HolderData::toDom( QDomDocument &dd ) const
 {
-  QDomElement de = dd.createElement( "param" );
-  de.setAttribute( "name", objectName() );
+  QDomElement de = dd.createElement( QSL("param") );
+  de.setAttribute( QSL("name"), objectName() );
   if( dyn ) {
-    de.setAttribute( "dyn", "1" );
-    de.setAttribute( "otype", getType() );
+    de.setAttribute( QSL("dyn"), QSL("1") );
+    de.setAttribute( QSL("otype"), getType() );
     saveParmsToDom( de );
   }
   QDomText tn = dd.createTextNode( toString() );
@@ -802,7 +823,7 @@ QDomElement HolderData::toDom( QDomDocument &dd ) const
 void HolderData::saveParmsToDom( QDomElement &de ) const
 {
   for( auto p = parms.cbegin(); p != parms.cend(); ++p ) {
-    de.setAttribute( "prm_" + p.key(), p.value() );
+    de.setAttribute( QSL("prm_") + p.key(), p.value() );
   }
 }
 
@@ -825,11 +846,11 @@ bool HolderData::fromDom_real( QDomElement &de, QString &errstr )
     }
 
     QDomElement ee = no.toElement();
-    QString elname = ee.attribute( "name" );
+    QString elname = ee.attribute( QSL("name") );
     QString tagname = ee.tagName();
 
-    if( tagname == "obj" ) {  // ------------------------------- object
-      QString cl_name = ee.attribute("otype");
+    if( tagname == QSL("obj") ) {  // ------------------------------- object
+      QString cl_name = ee.attribute(QSL("otype"));
       if( cl_name.isEmpty() ) {
         errstr = QString( "err: element \"%1\" without type" ).arg(elname);
         qWarning() << errstr << NWHE;
@@ -865,8 +886,8 @@ bool HolderData::fromDom_real( QDomElement &de, QString &errstr )
         return false;
       }
 
-    } else if( tagname == "param" ) {  // ---------------- simple param
-      QString tp_name = ee.attribute("otype");
+    } else if( tagname == QSL("param") ) {  // ---------------- simple param
+      QString tp_name = ee.attribute(QSL("otype"));
       HolderData *ho = getObj( elname );
       if( ho && ho->isObject() ) {
         errstr = QString("TDataSet::fromDom: param \"%1\" is an object type \"%2\" ")
@@ -915,7 +936,7 @@ bool HolderData::restoreParmsFromDom( QDomElement &de )
     if( dattr.isNull() ) { continue; }
     QString attr_name = dattr.name();
     // qDebug() << "dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
-    if( ! attr_name.startsWith( "prm_" ) ) { continue; } // only special names
+    if( ! attr_name.startsWith( QSL("prm_") ) ) { continue; } // only special names
     attr_name.remove( 0, 4 ); // remove "prm_";
     setParm( attr_name, dattr.value() );
     // qDebug() << "set dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
@@ -1184,10 +1205,10 @@ QStringList HolderData::getEnumStrings( const QString &enum_name ) const
   for( int i=0; i<n; ++i ) {
     int val = me.value( i ); // now the same as i, but ...
     snm = me.key( i );
-    nm = QString( "enum_" ) + enum_name + "_" + QSN( val );
+    nm = QSL( "enum_" ) % enum_name % QSL("_") % QSN( val );
     int ci_idx = mci->indexOfClassInfo( nm.toLocal8Bit().data() );
     if( ci_idx < 0 ) {
-      r << enum_name + "_" + QSN( val );
+      r << enum_name % QSL("_") % QSN( val );
       continue;
     }
     ci = mci->classInfo( ci_idx );
@@ -1250,11 +1271,11 @@ QAbstractItemModel* HolderData::getComplModel( const QString &targ, QObject *mdl
 {
   auto mdl = new QStandardItemModel( mdl_par );
   // qDebug() << "req: target: " << targ << NWHE;
-  if( targ == "in" ) {
+  if( targ == QSL("in") ) {
     fillComplModelForInputs( mdl );
-  } else if( targ == "prm" ) {
+  } else if( targ == QSL("prm") ) {
     fillComplModelForParams( mdl );
-  } else if( targ == "out" ) {
+  } else if( targ == QSL("out") ) {
     fillComplModelForOuts( mdl );
   }
   return mdl;
@@ -1287,7 +1308,7 @@ int HolderData::fillComplForInputs( QStandardItem *it0, const QString &prefix ) 
   int n = 0;
 
   int ign = 0;
-  getData( "ignored", &ign, false );
+  getData( QSL("ignored"), &ign, false );
   if( ign ) {
     return 0;
   }
@@ -1305,7 +1326,7 @@ int HolderData::fillComplForInputs( QStandardItem *it0, const QString &prefix ) 
     }
 
     if( auto hda = qobject_cast<HolderDoubleArray*>( e ) ) {
-      auto it = new QStandardItem( prefix % hda->objectName() + "[0]" );
+      auto it = new QStandardItem( prefix % hda->objectName() + QSL("[0]") );
       it0->appendRow( it ); ++n;
       continue;
     }
@@ -1359,7 +1380,7 @@ CTOR(HolderValue,HolderData)
 
 void HolderValue::reset_dfl()
 {
-  set( getParm( "def" ) );
+  set( getParm( QSL("def") ) );
 }
 
 void HolderValue::do_post_set()
@@ -1405,8 +1426,8 @@ STD_CLASSINFO_ALIAS(HolderInt,clpData,int);
 CTOR(HolderInt,HolderValue) , v(0)
 {
   tp=QVariant::Int;
-  if( getParm("props").isEmpty() ) {
-    setParm( "props", "INT,SIMPLE" );
+  if( getParm( QSL("props") ).isEmpty() ) {
+    setParm( QSL("props"), QSL("INT,SIMPLE") );
   }
   post_set();
 }
@@ -1445,13 +1466,8 @@ QVariant HolderInt::get( int /* idx */ ) const
 
 void HolderInt::do_post_set()
 {
-  int v_min { IMIN }, v_max { IMAX };
-  QString s_min = getParm( "min" );
-  if( ! s_min.isEmpty() )
-    v_min = s_min.toInt();
-  QString s_max = getParm( "max" );
-  if( ! s_max.isEmpty() )
-    v_max = s_max.toInt();
+  int v_min = getParmInt( QSL("min"), IMIN );
+  int v_max = getParmInt( QSL("max"), IMAX );
   v = qBound( v_min, v, v_max );
 }
 
@@ -1476,10 +1492,10 @@ STD_CLASSINFO_ALIAS(HolderSwitch,clpData,switch);
 
 CTOR(HolderSwitch,HolderInt)
 {
-  if( getParm("props") == "INT,SIMPLE" ) {
-    setParm( "props", "INT,SWITCH" );
+  if( getParm( QSL("props") ) == QSL("INT,SIMPLE") ) {
+    setParm( QSL("props"), QSL("INT,SWITCH") );
   }
-  setParm("min","0"); setParm("max","1");
+  setParm( QSL("min"), QSL("0") ); setParm( QSL("max"), QSL("1") );
   post_set();
 }
 
@@ -1503,20 +1519,20 @@ STD_CLASSINFO_ALIAS(HolderList,clpData,list);
 
 CTOR(HolderList,HolderInt)
 {
-  setParm("min","0"); setParm("max","0");
-  if( getParm("props") == "INT,SIMPLE" ) {
-    setParm( "props", "INT,LIST" );
+  setParm( QSL("min"), QSL("0") ); setParm( QSL("max"), QSL("0") );
+  if( getParm(QSL("props")) == QSL("INT,SIMPLE") ) {
+    setParm( QSL("props"), QSL("INT,LIST") );
   }
 
   // may be overkill, but one cone - one place
-  QString enum_name = getParm( "enum" );
+  QString enum_name = getParm( QSL("enum") );
   QStringList sl;
   if( ! enum_name.isEmpty() ) {
     if( par ) {
       sl = par->getEnumStrings( enum_name );
     }
   }
-  setParm( "max", QSN( sl.size()-1 ) );
+  setParm( QSL("max"), QSN( sl.size()-1 ) );
 
   post_set();
 }
@@ -1545,8 +1561,8 @@ CTOR(HolderDouble,HolderValue), v(0)
 {
   tp=QVariant::Double;
   post_set();
-  if( getParm("props").isEmpty() ) {
-    setParm( "props", "DOUBLE,SIMPLE" );
+  if( getParm(QSL("props")).isEmpty() ) {
+    setParm( QSL("props"), QSL("DOUBLE,SIMPLE") );
   }
 }
 
@@ -1580,15 +1596,8 @@ QVariant HolderDouble::get( int /* idx */ ) const
 
 void HolderDouble::do_post_set()
 {
-  double v_min { DMIN }, v_max { DMAX };
-  QString s_min = getParm( "min" );
-  if( ! s_min.isEmpty() ) {
-    v_min = s_min.toDouble();
-  }
-  QString s_max = getParm( "max" );
-  if( ! s_max.isEmpty() ) {
-    v_max = s_max.toDouble();
-  }
+  double v_min = getParmDouble( QSL("min"), DMIN );
+  double v_max = getParmDouble( QSL("max"), DMAX );
   v = qBound( v_min, v, v_max );
 }
 
@@ -1615,8 +1624,8 @@ CTOR(HolderString,HolderValue)
 {
   tp=QVariant::String;
   post_set();
-  if( getParm("props").isEmpty() ) {
-    setParm( "props", "STRING,SIMPLE" );
+  if( getParm(QSL("props")).isEmpty() ) {
+    setParm( QSL("props"), QSL("STRING,SIMPLE") );
   }
 }
 
@@ -1648,11 +1657,7 @@ QVariant HolderString::get( int /* idx */ ) const
 
 void HolderString::do_post_set()
 {
-  int v_max { IMAX };
-  QString s_max = getParm( "max" );
-  if( ! s_max.isEmpty() ) {
-    v_max = s_max.toInt();
-  }
+  int v_max = getParmInt( QSL("max"), IMAX );
   v.truncate( v_max );
 }
 
@@ -1679,8 +1684,8 @@ CTOR(HolderColor,HolderValue)
 {
   tp=QVariant::Color;
   post_set();
-  if( getParm("props").isEmpty() ) {
-    setParm( "props", "COLOR,INT" );
+  if( getParm(QSL("props")).isEmpty() ) {
+    setParm( QSL("props"), QSL("COLOR,INT") );
   }
 }
 
@@ -1745,8 +1750,8 @@ CTOR(HolderFont,HolderValue)
 {
   tp=QVariant::Font;
   post_set();
-  if( getParm("props").isEmpty() ) {
-    setParm( "props", "FONT,STRING" );
+  if( getParm(QSL("props")).isEmpty() ) {
+    setParm( QSL("props"), QSL("FONT,STRING") );
   }
 }
 
@@ -1807,8 +1812,8 @@ CTOR(HolderDate,HolderValue)
 {
   tp=QVariant::Date;
   post_set();
-  if( getParm("props").isEmpty() ) {
-    setParm( "props", "DATE,STRING" );
+  if( getParm(QSL("props")).isEmpty() ) {
+    setParm( QSL("props"), QSL("DATE,STRING") );
   }
 }
 
@@ -1848,12 +1853,12 @@ void HolderDate::do_post_set()
   if( ! v.isValid() ) {
     v = QDate( 1970, 0, 0 );
   }
-  QString s_min = getParm( "min" );
+  QString s_min = getParm( QSL("min") );
   if( ! s_min.isEmpty() ) {
     QDate d_min =  QDate::fromString( s_min, DATE_FORMAT );
     if( v < d_min ) { v = d_min; }
   }
-  QString s_max = getParm( "max" );
+  QString s_max = getParm( QSL("max") );
   if( ! s_max.isEmpty() ) {
     QDate d_max =  QDate::fromString( s_max, DATE_FORMAT );
     if( v > d_max ) { v = d_max; }
@@ -1884,8 +1889,8 @@ CTOR(HolderTime,HolderValue)
 {
   tp=QVariant::Time;
   post_set();
-  if( getParm("props").isEmpty() ) {
-    setParm( "props", "TIME,STRING" );
+  if( getParm(QSL("props")).isEmpty() ) {
+    setParm( QSL("props"), QSL("TIME,STRING") );
   }
 }
 
@@ -1925,12 +1930,12 @@ void HolderTime::do_post_set()
   if( ! v.isValid() ) {
     v = QTime( 0, 0, 0 );
   }
-  QString s_min = getParm( "min" );
+  QString s_min = getParm( QSL("min") );
   if( ! s_min.isEmpty() ) {
     QTime t_min =  QTime::fromString( s_min, TIME_FORMAT );
     if( v < t_min ) { v = t_min; }
   }
-  QString s_max = getParm( "max" );
+  QString s_max = getParm( QSL("max") );
   if( ! s_max.isEmpty() ) {
     QTime t_max =  QTime::fromString( s_max, TIME_FORMAT );
     if( v > t_max ) { v = t_max; }
@@ -1959,8 +1964,8 @@ STD_CLASSINFO_ALIAS(HolderIntArray,clpData|clpArray,int[]);
 CTOR(HolderIntArray,HolderValue)
 {
   tp=QVariant::UserType;
-  if( getParm("props").isEmpty() ) {
-    setParm( "props", "ARRAY_INT" );
+  if( getParm(QSL("props")).isEmpty() ) {
+    setParm( QSL("props"), QSL("ARRAY_INT") );
   }
   // all done by reset_dfl
 }
@@ -1973,20 +1978,13 @@ HolderIntArray::~HolderIntArray()
 void HolderIntArray::reset_dfl()
 {
   auto v0 = v;
-  int n = 1, v1 = 0;
-  QString s = getParm("N");
-  if( ! s.isEmpty() ) {
-    n = s.toInt();
-  }
-  s = getParm("def");
-  if( ! s.isEmpty() ) {
-    v1 = s.toInt();
-  }
+  int n  = getParmInt( QSL("N"), 1 );
+  int v1 = getParmInt( QSL("def"), 0 );
   v.assign( n, v1 );
 
-  s = getParm("defs");
+  auto s = getParm(QSL("defs"));
   if( ! s.isEmpty() ) {
-    QStringList sl = s.split( " ", QString::SkipEmptyParts );
+    QStringList sl = s.split( QSL(" "), QString::SkipEmptyParts );
     if( sl.size() > (int)v.size() ) {
       v.assign( sl.size(), v1 );
     }
@@ -2034,13 +2032,8 @@ QVariant HolderIntArray::get( int idx ) const
 
 void HolderIntArray::do_post_set()
 {
-  int v_min { IMIN }, v_max { IMAX };
-  QString s_min = getParm( "min" );
-  if( ! s_min.isEmpty() )
-    v_min = s_min.toInt();
-  QString s_max = getParm( "max" );
-  if( ! s_max.isEmpty() )
-    v_max = s_max.toInt();
+  int v_min = getParmInt( QSL("min"), IMIN );
+  int v_max = getParmInt( QSL("max"), IMAX );
   for( int& vc : v ) {
     vc = qBound( v_min, vc, v_max );
   }
@@ -2051,7 +2044,7 @@ QString HolderIntArray::toString() const
   QString s, sep = "";
   for( int vc : v ) {
     s += sep + QSN( vc );
-    sep = " ";
+    sep = QSL(" ");
   }
   return s;
 }
@@ -2059,7 +2052,7 @@ QString HolderIntArray::toString() const
 bool HolderIntArray::fromString( const QString &s )
 {
   bool ok;
-  QStringList sl = s.split(" ", QString::SkipEmptyParts );
+  QStringList sl = s.split(QSL(" "), QString::SkipEmptyParts );
   auto v0 = v;
   v.clear(); v.reserve( sl.size() );
 
@@ -2088,8 +2081,8 @@ STD_CLASSINFO_ALIAS(HolderDoubleArray,clpData|clpArray,double[]);
 CTOR(HolderDoubleArray,HolderValue)
 {
   tp=QVariant::UserType;
-  if( getParm("props").isEmpty() ) {
-    setParm( "props", "ARRAY_DOUBLE" );
+  if( getParm(QSL("props")).isEmpty() ) {
+    setParm( QSL("props"), QSL("ARRAY_DOUBLE") );
   }
 }
 
@@ -2100,23 +2093,15 @@ HolderDoubleArray::~HolderDoubleArray()
 
 void HolderDoubleArray::reset_dfl()
 {
-  int n = 1;
-  double v1 = 0;
+  int n = getParmInt( QSL("N"), 1 );
   auto v0 = v;
-  QString s = getParm("N");
-  if( ! s.isEmpty() ) {
-    n = s.toInt();
-  }
 
-  s = getParm("def");
-  if( ! s.isEmpty() ) {
-    v1 = s.toDouble();
-  }
+  double v1 = getParmDouble( QSL("def"), 0 );
   v.assign( n, v1 );
 
-  s = getParm("defs");
+  auto s = getParm( QSL("defs") );
   if( ! s.isEmpty() ) {
-    QStringList sl = s.split( " ", QString::SkipEmptyParts );
+    QStringList sl = s.split( QSL(" "), QString::SkipEmptyParts );
     if( sl.size() > (int)v.size() ) {
       v.assign( sl.size(), v1 );
     }
@@ -2163,13 +2148,8 @@ QVariant HolderDoubleArray::get( int idx ) const
 
 void HolderDoubleArray::do_post_set()
 {
-  double v_min { DMIN }, v_max { DMAX };
-  QString s_min = getParm( "min" );
-  if( ! s_min.isEmpty() )
-    v_min = s_min.toDouble();
-  QString s_max = getParm( "max" );
-  if( ! s_max.isEmpty() )
-    v_max = s_max.toDouble();
+  double v_min = getParmDouble( QSL("min"), DMIN );
+  double v_max = getParmDouble( QSL("max"), DMAX );
   for( double& vc : v ) {
     vc = qBound( v_min, vc, v_max );
   }
@@ -2180,7 +2160,7 @@ QString HolderDoubleArray::toString() const
   QString s, sep = "";
   for( double vc : v ) {
     s += sep + QSN( vc, 'g', DOUBLE_PREC  );
-    sep = " ";
+    sep = QSL(" ");
   }
   return s;
 }
@@ -2188,7 +2168,7 @@ QString HolderDoubleArray::toString() const
 bool HolderDoubleArray::fromString( const QString &s )
 {
   bool ok;
-  QStringList sl = s.split(" ", QString::SkipEmptyParts );
+  QStringList sl = s.split(QSL(" "), QString::SkipEmptyParts );
   auto v0 = v;
   v.clear(); v.reserve( sl.size() );
 
@@ -2217,8 +2197,8 @@ STD_CLASSINFO_ALIAS(HolderStringArray,clpData|clpArray,string[]);
 CTOR(HolderStringArray,HolderValue)
 {
   tp=QVariant::UserType;
-  if( getParm("props").isEmpty() ) {
-    setParm( "props", "ARRAY_STRING" );
+  if( getParm(QSL("props")).isEmpty() ) {
+    setParm( QSL("props"), QSL("ARRAY_STRING") );
   }
 }
 
@@ -2229,16 +2209,12 @@ HolderStringArray::~HolderStringArray()
 
 void HolderStringArray::reset_dfl()
 {
-  int n = 1;
+  int n = getParmInt( QSL("N"), 1 );
   auto v0 = v;
-  QString s = getParm("N");
-  if( ! s.isEmpty() ) {
-    n = s.toInt();
-  }
-  QString sd = getParm("def");
+  auto sd = getParm( QSL("def") );
 
   QStringList sl;
-  s = getParm("defs");
+  auto s = getParm( QSL("defs") );
   if( ! s.isEmpty() ) {
     sl = s.split( '\x01', QString::KeepEmptyParts ); // keep here
     if( sl.size() > n ) {
@@ -2289,10 +2265,8 @@ QVariant HolderStringArray::get( int idx ) const
 
 void HolderStringArray::do_post_set()
 {
-  int len_max = IMAX;
-  QString s_max = getParm( "max" );
-  if( ! s_max.isEmpty() ) {
-    len_max = s_max.toInt();
+  int len_max = getParmInt( QSL("max"), -1 );
+  if( len_max > -1 ) {
     for( QString& vc : v ) {
       vc.truncate(len_max);
     }
@@ -2339,8 +2313,8 @@ const char* TDataSet::helpstr =
 CTOR(TDataSet,HolderData)
 {
   tp=QVariant::UserType;
-  if( getParm("props").isEmpty() ) {
-    setParm( "props", "OBJ" );
+  if( getParm(QSL("props")).isEmpty() ) {
+    setParm( QSL("props"), QSL("OBJ") );
   }
 }
 
@@ -2382,7 +2356,7 @@ QString TDataSet::toString() const
   buf.reserve(4096); // TODO ?
   QTextStream tstr( &buf, QIODevice::WriteOnly );
   QDomDocument dd_tmp;
-  QDomElement el_tmp = dd_tmp.createElement("tmp_xxx");
+  QDomElement el_tmp = dd_tmp.createElement(QSL("tmp_xxx"));
   QDomElement dom = toDom( dd_tmp );
   dom.save( tstr, 4 );
 
@@ -2406,11 +2380,11 @@ bool TDataSet::fromString( const QString &s )
 
 QDomElement TDataSet::toDom( QDomDocument &dd ) const
 {
-  QDomElement de = dd.createElement( "obj" );
-  de.setAttribute( "name", objectName() );
-  de.setAttribute( "otype", getType() );
+  QDomElement de = dd.createElement( QSL("obj") );
+  de.setAttribute( QSL("name"), objectName() );
+  de.setAttribute( QSL("otype"), getType() );
   if( dyn ) { // func
-    de.setAttribute( "dyn", "1" );
+    de.setAttribute( QSL("dyn"), QSL("1") );
     saveParmsToDom( de );
   }
 

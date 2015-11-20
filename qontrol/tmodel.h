@@ -143,9 +143,9 @@ class TModel : public LinkedObj  {
   // ---------------------------------------
   /** long description */
   PRM_STRING( long_descr, efNRC, "Description", "Model description",
-      "props=STRING,MLINE\nncol=-1\nsep=block");
+      "props=STRING,MLINE\nncol=-1\nsep=block" );
   PRM_STRING( script, efNRC, "Script", "Model scripts",
-      "props=STRING,EXT,LARGETEXT");
+      "props=STRING,EXT,LARGETEXT\nfileext=.js" );
   PRM_SWITCH( autoImport, efNRC, "Auto Import", "Automaticaly import schemes before run",
       "sep=tab\ntabname=libs");
   PRM_STRING( imports, efNRC, "Imports", "From where to get schems: file:scheme",
