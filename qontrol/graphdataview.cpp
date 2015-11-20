@@ -35,15 +35,15 @@ GraphDataView::GraphDataView( HolderData *a_mod, CommonSubwin *a_par )
 
 void GraphDataView::init_actions()
 {
-  auto a = new QAction( QIcon( ":icons/showgraph.png" ), "&Show", this );
+  auto a = new QAction( QIcon( QSL(":icons/showgraph.png") ), QSL("&Show"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(showObj()) );
 
-  a = new QAction(  QIcon::fromTheme("document-export"), "Export", this );
+  a = new QAction(  QIcon::fromTheme(QSL("document-export")), QSL("Export"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(exportObj()) );
 
-  a = new QAction( QIcon( ":icons/showgraphdata.png" ), "show Data", this );
+  a = new QAction( QIcon( QSL(":icons/showgraphdata.png") ), QSL("show Data"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(showDataObj()) );
 
@@ -93,7 +93,7 @@ bool GraphDataView::showDataObj()
   QFontMetrics fm( dia->font() );
   int em = fm.width( 'W' );
 
-  dia->setWindowTitle( QString("Plot data: ") + di.title );
+  dia->setWindowTitle( QSL("Plot data: ") % di.title );
   auto lv = new QVBoxLayout( dia );
 
   auto dmod = new DoubleTableModel( di, dia );
@@ -101,7 +101,7 @@ bool GraphDataView::showDataObj()
   dtv->setModel( dmod );
   lv->addWidget( dtv );
 
-  auto bt_ok = new QPushButton( "Done", dia );
+  auto bt_ok = new QPushButton( QSL("Done"), dia );
   bt_ok->setDefault( true );
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
   lv->addWidget( bt_ok );
@@ -124,13 +124,12 @@ bool GraphDataView::exportObj()
 
   QString fnq = QFileDialog::getSaveFileName( this,
       QSL("Export data from \"") % gra->objectName() % QSL("\""),
-      gra->objectName() % QSL(".dat"),
-      "Data files (*.txt *.dat *.csv);;All files (*)" );
+      gra->objectName() % data_file_suff, data_files_sel );
   if( fnq.isEmpty() ) {
     return false;
   }
 
-  gra->dump( fnq, " " );
+  gra->dump( fnq, QSL(" ") );
   return true;
 }
 

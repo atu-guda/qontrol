@@ -37,22 +37,22 @@ OutDataView::OutDataView( HolderData *a_mod, CommonSubwin *a_par )
 
 void OutDataView::init_actions()
 {
-  auto a = new QAction( QIcon::fromTheme("arrow-right"), "&Add to plot", this );
+  auto a = new QAction( QIcon::fromTheme(QSL("arrow-right")), QSL("&Add to plot"), this );
   lv->addAction( a  );
   connect( a, SIGNAL(triggered()), this, SLOT(addToPlot()) );
 
-  a = new QAction( QIcon::fromTheme("document-export"), "Export", this );
+  a = new QAction( QIcon::fromTheme(QSL("document-export")), QSL("Export"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(exportObj()) );
 
-  a = new QAction(  QIcon( ":icons/showoutdata.png" ), "&Show data", this );
+  a = new QAction(  QIcon( QSL(":icons/showoutdata.png") ), QSL("&Show data"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(showDataObj()) );
 }
 
 bool OutDataView::addObj()
 {
-  QString tgt_nm = par->getSelNameInView( "sview" );
+  QString tgt_nm = par->getSelNameInView( QSL("sview") );
   QString out_nm;
 
   if( !tgt_nm.isEmpty() ) {
@@ -98,11 +98,11 @@ bool OutDataView::showDataObj()
 
   // calculate statistical data TODO: separate struct and func (or/and in TOutArr)
   arr->calc_stat( true, true ); // ensure all and fresh data
-  QString sinf = arr->getAllStats( ";\n" );
+  QString sinf = arr->getAllStats( QSL(";\n") );
 
 
   auto dia = new QDialog( this );
-  dia->setWindowTitle( QString("Data array: ") + di.title );
+  dia->setWindowTitle( QSL("Data array: ") % di.title );
   auto lay = new QGridLayout( dia );
 
   auto dmod = new DoubleTableModel( di, dia );
@@ -115,7 +115,7 @@ bool OutDataView::showDataObj()
        | Qt::TextSelectableByKeyboard );
   lay->addWidget( lab, 0, 1 );
 
-  auto bt_ok = new QPushButton( "Done", dia );
+  auto bt_ok = new QPushButton( QSL("Done"), dia );
   bt_ok->setDefault( true );
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
   lay->addWidget( bt_ok, 1, 0, 1, 2 );
@@ -135,12 +135,11 @@ bool OutDataView::exportObj()
 
   QString fnq = QFileDialog::getSaveFileName( this,
       QSL("Export data from \"") % arr->objectName() % QSL("\""),
-      arr->objectName() % QSL(".dat"),
-      QSL("Data files (*.txt *.dat *.csv);;All files (*)") );
+      arr->objectName() % data_file_suff, data_files_sel );
   if( fnq.isEmpty() ) {
     return false;
   }
-  arr->dump( fnq, " " );
+  arr->dump( fnq, QSL(" ") );
   return true;
 }
 
@@ -151,7 +150,7 @@ bool OutDataView::addToPlot()
     return false;
   }
 
-  TGraph *gra = qobject_cast<TGraph*>( par->getSelectedInView( "plots_view" ) );
+  TGraph *gra = qobject_cast<TGraph*>( par->getSelectedInView( QSL("plots_view") ) );
   if( !gra ) {
     qWarning() << "No selected plot found for " << nm_o << WHE;
     return false;

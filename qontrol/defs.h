@@ -48,6 +48,8 @@ constexpr const char *const TIME_FORMAT { "hh:mm:ss.zzz" };
 
 constexpr const char *const model_file_suff { ".qol" };
 constexpr const char *const model_files_sel { "Model *.qol files (*.qol);;All files(*)" };
+constexpr const char *const data_file_suff  { ".dat" };
+constexpr const char *const data_files_sel  { "Data files (*.txt *.dat *.csv);;All files (*)" };
 
 #define L8B QString::fromLocal8Bit
 #define QSN QString::number
