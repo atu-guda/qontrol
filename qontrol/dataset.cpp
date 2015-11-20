@@ -392,8 +392,9 @@ void HolderData::setParm( const QString &name, const QString &value )
 
 QString HolderData::getParm( const QString &name ) const
 {
-  if( parms.contains( name ) )
+  if( parms.contains( name ) ) {
     return parms[name];
+  }
   return QString();
 }
 
@@ -1461,17 +1462,7 @@ QString HolderInt::toString() const
 
 bool HolderInt::fromString( const QString &s )
 {
-  auto v0 = v;
-  bool ok = true;
-  int vc = QString2IntEx( s, &ok );
-  if( ok ) {
-    v = vc;
-    post_set();
-  }
-  if( v != v0 ) {
-    setModified();
-  }
-  return ok;
+  return set( s );
 }
 
 const char* HolderInt::helpstr { "Contains integer data" };
@@ -1603,22 +1594,12 @@ void HolderDouble::do_post_set()
 
 QString HolderDouble::toString() const
 {
-  return QSN( v, 'g', DOUBLE_PREC ); // TODO? format
+  return QSN( v, 'g', DOUBLE_PREC );
 }
 
 bool HolderDouble::fromString( const QString &s )
 {
-  auto v0 = v;
-  bool ok;
-  double vx = s.toDouble( &ok );
-  if( ok ) {
-    v = vx;
-    post_set();
-  }
-  if( v != v0 ) {
-    setModified();
-  }
-  return ok;
+  return set( s );
 }
 
 
@@ -1682,13 +1663,7 @@ QString HolderString::toString() const
 
 bool HolderString::fromString( const QString &s )
 {
-  auto v0 = v;
-  v = s;
-  post_set();
-  if( v != v0 ) {
-    setModified();
-  }
-  return true;
+  return set( s );
 }
 
 
@@ -1755,17 +1730,7 @@ QString HolderColor::toString() const
 
 bool HolderColor::fromString( const QString &s )
 {
-  auto v0 = v;
-  v = QColor( s );
-  if( ! v.isValid() ) {
-    QRgb rgba = s.toInt();
-    v.setRgba( rgba );
-  }
-  post_set();
-  if( v != v0 ) {
-    setModified();
-  }
-  return true;
+  return set( s );
 }
 
 
@@ -1798,7 +1763,11 @@ void HolderFont::reset_dfl()
 bool HolderFont::set( const QVariant & x, int /* idx */  )
 {
   auto v0 = v;
-  v.fromString( x.toString() );
+  if( x.type() == QVariant::Font ) {
+    v = x.value<QFont>();
+  } else {
+    v.fromString( x.toString() );
+  }
   post_set();
   if( v != v0 ) {
     setModified();
@@ -1822,13 +1791,7 @@ QString HolderFont::toString() const
 
 bool HolderFont::fromString( const QString &s )
 {
-  auto v0 = v;
-  v.fromString( s );
-  post_set();
-  if( v != v0 ) {
-    setModified();
-  }
-  return true;
+  return set( s );
 }
 
 
@@ -1858,11 +1821,12 @@ void HolderDate::reset_dfl()
   HolderValue::reset_dfl();
 }
 
-
 bool HolderDate::set( const QVariant & x, int /* idx */  )
 {
   auto v0 = v;
-  if( x.type() == QVariant::Int ) {
+  if( x.type() == QVariant::Date ) {
+    v = x.toDate();
+  } else if( x.type() == QVariant::Int ) {
     v = QDate::fromJulianDay( x.toInt() );
   } else {
     v = QDate::fromString( x.toString(), DATE_FORMAT );

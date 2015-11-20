@@ -196,7 +196,7 @@ void InputAbstract::set_link()
   if( isIgnored() || source.cval().isEmpty() ) {
     linkType = LinkNone; srcobj = QSL(":NONE:"); return;
   }
-  if( source.cval() == ":one" ) { // special local case
+  if( source.cval() == QSL(":one") ) { // special local case
     linkType = LinkSpec;  p = &one_in;  srcobj = QSL(":ONE:");return;
   }
 

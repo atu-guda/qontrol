@@ -167,6 +167,7 @@ struct TClassInfo {
   operator targ_type&()  { return v; } \
   targ_type vc() const { return v; } \
   const targ_type& cval() const { return v; } \
+  targ_type xval() const { return v; } \
   targ_type& val() { return v; } \
   const targ_type* caddr() const { return &v; } \
   targ_type* addr() { return &v; } \
