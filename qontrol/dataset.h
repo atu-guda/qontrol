@@ -598,6 +598,34 @@ class HolderFont : public HolderValue {
  HolderFont name = { #name, this, flags, vname, descr, extra  } ;
 
 
+/** Holder of QDate values */
+class HolderDate : public HolderValue {
+  Q_OBJECT
+ public:
+  DCL_CTOR(HolderDate);
+  virtual ~HolderDate();
+  DCL_CREATE;
+  DCL_STD_INF;
+  DCL_STD_GETSET;
+  virtual QString getTypeV() const override;
+  STD_CONVERSIONS(QDate);
+  INNER_ASSIGN(HolderDate);
+  int toInt() const { return (int)( v.toJulianDay() ); };
+  int day() const { return v.day(); }
+  int month() const { return v.month(); }
+  int year() const { return v.year(); }
+ protected:
+  QDate v;
+  Q_CLASSINFO( "nameHintBase",  "date_" );
+  DCL_DEFAULT_STATIC;
+};
+
+#define PRM_DATE( name, flags, vname, descr, extra ) \
+ HolderDate name = { #name, this, flags, vname, descr, extra  } ;
+
+
+
+
 // ----------------------------------------------------------------
 /** Holder: array of int */
 class HolderIntArray : public HolderValue {

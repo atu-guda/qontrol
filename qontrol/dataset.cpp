@@ -1933,6 +1933,76 @@ const char* HolderFont::helpstr { "Contains QFont data" };
 DEFAULT_FUNCS_REG(HolderFont);
 
 
+// ---------------- HolderDate ---------
+STD_CLASSINFO_ALIAS(HolderDate,clpData,date);
+
+CTOR(HolderDate,HolderValue)
+{
+  tp=QVariant::Date;
+  post_set();
+  if( getParm("props").isEmpty() ) {
+    setParm( "props", "DATE,STRING" );
+  }
+}
+
+HolderDate::~HolderDate()
+{
+}
+
+void HolderDate::reset_dfl()
+{
+  set( getParm( "def" ) );
+}
+
+
+bool HolderDate::set( const QVariant & x, int /* idx */  )
+{
+  auto v0 = v;
+  if( x.type() == QVariant::Int ) {
+    v = QDate::fromJulianDay( x.toInt() );
+  } else {
+    v = QDate::fromString( x.toString(), DATE_FORMAT );
+  }
+  post_set();
+  if( v != v0 ) {
+    setModified();
+  }
+  return true;
+}
+
+QVariant HolderDate::get( int /* idx */ ) const
+{
+  return QVariant( v.toString( DATE_FORMAT ) );
+}
+
+void HolderDate::do_post_set()
+{
+  if( ! v.isValid() ) {
+    v = QDate( 1970, 0, 0 );
+  }
+}
+
+QString HolderDate::toString() const
+{
+  return v.toString( DATE_FORMAT );
+}
+
+bool HolderDate::fromString( const QString &s )
+{
+  return set( s );
+}
+
+
+QString HolderDate::getTypeV() const
+{
+  return "date";
+}
+
+const char* HolderDate::helpstr { "Contains QDate data" };
+
+DEFAULT_FUNCS_REG(HolderDate);
+
+
 // ---------------- HolderIntArray ---------
 STD_CLASSINFO_ALIAS(HolderIntArray,clpData|clpArray,int[]);
 

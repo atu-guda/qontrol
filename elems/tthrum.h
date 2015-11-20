@@ -54,6 +54,7 @@ class TThrum : public TMiso  {
    PRM_STRING( p_str, 0, "&String", "some string", u8"ncol=2\ndef=\"a b c d f\"" );
    PRM_COLOR( p_col, 0, "Color", "Color value", "sep=col\ndef=silver" );
    PRM_FONT( p_font, 0, "Font", "Font value", "def=Sans" );
+   PRM_DATE( p_date, 0, "Date", "Date value", "def=2015.11.20" );
 
    PRM_INPUT( in0, 0, "input 0", "First input",  "sep=block" );
    PRM_INPUT( in1, 0, "input 1", "Second input", "sep=col" );
