@@ -1,5 +1,5 @@
 /***************************************************************************
-                          elemfact.cpp  - widgets for DataDialog
+    elemfact.cpp  - widgets factory for DataDialog
                              -------------------
     begin                : 2012.07.03
     copyright            : GPL (C) 2012-2015 by atu
@@ -63,7 +63,7 @@ bool ObjFactory::registerObjType( const TClassInfo *cl_info )
   if( ! cl_info ) {
     return false;
   }
-  QString cl_name = L8B( cl_info->className );
+  const QString &cl_name = cl_info->className;
   if( str_class.contains( cl_name ) ) {
     qWarning() << "reg: class " << cl_name << " already exists" << WHE;
     return false;

@@ -1,5 +1,5 @@
 /***************************************************************************
-                          dataset.cpp  -  description
+ dataset.cpp  -   base definifions and classes implementation
                              -------------------
     begin                : Wed Mar 29 2000
     copyright            : GPL (C) 2000-2015 by atu
@@ -19,7 +19,7 @@ using namespace std;
 
 // ================================================================
 // ---------------- HolderData .... ----------------------
-STD_CLASSINFO_TP(HolderData,clpSpecial|clpPure);
+STD_CLASSINFO(HolderData,clpSpecial|clpPure);
 
 HolderData::HolderData( ARGS_CTOR_MIN )
      :QAbstractItemModel( a_parent ),
@@ -1350,7 +1350,7 @@ const char* HolderData::helpstr { "Abstract data holder" };
 #undef CURR_CLASS
 
 // ---------------- HolderValue ---------
-STD_CLASSINFO_TP(HolderValue,clpData|clpPure);
+STD_CLASSINFO(HolderValue,clpData|clpPure);
 
 CTOR(HolderValue,HolderData)
 {
@@ -2310,12 +2310,6 @@ void TDataSet::reset_dfl()
   }
 }
 
-
-
-QString TDataSet::getTypeV() const
-{
-  return metaObject()->className();
-}
 
 DEFAULT_FUNCS_REG(TDataSet);
 
