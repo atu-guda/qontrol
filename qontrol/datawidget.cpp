@@ -51,8 +51,6 @@ QSize DataWidget::sizeHint() const
 
 // -------------  DummyDataWidget ----------------
 
-int DummyDataWidget::registered = DummyDataWidget::reg();
-
 DummyDataWidget::DummyDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
   lbl_d( new QLabel( this ) )
@@ -75,21 +73,10 @@ bool DummyDataWidget::get() const
   return true;
 }
 
-
-DataWidget* DummyDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new DummyDataWidget( h, parent );
-}
-
-int DummyDataWidget::reg()
-{
-  static DataWidgetProp p { create, "" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "DummyDataWidget", p );
-}
+DW_REG_FUN_STD( DummyDataWidget, "" );
 
 
 // ------------------- StringDataWidget ---------------------------
-int StringDataWidget::registered = StringDataWidget::reg();
 
 StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -141,20 +128,10 @@ bool StringDataWidget::get() const
   return true;
 }
 
-DataWidget* StringDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new StringDataWidget( h, parent );
-}
-
-int StringDataWidget::reg()
-{
-  static DataWidgetProp p { create, "STRING,SIMPLE" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "StringDataWidget", p );
-}
+DW_REG_FUN_STD( StringDataWidget, "STRING,SIMPLE" );
 
 
 // ------------------- StringMLDataWidget ---------------------------
-int StringMLDataWidget::registered = StringMLDataWidget::reg();
 
 StringMLDataWidget::StringMLDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -188,17 +165,6 @@ bool StringMLDataWidget::get() const
   return true;
 }
 
-DataWidget* StringMLDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new StringMLDataWidget( h, parent );
-}
-
-int StringMLDataWidget::reg()
-{
-  static DataWidgetProp p { create, "STRING,MLINE" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "StringMLDataWidget", p );
-}
-
 QSize StringMLDataWidget::minimumSizeHint() const
 {
   return te->minimumSizeHint() + QSize( 0, lbl->minimumSizeHint().height() );
@@ -210,9 +176,9 @@ QSize StringMLDataWidget::sizeHint() const
   return te->sizeHint() + QSize( 0, lbl->sizeHint().height() );
 }
 
+DW_REG_FUN_STD( StringMLDataWidget, "STRING,MLINE" );
 
 // ------------------- StringExtDataWidget ---------------------------
-int StringExtDataWidget::registered = StringExtDataWidget::reg();
 
 StringExtDataWidget::StringExtDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -282,24 +248,11 @@ void StringExtDataWidget::edit()
   f.close();
 }
 
-
-DataWidget* StringExtDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new StringExtDataWidget( h, parent );
-}
-
-int StringExtDataWidget::reg()
-{
-  static DataWidgetProp p { create, "STRING,EXT,MLINE,LARGETEXT" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "StringExtDataWidget", p );
-}
-
-
+DW_REG_FUN_STD( StringExtDataWidget, "STRING,EXT,MLINE,LARGETEXT" );
 
 
 
 // ------------------- IntDataWidget ---------------------------
-int IntDataWidget::registered = IntDataWidget::reg();
 
 IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -342,20 +295,10 @@ bool IntDataWidget::get() const
   return ok;
 }
 
-DataWidget* IntDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new IntDataWidget( h, parent );
-}
-
-int IntDataWidget::reg()
-{
-  static DataWidgetProp p { create, "INT,SIMPLE" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "IntDataWidget", p );
-}
+DW_REG_FUN_STD( IntDataWidget, "INT,SIMPLE" );
 
 
 // ------------------- IntSpinDataWidget ---------------------------
-int IntSpinDataWidget::registered = IntSpinDataWidget::reg();
 
 IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -409,21 +352,10 @@ bool IntSpinDataWidget::get() const
   return true;
 }
 
-DataWidget* IntSpinDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new IntSpinDataWidget( h, parent );
-}
-
-int IntSpinDataWidget::reg()
-{
-  static DataWidgetProp p { create, "INT,SPIN" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "IntSpinDataWidget", p );
-}
-
+DW_REG_FUN_STD( IntSpinDataWidget, "INT,SPIN" );
 
 
 // ------------------- SwitchDataWidget ---------------------------
-int SwitchDataWidget::registered = SwitchDataWidget::reg();
 
 SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -455,20 +387,10 @@ bool SwitchDataWidget::get() const
   return true;
 }
 
-DataWidget* SwitchDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new SwitchDataWidget( h, parent );
-}
-
-int SwitchDataWidget::reg()
-{
-  static DataWidgetProp p { create, "INT,SWITCH" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "SwitchDataWidget", p );
-}
+DW_REG_FUN_STD( SwitchDataWidget, "INT,SWITCH" );
 
 
 // ------------------- ListDataWidget ---------------------------
-int ListDataWidget::registered = ListDataWidget::reg();
 
 ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -512,21 +434,10 @@ bool ListDataWidget::get() const
   return true;
 }
 
-DataWidget* ListDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new ListDataWidget( h, parent );
-}
-
-int ListDataWidget::reg()
-{
-  static DataWidgetProp p { create, "INT,LIST" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "ListDataWidget", p );
-}
-
+DW_REG_FUN_STD( ListDataWidget, "INT,LIST" );
 
 
 // ------------------- DoubleDataWidget ---------------------------
-int DoubleDataWidget::registered = DoubleDataWidget::reg();
 
 DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -573,20 +484,10 @@ bool DoubleDataWidget::get() const
   return ok;
 }
 
-DataWidget* DoubleDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new DoubleDataWidget( h, parent );
-}
-
-int DoubleDataWidget::reg()
-{
-  static DataWidgetProp p { create, "DOUBLE,SIMPLE" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "DoubleDataWidget", p );
-}
+DW_REG_FUN_STD( DoubleDataWidget, "DOUBLE,SIMPLE" );
 
 
 // ------------------- DoubleSpinDataWidget ---------------------------
-int DoubleSpinDataWidget::registered = DoubleSpinDataWidget::reg();
 
 DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -639,21 +540,10 @@ bool DoubleSpinDataWidget::get() const
   return true;
 }
 
-DataWidget* DoubleSpinDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new DoubleSpinDataWidget( h, parent );
-}
-
-int DoubleSpinDataWidget::reg()
-{
-  static DataWidgetProp p { create, "DOUBLE,SPIN" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "DoubleSpinDataWidget", p );
-}
-
+DW_REG_FUN_STD( DoubleSpinDataWidget, "DOUBLE,SPIN" );
 
 
 // ------------------- ColorDataWidget ---------------------------
-int ColorDataWidget::registered = ColorDataWidget::reg();
 
 ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -690,20 +580,10 @@ bool ColorDataWidget::get() const
   return true;
 }
 
-DataWidget* ColorDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new ColorDataWidget( h, parent );
-}
-
-int ColorDataWidget::reg()
-{
-  static DataWidgetProp p { create, "COLOR" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "ColorDataWidget", p );
-}
+DW_REG_FUN_STD( ColorDataWidget, "COLOR" );
 
 
 // ------------------- FontDataWidget ---------------------------
-int FontDataWidget::registered = FontDataWidget::reg();
 
 FontDataWidget::FontDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -735,21 +615,10 @@ bool FontDataWidget::get() const
   return true;
 }
 
-DataWidget* FontDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new FontDataWidget( h, parent );
-}
-
-int FontDataWidget::reg()
-{
-  static DataWidgetProp p { create, "FONT" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "FontDataWidget", p );
-}
-
+DW_REG_FUN_STD( FontDataWidget, "FONT" );
 
 
 // ------------------- DateDataWidget ---------------------------
-int DateDataWidget::registered = DateDataWidget::reg();
 
 DateDataWidget::DateDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -792,21 +661,11 @@ bool DateDataWidget::get() const
   return true;
 }
 
-DataWidget* DateDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new DateDataWidget( h, parent );
-}
-
-int DateDataWidget::reg()
-{
-  static DataWidgetProp p { create, "DATE" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "DateDataWidget", p );
-}
+DW_REG_FUN_STD( DateDataWidget, "DATE" );
 
 
 
 // ------------------- TimeDataWidget ---------------------------
-int TimeDataWidget::registered = TimeDataWidget::reg();
 
 TimeDataWidget::TimeDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -848,22 +707,11 @@ bool TimeDataWidget::get() const
   return true;
 }
 
-DataWidget* TimeDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new TimeDataWidget( h, parent );
-}
-
-int TimeDataWidget::reg()
-{
-  static DataWidgetProp p { create, "TIME" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "TimeDataWidget", p );
-}
-
+DW_REG_FUN_STD( TimeDataWidget, "TIME" );
 
 
 
 // ------------------- IntArrayDataWidget ---------------------------
-int IntArrayDataWidget::registered = IntArrayDataWidget::reg();
 
 IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -929,20 +777,10 @@ bool IntArrayDataWidget::get() const
   return ok;
 }
 
-DataWidget* IntArrayDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new IntArrayDataWidget( h, parent );
-}
-
-int IntArrayDataWidget::reg()
-{
-  static DataWidgetProp p { create, "ARRAY_INT,INLINE" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "IntArrayDataWidget", p );
-}
+DW_REG_FUN_STD( IntArrayDataWidget, "ARRAY_INT,INLINE" );
 
 
 // ------------------- DoubleArrayDataWidget ---------------------------
-int DoubleArrayDataWidget::registered = DoubleArrayDataWidget::reg();
 
 DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -1015,20 +853,10 @@ bool DoubleArrayDataWidget::get() const
   return ok;
 }
 
-DataWidget* DoubleArrayDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new DoubleArrayDataWidget( h, parent );
-}
-
-int DoubleArrayDataWidget::reg()
-{
-  static DataWidgetProp p { create, "ARRAY_DOUBLE,INLINE" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "DoubleArrayDataWidget", p );
-}
+DW_REG_FUN_STD( DoubleArrayDataWidget, "ARRAY_DOUBLE,INLINE" );
 
 
 // ------------------- StringArrayDataWidget ---------------------------
-int StringArrayDataWidget::registered = StringArrayDataWidget::reg();
 
 StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -1095,20 +923,10 @@ bool StringArrayDataWidget::get() const
   return ok;
 }
 
-DataWidget* StringArrayDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new StringArrayDataWidget( h, parent );
-}
-
-int StringArrayDataWidget::reg()
-{
-  static DataWidgetProp p { create, "ARRAY_STRING,INLINE" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "StringArrayDataWidget", p );
-}
+DW_REG_FUN_STD( StringArrayDataWidget, "ARRAY_STRING,INLINE" );
 
 
 // ------------------- ObjDataWidget ---------------------------
-int ObjDataWidget::registered = ObjDataWidget::reg();
 
 ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
@@ -1138,8 +956,6 @@ bool ObjDataWidget::set()
 bool ObjDataWidget::get() const
 {
   // TODO:
-  // QVariant v = (cb->color()).rgba();
-  // ho.set( v );
   return true;
 }
 
@@ -1163,17 +979,7 @@ void ObjDataWidget::edit()
   }
 }
 
-DataWidget* ObjDataWidget::create( HolderData &h, QWidget *parent  )
-{
-  return new ObjDataWidget( h, parent );
-}
-
-int ObjDataWidget::reg()
-{
-  static DataWidgetProp p { create, "OBJ" };
-  return FactoryDataWidget::theFactory().registerWidgetType( "ObjDataWidget", p );
-}
-
+DW_REG_FUN_STD( ObjDataWidget, "OBJ" );
 
 
 // ==================== FactoryDataWidget ====================
