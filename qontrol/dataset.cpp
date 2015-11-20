@@ -19,7 +19,7 @@ using namespace std;
 
 // ================================================================
 // ---------------- HolderData .... ----------------------
-STD_CLASSINFO(HolderData,clpSpecial|clpPure);
+STD_CLASSINFO_TP(HolderData,clpSpecial|clpPure);
 
 HolderData::HolderData( ARGS_CTOR_MIN )
      :QAbstractItemModel( a_parent ),
@@ -536,12 +536,6 @@ void HolderData::extraToParm()
   if( getParm("dyn") == "1" ) {
     dyn = 1;
   }
-}
-
-
-QString HolderData::getTypeV() const // = 0
-{
-  return QSL("None");
 }
 
 
@@ -1353,9 +1347,10 @@ void HolderData::do_post_set()
 
 const char* HolderData::helpstr { "Abstract data holder" };
 
+#undef CURR_CLASS
 
 // ---------------- HolderValue ---------
-STD_CLASSINFO(HolderValue,clpData|clpPure);
+STD_CLASSINFO_TP(HolderValue,clpData|clpPure);
 
 CTOR(HolderValue,HolderData)
 {
@@ -1394,12 +1389,6 @@ bool HolderValue::fromString( const QString & /*s */ )
 {
   qWarning() << ERR_ABS << NWHE;
   return false;
-}
-
-
-QString HolderValue::getTypeV() const
-{
-  return QSL("value?");
 }
 
 const char* HolderValue::helpstr { "Parent of all data" };
@@ -1485,12 +1474,6 @@ bool HolderInt::fromString( const QString &s )
   return ok;
 }
 
-
-QString HolderInt::getTypeV() const
-{
-  return QSL("int");
-}
-
 const char* HolderInt::helpstr { "Contains integer data" };
 
 
@@ -1517,11 +1500,6 @@ HolderSwitch::~HolderSwitch()
 void HolderSwitch::do_post_set()
 {
   v = v ? 1 : 0;
-}
-
-QString HolderSwitch::getTypeV() const
-{
-  return QSL("switch");
 }
 
 const char* HolderSwitch::helpstr { "Contains integer (bin) data - switch iface" };
@@ -1562,11 +1540,6 @@ void HolderList::do_post_set()
   HolderInt::do_post_set();
 }
 
-
-QString HolderList::getTypeV() const
-{
-  return QSL("list");
-}
 
 const char* HolderList::helpstr { "Contains integer data - list iface" };
 
@@ -1649,11 +1622,6 @@ bool HolderDouble::fromString( const QString &s )
 }
 
 
-QString HolderDouble::getTypeV() const
-{
-  return QSL("double");
-}
-
 const char* HolderDouble::helpstr { "Contains double data" };
 
 DEFAULT_FUNCS_REG(HolderDouble);
@@ -1723,11 +1691,6 @@ bool HolderString::fromString( const QString &s )
   return true;
 }
 
-
-QString HolderString::getTypeV() const
-{
-  return QSL("string");
-}
 
 const char* HolderString::helpstr { "Contains QString data" };
 
@@ -1806,11 +1769,6 @@ bool HolderColor::fromString( const QString &s )
 }
 
 
-QString HolderColor::getTypeV() const
-{
-  return QSL("color");
-}
-
 const char* HolderColor::helpstr { "Contains QColor data" };
 
 DEFAULT_FUNCS_REG(HolderColor);
@@ -1873,11 +1831,6 @@ bool HolderFont::fromString( const QString &s )
   return true;
 }
 
-
-QString HolderFont::getTypeV() const
-{
-  return QSL("font");
-}
 
 const char* HolderFont::helpstr { "Contains QFont data" };
 
@@ -1944,11 +1897,6 @@ bool HolderDate::fromString( const QString &s )
   return set( s );
 }
 
-
-QString HolderDate::getTypeV() const
-{
-  return QSL("date");
-}
 
 const char* HolderDate::helpstr { "Contains QDate data" };
 
@@ -2077,11 +2025,6 @@ bool HolderIntArray::fromString( const QString &s )
   return ok; // ? only last
 }
 
-
-QString HolderIntArray::getTypeV() const
-{
-  return QSL("int[]");
-}
 
 const char* HolderIntArray::helpstr { "Contains vector of integer data" };
 
@@ -2212,11 +2155,6 @@ bool HolderDoubleArray::fromString( const QString &s )
 }
 
 
-QString HolderDoubleArray::getTypeV() const
-{
-  return QSL("double[]");
-}
-
 const char* HolderDoubleArray::helpstr { "Contains vector of double data" };
 
 
@@ -2332,11 +2270,6 @@ bool HolderStringArray::fromString( const QString &s )
   return !v.isEmpty();
 }
 
-
-QString HolderStringArray::getTypeV() const
-{
-  return QSL("string[]");
-}
 
 const char* HolderStringArray::helpstr { "Contains QStringList" };
 
@@ -2461,8 +2394,6 @@ void TDataSet::do_post_set()
 };
 
 
-// ------------------------------------ InputAbstract ---------
-//
 // end of dataset.cpp
 
 

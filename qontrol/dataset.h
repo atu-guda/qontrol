@@ -161,13 +161,16 @@ struct TClassInfo {
 // standard class_info definition
 #define STD_CLASSINFO(clname,clp) \
   TClassInfo clname::class_info =  \
-    {  #clname, QStringLiteral( #clname), clname::create,  helpstr, clp, &staticMetaObject };
+    {  #clname, QStringLiteral( #clname ), clname::create,  helpstr, clp, &staticMetaObject };
+
 
 // class_info definition under alias (for data holders HolderInt->int)
 #define STD_CLASSINFO_ALIAS(clname,clp,alias) \
   TClassInfo clname::class_info =  \
-    {  #alias,  QStringLiteral( #clname), clname::create, helpstr, clp, &staticMetaObject };
+    {  #alias,  QStringLiteral( #alias ), clname::create, helpstr, clp, &staticMetaObject }; \
+    QString clname::getTypeV() const {  return QSL( #alias );  }
 
+#define STD_CLASSINFO_TP(clname,clp) STD_CLASSINFO_ALIAS(clname,clp,clname)
 
 // define in class common converions to target type
 // need for usage class objects as pure data
