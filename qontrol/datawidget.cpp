@@ -748,6 +748,65 @@ int FontDataWidget::reg()
 
 
 
+// ------------------- DateDataWidget ---------------------------
+int DateDataWidget::registered = DateDataWidget::reg();
+
+DateDataWidget::DateDataWidget( HolderData &h, QWidget *parent )
+  : DataWidget( h, parent ),
+  de( new QDateEdit( this ) )
+{
+  main_w = de;
+  if( h.isRoTree( efROAny ) ) {
+    de->setDisabled( true );
+  }
+
+  QString s_min = h.getParm( "min" );
+  if( ! s_min.isEmpty() ) {
+    de->setMinimumDate( QDate::fromString( s_min, DATE_FORMAT ) );
+  }
+  QString s_max = h.getParm( "max" );
+  if( ! s_min.isEmpty() ) {
+    de->setMaximumDate( QDate::fromString( s_max, DATE_FORMAT ) );
+  }
+
+  de->setCalendarPopup( true );
+  de->setDisplayFormat( DATE_FORMAT );
+
+  auto lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
+  lay->addWidget( de, 1 );
+  setLayout( lay );
+
+}
+
+bool DateDataWidget::set()
+{
+  de->setDate(  QDate::fromString( ho.get().toString(), DATE_FORMAT ) );
+  return true;
+}
+
+bool DateDataWidget::get() const
+{
+  QString v = de->date().toString( DATE_FORMAT );
+  ho.set( v );
+  return true;
+}
+
+DataWidget* DateDataWidget::create( HolderData &h, QWidget *parent  )
+{
+  return new DateDataWidget( h, parent );
+}
+
+int DateDataWidget::reg()
+{
+  static DataWidgetProp p { create, "DATE" };
+  return FactoryDataWidget::theFactory().registerWidgetType( "DateDataWidget", p );
+}
+
+
+
+
 // ------------------- IntArrayDataWidget ---------------------------
 int IntArrayDataWidget::registered = IntArrayDataWidget::reg();
 

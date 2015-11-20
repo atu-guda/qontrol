@@ -541,7 +541,7 @@ void HolderData::extraToParm()
 
 QString HolderData::getTypeV() const // = 0;
 {
-  return "None";
+  return QSL("None");
 }
 
 
@@ -1399,7 +1399,7 @@ bool HolderValue::fromString( const QString & /*s */ )
 
 QString HolderValue::getTypeV() const
 {
-  return "value?";
+  return QSL("value?");
 }
 
 const char* HolderValue::helpstr { "Parent of all data" };
@@ -1497,7 +1497,7 @@ bool HolderInt::fromString( const QString &s )
 
 QString HolderInt::getTypeV() const
 {
-  return "int";
+  return QSL("int");
 }
 
 const char* HolderInt::helpstr { "Contains integer data" };
@@ -1530,7 +1530,7 @@ void HolderSwitch::do_post_set()
 
 QString HolderSwitch::getTypeV() const
 {
-  return "switch";
+  return QSL("switch");
 }
 
 const char* HolderSwitch::helpstr { "Contains integer (bin) data - switch iface" };
@@ -1574,7 +1574,7 @@ void HolderList::do_post_set()
 
 QString HolderList::getTypeV() const
 {
-  return "list";
+  return QSL("list");
 }
 
 const char* HolderList::helpstr { "Contains integer data - list iface" };
@@ -1669,7 +1669,7 @@ bool HolderDouble::fromString( const QString &s )
 
 QString HolderDouble::getTypeV() const
 {
-  return "double";
+  return QSL("double");
 }
 
 const char* HolderDouble::helpstr { "Contains double data" };
@@ -1754,7 +1754,7 @@ bool HolderString::fromString( const QString &s )
 
 QString HolderString::getTypeV() const
 {
-  return "string";
+  return QSL("string");
 }
 
 const char* HolderString::helpstr { "Contains QString data" };
@@ -1848,7 +1848,7 @@ bool HolderColor::fromString( const QString &s )
 
 QString HolderColor::getTypeV() const
 {
-  return "color";
+  return QSL("color");
 }
 
 const char* HolderColor::helpstr { "Contains QColor data" };
@@ -1925,7 +1925,7 @@ bool HolderFont::fromString( const QString &s )
 
 QString HolderFont::getTypeV() const
 {
-  return "font";
+  return QSL("font");
 }
 
 const char* HolderFont::helpstr { "Contains QFont data" };
@@ -1980,6 +1980,7 @@ void HolderDate::do_post_set()
   if( ! v.isValid() ) {
     v = QDate( 1970, 0, 0 );
   }
+  // TODO: min. max
 }
 
 QString HolderDate::toString() const
@@ -1995,7 +1996,7 @@ bool HolderDate::fromString( const QString &s )
 
 QString HolderDate::getTypeV() const
 {
-  return "date";
+  return QSL("date");
 }
 
 const char* HolderDate::helpstr { "Contains QDate data" };
@@ -2128,7 +2129,7 @@ bool HolderIntArray::fromString( const QString &s )
 
 QString HolderIntArray::getTypeV() const
 {
-  return "int[]";
+  return QSL("int[]");
 }
 
 const char* HolderIntArray::helpstr { "Contains vector of integer data" };
@@ -2262,7 +2263,7 @@ bool HolderDoubleArray::fromString( const QString &s )
 
 QString HolderDoubleArray::getTypeV() const
 {
-  return "double[]";
+  return QSL("double[]");
 }
 
 const char* HolderDoubleArray::helpstr { "Contains vector of double data" };
@@ -2383,7 +2384,7 @@ bool HolderStringArray::fromString( const QString &s )
 
 QString HolderStringArray::getTypeV() const
 {
-  return "string[]";
+  return QSL("string[]");
 }
 
 const char* HolderStringArray::helpstr { "Contains QStringList" };

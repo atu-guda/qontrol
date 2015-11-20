@@ -206,6 +206,21 @@ class FontDataWidget: public DataWidget {
   FontBtn *cb;
 };
 
+
+class DateDataWidget: public DataWidget {
+ public:
+  DateDataWidget( HolderData &h, QWidget *parent = 0 );
+  virtual bool set();
+  virtual bool get() const;
+  static DataWidget* create( HolderData &h, QWidget *parent  );
+ protected:
+  static int reg();
+  static int registered;
+  QDateEdit *de;
+};
+
+
+
 class IntArrayDataWidget: public DataWidget {
  public:
   IntArrayDataWidget( HolderData &h, QWidget *parent = 0 );
