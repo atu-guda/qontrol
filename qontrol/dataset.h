@@ -76,6 +76,8 @@ class AutoIncDec {
 struct TClassInfo {
   /** class name */
   const char *className;
+  /** class name as QString */
+  const QString q_className;
   /** ptr to static fun for creating instanses */
   PFHolderData creator;
   /** ptr to help string */
@@ -117,7 +119,12 @@ struct TClassInfo {
 //* declare common info functions
 #define DCL_STD_INF \
   virtual const TClassInfo* getClassInfo() const override; \
-  virtual const char* getHelp() const override;
+  virtual const char* getHelp() const override; \
+
+#define DCL_STD_INF_TYPE \
+  virtual const TClassInfo* getClassInfo() const override; \
+  virtual const char* getHelp() const override; \
+  virtual QString getTypeV() const override;
 
 //* declare common data manipulation functions
 #define DCL_STD_GETSET \
@@ -154,12 +161,12 @@ struct TClassInfo {
 // standard class_info definition
 #define STD_CLASSINFO(clname,clp) \
   TClassInfo clname::class_info =  \
-    {  #clname,  clname::create,  helpstr, clp, &staticMetaObject };
+    {  #clname, QStringLiteral( #clname), clname::create,  helpstr, clp, &staticMetaObject };
 
 // class_info definition under alias (for data holders HolderInt->int)
 #define STD_CLASSINFO_ALIAS(clname,clp,alias) \
   TClassInfo clname::class_info =  \
-    {  #alias,  clname::create,  helpstr, clp, &staticMetaObject };
+    {  #alias,  QStringLiteral( #clname), clname::create, helpstr, clp, &staticMetaObject };
 
 
 // define in class common converions to target type
@@ -424,9 +431,8 @@ class HolderValue : public HolderData {
  public:
   DCL_CTOR(HolderValue);
   DCL_CREATE;
-  DCL_STD_INF;
+  DCL_STD_INF_TYPE;
   DCL_STD_GETSET; // just for working create (need for register)
-  virtual QString getTypeV() const override;
  protected:
   Q_CLASSINFO( "nameHintBase",  "data_" );
   DCL_DEFAULT_STATIC;
@@ -441,11 +447,10 @@ class HolderInt : public HolderValue {
   DCL_CTOR(HolderInt);
   virtual ~HolderInt();
   DCL_CREATE;
-  DCL_STD_INF;
+  DCL_STD_INF_TYPE;
   DCL_STD_GETSET;
   STD_CONVERSIONS(int);
   INNER_ASSIGN(HolderInt);
-  virtual QString getTypeV() const override;
  protected:
   int v;
   Q_CLASSINFO( "nameHintBase",  "iv_" );
@@ -462,10 +467,9 @@ class HolderSwitch : public HolderInt {
   DCL_CTOR(HolderSwitch);
   virtual ~HolderSwitch();
   DCL_CREATE;
-  DCL_STD_INF;
+  DCL_STD_INF_TYPE;
   // most functions from HolderInt
   int operator=( int a ) { v=a; post_set(); return v; }
-  virtual QString getTypeV() const override;
  protected:
   virtual void do_post_set() override;
   Q_CLASSINFO( "nameHintBase",  "sw_" );
@@ -483,10 +487,9 @@ class HolderList : public HolderInt {
   DCL_CTOR(HolderList);
   virtual ~HolderList();
   DCL_CREATE;
-  DCL_STD_INF;
+  DCL_STD_INF_TYPE;
   // most functions from HolderInt
   int operator=( int a ) { v=a; post_set(); return v; }
-  virtual QString getTypeV() const;
  protected:
   virtual void do_post_set() override;
   Q_CLASSINFO( "nameHintBase",  "list_" );
@@ -504,11 +507,10 @@ class HolderDouble : public HolderValue {
   DCL_CTOR(HolderDouble);
   virtual ~HolderDouble();
   DCL_CREATE;
-  DCL_STD_INF;
+  DCL_STD_INF_TYPE;
   DCL_STD_GETSET;
   STD_CONVERSIONS(double);
   INNER_ASSIGN(HolderDouble);
-  virtual QString getTypeV() const override;
  protected:
   double v;
   Q_CLASSINFO( "nameHintBase",  "dv_" );
@@ -527,11 +529,10 @@ class HolderString : public HolderValue {
   DCL_CTOR(HolderString);
   virtual ~HolderString();
   DCL_CREATE;
-  DCL_STD_INF;
+  DCL_STD_INF_TYPE;
   DCL_STD_GETSET;
   STD_CONVERSIONS(QString);
   INNER_ASSIGN(HolderString);
-  virtual QString getTypeV() const override;
   std::string toStdString() const { return v.toStdString(); }
   bool isEmpty() const { return v.isEmpty(); }
   const char* c_str() const { return v.toStdString().c_str(); } // danger
@@ -553,9 +554,8 @@ class HolderColor : public HolderValue {
   DCL_CTOR(HolderColor);
   virtual ~HolderColor();
   DCL_CREATE;
-  DCL_STD_INF;
+  DCL_STD_INF_TYPE;
   DCL_STD_GETSET;
-  virtual QString getTypeV() const override;
   STD_CONVERSIONS(QColor);
   INNER_ASSIGN(HolderColor);
   int toInt() const { return (int)( v.rgb() ); };
@@ -583,9 +583,8 @@ class HolderFont : public HolderValue {
   DCL_CTOR(HolderFont);
   virtual ~HolderFont();
   DCL_CREATE;
-  DCL_STD_INF;
+  DCL_STD_INF_TYPE;
   DCL_STD_GETSET;
-  virtual QString getTypeV() const override;
   STD_CONVERSIONS(QFont);
   INNER_ASSIGN(HolderFont);
  protected:
@@ -605,9 +604,8 @@ class HolderDate : public HolderValue {
   DCL_CTOR(HolderDate);
   virtual ~HolderDate();
   DCL_CREATE;
-  DCL_STD_INF;
+  DCL_STD_INF_TYPE;
   DCL_STD_GETSET;
-  virtual QString getTypeV() const override;
   STD_CONVERSIONS(QDate);
   INNER_ASSIGN(HolderDate);
   int toInt() const { return (int)( v.toJulianDay() ); };
@@ -634,10 +632,9 @@ class HolderIntArray : public HolderValue {
   DCL_CTOR(HolderIntArray);
   virtual ~HolderIntArray();
   DCL_CREATE;
-  DCL_STD_INF;
+  DCL_STD_INF_TYPE;
   DCL_STD_GETSET;
   virtual int arrSize() const override { return v.size(); }
-  virtual QString getTypeV() const override;
   STD_CONVERSIONS(std::vector<int>);
   INNER_ASSIGN(HolderIntArray);
   int operator[](int i) const { return v[i]; };
@@ -659,10 +656,9 @@ class HolderDoubleArray : public HolderValue {
   DCL_CTOR(HolderDoubleArray);
   virtual ~HolderDoubleArray();
   DCL_CREATE;
-  DCL_STD_INF;
+  DCL_STD_INF_TYPE;
   DCL_STD_GETSET;
   virtual int arrSize() const override { return v.size(); }
-  virtual QString getTypeV() const override;
   STD_CONVERSIONS(std::vector<double>);
   INNER_ASSIGN(HolderDoubleArray);
   double operator[](int i) const { return v[i]; };
@@ -684,10 +680,9 @@ class HolderStringArray : public HolderValue {
   DCL_CTOR(HolderStringArray);
   virtual ~HolderStringArray();
   DCL_CREATE;
-  DCL_STD_INF;
+  DCL_STD_INF_TYPE;
   DCL_STD_GETSET;
   virtual int arrSize() const override { return v.size(); }
-  virtual QString getTypeV() const override;
   STD_CONVERSIONS(QStringList);
   INNER_ASSIGN(HolderStringArray);
   QString operator[](int i) const { return v[i]; };
@@ -712,10 +707,9 @@ class TDataSet : public HolderData {
    DCL_CTOR(TDataSet);
    virtual ~TDataSet() override;
    DCL_CREATE;
-   DCL_STD_INF;
-   DCL_STD_GETSET;
-
+   DCL_STD_INF; // to _TYPE as \|/
    virtual QString getTypeV() const override;
+   DCL_STD_GETSET;
 
    QDomElement toDom( QDomDocument &dd ) const override;
  protected:

@@ -539,7 +539,7 @@ void HolderData::extraToParm()
 }
 
 
-QString HolderData::getTypeV() const // = 0;
+QString HolderData::getTypeV() const // = 0
 {
   return QSL("None");
 }
@@ -1363,7 +1363,7 @@ CTOR(HolderValue,HolderData)
 
 void HolderValue::reset_dfl()
 {
-  qWarning() << ERR_ABS << NWHE;
+  set( getParm( "def" ) );
 }
 
 void HolderValue::do_post_set()
@@ -1428,16 +1428,7 @@ HolderInt::~HolderInt()
 
 void HolderInt::reset_dfl()
 {
-  auto v0 = v;
-  v = 0;
-  QString s = getParm( "def" );
-  if( ! s.isEmpty() ) {
-    v = QString2IntEx( s );
-  }
-  post_set();
-  if( v != v0 ) {
-    setModified();
-  }
+  HolderValue::reset_dfl();
 }
 
 
@@ -1602,16 +1593,7 @@ HolderDouble::~HolderDouble()
 
 void HolderDouble::reset_dfl()
 {
-  auto v0 = v;
-  v = 0;
-  QString s = getParm( "def" );
-  if( ! s.isEmpty() ) {
-    v = s.toDouble();
-  }
-  post_set();
-  if( v != v0 ) {
-    setModified();
-  }
+  HolderValue::reset_dfl();
 }
 
 
@@ -1696,17 +1678,7 @@ HolderString::~HolderString()
 
 void HolderString::reset_dfl()
 {
-  auto v0 = v;
-  QString s = getParm( "def" );
-  if( ! s.isEmpty() ) {
-    v = s;
-  } else {
-    v = "";
-  }
-  post_set();
-  if( v != v0 ) {
-    setModified();
-  }
+  HolderValue::reset_dfl();
 }
 
 bool HolderString::set( const QVariant & x, int /* idx */  )
@@ -1780,19 +1752,7 @@ HolderColor::~HolderColor()
 
 void HolderColor::reset_dfl()
 {
-  auto v0 = v;
-  v = QColor();
-  QString s = getParm( "def" );
-  if( ! s.isEmpty() ) {
-    v = QColor( s );
-    if( ! v.isValid() ) {
-      v = QColor(s.toInt());
-    }
-  }
-  post_set();
-  if( v != v0 ) {
-    setModified();
-  }
+  HolderValue::reset_dfl();
 }
 
 
@@ -1873,16 +1833,7 @@ HolderFont::~HolderFont()
 
 void HolderFont::reset_dfl()
 {
-  auto v0 = v;
-  v = QFont();
-  QString s = getParm( "def" );
-  if( ! s.isEmpty() ) {
-    v.fromString( s );
-  }
-  post_set();
-  if( v != v0 ) {
-    setModified();
-  }
+  HolderValue::reset_dfl();
 }
 
 
@@ -1951,7 +1902,7 @@ HolderDate::~HolderDate()
 
 void HolderDate::reset_dfl()
 {
-  set( getParm( "def" ) );
+  HolderValue::reset_dfl();
 }
 
 
@@ -2423,7 +2374,6 @@ void TDataSet::reset_dfl()
 {
   for( auto o : TCHILD(HolderData*) ) {
     o->reset_dfl();
-    // it may be a non-holder elements, like model.eng?
   }
 }
 
