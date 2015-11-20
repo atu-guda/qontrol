@@ -1494,7 +1494,9 @@ STD_CLASSINFO_ALIAS(HolderSwitch,clpData,switch);
 
 CTOR(HolderSwitch,HolderInt)
 {
-  setParmIfEmpty( QSL("props"), QSL("INT,SWITCH") );
+  if( getParm( QSL("props") ) == QSL("INT,SIMPLE") ) {
+    setParm( QSL("props"), QSL("INT,SWITCH") );
+  }
   setParm( QSL("min"), QSL("0") ); setParm( QSL("max"), QSL("1") );
   post_set();
 }
@@ -1520,7 +1522,9 @@ STD_CLASSINFO_ALIAS(HolderList,clpData,list);
 CTOR(HolderList,HolderInt)
 {
   setParm( QSL("min"), QSL("0") ); setParm( QSL("max"), QSL("0") );
-  setParmIfEmpty( QSL("props"), QSL("INT,LIST") );
+  if( getParm(QSL("props")) == QSL("INT,SIMPLE") ) {
+    setParm( QSL("props"), QSL("INT,LIST") );
+  }
 
   // may be overkill, but one cone - one place
   QString enum_name = getParm( QSL("enum") );

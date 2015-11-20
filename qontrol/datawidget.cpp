@@ -24,7 +24,7 @@ DataWidget::DataWidget( HolderData &h, QWidget *parent )
   : QFrame( parent ), ho( h ), main_w( nullptr ),
     lbl( new QLabel( tex2label( ho.getParm( QSL("vis_name") ) ), this ) )
 {
-  lbl->setWhatsThis( ho.getType() + " " + ho.objectName() );
+  lbl->setWhatsThis( ho.getType() + QSL(" ") + ho.objectName() );
   lbl->setMinimumWidth( 5 * LaboWin::Em() );
   lbl->setTextFormat( Qt::RichText );
   // setFrameStyle( QFrame::Panel | QFrame::Sunken );
@@ -64,7 +64,7 @@ DummyDataWidget::DummyDataWidget( HolderData &h, QWidget *parent )
 
 bool DummyDataWidget::set()
 {
-  lbl_d->setText( "@ " + ho.toString().left(20) );
+  lbl_d->setText( QSL("@ ") + ho.toString().left(20) );
   return true;
 }
 
@@ -91,12 +91,12 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
   int v_max = h.getParmInt( QSL("max"), 4096 ); // not IMAX - good limit for single-line string
   le->setMaxLength( v_max );
 
-  QString mask = h.getParm( "mask" );
+  QString mask = h.getParm( QSL("mask") );
   if( ! mask.isEmpty() ) {
     le->setInputMask( mask );
   }
 
-  QString cmpl_targ = h.getParm( "cmpl" );
+  QString cmpl_targ = h.getParm( QSL("cmpl") );
   if( ! cmpl_targ.isEmpty() ) {
     auto cmpl = new LinkCompleter( this );
     QAbstractItemModel *cmpl_mdl = h.getComplModel( cmpl_targ, cmpl );
@@ -185,7 +185,7 @@ StringExtDataWidget::StringExtDataWidget( HolderData &h, QWidget *parent )
     pb->setDisabled( true );
   }
   pb->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred );
-  pb->setText( ho.objectName() % " [text]" );
+  pb->setText( ho.objectName() % QSL(" [text]") );
   connect( pb, &QPushButton::clicked, this, &StringExtDataWidget::edit );
 
   auto lay =  new QHBoxLayout( this );
@@ -217,14 +217,14 @@ void StringExtDataWidget::edit()
     return;
   }
   QString fn = f.fileName();
-  QString cmd = "gvim -f ";
+  QString cmd = QSL("gvim -f ");
   if( LaboWin::win() ) {
     Mo2Settings *sett = LaboWin::win()->getSettings();
     if( sett ) {
       cmd = sett->editCmd;
     }
   }
-  cmd += " " + fn;
+  cmd += QSL(" ") + fn;
 
   {
     QTextStream os( &f );
@@ -304,7 +304,7 @@ IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent )
   int v_max = h.getParmInt( QSL("max"), IMAX );
   sb->setRange( v_min, v_max );
 
-  QString prefix = h.getParm( "prefix" );
+  QString prefix = h.getParm( QSL("prefix") );
   if( ! prefix.isEmpty() ) {
     sb->setPrefix( prefix );
   }
@@ -342,7 +342,7 @@ DW_REG_FUN_STD( IntSpinDataWidget, "INT,SPIN" );
 
 SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
   : DataWidget( h, parent ),
-  cb( new QCheckBox( " ", this )  )
+  cb( new QCheckBox( QSL(" "), this )  )
 {
   main_w = cb;
   if( h.isRoTree( efROAny ) ) {
@@ -392,7 +392,7 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
     }
   }
   QString noTeX = ho.getParm( QSL("noTeX") );
-  if( noTeX != "y" ) {
+  if( noTeX != QSL("y") ) {
     for( auto &s : sl ) { s = tex2label( s, true ); }
   }
   cb->addItems( sl );
@@ -812,7 +812,7 @@ StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent )
   QString vn = h.getParm( QSL("vis_name"), h.objectName() ) % QSL("[");
 
   int len_max = h.getParmInt( QSL("max"), 4096 ); // not IMAX - good limit for single-line string
-  QString mask = h.getParm( "mask" );
+  QString mask = h.getParm( QSL("mask") );
 
   lbl->setText( QSL("") ); // hack: hide common name
   auto lay = new QGridLayout( pwi );
@@ -937,7 +937,7 @@ QString FactoryDataWidget::findForHolder( const HolderData &ho, int *lev ) const
 
   for( auto i = propMap.begin(); i!= propMap.end(); ++i ) { // no : need key
     int good = 0;
-    QStringList w_p_list = QString( i.value().eprop ).split(",");
+    QStringList w_p_list = QString( i.value().eprop ).split(QSL(","));
 
     for( int j=0; j<ho_p_list.size(); ++j ) {
       if( w_p_list.contains( ho_p_list.at(j) ) ) {
@@ -958,7 +958,7 @@ QString FactoryDataWidget::findForHolder( const HolderData &ho, int *lev ) const
   }
 
   if( max_good < 0 ) { // TODO ????
-    name = "DummyDataWidget";
+    name = QSL("DummyDataWidget");
     max_good = 0;
   }
 
@@ -1027,7 +1027,7 @@ int DataDialog::getAll() // from object to wigets
 {
   QString s = ds.getType()  %  ' ' %  ds.getFullName();
   if( ds.getModified() ) {
-    s += " *";
+    s += QSL(" *");
   }
   setWindowTitle( s );
 
@@ -1100,16 +1100,13 @@ void DataDialog::showSimpleHelp()
   const char *help;
   if( (help = ds.getHelp()) == 0 )
     return;
-  QString help_str( "<p><a name=\"help_head\"></a> </p><hr/>\n" );
-
-  help_str += help;
-  help_str += "<hr/>\n";
+  QString help_str = QSL( "<p><a name=\"help_head\"></a> </p><hr/>\n" ) % help % QSL("<hr/>\n");
 
   for( auto ho : ds.TCHILD(HolderData*) ) {
-    help_str += "<p>" % ho->getType()
-      % " <b> " % ho->objectName() % " </b>; // "
-      % ho->getParm( QSL("descr") )  % " ("
-      % ho->getParm( QSL("vis_name") ) % ")</p>\n";
+    help_str += QSL("<p>") % ho->getType()
+      % QSL(" <b> ") % ho->objectName() % QSL(" </b>; // ")
+      % ho->getParm( QSL("descr") )  % QSL(" (")
+      % ho->getParm( QSL("vis_name") ) % QSL(")</p>\n");
   }
 
   auto dia = new QDialog( this );
@@ -1122,12 +1119,12 @@ void DataDialog::showSimpleHelp()
   brow->insertHtml( help_str );
   lay->addWidget( brow, 0, 0 );
 
-  auto bt_ok = new QPushButton( "&Ok", dia );
+  auto bt_ok = new QPushButton( QSL("&Ok"), dia );
   lay->addWidget( bt_ok, 1, 0 );
   dia->setLayout( lay );
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  brow->scrollToAnchor( "help_head" );
+  brow->scrollToAnchor( QSL("help_head") );
   dia->exec();
   delete dia;
 
@@ -1169,8 +1166,8 @@ bool DataDialog::delObj()
   }
 
   bool ok;
-  QString ob_name = QInputDialog::getItem( this, "Delete object",
-      "Select object to delete", sl, 0, false, &ok );
+  QString ob_name = QInputDialog::getItem( this, QSL("Delete object"),
+      QSL("Select object to delete"), sl, 0, false, &ok );
   if( !ok ) {
     return false;
   }
@@ -1271,13 +1268,13 @@ int DataDialog::createWidgets()
     }
 
     was_col = was_block = was_tab = false;
-    if( sep == "colend" ||  nr >= MAX_WIDGETS_PER_COL ) {
+    if( sep == QSL("colend") ||  nr >= MAX_WIDGETS_PER_COL ) {
       was_col = true;
     }
-    if( sep == "blockend" ) {
+    if( sep == QSL("blockend") ) {
       was_block = true;
     }
-    if( sep == "tabend" ) {
+    if( sep == QSL("tabend") ) {
       was_tab = true;
     }
   } // -------------- end item loop
@@ -1299,17 +1296,17 @@ int DataDialog::createWidgets()
 
   if( can_add_objs ) {
     auto lay_btn2 = new QHBoxLayout;
-    auto btn_addObj = new QPushButton( QIcon::fromTheme("list-add"), QSL("Add object") );
+    auto btn_addObj = new QPushButton( QIcon::fromTheme(QSL("list-add")), QSL("Add object") );
     connect( btn_addObj, &QPushButton::clicked, this, &DataDialog::addObj );
     lay_btn2->addWidget( btn_addObj );
-    auto btn_delObj = new QPushButton( QIcon::fromTheme("edit-delete"), QSL("Delete object") );
+    auto btn_delObj = new QPushButton( QIcon::fromTheme(QSL("edit-delete")), QSL("Delete object") );
     connect( btn_delObj, &QPushButton::clicked, this, &DataDialog::delObj );
     lay_btn2->addWidget( btn_delObj );
     lay1->addLayout( lay_btn2 );
   }
 
   auto lay_btn = new QHBoxLayout;
-  auto btn_ok = new QPushButton( QIcon::fromTheme("dialog-ok"),"Ok" );
+  auto btn_ok = new QPushButton( QIcon::fromTheme(QSL("dialog-ok")),QSL("Ok") );
   if( ro ) {
     btn_ok->setDisabled( true );
   } else {
@@ -1318,11 +1315,11 @@ int DataDialog::createWidgets()
   }
   lay_btn->addWidget( btn_ok );
   //
-  auto btn_cancel = new QPushButton( QIcon::fromTheme("dialog-cancel"), "Cancel" );
+  auto btn_cancel = new QPushButton( QIcon::fromTheme(QSL("dialog-cancel")), QSL("Cancel") );
   connect( btn_cancel, &QPushButton::clicked, this, &DataDialog::reject);
   lay_btn->addWidget( btn_cancel );
   //
-  auto btn_refresh = new QPushButton( QIcon::fromTheme("view-refresh"), "Refresh" );
+  auto btn_refresh = new QPushButton( QIcon::fromTheme(QSL("view-refresh")), QSL("Refresh") );
   if( ro ) {
     btn_refresh->setDisabled( true );
   } else {
@@ -1330,7 +1327,7 @@ int DataDialog::createWidgets()
   }
   lay_btn->addWidget( btn_refresh );
   //
-  auto btn_revert = new QPushButton( QIcon::fromTheme("document-revert"), "Revert" );
+  auto btn_revert = new QPushButton( QIcon::fromTheme(QSL("document-revert")), QSL("Revert") );
   if( ro ) {
     btn_revert->setDisabled( true );
   } else {
@@ -1338,7 +1335,7 @@ int DataDialog::createWidgets()
   }
   lay_btn->addWidget( btn_revert );
   //
-  auto btn_help = new QPushButton( QIcon::fromTheme("help-contents"), "Help" );
+  auto btn_help = new QPushButton( QIcon::fromTheme(QSL("help-contents")), QSL("Help") );
   connect( btn_help, &QPushButton::clicked, this, &DataDialog::showHelp);
   lay_btn->addWidget( btn_help );
   lay1->addLayout( lay_btn );
