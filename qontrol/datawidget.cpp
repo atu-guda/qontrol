@@ -209,10 +209,12 @@ bool StringExtDataWidget::get() const
 
 void StringExtDataWidget::edit()
 {
-  QString ftempl = QSL( "tmp_file_XXXXXXXX" )  %  ho.getParm( QSL("fileext"), QSL(".txt") );
+  // TODO: temporary dir
+  QString ftempl = QSL( "qo_tmp_file_XXXXXXXX" )  %  ho.getParm( QSL("fileext"), QSL(".txt") );
 
   QTemporaryFile f;
   f.setFileTemplate( ftempl );
+  // f.setAutoRemove( false ); // for debug
   if( !f.open() ) {
     return;
   }
@@ -235,13 +237,16 @@ void StringExtDataWidget::edit()
   QProcess proc;
   int rc = proc.execute( cmd );
   if( rc != 0 ) {
+    qWarning() << "Command " << cmd << " returns status " << rc << WHE;
     return;
   }
 
-  if( !f.open() ) {
+  QFile fr( fn );
+  if( !fr.open( QIODevice::ReadOnly ) ) {
+    qWarning() << "Fail to reopen file " << fn << WHE;
     return;
   }
-  QTextStream is( &f );
+  QTextStream is( &fr );
   ts = is.readAll();
   f.close();
 }
