@@ -561,7 +561,7 @@ void HolderData::extraToParm()
       qWarning() << "bad extra string part: " <<  s << NWHE;
     }
   }
-  dyn = getParmInt( QSL("dyn"), 0 );
+  dyn = getParmInt( QSL("dyn"), dyn ); // mod if manualy set
 }
 
 
@@ -1436,7 +1436,7 @@ CTOR(HolderInt,HolderValue) , v(0)
 
 HolderInt::~HolderInt()
 {
-  v = 0; dyn = 0;
+  v = 0;
 }
 
 void HolderInt::reset_dfl()
@@ -1568,7 +1568,7 @@ CTOR(HolderDouble,HolderValue), v(0)
 
 HolderDouble::~HolderDouble()
 {
-  v = 0; dyn = 0;
+  v = 0;
 }
 
 void HolderDouble::reset_dfl()
@@ -1629,7 +1629,6 @@ CTOR(HolderString,HolderValue)
 
 HolderString::~HolderString()
 {
-  dyn = 0;
 }
 
 void HolderString::reset_dfl()
@@ -1959,7 +1958,6 @@ CTOR(HolderIntArray,HolderValue)
 
 HolderIntArray::~HolderIntArray()
 {
-  dyn = 0;
 }
 
 void HolderIntArray::reset_dfl()
@@ -2073,7 +2071,6 @@ CTOR(HolderDoubleArray,HolderValue)
 
 HolderDoubleArray::~HolderDoubleArray()
 {
-  dyn = 0;
 }
 
 void HolderDoubleArray::reset_dfl()
@@ -2187,7 +2184,6 @@ CTOR(HolderStringArray,HolderValue)
 
 HolderStringArray::~HolderStringArray()
 {
-  dyn = 0;
 }
 
 void HolderStringArray::reset_dfl()

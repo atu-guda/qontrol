@@ -1156,7 +1156,7 @@ bool DataDialog::delObj()
   }
   QStringList sl;
   for( auto ho :  ds.TCHILD(HolderData*) ) {
-    if( ! ho->isDyn() ) {
+    if( ! ho->isDyn() || ho->hasAnyFlags( efImmutable ) ) {
       continue;
     }
     sl << ho->objectName();

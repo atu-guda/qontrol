@@ -7,11 +7,13 @@ add Flag: call parent post_set if changed. and supress for mass changes. set/do_
 sep prop: bitfield?
 updSuspended: like setModified
 Create arrays in dialogs.
+Script 'help' function + list of top-level objects and functions.
 Decoration objects.
 Documenation: cmdline options (partial), common workflow.
 Show(edit?) HolderData props
 LaboDoc: getModel + use in StatusModel
 StatusTip(col=2) for StatusModel More: clarify 'col' meaning for objects
+1D{v,h}/2D slider inputs + 2-double pair data
 Create Action fun + subclass QAction? (menu to place, flags)
 Controlled Scheme size.
 !Check: update link values only after step - prep for multi-threading (see TSubScheme)
