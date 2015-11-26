@@ -110,7 +110,7 @@ QVariant HolderData::dataObj( int col, int role ) const
   // no switch: too complex
   if( role == Qt::DisplayRole ) {
     QString s;
-    s = QSL( "c " ) + QSN( col ); // fallback value
+    s = QSL( "c " ) % QSN( col ); // fallback value
     switch( col ) {
       case 0:
         s = objectName(); break;
@@ -243,7 +243,7 @@ void HolderData::setModified()
   if( ignoreMod ) {
     return;
   }
-  if( modified & modifManual ) {  // do not repeat on alread modified
+  if( modified & modifManual ) {  // do not repeat on already modified
     return;
   }
   modified |= modifManual;
@@ -567,7 +567,7 @@ void HolderData::extraToParm()
 
 void HolderData::reportStructChanged()
 {
-  if( updSuspended ) {
+  if( updSuspended > 0 ) {
     return;
   }
 
@@ -582,7 +582,7 @@ void HolderData::reportStructChanged()
 
 void HolderData::handleStructChanged()
 {
-  if( updSuspended ) {
+  if( updSuspended > 0 ) {
     return;
   }
 
@@ -608,6 +608,7 @@ QIcon HolderData::getIcon() const
 {
   QString iconName = QSL( ":icons/elm_" ) % getType().toLower() % QSL(".png");
   QIcon el_ico( iconName );
+  // todo: from files, if failed
   return el_ico;
 }
 
@@ -833,16 +834,7 @@ void HolderData::saveParmsToDom( QDomElement &de ) const
 
 bool HolderData::fromDom( QDomElement &de, QString &errstr )
 {
-  auto old_updSuspended = updSuspended;
-  updSuspended = true;
-  bool ok = fromDom_real( de, errstr );
-
-  updSuspended = old_updSuspended;
-  return ok;
-}
-
-bool HolderData::fromDom_real( QDomElement &de, QString &errstr )
-{
+  IGNORE_STRUCT_CHANGE_HERE;
   for( QDomNode no = de.firstChild(); !no.isNull() ; no = no.nextSibling() ) {
 
     if ( ! no.isElement() ) {

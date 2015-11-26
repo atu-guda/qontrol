@@ -1086,7 +1086,7 @@ void DataDialog::revertData()
     return;
   }
   ds.suspendHandleStructChange();
-  ds.delAllDyn(); // TODO: supress errors during recreate.
+  ds.delAllDyn(); // TODO: suppress errors during recreate.
   ds.fromString( saved_data );
   ds.setUnModified();
   ds.resumeHandleStructChange();

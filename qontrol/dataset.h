@@ -9,6 +9,8 @@
 #ifndef _DATASET_H
 #define _DATASET_H
 
+#include <functional>
+
 #include <QObject>
 #include <QString>
 #include <QColor>
@@ -62,13 +64,27 @@ const char *const modificationChar[] = { "", "+", "#", "*", "?", ".", ",", "X" }
 // helper class to auto decrement values at function exit
 class AutoIncDec {
   public:
-   AutoIncDec( int &av ) : v(av) { ++v; }
+   explicit AutoIncDec( int &av ) : v(av) { ++v; }
    ~AutoIncDec() { --v; };
   private:
    int &v;
 };
 
 #define IGNORE_MOD_HERE  AutoIncDec __imod { ignoreMod };
+#define IGNORE_STRUCT_CHANGE_HERE  AutoIncDec __imod { updSuspended };
+
+// a-la simplefied boost ScopeExit
+class AtScopeExit {
+  public:
+   using ExitFunType = const std::function<void()>;
+   explicit AtScopeExit( ExitFunType &a_action ) : action( a_action ) {};
+   ~AtScopeExit() {  try {    action(); } catch(...) {}   }
+  private:
+    ExitFunType action;
+  private:
+    AtScopeExit( const AtScopeExit &r ) = delete;
+    AtScopeExit& operator=( const AtScopeExit &rhs ) = delete;
+};
 
 /** describes class and it's creator
    used for class registration
@@ -306,9 +322,9 @@ class HolderData : public QAbstractItemModel {
   /** initiates reactions to structure change: common: to root */
   void reportStructChanged();
   /** temporary suspend reaction to struct changes */
-  void suspendHandleStructChange() { updSuspended = true; }
+  void suspendHandleStructChange() { ++updSuspended; }
   /** resume reaction to struct changes */
-  void resumeHandleStructChange() { updSuspended = false; handleStructChanged(); }
+  void resumeHandleStructChange() { --updSuspended; if( updSuspended < 1 ) {handleStructChanged(); } }
   //* return icon for visualization
   virtual QIcon getIcon() const;
 
@@ -391,8 +407,6 @@ class HolderData : public QAbstractItemModel {
   virtual void do_reset() {}; //* adjustable reset function
   /** do real actions after structure changed */
   virtual void do_structChanged();
-  //* real part of fromDom */
-  bool fromDom_real( QDomElement &de, QString &errstr );
   bool restoreParmsFromDom( QDomElement &de );
   void saveParmsToDom( QDomElement &de ) const;
 
@@ -405,8 +419,8 @@ class HolderData : public QAbstractItemModel {
   /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
   int modified = 0;
   int ignoreMod = 0; // ignore modifcation during tmp object handling
-  /** flag: suspend reaction to structure update: use only in mass changes */
-  bool updSuspended = false;
+  /** flag/counter: suspend reaction to structure update: use only in mass changes */
+  int updSuspended = 0;
   //* active element index
   int active_idx = -1;
   //* flag: show active/inactive state in Qt::CheckStateRole
