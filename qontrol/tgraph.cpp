@@ -591,150 +591,28 @@ void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scda )
   QColor bg_c = scda->bgcolor;
   gr->Clf( bg_c.redF(), bg_c.greenF(), bg_c.blueF() );
 
-  const mglData *d_x = tli[LineRole::axisX]->md;
-  const mglData *d_y = tli[LineRole::axisY]->md;
-  // const mglData *d_z = tli[LineRole::axisZ]->md;
-  const mglData *d_c0 = tli[LineRole::c0]->md;
+  d_x = tli[LineRole::axisX]->md;
+  d_y = tli[LineRole::axisY]->md;
+  // d_z = tli[LineRole::axisZ]->md;
+  d_c0 = tli[LineRole::c0]->md;
 
-  int ig = 0;
+  int ig = -1;
   for( auto pl : pli ) {
+    ++ig;
     uint64_t msk = 1ull << ig;
     if( vd.off & msk ) {
-      ++ig;
+      continue;
+    }
+    gr->AddLegend( pl->pl_label.c_str(), pl->pl_extra.c_str() );
+    if( a_vd->sel == ig ) { // selected plotted last
       continue;
     }
 
-    const char *ext = pl->pl_extra.c_str();
-    const char *opt = pl->pl_opt.c_str();
-
-    switch( pl->type ) {
-      case GraphElem::DataType::DataPlot :
-        if( pl->is2D ) {
-          gr->Plot( *d_x, *d_y, *(pl->md), ext, opt );
-          break;
-        }
-        gr->Plot( *d_x, *(pl->md), ext, opt );
-        break;
-
-      case GraphElem::DataType::DataStep :
-        if( pl->is2D ) {
-          gr->Step( *d_x, *d_y, *(pl->md), ext, opt );
-          break;
-        }
-        gr->Step( *d_x, *(pl->md), ext, opt );
-        break;
-
-      case GraphElem::DataType::DataTape :
-        if( pl->is2D ) {
-          gr->Tape( *d_x, *d_y, *(pl->md), ext, opt );
-          break;
-        }
-        gr->Tape( *d_x, *(pl->md), ext, opt );
-        break;
-
-      case GraphElem::DataType::DataStem :
-        if( pl->is2D ) {
-          gr->Stem( *d_x, *d_y, *(pl->md), ext, opt );
-          break;
-        }
-        gr->Stem( *d_x, *(pl->md), ext, opt );
-        break;
-
-      case GraphElem::DataType::DataBars :
-        if( pl->is2D ) {
-          gr->Bars( *d_x, *d_y, *(pl->md), ext, opt );
-          break;
-        }
-        gr->Bars( *d_x, *(pl->md), ext, opt );
-        break;
-
-      case GraphElem::DataType::DataBarh :
-        if( pl->is2D ) {
-          gr->Barh( *(pl->md), *d_x, ext, opt );
-          break;
-        }
-        gr->Barh( *(pl->md), *d_x, ext, opt );
-        break;
-
-      case GraphElem::DataType::DataTens : // C0: color
-        if( pl->is2D ) {
-          gr->Tens( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
-          break;
-        }
-        gr->Tens( *d_x, *(pl->md), *d_c0, ext, opt );
-        break;
-
-      case GraphElem::DataType::DataArea :
-        if( pl->is2D ) {
-          gr->Area( *d_x, *d_y, *(pl->md), ext, opt );
-          break;
-        }
-        gr->Area( *d_x, *(pl->md), ext, opt );
-        break;
-      case GraphElem::DataType::DataRegion :
-        break; // unknown for now
-      case GraphElem::DataType::DataOHLC :
-        break; // unknown for now
-      case GraphElem::DataType::DataBoxPlot :
-        break; // unknown for now
-      case GraphElem::DataType::DataCandle :
-        break; // unknown for now
-      case GraphElem::DataType::DataCones :
-        break; // unknown for now
-      case GraphElem::DataType::DataError :
-        break; // unknown for now
-      case GraphElem::DataType::DataMark : // C0: sz
-        if( pl->is2D ) {
-          gr->Mark( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
-          break;
-        }
-        gr->Mark( *d_x, *(pl->md), *d_c0, ext, opt  );
-        break;
-
-      case GraphElem::DataType::DataTube : // C0: r
-        if( pl->is2D ) {
-          gr->Tube( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
-          break;
-        }
-        gr->Tube( *d_x, *(pl->md), *d_c0, ext, opt );
-        break;
-
-      case GraphElem::DataType::DataSurf :
-        gr->Surf( *d_x, *d_y, *(pl->md), ext, opt );
-        break;
-      case GraphElem::DataType::DataSurfC :
-        gr->SurfC( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
-        break;
-      case GraphElem::DataType::DataSurfA :
-        gr->SurfA( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
-        break;
-      case GraphElem::DataType::DataMesh :
-        gr->Mesh( *d_x, *d_y, *(pl->md), ext, opt );
-        break;
-      case GraphElem::DataType::DataFall :
-        gr->Fall( *d_x, *d_y, *(pl->md), ext, opt );
-        break;
-      case GraphElem::DataType::DataBelt :
-        gr->Belt( *d_x, *d_y, *(pl->md), ext, opt );
-        break;
-      case GraphElem::DataType::DataDens :
-        gr->Dens( *d_x, *d_y, *(pl->md), ext, opt );
-        break;
-      case GraphElem::DataType::DataCont :
-        gr->Cont( *d_x, *d_y, *(pl->md), ext, opt );
-        break;
-      case GraphElem::DataType::DataContF : // C0: v
-        gr->ContF( *d_c0, *d_x, *d_y, *(pl->md),  ext, opt );
-        break;
-      case GraphElem::DataType::DataContD : // C0: d
-        gr->ContD( *d_c0, *d_x, *d_y, *(pl->md), ext, opt );
-        break;
-      default: break;
-    }
-    gr->AddLegend( pl->pl_label.c_str(), ext );
-    ++ig;
+    plot1( gr, pl );
   }
-
+  if( a_vd->sel >=0  &&  a_vd->sel < (int)pli.size() ) {
+    plot1( gr, pli[a_vd->sel] );
+  }
 
 
   if( scda->drawBox ) { gr->Box( axis_style.c_str() ); }
@@ -766,6 +644,137 @@ void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scda )
 
   if( scda->legend_pos < 4 ) {
     gr->Legend( scda->legend_pos, "#" );
+  }
+}
+
+void TGraph::plot1( mglGraph *gr, const GraphElem *pl )
+{
+  const char *ext = pl->pl_extra.c_str();
+  const char *opt = pl->pl_opt.c_str();
+
+  switch( pl->type ) {
+    case GraphElem::DataType::DataPlot :
+      if( pl->is2D ) {
+        gr->Plot( *d_x, *d_y, *(pl->md), ext, opt );
+        break;
+      }
+      gr->Plot( *d_x, *(pl->md), ext, opt );
+      break;
+
+    case GraphElem::DataType::DataStep :
+      if( pl->is2D ) {
+        gr->Step( *d_x, *d_y, *(pl->md), ext, opt );
+        break;
+      }
+      gr->Step( *d_x, *(pl->md), ext, opt );
+      break;
+
+    case GraphElem::DataType::DataTape :
+      if( pl->is2D ) {
+        gr->Tape( *d_x, *d_y, *(pl->md), ext, opt );
+        break;
+      }
+      gr->Tape( *d_x, *(pl->md), ext, opt );
+      break;
+
+    case GraphElem::DataType::DataStem :
+      if( pl->is2D ) {
+        gr->Stem( *d_x, *d_y, *(pl->md), ext, opt );
+        break;
+      }
+      gr->Stem( *d_x, *(pl->md), ext, opt );
+      break;
+
+    case GraphElem::DataType::DataBars :
+      if( pl->is2D ) {
+        gr->Bars( *d_x, *d_y, *(pl->md), ext, opt );
+        break;
+      }
+      gr->Bars( *d_x, *(pl->md), ext, opt );
+      break;
+
+    case GraphElem::DataType::DataBarh :
+      if( pl->is2D ) {
+        gr->Barh( *(pl->md), *d_x, ext, opt );
+        break;
+      }
+      gr->Barh( *(pl->md), *d_x, ext, opt );
+      break;
+
+    case GraphElem::DataType::DataTens : // C0: color
+      if( pl->is2D ) {
+        gr->Tens( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+        break;
+      }
+      gr->Tens( *d_x, *(pl->md), *d_c0, ext, opt );
+      break;
+
+    case GraphElem::DataType::DataArea :
+      if( pl->is2D ) {
+        gr->Area( *d_x, *d_y, *(pl->md), ext, opt );
+        break;
+      }
+      gr->Area( *d_x, *(pl->md), ext, opt );
+      break;
+    case GraphElem::DataType::DataRegion :
+      break; // unknown for now
+    case GraphElem::DataType::DataOHLC :
+      break; // unknown for now
+    case GraphElem::DataType::DataBoxPlot :
+      break; // unknown for now
+    case GraphElem::DataType::DataCandle :
+      break; // unknown for now
+    case GraphElem::DataType::DataCones :
+      break; // unknown for now
+    case GraphElem::DataType::DataError :
+      break; // unknown for now
+    case GraphElem::DataType::DataMark : // C0: sz
+      if( pl->is2D ) {
+        gr->Mark( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+        break;
+      }
+      gr->Mark( *d_x, *(pl->md), *d_c0, ext, opt  );
+      break;
+
+    case GraphElem::DataType::DataTube : // C0: r
+      if( pl->is2D ) {
+        gr->Tube( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+        break;
+      }
+      gr->Tube( *d_x, *(pl->md), *d_c0, ext, opt );
+      break;
+
+    case GraphElem::DataType::DataSurf :
+      gr->Surf( *d_x, *d_y, *(pl->md), ext, opt );
+      break;
+    case GraphElem::DataType::DataSurfC :
+      gr->SurfC( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+      break;
+    case GraphElem::DataType::DataSurfA :
+      gr->SurfA( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+      break;
+    case GraphElem::DataType::DataMesh :
+      gr->Mesh( *d_x, *d_y, *(pl->md), ext, opt );
+      break;
+    case GraphElem::DataType::DataFall :
+      gr->Fall( *d_x, *d_y, *(pl->md), ext, opt );
+      break;
+    case GraphElem::DataType::DataBelt :
+      gr->Belt( *d_x, *d_y, *(pl->md), ext, opt );
+      break;
+    case GraphElem::DataType::DataDens :
+      gr->Dens( *d_x, *d_y, *(pl->md), ext, opt );
+      break;
+    case GraphElem::DataType::DataCont :
+      gr->Cont( *d_x, *d_y, *(pl->md), ext, opt );
+      break;
+    case GraphElem::DataType::DataContF : // C0: v
+      gr->ContF( *d_c0, *d_x, *d_y, *(pl->md),  ext, opt );
+      break;
+    case GraphElem::DataType::DataContD : // C0: d
+      gr->ContD( *d_c0, *d_x, *d_y, *(pl->md), ext, opt );
+      break;
+    default: break;
   }
 }
 

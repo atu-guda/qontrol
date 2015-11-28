@@ -64,7 +64,7 @@ MglView::~MglView()
 void MglView::resetData()
 {
   data_loaded = false;
-  sel = 0;
+  vd.sel = 0;
   linkPlot = -1; linkIdx = 0;
 }
 
@@ -340,16 +340,16 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       zoomReset();
       break;
 
-    case Qt::Key_0: sel = 0; update(); break;
-    case Qt::Key_1: sel = 1; update(); break;
-    case Qt::Key_2: sel = 2; update(); break;
-    case Qt::Key_3: sel = 3; update(); break;
-    case Qt::Key_4: sel = 4; update(); break;
-    case Qt::Key_5: sel = 5; update(); break;
-    case Qt::Key_6: sel = 6; update(); break;
-    case Qt::Key_7: sel = 7; update(); break;
-    case Qt::Key_8: sel = 8; update(); break;
-    case Qt::Key_9: sel = 9; update(); break;
+    case Qt::Key_0: vd.sel = 0; update(); break;
+    case Qt::Key_1: vd.sel = 1; update(); break;
+    case Qt::Key_2: vd.sel = 2; update(); break;
+    case Qt::Key_3: vd.sel = 3; update(); break;
+    case Qt::Key_4: vd.sel = 4; update(); break;
+    case Qt::Key_5: vd.sel = 5; update(); break;
+    case Qt::Key_6: vd.sel = 6; update(); break;
+    case Qt::Key_7: vd.sel = 7; update(); break;
+    case Qt::Key_8: vd.sel = 8; update(); break;
+    case Qt::Key_9: vd.sel = 9; update(); break;
   }
 
   update();
@@ -518,10 +518,10 @@ void MglView::saveScale()
 
 void MglView::togglePlot()
 {
-  if( sel < 0 || sel >= (int)sizeof(vd.off)*8 ) {
+  if( vd.sel < 0 || vd.sel >= (int)sizeof(vd.off)*8 ) {
     return;
   }
-  uint64_t msk = 1ull << sel;
+  uint64_t msk = 1ull << vd.sel;
   vd.off ^= msk;
 
   update();
@@ -529,10 +529,10 @@ void MglView::togglePlot()
 
 void MglView::toggleAllPlots()
 {
-  if( sel < 0 || sel >= (int)sizeof(vd.off)*8 ) {
+  if( vd.sel < 0 || vd.sel >= (int)sizeof(vd.off)*8 ) {
     return;
   }
-  uint64_t msk = ~(1ull << sel);
+  uint64_t msk = ~( 1ull << vd.sel );
   vd.off ^= msk;
 
   update();
@@ -540,13 +540,13 @@ void MglView::toggleAllPlots()
 
 void MglView::linkToPlot()
 {
-  if( sel < 0 || sel >= vd.ng ) {
+  if( vd.sel < 0 || vd.sel >= vd.ng ) {
     return;
   }
 
-  linkPlot = sel;
+  linkPlot = vd.sel;
   mglPoint mp = scd->getMark();
-  linkIdx = gra->findNearest( mp, sel );
+  linkIdx = gra->findNearest( mp, vd.sel );
   setMarkToLink(); // bound and update included
 }
 
@@ -651,9 +651,9 @@ QString MglView::getInfo( bool more ) const
      // % " D: " % toQString( vd.pv_dlt )
      % "  mag: " % toQString( vd.mag ) %  " ofs: " % toQString( vd.ofs ) % nl1
      % "real: " % toQString( pr_min ) % " - " % toQString( pr_max ) % nl
-     % QSN( sel ) % " ";
+     % QSN( vd.sel ) % " ";
 
-  s += gra->getPlotLabel( sel ) % "  ";
+  s += gra->getPlotLabel( vd.sel ) % "  ";
 
   if( linkPlot > -1 ) {
     s += "  Link: " % QSN( linkPlot) % " "
@@ -669,7 +669,7 @@ void MglView::showInfo()
   QString s = "<p>" + getInfo( true ) + "\n</p>\n<pre>\n";
 
   if( data_loaded ) {
-    s +=  gra->getPrintInfo( sel );
+    s +=  gra->getPrintInfo( vd.sel );
   }
   s += "\n</pre>\n";
 

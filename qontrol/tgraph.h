@@ -141,9 +141,10 @@ class GraphElem : public TDataSet {
 struct ViewData {
   mglPoint mag { 1, 1, 1 }, pv_min { 0, 0, 0 }, pv_max{ 1, 1, 1 }, pv_dlt { 1, 1, 1 };
   mglPoint ofs { 0, 0, 0 };
-  void reset() { mag.x = mag.y = mag.z = 1; ofs.x = ofs.y = ofs.z = 0; off = 0; };
-  int ng = 0, nn = 0, nx=0, ny=1; // only from TGraph to View
+  void reset() { mag.x = mag.y = mag.z = 1; ofs.x = ofs.y = ofs.z = 0; off = 0; sel = 0;};
+  int ng {0}, nn {0}, nx {0}, ny {1}; // only from TGraph to View
   uint64_t off = 0; // lines, not to show (from View to TGraph while plot)
+  int sel {0};
 };
 
 // --------------------------------------------------------------------
@@ -186,6 +187,7 @@ class TGraph : public TDataSet  {
    virtual void do_reset() override;
    //* remove numbner of data points to plot
    int fillSqueeze( std::vector<uint8_t> &plp );
+   void plot1( mglGraph *gr, const GraphElem *pl );
 
    /** title of graph  */
    PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nncol=-1\ndef=fig. " );
@@ -211,6 +213,11 @@ class TGraph : public TDataSet  {
    //* defining scale points
    mglPoint pr_min { 0, 0, 0 }, pr_max { 1, 1, 1 }, pr_dlt { 1, 1, 1 }; // real
    mglPoint pe_min { 0, 0, 0 }, pe_max { 1, 1, 1 }, pe_dlt { 1, 1, 1 }; // eff: last plot
+
+   const mglData *d_x = nullptr;
+   const mglData *d_y = nullptr;
+   // const mglData *d_z = nullptr;
+   const mglData *d_c0 = nullptr;
 
    Q_CLASSINFO( "nameHintBase",  "plot_" );
    DCL_DEFAULT_STATIC;

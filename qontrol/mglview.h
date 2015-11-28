@@ -72,7 +72,7 @@ class MglView : public QWidget  {
    void linkToPlot();
    void unlinkFromPlot();
    void nextPointInPlot( int step = 1 );
-   int getSelNum() const { return sel; }
+   int getSelNum() const { return vd.sel; }
 
  signals:
    void closeMe(); // ask main window to close me
@@ -101,7 +101,6 @@ class MglView : public QWidget  {
    std::vector<uint8_t> pb; // pix buf
    int alc_x {0}, alc_y = {0}; // size of allocated buffer**4
    double angle_step = {5.0}, mag_step { M_SQRT1_2 }, scale_step { 0.10 };
-   int sel {0}; //* selected plot, may be no plot here
    int linkPlot {-1}; //* linked data index
    int linkIdx {0};   //* current point index in linked array
    bool data_loaded {false};
