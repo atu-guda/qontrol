@@ -9,8 +9,6 @@
 #ifndef _DATASET_H
 #define _DATASET_H
 
-#include <functional>
-
 #include <QObject>
 #include <QString>
 #include <QColor>

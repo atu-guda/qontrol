@@ -58,6 +58,10 @@ int TRand::do_preRun( int /*run_tp*/, int /*an*/,
   if( addBaseSeed ) {
     getUpData( "seed", &bseed );
   };
+  hseed = 0;
+  if( addHash ) {
+    hseed = qHash( getFullName() );
+  };
   return 1;
 }
 
@@ -69,10 +73,10 @@ int TRand::do_startLoop( int acnx, int acny )
       (eff_seedType == startLoop && acnx == 0 ) ||
       (acnx == 0 && acny == 0)
     ) {
-    if( seed == -1 || ( addBaseSeed && bseed == -1) ) {
-      sseed = int( time(0) + acnx * 1001 + acny );
+    if( seed == -1 || ( addBaseSeed && (bseed == -1) ) ) {
+      sseed = int( time(0) + acnx * 1001 + acny + hseed );
     } else {
-      sseed = seed + bseed;
+      sseed = seed + bseed + hseed;
     }
     rng.set( sseed );
   };

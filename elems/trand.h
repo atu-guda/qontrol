@@ -94,6 +94,7 @@ class TRand : public TMiso  {
    PRM_LIST( seedType, efNRC, "Seed type", "When get new seed", "def=3\nenum=SeedType" );
    /** flag: add base seed to element seed */
    PRM_SWITCH( addBaseSeed, efNRC, "Add base", "Add base seed to element seed ", "def=1" );
+   PRM_SWITCH( addHash,     efNRC, "Add hash", "Add hash value of full name ", "def=1" );
 
    PRM_INPUT( in_t, 0, "input t", "Input t if not used automaticaly",  "sep=block" );
 
@@ -109,6 +110,7 @@ class TRand : public TMiso  {
    int eff_seedType = 0;
    /** copy valuse of base seed */
    int bseed = 1;
+   int hseed = 0; // seed from full name hash value. Required for subschemes.
    /** generator structure from GSL */
    RandGenerator rng;
 
