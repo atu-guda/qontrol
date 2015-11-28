@@ -123,10 +123,14 @@ LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
 
   // QString label_c = label.isEmpty() ? ( QString( "y_%1" ).arg( dl.size() )) : label;
   // QString label_c = label.isEmpty() ? QString( "y" ) : label;
-  QString label_c = QSL("\\big\\i{");
-  label_c += label.isEmpty() ? QString( "y" ) : label;
-  label_c += QSL("}");
-  pl_label = label_c.toStdString();
+  if( label == QSL(" ") ) {
+    pl_label = label.toStdString();
+  } else {
+    QString label_c = QSL("\\big\\i{");
+    label_c += label.isEmpty() ? QString( "y" ) : label;
+    label_c += QSL("}");
+    pl_label = label_c.toStdString();
+  }
 
   int i_cc = QColor(color).rgba();
 
@@ -603,7 +607,11 @@ void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scda )
     if( vd.off & msk ) {
       continue;
     }
-    gr->AddLegend( pl->pl_label.c_str(), pl->pl_extra.c_str() );
+    const char *clbl = pl->pl_label.c_str();
+    // qWarning() << "clbl= " << clbl << NWHE;
+    if( (unsigned char)(clbl[0]) > ' ' ) {
+      gr->AddLegend( clbl, pl->pl_extra.c_str() );
+    }
     if( a_vd->sel == ig ) { // selected plotted last
       continue;
     }
