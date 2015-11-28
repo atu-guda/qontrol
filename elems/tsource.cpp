@@ -128,6 +128,10 @@ int TSource::do_preRun( int /*run_tp*/, int /*an*/,
     if( addBaseSeed_u ) {
       getUpData( "seed", &bseed_u );
     };
+    hseed_u = 0;
+    if( addHash_u ) {
+      hseed_u = qHash( getFullName() );
+    }
   };
   // Phi
   if( use_f_ch ) {
@@ -139,6 +143,10 @@ int TSource::do_preRun( int /*run_tp*/, int /*an*/,
     if( addBaseSeed_p ) {
       getUpData( "seed", &bseed_p );
     };
+    hseed_p = 0;
+    if( addHash_p ) {
+      hseed_p = qHash( getFullName() );
+    }
   };
 
   return 1;
@@ -156,9 +164,9 @@ int TSource::do_startLoop( int acnx, int acny )
         (acnx == 0 && acny == 0)
       ) {
       if( seed_u == -1 || ( addBaseSeed_u && bseed_u == -1) ) {
-        sseed_u = int( time(0) + acnx * 101 + acny*17 );
+        sseed_u = int( time(0) + acnx * 101 + acny*17 + hseed_u );
       } else {
-        sseed_u = seed_u + bseed_u;
+        sseed_u = seed_u + bseed_u + hseed_u;
       }
       rng_u.set( sseed_u );
     };
@@ -177,9 +185,9 @@ int TSource::do_startLoop( int acnx, int acny )
         (acnx == 0 && acny == 0)
       ) {
       if( seed_p == -1 || ( addBaseSeed_p && bseed_p == -1) ) {
-        sseed_p = int( time(0) + acnx * 171 + acny*23 + 123);
+        sseed_p = int( time(0) + acnx * 171 + acny*23 + 123 + hseed_p );
       } else {
-        sseed_p = seed_p + bseed_p;
+        sseed_p = seed_p + bseed_p + hseed_p;
       }
       rng_p.set( sseed_p );
     };

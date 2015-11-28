@@ -89,6 +89,7 @@ class TSource : public TMiso  {
    PRM_INT(      seed_u, efNRC, "U seed"     , "Random Generator seed", "def=RND" );
    PRM_LIST( seedType_u, efNRC, "U seed type", "When to seed", "def=3\nenum=SeedType" );
    PRM_SWITCH( addBaseSeed_u, efNRC, "U add base seed", "Add seed from base(model)", "def=1");
+   PRM_SWITCH( addHash_u, efNRC, "U add hash", "Add hash(fullname) to seed", "def=1");
 
    // ----------- Phi chaos ----------------------
    PRM_SWITCH( use_f_ch,efNRC, "use \\phi chaos", "Use phase perturbations", "sep=col" );
@@ -99,6 +100,7 @@ class TSource : public TMiso  {
    PRM_INT( seed_p, efNRC,     "F seed"       , "Random Generator seed", "def=RND" );
    PRM_LIST( seedType_p, efNRC,"F seed type"  , "When to seed", "def=3\nenum=SeedType" );
    PRM_SWITCH( addBaseSeed_p, efNRC, "F add base to seed", "Add seed from base(model)", "def=1" );
+   PRM_SWITCH( addHash_p, efNRC, "F add hash", "Add hash(fullname) to seed", "def=1");
 
    // NO inputs
 
@@ -106,6 +108,7 @@ class TSource : public TMiso  {
    double u_ch_vs = 1, u_ch_ve = 1, u_ch_ts = 1, u_ch_te = 1, u_ch_k = 1,
           f_ch_vs = 1, f_ch_ve = 1, f_ch_ts = 1, f_ch_te = 1, f_ch_k = 1;
    int sseed_u = 1, sseed_p = 1, bseed_u =1 , bseed_p = 1,
+       hseed_u = 0, hseed_p = 0,
        eff_seedType_u = 0, eff_seedType_p = 0;
 
 
