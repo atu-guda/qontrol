@@ -2,7 +2,7 @@ QT += core widgets xml script printsupport
 TEMPLATE = app
 TARGET = qontrol
 CONFIG += c++11 release warn_on qt thread
-QMAKE_CXXFLAGS += -std=gnu++11 -fgnu-keywords # -fPIC
+QMAKE_CXXFLAGS += -std=gnu++11 -fgnu-keywords -fext-numeric-literals # -fPIC
 #CONFIG += debug warn_on qt thread
 
 RESOURCES = qontrol.qrc
@@ -95,6 +95,7 @@ SOURCES += \
 
 HEADERS += \
   addelemdia.h \
+  autoact.h \
   circbuf.h \
   cmdview.h \
   cmdlistview.h \

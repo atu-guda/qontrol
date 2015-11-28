@@ -24,6 +24,7 @@
 #include <QStandardItem>
 
 #include "miscfun.h"
+#include "autoact.h"
 #include "tmodel.h"
 #include "scriptfuncs.h"
 #include "labodoc.h"

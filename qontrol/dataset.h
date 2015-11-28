@@ -61,30 +61,10 @@ enum ModificationBits {
 //                               none  man  auto both extra......
 const char *const modificationChar[] = { "", "+", "#", "*", "?", ".", ",", "X" };
 
-// helper class to auto decrement values at function exit
-class AutoIncDec {
-  public:
-   explicit AutoIncDec( int &av ) : v(av) { ++v; }
-   ~AutoIncDec() { --v; };
-  private:
-   int &v;
-};
-
+// suses AutoIncDec from autoact.h, but not include, as define used
 #define IGNORE_MOD_HERE  AutoIncDec __imod { ignoreMod };
 #define IGNORE_STRUCT_CHANGE_HERE  AutoIncDec __imod { updSuspended };
 
-// a-la simplefied boost ScopeExit
-class AtScopeExit {
-  public:
-   using ExitFunType = const std::function<void()>;
-   explicit AtScopeExit( ExitFunType &a_action ) : action( a_action ) {};
-   ~AtScopeExit() {  try {    action(); } catch(...) {}   }
-  private:
-    ExitFunType action;
-  private:
-    AtScopeExit( const AtScopeExit &r ) = delete;
-    AtScopeExit& operator=( const AtScopeExit &rhs ) = delete;
-};
 
 /** describes class and it's creator
    used for class registration

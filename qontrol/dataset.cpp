@@ -10,6 +10,7 @@
 #include <QStandardItemModel>
 
 #include "miscfun.h"
+#include "autoact.h"
 #include "dataset.h"
 
 using namespace std;

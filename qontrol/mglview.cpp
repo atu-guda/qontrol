@@ -15,8 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <cmath>
-
 #include <QtWidgets>
 #include <QPrinter>
 #include <QPrintDialog>
