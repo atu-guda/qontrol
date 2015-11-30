@@ -1,10 +1,12 @@
 correct places for reset, set_link, *structChange..
+BUG: fail to link TOutArr to Simulation param.
 BUG: mofified state (i.e. after autocreated scheme removal)
 BUG: huge time on model params edit. May be containers must have nodialedit flag or depth limit?
   What about undo?
   shadow object copy, not XML representation.
   as clone with other/null parent, but need copyFrom/copyTo, swap/inplace func.
 Long descriptions in schems, plots .... (button)
+Reorder objects in list-alike containers.
 text with substitutions - plot labels or more? not only double. and TeX-aware.
   @{name.name:mod} mod: s/x/y/, maxlen=500,
   common TeX preambula +/= per label

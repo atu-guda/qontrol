@@ -48,8 +48,10 @@ class TLinP1Q0 : public TMiso  {
    /** coefficient near u(t)  */
    PRM_DOUBLE( ku, 0, "k_u",  "Amplification", "def=1" );
    /** Use u[1] as f(x) */
-   PRM_SWITCH( use_u1, efNoRunChange, "use in_f as f()",
+   PRM_SWITCH( use_u1, 0, "use in_f as f()",
         "Use in_f as source of f()", "sep=col" );
+   PRM_SWITCH( use_u2, 0, "u^2",
+        "Calculate u^2 before usage", "" );
 
    PRM_INPUT( in_u, 0, "u(t)", "Signal input",  "sep=block" );
    PRM_INPUT( in_f, 0, "in_f", "Functional input", "sep=col" );

@@ -45,14 +45,13 @@ int TLinP1Q0::do_startLoop( int /*acnx*/, int /*acny*/ )
 
 double TLinP1Q0::f( double /*t*/ )
 {
-  double x, f;
-  if( use_u1 ) {
-    f = in_f;
-  } else {
-    f = x_old;
+  double f = ( use_u1 ) ? in_f : x_old;
+  double u = in_u;
+  if( use_u2 ) {
+    u *= u;
   };
   // TODO: check this for stability
-  x = x_old + a * tdt * ( ku * in_u - f );
+  double x = x_old + a * tdt * ( ku * u - f );
   x_old = x;
   return x;
 }
