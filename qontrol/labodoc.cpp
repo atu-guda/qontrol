@@ -52,6 +52,17 @@ const QString& LaboDoc::pathName() const
   return m_filename;
 }
 
+QString LaboDoc::getFilePath() const
+{
+  return QFileInfo( m_filename ).canonicalFilePath();
+}
+
+QString LaboDoc::getFileBase() const
+{
+  return QFileInfo( m_filename ).baseName();
+}
+
+
 
 bool LaboDoc::newDocument()
 {

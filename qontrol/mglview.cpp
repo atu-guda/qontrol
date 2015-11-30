@@ -122,23 +122,26 @@ void MglView::zoomReset()
 
 QSize MglView::sizeHint() const
 {
-  return getSize0() + QSize( 0, bottom_h );
+  return getSize0() + QSize( 0, show_footer ? bottom_h : 0 );
 }
 
 void MglView::drawAll( QPainter &p )
 {
-  int w = width(), h = height(), hg = h - bottom_h;
+  int w = width(), h = height(), hg = h;
+  if( show_footer ) {
+    hg -= bottom_h;
+  }
   gr.SetSize( w, hg );
   gra->plotTo( &gr, &vd, scd.get() );
 
   gr.GetBGRN( pb.data(), 4*w*hg );
 
-  QPixmap pic = QPixmap::fromImage( QImage( pb.data(), w, hg, QImage::Format_RGB32 ));
-
   p.setFont( pa_fnt );
   // p.fillRect( 0, 0, w, h, QBrush( QColor(128,255,255) ) );
-  p.drawPixmap( 0, 0, pic );
-  drawFooter( p, hg );
+  p.drawImage( 0, 0, QImage( pb.data(), w, hg, QImage::Format_RGB32 ) );
+  if( show_footer ) {
+    drawFooter( p, hg );
+  }
 }
 
 void MglView::paintEvent( QPaintEvent * /*pe*/ )
@@ -221,6 +224,9 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       break;
     case Qt::Key_F:
       scd->useLight = !scd->useLight;
+      break;
+    case Qt::Key_U:
+      show_footer = ! show_footer;
       break;
     case Qt::Key_O:
       togglePlot();
@@ -604,7 +610,14 @@ void MglView::print()
 
 void MglView::exportPlot()
 {
-  QString fn = QFileDialog::getSaveFileName( this, "Save Picture", "out.png",
+  QString fn_prefix, fn_full; // empty
+  CommonSubwin *xpar = qobject_cast<CommonSubwin*>( parent() );
+  if( xpar ) {
+    fn_prefix = xpar->getFileBase() % QSL("-");
+    fn_full   = xpar->getFilePath();
+  }
+  QString fn0 = fn_prefix % gra->objectName() % QSL(".png");
+  QString fn = QFileDialog::getSaveFileName( this, "Save Picture", fn0,
                "PNG files (*.png);;All files (*)" );
   if( fn.isEmpty() ) {
     return;
@@ -614,6 +627,10 @@ void MglView::exportPlot()
   timg.fill( 0xFF );
   QPainter painter( &timg );
   render( &painter );
+  // use identify -verbose <file.png> to get all. TODO: to tgraph: plotToPng
+  timg.setText( QSL("Model_file"), fn_full );
+  timg.setText( QSL("Graph"), gra->objectName() );
+  timg.setText( QSL("Creator"), QSL(PACKAGE VERSION) );
 
   if( ! timg.save( fn, "PNG", 50 ) ) {
     QString err = strerror(errno);
@@ -688,6 +705,7 @@ static const char plot_helpstr[] = "<b>Hot keys:</b><br/>\n"
  "<b>b</b> - set base to mark<br/>\n"
  "<b>B</b> -hide/how base lines<br/>\n"
  "<b>f</b> - toggle light<br/>\n"
+ "<b>u</b> - toggle footer<br/>\n"
  "<b>g</b> - set mark to given point <br/>\n"
  "<b>l/L</b> - link/Unlink to data <br/>\n"
  "<b>d</b> - data info <br/>\n"

@@ -33,6 +33,7 @@ class CommonSubwin : public QMainWindow  {
    CommonSubwin( QWidget *parent, LaboDoc *a_doc, const QString &o_name );
    ~CommonSubwin();
    QString getFilePath() const;
+   QString getFileBase() const;
    void updateTitle();
    bool isMainWin() const { return main_win; }
    LaboDoc *getDocument() const { return  doc; };

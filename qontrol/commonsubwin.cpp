@@ -35,8 +35,15 @@ CommonSubwin::~CommonSubwin()
 QString CommonSubwin::getFilePath() const
 {
   if( !doc ) { return QString(); }
-  return QFileInfo( doc->pathName() ).canonicalFilePath();
+  return doc->getFilePath();
 }
+
+QString CommonSubwin::getFileBase() const
+{
+  if( !doc ) { return QString(); }
+  return doc->getFileBase();
+}
+
 
 void CommonSubwin::updateTitle()
 {

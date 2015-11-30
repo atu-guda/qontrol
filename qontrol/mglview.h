@@ -104,6 +104,7 @@ class MglView : public QWidget  {
    int linkPlot {-1}; //* linked data index
    int linkIdx {0};   //* current point index in linked array
    bool data_loaded {false};
+   bool show_footer {true};
 };
 
 // ============================== MglSubwin =======================================

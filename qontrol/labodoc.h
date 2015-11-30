@@ -66,6 +66,8 @@ class LaboDoc : public QObject
   void setPathName( const QString &name );
   /** returns the pathname of the current document file*/
   const QString& pathName() const;
+  QString getFilePath() const; // full canonical file name
+  QString getFileBase() const; // only base part of the file name, w/o dir and suffix
   /** create representation */
   QString toString() const;
 
