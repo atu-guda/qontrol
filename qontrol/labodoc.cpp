@@ -23,6 +23,7 @@
 #include <QtXml>
 
 #include "miscfun.h"
+#include "prog_opts.h"
 #include "labodoc.h"
 #include "labowin.h"
 #include "laboview.h"

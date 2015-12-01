@@ -1342,6 +1342,34 @@ int HolderData::fillComplForInputs( QStandardItem *it0, const QString &prefix ) 
   return n;
 }
 
+QStringList HolderData::getNamesOfType( const QString &subObjName,
+       const QString tp, bool withType ) const
+{
+  QStringList r;
+  const HolderData *subObj = this;
+  if( ! subObjName.isEmpty() ) {
+    subObj = getObj( subObjName );
+  }
+  if( !subObj ) { return r; }
+  // qWarning() << "Parent: " << subObj->getFullName() << NWHE;
+
+  bool ignoreType = tp.isEmpty();
+  for( auto ho: subObj->TCHILD(HolderData*) ) {
+    if( ignoreType || EFACT.isChildOf( ho->getType(), tp ) ) { // not ho->isChildOf: aliases
+      QString s = ho->objectName();
+      if( withType ) {
+        QString val;
+        if( ! ho->isChildOf( "TDataSet" ) ) {
+          val = QSL(" = \"") % ho->toString() % QSL("\"");
+        }
+        s += QSL(" ") % ho->getType() % val;
+      }
+      r << s;
+    }
+  }
+  return r;
+}
+
 void HolderData::dumpStruct() const
 {
   static int dump_lev = -1;

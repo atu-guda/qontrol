@@ -378,6 +378,9 @@ class HolderData : public QAbstractItemModel {
   virtual void fillComplModelForOuts( QStandardItemModel *mdl ) const;
   //* fill items for input: workhorse for fillComplModelForInputs
   int fillComplForInputs( QStandardItem *it0, const QString &prefix = QString()  ) const;
+  //* return object names of given type under given subobject
+  Q_INVOKABLE QStringList getNamesOfType( const QString &subObjName = QString(),
+       const QString tp = QString(), bool withType = false ) const;
  signals:
    void sigStructChanged();
  protected:

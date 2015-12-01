@@ -20,6 +20,7 @@
 #include <QFont>
 
 #include "labowin.h"
+#include "prog_opts.h"
 #include "labodoc.h"
 
 using namespace std;
@@ -146,7 +147,7 @@ int batch_process( const QString &model_file )
       };
 
       if( prog_opts.out_plots.size() == 1 && prog_opts.out_plots[0] == QSL("ALL") ) {
-        prog_opts.out_plots = model->getAllGraphNames();
+        prog_opts.out_plots = model->getNamesOfType( QSL("plots"), QSL("TGraph") );
       }
       for( auto nm : prog_opts.out_plots ) {
         cerr << "Processing plot \"" << qP( nm ) << "\" obj: \"";
@@ -195,6 +196,20 @@ int batch_process( const QString &model_file )
         cerr << "Script return value: " << rc <<  endl;
       }
     }
+  }
+
+  if( ! prog_opts.list_obj.isEmpty() ) {
+    QStringList nmtp = prog_opts.list_obj.split( ":", QString::KeepEmptyParts );
+    QString parentName, objTp;
+    if( nmtp.size() > 0 ) { parentName = nmtp[0]; };
+    if( nmtp.size() > 1 ) { objTp      = nmtp[1]; };
+    cout << "=== list of object in \"" << qP( parentName )
+         << "\" of type \"" << qP( objTp ) << "\"===" << endl;
+    QStringList nms = model->getNamesOfType( parentName, objTp, true );
+    for( auto s : nms ) {
+      cout << qP( s ) << endl;
+    }
+
   }
 
   if( prog_opts.dbg > 0 ) {
@@ -262,6 +277,7 @@ bool parse_cmdline( QApplication &app )
       { QSL("e"), QSL("convert script Exit status to program exit status") },
       { QSL("g"), QSL("output graph file (or ALL) after run..."), QSL("graph[:file_name]")  },
       { QSL("I"), QSL("add scripts include dir..."), QSL("directory") },
+      { QSL("l"), QSL("list objects of given type..."), QSL("parent[:type]") },
       { QSL("L"), QSL("add model libs dir..."), QSL("directory") },
       { QSL("M"), QSL("Run model script (for batch run)") },
       { QSL("N"), QSL("No-Run - only load (for batch run)") },
@@ -292,6 +308,8 @@ bool parse_cmdline( QApplication &app )
   prog_opts.out_plots = prs.values( QSL("g") );
   prog_opts.inc_dirs  += prs.values( QSL("I") );
   prog_opts.lib_dirs  += prs.values( QSL("L") );
+
+  prog_opts.list_obj = prs.value( QSL("l") );
 
   if( prs.isSet( QSL("M") ) ) {  prog_opts.mod_scr= true;  }
 

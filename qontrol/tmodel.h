@@ -121,8 +121,6 @@ class TModel : public LinkedObj  {
   virtual void fillComplModelForInputs( QStandardItemModel *mdl ) const override;
   virtual void fillComplModelForOuts( QStandardItemModel *mdl ) const override;
 
-  Q_INVOKABLE QStringList getAllGraphNames() const;
-
 
  protected:
   // --------------- convinience ptrs to obligatory elements

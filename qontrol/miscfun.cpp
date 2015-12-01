@@ -18,6 +18,7 @@
 
 #include "miscfun.h"
 #include "datawidget.h"
+#include "prog_opts.h"
 
 using namespace std;
 
