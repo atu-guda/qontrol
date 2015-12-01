@@ -22,6 +22,7 @@ struct ProgOpts {
   QString list_obj;      // -l parent[:obj]
   QString sim_name;      // -s sumulation name, def = sim0
   QStringList out_vars;  // -u T
+  QStringList set_vars;  // -S var=value
   QStringList out_plots; // -g graph:file.png  or  -g graph
   QStringList out_outs;  // -p out[:file.txt]
   QStringList grdata_outs;  // -P graph[:file.txt]

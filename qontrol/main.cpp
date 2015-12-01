@@ -132,6 +132,19 @@ int batch_process( const QString &model_file )
     return 4;
   }
 
+  for( auto nmv : prog_opts.set_vars ) {
+    QStringList n_mv = nmv.split( QSL("=") );
+    if( n_mv.size() != 2 ) {
+      cerr << "Bad set variable syntax: \"" << qP( nmv ) << "\", ignoring." << endl;
+      continue;
+    }
+    QString nm = n_mv[0], v = n_mv[1];
+    cerr << "Set \"" << qP( nm ) << "\" to \"" << qP( v ) << "\"" << endl;
+    if( ! model->setData( nm, v ) ) {
+      cerr << "Fail to set data" << endl;
+    }
+  }
+
   if( ! prog_opts.norun ) {
     cerr << "Starting run simulation \"" << qP( prog_opts.sim_name ) << "\"" << endl;
     int rc = model->run_bg();
@@ -285,6 +298,7 @@ bool parse_cmdline( QApplication &app )
       { QSL("P"), QSL("dump graph to file... (TODO)"), QSL("graph[:file_name]") },
       { QSL("p"), QSL("dump output array to file... (TODO)"), QSL("out[:file_name]")  },
       { QSL("s"), QSL("simulation name (for batch run)"), QSL("simulation"), QSL("sim0")  },
+      { QSL("S"), QSL("Set variable value (for batch run)"), QSL("name=value")  },
       { QSL("u"), QSL("output variable value after run (for batch run)..."), QSL("var") },
       { QSL("X"), QSL("execute files (for batch run)..."), QSL("file") },
       { QSL("x"), QSL("JS code to execute (for batch run)"), QSL("script")  },
@@ -322,6 +336,7 @@ bool parse_cmdline( QApplication &app )
 
   prog_opts.sim_name = prs.value( QSL("s") );
 
+  prog_opts.set_vars = prs.values( QSL("S") );
   prog_opts.out_vars  = prs.values( QSL("u") );
   prog_opts.s_files   = prs.values( QSL("X") );
 
