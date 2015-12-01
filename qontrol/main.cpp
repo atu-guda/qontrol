@@ -120,23 +120,19 @@ int batch_process( const QString &model_file )
     qCritical() << "Fail to read file " << model_file << WHE;
     return 3;
   }
-  TModel *model = doc.getRoot()->getObjT<TModel*>( "model" );
+  TModel *model = doc.getRoot()->getObjT<TModel*>( "model" ); // TODO: fun
   if( !model ) {
     qCritical() << "Not found model in file" << model_file << WHE;
     return 5;
   }
 
-  if( ! prog_opts.sim_name.isEmpty() ) {
-    if( ! model->setActiveSimul( prog_opts.sim_name ) ) {
-      qCritical() << "Not found simulation " << prog_opts.sim_name << " in model" << WHE;
-      return 4;
-    }
+  if( ! model->setActiveSimul( prog_opts.sim_name ) ) {
+    qCritical() << "Not found simulation " << prog_opts.sim_name << " in model" << WHE;
+    return 4;
   }
 
   if( ! prog_opts.norun ) {
-    if( prog_opts.dbg > 0 ) {
-      qDebug() << "Starintg run: ";
-    }
+    cerr << "Starting run simulation \"" << qP( prog_opts.sim_name ) << "\"" << endl;
     int rc = model->run_bg();
     cerr << "End run, rc= " << rc << endl;
 
@@ -149,7 +145,11 @@ int batch_process( const QString &model_file )
         }
       };
 
+      if( prog_opts.out_plots.size() == 1 && prog_opts.out_plots[0] == QSL("ALL") ) {
+        prog_opts.out_plots = model->getAllGraphNames();
+      }
       for( auto nm : prog_opts.out_plots ) {
+        cerr << "Processing plot \"" << qP( nm ) << "\" obj: \"";
         QStringList pc = nm.split( ":" );
         if( pc.size() < 1 ) { continue; }
         QString gname = pc[0];
@@ -157,7 +157,9 @@ int batch_process( const QString &model_file )
         if( pc.size() > 1 ) {
           gfile = pc[1];
         }
+        cerr << qP( gname) << "\" file: \"" << qP( gfile ) << "\" .";
         model->plotToPng( gname, gfile );
+        cerr << ".. DONE" << endl;
       };
     }
   }
@@ -258,7 +260,7 @@ bool parse_cmdline( QApplication &app )
       { QSL("c"), QSL("converts file to current format (adds -b)"), QSL("out_file") },
       { QSL("d"), QSL("debug level"), QSL("N") },
       { QSL("e"), QSL("convert script Exit status to program exit status") },
-      { QSL("g"), QSL("output graph file after run..."), QSL("graph[:file_name]")  },
+      { QSL("g"), QSL("output graph file (or ALL) after run..."), QSL("graph[:file_name]")  },
       { QSL("I"), QSL("add scripts include dir..."), QSL("directory") },
       { QSL("L"), QSL("add model libs dir..."), QSL("directory") },
       { QSL("M"), QSL("Run model script (for batch run)") },
@@ -267,7 +269,7 @@ bool parse_cmdline( QApplication &app )
       { QSL("P"), QSL("dump graph to file... (TODO)"), QSL("graph[:file_name]") },
       { QSL("p"), QSL("dump output array to file... (TODO)"), QSL("out[:file_name]")  },
       { QSL("s"), QSL("simulation name (for batch run)"), QSL("simulation"), QSL("sim0")  },
-      { QSL("u"), QSL("output after run (for batch run)..."), QSL("var") },
+      { QSL("u"), QSL("output variable value after run (for batch run)..."), QSL("var") },
       { QSL("X"), QSL("execute files (for batch run)..."), QSL("file") },
       { QSL("x"), QSL("JS code to execute (for batch run)"), QSL("script")  },
   } );

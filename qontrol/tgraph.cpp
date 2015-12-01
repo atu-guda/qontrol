@@ -612,14 +612,14 @@ void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scda )
     if( (unsigned char)(clbl[0]) > ' ' ) {
       gr->AddLegend( clbl, pl->pl_extra.c_str() );
     }
-    if( a_vd->sel == ig ) { // selected plotted last
+    if( vd.sel == ig ) { // selected plotted last
       continue;
     }
 
     plot1( gr, pl );
   }
-  if( a_vd->sel >=0  &&  a_vd->sel < (int)pli.size() ) {
-    plot1( gr, pli[a_vd->sel] );
+  if( vd.sel >=0  &&  vd.sel < (int)pli.size() ) {
+    plot1( gr, pli[vd.sel] );
   }
 
 

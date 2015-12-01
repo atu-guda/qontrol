@@ -808,10 +808,18 @@ void TModel::fillComplModelForOuts( QStandardItemModel *mdl ) const
   for( auto out: outs->TCHILD(TOutArr*) ) {
     auto it = new QStandardItem( out->objectName() );
     mdl->appendRow( it );
-    continue;
   }
 }
 
+QStringList TModel::getAllGraphNames() const
+{
+  QStringList r;
+  if( ! plots ) { return r; }
+  for( auto plot: plots->TCHILD(TGraph*) ) {
+    r << plot->objectName();
+  }
+  return r;
+}
 
 
 DEFAULT_FUNCS_REG(TModel)
