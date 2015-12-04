@@ -48,11 +48,6 @@ StatusModel::StatusModel( CommonSubwin *a_up_view )
   l_stat->setLineWidth( label_lw ); l_stat->setFrameStyle( label_fs );
   addWidget( l_stat );
 
-  l_nums = new QLabel( "n/n", this );
-  l_nums->setFixedWidth( 10 * mw + label_sep );
-  l_nums->setLineWidth( label_lw ); l_nums->setFrameStyle( label_fs );
-  addWidget( l_nums );
-
   l_name = new QLabel( "name", this );
   l_name->setLineWidth( label_lw ); l_name->setFrameStyle( label_fs );
   addWidget( l_name, 1 );
@@ -79,21 +74,12 @@ void StatusModel::update()
   l_level->setText( QSN( up_view->getLevel() ) );
   l_name->setText( "." );  l_desc->setText( "." );  l_val->setText( "" );
 
-  // QString s_nums = QSL("[") % QSN(up_view->getSelX()) % QSL(";")
-  //     % QSN( up_view->getSelY() ) % QSL("]");
-  // l_nums->setText( s_nums );
-
   LaboDoc *doc = up_view->getDocument();
   if( !doc ) {
     l_stat->setText( QSL("NO Doc!") );
     return;
   }
-  TRootData *root = doc->getRoot();
-  if( !root ) {
-    l_stat->setText( QSL("NO root!") );
-    return;
-  }
-  TModel *model = root->getObjT<TModel*>( "model" );
+  TModel *model = doc->getModel();
   if( !model ) {
     l_stat->setText( QSL("NO model!") );
     return;
@@ -106,7 +92,10 @@ void StatusModel::update()
 
   HolderData *ob = up_view->getSelectedInFocus();
   if( ob ) {
-    QString ob_nm_tp = ob->dataObj( 0, Qt::StatusTipRole ).toString();
+    QString ob_nm_tp = ob->dataObj( 0, Qt::StatusTipRole ).toString(); // TODO: make better
+    if( ob_nm_tp.size() < 3 ) {
+      ob_nm_tp = ob->objectName() % QSL(" ") % ob->getType();
+    }
     l_name->setText( ob_nm_tp );
     QString ob_descr = ob->getDataD( "descr", QString() );
     l_desc->setText( ob_descr );

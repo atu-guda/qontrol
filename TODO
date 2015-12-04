@@ -5,7 +5,7 @@ BUG: huge time on model params edit. May be containers must have nodialedit flag
   What about undo?
   shadow object copy, not XML representation.
   as clone with other/null parent, but need copyFrom/copyTo, swap/inplace func.
-Long descriptions in schems, plots .... (button)
+Long descriptions in schems, (button)
 Move output ot QImage to TGraph::plotTo
  hide gr to TGraph
 Reorder objects in list-alike containers.
@@ -19,7 +19,6 @@ Script 'help' function + list of top-level objects and functions.
 Decoration objects.
 Documenation: cmdline options (partial), common workflow.
 Show(edit?) HolderData props
-LaboDoc: getModel + use in StatusModel
 StatusTip(col=2) for StatusModel More: clarify 'col' meaning for objects
 1D{v,h}/2D slider inputs + 2-double pair data
 Create Action fun + subclass QAction? (menu to place, flags)

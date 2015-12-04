@@ -97,24 +97,38 @@ QString CommonSubwin::getSelNameInView( const QString& view_name ) const
   return vi->getSelName();
 }
 
-HolderData* CommonSubwin::getSelectedInFocus() const
+CmdView* CommonSubwin::getFocusedCmdView() const
 {
-  QWidget *w = focusWidget();
-  CmdView *vi = qobject_cast<CmdView*>( w );
-  if( !vi ) {
+  QWidget *fw = focusWidget();
+  CmdView *cv = qobject_cast<CmdView*>( fw );
+  if( cv ) {
+    return cv;
+  }
+  cv = qobject_cast<CmdView*>( fw->parent() ); // may by view in parent
+  if( !cv ) {
+    qWarning() << "Bad focused widget " << fw->objectName() << WHE;
     return nullptr;
   }
-  return vi->getSelObj();
+  return cv;
+}
+
+
+HolderData* CommonSubwin::getSelectedInFocus() const
+{
+  CmdView *cv = getFocusedCmdView();
+  if( !cv ) {
+    return nullptr;
+  }
+  return cv->getSelObj();
 }
 
 QString CommonSubwin::getSelNameInFocus() const
 {
-  QWidget *w = focusWidget();
-  CmdView *vi = qobject_cast<CmdView*>( w );
-  if( !vi ) {
-    return nullptr;
+  CmdView *cv = getFocusedCmdView();
+  if( !cv ) {
+    return QSL("");
   }
-  return vi->getSelName();
+  return cv->getSelName();
 }
 
 

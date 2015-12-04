@@ -74,7 +74,7 @@ class LaboDoc : public QObject
 
   /** returns ptr to rootdata */
   TRootData *getRoot() const { return rootdata; }
-  TModel *getModel() const { return model; }
+  TModel *getModel() const { return rootdata ? rootdata->getModel() : nullptr; }
   /** returns nonamed status */
   bool nonamed() const { return is_nonamed; }
 
@@ -84,7 +84,6 @@ class LaboDoc : public QObject
    QString m_filename;
  protected:
    TRootData *rootdata = nullptr;
-   TModel *model = nullptr;
    bool is_nonamed = true;
 };
 

@@ -41,6 +41,7 @@ class CommonSubwin : public QMainWindow  {
    virtual bool checkSlot( const char *nm ) = 0;
    using ViewNameMap = QMap<QString,CmdView*>;
    CmdView* getView( const QString& view_name ) const;
+   CmdView* getFocusedCmdView() const;
    HolderData* getSelectedInView( const QString& view_name ) const;
    QString getSelNameInView( const QString& view_name ) const;
    HolderData* getSelectedInFocus() const;

@@ -38,7 +38,7 @@ class StatusModel : public QStatusBar  {
 
  protected:
    CommonSubwin *up_view;
-   QLabel *l_mod, *l_level, *l_stat, *l_nums, *l_name,  *l_desc, *l_val;
+   QLabel *l_mod, *l_level, *l_stat, *l_name,  *l_desc, *l_val;
 };
 
 #endif

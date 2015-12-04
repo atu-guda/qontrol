@@ -285,16 +285,8 @@ void LaboView::testElm2()
 
 bool LaboView::actionObj( const char *action )
 {
-  QWidget *fw = focusWidget();
-  if( !fw ) {
-    return false;
-  }
-  CmdView *cv = qobject_cast<CmdView*>( fw );
+  CmdView *cv = getFocusedCmdView();
   if( !cv ) {
-    cv = qobject_cast<CmdView*>( fw->parent() ); // may by view in parent
-  }
-  if( !cv ) {
-    qWarning() << "Bad focused widget " << fw->objectName() << WHE;
     return false;
   }
   return QMetaObject::invokeMethod( cv, action, Qt::AutoConnection );

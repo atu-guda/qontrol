@@ -12,6 +12,7 @@
 #include "dataset.h"
 
 class LaboDoc;
+class TModel;
 
 /** class holding other classes descriptions
     so can create all registered class objects
@@ -25,10 +26,12 @@ class TRootData : public TDataSet {
    DCL_STD_INF;
    const LaboDoc* getDoc() const { return doc; };
    void setDoc( const LaboDoc *a_doc ) { doc = a_doc; }
+   TModel *getModel() { return model; }
    QString getFilePath() const; // pass to doc, in exists
    QString getFileBase() const; // same
  protected:
    const LaboDoc *doc = nullptr;
+   TModel *model = nullptr;
    Q_CLASSINFO( "nameHintBase",  "root" );
    DCL_DEFAULT_STATIC;
 };
