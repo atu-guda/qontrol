@@ -8,6 +8,8 @@
 
 #include "rootdata.h"
 #include "tmodel.h"
+#include "labodoc.h"
+
 using namespace std;
 
 const char* TRootData::helpstr = "<H1>TRootData</H1>\n"
@@ -27,6 +29,18 @@ CTOR(TRootData,TDataSet)
 
 TRootData::~TRootData()
 {
+}
+
+QString TRootData::getFilePath() const
+{
+  if( !doc ) { return QString(); };
+  return doc->getFilePath();
+}
+
+QString TRootData::getFileBase() const
+{
+  if( !doc ) { return QString(); };
+  return doc->getFileBase();
 }
 
 DEFAULT_FUNCS_REG(TRootData)

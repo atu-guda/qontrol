@@ -74,6 +74,7 @@ bool LaboDoc::newDocument()
   }
 
   rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
+  rootdata->setDoc( this );
 
   // rootdata->dumpStruct();
   is_nonamed = true;
@@ -134,6 +135,7 @@ bool LaboDoc::openDocument( const QString &filename )
     rootdata = nullptr;
   }
   rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
+  rootdata->setDoc( this );
 
   rootdata->suspendHandleStructChange();
   bool read_ok = rootdata->fromDom( obj_root, errstr );
