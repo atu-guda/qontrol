@@ -174,20 +174,24 @@ class TGraph : public TDataSet  {
    Q_INVOKABLE  int prepare();
    //* plot to file
    Q_INVOKABLE void plotToPng( const QString &fn );
+   Q_INVOKABLE QString hintFileName() const;
 
 
-   void plotTo( mglGraph *gr, const ViewData *a_vd = nullptr, const ScaleData *scda = nullptr );
+   void renderTo( QImage &img, const ViewData *a_vd = nullptr, const ScaleData *scda = nullptr );
    bool fillViewData( ViewData *da );
    bool getPointAt( int ig, int ip, mglPoint *p ) const;
    int findNearest( const mglPoint &p, int ig ) const ;//* find nearest point index
    void viewForPoints( const mglPoint &p0, const mglPoint &p1, ViewData &vd ) const;
    QString getPlotLabel( int ig ) const;
    QString getPrintInfo( int ig ) const;
+   mglPoint CalcXYZ( int mx, int my ) { return gr.CalcXYZ(mx, my); }
  protected:
    virtual void do_reset() override;
    //* remove numbner of data points to plot
    int fillSqueeze( std::vector<uint8_t> &plp );
-   void plot1( mglGraph *gr, const GraphElem *pl );
+   void plotTo( const ViewData *a_vd = nullptr, const ScaleData *scda = nullptr );
+   void plot1( const GraphElem *pl );
+   void addMetaData( QImage &img ) const;
 
    /** title of graph  */
    PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nncol=-1\ndef=fig. " );
@@ -219,6 +223,7 @@ class TGraph : public TDataSet  {
    const mglData *d_y = nullptr;
    // const mglData *d_z = nullptr;
    const mglData *d_c0 = nullptr;
+   mglGraph gr { 0, 800, 600 }; // 0 - def, 1 - OpenGL - dont work
 
    Q_CLASSINFO( "nameHintBase",  "plot_" );
    DCL_DEFAULT_STATIC;

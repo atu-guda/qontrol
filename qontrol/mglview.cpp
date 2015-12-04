@@ -46,9 +46,6 @@ MglView::MglView( TGraph *agra, QWidget *parent )
   QSize sz0 = getSize0();
   resize( sz0 + QSize( 0, bottom_h ) );
 
-  alc_x = sz0.height(); alc_y = sz0.width();
-  pb.resize( alc_x * alc_y * 4 );
-
   setMinimumSize( 480, 420 );
   setCursor( Qt::CrossCursor );
   setFocusPolicy( Qt::StrongFocus );
@@ -131,14 +128,11 @@ void MglView::drawAll( QPainter &p )
   if( show_footer ) {
     hg -= bottom_h;
   }
-  gr.SetSize( w, hg );
-  gra->plotTo( &gr, &vd, scd.get() );
+  QImage timg( w, hg, QImage::Format_RGB32 );
+  gra->renderTo( timg, &vd, scd.get() );
 
-  gr.GetBGRN( pb.data(), 4*w*hg );
+  p.drawImage( 0, 0, timg );
 
-  p.setFont( pa_fnt );
-  // p.fillRect( 0, 0, w, h, QBrush( QColor(128,255,255) ) );
-  p.drawImage( 0, 0, QImage( pb.data(), w, hg, QImage::Format_RGB32 ) );
   if( show_footer ) {
     drawFooter( p, hg );
   }
@@ -155,6 +149,7 @@ void MglView::paintEvent( QPaintEvent * /*pe*/ )
 void MglView::drawFooter( QPainter &p, int hg )
 {
   int w = width();
+  p.setFont( pa_fnt );
   QColor bg_c = QColor( scd->bgcolor );
   QColor fg_c = QColor( 0,0,0 );
   if( bg_c.value() < 128 ) {
@@ -177,7 +172,7 @@ void MglView::mousePressEvent( QMouseEvent *me )
   }
 
   int mx = me->x(), my = me->y(), btn = me->button();
-  mglPoint po = gr.CalcXYZ( mx, my );
+  mglPoint po = gra->CalcXYZ( mx, my );
   switch( btn ) {
     case Qt::LeftButton:
       unlinkFromPlot();
@@ -363,9 +358,9 @@ void MglView::keyPressEvent( QKeyEvent *ke )
 
 void MglView::resizeEvent( QResizeEvent *e )
 {
-  QSize cs = size();
-  alc_x = cs.width(); alc_y = cs.height();
-  pb.resize( alc_x * alc_y * 4 ); // sub bottom_h ?
+  // QSize cs = size();
+  // alc_x = cs.width(); alc_y = cs.height();
+  // pb.resize( alc_x * alc_y * 4 ); // sub bottom_h ?
 
   QWidget::resizeEvent( e );
 }
@@ -610,27 +605,17 @@ void MglView::print()
 
 void MglView::exportPlot()
 {
-  QString fn_prefix, fn_full; // empty
-  CommonSubwin *xpar = qobject_cast<CommonSubwin*>( parent() );
-  if( xpar ) {
-    fn_prefix = xpar->getFileBase() % QSL("-");
-    fn_full   = xpar->getFilePath();
-  }
-  QString fn0 = fn_prefix % gra->objectName() % QSL(".png");
+  QString fn0 = gra->hintFileName();
   QString fn = QFileDialog::getSaveFileName( this, "Save Picture", fn0,
                "PNG files (*.png);;All files (*)" );
   if( fn.isEmpty() ) {
     return;
   };
+  // gra->plotToPng( fn );
 
   QImage timg( width(), height(), QImage::Format_RGB32 );
   timg.fill( 0xFF );
-  QPainter painter( &timg );
-  render( &painter );
-  // use identify -verbose <file.png> to get all. TODO: to tgraph: plotToPng
-  timg.setText( QSL("Model_file"), fn_full );
-  timg.setText( QSL("Graph"), gra->objectName() );
-  timg.setText( QSL("Creator"), QSL(PACKAGE VERSION) );
+  gra->renderTo( timg, &vd, scd.get() );
 
   if( ! timg.save( fn, "PNG", 50 ) ) {
     QString err = strerror(errno);

@@ -98,8 +98,6 @@ class MglView : public QWidget  {
    ScaleData *scd_o { nullptr }; // _o = ptr to original
    const QFont &pa_fnt;
    int em {10}, ex {10}, bottom_h {40}; // default only
-   std::vector<uint8_t> pb; // pix buf
-   int alc_x {0}, alc_y = {0}; // size of allocated buffer**4
    double angle_step = {5.0}, mag_step { M_SQRT1_2 }, scale_step { 0.10 };
    int linkPlot {-1}; //* linked data index
    int linkIdx {0};   //* current point index in linked array

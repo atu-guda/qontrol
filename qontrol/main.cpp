@@ -151,6 +151,7 @@ int batch_process( const QString &model_file )
     cerr << "End run, rc= " << rc << endl;
 
     if( rc ) {
+      // output values
       for( auto nm : prog_opts.out_vars ) {
         QString v = model->getOutValue( nm );
         cout << qP(nm) << " = " << qP( v ) << endl;
@@ -159,6 +160,7 @@ int batch_process( const QString &model_file )
         }
       };
 
+      // output plots
       if( prog_opts.out_plots.size() == 1 && prog_opts.out_plots[0] == QSL("ALL") ) {
         prog_opts.out_plots = model->getNamesOfType( QSL("plots"), QSL("TGraph") );
       }
@@ -167,7 +169,7 @@ int batch_process( const QString &model_file )
         QStringList pc = nm.split( ":" );
         if( pc.size() < 1 ) { continue; }
         QString gname = pc[0];
-        QString gfile = gname + "_out.png";
+        QString gfile = QSL(""); // means: use hintFileName()
         if( pc.size() > 1 ) {
           gfile = pc[1];
         }

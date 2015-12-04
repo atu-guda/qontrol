@@ -15,11 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
+// debug?
+#include <QPainter>
 
 #include "miscfun.h"
 #include "tgraph.h"
 #include "tmodel.h"
 #include "toutarr.h"
+#include "rootdata.h"
 
 using namespace std;
 
@@ -538,23 +541,77 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
   return np;
 }
 
-
-void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scda )
+void TGraph::addMetaData( QImage &img ) const
 {
-  if( !gr ) { return; }
+  QString model_file = QSL("Unknown");
+  TRootData *root = getAncestorT<TRootData>();
+  if( root ) {
+    model_file = root->getFilePath();
+  }
+  QString sim_name = QSL("Unknown");
+  TModel *model = getAncestorT<TModel>();
+  if( model ) {
+    Simulation *sim = model->getActiveSimulation();
+    if( sim ) {
+      sim_name = sim->objectName();
+    }
+  }
+  img.setText( QSL("Graph"), objectName() );
+  img.setText( QSL("Model_file"), model_file );
+  img.setText( QSL("Simulation"), sim_name );
+  img.setText( QSL("Title"), title.cval() );
+  img.setText( QSL("Decription"), descr.cval() );
+  img.setText( QSL("Creator"), QSL(PACKAGE "-" VERSION) );
+  // TODO: more
+}
+
+void TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda )
+{
+  if( !scda ) { scda = scd; }
+  ViewData vd;
+  if( a_vd ) { vd = *a_vd; } // default values
+
+  int w = img.width(), h = img.height();
+
+  img.fill( 0xFF );
+
+  // mglGraph grx( 0, w, h );
+  gr.SetSize( w, h );
+
+  int gw = gr.GetWidth(), gh = gr.GetHeight();
+  // if( gw != w  || gh != h ) {
+  //   qWarning() << "Misamtch: w= " << w << " gw= " << gw << " h= " << h << " gh= " << gh << NWHE;
+  // } else {
+  // }
+  // horror!
+  QImage im2( gw, gh,  QImage::Format_RGB32 );
+  plotTo( &vd, scda );
+
+  gr.GetBGRN( im2.bits(), 4 * gw * gh );
+  img = im2;
+
+  // QPainter px( &img );
+  // px.drawLine( 10, 10, w/2, h );
+
+  addMetaData( img );
+
+}
+
+void TGraph::plotTo( const ViewData *a_vd, const ScaleData *scda )
+{
   if( !scda ) { scda = scd; }
   if( !prepared  && prepare() < 1 ) {
     return;
   }
 
-  gr->DefaultPlotParam();
+  gr.DefaultPlotParam();
 
-  gr->SetFontSize( scda->fontSise );
-  gr->SetPlotFactor( scda->plotFactor );
-  gr->Rotate( scda->phi, scda->theta );
-  gr->Light( scda->useLight );
-  gr->SetAlphaDef( scda->alpha );
-  gr->Alpha( (bool)(scda->useAlpha) );
+  gr.SetFontSize( scda->fontSise );
+  gr.SetPlotFactor( scda->plotFactor );
+  gr.Rotate( scda->phi, scda->theta );
+  gr.Light( scda->useLight );
+  gr.SetAlphaDef( scda->alpha );
+  gr.Alpha( (bool)(scda->useAlpha) );
 
   pr_dlt = pr_max - pr_min;
   pe_min = pr_min; pe_max = pr_max;
@@ -580,20 +637,20 @@ void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scda )
   mglPoint ve_max = ve_min + ve_dlt;
 
 
-  gr->SetRanges( ve_min, ve_max );
+  gr.SetRanges( ve_min, ve_max );
   if( need_c_axis ) {
-    gr->SetRange( 'c', tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max );
+    gr.SetRange( 'c', tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max );
     // DBGx( "dbg: C axis: %lf %lf", tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max  );
   }
 
-  gr->SetTicks( 'x', -(scda->gridX), scda->tickX );
-  gr->SetTicks( 'y', -(scda->gridY), scda->tickY );
+  gr.SetTicks( 'x', -(scda->gridX), scda->tickX );
+  gr.SetTicks( 'y', -(scda->gridY), scda->tickY );
 
   string axis_style = color2style( scda->axis_color.toInt(), 1 ).toStdString();
   string grid_style = color2style( scda->grid_color.toInt(), 1, "=" ).toStdString();
 
   QColor bg_c = scda->bgcolor;
-  gr->Clf( bg_c.redF(), bg_c.greenF(), bg_c.blueF() );
+  gr.Clf( bg_c.redF(), bg_c.greenF(), bg_c.blueF() );
 
   d_x = tli[LineRole::axisX]->md;
   d_y = tli[LineRole::axisY]->md;
@@ -610,52 +667,52 @@ void TGraph::plotTo( mglGraph *gr, const ViewData *a_vd, const ScaleData *scda )
     const char *clbl = pl->pl_label.c_str();
     // qWarning() << "clbl= " << clbl << NWHE;
     if( (unsigned char)(clbl[0]) > ' ' ) {
-      gr->AddLegend( clbl, pl->pl_extra.c_str() );
+      gr.AddLegend( clbl, pl->pl_extra.c_str() );
     }
     if( vd.sel == ig ) { // selected plotted last
       continue;
     }
 
-    plot1( gr, pl );
+    plot1( pl );
   }
   if( vd.sel >=0  &&  vd.sel < (int)pli.size() ) {
-    plot1( gr, pli[vd.sel] );
+    plot1( pli[vd.sel] );
   }
 
 
-  if( scda->drawBox ) { gr->Box( axis_style.c_str() ); }
+  if( scda->drawBox ) { gr.Box( axis_style.c_str() ); }
   if( scda->drawAxis ) {
-    gr->Grid( "xyz", grid_style.c_str() );
-    gr->Axis( "xyzU3AKDTVISO",  axis_style.c_str() );
+    gr.Grid( "xyz", grid_style.c_str() );
+    gr.Axis( "xyzU3AKDTVISO",  axis_style.c_str() );
     char main_label_axis = 'y';
-    gr->Label( 'x', tli[LineRole::axisX]->pl_label.c_str() );
+    gr.Label( 'x', tli[LineRole::axisX]->pl_label.c_str() );
     if( was_2D ) {
-      gr->Label( 'y', tli[LineRole::axisY]->pl_label.c_str() );
+      gr.Label( 'y', tli[LineRole::axisY]->pl_label.c_str() );
       main_label_axis = 'z';
     }
     if( ! scda->mainLabel.isEmpty() ) {
-      gr->Label( main_label_axis, scda->mainLabel.c_str() );
+      gr.Label( main_label_axis, scda->mainLabel.c_str() );
     }
   }
 
   if( scda->drawMark ) {
     mglPoint mark_point( scda->markX, scda->markY, scda->markZ );
-    gr->Mark( mark_point, "3r+" );
+    gr.Mark( mark_point, "3r+" );
   }
   if( scda->drawBase ) {
     mglPoint base_point( scda->baseX, scda->baseY, scda->baseZ );
-    gr->Error( base_point, pe_dlt, "B" );
+    gr.Error( base_point, pe_dlt, "B" );
   }
   if( scda->drawColorbar ) {
-    gr->Colorbar();
+    gr.Colorbar();
   }
 
   if( scda->legend_pos < 4 ) {
-    gr->Legend( scda->legend_pos, "#" );
+    gr.Legend( scda->legend_pos, "#" );
   }
 }
 
-void TGraph::plot1( mglGraph *gr, const GraphElem *pl )
+void TGraph::plot1( const GraphElem *pl )
 {
   const char *ext = pl->pl_extra.c_str();
   const char *opt = pl->pl_opt.c_str();
@@ -663,66 +720,66 @@ void TGraph::plot1( mglGraph *gr, const GraphElem *pl )
   switch( pl->type ) {
     case GraphElem::DataType::DataPlot :
       if( pl->is2D ) {
-        gr->Plot( *d_x, *d_y, *(pl->md), ext, opt );
+        gr.Plot( *d_x, *d_y, *(pl->md), ext, opt );
         break;
       }
-      gr->Plot( *d_x, *(pl->md), ext, opt );
+      gr.Plot( *d_x, *(pl->md), ext, opt );
       break;
 
     case GraphElem::DataType::DataStep :
       if( pl->is2D ) {
-        gr->Step( *d_x, *d_y, *(pl->md), ext, opt );
+        gr.Step( *d_x, *d_y, *(pl->md), ext, opt );
         break;
       }
-      gr->Step( *d_x, *(pl->md), ext, opt );
+      gr.Step( *d_x, *(pl->md), ext, opt );
       break;
 
     case GraphElem::DataType::DataTape :
       if( pl->is2D ) {
-        gr->Tape( *d_x, *d_y, *(pl->md), ext, opt );
+        gr.Tape( *d_x, *d_y, *(pl->md), ext, opt );
         break;
       }
-      gr->Tape( *d_x, *(pl->md), ext, opt );
+      gr.Tape( *d_x, *(pl->md), ext, opt );
       break;
 
     case GraphElem::DataType::DataStem :
       if( pl->is2D ) {
-        gr->Stem( *d_x, *d_y, *(pl->md), ext, opt );
+        gr.Stem( *d_x, *d_y, *(pl->md), ext, opt );
         break;
       }
-      gr->Stem( *d_x, *(pl->md), ext, opt );
+      gr.Stem( *d_x, *(pl->md), ext, opt );
       break;
 
     case GraphElem::DataType::DataBars :
       if( pl->is2D ) {
-        gr->Bars( *d_x, *d_y, *(pl->md), ext, opt );
+        gr.Bars( *d_x, *d_y, *(pl->md), ext, opt );
         break;
       }
-      gr->Bars( *d_x, *(pl->md), ext, opt );
+      gr.Bars( *d_x, *(pl->md), ext, opt );
       break;
 
     case GraphElem::DataType::DataBarh :
       if( pl->is2D ) {
-        gr->Barh( *(pl->md), *d_x, ext, opt );
+        gr.Barh( *(pl->md), *d_x, ext, opt );
         break;
       }
-      gr->Barh( *(pl->md), *d_x, ext, opt );
+      gr.Barh( *(pl->md), *d_x, ext, opt );
       break;
 
     case GraphElem::DataType::DataTens : // C0: color
       if( pl->is2D ) {
-        gr->Tens( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+        gr.Tens( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
         break;
       }
-      gr->Tens( *d_x, *(pl->md), *d_c0, ext, opt );
+      gr.Tens( *d_x, *(pl->md), *d_c0, ext, opt );
       break;
 
     case GraphElem::DataType::DataArea :
       if( pl->is2D ) {
-        gr->Area( *d_x, *d_y, *(pl->md), ext, opt );
+        gr.Area( *d_x, *d_y, *(pl->md), ext, opt );
         break;
       }
-      gr->Area( *d_x, *(pl->md), ext, opt );
+      gr.Area( *d_x, *(pl->md), ext, opt );
       break;
     case GraphElem::DataType::DataRegion :
       break; // unknown for now
@@ -738,49 +795,49 @@ void TGraph::plot1( mglGraph *gr, const GraphElem *pl )
       break; // unknown for now
     case GraphElem::DataType::DataMark : // C0: sz
       if( pl->is2D ) {
-        gr->Mark( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+        gr.Mark( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
         break;
       }
-      gr->Mark( *d_x, *(pl->md), *d_c0, ext, opt  );
+      gr.Mark( *d_x, *(pl->md), *d_c0, ext, opt  );
       break;
 
     case GraphElem::DataType::DataTube : // C0: r
       if( pl->is2D ) {
-        gr->Tube( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+        gr.Tube( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
         break;
       }
-      gr->Tube( *d_x, *(pl->md), *d_c0, ext, opt );
+      gr.Tube( *d_x, *(pl->md), *d_c0, ext, opt );
       break;
 
     case GraphElem::DataType::DataSurf :
-      gr->Surf( *d_x, *d_y, *(pl->md), ext, opt );
+      gr.Surf( *d_x, *d_y, *(pl->md), ext, opt );
       break;
     case GraphElem::DataType::DataSurfC :
-      gr->SurfC( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+      gr.SurfC( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
       break;
     case GraphElem::DataType::DataSurfA :
-      gr->SurfA( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
+      gr.SurfA( *d_x, *d_y, *(pl->md), *d_c0, ext, opt );
       break;
     case GraphElem::DataType::DataMesh :
-      gr->Mesh( *d_x, *d_y, *(pl->md), ext, opt );
+      gr.Mesh( *d_x, *d_y, *(pl->md), ext, opt );
       break;
     case GraphElem::DataType::DataFall :
-      gr->Fall( *d_x, *d_y, *(pl->md), ext, opt );
+      gr.Fall( *d_x, *d_y, *(pl->md), ext, opt );
       break;
     case GraphElem::DataType::DataBelt :
-      gr->Belt( *d_x, *d_y, *(pl->md), ext, opt );
+      gr.Belt( *d_x, *d_y, *(pl->md), ext, opt );
       break;
     case GraphElem::DataType::DataDens :
-      gr->Dens( *d_x, *d_y, *(pl->md), ext, opt );
+      gr.Dens( *d_x, *d_y, *(pl->md), ext, opt );
       break;
     case GraphElem::DataType::DataCont :
-      gr->Cont( *d_x, *d_y, *(pl->md), ext, opt );
+      gr.Cont( *d_x, *d_y, *(pl->md), ext, opt );
       break;
     case GraphElem::DataType::DataContF : // C0: v
-      gr->ContF( *d_c0, *d_x, *d_y, *(pl->md),  ext, opt );
+      gr.ContF( *d_c0, *d_x, *d_y, *(pl->md),  ext, opt );
       break;
     case GraphElem::DataType::DataContD : // C0: d
-      gr->ContD( *d_c0, *d_x, *d_y, *(pl->md), ext, opt );
+      gr.ContD( *d_c0, *d_x, *d_y, *(pl->md), ext, opt );
       break;
     default: break;
   }
@@ -876,10 +933,15 @@ QString TGraph::getPrintInfo( int ig ) const
 
 void TGraph::plotToPng( const QString &fn )
 {
-  mglGraph gr( 0, scd->w0, scd->h0 );
-  plotTo( &gr, nullptr, scd );
-  string fn_s = fn.toStdString();
-  gr.WritePNG( fn_s.c_str(), title.c_str() );
+  QString efn = fn.isEmpty() ? hintFileName() : fn;
+
+  int w =  scd->w0, h = scd->h0;
+  QImage timg( w, h, QImage::Format_RGB32 );
+  renderTo( timg, nullptr, scd );
+
+  if( ! timg.save( efn, "PNG", 50 ) ) {
+    qWarning() << "Fail to save png for plot" << NWHE;
+  }
 }
 
 int TGraph::fillDatasInfo( DatasInfo *di ) const
@@ -1037,6 +1099,17 @@ int TGraph::addOutArr( const QString &o_name )
 
 
   return 1;
+}
+
+QString TGraph::hintFileName() const
+{
+  QString base = QSL("x");
+  TRootData *root = getAncestorT<TRootData>();
+  if( root ) {
+    base = root->getFileBase();
+  }
+  // TODO: from some vars/labels with flag
+  return base %  QSL("-") % objectName() % QSL(".png");
 }
 
 // ---------------- misc funcs -------------------------- 
