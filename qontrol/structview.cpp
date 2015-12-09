@@ -161,7 +161,7 @@ void StructView::printAll()
     return;
   }
 
-  QPrinter *pr = LaboWin::win()->getPrinter();
+  QPrinter *pr = MAINWIN->getPrinter();
   if( !pr ) {
     qWarning() << "Printer not found!";
     return;
@@ -233,11 +233,11 @@ void StructView::drawAll( QPainter &p )
     return;
   };
 
-  Mo2Settings *psett = LaboWin::win()->getSettings();
-  int s_icons = psett->showicons;
-  const QFont &strf = LaboWin::win()->getStructFont();
+  SettingsData *sett = SETTINGS;
+  int s_icons = sett->getDataD( "showIcons", 1 );
+  const QFont &strf = sett->getAsFont( QSL("structFont") );
   p.setFont( strf );
-  const QFont &smlf = LaboWin::win()->getSmallFont();
+  const QFont &smlf = sett->getAsFont( QSL("smallFont" ) );
   QFontMetrics small_fm( smlf );
   em_small = small_fm.width( 'W' );
   ex_small = small_fm.height();
@@ -257,7 +257,8 @@ void StructView::drawAll( QPainter &p )
   p.drawRect( 0, 0, w, h );
 
   // ---------- draw grid
-  if( psett->showgrid ) {
+  int showGrid = sett->getDataD( QSL("showGrid"), 1 );
+  if( showGrid ) {
     p.setPen( QPen( bgCol.darker(150), 0, Qt::DotLine ) ); // TODO: config
     for( int i=0; i<nw; i++ ) {
       int x = lm + i*grid_sz;
@@ -314,7 +315,8 @@ void StructView::drawAll( QPainter &p )
 
 
     // order mark
-    if( psett->showord ) {
+    int showOrd = sett->getDataD( QSL("showOrd"), 0 );
+    if( showOrd ) {
       if( s_icons && ! ei.noIcon )  {
         p.setPen( Qt::NoPen ); p.setBrush( QColor(240,240,255) );
         p.drawRect( ei.xs, ei.ys, obj_sz-1, ex_small );
@@ -324,7 +326,8 @@ void StructView::drawAll( QPainter &p )
       line_busy++;
     };
     // --------------------- draw element name
-    if( psett->shownames || ei.noIcon || !s_icons ) {
+    int showNames = sett->getDataD( QSL("showNames"), 1 );
+    if( showNames ) {
       st_y = ei.ys + line_busy*ex_small;
       if( s_icons && ! ei.noIcon )  {
         p.setPen( Qt::NoPen ); p.setBrush( QColor(255,255,225) );
@@ -349,7 +352,8 @@ void StructView::drawAll( QPainter &p )
     st_y = ei.ys + line_busy*ex_small;
 
 
-    if( ! psett->showLinks || ei.ignored ) {
+    int showLinks = sett->getDataD( QSL("showLinks"), 1 );
+    if( !showLinks || ei.ignored ) {
       continue;
     }
 

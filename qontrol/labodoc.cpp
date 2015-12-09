@@ -87,7 +87,7 @@ bool LaboDoc::openDocument( const QString &filename )
 {
   QFile file( filename );
   if( !file.open( QFile::ReadOnly) ) {
-    handleError( LaboWin::win(), tr("Cannot read file %1: %2.").arg(filename).arg(file.errorString() ) );
+    handleError( MAINWIN, tr("Cannot read file %1: %2.").arg(filename).arg(file.errorString() ) );
     return false;
   }
   QTextStream in( &file );
@@ -102,7 +102,7 @@ bool LaboDoc::openDocument( const QString &filename )
   int err_line, err_column;
 
   if( ! dd.setContent( &xml_src, &xml_reader, &errstr, &err_line, &err_column ) ) {
-    handleError( LaboWin::win(), tr("Cannot parse file %1:\n%2\nLine %3 column %4.")
+    handleError( MAINWIN, tr("Cannot parse file %1:\n%2\nLine %3 column %4.")
                          .arg(filename).arg(errstr).arg(err_line).arg(err_column) );
     m_filename = "";
     return false;
@@ -121,7 +121,7 @@ bool LaboDoc::openDocument( const QString &filename )
         obj_root = ee;
         break;
       }
-      handleError( LaboWin::win(), tr("Bad first element: %1 %2 ").arg(tagname).arg(elname) );
+      handleError( MAINWIN, tr("Bad first element: %1 %2 ").arg(tagname).arg(elname) );
       return false;
     }
     cnode = cnode.nextSibling();
@@ -142,7 +142,7 @@ bool LaboDoc::openDocument( const QString &filename )
   if( ! read_ok ) {
     delete rootdata;
     rootdata = nullptr;
-    handleError( LaboWin::win(), QSL("Fail to parse file: ") % filename % " : " % errstr );
+    handleError( MAINWIN, QSL("Fail to parse file: ") % filename % " : " % errstr );
     return false;
   }
 
@@ -163,7 +163,7 @@ bool LaboDoc::saveDocument( bool forceNewName )
   if( rootdata == 0 ) {
     return false;
   }
-  QWidget *mwin = LaboWin::win();
+  QWidget *mwin = MAINWIN;
 
   QString fn = m_filename;
   bool isNewName = false;

@@ -24,6 +24,7 @@
 #include <QMap>
 
 #include "commonsubwin.h"
+#include "settingsdata.h"
 
 class QToolBar;
 class QPrinter;
@@ -43,37 +44,6 @@ class QTimer;
 class LaboDoc;
 class LaboView;
 
-/** auxilary class for storing Labo application settings */
-class Mo2Settings {
-  public:
-   Mo2Settings();
-   void load();
-   void save() const;
-  public:
-   /** flag: show element order: /view/showord */
-   bool showord;
-   /** flag: show grid in structure view: /view/showgrid */
-   bool showgrid;
-   /** flag: show element name: /view/shownames */
-   bool shownames;
-   /** flag: show element icon: /view/showicon */
-   bool showicons;
-   /** flag: maximize main window: /view/showmax */
-   bool showmax;
-   /** flag: show links (new) in structure /view/showlinks */
-   bool showLinks;
-   /** main font string: /fonts/main */
-   QString mainFont;
-   /** small font string: /fonts/small */
-   QString smallFont;
-   /** plot font string:  /fonts/plot */
-   QString plotFont;
-   /** structure view font string: /fonts/struct */
-   QString structFont;
-   //* cmd to exec external editor
-   QString editCmd;
-
-};
 
 /**
   * LaboWin is the main window class for application. It sets up the main
@@ -94,12 +64,8 @@ class LaboWin : public QMainWindow
     /** returns apps printer */
     QPrinter* getPrinter() { return printer; }
     /** returns pointer to settings object */
-    Mo2Settings* getSettings() { return &sett; }
+    SettingsData* getSettings() { return setti; }
     bool doFileOpen( const QString &fn );
-    const QFont& getMainFont()   const  { return mainFont; }
-    const QFont& getSmallFont()  const  { return smallFont; }
-    const QFont& getPlotFont()   const  { return plotFont; }
-    const QFont& getStructFont() const  { return structFont; }
     int getEm() const { return em; }
     QMdiSubWindow* addChild( CommonSubwin* w );
     QMdiSubWindow* findMdiByTitle( const QString &tit, bool activate = false );
@@ -271,9 +237,7 @@ class LaboWin : public QMainWindow
     //* last log size - for update
     int lastLogSize = 0;
     /**  settings  */
-    Mo2Settings sett;
-    /** common fonts */
-    QFont mainFont, smallFont, plotFont, structFont;
+    SettingsData *setti;
 
 
     QMenu *pFileMenu;
@@ -301,6 +265,9 @@ class LaboWin : public QMainWindow
     /** static pointer to main window -- the only allowed */
     static LaboWin *labowin;
 };
+
+#define MAINWIN LaboWin::win()
+#define SETTINGS (LaboWin::win()->getSettings())
 
 
 #endif

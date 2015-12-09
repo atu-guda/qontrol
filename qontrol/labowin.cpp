@@ -25,7 +25,6 @@
 #include "structview.h"
 #include "labodoc.h"
 #include "labowin.h"
-#include "mo2settdlg.h"
 
 using namespace std;
 
@@ -36,8 +35,11 @@ LaboWin::LaboWin()
     mdiArea( new QMdiArea ),
     logViewer( new QTextEdit(this) ),
     printer( new QPrinter ),
-    log_timer( new QTimer( this ) )
+    log_timer( new QTimer( this ) ),
+    setti( new SettingsData( "settings", nullptr, 0, "settings", "Data settings" ) )
 {
+  setti->reset_dfl();
+  setti->load();
   setWindowTitle( PACKAGE " " VERSION );
 
   split->addWidget( mdiArea );
@@ -63,7 +65,7 @@ LaboWin::LaboWin()
   initStatusBar();
 
   setWindowIcon( QIcon( ":icons/app.png" ) );
-  if( sett.showmax ) {
+  if( setti->getDataD( QSL("showMax"),0 ) ) {
     showMaximized();
   }
 
@@ -83,16 +85,16 @@ LaboWin::~LaboWin()
 {
   delete printer;
   printer = nullptr;
+  delete setti;
+  setti = nullptr;
   labowin = nullptr;
 }
 
 
 void LaboWin::setFonts()
 {
-  mainFont.fromString( sett.mainFont );
-  smallFont.fromString( sett.smallFont );
-  plotFont.fromString( sett.plotFont );
-  structFont.fromString( sett.structFont );
+  QVariant v;
+  const QFont &mainFont = setti->getAsFont( QSL("mainFont") );
   QFontMetrics fm( mainFont );
   em = fm.width( 'W' );
   QApplication::setFont( mainFont );
@@ -529,6 +531,7 @@ void LaboWin::initIface()
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "viewToolBar" );
     connect( a, &QAction::triggered, this, &LaboWin::slotViewToolBar );
+    pViewMenu->addAction( a );
     act_tbar = a; // to on/off
   }
   {
@@ -544,8 +547,9 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "Show &Orders", this );
+    a->setShortcut(  Qt::CTRL | Qt::SHIFT | Qt::Key_O );
     a->setCheckable( true );
-    a->setChecked( sett.showord );
+    a->setChecked( setti->getDataD( QSL("showOrd"), 0 ) );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "showOrd" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowOrd );
@@ -554,7 +558,7 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "Show &Grid", this );
     a->setCheckable( true );
-    a->setChecked( sett.showgrid );
+    a->setChecked( setti->getDataD( QSL("showGrid"), 1 ) );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "showGrid" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowGrid );
@@ -563,7 +567,7 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "Show &Names", this );
     a->setCheckable( true );
-    a->setChecked( sett.shownames );
+    a->setChecked( setti->getDataD( QSL("showNames"), 0 ) );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "showNames" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowNames );
@@ -572,7 +576,7 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "Show &Icons", this );
     a->setCheckable( true );
-    a->setChecked( sett.showicons );
+    a->setChecked( setti->getDataD( QSL("showIcons"), 0 ) );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "showIcons" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowIcons );
@@ -581,7 +585,7 @@ void LaboWin::initIface()
   {
     auto a = new QAction( "Show &Links", this );
     a->setCheckable( true );
-    a->setChecked( sett.showLinks );
+    a->setChecked( setti->getDataD( QSL("showLinks"), 0 ) );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "showLinks" );
     connect( a, &QAction::triggered, this, &LaboWin::slotShowLinks );
@@ -590,6 +594,7 @@ void LaboWin::initIface()
   }
   {
     auto a = new QAction( "Clear log", this );
+    a->setShortcut(  Qt::CTRL | Qt::SHIFT | Qt::Key_C );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "logClear" );
     connect( a, &QAction::triggered, this, &LaboWin::slotLogClear );
@@ -961,11 +966,13 @@ void LaboWin::slotFileSettings()
 {
   statusBar()->showMessage( tr ( "Edit settings..." ) );
 
-  auto dia = new Mo2SettDlg( sett, this );
-  if ( dia->exec() == QDialog::Accepted ) {
-    setFonts();
-  };
-  delete dia;
+  // auto dia = new Mo2SettDlg( sett, this );
+  // if ( dia->exec() == QDialog::Accepted ) {
+  //   setFonts();
+  // };
+  // delete dia;
+
+  ::editObj( this, setti );
 
   statusBar()->showMessage( tr ( "Ready." ) );
 }
@@ -974,7 +981,8 @@ void LaboWin::slotFileSettings()
 void LaboWin::slotFileSaveSett()
 {
   statusBar()->showMessage( tr ( "Saving settings..." ) );
-  sett.save();
+  // sett.save();
+  setti->save();
   statusBar()->showMessage( tr ( "Ready." ) );
 }
 
@@ -1098,31 +1106,36 @@ void LaboWin::slotViewStatusBar()
 
 void LaboWin::slotShowOrd()
 {
-  sett.showord = ! sett.showord;
+  int v =  ! setti->getDataD( QSL("showOrd"), 0 );
+  setti->setData( QSL("showOrd"), v );
   callLaboViewSlot( "update", "Updating View" );
 }
 
 void LaboWin::slotShowGrid()
 {
-  sett.showgrid = ! sett.showgrid;
+  int v = ! setti->getDataD( QSL("showGrid"), 0 );
+  setti->setData( QSL("showGrid"), v );
   callLaboViewSlot( "update", "Updating View" );
 }
 
 void LaboWin::slotShowNames()
 {
-  sett.shownames = ! sett.shownames;
+  int v = ! setti->getDataD( QSL("showNames"), 0 );
+  setti->setData( QSL("showNames"), v );
   callLaboViewSlot( "update", "Updating View" );
 }
 
 void LaboWin::slotShowIcons()
 {
-  sett.showicons = ! sett.showicons;
+  int v = ! setti->getDataD( QSL("showIcons"), 0 );
+  setti->setData( QSL("showIcons"), v );
   callLaboViewSlot( "update", "Updating View" );
 }
 
 void LaboWin::slotShowLinks()
 {
-  sett.showLinks = ! sett.showLinks;
+  int v = ! setti->getDataD( QSL("showLinks"), 0 );
+  setti->setData( QSL("showLinks"), v );
   callLaboViewSlot( "update", "Updating View" );
 }
 
@@ -1468,61 +1481,6 @@ void LaboWin::setActiveSubWindow( QWidget *win )
   }
   mdiArea->setActiveSubWindow( swin );
   updateActions();
-}
-
-// =============================== Mo2Settings =============================
-
-Mo2Settings::Mo2Settings()
-{
-  load();
-}
-
-void Mo2Settings::load()
-{
-  QSettings sets( ORG, PACKAGE );
-  sets.beginGroup("iface");
-  /* -------- flags ------------ */
-  showord   = sets.value("view/showord", false ).toBool();
-  showgrid  = sets.value("view/showgrid", true ).toBool();
-  shownames = sets.value("view/shownames", true ).toBool();
-  showicons = sets.value("view/showicons", true ).toBool();
-  showLinks = sets.value("view/showLinks", true ).toBool();
-  showmax   = sets.value("view/showmax", true ).toBool();
-  /* -------- fonts ----------- */
-  //  "Arial,10,-1,5,50,0,0,0,0,0"
-  QFont df;
-  QString dfs = df.toString();
-  mainFont    = sets.value("fonts/main", dfs ).toString();
-  smallFont   = sets.value("fonts/small", "Sans,7" ).toString();
-  plotFont    = sets.value("fonts/plot", "Sans,8" ).toString();
-  structFont  = sets.value("fonts/struct", "Sans,8" ).toString();
-  // misc
-  editCmd  = sets.value("editCmd", "gvim -f " ).toString();
-  sets.endGroup();
-}
-
-void Mo2Settings::save() const
-{
-  QSettings sets( ORG, PACKAGE );
-  sets.beginGroup("iface");
-  /* ---------- flags ------------- */
-  sets.setValue( "view/showord", showord );
-  sets.setValue( "view/showgrid", showgrid );
-  sets.setValue( "view/shownames", shownames );
-  sets.setValue( "view/showicons", showicons );
-  sets.setValue( "view/showLinks", showLinks );
-  sets.setValue( "view/showmax", showmax );
-  /* ---------- fonts ------------- */
-  sets.setValue( "fonts/main", mainFont );
-  sets.setValue( "fonts/small", smallFont );
-  sets.setValue( "fonts/plot", plotFont );
-  sets.setValue( "fonts/struct", structFont );
-  // ------------- more -------------
-  sets.setValue( "editCmd", editCmd );
-
-  sets.endGroup();
-  sets.sync();
-
 }
 
 

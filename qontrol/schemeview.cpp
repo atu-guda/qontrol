@@ -43,7 +43,7 @@ bool SchemeView::editObj()
     return false;
   }
 
-  LaboWin *mwin = LaboWin::win();
+  LaboWin *mwin = MAINWIN;
   if( !mwin ) {
     return false;
   }

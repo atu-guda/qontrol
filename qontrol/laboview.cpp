@@ -206,7 +206,7 @@ void LaboView::closeEvent( QCloseEvent *e )
   }
 
   // close windows, related to current, if LaboView closed
-  LaboWin *lw = LaboWin::win();
+  LaboWin *lw = MAINWIN;
   if( lw ) {
     QString fp = getFilePath();
     lw->closeRelated( fp );

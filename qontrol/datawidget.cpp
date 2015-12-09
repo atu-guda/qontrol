@@ -219,14 +219,8 @@ void StringExtDataWidget::edit()
     return;
   }
   QString fn = f.fileName();
-  QString cmd = QSL("gvim -f ");
-  if( LaboWin::win() ) {
-    Mo2Settings *sett = LaboWin::win()->getSettings();
-    if( sett ) {
-      cmd = sett->editCmd;
-    }
-  }
-  cmd += QSL(" ") + fn;
+  SettingsData *sett = SETTINGS;
+  QString cmd = sett->getDataD( QSL("editCmd"), QSL("gvim -f ") )  %  QSL(" ") % fn;
 
   {
     QTextStream os( &f );

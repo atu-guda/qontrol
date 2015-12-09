@@ -56,7 +56,7 @@ bool GraphDataView::showObj()
     return false;
   }
 
-  LaboWin *mwin = LaboWin::win();
+  LaboWin *mwin = MAINWIN;
   if( !mwin ) { return false;  }
 
   LaboDoc *doc = par->getDocument();

@@ -27,7 +27,6 @@ SOURCES += \
   linkedobj.cpp \
   main.cpp \
   miscfun.cpp \
-  mo2settdlg.cpp \
   colorbtn.cpp \
   doubletable.cpp \
   fontbtn.cpp \
@@ -46,6 +45,7 @@ SOURCES += \
   scheme.cpp \
   schemeview.cpp \
   scriptfuncs.cpp \
+  settingsdata.cpp \
   simul.cpp \
   simulview.cpp \
   tmiso.cpp \
@@ -107,7 +107,6 @@ HEADERS += \
   inputparams.h \
   linkedobj.h \
   miscfun.h \
-  mo2settdlg.h \
   colorbtn.h \
   doubletable.h \
   fontbtn.h \
@@ -126,6 +125,7 @@ HEADERS += \
   scheme.h \
   schemeview.h \
   scriptfuncs.h \
+  settingsdata.h \
   simul.h \
   simulview.h \
   tmiso.h \

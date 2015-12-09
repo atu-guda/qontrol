@@ -43,8 +43,6 @@ BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params
 More stylesheets
 props: v_min, v_max: precalculate?
 
-Application config: to TDataSet?
-
 JS run dialog. + one-line above log viewer
 
 Sub simulation? / set of dialog-ed values before run
