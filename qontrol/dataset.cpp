@@ -1784,7 +1784,21 @@ bool HolderFont::set( const QVariant & x, int /* idx */  )
   if( x.type() == QVariant::Font ) {
     v = x.value<QFont>();
   } else {
-    v.fromString( x.toString() );
+    QString fn = x.toString();
+    if( fn == QSL("DEFAULT") ) {
+      v = QFont();
+    } else if( fn == QSL("SMALL") ) {
+      v = QFont();
+      v.setPointSize( v.pointSize() * 7 / 10 );
+    } else if( fn == QSL("TINY") ) {
+      v = QFont();
+      v.setPointSize( v.pointSize() * 5 / 10 );
+    } else if( fn == QSL("LARGE") ) {
+      v = QFont();
+      v.setPointSize( v.pointSize() * 14 / 10 );
+    } else {
+      v.fromString( fn );
+    }
   }
   post_set();
   if( v != v0 ) {

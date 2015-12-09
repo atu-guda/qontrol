@@ -5,9 +5,8 @@ BUG: huge time on model params edit. May be containers must have nodialedit flag
   What about undo?
   shadow object copy, not XML representation.
   as clone with other/null parent, but need copyFrom/copyTo, swap/inplace func.
-Long descriptions in schems, (button)
-Move output ot QImage to TGraph::plotTo
- hide gr to TGraph
+Not only ' ' must mean 'ignore label', but '.' too.
+Long descriptions in schems, (button) - how to edit?
 Reorder objects in list-alike containers.
 text with substitutions - plot labels or more? not only double. and TeX-aware.
   @{name.name:mod} mod: s/x/y/, maxlen=500,
