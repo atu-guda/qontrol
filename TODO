@@ -5,7 +5,6 @@ BUG: huge time on model params edit. May be containers must have nodialedit flag
   What about undo?
   shadow object copy, not XML representation.
   as clone with other/null parent, but need copyFrom/copyTo, swap/inplace func.
-Not only ' ' must mean 'ignore label', but '.' too.
 Long descriptions in schems, (button) - how to edit?
 Reorder objects in list-alike containers.
 text with substitutions - plot labels or more? not only double. and TeX-aware.

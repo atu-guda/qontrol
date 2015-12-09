@@ -124,12 +124,10 @@ LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
   v_min = arr->getDataD( "dmin", 0.0 );
   v_max = arr->getDataD( "dmax", 0.0 );
 
-  // QString label_c = label.isEmpty() ? ( QString( "y_%1" ).arg( dl.size() )) : label;
-  // QString label_c = label.isEmpty() ? QString( "y" ) : label;
-  if( label == QSL(" ") ) {
+  if( label == QSL(".") ||  label == QSL(" ") ) {
     pl_label = label.toStdString();
   } else {
-    QString label_c = QSL("\\big\\i{");
+    QString label_c = QSL("\\big\\i{"); // TODO: better!
     label_c += label.isEmpty() ? QString( "y" ) : label;
     label_c += QSL("}");
     pl_label = label_c.toStdString();
@@ -666,7 +664,7 @@ void TGraph::plotTo( const ViewData *a_vd, const ScaleData *scda )
     }
     const char *clbl = pl->pl_label.c_str();
     // qWarning() << "clbl= " << clbl << NWHE;
-    if( (unsigned char)(clbl[0]) > ' ' ) {
+    if( ! ( pl->pl_label == "." || pl->pl_label == " "  ) ) {
       gr.AddLegend( clbl, pl->pl_extra.c_str() );
     }
     if( vd.sel == ig ) { // selected plotted last
