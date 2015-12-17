@@ -147,6 +147,58 @@ struct ViewData {
   int sel {0};
 };
 
+class PlotLabel : public TDataSet {
+   Q_OBJECT
+ public:
+   DCL_CTOR(PlotLabel);
+   virtual ~PlotLabel() override;
+   // virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
+   DCL_CREATE;
+   DCL_STD_INF;
+
+   enum CoordType {
+     CoordGraph = 0,
+     CoordScreen,
+     CoordFirst    // main coorrd system, a-la gnuplot
+   };
+   Q_ENUMS( CoordType );
+   Q_CLASSINFO( "enum_CoordType_0",   "Graph " );    // CoordGraph
+   Q_CLASSINFO( "enum_CoordType_1",   "Screen" );    // CoordScreen
+   Q_CLASSINFO( "enum_CoordType_2",   "First " );    // CoordFirst
+
+   enum LabelType {
+     LabelPlain = 0,
+     LabelHTML,
+     LabelMiniTeX,
+     LabelMGL,
+     labelTeX
+   };
+   Q_ENUMS( LabelType );
+   Q_CLASSINFO( "enum_LabelType_0",   "Plain " );    // LabelPlain
+   Q_CLASSINFO( "enum_LabelType_1",   "HTML" );      // LabelHTML,
+   Q_CLASSINFO( "enum_LabelType_2",   "MiniTeX" );   // LabelMiniTeX
+   Q_CLASSINFO( "enum_LabelType_3",   "MGL" );       // LabelMGL,
+   Q_CLASSINFO( "enum_LabelType_4",   "TeX" );       // labelTeX
+ protected:
+   PRM_STRING( text, 0, "Text", "label text", "props=STRING,MLINE\nncol=-1\ndef=Label");
+   PRM_LIST( labelType, 0, "Label type",  "method of label processing", "sep=block\nenum=LabelType" );
+   PRM_SWITCH( substVals, 0, "Subst", "Substitute values", "def=0\nsep=col" );
+   PRM_SWITCH( showFrame, 0, "Frame", "show frame around label", "def=0" );
+   PRM_COLOR( labelColor, 0, "Color", "Label color", "sep=col\ndef=black" );
+   PRM_COLOR( labelBgVolor, 0, "BgColor", "Label backgrounf color", "def=white" );
+   PRM_FONT( labelFont, 0, "Font", "label font", "sep=col");
+   PRM_STRING( labelFontMGL, 0, "MGL Font", "label font in MGL mode", "def=:rC");
+   PRM_DOUBLE( labelSizeMGL, 0, "MGL Size", "label font size in MGL mode", "def=2.0");
+
+   PRM_DOUBLE( labelX, 0, "X", "label X coordinate", "def=0.9\nsep=block");
+   PRM_DOUBLE( labelY, 0, "Y", "label Y coordinate", "def=0.9\nsep=col");
+   PRM_DOUBLE( labelZ, 0, "Z", "label Z coordinate", "def=0.0\nsep=col");
+   PRM_LIST( coordType, 0, "Coord",  "coordinate system for label", "sep=col\nenum=CoordType" );
+
+   Q_CLASSINFO( "nameHintBase",  "lbl_" );
+   DCL_DEFAULT_STATIC;
+};
+
 // --------------------------------------------------------------------
 
 /**Description of graph

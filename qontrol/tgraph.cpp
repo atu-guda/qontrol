@@ -220,6 +220,24 @@ LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
 DEFAULT_FUNCS_REG(GraphElem);
 
 // --------------------------------------------------------------------
+const char* PlotLabel::helpstr = "<H1>PlotLabel</H1>\n"
+ "Label for plot";
+
+
+STD_CLASSINFO(PlotLabel,clpElem);
+
+CTOR(PlotLabel,TDataSet)
+{
+}
+
+PlotLabel::~PlotLabel()
+{
+}
+
+
+DEFAULT_FUNCS_REG(PlotLabel);
+
+// --------------------------------------------------------------------
 
 const char* TGraph::helpstr = "<H1>TGraph</H1>\n"
  "Define, which outputs will be used for plotting and dumping. \n"
@@ -230,7 +248,7 @@ STD_CLASSINFO(TGraph,clpSpecial);
 CTOR(TGraph,TDataSet) ,
      scd( new ScaleData( "scd", this, 0, "scale", "scale data", "sep=blockend" ) )
 {
-  allowed_types = "GraphElem,GraphLabel,+SPECICAL";
+  allowed_types = "GraphElem,PlotLabel,+SPECICAL";
   scd->setImmutable();
   reset();
 }
