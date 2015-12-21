@@ -1,4 +1,5 @@
 correct places for reset, set_link, *structChange..
+BUG: Color tranparensy not preserved on dialog
 BUG: fail to link TOutArr to Simulation param.
 BUG: mofified state (i.e. after autocreated scheme removal)
 BUG: huge time on model params edit. May be containers must have nodialedit flag or depth limit?

@@ -140,6 +140,8 @@ StringMLDataWidget::StringMLDataWidget( HolderData &h, QWidget *parent )
   // setMaxLength( h.getMax() ); ???
   // TODO: min size
   te->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred );
+  te->setAcceptRichText( false );
+  // te->setWordWrapMode( QTextEdit::NoWrap );
 
   auto lay =  new QVBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
@@ -151,7 +153,7 @@ StringMLDataWidget::StringMLDataWidget( HolderData &h, QWidget *parent )
 
 bool StringMLDataWidget::set()
 {
-  te->setText( ho.toString() );
+  te->setPlainText( ho.toString() );
   return true;
 }
 

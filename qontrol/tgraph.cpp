@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-// debug?
 #include <QPainter>
+#include <QTextDocument>
 
 #include "miscfun.h"
 #include "tgraph.h"
@@ -232,6 +232,94 @@ CTOR(PlotLabel,TDataSet)
 
 PlotLabel::~PlotLabel()
 {
+}
+
+bool PlotLabel::render( QImage *img, mglGraph *gr ) const
+{
+  QString s = text;
+  switch( labelType ) {
+    case LabelPlain:
+      return renderPlain( img, s );
+    case LabelHTML:
+      return renderHTML( img, s );
+    case LabelMiniTeX:
+      return renderMiniTeX( img, s );
+    case LabelMGL:
+      return renderMGL( gr, s );
+    case LabelTeX:
+      return renderTeX( img, s );
+  }
+  return false;
+}
+
+bool PlotLabel::renderPlain( QImage *img, const QString &s ) const
+{
+  if( !img ) { return false; }
+  QPainter px( img );
+  int w = img->width(), h = img->height();
+  px.setFont( labelFont.cval() );
+
+  int xl = (int)( w * labelX ); // TODO: function for scales
+  int yl = (int)( h * (1.0-labelY) );
+
+  QRect r0( xl, yl, w-xl, w-yl );
+  QRect brect = px.boundingRect( r0, Qt::AlignLeft, s );
+  int r_h = brect.height();
+  brect.translate( 0, 2-r_h );  // More space is above
+  brect += QMargins( 1, 1, 1, 1 ); // TODO: config
+
+  // px.fillRect( xl-1, yl-1, 2, 2, Qt::red ); // Debug: point 0
+  // px.drawRect( r0 );
+
+
+  if( drawBG ) {
+    px.fillRect( brect, labelBgColor.cval() );
+  }
+
+  px.setPen( labelColor.cval() );
+  if( drawFrame ) {
+    px.drawRect( brect );
+  }
+
+  px.drawText( xl, yl, s );
+  return false;
+}
+
+bool PlotLabel::renderHTML( QImage *img, const QString &s ) const
+{
+  if( !img ) { return false; }
+  QPainter px( img );
+  int w = img->width(), h = img->height();
+  int xl = (int)( w * labelX ); // TODO: function for scales
+  int yl = (int)( h * (1-labelY) );
+  if( drawBG ) {
+    px.fillRect( xl, yl, 20, 20, labelBgColor.cval() );
+  }
+  px.translate( xl, yl );
+  px.setPen( labelColor.cval() );
+  QTextDocument ldoc;
+  ldoc.setUndoRedoEnabled( false );
+  ldoc.setDefaultFont( labelFont.cval() );
+  ldoc.setHtml( s );
+  ldoc.drawContents( &px );
+  return true;
+}
+
+bool PlotLabel::renderMiniTeX( QImage *img, const QString &s ) const
+{
+  QString st { tex2label( s, false ) };
+  return renderHTML( img, st );
+}
+
+bool PlotLabel::renderMGL( mglGraph *gr, const QString & /*s*/ ) const
+{
+  if( !gr ) { return false; }
+  return false;
+}
+
+bool PlotLabel::renderTeX( QImage *img, const QString &s ) const
+{
+  return renderMiniTeX( img, s ); // TMP: TODO: real external TeX
 }
 
 
@@ -604,6 +692,11 @@ void TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda 
   plotTo( &vd, scda );
 
   gr.GetBGRN( im2.bits(), 4 * gw * gh );
+
+  for( auto lbl : TCHILD(PlotLabel*) ) {
+    lbl->render( &im2, &gr );
+  }
+
   img = im2;
 
   // QPainter px( &img );

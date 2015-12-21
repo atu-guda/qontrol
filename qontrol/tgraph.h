@@ -171,7 +171,7 @@ class PlotLabel : public TDataSet {
      LabelHTML,
      LabelMiniTeX,
      LabelMGL,
-     labelTeX
+     LabelTeX
    };
    Q_ENUMS( LabelType );
    Q_CLASSINFO( "enum_LabelType_0",   "Plain " );    // LabelPlain
@@ -179,13 +179,17 @@ class PlotLabel : public TDataSet {
    Q_CLASSINFO( "enum_LabelType_2",   "MiniTeX" );   // LabelMiniTeX
    Q_CLASSINFO( "enum_LabelType_3",   "MGL" );       // LabelMGL,
    Q_CLASSINFO( "enum_LabelType_4",   "TeX" );       // labelTeX
+
+   virtual bool render( QImage *img, mglGraph *gr ) const;
  protected:
    PRM_STRING( text, 0, "Text", "label text", "props=STRING,MLINE\nncol=-1\ndef=Label");
    PRM_LIST( labelType, 0, "Label type",  "method of label processing", "sep=block\nenum=LabelType" );
    PRM_SWITCH( substVals, 0, "Subst", "Substitute values", "def=0\nsep=col" );
-   PRM_SWITCH( showFrame, 0, "Frame", "show frame around label", "def=0" );
+   PRM_SWITCH( drawFrame, 0, "Frame", "Draw frame around label", "def=0" );
+   PRM_SWITCH( drawBG,  0, "Background", "Draw label background", "def=0" );
+
    PRM_COLOR( labelColor, 0, "Color", "Label color", "sep=col\ndef=black" );
-   PRM_COLOR( labelBgVolor, 0, "BgColor", "Label backgrounf color", "def=white" );
+   PRM_COLOR( labelBgColor, 0, "BgColor", "Label background color", "def=white" );
    PRM_FONT( labelFont, 0, "Font", "label font", "sep=col");
    PRM_STRING( labelFontMGL, 0, "MGL Font", "label font in MGL mode", "def=:rC");
    PRM_DOUBLE( labelSizeMGL, 0, "MGL Size", "label font size in MGL mode", "def=2.0");
@@ -194,6 +198,12 @@ class PlotLabel : public TDataSet {
    PRM_DOUBLE( labelY, 0, "Y", "label Y coordinate", "def=0.9\nsep=col");
    PRM_DOUBLE( labelZ, 0, "Z", "label Z coordinate", "def=0.0\nsep=col");
    PRM_LIST( coordType, 0, "Coord",  "coordinate system for label", "sep=col\nenum=CoordType" );
+
+   bool renderPlain( QImage *img, const QString &s ) const;
+   bool renderHTML( QImage *img, const QString &s ) const;
+   bool renderMiniTeX( QImage *img, const QString &s ) const;
+   bool renderMGL( mglGraph *gr, const QString &s ) const;
+   bool renderTeX( QImage *img, const QString &s ) const;
 
    Q_CLASSINFO( "nameHintBase",  "lbl_" );
    DCL_DEFAULT_STATIC;

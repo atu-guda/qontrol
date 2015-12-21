@@ -132,7 +132,7 @@ QString tex2label( const QString &t, bool noSub )
 {
   static MapSC tex_map = init_tex_map();
 
-  // way to ignore comversion
+  // way to ignore conversion
   if( t.startsWith( QSL("<div") ) ) {
     return t;
   }
