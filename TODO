@@ -13,6 +13,7 @@ text with substitutions - plot labels or more? not only double. and TeX-aware.
   common TeX preambula +/= per label
 add Flag: call parent post_set if changed. and supress for mass changes. set/do_set?
 sep prop: bitfield?
+Fill, import, export special arrays.
 Create arrays in dialogs.
 Script 'help' function + list of top-level objects and functions.
 Decoration objects.

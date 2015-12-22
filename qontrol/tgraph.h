@@ -184,9 +184,12 @@ class PlotLabel : public TDataSet {
  protected:
    PRM_STRING( text, 0, "Text", "label text", "props=STRING,MLINE\nncol=-1\ndef=Label");
    PRM_LIST( labelType, 0, "Label type",  "method of label processing", "sep=block\nenum=LabelType" );
+
    PRM_SWITCH( substVals, 0, "Subst", "Substitute values", "def=0\nsep=col" );
+   PRM_SWITCH( drawLabel, 0, "Draw", "Draw label", "def=1" );
    PRM_SWITCH( drawFrame, 0, "Frame", "Draw frame around label", "def=0" );
    PRM_SWITCH( drawBG,  0, "Background", "Draw label background", "def=0" );
+   PRM_SWITCH( addToName, 0, "add to name", "add to default filename", "def=0" );
 
    PRM_COLOR( labelColor, 0, "Color", "Label color", "sep=col\ndef=black" );
    PRM_COLOR( labelBgColor, 0, "BgColor", "Label background color", "def=white" );
@@ -199,11 +202,11 @@ class PlotLabel : public TDataSet {
    PRM_DOUBLE( labelZ, 0, "Z", "label Z coordinate", "def=0.0\nsep=col");
    PRM_LIST( coordType, 0, "Coord",  "coordinate system for label", "sep=col\nenum=CoordType" );
 
-   bool renderPlain( QImage *img, const QString &s ) const;
-   bool renderHTML( QImage *img, const QString &s ) const;
-   bool renderMiniTeX( QImage *img, const QString &s ) const;
-   bool renderMGL( mglGraph *gr, const QString &s ) const;
-   bool renderTeX( QImage *img, const QString &s ) const;
+   bool renderPlain( QImage *img, const QString &s, QPoint p0 ) const;
+   bool renderHTML( QImage *img, const QString &s, QPoint p0 ) const;
+   bool renderMiniTeX( QImage *img, const QString &s, QPoint p0 ) const;
+   bool renderMGL( mglGraph *gr, const QString &s, QPoint p0 ) const;
+   bool renderTeX( QImage *img, const QString &s, QPoint p0 ) const;
 
    Q_CLASSINFO( "nameHintBase",  "lbl_" );
    DCL_DEFAULT_STATIC;
@@ -247,6 +250,7 @@ class TGraph : public TDataSet  {
    QString getPlotLabel( int ig ) const;
    QString getPrintInfo( int ig ) const;
    mglPoint CalcXYZ( int mx, int my ) { return gr.CalcXYZ(mx, my); }
+   mglPoint CalcScr( const mglPoint &xyz ) { return gr.CalcScr( xyz ); }
  protected:
    virtual void do_reset() override;
    //* remove numbner of data points to plot
@@ -280,6 +284,7 @@ class TGraph : public TDataSet  {
    //* defining scale points
    mglPoint pr_min { 0, 0, 0 }, pr_max { 1, 1, 1 }, pr_dlt { 1, 1, 1 }; // real
    mglPoint pe_min { 0, 0, 0 }, pe_max { 1, 1, 1 }, pe_dlt { 1, 1, 1 }; // eff: last plot
+   mglPoint ve_min { 0, 0, 0 }, ve_max { 1, 1, 1 }, ve_dlt { 1, 1, 1 }; // visual?
 
    const mglData *d_x = nullptr;
    const mglData *d_y = nullptr;

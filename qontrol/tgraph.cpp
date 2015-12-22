@@ -18,6 +18,8 @@
 #include <QPainter>
 #include <QTextDocument>
 
+#include <mgl2/base.h>
+
 #include "miscfun.h"
 #include "tgraph.h"
 #include "tmodel.h"
@@ -237,40 +239,84 @@ PlotLabel::~PlotLabel()
 bool PlotLabel::render( QImage *img, mglGraph *gr ) const
 {
   QString s = text;
+  // TODO: subst, tex?
+  if( ! drawLabel ) {
+    return true;
+  }
+
+  if( !img || !gr ) { return false; }
+
+  QPoint p0 {0, 0};
+  int w = img->width(), h = img->height();
+  mglPoint p0m { labelX, labelY, labelZ };
+
+  mglPoint p_min { 0, 0, 0 };
+  mglPoint p_max { 1, 1, 1 };
+  mglPoint p0p   { 0, 0, 0 };
+  const mglBase *gb = gr->Self();
+  if( gb ) {
+    p_min = gb->Min;  p_max = gb->Max;
+  }
+
+  switch( coordType ) {
+    case CoordGraph:
+      p0m.x = p_min.x + labelX * ( p_max.x - p_min.x );
+      p0m.y = p_min.y + labelY * ( p_max.y - p_min.y );
+      p0m.z = p_min.z + labelZ * ( p_max.z - p_min.z );
+      p0m.y = p_min.y - p0m.y + p_max.y; // hack: CalcScr is bad
+      p0p = gr->CalcScr( p0m );
+      p0 = QPoint( p0p.x, p0p.y );
+      break;
+    case CoordScreen:
+      p0 = QPoint( (int)( w * labelX ), (int)( h * ( 1.0 - labelY ) ) );
+      break;
+    case CoordFirst:
+      p0m.y = p_min.y - labelY + p_max.y; // hack
+      p0p = gr->CalcScr( p0m );
+      p0 = QPoint( p0p.x, p0p.y );
+      break;
+    default:
+      break;
+  }
+
+  // debug coordinate tranform
+  QString ds = QSL("pMin: " ) % toQString( p_min )  % QSL("  pMax: " ) % toQString( p_max  );
+  qWarning() << ds << WHE;
+  ds = QSL("p0m: " ) % toQString( p0m )  % QSL("  p0p: " ) % toQString( p0p  );
+  qWarning() << ds << NWHE;
+
   switch( labelType ) {
     case LabelPlain:
-      return renderPlain( img, s );
+      return renderPlain( img, s, p0 );
     case LabelHTML:
-      return renderHTML( img, s );
+      return renderHTML( img, s, p0 );
     case LabelMiniTeX:
-      return renderMiniTeX( img, s );
+      return renderMiniTeX( img, s, p0 );
     case LabelMGL:
-      return renderMGL( gr, s );
+      return renderMGL( gr, s, p0 );
     case LabelTeX:
-      return renderTeX( img, s );
+      return renderTeX( img, s, p0 );
+    default:
+      qWarning() << "Unknown label type: " << labelType << NWHE;
+      break;
   }
   return false;
 }
 
-bool PlotLabel::renderPlain( QImage *img, const QString &s ) const
+bool PlotLabel::renderPlain( QImage *img, const QString &s, QPoint p0 ) const
 {
   if( !img ) { return false; }
   QPainter px( img );
   int w = img->width(), h = img->height();
   px.setFont( labelFont.cval() );
 
-  int xl = (int)( w * labelX ); // TODO: function for scales
-  int yl = (int)( h * (1.0-labelY) );
+  int xl = p0.x(), yl = p0.y();
 
-  QRect r0( xl, yl, w-xl, w-yl );
+  QRect r0( xl, yl, w-xl, h-yl );
   QRect brect = px.boundingRect( r0, Qt::AlignLeft, s );
   int r_h = brect.height();
   brect.translate( 0, 2-r_h );  // More space is above
   brect += QMargins( 1, 1, 1, 1 ); // TODO: config
-
-  // px.fillRect( xl-1, yl-1, 2, 2, Qt::red ); // Debug: point 0
-  // px.drawRect( r0 );
-
 
   if( drawBG ) {
     px.fillRect( brect, labelBgColor.cval() );
@@ -282,10 +328,14 @@ bool PlotLabel::renderPlain( QImage *img, const QString &s ) const
   }
 
   px.drawText( xl, yl, s );
+
+  px.fillRect( xl-1, yl-1, 2, 2, Qt::red ); // Debug: point 0
+  // px.drawRect( r0 );
+
   return false;
 }
 
-bool PlotLabel::renderHTML( QImage *img, const QString &s ) const
+bool PlotLabel::renderHTML( QImage *img, const QString &s, QPoint /*p0*/ ) const
 {
   if( !img ) { return false; }
   QPainter px( img );
@@ -305,21 +355,21 @@ bool PlotLabel::renderHTML( QImage *img, const QString &s ) const
   return true;
 }
 
-bool PlotLabel::renderMiniTeX( QImage *img, const QString &s ) const
+bool PlotLabel::renderMiniTeX( QImage *img, const QString &s, QPoint p0 ) const
 {
   QString st { tex2label( s, false ) };
-  return renderHTML( img, st );
+  return renderHTML( img, st, p0 );
 }
 
-bool PlotLabel::renderMGL( mglGraph *gr, const QString & /*s*/ ) const
+bool PlotLabel::renderMGL( mglGraph *gr, const QString & /*s*/, QPoint /*p0*/ ) const
 {
   if( !gr ) { return false; }
   return false;
 }
 
-bool PlotLabel::renderTeX( QImage *img, const QString &s ) const
+bool PlotLabel::renderTeX( QImage *img, const QString &s, QPoint p0 ) const
 {
-  return renderMiniTeX( img, s ); // TMP: TODO: real external TeX
+  return renderMiniTeX( img, s, p0 ); // TMP: TODO: real external TeX
 }
 
 
@@ -741,9 +791,9 @@ void TGraph::plotTo( const ViewData *a_vd, const ScaleData *scda )
   if( a_vd ) {
     vd = *a_vd;
   }
-  mglPoint ve_dlt = pe_dlt / vd.mag; // realy * by coords
-  mglPoint ve_min = pe_min + pe_dlt / vd.ofs;
-  mglPoint ve_max = ve_min + ve_dlt;
+  ve_dlt = pe_dlt / vd.mag; // realy * by coords
+  ve_min = pe_min + pe_dlt / vd.ofs;
+  ve_max = ve_min + ve_dlt;
 
 
   gr.SetRanges( ve_min, ve_max );
@@ -819,6 +869,7 @@ void TGraph::plotTo( const ViewData *a_vd, const ScaleData *scda )
   if( scda->legend_pos < 4 ) {
     gr.Legend( scda->legend_pos, "#" );
   }
+
 }
 
 void TGraph::plot1( const GraphElem *pl )
