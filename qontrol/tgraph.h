@@ -180,7 +180,7 @@ class PlotLabel : public TDataSet {
    Q_CLASSINFO( "enum_LabelType_3",   "MGL" );       // LabelMGL,
    Q_CLASSINFO( "enum_LabelType_4",   "TeX" );       // labelTeX
 
-   virtual bool render( QImage *img, mglGraph *gr ) const;
+   virtual bool render( QImage *img, mglGraph *gr, bool onGr ) const;
  protected:
    PRM_STRING( text, 0, "Text", "label text", "props=STRING,MLINE\nncol=-1\ndef=Label");
    PRM_LIST( labelType, 0, "Label type",  "method of label processing", "sep=block\nenum=LabelType" );
@@ -194,7 +194,7 @@ class PlotLabel : public TDataSet {
    PRM_COLOR( labelColor, 0, "Color", "Label color", "sep=col\ndef=black" );
    PRM_COLOR( labelBgColor, 0, "BgColor", "Label background color", "def=white" );
    PRM_FONT( labelFont, 0, "Font", "label font", "sep=col");
-   PRM_STRING( labelFontMGL, 0, "MGL Font", "label font in MGL mode", "def=:rC");
+   PRM_STRING( labelFontMGL, 0, "MGL Font", "label font in MGL mode", "def=:L@");
    PRM_DOUBLE( labelSizeMGL, 0, "MGL Size", "label font size in MGL mode", "def=2.0");
 
    PRM_DOUBLE( labelX, 0, "X", "label X coordinate", "def=0.9\nsep=block");

@@ -236,8 +236,11 @@ PlotLabel::~PlotLabel()
 {
 }
 
-bool PlotLabel::render( QImage *img, mglGraph *gr ) const
+bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr ) const
 {
+  if(  onGr && labelType != LabelMGL ) { return false; }
+  if( !onGr && labelType == LabelMGL ) { return false; }
+
   QString s = text;
   // TODO: subst, tex?
   if( ! drawLabel ) {
@@ -280,10 +283,10 @@ bool PlotLabel::render( QImage *img, mglGraph *gr ) const
   }
 
   // debug coordinate tranform
-  QString ds = QSL("pMin: " ) % toQString( p_min )  % QSL("  pMax: " ) % toQString( p_max  );
-  qWarning() << ds << WHE;
-  ds = QSL("p0m: " ) % toQString( p0m )  % QSL("  p0p: " ) % toQString( p0p  );
-  qWarning() << ds << NWHE;
+  // QString ds = QSL("pMin: " ) % toQString( p_min )  % QSL("  pMax: " ) % toQString( p_max  );
+  // qWarning() << ds << WHE;
+  // ds = QSL("p0m: " ) % toQString( p0m )  % QSL("  p0p: " ) % toQString( p0p  );
+  // qWarning() << ds << NWHE;
 
   switch( labelType ) {
     case LabelPlain:
@@ -361,10 +364,18 @@ bool PlotLabel::renderMiniTeX( QImage *img, const QString &s, QPoint p0 ) const
   return renderHTML( img, st, p0 );
 }
 
-bool PlotLabel::renderMGL( mglGraph *gr, const QString & /*s*/, QPoint /*p0*/ ) const
+bool PlotLabel::renderMGL( mglGraph *gr, const QString &s, QPoint /*p0*/ ) const
 {
-  if( !gr ) { return false; }
-  return false;
+  if( !gr ) { return false;  }
+  wstring ws = s.toStdWString();
+  string fs = labelFontMGL.toString().toStdString();
+
+  gr->Putsw( mglPoint( labelX, labelY, labelZ ), ws.data(),
+      fs.c_str(), labelSizeMGL.cval() );
+  // gr->Puts( mglPoint( 0.5, 0.5, 0.0 ), "Z", "U:L@A", 6 );
+  gr->Ball( mglPoint( labelX, labelY, labelZ ), 'r' );
+
+  return true;
 }
 
 bool PlotLabel::renderTeX( QImage *img, const QString &s, QPoint p0 ) const
@@ -741,10 +752,14 @@ void TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda 
   QImage im2( gw, gh,  QImage::Format_RGB32 );
   plotTo( &vd, scda );
 
+  for( auto lbl : TCHILD(PlotLabel*) ) {
+    lbl->render( &im2, &gr, true ); // only MGL plots
+  }
+
   gr.GetBGRN( im2.bits(), 4 * gw * gh );
 
   for( auto lbl : TCHILD(PlotLabel*) ) {
-    lbl->render( &im2, &gr );
+    lbl->render( &im2, &gr, false );
   }
 
   img = im2;
@@ -795,7 +810,6 @@ void TGraph::plotTo( const ViewData *a_vd, const ScaleData *scda )
   ve_min = pe_min + pe_dlt / vd.ofs;
   ve_max = ve_min + ve_dlt;
 
-
   gr.SetRanges( ve_min, ve_max );
   if( need_c_axis ) {
     gr.SetRange( 'c', tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max );
@@ -810,6 +824,7 @@ void TGraph::plotTo( const ViewData *a_vd, const ScaleData *scda )
 
   QColor bg_c = scda->bgcolor;
   gr.Clf( bg_c.redF(), bg_c.greenF(), bg_c.blueF() );
+
 
   d_x = tli[LineRole::axisX]->md;
   d_y = tli[LineRole::axisY]->md;
@@ -834,6 +849,7 @@ void TGraph::plotTo( const ViewData *a_vd, const ScaleData *scda )
 
     plot1( pl );
   }
+
   if( vd.sel >=0  &&  vd.sel < (int)pli.size() ) {
     plot1( pli[vd.sel] );
   }
