@@ -124,17 +124,19 @@ QSize MglView::sizeHint() const
 
 void MglView::drawAll( QPainter &p )
 {
-  int w = width(), h = height(), hg = h;
+  wg = width();
+  h_tot = height();
+  hg = h_tot;
   if( show_footer ) {
     hg -= bottom_h;
   }
-  QImage timg( w, hg, QImage::Format_RGB32 );
+  QImage timg( wg, hg, QImage::Format_RGB32 );
   gra->renderTo( timg, &vd, scd.get() );
 
   p.drawImage( 0, 0, timg );
 
   if( show_footer ) {
-    drawFooter( p, hg );
+    drawFooter( p );
   }
 }
 
@@ -146,9 +148,8 @@ void MglView::paintEvent( QPaintEvent * /*pe*/ )
 
 }
 
-void MglView::drawFooter( QPainter &p, int hg )
+void MglView::drawFooter( QPainter &p )
 {
-  int w = width();
   p.setFont( pa_fnt );
   QColor bg_c = QColor( scd->bgcolor );
   QColor fg_c = QColor( 0,0,0 );
@@ -156,13 +157,13 @@ void MglView::drawFooter( QPainter &p, int hg )
     fg_c = QColor( 255, 255, 255 );
   }
 
-  p.fillRect( 0, hg, w, bottom_h, QBrush( bg_c ) );
+  p.fillRect( 0, hg, wg, bottom_h, QBrush( bg_c ) );
   p.setPen( fg_c );
-  p.drawLine( 0, hg, w, hg );
+  p.drawLine( 0, hg, wg, hg );
 
   QString s = getInfo();
 
-  p.drawText( ex, hg, w-2*ex, bottom_h, Qt::AlignLeft, s );
+  p.drawText( ex, hg, wg-2*ex, bottom_h, Qt::AlignLeft, s );
 }
 
 void MglView::mousePressEvent( QMouseEvent *me )
@@ -661,8 +662,9 @@ QString MglView::getInfo( bool more ) const
     s += "  Link: " % QSN( linkPlot) % " "
        % gra->getPlotLabel( linkPlot ) % " [" % QSN( linkIdx ) % "]  ";
   }
-  s += QChar( 0x03C6 ) % ": " % QSN( scd->phi ) % " "
-     % QChar( 0x03B8 ) % ": " % QSN( scd->theta );
+  s += QChar( 0x03C6 ) % QSL(": ") % QSN( scd->phi ) % QSL(" ")
+     % QChar( 0x03B8 ) % QSL(": ") % QSN( scd->theta )
+     % QSL(" wg= ") % QSN( wg ) % QSL( " hg= " ) % QSN( hg ) % QSL(" h_tot= ") % QSN( h_tot );
   return s;
 }
 

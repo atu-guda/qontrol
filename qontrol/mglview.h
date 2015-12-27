@@ -87,17 +87,17 @@ class MglView : public QWidget  {
    void Reload();
    void resetData();
    QSize getSize0() const;
-   void drawFooter( QPainter &p, int hg );
+   void drawFooter( QPainter &p );
    void setMarkToLink();
  protected:
    TGraph *gra;
    ViewData vd;
    mglPoint pr_min {0,0,0}, pr_max {1,1,1}, pr_dlt {1,1,1};
-   mglGraph gr { 0,100, 100 };
    std::shared_ptr<ScaleData> scd;
    ScaleData *scd_o { nullptr }; // _o = ptr to original
    const QFont &pa_fnt;
    int em {10}, ex {10}, bottom_h {40}; // default only
+   int wg = 100, hg = 100, h_tot = 140; // current pure graph size and total height;
    double angle_step = {5.0}, mag_step { M_SQRT1_2 }, scale_step { 0.10 };
    int linkPlot {-1}; //* linked data index
    int linkIdx {0};   //* current point index in linked array
