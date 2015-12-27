@@ -70,11 +70,14 @@ LaboWin::LaboWin()
   }
 
   logViewer->setReadOnly( true );
-  logViewer->setMinimumSize( 50*em, 8*em ); // TODO: fix!
+  logViewer->setMinimumSize( 50*em, 6*em ); // TODO: fix!
   logViewer->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Minimum );
+  QList<int> szs { 640, 80 };
+  split->setSizes( szs );
+
 
   connect( log_timer, &QTimer::timeout, this, &LaboWin::slotUpdateLog );
-  log_timer->setInterval( 1000 ); // 1 sec
+  log_timer->setInterval( 500 ); // 0.5 sec
   log_timer->start();
 
   labowin = this;
