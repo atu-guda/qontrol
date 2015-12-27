@@ -320,6 +320,7 @@ bool PlotLabel::renderPlain( QImage *img, const QString &s, QPoint p0 ) const
   int r_h = brect.height();
   brect.translate( 0, 2-r_h );  // More space is above
   brect += QMargins( 1, 1, 1, 1 ); // TODO: config
+  brect &= QRect( 0, 0, w, h );
 
   if( drawBG ) {
     px.fillRect( brect, labelBgColor.cval() );
@@ -332,7 +333,9 @@ bool PlotLabel::renderPlain( QImage *img, const QString &s, QPoint p0 ) const
 
   px.drawText( xl, yl, s );
 
-  px.fillRect( xl-1, yl-1, 2, 2, Qt::red ); // Debug: point 0
+  if( xl > 0 && yl > 0 && xl < w-2  && yl < h-2 ) {
+    px.fillRect( xl-1, yl-1, 2, 2, Qt::red ); // Debug: point 0
+  }
   // px.drawRect( r0 );
 
   return false;
