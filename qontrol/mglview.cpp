@@ -172,21 +172,24 @@ void MglView::mousePressEvent( QMouseEvent *me )
     return;
   }
 
-  int mx = me->x(), my = me->y(), btn = me->button();
-  mglPoint po = gra->CalcXYZ( mx, my, wg, hg, &vd, scd.get() );
+  mouse_x = me->x(); mouse_y = me->y();
+  int btn = me->button();
+  mglPoint po = gra->CalcXYZ( mouse_x, mouse_y, wg, hg, &vd, scd.get() );
   switch( btn ) {
     case Qt::LeftButton:
       unlinkFromPlot();
       scd->setMark( po );
-         break;
+      update();
+      break;
     case Qt::RightButton:
-         break;
+      return QWidget::mousePressEvent( me );
+      // break;
     case Qt::MidButton:
-         break;
+      return QWidget::mousePressEvent( me );
+      // break;
     default:
-         break;
+      break;
   };
-  update();
 
 }
 
@@ -665,7 +668,7 @@ QString MglView::getInfo( bool more ) const
   s += QChar( 0x03C6 ) % QSL(": ") % QSN( scd->phi ) % QSL(" ")
      % QChar( 0x03B8 ) % QSL(": ") % QSN( scd->theta )
      % QSL(" wg= ") % QSN( wg ) % QSL( " hg= " ) % QSN( hg ) % QSL(" h_tot= ") % QSN( h_tot )
-     % QSL(" wm= ") % QSN( gsz.width() ) % QSL( " hm= " ) % QSN( gsz.height() );
+     % QSL(" mx= ") % QSN( mouse_x ) % QSL( " my= " ) % QSN( mouse_y );
   return s;
 }
 
