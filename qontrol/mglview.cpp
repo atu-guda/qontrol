@@ -131,7 +131,7 @@ void MglView::drawAll( QPainter &p )
     hg -= bottom_h;
   }
   QImage timg( wg, hg, QImage::Format_RGB32 );
-  gra->renderTo( timg, &vd, scd.get() );
+  gsz = gra->renderTo( timg, &vd, scd.get() );
 
   p.drawImage( 0, 0, timg );
 
@@ -173,7 +173,7 @@ void MglView::mousePressEvent( QMouseEvent *me )
   }
 
   int mx = me->x(), my = me->y(), btn = me->button();
-  mglPoint po = gra->CalcXYZ( mx, my );
+  mglPoint po = gra->CalcXYZ( mx, my, wg, hg, &vd, scd.get() );
   switch( btn ) {
     case Qt::LeftButton:
       unlinkFromPlot();
@@ -664,7 +664,8 @@ QString MglView::getInfo( bool more ) const
   }
   s += QChar( 0x03C6 ) % QSL(": ") % QSN( scd->phi ) % QSL(" ")
      % QChar( 0x03B8 ) % QSL(": ") % QSN( scd->theta )
-     % QSL(" wg= ") % QSN( wg ) % QSL( " hg= " ) % QSN( hg ) % QSL(" h_tot= ") % QSN( h_tot );
+     % QSL(" wg= ") % QSN( wg ) % QSL( " hg= " ) % QSN( hg ) % QSL(" h_tot= ") % QSN( h_tot )
+     % QSL(" wm= ") % QSN( gsz.width() ) % QSL( " hm= " ) % QSN( gsz.height() );
   return s;
 }
 

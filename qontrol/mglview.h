@@ -98,6 +98,7 @@ class MglView : public QWidget  {
    const QFont &pa_fnt;
    int em {10}, ex {10}, bottom_h {40}; // default only
    int wg = 100, hg = 100, h_tot = 140; // current pure graph size and total height;
+   QSize gsz { 100, 100 }; // size from mglGraph
    double angle_step = {5.0}, mag_step { M_SQRT1_2 }, scale_step { 0.10 };
    int linkPlot {-1}; //* linked data index
    int linkIdx {0};   //* current point index in linked array

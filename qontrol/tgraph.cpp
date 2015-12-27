@@ -730,94 +730,42 @@ void TGraph::addMetaData( QImage &img ) const
   // TODO: more
 }
 
-void TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda )
+QSize TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda )
 {
+  int w = img.width(), h = img.height();
+  img.fill( 0xFF );
+
   if( !scda ) { scda = scd; }
   ViewData vd;
   if( a_vd ) { vd = *a_vd; } // default values
 
-  int w = img.width(), h = img.height();
-
-  img.fill( 0xFF );
-
-  // mglGraph grx( 0, w, h );
-  gr.SetSize( w, h );
-
+  mglGraph gr( 0, w, h );
   int gw = gr.GetWidth(), gh = gr.GetHeight();
-  // if( gw != w  || gh != h ) {
-  //   qWarning() << "Misamtch: w= " << w << " gw= " << gw << " h= " << h << " gh= " << gh << NWHE;
-  // } else {
-  // }
-  // horror!
-  QImage im2( gw, gh,  QImage::Format_RGB32 );
-  plotTo( &vd, scda );
+  setupMglGraph( gr, a_vd, scda, true );
+
+  plotTo( gr, &vd, scda );
 
   for( auto lbl : TCHILD(PlotLabel*) ) {
-    lbl->render( &im2, &gr, true ); // only MGL plots
+    lbl->render( &img, &gr, true ); // only MGL plots
   }
 
-  gr.GetBGRN( im2.bits(), 4 * gw * gh );
+  gr.GetBGRN( img.bits(), 4 * w * h );
 
   for( auto lbl : TCHILD(PlotLabel*) ) {
-    lbl->render( &im2, &gr, false );
+    lbl->render( &img, &gr, false );
   }
-
-  img = im2;
-
-  // QPainter px( &img );
-  // px.drawLine( 10, 10, w/2, h );
 
   addMetaData( img );
 
+  return QSize( gw, gh );
 }
 
-void TGraph::plotTo( const ViewData *a_vd, const ScaleData *scda )
+void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
 {
-  if( !scda ) { scda = scd; }
+  if( !scda || ! a_vd ) { return; }
   if( !prepared  && prepare() < 1 ) {
     return;
   }
-
-  gr.DefaultPlotParam();
-
-  gr.SetFontSize( scda->fontSise );
-  gr.SetPlotFactor( scda->plotFactor );
-  gr.Rotate( scda->phi, scda->theta );
-  gr.Light( scda->useLight );
-  gr.SetAlphaDef( scda->alpha );
-  gr.Alpha( (bool)(scda->useAlpha) );
-
-  pr_dlt = pr_max - pr_min;
-  pe_min = pr_min; pe_max = pr_max;
-
-  if( ! scda->autoScX ) {
-    pe_min.x = scda->plotMinX; pe_max.x = scda->plotMaxX;
-  }
-  if( ! scda->autoScY ) {
-    pe_min.y = scda->plotMinY; pe_max.y = scda->plotMaxY;
-  }
-  if( ! scda->autoScZ ) {
-    pe_min.z = scda->plotMinZ; pe_max.z = scda->plotMaxZ;
-  }
-  pe_dlt = pe_max - pe_min;
-
-
-  ViewData vd;
-  if( a_vd ) {
-    vd = *a_vd;
-  }
-  ve_dlt = pe_dlt / vd.mag; // realy * by coords
-  ve_min = pe_min + pe_dlt / vd.ofs;
-  ve_max = ve_min + ve_dlt;
-
-  gr.SetRanges( ve_min, ve_max );
-  if( need_c_axis ) {
-    gr.SetRange( 'c', tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max );
-    // DBGx( "dbg: C axis: %lf %lf", tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max  );
-  }
-
-  gr.SetTicks( 'x', -(scda->gridX), scda->tickX );
-  gr.SetTicks( 'y', -(scda->gridY), scda->tickY );
 
   string axis_style = color2style( scda->axis_color.toInt(), 1 ).toStdString();
   string grid_style = color2style( scda->grid_color.toInt(), 1, "=" ).toStdString();
@@ -835,7 +783,7 @@ void TGraph::plotTo( const ViewData *a_vd, const ScaleData *scda )
   for( auto pl : pli ) {
     ++ig;
     uint64_t msk = 1ull << ig;
-    if( vd.off & msk ) {
+    if( a_vd->off & msk ) {
       continue;
     }
     const char *clbl = pl->pl_label.c_str();
@@ -843,15 +791,16 @@ void TGraph::plotTo( const ViewData *a_vd, const ScaleData *scda )
     if( ! ( pl->pl_label == "." || pl->pl_label == " "  ) ) {
       gr.AddLegend( clbl, pl->pl_extra.c_str() );
     }
-    if( vd.sel == ig ) { // selected plotted last
+    if( a_vd->sel == ig ) { // selected plotted last
       continue;
     }
 
-    plot1( pl );
+    plot1( gr, pl );
   }
 
-  if( vd.sel >=0  &&  vd.sel < (int)pli.size() ) {
-    plot1( pli[vd.sel] );
+  int sel = a_vd->sel;
+  if(sel >=0  &&  sel < (int)pli.size() ) {
+    plot1( gr, pli[sel] );
   }
 
 
@@ -888,7 +837,7 @@ void TGraph::plotTo( const ViewData *a_vd, const ScaleData *scda )
 
 }
 
-void TGraph::plot1( const GraphElem *pl )
+void TGraph::plot1( mglGraph &gr, const GraphElem *pl )
 {
   const char *ext = pl->pl_extra.c_str();
   const char *opt = pl->pl_opt.c_str();
@@ -1019,6 +968,53 @@ void TGraph::plot1( const GraphElem *pl )
   }
 }
 
+void TGraph::setupMglGraph( mglGraph &grs, const ViewData *a_vd, const ScaleData *scda, bool full )
+{
+  grs.DefaultPlotParam();
+
+  grs.SetFontSize( scda->fontSise );
+  grs.SetPlotFactor( scda->plotFactor );
+  grs.Rotate( scda->phi, scda->theta );
+
+  pr_dlt = pr_max - pr_min;
+  pe_min = pr_min; pe_max = pr_max;
+
+  if( ! scda->autoScX ) {
+    pe_min.x = scda->plotMinX; pe_max.x = scda->plotMaxX;
+  }
+  if( ! scda->autoScY ) {
+    pe_min.y = scda->plotMinY; pe_max.y = scda->plotMaxY;
+  }
+  if( ! scda->autoScZ ) {
+    pe_min.z = scda->plotMinZ; pe_max.z = scda->plotMaxZ;
+  }
+  pe_dlt = pe_max - pe_min;
+
+
+  ViewData vd;
+  if( a_vd ) {
+    vd = *a_vd;
+  }
+  ve_dlt = pe_dlt / vd.mag; // realy * by coords
+  ve_min = pe_min + pe_dlt / vd.ofs;
+  ve_max = ve_min + ve_dlt;
+
+  grs.SetRanges( ve_min, ve_max );
+
+  if( full ) {
+    if( need_c_axis ) {
+      grs.SetRange( 'c', tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max );
+      // DBGx( "dbg: C axis: %lf %lf", tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max  );
+    }
+
+    grs.Light( scda->useLight );
+    grs.SetAlphaDef( scda->alpha );
+    grs.Alpha( (bool)(scda->useAlpha) );
+    grs.SetTicks( 'x', -(scda->gridX), scda->tickX );
+    grs.SetTicks( 'y', -(scda->gridY), scda->tickY );
+  }
+}
+
 bool TGraph::fillViewData( ViewData *da )
 {
   if( !da || !prepared ) {
@@ -1106,6 +1102,19 @@ QString TGraph::getPrintInfo( int ig ) const
   }
   return pli[ig]->md->PrintInfo();
 }
+
+mglPoint TGraph::CalcXYZ( int mx, int my, int w, int h,
+    const ViewData *a_vd, const ScaleData *scda )
+{
+  if( !scda ) { scda = scd; }
+  ViewData vd;
+  if( a_vd ) { vd = *a_vd; }
+
+  mglGraph gr( 0, w, h );
+  setupMglGraph( gr, a_vd, scda, false );
+  return gr.CalcXYZ( mx, my );
+}
+
 
 void TGraph::plotToPng( const QString &fn )
 {

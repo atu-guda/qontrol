@@ -242,21 +242,22 @@ class TGraph : public TDataSet  {
    Q_INVOKABLE QString hintFileName() const;
 
 
-   void renderTo( QImage &img, const ViewData *a_vd = nullptr, const ScaleData *scda = nullptr );
+   QSize renderTo( QImage &img, const ViewData *a_vd = nullptr, const ScaleData *scda = nullptr );
    bool fillViewData( ViewData *da );
    bool getPointAt( int ig, int ip, mglPoint *p ) const;
    int findNearest( const mglPoint &p, int ig ) const ;//* find nearest point index
    void viewForPoints( const mglPoint &p0, const mglPoint &p1, ViewData &vd ) const;
    QString getPlotLabel( int ig ) const;
    QString getPrintInfo( int ig ) const;
-   mglPoint CalcXYZ( int mx, int my ) { return gr.CalcXYZ(mx, my); }
-   mglPoint CalcScr( const mglPoint &xyz ) { return gr.CalcScr( xyz ); }
+   mglPoint CalcXYZ( int mx, int my, int w, int h,
+       const ViewData *a_vd = nullptr, const ScaleData *scda = nullptr );
  protected:
    virtual void do_reset() override;
    //* remove numbner of data points to plot
    int fillSqueeze( std::vector<uint8_t> &plp );
-   void plotTo( const ViewData *a_vd = nullptr, const ScaleData *scda = nullptr );
-   void plot1( const GraphElem *pl );
+   void plotTo( mglGraph &gr, const ViewData *a_vd = nullptr, const ScaleData *scda = nullptr );
+   void plot1( mglGraph &gr, const GraphElem *pl );
+   void setupMglGraph( mglGraph &grs, const ViewData *a_vd, const ScaleData *scda, bool full = true );
    void addMetaData( QImage &img ) const;
 
    /** title of graph  */
@@ -290,7 +291,7 @@ class TGraph : public TDataSet  {
    const mglData *d_y = nullptr;
    // const mglData *d_z = nullptr;
    const mglData *d_c0 = nullptr;
-   mglGraph gr { 0, 800, 600 }; // 0 - def, 1 - OpenGL - dont work
+   // mglGraph gr { 0, 800, 600 }; // 0 - def, 1 - OpenGL - dont work
 
    Q_CLASSINFO( "nameHintBase",  "plot_" );
    DCL_DEFAULT_STATIC;
