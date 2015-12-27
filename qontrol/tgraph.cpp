@@ -266,17 +266,15 @@ bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr ) const
       p0m.x = p_min.x + labelX * ( p_max.x - p_min.x );
       p0m.y = p_min.y + labelY * ( p_max.y - p_min.y );
       p0m.z = p_min.z + labelZ * ( p_max.z - p_min.z );
-      p0m.y = p_min.y - p0m.y + p_max.y; // hack: CalcScr is bad
       p0p = gr->CalcScr( p0m );
-      p0 = QPoint( p0p.x, p0p.y );
+      p0 = QPoint( p0p.x, h - p0p.y ); // hack
       break;
     case CoordScreen:
       p0 = QPoint( (int)( w * labelX ), (int)( h * ( 1.0 - labelY ) ) );
       break;
     case CoordFirst:
-      p0m.y = p_min.y - labelY + p_max.y; // hack
       p0p = gr->CalcScr( p0m );
-      p0 = QPoint( p0p.x, p0p.y );
+      p0 = QPoint( p0p.x, h - p0p.y ); // hack
       break;
     default:
       break;
@@ -1115,7 +1113,19 @@ mglPoint TGraph::CalcXYZ( int mx, int my, int w, int h,
 
   mglGraph gr( 0, w, h );
   setupMglGraph( gr, a_vd, scda, false );
-  return gr.CalcXYZ( mx, my );
+  // return gr.CalcXYZ( mx, my ); // main return
+  mglPoint r = gr.CalcXYZ( mx, my ); // ----------- test CalcScr
+  mglPoint s = gr.CalcScr( r );
+  s.y = w - s.y; // < -hack to fix
+  qWarning() << "mx= " << mx << " my= " << my << " r= " << toQString( r )
+             << " s= " << toQString( s ) << WHE;
+  mglBase *base = gr.Self();
+  mglMatrix B = *(base->GetB());
+  qWarning() << "B: x= " << B.x << " y= " << B.y << " z= " << B.z << " pf= " << B.pf;
+  qWarning() << " [ " << B.b[0] << " ; " << B.b[1] << " ; " << B.b[2] << " ]";
+  qWarning() << " [ " << B.b[3] << " ; " << B.b[4] << " ; " << B.b[5] << " ]";
+  qWarning() << " [ " << B.b[6] << " ; " << B.b[7] << " ; " << B.b[8] << " ]";
+  return r;
 }
 
 
