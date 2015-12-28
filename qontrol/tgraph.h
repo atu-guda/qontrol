@@ -207,7 +207,7 @@ class PlotLabel : public TDataSet {
    bool renderPlain( QImage *img, const QString &s, QPoint p0 ) const;
    bool renderHTML( QImage *img, const QString &s, QPoint p0 ) const;
    bool renderMiniTeX( QImage *img, const QString &s, QPoint p0 ) const;
-   bool renderMGL( mglGraph *gr, const QString &s, QPoint p0 ) const;
+   bool renderMGL( mglGraph *gr, const QString &s, const mglPoint &p0m ) const;
    bool renderTeX( QImage *img, const QString &s, QPoint p0 ) const;
 
    Q_CLASSINFO( "nameHintBase",  "lbl_" );

@@ -271,6 +271,7 @@ bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr ) const
       break;
     case CoordScreen:
       p0 = QPoint( (int)( w * labelX ), (int)( h * ( 1.0 - labelY ) ) );
+      p0m = gr->CalcXYZ( p0.x(), p0.y() );
       break;
     case CoordFirst:
       p0p = CalcScr( p0m, *gr );
@@ -294,7 +295,7 @@ bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr ) const
     case LabelMiniTeX:
       return renderMiniTeX( img, s, p0 );
     case LabelMGL:
-      return renderMGL( gr, s, p0 );
+      return renderMGL( gr, s, p0m );
     case LabelTeX:
       return renderTeX( img, s, p0 );
     default:
@@ -365,15 +366,14 @@ bool PlotLabel::renderMiniTeX( QImage *img, const QString &s, QPoint p0 ) const
   return renderHTML( img, st, p0 );
 }
 
-bool PlotLabel::renderMGL( mglGraph *gr, const QString &s, QPoint /*p0*/ ) const
+bool PlotLabel::renderMGL( mglGraph *gr, const QString &s,const mglPoint &p0m ) const
 {
   if( !gr ) { return false;  }
   wstring ws = s.toStdWString();
   string fs = labelFontMGL.toString().toStdString();
 
-  gr->Putsw( mglPoint( labelX, labelY, labelZ ), ws.data(),
-      fs.c_str(), labelSizeMGL.cval() );
-  gr->Ball( mglPoint( labelX, labelY, labelZ ), 'r' );
+  gr->Putsw( p0m, ws.data(),  fs.c_str(), labelSizeMGL.cval() );
+  gr->Ball( p0m, 'r' );
 
   return true;
 }
