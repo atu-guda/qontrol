@@ -266,15 +266,15 @@ bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr ) const
       p0m.x = p_min.x + labelX * ( p_max.x - p_min.x );
       p0m.y = p_min.y + labelY * ( p_max.y - p_min.y );
       p0m.z = p_min.z + labelZ * ( p_max.z - p_min.z );
-      p0p = gr->CalcScr( p0m );
-      p0 = QPoint( p0p.x, h - p0p.y ); // hack
+      p0p = CalcScr( p0m, *gr );
+      p0 = QPoint( p0p.x, p0p.y );
       break;
     case CoordScreen:
       p0 = QPoint( (int)( w * labelX ), (int)( h * ( 1.0 - labelY ) ) );
       break;
     case CoordFirst:
-      p0p = gr->CalcScr( p0m );
-      p0 = QPoint( p0p.x, h - p0p.y ); // hack
+      p0p = CalcScr( p0m, *gr );
+      p0 = QPoint( p0p.x, p0p.y );
       break;
     default:
       break;
@@ -373,7 +373,6 @@ bool PlotLabel::renderMGL( mglGraph *gr, const QString &s, QPoint /*p0*/ ) const
 
   gr->Putsw( mglPoint( labelX, labelY, labelZ ), ws.data(),
       fs.c_str(), labelSizeMGL.cval() );
-  // gr->Puts( mglPoint( 0.5, 0.5, 0.0 ), "Z", "U:L@A", 6 );
   gr->Ball( mglPoint( labelX, labelY, labelZ ), 'r' );
 
   return true;
@@ -1113,20 +1112,16 @@ mglPoint TGraph::CalcXYZ( int mx, int my, int w, int h,
 
   mglGraph gr( 0, w, h );
   setupMglGraph( gr, a_vd, scda, false );
-  // return gr.CalcXYZ( mx, my ); // main return
-  mglPoint r = gr.CalcXYZ( mx, my ); // ----------- test CalcScr
-  mglPoint s = gr.CalcScr( r );
-  s.y = w - s.y; // < -hack to fix
-  qWarning() << "mx= " << mx << " my= " << my << " r= " << toQString( r )
-             << " s= " << toQString( s ) << WHE;
-  mglBase *base = gr.Self();
-  mglMatrix B = *(base->GetB());
-  qWarning() << "B: x= " << B.x << " y= " << B.y << " z= " << B.z << " pf= " << B.pf;
-  qWarning() << " [ " << B.b[0] << " ; " << B.b[1] << " ; " << B.b[2] << " ]";
-  qWarning() << " [ " << B.b[3] << " ; " << B.b[4] << " ; " << B.b[5] << " ]";
-  qWarning() << " [ " << B.b[6] << " ; " << B.b[7] << " ; " << B.b[8] << " ]";
-  return r;
+  return gr.CalcXYZ( mx, my ); // main return
+
+  // mglPoint r = gr.CalcXYZ( mx, my ); // ----------- test CalcScr
+  // mglPoint s = CalcScr( r, gr );
+  // qWarning() << "mx= " << mx << " my= " << my << " r= " << toQString( r )
+  //            << " s= " << toQString( s ) << WHE;
+  // return r;
 }
+
+
 
 
 void TGraph::plotToPng( const QString &fn )
@@ -1333,6 +1328,27 @@ double mglLen( const mglPoint &a, const mglPoint &b )
 }
 
 
+mglPoint CalcScr( const mglPoint &p, mglGraph &gr )
+{
+  // gr must be setuped beforehand
+  mglBase *base = gr.Self();
+
+  mglPoint s = gr.CalcScr( p );
+
+  // out of axis case: CalcScr is bad
+  if( ( s.x < -1e6  || s.x > 1e6 ) &&  base != nullptr ) {
+    double pf = fabs( (base->GetB())->pf ) + 0.01;
+    const double alp = 0.8 / pf;
+    mglPoint p_mid = 0.5 * ( base->Min + base->Max ); // real coord of center
+    mglPoint s_mid = gr.CalcScr( p_mid );  // screed coord of center
+    mglPoint p_x = alp * p + ( 1-alp ) * p_mid;
+    mglPoint s_x = gr.CalcScr( p_x );
+    s = ( 1.0 / alp ) * ( s_x - ( 1-alp ) * s_mid );
+  }
+  s.y = gr.GetHeight() - s.y; // < -hack to fix
+
+  return s;
+}
 
 DEFAULT_FUNCS_REG(TGraph);
 

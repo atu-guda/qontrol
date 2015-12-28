@@ -40,6 +40,8 @@ QString color2style( int color, int lw = 1, const QString &extra = QString() );
 QString toQString( const mglPoint &p );
 //* distance beween points
 double mglLen( const mglPoint &a, const mglPoint &b );
+//* workaround about bad mgl CalcScr
+mglPoint CalcScr( const mglPoint &p, mglGraph &gr );
 
 //* decription of one line in plot
 
@@ -297,6 +299,7 @@ class TGraph : public TDataSet  {
    DCL_DEFAULT_STATIC;
 };
 typedef TGraph *PTGraph;
+
 
 #endif
 
