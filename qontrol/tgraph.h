@@ -182,16 +182,19 @@ class PlotLabel : public TDataSet {
    Q_CLASSINFO( "enum_LabelType_3",   "MGL" );       // LabelMGL,
    Q_CLASSINFO( "enum_LabelType_4",   "TeX" );       // labelTeX
 
-   virtual bool render( QImage *img, mglGraph *gr, bool onGr ) const;
+   virtual bool render( QImage *img, mglGraph *gr, bool onGr,
+       QString *fn_add_str = nullptr, QString *meta_add_str = nullptr ) const;
  protected:
    PRM_STRING( text, 0, "Text", "label text", "props=STRING,MLINE\nncol=-1\ndef=Label");
-   PRM_LIST( labelType, 0, "Label type",  "method of label processing", "sep=block\nenum=LabelType" );
 
-   PRM_SWITCH( substVals, 0, "Subst", "Substitute values", "def=0\nsep=col" );
-   PRM_SWITCH( drawLabel, 0, "Draw", "Draw label", "def=1" );
+   PRM_LIST( labelType, 0, "Label type",  "method of label processing", "sep=block\nenum=LabelType" );
+   PRM_SWITCH( substVals, 0, "Subst", "Substitute values", "def=0" );
+   PRM_SWITCH( addToName, 0, "add to name", "add to default filename", "def=0" );
+   PRM_SWITCH( addToMeta, 0, "add to meta", "add to file mealdata", "def=0" );
+
+   PRM_SWITCH( drawLabel, 0, "Draw", "Draw label", "def=1\nsep=col" );
    PRM_SWITCH( drawFrame, 0, "Frame", "Draw frame around label", "def=0" );
    PRM_SWITCH( drawBG,  0, "Background", "Draw label background", "def=0" );
-   PRM_SWITCH( addToName, 0, "add to name", "add to default filename", "def=0" );
 
    PRM_COLOR( labelColor, 0, "Color", "Label color", "sep=col\ndef=black" );
    PRM_COLOR( labelBgColor, 0, "BgColor", "Label background color", "def=white" );
@@ -203,6 +206,8 @@ class PlotLabel : public TDataSet {
    PRM_DOUBLE( labelY, 0, "Y", "label Y coordinate", "def=0.9\nsep=col");
    PRM_DOUBLE( labelZ, 0, "Z", "label Z coordinate", "def=0.0\nsep=col");
    PRM_LIST( coordType, 0, "Coord",  "coordinate system for label", "sep=col\nenum=CoordType" );
+   PRM_DOUBLE( labelW, 0, "W", "label width", "def=0.20\nsep=block");
+   PRM_DOUBLE( labelH, 0, "H", "label height","def=0.15\nsep=col");
 
    bool renderPlain( QImage *img, const QString &s, QPoint p0 ) const;
    bool renderHTML( QImage *img, const QString &s, QPoint p0 ) const;

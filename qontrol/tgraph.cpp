@@ -236,13 +236,22 @@ PlotLabel::~PlotLabel()
 {
 }
 
-bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr ) const
+bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr,
+    QString *fn_add_str, QString *meta_add_str ) const
 {
   if(  onGr && labelType != LabelMGL ) { return false; }
   if( !onGr && labelType == LabelMGL ) { return false; }
 
   QString s = text;
   // TODO: subst, tex?
+
+  if( addToName  && fn_add_str ) {
+    *fn_add_str = QSL("_") % s % QSL("_");
+  }
+  if( addToMeta && meta_add_str ) {
+    *meta_add_str = s;
+  }
+
   if( ! drawLabel ) {
     return true;
   }
@@ -340,18 +349,35 @@ bool PlotLabel::renderPlain( QImage *img, const QString &s, QPoint p0 ) const
   return false;
 }
 
-bool PlotLabel::renderHTML( QImage *img, const QString &s, QPoint /*p0*/ ) const
+bool PlotLabel::renderHTML( QImage *img, const QString &s, QPoint p0 ) const
 {
   if( !img ) { return false; }
   QPainter px( img );
   int w = img->width(), h = img->height();
-  int xl = (int)( w * labelX ); // TODO: function for scales
-  int yl = (int)( h * (1-labelY) );
-  if( drawBG ) {
-    px.fillRect( xl, yl, 20, 20, labelBgColor.cval() );
+  int xl = p0.x(), yl = p0.y();
+  int lw = (int)( w * labelW );
+  int lh = (int)( h * labelH );
+
+  if( xl > 0 && yl > 0 && xl < w-2  && yl < h-2 ) {
+    px.fillRect( xl-1, yl-1, 2, 2, Qt::red ); // Debug: point 0
   }
+  yl -= lh;
+
   px.translate( xl, yl );
+  QRect r0( 0, 0, lw, lh );
+
+  if( drawBG ) {
+    px.fillRect( r0, labelBgColor.cval() );
+  }
   px.setPen( labelColor.cval() );
+  if( drawFrame ) {
+    px.drawRect( r0 );
+  }
+
+  r0 += QMargins( -1, -1, -1, -1 ); // TODO: config
+
+  px.setClipRect( r0, Qt::ReplaceClip );
+
   QTextDocument ldoc;
   ldoc.setUndoRedoEnabled( false );
   ldoc.setDefaultFont( labelFont.cval() );
@@ -739,6 +765,8 @@ QSize TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda
   ViewData vd;
   if( a_vd ) { vd = *a_vd; } // default values
 
+  QString fn_add_str, meta_add_str;
+
   mglGraph gr( 0, w, h );
   int gw = gr.GetWidth(), gh = gr.GetHeight();
   setupMglGraph( gr, a_vd, scda, true );
@@ -746,13 +774,15 @@ QSize TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda
   plotTo( gr, &vd, scda );
 
   for( auto lbl : TCHILD(PlotLabel*) ) {
-    lbl->render( &img, &gr, true ); // only MGL plots
+    fn_add_str = QString(); meta_add_str = QString();
+    lbl->render( &img, &gr, true, &fn_add_str, &meta_add_str ); // only MGL plots
   }
 
   gr.GetBGRN( img.bits(), 4 * w * h );
 
   for( auto lbl : TCHILD(PlotLabel*) ) {
-    lbl->render( &img, &gr, false );
+    fn_add_str = QString(); meta_add_str = QString();
+    lbl->render( &img, &gr, false, &fn_add_str, &meta_add_str  );
   }
 
   addMetaData( img );
