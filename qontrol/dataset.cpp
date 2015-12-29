@@ -1718,11 +1718,15 @@ void HolderColor::reset_dfl()
 bool HolderColor::set( const QVariant & x, int /* idx */  )
 {
   auto v0 = v;
-  QString s = x.toString();
-  v = QColor( s );
-  if( ! v.isValid() ) {
-    QRgb rgba = x.toInt();
-    v.setRgba( rgba );
+  if( x.type() == QVariant::Color ) {
+    v = x.value<QColor>();
+  } else {
+    QString s = x.toString();
+    v = QColor( s );
+    if( ! v.isValid() ) {
+      QRgb rgba = x.toInt();
+      v.setRgba( rgba );
+    }
   }
   post_set();
   if( v != v0 ) {
@@ -1733,7 +1737,8 @@ bool HolderColor::set( const QVariant & x, int /* idx */  )
 
 QVariant HolderColor::get( int /* idx */ ) const
 {
-  return QVariant( (int)(v.rgba()) );
+  // return QVariant( (int)(v.rgba()) );
+  return QVariant( v );
 }
 
 void HolderColor::do_post_set()
@@ -1745,8 +1750,12 @@ void HolderColor::do_post_set()
 
 QString HolderColor::toString() const
 {
-  //return QSN( (int)(v.rgba()) );
-  return v.name();
+  if( v.alpha() == 255 ) {
+    return v.name();
+  }
+  QString s;
+  s.sprintf( "#%08x", v.rgba() );
+  return s;
 }
 
 bool HolderColor::fromString( const QString &s )

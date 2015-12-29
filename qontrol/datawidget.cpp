@@ -533,9 +533,22 @@ ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent )
 
 bool ColorDataWidget::set()
 {
-  int c_i = ho.get().toInt();
-  QRgb c_r( c_i );
-  QColor c( c_r );
+  QColor c;
+  QVariant v = ho.get();
+  switch( v.type() ) {
+    case QVariant::Color:
+      c = v.value<QColor>();
+      break;
+    case QVariant::String:
+      c = QColor( v.toString() );
+      break;
+    default:
+      int c_i = v.toInt();
+      QRgb c_r( c_i );
+      c = QColor( c_r );
+      break;
+  };
+
   cb->setColor( c ); // Int to Color inside button
   return true;
 }
@@ -543,9 +556,9 @@ bool ColorDataWidget::set()
 bool ColorDataWidget::get() const
 {
   QColor c = cb->color();
-  int c_i = c.rgba();
-  QVariant v = c_i;
-  ho.set( v );
+  // int c_i = c.rgba();
+  QVariant v = c;
+  ho.set( c );
   return true;
 }
 
