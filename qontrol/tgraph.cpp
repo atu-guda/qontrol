@@ -243,6 +243,10 @@ bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr,
   if( !onGr && labelType == LabelMGL ) { return false; }
 
   QString s = text;
+  if( substVals ) { // TODO: only once
+    TModel *model = getAncestorT<TModel>();
+    s = substValues( text.cval(), model );
+  }
   // TODO: subst, tex?
 
   if( addToName  && fn_add_str ) {

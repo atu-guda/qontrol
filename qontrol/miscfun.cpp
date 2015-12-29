@@ -311,6 +311,68 @@ QString getDomText( QDomNode &p )
   return r;
 }
 
+QString substValues( const QString &s, const HolderData *ho )
+{
+  if( !ho ) { return s; }
+  QString r = s;
+  QRegExp su( SUBST_RE );
+  if( !su.isValid() ) {
+    return QSL("BAD_RE");
+  }
+
+  int n_subst = 0;
+  const int max_n_subst = 100;
+  while( su.indexIn( r, 0 ) >= 0 && n_subst < max_n_subst ) { // return value show '1'?
+    int idx = su.pos( 0 );
+    int l = su.matchedLength();
+    QStringList sl = su.cap( 1 ).split( ':', QString::KeepEmptyParts );
+
+    // qWarning() << "idx = " << idx << " l= " << l << " cap[0]= " << su.cap(0) << WHE;
+    // qWarning() << "cap[1] = " << su.cap(1) << " n= " << sl.size() << WHE;
+
+    if( sl.size() < 1 ) { sl << QSL("NONAMED"); }
+    if( sl.size() < 2 ) { sl << QSL("64"); }
+    if( sl.size() < 3 ) { sl << QSL(""); }
+    QString nm = sl[0];
+    int maxlen = sl[1].toInt();
+    if( maxlen < 1 ) { maxlen = 64; };
+
+    char cnvType = 'g';
+    char cnv_s = sl[2].right(1).toLatin1()[0];
+    if( cnv_s >= 'a' && cnv_s <= 'z' ) {
+      cnvType = cnv_s;
+      sl[2].truncate( sl[2].size() - 1 );
+    }
+    int dprec = sl[2].toInt();
+    if( dprec < 1 ) { dprec = DOUBLE_PREC; };
+    ++n_subst;
+    // qWarning() << "nm = " << nm << " maxlen= " << maxlen << " dprec= " << dprec <<  " cnv= " << cnvType << WHE;
+    r.remove( idx, l );
+
+    QString repl = QSL("???");
+    HolderData *da = ho->getObj( nm );
+    if( da ) {
+      if( da->getTp() == QVariant::Double ) {
+        double v = 0;
+        HolderDouble *hod = qobject_cast<HolderDouble*>( da );
+        if( hod ) {
+          v = hod->cval();
+        }
+        repl = QString::number( v, cnvType, dprec );
+      } else if ( da->isChildOf( QSL("HolderValue") ) ) {
+        repl = da->toString();
+      } else { // TODO: TMiso
+        repl = da->objectName();
+      }
+    }
+
+    repl.truncate( maxlen );
+
+    r.insert( idx, repl );
+  }
+
+  return r;
+}
 
 
 // ****************************************

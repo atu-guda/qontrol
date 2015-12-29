@@ -1,15 +1,15 @@
 correct places for reset, set_link, *structChange..
+PlotLabel: only one (after reset) substitution / render pic
+PlotLabel: real TeX, common TeX preambula +/= per label
+PlotLabel: TMiso or /Data+column handling
 BUG: fail to link TOutArr to Simulation param.
-BUG: mofified state (i.e. after autocreated scheme removal)
+BUG: modified state (i.e. after autocreated scheme removal)
 BUG: huge time on model params edit. May be containers must have nodialedit flag or depth limit?
   What about undo?
   shadow object copy, not XML representation.
   as clone with other/null parent, but need copyFrom/copyTo, swap/inplace func.
 Long descriptions in schems, (button) - how to edit?
 Reorder objects in list-alike containers.
-text with substitutions - plot labels or more? not only double. and TeX-aware.
-  @{name.name:mod} mod: s/x/y/, maxlen=500,
-  common TeX preambula +/= per label
 Object: double or link
 add Flag: call parent post_set if changed. and supress for mass changes. set/do_set?
 sep prop: bitfield?

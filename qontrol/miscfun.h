@@ -78,6 +78,10 @@ QString tex2label( const QString &t, bool noSub = false );
 class QDomNode;
 QString getDomText( QDomNode &p );
 
+// regexp to subsitute text in plot labels @{schems.main_s.a0.a:10:5}
+const constexpr char* SUBST_RE { "@\\{([a-zA-z0-9_.:]+)\\}" };
+QString substValues( const QString &s, const HolderData *ho );
+
 // ------------- for iface ---------------------------------------
 
 void handleError( QWidget* par, const QString &s );
