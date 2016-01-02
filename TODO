@@ -1,5 +1,6 @@
 !Check: update link values only after step - prep for multi-threading (see TSubScheme)
 Holder: double or link
+Objects in plot.
 correct places for reset, set_link, *structChange..
 BUG: fail to link TOutArr to Simulation param.
 BUG: modified state (i.e. after autocreated scheme removal)

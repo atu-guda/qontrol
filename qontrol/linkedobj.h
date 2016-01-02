@@ -28,7 +28,7 @@ class LinkedObj : public TDataSet {
     * elmname.parmname
     * parmname
     * lt - ptr: store link type,
-    * targ - ptr_pre: strore ptr to source LinkedObj,
+    * targ - ptr_pre: store ptr to source LinkedObj,
     * lev - level of recursion, not for user */
    virtual const double* getDoublePtr( const QString &nm, int *lt = nullptr,
         const LinkedObj **src_ob = nullptr, int lev = 0 ) const;
@@ -76,12 +76,12 @@ class InputAbstract : public LinkedObj {
   PRM_STRING( label,  efNoRunChange, "Label", "Label to display on structure", "max=64"  );
   PRM_INT( channel, efNRC, "Channel", "Channel number of this input", "" );
   PRM_INT( subchannel, efNRC, "Subchannel", "Subchannel number of this input", "" );
-  PRM_INT( x_shift, 0, "X shift", "Shift on x-part of link represenration", "sep=col" );
-  PRM_INT( y_shift, 0, "Y shift", "Shift on y-part of link represenration", "" );
+  PRM_INT( x_shift, 0, "X shift", "Shift on x-part of link representation", "sep=col" );
+  PRM_INT( y_shift, 0, "Y shift", "Shift on y-part of link representation", "" );
   PRM_INT( line_w,  0, "Line width", "Line width on scheme", "def=1\nmin=0\nmax=20" );
   PRM_COLOR( line_color,  0, "Line color", "Line color on scheme", "def=black" );
   PRM_SWITCH( onlyLabel, 0, "only Label", "draw only link label on scheme", "" );
-  PRM_DOUBLE( out0, efInner, "input", "Readed by readInput for subschemes", "" );
+  PRM_DOUBLE( out0, efInner, "input", "Read by readInput for subschemes", "" );
   PRM_INT( linkType,  efInner | efRO, "Link type", "Describes link type", "def=3" );
   PRM_STRING( srcobj, efInner | efRO, "Source object", "Name of the source object", ""  );
 

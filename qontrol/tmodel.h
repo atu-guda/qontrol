@@ -43,10 +43,10 @@ class TModel : public LinkedObj  {
   DCL_CREATE;
   DCL_STD_INF;
 
-  //* redirects requuest to active scheme (may be more)
+  //* redirects request to active scheme (may be more)
   const double* getSchemeDoublePtr( const QString &nm, int *lt,
         const LinkedObj **src_ob, int lev ) const override;
-  // to automaticaly copy prm[10] to other parameters
+  // to automatically copy prm[10] to other parameters
   double* getMapDoublePtr( const QString &nm );
   Q_INVOKABLE QString getOutValue( const QString &nm ) const;
 
@@ -85,14 +85,14 @@ class TModel : public LinkedObj  {
 
   // interface to commands like above, but with names - to use from JS
  public slots:
-  //* adderts new out array
+  //* adds new out array
   TOutArr* addOut( const  QString &outname, const QString &objname );
   //* delete outs by name, return !=0 id success
   int delOut( const QString &name );
 
   //* adds new graph @returns: 0 - bad, !=0 Ok
   int addGraph( const QString &gname );
-  //* delete graph by name, retrns !=0 -  success
+  //* delete graph by name, returns !=0 -  success
   int delGraph( const QString &name );
   //* add output array to graph
   int addOutToGraph( const QString &o_name, const QString &g_name );
@@ -123,7 +123,7 @@ class TModel : public LinkedObj  {
 
 
  protected:
-  // --------------- convinience ptrs to obligatory elements
+  // --------------- convenience ptrs to obligatory elements
   // init not in init list - special handling?
   ContScheme *schems  = nullptr;
   ContOut   *outs  = nullptr;
@@ -146,9 +146,9 @@ class TModel : public LinkedObj  {
       "props=STRING,MLINE\nncol=-1\nsep=block" );
   PRM_STRING( script, efNRC, "Script", "Model scripts",
       "props=STRING,EXT,LARGETEXT\nfileext=.js" );
-  PRM_SWITCH( autoImport, efNRC, "Auto Import", "Automaticaly import schemes before run",
+  PRM_SWITCH( autoImport, efNRC, "Auto Import", "Automatically import schemes before run",
       "sep=tab\ntabname=libs");
-  PRM_STRING( imports, efNRC, "Imports", "From where to get schems: file:scheme",
+  PRM_STRING( imports, efNRC, "Imports", "From where to get schemes: file:scheme",
       "props=STRING,MLINE\nncol=-1");
   // ======================= invisible vars ======================
   /** loops counters */
@@ -163,7 +163,7 @@ class TModel : public LinkedObj  {
   PRM_DOUBLE( t, efInner, "time", "model time", "" );
   PRM_DOUBLE( tdt, efInner, "\\tau", "time step", "" );
   PRM_DOUBLE( rtime, efInner, "rtime", "real world time", "" );
-  /** parametrs */
+  /** parameters */
   PRM_DOUBLE( prm0, efInner, "prm0", "Current prm0 value", "" );
   PRM_DOUBLE( prm1, efInner, "prm1", "Current prm1 value", "" );
   PRM_DOUBLE( prm2, efInner, "prm2", "Current prm2 value", "" );
@@ -185,14 +185,14 @@ class TModel : public LinkedObj  {
   int end_loop = 0;
   /** real start time */
   double start_time = 0;
-  // copy of simulation vars - but w/o onject access - just for speed;
+  // copy of simulation vars - but w/o object access - just for speed;
   int N = 10, N1 = 1, N2 = 1, syncRT = 0;
 
   // saved parameters
   double prm0_save = 0, prm1_save = 1;
   // fake map target
   double fake_map_target = 0;
-  // ptr to mapped params
+  // ptr to mapped parameters
   double *prm0_targ = &fake_map_target, *prm1_targ = &fake_map_target;
 
   //* current scheme during run, else - 0
@@ -200,7 +200,7 @@ class TModel : public LinkedObj  {
   //* current simulation during run, else - 0
   Simulation *c_sim = nullptr;
 
-  //* script engine for currne model
+  //* script engine for current model
   QScriptEngine *eng = nullptr;
 
   Q_CLASSINFO( "nameHintBase",  "model" );
@@ -209,7 +209,7 @@ class TModel : public LinkedObj  {
 };
 
 // -------------------------- ModelRunner -----------------------------
-// class to run TModel async in sepatate thread
+// class to run TModel async in separate thread
 
 class ModelRunner : public QThread
 {

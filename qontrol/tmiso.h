@@ -116,7 +116,7 @@ class TMiso : public LinkedObj  {
 
    PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
 
-   /** pointer to param inputs container */
+   /** pointer to parameters inputs container */
    InputParams *pis;
    /** time step -- setted by preRun 0 - special value to detect usage before start */
    double tdt = 0;
@@ -124,7 +124,7 @@ class TMiso : public LinkedObj  {
    int model_nn = 0;
    /** parameters modified during run flag */
    int prm_mod = 0;
-   //* Current itration type: to propagate to subschemes...
+   //* Current iteration type: to propagate to subschemes...
    IterType iter_c = IterNo;
 
    DCL_DEFAULT_STATIC;

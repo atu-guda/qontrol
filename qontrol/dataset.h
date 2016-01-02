@@ -1,5 +1,5 @@
 /***************************************************************************
-   dataset.h  -  base definifions and classes
+   dataset.h  -  base definitions and classes
                              -------------------
     begin                : Wed Mar 29 2000
     copyright            : GPL (C) 2000-2015 by atu
@@ -39,15 +39,15 @@ typedef PTDataSet (*PFDataSet)( PTDataSet aparent );
 
 /** properties of class -- bitfield */
 enum ClassProps {
-  clpElem = 1,      //* element of cheme
+  clpElem = 1,      //* element of scheme
   clpPure = 2,      //* dont know - may by for stateless or abstract
   clpContainer = 4, //* can contain elements
-  clpSpecial = 8,   //* have special meaning for structue
+  clpSpecial = 8,   //* have special meaning for structure
   clpData = 16,     //* simple data
   clpArray = 32,     //* array
   clpInput = 64,     //* link to other
   clpParamInput = 128, //* link to other + name of inner field
-  clpObsolete = 256  //* obsolesed class, should not writed
+  clpObsolete = 256  //* obsoleted class, should not written
 };
 
 enum ModificationBits {
@@ -59,7 +59,7 @@ enum ModificationBits {
 //                               none  man  auto both extra......
 const char *const modificationChar[] = { "", "+", "#", "*", "?", ".", ",", "X" };
 
-// suses AutoIncDec from autoact.h, but not include, as define used
+// uses AutoIncDec from autoact.h, but not include, as define used
 #define IGNORE_MOD_HERE  AutoIncDec __imod { ignoreMod };
 #define IGNORE_STRUCT_CHANGE_HERE  AutoIncDec __imod { updSuspended };
 
@@ -70,7 +70,7 @@ const char *const modificationChar[] = { "", "+", "#", "*", "?", ".", ",", "X" }
 struct TClassInfo {
   /** class name as QString */
   const QString className;
-  /** ptr to static fun for creating instanses */
+  /** ptr to static fun for creating instances */
   PFHolderData creator;
   /** ptr to help string */
   const char *helpstr;
@@ -80,17 +80,17 @@ struct TClassInfo {
   const QMetaObject *meta;
 };
 
-//* arguments for std ctor and creater - full form
+//* arguments for std ctor and creator - full form
 #define ARGS_CTOR const QString &obj_name, HolderData *a_parent, \
          int a_flags = 0, const QString &a_v_name = QString(),  \
          const QString &a_descr = QString(), const QString &a_extra = QString()
 
-//* arguments for std ctor and creater - short form w/o def values
+//* arguments for std ctor and creator - short form w/o def values
 #define ARGS_CTOR_MIN const QString &obj_name, HolderData *a_parent, \
          int a_flags, const QString &a_v_name,  \
          const QString &a_descr, const QString &a_extra
 
-//* arguments for std ctor and creater - only names
+//* arguments for std ctor and creator - only names
 #define ARGS_CTOR_NAMES obj_name, a_parent, \
          a_flags, a_v_name,  \
          a_descr, a_extra
@@ -154,7 +154,7 @@ struct TClassInfo {
 // standard class_info definition
 #define STD_CLASSINFO(clname,clp) STD_CLASSINFO_ALIAS(clname,clp,clname)
 
-// define in class common converions to target type
+// define in class common conversions to target type
 // need for usage class objects as pure data
 #define STD_CONVERSIONS(targ_type) \
   operator targ_type() const { return v; } \
@@ -203,7 +203,7 @@ class HolderData : public QAbstractItemModel {
     * returns true if this object is base or save of given type.
     * if cl_name is empty, return true in >= TDataSet */
   Q_INVOKABLE bool isObject( const QString &cl_name = QString() ) const;
-  // count number of elements of given type, optionaly with named started with nm_start
+  // count number of elements of given type, optionally with named started with nm_start
   Q_INVOKABLE int countObjsOfType( const QString &tp, const QString &nm_start = QString() ) const;
   Q_INVOKABLE QString hintName( const QString &tp, const QString &nm_start = QString() ) const;
   Q_INVOKABLE void addFlags( int a_flags ) { flags |= a_flags; }
@@ -213,7 +213,7 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE bool hasAnyFlags( int flg ) const { return ( flags & flg ); };
   Q_INVOKABLE bool isRoTree( int flg = efRO ) const;
   HolderData* getParent() const { return par; } // no Q_INVOKABLE: need reg HolderData
-  // return ptr to ancessor of given type
+  // return ptr to ancestor of given type
   template<typename T> T* getAncestorT() const {
     HolderData *pa = par;
     while( pa ) {
@@ -225,13 +225,13 @@ class HolderData : public QAbstractItemModel {
     }
     return nullptr;
   }
-  // see DCL_STD_INF, DCL_STD_GETSET for childs
+  // see DCL_STD_INF, DCL_STD_GETSET for children
   virtual const TClassInfo* getClassInfo() const = 0;
-  /** returns list of registerd (exists) child elems names */
+  /** returns list of registered (exists) child elements names */
   Q_INVOKABLE QStringList elemNames() const;
-  /** returns list of registerd child + type */
+  /** returns list of registered child + type */
   Q_INVOKABLE QString ls() const;
-  /** returns list of registerd functions + signatures */
+  /** returns list of registered functions + signatures */
   Q_INVOKABLE QString lsf() const;
   /** returns holder by number */
   HolderData* getObj( int i ) const;
@@ -243,7 +243,7 @@ class HolderData : public QAbstractItemModel {
   /** find holder for object by name, safely cast to type T */
   template<typename T> T getObjT( const QString &oname ) const
     { return qobject_cast<T>( getObj( oname ) ); }
-  /** find element of ancessor by name and type T */
+  /** find element of ancestor by name and type T */
   template<typename T> T getObjOfAncessorT( const QString &oname ) const
     {
       HolderData *pa = par;
@@ -263,7 +263,7 @@ class HolderData : public QAbstractItemModel {
 
   int getModified() const { return modified & modifMask; } //* returns modified flag
   void setModified();/** set modified flag : and to parents*/
-  void setUnModified(); //* drop modified flag: and from childs
+  void setUnModified(); //* drop modified flag: and from children
   void post_set();
   virtual bool getData( const QString &nm, int *da, bool er = true ) const;
   virtual bool getData( const QString &nm, double *da, bool er = true ) const;
@@ -336,13 +336,13 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE int size() const { return children().size(); }
   Q_INVOKABLE virtual int arrSize() const { return 1; }
   Q_INVOKABLE int getState() const { return state; }
-  /** create object with params as string */
+  /** create object with parameters as string */
   Q_INVOKABLE bool addObjDatas( const QString &cl_name, const QString &ob_name, const QString &datas );
   /** delete given object by name, returns 0 - error, !=0 = ok */
   Q_INVOKABLE int delObj( const QString &ob_name );
   Q_INVOKABLE int delAllDyn();
   Q_INVOKABLE bool cloneObj( const QString &old_name, const QString &new_name );
-  //* rename object (if created dynamicaly)
+  //* rename object (if created dynamically)
   Q_INVOKABLE int renameObj( const QString &ob_name, const QString &new_name );
   // void check_guard() const;
   Q_INVOKABLE int getActiveIdx() const { return active_idx; }
@@ -370,9 +370,9 @@ class HolderData : public QAbstractItemModel {
 
   //* return model for completer
   QAbstractItemModel *getComplModel( const QString &targ, QObject *mdl_par ) const;
-  //* fill model for orinary inputs: now: pass to Model/Scheme
+  //* fill model for ordinary inputs: now: pass to Model/Scheme
   virtual void fillComplModelForInputs( QStandardItemModel *mdl ) const;
-  //* fill model for params
+  //* fill model for parameters
   virtual void fillComplModelForParams( QStandardItemModel *mdl ) const;
   //* fill model for outputs: pass to model
   virtual void fillComplModelForOuts( QStandardItemModel *mdl ) const;
@@ -399,7 +399,7 @@ class HolderData : public QAbstractItemModel {
   int state = stateGood;
   /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
   int modified = 0;
-  int ignoreMod = 0; // ignore modifcation during tmp object handling
+  int ignoreMod = 0; // ignore modification during tmp object handling
   /** flag/counter: suspend reaction to structure update: use only in mass changes */
   int updSuspended = 0;
   //* active element index
@@ -735,7 +735,7 @@ class TDataSet : public HolderData {
 
 // ----------------------------------------------------------------
 
-/** creator of TDataSet childs by name
+/** creator of TDataSet children by name
  * */
 class ObjFactory {
  typedef QMap<QString,const TClassInfo*> MapStrClass;
