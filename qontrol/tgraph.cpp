@@ -1359,8 +1359,15 @@ QString TGraph::hintFileName() const
   if( root ) {
     base = root->getFileBase();
   }
-  // TODO: from some vars/labels with flag
-  return base %  QSL("-") % objectName() % QSL(".png");
+  base += QSL("-") % objectName();
+
+  for( auto lbl : TCHILD(PlotLabel*) ) {
+    QString s = lbl->getFnAddStr();
+    if( s.isEmpty() ) { continue; }
+    base += s.replace( '\\', '_' );
+  }
+
+  return base %  QSL(".png");
 }
 
 // ---------------- misc funcs -------------------------- 

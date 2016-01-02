@@ -1,7 +1,6 @@
 correct places for reset, set_link, *structChange..
 PlotLabel: real TeX, common TeX preambula +/= per label
 PlotLabel: TMiso or /Data+column handling
-PlotLabel: labels to metadata, filename
 BUG: fail to link TOutArr to Simulation param.
 BUG: modified state (i.e. after autocreated scheme removal)
 BUG: huge time on model params edit. May be containers must have nodialedit flag or depth limit?
