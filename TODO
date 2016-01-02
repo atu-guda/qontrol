@@ -1,7 +1,7 @@
 correct places for reset, set_link, *structChange..
-PlotLabel: only one (after reset) substitution / render pic
 PlotLabel: real TeX, common TeX preambula +/= per label
 PlotLabel: TMiso or /Data+column handling
+PlotLabel: labels to metadata, filename
 BUG: fail to link TOutArr to Simulation param.
 BUG: modified state (i.e. after autocreated scheme removal)
 BUG: huge time on model params edit. May be containers must have nodialedit flag or depth limit?
@@ -62,6 +62,7 @@ objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
   -- Rastrigin and more
   -- or File Source input/output: TFileSource
   -- array of similar elements
+  -- Collections of data - add to Scheme, Simul, Model
 may be new field in TClassInfo to misc flags: can f() w/o preRun...,
     class group.. etc
 implement loading objects in so.
@@ -72,6 +73,6 @@ vector icons (language=SVG?) (may be dynamic)
 Hue of elements
 Label of element (or/and floating labels on structure view)
 Labels on plot view (fixed, attached to some points)
-Report with macros -- overrided by scripts?
+Report with macros -- overrided by scripts? + js iface to substValues
 
 

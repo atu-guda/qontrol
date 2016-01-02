@@ -157,6 +157,7 @@ class PlotLabel : public TDataSet {
    // virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
    DCL_CREATE;
    DCL_STD_INF;
+   virtual void do_reset() override { labelReady = false; };
 
    enum CoordType {
      CoordGraph = 0,
@@ -209,11 +210,14 @@ class PlotLabel : public TDataSet {
    PRM_DOUBLE( labelW, 0, "W", "label width", "def=0.20\nsep=block");
    PRM_DOUBLE( labelH, 0, "H", "label height","def=0.15\nsep=col");
 
-   bool renderPlain( QImage *img, const QString &s, QPoint p0 ) const;
-   bool renderHTML( QImage *img, const QString &s, QPoint p0 ) const;
-   bool renderMiniTeX( QImage *img, const QString &s, QPoint p0 ) const;
-   bool renderMGL( mglGraph *gr, const QString &s, const mglPoint &p0m ) const;
-   bool renderTeX( QImage *img, const QString &s, QPoint p0 ) const;
+   bool renderPlain( QImage *img, QPoint p0 ) const;
+   bool renderHTML( QImage *img, QPoint p0 ) const;
+   bool renderMiniTeX( QImage *img, QPoint p0 ) const;
+   bool renderMGL( mglGraph *gr, const mglPoint &p0m ) const;
+   bool renderTeX( QImage *img, QPoint p0 ) const;
+
+   mutable bool labelReady = false;
+   mutable QString labelWithSubst;
 
    Q_CLASSINFO( "nameHintBase",  "lbl_" );
    DCL_DEFAULT_STATIC;

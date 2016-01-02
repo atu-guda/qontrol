@@ -242,18 +242,27 @@ bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr,
   if(  onGr && labelType != LabelMGL ) { return false; }
   if( !onGr && labelType == LabelMGL ) { return false; }
 
-  QString s = text;
-  if( substVals ) { // TODO: only once
-    TModel *model = getAncestorT<TModel>();
-    s = substValues( text.cval(), model );
+  if( !labelReady ) {
+    QString s;
+    if( substVals ) {
+      TModel *model = getAncestorT<TModel>();
+      s = substValues( text.cval(), model );
+    } else {
+      s = text.cval();
+    }
+    if( labelType == LabelMiniTeX ) {
+      labelWithSubst = tex2label( s, false );
+    } else {
+      labelWithSubst = s;
+    }
+    labelReady = true;
   }
-  // TODO: subst, tex?
 
   if( addToName  && fn_add_str ) {
-    *fn_add_str = QSL("_") % s % QSL("_");
+    *fn_add_str = QSL("_") % labelWithSubst % QSL("_");
   }
   if( addToMeta && meta_add_str ) {
-    *meta_add_str = s;
+    *meta_add_str = labelWithSubst;
   }
 
   if( ! drawLabel ) {
@@ -302,15 +311,15 @@ bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr,
 
   switch( labelType ) {
     case LabelPlain:
-      return renderPlain( img, s, p0 );
+      return renderPlain( img, p0 );
     case LabelHTML:
-      return renderHTML( img, s, p0 );
+      return renderHTML( img, p0 );
     case LabelMiniTeX:
-      return renderMiniTeX( img, s, p0 );
+      return renderMiniTeX( img, p0 );
     case LabelMGL:
-      return renderMGL( gr, s, p0m );
+      return renderMGL( gr, p0m );
     case LabelTeX:
-      return renderTeX( img, s, p0 );
+      return renderTeX( img, p0 );
     default:
       qWarning() << "Unknown label type: " << labelType << NWHE;
       break;
@@ -318,7 +327,7 @@ bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr,
   return false;
 }
 
-bool PlotLabel::renderPlain( QImage *img, const QString &s, QPoint p0 ) const
+bool PlotLabel::renderPlain( QImage *img, QPoint p0 ) const
 {
   if( !img ) { return false; }
   QPainter px( img );
@@ -328,7 +337,7 @@ bool PlotLabel::renderPlain( QImage *img, const QString &s, QPoint p0 ) const
   int xl = p0.x(), yl = p0.y();
 
   QRect r0( xl, yl, w-xl, h-yl );
-  QRect brect = px.boundingRect( r0, Qt::AlignLeft, s );
+  QRect brect = px.boundingRect( r0, Qt::AlignLeft, labelWithSubst );
   int r_h = brect.height();
   brect.translate( 0, 2-r_h );  // More space is above
   brect += QMargins( 1, 1, 1, 1 ); // TODO: config
@@ -343,7 +352,7 @@ bool PlotLabel::renderPlain( QImage *img, const QString &s, QPoint p0 ) const
     px.drawRect( brect );
   }
 
-  px.drawText( xl, yl, s );
+  px.drawText( xl, yl, labelWithSubst );
 
   if( xl > 0 && yl > 0 && xl < w-2  && yl < h-2 ) {
     px.fillRect( xl-1, yl-1, 2, 2, Qt::red ); // Debug: point 0
@@ -353,7 +362,7 @@ bool PlotLabel::renderPlain( QImage *img, const QString &s, QPoint p0 ) const
   return false;
 }
 
-bool PlotLabel::renderHTML( QImage *img, const QString &s, QPoint p0 ) const
+bool PlotLabel::renderHTML( QImage *img, QPoint p0 ) const
 {
   if( !img ) { return false; }
   QPainter px( img );
@@ -385,21 +394,20 @@ bool PlotLabel::renderHTML( QImage *img, const QString &s, QPoint p0 ) const
   QTextDocument ldoc;
   ldoc.setUndoRedoEnabled( false );
   ldoc.setDefaultFont( labelFont.cval() );
-  ldoc.setHtml( s );
+  ldoc.setHtml( labelWithSubst );
   ldoc.drawContents( &px );
   return true;
 }
 
-bool PlotLabel::renderMiniTeX( QImage *img, const QString &s, QPoint p0 ) const
+bool PlotLabel::renderMiniTeX( QImage *img, QPoint p0 ) const
 {
-  QString st { tex2label( s, false ) };
-  return renderHTML( img, st, p0 );
+  return renderHTML( img, p0 ); // conversion is done beforehand
 }
 
-bool PlotLabel::renderMGL( mglGraph *gr, const QString &s,const mglPoint &p0m ) const
+bool PlotLabel::renderMGL( mglGraph *gr, const mglPoint &p0m ) const
 {
   if( !gr ) { return false;  }
-  wstring ws = s.toStdWString();
+  wstring ws = labelWithSubst.toStdWString();
   string fs = labelFontMGL.toString().toStdString();
 
   gr->Putsw( p0m, ws.data(),  fs.c_str(), labelSizeMGL.cval() );
@@ -408,9 +416,9 @@ bool PlotLabel::renderMGL( mglGraph *gr, const QString &s,const mglPoint &p0m ) 
   return true;
 }
 
-bool PlotLabel::renderTeX( QImage *img, const QString &s, QPoint p0 ) const
+bool PlotLabel::renderTeX( QImage *img, QPoint p0 ) const
 {
-  return renderMiniTeX( img, s, p0 ); // TMP: TODO: real external TeX
+  return renderMiniTeX( img, p0 ); // TMP: TODO: real external TeX
 }
 
 
