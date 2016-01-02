@@ -332,19 +332,11 @@ QString substValues( const QString &s, const HolderData *ho )
 
     if( sl.size() < 1 ) { sl << QSL("NONAMED"); }
     if( sl.size() < 2 ) { sl << QSL("64"); }
-    if( sl.size() < 3 ) { sl << QSL(""); }
+    if( sl.size() < 3 ) { sl << QSL("%.7g"); }
     QString nm = sl[0];
     int maxlen = sl[1].toInt();
     if( maxlen < 1 ) { maxlen = 64; };
 
-    char cnvType = 'g';
-    char cnv_s = sl[2].right(1).toLatin1()[0];
-    if( cnv_s >= 'a' && cnv_s <= 'z' ) {
-      cnvType = cnv_s;
-      sl[2].truncate( sl[2].size() - 1 );
-    }
-    int dprec = sl[2].toInt();
-    if( dprec < 1 ) { dprec = DOUBLE_PREC; };
     ++n_subst;
     // qWarning() << "nm = " << nm << " maxlen= " << maxlen << " dprec= " << dprec <<  " cnv= " << cnvType << WHE;
     r.remove( idx, l );
@@ -361,7 +353,7 @@ QString substValues( const QString &s, const HolderData *ho )
         if( hod ) {
           v = hod->cval();
         }
-        repl = QString::number( v, cnvType, dprec );
+        repl = QString::asprintf( sl[2].toLatin1(), v );
       } else if ( da->isChildOf( QSL("HolderValue") ) ) {
         repl = da->toString();
       } else { // TODO: TMiso
