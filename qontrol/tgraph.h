@@ -157,7 +157,7 @@ class PlotLabel : public TDataSet {
    // virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
    DCL_CREATE;
    DCL_STD_INF;
-   virtual void do_reset() override { labelReady = false; };
+   virtual void do_reset() override { labelReady = false; labelWithSubst = QString(); };
 
    enum CoordType {
      CoordGraph = 0,
@@ -183,8 +183,12 @@ class PlotLabel : public TDataSet {
    Q_CLASSINFO( "enum_LabelType_3",   "MGL" );       // LabelMGL,
    Q_CLASSINFO( "enum_LabelType_4",   "TeX" );       // labelTeX
 
-   virtual bool render( QImage *img, mglGraph *gr, bool onGr,
-       QString *fn_add_str = nullptr, QString *meta_add_str = nullptr ) const;
+   virtual bool render( QImage *img, mglGraph *gr, bool onGr ) const;
+
+   Q_INVOKABLE const QString& getLabelWithSubst() const { return labelWithSubst; }
+   Q_INVOKABLE QString getMetaStr() const;
+   Q_INVOKABLE QString getFnAddStr() const;
+
  protected:
    PRM_STRING( text, 0, "Text", "label text", "props=STRING,MLINE\nncol=-1\ndef=Label");
 
@@ -210,6 +214,7 @@ class PlotLabel : public TDataSet {
    PRM_DOUBLE( labelW, 0, "W", "label width", "def=0.20\nsep=block");
    PRM_DOUBLE( labelH, 0, "H", "label height","def=0.15\nsep=col");
 
+   void prepareText() const;
    bool renderPlain( QImage *img, QPoint p0 ) const;
    bool renderHTML( QImage *img, QPoint p0 ) const;
    bool renderMiniTeX( QImage *img, QPoint p0 ) const;

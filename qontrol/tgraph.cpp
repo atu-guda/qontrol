@@ -236,12 +236,8 @@ PlotLabel::~PlotLabel()
 {
 }
 
-bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr,
-    QString *fn_add_str, QString *meta_add_str ) const
+void PlotLabel::prepareText() const
 {
-  if(  onGr && labelType != LabelMGL ) { return false; }
-  if( !onGr && labelType == LabelMGL ) { return false; }
-
   if( !labelReady ) {
     QString s;
     if( substVals ) {
@@ -257,13 +253,32 @@ bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr,
     }
     labelReady = true;
   }
+}
 
-  if( addToName  && fn_add_str ) {
-    *fn_add_str = QSL("_") % labelWithSubst % QSL("_");
+QString PlotLabel::getMetaStr() const
+{
+  prepareText();
+  if( addToMeta ) {
+    return labelWithSubst;
   }
-  if( addToMeta && meta_add_str ) {
-    *meta_add_str = labelWithSubst;
+  return QString();
+}
+
+QString PlotLabel::getFnAddStr() const
+{
+  prepareText();
+  if( addToName ) {
+    return QSL("_") % labelWithSubst % QSL("_");
   }
+  return QString();
+}
+
+bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr ) const
+{
+  if(  onGr && labelType != LabelMGL ) { return false; }
+  if( !onGr && labelType == LabelMGL ) { return false; }
+
+  prepareText();
 
   if( ! drawLabel ) {
     return true;
@@ -354,9 +369,9 @@ bool PlotLabel::renderPlain( QImage *img, QPoint p0 ) const
 
   px.drawText( xl, yl, labelWithSubst );
 
-  if( xl > 0 && yl > 0 && xl < w-2  && yl < h-2 ) {
-    px.fillRect( xl-1, yl-1, 2, 2, Qt::red ); // Debug: point 0
-  }
+  // if( xl > 0 && yl > 0 && xl < w-2  && yl < h-2 ) {
+  //   px.fillRect( xl-1, yl-1, 2, 2, Qt::red ); // Debug: point 0
+  // }
   // px.drawRect( r0 );
 
   return false;
@@ -371,9 +386,9 @@ bool PlotLabel::renderHTML( QImage *img, QPoint p0 ) const
   int lw = (int)( w * labelW );
   int lh = (int)( h * labelH );
 
-  if( xl > 0 && yl > 0 && xl < w-2  && yl < h-2 ) {
-    px.fillRect( xl-1, yl-1, 2, 2, Qt::red ); // Debug: point 0
-  }
+  // if( xl > 0 && yl > 0 && xl < w-2  && yl < h-2 ) {
+  //   px.fillRect( xl-1, yl-1, 2, 2, Qt::red ); // Debug: point 0
+  // }
   yl -= lh;
 
   px.translate( xl, yl );
@@ -411,7 +426,7 @@ bool PlotLabel::renderMGL( mglGraph *gr, const mglPoint &p0m ) const
   string fs = labelFontMGL.toString().toStdString();
 
   gr->Putsw( p0m, ws.data(),  fs.c_str(), labelSizeMGL.cval() );
-  gr->Ball( p0m, 'r' );
+  // gr->Ball( p0m, 'r' );
 
   return true;
 }
@@ -765,7 +780,12 @@ void TGraph::addMetaData( QImage &img ) const
   img.setText( QSL("Title"), title.cval() );
   img.setText( QSL("Decription"), descr.cval() );
   img.setText( QSL("Creator"), QSL(PACKAGE "-" VERSION) );
-  // TODO: more
+
+  for( auto lbl : TCHILD(PlotLabel*) ) {
+    QString s = lbl->getMetaStr();
+    if( s.isEmpty() ) { continue; }
+    img.setText( QSL("label_") % lbl->objectName(), s.toLatin1() );
+  }
 }
 
 QSize TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda )
@@ -777,8 +797,6 @@ QSize TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda
   ViewData vd;
   if( a_vd ) { vd = *a_vd; } // default values
 
-  QString fn_add_str, meta_add_str;
-
   mglGraph gr( 0, w, h );
   int gw = gr.GetWidth(), gh = gr.GetHeight();
   setupMglGraph( gr, a_vd, scda, true );
@@ -786,15 +804,13 @@ QSize TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda
   plotTo( gr, &vd, scda );
 
   for( auto lbl : TCHILD(PlotLabel*) ) {
-    fn_add_str = QString(); meta_add_str = QString();
-    lbl->render( &img, &gr, true, &fn_add_str, &meta_add_str ); // only MGL plots
+    lbl->render( &img, &gr, true ); // only MGL plots
   }
 
   gr.GetBGRN( img.bits(), 4 * w * h );
 
   for( auto lbl : TCHILD(PlotLabel*) ) {
-    fn_add_str = QString(); meta_add_str = QString();
-    lbl->render( &img, &gr, false, &fn_add_str, &meta_add_str  );
+    lbl->render( &img, &gr, false );
   }
 
   addMetaData( img );
