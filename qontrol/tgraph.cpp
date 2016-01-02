@@ -1375,8 +1375,7 @@ QString TGraph::hintFileName() const
 QString color2style( int color, int lw, const QString &extra )
 {
   QColor cc = QRgb( color );
-  QString s_cc;
-  s_cc.sprintf( "%d{x%02X%02X%02X}", lw, cc.red(),  cc.green(), cc.blue() );
+  QString s_cc = QString::asprintf( "%d{x%02X%02X%02X}", lw, cc.red(),  cc.green(), cc.blue() );
   s_cc += extra;
   return s_cc;
 }

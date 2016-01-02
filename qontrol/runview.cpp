@@ -158,11 +158,7 @@ void RunView::paintEvent( QPaintEvent * /*pe*/ )
 
 void RunView::drawAll( QPainter &p )
 {
-  int gauge_w;
-  double rt;
-  QString s;
-
-  gauge_w = int( double(i_tot) * g_w / n_tot );
+  int gauge_w = int( double(i_tot) * g_w / n_tot );
   p.fillRect( 0, g_h+1, gauge_w, 18, Qt::red );
   p.setPen( Qt::white );
 
@@ -170,13 +166,14 @@ void RunView::drawAll( QPainter &p )
     p.drawLine( 0, c_y, g_w-1, c_y ); p.drawLine( c_x, 0, c_x, g_h );
   };
 
+  double rt;
   if( s_time > 0 ) {
     rt = get_real_time() - s_time;
   } else {
     rt = 0;
   }
 
-  s.sprintf( "%5s  t: %012.3f; m: [% .2f; % .2f]; rt: %7.2f  i: %7d (%3d:%3d);",
+  QString s = QString::asprintf( "%5s  t: %012.3f; m: [% .2f; % .2f]; rt: %7.2f  i: %7d (%3d:%3d);",
     getStateString(state), /*runType,*/ t, mouse_x, mouse_y, rt,
     i_tot, il1, il2  );
   p.drawText( 10, 14, s );

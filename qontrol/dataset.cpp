@@ -1753,8 +1753,7 @@ QString HolderColor::toString() const
   if( v.alpha() == 255 ) {
     return v.name();
   }
-  QString s;
-  s.sprintf( "#%08x", v.rgba() );
+  QString s = QString::asprintf( "#%08x", v.rgba() );
   return s;
 }
 
