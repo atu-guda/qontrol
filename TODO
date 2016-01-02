@@ -1,6 +1,6 @@
+!Check: update link values only after step - prep for multi-threading (see TSubScheme)
+Holder: double or link
 correct places for reset, set_link, *structChange..
-PlotLabel: real TeX, common TeX preambula +/= per label
-PlotLabel: TMiso or /Data+column handling
 BUG: fail to link TOutArr to Simulation param.
 BUG: modified state (i.e. after autocreated scheme removal)
 BUG: huge time on model params edit. May be containers must have nodialedit flag or depth limit?
@@ -9,7 +9,6 @@ BUG: huge time on model params edit. May be containers must have nodialedit flag
   as clone with other/null parent, but need copyFrom/copyTo, swap/inplace func.
 Long descriptions in schems, (button) - how to edit?
 Reorder objects in list-alike containers.
-Object: double or link
 add Flag: call parent post_set if changed. and supress for mass changes. set/do_set?
 sep prop: bitfield?
 Fill, import, export special arrays.
@@ -22,7 +21,6 @@ StatusTip(col=2) for StatusModel More: clarify 'col' meaning for objects
 1D{v,h}/2D slider inputs + 2-double pair data
 Create Action fun + subclass QAction? (menu to place, flags)
 Controlled Scheme size.
-!Check: update link values only after step - prep for multi-threading (see TSubScheme)
 Error handling (from inner to iface)
 Store script errors (and data?)
 Excess? error in fromDom ... and/or show last error?
@@ -37,21 +35,23 @@ Custom legeng/labels/axis(scale factor) in Mgl
 Tests
 Autocorrelation?
 Placeholder object: param is the type of real object?
-QScintilla? Dialog or SubWindow?
 Shadow/backup/undo main scheme?
 BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params
 More stylesheets
 props: v_min, v_max: precalculate?
+PlotLabel: real TeX, common TeX preambula +/= per label
 
 JS run dialog. + one-line above log viewer
+QScintilla? Dialog or SubWindow?
+js/large text edit widget + button/dialog + external editor (partial done)?
 
 Sub simulation? / set of dialog-ed values before run
 
 RunWindow?
+
 Edit large arrays
 TCircBuf + TDelay re*
 order -> only hint? or not use at all
-js/large text edit widget + button/dialog + external editor (partial done)?
 
 
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
@@ -64,14 +64,14 @@ objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
   -- Collections of data - add to Scheme, Simul, Model
 may be new field in TClassInfo to misc flags: can f() w/o preRun...,
     class group.. etc
-implement loading objects in so.
 Abort simulation option in TCriterion
+
+implement loading objects in so.
 
 Distributions analysis + plot
 vector icons (language=SVG?) (may be dynamic)
 Hue of elements
 Label of element (or/and floating labels on structure view)
-Labels on plot view (fixed, attached to some points)
 Report with macros -- overrided by scripts? + js iface to substValues
 
 

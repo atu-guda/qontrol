@@ -351,6 +351,9 @@ QString substValues( const QString &s, const HolderData *ho )
 
     QString repl = QSL("???");
     HolderData *da = ho->getObj( nm );
+    if( da->isChildOf( QSL("TMiso") ) )  { // auto 'out0' add for TMiso
+      da = ho->getObj( nm % QSL(".out0") );
+    }
     if( da ) {
       if( da->getTp() == QVariant::Double ) {
         double v = 0;

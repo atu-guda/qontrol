@@ -1790,21 +1790,22 @@ void HolderFont::reset_dfl()
 bool HolderFont::set( const QVariant & x, int /* idx */  )
 {
   auto v0 = v;
+  QFont vt; // default
   if( x.type() == QVariant::Font ) {
     v = x.value<QFont>();
   } else {
     QString fn = x.toString();
-    if( fn == QSL("DEFAULT") ) {
-      v = QFont();
+    if(  fn == QSL("DEFAULT")  ||  fn.isEmpty()  ) {
+      v = vt;
     } else if( fn == QSL("SMALL") ) {
-      v = QFont();
-      v.setPointSize( v.pointSize() * 7 / 10 );
+      vt.setPointSize( v.pointSize() * 7 / 10 );
+      v = vt;
     } else if( fn == QSL("TINY") ) {
-      v = QFont();
-      v.setPointSize( v.pointSize() * 5 / 10 );
+      vt.setPointSize( v.pointSize() * 5 / 10 );
+      v = vt;
     } else if( fn == QSL("LARGE") ) {
-      v = QFont();
-      v.setPointSize( v.pointSize() * 14 / 10 );
+      vt.setPointSize( v.pointSize() * 14 / 10 );
+      v = vt;
     } else {
       v.fromString( fn );
     }
