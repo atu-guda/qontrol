@@ -12,3 +12,4 @@ qontrol.cfg
 _o/*
 *.wav
 *.dat
+tests/noauto
