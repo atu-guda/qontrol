@@ -171,6 +171,9 @@ STD_CLASSINFO(InputAbstract,clpInput|clpSpecial|clpPure);
 
 CTOR(InputAbstract,LinkedObj)
 {
+  if( getParm( QSL("props") ) == QSL("OBJ") ) {
+    setParm( QSL("props"), QSL("OBJ,INPUT") );
+  }
 }
 
 InputAbstract::~InputAbstract()
@@ -229,7 +232,7 @@ QVariant InputAbstract::dataObj( int col, int role ) const
 {
   if( role == Qt::StatusTipRole && col < 2 ) { // used for button labels in dialogs
 
-    QString s = source;
+    QString s; // = source;
     int lt  = linkType;
     QChar ac;
     switch( lt ) {
@@ -257,7 +260,7 @@ QVariant InputAbstract::dataObj( int col, int role ) const
     }
 
     s += ac;
-    s += objectName();
+    // s += objectName();
     return s;
   }
 
@@ -344,7 +347,7 @@ void InputParam::set_link()
 QVariant InputParam::dataObj( int col, int role ) const
 {
   if( role == Qt::StatusTipRole && col < 2 ) { // used for button labels in dialogs
-    QString s = source;
+    QString s; // = source;
     QChar ac = QChar( 0x274C ); // X
     int lt = linkType;
     if( lt == LinkElm || lt == LinkSpec ) {
@@ -355,7 +358,7 @@ QVariant InputParam::dataObj( int col, int role ) const
     }
     s += ac;
 
-    s += objectName() % "." % tparam.cval();
+    // s += objectName() % "." % tparam.cval();
     if( targ == &fake_target ) {
       s += QChar( 0x274C ); // X
     }

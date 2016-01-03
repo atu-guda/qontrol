@@ -20,13 +20,18 @@ using namespace std;
 static const int MAX_COLS_PER_WIDGET  = 20;
 static const int MAX_WIDGETS_PER_COL  = 16;
 
-DataWidget::DataWidget( HolderData &h, QWidget *parent )
+DataWidget::DataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   : QFrame( parent ), ho( h ), main_w( nullptr ),
-    lbl( new QLabel( tex2label( ho.getParm( QSL("vis_name") ) ), this ) )
+    lbl( new QLabel( this ) )
 {
-  lbl->setWhatsThis( ho.getType() + QSL(" ") + ho.objectName() );
-  lbl->setMinimumWidth( 5 * LaboWin::Em() );
-  lbl->setTextFormat( Qt::RichText );
+  if( ! hideLabel ) {
+    lbl->setWhatsThis( ho.getType() + QSL(" ") + ho.objectName() );
+    // lbl->setMinimumWidth( 5 * LaboWin::Em() );
+    lbl->setTextFormat( Qt::RichText );
+    lbl->setText( tex2label( ho.getParm( QSL("vis_name") ) ) );
+  } else {
+    lbl->setFixedSize( 0, 0 );
+  }
   // setFrameStyle( QFrame::Panel | QFrame::Sunken );
 }
 
@@ -51,8 +56,8 @@ QSize DataWidget::sizeHint() const
 
 // -------------  DummyDataWidget ----------------
 
-DummyDataWidget::DummyDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+DummyDataWidget::DummyDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
   lbl_d( new QLabel( this ) )
 {
   main_w = lbl_d;
@@ -78,8 +83,8 @@ DW_REG_FUN_STD( DummyDataWidget, "" );
 
 // ------------------- StringDataWidget ---------------------------
 
-StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
   le( new QLineEdit( this ) )
 {
   main_w = le;
@@ -129,8 +134,8 @@ DW_REG_FUN_STD( StringDataWidget, "STRING,SIMPLE" );
 
 // ------------------- StringMLDataWidget ---------------------------
 
-StringMLDataWidget::StringMLDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+StringMLDataWidget::StringMLDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
   te( new QTextEdit( this ) )
 {
   main_w = te;
@@ -178,8 +183,8 @@ DW_REG_FUN_STD( StringMLDataWidget, "STRING,MLINE" );
 
 // ------------------- StringExtDataWidget ---------------------------
 
-StringExtDataWidget::StringExtDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+StringExtDataWidget::StringExtDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
   pb( new QPushButton( this ) )
 {
   main_w = pb;
@@ -253,8 +258,8 @@ DW_REG_FUN_STD( StringExtDataWidget, "STRING,EXT,MLINE,LARGETEXT" );
 
 // ------------------- IntDataWidget ---------------------------
 
-IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
   le( new QLineEdit( this ) )
 {
   main_w = le;
@@ -292,8 +297,8 @@ DW_REG_FUN_STD( IntDataWidget, "INT,SIMPLE" );
 
 // ------------------- IntSpinDataWidget ---------------------------
 
-IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
   sb( new QSpinBox( this ) )
 {
   main_w = sb;
@@ -341,9 +346,9 @@ DW_REG_FUN_STD( IntSpinDataWidget, "INT,SPIN" );
 
 // ------------------- SwitchDataWidget ---------------------------
 
-SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
-  cb( new QCheckBox( QSL(" "), this )  )
+SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent, bool /*hideLabel*/ )
+  : DataWidget( h, parent, true ),
+  cb( new QCheckBox( ho.getParm( QSL("vis_name")), this )  )
 {
   main_w = cb;
   if( h.isRoTree( efROAny ) ) {
@@ -376,8 +381,8 @@ DW_REG_FUN_STD( SwitchDataWidget, "INT,SWITCH" );
 
 // ------------------- ListDataWidget ---------------------------
 
-ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
   cb( new QComboBox( this ) )
 {
   main_w = cb;
@@ -423,8 +428,8 @@ DW_REG_FUN_STD( ListDataWidget, "INT,LIST" );
 
 // ------------------- DoubleDataWidget ---------------------------
 
-DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
   le( new QLineEdit ( this ) )
 {
   main_w = le;
@@ -466,8 +471,8 @@ DW_REG_FUN_STD( DoubleDataWidget, "DOUBLE,SIMPLE" );
 
 // ------------------- DoubleSpinDataWidget ---------------------------
 
-DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
    sb( new QDoubleSpinBox( this ) )
 {
   main_w = sb;
@@ -514,8 +519,8 @@ DW_REG_FUN_STD( DoubleSpinDataWidget, "DOUBLE,SPIN" );
 
 // ------------------- ColorDataWidget ---------------------------
 
-ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
    cb( new ColorBtn( this ) )
 {
   main_w = cb;
@@ -567,8 +572,8 @@ DW_REG_FUN_STD( ColorDataWidget, "COLOR" );
 
 // ------------------- FontDataWidget ---------------------------
 
-FontDataWidget::FontDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+FontDataWidget::FontDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
    cb( new FontBtn( this ) )
 {
   main_w = cb;
@@ -602,8 +607,8 @@ DW_REG_FUN_STD( FontDataWidget, "FONT" );
 
 // ------------------- DateDataWidget ---------------------------
 
-DateDataWidget::DateDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+DateDataWidget::DateDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
   de( new QDateEdit( this ) )
 {
   main_w = de;
@@ -649,8 +654,8 @@ DW_REG_FUN_STD( DateDataWidget, "DATE" );
 
 // ------------------- TimeDataWidget ---------------------------
 
-TimeDataWidget::TimeDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+TimeDataWidget::TimeDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
   te( new QTimeEdit( this ) )
 {
   main_w = te;
@@ -695,8 +700,8 @@ DW_REG_FUN_STD( TimeDataWidget, "TIME" );
 
 // ------------------- IntArrayDataWidget ---------------------------
 
-IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent, bool /*hideLabel*/ )
+  : DataWidget( h, parent, true ),
   pwi( new QWidget( this ) )
 {
   main_w = pwi;
@@ -708,7 +713,7 @@ IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent )
   int v_min = h.getParmInt( QSL("min"), IMIN );
   int v_max = h.getParmInt( QSL("max"), IMAX );
 
-  lbl->setText( QSL("") ); // hack: hide common name
+  // lbl->setText( QSL("") ); // hack: hide common name
   auto lay = new QGridLayout( pwi );
 
   for( int i=0; i<n; ++i ) {
@@ -753,8 +758,8 @@ DW_REG_FUN_STD( IntArrayDataWidget, "ARRAY_INT,INLINE" );
 
 // ------------------- DoubleArrayDataWidget ---------------------------
 
-DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent, bool /*hideLabel*/ )
+  : DataWidget( h, parent, true ),
   pwi( new QWidget( this ) )
 {
   main_w = pwi;
@@ -768,7 +773,7 @@ DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent )
   double v_max = h.getParmDouble( QSL("max"), DMAX );
   int decimals = h.getParmInt( QSL("decimals"), DOUBLE_PREC );
 
-  lbl->setText( QSL("") ); // hack: hide common name
+  // lbl->setText( QSL("") ); // hack: hide common name
   auto lay = new QGridLayout( pwi );
 
   for( int i=0; i<n; ++i ) {
@@ -814,8 +819,8 @@ DW_REG_FUN_STD( DoubleArrayDataWidget, "ARRAY_DOUBLE,INLINE" );
 
 // ------------------- StringArrayDataWidget ---------------------------
 
-StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent, bool /*hideLabel*/ )
+  : DataWidget( h, parent, true ),
   pwi( new QWidget( this ) )
 {
   main_w = pwi;
@@ -876,15 +881,17 @@ DW_REG_FUN_STD( StringArrayDataWidget, "ARRAY_STRING,INLINE" );
 
 // ------------------- ObjDataWidget ---------------------------
 
-ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent )
-  : DataWidget( h, parent ),
+ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
    pb( new QPushButton( this ) )
 {
-  main_w = pb;
-  // if( h.isRoTree( efROAny ) ) {
-  //   pb->setDisabled( true ); // TODO: real read-only
-  // }
-  pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
+  main_w = pb; // no R/O handling here
+  if( hideLabel ) {
+    pb->setFixedWidth( 3 * LaboWin::Em() );
+    pb->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
+  } else {
+    pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
+  }
   updateLabel();
   connect( pb, &QPushButton::clicked, this, &ObjDataWidget::edit );
 
@@ -928,6 +935,55 @@ void ObjDataWidget::edit()
 }
 
 DW_REG_FUN_STD( ObjDataWidget, "OBJ" );
+
+
+// ------------------- InputDataWidget ---------------------------
+
+InputDataWidget::InputDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
+   le( new QLineEdit( this ) ),
+   ow( new ObjDataWidget( h, this, true ) )
+{
+  main_w = ow;
+  if( h.isRoTree( efROAny ) ) {
+    le->setReadOnly( true );
+  }
+  ow->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
+
+  le->setMinimumWidth( 8 * LaboWin::Em() );
+  ow->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
+  auto cmpl = new LinkCompleter( this );
+  QAbstractItemModel *cmpl_mdl = h.getComplModel( QSL("in"), cmpl );
+  cmpl->setModel( cmpl_mdl );
+  le->setCompleter( cmpl );
+
+  auto lay =  new QHBoxLayout( this );
+  const int msz = 0;
+  lay->setContentsMargins( msz, msz, msz, msz );
+  lay->addWidget( lbl, 0 );
+  lay->addWidget( le,  3 );
+  lay->addWidget( ow,  1 );
+  setLayout( lay );
+  // setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  setMinimumWidth( 14 * LaboWin::Em() ); // hack
+}
+
+bool InputDataWidget::set()
+{
+  QString s = ho.getDataD( "source", QSL("") );
+  le->setText( s );
+  // TODO:
+  return true;
+}
+
+bool InputDataWidget::get() const
+{
+  // TODO:
+  return true;
+}
+
+
+DW_REG_FUN_STD( InputDataWidget, "OBJ,INPUT" );
 
 
 // ==================== FactoryDataWidget ====================

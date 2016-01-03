@@ -44,7 +44,7 @@ class DataWidget;
  * */
 class DataWidget : public QFrame {
  public:
-  DataWidget( HolderData &d, QWidget *parent = nullptr );
+  DataWidget( HolderData &d, QWidget *parent = nullptr, bool hideLabel = false );
   virtual QSize        minimumSizeHint() const;
   virtual QSize        sizeHint() const;
   virtual bool set() = 0;
@@ -69,7 +69,7 @@ typedef QMap<QString,DataWidgetProp> DwPropMap;
 
 class DummyDataWidget:  public DataWidget {
  public:
-  DummyDataWidget( HolderData &h, QWidget *parent = nullptr );
+  DummyDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   QLabel *lbl_d;
@@ -78,7 +78,7 @@ class DummyDataWidget:  public DataWidget {
 
 class StringDataWidget:  public DataWidget {
  public:
-  StringDataWidget( HolderData &h, QWidget *parent = nullptr );
+  StringDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   QLineEdit *le;
@@ -86,7 +86,7 @@ class StringDataWidget:  public DataWidget {
 
 class StringMLDataWidget: public DataWidget {
  public:
-  StringMLDataWidget( HolderData &h, QWidget *parent = nullptr );
+  StringMLDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
   virtual QSize  minimumSizeHint() const override;
   virtual QSize  sizeHint() const override;
@@ -97,7 +97,7 @@ class StringMLDataWidget: public DataWidget {
 class StringExtDataWidget: public DataWidget {
   Q_OBJECT
  public:
-  StringExtDataWidget( HolderData &h, QWidget *parent = nullptr );
+  StringExtDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected slots:
    void edit();
@@ -110,7 +110,7 @@ class StringExtDataWidget: public DataWidget {
 
 class IntDataWidget: public DataWidget {
  public:
-  IntDataWidget( HolderData &h, QWidget *parent = nullptr );
+  IntDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   QLineEdit *le;
@@ -118,7 +118,7 @@ class IntDataWidget: public DataWidget {
 
 class IntSpinDataWidget: public DataWidget {
  public:
-  IntSpinDataWidget( HolderData &h, QWidget *parent = nullptr );
+  IntSpinDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   QSpinBox *sb;
@@ -126,7 +126,7 @@ class IntSpinDataWidget: public DataWidget {
 
 class SwitchDataWidget: public DataWidget {
  public:
-  SwitchDataWidget( HolderData &h, QWidget *parent = nullptr );
+  SwitchDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   QCheckBox *cb;
@@ -135,7 +135,7 @@ class SwitchDataWidget: public DataWidget {
 
 class ListDataWidget: public DataWidget {
  public:
-  ListDataWidget( HolderData &h, QWidget *parent = nullptr );
+  ListDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   QComboBox *cb;
@@ -143,7 +143,7 @@ class ListDataWidget: public DataWidget {
 
 class DoubleDataWidget: public DataWidget {
  public:
-  DoubleDataWidget( HolderData &h, QWidget *parent = nullptr );
+  DoubleDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   QLineEdit *le;
@@ -152,7 +152,7 @@ class DoubleDataWidget: public DataWidget {
 
 class DoubleSpinDataWidget: public DataWidget {
  public:
-  DoubleSpinDataWidget( HolderData &h, QWidget *parent = nullptr );
+  DoubleSpinDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   QDoubleSpinBox *sb;
@@ -161,7 +161,7 @@ class DoubleSpinDataWidget: public DataWidget {
 
 class ColorDataWidget: public DataWidget {
  public:
-  ColorDataWidget( HolderData &h, QWidget *parent = nullptr );
+  ColorDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   ColorBtn *cb;
@@ -170,7 +170,7 @@ class ColorDataWidget: public DataWidget {
 
 class FontDataWidget: public DataWidget {
  public:
-  FontDataWidget( HolderData &h, QWidget *parent = nullptr );
+  FontDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   FontBtn *cb;
@@ -179,7 +179,7 @@ class FontDataWidget: public DataWidget {
 
 class DateDataWidget: public DataWidget {
  public:
-  DateDataWidget( HolderData &h, QWidget *parent = nullptr );
+  DateDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   QDateEdit *de;
@@ -188,7 +188,7 @@ class DateDataWidget: public DataWidget {
 
 class TimeDataWidget: public DataWidget {
  public:
-  TimeDataWidget( HolderData &h, QWidget *parent = nullptr );
+  TimeDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   QTimeEdit *te;
@@ -198,7 +198,7 @@ class TimeDataWidget: public DataWidget {
 
 class IntArrayDataWidget: public DataWidget {
  public:
-  IntArrayDataWidget( HolderData &h, QWidget *parent = nullptr );
+  IntArrayDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   std::vector<QLineEdit*> les;
@@ -208,7 +208,7 @@ class IntArrayDataWidget: public DataWidget {
 
 class DoubleArrayDataWidget: public DataWidget {
  public:
-  DoubleArrayDataWidget( HolderData &h, QWidget *parent = nullptr );
+  DoubleArrayDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   std::vector<QLineEdit*> les;
@@ -217,7 +217,7 @@ class DoubleArrayDataWidget: public DataWidget {
 
 class StringArrayDataWidget: public DataWidget {
  public:
-  StringArrayDataWidget( HolderData &h, QWidget *parent = nullptr );
+  StringArrayDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
  protected:
   std::vector<QLineEdit*> les;
@@ -228,7 +228,7 @@ class StringArrayDataWidget: public DataWidget {
 class ObjDataWidget: public DataWidget {
   Q_OBJECT
  public:
-  ObjDataWidget( HolderData &h, QWidget *parent = nullptr );
+  ObjDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
   void updateLabel();
  protected slots:
@@ -236,6 +236,17 @@ class ObjDataWidget: public DataWidget {
  protected:
   QPushButton *pb;
 };
+
+class InputDataWidget: public DataWidget {
+  Q_OBJECT
+ public:
+  InputDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
+  DW_DCL_STD_FUN;
+ protected:
+  QLineEdit *le;
+  ObjDataWidget *ow;
+};
+
 
 // --------------------------- Factory ----------------------
 
