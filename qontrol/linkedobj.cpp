@@ -168,8 +168,6 @@ bool LinkedObj::isIgnored() const
 //
 STD_CLASSINFO(InputAbstract,clpInput|clpSpecial|clpPure);
 
-const double InputAbstract::fake_in {0};
-const double InputAbstract::one_in {1.0};
 
 CTOR(InputAbstract,LinkedObj)
 {
@@ -192,13 +190,23 @@ void InputAbstract::do_structChanged()
 
 void InputAbstract::set_link()
 {
-  p = &fake_in; src_obj = nullptr; linkType = LinkBad; srcobj = QSL(":BAD:");
+  direct_in = 0;
+  p = &direct_in; src_obj = nullptr; linkType = LinkBad; srcObjName = QSL(":BAD:");
   if( isIgnored() || source.cval().isEmpty() ) {
-    linkType = LinkNone; srcobj = QSL(":NONE:"); return;
+    linkType = LinkNone; srcObjName = QSL(":NONE:"); return;
   }
-  if( source.cval() == QSL(":one") ) { // special local case
-    linkType = LinkSpec;  p = &one_in;  srcobj = QSL(":ONE:");return;
+  // if( source.cval() == QSL(":one") ) { // special local case TODO: remove
+  //   direct_in = 1.0;
+  //   linkType = LinkNone; srcObjName = QSL(":VALUE:"); return;
+  // }
+
+  bool ok = false;
+  double v = source.cval().toDouble( &ok );
+  if( ok ) {
+    direct_in = v;
+    linkType = LinkNone;  srcObjName = QSL(":VALUE:"); return;
   }
+
 
   int lt;
   const LinkedObj *srct = nullptr;
@@ -207,9 +215,9 @@ void InputAbstract::set_link()
   if( lt == LinkElm || lt == LinkSpec ) {
     p = cp;  src_obj = srct; linkType = lt;
     if( srct ) {
-      srcobj = srct->getFullName();
+      srcObjName = srct->getFullName();
     } else {
-      srcobj = QSL("$");
+      srcObjName = QSL("$");
     }
   } else {
     qWarning() << "ptr not found for " << source << NWHE;
@@ -222,13 +230,32 @@ QVariant InputAbstract::dataObj( int col, int role ) const
   if( role == Qt::StatusTipRole && col < 2 ) { // used for button labels in dialogs
 
     QString s = source;
-    QChar ac = QChar( 0x274C ); // X
-    if( p != &fake_in ) {
-      ac = QChar( 0x27BC ); // >>->
-      if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
-        ac = QChar( 0x2794 ); // ->
-      }
+    int lt  = linkType;
+    QChar ac;
+    switch( lt ) {
+      case LinkNone:
+        ac = '=';
+        break;
+      case LinkElm:
+        ac = QChar( 0x27BC ); // >>->
+        if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
+          ac = QChar( 0x2794 ); // ->
+        }
+        break;
+      case LinkSpec:
+        ac = QChar( 0x27A4 ); // >>
+        if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
+          ac = QChar( 0x27A0 ); // =>
+        }
+        break;
+      case LinkBad:
+        ac = QChar( 0x274C ); // X
+        break;
+      default:
+        ac = '?';
+        break;
     }
+
     s += ac;
     s += objectName();
     return s;
@@ -319,7 +346,8 @@ QVariant InputParam::dataObj( int col, int role ) const
   if( role == Qt::StatusTipRole && col < 2 ) { // used for button labels in dialogs
     QString s = source;
     QChar ac = QChar( 0x274C ); // X
-    if( p != &fake_in ) {
+    int lt = linkType;
+    if( lt == LinkElm || lt == LinkSpec ) {
       ac = QChar( 0x27BC );     // >>->
       if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
         ac = QChar( 0x2794 );   // ->
