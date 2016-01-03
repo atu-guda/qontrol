@@ -63,9 +63,9 @@ class TThrum : public TMiso  {
 
    PRM_STRING( p_str, 0, "&String", "some string", u8"sep=block\nncol=2\ndef=\"a b c d f\"" );
 
-   PRM_INPUT( in0, 0, "input 0", "First input",  "sep=block" );
-   PRM_INPUT( in1, 0, "input 1", "Second input", "sep=col" );
-   PRM_INPUT( in2, 0, "input 2", "Third input",  "sep=col" );
+   PRM_INPUT( in0, 0, "in0", "First input",  "sep=block" );
+   PRM_INPUT( in1, 0, "in1", "Second input", "sep=col" );
+   PRM_INPUT( in2, 0, "in2", "Third input",  "sep=col" );
 
    // PRM_STRING( p_strn, 0, "ML String", "Large string", "sep=block\nprops=STRING,MLINE\nncol=-1" );
    PRM_INT_ARR( a_int, 0, "int[]", "int array", "N=5\ndef=1\ndefs=0 2 4 \nsep=tab\ntabname=X1" );

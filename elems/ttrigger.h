@@ -69,9 +69,9 @@ class TTrigger : public TMiso  {
    /** autoreset after t0 */
    PRM_SWITCH( useT0, efNRC, "Autoreset (t0)", "Use autoreset after t0 time elapsed", "");
 
-   PRM_INPUT( in_r, 0, "R input", "Reset input",  "sep=block" );
-   PRM_INPUT( in_s, 0, "S input", "Set input", "sep=col" );
-   PRM_INPUT( in_x, 0, "X input", "X input",  "sep=col" );
+   PRM_INPUT( in_r, 0, "R", "Reset input",  "sep=block" );
+   PRM_INPUT( in_s, 0, "S", "Set input", "sep=col" );
+   PRM_INPUT( in_x, 0, "X", "X input",  "sep=col" );
    PRM_INPUT( in_ena, 0, "enable in", "enable input", "sep=col" );
 
    /** old u[2] value */

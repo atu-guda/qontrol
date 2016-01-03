@@ -229,8 +229,10 @@ class ObjDataWidget: public DataWidget {
   Q_OBJECT
  public:
   ObjDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
-  DW_DCL_STD_FUN;
   void updateLabel();
+  DW_DCL_STD_FUN;
+ signals:
+  void editingFinished();
  protected slots:
   void edit();
  protected:
@@ -242,6 +244,9 @@ class InputDataWidget: public DataWidget {
  public:
   InputDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
+ protected slots:
+  void lineToObj();
+  void objToLine();
  protected:
   QLineEdit *le;
   ObjDataWidget *ow;

@@ -887,7 +887,9 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
 {
   main_w = pb; // no R/O handling here
   if( hideLabel ) {
-    pb->setFixedWidth( 3 * LaboWin::Em() );
+    int w0 = 3 * LaboWin::Em() + 6;
+    pb->setFixedWidth( w0 );
+    setFixedWidth( w0+2 );
     pb->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
   } else {
     pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
@@ -928,6 +930,7 @@ void ObjDataWidget::edit()
   if( obj ) {
     auto dia = new DataDialog( *obj,  this );
     dia->exec();
+    emit editingFinished();
     updateLabel();
   } else {
     qWarning() << "Fail to convert holder " <<  ho.getFullName() << " to HolderData " << WHE;
@@ -948,10 +951,10 @@ InputDataWidget::InputDataWidget( HolderData &h, QWidget *parent, bool hideLabel
   if( h.isRoTree( efROAny ) ) {
     le->setReadOnly( true );
   }
-  ow->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
+  // ow->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
   le->setMinimumWidth( 8 * LaboWin::Em() );
-  ow->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
+  le->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   auto cmpl = new LinkCompleter( this );
   QAbstractItemModel *cmpl_mdl = h.getComplModel( QSL("in"), cmpl );
   cmpl->setModel( cmpl_mdl );
@@ -961,18 +964,21 @@ InputDataWidget::InputDataWidget( HolderData &h, QWidget *parent, bool hideLabel
   const int msz = 0;
   lay->setContentsMargins( msz, msz, msz, msz );
   lay->addWidget( lbl, 0 );
-  lay->addWidget( le,  3 );
-  lay->addWidget( ow,  1 );
+  lay->addWidget( le,  5 );
+  lay->addWidget( ow,  0 );
   setLayout( lay );
   // setFrameStyle( QFrame::Panel | QFrame::Sunken );
   setMinimumWidth( 14 * LaboWin::Em() ); // hack
+
+  connect( le, &QLineEdit::editingFinished, this, &InputDataWidget::lineToObj );
+  connect( ow, &ObjDataWidget::editingFinished, this, &InputDataWidget::objToLine );
 }
 
 bool InputDataWidget::set()
 {
-  QString s = ho.getDataD( "source", QSL("") );
+  QString s = ho.getDataD( QSL("source"), QSL("") );
   le->setText( s );
-  // TODO:
+  // other is done by ObjDataWidget::edit
   return true;
 }
 
@@ -982,10 +988,25 @@ bool InputDataWidget::get() const
   return true;
 }
 
+void InputDataWidget::lineToObj()
+{
+  QString s = le->text();
+  ho.setData( QSL("source"), s );
+  ho.handleStructChanged();
+  ow->updateLabel();
+}
+
+void InputDataWidget::objToLine()
+{
+  QString s = ho.getDataD(  QSL("source"), QSL("") );
+  le->setText( s );
+}
+
 
 DW_REG_FUN_STD( InputDataWidget, "OBJ,INPUT" );
 
 
+// ============================================================
 // ==================== FactoryDataWidget ====================
 
 FactoryDataWidget::FactoryDataWidget()

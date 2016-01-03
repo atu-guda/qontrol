@@ -41,10 +41,10 @@ class TLinear : public TMiso  {
    PRM_DOUBLE( b,  0, "b", "static shift", "sep=col" );
    PRM_DOUBLE( a,  0, "a", "common factor", "sep=col\ndef=1" );
 
-   PRM_INPUT( in_0, 0, "input 0", "First input",  "sep=block" );
-   PRM_INPUT( in_1, 0, "input 1", "Second input", "sep=col" );
-   PRM_INPUT( in_2, 0, "input 2", "Third input",  "sep=col" );
-   PRM_INPUT( in_3, 0, "input 3", "Fourth input", "sep=col" );
+   PRM_INPUT( in_0, 0, "in_0", "First input",  "sep=block" );
+   PRM_INPUT( in_1, 0, "in_1", "Second input", "sep=col" );
+   PRM_INPUT( in_2, 0, "in_2", "Third input",  "sep=col" );
+   PRM_INPUT( in_3, 0, "in_3", "Fourth input", "sep=col" );
 
    Q_CLASSINFO( "nameHintBase",  "sum_" );
    DCL_DEFAULT_STATIC;
