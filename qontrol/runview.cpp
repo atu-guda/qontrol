@@ -2,7 +2,7 @@
                           runview.cpp  -  description
                              -------------------
     begin                : Sat Aug 18 2001
-    copyright            : (C) 2001-2015 by atu
+    copyright            : (C) 2001-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

@@ -2,7 +2,7 @@
                           tquadexrt.cpp - find top extranum in quadatic approx
                              -------------------
     begin                : 2015.02.27
-    copyright            : (C) 2015-2015 by atu
+    copyright            : (C) 2015-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

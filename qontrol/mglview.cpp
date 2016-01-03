@@ -2,7 +2,7 @@
                           mglview.cpp - window to show plots via MathGL
                              -------------------
     begin                : 2014.11.29
-    copyright            : (C) 2014-2015 by atu
+    copyright            : (C) 2014-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

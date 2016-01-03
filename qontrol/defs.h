@@ -2,7 +2,7 @@
                           defs.h  -  common definitions and descriptions
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2015 by atu
+    copyright            : GPL (C) 2000-2016 by atu
     email                : atu@nmetau.edu.ua
  *************************************************************************/
 
@@ -20,7 +20,7 @@
 /* Name of package */
 #define PACKAGE "qontrol"
 #define ORG "atu.atunet"
-#define COPYRIGHT "(c) 2000-2015 atu; under GPLv2+"
+#define COPYRIGHT "(c) 2000-2016 atu; under GPLv2+"
 
 /* Model constants */
 

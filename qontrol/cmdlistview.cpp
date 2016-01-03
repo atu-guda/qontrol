@@ -2,7 +2,7 @@
                       cmdlistview.h - common base for list-alike viewvs
                              -------------------
     begin                : 2015.10.31
-    copyright            : (C) 2015-2015 by atu
+    copyright            : (C) 2015-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

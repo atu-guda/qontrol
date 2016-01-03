@@ -2,7 +2,7 @@
                      scriptfuncs.cpp - functions and types to use from JS
                              -------------------
     begin                : 2015.01.20 - partial copy from model.cpp
-    copyright            : (C) 2015-2015 by atu
+    copyright            : (C) 2015-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

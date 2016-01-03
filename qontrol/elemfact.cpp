@@ -2,7 +2,7 @@
     elemfact.cpp  - widgets factory for DataDialog
                              -------------------
     begin                : 2012.07.03
-    copyright            : GPL (C) 2012-2015 by atu
+    copyright            : GPL (C) 2012-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

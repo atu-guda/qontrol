@@ -2,7 +2,7 @@
   linkcompleter.h - completer for links fields description
   -------------------
 begin                : 2015.01.20
-copyright            : (C) 2015-2015 by atu
+copyright            : (C) 2015-2016 by atu
 email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

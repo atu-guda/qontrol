@@ -2,7 +2,7 @@
                           tmaxnum.h  -  find maximum input
                              -------------------
     begin                : 2015.03.02
-    copyright            : (C) 2015-2015 by atu
+    copyright            : (C) 2015-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

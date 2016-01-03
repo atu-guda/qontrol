@@ -2,7 +2,7 @@
                           circbuf.c - circular buffer class realization
                              -------------------
     begin                : 2015.01.14 (move from miscfun.cpp)
-    copyright            : (C) 2015-2015 by atu
+    copyright            : (C) 2015-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

@@ -2,7 +2,7 @@
                           tlatch.cpp  -  description
                              -------------------
     begin                : Sat Sep 2 2000
-    copyright            : (C) 2000-2015 by atu
+    copyright            : (C) 2000-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

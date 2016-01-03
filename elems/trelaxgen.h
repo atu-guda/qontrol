@@ -2,7 +2,7 @@
                           trelaxgen.h  -  description
                              -------------------
     begin                : 2014.10.28
-    copyright            : (C) 2014-2015 by atu
+    copyright            : (C) 2014-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

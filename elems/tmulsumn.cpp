@@ -2,7 +2,7 @@
         tmulsumn.h  - N-input multiplicator/summator + COG
                              -------------------
     begin                : 2015.11.15
-    copyright            : (C) 2015-2015 by atu
+    copyright            : (C) 2015-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

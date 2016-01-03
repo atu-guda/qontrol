@@ -2,7 +2,7 @@
                           contgraph.h  -  contrainer for TGraph
                              -------------------
     begin                : 2014.11.14
-    copyright            : (C) 2014-2015 by atu
+    copyright            : (C) 2014-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

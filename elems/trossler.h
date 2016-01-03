@@ -2,7 +2,7 @@
                           trossler.h  -  description
                              -------------------
     begin                : Thu May 03 2012
-    copyright            : (C) 2012-2015 by atu
+    copyright            : (C) 2012-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
