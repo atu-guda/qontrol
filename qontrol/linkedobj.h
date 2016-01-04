@@ -66,21 +66,25 @@ class InputAbstract : public LinkedObj {
   //* return ptr to LinkedObj, which holds element or nullptr;
   const LinkedObj* getSourceObj() const { return src_obj; };
   void readInput() { out0 = *p; };
+  int  getLinkType() const { return linkType; }
+  int  getOnlyFirst() const { return onlyFirst; }
+  /** find and set link to source or fake source */
+  virtual void set_link();
  protected:
   virtual void do_post_set() override;
   /** do real actions after structure changed */
-  virtual void do_structChanged();
-  /** find and set link to source or fake source */
-  virtual void set_link();
+  virtual void do_structChanged() override;
 
   PRM_STRING( source, efNoRunChange, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
+  PRM_SWITCH( onlyFirst, 0, "only First", "apply only at start of run", "" );
   PRM_STRING( label,  efNoRunChange, "Label", "Label to display on structure", "max=64"  );
   PRM_INT( x_shift, 0, "X shift", "Shift on x-part of link representation", "sep=col" );
   PRM_INT( y_shift, 0, "Y shift", "Shift on y-part of link representation", "" );
   PRM_INT( line_w,  0, "Line width", "Line width on scheme", "def=1\nmin=0\nmax=20" );
   PRM_COLOR( line_color,  0, "Line color", "Line color on scheme", "def=black" );
   PRM_SWITCH( onlyLabel, 0, "only Label", "draw only link label on scheme", "" );
-  PRM_INT( linkType,  efInner | efRO, "Link type", "Describes link type", "def=3" );
+
+  PRM_INT( linkType,  efInner | efRO, "Link type", "Describes link type", "def=3" ); // def=LinkBad
   PRM_STRING( srcObjName, efInner | efRO, "Source object", "Name of the source object", ""  );
 
   double direct_in = 0;
@@ -103,10 +107,10 @@ class InputSimple : public InputAbstract {
   // less operators for double: const only
   operator double() const { return *p; };
   const double* caddr() const { return p; };
- protected:
-  virtual void do_post_set() override;
   /** find and set link to source or fake source */
   virtual void set_link() override;
+ protected:
+  virtual void do_post_set() override;
 
   PRM_INT( channel, efNRC, "Channel", "Channel number of this input", "sep=block" );
   PRM_INT( subchannel, efNRC, "Subchannel", "Subchannel number of this input", "sep=col" );
@@ -134,13 +138,12 @@ class InputParam : public InputAbstract {
   double* targ_addr() const { return targ; };
   int getOnlyFirst() const { return onlyFirst; }
   int getTargetFlag() const { return target_flag; }
- protected:
-  virtual void do_post_set() override;
   /** find and set link to  from (fake)  source to (fake) target */
   virtual void set_link() override;
+ protected:
+  virtual void do_post_set() override;
 
   PRM_STRING( tparam, efNoRunChange, "Param", "Name of param target", "max=128\nprops=STRING,SIMPLE,INNERLINK\ncmpl=prm\nsep=block"  );
-  PRM_SWITCH( onlyFirst, 0, "only First", "apply only at start of run", "" );
 
   double fake_target = 0;
   double *targ = &fake_target;

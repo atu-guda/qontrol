@@ -70,7 +70,7 @@ const double* LinkedObj::getDoublePtr( const QString &nm, int *lt,
   if( nm_type == simpleName ) { // -- simple name ----- first only -----
     LinkedObj *ds= qobject_cast<LinkedObj*>(ho);
     if( ds ) {
-      return ds->getDoublePtr( "out0", plt, targ, lev+1 ); // defailt output
+      return ds->getDoublePtr( QSL("out0"), plt, targ, lev+1 ); // default output
     }
 
     HolderDouble *hod = qobject_cast<HolderDouble*>(ho);

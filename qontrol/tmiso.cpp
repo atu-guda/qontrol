@@ -60,6 +60,12 @@ double TMiso::fun( double t, IterType itype )
     return out0;
   }
 
+  if( itype == IterFirst ) {
+    for( auto in : inps  ) { in->readInput();   } // all
+  } else {
+    for( auto in : inps_a ) { in->readInput();   } // all active
+  }
+
   prm_mod |= pis->apply();
 
   v = out0 = f( t );
@@ -145,6 +151,28 @@ int TMiso::do_endLoop()
 {
   return 1;
 }
+
+void TMiso::do_structChanged()
+{
+  LinkedObj::do_structChanged();
+  inps.clear(); inps_a.clear(); inps_s.clear();
+
+  for( auto in : TCHILD(InputAbstract*) ) {
+    in->set_link();
+    inps.append( in );
+
+    int lt = in->getLinkType();
+    if( ( lt == LinkElm || lt == LinkSpec ) && ! in->getOnlyFirst()  ) {
+      inps_a.append( in );
+    }
+
+    InputSimple *in_s = qobject_cast<InputSimple*>( in );
+    if( in_s ) {
+      inps_s.append( in_s );
+    }
+  }
+}
+
 
 void TMiso::fillComplModelForParams( QStandardItemModel *mdl ) const
 {

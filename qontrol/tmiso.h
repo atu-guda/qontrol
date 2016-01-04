@@ -79,6 +79,9 @@ class TMiso : public LinkedObj  {
    /** check, if element have given visual coords */
    bool isAtCoord( int ax, int ay ) const
      { return (vis_x == ax && vis_y == ay ); }
+   Q_INVOKABLE int getN_Inputs() const { return inps.size(); }
+   Q_INVOKABLE int getN_SimpleInputs() const { return inps_s.size(); }
+   Q_INVOKABLE int getN_ActiveInputs() const { return inps_a.size(); }
    virtual void fillComplModelForParams( QStandardItemModel *mdl ) const;
  protected:
    /** main computation function
@@ -94,6 +97,9 @@ class TMiso : public LinkedObj  {
    virtual int do_startLoop( int acnx, int acny );
    /** will be called after each inner loop: called from endLoop */
    virtual int do_endLoop();
+   /** do real actions after structure changed - refills inputs */
+   virtual void do_structChanged() override;
+
    /** description on element */
    PRM_STRING( descr, efNoRunChange, "description",
        "Object description", "max=128\nncol=-1");
@@ -114,6 +120,12 @@ class TMiso : public LinkedObj  {
    PRM_SWITCH( flip, efNoRunChange, "flip image", "flip left-right element icon", "sep=col" );
    PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "" );
 
+   //* ptrs to all inputs: filled by do_structChanged
+   QList<InputAbstract*> inps;
+   //* ptrs to active inputs: LinkElm or LinkSpec
+   QList<InputAbstract*> inps_a;
+   //* ptrs to simple inputs:
+   QList<InputSimple*> inps_s;
    /** pointer to parameters inputs container */
    InputParams *pis;
    /** time step -- setted by preRun 0 - special value to detect usage before start */
