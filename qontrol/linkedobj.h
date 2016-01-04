@@ -74,8 +74,6 @@ class InputAbstract : public LinkedObj {
 
   PRM_STRING( source, efNoRunChange, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
   PRM_STRING( label,  efNoRunChange, "Label", "Label to display on structure", "max=64"  );
-  PRM_INT( channel, efNRC, "Channel", "Channel number of this input", "" );
-  PRM_INT( subchannel, efNRC, "Subchannel", "Subchannel number of this input", "" );
   PRM_INT( x_shift, 0, "X shift", "Shift on x-part of link representation", "sep=col" );
   PRM_INT( y_shift, 0, "Y shift", "Shift on y-part of link representation", "" );
   PRM_INT( line_w,  0, "Line width", "Line width on scheme", "def=1\nmin=0\nmax=20" );
@@ -109,6 +107,9 @@ class InputSimple : public InputAbstract {
   virtual void do_post_set() override;
   /** find and set link to source or fake source */
   virtual void set_link() override;
+
+  PRM_INT( channel, efNRC, "Channel", "Channel number of this input", "sep=block" );
+  PRM_INT( subchannel, efNRC, "Subchannel", "Subchannel number of this input", "sep=col" );
 
   Q_CLASSINFO( "nameHintBase",  "in_" );
   DCL_DEFAULT_STATIC;
