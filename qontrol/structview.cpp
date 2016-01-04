@@ -375,7 +375,8 @@ void StructView::drawAll( QPainter &p )
       int line_width = in->getDataD( "line_w", 1 );
       int x_shift    = in->getDataD( "x_shift", 0 );
       int y_shift    = in->getDataD( "y_shift", 0 );
-      QColor lco = in->getDataD( "line_color", Qt::black );
+      QColor lco = Qt::black;
+      in->getData( "line_color", lco );
       p.setPen( QPen( lco, line_width ) );
 
       if( lt == LinkNone ) {
@@ -460,7 +461,8 @@ void StructView::drawAll( QPainter &p )
       int line_width = ips->getDataD( "line_w", 2 );
       int x_shift = ips->getDataD( "x_shift", 0 );
       int y_shift = ips->getDataD( "y_shift", 0 );
-      QColor lco = ips->getDataD( "line_color", Qt::black );
+      QColor lco = Qt::black;
+      ips->getData( "line_color", lco );
       p.setPen( QPen( lco, line_width ) );
 
       int li_pdst_x = ei.xs + (1+i_in) * in_sep_sz;
@@ -506,12 +508,15 @@ void StructView::drawAll( QPainter &p )
       li_src_y = sei.yc - y_shift;
 
       // TODO: label
+      int only_lbl = ips->getDataD( "onlyLabel", 0 );
 
       int x_vert = sei.li_src_x - ( x_shift + el_marg ) * sei.flip_factor;
 
       p.drawLine( sei.li_src_x, li_src_y, x_vert, li_src_y ); // from src
-      p.drawLine( x_vert, ei.li_pdst_y+el_marg,  x_vert, li_src_y ); // vert line
-      p.drawLine( p_bott, QPoint( x_vert, ei.li_pdst_y+el_marg ) );  // to dst.bottom
+      if( ! only_lbl ) {
+        p.drawLine( x_vert, ei.li_pdst_y+el_marg,  x_vert, li_src_y ); // vert line
+        p.drawLine( p_bott, QPoint( x_vert, ei.li_pdst_y+el_marg ) );  // to dst.bottom
+      }
 
       ++i_in;
     } // end of param input loop

@@ -1042,6 +1042,27 @@ bool HolderData::getData( const QString &nm, QString &da, bool er ) const
   return true;
 }
 
+bool HolderData::getData( const QString &nm, QColor &da, bool er ) const
+{
+  QVariant vda;
+  bool rc = getData( nm, vda, er );
+  if( ! rc ) {
+    return false;
+  }
+  if( vda.type() == QVariant::Color ) {
+    da = vda.value<QColor>();
+    return true;
+  }
+  QString s = vda.toString();
+  QColor v = QColor( s );
+  if( ! v.isValid() ) {
+    QRgb rgba = vda.toInt();
+    v.setRgba( rgba );
+  }
+  da = v;
+  return true;
+}
+
 
 int HolderData::getDataD( const QString &nm, int dfl ) const
 {
@@ -1067,11 +1088,8 @@ QString HolderData::getDataD( const QString &nm, const QString &dfl ) const
 QColor HolderData::getDataD( const QString &nm, const QColor &dfl ) const
 {
   QColor r = dfl;
-  int ri = 0;
-  if( getData( nm,  &ri ) ) {
-    r = QColor( QRgb( ri ) );
-  }
-  return QColor( QRgb( ri ) );
+  getData( nm, r );
+  return r;
 }
 
 
@@ -1120,6 +1138,11 @@ bool HolderData::setD( const QString &nm, double da )
 }
 
 bool HolderData::setD( const QString &nm, const QString &da )
+{
+  return setData( nm, QVariant( da ) );
+}
+
+bool HolderData::setD( const QString &nm, const QColor &da )
 {
   return setData( nm, QVariant( da ) );
 }

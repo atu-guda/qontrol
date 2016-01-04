@@ -269,6 +269,7 @@ class HolderData : public QAbstractItemModel {
   virtual bool getData( const QString &nm, double *da, bool er = true ) const;
   virtual bool getData( const QString &nm, QVariant &da, bool er = true ) const;
   virtual bool getData( const QString &nm, QString &da, bool er = true ) const;
+  virtual bool getData( const QString &nm, QColor &da, bool er = true ) const;
   // the same but with default and direct return
   Q_INVOKABLE int     getDataD( const QString &nm, int dfl ) const;
   Q_INVOKABLE double  getDataD( const QString &nm, double dfl ) const;
@@ -280,6 +281,7 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE bool setD( const QString &nm, int da );
   Q_INVOKABLE bool setD( const QString &nm, double da );
   Q_INVOKABLE bool setD( const QString &nm, const QString &da );
+  Q_INVOKABLE bool setD( const QString &nm, const QColor &da );
   //* get data from some of parent
   bool getUpData( const QString &nm, int *da ) const;
   bool getUpData( const QString &nm, double *da ) const;
