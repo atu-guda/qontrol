@@ -139,7 +139,7 @@ int TSubScheme::do_preRun( int run_tp, int an,
     return 0;
   }
 
-  handleStructChanged();
+  // handleStructChanged();
   sch->handleStructChanged();
 
 
@@ -154,9 +154,12 @@ int TSubScheme::do_preRun( int run_tp, int an,
 
 int TSubScheme::do_postRun( int /*good*/ )
 {
-  sch->postRun();
-  // delObj( sch_ename, true ); // tmp: for debug: or forever?
-  return 1;
+  if( sch ) {
+    sch->postRun();
+    // delObj( sch_ename, true ); // tmp: for debug: or forever?
+    return 1;
+  }
+  return 0;
 }
 
 int TSubScheme::do_startLoop( int acnx, int acny )
@@ -178,11 +181,12 @@ int TSubScheme::do_endLoop()
 
 void TSubScheme::do_post_set()
 {
+  TMiso::do_post_set();
   sch_proto = getObjOfAncessorT<Scheme*>( sch_name );
   // if( !sch_proto ) {
   //   qWarning() << "Fail to find prototype cheme " << sch_name << NWHE; // Not here!
   // }
-  return LinkedObj::do_post_set();
+  return;
 }
 
 DEFAULT_FUNCS_REG(TSubScheme)
