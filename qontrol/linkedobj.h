@@ -41,6 +41,7 @@ class LinkedObj : public TDataSet {
    double* getDoublePrmPtr( const QString &nm, int *flg );
    bool isIgnored() const; // self or parents...
  protected:
+   PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
    DCL_DEFAULT_STATIC;
 };
 
@@ -79,7 +80,6 @@ class InputAbstract : public LinkedObj {
   PRM_INT( line_w,  0, "Line width", "Line width on scheme", "def=1\nmin=0\nmax=20" );
   PRM_COLOR( line_color,  0, "Line color", "Line color on scheme", "def=black" );
   PRM_SWITCH( onlyLabel, 0, "only Label", "draw only link label on scheme", "" );
-  PRM_DOUBLE( out0, efInner, "input", "Read by readInput for subschemes", "" );
   PRM_INT( linkType,  efInner | efRO, "Link type", "Describes link type", "def=3" );
   PRM_STRING( srcObjName, efInner | efRO, "Source object", "Name of the source object", ""  );
 

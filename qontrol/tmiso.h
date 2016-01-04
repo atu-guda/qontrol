@@ -114,8 +114,6 @@ class TMiso : public LinkedObj  {
    PRM_SWITCH( flip, efNoRunChange, "flip image", "flip left-right element icon", "sep=col" );
    PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "" );
 
-   PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
-
    /** pointer to parameters inputs container */
    InputParams *pis;
    /** time step -- setted by preRun 0 - special value to detect usage before start */
