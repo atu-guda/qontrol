@@ -54,9 +54,9 @@ class TRossler : public TMiso  {
    PRM_DOUBLE( vz, efInner, "vz", "dz/dt", "" );
    PRM_DOUBLE( v,  efInner, "v",  "dr/dt", ""  );
 
-   PRM_INPUT( in_x, 0, "input x", "Addition to x",  "sep=block" );
-   PRM_INPUT( in_y, 0, "input x", "Addition to y", "sep=col" );
-   PRM_INPUT( in_z, 0, "input x", "Addition to z",  "sep=col" );
+   PRM_INPUT( in_x, 0, "x+", "Addition to x",  "sep=block" );
+   PRM_INPUT( in_y, 0, "y+", "Addition to y",  "sep=col" );
+   PRM_INPUT( in_z, 0, "z+", "Addition to z",  "sep=col" );
 
    Q_CLASSINFO( "nameHintBase",  "ross_" );
    DCL_DEFAULT_STATIC;

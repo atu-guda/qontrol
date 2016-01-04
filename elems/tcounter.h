@@ -53,8 +53,8 @@ class TCounter : public TMiso  {
    /** use u[1] as reset */
    PRM_SWITCH( useReset, 0, "use Reset", "Use in_rst as Reset signal", "sep=col" );
 
-   PRM_INPUT( in_x,   0, "input", "Input source",  "sep=block" );
-   PRM_INPUT( in_rst, 0, "rst input", "Signal to reset counter", "sep=col" );
+   PRM_INPUT( in_x,   0, "in", "Input source",  "sep=block" );
+   PRM_INPUT( in_rst, 0, "rst", "Signal to reset counter", "sep=col" );
 
    int flip;
    /** old value of input */

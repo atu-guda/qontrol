@@ -65,7 +65,7 @@ class TFileSource : public TMiso  {
    PRM_INT( time_col,  efNRC, "Time column", "Determine time dy values in given column, -1 = manual", "def=-1" );
 
    PRM_LIST( itype, efNRC, "Interpolate", "Interpolation type", "enum=InterpolateType\ndef=1\nsep=col" );
-   PRM_DOUBLE( scale, efNRC, "scale", "commom coefficient for all outputs", "def=1.0" );
+   PRM_DOUBLE( scale, 0, "scale", "commom coefficient for all outputs", "def=1.0" );
 
    PRM_DOUBLE_ARR( v, efInner, "v", "Current data", "N=32\ndef=0.0" ); // 32 is max_col
 

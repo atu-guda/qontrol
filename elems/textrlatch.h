@@ -71,8 +71,8 @@ class TExtrLatch : public TMiso  {
    PRM_DOUBLE( u_ex,  efInner, "u_ex",  "u_ex" , "");
    PRM_DOUBLE( t_ex,  efInner, "t_ex",  "t_ex" , "");
 
-   PRM_INPUT( in_u,   0, "u input", "Main input",  "sep=block" );
-   PRM_INPUT( in_rst, 0, "rst signal", "Signal to reset", "sep=col" );
+   PRM_INPUT( in_u,   0, "in_u", "Main input",  "sep=block" );
+   PRM_INPUT( in_rst, 0, "rst", "Signal to reset", "sep=col" );
 
    double  u_old = 0, u_old2 = 0, t_old = 0;
 

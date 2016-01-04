@@ -79,11 +79,11 @@ class TCorrAnalysis : public TMiso  {
    PRM_DOUBLE( ave_x2, efInner, "aver_x2", "aver(x^2)", "" );
    PRM_DOUBLE( ave_y2, efInner, "aver_y2", "aver(y^2)", "" );
 
-   PRM_INPUT( in_x, 0, "x input", "First input",  "sep=block" );
-   PRM_INPUT( in_y, 0, "y input", "Second input", "" );
-   PRM_INPUT( in_add, 0, "add input", "Signal to add",  "sep=col" );
-   PRM_INPUT( in_rst, 0, "rst signal", "Reset signal", "" );
-   PRM_INPUT( in_calc, 0, "calc signal", "Calc signal", "sep=col" );
+   PRM_INPUT( in_x, 0, "in_x", "First input",  "sep=block" );
+   PRM_INPUT( in_y, 0, "in_y", "Second input", "" );
+   PRM_INPUT( in_add, 0, "in_{add}", "Signal to add",  "sep=col" );
+   PRM_INPUT( in_rst, 0, "rst", "Reset signal", "" );
+   PRM_INPUT( in_calc, 0, "calc", "Calc signal", "sep=col" );
 
    Q_CLASSINFO( "nameHintBase",  "corr_" );
    DCL_DEFAULT_STATIC;

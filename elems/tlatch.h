@@ -58,8 +58,8 @@ class TLatch : public TMiso  {
    PRM_SWITCH( useAdd,   efNRC, "use Add", "add current in_u to value, not set", "" );
    PRM_DOUBLE( lt, efInner, "Latch Time", "Time whan latch occurs" , "" );
 
-   PRM_INPUT( in_u, 0, "input", "Main input",  "sep=block" );
-   PRM_INPUT( in_latch, 0, "latch in", "Latch input", "sep=col" );
+   PRM_INPUT( in_u, 0, "in_u", "Main input",  "sep=block" );
+   PRM_INPUT( in_latch, 0, "latch", "Latch input", "sep=col" );
 
    int wasLatch = -1;
 

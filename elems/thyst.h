@@ -64,7 +64,7 @@ class THyst : public TMiso  {
    /** state s */
    PRM_DOUBLE( s, efInner, "s", "inner state 's'", "" );
 
-   PRM_INPUT( in_u, 0, "input", "Single input",  "sep=block" );
+   PRM_INPUT( in_u, 0, "in_u", "Single input",  "sep=block" );
 
    Q_CLASSINFO( "nameHintBase",  "hyst_" );
    DCL_DEFAULT_STATIC;

@@ -35,11 +35,11 @@ class TTrigger : public TMiso  {
      tr_rs = 0, tr_shmitt, tr_crise, tr_cdown, tr_clev
    };
    Q_ENUMS(TriggType);
-   Q_CLASSINFO( "enum_TriggType_0", "RS"               ); // tr_rs
-   Q_CLASSINFO( "enum_TriggType_1", "Shmitt(in_x)"     ); // tr_shmitt
-   Q_CLASSINFO( "enum_TriggType_2", "CountRise(in_x)"  ); // tr_crise
-   Q_CLASSINFO( "enum_TriggType_3", "CountDown(in_x)"  ); // tr_cdown
-   Q_CLASSINFO( "enum_TriggType_4", "CountLevel(in_x)" ); // tr_clev   
+   Q_CLASSINFO( "enum_TriggType_0", "RS"            ); // tr_rs
+   Q_CLASSINFO( "enum_TriggType_1", "Shmitt(X)"     ); // tr_shmitt
+   Q_CLASSINFO( "enum_TriggType_2", "CountRise(X)"  ); // tr_crise
+   Q_CLASSINFO( "enum_TriggType_3", "CountDown(X)"  ); // tr_cdown
+   Q_CLASSINFO( "enum_TriggType_4", "CountLevel(X)" ); // tr_clev   
  protected:
    /** main computation function */
    virtual double f( double t ) override;
@@ -72,7 +72,7 @@ class TTrigger : public TMiso  {
    PRM_INPUT( in_r, 0, "R", "Reset input",  "sep=block" );
    PRM_INPUT( in_s, 0, "S", "Set input", "sep=col" );
    PRM_INPUT( in_x, 0, "X", "X input",  "sep=col" );
-   PRM_INPUT( in_ena, 0, "enable in", "enable input", "sep=col" );
+   PRM_INPUT( in_ena, 0, "EN", "enable input", "sep=col" );
 
    /** old u[2] value */
    double u2_old = 0;

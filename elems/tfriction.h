@@ -40,7 +40,7 @@ class TFriction : public TMiso  {
    PRM_DOUBLE( f_mx, 0, "Max Ff",  "Max dry friction force (if constant) f_mx", "min=0\ndef=0.4" );
    PRM_DOUBLE( kf_mx, 0, "k_{Ff}", "Start force addition coefficient", "sep=col" );
    PRM_DOUBLE( kfv, 0, "k_{fv}", "Viscous friction coeff", "def=0.01");
-   PRM_SWITCH( useMf, efNRC, "use in\\_f\\_mx", "Use in_f_mx as maximum friction force", "sep=col"  );
+   PRM_SWITCH( useMf, efNRC, "use in_f_mx", "Use in_f_mx as maximum friction force", "sep=col"  );
    /** Current speed */
    PRM_DOUBLE( v, efInner, "v", "current speed", "" );
    /** Current friction force */
@@ -48,8 +48,8 @@ class TFriction : public TMiso  {
    /** state of mass: 0 -- sleep, 1 -- moving */
    PRM_INT( bodyState, efInner, "State", "State: 0=Sleep, 1=Run", ""  );
 
-   PRM_INPUT( in_u, 0,  "input", "Main (source) input",  "sep=block" );
-   PRM_INPUT( in_f_mx, 0, "input f_{mx}", "Maximum for input (if enabled)", "sep=col" );
+   PRM_INPUT( in_u, 0,  "in_u", "Main (source) input",  "sep=block" );
+   PRM_INPUT( in_f_mx, 0, "in_{fmx}", "Maximum for input (if enabled)", "sep=col" );
 
    /** old values and misc */
    double v_old = 0, x_old = 0;

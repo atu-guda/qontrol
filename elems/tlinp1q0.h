@@ -53,7 +53,7 @@ class TLinP1Q0 : public TMiso  {
    PRM_SWITCH( use_u2, 0, "u^2",
         "Calculate u^2 before usage", "" );
 
-   PRM_INPUT( in_u, 0, "u(t)", "Signal input",  "sep=block" );
+   PRM_INPUT( in_u, 0, "in_u", "Signal input",  "sep=block" );
    PRM_INPUT( in_f, 0, "in_f", "Functional input", "sep=col" );
 
    /** old value of x  */

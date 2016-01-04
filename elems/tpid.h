@@ -47,7 +47,7 @@ class TPid : public TMiso  {
    /** should output be devided to t */
    PRM_SWITCH( aver, efNRC, "Average", "Calculate average value", "sep=col" );
 
-   PRM_INPUT( in_u, 0, "input", "Single input u(x)",  "sep=block" );
+   PRM_INPUT( in_u, 0, "in_u", "Single input u(x)",  "sep=block" );
 
    /** accumulators and old values */
    double vi1 = 0, vi2 = 0, u_old = 0, u_old2 = 0, tdt2 = 1;

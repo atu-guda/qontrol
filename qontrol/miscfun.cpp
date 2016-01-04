@@ -343,7 +343,7 @@ QString substValues( const QString &s, const HolderData *ho )
 
     QString repl = QSL("???");
     HolderData *da = ho->getObj( nm );
-    if( da->isChildOf( QSL("TMiso") ) )  { // auto 'out0' add for TMiso
+    if( da && da->isChildOf( QSL("TMiso") ) )  { // auto 'out0' add for TMiso
       da = ho->getObj( nm % QSL(".out0") );
     }
     if( da ) {
@@ -356,7 +356,7 @@ QString substValues( const QString &s, const HolderData *ho )
         repl = QString::asprintf( sl[2].toLatin1(), v );
       } else if ( da->isChildOf( QSL("HolderValue") ) ) {
         repl = da->toString();
-      } else { // TODO: TMiso
+      } else {
         repl = da->objectName();
       }
     }
