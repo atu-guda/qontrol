@@ -78,8 +78,6 @@ class TSubScheme : public TMiso  {
    Scheme *sch = nullptr;
    //* ptr to scheme prototype
    Scheme *sch_proto = nullptr;
-   //* ptrs to inputs
-   QList<InputSimple*> inputs;
    //* ptrs to outputs
    QList<SubOutput*> subouts;
    static constexpr const char* const sch_ename = "sch";

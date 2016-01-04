@@ -105,7 +105,7 @@ class InputSimple : public InputAbstract {
   DCL_CREATE;
   DCL_STD_INF;
   // less operators for double: const only
-  operator double() const { return *p; };
+  operator double() const { return out0; };
   const double* caddr() const { return p; };
   /** find and set link to source or fake source */
   virtual void set_link() override;
@@ -136,7 +136,6 @@ class InputParam : public InputAbstract {
   operator double() const { return *p; };
   const double* caddr() const { return p; };
   double* targ_addr() const { return targ; };
-  int getOnlyFirst() const { return onlyFirst; }
   int getTargetFlag() const { return target_flag; }
   /** find and set link to  from (fake)  source to (fake) target */
   virtual void set_link() override;

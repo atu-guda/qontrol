@@ -93,10 +93,6 @@ TSubScheme::~TSubScheme()
 double TSubScheme::f( double t )
 {
   double v = 0;
-  for( auto in : inputs ) {
-    in->readInput();
-    // v = *in; // TMP: check
-  }
 
   if( sch ) {
     sch->runOneLoop( t, iter_c );
@@ -119,6 +115,7 @@ double TSubScheme::f( double t )
 int TSubScheme::do_preRun( int run_tp, int an,
                            int anx, int any, double atdt )
 {
+  TMiso::do_preRun( run_tp, an, anx, any, atdt );
   IGNORE_MOD_HERE;
   sch_proto = getObjOfAncessorT<Scheme*>( sch_name );
   if( !sch_proto ) {
@@ -142,20 +139,14 @@ int TSubScheme::do_preRun( int run_tp, int an,
     return 0;
   }
 
+  handleStructChanged();
   sch->handleStructChanged();
 
-  inputs.clear();
-  for( auto in : TCHILD(InputSimple*) ) {
-    inputs.append( in );
-  }
 
   subouts.clear();
   for( auto so : TCHILD(SubOutput*) ) {
-    subouts.append( so );
-  }
-
-  for( auto so : subouts ) {
     so->set_link();
+    subouts.append( so );
   }
 
   return sch->preRun( run_tp, an, anx, any, atdt );
