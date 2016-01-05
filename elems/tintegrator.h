@@ -37,10 +37,11 @@ class TIntegrator : public TMiso  {
    /** reimplemented from TMiso to init state */
    virtual int do_startLoop( int acnx, int acny ) override;
 
-   PRM_DOUBLE( ki, 0, "k_i",  "Factor before integral", "def=1" );
-   PRM_DOUBLE( dis, 0, "Disc coeff", "Discharde coeff (if enabled)", "def=1e-4" );
-   PRM_DOUBLE( vmin, 0, "Min limit", "Limit min value", "def=-10000" );
-   PRM_DOUBLE( vmax, 0, "Max limit", "Limit max value", "def=10000" );
+   PRM_PARAMD( ki, 0, "k_i",  "Factor before integral", "def=1" );
+   PRM_PARAMD( dis, 0, "Disc coeff", "Discharde coeff (if enabled)", "def=1e-4" );
+   PRM_PARAMD( vmin, 0, "Min limit", "Limit min value", "def=-10000" );
+   PRM_PARAMD( vmax, 0, "Max limit", "Limit max value", "def=10000" );
+
    PRM_DOUBLE( v, efInner, "v", "Current value", "" );
    PRM_DOUBLE( t_rst, efInner, "t_{rst}", "time from last reset", "" );
    PRM_DOUBLE( v_a, efInner, "v_a", "Average value", "" );

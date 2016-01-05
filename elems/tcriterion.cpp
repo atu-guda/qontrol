@@ -57,8 +57,9 @@ double TCriterion::f( double t )
   };
 
   aa = a;
-  if( useA )
+  if( useA ) {
     aa = in_a;
+  }
 
   switch( (int)type ) {
     case cr_mod_less:

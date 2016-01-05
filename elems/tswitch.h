@@ -35,8 +35,8 @@ class TSwitch : public TMiso  {
    virtual double f( double t ) override;
 
    /** levels  */
-   PRM_DOUBLE( level_0,efNRC, "Level 0", "Level to switch from in_0 to in_1", "def=0" );
-   PRM_DOUBLE( step,   efNRC, "Step",   "Step between levels", "def=1\nmin=1e-20" );
+   PRM_PARAMD( level_0,efNRC, "Level 0", "Level to switch from in_0 to in_1", "def=0" );
+   PRM_PARAMD( step,   efNRC, "Step",   "Step between levels", "def=1\nmin=1e-20" );
    PRM_INT(    n_max,  efNRC, "Max n",   "Maximum level number", "def=7\nmin=1\nmax=7" );
 
    PRM_DOUBLE( n_cur,  efInner, "Current n",   "Current input number (double)", "" );

@@ -34,15 +34,15 @@ class TSum8 : public TMiso  {
    /** main computation function */
    virtual double f( double t ) override;
    /** coefficients on input and shift */
-   PRM_DOUBLE( a_0, 0, "a_0", "factor in input 0", "def=1" );
-   PRM_DOUBLE( a_1, 0, "a_1", "factor in input 1", "def=-1" );
-   PRM_DOUBLE( a_2, 0, "a_2", "factor in input 2", "" );
-   PRM_DOUBLE( a_3, 0, "a_3", "factor in input 3", "" );
-   PRM_DOUBLE( a_4, 0, "a_4", "factor in input 4", "sep=col" );
-   PRM_DOUBLE( a_5, 0, "a_5", "factor in input 5", "" );
-   PRM_DOUBLE( a_6, 0, "a_6", "factor in input 6", "" );
-   PRM_DOUBLE( a_7, 0, "a_7", "factor in input 7", "" );
-   PRM_DOUBLE( b,  0, "b", "static shift", "sep=col" );
+   PRM_PARAMD( a_0, 0, "a_0", "factor in input 0", "def=1" );
+   PRM_PARAMD( a_1, 0, "a_1", "factor in input 1", "def=-1" );
+   PRM_PARAMD( a_2, 0, "a_2", "factor in input 2", "" );
+   PRM_PARAMD( a_3, 0, "a_3", "factor in input 3", "" );
+   PRM_PARAMD( a_4, 0, "a_4", "factor in input 4", "sep=col" );
+   PRM_PARAMD( a_5, 0, "a_5", "factor in input 5", "" );
+   PRM_PARAMD( a_6, 0, "a_6", "factor in input 6", "" );
+   PRM_PARAMD( a_7, 0, "a_7", "factor in input 7", "" );
+   PRM_PARAMD( b,  0, "b", "static shift", "sep=col" );
 
    PRM_INPUT( u_0, 0, "in_0", "Input 0",  "sep=block" );
    PRM_INPUT( u_1, 0, "in_1", "Input 1", "" );

@@ -95,7 +95,7 @@ int TMulsumN::do_preRun( int /*run_tp*/, int /*an*/, int /*anx*/, int /*any*/, d
   QMap<int,ChInSim2> ipairs;
   pf_ins.clear();
   np = 0;
-  for( auto i : TCHILD(InputSimple*) ) {
+  for( auto i : inps_s ) {
     int ch  = i->getDataD( "channel", -1 );
     int sch = i->getDataD( "subchannel", -1 );
     if( sch == 0 ) {

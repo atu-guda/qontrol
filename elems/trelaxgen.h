@@ -38,11 +38,11 @@ class TRelaxGen : public TMiso  {
    /** reimplemented from TMiso to reset */
    virtual int do_startLoop( int acnx, int acny ) override;
 
-   PRM_DOUBLE( c, 0, "c", "Capacitance", "def=1\nmin=1e-16" );
-   PRM_DOUBLE( r_1, 0, "r_1", "Charge resistance", "def=1\nmin=1e-6\nsep=col" );
-   PRM_DOUBLE( r_2, 0, "r_2", "Discharge resistance", "def=0.2\nmin=1e-6" );
-   PRM_DOUBLE( v_1, 0, "v_1", "Charge limit", "def=2\nsep=col" );
-   PRM_DOUBLE( v_2, 0, "v_2", "Discharge limit", "def=0.1" );
+   PRM_PARAMD( c, 0, "c", "Capacitance", "def=1\nmin=1e-16" );
+   PRM_PARAMD( r_1, 0, "r_1", "Charge resistance", "def=1\nmin=1e-6\nsep=col" );
+   PRM_PARAMD( r_2, 0, "r_2", "Discharge resistance", "def=0.2\nmin=1e-6" );
+   PRM_PARAMD( v_1, 0, "v_1", "Charge limit", "def=2\nsep=col" );
+   PRM_PARAMD( v_2, 0, "v_2", "Discharge limit", "def=0.1" );
    /** misc flags */
    PRM_SWITCH( useCharge, efNoRunChange, "Use i_{ch}", "Use i_ch as charge current", "sep=block" );
    PRM_SWITCH( useDischarge, efNoRunChange, "Use i_{dis}", "Use i_dis as discharge current", "" );

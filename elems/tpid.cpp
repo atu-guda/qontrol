@@ -62,13 +62,16 @@ double TPid::f( double t )
     v = kd1 * d1 + kp * uc + ki1 * vi1 + ki2 * vi2;
     return v;
   };
+
   d1 = ( uc - u_old ) / tdt;
   d2 = ( uc - 2*u_old + u_old2 ) / tdt2;
   vi1 += uc * tdt;
   vi2 += vi1 * tdt;
   v = kd2 * d2 + kd1 * d1 + kp * uc + ki1 * vi1 + ki2 * vi2;
-  if( aver )
+
+  if( aver ) {
     v /= t;
+  }
   u_old2 = u_old; u_old = uc;
   return v;
 }

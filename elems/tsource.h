@@ -72,20 +72,20 @@ class TSource : public TMiso  {
    /** type of input and misc flags */
    PRM_LIST( type, efNRC, "Type", "Source type", "enum=SourceType" ); //TODO
    /** Amplitude */
-   PRM_DOUBLE( uu, 0, "U", "Amplitude of signal (or pulse max)", "def=1\nsep=col" );
+   PRM_PARAMD( uu, 0, "U", "Amplitude of signal (or pulse max)", "def=1\nsep=col" );
    /** Frequency */
-   PRM_DOUBLE( omega, 0, "\\omega", "Frequency of source (or pulse width)", "def=0.7" );
+   PRM_PARAMD( omega, 0, "\\omega", "Frequency of source (or pulse width)", "def=0.7" );
    /** constant shift */
-   PRM_DOUBLE( cc, 0, "C", "Constant base", "sep=col" );
+   PRM_PARAMD( cc, 0, "C", "Constant base", "sep=col" );
    /** phase shift */
-   PRM_DOUBLE( phi, 0, "\\phi", "Phase shift", "def=0" );
+   PRM_PARAMD( phi, 0, "\\phi", "Phase shift", "def=0" );
 
    // ----------- U chaos ----------------------
    PRM_SWITCH( use_u_ch, efNRC, "use U chaos", "Use amplitude perturbations", "sep=tab\ntabname=Chaos" );
-   PRM_DOUBLE(  u_ch_v0, efNRC, "vU min"     , "Minimum value of amplitule factor", "def=0.5" );
-   PRM_DOUBLE(  u_ch_vm, efNRC, "vU max"     , "Maximum value of amplitule factor", "def=1.5" );
-   PRM_DOUBLE(  u_ch_t0, efNRC, "tU min"     , "Minimum time of change", "def=2\nmin=1e-20\nmax=1e20" );
-   PRM_DOUBLE(  u_ch_tm, efNRC, "tU max"     , "Maximum time of change", "def=10\nmin=1e-20\nmax=1e20" );
+   PRM_PARAMD(  u_ch_v0, efNRC, "vU min"     , "Minimum value of amplitule factor", "def=0.5" );
+   PRM_PARAMD(  u_ch_vm, efNRC, "vU max"     , "Maximum value of amplitule factor", "def=1.5" );
+   PRM_PARAMD(  u_ch_t0, efNRC, "tU min"     , "Minimum time of change", "def=2\nmin=1e-20\nmax=1e20" );
+   PRM_PARAMD(  u_ch_tm, efNRC, "tU max"     , "Maximum time of change", "def=10\nmin=1e-20\nmax=1e20" );
    PRM_INT(      seed_u, efNRC, "U seed"     , "Random Generator seed", "def=RND" );
    PRM_LIST( seedType_u, efNRC, "U seed type", "When to seed", "def=3\nenum=SeedType" );
    PRM_SWITCH( addBaseSeed_u, efNRC, "U add base seed", "Add seed from base(model)", "def=1");
@@ -93,10 +93,10 @@ class TSource : public TMiso  {
 
    // ----------- Phi chaos ----------------------
    PRM_SWITCH( use_f_ch,efNRC, "use \\phi chaos", "Use phase perturbations", "sep=col" );
-   PRM_DOUBLE( f_ch_v0, efNRC, "vF min"       , "Minimum value of phase factor", "def=-0.2" );
-   PRM_DOUBLE( f_ch_vm, efNRC, "vF max"       , "Maximum value of phase factor", "def=0.2" );
-   PRM_DOUBLE( f_ch_t0, efNRC, "tF min"       , "Minimum time of change", "def=2\nmin=1e-20\nmax=1e20" );
-   PRM_DOUBLE( f_ch_tm, efNRC, "rF max"       , "Maximum time of change", "def=10\nmin=1e-20\nmax=1e20" );
+   PRM_PARAMD( f_ch_v0, efNRC, "vF min"       , "Minimum value of phase factor", "def=-0.2" );
+   PRM_PARAMD( f_ch_vm, efNRC, "vF max"       , "Maximum value of phase factor", "def=0.2" );
+   PRM_PARAMD( f_ch_t0, efNRC, "tF min"       , "Minimum time of change", "def=2\nmin=1e-20\nmax=1e20" );
+   PRM_PARAMD( f_ch_tm, efNRC, "rF max"       , "Maximum time of change", "def=10\nmin=1e-20\nmax=1e20" );
    PRM_INT( seed_p, efNRC,     "F seed"       , "Random Generator seed", "def=RND" );
    PRM_LIST( seedType_p, efNRC,"F seed type"  , "When to seed", "def=3\nenum=SeedType" );
    PRM_SWITCH( addBaseSeed_p, efNRC, "F add base to seed", "Add seed from base(model)", "def=1" );

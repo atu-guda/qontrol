@@ -49,7 +49,7 @@ class TRandTrigg : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** Probability of spontatious flip  */
-   PRM_DOUBLE( prob, 0, "Probability", "Probability of spontatious flip","def=0.5");
+   PRM_PARAMD( prob, 0, "Probability", "Probability of spontatious flip","def=0.5");
    /** Forced every */
    PRM_INT( nforce, 0, "Forced every N", "Forced every N changes", "def=2" );
    /* flags */

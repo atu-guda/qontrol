@@ -31,7 +31,7 @@ CTOR(TSumN,TMiso)
 double TSumN::f( double /* t */ )
 {
   double r = 0;
-  for( auto i : inputs ) {
+  for( auto i : inps_s ) {
     r += static_cast<double>(*i);
   }
 
@@ -40,15 +40,6 @@ double TSumN::f( double /* t */ )
   return r;
 }
 
-int TSumN::do_preRun( int /*run_tp*/, int /*an*/, int /*anx*/, int /*any*/, double /*atdt*/ )
-{
-  inputs.clear();
-  for( auto i : TCHILD(InputSimple*) ) {
-    inputs.append( i );
-  }
-
-  return true;
-}
 
 DEFAULT_FUNCS_REG(TSumN)
 

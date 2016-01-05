@@ -55,10 +55,15 @@ double TFriction::f( double /* t */ )
 {
   double f, x, f_fd, cf_mx;
   double fx = in_u;
-  if( useMf )
+  if( mass <= 0 ) { // failsafe
+    mass = 1e-20;
+  }
+
+  if( useMf ) {
     cf_mx = in_f_mx;
-  else
+  } else {
     cf_mx = f_mx;
+  }
 
   if( bodyState == 0 ) { // sleep
     if( fabs(fx) <= cf_mx * ( 1 + kf_mx ) ) {
@@ -76,13 +81,14 @@ double TFriction::f( double /* t */ )
     double f_fv = - v_old * kfv;
     Ff = f = fx + f_fd + f_fv;
     v = v_old + f * tdt / mass;
-    if( v * v_old > 0 )
+    if( v * v_old > 0 ) {
       x = x_old + ( v + v_old ) * tdt / 2;
-    else { // start to  sleep
+    } else { // start to  sleep
       v = 0; bodyState = 0;
       x = x_old + v_old * tdt * fabs( v_old / (v_old - v) ) / 2;
     };
   };
+
   v_old = v; x_old = x;
   return x;
 }

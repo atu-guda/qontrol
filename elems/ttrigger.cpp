@@ -55,10 +55,12 @@ double TTrigger::f( double t )
   u2_old = in_s;
 
   if( useEnable && ! ui_ena ) { // disabled state
-    if( usePulse )
+    if( usePulse ) {
       return 0;
-    if( cst )
+    }
+    if( cst ) {
       return 1;
+    }
     return useMinus ? -1 : 0;
   };
 

@@ -34,12 +34,12 @@ class TLinear : public TMiso  {
    /** main computation function */
    virtual double f( double t ) override;
    /** coefficients on input and shift */
-   PRM_DOUBLE( a0, 0, "a0", "factor in input 0", "def=1" );
-   PRM_DOUBLE( a1, 0, "a1", "factor in input 1", "def=-1" );
-   PRM_DOUBLE( a2, 0, "a2", "factor in input 2", "sep=col" );
-   PRM_DOUBLE( a3, 0, "a3", "factor in input 3", "" );
-   PRM_DOUBLE( b,  0, "b", "static shift", "sep=col" );
-   PRM_DOUBLE( a,  0, "a", "common factor", "sep=col\ndef=1" );
+   PRM_PARAMD( a0, 0, "a0", "factor in input 0", "def=1" );
+   PRM_PARAMD( a1, 0, "a1", "factor in input 1", "def=-1" );
+   PRM_PARAMD( a2, 0, "a2", "factor in input 2", "sep=col" );
+   PRM_PARAMD( a3, 0, "a3", "factor in input 3", "" );
+   PRM_PARAMD( b,  0, "b", "static shift", "sep=col" );
+   PRM_PARAMD( a,  0, "a", "common factor", "sep=col\ndef=1" );
 
    PRM_INPUT( in_0, 0, "in_0", "First input",  "sep=block" );
    PRM_INPUT( in_1, 0, "in_1", "Second input", "sep=col" );

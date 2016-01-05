@@ -48,7 +48,7 @@ class TLogic : public TMiso  {
    /** type of logic element */
    PRM_LIST( type, efNRC, "Type", "Type of logic", "enum=LogicType" );
    /** level of 1  */
-   PRM_DOUBLE( level, 0, "level of 1", "Minimal level of '1' signal on input", "def=0.1" );
+   PRM_PARAMD( level, 0, "level of 1", "Minimal level of '1' signal on input", "def=0.1" );
    /** misc flags */
    PRM_SWITCH( useNInp0, efNRC, "Inverse u_0", "Inverse input u_0", "sep=col" );
    PRM_SWITCH( useNInp1, efNRC, "Inverse u_1", "Inverse input u_1", ""  );

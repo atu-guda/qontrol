@@ -49,6 +49,7 @@ double TDelay::f( double t )
     double v = cdelay / tdt;
     icd = int( v );
     v2 = v - icd; v1 = 1.0 - v2;
+    prm_mod = 0;
   }
 
   double cu = in_u;
@@ -80,6 +81,9 @@ int TDelay::do_postRun( int /*good*/ )
 
 int TDelay::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
+  if( cdelay > mdelay ) {
+    cdelay = mdelay;
+  }
   double v;
   buf->reset(); u00 = 0;
   v = cdelay / tdt;

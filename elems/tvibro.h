@@ -31,23 +31,17 @@ class TVibro : public TMiso  {
    DCL_CREATE;
    DCL_STD_INF;
  protected:
-   /** main computation function */
    virtual double f( double t ) override;
-   /** reimplemented from TMiso to init state */
    virtual int do_startLoop( int acnx, int acny ) override;
-   /** will be called before any action -- good place for allocs */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
 
-   /** damping */
-   PRM_DOUBLE( c0, 0, "c_0", "Damping coeficient", "def=0.4" );
-   /** natural frequency */
-   PRM_DOUBLE( Omega, 0, "\\Omega", "Natural frequency if c_0=0 and f(x)=x", "def=1.2" );
-   /** Initial velosity dx/dt(0) */
-   PRM_DOUBLE( v0, efNoRunChange, "v_0", "v(0)", "sep=col" );
-   /** Use u[1] as return force element output */
+   PRM_PARAMD( c0, 0, "c_0", "Damping coefficient", "def=0.4" );
+   PRM_PARAMD( Omega, 0, "\\Omega", "Natural frequency if c_0=0 and f(x)=x", "def=1.2" );
+   PRM_PARAMD( v0, efNoRunChange, "v_0", "v(0)", "sep=col" );
    PRM_SWITCH( use_u1, efNoRunChange, "use Force",
         "Use in_force as return force element output", "" );
-   /** Curent velosity dx/dt */
+
+   /** Current velocity dx/dt */
    PRM_DOUBLE( v, efInner, "v", "v(t)", "" );
 
    PRM_INPUT( in_u, 0, "u(t)", "Main input",  "sep=block" );

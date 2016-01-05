@@ -49,6 +49,7 @@ double TSourceLin::f( double t )
       curr_lin = 0;
   };
   v = vs[curr_lin] + slopes[curr_lin] * tr;
+  // v *= a;
   return v;
 }
 

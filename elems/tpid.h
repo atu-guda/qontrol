@@ -39,11 +39,11 @@ class TPid : public TMiso  {
    virtual int do_startLoop( int acnx, int acny ) override;
 
    /** coefficients  */
-   PRM_DOUBLE( kd2, 0, "k_{d2}", "Coefficient in second derivation", "");
-   PRM_DOUBLE( kd1, 0, "k_{d1}", "Coefficient in first derivation" , "");
-   PRM_DOUBLE( kp,  0, "k_p" ,   "Coefficient in proportional part", "sep=col\ndef=1");
-   PRM_DOUBLE( ki1, 0, "k_{i1}", "Coefficient in first integrator" , "sep=col");
-   PRM_DOUBLE( ki2, 0, "k_{i2}", "Coefficient in second integrator", "");
+   PRM_PARAMD( kd2, 0, "k_{d2}", "Coefficient in second derivation", "");
+   PRM_PARAMD( kd1, 0, "k_{d1}", "Coefficient in first derivation" , "");
+   PRM_PARAMD( kp,  0, "k_p" ,   "Coefficient in proportional part", "sep=col\ndef=1");
+   PRM_PARAMD( ki1, 0, "k_{i1}", "Coefficient in first integrator" , "sep=col");
+   PRM_PARAMD( ki2, 0, "k_{i2}", "Coefficient in second integrator", "");
    /** should output be devided to t */
    PRM_SWITCH( aver, efNRC, "Average", "Calculate average value", "sep=col" );
 

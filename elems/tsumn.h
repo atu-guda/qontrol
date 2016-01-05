@@ -33,12 +33,9 @@ class TSumN : public TMiso  {
  protected:
    /** main computation function */
    virtual double f( double t ) override;
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
 
-   PRM_DOUBLE( a, 0, "a", "common factor", "def=1\nsep=colend" );
-   PRM_DOUBLE( b,  0, "b", "static shift", "sep=blockend" );
-
-   QVector<InputSimple*> inputs;
+   PRM_PARAMD( a, 0, "a", "common factor", "def=1\nsep=colend" );
+   PRM_PARAMD( b,  0, "b", "static shift", "sep=blockend" );
 
    Q_CLASSINFO( "nameHintBase",  "sumn_" );
    DCL_DEFAULT_STATIC;

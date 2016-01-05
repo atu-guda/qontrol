@@ -41,29 +41,35 @@ double TLogic::f( double /* t */ )
   int iu1 = ( in_1 > level );
   int iu2 = ( in_2 > level );
   int iu3 = ( in_3 > level );
-  if( useNInp0 ) iu0 = ! iu0;
-  if( useNInp1 ) iu1 = ! iu1;
-  if( useNInp2 ) iu2 = ! iu2;
-  if( useNInp3 ) iu3 = ! iu3;
+  if( useNInp0 ) { iu0 = ! iu0; }
+  if( useNInp1 ) { iu1 = ! iu1; }
+  if( useNInp2 ) { iu2 = ! iu2; }
+  if( useNInp3 ) { iu3 = ! iu3; }
   ou = 0;
   switch( (int)type ) {
     case logAnd:
-      if( iu0 > 0 && iu1 > 0 && iu2 > 0 && iu3 > 0 )
+      if( iu0 > 0 && iu1 > 0 && iu2 > 0 && iu3 > 0 ) {
         ou = 1;
+      }
       break;
     case logOr:
-      if( iu0 > 0 || iu1 > 0 || iu2 > 0 || iu3 > 0 )
+      if( iu0 > 0 || iu1 > 0 || iu2 > 0 || iu3 > 0 ) {
         ou = 1;
+      }
       break;
     case logXor:
-      if( iu0 )
+      if( iu0 ) {
           ou = !ou;
-      if( iu1 )
+      }
+      if( iu1 ) {
           ou = !ou;
-      if( iu2 )
+      }
+      if( iu2 ) {
           ou = !ou;
-      if( iu3 )
+      }
+      if( iu3 ) {
           ou = !ou;
+      }
       break;
     case logU0:
       ou = iu0; break;
@@ -73,10 +79,12 @@ double TLogic::f( double /* t */ )
       ou = 1; break;
     default: ;
   };
-  if( useNOut )
+  if( useNOut ) {
     ou = !ou;
-  if( ou )
+  }
+  if( ou ) {
     return 1;
+  }
   return useMinus ? -1 : 0;
 }
 

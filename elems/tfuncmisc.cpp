@@ -38,7 +38,7 @@ CTOR(TFuncMisc,TMiso)
 
 double TFuncMisc::f( double /* t */ )
 {
-  double v, y;
+  double v;
   y = in_0 - in_1 - x0;
   switch( (int)type ) {
     case ft_deadLine     : v = a * deadLine( y, b ); break;

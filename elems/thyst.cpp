@@ -77,10 +77,14 @@ double THyst::f( double /* t */ )
 
 void THyst::fixState(void)
 {
-  if( s > x0 )
-    { d += s - x0;  s = (double)x0;  };
-  if( s < -x0 )
-    { d += s + x0;  s = -x0; };
+  if( x0 < 0 ) { x0 = 0; };
+  if( s > x0 ) {
+    d += s - x0;  s = (double)x0;
+  };
+  if( s < -x0 ) {
+    d += s + x0;  s = -x0;
+  };
+  prm_mod = 0;
 }
 
 int THyst::do_startLoop( int /*acnx*/, int /*acny*/ )

@@ -54,8 +54,8 @@ class TCorrAnalysis : public TMiso  {
    PRM_SWITCH( useCalc,  efNoRunChange, "use Calc", "Use in_calc>0 as signal to calc", "" );
    PRM_SWITCH( useReset, efNoRunChange, "use Reset", "Use u_rst>0 as signal to reset", "" );
    /** time start / stop values */
-   PRM_DOUBLE( t0, efNoRunChange, "t0", "Time to start on given type", "min=0\nsep=col" );
-   PRM_DOUBLE( t1, efNoRunChange, "t1", "Time to stop on given type", "min=0\ndef=10000" );
+   PRM_PARAMD( t0, efNRC, "t0", "Time to start on given type", "min=0\nsep=col" );
+   PRM_PARAMD( t1, efNRC, "t1", "Time to stop on given type", "min=0\ndef=10000" );
    /** current loop # and number of collected data,  ok state - calculated */
    PRM_INT( ii, efInner, "ii", "current loop number", "" );
    PRM_INT( n, efInner, "n", "number of collected data", "" );

@@ -47,7 +47,7 @@ class TLatch : public TMiso  {
    /** type of */
    PRM_LIST( type, efNRC, "Type", "Latch type", "enum=LatchType" );
    /** time to latch */
-   PRM_DOUBLE( t0, efNRC, "Time", "Time to latch" , "sep=col" );
+   PRM_PARAMD( t0, 0, "Time", "Time to latch" , "sep=col" );
    /** current value */
    PRM_DOUBLE( v, efInner, "v", "Current value", "" );
    /** old input  */
@@ -59,7 +59,7 @@ class TLatch : public TMiso  {
    PRM_DOUBLE( lt, efInner, "Latch Time", "Time whan latch occurs" , "" );
 
    PRM_INPUT( in_u, 0, "in_u", "Main input",  "sep=block" );
-   PRM_INPUT( in_latch, 0, "latch", "Latch input", "sep=col" );
+   PRM_INPUT( in_latch, 0, "in_{latch}", "Latch input", "sep=col" );
 
    int wasLatch = -1;
 

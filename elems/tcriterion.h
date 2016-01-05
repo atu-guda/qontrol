@@ -51,9 +51,9 @@ class TCriterion : public TMiso  {
    /** type of criterion */
    PRM_LIST( type, efNRC, "Type", "Type of criterion", "enum=CritType" );
    /** coefficients  */
-   PRM_DOUBLE( a, 0, "a", "level 'a'", "def=0.5" );
-   PRM_DOUBLE( b, 0, "b", "level 'b'", "def=1" );
-   PRM_DOUBLE( t0, 0, "t0",  "Start time", "" );
+   PRM_PARAMD( a, 0, "a", "level 'a'", "def=0.5" );
+   PRM_PARAMD( b, 0, "b", "level 'b'", "def=1" );
+   PRM_PARAMD( t0, 0, "t0",  "Start time", "" );
    /** flags and state */
    PRM_SWITCH( useA, efNRC, "Use in_a is a", "Use in_a as 'a' value", "sep=col" );
    PRM_SWITCH( useT0, efNRC, "t0", "Dont work before given time (t0)", "" );

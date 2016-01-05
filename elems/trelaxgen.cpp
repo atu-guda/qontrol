@@ -43,6 +43,12 @@ int TRelaxGen::do_startLoop( int /*acnx*/, int /*acny*/ )
 
 double TRelaxGen::f( double  /* t */ )
 {
+  if( prm_mod ) {
+    if( c <= 0 )   { c   = 1e-16; };
+    if( r_1 <= 0 ) { r_1 = 1e-6;  };
+    if( r_2 <= 0 ) { r_2 = 1e-6;  };
+    prm_mod = 0;
+  }
   // TODO: external I calc
   dv_ch  = ( v_in - v );
   dv_dis = (double)v;

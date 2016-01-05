@@ -58,9 +58,7 @@ class TExtrLatch : public TMiso  {
    PRM_INT( wasExtr, efInner,  "wasExtr", "flag: extremum detected", "" );
    PRM_INT( isStart, efInner, "isStart", "Was start", "");
    /** start time */
-   PRM_DOUBLE( tStart, efNRC, "Time start", "Time start", "sep=col");
-   /** fuzzy level for local extr */
-   PRM_DOUBLE( fuzzy, efOld, "Fuzzy level", "Fuzzy level for local extremum catcher", "min=0" );
+   PRM_PARAMD( tStart, efNRC, "Time start", "Time start", "sep=col");
    /** holders for extr levels and old values */
    PRM_DOUBLE( u_max, efInner, "u_max", "u_max", "");
    PRM_DOUBLE( t_max, efInner, "t_max", "t_max", "");

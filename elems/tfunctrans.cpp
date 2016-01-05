@@ -38,7 +38,7 @@ CTOR(TFuncTrans,TMiso)
 
 double TFuncTrans::f( double /* t */ )
 {
-  double v, y, by, tm;
+  double v, by, tm;
   y = in_0 - in_1 - x0; by = y * b;
   switch( (int)type ) {
     case ft_sin:

@@ -29,6 +29,7 @@ CTOR(TSwitch,TMiso)
 
 double TSwitch::f( double /* t */ )
 {
+  if( fabs(step) < D_AZERO ) { step = D_AZERO; }
   double vn = qBound( 0.0, ( in_s - level_0 ) / step, double(n_max) );
   int n = int( vn );
   n_cur = n;

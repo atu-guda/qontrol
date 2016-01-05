@@ -46,27 +46,17 @@ class TTrigger : public TMiso  {
    /** reimplemented from TMiso to init state */
    virtual int do_startLoop( int acnx, int acny ) override;
 
-   /** type of trigger */
    PRM_LIST( type, efNRC, "Type", "Type of trigger", "enum=TriggType" );
-   /**  current state */
    PRM_INT( cst, efInner, "state", "current state", "" );
-   /** level of 0  */
-   PRM_DOUBLE( level0, 0, "Level of 0", "Level of '0' signal", "def=0.1" );
-   /** level of 1 (shmidt) */
-   PRM_DOUBLE( level1, 0, "Level of 1", "Level of '1' signal (for shmidt)", "def=0.5"  );
-   /** autoreset time */
-   PRM_DOUBLE( t0, 0, "t0", "Autoreset time (if enabled)", "def=2" );
-   /** elapsed time */
+   PRM_PARAMD( level0, 0, "Level of 0", "Level of '0' signal", "def=0.1" );
+   PRM_PARAMD( level1, 0, "Level of 1", "Level of '1' signal (for shmidt)", "def=0.5"  );
+   PRM_PARAMD( t0, 0, "t0", "Autoreset time (if enabled)", "def=2" );
+
    PRM_DOUBLE( et, efInner, "et", "Elapsed time", "" );
-   /** set to 1 on start */
    PRM_SWITCH( useInit1, efNRC, "Set on start", "Set triggers value to 1 of start", "sep=col" );
-   /** use u[3] as enable */
    PRM_SWITCH( useEnable, efNRC, "use Enable", "Use in_ena as enable signal", "" );
-   /** pulse output */
    PRM_SWITCH( usePulse, efNRC, "Pulse output",  "Output is pulse, no level", "sep=col" );
-   /** use -1 as negative output */
    PRM_SWITCH( useMinus, efNRC, "Negative pulse", "Drop pulse is negative, not 0", "" );
-   /** autoreset after t0 */
    PRM_SWITCH( useT0, efNRC, "Autoreset (t0)", "Use autoreset after t0 time elapsed", "");
 
    PRM_INPUT( in_r, 0, "R", "Reset input",  "sep=block" );

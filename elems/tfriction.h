@@ -36,10 +36,10 @@ class TFriction : public TMiso  {
    /** reimplemented from TMiso to init state */
    virtual int do_startLoop( int acnx, int acny ) override;
 
-   PRM_DOUBLE( mass, 0, "Mass", "Body mass", "min=1e-30\ndef=1" );
-   PRM_DOUBLE( f_mx, 0, "Max Ff",  "Max dry friction force (if constant) f_mx", "min=0\ndef=0.4" );
-   PRM_DOUBLE( kf_mx, 0, "k_{Ff}", "Start force addition coefficient", "sep=col" );
-   PRM_DOUBLE( kfv, 0, "k_{fv}", "Viscous friction coeff", "def=0.01");
+   PRM_PARAMD( mass, 0, "Mass", "Body mass", "min=1e-30\ndef=1" );
+   PRM_PARAMD( f_mx, 0, "Max Ff",  "Max dry friction force (if constant) f_mx", "min=0\ndef=0.4" );
+   PRM_PARAMD( kf_mx, 0, "k_{Ff}", "Start force addition coefficient", "sep=col" );
+   PRM_PARAMD( kfv, 0, "k_{fv}", "Viscous friction coeff", "def=0.01");
    PRM_SWITCH( useMf, efNRC, "use in_f_mx", "Use in_f_mx as maximum friction force", "sep=col"  );
    /** Current speed */
    PRM_DOUBLE( v, efInner, "v", "current speed", "" );
