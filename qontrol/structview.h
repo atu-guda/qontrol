@@ -52,7 +52,6 @@ class StructView : public CmdView  {
       // calculated
       int xs0, ys0, xs, ys, xc, yc, flip_factor;
       int li_dst_x, pre_dst_x, li_src_x, li_pdst_y;
-      const InputParams *pis;
     };
     /** enumeration for chate checking */
     enum CheckType { validCheck = 0, selCheck, linkToCheck,

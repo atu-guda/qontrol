@@ -155,7 +155,7 @@ int TMiso::do_endLoop()
 void TMiso::do_structChanged()
 {
   LinkedObj::do_structChanged();
-  inps.clear(); inps_a.clear(); inps_s.clear();
+  inps.clear(); inps_a.clear(); inps_s.clear(); inps_ap.clear();
 
   for( auto in : TCHILD(InputAbstract*) ) {
     in->set_link();
@@ -169,6 +169,11 @@ void TMiso::do_structChanged()
     InputSimple *in_s = qobject_cast<InputSimple*>( in );
     if( in_s ) {
       inps_s.append( in_s );
+    }
+
+    ParamDouble *in_p = qobject_cast<ParamDouble*>( in );
+    if( in_s && (( lt == LinkElm || lt == LinkSpec )) ) {
+      inps_ap.append( in_p );
     }
   }
 }

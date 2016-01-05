@@ -200,7 +200,7 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   ob->getData( "flip", &ei.flip );
   ob->getData( "noIcon", &ei.noIcon );
   ei.flip_factor = ei.flip ? 1 : -1;
-  ei.n_inp = ob->countObjsOfType( QSL("InputSimple") );
+  ei.n_inp = ob->getN_SimpleInputs();
 
   ei.xs0 = lm + ei.vis_x * grid_sz;
   ei.ys0 = lm + ei.vis_y * grid_sz;
@@ -213,8 +213,7 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   ei.li_src_x = ei.xc - ei.flip_factor*(obj_sz/2);
   ei.li_pdst_y = ei.yc + (obj_sz/2);
 
-  ei.pis = ob->getObjT<const InputParams*>("pis");
-  ei.n_pinp = ei.pis->size();
+  ei.n_pinp = ob->getN_ActiveParmInputs();
 
   return true;
 }
@@ -456,7 +455,11 @@ void StructView::drawAll( QPainter &p )
     // ----------- parametric inputs
     i_in=0;
     in_sep_sz = obj_sz/(ei.n_pinp+1);
-    for( const auto ips : ei.pis->TCHILD(const InputParam*) ) { // const? TODO: check
+    for( const auto ips : ob->TCHILD(const ParamDouble*) ) {
+      if( !ips ) { continue; }
+      int lt = ips->getLinkType();
+
+      if( lt == LinkNone ) { continue; }
 
       int line_width = ips->getDataD( "line_w", 2 );
       int x_shift = ips->getDataD( "x_shift", 0 );
@@ -474,13 +477,6 @@ void StructView::drawAll( QPainter &p )
       p.drawLine( p_dst+p_crp, p_dst );
       p.drawLine( p_dst+p_crm, p_dst );
 
-      int lt = ips->getDataD( "linkType", LinkBad );
-      if( lt == LinkNone ) {
-        // unlike signal input, must be unlikely
-        p.drawEllipse( p_bott, el_marg/3, el_marg/3 );
-        continue;
-      }
-
       if( lt == LinkBad ) {
         p.setPen( QPen( Qt::red, 2 ) );
         p.drawLine( p_bott+p_crp, p_bott-p_crp );
@@ -494,7 +490,11 @@ void StructView::drawAll( QPainter &p )
         continue;
       }
 
-      // must be ordinary link
+      if( lt != LinkElm ) { // later must be ordinary link
+        qWarning() << "Unknown link type " << lt << " for " << ips->getFullName() << WHE;
+        continue;
+      }
+
       const TDataSet* sobj = ips->getSourceObj();
       const TMiso *so_obj = nullptr;
       if( !sobj || ( (so_obj = qobject_cast<const TMiso*>(sobj)) == nullptr ) ) {
@@ -697,38 +697,7 @@ void StructView::qlinkElm()
 
 void StructView::qplinkElm()
 {
-  if( storage->isRoTree() ) {
-    return;
-  }
-
-  QString oldlink;
-  if( ! checkState( linkToCheck ) ) {
-    return;
-  }
-
-  if( !selObj || !markObj  ) {
-    return;
-  }
-
-  QString toname = markObj->objectName();
-
-  InputParams *pis = selObj->getObjT<InputParams*>("pis");
-  if( !pis ) {
-    qWarning() << "no pis object in " <<  selObj->getFullName() << WHE;
-    return;
-  }
-  int n_pi = pis->size();
-  QString pi_name = QString("pi_") + QSN(n_pi);
-  InputParam *pi = pis->addObjT<InputParam>( pi_name );
-  if( !pi ) {
-    return;
-  }
-
-  pi->setData( "source", toname );
-
-  sch->reportStructChanged();
-  sch->reset();
-  emit viewChanged();
+  qWarning() << "No good way to implement, sorry" << WHE;
 }
 
 void StructView::unlinkElm()
@@ -743,18 +712,17 @@ void StructView::unlinkElm()
 
   QString lnkname;
   for( InputSimple *in : selObj->TCHILD(InputSimple*) ) {
-    if( ! in ) {
-      continue;
-    }
+    if( ! in ) {   continue;  }
     in->setData( "source", QSL("") );
   }
 
-  InputParams *pis = selObj->getObjT<InputParams*>("pis");
-  if( !pis ) {
-    qWarning() << "no pis object in " <<  selObj->getFullName() << WHE;
-    return;
+  for( ParamDouble *pin : selObj->TCHILD(ParamDouble*) ) {
+    if( ! pin ) { continue; }
+    auto lt = pin->getLinkType();
+    if( lt != LinkNone ) {
+      pin->setData( "source", QSL("") );
+    }
   }
-  qDeleteAll( pis->children() );
 
   sch->reportStructChanged();
   sch->reset();

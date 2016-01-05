@@ -82,6 +82,7 @@ class TMiso : public LinkedObj  {
    Q_INVOKABLE int getN_Inputs() const { return inps.size(); }
    Q_INVOKABLE int getN_SimpleInputs() const { return inps_s.size(); }
    Q_INVOKABLE int getN_ActiveInputs() const { return inps_a.size(); }
+   Q_INVOKABLE int getN_ActiveParmInputs() const { return inps_ap.size(); }
    virtual void fillComplModelForParams( QStandardItemModel *mdl ) const;
  protected:
    /** main computation function
@@ -128,6 +129,8 @@ class TMiso : public LinkedObj  {
    QList<InputAbstract*> inps_a;
    //* ptrs to simple inputs:
    QList<InputSimple*> inps_s;
+   //* ptrs to active param inputs: (onlyOnce Counted)
+   QList<ParamDouble*> inps_ap;
    /** pointer to parameters inputs container */
    InputParams *pis;
    /** time step -- setted by preRun 0 - special value to detect usage before start */
