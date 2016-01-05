@@ -99,6 +99,8 @@ class TMiso : public LinkedObj  {
    virtual int do_endLoop();
    /** do real actions after structure changed - refills inputs */
    virtual void do_structChanged() override;
+   //* for conversion from new link;
+   virtual void do_post_set() override;
 
    /** description on element */
    PRM_STRING( descr, efNoRunChange, "description",

@@ -302,6 +302,38 @@ const char* InputSimple::helpstr { "Link to source of simple double data" };
 DEFAULT_FUNCS_REG(InputSimple);
 
 
+// ------------------------------------ ParamDouble ---------
+STD_CLASSINFO(ParamDouble,clpInput|clpSpecial);
+
+CTOR(ParamDouble,InputAbstract)
+{
+  need_fixparm = getParmInt( "fixparm", 0 );
+}
+
+ParamDouble::~ParamDouble()
+{
+}
+
+
+
+void ParamDouble::do_post_set()
+{
+  InputAbstract::do_post_set(); // report is here
+}
+
+
+void ParamDouble::set_link()
+{
+  InputAbstract::set_link();
+}
+
+
+const char* ParamDouble::helpstr { "Double parameter" };
+
+DEFAULT_FUNCS_REG(ParamDouble);
+
+
+
 // ------------------------------------ InputParam ---------
 STD_CLASSINFO(InputParam,clpInput|clpSpecial);
 

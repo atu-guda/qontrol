@@ -101,13 +101,13 @@ class InputSimple : public InputAbstract {
   Q_OBJECT
  public:
   DCL_CTOR(InputSimple);
-  virtual ~InputSimple();
+  virtual ~InputSimple() override;
   DCL_CREATE;
   DCL_STD_INF;
   // less operators for double: const only
   operator double() const { return out0; };
   const double* caddr() const { return p; };
-  /** find and set link to source or fake source */
+  /** find and set link to source (external or direct_in) */
   virtual void set_link() override;
  protected:
   virtual void do_post_set() override;
@@ -122,6 +122,37 @@ class InputSimple : public InputAbstract {
 #define PRM_INPUT( name, flags, vname, descr, extra ) \
   InputSimple name = { #name, this, flags, vname, descr, extra  } ;
 
+// ---------------------------------------------------------------------
+/** Special input - paramertic / value, can be used as double */
+class ParamDouble : public InputAbstract {
+  Q_OBJECT
+ public:
+  DCL_CTOR(ParamDouble);
+  virtual ~ParamDouble() override;
+  DCL_CREATE;
+  DCL_STD_INF;
+  operator double() const { return out0; };
+  operator double&() { return out0; };
+  Q_INVOKABLE double vc() const { return out0; } // synonims
+  double cval() const { return out0; }
+  const double* caddr() const { return p; };
+  double& operator=( double rhs ) { out0 = rhs; return out0; }
+  Q_INVOKABLE bool isFixparmNeed() const { return need_fixparm; };
+  /** find and set link to values */
+  virtual void set_link() override;
+ protected:
+  virtual void do_post_set() override;
+
+  bool need_fixparm = false;
+
+  Q_CLASSINFO( "nameHintBase",  "p_" );
+  DCL_DEFAULT_STATIC;
+};
+
+#define PRM_PARAMD( name, flags, vname, descr, extra ) \
+  ParamDouble name = { #name, this, flags, vname, descr, extra  } ;
+
+
 // ----------------------------------------------------------------
 /** Special holder link - parametric input,
  * like simple, but with local param target */
@@ -129,7 +160,7 @@ class InputParam : public InputAbstract {
   Q_OBJECT
  public:
   DCL_CTOR(InputParam);
-  virtual ~InputParam();
+  virtual ~InputParam() override;
   virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
   DCL_CREATE;
   DCL_STD_INF;

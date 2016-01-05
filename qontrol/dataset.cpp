@@ -886,7 +886,16 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
     } else if( tagname == QSL("param") ) {  // ---------------- simple param
       QString tp_name = ee.attribute(QSL("otype"));
       HolderData *ho = getObj( elname );
+      QString txt = getDomText( ee );
       if( ho && ho->isObject() ) {
+        //* TODO: remove after newlink conversion
+        if( ho->getType() == QSL("ParamDouble") ) {
+          ho->setData( QSL("source"), txt );
+          ho->setData( QSL("line_w"), 2 );
+          ho->setData( QSL("line_color"), QSL("red") );
+          continue;
+        }
+        // --------- end conversion (TMP) --------
         errstr = QString("TDataSet::fromDom: param \"%1\" is an object type \"%2\" ")
                  .arg(elname).arg(ho->getType());
         qWarning() << errstr << NWHE;
@@ -902,7 +911,7 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
           continue; // ignore unused params
         }
       }
-      ho->fromString( getDomText( ee ) );
+      ho->fromString( txt );
       ho->restoreParmsFromDom( ee );
 
     } else { // ----------- unknown element
