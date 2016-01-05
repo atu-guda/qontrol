@@ -28,7 +28,16 @@ CTOR(TThrum,TMiso)
 
 double TThrum::f( double /* t */ )
 {
-  return in0 * 3.1;
+  if( prm_mod ) {
+    fixparm();
+  }
+  return in0 * p_dou + doup;
+}
+
+void TThrum::fixparm()
+{
+  p_int = 17;
+  if( doup > 42 ) { doup = 42; }
 }
 
 DEFAULT_FUNCS_REG(TThrum)
