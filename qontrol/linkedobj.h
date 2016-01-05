@@ -60,6 +60,7 @@ class InputAbstract : public LinkedObj {
  public:
   DCL_CTOR(InputAbstract);
   virtual ~InputAbstract();  // must be abstract, but in this case cannot register
+  virtual void reset_dfl() override;
   virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
   DCL_CREATE;
   DCL_STD_INF;
@@ -144,6 +145,7 @@ class ParamDouble : public InputAbstract {
  protected:
   virtual void do_post_set() override;
 
+  PRM_STRING( tparam, efOld, "Param", "old param names - remove after cnv", ""  );
   bool need_fixparm = false;
 
   Q_CLASSINFO( "nameHintBase",  "p_" );

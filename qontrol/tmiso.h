@@ -114,8 +114,7 @@ class TMiso : public LinkedObj  {
        "X-coordinate of element in scheme", "min=0\nmax=64" );
    PRM_INT( vis_y, efRODial | efNoRunChange, "Visual y",
        "Y-coordinate of element in scheme", "min=0\nmax=64" );
-   PRM_DOUBLE( out0_init, efNoRunChange, "Init value",
-       "Initial value of output", "" );
+   PRM_PARAMD( out0_init, efNRC, "Init value", "Initial value of output", "def=0.0" );
    PRM_SWITCH( locked, efNoRunChange, "Locked", "Bypass out0_init to output", "sep=col"  );
    PRM_SWITCH( ignored, efNoRunChange, "Ignored", "Ignore element while run", ""  );
    PRM_SWITCH( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", "" );

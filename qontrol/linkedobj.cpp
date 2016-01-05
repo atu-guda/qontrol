@@ -180,6 +180,12 @@ InputAbstract::~InputAbstract()
 {
 }
 
+void InputAbstract::reset_dfl()
+{
+  LinkedObj::reset_dfl();
+  QString s = getParm( QSL("def") );
+  source = s;
+}
 
 void InputAbstract::do_post_set()
 {
