@@ -32,9 +32,10 @@ STD_CLASSINFO(TMiso,clpSpecial|clpPure);
 
 
 CTOR(TMiso,LinkedObj) ,
-       pis( new InputParams( "pis", this, 0, "param links",
-                             "object paramitric links", "sep=blockend") )
+       pis( new InputParams( "pis", this, 0, "old param links",
+                             "old object paramitric links", "" ) )
 {
+  pis->addFlags( efOld );
 }
 
 TMiso::~TMiso()
@@ -46,7 +47,6 @@ DEFAULT_FUNCS_REG(TMiso);
 
 double TMiso::fun( double t, IterType itype )
 {
-  int v;
   iter_c = itype;
   if( locked || ignored ) {
     return out0 = (double)out0_init;
@@ -65,10 +65,11 @@ double TMiso::fun( double t, IterType itype )
   } else {
     for( auto in : inps_a ) { in->readInput();   } // all active
   }
+  prm_mod += prm_will_mod;
 
-  prm_mod |= pis->apply();
+  // prm_mod |= pis->apply();
 
-  v = out0 = f( t );
+  double v = out0 = f( t );
   return v;
 }
 
@@ -86,7 +87,7 @@ int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
   tdt = adt; model_nn = an;
   iter_c = IterNo;
   // handleStructChanged(); // to relink. may by in startLoop, in relinking allowed ???
-  pis->prepare();
+  // pis->prepare();
   prm_mod = 0;
   int rc =  do_preRun( run_tp, an, anx, any, adt );
   if( !rc ) {
@@ -111,9 +112,6 @@ int TMiso::postRun( int good )
   int rc = do_postRun( good );
   state = good ? stateDone : stateGood;
   iter_c = IterNo;
-  if( prm_mod ) {
-    modified |= modifAuto;
-  }
   return rc;
 }
 
@@ -129,7 +127,8 @@ int TMiso::startLoop( int acnx, int acny )
   }
   state = stateRun;
   out0 = (double)out0_init;
-  prm_mod |= pis->apply_pre();
+  prm_mod = 0;
+  // prm_mod |= pis->apply_pre(); // <- TODO: ! how to replace this?
   return do_startLoop( acnx, acny );
 }
 
@@ -156,6 +155,7 @@ void TMiso::do_structChanged()
 {
   LinkedObj::do_structChanged();
   inps.clear(); inps_a.clear(); inps_s.clear(); inps_ap.clear();
+  prm_will_mod = 0;
 
   for( auto in : TCHILD(InputAbstract*) ) {
     in->set_link();
@@ -172,8 +172,9 @@ void TMiso::do_structChanged()
     }
 
     ParamDouble *in_p = qobject_cast<ParamDouble*>( in );
-    if( in_s && (( lt == LinkElm || lt == LinkSpec )) ) {
+    if( in_p && (( lt == LinkElm || lt == LinkSpec )) ) {
       inps_ap.append( in_p );
+      prm_will_mod += in_p->isFixparmNeed();
     }
   }
 }
@@ -194,6 +195,7 @@ void TMiso::do_post_set()
     QString s = lnk->toString();
     parm->fromString( s );
   }
+  pis->delAllDyn();
 
 }
 

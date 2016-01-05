@@ -131,6 +131,7 @@ class ParamDouble : public InputAbstract {
   virtual ~ParamDouble() override;
   DCL_CREATE;
   DCL_STD_INF;
+  virtual QIcon getIcon() const override { return QIcon(); }; // empty icon: save space
   operator double() const { return out0; };
   operator double&() { return out0; };
   Q_INVOKABLE double vc() const { return out0; } // synonims

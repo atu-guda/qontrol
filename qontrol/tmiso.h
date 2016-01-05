@@ -121,7 +121,7 @@ class TMiso : public LinkedObj  {
    PRM_SWITCH( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", "" );
    PRM_SWITCH( onlyLast, efNoRunChange , "only Last", "Process element only at last iteration", "" );
    PRM_SWITCH( flip, efNoRunChange, "flip image", "flip left-right element icon", "sep=col" );
-   PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "" );
+   PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "sep=blockend" );
 
    //* ptrs to all inputs: filled by do_structChanged
    QList<InputAbstract*> inps;
@@ -139,6 +139,8 @@ class TMiso : public LinkedObj  {
    int model_nn = 0;
    /** parameters modified during run flag */
    int prm_mod = 0;
+   /** parameters modification will require fixing, prm_mod - indicator */
+   int prm_will_mod = 0;
    //* Current iteration type: to propagate to subschemes...
    IterType iter_c = IterNo;
 

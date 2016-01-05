@@ -260,6 +260,9 @@ QVariant InputAbstract::dataObj( int col, int role ) const
     }
 
     s += ac;
+    if( onlyFirst ) {
+      s += QChar( 0x271D ); // +
+    }
     // s += objectName();
     return s;
   }
