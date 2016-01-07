@@ -287,7 +287,7 @@ bool LaboDoc::isModified() const
     return false;
   }
   int mmd = rootdata->getModified();
-  return ( mmd & modifManual );
+  return mmd;
 }
 
 

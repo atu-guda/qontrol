@@ -458,10 +458,6 @@ int TModel::postRun()
 
   int rc = c_sch->postRun();
 
-  int cm = c_sch->getModified();
-  if( modified == 0 && cm != 0 ) {
-    modified |= modifAuto;
-  }
   if( outs ) {
     outs->postRun( 1 );
   }

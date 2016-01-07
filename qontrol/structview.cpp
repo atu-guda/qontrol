@@ -338,14 +338,11 @@ void StructView::drawAll( QPainter &p )
     };
 
     int mod = ob->getModified(); // ---------- modification marks
-    if( mod & modifManual ) {
+    if( mod ) {
       p.setPen( Qt::NoPen );  p.setBrush( QColor( 255, 150, 150, 128 ) );
       p.drawRect( ei.xs, ei.ys+1, obj_sz-3, obj_sz/2 );
     }
-    if( mod & modifAuto ) {
-      p.setPen( Qt::NoPen );  p.setBrush( QColor( 255, 255, 100, 128 ) );
-      p.drawRect( ei.xs+1, ei.ys+obj_sz/2, obj_sz-3, obj_sz/3 );
-    }
+
     // TODO: vector icon here
     p.setBrush( Qt::NoBrush ); p.setPen( QPen(Qt::black,1) );
     st_y = ei.ys + line_busy*ex_small;

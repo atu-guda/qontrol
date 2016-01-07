@@ -50,15 +50,6 @@ enum ClassProps {
   clpObsolete = 256  //* obsoleted class, should not written
 };
 
-enum ModificationBits {
-  modifManual = 1,
-  modifAuto = 2,
-  modifMask = 3
-};
-
-//                               none  man  auto both extra......
-const char *const modificationChar[] = { "", "+", "#", "*", "?", ".", ",", "X" };
-
 // uses AutoIncDec from autoact.h, but not include, as define used
 #define IGNORE_MOD_HERE  AutoIncDec __imod { ignoreMod };
 #define IGNORE_STRUCT_CHANGE_HERE  AutoIncDec __imod { updSuspended };
@@ -261,7 +252,7 @@ class HolderData : public QAbstractItemModel {
   //* reset object and all (sub)children, to local actions - do_reset();
   Q_INVOKABLE void reset();
 
-  int getModified() const { return modified & modifMask; } //* returns modified flag
+  int getModified() const { return modified; } //* returns modified flag
   void setModified();/** set modified flag : and to parents*/
   void setUnModified(); //* drop modified flag: and from children
   Q_INVOKABLE void post_set();

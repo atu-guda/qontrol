@@ -31,32 +31,32 @@ StatusModel::StatusModel( CommonSubwin *a_up_view )
   int mw;
 
   // labels creation
-  l_mod = new QLabel( "m", this );
+  l_mod = new QLabel( this );
   QFontMetrics fm = l_mod->fontMetrics();
   mw = fm.width("9");
   l_mod->setFixedWidth( mw + label_sep );
   l_mod->setLineWidth( label_lw ); l_mod->setFrameStyle( label_fs );
   addWidget( l_mod );
 
-  l_level = new QLabel( "N", this );
+  l_level = new QLabel( this );
   l_level->setFixedWidth( mw + label_sep );
   l_level->setLineWidth( label_lw ); l_level->setFrameStyle( label_fs );
   addWidget( l_level );
 
-  l_stat = new QLabel( "s", this );
+  l_stat = new QLabel( this );
   l_stat->setFixedWidth( 4 * mw + label_sep );
   l_stat->setLineWidth( label_lw ); l_stat->setFrameStyle( label_fs );
   addWidget( l_stat );
 
-  l_name = new QLabel( "name", this );
+  l_name = new QLabel( this );
   l_name->setLineWidth( label_lw ); l_name->setFrameStyle( label_fs );
   addWidget( l_name, 1 );
 
-  l_desc = new QLabel( "desk", this );
+  l_desc = new QLabel( this );
   l_desc->setLineWidth( label_lw ); l_desc->setFrameStyle( label_fs );
   addWidget( l_desc, 2 );
 
-  l_val = new QLabel( "val", this );
+  l_val = new QLabel( this );
   l_val->setFixedWidth( (DOUBLE_PREC+6) * mw + label_sep );
   l_val->setLineWidth( label_lw ); l_val->setFrameStyle( label_fs );
   l_val->setTextInteractionFlags( Qt::TextSelectableByMouse );
@@ -72,7 +72,7 @@ StatusModel::~StatusModel()
 void StatusModel::update()
 {
   l_level->setText( QSN( up_view->getLevel() ) );
-  l_name->setText( "." );  l_desc->setText( "." );  l_val->setText( "" );
+  l_name->setText( QSL(".") );  l_desc->setText( QSL(".") );  l_val->setText( QSL("") );
 
   LaboDoc *doc = up_view->getDocument();
   if( !doc ) {
@@ -87,8 +87,9 @@ void StatusModel::update()
 
   int state = model->getState();
   l_stat->setText( getStateString( state ) );
-  int mod = model->getModified();
-  l_mod->setText( modificationChar[mod] );
+  QString s1;
+  if(  model->getModified() ) { s1 += QSL("*"); };
+  l_mod->setText( s1 );
 
   HolderData *ob = up_view->getSelectedInFocus();
   if( ob ) {
@@ -97,12 +98,12 @@ void StatusModel::update()
       ob_nm_tp = ob->objectName() % QSL(" ") % ob->getType();
     }
     l_name->setText( ob_nm_tp );
-    QString ob_descr = ob->getDataD( "descr", QString() );
+    QString ob_descr = ob->getDataD( QSL("descr"), QString() );
     l_desc->setText( ob_descr );
     if( state > stateGood ) {
       TMiso *el = qobject_cast<TMiso*>( ob );
       if( el ) {
-        double val = el->getDataD( "out0", 0.0 ); // TODO: StatusTipRole(col=2)
+        double val = el->getDataD( QSL("out0"), 0.0 ); // TODO: StatusTipRole(col=2)
         l_val->setText( QSN( val, 'g', DOUBLE_PREC ) );
       }
     };

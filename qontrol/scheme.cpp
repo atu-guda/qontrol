@@ -194,9 +194,6 @@ int Scheme::postRun()
     cm |= ob->getModified();
   };
 
-  if( modified == 0 && cm != 0 ) {
-    modified |= modifAuto;
-  }
   state = stateDone; // TODO: or state Bad?
   return 1;
 }

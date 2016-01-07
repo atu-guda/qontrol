@@ -229,7 +229,8 @@ int HolderData::indexOfHolder( const HolderData *ho ) const
 
 QString HolderData::getStateStr() const
 {
-  QString s = modificationChar[ getModified() ];
+  char c1 = getModified() ? '*' : ' ';
+  QString s = QChar(c1);
   if( dyn ) { s += QSL("."); };
   s += getStateString( state );
   s += QSL(" 0x");
@@ -244,10 +245,10 @@ void HolderData::setModified()
   if( ignoreMod ) {
     return;
   }
-  if( modified & modifManual ) {  // do not repeat on already modified
+  if( modified ) {  // do not repeat on already modified
     return;
   }
-  modified |= modifManual;
+  modified = 1;
   if( flags & efNoSave ) {    // ignore shadow and so on
     return;
   }
