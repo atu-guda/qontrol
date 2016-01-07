@@ -71,6 +71,13 @@ class InputAbstract : public LinkedObj {
   int  getOnlyFirst() const { return onlyFirst; }
   /** find and set link to source or fake source */
   virtual void set_link();
+
+  // less operators for double: const only
+  operator double() const { return out0; };
+  const double* caddr() const { return p; };
+  Q_INVOKABLE double vc() const { return out0; } // synonims
+  double cval() const { return out0; }
+
  protected:
   virtual void do_post_set() override;
   /** do real actions after structure changed */
@@ -105,9 +112,6 @@ class InputSimple : public InputAbstract {
   virtual ~InputSimple() override;
   DCL_CREATE;
   DCL_STD_INF;
-  // less operators for double: const only
-  operator double() const { return out0; };
-  const double* caddr() const { return p; };
   /** find and set link to source (external or direct_in) */
   virtual void set_link() override;
  protected:
@@ -133,11 +137,7 @@ class ParamDouble : public InputAbstract {
   DCL_CREATE;
   DCL_STD_INF;
   virtual QIcon getIcon() const override { return QIcon(); }; // empty icon: save space
-  operator double() const { return out0; };
   operator double&() { return out0; };
-  Q_INVOKABLE double vc() const { return out0; } // synonims
-  double cval() const { return out0; }
-  const double* caddr() const { return p; };
   double& operator=( double rhs ) { out0 = rhs; return out0; }
   Q_INVOKABLE bool isFixparmNeed() const { return need_fixparm; };
   /** find and set link to values */

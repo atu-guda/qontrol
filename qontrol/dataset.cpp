@@ -1404,8 +1404,6 @@ QStringList HolderData::getNamesOfType( const QString &subObjName,
 
 void HolderData::dumpStruct() const
 {
-  static int dump_lev = -1;
-  ++dump_lev;
   qDebug() << toString() << NWHE;
 }
 

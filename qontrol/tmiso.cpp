@@ -60,17 +60,11 @@ double TMiso::fun( double t, IterType itype )
     return out0;
   }
 
-  if( itype == IterFirst ) {
-    for( auto in : inps  ) { in->readInput();   } // all
-  } else {
-    for( auto in : inps_a ) { in->readInput();   } // all active
-  }
+  for( auto in : inps_a ) { in->readInput();   } // all active
   prm_mod += prm_will_mod;
 
-  // prm_mod |= pis->apply();
-
-  double v = out0 = f( t );
-  return v;
+  out0 = f( t );
+  return out0;
 }
 
 
@@ -128,7 +122,10 @@ int TMiso::startLoop( int acnx, int acny )
   state = stateRun;
   out0 = (double)out0_init;
   prm_mod = 0;
-  // prm_mod |= pis->apply_pre(); // <- TODO: ! how to replace this?
+  for( auto in : inps  ) {
+    in->readInput();
+  }
+  prm_mod += prm_will_mod;
   return do_startLoop( acnx, acny );
 }
 

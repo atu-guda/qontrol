@@ -213,7 +213,8 @@ void InputAbstract::set_link()
   double v = source.cval().toDouble( &ok );
   if( ok ) {
     direct_in = v;
-    linkType = LinkNone;  srcObjName = QSL(":VALUE:"); return;
+    linkType = LinkNone;  srcObjName = QSL("=") % QSN( v );
+    return;
   }
 
 

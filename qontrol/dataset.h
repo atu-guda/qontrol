@@ -264,7 +264,7 @@ class HolderData : public QAbstractItemModel {
   int getModified() const { return modified & modifMask; } //* returns modified flag
   void setModified();/** set modified flag : and to parents*/
   void setUnModified(); //* drop modified flag: and from children
-  void post_set();
+  Q_INVOKABLE void post_set();
   virtual bool getData( const QString &nm, int *da, bool er = true ) const;
   virtual bool getData( const QString &nm, double *da, bool er = true ) const;
   virtual bool getData( const QString &nm, QVariant &da, bool er = true ) const;
@@ -299,12 +299,16 @@ class HolderData : public QAbstractItemModel {
   /** is given type of subelement valid for this object */
   virtual int isValidType( const QString &cl_name ) const;
   void dumpStruct() const;
+
   /** initiates reactions to structure change: common: to root */
-  void reportStructChanged();
+  Q_INVOKABLE void reportStructChanged();
   /** temporary suspend reaction to struct changes */
   void suspendHandleStructChange() { ++updSuspended; }
   /** resume reaction to struct changes */
   void resumeHandleStructChange() { --updSuspended; if( updSuspended < 1 ) {handleStructChanged(); } }
+  /** reaction to add/remove/relink of subobjects: call do_structChanged */
+  Q_INVOKABLE void handleStructChanged();
+
   //* return icon for visualization
   virtual QIcon getIcon() const;
 
@@ -355,8 +359,6 @@ class HolderData : public QAbstractItemModel {
       {
         return qobject_cast<T>( getActiveObj() );
       }
-  /** reaction to add/remove/relink of subobjects: call do_structChanged */
-  void handleStructChanged();
   void extraToParm();
 
   // functions to work with substructure
