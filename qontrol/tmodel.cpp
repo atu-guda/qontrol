@@ -176,6 +176,11 @@ void TModel::do_reset()
 int TModel::startRun()
 {
   int rc;
+
+  // profiling
+  // vector<double> prfl_t; prfl_t.reserve( 100 ); QStringList prfl_l;
+  // prfl_t.push_back( get_real_time() ); prfl_l << QSL("init");
+
   if( run_type >= 0 ) { // in progress now
     qWarning() << "bad run_type during startRun " << run_type << NWHE;
     return 0;
@@ -183,7 +188,6 @@ int TModel::startRun()
   if( autoImport ) {
     importAllSchemes(); // TODO: check?
   }
-  reset();
 
   c_sim = getActiveSimulation();
   if( !c_sim ) {
@@ -200,7 +204,7 @@ int TModel::startRun()
 
 
   // TODO: remove debug?
-  c_sim->post_set();
+  // c_sim->post_set();
   reportStructChanged();
 
   T   = c_sim->getDataD( "T", 0.0 );
@@ -277,6 +281,12 @@ int TModel::startRun()
   if( execModelScript ) {
     runModelScript();
   }
+
+  // double rtx = prfl_t[0], rt0 = rtx; int sz = prfl_t.size();
+  // for( int i=0; i<sz; ++i ) {
+  //   qWarning() << "PROF: " <<  (prfl_t[i] - rt0) << " +" << (prfl_t[i] - rtx) << prfl_l[i] << WHE;
+  //   rtx = prfl_t[i];
+  // }
 
   return 1;
 }
@@ -680,13 +690,16 @@ QString TModel::runScript( const QString& script )
   if( script.isEmpty() ) {
     return QString();
   }
+  // double rt0 = get_real_time();
   QScriptValue res = eng->evaluate( script );
+  // double drt = get_real_time() - rt0;
   QString r;
   if( eng->hasUncaughtException() ) {
     int line = eng->uncaughtExceptionLineNumber();
     r = "Error: uncaught exception at line " % QSN( line ) % " : \n";
   }
   r += res.toString();
+  // qWarning() << "PROF: drt= " << drt << WHE;
   return r;
 }
 

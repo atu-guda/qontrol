@@ -1162,7 +1162,6 @@ void DataDialog::checkData()
 void DataDialog::refreshData()
 {
   setAll();
-  ds.post_set();
   getAll();
 }
 

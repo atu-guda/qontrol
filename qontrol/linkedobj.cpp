@@ -189,7 +189,9 @@ void InputAbstract::reset_dfl()
 
 void InputAbstract::do_post_set()
 {
-  reportStructChanged(); // changed link means changes structure
+  // TODO: uncomment, commenrd only for debug
+  // MORE: works much better with commenting
+  // reportStructChanged(); // changed link means changes structure
 }
 
 void InputAbstract::do_structChanged()
