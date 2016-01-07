@@ -60,7 +60,7 @@ double TMiso::fun( double t, IterType itype )
     return out0;
   }
 
-  readInputs(); // TODO: move?;
+  // readInputs(); // moved to scheme
 
   out0 = f( t );
   return out0;
@@ -79,8 +79,6 @@ int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
   }
   tdt = adt; model_nn = an;
   iter_c = IterNo;
-  // handleStructChanged(); // to relink. may by in startLoop, in relinking allowed ???
-  // pis->prepare();
   prm_mod = 0;
   int rc =  do_preRun( run_tp, an, anx, any, adt );
   if( !rc ) {
@@ -121,7 +119,7 @@ int TMiso::startLoop( int acnx, int acny )
   state = stateRun;
   out0 = (double)out0_init;
   prm_mod = 0;
-  // readAllInputs(); // TODO: move
+  // readAllInputs(); // moved to scheme
   return do_startLoop( acnx, acny );
 }
 

@@ -162,11 +162,15 @@ int Scheme::runOneLoop( double t, IterType itype )
 {
   // readInputs();
   for( auto cur_el : v_el ) {
+     cur_el->readInputs(); // optimization
+  }
+
+  for( auto cur_el : v_el ) {
     if( end_loop ) {
       break;
     }
 
-     cur_el->fun( t, itype );  // <============ main action
+    cur_el->fun( t, itype );  // <============ main action
   };
 
   return 1;
