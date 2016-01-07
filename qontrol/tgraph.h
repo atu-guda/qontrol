@@ -150,7 +150,10 @@ struct ViewData {
   int sel {0};
 };
 
-class PlotLabel : public TDataSet {
+// --------------------------------------------------------------------
+
+
+class PlotLabel : public LinkedObj {
    Q_OBJECT
  public:
    DCL_CTOR(PlotLabel);
@@ -235,7 +238,7 @@ class PlotLabel : public TDataSet {
   *@author atu
   */
 
-class TGraph : public TDataSet  {
+class TGraph : public LinkedObj  {
   Q_OBJECT
  public:
    DCL_CTOR(TGraph);

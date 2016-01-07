@@ -43,6 +43,7 @@ CTOR(TModel,LinkedObj)
   allowed_types = "HolderValue,"
                   "ContScheme,ContSimul,ContOut,ContGraph"; // +SPECIAL
   rtime =0; t = 0; tdt =1; // fake
+  needReadInputsRecurse = true;
 
   schems = addObjT<ContScheme>( "schems" );
   schems->setParm( "sep", "tab" );
@@ -435,6 +436,7 @@ int TModel::runOneLoop( IterType itype )
     qWarning() << "No active scheme" << NWHE;
     return 0;
   }
+  // readInputs();
 
   int rc = c_sch->runOneLoop( t, itype );
   if( !rc ) {
@@ -463,12 +465,16 @@ int TModel::postRun()
   if( outs ) {
     outs->postRun( 1 );
   }
+  if( plots ) {
+    plots->readAllInputs(); // or hide in postRun()
+  }
   return rc;
 }
 
 int TModel::allStartLoop( int acnx, int acny )
 {
   int rc = 0;
+  // readAllInputs();
 
   if( c_sch ) {
     rc = c_sch->allStartLoop( acnx, acny );

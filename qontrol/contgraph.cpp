@@ -27,9 +27,10 @@ const char* ContGraph::helpstr = "<H1>ContGraph</H1>\n"
 
 STD_CLASSINFO(ContGraph,clpSpecial | clpContainer);
 
-CTOR(ContGraph,TDataSet)
+CTOR(ContGraph,LinkedObj)
 {
   allowed_types = "TGraph,+SPECIAL";
+  needReadInputsRecurse = true;
 }
 
 ContGraph::~ContGraph()

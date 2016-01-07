@@ -228,7 +228,7 @@ const char* PlotLabel::helpstr = "<H1>PlotLabel</H1>\n"
 
 STD_CLASSINFO(PlotLabel,clpElem);
 
-CTOR(PlotLabel,TDataSet)
+CTOR(PlotLabel,LinkedObj)
 {
 }
 
@@ -447,11 +447,12 @@ const char* TGraph::helpstr = "<H1>TGraph</H1>\n"
 
 STD_CLASSINFO(TGraph,clpSpecial);
 
-CTOR(TGraph,TDataSet) ,
+CTOR(TGraph,LinkedObj) ,
      scd( new ScaleData( "scd", this, 0, "scale", "scale data", "sep=blockend" ) )
 {
   allowed_types = "GraphElem,PlotLabel,+SPECICAL";
   scd->setImmutable();
+  needReadInputsRecurse = true;
   reset();
 }
 

@@ -38,6 +38,7 @@ CTOR(Scheme,LinkedObj)
   allowed_types = "TMiso";
   const int ELM_RES = 64;
   v_el.reserve( ELM_RES );
+  needReadInputsRecurse = true;
 }
 
 Scheme::~Scheme()
@@ -159,6 +160,7 @@ void Scheme::fillComplModelForInputs( QStandardItemModel *mdl ) const
 
 int Scheme::runOneLoop( double t, IterType itype )
 {
+  // readInputs();
   for( auto cur_el : v_el ) {
     if( end_loop ) {
       break;
@@ -207,6 +209,7 @@ void Scheme::do_reset()
 
 int Scheme::allStartLoop( int acnx, int acny )
 {
+  readAllInputs();
   for( auto ob : v_el ) {
     int rc = ob->startLoop( acnx, acny );
     if( !rc ) {
@@ -399,6 +402,7 @@ STD_CLASSINFO(ContScheme,clpSpecial | clpContainer);
 CTOR(ContScheme,LinkedObj)
 {
   allowed_types = "Scheme,+SPECIAL";
+  needReadInputsRecurse = true;
 }
 
 ContScheme::~ContScheme()

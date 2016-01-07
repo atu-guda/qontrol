@@ -60,7 +60,7 @@ double TMiso::fun( double t, IterType itype )
     return out0;
   }
 
-  readInputs(); // TODO: move;
+  readInputs(); // TODO: move?;
 
   out0 = f( t );
   return out0;
@@ -121,7 +121,7 @@ int TMiso::startLoop( int acnx, int acny )
   state = stateRun;
   out0 = (double)out0_init;
   prm_mod = 0;
-  readAllInputs(); // TODO: move
+  // readAllInputs(); // TODO: move
   return do_startLoop( acnx, acny );
 }
 
