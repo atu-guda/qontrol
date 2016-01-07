@@ -11,6 +11,7 @@
 
 #include "dataset.h"
 
+class InputAbstract; class InputSimple; class ParamDouble;
 
 /** base class for all  objects, capable to double-type links*/
 class LinkedObj : public TDataSet {
@@ -40,8 +41,30 @@ class LinkedObj : public TDataSet {
     * for parameter mod only - no descend  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
    bool isIgnored() const; // self or parents...
+   virtual void do_structChanged() override;
+
+   Q_INVOKABLE int getN_Inputs() const { return inps.size(); }
+   Q_INVOKABLE int getN_SimpleInputs() const { return inps_s.size(); }
+   Q_INVOKABLE int getN_ActiveInputs() const { return inps_a.size(); }
+   Q_INVOKABLE int getN_ActiveParmInputs() const { return inps_ap.size(); }
+
+   virtual void readInputs();
+   virtual void readAllInputs();
  protected:
-   PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
+
+   //* ptrs to all inputs: filled by do_structChanged
+   QList<InputAbstract*> inps;
+   //* ptrs to active inputs: LinkElm or LinkSpec
+   QList<InputAbstract*> inps_a;
+   //* ptrs to simple inputs:
+   QList<InputSimple*> inps_s;
+   //* ptrs to active param inputs: (onlyOnce Counted)
+   QList<ParamDouble*> inps_ap;
+
+   bool needReadInputsRecurse = false;
+   int prm_mod = 0; //* parameters modified during run flag
+   int prm_will_mod = 0; //** parameters modification will require fixing, prm_mod - indicator
+
    DCL_DEFAULT_STATIC;
 };
 
@@ -94,6 +117,8 @@ class InputAbstract : public LinkedObj {
 
   PRM_INT( linkType,  efInner | efRO, "Link type", "Describes link type", "def=3" ); // def=LinkBad
   PRM_STRING( srcObjName, efInner | efRO, "Source object", "Name of the source object", ""  );
+
+  PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
 
   double direct_in = 0;
   const double *p = &direct_in;

@@ -79,10 +79,6 @@ class TMiso : public LinkedObj  {
    /** check, if element have given visual coords */
    bool isAtCoord( int ax, int ay ) const
      { return (vis_x == ax && vis_y == ay ); }
-   Q_INVOKABLE int getN_Inputs() const { return inps.size(); }
-   Q_INVOKABLE int getN_SimpleInputs() const { return inps_s.size(); }
-   Q_INVOKABLE int getN_ActiveInputs() const { return inps_a.size(); }
-   Q_INVOKABLE int getN_ActiveParmInputs() const { return inps_ap.size(); }
    virtual void fillComplModelForParams( QStandardItemModel *mdl ) const;
  protected:
    /** main computation function
@@ -122,24 +118,14 @@ class TMiso : public LinkedObj  {
    PRM_SWITCH( flip, efNoRunChange, "flip image", "flip left-right element icon", "sep=col" );
    PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "sep=blockend" );
 
-   //* ptrs to all inputs: filled by do_structChanged
-   QList<InputAbstract*> inps;
-   //* ptrs to active inputs: LinkElm or LinkSpec
-   QList<InputAbstract*> inps_a;
-   //* ptrs to simple inputs:
-   QList<InputSimple*> inps_s;
-   //* ptrs to active param inputs: (onlyOnce Counted)
-   QList<ParamDouble*> inps_ap;
+   PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
+
    /** pointer to parameters inputs container */
    InputParams *pis;
    /** time step -- setted by preRun 0 - special value to detect usage before start */
    double tdt = 0;
    /** number of iteration per loop -- setted by PreRun */
    int model_nn = 0;
-   /** parameters modified during run flag */
-   int prm_mod = 0;
-   /** parameters modification will require fixing, prm_mod - indicator */
-   int prm_will_mod = 0;
    //* Current iteration type: to propagate to subschemes...
    IterType iter_c = IterNo;
 

@@ -162,7 +162,60 @@ bool LinkedObj::isIgnored() const
 }
 
 
+void LinkedObj::do_structChanged()
+{
+  TDataSet::do_structChanged();
+  inps.clear(); inps_a.clear(); inps_s.clear(); inps_ap.clear();
 
+  for( auto in : TCHILD(InputAbstract*) ) {
+    in->set_link();
+    inps.append( in );
+
+    int lt = in->getLinkType();
+    if( ( lt == LinkElm || lt == LinkSpec ) && ! in->getOnlyFirst()  ) {
+      inps_a.append( in );
+    }
+
+    InputSimple *in_s = qobject_cast<InputSimple*>( in );
+    if( in_s ) {
+      inps_s.append( in_s );
+    }
+
+    ParamDouble *in_p = qobject_cast<ParamDouble*>( in );
+    if( in_p && (( lt == LinkElm || lt == LinkSpec )) ) {
+      inps_ap.append( in_p );
+      prm_will_mod += in_p->isFixparmNeed();
+    }
+  }
+}
+
+void LinkedObj::readInputs()
+{
+  if( needReadInputsRecurse ) {
+    for( auto in : TCHILD(LinkedObj*) ) {
+      in->readInputs();
+    }
+  }
+
+  for( auto in : inps_a ) {
+    in->readInput();
+  }
+  prm_mod += prm_will_mod;
+}
+
+void LinkedObj::readAllInputs()
+{
+  if( needReadInputsRecurse ) {
+    for( auto in : TCHILD(LinkedObj*) ) {
+      in->readAllInputs();
+    }
+  }
+
+  for( auto in : inps  ) {
+    in->readInput();
+  }
+  prm_mod += prm_will_mod;
+}
 
 // ------------------------------------ InputAbstract ---------
 //
@@ -196,6 +249,7 @@ void InputAbstract::do_post_set()
 
 void InputAbstract::do_structChanged()
 {
+  LinkedObj::do_structChanged();
   set_link();
 }
 

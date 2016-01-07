@@ -60,8 +60,7 @@ double TMiso::fun( double t, IterType itype )
     return out0;
   }
 
-  for( auto in : inps_a ) { in->readInput();   } // all active
-  prm_mod += prm_will_mod;
+  readInputs(); // TODO: move;
 
   out0 = f( t );
   return out0;
@@ -122,10 +121,7 @@ int TMiso::startLoop( int acnx, int acny )
   state = stateRun;
   out0 = (double)out0_init;
   prm_mod = 0;
-  for( auto in : inps  ) {
-    in->readInput();
-  }
-  prm_mod += prm_will_mod;
+  readAllInputs(); // TODO: move
   return do_startLoop( acnx, acny );
 }
 
@@ -151,29 +147,7 @@ int TMiso::do_endLoop()
 void TMiso::do_structChanged()
 {
   LinkedObj::do_structChanged();
-  inps.clear(); inps_a.clear(); inps_s.clear(); inps_ap.clear();
   prm_will_mod = 0;
-
-  for( auto in : TCHILD(InputAbstract*) ) {
-    in->set_link();
-    inps.append( in );
-
-    int lt = in->getLinkType();
-    if( ( lt == LinkElm || lt == LinkSpec ) && ! in->getOnlyFirst()  ) {
-      inps_a.append( in );
-    }
-
-    InputSimple *in_s = qobject_cast<InputSimple*>( in );
-    if( in_s ) {
-      inps_s.append( in_s );
-    }
-
-    ParamDouble *in_p = qobject_cast<ParamDouble*>( in );
-    if( in_p && (( lt == LinkElm || lt == LinkSpec )) ) {
-      inps_ap.append( in_p );
-      prm_will_mod += in_p->isFixparmNeed();
-    }
-  }
 }
 
 void TMiso::do_post_set()

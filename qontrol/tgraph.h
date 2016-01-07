@@ -25,8 +25,9 @@
 
 #include <mgl2/mgl.h>
 
-#include "dataset.h"
+#include "linkedobj.h"
 #include "scaledata.h"
+
 class DatasInfo;
 class TGraph;
 
@@ -207,9 +208,9 @@ class PlotLabel : public TDataSet {
    PRM_STRING( labelFontMGL, 0, "MGL Font", "label font in MGL mode", "def=:L@");
    PRM_DOUBLE( labelSizeMGL, 0, "MGL Size", "label font size in MGL mode", "def=2.0");
 
-   PRM_DOUBLE( labelX, 0, "X", "label X coordinate", "def=0.9\nsep=block");
-   PRM_DOUBLE( labelY, 0, "Y", "label Y coordinate", "def=0.9\nsep=col");
-   PRM_DOUBLE( labelZ, 0, "Z", "label Z coordinate", "def=0.0\nsep=col");
+   PRM_PARAMD( labelX, 0, "X", "label X coordinate", "def=0.9\nsep=block");
+   PRM_PARAMD( labelY, 0, "Y", "label Y coordinate", "def=0.9\nsep=col");
+   PRM_PARAMD( labelZ, 0, "Z", "label Z coordinate", "def=0.0\nsep=col");
    PRM_LIST( coordType, 0, "Coord",  "coordinate system for label", "sep=col\nenum=CoordType" );
    PRM_DOUBLE( labelW, 0, "W", "label width", "def=0.20\nsep=block");
    PRM_DOUBLE( labelH, 0, "H", "label height","def=0.15\nsep=col");
