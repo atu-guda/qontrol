@@ -891,6 +891,8 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
       if( ho && ho->isObject() ) {
         //* TODO: remove after newlink conversion
         if( ho->getType() == QSL("ParamDouble") ) {
+          double vt = txt.toDouble(); // hack: limit number of digits on conversion
+          txt = QSN( vt, 'g', DOUBLE_PREC );
           ho->setData( QSL("source"), txt );
           ho->setData( QSL("line_w"), 2 );
           ho->setData( QSL("line_color"), QSL("red") );
