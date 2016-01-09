@@ -33,12 +33,10 @@ enum IterType {
   IterNo    = 3,   // before or after run
 };
 
-class TModel; class Scheme;
-
 // -------------------------- TMiso -----------------------------
 
 /** \class TMiso tmiso.h
- * \breef Pure parent of all scheme elements.
+ * \breef Parent of all scheme elements.
  *
  */
 
