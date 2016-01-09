@@ -4,6 +4,7 @@ all_rc=0
 failed=''
 
 for i in *.qol ; do
+  echo ; echo
   base="${i%.qol}"
   echo "RUN: ../qontrol -M -d -b -e -x test0() $i"
   ../qontrol -M -b -e -x "test0();" "$i" ; rc=$?
@@ -15,6 +16,7 @@ for i in *.qol ; do
 done
 
 if [[ "$all_rc" -ne 0 ]] ; then
+  echo
   echo "*************** ERRORS DETECTED *******************"
   echo "failed: $failed"
 fi
