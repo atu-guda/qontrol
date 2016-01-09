@@ -160,7 +160,7 @@ void Scheme::fillComplModelForInputs( QStandardItemModel *mdl ) const
 
 int Scheme::runOneLoop( double t, IterType itype )
 {
-  // readInputs();
+  // readInputs(); // <-- too slow here
   for( auto cur_el : v_el ) {
      cur_el->readInputs(); // optimization
   }

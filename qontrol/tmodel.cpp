@@ -209,12 +209,20 @@ int TModel::startRun()
   reportStructChanged();
 
   T   = c_sim->getDataD( "T", 0.0 );
+  T_brk = c_sim->getDataD( "T_brk", 1e200 );
   N   = c_sim->getDataD( "N", 1 );
   N1  = c_sim->getDataD( "N1", 1 );
   N2  = c_sim->getDataD( "N2", 1 );
   n1_eff = c_sim->getDataD( "n1_eff", N1 );
   n2_eff = c_sim->getDataD( "n2_eff", N2 );
   n_tot  = c_sim->getDataD( "n_tot", N );
+  n_threads  = c_sim->getDataD( "n_threads", 0 );
+  if( n_threads < 1 ) {
+    n_threads = QThread::idealThreadCount();
+  }
+  if( n_threads < 1 ) {
+    n_threads = 1;
+  }
   syncRT = c_sim->getDataD( "syncRT", 0 );
   prm0s = c_sim->getDataD( "prm0s", 0.0 );
   prm1s = c_sim->getDataD( "prm1s", 0.0 );
@@ -340,6 +348,11 @@ int TModel::run( QSemaphore *sem )
 
       for( int i=0; i<N; ++i, ++i_tot ) {
 
+        if ( t >= T_brk ) {
+          stopRun( 0 );
+          return 0;
+        }
+
         if ( QThread::currentThread()->isInterruptionRequested() ) { // check for break
           stopRun( 0 );
           return 0;
@@ -432,11 +445,12 @@ void TModel::plotToPng( const QString &gname, const QString &fn )
 
 int TModel::runOneLoop( IterType itype )
 {
-  if( !c_sch ) {
-    qWarning() << "No active scheme" << NWHE;
-    return 0;
-  }
-  // readInputs();
+  // if( !c_sch ) {
+  //   qWarning() << "No active scheme" << NWHE;
+  //   return 0;
+  // }
+
+  // readInputs(); // too slow here
 
   int rc = c_sch->runOneLoop( t, itype );
   if( !rc ) {

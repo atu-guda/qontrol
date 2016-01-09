@@ -132,7 +132,9 @@ class TModel : public LinkedObj  {
   Scheme* main_s = nullptr;
   // =============== iface objects ==============================
   // copy of simulation vars - just for speed;
-  PRM_DOUBLE(     T, efInner, "T", "Total simulation time", "def=1" );
+  PRM_DOUBLE(     T, efInner, "T", "Total simulation time (copy)", "def=1" );
+  PRM_DOUBLE( T_brk, efInner, "T_{brk}", "Break time (copy)", "min=0\nmax=1e300\ndef=1e100" );
+  PRM_INT( n_threads, efInner, "n_{threads}", "Number of threads for simulation, <1 = auto (copy)", "max=1000\ndef=0" );
   /** Initial parametrs values */
   PRM_DOUBLE( prm0s, efInner, "prm0s", "Initial prm0 value", "sep=block" );
   PRM_DOUBLE( prm1s, efInner, "prm1s", "Initial prm1 value", "" );
