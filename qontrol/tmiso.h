@@ -24,7 +24,6 @@
 #define TMISO_H
 
 #include "linkedobj.h"
-#include "inputparams.h"
 
 /** iteration type */
 enum IterType {
@@ -120,8 +119,6 @@ class TMiso : public LinkedObj  {
 
    PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
 
-   /** pointer to parameters inputs container */
-   InputParams *pis;
    /** time step -- setted by preRun 0 - special value to detect usage before start */
    double tdt = 0;
    /** number of iteration per loop -- setted by PreRun */

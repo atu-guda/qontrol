@@ -31,11 +31,8 @@ const char* TMiso::helpstr = "<H1>TMiso</H1>\n"
 STD_CLASSINFO(TMiso,clpSpecial|clpPure);
 
 
-CTOR(TMiso,LinkedObj) ,
-       pis( new InputParams( "pis", this, 0, "old param links",
-                             "old object paramitric links", "" ) )
+CTOR(TMiso,LinkedObj)
 {
-  pis->addFlags( efOld );
 }
 
 TMiso::~TMiso()
@@ -151,21 +148,6 @@ void TMiso::do_structChanged()
 void TMiso::do_post_set()
 {
   LinkedObj::do_post_set();
-  if( !pis ) { return; }
-
-  // conversion to new link scheme
-  for( auto lnk : pis->TCHILD(InputParam*) ) {
-    QString tparam = lnk->getDataD( QSL("tparam"), QSL("") );
-    ParamDouble *parm = getObjT<ParamDouble*>( tparam );
-    if( !parm ) {
-      qWarning() << "Not found param " << tparam << " for " << lnk->objectName() << NWHE;
-      continue;
-    }
-    QString s = lnk->toString();
-    parm->fromString( s );
-  }
-  pis->delAllDyn();
-
 }
 
 void TMiso::fillComplModelForParams( QStandardItemModel *mdl ) const

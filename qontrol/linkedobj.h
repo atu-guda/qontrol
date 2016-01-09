@@ -181,35 +181,6 @@ class ParamDouble : public InputAbstract {
   ParamDouble name = { #name, this, flags, vname, descr, extra  } ;
 
 
-// ----------------------------------------------------------------
-/** Special holder link - parametric input,
- * like simple, but with local param target */
-class InputParam : public InputAbstract {
-  Q_OBJECT
- public:
-  DCL_CTOR(InputParam);
-  virtual ~InputParam() override;
-  virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
-  DCL_CREATE;
-  DCL_STD_INF;
-  operator double() const { return *p; };
-  const double* caddr() const { return p; };
-  double* targ_addr() const { return targ; };
-  int getTargetFlag() const { return target_flag; }
-  /** find and set link to  from (fake)  source to (fake) target */
-  virtual void set_link() override;
- protected:
-  virtual void do_post_set() override;
-
-  PRM_STRING( tparam, efNoRunChange, "Param", "Name of param target", "max=128\nprops=STRING,SIMPLE,INNERLINK\ncmpl=prm\nsep=block"  );
-
-  double fake_target = 0;
-  double *targ = &fake_target;
-  int target_flag = 0;
-
-  Q_CLASSINFO( "nameHintBase",  "p_" );
-  DCL_DEFAULT_STATIC;
-};
 
 // ----------------------------------------------------------------
 

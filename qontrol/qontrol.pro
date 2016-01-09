@@ -23,7 +23,6 @@ SOURCES += \
   contout.cpp \
   dataset.cpp \
   elemfact.cpp \
-  inputparams.cpp \
   linkedobj.cpp \
   main.cpp \
   miscfun.cpp \
@@ -104,7 +103,6 @@ HEADERS += \
   contout.h \
   dataset.h \
   defs.h \
-  inputparams.h \
   linkedobj.h \
   miscfun.h \
   colorbtn.h \
