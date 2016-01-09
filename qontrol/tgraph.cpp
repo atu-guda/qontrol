@@ -230,10 +230,18 @@ STD_CLASSINFO(PlotLabel,clpElem);
 
 CTOR(PlotLabel,LinkedObj)
 {
+  needReadInputsRecurse = true;
 }
 
 PlotLabel::~PlotLabel()
 {
+}
+
+void PlotLabel::do_post_set()
+{
+  LinkedObj::do_post_set();
+  handleStructChanged();
+  readInputs();
 }
 
 void PlotLabel::prepareText() const
@@ -439,6 +447,115 @@ bool PlotLabel::renderTeX( QImage *img, QPoint p0 ) const
 
 DEFAULT_FUNCS_REG(PlotLabel);
 
+
+// --------------------------------------------------------------------
+const char* PlotFlippery::helpstr = "<H1>PlotFlippery</H1>\n"
+ "Flipperies for the plot";
+
+
+STD_CLASSINFO(PlotFlippery,clpElem);
+
+CTOR(PlotFlippery,LinkedObj)
+{
+  needReadInputsRecurse = true;
+}
+
+PlotFlippery::~PlotFlippery()
+{
+}
+
+void PlotFlippery::do_post_set()
+{
+  LinkedObj::do_post_set();
+  handleStructChanged(); // to re-read changed values after dialog TODO: separate fun
+  readInputs();
+}
+
+bool PlotFlippery::render( mglGraph *gr ) const
+{
+  if( ! drawFlippery ) {
+    return true;
+  }
+  mglPoint p0( x0, y0, z0 );
+  mglPoint p1( x1, y1, z1 );
+  mglPoint p2( x2, y2, z2 );
+  mglPoint p3( x3, y3, z3 );
+
+  const char *style = flStyle.c_str();
+  char sc0 = style[0];
+
+
+  switch( flType ) {
+
+    case FlipperyBall:
+      gr->Ball( p0, sc0 );
+      break;
+
+    case FlipperyCircle:
+      gr->Circle( p0, v_0, style );
+      break;
+
+    case FlipperySphere:
+      gr->Sphere( p0, v_0, style );
+      break;
+
+    case FlipperyEllipse:
+      gr->Ellipse( p0, p1, v_0, style );
+      break;
+
+    case FlipperyDrop:
+      gr->Drop( p0, p1, v_0, style, v_1, v_2 );
+      break;
+
+    case FlipperyLine:
+      gr->Line( p0, p1, style, nl );
+      break;
+
+    case FlipperyError:
+      gr->Error( p0, p1, style );
+      break;
+
+    case FlipperyCurve:
+      gr->Curve( p0, p1, p2, p3, style );
+      break;
+
+    case FlipperyFace:
+      gr->Face( p0, p1, p2, p3, style );
+      break;
+
+    case FlipperyRect:
+      gr->Face( p0, p1, p2, p3, style ); // TODO: fix
+      break;
+
+    case FlipperyCone:
+      gr->Cone( p0, p1, v_0, v_1, style );
+      break;
+
+    case FlipperyRhomb:
+      gr->Rhomb( p0, p1, v_0, style );
+      break;
+
+    case FlipperyArc:
+      gr->Arc( p0, p1, p2, v_0, style );
+      break;
+
+    case FlipperyPolygon:
+      gr->Polygon( p0, p1, nl, style );
+      break;
+
+    default:
+      break;
+  }
+
+
+  if( !gr ) { return false; }
+
+  return false;
+}
+
+
+DEFAULT_FUNCS_REG(PlotFlippery);
+
 // --------------------------------------------------------------------
 
 const char* TGraph::helpstr = "<H1>TGraph</H1>\n"
@@ -450,7 +567,7 @@ STD_CLASSINFO(TGraph,clpSpecial);
 CTOR(TGraph,LinkedObj) ,
      scd( new ScaleData( "scd", this, 0, "scale", "scale data", "sep=blockend" ) )
 {
-  allowed_types = "GraphElem,PlotLabel,+SPECICAL";
+  allowed_types = "GraphElem,PlotLabel,PlotFlippery,+SPECICAL";
   scd->setImmutable();
   needReadInputsRecurse = true;
   reset();
@@ -803,6 +920,10 @@ QSize TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda
   setupMglGraph( gr, a_vd, scda, true );
 
   plotTo( gr, &vd, scda );
+
+  for( auto flp : TCHILD(PlotFlippery*) ) {
+    flp->render( &gr );
+  }
 
   for( auto lbl : TCHILD(PlotLabel*) ) {
     lbl->render( &img, &gr, true ); // only MGL plots

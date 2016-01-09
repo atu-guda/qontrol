@@ -162,6 +162,7 @@ class PlotLabel : public LinkedObj {
    DCL_CREATE;
    DCL_STD_INF;
    virtual void do_reset() override { labelReady = false; labelWithSubst = QString(); };
+   virtual void do_post_set() override;
 
    enum CoordType {
      CoordGraph = 0,
@@ -231,6 +232,85 @@ class PlotLabel : public LinkedObj {
    Q_CLASSINFO( "nameHintBase",  "lbl_" );
    DCL_DEFAULT_STATIC;
 };
+
+// --------------------------------------------------------------------
+
+
+class PlotFlippery : public LinkedObj {
+   Q_OBJECT
+ public:
+   DCL_CTOR(PlotFlippery);
+   virtual ~PlotFlippery() override;
+   DCL_CREATE;
+   DCL_STD_INF;
+
+   enum FlipperyType {
+     FlipperyBall = 0,
+     FlipperyCircle,
+     FlipperySphere,
+     FlipperyEllipse,
+     FlipperyDrop,
+     FlipperyLine,
+     FlipperyError,
+     FlipperyCurve,
+     FlipperyFace,
+     FlipperyRect,
+     FlipperyCone,
+     FlipperyRhomb,
+     FlipperyArc,
+     FlipperyPolygon
+   };
+   Q_ENUMS( FlipperyType );
+   Q_CLASSINFO( "enum_FlipperyType_0",   "Ball(p0)"        );         // FlipperyBall
+   Q_CLASSINFO( "enum_FlipperyType_1",   "Circle(p0,v_0)"  );         // FlipperyCircle
+   Q_CLASSINFO( "enum_FlipperyType_2",   "Sphere(p0,v_0) " );         // FlipperySphere
+   Q_CLASSINFO( "enum_FlipperyType_3",   "Ellipse(p0,p1,v_0)" );      // FlipperyEllipse
+   Q_CLASSINFO( "enum_FlipperyType_4",   "Drop(p0,p1,v_0,v_1,v_2)" ); // FlipperyDrop
+   Q_CLASSINFO( "enum_FlipperyType_5",   "Line (p0,p1,nl) " );        // FlipperyLine
+   Q_CLASSINFO( "enum_FlipperyType_6",   "Error(p0,p1)" );            // FlipperyError
+   Q_CLASSINFO( "enum_FlipperyType_7",   "Curve(p0,p1,p2,p3)" );      // FlipperyCurve
+   Q_CLASSINFO( "enum_FlipperyType_8",   "Face(p0,p1,p2,p3)" );       // FlipperyFace
+   Q_CLASSINFO( "enum_FlipperyType_9",   "Rect?   " );                // FlipperyRect
+   Q_CLASSINFO( "enum_FlipperyType_10",  "Cone(p0,p1,v_0,v_1)" );     // FlipperyCone
+   Q_CLASSINFO( "enum_FlipperyType_11",  "Rhomb(p0,p1,v_0)" );        // FlipperyRhomb
+   Q_CLASSINFO( "enum_FlipperyType_12",  "Arc(p0,p1,p2,v_0)" );       // FlipperyArc
+   Q_CLASSINFO( "enum_FlipperyType_13",  "Polygon( p0,p1,nl)" );      // FlipperyPolygon
+
+   virtual bool render( mglGraph *gr ) const;
+
+
+ protected:
+   virtual void do_post_set() override;
+   PRM_LIST( flType, 0, "Flippery type",  "Flippery type", "ncol=2\nenum=FlipperyType" );
+   PRM_STRING( flStyle, 0, "Style", "Flippery style in MGL terms", "sep=col\ndef=S@");
+
+   PRM_PARAMD( x0, 0, "x0", "x0 coordinate", "def=0.1\nsep=block");
+   PRM_PARAMD( y0, 0, "y0", "y0 coordinate", "def=0.5\nsep=col");
+   PRM_PARAMD( z0, 0, "z0", "z0 coordinate", "def=0.0\nsep=col");
+
+   PRM_PARAMD( x1, 0, "x1", "x1 coordinate", "def=0.3\nsep=block");
+   PRM_PARAMD( y1, 0, "y1", "y1 coordinate", "def=0.7\nsep=col");
+   PRM_PARAMD( z1, 0, "z1", "z1 coordinate", "def=0.0\nsep=col");
+
+   PRM_PARAMD( x2, 0, "x2", "x2 coordinate", "def=0.2\nsep=block");
+   PRM_PARAMD( y2, 0, "y2", "y2 coordinate", "def=0.62\nsep=col");
+   PRM_PARAMD( z2, 0, "z2", "z2 coordinate", "def=0.0\nsep=col");
+
+   PRM_PARAMD( x3, 0, "x3", "x3 coordinate", "def=0.25\nsep=block");
+   PRM_PARAMD( y3, 0, "y3", "y3 coordinate", "def=0.65\nsep=col");
+   PRM_PARAMD( z3, 0, "z3", "z3 coordinate", "def=0.0\nsep=col");
+
+   PRM_PARAMD( v_0, 0, "v_0", "Value 0", "def=0.5\nsep=block");
+   PRM_PARAMD( v_1, 0, "v_1", "Value 0", "def=0.25\nsep=col");
+   PRM_PARAMD( v_2, 0, "v_2", "Value 0", "def=0.1\nsep=col");
+
+   PRM_INT( nl, 0, "nl",  "Number of something", "sep=block\ndef=4" );
+   PRM_SWITCH( drawFlippery, 0, "Draw", "Draw flippery", "def=1\nsep=col" );
+
+   Q_CLASSINFO( "nameHintBase",  "flp_" );
+   DCL_DEFAULT_STATIC;
+};
+
 
 // --------------------------------------------------------------------
 

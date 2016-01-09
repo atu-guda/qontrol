@@ -255,20 +255,16 @@ void InputAbstract::do_structChanged()
 
 void InputAbstract::set_link()
 {
-  direct_in = 0;
+  direct_in = 0; out0 = 0;
   p = &direct_in; src_obj = nullptr; linkType = LinkBad; srcObjName = QSL(":BAD:");
   if( isIgnored() || source.cval().isEmpty() ) {
     linkType = LinkNone; srcObjName = QSL(":NONE:"); return;
   }
-  // if( source.cval() == QSL(":one") ) { // special local case TODO: remove
-  //   direct_in = 1.0;
-  //   linkType = LinkNone; srcObjName = QSL(":VALUE:"); return;
-  // }
 
   bool ok = false;
   double v = source.cval().toDouble( &ok );
   if( ok ) {
-    direct_in = v;
+    direct_in = v; out0 = v;
     linkType = LinkNone;  srcObjName = QSL("=") % QSN( v );
     return;
   }

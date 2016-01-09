@@ -16,6 +16,8 @@
     <file>icons/elm_string.png</file>
     <file>icons/elm_string_arr.png</file>
     <file>icons/elm_none.png</file>
+    <file>icons/elm_plotlabel.png</file>
+    <file>icons/elm_plotflippery.png</file>
     <file>icons/elm_scaledata.png</file>
     <file>icons/elm_scheme.png</file>
     <file>icons/elm_simul_0.png</file>
