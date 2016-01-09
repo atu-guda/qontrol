@@ -20,7 +20,7 @@
 const char* TMultipl::helpstr = "<H1>TMultipl</H1>\n"
  "<p>Simple multiplicator: <br>\n"
  "it multimplies all enabled inputs and parametr <b>a</b>\n"
- "Have 5 parameters: <b>on0 .. on3, a</b>, each can be changed at any time.</p>";
+ "</p>";
 
 STD_CLASSINFO(TMultipl,clpElem);
 
@@ -32,14 +32,10 @@ CTOR(TMultipl,TMiso)
 double TMultipl::f( double /* t */ )
 {
   double v = a;
-  if( on0 )
-    v *= in_0;
-  if( on1 )
-    v *= in_1;
-  if( on2 )
-    v *= in_2;
-  if( on3 )
-    v *= in_3;
+  v *= in_0;
+  v *= in_1;
+  v *= in_2;
+  v *= in_3;
   return v;
 }
 

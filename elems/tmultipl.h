@@ -37,10 +37,10 @@ class TMultipl : public TMiso  {
    /** common coefficient */
    PRM_PARAMD( a,    0, "a", "Common factor", "sep=col\ndef=1" );
    /** switches -- is this input on */
-   PRM_SWITCH( on0, 0, "On 0", "Use input 0", "def=1\nsep=block" );
-   PRM_SWITCH( on1, 0, "On 1", "Use input 1", "def=1\nsep=col" );
-   PRM_SWITCH( on2, 0, "On 2", "Use input 2", "def=1\nsep=col" );
-   PRM_SWITCH( on3, 0, "On 3", "Use input 3", "def=1\nsep=col" );
+   PRM_SWITCH( on0, efOld, "On 0", "Use input 0", "def=1\nsep=block" );
+   PRM_SWITCH( on1, efOld, "On 1", "Use input 1", "def=1\nsep=col" );
+   PRM_SWITCH( on2, efOld, "On 2", "Use input 2", "def=1\nsep=col" );
+   PRM_SWITCH( on3, efOld, "On 3", "Use input 3", "def=1\nsep=col" );
 
    PRM_INPUT( in_0, 0, "in_0", "First input",  "def=1\nsep=block" );
    PRM_INPUT( in_1, 0, "in_1", "Second input", "def=1\nsep=col" );
