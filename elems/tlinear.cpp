@@ -28,7 +28,7 @@ CTOR(TLinear,TMiso)
 {
 }
 
-double TLinear::f( double /* t */ )
+double TLinear::f( double /* t */ ) noexcept
 {
   return a * ( in_0*a0 + in_1*a1 + in_2*a2 + in_3*a3 + b );
 }

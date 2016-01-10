@@ -37,7 +37,7 @@ class TCorrAnalysis : public TMiso  {
    Q_CLASSINFO( "enum_CallType_2", "in_add>0" );// call_u2
  protected:
    /** main computation function */
-   virtual double f( double t ) override;
+   virtual double f( double t ) noexcept override;
    /** reimplemented from TMiso to reset summators */
    virtual int do_startLoop( int acnx, int acny ) override;
    /* ============= function members ================== */

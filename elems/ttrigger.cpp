@@ -38,7 +38,7 @@ int TTrigger::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 1;
 }
 
-double TTrigger::f( double t )
+double TTrigger::f( double t ) noexcept
 {
   int sw, act;
   int ui_r = ( in_r > level1 );

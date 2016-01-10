@@ -49,7 +49,7 @@ class TFileSource : public TMiso  {
    };
  protected:
 
-   virtual double f( double t ) override;
+   virtual double f( double t ) noexcept override;
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    virtual int do_postRun( int good ) override;
    virtual int do_startLoop( int acnx, int acny ) override;

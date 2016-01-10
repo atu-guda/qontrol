@@ -83,7 +83,7 @@ int TRand::do_startLoop( int acnx, int acny )
   return 1;
 }
 
-double TRand::f( double  t  )
+double TRand::f( double  t  ) noexcept
 {
   double du, in;
   if( inputTime ) {

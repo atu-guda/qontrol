@@ -26,7 +26,7 @@ CTOR(TThrum,TMiso)
 {
 }
 
-double TThrum::f( double /* t */ )
+double TThrum::f( double /* t */ ) noexcept
 {
   if( prm_mod ) {
     fixparm();

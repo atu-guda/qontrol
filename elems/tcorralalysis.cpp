@@ -48,7 +48,7 @@ int TCorrAnalysis::do_startLoop( int /*acnx*/, int /*acny*/ )
 }
 
 
-double TCorrAnalysis::f( double t )
+double TCorrAnalysis::f( double t ) noexcept
 {
   int add;
   double x = in_x, y = in_y;

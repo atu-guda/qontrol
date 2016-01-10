@@ -42,7 +42,7 @@ CTOR(TLorenz,TMiso)
 {
 }
 
-double TLorenz::f( double /*t*/ )
+double TLorenz::f( double /*t*/ ) noexcept
 {
   vx = ( sigma * (y-x) );
   vy = ( x * (r-z) - y );

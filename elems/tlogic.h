@@ -43,7 +43,7 @@ class TLogic : public TMiso  {
    Q_CLASSINFO( "enum_LogicType_5", "1" );     // logOne
  protected:
    /** main computation function */
-   virtual double f( double t ) override;
+   virtual double f( double t ) noexcept override;
 
    /** type of logic element */
    PRM_LIST( type, efNRC, "Type", "Type of logic", "enum=LogicType" );

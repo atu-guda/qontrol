@@ -34,7 +34,7 @@ class TRelaxGen : public TMiso  {
    enum GenType { gen_def=0, gen_mai, gen_dual };
  protected:
    /** main computation function */
-   virtual double f( double t ) override;
+   virtual double f( double t ) noexcept override;
    /** reimplemented from TMiso to reset */
    virtual int do_startLoop( int acnx, int acny ) override;
 

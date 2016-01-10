@@ -28,7 +28,7 @@ CTOR(TSumN,TMiso)
   allowed_types = "InputSimple,+SPECIAL";
 }
 
-double TSumN::f( double /* t */ )
+double TSumN::f( double /* t */ ) noexcept
 {
   double r = 0;
   for( auto i : inps_s ) {

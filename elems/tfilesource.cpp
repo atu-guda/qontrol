@@ -32,7 +32,7 @@ TFileSource::~TFileSource()
   all_close();
 }
 
-double TFileSource::f( double t )
+double TFileSource::f( double t ) noexcept
 {
   //qDebug() << "f: t= " << t << " t0= " << t0 << " t1= " << t1 << " cl = " << cl
   //         << "tau_e= " << tau_e << NWHE;

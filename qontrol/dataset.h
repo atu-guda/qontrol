@@ -148,19 +148,18 @@ struct TClassInfo {
 // define in class common conversions to target type
 // need for usage class objects as pure data
 #define STD_CONVERSIONS(targ_type) \
-  operator targ_type() const { return v; } \
-  operator targ_type&()  { return v; } \
-  targ_type vc() const { return v; } \
-  const targ_type& cval() const { return v; } \
-  targ_type xval() const { return v; } \
-  targ_type& val() { return v; } \
-  const targ_type* caddr() const { return &v; } \
-  targ_type* addr() { return &v; } \
-  targ_type operator=( targ_type a ) { return v=a; }
+  operator targ_type() const noexcept { return v; } \
+  operator targ_type&()  noexcept { return v; } \
+  targ_type vc() const noexcept { return v; } \
+  const targ_type& cval() const noexcept { return v; } \
+  targ_type& val() noexcept { return v; } \
+  const targ_type* caddr() const noexcept { return &v; } \
+  targ_type* addr() noexcept { return &v; } \
+  targ_type operator=( targ_type a ) noexcept { return v=a; }
 
 // operator= for pure data holders: copy inner part
 #define INNER_ASSIGN(clname) \
-  clname& operator=( const clname &r ) { v = r.v; return *this; }
+  clname& operator=( const clname &r ) noexcept { v = r.v; return *this; }
 
 
 
@@ -187,9 +186,9 @@ class HolderData : public QAbstractItemModel {
   // helper for "data", but for "this", not index
   virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const;
 
-  QVariant::Type getTp() const { return tp; }
+  QVariant::Type getTp() const noexcept { return tp; }
   QString getStateStr() const;
-  int isDyn() const { return dyn; }
+  int isDyn() const noexcept { return dyn; }
    /**  returns false for simple data holders
     * returns true if this object is base or save of given type.
     * if cl_name is empty, return true in >= TDataSet */
@@ -197,13 +196,13 @@ class HolderData : public QAbstractItemModel {
   // count number of elements of given type, optionally with named started with nm_start
   Q_INVOKABLE int countObjsOfType( const QString &tp, const QString &nm_start = QString() ) const;
   Q_INVOKABLE QString hintName( const QString &tp, const QString &nm_start = QString() ) const;
-  Q_INVOKABLE void addFlags( int a_flags ) { flags |= a_flags; }
-  Q_INVOKABLE void setImmutable() { flags |= efImmutable; }
-  Q_INVOKABLE int  getFlags() const { return flags; }
-  Q_INVOKABLE bool hasAllFlags( int flg ) const { return ( flags & flg ) == flg; };
-  Q_INVOKABLE bool hasAnyFlags( int flg ) const { return ( flags & flg ); };
+  Q_INVOKABLE void addFlags( int a_flags ) noexcept { flags |= a_flags; }
+  Q_INVOKABLE void setImmutable() noexcept { flags |= efImmutable; }
+  Q_INVOKABLE int  getFlags() const noexcept { return flags; }
+  Q_INVOKABLE bool hasAllFlags( int flg ) const noexcept { return ( flags & flg ) == flg; };
+  Q_INVOKABLE bool hasAnyFlags( int flg ) const noexcept { return ( flags & flg ); };
   Q_INVOKABLE bool isRoTree( int flg = efRO ) const;
-  HolderData* getParent() const { return par; } // no Q_INVOKABLE: need reg HolderData
+  HolderData* getParent() const noexcept { return par; } // no Q_INVOKABLE: need reg HolderData
   // return ptr to ancestor of given type
   template<typename T> T* getAncestorT() const {
     HolderData *pa = par;
@@ -226,7 +225,7 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE QString lsf() const;
   /** returns holder by number */
   HolderData* getObj( int i ) const;
-  /** find holder for object by name */ // TODO: +full.name.elm
+  /** find holder for object by name */ //  elm relative.name.elm
   HolderData* getObj( const QString &oname ) const;
   /** find holder for object by index, safely cast to type T */
   template<typename T> T getObjT( int idx ) const
@@ -252,7 +251,7 @@ class HolderData : public QAbstractItemModel {
   //* reset object and all (sub)children, to local actions - do_reset();
   Q_INVOKABLE void reset();
 
-  int getModified() const { return modified; } //* returns modified flag
+  int getModified() const noexcept { return modified; } //* returns modified flag
   void setModified();/** set modified flag : and to parents*/
   void setUnModified(); //* drop modified flag: and from children
   Q_INVOKABLE void post_set();
@@ -305,7 +304,7 @@ class HolderData : public QAbstractItemModel {
 
   virtual QDomElement toDom( QDomDocument &dd ) const;
   bool fromDom( QDomElement &de, QString &errstr );
-  Q_INVOKABLE QString allowTypes() const { return allowed_types; }
+  Q_INVOKABLE QString allowTypes() const noexcept { return allowed_types; }
   /** is this class child of given or the same by name */
   Q_INVOKABLE bool isChildOf( const QString &cname ) const;
   //* returns this object index in parent or -1 on no [my] parent
@@ -392,7 +391,7 @@ class HolderData : public QAbstractItemModel {
   HolderData *par; // keep it?
   /** state: 0-bad, 1-constructed, 2-run; */
   int state = stateGood;
-  /** flag: is modified: 0:no, 1-yes, 2-yes(auto) */
+  /** flag: is modified: 0:no, 1-yes */
   int modified = 0;
   int ignoreMod = 0; // ignore modification during tmp object handling
   /** flag/counter: suspend reaction to structure update: use only in mass changes */
@@ -428,7 +427,6 @@ class HolderInt : public HolderValue {
   Q_OBJECT
  public:
   DCL_CTOR(HolderInt);
-  virtual ~HolderInt();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
@@ -448,7 +446,6 @@ class HolderSwitch : public HolderInt {
   Q_OBJECT
  public:
   DCL_CTOR(HolderSwitch);
-  virtual ~HolderSwitch();
   DCL_CREATE;
   DCL_STD_INF;
   // most functions from HolderInt
@@ -468,7 +465,6 @@ class HolderList : public HolderInt {
   Q_OBJECT
  public:
   DCL_CTOR(HolderList);
-  virtual ~HolderList();
   DCL_CREATE;
   DCL_STD_INF;
   // most functions from HolderInt
@@ -488,7 +484,6 @@ class HolderDouble : public HolderValue {
   Q_OBJECT
  public:
   DCL_CTOR(HolderDouble);
-  virtual ~HolderDouble();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
@@ -510,13 +505,13 @@ class HolderString : public HolderValue {
   Q_OBJECT
  public:
   DCL_CTOR(HolderString);
-  virtual ~HolderString();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
   STD_CONVERSIONS(QString);
   INNER_ASSIGN(HolderString);
-  std::string toStdString() const { return v.toStdString(); }
+  std::string  toStdString()  const { return v.toStdString(); }
+  std::wstring toStdWString() const { return v.toStdWString(); }
   bool isEmpty() const { return v.isEmpty(); }
   const char* c_str() const { return v.toStdString().c_str(); } // danger
  protected:
@@ -535,7 +530,6 @@ class HolderColor : public HolderValue {
   Q_OBJECT
  public:
   DCL_CTOR(HolderColor);
-  virtual ~HolderColor();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
@@ -564,7 +558,6 @@ class HolderFont : public HolderValue {
   Q_OBJECT
  public:
   DCL_CTOR(HolderFont);
-  virtual ~HolderFont();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
@@ -585,7 +578,6 @@ class HolderDate : public HolderValue {
   Q_OBJECT
  public:
   DCL_CTOR(HolderDate);
-  virtual ~HolderDate();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
@@ -611,7 +603,6 @@ class HolderTime : public HolderValue {
   Q_OBJECT
  public:
   DCL_CTOR(HolderTime);
-  virtual ~HolderTime();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
@@ -640,7 +631,6 @@ class HolderIntArray : public HolderValue {
   Q_OBJECT
  public:
   DCL_CTOR(HolderIntArray);
-  virtual ~HolderIntArray();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
@@ -664,7 +654,6 @@ class HolderDoubleArray : public HolderValue {
   Q_OBJECT
  public:
   DCL_CTOR(HolderDoubleArray);
-  virtual ~HolderDoubleArray();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
@@ -688,7 +677,6 @@ class HolderStringArray : public HolderValue {
   Q_OBJECT
  public:
   DCL_CTOR(HolderStringArray);
-  virtual ~HolderStringArray();
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;

@@ -44,7 +44,7 @@ class TExtrLatch : public TMiso  {
    Q_CLASSINFO( "enum_ExtrType_4", "Amplitude" );  // extrAmpl
  protected:
    /** main computation function */
-   virtual double f( double t ) override;
+   virtual double f( double t ) noexcept override;
    /** reimplemented from TMiso to reset */
    virtual int do_startLoop( int acnx, int acny ) override;
    void reset_vars();

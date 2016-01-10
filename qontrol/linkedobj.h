@@ -88,18 +88,18 @@ class InputAbstract : public LinkedObj {
   DCL_CREATE;
   DCL_STD_INF;
   //* return ptr to LinkedObj, which holds element or nullptr;
-  const LinkedObj* getSourceObj() const { return src_obj; };
-  void readInput() { out0 = *p; };
-  int  getLinkType() const { return linkType; }
-  int  getOnlyFirst() const { return onlyFirst; }
+  const LinkedObj* getSourceObj() const noexcept { return src_obj; };
+  void readInput() noexcept { out0 = *p; } ;
+  int  getLinkType() const noexcept { return linkType; }
+  int  getOnlyFirst() const noexcept { return onlyFirst; }
   /** find and set link to source or fake source */
   virtual void set_link();
 
   // less operators for double: const only
-  operator double() const { return out0; };
-  const double* caddr() const { return p; };
-  Q_INVOKABLE double vc() const { return out0; } // synonims
-  double cval() const { return out0; }
+  operator double() const noexcept { return out0; };
+  const double* caddr() const noexcept { return p; };
+  Q_INVOKABLE double vc() const noexcept { return out0; } // synonims
+  double cval() const noexcept { return out0; }
 
  protected:
   virtual void do_post_set() override;

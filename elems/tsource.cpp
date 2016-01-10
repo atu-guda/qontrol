@@ -34,7 +34,7 @@ CTOR(TSource,TMiso)
 
 
 
-double TSource::f( double t )
+double TSource::f( double t ) noexcept
 {
   double v, omet, uu_s, omet_s, lt, u_ch, f_ch, pha, pha_0;
   int n;

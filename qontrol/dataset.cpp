@@ -1488,11 +1488,6 @@ CTOR(HolderInt,HolderValue) , v(0)
   post_set();
 }
 
-HolderInt::~HolderInt()
-{
-  v = 0;
-}
-
 void HolderInt::reset_dfl()
 {
   HolderValue::reset_dfl();
@@ -1555,10 +1550,6 @@ CTOR(HolderSwitch,HolderInt)
   post_set();
 }
 
-HolderSwitch::~HolderSwitch()
-{
-  // NOP
-}
 
 void HolderSwitch::do_post_set()
 {
@@ -1593,10 +1584,6 @@ CTOR(HolderList,HolderInt)
   post_set();
 }
 
-HolderList::~HolderList()
-{
-  // NOP
-}
 
 void HolderList::do_post_set()
 {
@@ -1618,11 +1605,6 @@ CTOR(HolderDouble,HolderValue), v(0)
   tp=QVariant::Double;
   post_set();
   setParmIfEmpty( QSL("props"), QSL("DOUBLE,SIMPLE") );
-}
-
-HolderDouble::~HolderDouble()
-{
-  v = 0;
 }
 
 void HolderDouble::reset_dfl()
@@ -1681,10 +1663,6 @@ CTOR(HolderString,HolderValue)
   setParmIfEmpty( QSL("props"), QSL("STRING,SIMPLE") );
 }
 
-HolderString::~HolderString()
-{
-}
-
 void HolderString::reset_dfl()
 {
   HolderValue::reset_dfl();
@@ -1736,10 +1714,6 @@ CTOR(HolderColor,HolderValue)
   tp=QVariant::Color;
   v = QColor(Qt::red);
   setParmIfEmpty( QSL("props"), QSL("COLOR,INT") );
-}
-
-HolderColor::~HolderColor()
-{
 }
 
 void HolderColor::reset_dfl()
@@ -1807,10 +1781,6 @@ CTOR(HolderFont,HolderValue)
 {
   tp=QVariant::Font;
   setParmIfEmpty( QSL("props"), QSL("FONT,STRING") );
-}
-
-HolderFont::~HolderFont()
-{
 }
 
 void HolderFont::reset_dfl()
@@ -1884,10 +1854,6 @@ CTOR(HolderDate,HolderValue)
   setParmIfEmpty( QSL("props"), QSL("DATE,STRING") );
 }
 
-HolderDate::~HolderDate()
-{
-}
-
 void HolderDate::reset_dfl()
 {
   HolderValue::reset_dfl();
@@ -1959,10 +1925,6 @@ CTOR(HolderTime,HolderValue)
   setParmIfEmpty( QSL("props"), QSL("TIME,STRING") );
 }
 
-HolderTime::~HolderTime()
-{
-}
-
 void HolderTime::reset_dfl()
 {
   HolderValue::reset_dfl();
@@ -2031,10 +1993,6 @@ CTOR(HolderIntArray,HolderValue)
   tp=QVariant::UserType;
   setParmIfEmpty( QSL("props"), QSL("ARRAY_INT") );
   // all done by reset_dfl
-}
-
-HolderIntArray::~HolderIntArray()
-{
 }
 
 void HolderIntArray::reset_dfl()
@@ -2146,10 +2104,6 @@ CTOR(HolderDoubleArray,HolderValue)
   setParmIfEmpty( QSL("props"), QSL("ARRAY_DOUBLE") );
 }
 
-HolderDoubleArray::~HolderDoubleArray()
-{
-}
-
 void HolderDoubleArray::reset_dfl()
 {
   int n = getParmInt( QSL("N"), 1 );
@@ -2259,10 +2213,6 @@ CTOR(HolderStringArray,HolderValue)
   setParmIfEmpty( QSL("props"), QSL("ARRAY_STRING") );
 }
 
-HolderStringArray::~HolderStringArray()
-{
-}
-
 void HolderStringArray::reset_dfl()
 {
   int n = getParmInt( QSL("N"), 1 );
@@ -2357,7 +2307,8 @@ const char* HolderStringArray::helpstr { "Contains QStringList" };
 DEFAULT_FUNCS_REG(HolderStringArray);
 
 
-
+//=====================================================================
+//=====================================================================
 // ---------------- TDataSet ------------------------
 STD_CLASSINFO(TDataSet,clpSpecial|clpPure);
 
@@ -2467,5 +2418,4 @@ void TDataSet::do_post_set()
 
 
 // end of dataset.cpp
-
 

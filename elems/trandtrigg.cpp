@@ -70,7 +70,7 @@ int TRandTrigg::do_startLoop( int acnx, int acny )
 }
 
 
-double TRandTrigg::f( double /* t */ )
+double TRandTrigg::f( double /* t */ ) noexcept
 {
   double du, uc = in_u;
   du = uc - u_old; u_old = uc;

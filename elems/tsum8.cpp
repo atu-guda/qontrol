@@ -27,7 +27,7 @@ CTOR(TSum8,TMiso)
 {
 }
 
-double TSum8::f( double /* t */ )
+double TSum8::f( double /* t */ ) noexcept
 {
   return u_0*a_0 + u_1*a_1 + u_2*a_2 + u_3*a_3 +
          u_4*a_4 + u_5*a_5 + u_6*a_6 + u_7*a_7 + b;

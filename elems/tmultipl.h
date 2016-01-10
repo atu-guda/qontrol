@@ -32,7 +32,7 @@ class TMultipl : public TMiso  {
    DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t ) override;
+   virtual double f( double t ) noexcept override;
 
    /** common coefficient */
    PRM_PARAMD( a,    0, "a", "Common factor", "sep=col\ndef=1" );

@@ -32,7 +32,7 @@ class TSumN : public TMiso  {
    DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t ) override;
+   virtual double f( double t ) noexcept override;
 
    PRM_PARAMD( a, 0, "a", "common factor", "def=1\nsep=colend" );
    PRM_PARAMD( b,  0, "b", "static shift", "sep=blockend" );

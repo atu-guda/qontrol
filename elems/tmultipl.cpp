@@ -29,7 +29,7 @@ CTOR(TMultipl,TMiso)
 }
 
 
-double TMultipl::f( double /* t */ )
+double TMultipl::f( double /* t */ ) noexcept
 {
   double v = a;
   v *= in_0;

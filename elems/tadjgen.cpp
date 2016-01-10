@@ -42,7 +42,7 @@ int TAdjGen::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 1;
 }
 
-double TAdjGen::f( double  t )
+double TAdjGen::f( double  t ) noexcept
 {
   double om, om2, df, ff, v, diff_out = 0;
   int g1, g2;

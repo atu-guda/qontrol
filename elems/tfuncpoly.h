@@ -55,7 +55,7 @@ class TFuncPoly : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_15","a*pow(b*|y|,c)*sign(y)+g"              ); // ft_pows
  protected:
    /** main computation function */
-   virtual double f( double t ) override;
+   virtual double f( double t ) noexcept override;
 
    /** type of function */
    PRM_LIST( type, 0, "Type", "Function type", "enum=FuncType" );

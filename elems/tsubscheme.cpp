@@ -85,12 +85,9 @@ CTOR(TSubScheme,TMiso)
   setParm( "bad_types", "Scheme" );
 }
 
-TSubScheme::~TSubScheme()
-{
-}
 
 
-double TSubScheme::f( double t )
+double TSubScheme::f( double t ) noexcept
 {
   double v = 0;
 

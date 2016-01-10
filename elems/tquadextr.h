@@ -33,7 +33,7 @@ class TQuadExtr : public TMiso  {
    DCL_STD_INF;
 
  protected:
-   virtual double f( double t ) override;
+   virtual double f( double t ) noexcept override;
 
    PRM_SWITCH( emulC,  efNRC, "Emulate C", "Make virtual linear central point", "" );
    PRM_SWITCH( limitX, efNRC, "Limit X", "Limit X to half-width", "def=1" );

@@ -21,7 +21,7 @@
 #include <memory>
 
 #include "tmiso.h"
-class TCircBuf;
+#include "circbuf.h"
 
 
 /**delays signal for given time
@@ -34,10 +34,9 @@ class TDelay : public TMiso  {
    DCL_CTOR(TDelay);
    DCL_CREATE;
    DCL_STD_INF;
-   virtual ~TDelay() override;
  protected:
    /** main computation function */
-   virtual double f( double t ) override;
+   virtual double f( double t ) noexcept override;
    /** calc values & alloc buf */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    /** deallocates buf */

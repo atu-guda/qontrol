@@ -42,7 +42,7 @@ int TLatch::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 1;
 }
 
-double TLatch::f( double t )
+double TLatch::f( double t ) noexcept
 {
   double dv, bv;
   int ok;
@@ -52,6 +52,7 @@ double TLatch::f( double t )
     dv = 0; wasLatch = 0; // first step
   };
   bv = useAdd ? v : 0;
+
   switch( (int)type ) {
     case latchTime:
       if( t >= t0 ) {

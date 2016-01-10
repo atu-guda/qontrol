@@ -44,12 +44,12 @@ class TMiso : public LinkedObj  {
   Q_OBJECT
  public:
    DCL_CTOR(TMiso);
-   virtual ~TMiso();
+   // virtual ~TMiso() override;
    DCL_CREATE;
    DCL_STD_INF;
 
    /** external computation function + in/out */
-   double fun( double t, IterType itype );
+   double fun( double t, IterType itype ) noexcept;
 
    /** will be called before any action -- good place for allocs
     *
@@ -82,7 +82,7 @@ class TMiso : public LinkedObj  {
     * \param t current time
     * \return output value of element
     * */
-   virtual double f( double t );
+   virtual double f( double t ) noexcept;
    /** place of customization of preRun, return: !=0 = Ok */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** will be called after all actions from posrtRun  -- good place for deallocs */

@@ -41,7 +41,7 @@ CTOR(TRossler,TMiso)
 }
 
 
-double TRossler::f( double /*t*/ )
+double TRossler::f( double /*t*/ ) noexcept
 {
   vx = -y - z;
   vy = x  + a*y;

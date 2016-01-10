@@ -32,7 +32,7 @@ class TPid : public TMiso  {
    DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t ) override;
+   virtual double f( double t ) noexcept override;
    /** will be called before any action -- good place for allocs */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    /** reimplemented from TMiso to reset integrators and diffs */

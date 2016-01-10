@@ -57,7 +57,7 @@ class TFuncMisc : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_16", "a*max(u0,u1)+g"             );    // ft_max
  protected:
    /** main computation function */
-   virtual double f( double t ) override;
+   virtual double f( double t ) noexcept override;
 
    /** type of function */
    PRM_LIST( type, 0, "Type", "Function type", "enum=FuncType" );

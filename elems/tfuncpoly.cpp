@@ -36,7 +36,7 @@ CTOR(TFuncPoly,TMiso)
 }
 
 
-double TFuncPoly::f( double /* t */ )
+double TFuncPoly::f( double /* t */ ) noexcept
 {
   double v, t1, t2;
   y = in_0 - in_1 - x0; y2 = y*y;

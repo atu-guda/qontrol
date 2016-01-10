@@ -431,7 +431,7 @@ bool PlotLabel::renderMGL( mglGraph *gr, const mglPoint &p0m ) const
 {
   if( !gr ) { return false;  }
   wstring ws = labelWithSubst.toStdWString();
-  string fs = labelFontMGL.toString().toStdString();
+  string fs = labelFontMGL.toStdString();
 
   gr->Putsw( p0m, ws.data(),  fs.c_str(), labelSizeMGL.cval() );
   // gr->Ball( p0m, 'r' );

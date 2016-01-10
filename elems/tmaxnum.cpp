@@ -28,7 +28,7 @@ CTOR(TMaxNum,TMiso)
 }
 
 
-double TMaxNum::f( double /* t */ )
+double TMaxNum::f( double /* t */ ) noexcept
 {
   bool need_min = ( type == et_MIN ) || ( type == et_MINMOD );
   bool need_mod = ( type == et_MAXMOD ) || ( type == et_MINMOD );

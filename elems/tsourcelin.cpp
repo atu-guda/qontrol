@@ -38,7 +38,7 @@ CTOR(TSourceLin,TMiso),
 
 
 
-double TSourceLin::f( double t )
+double TSourceLin::f( double t ) noexcept
 {
   double tr, v;
   tr = t - t_start;

@@ -41,7 +41,7 @@ int TRelaxGen::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 1;
 }
 
-double TRelaxGen::f( double  /* t */ )
+double TRelaxGen::f( double  /* t */ ) noexcept
 {
   if( prm_mod ) {
     if( c <= 0 )   { c   = 1e-16; };
@@ -52,6 +52,7 @@ double TRelaxGen::f( double  /* t */ )
   // TODO: external I calc
   dv_ch  = ( v_in - v );
   dv_dis = (double)v;
+
   if( isDis ) {
     if( useDischarge ) {
       I = -i_dis;
@@ -65,7 +66,7 @@ double TRelaxGen::f( double  /* t */ )
     if( v <= v_2 ) {
       isDis = 0;
     }
-  } else {
+  } else { // -------- charging
     if( useCharge ) {
       I = i_ch;
     } else {

@@ -32,7 +32,7 @@ class TLinear : public TMiso  {
    DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t ) override;
+   virtual double f( double t ) noexcept override;
    /** coefficients on input and shift */
    PRM_PARAMD( a0, 0, "a0", "factor in input 0", "def=1" );
    PRM_PARAMD( a1, 0, "a1", "factor in input 1", "def=-1" );

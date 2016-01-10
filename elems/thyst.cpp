@@ -36,7 +36,7 @@ CTOR(THyst,TMiso)
 }
 
 
-double THyst::f( double /* t */ )
+double THyst::f( double /* t */ ) noexcept
 {
   double ud, ts , v, u_old;
   if( prm_mod ) {

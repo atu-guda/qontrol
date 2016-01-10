@@ -51,7 +51,7 @@ int TFriction::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 1;
 }
 
-double TFriction::f( double /* t */ )
+double TFriction::f( double /* t */ ) noexcept
 {
   double f, x, f_fd, cf_mx;
   double fx = in_u;

@@ -41,7 +41,7 @@ int TIntegrator::do_startLoop( int /*acnx*/, int /*acny*/ )
 }
 
 
-double TIntegrator::f( double /* t */ )
+double TIntegrator::f( double /* t */ ) noexcept
 {
   double v_ret, base = 0, in;
   if( useBase ) {
