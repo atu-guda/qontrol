@@ -1,9 +1,7 @@
 Barriers?
 correct places for reset, set_link, *structChange..
-Sepagate layout managers for block in DataDialog
 TSubScheme I/O redesigh?
 generalize StartLoop .... (remove all*Loop)
-BUG: fail to link TOutArr to Simulation param.
 BUG: modified state (i.e. after autocreated scheme removal)
 BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params
 Allow DoubleParam to Simul, TModel,

@@ -1272,7 +1272,7 @@ bool DataDialog::delObj()
 
 int DataDialog::createWidgets()
 {
-  int nr = 0, nc = 0, nr_max = 0, nr_block = 0, n_tab = 0;
+  int nr = 0, nc = 0, nr_max = 0, n_tab = 0;
   bool was_block = 0, was_col = 0, was_tab = 0;
 
   // remove existent- if recreate need
@@ -1292,10 +1292,9 @@ int DataDialog::createWidgets()
 
   QWidget *wmain = nullptr;
   QGridLayout *lay2 = nullptr;
+  QVBoxLayout *lay_wv = nullptr;
   QString tabname = QSL("Main");
   was_tab = true;
-
-  DataWidget *w;
 
   for( auto ho :  ds.TCHILD(HolderData*) ) {
     if( ho->hasAnyFlags( efNoDial ) ) {
@@ -1314,32 +1313,37 @@ int DataDialog::createWidgets()
       if( lay2 ) {
         addFinalSpace( lay2 );
       }
-      nc = nr = nr_max = nr_block = 0;
+      nc = nr = nr_max = 0;
       wmain = new QWidget();
       tw->addTab( wmain, tabname );
 
-      lay2 = new QGridLayout( wmain );
-      lay2->setSpacing( 2 );
+      lay_wv = new QVBoxLayout( wmain );
+
+      was_block = true; lay2 = nullptr;
       ++n_tab;
       tabname = QSL("Tab &") % QSN( n_tab ); // next tab, if not overrided
     }
 
     if( sep == QSL("block") || was_block ) {
-      auto fr = new QFrame( this );
-      fr->setFrameStyle( QFrame::HLine );
 
-      lay2->addWidget( fr, nr_max, 0, 1, -1 );
-      ++nr_max;
-      nr_block = nr_max; nr = nr_block; nc = 0;
+      if( lay2 ) {
+        auto fr = new QFrame( wmain );
+        fr->setFrameStyle( QFrame::HLine );
+        lay2->addWidget( fr, nr_max, 0, 1, -1 );
+      }
+      lay2 = new QGridLayout; lay2->setSpacing( 2 );
+      lay_wv->addLayout( lay2 );
+      nr = nr_max = nc = 0;
+      // ++nr_max;
     }
 
     if( sep == QSL("col") || was_col ) {
-      nr = nr_block; ++nc;
+      nr = 0; ++nc;
     }
 
     QString name = ho->objectName();
 
-    w = FactoryDataWidget::theFactory().createDataWidget( *ho, this );
+    DataWidget *w = FactoryDataWidget::theFactory().createDataWidget( *ho, this );
     if( !w ) {
       qWarning() << "not found edit widget for object " << name << WHE;
       continue;

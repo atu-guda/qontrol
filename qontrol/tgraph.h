@@ -281,7 +281,7 @@ class PlotFlippery : public LinkedObj {
 
  protected:
    virtual void do_post_set() override;
-   PRM_LIST( flType, 0, "Flippery type",  "Flippery type", "ncol=2\nenum=FlipperyType" );
+   PRM_LIST( flType, 0, "Flippery type",  "Flippery type", "enum=FlipperyType" );
    PRM_STRING( flStyle, 0, "Style", "Flippery style in MGL terms", "sep=col\ndef=S@");
 
    PRM_PARAMD( x0, 0, "x0", "x0 coordinate", "def=0.1\nsep=block");
