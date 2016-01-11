@@ -881,7 +881,7 @@ DW_REG_FUN_STD( StringArrayDataWidget, "ARRAY_STRING,INLINE" );
 // ------------------- ObjDataWidget ---------------------------
 
 ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
-  : DataWidget( h, parent, hideLabel ),
+  : DataWidget( h, parent, true ),
    pb( new QPushButton( this ) )
 {
   main_w = pb; // no R/O handling here
