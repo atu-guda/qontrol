@@ -38,7 +38,7 @@ CTOR(TMulsumN,TMiso)
   allowed_types = "InputSimple,+SPECIAL";
 }
 
-double TMulsumN::f( double /* t */ ) noexcept
+double TMulsumN::f() noexcept
 {
   spf = 0; sp = 0; sf = 0;
   {

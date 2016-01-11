@@ -62,7 +62,7 @@ class TFuncTrans : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_21", "a*cosh(b*y)+g"                        ); //  ft_cosh
  protected:
    /** main computation function */
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
 
    /** type of function */
    PRM_LIST( type, 0, "Type", "Function type", "enum=FuncType" );

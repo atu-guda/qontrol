@@ -43,7 +43,7 @@ int TLinP1Q0::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 1;
 }
 
-double TLinP1Q0::f( double /*t*/ ) noexcept
+double TLinP1Q0::f() noexcept
 {
   double f = ( use_u1 ) ? in_f : x_old;
   double u = in_u;

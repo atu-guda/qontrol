@@ -41,7 +41,7 @@ int TRelaxGen::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 1;
 }
 
-double TRelaxGen::f( double  /* t */ ) noexcept
+double TRelaxGen::f() noexcept
 {
   if( prm_mod ) {
     if( c <= 0 )   { c   = 1e-16; };

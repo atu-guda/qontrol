@@ -30,7 +30,7 @@ CTOR(TDelay,TMiso)
 {
 }
 
-double TDelay::f( double t ) noexcept
+double TDelay::f() noexcept
 {
   double a1, a2;
   if( !buf ) {

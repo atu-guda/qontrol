@@ -37,7 +37,7 @@ CTOR(TExtrLatch,TMiso)
 }
 
 
-double TExtrLatch::f( double t ) noexcept
+double TExtrLatch::f() noexcept
 {
   __label__ to_exit;
   double v, u = in_u;

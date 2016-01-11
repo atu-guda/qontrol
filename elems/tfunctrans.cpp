@@ -36,7 +36,7 @@ CTOR(TFuncTrans,TMiso)
 }
 
 
-double TFuncTrans::f( double /* t */ ) noexcept
+double TFuncTrans::f() noexcept
 {
   double v, by, tm;
   y = in_0 - in_1 - x0; by = y * b;

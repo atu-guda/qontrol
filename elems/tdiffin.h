@@ -34,7 +34,7 @@ class TDiffIn : public TMiso  {
 
  protected:
    /** main computation function */
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
 
    PRM_SWITCH( emulC, efNRC, "Emulate C", "Make virtual linear cenral point", "" );
    // Outputs

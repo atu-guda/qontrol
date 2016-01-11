@@ -34,7 +34,7 @@ CTOR(TLogic,TMiso)
 }
 
 
-double TLogic::f( double /* t */ ) noexcept
+double TLogic::f() noexcept
 {
   int ou;
   int iu0 = ( in_0 > level );

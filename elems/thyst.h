@@ -44,7 +44,7 @@ class THyst : public TMiso  {
 
  protected:
    /** main computation function */
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
    /** reimplemented from TMiso to set init state */
    virtual int do_startLoop( int acnx, int acny ) override;
    void fixState(void);

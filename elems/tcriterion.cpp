@@ -39,7 +39,7 @@ int TCriterion::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 1;
 }
 
-double TCriterion::f( double t ) noexcept
+double TCriterion::f() noexcept
 {
   int ok, rv;
   double aa, x;

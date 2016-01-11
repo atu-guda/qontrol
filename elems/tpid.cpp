@@ -46,7 +46,7 @@ int TPid::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 1;
 }
 
-double TPid::f( double t ) noexcept
+double TPid::f() noexcept
 {
   double v = 0, d1, d2, uc = in_u;
 

@@ -33,7 +33,7 @@ class TIntegrator : public TMiso  {
    DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
    /** reimplemented from TMiso to init state */
    virtual int do_startLoop( int acnx, int acny ) override;
 

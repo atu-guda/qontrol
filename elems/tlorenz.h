@@ -32,7 +32,7 @@ class TLorenz : public TMiso  {
    DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
    /** called before each inner param loop. Unused param - -1 */
    virtual int do_startLoop( int acnx, int acny ) override;
 

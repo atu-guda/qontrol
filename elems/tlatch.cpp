@@ -42,7 +42,7 @@ int TLatch::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 1;
 }
 
-double TLatch::f( double t ) noexcept
+double TLatch::f() noexcept
 {
   double dv, bv;
   int ok;

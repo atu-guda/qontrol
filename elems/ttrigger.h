@@ -42,7 +42,7 @@ class TTrigger : public TMiso  {
    Q_CLASSINFO( "enum_TriggType_4", "CountLevel(X)" ); // tr_clev   
  protected:
    /** main computation function */
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
    /** reimplemented from TMiso to init state */
    virtual int do_startLoop( int acnx, int acny ) override;
 

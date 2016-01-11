@@ -38,7 +38,7 @@ int TCounter::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 1;
 }
 
-double TCounter::f( double /* t */ ) noexcept
+double TCounter::f() noexcept
 {
   double v, du;
   int tick;

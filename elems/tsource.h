@@ -63,7 +63,7 @@ class TSource : public TMiso  {
  protected:
 
    /** main computation function */
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
    /** will be called before any action -- good place for allocs */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    /** called before each inner param loop. Unused param - -1 */

@@ -32,7 +32,7 @@ class TSwitch : public TMiso  {
    DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
 
    /** levels  */
    PRM_PARAMD( level_0,efNRC, "Level 0", "Level to switch from in_0 to in_1", "def=0" );

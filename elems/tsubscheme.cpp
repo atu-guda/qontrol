@@ -87,7 +87,7 @@ CTOR(TSubScheme,TMiso)
 
 
 
-double TSubScheme::f( double t ) noexcept
+double TSubScheme::f() noexcept
 {
   double v = 0;
 

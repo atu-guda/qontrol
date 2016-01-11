@@ -28,7 +28,7 @@ CTOR(TDiffIn,TMiso)
 }
 
 
-double TDiffIn::f( double /*t*/ ) noexcept
+double TDiffIn::f() noexcept
 {
   double x_ce, y_ce;
   if( emulC ) {

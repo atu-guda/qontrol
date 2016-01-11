@@ -42,7 +42,7 @@ class TThrum : public TMiso  {
    Q_CLASSINFO( "enum_ListType_4", "..." );     // lt_more
  protected:
    /** main computation function */
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
    void fixparm();
 
    PRM_INT( p_int, 0, "Int", "integer value", "min=-2\nmax=12\ndef=1" );

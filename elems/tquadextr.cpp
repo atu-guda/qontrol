@@ -29,7 +29,7 @@ CTOR(TQuadExtr,TMiso)
 }
 
 
-double TQuadExtr::f( double /*t*/ ) noexcept
+double TQuadExtr::f() noexcept
 {
   double x_ce, y_ce; // effective central point (need if emulC)
   if( emulC ) {

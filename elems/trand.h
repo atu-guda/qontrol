@@ -68,7 +68,7 @@ class TRand : public TMiso  {
    Q_CLASSINFO( "enum_SeedType_3", "As defined in Model" );     // asModel
  protected:
    /** main computation function */
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
    /** reimplemented from TMiso to init generator */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    /** reimplemented from TMiso to init generator and variables */

@@ -49,7 +49,7 @@ class TMiso : public LinkedObj  {
    DCL_STD_INF;
 
    /** external computation function + in/out */
-   double fun( double t, IterType itype ) noexcept;
+   double fun( double t_, IterType itype ) noexcept;
 
    /** will be called before any action -- good place for allocs
     *
@@ -82,7 +82,7 @@ class TMiso : public LinkedObj  {
     * \param t current time
     * \return output value of element
     * */
-   virtual double f( double t ) noexcept;
+   virtual double f() noexcept;
    /** place of customization of preRun, return: !=0 = Ok */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
    /** will be called after all actions from posrtRun  -- good place for deallocs */
@@ -119,6 +119,7 @@ class TMiso : public LinkedObj  {
 
    /** time step -- setted by preRun 0 - special value to detect usage before start */
    double tdt = 0;
+   double t; // current time, set by fun()
    /** number of iteration per loop -- setted by PreRun */
    int model_nn = 0;
    //* Current iteration type: to propagate to subschemes...

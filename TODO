@@ -1,9 +1,13 @@
-partialy done: update link values only after step - prep for multi-threading (see TSubScheme)
+Barriers?
 correct places for reset, set_link, *structChange..
 Sepagate layout managers for block in DataDialog
+TSubScheme I/O redesigh?
+generalize StartLoop .... (remove all*Loop)
 BUG: fail to link TOutArr to Simulation param.
 BUG: modified state (i.e. after autocreated scheme removal)
 BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params
+Allow DoubleParam to Simul, TModel,
+Allow to hide elems (like TMiso) in dialog
 Long descriptions in schems, (button) - how to edit?
 Reorder objects in list-alike containers. - require artificial numeration
 add Flag: call parent post_set if changed. and supress for mass changes. set/do_set?
@@ -28,14 +32,15 @@ Inputs - may be Elements? like TFileSource?
 Dump TOutArr/TGraph commandline (-p/-P)
 More functional labels in dialogs: go to buddy, autoset ....
 Outputs - or even IO - for external data.
-Custom legeng/labels/axis(scale factor) in Mgl
+Custom legend/labels/axis(scale factor) in Mgl
 Tests
 Autocorrelation?
 Placeholder object: param is the type of real object?
 Shadow/backup/undo main scheme?
 More stylesheets
 props: v_min, v_max: precalculate?
-PlotLabel: real TeX, common TeX preambula +/= per label
+PlotLabel: real TeX, common TeX preambula +/= per label - or external program
+
 
 JS run dialog. + one-line above log viewer
 QScintilla? Dialog or SubWindow?

@@ -45,7 +45,7 @@ int TVibro::do_startLoop( int /*acnx*/, int /*acny*/ )
   return 1;
 }
 
-double TVibro::f( double /*t*/ ) noexcept
+double TVibro::f() noexcept
 {
   double x, ctau = tdt * c0 / 2; // c0 can be changed at any time, so here
 

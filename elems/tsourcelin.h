@@ -37,7 +37,7 @@ class TSourceLin : public TMiso  {
    void recalc(void);
  protected:
    /** main computation function */
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
    /** times of lines, <=0 - end */
    virtual int do_startLoop( int acnx, int acny ) override;
 

@@ -41,7 +41,7 @@ class TMaxNum : public TMiso  {
    Q_CLASSINFO( "enum_ExtrType_3", "MIN||"     );   // et_MINMOD
 
  protected:
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
 
    PRM_LIST(   type,   efNRC,    "Type",  "Type of extremum", "enum=ExtrType" );
    PRM_INT(    n_in,   efNRC, "N_{in}",   "Number of inputs", "def=8\nmin=1\nmax=8" );

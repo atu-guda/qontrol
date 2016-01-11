@@ -38,7 +38,7 @@ class TAdjGen : public TMiso  {
    Q_CLASSINFO( "enum_GenType_2", "Dual(\\omega,\\omega_2)" ); // gen_dual
  protected:
    /** main computation function */
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
    /** reimplemented from TMiso to reset */
    virtual int do_startLoop( int acnx, int acny );
 

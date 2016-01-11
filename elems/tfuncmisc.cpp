@@ -36,7 +36,7 @@ CTOR(TFuncMisc,TMiso)
 }
 
 
-double TFuncMisc::f( double /* t */ ) noexcept
+double TFuncMisc::f() noexcept
 {
   double v;
   y = in_0 - in_1 - x0;

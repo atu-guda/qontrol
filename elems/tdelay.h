@@ -36,7 +36,7 @@ class TDelay : public TMiso  {
    DCL_STD_INF;
  protected:
    /** main computation function */
-   virtual double f( double t ) noexcept override;
+   virtual double f() noexcept override;
    /** calc values & alloc buf */
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    /** deallocates buf */
