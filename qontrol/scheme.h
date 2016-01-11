@@ -84,7 +84,7 @@ class Scheme : public LinkedObj  {
  protected:
   virtual void do_reset() override;
 
-  PRM_STRING( descr, efNoRunChange, "description", "Scheme description", "max=1024\nprops=STRING,MLINE\nncol=-1");
+  PRM_STRING( descr, efNoRunChange, "description", "Scheme description", "max=1024\nprops=STRING,MLINE\nncol=-1\nsep=blockend");
   // ======================= invisible vars ======================
   /** run type */
   int run_type = -1; // reset

@@ -64,6 +64,7 @@ class TThrum : public TMiso  {
    PRM_COLOR( p_col, 0, "Color", "Color value", "sep=col\ndef=silver" );
    PRM_DATE( p_date, 0, "Date", "Date value", "def=2015.11.20\nmin=1010.10.10" );
    PRM_TIME( p_time, 0, "Time", "Time value", "def=23:59:59.001\nmin=00:13:00.000" );
+   PRM_INT( p_i2, 0, "Int2", "integer value2", "def=5\nsep=row" );
 
    PRM_STRING( p_str, 0, "&String", "some string", u8"sep=block\nncol=2\ndef=\"a b c d f\"" );
 
@@ -73,7 +74,7 @@ class TThrum : public TMiso  {
 
    // PRM_STRING( p_strn, 0, "ML String", "Large string", "sep=block\nprops=STRING,MLINE\nncol=-1" );
    PRM_INT_ARR( a_int, 0, "int[]", "int array", "N=5\ndef=1\ndefs=0 2 4 \nsep=tab\ntabname=X1" );
-   PRM_DOUBLE_ARR( a_dou, 0, "dou[]", "double array", "N=5\ndef=0.1\ndefs=7 1.2e-5 3e7 \nsep=tabend" );
+   PRM_DOUBLE_ARR( a_dou, 0, "dou[]", "double array", "N=5\ndef=0.1\ndefs=7 1.2e-5 3e7 \nsep=col,tabend" );
    PRM_STRING_ARR( a_str, 0, "str[]", "string array", "N=5\ndef=a b c\ndefs=first\x01second x x\x01last" );
 
    Q_CLASSINFO( "nameHintBase",  "thrum_" );

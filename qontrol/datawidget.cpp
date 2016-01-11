@@ -25,7 +25,6 @@ DataWidget::DataWidget( HolderData &h, QWidget *parent, bool hideLabel )
     lbl( new QLabel( this ) )
 {
   if( ! hideLabel ) {
-    lbl->setWhatsThis( ho.getType() + QSL(" ") + ho.objectName() );
     // lbl->setMinimumWidth( 5 * LaboWin::Em() );
     lbl->setTextFormat( Qt::RichText );
     lbl->setText( tex2label( ho.getParm( QSL("vis_name") ) ) );
@@ -1302,6 +1301,7 @@ int DataDialog::createWidgets()
     }
 
     QString sep =  ho->getParm( QSL("sep") );
+    QStringList seps = sep.split( QSL(",") );
     QString ctn =  ho->getParm( QSL("tabname") );
     if( !ctn.isEmpty() ) {
       tabname = ctn;
@@ -1309,7 +1309,7 @@ int DataDialog::createWidgets()
     int ncol =  ho->getParmInt( QSL("ncol"), 1 ); // number of columns per widget
     ncol = qBound( -1, ncol, MAX_COLS_PER_WIDGET );
 
-    if( sep == QSL("tab") || was_tab ) {
+    if( seps.contains( QSL("tab") ) || was_tab ) {
       if( lay2 ) {
         addFinalSpace( lay2 );
       }
@@ -1324,7 +1324,7 @@ int DataDialog::createWidgets()
       tabname = QSL("Tab &") % QSN( n_tab ); // next tab, if not overrided
     }
 
-    if( sep == QSL("block") || was_block ) {
+    if( seps.contains( QSL("block") ) || was_block ) {
 
       if( lay2 ) {
         auto fr = new QFrame( wmain );
@@ -1334,11 +1334,14 @@ int DataDialog::createWidgets()
       lay2 = new QGridLayout; lay2->setSpacing( 2 );
       lay_wv->addLayout( lay2 );
       nr = nr_max = nc = 0;
-      // ++nr_max;
     }
 
-    if( sep == QSL("col") || was_col ) {
+    if( seps.contains( QSL("col") ) || was_col ) {
       nr = 0; ++nc;
+    }
+
+    if( seps.contains( QSL("row") ) ) {
+      nr = nr_max; nc = 0;
     }
 
     QString name = ho->objectName();
@@ -1350,7 +1353,8 @@ int DataDialog::createWidgets()
     }
 
     dwm[name] = w;
-    QString whats = ho->dataObj( 0, Qt::WhatsThisRole ).toString();
+    QString whats = ho->getType() % QSL(" ") % ho->objectName() % QSL("; ")
+                  % ho->dataObj( 0, Qt::WhatsThisRole ).toString();
     w->setWhatsThis( whats );
     // w->setStatusTip( whats ); // TODO: just for test
     // w->setToolTip( whats ); // TODO: just for test
@@ -1362,13 +1366,13 @@ int DataDialog::createWidgets()
     }
 
     was_col = was_block = was_tab = false;
-    if( sep == QSL("colend") ||  nr >= MAX_WIDGETS_PER_COL ) {
+    if( seps.contains( QSL("colend") ) ||  nr >= MAX_WIDGETS_PER_COL ) {
       was_col = true;
     }
-    if( sep == QSL("blockend") ) {
+    if( seps.contains( QSL("blockend") ) ) {
       was_block = true;
     }
-    if( sep == QSL("tabend") ) {
+    if( seps.contains( QSL("tabend") ) ) {
       was_tab = true;
     }
   } // -------------- end item loop
