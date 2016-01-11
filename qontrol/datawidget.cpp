@@ -952,7 +952,7 @@ InputDataWidget::InputDataWidget( HolderData &h, QWidget *parent, bool hideLabel
   }
   // ow->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
 
-  le->setMinimumWidth( 8 * LaboWin::Em() );
+  le->setMinimumWidth( 6 * LaboWin::Em() );
   le->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
   auto cmpl = new LinkCompleter( this );
   QAbstractItemModel *cmpl_mdl = h.getComplModel( QSL("in"), cmpl );
@@ -965,9 +965,12 @@ InputDataWidget::InputDataWidget( HolderData &h, QWidget *parent, bool hideLabel
   lay->addWidget( lbl, 0 );
   lay->addWidget( le,  5 );
   lay->addWidget( ow,  0 );
+  auto frr = new QFrame( this );
+  frr->setFrameStyle( QFrame::VLine );
+  lay->addWidget( frr );
   setLayout( lay );
   // setFrameStyle( QFrame::Panel | QFrame::Sunken );
-  setMinimumWidth( 14 * LaboWin::Em() ); // hack
+  setMinimumWidth( lbl->width() + (6+3) * LaboWin::Em() ); // hack
 
   connect( le, &QLineEdit::editingFinished, this, &InputDataWidget::lineToObj );
   connect( ow, &ObjDataWidget::editingFinished, this, &InputDataWidget::objToLine );
