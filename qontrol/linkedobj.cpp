@@ -365,7 +365,7 @@ DEFAULT_FUNCS_REG(InputSimple);
 
 
 // ------------------------------------ ParamDouble ---------
-STD_CLASSINFO(ParamDouble,clpInput|clpSpecial);
+STD_CLASSINFO(ParamDouble,clpInput);
 
 CTOR(ParamDouble,InputAbstract)
 {

@@ -28,7 +28,7 @@ CTOR(Simulation,LinkedObj)
 {
   show_active = true;
   // allowed_types = "double"; // double + inputs? TODO: check alias
-  allowed_types = "HolderValue"; // double + inputs? TODO: check alias
+  allowed_types = "HolderValue,ParamDouble"; // double + inputs? TODO: check alias
 }
 
 Simulation::~Simulation()

@@ -4,12 +4,9 @@ TSubScheme I/O redesigh?
 generalize StartLoop .... (remove all*Loop)
 BUG: modified state (i.e. after autocreated scheme removal)
 BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params
-Allow DoubleParam to Simul, TModel,
-Allow to hide elems (like TMiso) in dialog
 Long descriptions in schems, (button) - how to edit?
 Reorder objects in list-alike containers. - require artificial numeration
 add Flag: call parent post_set if changed. and supress for mass changes. set/do_set?
-sep prop: bitfield?
 Fill, import, export special arrays.
 Create arrays in dialogs.
 Script 'help' function + list of top-level objects and functions.
@@ -38,6 +35,7 @@ Shadow/backup/undo main scheme?
 More stylesheets
 props: v_min, v_max: precalculate?
 PlotLabel: real TeX, common TeX preambula +/= per label - or external program
+Allow to hide elems (like TMiso) in dialog
 
 
 JS run dialog. + one-line above log viewer

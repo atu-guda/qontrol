@@ -40,7 +40,7 @@ STD_CLASSINFO(TModel,clpSpecial | clpContainer);
 
 CTOR(TModel,LinkedObj)
 {
-  allowed_types = "HolderValue,"
+  allowed_types = "HolderValue,ParamDouble,"
                   "ContScheme,ContSimul,ContOut,ContGraph"; // +SPECIAL
   rtime =0; t = 0; tdt =1; // fake
   needReadInputsRecurse = true;

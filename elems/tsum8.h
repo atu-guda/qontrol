@@ -44,14 +44,14 @@ class TSum8 : public TMiso  {
    PRM_PARAMD( a_7, 0, "a_7", "factor in input 7", "" );
    PRM_PARAMD( b,  0, "b", "static shift", "sep=col" );
 
-   PRM_INPUT( u_0, 0, "in_0", "Input 0",  "sep=block" );
-   PRM_INPUT( u_1, 0, "in_1", "Input 1", "" );
-   PRM_INPUT( u_2, 0, "in_2", "Input 2",  "sep=col" );
-   PRM_INPUT( u_3, 0, "in_3", "Input 3", "" );
-   PRM_INPUT( u_4, 0, "in_4", "Input 4",  "sep=col" );
-   PRM_INPUT( u_5, 0, "in_5", "Input 5", "" );
-   PRM_INPUT( u_6, 0, "in_6", "Input 6",  "sep=col" );
-   PRM_INPUT( u_7, 0, "in_7", "Input 7", "" );
+   PRM_INPUT( u_0, 0, "u_0", "Input 0",  "sep=block" );
+   PRM_INPUT( u_1, 0, "u_1", "Input 1", "" );
+   PRM_INPUT( u_2, 0, "u_2", "Input 2",  "sep=col" );
+   PRM_INPUT( u_3, 0, "u_3", "Input 3", "" );
+   PRM_INPUT( u_4, 0, "u_4", "Input 4",  "sep=col" );
+   PRM_INPUT( u_5, 0, "u_5", "Input 5", "" );
+   PRM_INPUT( u_6, 0, "u_6", "Input 6",  "sep=col" );
+   PRM_INPUT( u_7, 0, "u_7", "Input 7", "" );
 
    Q_CLASSINFO( "nameHintBase",  "sum_" );
    DCL_DEFAULT_STATIC;
