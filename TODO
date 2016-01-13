@@ -8,7 +8,6 @@ Long descriptions in schems, (button) - how to edit?
 Reorder objects in list-alike containers. - require artificial numeration
 add Flag: call parent post_set if changed. and supress for mass changes. set/do_set?
 Fill, import, export special arrays.
-Create arrays in dialogs.
 Script 'help' function + list of top-level objects and functions.
 Decoration objects.
 Documenation: cmdline options (partial), common workflow.

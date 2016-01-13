@@ -2052,6 +2052,11 @@ QVariant HolderIntArray::get( int idx ) const
 
 void HolderIntArray::do_post_set()
 {
+  unsigned n = getParmInt( QSL("N"), 1 );
+  if( n != v.size() ) {
+    int v1 = getParmInt( QSL("def"), 0 );
+    v.resize( n, v1 );
+  }
   int v_min = getParmInt( QSL("min"), IMIN );
   int v_max = getParmInt( QSL("max"), IMAX );
   for( int& vc : v ) {
@@ -2109,7 +2114,7 @@ void HolderDoubleArray::reset_dfl()
   int n = getParmInt( QSL("N"), 1 );
   auto v0 = v;
 
-  double v1 = getParmDouble( QSL("def"), 0 );
+  double v1 = getParmDouble( QSL("def"), 0.0 );
   v.assign( n, v1 );
 
   auto s = getParm( QSL("defs") );
@@ -2161,6 +2166,11 @@ QVariant HolderDoubleArray::get( int idx ) const
 
 void HolderDoubleArray::do_post_set()
 {
+  unsigned n = getParmInt( QSL("N"), 1 );
+  if( n != v.size() ) {
+    double v1 = getParmDouble( QSL("def"), 0.0 );
+    v.resize( n, v1 );
+  }
   double v_min = getParmDouble( QSL("min"), DMIN );
   double v_max = getParmDouble( QSL("max"), DMAX );
   for( double& vc : v ) {
@@ -2263,7 +2273,10 @@ bool HolderStringArray::set( const QVariant & x, int idx )
 
 QVariant HolderStringArray::get( int idx ) const
 {
-  if( idx < 0 || idx >= v.size() ) { // slow, but safe - not for fast code
+  if( idx < 0 ) {
+    return v;
+  }
+  if( idx >= v.size() ) { // slow, but safe - not for fast code
     return QVariant();
   }
   return QVariant( v[idx] );
@@ -2271,6 +2284,11 @@ QVariant HolderStringArray::get( int idx ) const
 
 void HolderStringArray::do_post_set()
 {
+  int n = getParmInt( QSL("N"), 1 );
+  auto v1 = getParm( QSL("def") );
+  if( n > v.size() ) {
+    v << v1;
+  }
   int len_max = getParmInt( QSL("max"), -1 );
   if( len_max > -1 ) {
     for( QString& vc : v ) {
