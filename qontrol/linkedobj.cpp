@@ -23,24 +23,13 @@ CTOR(LinkedObj,TDataSet)
 {
 }
 
-LinkedObj::~LinkedObj()
-{
-}
-
-
-// ----------------------------------
-
-
-
 DEFAULT_FUNCS_REG(LinkedObj);
-
-
 
 
 const double* LinkedObj::getDoublePtr( const QString &nm, int *lt,
               const LinkedObj **targ, int lev  ) const
 {
-  static int clt;
+  int clt; // fake value to safe ptr usage
   int *plt = lt ? lt : &clt;
   if( nm.isEmpty() ) {
     *plt = LinkNone; return nullptr;
@@ -49,13 +38,13 @@ const double* LinkedObj::getDoublePtr( const QString &nm, int *lt,
     *plt = LinkBad;
     return nullptr;
   }
-  QString nmf = nm, first, rest;
+  QString first, rest;
 
   int idx;
-  NameType nm_type = splitName( nmf, first, rest, idx );
+  auto nm_type = splitName( nm, first, rest, idx );
   if( nm_type == badName ) {
     *plt = LinkBad;
-    qWarning() << "bad source name " << nmf << NWHE;
+    qWarning() << "bad source name " << nm << NWHE;
     return nullptr;
   }
 
@@ -63,7 +52,7 @@ const double* LinkedObj::getDoublePtr( const QString &nm, int *lt,
 
   if( !ho ) {
     *plt = LinkBad;
-    // qWarning() << "elem" << first << "not found, nmf= " << nmf << NWHE;
+    // qWarning() << "elem" << first << "not found, nm= " << nf << NWHE;
     return nullptr;
   }
 
@@ -164,7 +153,7 @@ bool LinkedObj::isIgnored() const
 
 void LinkedObj::do_structChanged()
 {
-  TDataSet::do_structChanged();
+  // TDataSet::do_structChanged(); // empty - do not call
   inps.clear(); inps_a.clear(); inps_s.clear(); inps_ap.clear();
 
   for( auto in : TCHILD(InputAbstract*) ) {
@@ -189,7 +178,7 @@ void LinkedObj::do_structChanged()
   }
 }
 
-void LinkedObj::readInputs()
+void LinkedObj::readInputs() noexcept
 {
   if( needReadInputsRecurse ) {
     for( auto in : TCHILD(LinkedObj*) ) {
@@ -203,7 +192,7 @@ void LinkedObj::readInputs()
   prm_mod += prm_will_mod;
 }
 
-void LinkedObj::readAllInputs()
+void LinkedObj::readAllInputs() noexcept
 {
   if( needReadInputsRecurse ) {
     for( auto in : TCHILD(LinkedObj*) ) {
@@ -229,22 +218,11 @@ CTOR(InputAbstract,LinkedObj)
   }
 }
 
-InputAbstract::~InputAbstract()
-{
-}
-
 void InputAbstract::reset_dfl()
 {
   LinkedObj::reset_dfl();
   QString s = getParm( QSL("def") );
   source = s;
-}
-
-void InputAbstract::do_post_set()
-{
-  // TODO: uncomment, commenrd only for debug
-  // MORE: works much better with commenting
-  // reportStructChanged(); // changed link means changes structure
 }
 
 void InputAbstract::do_structChanged()
@@ -341,23 +319,6 @@ CTOR(InputSimple,InputAbstract)
 {
 }
 
-InputSimple::~InputSimple()
-{
-}
-
-
-
-void InputSimple::do_post_set()
-{
-  InputAbstract::do_post_set(); // report is here
-}
-
-
-void InputSimple::set_link()
-{
-  InputAbstract::set_link();
-}
-
 
 const char* InputSimple::helpstr { "Link to source of simple double data" };
 
@@ -370,23 +331,6 @@ STD_CLASSINFO(ParamDouble,clpInput);
 CTOR(ParamDouble,InputAbstract)
 {
   need_fixparm = getParmInt( "fixparm", 0 );
-}
-
-ParamDouble::~ParamDouble()
-{
-}
-
-
-
-void ParamDouble::do_post_set()
-{
-  InputAbstract::do_post_set(); // report is here
-}
-
-
-void ParamDouble::set_link()
-{
-  InputAbstract::set_link();
 }
 
 

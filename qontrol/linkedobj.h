@@ -18,13 +18,13 @@ class LinkedObj : public TDataSet {
   Q_OBJECT
  public:
    DCL_CTOR(LinkedObj);
-   virtual ~LinkedObj() override;
+   // virtual ~LinkedObj() override;
    DCL_CREATE;
    DCL_STD_INF;
 
    /** returns pointer to given parameter, checking if valid
     * valid values:
-    * 1.23e-5 - direct double value
+    * 1.23e-5 - direct double value -- NO, not here (see set_link)
     * elmname = elmname.out0
     * elmname.parmname
     * parmname
@@ -38,7 +38,7 @@ class LinkedObj : public TDataSet {
    virtual const double* getSchemeDoublePtr( const QString &nm, int *lt = nullptr,
         const LinkedObj **src_ob = nullptr, int lev = 0 ) const;
    /** gets pointer to parameter, near to getDoublePtr
-    * for parameter mod only - no descend  */
+    * for parameter mod only - no descend (now only in TModel param mirror)  */
    double* getDoublePrmPtr( const QString &nm, int *flg );
    bool isIgnored() const; // self or parents...
    virtual void do_structChanged() override;
@@ -48,8 +48,8 @@ class LinkedObj : public TDataSet {
    Q_INVOKABLE int getN_ActiveInputs() const { return inps_a.size(); }
    Q_INVOKABLE int getN_ActiveParmInputs() const { return inps_ap.size(); }
 
-   virtual void readInputs();
-   virtual void readAllInputs();
+   void readInputs() noexcept;
+   void readAllInputs() noexcept;
  protected:
 
    //* ptrs to all inputs: filled by do_structChanged
@@ -82,8 +82,8 @@ class InputAbstract : public LinkedObj {
   Q_OBJECT
  public:
   DCL_CTOR(InputAbstract);
-  virtual ~InputAbstract();  // must be abstract, but in this case cannot register
-  virtual void reset_dfl() override;
+  // virtual ~InputAbstract();
+  virtual void reset_dfl() override; // += handle "def" value sto "source" parameter
   virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
   DCL_CREATE;
   DCL_STD_INF;
@@ -102,7 +102,7 @@ class InputAbstract : public LinkedObj {
   double cval() const noexcept { return out0; }
 
  protected:
-  virtual void do_post_set() override;
+  // virtual void do_post_set() override;
   /** do real actions after structure changed */
   virtual void do_structChanged() override;
 
@@ -134,13 +134,13 @@ class InputSimple : public InputAbstract {
   Q_OBJECT
  public:
   DCL_CTOR(InputSimple);
-  virtual ~InputSimple() override;
+  // virtual ~InputSimple() override;
   DCL_CREATE;
   DCL_STD_INF;
   /** find and set link to source (external or direct_in) */
-  virtual void set_link() override;
+  // virtual void set_link() override;
  protected:
-  virtual void do_post_set() override;
+  // virtual void do_post_set() override;
 
   PRM_INT( channel, efNRC, "Channel", "Channel number of this input", "sep=block" );
   PRM_INT( subchannel, efNRC, "Subchannel", "Subchannel number of this input", "sep=col" );
@@ -158,17 +158,16 @@ class ParamDouble : public InputAbstract {
   Q_OBJECT
  public:
   DCL_CTOR(ParamDouble);
-  virtual ~ParamDouble() override;
+  // virtual ~ParamDouble() override;
   DCL_CREATE;
   DCL_STD_INF;
   virtual QIcon getIcon() const override { return QIcon(); }; // empty icon: save space
   operator double&() { return out0; };
   double& operator=( double rhs ) { out0 = rhs; return out0; }
   Q_INVOKABLE bool isFixparmNeed() const { return need_fixparm; };
-  /** find and set link to values */
-  virtual void set_link() override;
+  // virtual void set_link() override;
  protected:
-  virtual void do_post_set() override;
+  // virtual void do_post_set() override;
 
   PRM_STRING( tparam, efOld, "Param", "old param names - remove after cnv", ""  );
   bool need_fixparm = false;
