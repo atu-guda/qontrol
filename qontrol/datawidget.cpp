@@ -1277,23 +1277,24 @@ int DataDialog::createWidgets()
   int nr = 0, nc = 0, nr_max = 0, n_tab = 0;
   bool was_block = 0, was_col = 0, was_tab = 0;
 
-  // remove existent- if recreate need
-  for( QObject *child : children() ) {
-    delete child;
+  if( !lay_main ) {
+    lay_main = new QVBoxLayout( this );
+    setLayout( lay_main );
+  }
+
+  createButtons();
+
+  if( tw ) {
+    delete tw; // and all sub-widgets
   }
   dwm.clear();
+  tw = new QTabWidget( this );
+  lay_main->insertWidget( 0, tw );
 
-  if( auto old_lay = layout() ) {
-    delete old_lay;
-  }
-  auto lay1 = new QVBoxLayout;
-
-  auto tw = new QTabWidget( this );
   tw->setTabBarAutoHide( true );
-  lay1->addWidget( tw );
 
   QWidget *wmain = nullptr;
-  QGridLayout *lay2 = nullptr;
+  QGridLayout *lay_gr = nullptr;
   QVBoxLayout *lay_wv = nullptr;
   QString tabname = QSL("Main");
   was_tab = true;
@@ -1313,8 +1314,8 @@ int DataDialog::createWidgets()
     ncol = qBound( -1, ncol, MAX_COLS_PER_WIDGET );
 
     if( seps.contains( QSL("tab") ) || was_tab ) {
-      if( lay2 ) {
-        addFinalSpace( lay2 );
+      if( lay_gr ) {
+        addFinalSpace( lay_gr );
       }
       nc = nr = nr_max = 0;
       wmain = new QWidget();
@@ -1322,20 +1323,20 @@ int DataDialog::createWidgets()
 
       lay_wv = new QVBoxLayout( wmain );
 
-      was_block = true; lay2 = nullptr;
+      was_block = true; lay_gr = nullptr;
       ++n_tab;
       tabname = QSL("Tab &") % QSN( n_tab ); // next tab, if not overrided
     }
 
     if( seps.contains( QSL("block") ) || was_block ) {
 
-      if( lay2 ) {
+      if( lay_gr ) {
         auto fr = new QFrame( wmain );
         fr->setFrameStyle( QFrame::HLine );
-        lay2->addWidget( fr, nr_max, 0, 1, -1 );
+        lay_gr->addWidget( fr, nr_max, 0, 1, -1 );
       }
-      lay2 = new QGridLayout; lay2->setSpacing( 2 );
-      lay_wv->addLayout( lay2 );
+      lay_gr = new QGridLayout; lay_gr->setSpacing( 2 );
+      lay_wv->addLayout( lay_gr );
       nr = nr_max = nc = 0;
     }
 
@@ -1349,7 +1350,7 @@ int DataDialog::createWidgets()
 
     QString name = ho->objectName();
 
-    DataWidget *w = FactoryDataWidget::theFactory().createDataWidget( *ho, this );
+    DataWidget *w = FactoryDataWidget::theFactory().createDataWidget( *ho, tw );
     if( !w ) {
       qWarning() << "not found edit widget for object " << name << WHE;
       continue;
@@ -1361,7 +1362,7 @@ int DataDialog::createWidgets()
     w->setWhatsThis( whats );
     // w->setStatusTip( whats ); // TODO: just for test
     // w->setToolTip( whats ); // TODO: just for test
-    lay2->addWidget( w, nr, nc, 1, ncol );
+    lay_gr->addWidget( w, nr, nc, 1, ncol );
 
     ++nr;
     if( nr > nr_max ) {
@@ -1379,15 +1380,36 @@ int DataDialog::createWidgets()
       was_tab = true;
     }
   } // -------------- end item loop
-  if( lay2 ) { // last tab: add stretch
-    addFinalSpace( lay2 );
+  if( lay_gr ) { // last tab: add stretch
+    addFinalSpace( lay_gr );
   }
 
-  // final line and buttons
+  return nr;
+}
+
+void DataDialog::addFinalSpace( QGridLayout *lay )
+{
+  int xnr = lay->rowCount();
+  auto frb = new QFrame( this );
+  // frb->setFrameStyle( QFrame::HLine );
+  // frb->setFrameStyle( QFrame::Box );
+  frb->setMinimumSize( 1, 1 );
+  frb->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
+  lay->addWidget( frb, xnr, 0, 1, -1 );
+  lay->setRowMinimumHeight( xnr, 1 );
+  lay->setRowStretch( xnr, 2 );
+}
+
+void DataDialog::createButtons()
+{
+  if( buttons_created ) {
+    return;
+  }
+  if( !lay_main ) { return; }
+
   auto frb = new QFrame( this );
   frb->setFrameStyle( QFrame::HLine );
-  lay1->addWidget( frb );
-
+  lay_main->insertWidget( 1, frb );
 
   bool can_add_objs = false;
   QStringList obj_clss = EFACT.goodTypeNames( ds.allowTypes() );
@@ -1403,7 +1425,7 @@ int DataDialog::createWidgets()
     auto btn_delObj = new QPushButton( QIcon::fromTheme(QSL("edit-delete")), QSL("Delete object") );
     connect( btn_delObj, &QPushButton::clicked, this, &DataDialog::delObj );
     lay_btn2->addWidget( btn_delObj );
-    lay1->addLayout( lay_btn2 );
+    lay_main->addLayout( lay_btn2 );
   }
 
   auto lay_btn = new QHBoxLayout;
@@ -1439,22 +1461,7 @@ int DataDialog::createWidgets()
   auto btn_help = new QPushButton( QIcon::fromTheme(QSL("help-contents")), QSL("Help") );
   connect( btn_help, &QPushButton::clicked, this, &DataDialog::showHelp);
   lay_btn->addWidget( btn_help );
-  lay1->addLayout( lay_btn );
+  lay_main->insertLayout( 2, lay_btn );
 
-  setLayout( lay1 );
-
-  return nr;
-}
-
-void DataDialog::addFinalSpace( QGridLayout *lay )
-{
-  int xnr = lay->rowCount();
-  auto frb = new QFrame( this );
-  frb->setFrameStyle( QFrame::HLine );
-  frb->setFrameStyle( QFrame::Box );
-  frb->setMinimumSize( 1, 1 );
-  frb->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
-  lay->addWidget( frb, xnr, 0, 1, -1 );
-  lay->setRowMinimumHeight( xnr, 1 );
-  lay->setRowStretch( xnr, 2 );
+  buttons_created = true;
 }

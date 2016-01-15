@@ -295,12 +295,16 @@ class DataDialog : public QDialog {
    bool delObj();
   protected:
    virtual int createWidgets();
+   virtual void createButtons();
    void showSimpleHelp();
    void addFinalSpace( QGridLayout *lay );
    HolderData &ds;
    DaWiMap dwm;
    QString saved_data;
    bool ro;
+   bool buttons_created = false;
+   QVBoxLayout *lay_main = nullptr;
+   QTabWidget *tw = nullptr; // pane for all data widgets
 };
 
 #endif  // _DATAWIDGET_H
