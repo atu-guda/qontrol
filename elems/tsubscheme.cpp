@@ -27,10 +27,6 @@ CTOR(SubOutput,LinkedObj)
 {
 }
 
-SubOutput::~SubOutput()
-{
-}
-
 
 bool SubOutput::set_link()
 {
@@ -109,8 +105,7 @@ double TSubScheme::f() noexcept
   return v; // TMP
 }
 
-int TSubScheme::do_preRun( int run_tp, int an,
-                           int anx, int any, double atdt )
+int TSubScheme::do_preRun(  int run_tp, int an, int anx, int any, double atdt )
 {
   TMiso::do_preRun( run_tp, an, anx, any, atdt );
   IGNORE_MOD_HERE;
@@ -146,35 +141,22 @@ int TSubScheme::do_preRun( int run_tp, int an,
     subouts.append( so );
   }
 
-  return sch->preRun( run_tp, an, anx, any, atdt );
+  // return sch->preRun( run_tp, an, anx, any, atdt ); // by LinkedObj
+  return 1;
 }
 
 int TSubScheme::do_postRun( int /*good*/ )
 {
-  if( sch ) {
-    sch->postRun();
-    // delObj( sch_ename, true ); // tmp: for debug: or forever?
-    return 1;
-  }
-  return 0;
+  return 1;
+  // if( sch ) {
+  //   sch->postRun();
+  //   // delObj( sch_ename, true ); // tmp: for debug: or forever?
+  //   return 1;
+  // }
+  // return 0;
 }
 
-int TSubScheme::do_startLoop( int acnx, int acny )
-{
-  if( sch ) {
-    return sch->allStartLoop( acnx, acny );
-  }
-  return 0;
-}
 
-int TSubScheme::do_endLoop()
-{
-  if( sch ) {
-    sch->allEndLoop();
-    return 1;
-  }
-  return 0;
-}
 
 void TSubScheme::do_post_set()
 {

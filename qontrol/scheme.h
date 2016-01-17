@@ -31,7 +31,7 @@ class Scheme : public LinkedObj  {
   Q_OBJECT
  public:
   DCL_CTOR(Scheme);
-  virtual ~Scheme() override;
+  // virtual ~Scheme() override;
   DCL_CREATE;
   DCL_STD_INF;
 
@@ -68,16 +68,6 @@ class Scheme : public LinkedObj  {
   void sortOrd();
   /** performs one loop */
   virtual int runOneLoop( double t, IterType itype );
-  /** fill tables & call preRun for elements */
-  virtual int preRun( int run_tp, int N, int anx, int any, double tdt );
-  /** call postRun for elements and dealloc inner buffers */
-  virtual int postRun();
-  /** calls startLoop for all elms */
-  virtual int allStartLoop( int acnx, int acny );
-  /** calls endLoop for all elms */
-  virtual void allEndLoop();
-  /** links input & parm names -> indexses in ptrs TODO: drop */
-  virtual int linkNames();
 
   virtual void fillComplModelForInputs( QStandardItemModel *mdl ) const override;
 
@@ -106,7 +96,7 @@ class ContScheme : public LinkedObj {
    Q_OBJECT
   public:
    DCL_CTOR(ContScheme);
-   virtual ~ContScheme() override;
+   // virtual ~ContScheme() override;
    DCL_CREATE;
    DCL_STD_INF;
   private:

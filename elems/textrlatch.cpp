@@ -121,8 +121,9 @@ double TExtrLatch::f() noexcept
   return v;
 }
 
-int TExtrLatch::do_startLoop( int /*acnx*/, int /*acny*/ )
+int TExtrLatch::do_startLoop( int acnx, int acny )
 {
+  TMiso::do_startLoop( acnx, acny );
   reset_vars();
   return 1;
 }

@@ -34,8 +34,9 @@ CTOR(TRelaxGen,TMiso)
 }
 
 
-int TRelaxGen::do_startLoop( int /*acnx*/, int /*acny*/ )
+int TRelaxGen::do_startLoop( int acnx, int acny )
 {
+  TMiso::do_startLoop( acnx, acny );
   v = (double)out0_init;
   isDis = I =  dv_ch = dv_dis = 0;
   return 1;

@@ -334,7 +334,7 @@ int TModel::run( QSemaphore *sem )
       *prm0_targ = prm0;
       start_time = get_real_time(); rtime = t = 0;
 
-      if( ! allStartLoop( il1, il2 ) ) {
+      if( ! startLoop( il1, il2 ) ) {
         stopRun( 0 );
         return 0;
       }
@@ -384,7 +384,7 @@ int TModel::run( QSemaphore *sem )
         }
       } // -- main loop (i)
 
-      allEndLoop( il1, il2 );
+      endLoop();
       if( plots ) {
         plots->reset();
       }
@@ -409,7 +409,7 @@ int TModel::stopRun( int reason )
     reset();
     state = stateGood;
   } else {
-    postRun();
+    postRun( 1 );
     state = stateDone;
   }
 
@@ -463,51 +463,6 @@ int TModel::runOneLoop( IterType itype )
   return 1;
 }
 
-
-int TModel::postRun()
-{
-  if( !c_sch ) {
-    return 0;
-  }
-
-  int rc = c_sch->postRun();
-
-  if( outs ) {
-    outs->postRun( 1 );
-  }
-  if( plots ) {
-    plots->readAllInputs(); // or hide in postRun()
-  }
-  return rc;
-}
-
-int TModel::allStartLoop( int acnx, int acny )
-{
-  int rc = 0;
-  // readAllInputs();
-
-  if( c_sch ) {
-    rc = c_sch->allStartLoop( acnx, acny );
-  }
-  if( !rc ) {
-    return 0;
-  }
-
-  if( outs ) {
-    rc = outs->startLoop( acnx, acny );
-  }
-  return rc;
-}
-
-void TModel::allEndLoop( int acnx, int acny )
-{
-  if( c_sch ) {
-    c_sch->allEndLoop();
-  }
-  if( outs ) {
-    outs->endLoop( acnx, acny );
-  }
-}
 
 
 

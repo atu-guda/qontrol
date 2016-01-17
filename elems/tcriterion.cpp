@@ -33,8 +33,9 @@ CTOR(TCriterion,TMiso)
 }
 
 
-int TCriterion::do_startLoop( int /*acnx*/, int /*acny*/ )
+int TCriterion::do_startLoop( int acnx, int acny )
 {
+  TMiso::do_startLoop( acnx, acny );
   st = 0;
   return 1;
 }

@@ -28,15 +28,16 @@ CTOR(TVibro,TMiso)
 }
 
 
-int TVibro::do_preRun( int /*run_tp*/, int /*an*/,
-                       int /*anx*/, int /*any*/, double /*adt*/ )
+int TVibro::do_preRun( int run_tp, int an, int anx, int any, double atdt )
 {
+  TMiso::do_preRun( run_tp, an, anx, any, atdt );
   tdt2 = tdt * tdt;
   return 1;
 }
 
-int TVibro::do_startLoop( int /*acnx*/, int /*acny*/ )
+int TVibro::do_startLoop( int acnx, int acny )
 {
+  TMiso::do_startLoop( acnx, acny );
   u_old = f_old = 0;
   v = (double)v0;
   x_old = out0_init;

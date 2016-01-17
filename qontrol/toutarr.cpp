@@ -34,13 +34,8 @@ const char* TOutArr::helpstr = "<H1>TOutArr</H1>\n"
 
 STD_CLASSINFO(TOutArr,clpSpecial);
 
-CTOR(TOutArr,TDataSet)
+CTOR(TOutArr,LinkedObj)
 {
-}
-
-TOutArr::~TOutArr()
-{
-  n = nx = ny = 0;
 }
 
 QVariant TOutArr::dataObj( int col, int role ) const
@@ -143,6 +138,7 @@ void TOutArr::do_structChanged()
 
 void TOutArr::set_link()
 {
+  // #warning use InputSimple
   so = nullptr;
   TModel *mod = getAncestorT<TModel>();
   int lt; const LinkedObj *so_ob;
@@ -164,7 +160,7 @@ int TOutArr::take_val()
   return n;
 }
 
-int TOutArr::preRun( int /*run_tp*/, int an, int anx, int any, double /*adt*/ )
+int TOutArr::do_preRun( int /*run_tp*/, int an, int anx, int any, double /*adt*/ )
 {
   reset();
   if( any < 1 ) {  any = 1;  }
@@ -187,17 +183,16 @@ int TOutArr::preRun( int /*run_tp*/, int an, int anx, int any, double /*adt*/ )
   }
   arr.resize( arrsize );
 
-
   return 1;
 }
 
-int TOutArr::postRun( int /*good*/ )
+int TOutArr::do_postRun( int /*good*/ )
 {
   calc_stat(); // calc even in case of non-full array
   return 1;
 }
 
-int TOutArr::startLoop( int acnx, int acny )
+int TOutArr::do_startLoop( int acnx, int acny )
 {
   switch( type ) {
     case OutArrType::outSimple:
@@ -220,7 +215,7 @@ int TOutArr::startLoop( int acnx, int acny )
   return 1;
 }
 
-int TOutArr::endLoop( int /*acnx*/, int /*acny*/ )
+int TOutArr::do_endLoop()
 {
   switch( type ) {
     case OutArrType::outSimple:

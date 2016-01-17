@@ -60,9 +60,9 @@ double TDelay::f() noexcept
   return v1 * a1 + v2 * a2;
 }
 
-int TDelay::do_preRun( int /*run_tp*/, int /*an*/,
-                       int /*anx*/, int /*any*/, double /*atdt*/ )
+int TDelay::do_preRun( int run_tp, int an, int anx, int any, double atdt )
 {
+  TMiso::do_preRun( run_tp, an, anx, any, atdt );
   imd = int( mdelay / tdt );
   buf.reset( new TCircBuf( imd ) );
   return 1;
@@ -74,8 +74,9 @@ int TDelay::do_postRun( int /*good*/ )
   return 1;
 }
 
-int TDelay::do_startLoop( int /*acnx*/, int /*acny*/ )
+int TDelay::do_startLoop( int acnx, int acny )
 {
+  TMiso::do_startLoop( acnx, acny );
   if( cdelay > mdelay ) {
     cdelay = mdelay;
   }

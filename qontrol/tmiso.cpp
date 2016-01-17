@@ -66,75 +66,24 @@ double TMiso::f() noexcept
   return 0;
 }
 
-int TMiso::preRun( int run_tp, int an, int anx, int any, double adt )
+int TMiso::do_preRun( int /*run_tp*/, int an, int /*anx*/,
+                      int /*any*/, double adt )
 {
-  if( ignored ) {
-    return 0;
-  }
   tdt = adt; model_nn = an;
-  iter_c = IterNo;
-  prm_mod = 0;
-  int rc =  do_preRun( run_tp, an, anx, any, adt );
-  if( !rc ) {
-    return 0;
-  }
-  return (state > 0 ) ? 1 : 0;
-}
-
-int TMiso::do_preRun( int /*run_tp*/, int /*an*/, int /*anx*/,
-                      int /*any*/, double /*adt*/ )
-{
   return 1;
 }
 
 
 
-int TMiso::postRun( int good )
-{
-  if( ignored ) {
-    return 0;
-  }
-  int rc = do_postRun( good );
-  state = good ? stateDone : stateGood;
-  iter_c = IterNo;
-  return rc;
-}
-
-int TMiso::do_postRun( int /*good*/ )
-{
-  return 1;
-}
-
-int TMiso::startLoop( int acnx, int acny )
-{
-  if( ignored ) {
-    return 0;
-  }
-  state = stateRun;
-  out0 = (double)out0_init;
-  prm_mod = 0;
-  // readAllInputs(); // moved to scheme
-  return do_startLoop( acnx, acny );
-}
 
 int TMiso::do_startLoop( int /* acnx */, int /* acny */ )
 {
+  state = stateRun;
+  out0 = (double)out0_init;
+  // readAllInputs(); // moved to scheme
   return 1;
 }
 
-int TMiso::endLoop()
-{
-  if( ignored ) {
-    return 0;
-  }
-  state = stateGood;
-  return do_endLoop();
-}
-
-int TMiso::do_endLoop()
-{
-  return 1;
-}
 
 void TMiso::do_structChanged()
 {
@@ -142,10 +91,6 @@ void TMiso::do_structChanged()
   prm_will_mod = 0;
 }
 
-void TMiso::do_post_set()
-{
-  LinkedObj::do_post_set();
-}
 
 void TMiso::fillComplModelForParams( QStandardItemModel *mdl ) const
 {

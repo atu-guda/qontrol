@@ -206,6 +206,88 @@ void LinkedObj::readAllInputs() noexcept
   prm_mod += prm_will_mod;
 }
 
+int LinkedObj::preRun( int run_tp, int an, int anx, int any, double atdt )
+{
+  // reset(); ????
+  iter_c = IterNo; state = stateRun;
+  prm_mod = 0;
+  int rc =  do_preRun( run_tp, an, anx, any, atdt );
+  if( !rc ) {
+    qWarning() << "preRun failed for object " << getFullName() << NWHE;
+    return 0;
+  }
+
+  for( auto ob : TCHILD(LinkedObj*) ) {
+    rc = ob->preRun( run_tp, an, anx, any, atdt );
+    if( !rc ) {
+      return 0;
+    }
+  };
+  return ( state > stateBad ) ? 1 : 0;
+}
+
+int LinkedObj::do_preRun( int /*run_tp*/, int /*an*/, int /*anx*/,
+                      int /*any*/, double /*adt*/ )
+{
+  return 1;
+}
+
+
+int LinkedObj::postRun( int good )
+{
+  for( auto ob : TCHILD(LinkedObj*) ) {
+    ob->postRun( good );
+  };
+  do_postRun( good );
+
+  state = good ? stateDone : stateGood; // TODO: or state Bad?
+  iter_c = IterNo;
+  return 1;
+}
+
+int LinkedObj::do_postRun(  int /*good*/  )
+{
+  return 1;
+}
+
+
+int LinkedObj::startLoop( int acnx, int acny )
+{
+  readAllInputs();
+  int rc = do_startLoop( acnx, acny );
+  if( rc == 0 ) {
+    qWarning() << "Fail to start " << NWHE;
+    return 0;
+  }
+
+  for( auto ob : TCHILD(LinkedObj*) ) {
+    rc = ob->startLoop( acnx, acny );
+    if( !rc ) {
+      return 0;
+    }
+  };
+  return 1;
+}
+
+int LinkedObj::do_startLoop( int /*acnx*/, int /*acny*/ )
+{
+  return 1;
+}
+
+int LinkedObj::endLoop()
+{
+  for( auto ob : TCHILD(LinkedObj*) ) {
+    ob->endLoop();
+  };
+  return 1;
+}
+
+
+int LinkedObj::do_endLoop()
+{
+  return 1;
+}
+
 // ------------------------------------ InputAbstract ---------
 //
 STD_CLASSINFO(InputAbstract,clpInput|clpSpecial|clpPure);

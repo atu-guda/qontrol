@@ -18,7 +18,7 @@
 #ifndef TOUTARR_H
 #define TOUTARR_H
 
-#include "dataset.h"
+#include "linkedobj.h"
 
 struct DatasInfo;
 
@@ -30,13 +30,13 @@ struct DatasInfo;
   * @author atu
   */
 
-class TOutArr : public TDataSet  {
+class TOutArr : public LinkedObj  {
   Q_OBJECT
  public:
    DCL_CTOR(TOutArr);
    DCL_CREATE;
    DCL_STD_INF;
-   virtual ~TOutArr() override;
+   // virtual ~TOutArr() override;
    enum OutArrType {
      outSimple = 0,
      outParm1  = 1,
@@ -59,14 +59,6 @@ class TOutArr : public TDataSet  {
    Q_INVOKABLE virtual int arrSize() const override { return arrsize; }
    Q_INVOKABLE int getN() const { return n; }
 
-   //* called before all runs
-   int preRun( int run_tp, int an, int anx, int any, double adt );
-   //* will be called after all actions
-   int postRun( int good );
-   //* called before each inner param loop
-   int startLoop( int acnx, int acny );
-   /** will be called after each inner loop */
-   int endLoop( int acnx, int acny );
    /** get and push next value. pushed only if level >= type */
    virtual int take_val();
 
@@ -103,6 +95,10 @@ class TOutArr : public TDataSet  {
    virtual void do_structChanged() override;
    void set_link();
    void reset_stat();
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
+   virtual int do_postRun( int good ) override;
+   virtual int do_startLoop( int acnx, int acny ) override;
+   virtual int do_endLoop() override;
 
    PRM_LIST( type, efNoRunChange, "Type", "Type of array", "enum=OutArrType" );
    PRM_STRING( descr, efNoRunChange, "description", "Output array description", "max=256\nncol=-1");

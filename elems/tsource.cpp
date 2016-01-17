@@ -116,9 +116,9 @@ double TSource::f() noexcept
   return v;
 }
 
-int TSource::do_preRun( int /*run_tp*/, int /*an*/,
-                     int /*anx*/, int /*any*/, double /*adt*/ )
+int TSource::do_preRun( int run_tp, int an, int anx, int any, double atdt )
 {
+  TMiso::do_preRun( run_tp, an, anx, any, atdt );
   if( use_u_ch ) {
     eff_seedType_u = seedType_u;
     if( seedType_u == 3 ) { // as model
@@ -155,6 +155,7 @@ int TSource::do_preRun( int /*run_tp*/, int /*an*/,
 
 int TSource::do_startLoop( int acnx, int acny )
 {
+  TMiso::do_startLoop( acnx, acny );
   was_pulse = 0;
   tt = model_nn * tdt;
   // U rnd init

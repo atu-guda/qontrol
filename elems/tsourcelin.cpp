@@ -54,8 +54,9 @@ double TSourceLin::f() noexcept
 }
 
 
-int TSourceLin::do_startLoop( int /*acnx*/, int /*acny*/ )
+int TSourceLin::do_startLoop( int acnx, int acny )
 {
+  TMiso::do_startLoop( acnx, acny );
   recalc();
   t_start = 0; curr_lin = 0;
   return 1;

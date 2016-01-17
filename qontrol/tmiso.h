@@ -25,13 +25,6 @@
 
 #include "linkedobj.h"
 
-/** iteration type */
-enum IterType {
-  IterMid   = 0,   // not-first and not-last iteration
-  IterFirst = 1,   // first iteration in i inner loop
-  IterLast  = 2,   // last iteration in inner loop
-  IterNo    = 3,   // before or after run
-};
 
 // -------------------------- TMiso -----------------------------
 
@@ -51,23 +44,6 @@ class TMiso : public LinkedObj  {
    /** external computation function + in/out */
    double fun( double t_, IterType itype ) noexcept;
 
-   /** will be called before any action -- good place for allocs
-    *
-    * \param run_tp current run type: 0-simple,
-    *      1 - 1d param loop, 2 - 2d param loop
-    * \param an number of steps in modeling
-    * \param anx number of inner param loop
-    * \param any number of outer param loop
-    * \param adt time step  - will be a \b tdt in elememt
-    * non-virtual: adjusted by do_preRun
-    * */
-   int preRun( int run_tp, int an, int anx, int any, double adt );
-   /** will be called after all actions -- call do_postRun */
-   int postRun( int good );
-   /** called before each inner param loop -- call do_startLoop */
-   int startLoop( int acnx, int acny );
-   /** will be called after each inner loop -- call do_endLoop */
-   int endLoop();
    /** fast access to order */
    int getOrder() const { return ord; }
    /** compare objects by order - to sort before run */
@@ -84,17 +60,15 @@ class TMiso : public LinkedObj  {
     * */
    virtual double f() noexcept;
    /** place of customization of preRun, return: !=0 = Ok */
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    /** will be called after all actions from posrtRun  -- good place for deallocs */
-   virtual int do_postRun( int good );
+   // virtual int do_postRun( int good ) override;
    /** called before each inner param loop from startLoop */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int do_startLoop( int acnx, int acny ) override;
    /** will be called after each inner loop: called from endLoop */
-   virtual int do_endLoop();
+   // virtual int do_endLoop() override;
    /** do real actions after structure changed - refills inputs */
    virtual void do_structChanged() override;
-   //* for conversion from new link;
-   virtual void do_post_set() override;
 
    /** description on element */
    PRM_STRING( descr, efNoRunChange, "description",
@@ -122,8 +96,6 @@ class TMiso : public LinkedObj  {
    double t; // current time, set by fun()
    /** number of iteration per loop -- setted by PreRun */
    int model_nn = 0;
-   //* Current iteration type: to propagate to subschemes...
-   IterType iter_c = IterNo;
 
    DCL_DEFAULT_STATIC;
 

@@ -31,57 +31,26 @@ const char* ContOut::helpstr = "<H1>ContOut</H1>\n"
 
 STD_CLASSINFO(ContOut,clpSpecial | clpContainer);
 
-CTOR(ContOut,TDataSet)
+CTOR(ContOut,LinkedObj)
 {
   allowed_types = "TOutArr,+SPECIAL";
   vo.reserve( 64 );
 }
 
-ContOut::~ContOut()
-{
-}
 
-int ContOut::preRun( int run_tp, int an, int anx, int any, double adt )
+int ContOut::do_preRun( int /*run_tp*/, int /*an*/, int /*anx*/, int /*any*/, double /*adt*/ )
 {
   vo.clear();
-
   // fill array for pure TOutArr entries: for fast access later
   for( auto arr : TCHILD(TOutArr*) ) {
     vo.push_back( arr );
-    if( ! arr->preRun( run_tp, an, anx, any, adt ) ) {
-      vo.clear();
-      return 0;
-    }
   }
   return 1;
 }
 
-int ContOut::postRun( int good )
+int ContOut::do_postRun( int /*good*/ )
 {
-  for( auto arr : vo ) {
-    arr->postRun( good );
-  }
   vo.clear();
-  return 1;
-}
-
-int ContOut::startLoop( int acnx, int acny )
-{
-  for( auto arr : vo ) {
-    if( ! arr->startLoop( acnx, acny ) ) {
-      return 0;
-    }
-  }
-
-  return 1;
-}
-
-int ContOut::endLoop( int acnx, int acny )
-{
-  for( auto arr : vo ) {
-    arr->endLoop( acnx, acny );
-  }
-
   return 1;
 }
 

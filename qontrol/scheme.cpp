@@ -41,9 +41,6 @@ CTOR(Scheme,LinkedObj)
   needReadInputsRecurse = true;
 }
 
-Scheme::~Scheme()
-{
-}
 
 QVariant Scheme::dataObj( int col, int role ) const
 {
@@ -176,55 +173,12 @@ int Scheme::runOneLoop( double t, IterType itype )
   return 1;
 }
 
-int Scheme::preRun( int run_tp, int N, int anx, int any, double tdt )
-{
-  reset();
-  state = stateRun;
-  for( auto ob : v_el ) {
-    int rc = ob->preRun( run_tp, N, anx, any, tdt );
-    if( !rc ) {
-      qWarning() << "preRun failed for object " << ob->getFullName() << NWHE;
-      return 0;
-    }
-  };
-  return 1;
-}
 
-int Scheme::postRun()
-{
-  int cm = 0;
-  for( auto ob : v_el ) {
-    ob->postRun( end_loop );
-    cm |= ob->getModified();
-  };
-
-  state = stateDone; // TODO: or state Bad?
-  return 1;
-}
 
 void Scheme::do_reset()
 {
-  linkNames();
+  // linkNames();
   state = stateGood; run_type = -1;
-}
-
-int Scheme::allStartLoop( int acnx, int acny )
-{
-  readAllInputs();
-  for( auto ob : v_el ) {
-    int rc = ob->startLoop( acnx, acny );
-    if( !rc ) {
-      return 0;
-    }
-  };
-  return 1;
-}
-
-void Scheme::allEndLoop()
-{
-  for( auto ob : v_el ) {
-    ob->endLoop();
-  };
 }
 
 
@@ -343,8 +297,10 @@ int Scheme::moveElem( const QString &nm, int newx, int newy )
   return 0;
 }
 
-int Scheme::linkNames()
+
+void Scheme::do_structChanged()
 {
+  LinkedObj::do_structChanged();
   v_el.clear();
 
   for( auto ob : TCHILD(TMiso*) ) {
@@ -357,14 +313,6 @@ int Scheme::linkNames()
   };
 
   sortOrd();
-
-  return 0;
-}
-
-void Scheme::do_structChanged()
-{
-  LinkedObj::do_structChanged();
-  linkNames();
 }
 
 void Scheme::sortOrd()
@@ -404,10 +352,6 @@ CTOR(ContScheme,LinkedObj)
 {
   allowed_types = "Scheme,+SPECIAL";
   needReadInputsRecurse = true;
-}
-
-ContScheme::~ContScheme()
-{
 }
 
 DEFAULT_FUNCS_REG(ContScheme)

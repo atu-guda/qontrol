@@ -37,9 +37,9 @@ CTOR(TRandTrigg,TMiso)
 
 
 
-int TRandTrigg::do_preRun( int /*run_tp*/, int /*an*/,
-                           int /*anx*/, int /*any*/, double /*adt*/ )
+int TRandTrigg::do_preRun( int run_tp, int an, int anx, int any, double atdt )
 {
+  TMiso::do_preRun( run_tp, an, anx, any, atdt );
   eff_seedType = seedType;
   if( seedType == asModel ) {
     getUpData( "seedType", &eff_seedType );
@@ -54,6 +54,7 @@ int TRandTrigg::do_preRun( int /*run_tp*/, int /*an*/,
 
 int TRandTrigg::do_startLoop( int acnx, int acny )
 {
+  TMiso::do_startLoop( acnx, acny );
   ns = -1; u_old = 0; currOut = 0;
   if( ( eff_seedType == everyRun ) ||                // need to seed now
       ( eff_seedType == startLoop && acnx == 0 ) ||

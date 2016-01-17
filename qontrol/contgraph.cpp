@@ -33,10 +33,12 @@ CTOR(ContGraph,LinkedObj)
   needReadInputsRecurse = true;
 }
 
-ContGraph::~ContGraph()
-{
-}
 
+int ContGraph::do_postRun( int /*good*/ )
+{
+  readAllInputs(); // for labels...
+  return 1;
+}
 
 DEFAULT_FUNCS_REG(ContGraph)
 

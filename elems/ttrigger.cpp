@@ -32,8 +32,9 @@ CTOR(TTrigger,TMiso)
 }
 
 
-int TTrigger::do_startLoop( int /*acnx*/, int /*acny*/ )
+int TTrigger::do_startLoop( int acnx, int acny )
 {
+  TMiso::do_startLoop( acnx, acny );
   cst = (int)useInit1; u2_old = et = 0;
   return 1;
 }

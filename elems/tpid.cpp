@@ -29,9 +29,9 @@ CTOR(TPid,TMiso)
 }
 
 
-int TPid::do_preRun( int /*run_tp*/, int /*an*/,
-                     int /*anx*/, int /*any*/, double /*adt*/ )
+int TPid::do_preRun(  int run_tp, int an, int anx, int any, double atdt )
 {
+  TMiso::do_preRun( run_tp, an, anx, any, atdt );
   if( tdt < 1e-100 ) {
     return 0;
   }
@@ -39,8 +39,9 @@ int TPid::do_preRun( int /*run_tp*/, int /*an*/,
   return 1;
 }
 
-int TPid::do_startLoop( int /*acnx*/, int /*acny*/ )
+int TPid::do_startLoop( int acnx, int acny )
 {
+  TMiso::do_startLoop( acnx, acny );
   vi1 = vi2 = u_old = u_old2 = 0;
   start = 1;
   return 1;

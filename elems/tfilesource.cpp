@@ -89,9 +89,9 @@ int TFileSource::next_tau_e()
   return 1;
 }
 
-int TFileSource::do_preRun( int /*run_tp*/, int /*an*/,
-                     int /*anx*/, int /*any*/, double /*adt*/ )
+int TFileSource::do_preRun( int run_tp, int an, int anx, int any, double atdt )
 {
+  TMiso::do_preRun( run_tp, an, anx, any, atdt );
   file.setFileName( filename );
   pv.resize( greed + 1 ); // always need place for 2 lines
   n_ofs = ncl = cl = 0; tau_e = 1; // safe value
@@ -118,8 +118,9 @@ int TFileSource::do_postRun( int /*good*/ )
 }
 
 
-int TFileSource::do_startLoop( int /*acnx*/, int /*acny*/ )
+int TFileSource::do_startLoop( int acnx, int acny )
 {
+  TMiso::do_startLoop( acnx, acny );
   if( asProc.cval() ) {
     p_fi = popen( filename.c_str(), "r" );
     if( ! p_fi ) {

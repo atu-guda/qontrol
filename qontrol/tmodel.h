@@ -79,9 +79,6 @@ class TModel : public LinkedObj  {
  protected:
   virtual void do_reset() override;
   int runOneLoop( IterType itype );
-  int postRun();
-  int allStartLoop( int acnx, int acny );
-  void allEndLoop( int acnx, int acny );
 
   // interface to commands like above, but with names - to use from JS
  public slots:

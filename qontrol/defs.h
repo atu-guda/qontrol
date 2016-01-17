@@ -79,8 +79,7 @@ const constexpr int elm_known_flags = 9;
 // todo: func QString elemFlagsToString( int );
 
 enum _STATE_VALUES {
-  stateBad = 0, stateGood = 1, stateDone = 2, stateRun = 3,
-  statePreRun = 4, statePostRun = 5 // not used
+  stateBad = 0, stateGood = 1, stateDone = 2, stateRun = 3
 };
 
 

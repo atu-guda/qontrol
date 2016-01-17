@@ -24,10 +24,11 @@ class ContGraph : public LinkedObj {
    Q_OBJECT
   public:
    DCL_CTOR(ContGraph);
-   virtual ~ContGraph() override;
+   // virtual ~ContGraph() override;
    DCL_CREATE;
    DCL_STD_INF;
   private:
+   virtual int do_postRun( int good ) override;
    DCL_DEFAULT_STATIC;
 };
 

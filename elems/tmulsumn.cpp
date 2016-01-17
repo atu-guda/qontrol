@@ -90,8 +90,9 @@ double TMulsumN::f() noexcept
   return spf;
 }
 
-int TMulsumN::do_preRun( int /*run_tp*/, int /*an*/, int /*anx*/, int /*any*/, double /*atdt*/ )
+int TMulsumN::do_preRun( int run_tp, int an, int anx, int any, double atdt  )
 {
+  TMiso::do_preRun( run_tp, an, anx, any, atdt );
   QMap<int,ChInSim2> ipairs;
   pf_ins.clear();
   np = 0;

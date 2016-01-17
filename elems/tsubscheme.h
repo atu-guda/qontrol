@@ -27,7 +27,7 @@ class SubOutput : public LinkedObj {
   Q_OBJECT
  public:
   DCL_CTOR(SubOutput);
-  virtual ~SubOutput();
+  // virtual ~SubOutput();
   // virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
   DCL_CREATE;
   DCL_STD_INF;
@@ -62,12 +62,11 @@ class TSubScheme : public TMiso  {
    DCL_STD_INF;
    // virtual ~TSubScheme() override;
  protected:
-   /** main computation function */
    virtual double f() noexcept override;
    virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    virtual int do_postRun( int good ) override;
-   virtual int do_startLoop( int acnx, int acny ) override;
-   virtual int do_endLoop() override;
+   // virtual int do_startLoop( int acnx, int acny ) override;
+   // virtual int do_endLoop() override;
    // TODO: all do_ -- pass to scheme
    virtual void do_post_set() override;
 

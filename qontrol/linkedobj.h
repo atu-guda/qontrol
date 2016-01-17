@@ -13,6 +13,14 @@
 
 class InputAbstract; class InputSimple; class ParamDouble;
 
+/** iteration type */
+enum IterType {
+  IterMid   = 0,   // not-first and not-last iteration
+  IterFirst = 1,   // first iteration in i inner loop
+  IterLast  = 2,   // last iteration in inner loop
+  IterNo    = 3,   // before or after run
+};
+
 /** base class for all  objects, capable to double-type links*/
 class LinkedObj : public TDataSet {
   Q_OBJECT
@@ -43,6 +51,21 @@ class LinkedObj : public TDataSet {
    bool isIgnored() const; // self or parents...
    virtual void do_structChanged() override;
 
+   /** will be called before all runs -- good place for allocs
+    *
+    * \param run_tp current run type: 0-simple,
+    *      1 - 1d param loop, 2 - 2d param loop
+    * \param an number of steps in modeling
+    * \param anx number of inner param loop
+    * \param any number of outer param loop
+    * \param adt time step  - will be a \b tdt in elememt
+    * non-virtual: adjusted by do_preRun
+    * */
+   int preRun( int run_tp, int an, int anx, int any, double adt );
+   int postRun( int good ); //* will be called after all actions -- call do_postRun
+   int startLoop( int acnx, int acny ); //* called before each inner param loop -- call do_startLoop
+   int endLoop(); //* will be called after each inner loop -- call do_endLoop
+
    Q_INVOKABLE int getN_Inputs() const { return inps.size(); }
    Q_INVOKABLE int getN_SimpleInputs() const { return inps_s.size(); }
    Q_INVOKABLE int getN_ActiveInputs() const { return inps_a.size(); }
@@ -64,6 +87,16 @@ class LinkedObj : public TDataSet {
    bool needReadInputsRecurse = false;
    int prm_mod = 0; //* parameters modified during run flag
    int prm_will_mod = 0; //** parameters modification will require fixing, prm_mod - indicator
+   IterType iter_c = IterNo;//* Current iteration type: to propagate to subschemes...
+
+   /** place of customization of preRun, return: !=0 = Ok */
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   /** will be called after all actions from posrtRun  -- good place for deallocs */
+   virtual int do_postRun( int good );
+   /** called before each inner param loop from startLoop */
+   virtual int do_startLoop( int acnx, int acny );
+   /** will be called after each inner loop: called from endLoop */
+   virtual int do_endLoop();
 
    DCL_DEFAULT_STATIC;
 };

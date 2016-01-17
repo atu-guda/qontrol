@@ -41,8 +41,9 @@ void TCorrAnalysis::reset_data()
   ave_x = ave_y = ave_x2 = ave_y2 = 0;
 }
 
-int TCorrAnalysis::do_startLoop( int /*acnx*/, int /*acny*/ )
+int TCorrAnalysis::do_startLoop( int acnx, int acny )
 {
+  TMiso::do_startLoop( acnx, acny );
   reset_data();
   return 1;
 }

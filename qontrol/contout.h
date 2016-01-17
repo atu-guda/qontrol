@@ -18,27 +18,18 @@
 #ifndef _CONTOUT_H
 #define _CONTOUT_H
 
-#include "dataset.h"
+#include "linkedobj.h"
 #include "scriptfuncs.h"
 
 class TOutArr;
 
-class ContOut : public TDataSet {
+class ContOut : public LinkedObj {
    Q_OBJECT
   public:
    DCL_CTOR(ContOut);
-   virtual ~ContOut() override;
+   // virtual ~ContOut() override;
    DCL_CREATE;
    DCL_STD_INF;
-
-   //* called before all runs
-   int preRun( int run_tp, int an, int anx, int any, double adt );
-   //* will be called after all actions
-   int postRun( int good );
-   //* called before each inner param loop
-   int startLoop( int acnx, int acny );
-   /** will be called after each inner loop */
-   int endLoop( int acnx, int acny );
 
    //* get all needed ordinary (outSimple) values
    void takeAllVals();
@@ -64,6 +55,10 @@ class ContOut : public TDataSet {
                  const dvector **p_d_x, const dvector **p_d_y ) const;
    int fftx( const QString &nm_in, const QString &nm_omega,
              const QString &nm_a, const QString &nm_phi, double ome_max, bool cmpl );
+
+   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
+   virtual int do_postRun( int good ) override;
+
    std::vector<TOutArr*> vo;
    DCL_DEFAULT_STATIC;
 };

@@ -32,9 +32,9 @@ CTOR(TCounter,TMiso)
 }
 
 
-int TCounter::do_startLoop( int /*acnx*/, int /*acny*/ )
+int TCounter::do_startLoop( int acnx, int acny )
 {
-  cn = flip = 0; u_old = DMAX;
+  TMiso::do_startLoop( acnx, acny );
   return 1;
 }
 

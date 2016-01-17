@@ -54,8 +54,9 @@ double TRossler::f() noexcept
   return x;
 }
 
-int TRossler::do_startLoop( int /*acnx*/, int /*acny*/ )
+int TRossler::do_startLoop( int acnx, int acny )
 {
+  TMiso::do_startLoop( acnx, acny );
   x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
   return 1;
 }
