@@ -81,7 +81,7 @@ class LaboWin : public QMainWindow
     //* make action and link to slot, set property
     QAction* makeAction( const QString &text, const char *actName, SlotVV targetSlot );
 
-  private slots:
+  private Q_SLOTS:
 
     /** sets the main application window title each time
       * the active MDI child window changes. */

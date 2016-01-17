@@ -81,7 +81,7 @@ class TModel : public LinkedObj  {
   int runOneLoop( IterType itype );
 
   // interface to commands like above, but with names - to use from JS
- public slots:
+ public Q_SLOTS:
   //* adds new out array
   TOutArr* addOut( const  QString &outname, const QString &objname );
   //* delete outs by name, return !=0 id success
@@ -216,7 +216,7 @@ class ModelRunner : public QThread
   public:
    ModelRunner( TModel *a_model, QSemaphore *a_sem, QObject *parent = nullptr );
    virtual void run() override;
-  signals:
+  Q_SIGNALS:
    void resultReady( int rc );
   protected:
    TModel *model;

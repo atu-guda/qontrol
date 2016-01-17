@@ -33,7 +33,7 @@ class CmdView : public QWidget {
     HolderData* getStorage() { return storage; }
     virtual QModelIndex currentIndex() const;
     const QString& getLastObjName() const { return lastObjName; }
-  public slots:
+  public Q_SLOTS:
     virtual bool addObj();
     virtual bool delObj();
     virtual bool editObj();
@@ -48,7 +48,7 @@ class CmdView : public QWidget {
     virtual bool showObj();
     virtual bool showDataObj();
     virtual bool exportObj();
-  signals:
+  Q_SIGNALS:
     void viewChanged();
   protected:
     HolderData* storage;

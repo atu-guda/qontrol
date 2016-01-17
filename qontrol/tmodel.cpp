@@ -252,21 +252,13 @@ int TModel::startRun()
   prm0_targ = getMapDoublePtr( ">prm0_map" );
   prm1_targ = getMapDoublePtr( ">prm1_map" );
 
-  rc = outs->preRun( run_type, N, n1_eff, n2_eff, tdt );
+  rc = preRun( run_type, N, n1_eff, n2_eff, tdt );
   if( !rc ) {
-    qWarning() << "warn: output arrays preRun failed" << NWHE;
     reset();
     c_sim = nullptr; c_sch = nullptr;
     return 0;
   }
 
-  rc = c_sch->preRun( run_type, N, n1_eff, n2_eff, tdt );
-  if( !rc ) {
-    qWarning() << " scheme preRun failed " << c_sch->getFullName() << WHE;
-    reset();
-    c_sim = nullptr; c_sch = nullptr;
-    return 0;
-  }
   state = stateRun;
 
   int useScripts  = c_sim->getDataD( "useScripts", 0 );
@@ -385,7 +377,7 @@ int TModel::run( QSemaphore *sem )
       } // -- main loop (i)
 
       endLoop();
-      if( plots ) {
+      if( plots ) { // TODO: move to ContGraph::do_endLoop
         plots->reset();
       }
       runScript( scriptEndLoop );

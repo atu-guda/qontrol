@@ -1,16 +1,17 @@
 Barriers?
+Combine subscheme links with ordinary. TSubScheme I/O redesign?
+TOutArr: use InputSimple (need conversion)
+TModel::startRun: list on vars to copy. List for engine aliases?
 correct places for reset, set_link, *structChange..
-TSubScheme I/O redesigh?
-generalize StartLoop .... (remove all*Loop)
 BUG: modified state (i.e. after autocreated scheme removal)
 BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params
 Long descriptions in schems, (button) - how to edit?
 Reorder objects in list-alike containers. - require artificial numeration
-add Flag: call parent post_set if changed. and supress for mass changes. set/do_set?
+add Flag: call parent post_set if changed, and suppress for mass changes. set/do_set?
 Fill, import, export special arrays.
 Script 'help' function + list of top-level objects and functions.
 Decoration objects.
-Documenation: cmdline options (partial), common workflow.
+Documentaion: cmdline options (partial), common workflow.
 Show(edit?) HolderData props
 StatusTip(col=2) for StatusModel More: clarify 'col' meaning for objects
 1D{v,h}/2D slider inputs + 2-double pair data

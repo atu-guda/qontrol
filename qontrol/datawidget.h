@@ -99,7 +99,7 @@ class StringExtDataWidget: public DataWidget {
  public:
   StringExtDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
- protected slots:
+ protected Q_SLOTS:
    void edit();
  protected:
   QPushButton *pb;
@@ -231,9 +231,9 @@ class ObjDataWidget: public DataWidget {
   ObjDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   void updateLabel();
   DW_DCL_STD_FUN;
- signals:
+ Q_SIGNALS:
   void editingFinished();
- protected slots:
+ protected Q_SLOTS:
   void edit();
  protected:
   QPushButton *pb;
@@ -244,7 +244,7 @@ class InputDataWidget: public DataWidget {
  public:
   InputDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
   DW_DCL_STD_FUN;
- protected slots:
+ protected Q_SLOTS:
   void lineToObj();
   void objToLine();
  protected:
@@ -285,7 +285,7 @@ class DataDialog : public QDialog {
    DataDialog( HolderData &a_ds, QWidget *parent = nullptr );
    int getAll(); // from object to wigets
    int setAll(); // from widgets to object
-  public slots:
+  public Q_SLOTS:
    virtual void accept();
    void showHelp();
    void checkData();

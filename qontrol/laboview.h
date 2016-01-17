@@ -73,10 +73,10 @@ class LaboView : public CommonSubwin
    virtual bool callSlot( const char *nm );
    virtual bool checkSlot( const char *nm );
 
- signals:
+ Q_SIGNALS:
    void viewChanged();
 
- public slots:
+ public Q_SLOTS:
    /** called whan we need to update views */
    void updateViews();
    /** contains the implementation for printing functionality  */

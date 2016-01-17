@@ -39,7 +39,7 @@ class RunView : public QDialog  {
    ~RunView();
    /** hint size for good view */
    virtual QSize sizeHint() const;
- public slots:
+ public Q_SLOTS:
    /**  begins computations */
    void slotStartRun();
    /** interrupts computation */

@@ -34,9 +34,9 @@ class FontBtn : public QPushButton  {
    const QFont& font() const { return cfont; }
    void set_Font( const QFont &c );
    void set_Font( const QString &s );
- signals:
+ Q_SIGNALS:
    void changed( const QFont &newFont );
- protected slots:
+ protected Q_SLOTS:
    void slotClicked();
  protected:
    virtual void paintEvent( QPaintEvent *ev );

@@ -1,8 +1,9 @@
 QT += core widgets xml script printsupport
 TEMPLATE = app
 TARGET = qontrol
-CONFIG += c++11 release warn_on qt thread
-QMAKE_CXXFLAGS += -std=gnu++11 -fgnu-keywords -fext-numeric-literals # -fPIC
+CONFIG += c++14 release warn_on qt thread
+CONFIG += no-keywords
+#QMAKE_CXXFLAGS += -fgnu-keywords -fext-numeric-literals # -fPIC
 #CONFIG += debug warn_on qt thread
 
 RESOURCES = qontrol.qrc
@@ -12,6 +13,7 @@ INCLUDEPATH += .. ../elems
 LIBS += -lgsl -lgslcblas
 LIBS += -lmgl
 LIBS += -lfftw3
+LIBS += -lboost_thread -lboost_chrono
 
 SOURCES += \
   addelemdia.cpp \

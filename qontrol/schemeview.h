@@ -26,7 +26,7 @@ class SchemeView : public CmdListView {
   Q_OBJECT
   public:
    SchemeView( HolderData *a_mod, CommonSubwin *a_par );
-  public slots:
+  public Q_SLOTS:
     // virtual bool addObj() override;
     // virtual bool delObj() override;
     virtual bool editObj() override;

@@ -78,8 +78,6 @@ class LaboDoc : public QObject
   /** returns nonamed status */
   bool nonamed() const { return is_nonamed; }
 
- public slots:
-
  private:
    QString m_filename;
  protected:

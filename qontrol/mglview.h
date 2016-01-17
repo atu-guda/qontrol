@@ -18,6 +18,10 @@
 #ifndef MGLVIEW_H
 #define MGLVIEW_H
 
+// protect boost names from QT intervention
+#include <boost/thread.hpp>
+#include <boost/thread/barrier.hpp>
+
 #include <cmath>
 #include <vector>
 #include <string>
@@ -49,7 +53,7 @@ class MglView : public QWidget  {
    virtual QSize sizeHint() const override;
    QString getInfo( bool more = false ) const;
 
- public slots:
+ public Q_SLOTS:
    void resetScale();
    void markToBase();
    void setPhi( double a_phi, bool add = false );
@@ -74,7 +78,7 @@ class MglView : public QWidget  {
    void nextPointInPlot( int step = 1 );
    int getSelNum() const { return vd.sel; }
 
- signals:
+ Q_SIGNALS:
    void closeMe(); // ask main window to close me
 
  protected:
@@ -116,7 +120,7 @@ class MglSubwin : public CommonSubwin {
    ~MglSubwin();
    virtual bool callSlot( const char *nm );
    virtual bool checkSlot( const char *nm );
-  public slots:
+  public Q_SLOTS:
    virtual int getLevel() const override;
   protected:
    MglView *mview = nullptr;

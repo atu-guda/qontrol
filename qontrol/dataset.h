@@ -375,7 +375,7 @@ class HolderData : public QAbstractItemModel {
   //* return object names of given type under given subobject
   Q_INVOKABLE QStringList getNamesOfType( const QString &subObjName = QString(),
        const QString tp = QString(), bool withType = false ) const;
- signals:
+ Q_SIGNALS:
    void sigStructChanged();
  protected:
   virtual void do_post_set() = 0;

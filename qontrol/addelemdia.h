@@ -38,7 +38,7 @@ class SelectTypeDialog : public QDialog {
    int countTypes() const { return cl_names.size(); }
    QString getTypeN( int n ) const
      { return  n<cl_names.size() ? cl_names[n] : QString(); }
-  public slots:
+  public Q_SLOTS:
    virtual void accept();
   protected:
    void setupUi();

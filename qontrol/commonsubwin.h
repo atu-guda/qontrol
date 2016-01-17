@@ -45,10 +45,10 @@ class CommonSubwin : public QMainWindow  {
    HolderData* getSelectedInView( const QString& view_name ) const;
    QString getSelNameInView( const QString& view_name ) const;
    HolderData* getSelectedInFocus() const;
- public slots:
+ public Q_SLOTS:
    QString getSelNameInFocus() const;
    virtual int getLevel() const = 0;
- signals:
+ Q_SIGNALS:
    void closeMe(); // ask main window to close me
 
  protected:

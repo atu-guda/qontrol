@@ -15,21 +15,24 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <QPainter>
-#include <QTextDocument>
+#include <boost/thread.hpp>
+#include <boost/thread/barrier.hpp>
 
 #include <mgl2/base.h>
 
+#include "tmodel.h"
 #include "miscfun.h"
 #include "tgraph.h"
-#include "tmodel.h"
 #include "toutarr.h"
 #include "rootdata.h"
+
+#include <QPainter>
+#include <QTextDocument>
 
 using namespace std;
 
 const char* GraphElem::helpstr = "<H1>GraphElem</H1>\n"
- "Defines one source and output type for onw  line";
+ "Defines one source and output type for one  line";
 
 const char *role_name[] = {
   "none", "X axis", "Y axis", "Z axis", "Plot", "C0", "C1", "C2", "C3", "C4", "C5", "Sz", "??1"

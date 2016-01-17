@@ -20,6 +20,10 @@
 // unistd for usleep: TODO: replace with threads
 #include <unistd.h>
 #include <algorithm>
+
+#include <boost/chrono/chrono.hpp>
+#include <boost/bind.hpp>
+
 #include <QStandardItem>
 
 #include "miscfun.h"
@@ -146,7 +150,7 @@ void Scheme::fillComplModelForInputs( QStandardItemModel *mdl ) const
   // try active simulation
   Simulation *csim = mod->getActiveSimulation();
   if( csim ) {
-     csim->fillComplForInputs( root_item );
+    csim->fillComplForInputs( root_item );
   }
 
   // then model
@@ -178,6 +182,8 @@ int Scheme::runOneLoop( double t, IterType itype )
 void Scheme::do_reset()
 {
   // linkNames();
+  prepared = false; n_th = 0; v_elt.clear(); vth.clear();
+  barr0 = nullptr;  barr1 = nullptr;
   state = stateGood; run_type = -1;
 }
 
@@ -325,7 +331,7 @@ int Scheme::hintOrd() const
 {
   int m = 0;
   for( auto ob : TCHILD(TMiso*) ) {
-    int mc = ob->getDataD( "ord", 0 );
+    int mc = ob->getDataD( QSL("ord"), 0 );
     if( mc > m ) {
       m = mc;
     }
@@ -334,6 +340,26 @@ int Scheme::hintOrd() const
   return m1;
 }
 
+int Scheme::th_prep( unsigned n_th_ )
+{
+  n_th = n_th_;
+  if( n_th < 1 ) { n_th = 1; }
+
+  auto vsz = v_el.size();
+  // unsigned el_per_th = ( vsz + n_th - 1 ) / n_th;
+  // unsigned nt = n_th * el_per_th; // total number of elements, counting nulls
+  // v_elt.clear();
+  // v_elt.resize( n_th ); // TODO: each::reserve( el_per_th );
+  //
+  // for( unsigned i=0; i<nt; ++i ) {
+  //   unsigned tn = i % n_th;
+  //   v_elt[tn].push_back( ( i < vsz ) ? v_el[i] : nullptr );
+  // }
+  //
+  // prepared = true;
+
+  return 1;
+}
 
 
 

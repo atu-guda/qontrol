@@ -85,7 +85,7 @@ class StructView : public CmdView  {
     int getLevel() const { return level; }
     int checkState( CheckType ctp );
     QString getSchemeName() const;
-  public slots:
+  public Q_SLOTS:
     void update();
     void print();
     /** change selection rel: 0-abs 1-rel 2-next elm */
@@ -118,7 +118,7 @@ class StructView : public CmdView  {
     // virtual bool exportObj() override;
 
 
-  signals:
+  Q_SIGNALS:
     void sig_changeSel(int,int,int);
     void sig_changeLevel(int);
   protected:
@@ -162,7 +162,7 @@ class StructSubwin : public CommonSubwin {
    ~StructSubwin();
    virtual bool callSlot( const char *nm );
    virtual bool checkSlot( const char *nm );
-  public slots:
+  public Q_SLOTS:
    virtual int getLevel() const override;
   protected:
    QScrollArea *scrollArea = nullptr; // null only for correct layout create

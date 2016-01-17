@@ -30,7 +30,7 @@ class OutDataView : public CmdListView {
    // virtual HolderData* getSelObj() const override;
    // virtual void handleSelChange() override;
    // virtual QModelIndex currentIndex() const override;
-  public slots:
+  public Q_SLOTS:
     virtual bool addObj() override;
     // virtual bool delObj() override;
     // virtual bool editObj() override;

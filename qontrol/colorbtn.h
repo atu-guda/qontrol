@@ -35,9 +35,9 @@ class ColorBtn : public QPushButton  {
    int colorInt() const;
    void setColor( const QColor &c );
    void setColor( int ic );
- signals:
+ Q_SIGNALS:
    void changed( const QColor &newColor );
- protected slots:
+ protected Q_SLOTS:
    /** called if clicked */
    void slotClicked();
  protected:
