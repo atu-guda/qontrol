@@ -73,20 +73,20 @@ double TFriction::f() noexcept
     } else { // launch
       f_fd = - cf_mx * sign(fx);
       Ff = f = fx + f_fd;  // skip viscous now ?
-      v = f * tdt / mass;
-      x = x_old + v * tdt / 2;
+      v = f * ctdt / mass;
+      x = x_old + v * ctdt / 2;
       bodyState = 1;  // begin to move;
     };
   } else { // moving
     f_fd = - sign(v_old) * cf_mx;
     double f_fv = - v_old * kfv;
     Ff = f = fx + f_fd + f_fv;
-    v = v_old + f * tdt / mass;
+    v = v_old + f * ctdt / mass;
     if( v * v_old > 0 ) {
-      x = x_old + ( v + v_old ) * tdt / 2;
+      x = x_old + ( v + v_old ) * ctdt / 2;
     } else { // start to  sleep
       v = 0; bodyState = 0;
-      x = x_old + v_old * tdt * fabs( v_old / (v_old - v) ) / 2;
+      x = x_old + v_old * ctdt * fabs( v_old / (v_old - v) ) / 2;
     };
   };
 

@@ -38,7 +38,7 @@ CTOR(ContOut,LinkedObj)
 }
 
 
-int ContOut::do_preRun( int /*run_tp*/, int /*an*/, int /*anx*/, int /*any*/, double /*adt*/ )
+int ContOut::do_preRun()
 {
   vo.clear();
   // fill array for pure TOutArr entries: for fast access later

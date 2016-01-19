@@ -88,7 +88,7 @@ double TSubScheme::f() noexcept
   double v = 0;
 
   if( sch ) {
-    sch->runOneLoop( t, iter_c );
+    sch->runOneLoop( iter_c );
   } else {
     qWarning() << "No scheme?" << NWHE;
   }
@@ -105,9 +105,8 @@ double TSubScheme::f() noexcept
   return v; // TMP
 }
 
-int TSubScheme::do_preRun(  int run_tp, int an, int anx, int any, double atdt )
+int TSubScheme::do_preRun()
 {
-  TMiso::do_preRun( run_tp, an, anx, any, atdt );
   IGNORE_MOD_HERE;
   sch_proto = getObjOfAncessorT<Scheme*>( sch_name );
   if( !sch_proto ) {
@@ -141,7 +140,6 @@ int TSubScheme::do_preRun(  int run_tp, int an, int anx, int any, double atdt )
     subouts.append( so );
   }
 
-  // return sch->preRun( run_tp, an, anx, any, atdt ); // by LinkedObj
   return 1;
 }
 

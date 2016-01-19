@@ -56,11 +56,11 @@ double TLatch::f() noexcept
 
   switch( (int)type ) {
     case latchTime:
-      if( t >= t0 ) {
+      if( ct >= t0 ) {
         if( wasLatch ) {
           break;
         }
-        wasLatch = 1; lt = t; v = bv + in_u;
+        wasLatch = 1; lt = ct; v = bv + in_u;
       };
       break;
     case latchSignal:
@@ -73,7 +73,7 @@ double TLatch::f() noexcept
         ok = ( in_latch > 0.1 );
       };
       if( ok ) {
-        wasLatch = 1; lt = t; v = bv + in_u;
+        wasLatch = 1; lt = ct; v = bv + in_u;
       };
       break;
     default: ;

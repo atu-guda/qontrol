@@ -160,9 +160,10 @@ int TOutArr::take_val()
   return n;
 }
 
-int TOutArr::do_preRun( int /*run_tp*/, int an, int anx, int any, double /*adt*/ )
+int TOutArr::do_preRun()
 {
   reset();
+  int any = rinf->ny; int anx = rinf->nx; int an = rinf->N;
   if( any < 1 ) {  any = 1;  }
   if( anx < 1 ) {  anx = 1;  }
   if( nq  < 1 ) {  nq  = 1;  }

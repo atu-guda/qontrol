@@ -48,7 +48,7 @@ double TTrigger::f() noexcept
   int ui_ena = ( in_ena > level1 );
   double du;
 
-  if( t > tdt/2 ) {
+  if( ct > ctdt/2 ) {
     du = in_s - u2_old;
   } else {
     du = 0;
@@ -104,7 +104,7 @@ double TTrigger::f() noexcept
     if( et >= t0 ) {
       sw = -1; et = 0;
     } else {
-      et += tdt;
+      et += ctdt;
     };
   };
   act = 0;

@@ -29,13 +29,9 @@ CTOR(TPid,TMiso)
 }
 
 
-int TPid::do_preRun(  int run_tp, int an, int anx, int any, double atdt )
+int TPid::do_preRun()
 {
-  TMiso::do_preRun( run_tp, an, anx, any, atdt );
-  if( tdt < 1e-100 ) {
-    return 0;
-  }
-  tdt2 = tdt * tdt;
+  tdt2 = ctdt * ctdt;
   return 1;
 }
 
@@ -52,26 +48,26 @@ double TPid::f() noexcept
   double v = 0, d1, d2, uc = in_u;
 
   if( start == 1 ) {
-    start = 2; u_old = uc; vi1 += uc * tdt; vi2 += vi1 * tdt;
+    start = 2; u_old = uc; vi1 += uc * ctdt; vi2 += vi1 * ctdt;
     v = kp * uc + ki1 * vi1 + ki2 * vi2;
     return v;
   };
   if( start == 2 ) {
-    start = 0; d1 = ( uc - u_old ) / tdt;
-    vi1 += uc * tdt; vi2 += vi1 * tdt;
+    start = 0; d1 = ( uc - u_old ) / ctdt;
+    vi1 += uc * ctdt; vi2 += vi1 * ctdt;
     u_old2 = u_old; u_old = uc;
     v = kd1 * d1 + kp * uc + ki1 * vi1 + ki2 * vi2;
     return v;
   };
 
-  d1 = ( uc - u_old ) / tdt;
+  d1 = ( uc - u_old ) / ctdt;
   d2 = ( uc - 2*u_old + u_old2 ) / tdt2;
-  vi1 += uc * tdt;
-  vi2 += vi1 * tdt;
+  vi1 += uc * ctdt;
+  vi2 += vi1 * ctdt;
   v = kd2 * d2 + kd1 * d1 + kp * uc + ki1 * vi1 + ki2 * vi2;
 
-  if( aver ) {
-    v /= t;
+  if( aver && ct > 0 ) {
+    v /= ct;
   }
   u_old2 = u_old; u_old = uc;
   return v;

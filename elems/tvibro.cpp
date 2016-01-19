@@ -28,10 +28,9 @@ CTOR(TVibro,TMiso)
 }
 
 
-int TVibro::do_preRun( int run_tp, int an, int anx, int any, double atdt )
+int TVibro::do_preRun()
 {
-  TMiso::do_preRun( run_tp, an, anx, any, atdt );
-  tdt2 = tdt * tdt;
+  tdt2 = ctdt * ctdt;
   return 1;
 }
 
@@ -41,25 +40,25 @@ int TVibro::do_startLoop( int acnx, int acny )
   u_old = f_old = 0;
   v = (double)v0;
   x_old = out0_init;
-  x_old2 = out0_init - v0 * tdt;
+  x_old2 = out0_init - v0 * ctdt;
   isStart = 1;
   return 1;
 }
 
 double TVibro::f() noexcept
 {
-  double x, ctau = tdt * c0 / 2; // c0 can be changed at any time, so here
+  double x, ctau = ctdt * c0 / 2; // c0 can be changed at any time, so here
 
   if( isStart == 1 ) {  // first step
     isStart = 2; x = out0_init; v = (double)v0;
   } else if ( isStart == 2 ) {  // second step
     isStart = 0;
-    x = x_old + v0 * tdt + 0.5 * tdt2 * u_old;
-    v = v0 + u_old * tdt;
+    x = x_old + v0 * ctdt + 0.5 * tdt2 * u_old;
+    v = v0 + u_old * ctdt;
   } else {  // all other steps
     x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * (u_old - Omega * Omega * f_old) )
       / ( 1 + ctau );
-    v = ( x - x_old2 ) / ( 2 * tdt );
+    v = ( x - x_old2 ) / ( 2 * ctdt );
   }
 
   f_old = use_u1 ? in_f : x;

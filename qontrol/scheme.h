@@ -73,7 +73,7 @@ class Scheme : public LinkedObj  {
   /** sorts elements on its order */
   void sortOrd();
   /** performs one loop */
-  virtual int runOneLoop( double t, IterType itype );
+  virtual int runOneLoop( IterType itype );
 
   int th_run( unsigned n_th_ ); //* run common ac
 

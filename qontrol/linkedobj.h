@@ -12,6 +12,9 @@
 #include "dataset.h"
 
 class InputAbstract; class InputSimple; class ParamDouble;
+class TModel; class Scheme; class Simulation;
+
+constexpr double TDT_MIN = 1e-30; // minimal tau
 
 /** iteration type */
 enum IterType {
@@ -19,6 +22,20 @@ enum IterType {
   IterFirst = 1,   // first iteration in i inner loop
   IterLast  = 2,   // last iteration in inner loop
   IterNo    = 3,   // before or after run
+};
+
+struct RunInfo {
+  int run_tp;
+  int N;
+  int nx;
+  int ny;
+  unsigned n_th;
+  double tdt;
+  double T;
+  const double *p_t_model;
+  TModel *model;
+  Simulation *sim;
+  Scheme *sch;
 };
 
 /** base class for all  objects, capable to double-type links*/
@@ -61,10 +78,12 @@ class LinkedObj : public TDataSet {
     * \param adt time step  - will be a \b tdt in elememt
     * non-virtual: adjusted by do_preRun
     * */
-   int preRun( int run_tp, int an, int anx, int any, double adt );
+   int preRun( const RunInfo *rinf_ );
    int postRun( int good ); //* will be called after all actions -- call do_postRun
    int startLoop( int acnx, int acny ); //* called before each inner param loop -- call do_startLoop
    int endLoop(); //* will be called after each inner loop -- call do_endLoop
+
+   virtual int endloop_fun(); // to call at end of loop (really Scheme->model). if returns 0 - break;
 
    Q_INVOKABLE int getN_Inputs() const { return inps.size(); }
    Q_INVOKABLE int getN_SimpleInputs() const { return inps_s.size(); }
@@ -74,6 +93,12 @@ class LinkedObj : public TDataSet {
    void readInputs() noexcept;
    void readAllInputs() noexcept;
  protected:
+
+
+   double ct { 0.0 };
+   double ctdt { 1.0 };
+   const RunInfo *rinf = nullptr;
+   const double *p_t_model = nullptr;
 
    //* ptrs to all inputs: filled by do_structChanged
    QList<InputAbstract*> inps;
@@ -90,7 +115,7 @@ class LinkedObj : public TDataSet {
    IterType iter_c = IterNo;//* Current iteration type: to propagate to subschemes...
 
    /** place of customization of preRun, return: !=0 = Ok */
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt );
+   virtual int do_preRun();
    /** will be called after all actions from posrtRun  -- good place for deallocs */
    virtual int do_postRun( int good );
    /** called before each inner param loop from startLoop */

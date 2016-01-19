@@ -41,29 +41,28 @@ double TDelay::f() noexcept
     if( mdelay < cdelay ) {
       cdelay = (double)mdelay;
     }
-    double v = cdelay / tdt;
+    double v = cdelay / ctdt;
     icd = int( v );
     v2 = v - icd; v1 = 1.0 - v2;
     prm_mod = 0;
   }
 
   double cu = in_u;
-  if( t < 1.3 * tdt ) {
+  if( ct < 1.3 * ctdt ) {
     u00 = cu;
   }
 
   buf->add( cu );
   a1 = (*buf)[icd]; a2 = (*buf)[icd+1];
-  if( t < cdelay ) {
+  if( ct < cdelay ) {
     return u00;
   }
   return v1 * a1 + v2 * a2;
 }
 
-int TDelay::do_preRun( int run_tp, int an, int anx, int any, double atdt )
+int TDelay::do_preRun()
 {
-  TMiso::do_preRun( run_tp, an, anx, any, atdt );
-  imd = int( mdelay / tdt );
+  imd = int( mdelay / ctdt );
   buf.reset( new TCircBuf( imd ) );
   return 1;
 }
@@ -82,7 +81,7 @@ int TDelay::do_startLoop( int acnx, int acny )
   }
   double v;
   buf->reset(); u00 = 0;
-  v = cdelay / tdt;
+  v = cdelay / ctdt;
   icd = int( v );
   v2 = v - icd; v1 = 1.0 - v2;
   return 1;

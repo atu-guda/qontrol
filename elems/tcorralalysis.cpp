@@ -16,7 +16,6 @@
  ***************************************************************************/
 
 #include <cmath>
-#include "tmodel.h"
 #include "toutarr.h"
 #include "tcorralalysis.h"
 
@@ -61,7 +60,7 @@ double TCorrAnalysis::f() noexcept
     case call_all:
       add = 1; break;
     case call_time:
-      add = ( t >= t0 ) && ( t <= t1 ); break;
+      add = ( ct >= t0 ) && ( ct <= t1 ); break;
     case call_u2:
       add = ( in_add > 0.1 ); break;
     default:
@@ -72,7 +71,7 @@ double TCorrAnalysis::f() noexcept
     s_xy += x * y;
     ++n;
   };
-  if( ( ii >= model_nn-1 || ( useCalc && in_calc > 0.1 ))   ) {
+  if( ( ii >= rinf->N-1 || ( useCalc && in_calc > 0.1 ))   ) {
     calc();
   };
   return s_x;

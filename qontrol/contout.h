@@ -56,7 +56,7 @@ class ContOut : public LinkedObj {
    int fftx( const QString &nm_in, const QString &nm_omega,
              const QString &nm_a, const QString &nm_phi, double ome_max, bool cmpl );
 
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
+   virtual int do_preRun() override;
    virtual int do_postRun( int good ) override;
 
    std::vector<TOutArr*> vo;

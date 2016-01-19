@@ -33,7 +33,7 @@ class TVibro : public TMiso  {
  protected:
    virtual double f() noexcept override;
    virtual int do_startLoop( int acnx, int acny ) override;
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
+   virtual int do_preRun() override;
 
    PRM_PARAMD( c0, 0, "c_0", "Damping coefficient", "def=0.4" );
    PRM_PARAMD( Omega, 0, "\\Omega", "Natural frequency if c_0=0 and f(x)=x", "def=1.2" );

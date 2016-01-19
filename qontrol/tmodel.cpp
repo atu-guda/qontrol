@@ -211,6 +211,7 @@ int TModel::startRun()
   T   = c_sim->getDataD( "T", 0.0 );
   T_brk = c_sim->getDataD( "T_brk", 1e200 );
   N   = c_sim->getDataD( "N", 1 );
+  if( N < 1 ) { N = 1; }
   N1  = c_sim->getDataD( "N1", 1 );
   N2  = c_sim->getDataD( "N2", 1 );
   n1_eff = c_sim->getDataD( "n1_eff", N1 );
@@ -246,13 +247,27 @@ int TModel::startRun()
 
   i_tot = ii = il1 = il2 = 0;
   sgnt = int( time( 0 ) );
+  if( T < TDT_MIN ) {
+    qWarning() << "Too small full time time T" << T << NWHE;
+    return 0;
+  }
   tdt = T / N;
+  if( tdt < TDT_MIN ) {
+    qWarning() << "Too small time step tdt" << tdt << NWHE;
+    return 0;
+  }
   prm2 = (double)prm2s; prm3 = (double)prm3s;
 
   prm0_targ = getMapDoublePtr( ">prm0_map" );
   prm1_targ = getMapDoublePtr( ">prm1_map" );
 
-  rc = preRun( run_type, N, n1_eff, n2_eff, tdt );
+  rinf.run_tp = run_type; rinf.N = N; rinf.nx = n1_eff; rinf.ny = n2_eff;
+  rinf.n_th = n_threads;
+  rinf.tdt = tdt; rinf.T = T;
+  rinf.p_t_model = t.caddr();
+  rinf.model = this; rinf.sim = c_sim; rinf.sch = c_sch;
+
+  rc = preRun( &rinf );
   if( !rc ) {
     reset();
     c_sim = nullptr; c_sch = nullptr;
@@ -451,7 +466,7 @@ int TModel::runOneLoop( IterType itype )
 
   // readInputs(); // too slow here
 
-  int rc = c_sch->runOneLoop( t, itype );
+  int rc = c_sch->runOneLoop( itype );
   if( !rc ) {
     end_loop = 1;
   }

@@ -42,7 +42,7 @@ class TMiso : public LinkedObj  {
    DCL_STD_INF;
 
    /** external computation function + in/out */
-   double fun( double t_, IterType itype ) noexcept;
+   double fun( IterType itype ) noexcept;
 
    /** fast access to order */
    int getOrder() const { return ord; }
@@ -60,7 +60,7 @@ class TMiso : public LinkedObj  {
     * */
    virtual double f() noexcept;
    /** place of customization of preRun, return: !=0 = Ok */
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
+   // virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
    /** will be called after all actions from posrtRun  -- good place for deallocs */
    // virtual int do_postRun( int good ) override;
    /** called before each inner param loop from startLoop */
@@ -90,12 +90,6 @@ class TMiso : public LinkedObj  {
    PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "sep=blockend" );
 
    PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
-
-   /** time step -- setted by preRun 0 - special value to detect usage before start */
-   double tdt = 0;
-   double t; // current time, set by fun()
-   /** number of iteration per loop -- setted by PreRun */
-   int model_nn = 0;
 
    DCL_DEFAULT_STATIC;
 

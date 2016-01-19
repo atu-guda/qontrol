@@ -36,7 +36,7 @@ class TMulsumN : public TMiso  {
  protected:
    /** main computation function */
    virtual double f() noexcept override;
-   virtual int do_preRun( int run_tp, int an, int anx, int any, double adt ) override;
+   virtual int do_preRun() override;
 
    PRM_DOUBLE( spf,   efInner, "spf",  "Summ of p_i * f_i", "" );
    PRM_DOUBLE( sp,    efInner, "sp",   "Summ of p_i", "" );

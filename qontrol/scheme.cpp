@@ -159,7 +159,7 @@ void Scheme::fillComplModelForInputs( QStandardItemModel *mdl ) const
 
 
 
-int Scheme::runOneLoop( double t, IterType itype )
+int Scheme::runOneLoop( IterType itype )
 {
   // readInputs(); // <-- too slow here
   for( auto cur_el : v_el ) {
@@ -171,7 +171,7 @@ int Scheme::runOneLoop( double t, IterType itype )
       break;
     }
 
-    cur_el->fun( t, itype );  // <============ main action
+    cur_el->fun( itype );  // <============ main action
   };
 
   return 1;
@@ -415,7 +415,7 @@ int Scheme::th_stage0( unsigned nt )
   for( unsigned i=0; i<2 /*N*/; ++i ) {
     for( auto v : v_elt[nt] ) {
       v->readInputs();
-      v->fun( 0 /*t*/, itype );
+      v->fun( itype );
       if( end_loop ) {
         th_interrupt_all();
         return -1;
@@ -438,7 +438,7 @@ int Scheme::th_stage1()
     return 0;
   }
 
-  system_clock::time_point tm = system_clock::now();
+  // system_clock::time_point tm = system_clock::now();
   for( unsigned i=0; i<2 /*N*/; ++i ) {
     barr0->wait();
     // if( wait_ms > 0 ) {

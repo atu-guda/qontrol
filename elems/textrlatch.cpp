@@ -45,7 +45,7 @@ double TExtrLatch::f() noexcept
   static const uint16_t mybits[6] = { 1, 2, 4, 7, 7, 0 };
 
   double ua = fabs( u );
-  if( t < tStart ) {                // time before work
+  if( ct < tStart ) {                // time before work
      return u;
   }
 
@@ -59,7 +59,7 @@ double TExtrLatch::f() noexcept
 
   if( isStart == 1 ) {
     isStart = 0;
-    u_min = u_max = u; u_abs = ua; t_ex = t_min = t_max = t_abs = t;
+    u_min = u_max = u; u_abs = ua; t_ex = t_min = t_max = t_abs = ct;
     u_old = u_old2 = u;
     extb = 0xFF; // fake
     goto to_exit;
@@ -68,13 +68,13 @@ double TExtrLatch::f() noexcept
   if( !useLocal ) {
     extb = 0;
     if( u > u_max ) {
-      u_max = u; t_max = t; extb  = 1;
+      u_max = u; t_max = ct; extb  = 1;
     };
     if( u < u_min ) {
-      u_min = u; t_min = t; extb |= 2;
+      u_min = u; t_min = ct; extb |= 2;
     };
     if( ua > u_abs ) {
-      u_abs = ua; t_abs = t; extb |= 4;
+      u_abs = ua; t_abs = ct; extb |= 4;
     };
 
     goto to_exit;
@@ -112,12 +112,12 @@ double TExtrLatch::f() noexcept
         u_ex = 0.5 * ( (double)u_max - u_min );
         t_ex = ( (double)t_min > (double)t_max ) ? (double)t_min : (double)t_max;
         break;
-      default: u_ex = 0; t_ex = t; break;
+      default: u_ex = 0; t_ex = ct; break;
     };
   }
 
   v = outT ? t_ex : u_ex;
-  u_old2 = u_old; u_old = u; t_old = t;
+  u_old2 = u_old; u_old = u; t_old = ct;
   return v;
 }
 

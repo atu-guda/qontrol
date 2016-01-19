@@ -41,7 +41,7 @@ CTOR(TSourceLin,TMiso),
 double TSourceLin::f() noexcept
 {
   double tr, v;
-  tr = t - t_start;
+  tr = ct - t_start;
   while( tr > t_int[curr_lin] ) { // find next line (may be not the next)
     tr -= t_int[curr_lin]; t_start += t_int[curr_lin];
     curr_lin++;

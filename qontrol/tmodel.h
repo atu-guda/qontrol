@@ -159,8 +159,8 @@ class TModel : public LinkedObj  {
   PRM_INT( seed, efInner|efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
   /** type of seeding: 0 - every run, 1 - every 1d loop .. obj */
   PRM_INT( seedType, efInner|efNoRunChange, "Seed type", "type of seeding", "" ); // no list - copy
+  PRM_DOUBLE( tdt, efInner, "\\tau", "time step", "" ); // just copy for speed
   PRM_DOUBLE( t, efInner, "time", "model time", "" );
-  PRM_DOUBLE( tdt, efInner, "\\tau", "time step", "" );
   PRM_DOUBLE( rtime, efInner, "rtime", "real world time", "" );
   /** parameters */
   PRM_DOUBLE( prm0, efInner, "prm0", "Current prm0 value", "" );
@@ -186,6 +186,7 @@ class TModel : public LinkedObj  {
   double start_time = 0;
   // copy of simulation vars - but w/o object access - just for speed;
   int N = 10, N1 = 1, N2 = 1, syncRT = 0;
+  RunInfo rinf; // information about current run (passed to preRun)
 
   // saved parameters
   double prm0_save = 0, prm1_save = 1;

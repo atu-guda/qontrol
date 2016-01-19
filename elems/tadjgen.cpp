@@ -48,14 +48,14 @@ double TAdjGen::f() noexcept
   double om, om2, df, ff, v, diff_out = 0;
   int g1, g2;
   om = in_omega; om2 = in_omega2;
-  cav += om * tdt;  cav2 += om2 * tdt;
+  cav += om * ctdt;  cav2 += om2 * ctdt;
   if( useF ) {
     om  = omega_0 * ( 1 + om*k_omega );
     om2 = omega_0 * ( 1 + om2*k_omega );
   };
   real_tick = 0; tick = 0;
   switch( (int)type ) {
-    case gen_def: ig += om * tdt;                 // Pi=int_0^T(om*dt);
+    case gen_def: ig += om * ctdt;                 // Pi=int_0^T(om*dt);
             if( useReset && in_rst > 0.01 ) {
               real_tick = 1; break;
             };
@@ -69,7 +69,7 @@ double TAdjGen::f() noexcept
     case gen_mai:
             if( om < 1.0e-100 )
               om = 1.0e-50;
-            ctt += tdt; ff = 1.0 / om;  df = tdt * ff;
+            ctt += ctdt; ff = 1.0 / om;  df = ctdt * ff;
             ig += df * M_PI;
             if( useReset && in_rst > 0.01 ) {
               real_tick = 1; break;
@@ -80,7 +80,7 @@ double TAdjGen::f() noexcept
               real_tick = 1;
             };
             break;
-    case gen_dual: ig += om * tdt; ig2 += om2 * tdt;
+    case gen_dual: ig += om * ctdt; ig2 += om2 * ctdt;
             g1 = ( ig  > M_PI );
             g2 = ( ig2 > M_PI );
             if( useReset && in_rst > 0.01 ) {
@@ -101,8 +101,8 @@ double TAdjGen::f() noexcept
   tick = real_tick;
   if( real_tick ) {
     ctt = ig = ig2 = 0;
-    tick_T = t - tick_old;
-    tick_old = t;
+    tick_T = ct - tick_old;
+    tick_old = ct;
     av = cav / tick_T; av2 = cav2 / tick_T; av_diff = av - av2;
     cav = cav2 = 0;
     currOut = !currOut;

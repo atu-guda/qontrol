@@ -18,7 +18,6 @@
 #include <time.h>
 #include <cmath>
 #include <miscfun.h>
-#include "tmodel.h"
 #include "trand.h"
 
 const char* TRand::helpstr = "<H1>TRand</H1>\n"
@@ -47,9 +46,8 @@ CTOR(TRand,TMiso)
 
 // =========================== meat ================================
 
-int TRand::do_preRun( int run_tp, int an, int anx, int any, double atdt )
+int TRand::do_preRun()
 {
-  TMiso::do_preRun( run_tp, an, anx, any, atdt );
   eff_seedType = seedType;
   if( seedType == asModel ) {
     getUpData( "seedType", &eff_seedType );
@@ -88,7 +86,7 @@ double TRand::f() noexcept
 {
   double du, in;
   if( inputTime ) {
-    in = t;
+    in = ct;
   } else {
     in = in_t;
   }

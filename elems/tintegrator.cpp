@@ -61,7 +61,7 @@ double TIntegrator::f() noexcept
     t_rst = 0;
   };
 
-  if( t_rst < (tdt/2) ) {  // start or reset case
+  if( t_rst < (ctdt/2) ) {  // start or reset case
     v_ret = v;
     if( useAver ) {
       v = 0;  v_ret = v_a = in;
@@ -72,9 +72,9 @@ double TIntegrator::f() noexcept
       v_ret = v_old;
     }
   } else {
-    v += in * tdt * ki;
+    v += in * ctdt * ki;
     if( useDis ) {
-      v -= tdt * ( v - base ) * dis;
+      v -= ctdt * ( v - base ) * dis;
     };
     if( useMin  &&  v < vmin ) {
       v = (double)vmin;
@@ -89,7 +89,7 @@ double TIntegrator::f() noexcept
     };
   };
 
-  t_rst += tdt; v_old = v_ret;
+  t_rst += ctdt; v_old = v_ret;
   if( useSqrOut ) {
     v_ret = ( v_ret > 0 ) ? sqrt( v_ret ) : 0.0;
   }

@@ -38,28 +38,28 @@ double TSource::f() noexcept
 {
   double v, omet, uu_s, omet_s, lt, u_ch, f_ch, pha, pha_0;
   int n;
-  omet = t * omega + phi; u_ch = 1; f_ch = 0;
+  omet = ct * omega + phi; u_ch = 1; f_ch = 0;
 
   if( use_u_ch ) { // chaos on U
-    if( t < u_ch_te ) {
-      u_ch = u_ch_vs + ( t - u_ch_ts ) * u_ch_k;
+    if( ct < u_ch_te ) {
+      u_ch = u_ch_vs + ( ct - u_ch_ts ) * u_ch_k;
     } else {
       u_ch = u_ch_vs = u_ch_ve;
       u_ch_ve = rng_u.flat( u_ch_v0, u_ch_vm );
-      u_ch_ts = t;
-      u_ch_te = t + rng_u.flat( u_ch_t0, u_ch_tm );
+      u_ch_ts = ct;
+      u_ch_te = ct + rng_u.flat( u_ch_t0, u_ch_tm );
       u_ch_k = ( u_ch_ve - u_ch_vs ) / ( u_ch_te - u_ch_ts );
     };
   }; // end if( u_chaos )
 
   if( use_f_ch ) { // chaos on phase
-    if( t < f_ch_te ) {
-      f_ch = f_ch_vs + ( t - f_ch_ts ) * f_ch_k;
+    if( ct < f_ch_te ) {
+      f_ch = f_ch_vs + ( ct - f_ch_ts ) * f_ch_k;
     } else {
       f_ch = f_ch_vs = f_ch_ve;
       f_ch_ve = rng_p.flat( f_ch_v0, f_ch_vm );
-      f_ch_ts = t;
-      f_ch_te = t + rng_p.flat( f_ch_t0, f_ch_tm );
+      f_ch_ts = ct;
+      f_ch_te = ct + rng_p.flat( f_ch_t0, f_ch_tm );
       f_ch_k = ( f_ch_ve - f_ch_vs ) / ( f_ch_te - f_ch_ts );
     };
   }; // end if( f_chaos )
@@ -74,25 +74,25 @@ double TSource::f() noexcept
     case so_sign:
       v = uu_s * sign( sin( omet_s ) ); break;
     case so_sin_raise:
-      v = uu_s * sin( omet_s ) * t / tt; break;
+      v = uu_s * sin( omet_s ) * ct / tt; break;
     case so_sign_raise:
-      v = uu_s * sign( sin( omet_s ) ) * t / tt; break;
+      v = uu_s * sign( sin( omet_s ) ) * ct / tt; break;
     case so_dirac:
       v = 0;
-      if( was_pulse == 0 && t >= omega ) {
-        v = uu_s / tdt; was_pulse = 1;
+      if( was_pulse == 0 && ct >= omega ) {
+        v = uu_s / ctdt; was_pulse = 1;
       };
       break;
     case so_theta:
-      v = ( t > omega ) ? uu_s : 0; break;
+      v = ( ct > omega ) ? uu_s : 0; break;
     case so_raise:
-      v = uu_s * ( t + f_ch ) / tt; break;
+      v = uu_s * ( ct + f_ch ) / tt; break;
     case so_saw:
-      n = int( t / omega ); lt = t - n * omega;
+      n = int( ct / omega ); lt = ct - n * omega;
       v = uu_s * ( lt + f_ch ) / omega;
       break;
     case so_saw2:
-      n = int( 2 * t / omega ); lt = 2 * t - n * omega;
+      n = int( 2 * ct / omega ); lt = 2 * ct - n * omega;
       v = 0.5 * uu_s - 2 * ( lt + f_ch ) * uu / omega;
       if( ! (n & 1)  ) {
         v = -v;
@@ -116,9 +116,9 @@ double TSource::f() noexcept
   return v;
 }
 
-int TSource::do_preRun( int run_tp, int an, int anx, int any, double atdt )
+int TSource::do_preRun()
 {
-  TMiso::do_preRun( run_tp, an, anx, any, atdt );
+  tt = rinf->T;
   if( use_u_ch ) {
     eff_seedType_u = seedType_u;
     if( seedType_u == 3 ) { // as model
@@ -157,7 +157,7 @@ int TSource::do_startLoop( int acnx, int acny )
 {
   TMiso::do_startLoop( acnx, acny );
   was_pulse = 0;
-  tt = model_nn * tdt;
+
   // U rnd init
   if( use_u_ch ) {
     if( (eff_seedType_u == 0) ||                // need to seed now

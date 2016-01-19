@@ -63,7 +63,7 @@ double TRelaxGen::f() noexcept
     if( useContCharge ) {
       I += dv_ch / r_1;
     }
-    v += I * tdt / c;
+    v += I * ctdt / c;
     if( v <= v_2 ) {
       isDis = 0;
     }
@@ -76,7 +76,7 @@ double TRelaxGen::f() noexcept
     if( useContDischarge ) {
       I -= dv_dis / r_2;
     }
-    v += I * tdt / c;
+    v += I * ctdt / c;
     if( v >= v_1 || ( useTrig && trig > 0.1 ) ) {
       isDis = 1;
     }

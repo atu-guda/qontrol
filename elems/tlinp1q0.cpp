@@ -52,7 +52,7 @@ double TLinP1Q0::f() noexcept
     u *= u;
   };
   // TODO: check this for stability
-  double x = x_old + a * tdt * ( ku * u - f );
+  double x = x_old + a * ctdt * ( ku * u - f );
   x_old = x;
   return x;
 }

@@ -16,7 +16,6 @@
  ***************************************************************************/
 
 #include "miscfun.h"
-#include "tmodel.h"
 #include "trandtrigg.h"
 
 
@@ -37,9 +36,8 @@ CTOR(TRandTrigg,TMiso)
 
 
 
-int TRandTrigg::do_preRun( int run_tp, int an, int anx, int any, double atdt )
+int TRandTrigg::do_preRun()
 {
-  TMiso::do_preRun( run_tp, an, anx, any, atdt );
   eff_seedType = seedType;
   if( seedType == asModel ) {
     getUpData( "seedType", &eff_seedType );

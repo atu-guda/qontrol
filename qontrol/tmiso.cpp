@@ -38,7 +38,7 @@ CTOR(TMiso,LinkedObj)
 
 DEFAULT_FUNCS_REG(TMiso);
 
-double TMiso::fun( double t_, IterType itype ) noexcept
+double TMiso::fun( IterType itype ) noexcept
 {
   iter_c = itype;
   if( locked || ignored ) {
@@ -55,7 +55,7 @@ double TMiso::fun( double t_, IterType itype ) noexcept
 
   // readInputs(); // moved to scheme
 
-  t = t_;
+  ct = *p_t_model;
   out0 = f();
   return out0;
 }
@@ -65,14 +65,6 @@ double TMiso::f() noexcept
 {
   return 0;
 }
-
-int TMiso::do_preRun( int /*run_tp*/, int an, int /*anx*/,
-                      int /*any*/, double adt )
-{
-  tdt = adt; model_nn = an;
-  return 1;
-}
-
 
 
 

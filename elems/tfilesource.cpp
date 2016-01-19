@@ -34,11 +34,8 @@ TFileSource::~TFileSource()
 
 double TFileSource::f() noexcept
 {
-  //qDebug() << "f: t= " << t << " t0= " << t0 << " t1= " << t1 << " cl = " << cl
-  //         << "tau_e= " << tau_e << NWHE;
-
   double dt;
-  while( ( dt = t - t0 ) >= tau_e ) {
+  while( ( dt = ct - t0 ) >= tau_e ) {
     if( ! next_tau_e() ) {
       return v[0];
     }
@@ -89,9 +86,8 @@ int TFileSource::next_tau_e()
   return 1;
 }
 
-int TFileSource::do_preRun( int run_tp, int an, int anx, int any, double atdt )
+int TFileSource::do_preRun()
 {
-  TMiso::do_preRun( run_tp, an, anx, any, atdt );
   file.setFileName( filename );
   pv.resize( greed + 1 ); // always need place for 2 lines
   n_ofs = ncl = cl = 0; tau_e = 1; // safe value
@@ -102,7 +98,7 @@ int TFileSource::do_preRun( int run_tp, int an, int anx, int any, double atdt )
     if( tau > 0 ) {
       tau_e = tau;
     } else {
-      tau_e = tdt;
+      tau_e = ctdt;
     }
   }
   // qDebug() << "Effective tau is " << tau_e << NWHE;

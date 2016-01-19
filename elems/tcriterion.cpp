@@ -44,7 +44,7 @@ double TCriterion::f() noexcept
 {
   int ok, rv;
   double aa, x;
-  if( useT0 && t < t0 ) {
+  if( useT0 && ct < t0 ) {
     return 0;
   }
   x = in_pos - in_neg;
