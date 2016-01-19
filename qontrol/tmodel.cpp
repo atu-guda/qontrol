@@ -300,6 +300,8 @@ int TModel::run( QSemaphore *sem )
     return 0;
   }
 
+  double rt0 = get_real_time();
+
   prm0_save = *prm0_targ; prm1_save = *prm1_targ;
 
   QString scriptPreRun, scriptPostRun, scriptStartLoop, scriptEndLoop;
@@ -314,6 +316,8 @@ int TModel::run( QSemaphore *sem )
   }
 
   runScript( scriptPreRun ); // test for empty - inside
+
+  double rt1 = get_real_time();
 
   int rc = 0;
   for( il2 = 0; il2 < n2_eff; ++il2 ) {
@@ -383,10 +387,13 @@ int TModel::run( QSemaphore *sem )
       runScript( scriptEndLoop );
     } // -- inner loop (il1)
   }   // -- outer loop (il2)
+  double rt2 = get_real_time();
 
   runScript( scriptPostRun );
+  double rt3 = get_real_time();
 
   stopRun( 0 );
+  qWarning() << "Times: pre:" << (rt1-rt0) << "run:" << (rt2-rt1) << "post:" << (rt3-rt2) << WHE;
   return i_tot;
 }
 

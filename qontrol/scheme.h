@@ -68,19 +68,24 @@ class Scheme : public LinkedObj  {
   /** suggest order value for new element */
   Q_INVOKABLE int hintOrd() const;
 
-  /** reimplemented to real Elems, TODO: separate containers */
+  /** reimplemented to real Elems */
   virtual void do_structChanged();
   /** sorts elements on its order */
   void sortOrd();
   /** performs one loop */
   virtual int runOneLoop( double t, IterType itype );
 
-  int th_prep( unsigned n_th_ );
+  int th_run( unsigned n_th_ ); //* run common ac
 
   virtual void fillComplModelForInputs( QStandardItemModel *mdl ) const override;
 
  protected:
   virtual void do_reset() override;
+
+  int th_prep();                 //* prepare for thread run: fill v_elt;
+  int th_stage0( unsigned nt );  //* run main element loops by thread
+  int th_stage1();               //* run common actions after each iteration
+  void th_interrupt_all();
 
   PRM_STRING( descr, efNoRunChange, "description", "Scheme description", "max=1024\nprops=STRING,MLINE\nncol=-1\nsep=blockend");
   // ======================= invisible vars ======================

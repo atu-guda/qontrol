@@ -340,28 +340,124 @@ int Scheme::hintOrd() const
   return m1;
 }
 
-int Scheme::th_prep( unsigned n_th_ )
+int Scheme::th_prep()
 {
+  auto vsz = v_el.size();
+  unsigned el_per_th = ( vsz + n_th - 1 ) / n_th;
+  unsigned nt = n_th * el_per_th; // total number of elements, counting nulls
+  v_elt.clear();
+  v_elt.resize( n_th ); // TODO: each::reserve( el_per_th );
+  for( auto vt : v_elt ) { vt.reserve( el_per_th ); };
+
+  for( unsigned i=0; i<nt; ++i ) {
+    unsigned tn = i % n_th;
+    v_elt[tn].push_back( ( i < vsz ) ? v_el[i] : nullptr );
+  }
+
+  prepared = true;
+  qWarning() << "Prep: vsz= " << vsz << " n_th= " << n_th
+             << " el_per_th " << el_per_th << " nt= " << nt << NWHE;
+
+  return 1;
+}
+
+int Scheme::th_run( unsigned n_th_ )
+{
+  L_GUARD( run_mutex );
+
   n_th = n_th_;
   if( n_th < 1 ) { n_th = 1; }
 
-  auto vsz = v_el.size();
-  // unsigned el_per_th = ( vsz + n_th - 1 ) / n_th;
-  // unsigned nt = n_th * el_per_th; // total number of elements, counting nulls
-  // v_elt.clear();
-  // v_elt.resize( n_th ); // TODO: each::reserve( el_per_th );
-  //
-  // for( unsigned i=0; i<nt; ++i ) {
-  //   unsigned tn = i % n_th;
-  //   v_elt[tn].push_back( ( i < vsz ) ? v_el[i] : nullptr );
-  // }
-  //
-  // prepared = true;
+  th_prep();
+  barri a_ba0( n_th + 1 ); barr0 = &a_ba0;
+  barri a_ba1( n_th + 1 ); barr1 = &a_ba0;
+
+  vth.clear();
+
+  for( unsigned i=0; i<n_th; ++i ) {
+    vth.push_back( boost::thread( boost::bind( &Scheme::th_stage0, this, i ) ) );
+  }
+  vth.push_back( boost::thread( boost::bind( &Scheme::th_stage1, this ) ) );
+
+  for( auto &th : vth ) {
+    th.join();
+  }
+
+  qWarning() << "*** END work ***" << WHE;
+  vth.clear();
+  barr0 = nullptr;
+  barr1 = nullptr;
 
   return 1;
 }
 
 
+int Scheme::th_stage0( unsigned nt )
+{
+  if( !barr0 || !barr1 ) {
+    qWarning() << "No barriers!!!" << NWHE;
+    th_interrupt_all();
+    return 0;
+  }
+  if( !prepared ) {
+    qWarning() << "not prepared " << NWHE;
+    th_interrupt_all();
+    return 0;
+  }
+  if( nt >= v_elt.size() ) {
+    qWarning() << "bad nt: " << nt << NWHE;
+    th_interrupt_all();
+    return 0;
+  }
+
+  int nr = 0;
+  IterType itype = IterFirst;
+  for( unsigned i=0; i<2 /*N*/; ++i ) {
+    for( auto v : v_elt[nt] ) {
+      v->readInputs();
+      v->fun( 0 /*t*/, itype );
+      if( end_loop ) {
+        th_interrupt_all();
+        return -1;
+      }
+    }
+    boost::this_thread::interruption_point();
+    barr0->wait();
+    barr1->wait();
+    ++nr;
+  }
+  return nr;
+}
+
+int Scheme::th_stage1()
+{
+  using namespace boost::chrono;
+  if( !barr0 || !barr1 ) {
+    qWarning() << "\nNo barriers!!!" << NWHE;
+    th_interrupt_all();
+    return 0;
+  }
+
+  system_clock::time_point tm = system_clock::now();
+  for( unsigned i=0; i<2 /*N*/; ++i ) {
+    barr0->wait();
+    // if( wait_ms > 0 ) {
+    //   tm += milliseconds( wait_ms );
+    //   boost::this_thread::sleep_until( tm );
+    // }
+    // -------------- main work here -----------------
+    // t += tdt;
+    barr1->wait();
+  }
+  return 1;
+}
+
+void Scheme::th_interrupt_all()
+{
+  for( auto &th : vth ) {
+    th.interrupt();
+  }
+}
 
 DEFAULT_FUNCS_REG(Scheme)
 
