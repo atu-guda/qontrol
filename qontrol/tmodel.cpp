@@ -357,49 +357,52 @@ int TModel::run( QSemaphore *sem )
         runScript( scriptStartLoop );
       }
 
-      for( int i=0; i<N; ++i, ++i_tot ) { // <------- main loop
+      c_sch->th_run();
 
-        if ( t >= T_brk ) {
-          stopRun( 0 );
-          return 0;
-        }
-
-        if ( QThread::currentThread()->isInterruptionRequested() ) { // check for break
-          stopRun( 0 );
-          return 0;
-        }
-
-        IterType itype = IterMid;
-        if( i == 0 ) {
-          itype = IterFirst;
-        } else if ( i == (N-1) ) {
-          itype = IterLast;
-        }
-
-        rtime = get_real_time() - start_time;
-        if( syncRT ) {
-          if( t > rtime ) {
-            unsigned long wait_ms = (unsigned long)( 1000000 * ( t - rtime ) );
-            usleep( wait_ms ); // ------------------- TODO: redesign ?? ------
-          };
-        };
-        sem->acquire( 1 );
-
-        rc = runOneLoop( itype );
-
-        sem->release( 1 );
-
-        if( !rc ) {
-          stopRun( 0 );
-          return 0;
-        }
-      } // -- main loop (i)
+      // for( int i=0; i<N; ++i, ++i_tot ) { // <------- main loop
+      //
+      //   if ( t >= T_brk ) {
+      //     stopRun( 0 );
+      //     return 0;
+      //   }
+      //
+      //   if ( QThread::currentThread()->isInterruptionRequested() ) { // check for break
+      //     stopRun( 0 );
+      //     return 0;
+      //   }
+      //
+      //   IterType itype = IterMid;
+      //   if( i == 0 ) {
+      //     itype = IterFirst;
+      //   } else if ( i == (N-1) ) {
+      //     itype = IterLast;
+      //   }
+      //
+      //   rtime = get_real_time() - start_time;
+      //   if( syncRT ) {
+      //     if( t > rtime ) {
+      //       unsigned long wait_ms = (unsigned long)( 1000000 * ( t - rtime ) );
+      //       usleep( wait_ms ); // ------------------- TODO: redesign ?? ------
+      //     };
+      //   };
+      //   sem->acquire( 1 );
+      //
+      //   rc = runOneLoop( itype );
+      //
+      //   sem->release( 1 );
+      //
+      //   if( !rc ) {
+      //     stopRun( 0 );
+      //     return 0;
+      //   }
+      // } // -- main loop (i)
 
       endLoop();
       if( plots ) { // TODO: remove? move to ContGraph::do_endLoop or stopRun?
         plots->reset();
       }
       runScript( scriptEndLoop );
+
     } // -- inner loop (il1)
   }   // -- outer loop (il2)
   double rt2 = get_real_time();
@@ -410,6 +413,15 @@ int TModel::run( QSemaphore *sem )
   stopRun( 0 );
   qWarning() << "Times: pre:" << (rt1-rt0) << "run:" << (rt2-rt1) << "post:" << (rt3-rt2) << WHE;
   return i_tot;
+}
+
+int TModel::endIter_fun()
+{
+  rtime = get_real_time() - start_time;
+  outs->takeAllVals();
+  ct += ctdt; t = ct; ++ii;
+  // TODO: semaphore here
+  return 1;
 }
 
 int TModel::stopRun( int reason )
@@ -470,14 +482,6 @@ int TModel::runOneLoop( IterType itype )
   return 1;
 }
 
-
-int TModel::endIter_fun()
-{
-  outs->takeAllVals();
-  ct += ctdt; t = ct; ++ii;
-  // TODO: semaphore here
-  return 1;
-}
 
 
 

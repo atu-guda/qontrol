@@ -75,7 +75,7 @@ class Scheme : public LinkedObj  {
   /** performs one loop */
   virtual int runOneLoop( IterType itype );
 
-  int th_run( unsigned n_th_ ); //* run common ac
+  int th_run(); //* run common
 
   virtual void fillComplModelForInputs( QStandardItemModel *mdl ) const override;
 

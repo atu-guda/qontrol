@@ -345,6 +345,7 @@ int Scheme::th_prep()
   auto vsz = v_el.size();
   unsigned el_per_th = ( vsz + n_th - 1 ) / n_th;
   unsigned nt = n_th * el_per_th; // total number of elements, counting nulls
+  qWarning() << "Prep: vsz=" << vsz << " n_th= " << n_th << "nt=" << nt << "el_per_th=" << el_per_th << NWHE;
   v_elt.clear();
   v_elt.resize( n_th ); // TODO: each::reserve( el_per_th );
   for( auto vt : v_elt ) { vt.reserve( el_per_th ); };
@@ -355,17 +356,16 @@ int Scheme::th_prep()
   }
 
   prepared = true;
-  qWarning() << "Prep: vsz= " << vsz << " n_th= " << n_th
-             << " el_per_th " << el_per_th << " nt= " << nt << NWHE;
+  qWarning() << "Prep_end" << NWHE;
 
   return 1;
 }
 
-int Scheme::th_run( unsigned n_th_ )
+int Scheme::th_run()
 {
   L_GUARD( run_mutex );
 
-  n_th = n_th_;
+  n_th = rinf->n_th;
   if( n_th < 1 ) { n_th = 1; }
 
   th_prep();
@@ -373,6 +373,7 @@ int Scheme::th_run( unsigned n_th_ )
   barri a_ba1( n_th + 1 ); barr1 = &a_ba0;
 
   vth.clear();
+  qWarning() << "Starting creating  threads" << NWHE;
 
   for( unsigned i=0; i<n_th; ++i ) {
     vth.push_back( boost::thread( boost::bind( &Scheme::th_stage0, this, i ) ) );
@@ -411,19 +412,22 @@ int Scheme::th_stage0( unsigned nt )
   }
 
   int nr = 0;
+  unsigned N = rinf->N;
   IterType itype = IterFirst;
-  for( unsigned i=0; i<2 /*N*/; ++i ) {
+  for( unsigned i=0; i<N; ++i ) {
     for( auto v : v_elt[nt] ) {
+      if( !v ) { continue; } // nulls at the end
       v->readInputs();
       v->fun( itype );
       if( end_loop ) {
         th_interrupt_all();
         return -1;
       }
+      itype = ( i < N-2 ) ? IterMid : IterLast;
     }
     boost::this_thread::interruption_point();
     barr0->wait();
-    barr1->wait();
+    barr1->wait(); // wait for stage 1 actions
     ++nr;
   }
   return nr;
@@ -439,14 +443,15 @@ int Scheme::th_stage1()
   }
 
   // system_clock::time_point tm = system_clock::now();
-  for( unsigned i=0; i<2 /*N*/; ++i ) {
+  auto N = rinf->N;
+  for( unsigned i=0; i<N; ++i ) {
     barr0->wait();
+    rinf->model->endIter_fun();
     // if( wait_ms > 0 ) {
     //   tm += milliseconds( wait_ms );
     //   boost::this_thread::sleep_until( tm );
     // }
     // -------------- main work here -----------------
-    // t += tdt;
     barr1->wait();
   }
   return 1;

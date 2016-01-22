@@ -26,9 +26,9 @@ enum IterType {
 
 struct RunInfo {
   int run_tp;
-  int N;
-  int nx;
-  int ny;
+  unsigned N;
+  unsigned nx;
+  unsigned ny;
   unsigned n_th;
   double tdt;
   double T;
