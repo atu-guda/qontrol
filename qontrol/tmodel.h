@@ -64,6 +64,7 @@ class TModel : public LinkedObj  {
   Simulation* getSimul( const QString &name );
   Scheme* getScheme( const QString &name );
 
+  virtual int endIter_fun() override;
   int startRun();
   int stopRun( int reason );
   int run( QSemaphore *sem );

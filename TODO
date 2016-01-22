@@ -1,5 +1,7 @@
 Barriers?
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
+HolderInt -> long
+#pragma once
 TOutArr: use InputSimple (need conversion)
 TModel::startRun: list on vars to copy. List for engine aliases?
 correct places for reset, set_link, *structChange..

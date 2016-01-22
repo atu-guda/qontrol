@@ -285,7 +285,7 @@ int LinkedObj::endLoop()
   for( auto ob : TCHILD(LinkedObj*) ) {
     ob->endLoop();
   };
-  return 1;
+  return do_endLoop();
 }
 
 
@@ -294,7 +294,7 @@ int LinkedObj::do_endLoop()
   return 1;
 }
 
-int LinkedObj::endloop_fun()
+int LinkedObj::endIter_fun()
 {
   return 1;
 }

@@ -335,15 +335,15 @@ int TModel::run( QSemaphore *sem )
   double rt1 = get_real_time();
 
   int rc = 0;
-  for( il2 = 0; il2 < n2_eff; ++il2 ) {
+  for( il2 = 0; il2 < n2_eff; ++il2 ) { // <--------- outer param loop
     prm1 = prm1s + il2 * prm1d;
     *prm1_targ = prm1;
-    for( il1 = 0; il1 < n1_eff; ++il1 ) {
+    for( il1 = 0; il1 < n1_eff; ++il1 ) { // <------ inner param loop
 
 
       prm0 = prm0s + il1 * prm0d;
       *prm0_targ = prm0;
-      start_time = get_real_time(); rtime = t = 0;
+      start_time = get_real_time(); rtime = ct = 0; t = 0;
 
       if( ! startLoop( il1, il2 ) ) {
         stopRun( 0 );
@@ -357,7 +357,7 @@ int TModel::run( QSemaphore *sem )
         runScript( scriptStartLoop );
       }
 
-      for( int i=0; i<N; ++i, ++i_tot ) {
+      for( int i=0; i<N; ++i, ++i_tot ) { // <------- main loop
 
         if ( t >= T_brk ) {
           stopRun( 0 );
@@ -396,7 +396,7 @@ int TModel::run( QSemaphore *sem )
       } // -- main loop (i)
 
       endLoop();
-      if( plots ) { // TODO: move to ContGraph::do_endLoop
+      if( plots ) { // TODO: remove? move to ContGraph::do_endLoop or stopRun?
         plots->reset();
       }
       runScript( scriptEndLoop );
@@ -459,25 +459,25 @@ void TModel::plotToPng( const QString &gname, const QString &fn )
 
 int TModel::runOneLoop( IterType itype )
 {
-  // if( !c_sch ) {
-  //   qWarning() << "No active scheme" << NWHE;
-  //   return 0;
-  // }
-
   // readInputs(); // too slow here
 
   int rc = c_sch->runOneLoop( itype );
   if( !rc ) {
     end_loop = 1;
   }
+  endIter_fun();
 
-  outs->takeAllVals();
-
-  t += tdt; ++ii;
   return 1;
 }
 
 
+int TModel::endIter_fun()
+{
+  outs->takeAllVals();
+  ct += ctdt; t = ct; ++ii;
+  // TODO: semaphore here
+  return 1;
+}
 
 
 
