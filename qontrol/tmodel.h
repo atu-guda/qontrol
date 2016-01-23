@@ -64,7 +64,7 @@ class TModel : public LinkedObj  {
   Scheme* getScheme( const QString &name );
 
   int startRun();
-  int stopRun( int reason );
+  int stopRun();
   int run( QSemaphore *sem );
   Q_INVOKABLE int run_bg(); // startRun and stopRun to use w/o iface
   // pass to real TGraph

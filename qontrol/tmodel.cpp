@@ -337,6 +337,8 @@ int TModel::run( QSemaphore *sem )
 
   double rt1 = get_real_time();
 
+  AtScopeExit ase1( [this](){ this->stopRun(); } );
+
   int rc = 0;
   for( il2 = 0; il2 < n2_eff; ++il2 ) { // <--------- outer param loop
     prm1 = prm1s + il2 * prm1d;
@@ -354,7 +356,6 @@ int TModel::run( QSemaphore *sem )
       rtime = ct = 0; t = 0;
 
       if( ! startLoop( il1, il2 ) ) {
-        stopRun( 0 );
         return 0;
       }
       if( useScripts ) {
@@ -368,12 +369,10 @@ int TModel::run( QSemaphore *sem )
       for( int i=0; i<N; ++i, ++i_tot ) { // <------- main loop
 
         if ( t >= T_brk ) {
-          stopRun( 0 );
           return 0;
         }
 
         if ( QThread::currentThread()->isInterruptionRequested() ) { // check for break
-          stopRun( 0 );
           return 0;
         }
 
@@ -403,15 +402,11 @@ int TModel::run( QSemaphore *sem )
         sem->release( 1 );
 
         if( !rc ) {
-          stopRun( 0 );
           return 0;
         }
       } // -- main loop (i)
 
       endLoop();
-      if( plots ) { // TODO: remove? move to ContGraph::do_endLoop or stopRun?
-        plots->reset();
-      }
       runScript( scriptEndLoop );
 
     } // -- inner loop (il1)
@@ -421,13 +416,12 @@ int TModel::run( QSemaphore *sem )
   runScript( scriptPostRun );
   double rt3 = get_real_time();
 
-  stopRun( 0 );
   qWarning() << "Times: pre:" << (rt1-rt0) << "run:" << (rt2-rt1) << "post:" << (rt3-rt2) << WHE;
   return i_tot;
 }
 
 
-int TModel::stopRun( int /*reason*/ )
+int TModel::stopRun()
 {
   if( !c_sch ) {
     qWarning() << "No active scheme" << NWHE;
@@ -435,16 +429,14 @@ int TModel::stopRun( int /*reason*/ )
   }
 
   postRun( 1 );
-  // if( end_loop || reason ) {
-  //   reset();
-  //   state = stateGood;
-  // } else {
-  //   state = stateDone;
-  // }
 
   int saveParams = c_sim->getDataD( "saveParams", 1 );
   if( saveParams ) {
     *prm0_targ = prm0_save;  *prm1_targ = prm1_save;
+  }
+
+  if( plots ) { // TODO: remove? move to ContGraph::do_endLoop or stopRun?
+    plots->reset();
   }
 
   run_type = -1;
