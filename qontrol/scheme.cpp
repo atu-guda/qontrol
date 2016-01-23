@@ -171,7 +171,7 @@ int Scheme::runOneLoop( IterType itype )
     cur_el->fun( itype );  // <============ main action
   };
 
-  return 1;
+  return ( end_loop == 0 );
 }
 
 
@@ -179,7 +179,7 @@ int Scheme::runOneLoop( IterType itype )
 void Scheme::do_reset()
 {
   // linkNames();
-  state = stateGood; run_type = -1;
+  state = stateGood; run_type = -1; obj_brk = nullptr;
 }
 
 
@@ -196,9 +196,24 @@ TMiso* Scheme::ord2Miso( int aord ) const
   return nullptr;
 }
 
-int Scheme::fback( int code, int /* aord */, const QString & /* tdescr */ )
+int Scheme::do_preRun()
 {
+  end_loop = 0;
+  obj_brk = nullptr;
+  breakObjNm = QSL("");
+  return 1;
+}
+
+int Scheme::fback( int code, TMiso *obj )
+{
+  obj_brk = obj;
+  breakObjNm = QSL("unknown?");
+  if( obj ) {
+    breakObjNm = obj->getFullName();
+  }
+
   if( code ) {
+    qWarning() << "Break with code" << code << "from obj" << breakObjNm << NWHE;
     end_loop = code;
   };
   return 0;

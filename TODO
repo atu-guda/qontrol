@@ -62,7 +62,6 @@ objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
   -- Collections of data - add to Scheme, Simul, Model
 may be new field in TClassInfo to misc flags: can f() w/o preRun...,
     class group.. etc
-Abort simulation option in TCriterion
 
 implement loading objects in so.
 

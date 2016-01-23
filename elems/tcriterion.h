@@ -59,6 +59,9 @@ class TCriterion : public TMiso  {
    PRM_SWITCH( useEnable, efNRC, "use Enable", "Use in_ena signal as Enable", "" );
    PRM_SWITCH( useLock, efNRC, "Lock", "Lock after first front", "sep=col" );
    PRM_SWITCH( usePulse, efNRC, "Pulse Output", "output is pulse +1, 0, -1", "" );
+   PRM_SWITCH( termSim,  efNRC, "Terminate simulation", "Terminate simulation if condition is true", "" );
+   PRM_INT( termCode, efNRC, "Term code", "Terminations code in !=0", "def=1" );
+
    PRM_INT( st, efInner, "state", "current state", "");
 
    PRM_INPUT( in_pos, 0, "in+", "Positive input",  "sep=block" );

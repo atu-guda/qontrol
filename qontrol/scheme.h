@@ -39,7 +39,8 @@ class Scheme : public LinkedObj  {
   const double* getSchemeDoublePtr( const QString &nm, int *lt,
         const LinkedObj **src_ob, int lev ) const override;
   /** function to call from elem.f() to signal something */
-  virtual int fback( int code, int aord, const QString &tdescr );
+  int fback( int code, TMiso *obj );
+  virtual int do_preRun() override;
 
   /** returns element by its order */
   TMiso* ord2Miso( int aord ) const;
@@ -75,6 +76,7 @@ class Scheme : public LinkedObj  {
 
 
   PRM_STRING( descr, efNoRunChange, "description", "Scheme description", "max=1024\nprops=STRING,MLINE\nncol=-1\nsep=blockend");
+  PRM_STRING( breakObjNm, efInner, "Break objname", "Name of object, which call fback", "");
   // ======================= invisible vars ======================
   /** run type */
   int run_type = -1; // reset
@@ -84,6 +86,8 @@ class Scheme : public LinkedObj  {
   // caches for fast access
   /** vector of ptrs to active elements, my be sorted on ord */
   std::vector<TMiso*> v_el;
+
+  TMiso *obj_brk = nullptr;
 
   Q_CLASSINFO( "nameHintBase",  "sch_" );
   DCL_DEFAULT_STATIC;

@@ -177,6 +177,7 @@ void TModel::do_reset()
 int TModel::startRun()
 {
   int rc;
+  end_loop = 0;
 
   // profiling
   // vector<double> prfl_t; prfl_t.reserve( 100 ); QStringList prfl_l;
@@ -418,20 +419,20 @@ int TModel::run( QSemaphore *sem )
 }
 
 
-int TModel::stopRun( int reason )
+int TModel::stopRun( int /*reason*/ )
 {
   if( !c_sch ) {
     qWarning() << "No active scheme" << NWHE;
     return 0;
   }
 
-  if( end_loop || reason ) {
-    reset();
-    state = stateGood;
-  } else {
-    postRun( 1 );
-    state = stateDone;
-  }
+  postRun( 1 );
+  // if( end_loop || reason ) {
+  //   reset();
+  //   state = stateGood;
+  // } else {
+  //   state = stateDone;
+  // }
 
   int saveParams = c_sim->getDataD( "saveParams", 1 );
   if( saveParams ) {
@@ -468,12 +469,14 @@ int TModel::runOneLoop( IterType itype )
   // readInputs(); // too slow here
 
   int rc = c_sch->runOneLoop( itype );
-  if( !rc ) {
-    end_loop = 1;
-  }
 
   outs->takeAllVals();
   ct += ctdt; t = ct; ++ii;
+
+  if( !rc ) {
+    end_loop = 1;
+    return 0;
+  }
 
   return 1;
 }

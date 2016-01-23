@@ -16,7 +16,9 @@
  ***************************************************************************/
 
 #include <cmath>
+
 #include "tcriterion.h"
+#include "scheme.h"
 
 
 const char* TCriterion::helpstr = "<H1>TCriterion</H1>\n"
@@ -85,6 +87,10 @@ double TCriterion::f() noexcept
   } else {
     rv = ok;
   };
+
+  if( termSim && ok && rinf && rinf->sch ) {
+    rinf->sch->fback( termCode, this );
+  }
 
   st = ok;
   // TODO: break all computation action
