@@ -6,6 +6,7 @@ chrono sleep_untill
 correct places for reset, set_link, *structChange..
 BUG: modified state (i.e. after autocreated scheme removal)
 BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params
+Show link to outer object, if target is inside.
 Long descriptions in schems, (button) - how to edit?
 Reorder objects in list-alike containers. - require artificial numeration
 add Flag: call parent post_set if changed, and suppress for mass changes. set/do_set?

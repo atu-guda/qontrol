@@ -119,8 +119,8 @@ void StructView::changeSel( int x, int y, int rel )
             ++n_obj;
             ob =  sch->getObjT<TMiso*>( n_obj );
             if( ob ) {
-              sel_x = ob->getDataD( "vis_x", 0 );
-              sel_y = ob->getDataD( "vis_y", 0 );
+              sel_x = ob->getDataD( QSL("vis_x"), 0 );
+              sel_y = ob->getDataD( QSL("vis_y"), 0 );
             };
             break;
     default: break;
@@ -190,14 +190,14 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   ei.vis_x  = ei.vis_y =  ei.locked = ei.onlyFirst
     =  ei.onlyLast = ei.flip = ei.noIcon = 0;
 
-  ob->getData( "vis_x", &ei.vis_x );
-  ob->getData( "vis_y", &ei.vis_y );
-  ob->getData( "locked", &ei.locked );
-  ob->getData( "ignored", &ei.ignored );
-  ob->getData( "onlyFirst", &ei.onlyFirst );
-  ob->getData( "onlyLast", &ei.onlyLast );
-  ob->getData( "flip", &ei.flip );
-  ob->getData( "noIcon", &ei.noIcon );
+  ob->getData( QSL("vis_x"), &ei.vis_x );
+  ob->getData( QSL("vis_y"), &ei.vis_y );
+  ob->getData( QSL("locked"), &ei.locked );
+  ob->getData( QSL("ignored"), &ei.ignored );
+  ob->getData( QSL("onlyFirst"), &ei.onlyFirst );
+  ob->getData( QSL("onlyLast"), &ei.onlyLast );
+  ob->getData( QSL("flip"), &ei.flip );
+  ob->getData( QSL("noIcon"), &ei.noIcon );
   ei.flip_factor = ei.flip ? 1 : -1;
   ei.n_inp = ob->getN_SimpleInputs();
 
@@ -232,7 +232,7 @@ void StructView::drawAll( QPainter &p )
   };
 
   SettingsData *sett = SETTINGS;
-  int s_icons = sett->getDataD( "showIcons", 1 );
+  int s_icons = sett->getDataD( QSL("showIcons"), 1 );
   const QFont &strf = sett->getAsFont( QSL("structFont") );
   p.setFont( strf );
   const QFont &smlf = sett->getAsFont( QSL("smallFont" ) );
@@ -353,14 +353,14 @@ void StructView::drawAll( QPainter &p )
       if( ! in ) {
         continue;
       }
-      int lt = in->getDataD( "linkType", LinkBad );
+      int lt = in->getDataD( QSL("linkType"), LinkBad );
       const TDataSet* sobj = in->getSourceObj();
       li_dst_y = ei.ys + i_in*in_sep_sz;
-      int line_width = in->getDataD( "line_w", 1 );
-      int x_shift    = in->getDataD( "x_shift", 0 );
-      int y_shift    = in->getDataD( "y_shift", 0 );
+      int line_width = in->getDataD( QSL("line_w"), 1 );
+      int x_shift    = in->getDataD( QSL("x_shift"), 0 );
+      int y_shift    = in->getDataD( QSL("y_shift"), 0 );
       QColor lco = Qt::black;
-      in->getData( "line_color", lco );
+      in->getData( QSL("line_color"), lco );
       p.setPen( QPen( lco, line_width ) );
 
       if( lt == LinkNone ) {
@@ -374,7 +374,7 @@ void StructView::drawAll( QPainter &p )
       p.drawLine( ei.li_dst_x +  3*ei.flip_factor, li_dst_y-2, ei.li_dst_x, li_dst_y  );
       p.drawLine( ei.li_dst_x +  3*ei.flip_factor, li_dst_y+2, ei.li_dst_x, li_dst_y  );
 
-      QString lbl = in->getDataD( "label", QString() );
+      QString lbl = in->getDataD( QSL("label"), QString() );
       if( ! lbl.isEmpty() ) {
         p.drawText( x_vert-2*ei.flip_factor, li_dst_y-2, lbl );
       }
@@ -404,7 +404,7 @@ void StructView::drawAll( QPainter &p )
 
       // get info about source and calc coords
       fill_elmInfo( so_obj, sei );
-      QString so = in->getDataD( "source", QString() );
+      QString so = in->getDataD( QSL("source"), QString() );
 
       if( ei.vis_y != sei.vis_y ) {
         li_src_y = sei.yc - y_shift;
@@ -423,7 +423,7 @@ void StructView::drawAll( QPainter &p )
       p.drawLine( sei.li_src_x, li_src_y,
                   sei.li_src_x + el_marg*sei.flip_factor, li_src_y );
 
-      int only_lbl = in->getDataD( "onlyLabel", 0 );
+      int only_lbl = in->getDataD( QSL("onlyLabel"), 0 );
       if( only_lbl ) {
         if( ! lbl.isEmpty() ) {
           p.drawText( sei.li_src_x+(3+el_marg)*sei.flip_factor, li_src_y-2, lbl );
@@ -446,11 +446,11 @@ void StructView::drawAll( QPainter &p )
 
       if( lt == LinkNone ) { continue; }
 
-      int line_width = ips->getDataD( "line_w", 2 );
-      int x_shift = ips->getDataD( "x_shift", 0 );
-      int y_shift = ips->getDataD( "y_shift", 0 );
+      int line_width = ips->getDataD( QSL("line_w"), 2 );
+      int x_shift = ips->getDataD( QSL("x_shift"), 0 );
+      int y_shift = ips->getDataD( QSL("y_shift"), 0 );
       QColor lco = Qt::black;
-      ips->getData( "line_color", lco );
+      ips->getData( QSL("line_color"), lco );
       p.setPen( QPen( lco, line_width ) );
 
       int li_pdst_x = ei.xs + (1+i_in) * in_sep_sz;
@@ -493,7 +493,7 @@ void StructView::drawAll( QPainter &p )
       li_src_y = sei.yc - y_shift;
 
       // TODO: label
-      int only_lbl = ips->getDataD( "onlyLabel", 0 );
+      int only_lbl = ips->getDataD( QSL("onlyLabel"), 0 );
 
       int x_vert = sei.li_src_x - ( x_shift + el_marg ) * sei.flip_factor;
 
@@ -512,7 +512,7 @@ void StructView::drawAll( QPainter &p )
 
   // -------------- output marks
 
-  CmdView *outs_view = par->getView( "outs_view" );
+  CmdView *outs_view = par->getView( QSL("outs_view") );
   if( outs_view ) {
     ContOut *outs = qobject_cast<ContOut*>( outs_view->getStorage() );
     if( !outs ) {
@@ -523,8 +523,8 @@ void StructView::drawAll( QPainter &p )
       for( auto arr : outs->TCHILD(TOutArr*) ) {
         int out_nu = arr->getMyIndexInParent();
 
-        src_name = arr->getDataD( "name", QString() );
-        int out_tp = arr->getDataD( "type", -1 );
+        src_name = arr->getDataD( QSL("name"), QString() );
+        int out_tp = arr->getDataD( QSL("type"), -1 );
         int lt  = LinkBad;
         const LinkedObj *lob = nullptr;
         const double *fp = sch->getDoublePtr( src_name, &lt, &lob );
@@ -670,7 +670,7 @@ void StructView::qlinkElm()
     qWarning() << "in == nullptr in " << selObj->getFullName() << WHE;
     return;
   }
-  if( ! in->setData( "source", toname ) ) {
+  if( ! in->setData( QSL("source"), toname ) ) {
     qWarning() << "fail to set source " << toname << " in " << in->getFullName() << WHE;
     return;
   }
@@ -698,14 +698,14 @@ void StructView::unlinkElm()
   QString lnkname;
   for( InputSimple *in : selObj->TCHILD(InputSimple*) ) {
     if( ! in ) {   continue;  }
-    in->setData( "source", QSL("") );
+    in->setData( QSL("source"), QSL("") );
   }
 
   for( ParamDouble *pin : selObj->TCHILD(ParamDouble*) ) {
     if( ! pin ) { continue; }
     auto lt = pin->getLinkType();
     if( lt != LinkNone ) {
-      pin->setData( "source", QSL("") );
+      pin->setData( QSL("source"), QSL("") );
     }
   }
 
@@ -724,9 +724,9 @@ void StructView::lockElm()
     return;
   }
 
-  int lck = selObj->getDataD( "locked", 0 );
+  int lck = selObj->getDataD( QSL("locked"), 0 );
   lck = !lck;
-  selObj->setData( "locked", lck );
+  selObj->setData( QSL("locked"), lck );
 
   sch->reset();
   emit viewChanged();
@@ -831,8 +831,8 @@ bool StructView::cloneObj()
   if( !ob ) {
     return false; // unli
   }
-  int ox = ob->getDataD( "vis_x", 0 );
-  int oy = ob->getDataD( "vis_y", 0 );
+  int ox = ob->getDataD( QSL("vis_x"), 0 );
+  int oy = ob->getDataD( QSL("vis_y"), 0 );
 
   // find new good place near
   for( unsigned v=1; v<128; ++v ) {
@@ -842,8 +842,8 @@ bool StructView::cloneObj()
     int noy = oy + ady;
     TMiso *oob = sch->xy2Miso( nox, noy );
     if( oob ) { continue; } // place busy
-    ob->setData( "vis_x", nox );
-    ob->setData( "vis_y", noy );
+    ob->setData( QSL("vis_x"), nox );
+    ob->setData( QSL("vis_y"), noy );
     return true;
   }
   return true;
@@ -865,8 +865,8 @@ bool StructView::pasteObj()
     return false;
   }
 
-  ob->setData( "vis_x", sel_x );
-  ob->setData( "vis_y", sel_y );
+  ob->setData( QSL("vis_x"), sel_x );
+  ob->setData( QSL("vis_y"), sel_y );
   ob->reportStructChanged();
   changeSel( 0, 0, 1 ); // update sel
   return true;
@@ -893,7 +893,7 @@ void StructView::mousePressEvent( QMouseEvent *me )
   ob = sch->xy2Miso( ex, ey );
   if( ob ) {
     elmname = ob->getFullName();
-    // double outval = ob->getDataD( "out0", 0.0 );
+    // double outval = ob->getDataD( QSL("out0"), 0.0 );
     if( elmname.isEmpty() ) {
       elmname = "?unknown?";
     }
@@ -945,10 +945,10 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("edit-copy"), "&Copy" );
     connect( act, &QAction::triggered, this, &StructView::copyObj );
-    act = menu->addAction( QIcon( ":icons/edit-clone.png" ), "Clone" );
+    act = menu->addAction( QIcon( ":icons/edit-clone.png" ), QSL("Clone") );
     connect( act, &QAction::triggered, this, &StructView::cloneObj );
     menu->addSeparator();
-    act = menu->addAction( QIcon( ":icons/markelm.png" ), "Mark" );
+    act = menu->addAction( QIcon( ":icons/markelm.png" ), QSL("Mark") );
     connect( act, &QAction::triggered, this, &StructView::markElm );
     menu->addSeparator();
     act = menu->addAction( QIcon( ":icons/info-obj.png" ), "show &Info" );
@@ -969,7 +969,7 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     }
   };
 
-  CmdView *outs_view = par->getView( "outs_view" );
+  CmdView *outs_view = par->getView( QSL("outs_view") );
   if( outs_view ) {
     menu->addSeparator();
     act = menu->addAction( QIcon( ":icons/newout.png" ), "New outp&ut" );
