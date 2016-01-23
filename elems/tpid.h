@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tpid.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TPID_H
-#define TPID_H
 
 #include <tmiso.h>
 
@@ -58,6 +57,5 @@ class TPid : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

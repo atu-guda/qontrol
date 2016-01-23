@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tsum8.h  - 8-input linear summator
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TSUM8_8
-#define TSUM8_8
 
 #include "tmiso.h"
 
@@ -57,4 +56,3 @@ class TSum8 : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif

@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tdiffin.h - diff between input signals
                              -------------------
@@ -14,8 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TDIFFIN_H
-#define TDIFFIN_H
 
 #include <tmiso.h>
 
@@ -61,6 +60,5 @@ class TDiffIn : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

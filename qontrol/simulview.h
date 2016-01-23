@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           simulview.h - view for simulations
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _SIMULVIEW_H
-#define _SIMULVIEW_H
 
 #include <QtWidgets>
 
@@ -47,5 +46,4 @@ class SimulView : public CmdListView {
     void init_actions();
 };
 
-#endif
 

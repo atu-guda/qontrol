@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tquadexrt.h - find top extrenum in quadratic approx
                            -------------------
@@ -14,8 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TQUADEXTR_H
-#define TQUADEXTR_H
 
 #include <tmiso.h>
 
@@ -67,6 +66,5 @@ class TQuadExtr : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           contgraph.h  -  contrainer for TGraph
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _CONTGRAPH_H
-#define _CONTGRAPH_H
 
 #include "linkedobj.h"
 
@@ -32,5 +31,4 @@ class ContGraph : public LinkedObj {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 

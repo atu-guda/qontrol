@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           addelem.h  -  description
                              -------------------
@@ -6,8 +7,6 @@
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
-#ifndef _ADDELEMDIA_H
-#define _ADDELEMDIA_H
 
 #include <QtWidgets>
 #include "dataset.h"
@@ -49,5 +48,4 @@ class SelectTypeDialog : public QDialog {
    QListWidget *lw;
 };
 
-#endif
 

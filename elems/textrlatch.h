@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           textrlatch.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TEXTRLATCH_H
-#define TEXTRLATCH_H
 
 #include <tmiso.h>
 
@@ -78,6 +77,5 @@ class TExtrLatch : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

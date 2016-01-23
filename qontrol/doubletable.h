@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           doubletable.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef DOUBLETABLE_H
-#define DOUBLETABLE_H
 
 #include <QAbstractTableModel>
 #include <QWidget>
@@ -38,5 +37,4 @@ class DoubleTableModel : public QAbstractTableModel {
    const DatasInfo &di;
 };
 
-#endif
 

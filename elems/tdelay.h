@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tdelay.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TDELAY_H
-#define TDELAY_H
 
 #include <memory>
 
@@ -61,6 +60,5 @@ class TDelay : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tcriterion.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TCRITERION_H
-#define TCRITERION_H
 
 #include <tmiso.h>
 
@@ -71,6 +70,5 @@ class TCriterion : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

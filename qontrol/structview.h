@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           structview.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef STRUCTVIEW_H
-#define STRUCTVIEW_H
 
 #include <QWidget>
 
@@ -169,7 +168,6 @@ class StructSubwin : public CommonSubwin {
    StructView *sview = nullptr;
 };
 
-#endif
 
 // end of structview.h
 

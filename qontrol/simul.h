@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           simul.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef SIMUL_H
-#define SIMUL_H
 
 #include "linkedobj.h"
 
@@ -125,5 +124,4 @@ class ContSimul : public TDataSet {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 

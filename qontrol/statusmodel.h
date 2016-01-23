@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           statusmodel.h  -  description
                              -------------------
@@ -16,8 +17,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef STATUSMODEL_H
-#define STATUSMODEL_H
 
 #include <QStatusBar>
 
@@ -41,7 +40,6 @@ class StatusModel : public QStatusBar  {
    QLabel *l_mod, *l_level, *l_stat, *l_name,  *l_desc, *l_val;
 };
 
-#endif
 
 // end of statusmodel.h
 

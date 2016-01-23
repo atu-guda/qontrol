@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tlogic.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TLOGIC_H
-#define TLOGIC_H
 
 #include <tmiso.h>
 
@@ -66,6 +65,5 @@ class TLogic : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tmaxnum.h  -  find maximum input
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TMAXNUM_H
-#define TMAXNUM_H
 
 #include <tmiso.h>
 
@@ -74,5 +73,4 @@ class TMaxNum : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 

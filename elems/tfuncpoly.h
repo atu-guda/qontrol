@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tfuncpoly.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TFUNCPOLY_H
-#define TFUNCPOLY_H
 
 #include <tmiso.h>
 
@@ -80,6 +79,5 @@ class TFuncPoly : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

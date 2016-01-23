@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tsource.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TSOURCE_H
-#define TSOURCE_H
 
 #include "tmiso.h"
 #include "rand_gen.h"
@@ -123,4 +122,3 @@ class TSource : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif

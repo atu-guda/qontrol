@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           datawidget.h  - widgets for DataDialog
                              -------------------
@@ -6,8 +7,6 @@
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
-#ifndef _DATAWIDGET_H
-#define _DATAWIDGET_H
 
 #include <QtWidgets>
 #include <QVariant>
@@ -307,6 +306,5 @@ class DataDialog : public QDialog {
    QTabWidget *tw = nullptr; // pane for all data widgets
 };
 
-#endif  // _DATAWIDGET_H
 
 

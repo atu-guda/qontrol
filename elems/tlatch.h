@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tlatch.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TLATCH_H
-#define TLATCH_H
 
 #include <tmiso.h>
 
@@ -67,6 +66,5 @@ class TLatch : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

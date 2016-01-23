@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tfriction.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TFRICTION_H
-#define TFRICTION_H
 
 #include <tmiso.h>
 
@@ -58,6 +57,5 @@ class TFriction : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

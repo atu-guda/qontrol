@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tcorralalysis.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TCORRALALYSIS_H
-#define TCORRALALYSIS_H
 
 #include <tmiso.h>
 
@@ -91,5 +90,4 @@ class TCorrAnalysis : public TMiso  {
 
 
 
-#endif
 

@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           colorbtn.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef COLORBTN_H
-#define COLORBTN_H
 
 #include <QWidget>
 #include <QPushButton>
@@ -46,5 +45,4 @@ class ColorBtn : public QPushButton  {
    QColor col;
 };
 
-#endif
 

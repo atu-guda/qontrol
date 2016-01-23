@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tfuncmisc.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TFUNCMISC_H
-#define TFUNCMISC_H
 
 #include <tmiso.h>
 
@@ -79,6 +78,5 @@ class TFuncMisc : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

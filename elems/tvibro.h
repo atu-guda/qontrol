@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tvibro.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TVIBRO_H
-#define TVIBRO_H
 
 #include <tmiso.h>
 
@@ -56,6 +55,5 @@ class TVibro : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

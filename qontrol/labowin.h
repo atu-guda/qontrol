@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           labowin.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef LABOWIN_H
-#define LABOWIN_H
 
 // include files for QT
 #include <QMainWindow>
@@ -270,7 +269,6 @@ class LaboWin : public QMainWindow
 #define SETTINGS (LaboWin::win()->getSettings())
 
 
-#endif
 
 // end of labowin.h
 

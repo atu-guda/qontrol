@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tmiso.h  -  description
                              -------------------
@@ -20,8 +21,6 @@
 */
 
 
-#ifndef TMISO_H
-#define TMISO_H
 
 #include "linkedobj.h"
 
@@ -97,4 +96,3 @@ class TMiso : public LinkedObj  {
 
 typedef TMiso* PTMiso;
 
-#endif

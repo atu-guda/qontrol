@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           trelaxgen.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TRELAXGEN_H
-#define TRELAXGEN_H
 
 #include <tmiso.h>
 
@@ -66,5 +65,4 @@ class TRelaxGen : public TMiso  {
 };
 
 
-#endif
 

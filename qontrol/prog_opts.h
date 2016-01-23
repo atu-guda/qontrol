@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
  prog_opts.h - description of program options
                              -------------------
@@ -5,8 +6,6 @@
     copyright            : GPL (C) 2015-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
-#ifndef _PROG_OPTS_H
-#define _PROG_OPTS_H
 
 // options passed to program
 struct ProgOpts {
@@ -33,5 +32,4 @@ struct ProgOpts {
 
 extern ProgOpts prog_opts; // defined in main.cpp
 
-#endif
 

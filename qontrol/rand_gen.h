@@ -1,5 +1,4 @@
-#ifndef _RAND_GEN
-#define _RAND_GEN
+#pragma once
 
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
@@ -53,4 +52,3 @@ class RandGenerator {
    static const gsl_rng_type *env_tp;
 };
 
-#endif

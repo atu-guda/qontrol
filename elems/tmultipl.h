@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tmultipl.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TMULTIPL_H
-#define TMULTIPL_H
 
 #include <tmiso.h>
 
@@ -51,6 +50,5 @@ class TMultipl : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

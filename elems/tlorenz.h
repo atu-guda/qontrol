@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tlorenz.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TLORENZ_H
-#define TLORENZ_H
 
 #include "tmiso.h"
 
@@ -65,4 +64,3 @@ class TLorenz : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif

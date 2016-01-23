@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           rootdata.h  -  description lcass TRootData
                              -------------------
@@ -6,8 +7,6 @@
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
-#ifndef _ROOTDATA_H
-#define _ROOTDATA_H
 
 #include "dataset.h"
 
@@ -36,6 +35,5 @@ class TRootData : public TDataSet {
    DCL_DEFAULT_STATIC;
 };
 
-#endif  // _ROOTDATA_H
 
 

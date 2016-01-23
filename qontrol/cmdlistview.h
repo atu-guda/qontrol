@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                       cmdlistview.h - common base for list-alike viewvs
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _CMDLISTVIEW_H
-#define _CMDLISTVIEW_H
 
 #include <QtWidgets>
 
@@ -51,5 +50,4 @@ class CmdListView : public CmdView {
    void init_base_actions();
 };
 
-#endif
 

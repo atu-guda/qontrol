@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           schemeview.h - view for schems list
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _SCHEMEVIEW_H
-#define _SCHEMEVIEW_H
 
 #include <QtWidgets>
 
@@ -45,5 +44,4 @@ class SchemeView : public CmdListView {
    void init_actions();
 };
 
-#endif
 

@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           defs.h  -  common definitions and descriptions
                              -------------------
@@ -6,8 +7,6 @@
     email                : atu@nmetau.edu.ua
  *************************************************************************/
 
-#ifndef _DEFS_H
-#define _DEFS_H
 
 #include <limits>
 #include <vector>
@@ -93,5 +92,4 @@ constexpr char RE_FULLNAME[]
 
 extern QString log_app;
 
-#endif // _DEFS_H
 

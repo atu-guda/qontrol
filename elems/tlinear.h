@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tlinear.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TLINEAR_H
-#define TLINEAR_H
 
 #include "tmiso.h"
 
@@ -50,4 +49,3 @@ class TLinear : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif

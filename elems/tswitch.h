@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tswitch.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TSWITCH_H
-#define TSWITCH_H
 
 #include <tmiso.h>
 
@@ -55,5 +54,4 @@ class TSwitch : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 

@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
      settingsdata.h - application settings structure declration
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _SETTINGSDATA_H
-#define _SETTINGSDATA_H
 
 #include "dataset.h"
 
@@ -51,5 +50,4 @@ class SettingsData : public TDataSet {
 
 };
 
-#endif
 

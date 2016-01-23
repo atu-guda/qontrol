@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           runview.h  -  description
                              -------------------
@@ -16,8 +17,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef RUNVIEW_H
-#define RUNVIEW_H
 
 #include "defs.h"
 #include <QDialog>
@@ -122,7 +121,6 @@ class RunView : public QDialog  {
     int autoStart = 0;
 };
 
-#endif
 
 // end of runview.h
 

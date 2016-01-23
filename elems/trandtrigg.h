@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           trandtrigg.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TRANDTRIGG_H
-#define TRANDTRIGG_H
 
 #include <tmiso.h>
 #include "rand_gen.h"
@@ -89,6 +88,5 @@ class TRandTrigg : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

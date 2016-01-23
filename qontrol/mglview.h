@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           mglview.h  -  window to show plots via MathGL
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef MGLVIEW_H
-#define MGLVIEW_H
 
 #include <cmath>
 #include <vector>
@@ -123,6 +122,5 @@ class MglSubwin : public CommonSubwin {
 };
 
 
-#endif
 
 

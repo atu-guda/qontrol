@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           commonsubwin.h - common MDI subwindow inner widget
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef COMMONSUBWIN_H
-#define COMMONSUBWIN_H
 
 
 #include "defs.h"
@@ -61,7 +60,6 @@ class CommonSubwin : public QMainWindow  {
    ViewNameMap vmap;
 };
 
-#endif
 
 // end of commonsubwin.h
 

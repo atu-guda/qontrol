@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tthrum.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TTHRUM_H
-#define TTHRUM_H
 
 #include "tmiso.h"
 
@@ -81,4 +80,3 @@ class TThrum : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif

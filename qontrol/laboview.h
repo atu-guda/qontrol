@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           laboview.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef LABOVIEW_H
-#define LABOVIEW_H
 
 #include "commonsubwin.h"
 
@@ -179,7 +178,6 @@ class LaboView : public CommonSubwin
    int em = 10;
 };
 
-#endif
 
 // end of laboview.h
 

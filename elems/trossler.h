@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           trossler.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TROSSLER_H
-#define TROSSLER_H
 
 #include "tmiso.h"
 
@@ -62,4 +61,3 @@ class TRossler : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif

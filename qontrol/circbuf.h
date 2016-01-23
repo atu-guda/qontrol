@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           circbuf.h - circular buffer class description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _CIRCBUF_H
-#define _CIRCBUF_H
 #include "defs.h"
 // ------------- miscelanios classes -----------------------------
 
@@ -42,5 +41,4 @@ class TCircBuf {
    std::vector<double> d;
    static const constexpr unsigned recalc_after = 10000;
 };
-#endif
 

@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tsumn.h  - N-input linear summator
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TSUMN_H
-#define TSUMN_H
 
 #include "tmiso.h"
 
@@ -41,4 +40,3 @@ class TSumN : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif

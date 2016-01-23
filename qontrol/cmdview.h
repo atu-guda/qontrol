@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                      cmdview.h  -  common base for views vith std actions
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef CMDVIEW_H
-#define CMDVIEW_H
 
 #include <QWidget>
 
@@ -57,5 +56,4 @@ class CmdView : public QWidget {
     QString sugg_name;
 };
 
-#endif // CMDVIEW_H
 

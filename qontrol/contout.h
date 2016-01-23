@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           contout.h  -  contrainer for TOutArr
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _CONTOUT_H
-#define _CONTOUT_H
 
 #include "linkedobj.h"
 #include "scriptfuncs.h"
@@ -63,5 +62,4 @@ class ContOut : public LinkedObj {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 

@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
   linkcompleter.h - completer for links fields description
   -------------------
@@ -15,8 +16,6 @@ email                : atu@nmetau.edu.ua
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _LINKCOMPLETER_H
-#define _LINKCOMPLETER_H
 
 #include <QCompleter>
 #include <QStringList>
@@ -33,5 +32,4 @@ class LinkCompleter : public QCompleter
     QString pathFromIndex( const QModelIndex &idx ) const override;
 };
 
-#endif
 

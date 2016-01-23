@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tintegrator.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TINTEGRATOR_H
-#define TINTEGRATOR_H
 
 #include <tmiso.h>
 
@@ -68,6 +67,5 @@ class TIntegrator : public TMiso  {
 };
 
 
-#endif
 
 

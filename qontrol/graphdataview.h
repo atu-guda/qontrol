@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           graphdataview.h - view for plots
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _GRAPHDATAVIEW_H
-#define _GRAPHDATAVIEW_H
 
 #include <QtWidgets>
 
@@ -45,5 +44,4 @@ class GraphDataView : public CmdListView {
     void init_actions();
 };
 
-#endif
 

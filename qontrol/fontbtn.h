@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
   fontbtn.h - widget to edit font by button
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef FONTBTN_H
-#define FONTBTN_H
 
 #include <QWidget>
 #include <QPushButton>
@@ -44,5 +43,4 @@ class FontBtn : public QPushButton  {
    QFont cfont;
 };
 
-#endif
 

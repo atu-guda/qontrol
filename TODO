@@ -1,8 +1,8 @@
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
 HolderInt -> long
-#pragma once
 TOutArr: use InputSimple (need conversion)
 TModel::startRun: list on vars to copy. List for engine aliases?
+chrono sleep_untill
 correct places for reset, set_link, *structChange..
 BUG: modified state (i.e. after autocreated scheme removal)
 BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params

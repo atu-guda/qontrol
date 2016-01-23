@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tsourcelin.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TSOURCELIN_H
-#define TSOURCELIN_H
 
 #include "tmiso.h"
 
@@ -59,5 +58,4 @@ class TSourceLin : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 

@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tsubscheme.h  - subscheme element defs
     begin                : 2015.10.03
@@ -14,8 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _TSUBSCHEME_H
-#define _TSUBSCHEME_H
 
 
 #include "tmiso.h"
@@ -85,6 +84,5 @@ class TSubScheme : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 

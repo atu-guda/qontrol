@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
    dataset.h  -  base definitions and classes
                              -------------------
@@ -6,8 +7,6 @@
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
-#ifndef _DATASET_H
-#define _DATASET_H
 
 #include <QObject>
 #include <QString>
@@ -748,6 +747,5 @@ class ObjFactory {
 #define EFACT ObjFactory::theFactory()
 
 
-#endif  // _DATASET_H
 
 

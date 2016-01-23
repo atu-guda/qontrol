@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           ttrigger.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TTRIGGER_H
-#define TTRIGGER_H
 
 #include <tmiso.h>
 
@@ -73,6 +72,5 @@ class TTrigger : public TMiso  {
 
 
 
-#endif
 
 

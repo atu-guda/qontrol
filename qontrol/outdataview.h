@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           outdataview.h - view for outs
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _OUTDATAVIEW_H
-#define _OUTDATAVIEW_H
 
 #include <QtWidgets>
 
@@ -51,5 +50,4 @@ class OutDataView : public CmdListView {
    void init_actions();
 };
 
-#endif
 

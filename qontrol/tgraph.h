@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tgraph.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TGRAPH_H
-#define TGRAPH_H
 
 #include <memory>
 
@@ -399,5 +398,4 @@ class TGraph : public LinkedObj  {
 typedef TGraph *PTGraph;
 
 
-#endif
 

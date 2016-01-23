@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           scriptfuncs.h - JS funcs description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _SCRIPTFUNCS_H
-#define _SCRIPTFUNCS_H
 
 #include <QString>
 #include <QScriptEngine>
@@ -41,5 +40,4 @@ QScriptValue script_include( QScriptContext *ctx, QScriptEngine *eng );
 
 
 
-#endif
 

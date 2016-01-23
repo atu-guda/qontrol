@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           trand.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TRAND_H
-#define TRAND_H
 
 #include <tmiso.h>
 #include "rand_gen.h"
@@ -118,6 +117,5 @@ class TRand : public TMiso  {
    Q_CLASSINFO( "nameHintBase",  "rnd_" );
 };
 
-#endif
 
 

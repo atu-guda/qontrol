@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           linkedobj.h - object with link capabilities
                              -------------------
@@ -6,8 +7,6 @@
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
-#ifndef _LINKEDOBJ_H
-#define _LINKEDOBJ_H
 
 #include "dataset.h"
 
@@ -239,6 +238,5 @@ class ParamDouble : public InputAbstract {
 
 // ----------------------------------------------------------------
 
-#endif // _LINKEDOBJ_H
 
 

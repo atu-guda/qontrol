@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           scaledata.h  -  description
                              -------------------
@@ -6,8 +7,6 @@
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
-#ifndef _SCALEDATA_H
-#define _SCALEDATA_H
 
 #include <mgl2/mgl.h>
 
@@ -85,4 +84,3 @@ class ScaleData : public TDataSet
    DCL_DEFAULT_STATIC;
 };
 
-#endif  // _SCALEDATA_H

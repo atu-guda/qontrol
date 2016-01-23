@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
         tmulsumn.cpp  - N-input multiplicator/summator + COG
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TMULSUMN_H
-#define TMULSUMN_H
 
 #include "tmiso.h"
 
@@ -59,4 +58,3 @@ class TMulsumN : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif

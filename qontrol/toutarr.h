@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           toutarr.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TOUTARR_H
-#define TOUTARR_H
 
 #include "linkedobj.h"
 
@@ -146,5 +145,4 @@ class TOutArr : public LinkedObj  {
 };
 typedef TOutArr *PTOutArr;
 
-#endif
 

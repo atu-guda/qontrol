@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           miscfun.h  -  description
                              -------------------
@@ -8,8 +9,6 @@
 
 
 
-#ifndef __MISCFUN_H
-#define __MISCFUN_H
 
 #include <QString>
 #include <QStringList>
@@ -90,7 +89,6 @@ bool confirmDelete( QWidget *par, const QString &obj, const QString &nm );
 bool editObj( QWidget *par, HolderData *obj );
 bool showTree( QWidget *par, HolderData *obj );
 
-#endif
 
 
 

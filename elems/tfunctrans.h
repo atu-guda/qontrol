@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tfunctrans.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TFUNCTRANS_H
-#define TFUNCTRANS_H
 
 #include <tmiso.h>
 
@@ -84,7 +83,6 @@ class TFuncTrans : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
 
 
 

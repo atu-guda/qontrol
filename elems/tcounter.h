@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tcounter.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TCOUNTER_H
-#define TCOUNTER_H
 
 #include <tmiso.h>
 
@@ -67,4 +66,3 @@ class TCounter : public TMiso  {
 
 
 
-#endif

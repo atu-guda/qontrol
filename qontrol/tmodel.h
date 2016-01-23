@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           tmodel.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TMODEL_H
-#define TMODEL_H
 
 #include "defs.h"
 #include "contout.h"
@@ -224,5 +223,4 @@ class ModelRunner : public QThread
    QSemaphore *sem;
 };
 
-#endif
 

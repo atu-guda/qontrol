@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           thyst.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef THYST_H
-#define THYST_H
 
 #include <tmiso.h>
 
@@ -71,4 +70,3 @@ class THyst : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif

@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
                           labodoc.h  -  description
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef LABODOC_H
-#define LABODOC_H
 
 // include files for QT
 #include <QObject>
@@ -85,7 +84,6 @@ class LaboDoc : public QObject
    bool is_nonamed = true;
 };
 
-#endif // LABODOC_H
 
 // end of labodoc.h
 

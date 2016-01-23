@@ -1,3 +1,4 @@
+#pragma once
 /***************************************************************************
          tfilesource.h  - element to read text data from file (defs)
                              -------------------
@@ -15,8 +16,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef TFILESOURCE_H
-#define TFILESOURCE_H
 
 #include <cstdio>
 
@@ -91,4 +90,3 @@ class TFileSource : public TMiso  {
    DCL_DEFAULT_STATIC;
 };
 
-#endif
