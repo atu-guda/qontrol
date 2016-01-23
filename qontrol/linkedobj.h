@@ -87,6 +87,9 @@ class LinkedObj : public TDataSet {
    Q_INVOKABLE int getN_ActiveInputs() const { return inps_a.size(); }
    Q_INVOKABLE int getN_ActiveParmInputs() const { return inps_ap.size(); }
 
+   Q_INVOKABLE QStringList getInputsNames() const;
+   Q_INVOKABLE QString lsInputs() const;
+
    void readInputs() noexcept;
    void readAllInputs() noexcept;
  protected:

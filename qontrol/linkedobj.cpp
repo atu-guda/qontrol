@@ -294,6 +294,29 @@ int LinkedObj::do_endLoop()
   return 1;
 }
 
+QStringList LinkedObj::getInputsNames() const
+{
+  QStringList r;
+  for( auto in : TCHILD(InputAbstract*) ) {
+    if( !in ) { continue; };
+    r << in->objectName();
+  }
+
+  return r;
+}
+
+QString LinkedObj::lsInputs() const
+{
+  QString r;
+  for( auto in : TCHILD(InputAbstract*) ) {
+    if( !in ) { continue; };
+    r += in->getType() % QSL(" ") % in->objectName() % QSL(";  //  ")
+      % in->getParm( QSL("descr") ) % QSL("\n");
+  }
+
+  return r;
+}
+
 
 // ------------------------------------ InputAbstract ---------
 //
