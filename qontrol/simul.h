@@ -66,9 +66,8 @@ class Simulation : public LinkedObj  {
   PRM_SWITCH( syncRT, efNRC, "Sync RT",
       "Real and model time synchronization ", "sep=col" );
   PRM_DOUBLE( io_t, efNRC, "I/O time", "Time per each I/O action", "def=0.1\nmin=1e-4" );
-  PRM_INT( n_threads, efNRC, "n_{threads}",
-       "Number of threads for simulation, <1 = auto",
-       "max=1000\ndef=0" );
+  PRM_SWITCH( fakeRT, efNRC, "Fake RT",
+      "Real time is set to model time", "" );
 
   /** Loop parameter values */
   PRM_INT( N1, efNRC, "N1",

@@ -20,14 +20,8 @@
 
 #include <vector>
 
-#include <boost/thread.hpp>
-#include <boost/thread/barrier.hpp>
-
 class TMiso;
 #include "linkedobj.h"
-
-using barri = boost::barrier;
-#define L_GUARD(x) boost::lock_guard<boost::mutex> locker(x);
 
 /**Contains elements of scheme
   *@author atu
@@ -75,17 +69,11 @@ class Scheme : public LinkedObj  {
   /** performs one loop */
   virtual int runOneLoop( IterType itype );
 
-  int th_run(); //* run common
-
   virtual void fillComplModelForInputs( QStandardItemModel *mdl ) const override;
 
  protected:
   virtual void do_reset() override;
 
-  int th_prep();                 //* prepare for thread run: fill v_elt;
-  int th_stage0( unsigned nt );  //* run main element loops by thread
-  int th_stage1();               //* run common actions after each iteration
-  void th_interrupt_all();
 
   PRM_STRING( descr, efNoRunChange, "description", "Scheme description", "max=1024\nprops=STRING,MLINE\nncol=-1\nsep=blockend");
   // ======================= invisible vars ======================
@@ -97,16 +85,6 @@ class Scheme : public LinkedObj  {
   // caches for fast access
   /** vector of ptrs to active elements, my be sorted on ord */
   std::vector<TMiso*> v_el;
-
-  // --- thread-aware parts
-  unsigned n_th { 0 };
-  bool prepared { false };
-  std::vector< std::vector<TMiso*> > v_elt;
-
-  boost::mutex run_mutex;
-  std::vector<boost::thread> vth;
-  barri *barr0 = nullptr;
-  barri *barr1 = nullptr;
 
   Q_CLASSINFO( "nameHintBase",  "sch_" );
   DCL_DEFAULT_STATIC;

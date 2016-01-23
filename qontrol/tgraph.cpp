@@ -15,9 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <boost/thread.hpp>
-#include <boost/thread/barrier.hpp>
-
 #include <mgl2/base.h>
 
 #include "tmodel.h"

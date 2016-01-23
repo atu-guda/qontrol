@@ -21,9 +21,6 @@
 #include <unistd.h>
 #include <algorithm>
 
-#include <boost/chrono/chrono.hpp>
-#include <boost/bind.hpp>
-
 #include <QStandardItem>
 
 #include "miscfun.h"
@@ -182,8 +179,6 @@ int Scheme::runOneLoop( IterType itype )
 void Scheme::do_reset()
 {
   // linkNames();
-  prepared = false; n_th = 0; v_elt.clear(); vth.clear();
-  barr0 = nullptr;  barr1 = nullptr;
   state = stateGood; run_type = -1;
 }
 
@@ -340,129 +335,6 @@ int Scheme::hintOrd() const
   return m1;
 }
 
-int Scheme::th_prep()
-{
-  auto vsz = v_el.size();
-  unsigned el_per_th = ( vsz + n_th - 1 ) / n_th;
-  unsigned nt = n_th * el_per_th; // total number of elements, counting nulls
-  qWarning() << "Prep: vsz=" << vsz << " n_th= " << n_th << "nt=" << nt << "el_per_th=" << el_per_th << NWHE;
-  v_elt.clear();
-  v_elt.resize( n_th ); // TODO: each::reserve( el_per_th );
-  for( auto vt : v_elt ) { vt.reserve( el_per_th ); };
-
-  for( unsigned i=0; i<nt; ++i ) {
-    unsigned tn = i % n_th;
-    v_elt[tn].push_back( ( i < vsz ) ? v_el[i] : nullptr );
-  }
-
-  prepared = true;
-  qWarning() << "Prep_end" << NWHE;
-
-  return 1;
-}
-
-int Scheme::th_run()
-{
-  L_GUARD( run_mutex );
-
-  n_th = rinf->n_th;
-  if( n_th < 1 ) { n_th = 1; }
-
-  th_prep();
-  barri a_ba0( n_th + 1 ); barr0 = &a_ba0;
-  barri a_ba1( n_th + 1 ); barr1 = &a_ba0;
-
-  vth.clear();
-  qWarning() << "Starting creating  threads" << NWHE;
-
-  for( unsigned i=0; i<n_th; ++i ) {
-    vth.push_back( boost::thread( boost::bind( &Scheme::th_stage0, this, i ) ) );
-  }
-  vth.push_back( boost::thread( boost::bind( &Scheme::th_stage1, this ) ) );
-
-  for( auto &th : vth ) {
-    th.join();
-  }
-
-  qWarning() << "*** END work ***" << WHE;
-  vth.clear();
-  barr0 = nullptr;
-  barr1 = nullptr;
-
-  return 1;
-}
-
-
-int Scheme::th_stage0( unsigned nt )
-{
-  if( !barr0 || !barr1 ) {
-    qWarning() << "No barriers!!!" << NWHE;
-    th_interrupt_all();
-    return 0;
-  }
-  if( !prepared ) {
-    qWarning() << "not prepared " << NWHE;
-    th_interrupt_all();
-    return 0;
-  }
-  if( nt >= v_elt.size() ) {
-    qWarning() << "bad nt: " << nt << NWHE;
-    th_interrupt_all();
-    return 0;
-  }
-
-  int nr = 0;
-  unsigned N = rinf->N;
-  IterType itype = IterFirst;
-  for( unsigned i=0; i<N; ++i ) {
-    for( auto v : v_elt[nt] ) {
-      if( !v ) { continue; } // nulls at the end
-      v->readInputs();
-      v->fun( itype );
-      if( end_loop ) {
-        th_interrupt_all();
-        return -1;
-      }
-      itype = ( i < N-2 ) ? IterMid : IterLast;
-    }
-    boost::this_thread::interruption_point();
-    barr0->wait();
-    barr1->wait(); // wait for stage 1 actions
-    ++nr;
-  }
-  return nr;
-}
-
-int Scheme::th_stage1()
-{
-  using namespace boost::chrono;
-  if( !barr0 || !barr1 ) {
-    qWarning() << "\nNo barriers!!!" << NWHE;
-    th_interrupt_all();
-    return 0;
-  }
-
-  // system_clock::time_point tm = system_clock::now();
-  auto N = rinf->N;
-  for( unsigned i=0; i<N; ++i ) {
-    barr0->wait();
-    rinf->model->endIter_fun();
-    // if( wait_ms > 0 ) {
-    //   tm += milliseconds( wait_ms );
-    //   boost::this_thread::sleep_until( tm );
-    // }
-    // -------------- main work here -----------------
-    barr1->wait();
-  }
-  return 1;
-}
-
-void Scheme::th_interrupt_all()
-{
-  for( auto &th : vth ) {
-    th.interrupt();
-  }
-}
 
 DEFAULT_FUNCS_REG(Scheme)
 

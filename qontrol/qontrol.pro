@@ -13,7 +13,7 @@ INCLUDEPATH += .. ../elems
 LIBS += -lgsl -lgslcblas
 LIBS += -lmgl
 LIBS += -lfftw3
-LIBS += -lboost_thread -lboost_chrono
+#LIBS += -lboost_thread -lboost_chrono
 
 SOURCES += \
   addelemdia.cpp \

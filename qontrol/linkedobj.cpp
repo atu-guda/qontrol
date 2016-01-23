@@ -294,10 +294,6 @@ int LinkedObj::do_endLoop()
   return 1;
 }
 
-int LinkedObj::endIter_fun()
-{
-  return 1;
-}
 
 // ------------------------------------ InputAbstract ---------
 //

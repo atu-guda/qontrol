@@ -71,7 +71,7 @@ double TCorrAnalysis::f() noexcept
     s_xy += x * y;
     ++n;
   };
-  if( ( ii >= rinf->N-1 || ( useCalc && in_calc > 0.1 ))   ) {
+  if( ( ii >= (int)(rinf->N-1) || ( useCalc && in_calc > 0.1 ))   ) {
     calc();
   };
   return s_x;

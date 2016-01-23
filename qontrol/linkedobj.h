@@ -29,7 +29,7 @@ struct RunInfo {
   unsigned N;
   unsigned nx;
   unsigned ny;
-  unsigned n_th;
+  int fakeRT;
   double tdt;
   double T;
   const double *p_t_model;
@@ -82,9 +82,6 @@ class LinkedObj : public TDataSet {
    int postRun( int good ); //* will be called after all actions -- call do_postRun
    int startLoop( int acnx, int acny ); //* called before each inner param loop -- call do_startLoop
    int endLoop(); //* will be called after each inner loop -- call do_endLoop
-
-   virtual int endIter_fun(); // to call at end of iteration
-                              // (really Scheme->model). if returns 0 - break;
 
    Q_INVOKABLE int getN_Inputs() const { return inps.size(); }
    Q_INVOKABLE int getN_SimpleInputs() const { return inps_s.size(); }

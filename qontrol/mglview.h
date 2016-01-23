@@ -18,10 +18,6 @@
 #ifndef MGLVIEW_H
 #define MGLVIEW_H
 
-// protect boost names from QT intervention
-#include <boost/thread.hpp>
-#include <boost/thread/barrier.hpp>
-
 #include <cmath>
 #include <vector>
 #include <string>

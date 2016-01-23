@@ -217,14 +217,8 @@ int TModel::startRun()
   n1_eff = c_sim->getDataD( "n1_eff", N1 );
   n2_eff = c_sim->getDataD( "n2_eff", N2 );
   n_tot  = c_sim->getDataD( "n_tot", N );
-  n_threads  = c_sim->getDataD( "n_threads", 0 );
-  if( n_threads < 1 ) {
-    n_threads = QThread::idealThreadCount();
-  }
-  if( n_threads < 1 ) {
-    n_threads = 1;
-  }
   syncRT = c_sim->getDataD( "syncRT", 0 );
+  fakeRT = c_sim->getDataD( "fakeRT", 0 );
   prm0s = c_sim->getDataD( "prm0s", 0.0 );
   prm1s = c_sim->getDataD( "prm1s", 0.0 );
   prm2s = c_sim->getDataD( "prm2s", 0.0 );
@@ -262,7 +256,7 @@ int TModel::startRun()
   prm1_targ = getMapDoublePtr( ">prm1_map" );
 
   rinf.run_tp = run_type; rinf.N = N; rinf.nx = n1_eff; rinf.ny = n2_eff;
-  rinf.n_th = n_threads;
+  rinf.fakeRT = fakeRT;
   rinf.tdt = tdt; rinf.T = T;
   rinf.p_t_model = t.caddr();
   rinf.model = this; rinf.sim = c_sim; rinf.sch = c_sch;
@@ -343,7 +337,12 @@ int TModel::run( QSemaphore *sem )
 
       prm0 = prm0s + il1 * prm0d;
       *prm0_targ = prm0;
-      start_time = get_real_time(); rtime = ct = 0; t = 0;
+      if( fakeRT ) {
+        start_time = 0;
+      } else {
+        start_time = get_real_time();
+      }
+      rtime = ct = 0; t = 0;
 
       if( ! startLoop( il1, il2 ) ) {
         stopRun( 0 );
@@ -357,45 +356,48 @@ int TModel::run( QSemaphore *sem )
         runScript( scriptStartLoop );
       }
 
-      c_sch->th_run();
+      for( int i=0; i<N; ++i, ++i_tot ) { // <------- main loop
 
-      // for( int i=0; i<N; ++i, ++i_tot ) { // <------- main loop
-      //
-      //   if ( t >= T_brk ) {
-      //     stopRun( 0 );
-      //     return 0;
-      //   }
-      //
-      //   if ( QThread::currentThread()->isInterruptionRequested() ) { // check for break
-      //     stopRun( 0 );
-      //     return 0;
-      //   }
-      //
-      //   IterType itype = IterMid;
-      //   if( i == 0 ) {
-      //     itype = IterFirst;
-      //   } else if ( i == (N-1) ) {
-      //     itype = IterLast;
-      //   }
-      //
-      //   rtime = get_real_time() - start_time;
-      //   if( syncRT ) {
-      //     if( t > rtime ) {
-      //       unsigned long wait_ms = (unsigned long)( 1000000 * ( t - rtime ) );
-      //       usleep( wait_ms ); // ------------------- TODO: redesign ?? ------
-      //     };
-      //   };
-      //   sem->acquire( 1 );
-      //
-      //   rc = runOneLoop( itype );
-      //
-      //   sem->release( 1 );
-      //
-      //   if( !rc ) {
-      //     stopRun( 0 );
-      //     return 0;
-      //   }
-      // } // -- main loop (i)
+        if ( t >= T_brk ) {
+          stopRun( 0 );
+          return 0;
+        }
+
+        if ( QThread::currentThread()->isInterruptionRequested() ) { // check for break
+          stopRun( 0 );
+          return 0;
+        }
+
+        IterType itype = IterMid;
+        if( i == 0 ) {
+          itype = IterFirst;
+        } else if ( i == (N-1) ) {
+          itype = IterLast;
+        }
+
+        if( fakeRT ) {
+          rtime = t;
+        } else {
+          rtime = get_real_time() - start_time;
+        }
+        if( syncRT ) {
+          if( t > rtime ) {
+            unsigned long wait_ms = (unsigned long)( 1000000 * ( t - rtime ) );
+            usleep( wait_ms ); // ------------------- TODO: redesign ?? ------
+          };
+        };
+
+        sem->acquire( 1 );
+
+        rc = runOneLoop( itype );
+
+        sem->release( 1 );
+
+        if( !rc ) {
+          stopRun( 0 );
+          return 0;
+        }
+      } // -- main loop (i)
 
       endLoop();
       if( plots ) { // TODO: remove? move to ContGraph::do_endLoop or stopRun?
@@ -415,14 +417,6 @@ int TModel::run( QSemaphore *sem )
   return i_tot;
 }
 
-int TModel::endIter_fun()
-{
-  rtime = get_real_time() - start_time;
-  outs->takeAllVals();
-  ct += ctdt; t = ct; ++ii;
-  // TODO: semaphore here
-  return 1;
-}
 
 int TModel::stopRun( int reason )
 {
@@ -477,7 +471,9 @@ int TModel::runOneLoop( IterType itype )
   if( !rc ) {
     end_loop = 1;
   }
-  endIter_fun();
+
+  outs->takeAllVals();
+  ct += ctdt; t = ct; ++ii;
 
   return 1;
 }
