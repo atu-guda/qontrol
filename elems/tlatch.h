@@ -41,7 +41,7 @@ class TLatch : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** reimplemented from TMiso to init state */
-   virtual int do_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( int acnx, int acny ) override;
 
    /** type of */
    PRM_LIST( type, efNRC, "Type", "Latch type", "enum=LatchType" );

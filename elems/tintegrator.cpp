@@ -33,9 +33,8 @@ CTOR(TIntegrator,TMiso)
 
 
 
-int TIntegrator::do_startLoop( int acnx, int acny )
+int TIntegrator::miso_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  TMiso::do_startLoop( acnx, acny );
   v_old = v = v_a = (double)out0_init;
   t_rst = 0;
   return 1;

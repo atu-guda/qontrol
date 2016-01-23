@@ -35,7 +35,7 @@ class TPid : public TMiso  {
    /** will be called before any action -- good place for allocs */
    virtual int do_preRun() override;
    /** reimplemented from TMiso to reset integrators and diffs */
-   virtual int do_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( int acnx, int acny ) override;
 
    /** coefficients  */
    PRM_PARAMD( kd2, 0, "k_{d2}", "Coefficient in second derivation", "");

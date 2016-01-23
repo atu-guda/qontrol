@@ -45,7 +45,7 @@ class TExtrLatch : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** reimplemented from TMiso to reset */
-   virtual int do_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( int acnx, int acny ) override;
    void reset_vars();
 
    /** type of extremum */

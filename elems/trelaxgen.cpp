@@ -22,10 +22,12 @@ using namespace std;
 
 const char* TRelaxGen::helpstr = "<h1>TRelaxGen</h1>\n"
  "Relaxation generator: <br/>\n"
- "Simulates element, in which capacitor C is charging from external voltage source v_in <br/>\n"
- "via resistor r1 up to v_1, than discharges to ground down to v_2 via r1. \n"
+ "Simulates element, in which capacitor <b>c</b> is charging <br/>"
+ "from external voltage source <b>v<sub>in</sub></b> <br/>\n"
+ "via resistor <b>r<sub>1</sub></b> up to <b>v<sub>1</sub></b>,<br/>"
+ "than discharges to ground down to <b>v<sub>2</sub></b> via <b>r<sub>2</sub></b>.\n"
  "Charging or discharging may be continuous. \n"
- "External elements may be used as voltage-current conversions.<br/>. \n";
+ "External elements may be used as voltage-current conversions.<br/>\n";
 
 STD_CLASSINFO(TRelaxGen,clpElem );
 
@@ -34,9 +36,8 @@ CTOR(TRelaxGen,TMiso)
 }
 
 
-int TRelaxGen::do_startLoop( int acnx, int acny )
+int TRelaxGen::miso_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  TMiso::do_startLoop( acnx, acny );
   v = (double)out0_init;
   isDis = I =  dv_ch = dv_dis = 0;
   return 1;

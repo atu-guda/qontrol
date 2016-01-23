@@ -43,9 +43,8 @@ CTOR(TFriction,TMiso)
 }
 
 
-int TFriction::do_startLoop( int acnx, int acny )
+int TFriction::miso_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  TMiso::do_startLoop( acnx, acny );
   x_old = out0_init;
   v = v_old = Ff = 0;
   bodyState = 0;

@@ -153,9 +153,8 @@ int TSource::do_preRun()
 }
 
 
-int TSource::do_startLoop( int acnx, int acny )
+int TSource::miso_startLoop( int acnx, int acny )
 {
-  TMiso::do_startLoop( acnx, acny );
   was_pulse = 0;
 
   // U rnd init

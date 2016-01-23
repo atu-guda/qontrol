@@ -35,10 +35,9 @@ int TPid::do_preRun()
   return 1;
 }
 
-int TPid::do_startLoop( int acnx, int acny )
+int TPid::miso_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  TMiso::do_startLoop( acnx, acny );
-  vi1 = vi2 = u_old = u_old2 = 0;
+  vi1 = vi2 = 0; u_old = u_old2 = out0;
   start = 1;
   return 1;
 }

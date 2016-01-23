@@ -56,10 +56,10 @@ double TLorenz::f() noexcept
 }
 
 
-int TLorenz::do_startLoop( int acnx, int acny )
+int TLorenz::miso_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  TMiso::do_startLoop( acnx, acny );
   x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
+  out0 = x; // ????
   return 1;
 }
 

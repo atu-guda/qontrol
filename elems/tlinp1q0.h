@@ -40,7 +40,7 @@ class TLinP1Q0 : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** reimplemented from TMiso to init state */
-   virtual int do_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( int acnx, int acny ) override;
 
    /** coefficient near f(x) */
    PRM_PARAMD( a, 0, "a", "a in dx/dt = a*f(ku*u(t)-x)", "def=1" );

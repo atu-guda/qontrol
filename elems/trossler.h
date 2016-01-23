@@ -33,7 +33,7 @@ class TRossler : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** called before each inner param loop. Unused param - -1 */
-   virtual int do_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( int acnx, int acny ) override;
 
    /** main system parameters */
    PRM_PARAMD( a, 0, "a", "Parameter a", "def=0.25" );

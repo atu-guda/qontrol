@@ -114,9 +114,8 @@ int TFileSource::do_postRun( int /*good*/ )
 }
 
 
-int TFileSource::do_startLoop( int acnx, int acny )
+int TFileSource::miso_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  TMiso::do_startLoop( acnx, acny );
   if( asProc.cval() ) {
     p_fi = popen( filename.c_str(), "r" );
     if( ! p_fi ) {

@@ -36,9 +36,8 @@ CTOR(TLatch,TMiso)
 }
 
 
-int TLatch::do_startLoop( int acnx, int acny )
+int TLatch::miso_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  TMiso::do_startLoop( acnx, acny );
   v = (double)out0_init; u_old = lt = 0;  wasLatch = -1;
   return 1;
 }

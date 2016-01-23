@@ -34,9 +34,8 @@ int TVibro::do_preRun()
   return 1;
 }
 
-int TVibro::do_startLoop( int acnx, int acny )
+int TVibro::miso_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  TMiso::do_startLoop( acnx, acny );
   u_old = f_old = 0;
   v = (double)v0;
   x_old = out0_init;

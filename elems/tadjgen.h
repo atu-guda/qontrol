@@ -39,7 +39,7 @@ class TAdjGen : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** reimplemented from TMiso to reset */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int miso_startLoop( int acnx, int acny );
 
    /** type of averaging, */
    PRM_LIST( type, efNoRunChange, "Type", "Type of generator", "enum=GenType" );

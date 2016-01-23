@@ -34,9 +34,8 @@ CTOR(TAdjGen,TMiso)
 }
 
 
-int TAdjGen::do_startLoop( int acnx, int acny )
+int TAdjGen::miso_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  TMiso::do_startLoop( acnx, acny );
   ctt = ig = ig2 = dlt = tick_T = tick_old = av = av2 = av_diff = 0;
   currOut = 0; real_tick = 0; tick = 0;
   cav = cav2 = 0;

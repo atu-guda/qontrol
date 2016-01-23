@@ -20,19 +20,19 @@
 #include "miscfun.h"
 #include "trossler.h"
 
-const char* TRossler::helpstr = "<H1>TRossler</H1>\n"
- "<p>Simulator element for Rossler system <br>\n"
- " \\dot{x} = -y -x + in_x;   <br>\n"
- " \\dot{y} = x + a * y + in_y; <br>\n"
- " \\dot{z} = b + z * (x-c) + in_z<br>\n"
- " <br>\n"
- " Inputs in_[xyz]: add to x, y, z <br>\n"
- " <br>\n"
- " Outputs <b>x</b> variable - other can be get by TIinputAny<br>\n"
- " <br>\n"
- "Have 6 parameters: 3 from system, <b>a, b ,c </b>, <br>"
- "and 3 inital state: <b> x_0, y_0, z_0 </b>, <br>"
- "First 3 may can be changed at any time.</p>";
+const char* TRossler::helpstr = "<h1>TRossler</h1>\n"
+ "<p>Simulator element for Rossler system <br/>\n"
+ " \\dot{x} = -y -x + in_x;   <br/>\n"
+ " \\dot{y} = x + a * y + in_y; <br/>\n"
+ " \\dot{z} = b + z * (x-c) + in_z<br/>\n"
+ " <br/>\n"
+ " Inputs in_[xyz]: add to x, y, z <br/>\n"
+ " <br/>\n"
+ " Outputs <b>x</b> variable - other can be get by TIinputAny<br/>\n"
+ " <br/>\n"
+ "Have 6 parameters: 3 from system, <b>a, b ,c </b>, <br/>"
+ "and 3 inital state: <b> x_0, y_0, z_0 </b>, <br/>"
+ "First 3 may can be changed at any time. <br/>out0_init is <b>ignored</b>!</p>";
 
 STD_CLASSINFO(TRossler,clpElem );
 
@@ -54,10 +54,10 @@ double TRossler::f() noexcept
   return x;
 }
 
-int TRossler::do_startLoop( int acnx, int acny )
+int TRossler::miso_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  TMiso::do_startLoop( acnx, acny );
   x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
+  out0 = x;
   return 1;
 }
 

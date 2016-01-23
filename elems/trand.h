@@ -71,7 +71,7 @@ class TRand : public TMiso  {
    /** reimplemented from TMiso to init generator */
    virtual int do_preRun() override;
    /** reimplemented from TMiso to init generator and variables */
-   virtual int do_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( int acnx, int acny ) override;
 
    /** type of distribution */
    PRM_LIST( type, efNRC, "Type", "Distribution type", "enum=DistrType" );

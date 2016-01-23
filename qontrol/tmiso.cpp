@@ -68,11 +68,16 @@ double TMiso::f() noexcept
 
 
 
-int TMiso::do_startLoop( int /* acnx */, int /* acny */ )
+int TMiso::do_startLoop( int acnx, int acny )
 {
   state = stateRun;
   out0 = (double)out0_init;
   // readAllInputs(); // moved to scheme
+  return miso_startLoop( acnx, acny );
+}
+
+int TMiso::miso_startLoop( int /* acnx */, int /* acny */ )
+{
   return 1;
 }
 

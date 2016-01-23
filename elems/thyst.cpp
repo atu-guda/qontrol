@@ -69,7 +69,8 @@ double THyst::f() noexcept
       v = tanh( alpha * d ); break;
     case ht_tanhSAlphaD:
       v = tanh( s + alpha * d ); break;
-    default: v = 0;
+    default:
+      v = 0; break;
   };
   v = a * v + b;
   return v;
@@ -87,9 +88,8 @@ void THyst::fixState(void)
   prm_mod = 0;
 }
 
-int THyst::do_startLoop( int acnx, int acny )
+int THyst::miso_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  TMiso::do_startLoop( acnx, acny );
   s = d = 0;
   return 1;
 }

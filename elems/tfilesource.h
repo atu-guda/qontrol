@@ -51,7 +51,7 @@ class TFileSource : public TMiso  {
    virtual double f() noexcept override;
    virtual int do_preRun() override;
    virtual int do_postRun( int good ) override;
-   virtual int do_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( int acnx, int acny ) override;
    virtual int do_endLoop() override;
 
    PRM_STRING( filename, efNRC, "File name", "Input file name", "" );

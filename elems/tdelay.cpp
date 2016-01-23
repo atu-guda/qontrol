@@ -73,9 +73,8 @@ int TDelay::do_postRun( int /*good*/ )
   return 1;
 }
 
-int TDelay::do_startLoop( int acnx, int acny )
+int TDelay::miso_startLoop( int /*acnx*/, int /*acny*/ )
 {
-  TMiso::do_startLoop( acnx, acny );
   if( cdelay > mdelay ) {
     cdelay = mdelay;
   }
