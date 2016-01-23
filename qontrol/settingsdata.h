@@ -30,7 +30,6 @@ class SettingsData : public TDataSet {
    const QFont& getAsFont( const QString &nm ) const;
 
  protected:
-   PRM_SWITCH( showOrd,   0, "show Order",  "Show element order", "def=0" );
    PRM_SWITCH( showGrid,  0, "show Grid",   "Show scheme grid",  "def=1" );
    PRM_SWITCH( showNames, 0, "show Names",  "Show elements names",  "def=1" );
    PRM_SWITCH( showIcons, 0, "show Icons",  "Show scheme icon", "def=1" );

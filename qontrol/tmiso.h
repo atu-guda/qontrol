@@ -43,11 +43,6 @@ class TMiso : public LinkedObj  {
    /** external computation function + in/out */
    double fun( IterType itype ) noexcept;
 
-   /** fast access to order */
-   int getOrder() const { return ord; }
-   /** compare objects by order - to sort before run */
-   friend bool operator<( const TMiso &lhs, const TMiso &rhs )
-     { return lhs.ord < rhs.ord; }
    /** check, if element have given visual coords */
    bool isAtCoord( int ax, int ay ) const
      { return (vis_x == ax && vis_y == ay ); }
@@ -73,11 +68,10 @@ class TMiso : public LinkedObj  {
    PRM_STRING( descr, efNoRunChange, "description",
        "Object description", "max=128\nncol=-1");
    /** order, in which elements will be used and holder */
-   PRM_INT( ord, efRODial | efNoRunChange, "Order",
-       "Order, in which element will be processed", "min=0\nsep=block" );
+   PRM_INT( ord, efOld, "Order", "obsoleted", "" );
    /** visual coordinates */
    PRM_INT( vis_x, efRODial | efNoRunChange, "Visual x",
-       "X-coordinate of element in scheme", "min=0\nmax=64" );
+       "X-coordinate of element in scheme", "min=0\nmax=64\nsep=block" );
    PRM_INT( vis_y, efRODial | efNoRunChange, "Visual y",
        "Y-coordinate of element in scheme", "min=0\nmax=64" );
    PRM_PARAMD( out0_init, efNRC, "Init value", "Initial value of output", "def=0.0" );

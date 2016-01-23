@@ -184,17 +184,6 @@ void Scheme::do_reset()
 
 
 
-TMiso* Scheme::ord2Miso( int aord ) const
-{
-  for( auto ob : TCHILD(TMiso*) ) {
-    int oord = ob->getDataD( "ord", -1 );
-    if( aord == oord ) {
-      return ob;
-    }
-  };
-
-  return nullptr;
-}
 
 int Scheme::do_preRun()
 {
@@ -250,15 +239,13 @@ QSize Scheme::getMaxXY() const
 }
 
 
-TMiso* Scheme::addElem( const QString &cl_name, const QString &ob_name,
-                     int aord, int avis_x, int avis_y )
+TMiso* Scheme::addElem( const QString &cl_name, const QString &ob_name, int avis_x, int avis_y )
 {
   // not addObjT, downcast
   TMiso *ob = qobject_cast<TMiso*>( addObjP( cl_name, ob_name ) );
   if( !ob ) {
     return nullptr;
   }
-  ob->setData( "ord", aord );
   ob->setData( "vis_x", avis_x );
   ob->setData( "vis_y", avis_y );
   reset();
@@ -274,22 +261,6 @@ int Scheme::delElem( const QString &ename )
   return rc;
 }
 
-
-int Scheme::newOrder( const QString &name, int new_ord )
-{
-  TMiso *ob = getObjT<TMiso*>( name );
-  if( !ob ) {
-    return -1;
-  }
-  if( ord2Miso( new_ord ) != nullptr ) {
-    return -1;
-  }
-  ob->setData( "ord", new_ord );
-  int k = ob->getDataD( "ord", -1 );
-
-  reset();
-  return ( k == new_ord ) ? 0 : -1;
-}
 
 int Scheme::moveElem( const QString &nm, int newx, int newy )
 {
@@ -328,26 +299,6 @@ void Scheme::do_structChanged()
     v_el.push_back( ob );
   };
 
-  sortOrd();
-}
-
-void Scheme::sortOrd()
-{
-  std::sort( v_el.begin(), v_el.end(),
-      []( const TMiso *a, const TMiso*b) { return *a < *b; } );
-}
-
-int Scheme::hintOrd() const
-{
-  int m = 0;
-  for( auto ob : TCHILD(TMiso*) ) {
-    int mc = ob->getDataD( QSL("ord"), 0 );
-    if( mc > m ) {
-      m = mc;
-    }
-  };
-  int m1 = ( (m+10) / 10 ) * 10;
-  return m1;
 }
 
 

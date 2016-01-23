@@ -85,7 +85,6 @@ class LaboView : public CommonSubwin
    void qplinkElm();
    void unlinkElm();
    void lockElm();
-   void ordElm();
    void markElm();
    void moveElm();
    void testElm2();

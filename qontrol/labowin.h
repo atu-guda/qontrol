@@ -135,7 +135,6 @@ class LaboWin : public QMainWindow
     void slotqpLinkElm();
     void slotUnlinkElm();
     void slotLockElm();
-    void slotOrdElm();
     void slotMarkElm();
     void slotMoveElm();
 
@@ -173,8 +172,6 @@ class LaboWin : public QMainWindow
     void slotViewToolBar();
     /** toggle the statusbar*/
     void slotViewStatusBar();
-    /** toggle the showorder flag */
-    void slotShowOrd();
     /** toggle the showgrid flag */
     void slotShowGrid();
     /** toggle the shownames flag */

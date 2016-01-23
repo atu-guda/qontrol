@@ -42,8 +42,6 @@ class Scheme : public LinkedObj  {
   int fback( int code, TMiso *obj );
   virtual int do_preRun() override;
 
-  /** returns element by its order */
-  TMiso* ord2Miso( int aord ) const;
   /** visual coords -> TMiso @returns: nullptr - not found */
   TMiso* xy2Miso( int avis_x, int avis_y ) const;
   //* return max (x,y) of all elements
@@ -51,21 +49,14 @@ class Scheme : public LinkedObj  {
   //* return number of elements of TMiso-alike
   Q_INVOKABLE int getNMiso() const { return v_el.size(); }
   /** inserts active element @returns: nullptr - bad  else - ptr to inserted element */
-  TMiso* addElem( const QString &cl_name, const QString &ob_name,
-                       int aord, int avis_x, int avis_y );
+  TMiso* addElem( const QString &cl_name, const QString &ob_name, int avis_x, int avis_y );
   /** delete active element by name !0 = sucess */
   Q_INVOKABLE int delElem( const QString &ename );
   /** moves element to new position if free */
   Q_INVOKABLE int moveElem( const QString &nm, int newx, int newy );
-  /** new order of element ny name */
-  Q_INVOKABLE int newOrder( const QString &name, int new_ord );
-  /** suggest order value for new element */
-  Q_INVOKABLE int hintOrd() const;
 
   /** reimplemented to real Elems */
   virtual void do_structChanged();
-  /** sorts elements on its order */
-  void sortOrd();
   /** performs one loop */
   virtual int runOneLoop( IterType itype );
 
@@ -84,7 +75,7 @@ class Scheme : public LinkedObj  {
   int end_loop = 0;
 
   // caches for fast access
-  /** vector of ptrs to active elements, my be sorted on ord */
+  /** vector of ptrs to active elements */
   std::vector<TMiso*> v_el;
 
   TMiso *obj_brk = nullptr;

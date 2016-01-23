@@ -1,5 +1,5 @@
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
-HolderInt -> long
+HolderInt -> long, or array sizes - long
 TOutArr: use InputSimple (need conversion)
 TModel::startRun: list on vars to copy. List for engine aliases?
 chrono sleep_untill

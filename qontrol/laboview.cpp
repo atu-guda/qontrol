@@ -260,10 +260,6 @@ void LaboView::lockElm()
   return sview->lockElm();
 }
 
-void LaboView::ordElm()
-{
-  return sview->ordElm();
-}
 
 void LaboView::markElm()
 {

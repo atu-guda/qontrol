@@ -187,12 +187,11 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
 
   ei.name = ob->objectName();
   ei.type = ob->getType();
-  ei.vis_x  = ei.vis_y =  ei.ord = ei.locked = ei.onlyFirst
+  ei.vis_x  = ei.vis_y =  ei.locked = ei.onlyFirst
     =  ei.onlyLast = ei.flip = ei.noIcon = 0;
 
   ob->getData( "vis_x", &ei.vis_x );
   ob->getData( "vis_y", &ei.vis_y );
-  ob->getData( "ord", &ei.ord );
   ob->getData( "locked", &ei.locked );
   ob->getData( "ignored", &ei.ignored );
   ob->getData( "onlyFirst", &ei.onlyFirst );
@@ -313,17 +312,6 @@ void StructView::drawAll( QPainter &p )
     }
 
 
-    // order mark
-    int showOrd = sett->getDataD( QSL("showOrd"), 0 );
-    if( showOrd ) {
-      if( s_icons && ! ei.noIcon )  {
-        p.setPen( Qt::NoPen ); p.setBrush( QColor(240,240,255) );
-        p.drawRect( ei.xs, ei.ys, obj_sz-1, ex_small );
-      };
-      p.setPen( Qt::black );
-      p.drawText( ei.xs + 2, ei.ys + ex_small, QSN( ei.ord ) );
-      line_busy++;
-    };
     // --------------------- draw element name
     int showNames = sett->getDataD( QSL("showNames"), 1 );
     if( showNames ) {
@@ -744,25 +732,6 @@ void StructView::lockElm()
   emit viewChanged();
 }
 
-void StructView::ordElm()
-{
-  if( storage->isRoTree() ) {
-    return;
-  }
-
-  if( ! checkState( selCheck ) ) {
-    return;
-  }
-
-  bool ok;
-  int old_ord = selObj->getDataD( "ord", 0 );
-  int new_ord = QInputDialog::getInt( this, "New element order",
-      "Input new element order",  old_ord, 0, IMAX, 1, &ok );
-  if( ok ) {
-    sch->newOrder( selObj->objectName(), new_ord ); // reset implied
-    emit viewChanged();
-  };
-}
 
 void StructView::markElm()
 {
@@ -813,10 +782,8 @@ bool StructView::addObj()
 
   AddObjParams prm;
   prm.name = objName;
-  int oord = sch->hintOrd();
   prm.values = QSL("vis_x=") % QSN( sel_x ) % QSL("\n") %
-               QSL("vis_y=") % QSN( sel_y ) % QSL("\n") %
-               QSL("ord=") % QSN( oord );
+               QSL("vis_y=") % QSN( sel_y ) % QSL("\n");
 
   HolderData *ho = SelectTypeDialog::askAndCreateObj( storage, this, prm );
   if( !ho ) {
@@ -898,11 +865,8 @@ bool StructView::pasteObj()
     return false;
   }
 
-  int oord = sch->hintOrd();
-
   ob->setData( "vis_x", sel_x );
   ob->setData( "vis_y", sel_y );
-  ob->setData( "ord", oord );
   ob->reportStructChanged();
   changeSel( 0, 0, 1 ); // update sel
   return true;
@@ -977,8 +941,6 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
       menu->addSeparator();
       act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
       connect( act, &QAction::triggered, this, &StructView::qlinkElm );
-      act = menu->addAction(  QIcon( ":icons/orderelm.png" ), "&Reorder" );
-      connect( act, &QAction::triggered, this, &StructView::ordElm );
     }
     menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("edit-copy"), "&Copy" );

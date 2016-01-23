@@ -42,7 +42,6 @@ void SettingsData::load()
   QSettings sets( ORG, PACKAGE );
   sets.beginGroup("iface");
   /* -------- flags ------------ */
-  showOrd   = sets.value("view/showord", false ).toBool();
   showGrid  = sets.value("view/showgrid", true ).toBool();
   showNames = sets.value("view/shownames", true ).toBool();
   showIcons = sets.value("view/showicons", true ).toBool();
@@ -72,7 +71,6 @@ void SettingsData::save() const
   QSettings sets( ORG, PACKAGE );
   sets.beginGroup("iface");
   /* ---------- flags ------------- */
-  sets.setValue( "view/showord", showOrd.cval() );
   sets.setValue( "view/showgrid", showGrid.cval() );
   sets.setValue( "view/shownames", showNames.cval() );
   sets.setValue( "view/showicons", showIcons.cval() );

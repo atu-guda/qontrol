@@ -351,14 +351,6 @@ void LaboWin::initIface()
     pElmMenu->addAction( a );
   }
   {
-    auto a = new QAction( QIcon( ":icons/orderelm.png" ), "Change &Orger", this );
-    a->setShortcut( Qt::Key_O );
-    registerAction( a, "ordElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotOrdElm );
-    pElmMenu->addAction( a );
-    elmToolbar->addAction( a );
-  }
-  {
     auto a= new QAction( QIcon( ":icons/markelm.png" ), "&Mark element", this );
     a->setShortcut( Qt::Key_M );
     registerAction( a, "markElm" );
@@ -547,16 +539,6 @@ void LaboWin::initIface()
     pViewMenu->addAction( a );
     pViewMenu->addSeparator();
     act_sbar = a;
-  }
-  {
-    auto a = new QAction( "Show &Orders", this );
-    a->setShortcut(  Qt::CTRL | Qt::SHIFT | Qt::Key_O );
-    a->setCheckable( true );
-    a->setChecked( setti->getDataD( QSL("showOrd"), 0 ) );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "showOrd" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotShowOrd );
-    pViewMenu->addAction( a );
   }
   {
     auto a = new QAction( "Show &Grid", this );
@@ -1107,12 +1089,6 @@ void LaboWin::slotViewStatusBar()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
-void LaboWin::slotShowOrd()
-{
-  int v =  ! setti->getDataD( QSL("showOrd"), 0 );
-  setti->setData( QSL("showOrd"), v );
-  callLaboViewSlot( "update", "Updating View" );
-}
 
 void LaboWin::slotShowGrid()
 {
@@ -1348,11 +1324,6 @@ void LaboWin::slotLockElm()
   callLaboViewSlot( "lockElm", tr( "Locking element..." ) );
 }
 
-
-void LaboWin::slotOrdElm()
-{
-  callLaboViewSlot( "ordElm", tr( "Setting new order of element..." ) );
-}
 
 void LaboWin::slotMarkElm()
 {
