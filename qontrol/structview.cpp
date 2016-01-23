@@ -46,17 +46,13 @@ StructView::StructView( CommonSubwin *a_par, Scheme *a_sch )
   // setFocus();
 }
 
-StructView::~StructView()
-{
-
-}
 
 QSize StructView::getElemsBound() const
 {
   if( !sch ) {
     return QSize( 10, 10 );
   }
-  QSize mss = sch->getMaxXY().expandedTo( QSize( sel_x, sel_y ) );
+  QSize mss = sch->getMaxXY().expandedTo( QSize(16, 12) ).expandedTo( QSize( sel_x, sel_y ) );
   mss += QSize( 3, 3 ); // free bound
   mss *= grid_sz;       // to grid scale
 
@@ -270,6 +266,8 @@ void StructView::drawAll( QPainter &p )
 
   p.setPen( Qt::black );
   // --------- draw elems ---------------------
+  int showNames = sett->getDataD( QSL("showNames"), 1 );
+  int showLinks = sett->getDataD( QSL("showLinks"), 1 );
   int cr_diff = el_marg/3;
   QPoint p_crp {  cr_diff, cr_diff }; // difs for cross and arrow
   QPoint p_crm { -cr_diff, cr_diff };
@@ -313,7 +311,6 @@ void StructView::drawAll( QPainter &p )
 
 
     // --------------------- draw element name
-    int showNames = sett->getDataD( QSL("showNames"), 1 );
     if( showNames ) {
       st_y = ei.ys + line_busy*ex_small;
       if( s_icons && ! ei.noIcon )  {
@@ -336,7 +333,6 @@ void StructView::drawAll( QPainter &p )
     st_y = ei.ys + line_busy*ex_small;
 
 
-    int showLinks = sett->getDataD( QSL("showLinks"), 1 );
     if( !showLinks || ei.ignored ) {
       continue;
     }
@@ -388,17 +384,12 @@ void StructView::drawAll( QPainter &p )
         continue;
       }
 
-      if( lt == LinkSpec ) {
+      auto tho = sch->findChildBySubchild( sobj );
+      auto so_obj = qobject_cast<const TMiso*>( tho );
+
+      if( !so_obj /*lt == LinkSpec*/ ) {
         p.setPen( QPen( Qt::magenta, 2 ) );
         p.drawRect( x_vert-el_marg/4, li_dst_y-el_marg/4, el_marg/2, el_marg/2 );
-        continue;
-      }
-
-      // here must be ordinary sources -> large mark if not so
-      const TMiso *so_obj = nullptr;
-      if( !sobj || ( (so_obj = qobject_cast<const TMiso*>(sobj)) == nullptr ) ) {
-        p.setPen( QPen( Qt::red, 4 ) );
-        p.drawEllipse( QPoint(x_vert, li_dst_y), el_marg, el_marg );
         continue;
       }
 
@@ -469,22 +460,13 @@ void StructView::drawAll( QPainter &p )
         continue;
       }
 
-      if( lt == LinkSpec ) {
+      const TDataSet* sobj = ips->getSourceObj();
+      auto tho = sch->findChildBySubchild( sobj );
+      auto so_obj = qobject_cast<const TMiso*>( tho );
+
+      if( !so_obj /*lt == LinkSpec */ ) {
         p.setPen( QPen( Qt::magenta, 2 ) );
         p.drawRect( QRect( p_bott, QSize(el_marg/2, el_marg/2) ) );
-        continue;
-      }
-
-      if( lt != LinkElm ) { // later must be ordinary link
-        qWarning() << "Unknown link type " << lt << " for " << ips->getFullName() << WHE;
-        continue;
-      }
-
-      const TDataSet* sobj = ips->getSourceObj();
-      const TMiso *so_obj = nullptr;
-      if( !sobj || ( (so_obj = qobject_cast<const TMiso*>(sobj)) == nullptr ) ) {
-        p.setPen( QPen( Qt::red, 4 ) );
-        p.drawEllipse( p_bott, el_marg, el_marg );
         continue;
       }
 

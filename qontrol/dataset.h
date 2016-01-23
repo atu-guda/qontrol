@@ -247,6 +247,7 @@ class HolderData : public QAbstractItemModel {
     }
   /** index of holder, if my, -1 - if not */
   int indexOfHolder( const HolderData *ho ) const;
+  const HolderData* findChildBySubchild( const HolderData *subch ) const;
   //* reset object and all (sub)children, to local actions - do_reset();
   Q_INVOKABLE void reset();
 

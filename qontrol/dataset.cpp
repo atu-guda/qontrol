@@ -226,6 +226,19 @@ int HolderData::indexOfHolder( const HolderData *ho ) const
   return children().indexOf( const_cast<HolderData*>(ho) );
 }
 
+const HolderData* HolderData::findChildBySubchild( const HolderData *subch ) const
+{
+  const HolderData *prev = nullptr;
+  while( subch ) {
+    prev = subch;
+    subch = subch->getParent();
+    if( subch == this ) {
+      return prev;
+    }
+  };
+  return nullptr;
+}
+
 
 QString HolderData::getStateStr() const
 {

@@ -58,7 +58,7 @@ class StructView : public CmdView  {
     };
 
     StructView( CommonSubwin *a_par, Scheme *a_sch );
-    virtual ~StructView();
+    // virtual ~StructView();
     /** print contents */
     void printAll();
     /** grid size */
