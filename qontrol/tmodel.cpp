@@ -95,6 +95,14 @@ const double* TModel::getSchemeDoublePtr( const QString &nm, int *lt,
     };
   };
 
+  Simulation *sim = getActiveSimulation();
+  if( sim ) {
+    rv =  sim->getDoublePtr( nm, lt, src_ob, lev );
+    if( rv ) {
+      return rv;
+    };
+  };
+
   // may be some model params? // overkill ? called by scheme?
   rv =  getDoublePtr( nm, lt, src_ob, lev );
 
