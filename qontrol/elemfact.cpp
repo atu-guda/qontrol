@@ -70,10 +70,6 @@ bool ObjFactory::registerObjType( const TClassInfo *cl_info )
   }
   str_class.insert( cl_name, cl_info );
 
-  int props = cl_info->props;
-  if( ( props & clpData ) && ! ( props & clpPure ) ) {
-    param_names << cl_name;
-  }
   return true;
 }
 

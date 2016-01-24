@@ -29,7 +29,7 @@ const char* TFuncTrans::helpstr = "<H1>TFuncTrans</H1>\n"
  "Integer parameter <b>type</b> selects type of function.<br>\n"
  "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n</p>";
 
-STD_CLASSINFO(TFuncTrans,clpElem);
+STD_CLASSINFO(TFuncTrans,clpElem|clpCalcAtStart);
 
 CTOR(TFuncTrans,TMiso)
 {

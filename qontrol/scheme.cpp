@@ -32,7 +32,7 @@ using namespace std;
 const char* Scheme::helpstr = "<H1>Scheme</H1>\n"
  "Hold all active elements";
 
-STD_CLASSINFO(Scheme,clpSpecial | clpContainer);
+STD_CLASSINFO(Scheme,clpSpecial);
 
 CTOR(Scheme,LinkedObj)
 {
@@ -301,6 +301,31 @@ void Scheme::do_structChanged()
 
 }
 
+int Scheme::do_startLoop( int acnx, int acny )
+{
+  auto rc = LinkedObj::do_startLoop( acnx, acny );
+  if( !rc ) {
+    return rc;
+  }
+  return 1;
+}
+
+int Scheme::post_startLoop()
+{
+  if( !rinf || !rinf->sim ) {
+    return 0;
+  }
+
+  int n_pre = rinf->sim->getDataD( QSL("n_pre"), 1 );
+  for( int i=0; i<n_pre; ++i ) {
+    for( auto el : v_el ) {
+      el->preCalc();
+    }
+  }
+  return 1;
+}
+
+
 
 DEFAULT_FUNCS_REG(Scheme)
 
@@ -311,7 +336,7 @@ DEFAULT_FUNCS_REG(Scheme)
 const char* ContScheme::helpstr = "<H1>ContScheme</H1>\n"
  "Container of simulations";
 
-STD_CLASSINFO(ContScheme,clpSpecial | clpContainer);
+STD_CLASSINFO(ContScheme,clpSpecial);
 
 CTOR(ContScheme,LinkedObj)
 {

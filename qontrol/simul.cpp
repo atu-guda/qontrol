@@ -22,7 +22,7 @@ using namespace std;
 const char* Simulation::helpstr = "<H1>Simulation</H1>\n"
  "Simulation data and description";
 
-STD_CLASSINFO(Simulation,clpSpecial | clpContainer);
+STD_CLASSINFO(Simulation,clpSpecial);
 
 CTOR(Simulation,LinkedObj)
 {
@@ -72,7 +72,7 @@ DEFAULT_FUNCS_REG(Simulation)
 const char* ContSimul::helpstr = "<H1>ContSimul</H1>\n"
  "Container of simulations";
 
-STD_CLASSINFO(ContSimul,clpSpecial | clpContainer);
+STD_CLASSINFO(ContSimul,clpSpecial);
 
 CTOR(ContSimul,TDataSet)
 {

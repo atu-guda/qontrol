@@ -72,8 +72,16 @@ int TMiso::do_startLoop( int acnx, int acny )
 {
   state = stateRun;
   out0 = (double)out0_init;
-  // readAllInputs(); // moved to scheme
+  // readAllInputs(); // moved to LinkedObj
   return miso_startLoop( acnx, acny );
+}
+
+void TMiso::preCalc()
+{
+  if( hasClassProps( clpCalcAtStart ) && ! noCalcStart  ) {
+    readAllInputs();
+    fun( IterFirst );
+  }
 }
 
 int TMiso::miso_startLoop( int /* acnx */, int /* acny */ )

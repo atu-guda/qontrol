@@ -29,7 +29,7 @@ using namespace std;
 const char* ContOut::helpstr = "<H1>ContOut</H1>\n"
  "Container of output arrays";
 
-STD_CLASSINFO(ContOut,clpSpecial | clpContainer);
+STD_CLASSINFO(ContOut,clpSpecial);
 
 CTOR(ContOut,LinkedObj)
 {

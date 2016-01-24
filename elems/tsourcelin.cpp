@@ -58,6 +58,7 @@ int TSourceLin::miso_startLoop( int /*acnx*/, int /*acny*/ )
 {
   recalc();
   t_start = 0; curr_lin = 0;
+  out0 = vs[0];
   return 1;
 }
 

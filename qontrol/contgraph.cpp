@@ -25,7 +25,7 @@ using namespace std;
 const char* ContGraph::helpstr = "<H1>ContGraph</H1>\n"
  "Container of ouput arrays";
 
-STD_CLASSINFO(ContGraph,clpSpecial | clpContainer);
+STD_CLASSINFO(ContGraph,clpSpecial);
 
 CTOR(ContGraph,LinkedObj)
 {

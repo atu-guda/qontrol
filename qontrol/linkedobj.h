@@ -120,6 +120,7 @@ class LinkedObj : public TDataSet {
    virtual int do_postRun( int good );
    /** called before each inner param loop from startLoop */
    virtual int do_startLoop( int acnx, int acny );
+   virtual int post_startLoop(); // for near-to ready actions
    /** will be called after each inner loop: called from endLoop */
    virtual int do_endLoop();
 

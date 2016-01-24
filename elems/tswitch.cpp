@@ -20,7 +20,7 @@
 const char* TSwitch::helpstr = "<H1>TSwitch</H1>\n"
  "<p>Connects output to one of inputs, accrding to values of u_s: <br>\n</p>";
 
-STD_CLASSINFO(TSwitch,clpElem);
+STD_CLASSINFO(TSwitch,clpElem|clpCalcAtStart);
 
 CTOR(TSwitch,TMiso)
 {

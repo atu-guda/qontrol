@@ -26,7 +26,7 @@ const char* TSource::helpstr = "<H1>TSource</H1>\n"
  "Have N parameters: <b>type, U, omega, .. b</b>,"
  "each can be changed at any time .</p>";
 
-STD_CLASSINFO(TSource,clpElem);
+STD_CLASSINFO(TSource,clpElem|clpCalcAtStart);
 
 CTOR(TSource,TMiso)
 {

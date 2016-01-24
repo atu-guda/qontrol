@@ -41,6 +41,7 @@ CTOR(TMulsumN,TMiso)
 double TMulsumN::f() noexcept
 {
   spf = 0; sp = 0; sf = 0;
+  int n = pf_ins.size(); // local ?? np?
   {
     double f_max = DMIN, p_max = DMIN;
     int i_max = -1, i = 0;
@@ -55,11 +56,15 @@ double TMulsumN::f() noexcept
       }
       ++i;
     }
-    pge = spf / sf;
+    if( fabs( sf ) > D_AZERO ) {
+      pge = spf / sf;
+    } else {
+      pge = sp / n; // fallback value: average
+    }
+
     ne = i_max; fe = f_max;  pe = p_max;
   }
 
-  int n = pf_ins.size(); // local ?? np?
   ple = pee = pe; spfl = fe * pe; spl = pe; fee = sfl = fe; // fallback
   if( ne > 0  &&  ne < n-1 ) { // not boundary
     double pl = *(pf_ins[ne-1].in_p);
@@ -71,7 +76,11 @@ double TMulsumN::f() noexcept
     spl = pl + pc + pr;
     sfl = fl + fc + fr;
     spfl = pl*fl + pc*fc + pr*fr;
-    ple = spfl / sfl;
+    if( fabs( sfl ) > D_AZERO ) {
+      ple = spfl / sfl;
+    } else {
+      ple = spl / 3.0;
+    }
     // a-la tquadexrt
     double p_lt = pl - pc;
     double p_rt = pr - pc;

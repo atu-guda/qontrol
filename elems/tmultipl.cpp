@@ -22,7 +22,7 @@ const char* TMultipl::helpstr = "<H1>TMultipl</H1>\n"
  "it multimplies all enabled inputs and parametr <b>a</b>\n"
  "</p>";
 
-STD_CLASSINFO(TMultipl,clpElem);
+STD_CLASSINFO(TMultipl,clpElem|clpCalcAtStart);
 
 CTOR(TMultipl,TMiso)
 {

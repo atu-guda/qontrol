@@ -35,7 +35,7 @@ const char *role_name[] = {
   "none", "X axis", "Y axis", "Z axis", "Plot", "C0", "C1", "C2", "C3", "C4", "C5", "Sz", "??1"
 };
 
-STD_CLASSINFO(GraphElem,clpElem);
+STD_CLASSINFO(GraphElem,0);
 
 CTOR(GraphElem,TDataSet)
 {
@@ -226,7 +226,7 @@ const char* PlotLabel::helpstr = "<H1>PlotLabel</H1>\n"
  "Label for plot";
 
 
-STD_CLASSINFO(PlotLabel,clpElem);
+STD_CLASSINFO(PlotLabel,0);
 
 CTOR(PlotLabel,LinkedObj)
 {
@@ -453,7 +453,7 @@ const char* PlotFlippery::helpstr = "<H1>PlotFlippery</H1>\n"
  "Flipperies for the plot";
 
 
-STD_CLASSINFO(PlotFlippery,clpElem);
+STD_CLASSINFO(PlotFlippery,0);
 
 CTOR(PlotFlippery,LinkedObj)
 {

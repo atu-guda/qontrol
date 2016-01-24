@@ -22,7 +22,7 @@ const char* TQuadExtr::helpstr = "<H1>TQuadExtr</H1>\n"
  "Find upper extremum in quadratic approximation by given 3 points \n"
  "(may by with limits)";
 
-STD_CLASSINFO(TQuadExtr,clpElem);
+STD_CLASSINFO(TQuadExtr,clpElem|clpCalcAtStart);
 
 CTOR(TQuadExtr,TMiso)
 {

@@ -27,7 +27,7 @@ const char* TLogic::helpstr = "<H1>TLogic</H1>\n"
  " - <b>useMinus</b> -- negative output == -1, not 0.  <br>\n"
  "For AND unused inputs link to ':one' .</p>";
 
-STD_CLASSINFO(TLogic,clpElem);
+STD_CLASSINFO(TLogic,clpElem|clpCalcAtStart);
 
 CTOR(TLogic,TMiso)
 {

@@ -15,7 +15,7 @@ using namespace std;
 const char* TRootData::helpstr = "<H1>TRootData</H1>\n"
  "Root element for all elemsnts tree";
 
-STD_CLASSINFO(TRootData,clpContainer|clpSpecial );
+STD_CLASSINFO(TRootData,clpSpecial );
 
 
 CTOR(TRootData,TDataSet)

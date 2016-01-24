@@ -2429,8 +2429,7 @@ QDomElement TDataSet::toDom( QDomDocument &dd ) const
       continue;
     }
 
-    const TClassInfo *ci = ho->getClassInfo(); // dont write obsoleted objects
-    if( ci->props & clpObsolete ) {
+    if( hasClassProps( clpObsolete ) ) {
       continue;
     }
 

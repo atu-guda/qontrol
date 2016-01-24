@@ -40,7 +40,6 @@ class Scheme : public LinkedObj  {
         const LinkedObj **src_ob, int lev ) const override;
   /** function to call from elem.f() to signal something */
   int fback( int code, TMiso *obj );
-  virtual int do_preRun() override;
 
   /** visual coords -> TMiso @returns: nullptr - not found */
   TMiso* xy2Miso( int avis_x, int avis_y ) const;
@@ -64,9 +63,12 @@ class Scheme : public LinkedObj  {
 
  protected:
   virtual void do_reset() override;
+  virtual int do_preRun() override;
+  virtual int do_startLoop( int acnx, int acny ) override;
+  virtual int post_startLoop() override; // for preCalc
 
 
-  PRM_STRING( descr, efNoRunChange, "description", "Scheme description", "max=1024\nprops=STRING,MLINE\nncol=-1\nsep=blockend");
+  PRM_STRING( descr, efNRC, "description", "Scheme description", "max=1024\nprops=STRING,MLINE\nncol=-1\nsep=blockend");
   PRM_STRING( breakObjNm, efInner, "Break objname", "Name of object, which call fback", "");
   // ======================= invisible vars ======================
   /** run type */

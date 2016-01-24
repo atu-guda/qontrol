@@ -21,7 +21,7 @@ const char* TSumN::helpstr = "<H1>TSumN</H1>\n"
  "N-input Linear summator: <br>\n"
  "<b>x = b + a * \\sum_i u_i </b><br>\n";
 
-STD_CLASSINFO(TSumN,clpElem);
+STD_CLASSINFO(TSumN,clpElem|clpCalcAtStart);
 
 CTOR(TSumN,TMiso)
 {

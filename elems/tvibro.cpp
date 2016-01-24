@@ -46,7 +46,7 @@ int TVibro::miso_startLoop( int /*acnx*/, int /*acny*/ )
 
 double TVibro::f() noexcept
 {
-  double x, ctau = ctdt * c0 / 2; // c0 can be changed at any time, so here
+  double x, ctau = ctdt * c0 / 2; // c0 can be changed at any time, so here, TODO: use mod_prm
 
   if( isStart == 1 ) {  // first step
     isStart = 2; x = out0_init; v = (double)v0;

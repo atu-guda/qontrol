@@ -38,15 +38,13 @@ typedef PTDataSet (*PFDataSet)( PTDataSet aparent );
 
 /** properties of class -- bitfield */
 enum ClassProps {
-  clpElem = 1,      //* element of scheme
-  clpPure = 2,      //* dont know - may by for stateless or abstract
-  clpContainer = 4, //* can contain elements
-  clpSpecial = 8,   //* have special meaning for structure
-  clpData = 16,     //* simple data
-  clpArray = 32,     //* array
-  clpInput = 64,     //* link to other
-  clpParamInput = 128, //* link to other + name of inner field
-  clpObsolete = 256  //* obsoleted class, should not written
+  clpElem = 1,          //* element of scheme
+  clpPure = 2,          //* abstract - no create (TODO: check)
+  clpSpecial = 8,       //* have special meaning for structure
+  clpData = 16,         //* simple data
+  clpArray = 32,        //* array
+  clpCalcAtStart = 64,  //* calc out0 during startLoop
+  clpObsolete = 256     //* obsoleted class, should not written
 };
 
 // uses AutoIncDec from autoact.h, but not include, as define used
@@ -192,6 +190,8 @@ class HolderData : public QAbstractItemModel {
     * returns true if this object is base or save of given type.
     * if cl_name is empty, return true in >= TDataSet */
   Q_INVOKABLE bool isObject( const QString &cl_name = QString() ) const;
+  Q_INVOKABLE int getClassProps() const { return getClassInfo()->props; };
+  Q_INVOKABLE int hasClassProps( int clp ) const { return (getClassInfo()->props) & clp; };
   // count number of elements of given type, optionally with named started with nm_start
   Q_INVOKABLE int countObjsOfType( const QString &tp, const QString &nm_start = QString() ) const;
   Q_INVOKABLE QString hintName( const QString &tp, const QString &nm_start = QString() ) const;
@@ -730,7 +730,6 @@ class ObjFactory {
    QStringList allTypeNames() const { return str_class.keys(); } // TODO: criterion
    QStringList goodTypeNames( const QString & allows,
                           const QString &hidden_types = QString() ) const;
-   const QStringList& allParamTypes() const { return param_names; }
    const TClassInfo* getInfo( const QString &a_type ) const;
    bool isChildOf( const QString &cl, const QString &par_cl ) const;
 
@@ -742,7 +741,6 @@ class ObjFactory {
    ObjFactory& operator=( ObjFactory&& r ) = delete;
 
    MapStrClass str_class;
-   QStringList param_names;
 };
 
 #define EFACT ObjFactory::theFactory()

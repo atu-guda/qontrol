@@ -42,7 +42,7 @@ double THyst::f() noexcept
   if( prm_mod ) {
     fixState();
   }
-  // atu test
+  // atu test TODO: check!
   u_old = d + s;
   //
   ud = in_u - u_old;

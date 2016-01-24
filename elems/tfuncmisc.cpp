@@ -29,7 +29,7 @@ const char* TFuncMisc::helpstr = "<H1>TFuncMisc</H1>\n"
  "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n";
 
 
-STD_CLASSINFO(TFuncMisc,clpElem);
+STD_CLASSINFO(TFuncMisc,clpElem|clpCalcAtStart);
 
 CTOR(TFuncMisc,TMiso)
 {

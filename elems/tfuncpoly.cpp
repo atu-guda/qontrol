@@ -29,7 +29,7 @@ const char* TFuncPoly::helpstr = "<H1>TFuncPoly</H1>\n"
  "Integer parameter <b>type</b> selects type of function.<br>\n"
  "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n";
 
-STD_CLASSINFO(TFuncPoly,clpElem);
+STD_CLASSINFO(TFuncPoly,clpElem|clpCalcAtStart);
 
 CTOR(TFuncPoly,TMiso)
 {

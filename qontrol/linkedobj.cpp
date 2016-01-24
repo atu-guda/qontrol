@@ -12,7 +12,7 @@
 using namespace std;
 
 
-STD_CLASSINFO(LinkedObj,clpSpecial|clpPure);
+STD_CLASSINFO(LinkedObj,clpPure);
 
 
 const char* LinkedObj::helpstr =
@@ -272,6 +272,12 @@ int LinkedObj::startLoop( int acnx, int acny )
       return 0;
     }
   };
+
+  rc = post_startLoop();
+  if( rc == 0 ) {
+    qWarning() << "Fail to make post_startLoop " << NWHE;
+    return 0;
+  }
   return 1;
 }
 
@@ -279,6 +285,12 @@ int LinkedObj::do_startLoop( int /*acnx*/, int /*acny*/ )
 {
   return 1;
 }
+
+int LinkedObj::post_startLoop()
+{
+  return 1;
+}
+
 
 int LinkedObj::endLoop()
 {
@@ -320,7 +332,7 @@ QString LinkedObj::lsInputs() const
 
 // ------------------------------------ InputAbstract ---------
 //
-STD_CLASSINFO(InputAbstract,clpInput|clpSpecial|clpPure);
+STD_CLASSINFO(InputAbstract,clpSpecial|clpPure);
 
 
 CTOR(InputAbstract,LinkedObj)
@@ -425,7 +437,7 @@ const char* InputAbstract::helpstr { "Abstract link" };
 DEFAULT_FUNCS_REG(InputAbstract);
 
 // ------------------------------------ InputSimple ---------
-STD_CLASSINFO(InputSimple,clpInput|clpSpecial);
+STD_CLASSINFO(InputSimple,0);
 
 CTOR(InputSimple,InputAbstract)
 {
@@ -438,7 +450,7 @@ DEFAULT_FUNCS_REG(InputSimple);
 
 
 // ------------------------------------ ParamDouble ---------
-STD_CLASSINFO(ParamDouble,clpInput);
+STD_CLASSINFO(ParamDouble,0);
 
 CTOR(ParamDouble,InputAbstract)
 {

@@ -36,7 +36,7 @@ using namespace std;
 const char* TModel::helpstr = "<H1>TModel</H1>\n"
  "Hold all schems, output arrays, graph descriptions and simulations";
 
-STD_CLASSINFO(TModel,clpSpecial | clpContainer);
+STD_CLASSINFO(TModel,clpSpecial);
 
 CTOR(TModel,LinkedObj)
 {
@@ -264,6 +264,7 @@ int TModel::startRun()
   prm0_targ = getMapDoublePtr( ">prm0_map" );
   prm1_targ = getMapDoublePtr( ">prm1_map" );
 
+  t = 0; ct = 0;
   rinf.run_tp = run_type; rinf.N = N; rinf.nx = n1_eff; rinf.ny = n2_eff;
   rinf.fakeRT = fakeRT;
   rinf.tdt = tdt; rinf.T = T;
