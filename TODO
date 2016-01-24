@@ -1,4 +1,4 @@
-At startLoop: init_out0->out0, readLinks? pure elements?
+TFileSimple - just values
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
 HolderInt -> long, or array sizes - long
 TOutArr: use InputSimple (need conversion)

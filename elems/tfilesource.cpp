@@ -178,6 +178,7 @@ int TFileSource::readLines( int ltr )
   }
 
   char sep_c = sep.cval()[0].toLatin1();
+  // qWarning() << "sep_c=" << sep_c;
   if( !sep_c ) {
     sep_c = ' '; // workaround bug: collapsed spaces-only strings
   }
@@ -197,12 +198,13 @@ int TFileSource::readLines( int ltr )
       break;
     }
     lin = file.readLine( buf_sz ).simplified();
+    // qWarning() << "lin.sz=" << lin.size() << "lin=" << lin << NWHE;
     if( lin.size() < 1 || lin[0] == '#' || lin[0] == ';' ) { // empty or comment
       continue;
     }
 
     QList<QByteArray> lba = lin.split( sep_c );
-    // qDebug() << "Split: [" << lba.size() << "] " << lba << " c=" << (int)sep_c <<  NWHE;
+    // qWarning() << "Split: [" << lba.size() << "] " << lba << " c=" << (int)sep_c <<  NWHE;
     int i = 0, nr = 0;
     pv[ncl].reset();
     for( auto s : lba ) {
