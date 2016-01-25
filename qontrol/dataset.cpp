@@ -2220,7 +2220,6 @@ bool HolderDoubleArray::fromString( const QString &s )
   return ok; // ? only last
 }
 
-
 const char* HolderDoubleArray::helpstr { "Contains vector of double data" };
 
 

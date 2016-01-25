@@ -64,6 +64,7 @@ SOURCES += \
   ../elems/tdiffin.cpp \
   ../elems/textrlatch.cpp \
   ../elems/tfriction.cpp \
+  ../elems/tfilesimple.cpp \
   ../elems/tfilesource.cpp \
   ../elems/tfuncmisc.cpp \
   ../elems/tfuncpoly.cpp \
@@ -141,6 +142,7 @@ HEADERS += \
   ../elems/tdelay.h \
   ../elems/tdiffin.h \
   ../elems/textrlatch.h \
+  ../elems/tfilesimple.h \
   ../elems/tfilesource.h \
   ../elems/tfriction.h \
   ../elems/tfuncmisc.h \
