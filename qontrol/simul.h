@@ -58,6 +58,7 @@ class Simulation : public LinkedObj  {
   // simulation parameters, borrowed/renamed from TModel
   PRM_LIST( runType, efNRC, "Run type",  "type of simulation run", "enum=RunType" );
   PRM_DOUBLE( T, efNRC, "T", "Full Run Time", "min=0\nmax=1e300\ndef=100" );
+  PRM_DOUBLE( t_0, efNRC, "t_0", "Start time", "def=0" );
   PRM_DOUBLE( T_brk, efNRC, "T_{brk}", "Break time", "min=0\nmax=1e300\ndef=1e100" );
   PRM_INT( N, efNRC, "N", "Number of steps in one run",
       "min=1\nmax=200000000\nsep=col\ndef=10000"  );

@@ -129,8 +129,9 @@ class TModel : public LinkedObj  {
   // =============== iface objects ==============================
   // copy of simulation vars - just for speed;
   PRM_DOUBLE(     T, efInner, "T", "Total simulation time (copy)", "def=1" );
+  PRM_DOUBLE(   t_0, efInner, "t_0", "Start time", "def=100" );
   PRM_DOUBLE( T_brk, efInner, "T_{brk}", "Break time (copy)", "min=0\nmax=1e300\ndef=1e100" );
-  PRM_INT( fakeRT, efInner, "Fake RT", " (copy)", "" );
+  PRM_INT(   fakeRT, efInner, "Fake RT", " (copy)", "" );
   /** Initial parametrs values */
   PRM_DOUBLE( prm0s, efInner, "prm0s", "Initial prm0 value", "sep=block" );
   PRM_DOUBLE( prm1s, efInner, "prm1s", "Initial prm1 value", "" );
@@ -159,7 +160,8 @@ class TModel : public LinkedObj  {
   /** type of seeding: 0 - every run, 1 - every 1d loop .. obj */
   PRM_INT( seedType, efInner|efNoRunChange, "Seed type", "type of seeding", "" ); // no list - copy
   PRM_DOUBLE( tdt, efInner, "\\tau", "time step", "" ); // just copy for speed
-  PRM_DOUBLE( t, efInner, "time", "model time", "" );
+  PRM_DOUBLE( t, efInner, "t", "model time (from t_0)", "" );
+  PRM_DOUBLE( t_r, efInner, "t_r", "model relative time (from 0)", "" );
   PRM_DOUBLE( rtime, efInner, "rtime", "real world time", "" );
   /** parameters */
   PRM_DOUBLE( prm0, efInner, "prm0", "Current prm0 value", "" );

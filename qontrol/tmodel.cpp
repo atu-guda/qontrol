@@ -217,7 +217,8 @@ int TModel::startRun()
   // c_sim->post_set();
   reportStructChanged();
 
-  T   = c_sim->getDataD( "T", 0.0 );
+  T   = c_sim->getDataD( "T", 1.0 );
+  t_0 = c_sim->getDataD( "t_0", 0.0 );
   T_brk = c_sim->getDataD( "T_brk", 1e200 );
   N   = c_sim->getDataD( "N", 1 );
   if( N < 1 ) { N = 1; }
@@ -264,7 +265,7 @@ int TModel::startRun()
   prm0_targ = getMapDoublePtr( ">prm0_map" );
   prm1_targ = getMapDoublePtr( ">prm1_map" );
 
-  t = 0; ct = 0;
+  t = t_0; ct = t_0; t_r = 0;
   rinf.run_tp = run_type; rinf.N = N; rinf.nx = n1_eff; rinf.ny = n2_eff;
   rinf.fakeRT = fakeRT;
   rinf.tdt = tdt; rinf.T = T;
@@ -350,11 +351,11 @@ int TModel::run( QSemaphore *sem )
       prm0 = prm0s + il1 * prm0d;
       *prm0_targ = prm0;
       if( fakeRT ) {
-        start_time = 0;
+        start_time = t_0;
       } else {
         start_time = get_real_time();
       }
-      rtime = ct = 0; t = 0;
+      rtime = 0; ct = t_0; t = t_0; t_r = 0;
 
       if( ! startLoop( il1, il2 ) ) {
         return 0;
@@ -472,7 +473,7 @@ int TModel::runOneLoop( IterType itype )
   int rc = c_sch->runOneLoop( itype );
 
   outs->takeAllVals();
-  ct += ctdt; t = ct; ++ii;
+  ct += ctdt; t = ct; t_r += ctdt; ++ii;
 
   if( !rc ) {
     end_loop = 1;
