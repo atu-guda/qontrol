@@ -263,10 +263,15 @@ bool CmdView::infoObj()
 
   auto lay = new QVBoxLayout();
 
-  auto tv = new QTableWidget( 100, 6, dia );
+  auto tv = new QTableWidget( selObj->size(), 5, dia );
   QStringList hlabels;
-  hlabels << "Name" << "Type" << "Value" << "Descr" << "Target"<< "Flags";
+  hlabels << QSL("Name") << QSL("Type") << QSL("Value") << QSL("Descr") << QSL("Flags"); // << QSL("x")
   tv->setHorizontalHeaderLabels( hlabels );
+  tv->setColumnWidth( 0,  8*em );
+  tv->setColumnWidth( 1,  9*em );
+  tv->setColumnWidth( 2, 28*em );
+  tv->setColumnWidth( 3, 23*em );
+  tv->setColumnWidth( 5,  6*em );
 
   QObjectList childs = selObj->children();
 
@@ -274,18 +279,15 @@ bool CmdView::infoObj()
   for( auto o :  childs ) {
     QObject *ob = o;
     tv->setItem( i, 0, new  QTableWidgetItem( ob->objectName() ) );
-    if( ob->inherits("TDataSet" ) ) {
-      TDataSet *ds = qobject_cast<TDataSet*>(ob);
-      tv->setItem( i, 1, new QTableWidgetItem(ds->getType()) );
-      tv->setItem( i, 2, new QTableWidgetItem( ds->toString() ) );
-    } else if( ob->inherits("HolderData" ) ) {
+    HolderData *ho = qobject_cast<HolderData*>(ob);
+    if( ho ) {
       HolderData *ho = qobject_cast<HolderData*>(ob);
-      tv->setItem( i, 1, new QTableWidgetItem(ho->getType() ) );
-      tv->setItem( i, 2, new QTableWidgetItem(ho->toString() ) );
-      tv->setItem( i, 3, new QTableWidgetItem(ho->getParm( QSL("vis_name") ) + " \""
+      tv->setItem( i, 1, new QTableWidgetItem( ho->getType() ) );
+      tv->setItem( i, 2, new QTableWidgetItem( ho->textVisual() ) );
+      tv->setItem( i, 3, new QTableWidgetItem( ho->getParm( QSL("vis_name") ) + " \""
                     + ho->getParm( QSL("descr") ) + "\"" ) );
-      tv->setItem( i, 4, new QTableWidgetItem( ho->objectName() ) );
-      tv->setItem( i, 5, new QTableWidgetItem( flags2str(ho->getFlags()) ) );
+      tv->setItem( i, 4, new QTableWidgetItem( flags2str(ho->getFlags()) ) );
+      // tv->setItem( i, 4, new QTableWidgetItem( QSL(".") ) ); // TODO: more?
 
     } else { // unknown
       tv->setItem( i, 1, new QTableWidgetItem("???unknown???" ) );
@@ -303,7 +305,7 @@ bool CmdView::infoObj()
 
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
 
-  dia->resize( 72*em, 50*em ); // TODO: adjust to inner table width
+  dia->resize( 85*em, 50*em );
   dia->exec();
   delete dia;
   emit viewChanged();

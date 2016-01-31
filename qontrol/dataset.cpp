@@ -118,15 +118,14 @@ QVariant HolderData::dataObj( int col, int role ) const
       case 1:
         s = getType(); break;
       case 2:
-        if( size() == 0 ) {
-          getData( "", s );
-          int ls;
-          if( (ls = s.size()) > 80 ) {
-            s.truncate( 72 );
-            s += QSL( "... [" ) + QSN( ls ) + QSL( "]" );
+        s = textVisual();
+        int ls;
+        if( (ls = s.size()) > 80 ) {
+          s.truncate( 72 );
+          s += QSL( "..." );
+          if( s[0] == '"' ) {
+            s.append( '"' );
           }
-        } else {
-          s = QSND( getDouble() ) % QSL(" [") % QSN( size() ) % QSL("]");
         }
         break;
       case 3:
@@ -314,7 +313,7 @@ QString HolderData::ls() const
   r = getFullName() % QSL(" : ") % getType() % QSL(" dyn: ") % QSN(dyn)
     + QSL(" flags: 0x") % QSNX(flags) % QSL(" ptr: ") % QSNX( (unsigned long)(this));
   if( ! isObject() ) {
-    r += QSL(" = \"") % toString() % QSL("\"");
+    r += QSL(" = \"") % textVisual() % QSL("\"");
   }
   r += QSL("\n;------------------------------------\n");
   int n_el = 0;
@@ -325,7 +324,7 @@ QString HolderData::ls() const
     if( ho ) {
       r += ho->getType();
       if( ! ho->isObject() ) {
-        QString vs = ho->toString();
+        QString vs = ho->textVisual();
         vs.truncate( 80 );
         r += QSL(" = \"") % vs + QSL("\"");
       }
@@ -1496,6 +1495,11 @@ QString HolderValue::toString() const
   return QString();
 }
 
+QString HolderValue::textVisual() const
+{
+  return QSL("--HolderValue--");
+}
+
 bool HolderValue::fromString( const QString & /*s */ )
 {
   qWarning() << ERR_ABS << NWHE;
@@ -1559,6 +1563,11 @@ void HolderInt::do_post_set()
 }
 
 QString HolderInt::toString() const
+{
+  return QSN( v );
+}
+
+QString HolderInt::textVisual() const
 {
   return QSN( v );
 }
@@ -1683,6 +1692,11 @@ QString HolderDouble::toString() const
   return QSND( v );
 }
 
+QString HolderDouble::textVisual() const
+{
+  return QSND( v );
+}
+
 bool HolderDouble::fromString( const QString &s )
 {
   return set( s );
@@ -1739,6 +1753,11 @@ void HolderString::do_post_set()
 QString HolderString::toString() const
 {
   return v;
+}
+
+QString HolderString::textVisual() const
+{
+  return QSL("\"") % v % QSL("\"");
 }
 
 bool HolderString::fromString( const QString &s )
@@ -1815,6 +1834,11 @@ QString HolderColor::toString() const
   return s;
 }
 
+QString HolderColor::textVisual() const
+{
+  return toString();
+}
+
 bool HolderColor::fromString( const QString &s )
 {
   return set( s );
@@ -1887,6 +1911,11 @@ void HolderFont::do_post_set()
 QString HolderFont::toString() const
 {
   return v.key();
+}
+
+QString HolderFont::textVisual() const
+{
+  return toString();
 }
 
 bool HolderFont::fromString( const QString &s )
@@ -1964,6 +1993,11 @@ QString HolderDate::toString() const
   return v.toString( DATE_FORMAT );
 }
 
+QString HolderDate::textVisual() const
+{
+  return toString();
+}
+
 bool HolderDate::fromString( const QString &s )
 {
   return set( s );
@@ -2038,6 +2072,11 @@ void HolderTime::do_post_set()
 QString HolderTime::toString() const
 {
   return v.toString( TIME_FORMAT );
+}
+
+QString HolderTime::textVisual() const
+{
+  return toString();
 }
 
 bool HolderTime::fromString( const QString &s )
@@ -2144,6 +2183,16 @@ QString HolderIntArray::toString() const
   for( int vc : v ) {
     s += sep + QSN( vc );
     sep = QSL(" ");
+  }
+  return s;
+}
+
+QString HolderIntArray::textVisual() const
+{
+  QString s { QSL("[") }, sep { QSL("") };
+  for( auto vc : v ) {
+    s += sep + QSN( vc );
+    sep = QSL(", ");
   }
   return s;
 }
@@ -2270,6 +2319,16 @@ QString HolderDoubleArray::toString() const
   return s;
 }
 
+QString HolderDoubleArray::textVisual() const
+{
+  QString s { QSL("[") }, sep { QSL("") };
+  for( auto vc : v ) {
+    s += sep + QSND( vc );
+    sep = QSL(", ");
+  }
+  return s;
+}
+
 bool HolderDoubleArray::fromString( const QString &s )
 {
   bool ok;
@@ -2391,6 +2450,16 @@ QString HolderStringArray::toString() const
   return v.join( QChar(0x2400) ); // NUL representation in Unicode
 }
 
+QString HolderStringArray::textVisual() const
+{
+  QString s { QSL("[") }, sep { QSL("") };
+  for( auto vc : v ) {
+    s += sep % QSL("\"") % vc  % QSL("\"");
+    sep = QSL(", ");
+  }
+  return s;
+}
+
 bool HolderStringArray::fromString( const QString &s )
 {
   auto v0 = v;
@@ -2478,6 +2547,11 @@ QString TDataSet::toString() const
   dom.save( tstr, 4 );
 
   return buf;
+}
+
+QString TDataSet::textVisual() const
+{
+  return QSL("{") % QSN( size() ) % QSL("}");
 }
 
 bool TDataSet::fromString( const QString &s )

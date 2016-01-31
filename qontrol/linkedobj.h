@@ -147,6 +147,8 @@ class InputAbstract : public LinkedObj {
   DCL_CREATE;
   DCL_STD_INF;
   Q_INVOKABLE virtual double getDouble( int /*idx*/ = 0 ) const override { return out0; }
+  QString prepTextVisual( bool isLong ) const;
+  Q_INVOKABLE virtual QString textVisual() const override;
   //* return ptr to LinkedObj, which holds element or nullptr;
   const LinkedObj* getSourceObj() const noexcept { return src_obj; };
   void readInput() noexcept { out0 = *p; } ;

@@ -57,7 +57,7 @@ StatusModel::StatusModel( CommonSubwin *a_up_view )
   addWidget( l_desc, 2 );
 
   l_val = new QLabel( this );
-  l_val->setFixedWidth( (DOUBLE_PREC+6) * mw + label_sep );
+  l_val->setMinimumSize( QSize( (DOUBLE_PREC+6) * mw + label_sep, fm.height() ) );
   l_val->setLineWidth( label_lw ); l_val->setFrameStyle( label_fs );
   l_val->setTextInteractionFlags( Qt::TextSelectableByMouse );
   addWidget( l_val );
@@ -65,9 +65,6 @@ StatusModel::StatusModel( CommonSubwin *a_up_view )
   setFixedHeight( fm.height() + 12 );
 }
 
-StatusModel::~StatusModel()
-{
-}
 
 void StatusModel::update()
 {
@@ -100,13 +97,7 @@ void StatusModel::update()
     l_name->setText( ob_nm_tp );
     QString ob_descr = ob->getDataD( QSL("descr"), QString() );
     l_desc->setText( ob_descr );
-    if( state > stateGood ) {
-      TMiso *el = qobject_cast<TMiso*>( ob );
-      if( el ) {
-        double val = el->getDouble();
-        l_val->setText( QSN( val, 'g', DOUBLE_PREC ) );
-      }
-    };
+    l_val->setText( ob->textVisual() );
   };
 
   QStatusBar::update();

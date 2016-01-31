@@ -40,6 +40,7 @@ class TMiso : public LinkedObj  {
    DCL_CREATE;
    DCL_STD_INF;
    Q_INVOKABLE virtual double getDouble( int /*idx*/ = 0 ) const override { return out0; }
+   Q_INVOKABLE virtual QString textVisual() const override;
 
    /** external computation function + in/out */
    double fun( IterType itype ) noexcept;

@@ -585,15 +585,7 @@ QVariant TGraph::dataObj( int col, int role ) const
     if( col != 0 ) {
       return QVariant();
     }
-    QString s = QSL("[" );
-
-    for( auto ge : TCHILD(GraphElem*) ) {
-      if( ge->type == GraphElem::DataType::DataNone ) { continue; }
-      s += ge->src.cval() % QSL( "," );
-    }
-
-    s += QSL("]" );
-    return s;
+    return textVisual();
   }
 
   // if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
@@ -604,6 +596,18 @@ QVariant TGraph::dataObj( int col, int role ) const
   // }
 
   return TDataSet::dataObj( col, role );
+}
+
+QString TGraph::textVisual() const
+{
+  QString s { QSL("[") }, sep { QSL("") };
+  for( auto ge : TCHILD(GraphElem*) ) {
+    if( ge->type == GraphElem::DataType::DataNone ) { continue; }
+    s += sep % ge->src.cval();
+    sep = QSL(",");
+  }
+  s += QSL("](" ) % QSN(nx) % QSL("x") % QSN(ny) % QSL(")");
+  return s;
 }
 
 void TGraph::do_reset()

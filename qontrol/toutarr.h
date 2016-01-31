@@ -36,6 +36,8 @@ class TOutArr : public LinkedObj  {
    DCL_CREATE;
    DCL_STD_INF;
    // virtual ~TOutArr() override;
+   Q_INVOKABLE virtual QString textVisual() const override;
+
    enum OutArrType {
      outSimple = 0,
      outParm1  = 1,

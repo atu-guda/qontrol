@@ -920,9 +920,11 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
       menu->addSeparator();
       act = menu->addAction( QIcon::fromTheme("edit-rename"), "Rename element" );
       connect( act, &QAction::triggered, this, &StructView::renameObj );
-      menu->addSeparator();
-      act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
-      connect( act, &QAction::triggered, this, &StructView::qlinkElm );
+      if( markObj ) {
+        menu->addSeparator();
+        act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
+        connect( act, &QAction::triggered, this, &StructView::qlinkElm );
+      }
     }
     menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("edit-copy"), "&Copy" );

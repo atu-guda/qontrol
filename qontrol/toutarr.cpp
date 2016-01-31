@@ -40,7 +40,6 @@ CTOR(TOutArr,LinkedObj)
 
 QVariant TOutArr::dataObj( int col, int role ) const
 {
-  int idx = getMyIndexInParent();
   if( role == Qt::BackgroundRole ) {
     if( col != 0 ) {
       return TDataSet::dataObj( col, role );
@@ -74,20 +73,26 @@ QVariant TOutArr::dataObj( int col, int role ) const
     if( col != 0 ) {
       return TDataSet::dataObj( col, role );
     }
-    QString s = QSL("(") % QSN(idx) % QSL(") ") % name.cval() % QSL(" [") % QSN(n)
-      % QSL("]\n[")  % QSN(nx) % " x " % QSN(ny) % QSL("]");
-    return s;
+    return textVisual();
   }
 
   else if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
     if( col > 1 ) {
       return TDataSet::dataObj( col, role );
     }
-    QString s = QSL("(") % QSN(idx) % QSL(") ") % objectName() % QSL(" <- ") %  name.cval();
+    QString s = objectName() % QChar(0x21A2) %  name.cval();
     return s;
   }
 
   return TDataSet::dataObj( col, role );
+}
+
+QString TOutArr::textVisual() const
+{
+  int idx = getMyIndexInParent();
+  QString s = QSL("(") % QSN(idx) % QSL(") ") % name.cval() % QSL(" [") % QSN(n)
+    % QSL("] [")  % QSN(nx) % " x " % QSN(ny) % QSL("]");
+  return s;
 }
 
 QIcon TOutArr::getIcon() const

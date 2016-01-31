@@ -38,6 +38,11 @@ CTOR(TMiso,LinkedObj)
 
 DEFAULT_FUNCS_REG(TMiso);
 
+QString TMiso::textVisual() const
+{
+  return QSL("=") % QSND( out0 );
+}
+
 double TMiso::fun( IterType itype ) noexcept
 {
   iter_c = itype;

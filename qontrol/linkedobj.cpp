@@ -176,6 +176,7 @@ void LinkedObj::do_structChanged()
       prm_will_mod += in_p->isFixparmNeed();
     }
   }
+  readAllInputs(); // realy fake: just for visual representation
 }
 
 void LinkedObj::readInputs() noexcept
@@ -389,46 +390,70 @@ void InputAbstract::set_link()
 
 }
 
+
 QVariant InputAbstract::dataObj( int col, int role ) const
 {
   if( role == Qt::StatusTipRole && col < 2 ) { // used for button labels in dialogs
-
-    QString s; // = source;
-    int lt  = linkType;
-    QChar ac;
-    switch( lt ) {
-      case LinkNone:
-        ac = '=';
-        break;
-      case LinkElm:
-        ac = QChar( 0x27BC ); // >>->
-        if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
-          ac = QChar( 0x2794 ); // ->
-        }
-        break;
-      case LinkSpec:
-        ac = QChar( 0x27A4 ); // >>
-        if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
-          ac = QChar( 0x27A0 ); // =>
-        }
-        break;
-      case LinkBad:
-        ac = QChar( 0x274C ); // X
-        break;
-      default:
-        ac = '?';
-        break;
-    }
-
-    s += ac;
-    if( onlyFirst ) {
-      s += QChar( 0x271D ); // +
-    }
-    // s += objectName();
-    return s;
+    return prepTextVisual( false );
   }
 
   return LinkedObj::dataObj( col, role );
+}
+
+QString InputAbstract::prepTextVisual( bool isLong ) const
+{
+  QString s;
+  // readAllInputs(); // ;-( -- fail, no const
+  int lt  = linkType;
+  switch( lt ) {
+    case LinkNone:
+      if( ! isLong ) {
+        s = QSL("=");
+      }
+      break;
+    case LinkElm:
+      s = QChar( 0x27BC ); // >>->
+      if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
+        s = QChar( 0x2794 ); // ->
+      }
+      if( isLong ) {
+        s += source.cval();
+      }
+      break;
+    case LinkSpec:
+      s = QChar( 0x27A4 ); // >>
+      if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
+        s = QChar( 0x27A0 ); // =>
+      }
+      if( isLong ) {
+        s += source.cval();
+      }
+      break;
+    case LinkBad:
+      s = QChar( 0x274C ); // X
+      break;
+    default:
+      s = QSL("?");
+      break;
+  }
+
+  if( onlyFirst ) {
+    s += QChar( 0x271D ); // +
+  }
+
+  if( isLong ) {
+    if( src_obj ) {
+      s += QSL("(") % src_obj->getFullName() % QSL(")");
+    }
+    s += QSL("= ") % QSND( out0 );
+  }
+
+  return s;
+}
+
+QString InputAbstract::textVisual() const
+{
+  return prepTextVisual( true );
 }
 
 

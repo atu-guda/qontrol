@@ -325,6 +325,7 @@ class TGraph : public LinkedObj  {
    DCL_STD_INF;
    virtual ~TGraph() override;
    virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
+   Q_INVOKABLE virtual QString textVisual() const override;
    using shared_GE = std::shared_ptr<GraphElem>;
 
 

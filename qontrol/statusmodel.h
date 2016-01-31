@@ -32,7 +32,6 @@ class StatusModel : public QStatusBar  {
  Q_OBJECT
  public:
    StatusModel( CommonSubwin *a_up_view );
-   ~StatusModel();
    void update();
 
  protected:
