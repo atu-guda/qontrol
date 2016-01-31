@@ -49,11 +49,14 @@ class CmdView : public QWidget {
     virtual bool exportObj();
   Q_SIGNALS:
     void viewChanged();
+    void focusChanged();
   protected:
     HolderData* storage;
     CommonSubwin *par;
     QString lastObjName;
     QString sugg_name;
+  protected:
+    virtual void focusInEvent( QFocusEvent *ev ) override;
 };
 
 

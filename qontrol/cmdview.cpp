@@ -29,6 +29,12 @@ CmdView::CmdView( CommonSubwin *a_par, HolderData *a_storage )
 {
 }
 
+void CmdView::focusInEvent( QFocusEvent *ev )
+{
+  emit focusChanged();
+  QWidget::focusInEvent( ev );
+}
+
 QString CmdView::getSelName() const
 {
   HolderData *ob = getSelObj();

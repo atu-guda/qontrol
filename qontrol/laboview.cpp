@@ -113,6 +113,11 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   connect( sims_view, &OutDataView::viewChanged, this, &LaboView::updateViews );
   connect( schems_view, &OutDataView::viewChanged, this, &LaboView::updateViews );
 
+  connect( outs_view, &OutDataView::focusChanged, stam, &StatusModel::update );
+  connect( plots_view, &GraphDataView::focusChanged, stam, &StatusModel::update );
+  connect( sims_view, &SimulView::focusChanged, stam, &StatusModel::update );
+  connect( schems_view, &SchemeView::focusChanged, stam, &StatusModel::update );
+
   initEngine();
 }
 

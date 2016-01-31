@@ -45,6 +45,7 @@ CmdListView::CmdListView( HolderData *a_mod, CommonSubwin *a_par )
   selMod->select( s_idx, QItemSelectionModel::Select );
   selMod->setCurrentIndex( s_idx, QItemSelectionModel::Select );
   connect( selMod, &QItemSelectionModel::currentChanged, this, &CmdListView::viewChanged );
+  connect( lv, &QListView::clicked, this, &CmdListView::focusChanged );
 }
 
 HolderData* CmdListView::getSelObj() const
