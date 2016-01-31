@@ -237,8 +237,11 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       emit closeMe();
       // parentWidget()->parentWidget()->close();
       break;
-    case Qt::Key_R | Sh:
+    case Qt::Key_R:
       resetScale();
+      break;
+    case Qt::Key_R | Sh:
+      Reload();
       break;
     case Qt::Key_P | Ct:
       print();
@@ -345,19 +348,19 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       zoomReset();
       break;
 
-    case Qt::Key_0: vd.sel = 0; update(); break;
-    case Qt::Key_1: vd.sel = 1; update(); break;
-    case Qt::Key_2: vd.sel = 2; update(); break;
-    case Qt::Key_3: vd.sel = 3; update(); break;
-    case Qt::Key_4: vd.sel = 4; update(); break;
-    case Qt::Key_5: vd.sel = 5; update(); break;
-    case Qt::Key_6: vd.sel = 6; update(); break;
-    case Qt::Key_7: vd.sel = 7; update(); break;
-    case Qt::Key_8: vd.sel = 8; update(); break;
-    case Qt::Key_9: vd.sel = 9; update(); break;
+    case Qt::Key_0: vd.sel = 0;  break;
+    case Qt::Key_1: vd.sel = 1;  break;
+    case Qt::Key_2: vd.sel = 2;  break;
+    case Qt::Key_3: vd.sel = 3;  break;
+    case Qt::Key_4: vd.sel = 4;  break;
+    case Qt::Key_5: vd.sel = 5;  break;
+    case Qt::Key_6: vd.sel = 6;  break;
+    case Qt::Key_7: vd.sel = 7;  break;
+    case Qt::Key_8: vd.sel = 8;  break;
+    case Qt::Key_9: vd.sel = 9;  break;
   }
 
-  update();
+  update(); // even on unused keys
 }
 
 void MglView::resizeEvent( QResizeEvent *e )
@@ -684,14 +687,15 @@ void MglView::showInfo()
   QMessageBox::information( this,"Data info", s );
 }
 
-static const char plot_helpstr[] = "<b>Hot keys:</b><br/>\n"
+static const QString plot_helpstr = QSL("<b>Hot keys:</b><br/>\n"
  "<b>q</b> - close <br/>\n"
  "<b>F1</b> - this help <br/>\n"
  "<b>a/A</b> - change alpha <br/>\n"
  "<b>o/O</b> - on/off non-selected plots <br/>\n"
  "<b>s/S</b> - scale dialog / save current scale <br/>\n"
  "<b>Ctrl-P</b> - print<br/>\n"
- "<b>R</b> - reset and redraw<br/>\n"
+ "<b>r</b> - reset and redraw<br/>\n"
+ "<b>R</b> - Reload add Redraw<br/>\n"
  "<b>e</b> - export image to png <br/>\n"
  "<b>b</b> - set base to mark<br/>\n"
  "<b>B</b> -hide/how base lines<br/>\n"
@@ -701,7 +705,7 @@ static const char plot_helpstr[] = "<b>Hot keys:</b><br/>\n"
  "<b>l/L</b> - link/Unlink to data <br/>\n"
  "<b>d</b> - data info <br/>\n"
  "<b>z</b> - zoom base - mark, or near mark <br/>\n"
- "<b>Z</b> - zoom reset <br/>\n"
+ "<b>Z</b> - zoom reset <br/><hr/>\n"
  "<b>PageUp, PageDown</b> - move Up/Down <br>\n"
  "<b>+/- Shift, Ctrl</b> - Zoom on X (Y,Z) <br>\n"
  "<b> - not in link state: - </b> <br/>\n"
@@ -709,7 +713,7 @@ static const char plot_helpstr[] = "<b>Hot keys:</b><br/>\n"
  "<b>[Shift]{Left, Top, Right, Bottom}</b> - Rotate <br>\n"
  "<b>Ctrl {Left, Top, Right, Bottom}</b> - shift plot <br>\n"
  "<b>- in link state: -</b>  <br>\n"
- "<b>[ ] </b> - previous/next point <br>\n";
+ "<b>[ ] </b> - previous/next point <br>\n");
 
 void MglView::showHelp()
 {
