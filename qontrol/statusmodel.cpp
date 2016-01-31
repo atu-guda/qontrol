@@ -103,7 +103,7 @@ void StatusModel::update()
     if( state > stateGood ) {
       TMiso *el = qobject_cast<TMiso*>( ob );
       if( el ) {
-        double val = el->getDataD( QSL("out0"), 0.0 ); // TODO: StatusTipRole(col=2)
+        double val = el->getDouble();
         l_val->setText( QSN( val, 'g', DOUBLE_PREC ) );
       }
     };

@@ -126,7 +126,7 @@ QVariant HolderData::dataObj( int col, int role ) const
             s += QSL( "... [" ) + QSN( ls ) + QSL( "]" );
           }
         } else {
-          s = QSL("[") + QSN( size() ) + QSL("]");
+          s = QSND( getDouble() ) % QSL(" [") % QSN( size() ) % QSL("]");
         }
         break;
       case 3:
@@ -1680,7 +1680,7 @@ void HolderDouble::do_post_set()
 
 QString HolderDouble::toString() const
 {
-  return QSN( v, 'g', DOUBLE_PREC );
+  return QSND( v );
 }
 
 bool HolderDouble::fromString( const QString &s )
@@ -2264,7 +2264,7 @@ QString HolderDoubleArray::toString() const
 {
   QString s, sep = "";
   for( double vc : v ) {
-    s += sep + QSN( vc, 'g', DOUBLE_PREC  );
+    s += sep + QSND( vc );
     sep = QSL(" ");
   }
   return s;

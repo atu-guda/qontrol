@@ -52,7 +52,8 @@ constexpr const char *const data_files_sel  { "Data files (*.txt *.dat *.csv);;A
 
 #define L8B QString::fromLocal8Bit
 #define QSN QString::number
-#define QSNX(n) QString::number((n),DOUBLE_PREC)
+#define QSNX(n) QString::number((n),16)
+#define QSND(n) QString::number((n),'g',DOUBLE_PREC)
 #define QSL QStringLiteral
 
 #define SCRIPT_DIR "scripts"

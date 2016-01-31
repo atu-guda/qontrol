@@ -451,7 +451,7 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent, bool hideLab
 
 bool DoubleDataWidget::set()
 {
-  le->setText( QSN( ho.get().toDouble(), 'g', DOUBLE_PREC ) );
+  le->setText( QSND( ho.getDouble() ) );
   return true;
 }
 
@@ -780,7 +780,6 @@ DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent, bo
     la->setText( vn + QSN(i) + ']' );
     lay->addWidget( la, i, 0 );
 
-
     auto le = new QLineEdit( pwi );
     le->setReadOnly( ro );
     le->setValidator( new QDoubleValidator( v_min, v_max, decimals, le ) );
@@ -796,7 +795,7 @@ bool DoubleArrayDataWidget::set()
 {
   int n = les.size();
   for( int i=0; i<n; ++i ) {
-    les[i]->setText( QSN( ho.get(i).toDouble(), 'g', DOUBLE_PREC ) );
+    les[i]->setText( QSND( ho.getDouble(i) ) );
   }
   return true;
 }
