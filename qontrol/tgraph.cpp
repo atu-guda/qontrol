@@ -1175,13 +1175,25 @@ void TGraph::setupMglGraph( mglGraph &grs, const ViewData *a_vd, const ScaleData
   pr_dlt = pr_max - pr_min;
   pe_min = pr_min; pe_max = pr_max;
 
-  if( ! scda->autoScX ) {
+  if( scda->autoScX ) {
+    if( scda->beauScX ) {
+      beautifyScale( pe_min.x, pr_max.x );
+    }
+  } else {
     pe_min.x = scda->plotMinX; pe_max.x = scda->plotMaxX;
   }
-  if( ! scda->autoScY ) {
+  if( scda->autoScY ) {
+    if( scda->beauScY ) {
+      beautifyScale( pe_min.y, pr_max.y );
+    }
+  } else {
     pe_min.y = scda->plotMinY; pe_max.y = scda->plotMaxY;
   }
-  if( ! scda->autoScZ ) {
+  if( scda->autoScZ ) {
+    if( scda->beauScY ) {
+      beautifyScale( pe_min.z, pr_max.z );
+    }
+  } else {
     pe_min.z = scda->plotMinZ; pe_max.z = scda->plotMaxZ;
   }
   pe_dlt = pe_max - pe_min;

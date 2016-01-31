@@ -67,6 +67,8 @@ double waveMhat( double x );
 
 double limitAngleDeg( double a ); // limits angle to [0;360)
 
+void beautifyScale( double &a, double &b ); // make gooa scale for plot
+
 //* implementation in tex2label.cpp
 QString tex2label( const QString &t, bool noSub = false );
 

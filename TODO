@@ -1,4 +1,4 @@
-MglView: better autoscale (+include points) (getDataD(double) for links)
+Redesign post_set(), *structChange.
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
 Holder*Array -> long indexes, More dimensions. Measure vector::size_t.
 TOutArr: use InputSimple (need conversion)

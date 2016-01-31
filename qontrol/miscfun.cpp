@@ -224,6 +224,21 @@ double limitAngleDeg( double a )
   return a;
 }
 
+void beautifyScale( double &a, double &b )
+{
+  if( b < a ) { swap( a, b ); };
+  if( a == b ) { a -= 0.5; b += -0.5; }
+
+  double dlt = b - a;
+  double k1 = log10( dlt * 0.99 );
+  k1 = pow10( floor( k1 ) );
+  double k2 = 0.1 * dlt / k1;
+  k2 = ( k2 > 0.5 ) ? 1 : ( ( k2 > 0.2 ) ? 0.5 : 0.2 ) ;
+  k1 *= k2;
+  a = k1 * floor( a / k1 );
+  b = a + k1 * 10;
+}
+
 // ------------- for iface ---------------------------------------
 
 void handleError( QWidget* par, const QString &s )

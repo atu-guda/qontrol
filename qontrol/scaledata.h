@@ -54,18 +54,21 @@ class ScaleData : public TDataSet
 
    // X-scale
    PRM_SWITCH(  autoScX, efNRC,    "Autoscale X", "Automaticaly make X scale", "def=1\nsep=block" );
+   PRM_SWITCH(  beauScX, efNRC,    "Beautify X", "Beautify X scale", "def=1" );
    PRM_DOUBLE( plotMinX, efNRC,    "Plot min(x)", "Used for plot minimum X value", "" );
    PRM_DOUBLE( plotMaxX, efNRC,    "Plot max(x)", "Used for plot maximum X value", "def=1" );
    PRM_DOUBLE(    gridX, efNRC,    "Grid X", "Number of Grid lines for X (- =step)", "def=0" );
    PRM_INT(       tickX, efNRC,    "Tick X", "Number of Ticks for X", "def=5" );
    // Y-scale
    PRM_SWITCH(  autoScY, efNRC,    "Autoscale Y", "Automaticaly make Y scale", "sep=col\ndef=1" );
+   PRM_SWITCH(  beauScY, efNRC,    "Beautify Y", "Beautify X scale", "def=1" );
    PRM_DOUBLE( plotMinY, efNRC,    "Plot min(y)", "Used for plot minimum Y value", "" );
    PRM_DOUBLE( plotMaxY, efNRC,    "Plot max(y)", "Used for plot maximum Y value", "def=1" );
    PRM_DOUBLE(    gridY, efNRC,    "Grid Y", "Number of Grid lines for Y (- =step)", "def=0" );
    PRM_INT(       tickY, efNRC,    "Tick Y", "Number of Ticks for Y", "def=5" );
    // Z-scale
    PRM_SWITCH(  autoScZ, efNRC,    "Autoscale Z", "Automaticaly make Z scale", "sep=col\ndef=1" );
+   PRM_SWITCH(  beauScZ, efNRC,    "Beautify Z", "Beautify Z scale", "def=1" );
    PRM_DOUBLE( plotMinZ, efNRC,    "Plot min(Z)", "Used for plot minimum Z value", "" );
    PRM_DOUBLE( plotMaxZ, efNRC,    "Plot max(Z)", "Used for plot maximum Z value", "def=1" );
    PRM_DOUBLE(    gridZ, efNRC,    "Grid Z", "Number of Grid lines for Z (- =step)", "def=0" );
