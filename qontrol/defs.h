@@ -63,20 +63,24 @@ using dvector = std::vector<double>;
 
 
 enum _ELEM_FLAGS {
-  efMustRead = 1, // MR, really unused
-  efNoRunChange = 2, efNRC = efNoRunChange,  //  NRC
-  efNoDial = 4, efRODial = 8,                /* ND, ROD */
-  efNoSave = 0x10, efRO = 0x20, efStatic = 0x40,   /* NS, RO, St */
-  efImmutable = 0x80,  // Im
-  efCalcParent = 0x100, // Ca
+  efMustRead    =     1,   //* MR - really unused [0]
+  efNRC         =     2,   //* NRC - disable change during run [1]
+  efNoDial      =     4,   //* ND - not show in dialog [2]
+  efRODial      =     8,   //* ROD - R/O in dialogs [3]
+  efNoSave      =  0x10,   //* NS - no save this object in file [4]
+  efRO          =  0x20,   //* RO - readonly element [5]
+  efStatic      =  0x40,   //* St - static element - unknown for now [6]
+  efImmutable   =  0x80,   //* Im - disable rename, delete [7]
+  efPostParent  = 0x100,   //* PP - call parent post_set from self [8]
+  efStructCh    = 0x200,   //* SS - changes hits common structure [9]
   efROAny = efRO | efRODial,
   efInner = efNoDial | efNoSave | efRO,
   efTmp = efNoSave | efRO,
-  efOld = efNoRunChange | efNoDial | efNoSave
+  efOld = efNRC | efNoDial | efNoSave
 };
-const constexpr int elm_known_flags = 9;
-
-// todo: func QString elemFlagsToString( int );
+const constexpr int elm_known_flags = 10;
+// const char *elem_flag_names[elm_known_flags+1] in miscfunc.cpp for now
+// QString flags2str( int fl ) there too
 
 enum _STATE_VALUES {
   stateBad = 0, stateGood = 1, stateDone = 2, stateRun = 3

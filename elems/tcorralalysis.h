@@ -49,9 +49,9 @@ class TCorrAnalysis : public TMiso  {
 
    /* ============= data members ================== */
    /** type of data collection, flags */
-   PRM_LIST( type, efNoRunChange, "Type", "Collection type", "enum=CallType" );
-   PRM_SWITCH( useCalc,  efNoRunChange, "use Calc", "Use in_calc>0 as signal to calc", "" );
-   PRM_SWITCH( useReset, efNoRunChange, "use Reset", "Use u_rst>0 as signal to reset", "" );
+   PRM_LIST( type, efNRC, "Type", "Collection type", "enum=CallType" );
+   PRM_SWITCH( useCalc,  efNRC, "use Calc", "Use in_calc>0 as signal to calc", "" );
+   PRM_SWITCH( useReset, efNRC, "use Reset", "Use u_rst>0 as signal to reset", "" );
    /** time start / stop values */
    PRM_PARAMD( t0, efNRC, "t0", "Time to start on given type", "min=0\nsep=col" );
    PRM_PARAMD( t1, efNRC, "t1", "Time to stop on given type", "min=0\ndef=10000" );

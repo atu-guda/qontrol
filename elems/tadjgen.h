@@ -42,15 +42,15 @@ class TAdjGen : public TMiso  {
    virtual int miso_startLoop( int acnx, int acny );
 
    /** type of averaging, */
-   PRM_LIST( type, efNoRunChange, "Type", "Type of generator", "enum=GenType" );
+   PRM_LIST( type, efNRC, "Type", "Type of generator", "enum=GenType" );
    /** misc flags */
-   PRM_SWITCH( useReset, efNoRunChange, "use Reset", "Use in_rst  signal", "sep=col" );
-   PRM_SWITCH( useLock, efNoRunChange, "use Lock", "Use lock signal", "" );
-   PRM_SWITCH( outStrobe, efNoRunChange, "Output Strobe", "Output only at switching moments", "" );
-   PRM_SWITCH( useZero, efNoRunChange, "0 is neg. out", "Negative output is 0, not -1", "sep=col" );
-   PRM_SWITCH( useSignStrobe, efNoRunChange, "Signed strobe", "Output +1 - switch to ON, -1 - OFF", "" );
-   PRM_SWITCH( usePlusStrobe, efNoRunChange, "Only + strobe", "Output only positive strobe", "" );
-   PRM_SWITCH( useF, efNoRunChange, "input F", "input is F, not omega", "sep=col" );
+   PRM_SWITCH( useReset, efNRC, "use Reset", "Use in_rst  signal", "sep=col" );
+   PRM_SWITCH( useLock, efNRC, "use Lock", "Use lock signal", "" );
+   PRM_SWITCH( outStrobe, efNRC, "Output Strobe", "Output only at switching moments", "" );
+   PRM_SWITCH( useZero, efNRC, "0 is neg. out", "Negative output is 0, not -1", "sep=col" );
+   PRM_SWITCH( useSignStrobe, efNRC, "Signed strobe", "Output +1 - switch to ON, -1 - OFF", "" );
+   PRM_SWITCH( usePlusStrobe, efNRC, "Only + strobe", "Output only positive strobe", "" );
+   PRM_SWITCH( useF, efNRC, "input F", "input is F, not omega", "sep=col" );
    PRM_INT( currOut, efInner, "Current out", "Current INT output", "");
    PRM_DOUBLE( tick, efInner, "Tick", "1 means generator ticks now", "" );
    /** koeff to F-omega conversion if useF */

@@ -101,18 +101,18 @@ class TOutArr : public LinkedObj  {
    virtual int do_startLoop( int acnx, int acny ) override;
    virtual int do_endLoop() override;
 
-   PRM_LIST( type, efNoRunChange, "Type", "Type of array", "enum=OutArrType" );
-   PRM_STRING( descr, efNoRunChange, "description", "Output array description", "max=256\nncol=-1");
-   PRM_STRING( name, efNoRunChange, "Source", "Name of element to use", "sep=block\nmax=128\nprops=STRING,SIMPLE,LINK\ncmpl=in" );
-   PRM_STRING( label, efNoRunChange, "Label", "Label of data", "max=32" );
-   PRM_SWITCH( allStat, efNoRunChange, "All stat", "calculate all statistics", "def=0" );
+   PRM_LIST( type, efNRC, "Type", "Type of array", "enum=OutArrType" );
+   PRM_STRING( descr, efNRC, "description", "Output array description", "max=256\nncol=-1");
+   PRM_STRING( name, efNRC, "Source", "Name of element to use", "sep=block\nmax=128\nprops=STRING,SIMPLE,LINK\ncmpl=in" );
+   PRM_STRING( label, efNRC, "Label", "Label of data", "max=32" );
+   PRM_SWITCH( allStat, efNRC, "All stat", "calculate all statistics", "def=0" );
    PRM_INT( nx, efInner, "nx","size of x dimensions arrays", "def=1"  );
    PRM_INT( ny, efInner, "ny","size of x=const block in 2-d arrays", "def=1"  );
-   PRM_INT( nq, efNoRunChange, "Every n", "each n-th data collect. ", "min=1\nmax=1000000\ndef=1" );
-   PRM_INT( lnq, efNoRunChange, "Catch at n=", "latch value of counter", "min=0\nmax=1000000" );
+   PRM_INT( nq, efNRC, "Every n", "each n-th data collect. ", "min=1\nmax=1000000\ndef=1" );
+   PRM_INT( lnq, efNRC, "Catch at n=", "latch value of counter", "min=0\nmax=1000000" );
    PRM_INT( cnq, efInner, "Current n", "current value of counter(0..nq-1)", "" );
-   PRM_DOUBLE( scale, efNoRunChange, "Scale", "input factor", "def=1" );
-   PRM_DOUBLE( shift, efNoRunChange, "Shift", "input shift", "" );
+   PRM_DOUBLE( scale, efNRC, "Scale", "input factor", "def=1" );
+   PRM_DOUBLE( shift, efNRC, "Shift", "input shift", "" );
    // statistics
    PRM_DOUBLE( dmin, efInner, "min", "min value", "" );
    PRM_DOUBLE( dmax, efInner, "max", "max value", "" );

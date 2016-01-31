@@ -35,7 +35,7 @@ class SubOutput : public LinkedObj {
   bool set_link();
  protected:
 
-  PRM_STRING( source, efNoRunChange, "Source", "Address of signal source from subscheme", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
+  PRM_STRING( source, efNRC, "Source", "Address of signal source from subscheme", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
 
   PRM_INT( linkType,  efInner | efRO, "Link type", "Describes type of link", "def=3" ); // 3=LinkBad
   PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );

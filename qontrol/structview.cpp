@@ -826,7 +826,7 @@ bool StructView::cloneObj()
     if( oob ) { continue; } // place busy
     ob->setData( QSL("vis_x"), nox );
     ob->setData( QSL("vis_y"), noy );
-    return true;
+    break;
   }
   return true;
 }

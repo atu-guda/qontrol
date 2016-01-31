@@ -156,9 +156,9 @@ class TModel : public LinkedObj  {
   PRM_INT( il2, efInner, "il2", "Param 1 index", "" );
   //* copies the current simulation
   /** current time and time step, real time */
-  PRM_INT( seed, efInner|efNoRunChange, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
+  PRM_INT( seed, efInner|efNRC, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
   /** type of seeding: 0 - every run, 1 - every 1d loop .. obj */
-  PRM_INT( seedType, efInner|efNoRunChange, "Seed type", "type of seeding", "" ); // no list - copy
+  PRM_INT( seedType, efInner|efNRC, "Seed type", "type of seeding", "" ); // no list - copy
   PRM_DOUBLE( tdt, efInner, "\\tau", "time step", "" ); // just copy for speed
   PRM_DOUBLE( t, efInner, "t", "model time (from t_0)", "" );
   PRM_DOUBLE( t_r, efInner, "t_r", "model relative time (from 0)", "" );

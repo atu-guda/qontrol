@@ -49,7 +49,7 @@ class THyst : public TMiso  {
    void fixState(void);
  protected:
    /** type of hysteresis */
-   PRM_LIST( type, efNoRunChange, "Type",  "Type of hysteresis", "enum=HystType" );
+   PRM_LIST( type, efNRC, "Type",  "Type of hysteresis", "enum=HystType" );
    /** width of hysteresis  */
    PRM_PARAMD( x0, 0, "x_0",  "x0 - width if hysteresis", "min=0\nsep=col\ndef=1\nfixparm=1" );
    /** slope of hysteresis  */

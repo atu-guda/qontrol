@@ -36,8 +36,8 @@ class TVibro : public TMiso  {
 
    PRM_PARAMD( c0, 0, "c_0", "Damping coefficient", "def=0.4" );
    PRM_PARAMD( Omega, 0, "\\Omega", "Natural frequency if c_0=0 and f(x)=x", "def=1.2" );
-   PRM_PARAMD( v0, efNoRunChange, "v_0", "v(0)", "sep=col" );
-   PRM_SWITCH( use_u1, efNoRunChange, "use Force",
+   PRM_PARAMD( v0, efNRC, "v_0", "v(0)", "sep=col" );
+   PRM_SWITCH( use_u1, efNRC, "use Force",
         "Use in_force as return force element output", "" );
 
    /** Current velocity dx/dt */

@@ -417,6 +417,7 @@ void LaboView::setActiveSimul()
 void LaboView::editModel()
 {
   bool ok = ::editObj( this, model );
+  model->readAllInputs();
   if( ok ) {
     model->reset();
     emit viewChanged();

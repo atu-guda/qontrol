@@ -391,7 +391,7 @@ class HolderData : public QAbstractItemModel {
   void saveParmsToDom( QDomElement &de ) const;
 
   int dyn = 0; //* flag: is created dynamically i.e. can be deleted
-  int flags;   //* use bitset of _ELEM_FLAGS: efRO, efNoRunChange, ...
+  int flags;   //* use bitset of _ELEM_FLAGS: efRO, efNRC, ...
   QVariant::Type tp = QVariant::Invalid;
   HolderData *par; // keep it?
   /** state: 0-bad, 1-constructed, 2-run; */

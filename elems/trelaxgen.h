@@ -43,11 +43,11 @@ class TRelaxGen : public TMiso  {
    PRM_PARAMD( v_1, 0, "v_1", "Charge limit", "def=2\nsep=col" );
    PRM_PARAMD( v_2, 0, "v_2", "Discharge limit", "def=0.1" );
    /** misc flags */
-   PRM_SWITCH( useCharge, efNoRunChange, "Use i_{ch}", "Use i_ch as charge current", "sep=block" );
-   PRM_SWITCH( useDischarge, efNoRunChange, "Use i_{dis}", "Use i_dis as discharge current", "" );
-   PRM_SWITCH( useTrig, efNoRunChange, "Use trig", "Use trig as signal to discharge", "" );
-   PRM_SWITCH( useContCharge, efNoRunChange, "Contiguous charge", "Use contiguous charging", "sep=col" );
-   PRM_SWITCH( useContDischarge, efNoRunChange, "Contiguous discharge", "Use contiguous discharging", "" );
+   PRM_SWITCH( useCharge, efNRC, "Use i_{ch}", "Use i_ch as charge current", "sep=block" );
+   PRM_SWITCH( useDischarge, efNRC, "Use i_{dis}", "Use i_dis as discharge current", "" );
+   PRM_SWITCH( useTrig, efNRC, "Use trig", "Use trig as signal to discharge", "" );
+   PRM_SWITCH( useContCharge, efNRC, "Contiguous charge", "Use contiguous charging", "sep=col" );
+   PRM_SWITCH( useContDischarge, efNRC, "Contiguous discharge", "Use contiguous discharging", "" );
 
    PRM_DOUBLE( v,     efInner, "v", "voltage", "def=0" );
    PRM_DOUBLE( isDis, efInner, "isDis", "1 means generator discharges now", "def=0" );

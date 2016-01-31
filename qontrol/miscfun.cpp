@@ -91,13 +91,16 @@ int isGoodName( const QString &s )
   return 1;
 }
 
-QString flags2str( int fl ) {
-  static const char *lbl[elm_known_flags+1]
-     { "MR", "NRC", "ND", "ROD", "NS", "RO", "St", "Im", "Ca", "?200?" };
-  QString s = "";
+
+QString flags2str( int fl )
+{
+  static const char *elem_flag_names[elm_known_flags+1]
+    { "MR", "NRC", "ND", "ROD", "NS", "RO", "St", "Im", "Pp", "SS", "?10" };
+  QString s { QSL("") }, sep { QSL("") };
   for( int j=0; j<elm_known_flags; j++ ) {
     if( fl & ( 1 << j ) ) {
-      s += lbl[j]; s += ",";
+      s += sep % elem_flag_names[j];
+      s += QSL(",");
     };
   };
   return s;

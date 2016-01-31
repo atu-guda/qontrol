@@ -168,9 +168,9 @@ class InputAbstract : public LinkedObj {
   /** do real actions after structure changed */
   virtual void do_structChanged() override;
 
-  PRM_STRING( source, efNoRunChange, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
+  PRM_STRING( source, efNRC, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
   PRM_SWITCH( onlyFirst, 0, "only First", "apply only at start of run", "" );
-  PRM_STRING( label,  efNoRunChange, "Label", "Label to display on structure", "max=64"  );
+  PRM_STRING( label,  efNRC, "Label", "Label to display on structure", "max=64"  );
   PRM_INT( x_shift, 0, "X shift", "Shift on x-part of link representation", "sep=col" );
   PRM_INT( y_shift, 0, "Y shift", "Shift on y-part of link representation", "" );
   PRM_INT( line_w,  0, "Line width", "Line width on scheme", "def=1\nmin=0\nmax=20" );

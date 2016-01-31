@@ -69,25 +69,22 @@ class TMiso : public LinkedObj  {
    /** do real actions after structure changed - refills inputs */
    virtual void do_structChanged() override;
 
-   /** description on element */
-   PRM_STRING( descr, efNoRunChange, "description",
-       "Object description", "max=128\nncol=-1");
-   /** order, in which elements will be used and holder */
+   PRM_STRING( descr, efNRC, "description", "Object description", "max=128\nncol=-1");
    PRM_INT( ord, efOld, "Order", "obsoleted", "" );
    /** visual coordinates */
-   PRM_INT( vis_x, efRODial | efNoRunChange, "Visual x",
+   PRM_INT( vis_x, efRODial | efNRC, "Visual x",
        "X-coordinate of element in scheme", "min=0\nmax=64\nsep=block" );
-   PRM_INT( vis_y, efRODial | efNoRunChange, "Visual y",
+   PRM_INT( vis_y, efRODial | efNRC, "Visual y",
        "Y-coordinate of element in scheme", "min=0\nmax=64" );
    PRM_PARAMD( out0_init, efNRC, "Init value", "Initial value of output", "def=0.0" );
    PRM_SWITCH( noCalcStart, efNRC, "No calc at start", "Disable out0 at startLoop ", ""  );
 
-   PRM_SWITCH( locked, efNoRunChange, "Locked", "Bypass out0_init to output", "sep=col"  );
-   PRM_SWITCH( ignored, efNoRunChange, "Ignored", "Ignore element while run", ""  );
-   PRM_SWITCH( onlyFirst, efNoRunChange, "only First", "Process element only at first iteration", "" );
-   PRM_SWITCH( onlyLast, efNoRunChange , "only Last", "Process element only at last iteration", "" );
-   PRM_SWITCH( flip, efNoRunChange, "flip image", "flip left-right element icon", "sep=col" );
-   PRM_SWITCH( noIcon, efNoRunChange, "no Icon", "don't show element icon", "sep=blockend" );
+   PRM_SWITCH( locked, efNRC, "Locked", "Bypass out0_init to output", "sep=col"  );
+   PRM_SWITCH( ignored, efNRC, "Ignored", "Ignore element while run", ""  );
+   PRM_SWITCH( onlyFirst, efNRC, "only First", "Process element only at first iteration", "" );
+   PRM_SWITCH( onlyLast, efNRC , "only Last", "Process element only at last iteration", "" );
+   PRM_SWITCH( flip, efNRC, "flip image", "flip left-right element icon", "sep=col" );
+   PRM_SWITCH( noIcon, efNRC, "no Icon", "don't show element icon", "sep=blockend" );
 
    PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
 
