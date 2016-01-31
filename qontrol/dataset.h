@@ -106,6 +106,7 @@ struct TClassInfo {
   virtual void reset_dfl() override; \
   virtual bool set( const QVariant & x, int idx = 0 ) override; \
   virtual QVariant get( int idx = 0 ) const override; \
+  Q_INVOKABLE virtual double getDouble( int idx = 0 ) const override; \
   virtual void do_post_set() override; \
   virtual QString toString() const override; \
   virtual bool fromString( const QString &s ) override;
@@ -327,6 +328,8 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
   Q_INVOKABLE virtual bool set( const QVariant & x, int idx = 0 ) = 0;
   Q_INVOKABLE virtual QVariant get( int idx = 0 ) const = 0;
+  Q_INVOKABLE virtual double getDouble( int idx = 0 ) const = 0;
+  Q_INVOKABLE double getDoubleVal( const QString &nm ) const;
   Q_INVOKABLE virtual QString toString() const = 0;
   Q_INVOKABLE virtual bool fromString( const QString &s ) = 0;
   Q_INVOKABLE int size() const { return children().size(); }

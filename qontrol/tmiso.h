@@ -39,6 +39,7 @@ class TMiso : public LinkedObj  {
    // virtual ~TMiso() override;
    DCL_CREATE;
    DCL_STD_INF;
+   Q_INVOKABLE virtual double getDouble( int /*idx*/ = 0 ) const override { return out0; }
 
    /** external computation function + in/out */
    double fun( IterType itype ) noexcept;

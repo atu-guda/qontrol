@@ -989,6 +989,21 @@ QString HolderData::getFullName() const
   return res;
 }
 
+double HolderData::getDoubleVal( const QString &nm ) const
+{
+  if( nm.isEmpty() ) {
+    return getDouble();
+  }
+
+  HolderData *ho = getObj( nm );
+  if( !ho ) {
+    return 0.0;
+  }
+
+  return ho->getDouble();
+}
+
+
 bool HolderData::getData( const QString &nm, QVariant &da, bool er ) const
 {
   if( nm.isEmpty() ) {
@@ -1041,18 +1056,15 @@ bool HolderData::getData( const QString &nm, int *da, bool er ) const
   return true;
 }
 
-bool HolderData::getData( const QString &nm, double *da, bool er ) const
+bool HolderData::getData( const QString &nm, double *da, bool /*er*/ ) const
 {
   if( !da ) {
     return false;
   }
-  QVariant vda;
-  bool rc = getData( nm, vda, er );
-  if( ! rc ) {
-    return false;
-  }
-  *da = vda.toDouble();
-  return 1;
+  // special case!
+  double a =  getDoubleVal( nm );
+  *da = a;
+  return true;
 }
 
 
@@ -1472,6 +1484,12 @@ QVariant HolderValue::get( int /* idx */ ) const
   return QVariant();
 }
 
+double HolderValue::getDouble( int /*idx = 0*/ ) const
+{
+  qWarning() << ERR_ABS << NWHE;
+  return 0.0;
+}
+
 QString HolderValue::toString() const
 {
   qWarning() << ERR_ABS << NWHE;
@@ -1526,6 +1544,11 @@ bool HolderInt::set( const QVariant & x, int /* idx */ )
 QVariant HolderInt::get( int /* idx */ ) const
 {
   return QVariant( v );
+}
+
+double HolderInt::getDouble( int /* idx = 0 */ ) const
+{
+  return v;
 }
 
 void HolderInt::do_post_set()
@@ -1643,6 +1666,11 @@ QVariant HolderDouble::get( int /* idx */ ) const
   return QVariant( v );
 }
 
+double HolderDouble::getDouble( int /* idx = 0 */ ) const
+{
+  return v;
+}
+
 void HolderDouble::do_post_set()
 {
   double v_min = getParmDouble( QSL("min"), DMIN );
@@ -1695,6 +1723,11 @@ bool HolderString::set( const QVariant & x, int /* idx */  )
 QVariant HolderString::get( int /* idx */ ) const
 {
   return QVariant( v );
+}
+
+double HolderString::getDouble( int /* idx = 0 */ ) const
+{
+  return v.toDouble();
 }
 
 void HolderString::do_post_set()
@@ -1759,6 +1792,11 @@ QVariant HolderColor::get( int /* idx */ ) const
 {
   // return QVariant( (int)(v.rgba()) );
   return QVariant( v );
+}
+
+double HolderColor::getDouble( int /* idx = 0 */ ) const
+{
+  return v.lightnessF();
 }
 
 void HolderColor::do_post_set()
@@ -1837,6 +1875,11 @@ QVariant HolderFont::get( int /* idx */ ) const
   return QVariant( v.key() );
 }
 
+double HolderFont::getDouble( int /* idx = 0 */ ) const
+{
+  return v.pointSize();
+}
+
 void HolderFont::do_post_set()
 {
 }
@@ -1892,6 +1935,11 @@ bool HolderDate::set( const QVariant & x, int /* idx */  )
 QVariant HolderDate::get( int /* idx */ ) const
 {
   return QVariant( v );
+}
+
+double HolderDate::getDouble( int /* idx = 0 */ ) const
+{
+  return (double)( v.toJulianDay() );
 }
 
 void HolderDate::do_post_set()
@@ -1963,6 +2011,11 @@ bool HolderTime::set( const QVariant & x, int /* idx */  )
 QVariant HolderTime::get( int /* idx */ ) const
 {
   return QVariant( v );
+}
+
+double HolderTime::getDouble( int /* idx = 0 */ ) const
+{
+  return 0.001 * (double)( v.msecsSinceStartOfDay() ); // to seconds
 }
 
 void HolderTime::do_post_set()
@@ -2061,6 +2114,14 @@ QVariant HolderIntArray::get( int idx ) const
     return QVariant();
   }
   return QVariant( v[idx] );
+}
+
+double HolderIntArray::getDouble( int idx ) const
+{
+  if( idx < 0 || (unsigned)idx >= v.size() ) {
+    return 0.0;
+  }
+  return double( v[idx] );
 }
 
 void HolderIntArray::do_post_set()
@@ -2175,6 +2236,14 @@ QVariant HolderDoubleArray::get( int idx ) const
   if( idx < 0 || (unsigned)idx >= v.size() ) // slow, but safe - not for fast code
     return QVariant();
   return QVariant( v[idx] );
+}
+
+double HolderDoubleArray::getDouble( int idx ) const
+{
+  if( idx < 0 || (unsigned)idx >= v.size() ) {
+    return 0.0;
+  }
+  return v[idx];
 }
 
 void HolderDoubleArray::do_post_set()
@@ -2294,6 +2363,14 @@ QVariant HolderStringArray::get( int idx ) const
   return QVariant( v[idx] );
 }
 
+double HolderStringArray::getDouble( int idx ) const
+{
+  if( idx < 0 || idx >= v.size() ) {
+    return 0;
+  }
+  return v[idx].toDouble();
+}
+
 void HolderStringArray::do_post_set()
 {
   int n = getParmInt( QSL("N"), 1 );
@@ -2383,6 +2460,11 @@ bool TDataSet::set( const QVariant & x, int /* idx */  )
 QVariant TDataSet::get( int /* idx */ ) const
 {
   return QVariant( this->toString() );
+}
+
+double TDataSet::getDouble( int /* idx = 0 */ ) const
+{
+  return 0.0;
 }
 
 QString TDataSet::toString() const

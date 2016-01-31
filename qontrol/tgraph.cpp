@@ -791,6 +791,18 @@ int TGraph::prepare()
     z0 = v_min; z1 = v_max;
   }
 
+  for( auto flp : TCHILD(PlotFlippery*) ) {
+    double fl_x0 = flp->getDataD( QSL("x0" ), x0 );
+    double fl_y0 = flp->getDataD( QSL("y0" ), y0 );
+    double fl_z0 = flp->getDataD( QSL("z0" ), z0 );
+    if( fl_x0 < x0 ) { x0 = fl_x0; }; // TODO: common action
+    if( fl_x0 > x1 ) { x1 = fl_x0; };
+    if( fl_y0 < y0 ) { y0 = fl_y0; };
+    if( fl_y0 > y1 ) { y1 = fl_y0; };
+    if( fl_z0 < z0 ) { z0 = fl_z0; };
+    if( fl_z0 > z1 ) { z1 = fl_z0; };
+  }
+
   pr_min = { x0, y0, z0 };
   pr_max = { x1, y1, z1 };
   pr_dlt = pr_max - pr_min; // recalced in plot, but may be used before

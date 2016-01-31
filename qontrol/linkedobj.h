@@ -146,6 +146,7 @@ class InputAbstract : public LinkedObj {
   virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
   DCL_CREATE;
   DCL_STD_INF;
+  Q_INVOKABLE virtual double getDouble( int /*idx*/ = 0 ) const override { return out0; }
   //* return ptr to LinkedObj, which holds element or nullptr;
   const LinkedObj* getSourceObj() const noexcept { return src_obj; };
   void readInput() noexcept { out0 = *p; } ;
