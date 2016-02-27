@@ -5,6 +5,8 @@ CONFIG += c++14 release warn_on qt thread
 CONFIG += no-keywords
 #QMAKE_CXXFLAGS += -fgnu-keywords -fext-numeric-literals # -fPIC
 #CONFIG += debug warn_on qt thread
+OBJECTS_DIR=.obj
+MOC_DIR=.moc
 
 RESOURCES = qontrol.qrc
 
