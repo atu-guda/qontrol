@@ -1,4 +1,3 @@
-Redesign post_set(), *structChange.
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
 Holder*Array -> long indexes, More dimensions. Measure vector::size_t.
 TOutArr: use InputSimple (need conversion)
@@ -9,7 +8,7 @@ BUG: modified state (i.e. after autocreated scheme removal)
 BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params
 Long descriptions in schems, (button) - how to edit?
 Reorder objects in list-alike containers. - require artificial numeration
-add Flag: call parent post_set if changed, and suppress for mass changes. set/do_set?
+Redesign post_set(), *structChange. (half done?)
 Fill, import, export special arrays.
 Script 'help' function + list of top-level objects and functions.
 Decoration objects.

@@ -1437,9 +1437,15 @@ void HolderData::dumpStruct() const
 void HolderData::post_set()
 {
   do_post_set();
-  for( auto ho: TCHILD(HolderData*) ) { // propagate to childs
-    ho->post_set();
+  if( hasAllFlags( efPostParent ) && par != nullptr ) {
+    par->post_set();
   }
+  if( hasAllFlags( efStructCh ) && par != nullptr ) {
+    reportStructChanged();
+  }
+  // for( auto ho: TCHILD(HolderData*) ) { // propagate to childs
+  //   ho->post_set();
+  // }
 }
 
 void HolderData::do_post_set()
