@@ -104,6 +104,11 @@ CmdView* CommonSubwin::getFocusedCmdView() const
   if( cv ) {
     return cv;
   }
+
+  if( !fw ) {
+    return nullptr;
+  }
+
   cv = qobject_cast<CmdView*>( fw->parent() ); // may by view in parent
   if( !cv ) {
     qWarning() << "Bad focused widget " << fw->objectName() << WHE;
