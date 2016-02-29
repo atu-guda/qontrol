@@ -28,7 +28,7 @@ class Simulation : public LinkedObj  {
   Q_OBJECT
  public:
   DCL_CTOR(Simulation);
-  virtual ~Simulation() override;
+  // virtual ~Simulation() override;
   DCL_CREATE;
   DCL_STD_INF;
 

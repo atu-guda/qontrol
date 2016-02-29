@@ -84,6 +84,7 @@ SOURCES += \
   ../elems/tmulsumn.cpp \
   ../elems/tpid.cpp \
   ../elems/tquadextr.cpp \
+  ../elems/tquality.cpp \
   ../elems/trand.cpp \
   ../elems/trandtrigg.cpp \
   ../elems/trelaxgen.cpp \
@@ -163,6 +164,7 @@ HEADERS += \
   ../elems/tmulsumn.h \
   ../elems/tpid.h \
   ../elems/tquadextr.h \
+  ../elems/tquality.h \
   ../elems/trand.h \
   ../elems/trandtrigg.h \
   ../elems/trelaxgen.h \

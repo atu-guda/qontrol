@@ -213,8 +213,8 @@ int TModel::startRun()
   }
 
 
-  // TODO: remove debug?
-  // c_sim->post_set();
+  // TODO: all_post_set? remove debug?
+  c_sim->post_set();
   reportStructChanged();
 
   T   = c_sim->getDataD( "T", 1.0 );
