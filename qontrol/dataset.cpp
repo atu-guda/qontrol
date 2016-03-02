@@ -825,6 +825,21 @@ int HolderData::isValidType(  const QString &cl_name  ) const
 }
 
 
+QString HolderData::toXML() const
+{
+  QString buf;
+  buf.reserve(4096); // TODO ?
+  QTextStream tstr( &buf, QIODevice::WriteOnly );
+  tstr.setCodec( "UTF-8" ); // no QSL
+  QDomDocument dd_tmp;
+  QDomElement el_tmp = dd_tmp.createElement( QSL("tmp_xxx") );
+  QDomElement dom = toDom( dd_tmp );
+  dom.save( tstr, QDomNode::EncodingFromTextStream );
+
+  return buf;
+}
+
+
 QDomElement HolderData::toDom( QDomDocument &dd ) const
 {
   QDomElement de = dd.createElement( QSL("param") );
@@ -2544,15 +2559,7 @@ double TDataSet::getDouble( int /* idx = 0 */ ) const
 
 QString TDataSet::toString() const
 {
-  QString buf;
-  buf.reserve(4096); // TODO ?
-  QTextStream tstr( &buf, QIODevice::WriteOnly );
-  QDomDocument dd_tmp;
-  QDomElement el_tmp = dd_tmp.createElement(QSL("tmp_xxx"));
-  QDomElement dom = toDom( dd_tmp );
-  dom.save( tstr, 4 );
-
-  return buf;
+  return toXML();
 }
 
 QString TDataSet::textVisual() const

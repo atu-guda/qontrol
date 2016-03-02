@@ -304,6 +304,7 @@ class HolderData : public QAbstractItemModel {
   //* return icon for visualization
   virtual QIcon getIcon() const;
 
+  Q_INVOKABLE QString toXML() const;
   virtual QDomElement toDom( QDomDocument &dd ) const;
   bool fromDom( QDomElement &de, QString &errstr );
   Q_INVOKABLE QString allowTypes() const noexcept { return allowed_types; }

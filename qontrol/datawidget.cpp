@@ -1290,7 +1290,7 @@ bool DataDialog::copyOne()
     return false;
   }
 
-  QString s = ho->toString();
+  QString s = ho->toXML();
   setClipboardStr( s );
   return true;
 }
