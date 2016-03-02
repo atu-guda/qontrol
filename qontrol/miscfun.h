@@ -91,6 +91,9 @@ bool confirmDelete( QWidget *par, const QString &obj, const QString &nm );
 bool editObj( QWidget *par, HolderData *obj );
 bool showTree( QWidget *par, HolderData *obj );
 
+QString getClipboardStr();
+bool    setClipboardStr( const QString &s );
+
 
 
 

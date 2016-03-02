@@ -1270,6 +1270,104 @@ bool DataDialog::delObj()
   return ok;
 }
 
+bool DataDialog::copyOne()
+{
+  QStringList sl = ds.elemNames();
+  if( sl.isEmpty() ) {
+    return false;
+  }
+
+  bool ok;
+  QString ob_name = QInputDialog::getItem( this, QSL("Copy object"),
+      QSL("Select object to copy"), sl, 0, false, &ok );
+  if( !ok ) {
+    return false;
+  }
+
+  HolderData *ho = ds.getObj( ob_name );
+  if( !ho ) {
+    qWarning() << QSL("Fail to find object ") << ob_name << QSL(" to copy") << WHE;
+    return false;
+  }
+
+  QString s = ho->toString();
+  setClipboardStr( s );
+  return true;
+}
+
+bool DataDialog::copyAll()
+{
+  QString s = ds.toString();
+  setClipboardStr( s );
+  return true;
+}
+
+bool DataDialog::pasteOne() // like CmdView::pasteObj() TODO: move common code
+{
+  if( ro ) {
+    return false;
+  }
+  QString s = getClipboardStr();
+
+  int err_line, err_column;
+  QString errstr;
+  QDomDocument x_dd;
+  if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
+    handleWarn( this, tr("Cannot parse clipboard string:\n%2\nLine %3 column %4.")
+                .arg(errstr).arg(err_line).arg(err_column) );
+    return false;
+  }
+  QDomElement ee = x_dd.documentElement();
+
+  QString tagname = ee.tagName();
+  // if( tagname != "obj" ) {
+  //   handleWarn( this, tr("element tag is not 'obj':  %2").arg( tagname ) );
+  //   return false;
+  // }
+
+  QString otype = ee.attribute( QSL("otype") );
+  QString oname = ee.attribute( QSL("name") );
+  oname = ds.hintName( otype, oname );
+
+  bool ok;
+  oname = QInputDialog::getText( this, "Object: " + oname,
+      "Enter new name:", QLineEdit::Normal, oname, &ok );
+  if( !ok ) {
+    return false;
+  }
+
+  HolderData *ob = ds.addObjP( otype, oname );
+  if( !ob  ) {
+    handleError( this, QString("Fail to add Obj: %1 %2").arg(otype).arg(oname) );
+    return false;
+  }
+  if( !ob->fromDom( ee, errstr ) ) {
+    handleWarn( this, tr("fail to set params:  %1").arg( errstr ) );
+  }
+  createWidgets();
+  getAll();
+  update();
+  return true;
+}
+
+bool DataDialog::pasteAll()
+{
+  if( ro ) {
+    return false;
+  }
+  QString s = getClipboardStr();
+
+  bool ok =  ds.fromString( s );
+  if( !ok ) {
+    return false;
+  }
+
+  createWidgets();
+  getAll();
+  update();
+  return true;
+}
+
 
 int DataDialog::createWidgets()
 {
@@ -1421,9 +1519,19 @@ void DataDialog::createButtons()
     auto btn_addObj = new QPushButton( QIcon::fromTheme(QSL("list-add")), QSL("Add object") );
     connect( btn_addObj, &QPushButton::clicked, this, &DataDialog::addObj );
     lay_btn2->addWidget( btn_addObj );
+
     auto btn_delObj = new QPushButton( QIcon::fromTheme(QSL("edit-delete")), QSL("Delete object") );
     connect( btn_delObj, &QPushButton::clicked, this, &DataDialog::delObj );
     lay_btn2->addWidget( btn_delObj );
+
+    auto btn_pasteOne = new QPushButton( QSL("Paste obj") );
+    connect( btn_pasteOne, &QPushButton::clicked, this, &DataDialog::pasteOne );
+    lay_btn2->addWidget( btn_pasteOne );
+
+    auto btn_pasteAll = new QPushButton( QSL("Paste all") );
+    connect( btn_pasteAll, &QPushButton::clicked, this, &DataDialog::pasteAll );
+    lay_btn2->addWidget( btn_pasteAll );
+
     lay_main->addLayout( lay_btn2 );
   }
 
@@ -1457,9 +1565,18 @@ void DataDialog::createButtons()
   }
   lay_btn->addWidget( btn_revert );
   //
+  auto btn_copyOne = new QPushButton( QSL("Copy Obj") );
+  connect( btn_copyOne, &QPushButton::clicked, this, &DataDialog::copyOne );
+  lay_btn->addWidget( btn_copyOne );
+  //
+  auto btn_copyAll = new QPushButton( QSL("Copy All") );
+  connect( btn_copyAll, &QPushButton::clicked, this, &DataDialog::copyAll );
+  lay_btn->addWidget( btn_copyAll );
+  //
   auto btn_help = new QPushButton( QIcon::fromTheme(QSL("help-contents")), QSL("Help") );
-  connect( btn_help, &QPushButton::clicked, this, &DataDialog::showHelp);
+  connect( btn_help, &QPushButton::clicked, this, &DataDialog::showHelp );
   lay_btn->addWidget( btn_help );
+
   lay_main->insertLayout( 2, lay_btn );
 
   buttons_created = true;

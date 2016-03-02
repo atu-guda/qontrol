@@ -292,6 +292,10 @@ class DataDialog : public QDialog {
    void revertData();
    bool addObj();
    bool delObj();
+   bool copyOne();
+   bool copyAll();
+   bool pasteOne();
+   bool pasteAll();
   protected:
    virtual int createWidgets();
    virtual void createButtons();

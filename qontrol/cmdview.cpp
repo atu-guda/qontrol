@@ -193,12 +193,7 @@ bool CmdView::copyObj()
     return false;
   }
 
-  QClipboard *clp = QApplication::clipboard();
-  if( !selObj || !clp ) {
-    return false;
-  }
-  QString s = selObj->toString();
-  clp->setText( s );
+  setClipboardStr( selObj->toString() );
   return true;
 }
 
@@ -209,11 +204,7 @@ bool CmdView::pasteObj()
     return false;
   }
 
-  QClipboard *clp = QApplication::clipboard();
-  if( !clp ) {
-    return false;
-  }
-  QString s = clp->text();
+  QString s = getClipboardStr();
   int err_line, err_column;
   QString errstr;
   QDomDocument x_dd;
@@ -225,13 +216,13 @@ bool CmdView::pasteObj()
   QDomElement ee = x_dd.documentElement();
 
   QString tagname = ee.tagName();
-  if( tagname != "obj" ) {
+  if( tagname != QSL("obj") ) {
     handleWarn( this, tr("element tag is not 'obj':  %2").arg( tagname ) );
     return false;
   }
 
-  QString otype = ee.attribute( "otype" );
-  QString oname = ee.attribute( "name" );
+  QString otype = ee.attribute( QSL("otype") );
+  QString oname = ee.attribute( QSL("name") );
   oname = storage->hintName( otype, oname );
 
   bool ok;

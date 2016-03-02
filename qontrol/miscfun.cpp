@@ -387,6 +387,24 @@ QString substValues( const QString &s, const HolderData *ho )
   return r;
 }
 
+QString getClipboardStr()
+{
+  QClipboard *clp = QApplication::clipboard();
+  if( !clp ) {
+    return QString();
+  }
+  return clp->text();
+}
+
+bool setClipboardStr( const QString &s )
+{
+  QClipboard *clp = QApplication::clipboard();
+  if( !clp ) {
+    return false;
+  }
+  clp->setText( s );
+  return true;
+}
 
 // ****************************************
 
