@@ -825,7 +825,7 @@ int HolderData::isValidType(  const QString &cl_name  ) const
 }
 
 
-QString HolderData::toXML() const
+QString HolderData::toXML( bool forceType ) const
 {
   QString buf;
   buf.reserve(4096); // TODO ?
@@ -833,19 +833,21 @@ QString HolderData::toXML() const
   tstr.setCodec( "UTF-8" ); // no QSL
   QDomDocument dd_tmp;
   QDomElement el_tmp = dd_tmp.createElement( QSL("tmp_xxx") );
-  QDomElement dom = toDom( dd_tmp );
+  QDomElement dom = toDom( dd_tmp, forceType );
   dom.save( tstr, QDomNode::EncodingFromTextStream );
 
   return buf;
 }
 
 
-QDomElement HolderData::toDom( QDomDocument &dd ) const
+QDomElement HolderData::toDom( QDomDocument &dd, bool forceType ) const
 {
   QDomElement de = dd.createElement( QSL("param") );
   de.setAttribute( QSL("name"), objectName() );
   if( dyn ) {
     de.setAttribute( QSL("dyn"), QSL("1") );
+  }
+  if( dyn || forceType) {
     de.setAttribute( QSL("otype"), getType() );
     saveParmsToDom( de );
   }
@@ -2582,13 +2584,15 @@ bool TDataSet::fromString( const QString &s )
   return fromDom( domroot, errstr );
 }
 
-QDomElement TDataSet::toDom( QDomDocument &dd ) const
+QDomElement TDataSet::toDom( QDomDocument &dd, bool forceType ) const
 {
   QDomElement de = dd.createElement( QSL("obj") );
   de.setAttribute( QSL("name"), objectName() );
   de.setAttribute( QSL("otype"), getType() );
-  if( dyn ) { // func
+  if( dyn || forceType ) { // func
     de.setAttribute( QSL("dyn"), QSL("1") );
+  }
+  if( dyn || forceType ) { // func
     saveParmsToDom( de );
   }
 
@@ -2601,7 +2605,7 @@ QDomElement TDataSet::toDom( QDomDocument &dd ) const
       continue;
     }
 
-    QDomElement cde = ho->toDom( dd );
+    QDomElement cde = ho->toDom( dd, forceType );
     de.appendChild( cde );
   }
 

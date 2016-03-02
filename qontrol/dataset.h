@@ -304,8 +304,8 @@ class HolderData : public QAbstractItemModel {
   //* return icon for visualization
   virtual QIcon getIcon() const;
 
-  Q_INVOKABLE QString toXML() const;
-  virtual QDomElement toDom( QDomDocument &dd ) const;
+  Q_INVOKABLE QString toXML( bool forceType = false ) const;
+  virtual QDomElement toDom( QDomDocument &dd, bool forceType = false  ) const;
   bool fromDom( QDomElement &de, QString &errstr );
   Q_INVOKABLE QString allowTypes() const noexcept { return allowed_types; }
   /** is this class child of given or the same by name */
@@ -714,7 +714,7 @@ class TDataSet : public HolderData {
    DCL_STD_INF; // to _TYPE as \|/
    DCL_STD_GETSET;
 
-   QDomElement toDom( QDomDocument &dd ) const override;
+   QDomElement toDom( QDomDocument &dd, bool forceType = false ) const override;
  protected:
    Q_CLASSINFO( "nameHintBase",  "obj_" );
    DCL_DEFAULT_STATIC;
