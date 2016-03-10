@@ -12,7 +12,6 @@ Reorder objects in list-alike containers. - require artificial numeration
 Redesign post_set(), *structChange. (half done?)
 Fill, import, export special arrays.
 Script 'help' function + list of top-level objects and functions.
-Decoration objects.
 Documentaion: cmdline options (partial), common workflow.
 Show(edit?) HolderData props
 StatusTip(col=2) for StatusModel More: clarify 'col' meaning for objects
@@ -32,7 +31,7 @@ Outputs - or even IO - for external data.
 Custom legend/labels/axis(scale factor) in Mgl
 Tests
 Autocorrelation?
-Placeholder object: param is the type of real object?
+Placeholder object: param is the type of real object or template object name?
 Shadow/backup/undo main scheme?
 More stylesheets
 props: v_min, v_max: precalculate?

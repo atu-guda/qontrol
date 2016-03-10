@@ -39,7 +39,7 @@ class TQuadExtr : public TMiso  {
    PRM_PARAMD( lim_s,  0,     "lim_{s}", "Limit Scale", "sep=col\ndef=0.5" );
    PRM_SWITCH( limitG, efNRC, "Limit as given", "Limit X by given values", "sep=col" );
    PRM_PARAMD( x_min,  0,     "x_{min}", "Given minimal x", "sep=col\ndef=-1" );
-   PRM_PARAMD( x_max,  0,      "x_{max}", "Given miximal x", "def=1" );
+   PRM_PARAMD( x_max,  0,     "x_{max}", "Given miximal x", "def=1" );
    // Outputs
    PRM_DOUBLE( a_1,   efInner, "a_1", "Coefficient at x", "" );
    PRM_DOUBLE( a_2,   efInner, "a_2", "Coefficient at x^2", "" );

@@ -53,13 +53,18 @@ double TQuadExtr::f() noexcept
     lim_x_lt = x_min - x_ce; lim_x_rt = x_max - x_ce;
   }
 
-  double denom = x_lt * x_lt * x_rt - x_lt * x_rt * x_rt;
-  if( fabs( denom ) < D_AZERO ) { // x_r and x_l is to near
+  double x_lt2 = x_lt * x_lt;
+  double x_rt2 = x_rt * x_rt;
+  double denom = x_lt2 * x_rt - x_lt * x_rt2;
+  if( fabs( denom ) < D_AZERO ) { // x_r and x_l is too near
     return x_cn;
   }
 
-  a_1 = ( y_rt * x_lt * x_lt - y_lt * x_rt * x_rt ) / denom;
+  a_1 = ( y_rt * x_lt2 - y_lt * x_rt2 ) / denom;
   a_2 = - ( y_rt * x_lt - y_lt * x_rt ) / denom;
+  if( fabs( a_2 ) < D_AZERO ) { // near straigh line
+    return x_cn; // TODO: check! ???
+  }
 
   x_cnt = - 0.5 * a_1 / a_2;
 
