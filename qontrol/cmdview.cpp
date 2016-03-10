@@ -227,7 +227,7 @@ bool CmdView::pasteObj()
 
   bool ok;
   oname = QInputDialog::getText( this, "Object: " + oname,
-      "Enter new name:", QLineEdit::Normal, oname, &ok );
+      QSL("Enter new name (type ") % otype % QSL("):"), QLineEdit::Normal, oname, &ok );
   if( !ok ) {
     return false;
   }
