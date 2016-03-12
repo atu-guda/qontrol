@@ -173,6 +173,9 @@ class HolderData : public QAbstractItemModel {
   virtual ~HolderData();
   DCL_CREATE;
 
+  using size_type = QList<QObject*>::size_type;
+  using arrsize_type = dvector::size_type;
+
   // QAbstractItemModel part
   virtual int columnCount( const QModelIndex &par = QModelIndex() ) const override;
   virtual int rowCount( const QModelIndex &par = QModelIndex() ) const override;
@@ -312,8 +315,8 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE bool isChildOf( const QString &cname ) const;
   //* returns this object index in parent or -1 on no [my] parent
   Q_INVOKABLE int getMyIndexInParent() const;
-  Q_INVOKABLE QString childName( int n ) const
-    { return ( n<size() && n >= 0 ) ? children().at( n )->objectName() : ""; }
+  Q_INVOKABLE QString childName( size_type n ) const
+    { return ( n<size() && n >= 0 ) ? children().at( n )->objectName() : QSL(""); }
   //* return strings for given enum
   Q_INVOKABLE QStringList getEnumStrings( const QString &enum_name ) const;
 
@@ -335,8 +338,8 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE virtual QString toString() const = 0;
   Q_INVOKABLE virtual QString textVisual() const = 0;
   Q_INVOKABLE virtual bool fromString( const QString &s ) = 0;
-  Q_INVOKABLE int size() const { return children().size(); }
-  Q_INVOKABLE virtual int arrSize() const { return 1; }
+  Q_INVOKABLE size_type size() const { return children().size(); }
+  Q_INVOKABLE virtual arrsize_type arrSize() const { return 1; }
   Q_INVOKABLE int getState() const { return state; }
   /** create object with parameters as string */
   Q_INVOKABLE bool addObjDatas( const QString &cl_name, const QString &ob_name, const QString &datas );
@@ -640,11 +643,11 @@ class HolderIntArray : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual int arrSize() const override { return v.size(); }
+  virtual arrsize_type arrSize() const override { return v.size(); }
   STD_CONVERSIONS(std::vector<int>);
   INNER_ASSIGN(HolderIntArray);
-  int operator[](int i) const { return v[i]; };
-  int& operator[](int i) { return v[i]; };
+  int operator[]( arrsize_type i ) const { return v[i]; };
+  int& operator[]( arrsize_type i ) { return v[i]; };
  protected:
   std::vector<int> v;
   Q_CLASSINFO( "nameHintBase",  "ia_" );
@@ -663,11 +666,11 @@ class HolderDoubleArray : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual int arrSize() const override { return v.size(); }
+  virtual arrsize_type arrSize() const override { return v.size(); }
   STD_CONVERSIONS(std::vector<double>);
   INNER_ASSIGN(HolderDoubleArray);
-  double operator[](int i) const { return v[i]; };
-  double& operator[](int i) { return v[i]; };
+  double operator[]( arrsize_type i ) const { return v[i]; };
+  double& operator[]( arrsize_type i ) { return v[i]; };
  protected:
   std::vector<double> v;
   Q_CLASSINFO( "nameHintBase",  "da_" );
@@ -686,11 +689,11 @@ class HolderStringArray : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
-  virtual int arrSize() const override { return v.size(); }
+  virtual arrsize_type arrSize() const override { return v.size(); }
   STD_CONVERSIONS(QStringList);
   INNER_ASSIGN(HolderStringArray);
-  QString operator[](int i) const { return v[i]; };
-  QString& operator[](int i) { return v[i]; };
+  QString operator[]( arrsize_type i ) const { return v[i]; };
+  QString& operator[]( arrsize_type i ) { return v[i]; };
  protected:
   QStringList v;
   Q_CLASSINFO( "nameHintBase",  "sa_" );

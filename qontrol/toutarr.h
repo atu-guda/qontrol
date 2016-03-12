@@ -57,7 +57,7 @@ class TOutArr : public LinkedObj  {
    const dvector* getArray() const { return &arr; }
    /** request to allocate array: only for special arrays now */
    Q_INVOKABLE int alloc( int anx, int any = 1 );
-   Q_INVOKABLE virtual int arrSize() const override { return arrsize; }
+   Q_INVOKABLE virtual arrsize_type arrSize() const override { return arrsize; }
    Q_INVOKABLE int getN() const { return n; }
 
    /** get and push next value. pushed only if level >= type */
