@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "miscfun.h"
 #include "circbuf.h"
 
 TCircBuf::TCircBuf( unsigned nn ) :
@@ -64,7 +65,7 @@ void TCircBuf::add( double a )
 double TCircBuf::operator[]( int i ) const
 {
   int j;
-  if( i < 0 || (unsigned)i >= nf ) { // first comparison rejects bad values for second
+  if( ! isInBounds( 0, i, nf-1 ) ) { // first comparison rejects bad values for second
     return 0;
   }
   j = s - i - 1;

@@ -526,7 +526,7 @@ void MglView::saveScale()
 
 void MglView::togglePlot()
 {
-  if( vd.sel < 0 || vd.sel >= (int)sizeof(vd.off)*8 ) {
+  if( ! isInBounds( 0, vd.sel, (int)sizeof(vd.off)*8 ) ) {
     return;
   }
   uint64_t msk = 1ull << vd.sel;
@@ -537,7 +537,7 @@ void MglView::togglePlot()
 
 void MglView::toggleAllPlots()
 {
-  if( vd.sel < 0 || vd.sel >= (int)sizeof(vd.off)*8 ) {
+  if( ! isInBounds( 0, vd.sel, (int)sizeof(vd.off)*8 ) ) {
     return;
   }
   uint64_t msk = ~( 1ull << vd.sel );
@@ -548,7 +548,7 @@ void MglView::toggleAllPlots()
 
 void MglView::linkToPlot()
 {
-  if( vd.sel < 0 || vd.sel >= vd.ng ) {
+  if( ! isInBounds( 0, vd.sel, vd.ng ) ) {
     return;
   }
 

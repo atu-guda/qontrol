@@ -358,7 +358,7 @@ QString HolderData::lsf() const
 
 HolderData* HolderData::getObj( int i ) const
 {
-  if( i < size() && i >=0 ) {
+  if( isInBounds( 0, i, size()-1 ) ) {
     return qobject_cast<HolderData*>(children().at(i));
   }
   return nullptr;
@@ -2158,7 +2158,7 @@ void HolderIntArray::reset_dfl()
 bool HolderIntArray::set( const QVariant & x, int idx )
 {
   bool ok;
-  if( idx < 0 || (unsigned)(idx) >= v.size() ) { // slow, but safe - not for fast code
+  if( ! isGoodIndex( idx, v ) ) { // slow, but safe - not for fast code
     return false;
   }
   auto v0 = v[idx];
@@ -2172,7 +2172,7 @@ bool HolderIntArray::set( const QVariant & x, int idx )
 
 QVariant HolderIntArray::get( int idx ) const
 {
-  if( idx < 0 || (unsigned)idx >= v.size() ) { // slow, but safe - not for fast code
+  if( ! isGoodIndex( idx, v ) ) { // slow, but safe - not for fast code
     return QVariant();
   }
   return QVariant( v[idx] );
@@ -2180,7 +2180,7 @@ QVariant HolderIntArray::get( int idx ) const
 
 double HolderIntArray::getDouble( int idx ) const
 {
-  if( idx < 0 || (unsigned)idx >= v.size() ) {
+  if( ! isGoodIndex( idx, v ) ) {
     return 0.0;
   }
   return double( v[idx] );
@@ -2291,7 +2291,7 @@ void HolderDoubleArray::reset_dfl()
 bool HolderDoubleArray::set( const QVariant & x, int idx )
 {
   bool ok;
-  if( idx < 0 || (unsigned)(idx) >= v.size() ) { // slow, but safe - not for fast code
+  if( ! isGoodIndex( idx, v ) ) { // slow, but safe - not for fast code
     return false;
   }
   auto v0 = v[idx];
@@ -2305,14 +2305,15 @@ bool HolderDoubleArray::set( const QVariant & x, int idx )
 
 QVariant HolderDoubleArray::get( int idx ) const
 {
-  if( idx < 0 || (unsigned)idx >= v.size() ) // slow, but safe - not for fast code
+  if( ! isGoodIndex( idx, v ) ) { // slow, but safe - not for fast code
     return QVariant();
+  }
   return QVariant( v[idx] );
 }
 
 double HolderDoubleArray::getDouble( int idx ) const
 {
-  if( idx < 0 || (unsigned)idx >= v.size() ) {
+  if( ! isGoodIndex( idx, v ) ) {
     return 0.0;
   }
   return v[idx];
@@ -2422,7 +2423,7 @@ void HolderStringArray::reset_dfl()
 
 bool HolderStringArray::set( const QVariant & x, int idx )
 {
-  if( idx < 0 || idx >= v.size() )  { // slow, but safe - not for fast code
+  if( ! isGoodIndex( idx, v ) ) {
     return false;
   }
   auto v0 = v[idx];
@@ -2447,7 +2448,7 @@ QVariant HolderStringArray::get( int idx ) const
 
 double HolderStringArray::getDouble( int idx ) const
 {
-  if( idx < 0 || idx >= v.size() ) {
+  if( ! isGoodIndex( idx, v ) ) {
     return 0;
   }
   return v[idx].toDouble();

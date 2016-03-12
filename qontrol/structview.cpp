@@ -129,10 +129,7 @@ void StructView::changeSel( int x, int y, int rel )
 
 void StructView::changeLevel( int lev )
 {
-  level = lev;
-  if( level < 0 || level >= 64 ) {
-    level = 0;
-  }
+  level = vBound( 0, lev, 64-1 ); // TODO: define
   // update();
   emit viewChanged();
 }
@@ -643,7 +640,7 @@ void StructView::qlinkElm()
   // TODO: its model action. really? model dont know about selected and marked.
 
   auto inputs =  selObj->TCHILD(InputSimple*);
-  if( level < 0 || level >= inputs.size() ) {
+  if( ! isGoodIndex( level, inputs ) ) {
     qWarning() << "bad level " << level << " to link " << selObj->getFullName() << WHE;
     return;
   }
@@ -867,7 +864,7 @@ void StructView::mousePressEvent( QMouseEvent *me )
   h = height(); w = width(); nh = h / grid_sz - 1; nw = w / grid_sz - 1;
   x = me->x(); y = me->y();
   ex = ( x - lm ) / grid_sz; ey = ( y - tm ) / grid_sz;
-  if( ex < 0 || ex >= nw || ey < 0 || ey >= nh ) {
+  if( ! isInBounds( 0, ex, nw-1) || ! isInBounds( 0, ey, nh-1) ) {
     return;
   }
 

@@ -209,18 +209,6 @@ bool SelectTypeDialog::getTypeAndParams( HolderData *pobj, QWidget *aparent, Add
     prm.vis_name = QSL("<div>") % prm.name % QSL("</div>" );
   }
 
-  // QString sep { QSL("\nsep=") };
-  // QString dlm, coma { QSL(",") };
-  // if( cb_col->isChecked() ) { sep += QSL("col"); dlm = coma; }
-  // if( cb_colend->isChecked() ) { sep += dlm % QSL("col"); dlm = coma; }
-  // if( cb_row->isChecked() ) { sep += dlm % QSL("row"); dlm = coma; }
-  // if( cb_block->isChecked() ) { sep += dlm % QSL("block"); dlm = coma; }
-  // if( cb_blockend->isChecked() ) { sep += dlm % QSL("blockend"); dlm = coma; }
-  // if( cb_tab->isChecked() ) { sep += dlm % QSL("tab"); dlm = coma; }
-  // if( cb_tabend->isChecked() ) { sep += dlm % QSL("tabend"); dlm = coma; }
-  // if( dlm.isEmpty() ) {
-  //   sep = QSL("");
-  // }
   QString sep = lws->currentData().toString();
   prm.extra = ed_extra->toPlainText() % sep;
 

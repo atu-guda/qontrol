@@ -64,6 +64,11 @@ inline double vBound(   double l, double x, double r )
   { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
 inline int    vBound(      int l,    int x,    int r )
   { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
+template< typename T > bool isGoodIndex( long idx, const T& container )
+  {
+    static_assert( sizeof(long) >= sizeof(typename T::size_type), "index size is incompatible to long!");
+    return (idx>=0) && idx<(long)container.size();
+  }
 double deadLine( double x, double x0 );
 double limitLine( double x, double x0 );
 double deadLimitLine( double x, double x0, double x1, double a );

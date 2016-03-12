@@ -1189,8 +1189,9 @@ void DataDialog::showHelp()
 void DataDialog::showSimpleHelp()
 {
   const char *help;
-  if( (help = ds.getHelp()) == 0 )
+  if( (help = ds.getHelp()) == 0 ) {
     return;
+  }
   QString help_str = QSL( "<p><a name=\"help_head\"></a> </p><hr/>\n" ) % help % QSL("<hr/>\n");
 
   for( auto ho : ds.TCHILD(HolderData*) ) {

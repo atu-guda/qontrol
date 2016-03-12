@@ -1236,7 +1236,7 @@ bool TGraph::fillViewData( ViewData *da )
 
 bool TGraph::getPointAt( int ig, int ip, mglPoint *p ) const
 {
-  if( !prepared || !p || ig<0 || ig >=(int)pli.size() || ip <0 || ip >= nn ) {
+  if( !prepared || !p || ! isGoodIndex( ig, pli ) || ! isInBounds( 0, ip, nn-1 ) ) {
     return false;
   }
   double x = tli[LineRole::axisX]->md->a[ip];
@@ -1254,7 +1254,7 @@ bool TGraph::getPointAt( int ig, int ip, mglPoint *p ) const
 
 int TGraph::findNearest( const mglPoint &p, int ig ) const
 {
-  if( !prepared || ig<0 || ig >=(int)pli.size() ) {
+  if( !prepared || ! isGoodIndex( ig, pli ) ) {
     return -1;
   }
   mglPoint p0 = p, p1;
@@ -1297,7 +1297,7 @@ void TGraph::viewForPoints( const mglPoint &p0, const mglPoint &p1, ViewData &vd
 
 QString TGraph::getPlotLabel( int ig ) const
 {
-  if( ig < 0 || ig >= (int)pli.size() ) {
+  if( ! isGoodIndex( ig, pli ) ) {
     return QString();
   }
   return pli[ig]->label;
@@ -1305,7 +1305,7 @@ QString TGraph::getPlotLabel( int ig ) const
 
 QString TGraph::getPrintInfo( int ig ) const
 {
-  if( ig < 0 || ig >= (int)pli.size() ) {
+  if( ! isGoodIndex( ig, pli ) ) {
     return QString();
   }
   return pli[ig]->md->PrintInfo();

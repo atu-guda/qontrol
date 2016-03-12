@@ -1237,10 +1237,14 @@ void LaboWin::slotTest()
   ostr += QSL("<hr/>\n");
   auto scriptsDirs = QDir::searchPaths( SCRIPT_DIR );
   ostr += "<b>Scripts dirs</b>: <br/>\n";
-  for( auto s: scriptsDirs ) { ostr += QSL(" \"") % s % QSL("\"<br>\n"); }
+  for( auto s: scriptsDirs ) {
+    ostr += QSL(" \"") % s % QSL("\"<br>\n");
+  }
   auto libDirs = QDir::searchPaths( LIB_DIR );
   ostr += "<b>Lib dirs</b>: <br/>\n";
-  for( auto s: libDirs ) { ostr += QSL(" \"") % s % QSL("\"<br>\n"); }
+  for( auto s: libDirs ) {
+    ostr += QSL(" \"") % s % QSL("\"<br>\n");
+  }
   // ostr += QSL("<br>\n");
 
   QMessageBox::information( this, tr( "Test" ), ostr, QMessageBox::Ok );
