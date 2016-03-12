@@ -69,6 +69,14 @@ template< typename T > bool isGoodIndex( long idx, const T& container )
     static_assert( sizeof(long) >= sizeof(typename T::size_type), "index size is incompatible to long!");
     return (idx>=0) && idx<(long)container.size();
   }
+template< typename T >
+const typename T::value_type atd( const T& container, typename T::size_type idx, const typename T::value_type &def )
+  {
+    if( idx < 0 && idx >= container.size() ) {
+      return def;
+    }
+    return container[idx];
+  }
 double deadLine( double x, double x0 );
 double limitLine( double x, double x0 );
 double deadLimitLine( double x, double x0, double x1, double a );

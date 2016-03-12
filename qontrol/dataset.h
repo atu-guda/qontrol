@@ -228,7 +228,7 @@ class HolderData : public QAbstractItemModel {
   /** returns list of registered functions + signatures */
   Q_INVOKABLE QString lsf() const;
   /** returns holder by number */
-  HolderData* getObj( int i ) const;
+  HolderData* getObj( size_type i ) const;
   /** find holder for object by name */ //  elm relative.name.elm
   HolderData* getObj( const QString &oname ) const;
   /** find holder for object by index, safely cast to type T */

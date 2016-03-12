@@ -78,7 +78,7 @@ int HolderData::columnCount( const QModelIndex & /*par*/ ) const
 
 int HolderData::rowCount( const QModelIndex &par ) const
 {
-  int sz = size();
+  auto sz = size();
   if( ! par.isValid() ) { // invalid: assume self (examples: root)
     return sz;
   }
@@ -88,7 +88,7 @@ int HolderData::rowCount( const QModelIndex &par ) const
     return 0;
   }
   sz = po->size();
-  return sz;
+  return (int)sz;
 }
 
 QVariant HolderData::data( const QModelIndex &idx, int role ) const
@@ -356,9 +356,9 @@ QString HolderData::lsf() const
   return r;
 }
 
-HolderData* HolderData::getObj( int i ) const
+HolderData* HolderData::getObj( size_type i ) const
 {
-  if( isInBounds( 0, i, size()-1 ) ) {
+  if( isGoodIndex( i, *this ) ) {
     return qobject_cast<HolderData*>(children().at(i));
   }
   return nullptr;
@@ -2183,7 +2183,8 @@ double HolderIntArray::getDouble( int idx ) const
   if( ! isGoodIndex( idx, v ) ) {
     return 0.0;
   }
-  return double( v[idx] );
+  return v[idx];
+  // return atd( v, idx, 0.0 );
 }
 
 void HolderIntArray::do_post_set()
@@ -2313,6 +2314,7 @@ QVariant HolderDoubleArray::get( int idx ) const
 
 double HolderDoubleArray::getDouble( int idx ) const
 {
+  // return atd( v, idx, 0.0 );
   if( ! isGoodIndex( idx, v ) ) {
     return 0.0;
   }
