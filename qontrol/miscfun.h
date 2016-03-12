@@ -56,6 +56,14 @@ inline double sign( double x ) {  return ( x>0 ) ? 1 : ( ( x<0 ) ? -1 : 0 ); };
 /** Heaviside */
 inline double thetta( double x ) { return ( x>0 ) ? 1 : 0; };
 inline double posval( double x ) { return ( x>=0 ) ? x : 0; };
+inline bool isInBounds(   double l, double x, double r ) { return (x>=l) && (x<=r); };
+inline bool isInBounds(      int l,    int x,    int r ) { return (x>=l) && (x<=r); };
+inline bool isInBoundsNE( double l, double x, double r ) { return (x>l)  && (x<r);  };
+inline bool isInBoundsNE(    int l,    int x,    int r ) { return (x>l)  && (x<r);  };
+inline double vBound(   double l, double x, double r )
+  { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
+inline int    vBound(      int l,    int x,    int r )
+  { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
 double deadLine( double x, double x0 );
 double limitLine( double x, double x0 );
 double deadLimitLine( double x, double x0, double x1, double a );

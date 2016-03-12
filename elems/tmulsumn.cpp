@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "miscfun.h"
 #include "tmulsumn.h"
 
 const char* TMulsumN::helpstr = "<h1>TMulsumN</h1>\n"
@@ -91,7 +92,7 @@ double TMulsumN::f() noexcept
       double a_1 = ( f_rt * p_lt * p_lt - f_lt * p_rt * p_rt ) / denom;
       double a_2 = - ( f_rt * p_lt - f_lt * p_rt ) / denom;
       pee = pc - 0.5 * a_1 / a_2; // rel
-      pee = qBound( pl, (double)pee, pr );
+      pee = vBound( pl, (double)pee, pr );
       double pee_t = pee - pc;
       fee = fc + a_2 * pee_t * pee_t + a_1 * pee_t;
     }

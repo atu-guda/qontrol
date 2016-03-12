@@ -85,8 +85,8 @@ void StructView::print()
 void StructView::handleSelChange()
 {
   selObj = nullptr;
-  sel_x = qBound( 0, sel_x, MODEL_MX-1 );
-  sel_y = qBound( 0, sel_y, MODEL_MY-1 );
+  sel_x = vBound( 0, sel_x, MODEL_MX-1 );
+  sel_y = vBound( 0, sel_y, MODEL_MY-1 );
   sel = -1;
   auto ob = sch->xy2Miso( sel_x, sel_y );
   if( ob ) {

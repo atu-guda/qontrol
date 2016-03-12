@@ -1582,7 +1582,7 @@ void HolderInt::do_post_set()
 {
   int v_min = getParmInt( QSL("min"), IMIN );
   int v_max = getParmInt( QSL("max"), IMAX );
-  v = qBound( v_min, v, v_max );
+  v = vBound( v_min, v, v_max );
 }
 
 QString HolderInt::toString() const
@@ -1707,7 +1707,7 @@ void HolderDouble::do_post_set()
 {
   double v_min = getParmDouble( QSL("min"), DMIN );
   double v_max = getParmDouble( QSL("max"), DMAX );
-  v = qBound( v_min, v, v_max );
+  v = vBound( v_min, v, v_max );
 }
 
 QString HolderDouble::toString() const
@@ -2196,7 +2196,7 @@ void HolderIntArray::do_post_set()
   int v_min = getParmInt( QSL("min"), IMIN );
   int v_max = getParmInt( QSL("max"), IMAX );
   for( int& vc : v ) {
-    vc = qBound( v_min, vc, v_max );
+    vc = vBound( v_min, vc, v_max );
   }
 }
 
@@ -2328,7 +2328,7 @@ void HolderDoubleArray::do_post_set()
   double v_min = getParmDouble( QSL("min"), DMIN );
   double v_max = getParmDouble( QSL("max"), DMAX );
   for( double& vc : v ) {
-    vc = qBound( v_min, vc, v_max );
+    vc = vBound( v_min, vc, v_max );
   }
 }
 

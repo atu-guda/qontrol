@@ -444,7 +444,7 @@ void MglView::setAlpha( double al, bool rel )
   } else {
     scd->alpha  = al;
   }
-  scd->alpha = qBound( 0.0, (double)(scd->alpha), 1.0 );
+  scd->alpha = vBound( 0.0, scd->alpha, 1.0 );
   update();
 }
 
@@ -578,7 +578,7 @@ void MglView::setMarkToLink()
   if( linkPlot < 0 ) {
     return;
   }
-  linkIdx = qBound( 0, linkIdx, vd.nn-1 );
+  linkIdx = vBound( 0, linkIdx, vd.nn-1 );
   mglPoint targ;
   if( ! gra->getPointAt( linkPlot, linkIdx, &targ ) ) {
     qWarning() << "unknown point " << linkIdx << "line " << linkPlot << WHE;

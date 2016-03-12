@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "miscfun.h"
 #include "tswitch.h"
 
 const char* TSwitch::helpstr = "<H1>TSwitch</H1>\n"
@@ -30,7 +31,7 @@ CTOR(TSwitch,TMiso)
 double TSwitch::f() noexcept
 {
   if( fabs(step) < D_AZERO ) { step = D_AZERO; }
-  double vn = qBound( 0.0, ( in_s - level_0 ) / step, double(n_max) );
+  double vn = vBound( 0.0, ( in_s - level_0 ) / step, double(n_max) );
   int n = int( vn );
   n_cur = n;
 

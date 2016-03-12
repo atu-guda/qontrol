@@ -48,9 +48,11 @@ double TQuadExtr::f() noexcept
   y_rt = y_r  - y_ce;
 
   // limit values
-  double lim_x_lt = lim_s * x_lt, lim_x_rt = lim_s * x_rt;
-  if( limitG ) {
+  double lim_x_lt, lim_x_rt;
+  if( limitG ) { // given
     lim_x_lt = x_min - x_ce; lim_x_rt = x_max - x_ce;
+  } else {       // relative
+    lim_x_lt = lim_s * x_lt; lim_x_rt = lim_s * x_rt;
   }
 
   double x_lt2 = x_lt * x_lt;
@@ -70,7 +72,7 @@ double TQuadExtr::f() noexcept
 
   if( limitX ) { // often need, else - for tests
 
-    if( ! ( a_2 < 0  &&  x_cnt > lim_x_lt  &&  x_cnt < lim_x_rt ) ) { // Min and in limits
+    if( !  ( a_2 < 0  &&  isInBoundsNE( lim_x_lt, x_cnt, lim_x_rt ) )  ) {
 
       if( y_r > y_l ) { //  bound to point with large y, NOT nearest to x_cn!
         x_cnt = lim_x_rt;
