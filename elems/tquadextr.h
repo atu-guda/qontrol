@@ -35,8 +35,8 @@ class TQuadExtr : public TMiso  {
    virtual double f() noexcept override;
 
    PRM_SWITCH( emulC,  efNRC, "Emulate C", "Make virtual linear central point", "" );
-   PRM_SWITCH( limitX, efNRC, "Limit X", "Limit X to half-width", "def=1" );
-   PRM_PARAMD( lim_s,  0,     "lim_{s}", "Limit Scale", "sep=col\ndef=0.5" );
+   PRM_SWITCH( limitX, efNRC, "Limit X", "Limit X to", "def=1\nsep=col" );
+   PRM_PARAMD( lim_s,  0,     "lim_{s}", "Limit Scale", "def=0.99" );
    PRM_SWITCH( limitG, efNRC, "Limit as given", "Limit X by given values", "sep=col" );
    PRM_PARAMD( x_min,  0,     "x_{min}", "Given minimal x", "sep=col\ndef=-1" );
    PRM_PARAMD( x_max,  0,     "x_{max}", "Given miximal x", "def=1" );
@@ -55,12 +55,12 @@ class TQuadExtr : public TMiso  {
    PRM_DOUBLE( y_lt,  efInner, "y_{lt}", "Relative y left point = y_l-y_c", "" );
    PRM_DOUBLE( y_rt,  efInner, "y_{rt}", "Relative y right point = y_r-y_c", "" );
 
-   PRM_INPUT( x_r,   0, "x_r", "Coordinate on right point",  "sep=block" );
-   PRM_INPUT( y_r,   0, "y_r", "Value on right point",  "" );
-   PRM_INPUT( x_c,   0, "x_c", "Coordinate on central point",  "sep=col" );
-   PRM_INPUT( y_c,   0, "y_c", "Value on central point",  "" );
-   PRM_INPUT( x_l,   0, "x_l", "Coordinate on left point",  "sep=col" );
-   PRM_INPUT( y_l,   0, "y_l", "Value on left point",  "" );
+   PRM_INPUT( x_l,   0, "x_l", "Left point argument",  "sep=block" );
+   PRM_INPUT( y_l,   0, "y_l", "Left point value",  "" );
+   PRM_INPUT( x_c,   0, "x_c", "Central point argument",  "sep=col" );
+   PRM_INPUT( y_c,   0, "y_c", "Central point value",  "" );
+   PRM_INPUT( x_r,   0, "x_r", "Right point argument",  "sep=col" );
+   PRM_INPUT( y_r,   0, "y_r", "Right point value",  "" );
 
    Q_CLASSINFO( "nameHintBase",  "qextr_" );
    DCL_DEFAULT_STATIC;

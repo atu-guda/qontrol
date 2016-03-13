@@ -42,7 +42,7 @@ CTOR(TMulsumN,TMiso)
 double TMulsumN::f() noexcept
 {
   spf = 0; sp = 0; sf = 0;
-  int n = pf_ins.size(); // local ?? np?
+  auto n = pf_ins.size(); // local ?? np?
   {
     double f_max = DMIN, p_max = DMIN;
     int i_max = -1, i = 0;
@@ -57,23 +57,26 @@ double TMulsumN::f() noexcept
       }
       ++i;
     }
-    if( fabs( sf ) > D_AZERO ) {
+    if( fabs( sf ) > D_AZERO ) { // COG global esimations
       pge = spf / sf;
     } else {
       pge = sp / n; // fallback value: average
     }
 
-    ne = i_max; fe = f_max;  pe = p_max;
+    ne = i_max; fe = f_max;  pe = p_max; // extremum index and values
   }
 
   ple = pee = pe; spfl = fe * pe; spl = pe; fee = sfl = fe; // fallback
-  if( ne > 0  &&  ne < n-1 ) { // not boundary
-    double pl = *(pf_ins[ne-1].in_p);
-    double pc = *(pf_ins[ne  ].in_p);
-    double pr = *(pf_ins[ne+1].in_p);
-    double fl = *(pf_ins[ne-1].in_f);
-    double fc = *(pf_ins[ne  ].in_f);
-    double fr = *(pf_ins[ne+1].in_f);
+
+  // local extemums (le,ee) estimation
+  if( n >= 3 ) { // 3 - minimum amount to use these methods
+    int lne = vBound( 1, (int)ne, n-2 ); // shift from boundary
+    double pl = *(pf_ins[lne-1].in_p);
+    double pc = *(pf_ins[lne  ].in_p);
+    double pr = *(pf_ins[lne+1].in_p);
+    double fl = *(pf_ins[lne-1].in_f);
+    double fc = *(pf_ins[lne  ].in_f);
+    double fr = *(pf_ins[lne+1].in_f);
     spl = pl + pc + pr;
     sfl = fl + fc + fr;
     spfl = pl*fl + pc*fc + pr*fr;
@@ -82,7 +85,7 @@ double TMulsumN::f() noexcept
     } else {
       ple = spl / 3.0;
     }
-    // a-la tquadexrt
+    // a-la tquadexrt: TODO: separate func
     double p_lt = pl - pc;
     double p_rt = pr - pc;
     double f_lt = fl - fc;
@@ -91,10 +94,12 @@ double TMulsumN::f() noexcept
     if( fabs( denom ) > D_AZERO ) {
       double a_1 = ( f_rt * p_lt * p_lt - f_lt * p_rt * p_rt ) / denom;
       double a_2 = - ( f_rt * p_lt - f_lt * p_rt ) / denom;
-      pee = pc - 0.5 * a_1 / a_2; // rel
-      pee = vBound( pl, (double)pee, pr );
-      double pee_t = pee - pc;
-      fee = fc + a_2 * pee_t * pee_t + a_1 * pee_t;
+      if( a_2 < - D_AZERO ) { // only negative a2 here
+        pee = pc - 0.5 * a_1 / a_2; // rel
+        pee = vBound( pl, (double)pee, pr );
+        double pee_t = pee - pc;
+        fee = fc + a_2 * pee_t * pee_t + a_1 * pee_t;
+      }
     }
   }
   return spf;
