@@ -36,7 +36,7 @@ CTOR(ContGraph,LinkedObj)
 
 int ContGraph::do_postRun( int /*good*/ )
 {
-  readAllInputs(); // for labels...
+  // readAllInputs(); // for labels...-> moved to prepare
   return 1;
 }
 

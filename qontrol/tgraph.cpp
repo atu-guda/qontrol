@@ -625,6 +625,7 @@ void TGraph::do_reset()
 int TGraph::prepare()
 {
   reset();
+  readAllInputs();
   double vmin = DMAX, vmax = DMIN; // cross! (local copy of v_min, v_max)
   bool was_x = false, was_y = false;
   vector<double> ve_fx, ve_fy; // arrays for missing data
@@ -1336,6 +1337,7 @@ void TGraph::plotToPng( const QString &fn )
 {
   QString efn = fn.isEmpty() ? hintFileName() : fn;
 
+  reset(); // to reread all
   int w =  scd->w0, h = scd->h0;
   QImage timg( w, h, QImage::Format_RGB32 );
   renderTo( timg, nullptr, scd );
