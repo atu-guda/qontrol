@@ -81,6 +81,8 @@ double TFuncPoly::f() noexcept
       v = a * pow( b * posval(y), posval(c) ); break;
     case  ft_pows:
       v = a * pow( b * fabs(y), posval(c) )  *  sign( y ); break;
+    case  ft_hypot4:
+      v = e * sqrt( a*a*in_0*in_0 + b*b*in_1*in_1 +c*c*in_2*in_2 +d*d*in_3*in_3 ); break;
     default: v = 0;
   };
   v += g;
