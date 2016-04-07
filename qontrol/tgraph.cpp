@@ -928,6 +928,10 @@ QSize TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda
   int w = img.width(), h = img.height();
   img.fill( 0xFF );
 
+  if( !prepared  && prepare() < 1 ) {
+    return QSize( w, h );
+  }
+
   if( !scda ) { scda = scd; }
   ViewData vd;
   if( a_vd ) { vd = *a_vd; } // default values
@@ -1213,7 +1217,7 @@ void TGraph::setupMglGraph( mglGraph &grs, const ViewData *a_vd, const ScaleData
   if( full ) {
     if( need_c_axis ) {
       grs.SetRange( 'c', tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max );
-      // DBGx( "dbg: C axis: %lf %lf", tli[LineRole::c0]->v_min, tli[LineRole::c0]->v_max  );
+      // qWarning() << "dbg: C axis: " << tli[LineRole::c0]->v_min << tli[LineRole::c0]->v_max << NWHE;
     }
 
     grs.Light( scda->useLight );
