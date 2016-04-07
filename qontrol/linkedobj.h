@@ -151,7 +151,7 @@ class InputAbstract : public LinkedObj {
   Q_INVOKABLE virtual QString textVisual() const override;
   //* return ptr to LinkedObj, which holds element or nullptr;
   const LinkedObj* getSourceObj() const noexcept { return src_obj; };
-  void readInput() noexcept { out0 = *p; } ;
+  void readInput() noexcept { out0 = *p * factor + shift; } ;
   int  getLinkType() const noexcept { return linkType; }
   int  getOnlyFirst() const noexcept { return onlyFirst; }
   /** find and set link to source or fake source */
@@ -170,6 +170,8 @@ class InputAbstract : public LinkedObj {
 
   PRM_STRING( source, efNRC, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
   PRM_SWITCH( onlyFirst, 0, "only First", "apply only at start of run", "" );
+  PRM_DOUBLE( factor, 0, "factor", "Input factor", "def=1" );
+  PRM_DOUBLE( shift,  0, "shift",  "Input shift",  "def=0" );
   PRM_STRING( label,  efNRC, "Label", "Label to display on structure", "max=64"  );
   PRM_INT( x_shift, 0, "X shift", "Shift on x-part of link representation", "sep=col" );
   PRM_INT( y_shift, 0, "Y shift", "Shift on y-part of link representation", "" );

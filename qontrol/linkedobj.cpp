@@ -402,38 +402,39 @@ QVariant InputAbstract::dataObj( int col, int role ) const
 
 QString InputAbstract::prepTextVisual( bool isLong ) const
 {
-  QString s;
+  bool isScaled = ( fabs(factor-1) > D_AZERO ) || ( fabs(shift) > D_AZERO );
+  QString s = isScaled ? QSL("!") : QSL("");
   // readAllInputs(); // ;-( -- fail, no const
   int lt  = linkType;
   switch( lt ) {
     case LinkNone:
       if( ! isLong ) {
-        s = QSL("=");
+        s += QSL("=");
       }
       break;
     case LinkElm:
-      s = QChar( 0x27BC ); // >>->
+      s += QChar( 0x27BC ); // >>->
       if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
-        s = QChar( 0x2794 ); // ->
+        s += QChar( 0x2794 ); // ->
       }
       if( isLong ) {
         s += source.cval();
       }
       break;
     case LinkSpec:
-      s = QChar( 0x27A4 ); // >>
+      s += QChar( 0x27A4 ); // >>
       if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
-        s = QChar( 0x27A0 ); // =>
+        s += QChar( 0x27A0 ); // =>
       }
       if( isLong ) {
         s += source.cval();
       }
       break;
     case LinkBad:
-      s = QChar( 0x274C ); // X
+      s += QChar( 0x274C ); // X
       break;
     default:
-      s = QSL("?");
+      s += QSL("?");
       break;
   }
 
