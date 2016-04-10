@@ -58,7 +58,7 @@ void Simulation::do_post_set()
     n2_eff = (int)N2;
   }
 
-  n_tot = N * n1_eff * n2_eff;
+  n_tot = (long)N * n1_eff * n2_eff;
 }
 
 

@@ -173,8 +173,8 @@ void RunView::drawAll( QPainter &p )
     rt = 0;
   }
 
-  QString s = QString::asprintf( "%5s  t: %012.3f; m: [% .2f; % .2f]; rt: %7.2f  i: %7d (%3d:%3d);",
-    getStateString(state), /*runType,*/ t, mouse_x, mouse_y, rt,
+  QString s = QString::asprintf( "%5s  t: %012.4f; m: [% .2f; % .2f]; rt: %7.2f  i: %9ld (%3d:%3d);",
+    getStateString(state), t, mouse_x, mouse_y, rt,
     i_tot, il1, il2  );
   p.drawText( 10, 14, s );
 
@@ -315,7 +315,7 @@ void RunView::getSchemeData()
 {
   Simulation *c_sim = model->getActiveSimulation();
   if( c_sim ) {
-    n_tot = c_sim->getDataD( "n_tot", 100 );
+    n_tot = c_sim->getDataD( "n_tot", 100l );
     T = c_sim->getDataD( "T", 1.0 );
     N = c_sim->getDataD( "N", 1 );
     syncRT = c_sim->getDataD( "syncRT", 0 );

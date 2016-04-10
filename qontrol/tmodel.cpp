@@ -226,7 +226,7 @@ int TModel::startRun()
   N2  = c_sim->getDataD( "N2", 1 );
   n1_eff = c_sim->getDataD( "n1_eff", N1 );
   n2_eff = c_sim->getDataD( "n2_eff", N2 );
-  n_tot  = c_sim->getDataD( "n_tot", N );
+  n_tot  = c_sim->getDataD( "n_tot", (long)N );
   syncRT = c_sim->getDataD( "syncRT", 0 );
   fakeRT = c_sim->getDataD( "fakeRT", 0 );
   prm0s = c_sim->getDataD( "prm0s", 0.0 );
@@ -249,7 +249,7 @@ int TModel::startRun()
 
   run_type = type;
 
-  i_tot = ii = il1 = il2 = 0;
+  i_tot = 0; ii = il1 = il2 = 0;
   sgnt = int( time( 0 ) );
   if( T < TDT_MIN ) {
     qWarning() << "Too small full time time T" << T << NWHE;
@@ -313,7 +313,7 @@ int TModel::startRun()
 }
 
 
-int TModel::run( QSemaphore *sem )
+long TModel::run( QSemaphore *sem )
 {
   if( !sem || ! c_sch || !c_sim ) {
     qCritical() << "bad init!" << NWHE;
@@ -445,10 +445,10 @@ int TModel::stopRun()
   return 1;
 }
 
-int TModel::run_bg()
+long TModel::run_bg()
 {
   QSemaphore sem_io( 1 ); // really not need, may be more?
-  int rc = startRun();
+  long rc = startRun();
   if( !rc ) {
     return 0;
   }

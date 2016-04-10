@@ -261,12 +261,14 @@ class HolderData : public QAbstractItemModel {
   void setUnModified(); //* drop modified flag: and from children
   Q_INVOKABLE void post_set();
   virtual bool getData( const QString &nm, int *da, bool er = true ) const;
+  virtual bool getData( const QString &nm, long *da, bool er = true ) const;
   virtual bool getData( const QString &nm, double *da, bool er = true ) const;
   virtual bool getData( const QString &nm, QVariant &da, bool er = true ) const;
   virtual bool getData( const QString &nm, QString &da, bool er = true ) const;
   virtual bool getData( const QString &nm, QColor &da, bool er = true ) const;
   // the same but with default and direct return
   Q_INVOKABLE int     getDataD( const QString &nm, int dfl ) const;
+  Q_INVOKABLE long    getDataD( const QString &nm, long dfl ) const;
   Q_INVOKABLE double  getDataD( const QString &nm, double dfl ) const;
   Q_INVOKABLE QString getDataD( const QString &nm, const QString &dfl ) const;
   Q_INVOKABLE QColor  getDataD( const QString &nm, const QColor &dfl ) const;

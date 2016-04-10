@@ -104,11 +104,12 @@ class RunView : public QDialog  {
     int keys_state[10];
     // some next vars filled from Scheme =========================
     /** total number of loops */
-    int n_tot = 1;
+    long n_tot = 1;
     //* iteration per loop
     int N = 1;
     /** misc counters */
-    int i_tot = 0, il1 = 0, il2 = 0;
+    long i_tot = 0;
+    int il1 = 0, il2 = 0;
     //* current time
     double t;
     //* total time

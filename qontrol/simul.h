@@ -106,7 +106,7 @@ class Simulation : public LinkedObj  {
   //* helper values to simplify usage
   PRM_INT( n1_eff, efInner, "n1_eff", "Effective number of iteration in inner loop" , "" );
   PRM_INT( n2_eff, efInner, "n2_eff", "Effective number of iteration in outer loop" , "" );
-  PRM_INT( n_tot, efInner, "n_tot", "Total number of iterations" , "" );
+  PRM_LONG( n_tot, efInner, "n_tot", "Total number of iterations" , "" );
 
   Q_CLASSINFO( "nameHintBase",  "sim" );
   DCL_DEFAULT_STATIC;

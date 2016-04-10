@@ -65,14 +65,14 @@ class TModel : public LinkedObj  {
 
   int startRun();
   int stopRun();
-  int run( QSemaphore *sem );
-  Q_INVOKABLE int run_bg(); // startRun and stopRun to use w/o iface
+  long run( QSemaphore *sem );
+  Q_INVOKABLE long run_bg(); // startRun and stopRun to use w/o iface
   // pass to real TGraph
   Q_INVOKABLE void plotToPng( const QString &gname, const QString &fn );
 
   // for fast access in RunView
   double get_t() const { return t; }
-  int get_i_tot() const { return i_tot; }
+  long get_i_tot() const { return i_tot; }
   int get_il1() const { return il1; }
   int get_il2() const { return il2; }
  protected:
@@ -172,9 +172,9 @@ class TModel : public LinkedObj  {
   PRM_INT( sgnt, efInner, "sgnt", "signature to check", "" );
 
   /** total number of iterations */
-  PRM_INT( n_tot, efInner, "n_tot", "total number of iterations", "" );
+  PRM_LONG( n_tot, efInner, "n_tot", "total number of iterations", "" );
   /** total counter */
-  PRM_INT( i_tot, efInner, "i_tot", "total counter", "" );
+  PRM_LONG( i_tot, efInner, "i_tot", "total counter", "" );
   /** run type */
   int run_type = -1; // reset
   /** effective number of loop on prm0 */

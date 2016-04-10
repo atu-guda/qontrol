@@ -1085,6 +1085,20 @@ bool HolderData::getData( const QString &nm, int *da, bool er ) const
   return true;
 }
 
+bool HolderData::getData( const QString &nm, long *da, bool er ) const
+{
+  if( !da ) {
+    return false;
+  }
+  QVariant vda;
+  bool rc = getData( nm, vda, er );
+  if( ! rc ) {
+    return false;
+  }
+  *da = (long)vda.toLongLong();
+  return true;
+}
+
 bool HolderData::getData( const QString &nm, double *da, bool /*er*/ ) const
 {
   if( !da ) {
@@ -1132,14 +1146,21 @@ bool HolderData::getData( const QString &nm, QColor &da, bool er ) const
 
 int HolderData::getDataD( const QString &nm, int dfl ) const
 {
-  int r = dfl;
+  auto r = dfl;
+  getData( nm, &r );
+  return r;
+}
+
+long HolderData::getDataD( const QString &nm, long dfl ) const
+{
+  auto r = dfl;
   getData( nm, &r );
   return r;
 }
 
 double HolderData::getDataD( const QString &nm, double dfl ) const
 {
-  double r = dfl;
+  auto r = dfl;
   getData( nm, &r );
   return r;
 }
