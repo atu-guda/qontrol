@@ -107,7 +107,7 @@ class GraphElem : public TDataSet {
 
  public:
    //* fills inner data, required for plot (seed inner:)
-   LineRole fillForPlot( int &g_nn, int &g_ny, int igc );
+   LineRole fillForPlot( long &g_nn, long &g_ny, int igc );
 
  protected:
    virtual void do_reset() override;
@@ -125,7 +125,7 @@ class GraphElem : public TDataSet {
    // inner: prepare to plot
    int ig = -1; // index
    LineRole role = LineRole::none;
-   int nn = 0, nx = 0, ny = 1;
+   long nn = 0, nx = 0, ny = 1;
    std::string pl_label = "";
    std::string pl_extra = "";
    std::string pl_opt = "";
@@ -144,7 +144,8 @@ struct ViewData {
   mglPoint mag { 1, 1, 1 }, pv_min { 0, 0, 0 }, pv_max{ 1, 1, 1 }, pv_dlt { 1, 1, 1 };
   mglPoint ofs { 0, 0, 0 };
   void reset() { mag.x = mag.y = mag.z = 1; ofs.x = ofs.y = ofs.z = 0; off = 0; sel = 0;};
-  int ng {0}, nn {0}, nx {0}, ny {1}; // only from TGraph to View
+  int  ng {0}; // only from TGraph to View
+  long nn {0}, nx {0}, ny {1}; // same
   uint64_t off = 0; // lines, not to show (from View to TGraph while plot)
   int sel {0};
 };
@@ -344,8 +345,8 @@ class TGraph : public LinkedObj  {
 
    QSize renderTo( QImage &img, const ViewData *a_vd = nullptr, const ScaleData *scda = nullptr );
    bool fillViewData( ViewData *da );
-   bool getPointAt( int ig, int ip, mglPoint *p ) const;
-   int findNearest( const mglPoint &p, int ig ) const ;//* find nearest point index
+   bool getPointAt( int ig, long ip, mglPoint *p ) const;
+   long findNearest( const mglPoint &p, int ig ) const ;//* find nearest point index
    void viewForPoints( const mglPoint &p0, const mglPoint &p1, ViewData &vd ) const;
    QString getPlotLabel( int ig ) const;
    QString getPrintInfo( int ig ) const;
@@ -354,7 +355,7 @@ class TGraph : public LinkedObj  {
  protected:
    virtual void do_reset() override;
    //* remove numbner of data points to plot
-   int fillSqueeze( std::vector<uint8_t> &plp );
+   long fillSqueeze( std::vector<uint8_t> &plp );
    void plotTo( mglGraph &gr, const ViewData *a_vd = nullptr, const ScaleData *scda = nullptr );
    void plot1( mglGraph &gr, const GraphElem *pl );
    void setupMglGraph( mglGraph &grs, const ViewData *a_vd, const ScaleData *scda, bool full = true );
@@ -375,7 +376,7 @@ class TGraph : public LinkedObj  {
    bool prepared = false;
    bool was_2D = false;
    bool need_c_axis = false;
-   int nn = 0, nx = 0, ny = 1;
+   long nn = 0, nx = 0, ny = 1;
    GraphElem* tli[LineRole::sz];  // type line ptrs
    std::vector<GraphElem*> pli;   // data line ptrs - only plottted lines
 

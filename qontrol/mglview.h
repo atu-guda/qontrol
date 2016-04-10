@@ -101,7 +101,7 @@ class MglView : public QWidget  {
    int mouse_x {0}, mouse_y {0};
    double angle_step = {5.0}, mag_step { M_SQRT1_2 }, scale_step { 0.10 };
    int linkPlot {-1}; //* linked data index
-   int linkIdx {0};   //* current point index in linked array
+   long linkIdx {0};   //* current point index in linked array
    bool data_loaded {false};
    bool show_footer {true};
 };

@@ -578,7 +578,7 @@ void MglView::setMarkToLink()
   if( linkPlot < 0 ) {
     return;
   }
-  linkIdx = vBound( 0, linkIdx, vd.nn-1 );
+  linkIdx = vBound( 0l, linkIdx, vd.nn-1 );
   mglPoint targ;
   if( ! gra->getPointAt( linkPlot, linkIdx, &targ ) ) {
     qWarning() << "unknown point " << linkIdx << "line " << linkPlot << WHE;

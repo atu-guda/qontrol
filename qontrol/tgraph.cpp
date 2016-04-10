@@ -85,7 +85,7 @@ void GraphElem::do_reset()
   ve = nullptr;
 }
 
-LineRole GraphElem::fillForPlot( int &g_nn, int &g_ny, int igc )
+LineRole GraphElem::fillForPlot( long &g_nn, long &g_ny, int igc )
 {
   LineRole rl = LineRole::none;
   ig = -1;
@@ -663,15 +663,15 @@ int TGraph::prepare()
   c_nn = nn; c_nx = nx; c_ny = ny;
 
   if( pli.size() < 1  ||  nn < 1 || nx < 1 ) {
-    qWarning() << "nothing to plot: pli.size=" << (int)pli.size()
-               << "nn=" << (int)nn << "nx=" << (int)nx << NWHE;
+    qWarning() << "nothing to plot: pli.size=" << (long)pli.size()
+               << "nn=" << (long)nn << "nx=" << (long)nx << NWHE;
     return 0;
   }
 
   if( ! was_x ) { // create fake X array
     ve_fx.resize( nn );
-    for( int j=0; j<ny; ++j ) {
-      for( int i=0; i<nx; ++i ) {
+    for( long j=0; j<ny; ++j ) {
+      for( long i=0; i<nx; ++i ) {
         ve_fx[i+j*nx] = i;
       }
     }
@@ -689,8 +689,8 @@ int TGraph::prepare()
 
   if( was_2D && !was_y ) { // make fake y array if at least 1 2D plot
     ve_fy.resize( nn );
-    for( int j=0; j<ny; ++j ) {
-      for( int i=0; i<nx; ++i ) {
+    for( long j=0; j<ny; ++j ) {
+      for( long i=0; i<nx; ++i ) {
         ve_fy[i+j*nx] = j;
       }
     }
@@ -708,12 +708,12 @@ int TGraph::prepare()
   v_min = vmin; v_max = vmax;
 
   vector<uint8_t> plp( nn, 0 ); // flags: point worth to draw
-  int np = fillSqueeze( plp );
+  long np = fillSqueeze( plp );
   // qDebug() << "squeeze res nn= " << (int)nn << "np= " np << NWHE;
 
   // create fake zero array
   auto mdz = new mglData( nx, ny );
-  for( int i=0; i<np; ++i ) { mdz->a[i] = 0.0; };
+  for( long i=0; i<np; ++i ) { mdz->a[i] = 0.0; };
   ge_zero  = make_shared<GraphElem>( "_zero",  nullptr, efInner, "zero data", "zero", "" );
   ge_zero->type = GraphElem::DataType::DataNone;
   ge_zero->is2D = was_2D; ge_zero->label = "0!";
@@ -734,7 +734,7 @@ int TGraph::prepare()
       continue;
     }
 
-    for( int i=0, j=0; i<nn && j<np ; ++i ) {
+    for( long i=0, j=0; i<nn && j<np ; ++i ) {
       if( plp[i] ) {
         md->a[j] = (*ve)[i];
         ++j;
@@ -747,7 +747,7 @@ int TGraph::prepare()
     auto md = new mglData( nx, ny );
     ge_fx->md = md;
     if( ve ) {
-      for( int i=0, j=0; i<nn && j<np ; ++i ) {
+      for( long i=0, j=0; i<nn && j<np ; ++i ) {
         if( plp[i] ) {
           md->a[j] = (*(ge_fx->ve))[i];
           ++j;
@@ -761,7 +761,7 @@ int TGraph::prepare()
     auto md = new mglData( nx, ny );
     ge_fy->md = md;
     if( ve ) {
-      for( int i=0, j=0; i<nn && j<np ; ++i ) {
+      for( long i=0, j=0; i<nn && j<np ; ++i ) {
         if( plp[i] ) {
           md->a[j] = (*(ge_fy->ve))[i];
           ++j;
@@ -775,14 +775,14 @@ int TGraph::prepare()
 
 
   // all unfilled set to ge_zero
-  // int iii = 0;
+  // long iii = 0;
   for( auto &ge : tli ) {
     if( !ge ) {
       ge = ge_zero.get();
     }
     // DBGx( "dbg: %d %s ge \"%s\" %s nx: %d ny: %d min: %lf max :%lf",
     //     iii, role_name[iii], qP(ge->label), role_name[ge->role],
-    //     (int)ge->md->nx, (int)ge->md->ny, ge->v_min, ge->v_max );
+    //     (long)ge->md->nx, (long)ge->md->ny, ge->v_min, ge->v_max );
     // ++iii;
   }
 
@@ -818,9 +818,9 @@ int TGraph::prepare()
   return pli.size();
 }
 
-int TGraph::fillSqueeze( vector<uint8_t> &plp )
+long TGraph::fillSqueeze( vector<uint8_t> &plp )
 {
-  const int max_nn_nosqz = 2000;
+  const long max_nn_nosqz = 2000;
   GraphElem *ge_x = tli[LineRole::axisX];
   if( !ge_x ) { // unlikely
     qWarning() << "warn: X axis not found!!!" << NWHE;
@@ -837,23 +837,23 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
     return nn;
   }
 
-  int np = 0; // number of selectd points;
+  long np = 0; // number of selectd points;
   const int nd0 = 4; // inifial filling delta in pixels
   double mdlt = scd->maxErr * ( v_max - v_min ) / scd->h0; // max allowd delta
-  int stp0 = nn * nd0 / scd->w0; // step for initial filling grid
+  long stp0 = nn * nd0 / scd->w0; // step for initial filling grid
 
   // initial grid
-  for( int i=0; i<nn; i+=stp0 ) {
+  for( long i=0; i<nn; i+=stp0 ) {
     plp[i] = 1;  ++np;
   }
   if( ! plp[nn-1] ) {
     plp[nn-1] = 1;  ++np;
   }
   // DBGx( "dbg: squeeze base: np= %d mdlt= %lf h0= %d stp0= %d v_min= %lf v_max= %lf",
-  //       np, mdlt, (int)scd->h0, stp0, (double)v_min, (double)v_max );
+  //       np, mdlt, (long)scd->h0, stp0, (double)v_min, (double)v_max );
 
   int was_add = 1;
-  for( int n_add = 0; was_add && n_add < 10; ++n_add ) { // 10 : max iterations to split
+  for( long n_add = 0; was_add && n_add < 10; ++n_add ) { // 10 : max iterations to split
     was_add = 0;
     for( auto ge : TCHILD(GraphElem*) ) {
       if( ge->role == LineRole::none || ge->role == LineRole::axisX ) { continue; }
@@ -863,7 +863,7 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
         // DBGx( "warn: no array in squeeze \"%s\"", qP(ge->label) );
         continue;
       }
-      for( int i0 = 0, i1 = 0; i0 < nn-1; i0 = i1 ) {
+      for( long i0 = 0, i1 = 0; i0 < nn-1; i0 = i1 ) {
         for( i1 = i0+1; !plp[i1] && i1 < nn; ++i1 ) /* NOP: find next set*/;
         double x0 = (*ve_x)[i0], x1 = (*ve_x)[i1];
         double y0 = (*yyc)[i0], y1 = (*yyc)[i1];
@@ -873,9 +873,9 @@ int TGraph::fillSqueeze( vector<uint8_t> &plp )
         double kxy = ( y1 - y0 ) / ( x1 - x0 );
 
         // find point of maximum delta
-        int i_cm = 0; // index of current maximum
+        long i_cm = 0; // index of current maximum
         double dly_cm = 0; // value of this max
-        for( int i2=i0+1; i2<i1-1; ++i2 ) {
+        for( long i2=i0+1; i2<i1-1; ++i2 ) {
           double yc = y0 + kxy * ( (*ve_x)[i2] - x0 );
           double dly = fabs( yc - (*yyc)[i2] );
           if( dly > dly_cm ) {
@@ -1239,9 +1239,9 @@ bool TGraph::fillViewData( ViewData *da )
   return true;
 }
 
-bool TGraph::getPointAt( int ig, int ip, mglPoint *p ) const
+bool TGraph::getPointAt( int ig, long ip, mglPoint *p ) const
 {
-  if( !prepared || !p || ! isGoodIndex( ig, pli ) || ! isInBounds( 0, ip, nn-1 ) ) {
+  if( !prepared || !p || ! isGoodIndex( ig, pli ) || ! isInBounds( 0l, ip, nn-1 ) ) {
     return false;
   }
   double x = tli[LineRole::axisX]->md->a[ip];
@@ -1257,7 +1257,7 @@ bool TGraph::getPointAt( int ig, int ip, mglPoint *p ) const
   return true;
 }
 
-int TGraph::findNearest( const mglPoint &p, int ig ) const
+long TGraph::findNearest( const mglPoint &p, int ig ) const
 {
   if( !prepared || ! isGoodIndex( ig, pli ) ) {
     return -1;
@@ -1268,12 +1268,12 @@ int TGraph::findNearest( const mglPoint &p, int ig ) const
     p0.z = 0;
   }
 
-  double l_min = DMAX; int i_min = 0;
+  double l_min = DMAX; long i_min = 0;
   const mglData *d_x = tli[LineRole::axisX]->md;
   const mglData *d_y = tli[LineRole::axisY]->md;
   const mglData *d_v = pli[ig]->md;
 
-  for( int i=0; i<nn; ++i ) {
+  for( long i=0; i<nn; ++i ) {
     if( was_2D ) {
       p1 = { d_x->a[i], d_y->a[i], d_v->a[i] };
     } else {
@@ -1364,7 +1364,7 @@ int TGraph::fillDatasInfo( DatasInfo *di ) const
   }
 
   di->reset();
-  int nn = IMAX, ny = 0; // 0 is special: not found
+  long nn = LMAX, ny = 0; // 0 is special: not found
 
   for( auto ge : TCHILD(GraphElem*) ) {
     QString s = ge->getDataD( "src", QString() );
@@ -1376,12 +1376,12 @@ int TGraph::fillDatasInfo( DatasInfo *di ) const
     if( !arr ) {
       continue;
     }
-    int nn_c = arr->getDataD( "n", 0 );
+    long nn_c = arr->getDataD( "n", 0l );
     if( nn_c < 1 ) {
       continue;
     }
     if( ny < 1 ) {
-      ny = arr->getDataD( "ny", 0 ); // default 0 = not found / bad
+      ny = arr->getDataD( "ny", 0l ); // default 0 = not found / bad
     }
     const dvector *ve = arr->getArray();
     if( !ve ) {
