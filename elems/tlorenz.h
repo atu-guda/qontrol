@@ -33,7 +33,7 @@ class TLorenz : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** called before each inner param loop. Unused param - -1 */
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
 
    /** main system parameters */
    PRM_PARAMD( sigma, 0, "\\sigma", "\\sigma parameter", "def=10.0" );

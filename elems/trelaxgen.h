@@ -35,7 +35,7 @@ class TRelaxGen : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** reimplemented from TMiso to reset */
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
 
    PRM_PARAMD( c, 0, "c", "Capacitance", "def=1\nmin=1e-16" );
    PRM_PARAMD( r_1, 0, "r_1", "Charge resistance", "def=1\nmin=1e-6\nsep=col" );

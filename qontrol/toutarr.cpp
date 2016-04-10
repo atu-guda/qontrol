@@ -108,7 +108,7 @@ QIcon TOutArr::getIcon() const
 
 
 
-int TOutArr::alloc( int anx, int any )
+int TOutArr::alloc( long anx, long any )
 {
   if( type != OutArrType::outSpec ) {
     return 0;
@@ -156,7 +156,7 @@ void TOutArr::set_link()
   }
 }
 
-int TOutArr::take_val()
+long TOutArr::take_val()
 {
   if( type != OutArrType::outSimple ) {
     return 0;
@@ -198,7 +198,7 @@ int TOutArr::do_postRun( int /*good*/ )
   return 1;
 }
 
-int TOutArr::do_startLoop( int acnx, int acny )
+int TOutArr::do_startLoop( long acnx, long acny )
 {
   switch( type ) {
     case OutArrType::outSimple:
@@ -282,7 +282,7 @@ void TOutArr::put_next_val()
   add( *so ); // scale inside
 }
 
-double TOutArr::at( int i ) const
+double TOutArr::at( long i ) const
 {
   if( i >=n || i<0 ) {
     return 0;
@@ -290,7 +290,7 @@ double TOutArr::at( int i ) const
   return arr[i];
 }
 
-double TOutArr::at( int x, int y ) const
+double TOutArr::at( long x, long y ) const
 {
   return at( x + y * nx );
 }
@@ -314,11 +314,11 @@ double TOutArr::atT( double T ) const
     return 0;
   }
   double tdt = model->getDataD( "tdt", 1.0 );
-  int idx = (int)( 0.5 + T / tdt );
+  long idx = (long)( 0.5 + T / tdt );
   return at( idx );
 }
 
-void TOutArr::put( int i, double v )
+void TOutArr::put( long i, double v )
 {
   v *= scale;  v += shift;
   if( i >=n || i<0 ) {
@@ -331,7 +331,7 @@ void TOutArr::put( int i, double v )
   need_calc_stat = true;
 }
 
-void TOutArr::put( int x, int y, double v )
+void TOutArr::put( long x, long y, double v )
 {
   return put( x + y*nx, v );
 }
@@ -381,7 +381,7 @@ void TOutArr::calc_stat( bool force, bool forceAll )
   reset_stat();
   dmin = DMAX; dmax = DMIN;
 
-  for( int i=0; i<n; ++i ) {
+  for( long i=0; i<n; ++i ) {
     double v = arr[i];
     if( v < dmin ) {
       dmin = v; imin = i;

@@ -71,8 +71,8 @@ const double* LinkedObj::getDoublePtr( const QString &nm, int *lt,
 
     auto *hoda = qobject_cast<HolderDoubleArray*>(ho); // array special case
     if( hoda ) {
-      int na = hoda->arrSize();
-      if( idx >= na ) {
+      auto na = hoda->arrSize();
+      if( (unsigned long)idx >= na ) {
         qWarning() << "Bad index " << idx << " while access to " << hoda->getFullName()
                    << " size " << na << NWHE;
         *plt = LinkBad;
@@ -258,7 +258,7 @@ int LinkedObj::do_postRun(  int /*good*/  )
 }
 
 
-int LinkedObj::startLoop( int acnx, int acny )
+int LinkedObj::startLoop( long acnx, long acny )
 {
   readAllInputs();
   int rc = do_startLoop( acnx, acny );
@@ -282,7 +282,7 @@ int LinkedObj::startLoop( int acnx, int acny )
   return 1;
 }
 
-int LinkedObj::do_startLoop( int /*acnx*/, int /*acny*/ )
+int LinkedObj::do_startLoop( long /*acnx*/, long /*acny*/ )
 {
   return 1;
 }

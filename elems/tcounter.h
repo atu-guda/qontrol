@@ -41,7 +41,7 @@ class TCounter : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** reimplemented from TMiso to reset counter */
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
 
    /** type of output from counter */
    PRM_LIST( type, efNRC, "Type", "Type of counters output", "enum=CountType" );

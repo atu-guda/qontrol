@@ -175,6 +175,7 @@ class HolderData : public QAbstractItemModel {
 
   using size_type = QList<QObject*>::size_type;
   using arrsize_type = dvector::size_type;
+  static_assert( sizeof(arrsize_type) == sizeof(long), "arrsize_type is not equ to long" );
 
   // QAbstractItemModel part
   virtual int columnCount( const QModelIndex &par = QModelIndex() ) const override;

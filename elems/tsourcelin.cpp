@@ -54,7 +54,7 @@ double TSourceLin::f() noexcept
 }
 
 
-int TSourceLin::miso_startLoop( int /*acnx*/, int /*acny*/ )
+int TSourceLin::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   recalc();
   t_start = 0; curr_lin = 0;

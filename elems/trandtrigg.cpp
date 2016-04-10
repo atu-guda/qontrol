@@ -50,7 +50,7 @@ int TRandTrigg::do_preRun()
 }
 
 
-int TRandTrigg::miso_startLoop( int acnx, int acny )
+int TRandTrigg::miso_startLoop( long acnx, long acny )
 {
   ns = -1; u_old = 0; currOut = 0;
   if( ( eff_seedType == everyRun ) ||                // need to seed now

@@ -32,7 +32,7 @@ CTOR(TTrigger,TMiso)
 }
 
 
-int TTrigger::miso_startLoop( int /*acnx*/, int /*acny*/ )
+int TTrigger::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   cst = (int)useInit1; u2_old = et = 0;
   return 1;

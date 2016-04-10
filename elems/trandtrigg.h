@@ -45,7 +45,7 @@ class TRandTrigg : public TMiso  {
    /** reimplemented from TMiso to init random generator */
    virtual int do_preRun() override;
    /** reimplemented from TMiso to set start values */
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
 
    /** Probability of spontatious flip  */
    PRM_PARAMD( prob, 0, "Probability", "Probability of spontatious flip","def=0.5");

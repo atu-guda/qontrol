@@ -34,7 +34,7 @@ class TIntegrator : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** reimplemented from TMiso to init state */
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
 
    PRM_PARAMD( ki, 0, "k_i",  "Factor before integral", "def=1" );
    PRM_PARAMD( dis, 0, "Disc coeff", "Discharde coeff (if enabled)", "def=1e-4" );

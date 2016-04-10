@@ -88,7 +88,7 @@ void THyst::fixState(void)
   prm_mod = 0;
 }
 
-int THyst::miso_startLoop( int /*acnx*/, int /*acny*/ )
+int THyst::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   s = d = 0;
   return 1;

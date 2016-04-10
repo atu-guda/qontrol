@@ -220,13 +220,13 @@ int TModel::startRun()
   T   = c_sim->getDataD( "T", 1.0 );
   t_0 = c_sim->getDataD( "t_0", 0.0 );
   T_brk = c_sim->getDataD( "T_brk", 1e200 );
-  N   = c_sim->getDataD( "N", 1 );
+  N   = c_sim->getDataD( "N", 1l );
   if( N < 1 ) { N = 1; }
-  N1  = c_sim->getDataD( "N1", 1 );
-  N2  = c_sim->getDataD( "N2", 1 );
+  N1  = c_sim->getDataD( "N1", 1l );
+  N2  = c_sim->getDataD( "N2", 1l );
   n1_eff = c_sim->getDataD( "n1_eff", N1 );
   n2_eff = c_sim->getDataD( "n2_eff", N2 );
-  n_tot  = c_sim->getDataD( "n_tot", (long)N );
+  n_tot  = c_sim->getDataD( "n_tot",  N );
   syncRT = c_sim->getDataD( "syncRT", 0 );
   fakeRT = c_sim->getDataD( "fakeRT", 0 );
   prm0s = c_sim->getDataD( "prm0s", 0.0 );
@@ -249,7 +249,7 @@ int TModel::startRun()
 
   run_type = type;
 
-  i_tot = 0; ii = il1 = il2 = 0;
+  i_tot = ii = il1 = il2 = 0;
   sgnt = int( time( 0 ) );
   if( T < TDT_MIN ) {
     qWarning() << "Too small full time time T" << T << NWHE;
@@ -293,9 +293,9 @@ int TModel::startRun()
   if( useScripts ) {
     eng->globalObject().setProperty( "T", eng->newVariant( (double)T ) );
     eng->globalObject().setProperty( "tdt", eng->newVariant( (double)tdt ) );
-    eng->globalObject().setProperty( "N", eng->newVariant( (int)N ) );
-    eng->globalObject().setProperty( "N1", eng->newVariant( (int)n1_eff ) );
-    eng->globalObject().setProperty( "N2", eng->newVariant( (int)n2_eff ) );
+    eng->globalObject().setProperty( "N", eng->newVariant( (long long)N ) );
+    eng->globalObject().setProperty( "N1", eng->newVariant( (long long)n1_eff ) );
+    eng->globalObject().setProperty( "N2", eng->newVariant( (long long)n2_eff ) );
     // alias objs
     eng->globalObject().setProperty( "c_sim", eng->newQObject( c_sim ) );
   }
@@ -368,7 +368,7 @@ long TModel::run( QSemaphore *sem )
         runScript( scriptStartLoop );
       }
 
-      for( int i=0; i<N; ++i, ++i_tot ) { // <------- main loop
+      for( long i=0; i<N; ++i, ++i_tot ) { // <------- main loop
 
         if ( t >= T_brk ) {
           return 0;
@@ -830,7 +830,7 @@ void ModelRunner::run()
   if( !model || !sem ) {
     return;
   }
-  int rc = model->run( sem );
+  auto rc = model->run( sem );
   emit resultReady( rc );
 }
 

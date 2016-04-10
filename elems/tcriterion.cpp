@@ -35,7 +35,7 @@ CTOR(TCriterion,TMiso)
 }
 
 
-int TCriterion::miso_startLoop( int /*acnx*/, int /*acny*/ )
+int TCriterion::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   st = 0;
   return 1;

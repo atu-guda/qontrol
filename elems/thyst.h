@@ -45,7 +45,7 @@ class THyst : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** reimplemented from TMiso to set init state */
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
    void fixState(void);
  protected:
    /** type of hysteresis */

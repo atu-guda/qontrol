@@ -38,7 +38,7 @@ class TSourceLin : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** times of lines, <=0 - end */
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
 
    PRM_PARAMD( a,  0, "a", "Common factor", "sep=col\ndef=1" );
 

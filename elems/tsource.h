@@ -66,7 +66,7 @@ class TSource : public TMiso  {
    /** will be called before any action -- good place for allocs */
    virtual int do_preRun() override;
    /** called before each inner param loop. Unused param - -1 */
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
 
    /** type of input and misc flags */
    PRM_LIST( type, efNRC, "Type", "Source type", "enum=SourceType" ); //TODO

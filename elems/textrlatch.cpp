@@ -121,7 +121,7 @@ double TExtrLatch::f() noexcept
   return v;
 }
 
-int TExtrLatch::miso_startLoop( int /*acnx*/, int /*acny*/ )
+int TExtrLatch::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   reset_vars();
   return 1;

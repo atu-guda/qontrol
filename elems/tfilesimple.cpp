@@ -96,7 +96,7 @@ int TFileSimple::do_postRun( int /*good*/ )
 }
 
 
-int TFileSimple::miso_startLoop( int /*acnx*/, int /*acny*/ )
+int TFileSimple::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   n_total = 0; hold_i = 0;
   if( ! file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {

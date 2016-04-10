@@ -60,7 +60,7 @@ class Simulation : public LinkedObj  {
   PRM_DOUBLE( T, efNRC, "T", "Full Run Time", "min=0\nmax=1e300\ndef=100" );
   PRM_DOUBLE( t_0, efNRC, "t_0", "Start time", "def=0" );
   PRM_DOUBLE( T_brk, efNRC, "T_{brk}", "Break time", "min=0\nmax=1e300\ndef=1e100" );
-  PRM_INT( N, efNRC, "N", "Number of steps in one run",
+  PRM_LONG( N, efNRC, "N", "Number of steps in one run",
       "min=1\nmax=200000000\nsep=col\ndef=10000"  );
   PRM_DOUBLE( tdt, efNRC | efRODial | efNoSave, "\\tau", "step time", "def=1" );
   PRM_INT( n_pre, efNRC, "N pre", "Number of calculations at startLoop ", "def=5" );
@@ -71,13 +71,13 @@ class Simulation : public LinkedObj  {
       "Real time is set to model time", "" );
 
   /** Loop parameter values */
-  PRM_INT( N1, efNRC, "N1",
+  PRM_LONG( N1, efNRC, "N1",
        "Number of inner parametric loops iterations",
        "min=1\nmax=10000\nsep=block\ndef=1" );
   PRM_DOUBLE( prm0s, efNRC, "prm0s", "Initial prm0 value", "" );
   PRM_DOUBLE( prm0d, efNRC, "prm0+=", "Parameter 0 delta", "" );
   PRM_STRING( prm0_map,  efNRC, "Map to(0)", "Change parameter with prm0", "max=128\ncmpl=in" );
-  PRM_INT( N2, efNRC, "N2",
+  PRM_LONG( N2, efNRC, "N2",
        "Number of outer parametric loops iterations",
        "min=1\nmax=10000\nsep=col\ndef=1\nsep=col" );
   PRM_DOUBLE( prm1s, efNRC, "prm1s", "Initial prm1 value", "" );
@@ -104,8 +104,8 @@ class Simulation : public LinkedObj  {
   PRM_STRING( descr, 0, "Description", "Simulation description",
       "props=STRING,MLINE\nncol=-1\nsep=tabend\ntabname=Parameters");
   //* helper values to simplify usage
-  PRM_INT( n1_eff, efInner, "n1_eff", "Effective number of iteration in inner loop" , "" );
-  PRM_INT( n2_eff, efInner, "n2_eff", "Effective number of iteration in outer loop" , "" );
+  PRM_LONG( n1_eff, efInner, "n1_eff", "Effective number of iteration in inner loop" , "" );
+  PRM_LONG( n2_eff, efInner, "n2_eff", "Effective number of iteration in outer loop" , "" );
   PRM_LONG( n_tot, efInner, "n_tot", "Total number of iterations" , "" );
 
   Q_CLASSINFO( "nameHintBase",  "sim" );

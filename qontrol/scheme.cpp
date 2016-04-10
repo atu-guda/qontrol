@@ -301,7 +301,7 @@ void Scheme::do_structChanged()
 
 }
 
-int Scheme::do_startLoop( int acnx, int acny )
+int Scheme::do_startLoop( long acnx, long acny )
 {
   auto rc = LinkedObj::do_startLoop( acnx, acny );
   if( !rc ) {

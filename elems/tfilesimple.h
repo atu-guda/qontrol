@@ -39,7 +39,7 @@ class TFileSimple : public TMiso  {
    virtual double f() noexcept override;
    virtual int do_preRun() override;
    virtual int do_postRun( int good ) override;
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
    virtual int do_endLoop() override;
 
    int readLine() noexcept;

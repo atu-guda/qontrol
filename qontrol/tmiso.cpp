@@ -73,7 +73,7 @@ double TMiso::f() noexcept
 
 
 
-int TMiso::do_startLoop( int acnx, int acny )
+int TMiso::do_startLoop( long acnx, long acny )
 {
   state = stateRun;
   out0 = (double)out0_init;
@@ -89,7 +89,7 @@ void TMiso::preCalc()
   }
 }
 
-int TMiso::miso_startLoop( int /* acnx */, int /* acny */ )
+int TMiso::miso_startLoop( long /* acnx */, long /* acny */ )
 {
   return 1;
 }

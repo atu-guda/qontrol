@@ -213,18 +213,18 @@ double waveMhat( double x )
 int DatasInfo::dump( QTextStream& os, const QString &delim )
 {
   int no = 0;
-  int dl_sz0 = delim.size() + 2, dl_sz = dl_sz0 - 1;
+  long dl_sz0 = delim.size() + 2, dl_sz = dl_sz0 - 1;
   os << "#";
   for( auto lbl : labels ) {
-    os << qSetFieldWidth( prec+6 ) << lbl << qSetFieldWidth( dl_sz ) << delim;
+    os << qSetFieldWidth( DOUBLE_PREC+6 ) << lbl << qSetFieldWidth( dl_sz ) << delim;
     dl_sz = dl_sz0; // to more actions, but less then 'if'
   }
   os << endl;
-  os.setRealNumberPrecision( prec );
+  os.setRealNumberPrecision( DOUBLE_PREC );
 
-  for( int i=0; i<nn; ++i ) {
+  for( long i=0; i<nn; ++i ) {
     for( auto ve: ves ) {
-      os << qSetFieldWidth( prec+6 ) << (*ve)[i] << qSetFieldWidth( dl_sz ) << delim;
+      os << qSetFieldWidth( DOUBLE_PREC+6 ) << (*ve)[i] << qSetFieldWidth( dl_sz ) << delim;
     }
     os << endl;
     ++no;

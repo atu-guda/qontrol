@@ -19,15 +19,14 @@ class HolderData;
 
 //* describe data arrays for dump, show....
 struct DatasInfo {
-  int nn = 0; //* total number of data: minimal of present arrays
-  int nx = 0; //* x-dimension, used only in 1 array output
-  int ny = 1; //* y-dimension, the same
+  long nn = 0; //* total number of data: minimal of present arrays
+  long nx = 0; //* x-dimension, used only in 1 array output
+  long ny = 1; //* y-dimension, the same
   QStringList labels; //* labels of arrays
   std::vector<const dvector*> ves; //* prts to arrays itself
   QString title; //* obviosly, used for display
-  static constexpr const int prec = 12; //* magic prcision
   void reset() { nn = nx = 0; ny = 1; labels.clear(); ves.clear(); title = QString(); }
-  int size() const { return ves.size(); }
+  long size() const { return ves.size(); }
   int dump( QTextStream& os, const QString &delim = " " );
 };
 
@@ -59,8 +58,10 @@ inline double thetta( double x ) { return ( x>0 ) ? 1 : 0; };
 inline double posval( double x ) { return ( x>=0 ) ? x : 0; };
 inline bool isInBounds(   double l, double x, double r ) { return (x>=l) && (x<=r); };
 inline bool isInBounds(      int l,    int x,    int r ) { return (x>=l) && (x<=r); };
+inline bool isInBounds(     long l,   long x,   long r ) { return (x>=l) && (x<=r); };
 inline bool isInBoundsNE( double l, double x, double r ) { return (x>l)  && (x<r);  };
 inline bool isInBoundsNE(    int l,    int x,    int r ) { return (x>l)  && (x<r);  };
+inline bool isInBoundsNE(   long l,   long x,   long r ) { return (x>l)  && (x<r);  };
 inline double vBound(   double l, double x, double r )
   { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
 inline int    vBound(      int l,    int x,    int r )

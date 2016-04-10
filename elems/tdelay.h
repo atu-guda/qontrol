@@ -41,7 +41,7 @@ class TDelay : public TMiso  {
    /** deallocates buf */
    virtual int do_postRun( int good ) override;
    /** reimplemented from TMiso to reset array */
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
 
    PRM_DOUBLE( mdelay, efNRC, "Max. delay", "Maximum delay", "min=0\nmax=1e20\ndef=1.5");
    PRM_PARAMD( cdelay, 0, "Current delay", "Current delay", "min=0\nmax=1e20\ndef=1.0\nsep=col" );

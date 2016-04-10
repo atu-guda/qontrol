@@ -52,10 +52,10 @@ void Simulation::do_post_set()
 
   n1_eff = n2_eff = 1;
   if( runType > Simulation::runSingle ) {
-    n1_eff = (int)N1;
+    n1_eff = (long)N1;
   }
   if( runType > Simulation::runLoop ) {
-    n2_eff = (int)N2;
+    n2_eff = (long)N2;
   }
 
   n_tot = (long)N * n1_eff * n2_eff;

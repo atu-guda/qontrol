@@ -73,8 +73,8 @@ class TModel : public LinkedObj  {
   // for fast access in RunView
   double get_t() const { return t; }
   long get_i_tot() const { return i_tot; }
-  int get_il1() const { return il1; }
-  int get_il2() const { return il2; }
+  long get_il1() const { return il1; }
+  long get_il2() const { return il2; }
  protected:
   virtual void do_reset() override;
   int runOneLoop( IterType itype );
@@ -151,9 +151,9 @@ class TModel : public LinkedObj  {
       "props=STRING,MLINE\nncol=-1");
   // ======================= invisible vars ======================
   /** loops counters */
-  PRM_INT( ii, efInner,  "ii", "Inner index", "" );
-  PRM_INT( il1, efInner, "il1", "Param 0 index", "" );
-  PRM_INT( il2, efInner, "il2", "Param 1 index", "" );
+  PRM_LONG( ii, efInner,  "ii", "Inner index", "" );
+  PRM_LONG( il1, efInner, "il1", "Param 0 index", "" );
+  PRM_LONG( il2, efInner, "il2", "Param 1 index", "" );
   //* copies the current simulation
   /** current time and time step, real time */
   PRM_INT( seed, efInner|efNRC, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
@@ -178,15 +178,16 @@ class TModel : public LinkedObj  {
   /** run type */
   int run_type = -1; // reset
   /** effective number of loop on prm0 */
-  int n1_eff = 0;
+  long n1_eff = 0;
   /** effective number of loop on prm1 */
-  int n2_eff = 0;
+  long n2_eff = 0;
   /** end loop flag: to be set by fback() */
   int end_loop = 0;
   /** real start time */
   double start_time = 0;
   // copy of simulation vars - but w/o object access - just for speed;
-  int N = 10, N1 = 1, N2 = 1, syncRT = 0;
+  long N = 10, N1 = 1, N2 = 1;
+  int syncRT = 0;
   RunInfo rinf; // information about current run (passed to preRun)
 
   // saved parameters

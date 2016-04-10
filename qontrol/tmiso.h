@@ -61,9 +61,9 @@ class TMiso : public LinkedObj  {
    /** will be called after all actions from posrtRun  -- good place for deallocs */
    // virtual int do_postRun( int good ) override;
    /** called before each inner param loop from startLoop */
-   virtual int do_startLoop( int acnx, int acny ) override;
+   virtual int do_startLoop( long acnx, long acny ) override;
    //* to be overrided by real elements
-   virtual int miso_startLoop( int acnx, int acny );
+   virtual int miso_startLoop( long acnx, long acny );
    /** will be called after each inner loop: called from endLoop */
    // virtual int do_endLoop() override;
    /** do real actions after structure changed - refills inputs */

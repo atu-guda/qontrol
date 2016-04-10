@@ -56,31 +56,31 @@ class TOutArr : public LinkedObj  {
    /** access to array value */
    const dvector* getArray() const { return &arr; }
    /** request to allocate array: only for special arrays now */
-   Q_INVOKABLE int alloc( int anx, int any = 1 );
+   Q_INVOKABLE int alloc( long anx, int long = 1 );
    Q_INVOKABLE virtual arrsize_type arrSize() const override { return arrsize; }
-   Q_INVOKABLE int getN() const { return n; }
+   Q_INVOKABLE arrsize_type getN() const { return n; }
 
    /** get and push next value. pushed only if level >= type */
-   virtual int take_val();
+   virtual long take_val();
 
    /** dumps data to file */
    Q_INVOKABLE int dump( const QString &fn, const QString &delim );
    /** fills fields in DatasInfo structure, return number of elements (nn) */
    int fillDatasInfo( DatasInfo *di ) const;
    //* access to one element by 1 ind 2 index
-   Q_INVOKABLE double at( int i ) const;
-   Q_INVOKABLE double at( int x, int y ) const;
+   Q_INVOKABLE double at( long i ) const;
+   Q_INVOKABLE double at( long x, long y ) const;
    Q_INVOKABLE double getLast() const;
    Q_INVOKABLE double atT( double T ) const;
-   Q_INVOKABLE void put( int i, double v );
-   Q_INVOKABLE void put( int x, int y, double v );
+   Q_INVOKABLE void put( long i, double v );
+   Q_INVOKABLE void put( long x, long y, double v );
    Q_INVOKABLE void add( double v );
    // fact access to statistics. calc_stat is cheap w/o force
    Q_INVOKABLE void calc_stat( bool force = false, bool forceAll = false );
    Q_INVOKABLE double getMin() const   {  return dmin; }
    Q_INVOKABLE double getMax() const   {  return dmax; }
-   Q_INVOKABLE int    getIMin() const  {  return imin; }
-   Q_INVOKABLE int    getIMax() const  {  return imax; }
+   Q_INVOKABLE long   getIMin() const  {  return imin; }
+   Q_INVOKABLE long   getIMax() const  {  return imax; }
    Q_INVOKABLE double getSum() const   {  return s_x; }
    Q_INVOKABLE double getSum2() const  {  return s_x2; }
    Q_INVOKABLE double getAver() const  {  return a_x; }
@@ -98,7 +98,7 @@ class TOutArr : public LinkedObj  {
    void reset_stat();
    virtual int do_preRun() override;
    virtual int do_postRun( int good ) override;
-   virtual int do_startLoop( int acnx, int acny ) override;
+   virtual int do_startLoop( long acnx, long acny ) override;
    virtual int do_endLoop() override;
 
    PRM_LIST( type, efNRC, "Type", "Type of array", "enum=OutArrType" );
@@ -106,8 +106,6 @@ class TOutArr : public LinkedObj  {
    PRM_STRING( name, efNRC, "Source", "Name of element to use", "sep=block\nmax=128\nprops=STRING,SIMPLE,LINK\ncmpl=in" );
    PRM_STRING( label, efNRC, "Label", "Label of data", "max=32" );
    PRM_SWITCH( allStat, efNRC, "All stat", "calculate all statistics", "def=0" );
-   PRM_INT( nx, efInner, "nx","size of x dimensions arrays", "def=1"  );
-   PRM_INT( ny, efInner, "ny","size of x=const block in 2-d arrays", "def=1"  );
    PRM_INT( nq, efNRC, "Every n", "each n-th data collect. ", "min=1\nmax=1000000\ndef=1" );
    PRM_INT( lnq, efNRC, "Catch at n=", "latch value of counter", "min=0\nmax=1000000" );
    PRM_INT( cnq, efInner, "Current n", "current value of counter(0..nq-1)", "" );
@@ -125,12 +123,14 @@ class TOutArr : public LinkedObj  {
    PRM_DOUBLE( absdev_x,  efInner, "absvar_x", "Absolute deviation", "" );
    PRM_DOUBLE( acorr,  efInner, "acorr", "autocorrelation", "" );
    /** array size */
-   PRM_INT( arrsize, efInner, "full size", "Full array size", "" );
+   PRM_LONG( arrsize, efRO | efNoSave, "arrsize", "Full array size", "sep=col" );
+   PRM_LONG( nx, efRO | efNoSave, "nx","size of x dimensions arrays", "def=1"  );
+   PRM_LONG( ny, efRO | efNoSave, "ny","size of x=const block in 2-d arrays", "def=1"  );
    /** current number of datas */
-   PRM_INT( n, efInner, "current size", "Current number of datas", "" );
-   PRM_INT( imin, efInner, "imin", "index of minimal element", "def=-1" );
-   PRM_INT( imax, efInner, "imax", "index of maximal element", "def=-1" );
-   PRM_INT( isfin, efInner, "isfin", "Flag: all values was finite", "def=1" );
+   PRM_LONG( n, efRO | efNoSave, "n", "Current number of datas", "" );
+   PRM_LONG( imin, efInner, "imin", "index of minimal element", "def=-1" );
+   PRM_LONG( imax, efInner, "imax", "index of maximal element", "def=-1" );
+   PRM_LONG( isfin, efInner, "isfin", "Flag: all values was finite", "def=1" );
    /** data storage */
    dvector arr;
    /** fake source */

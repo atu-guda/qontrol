@@ -153,7 +153,7 @@ int TSource::do_preRun()
 }
 
 
-int TSource::miso_startLoop( int acnx, int acny )
+int TSource::miso_startLoop( long acnx, long acny )
 {
   was_pulse = 0;
 

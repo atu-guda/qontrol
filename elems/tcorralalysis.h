@@ -38,7 +38,7 @@ class TCorrAnalysis : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** reimplemented from TMiso to reset summators */
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
    /* ============= function members ================== */
    /** resets collocted and computed data */
    void reset_data();

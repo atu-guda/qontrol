@@ -37,7 +37,7 @@ CTOR(TLinP1Q0,TMiso)
 }
 
 
-int TLinP1Q0::miso_startLoop( int /*acnx*/, int /*acny*/ )
+int TLinP1Q0::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   x_old = out0_init;
   return 1;

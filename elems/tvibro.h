@@ -31,7 +31,7 @@ class TVibro : public TMiso  {
    DCL_STD_INF;
  protected:
    virtual double f() noexcept override;
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
    virtual int do_preRun() override;
 
    PRM_PARAMD( c0, 0, "c_0", "Damping coefficient", "def=0.4" );

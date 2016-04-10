@@ -64,7 +64,7 @@ int TRand::do_preRun()
 }
 
 
-int TRand::miso_startLoop( int acnx, int acny )
+int TRand::miso_startLoop( long acnx, long acny )
 {
   old_val = 0; sp_time = DMAX; old_in = 0;
   if( (eff_seedType == everyRun ) ||                // need to seed now

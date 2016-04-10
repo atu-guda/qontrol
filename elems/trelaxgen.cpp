@@ -36,7 +36,7 @@ CTOR(TRelaxGen,TMiso)
 }
 
 
-int TRelaxGen::miso_startLoop( int /*acnx*/, int /*acny*/ )
+int TRelaxGen::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   v = (double)out0_init;
   isDis = I =  dv_ch = dv_dis = 0;

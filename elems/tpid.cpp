@@ -35,7 +35,7 @@ int TPid::do_preRun()
   return 1;
 }
 
-int TPid::miso_startLoop( int /*acnx*/, int /*acny*/ )
+int TPid::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   vi1 = vi2 = 0; u_old = u_old2 = out0;
   start = 1;

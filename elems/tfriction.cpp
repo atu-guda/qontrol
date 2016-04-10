@@ -43,7 +43,7 @@ CTOR(TFriction,TMiso)
 }
 
 
-int TFriction::miso_startLoop( int /*acnx*/, int /*acny*/ )
+int TFriction::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   x_old = out0_init;
   v = v_old = Ff = 0;

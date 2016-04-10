@@ -25,9 +25,9 @@ enum IterType {
 
 struct RunInfo {
   int run_tp;
-  unsigned N;
-  unsigned nx;
-  unsigned ny;
+  long N;
+  long nx;
+  long ny;
   int fakeRT;
   double tdt;
   double T;
@@ -79,7 +79,7 @@ class LinkedObj : public TDataSet {
     * */
    int preRun( const RunInfo *rinf_ );
    int postRun( int good ); //* will be called after all actions -- call do_postRun
-   int startLoop( int acnx, int acny ); //* called before each inner param loop -- call do_startLoop
+   int startLoop( long acnx, long acny ); //* called before each inner param loop -- call do_startLoop
    int endLoop(); //* will be called after each inner loop -- call do_endLoop
 
    Q_INVOKABLE int getN_Inputs() const { return inps.size(); }
@@ -119,7 +119,7 @@ class LinkedObj : public TDataSet {
    /** will be called after all actions from posrtRun  -- good place for deallocs */
    virtual int do_postRun( int good );
    /** called before each inner param loop from startLoop */
-   virtual int do_startLoop( int acnx, int acny );
+   virtual int do_startLoop( long acnx, long acny );
    virtual int post_startLoop(); // for near-to ready actions
    /** will be called after each inner loop: called from endLoop */
    virtual int do_endLoop();

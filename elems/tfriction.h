@@ -33,7 +33,7 @@ class TFriction : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** reimplemented from TMiso to init state */
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
 
    PRM_PARAMD( mass, 0, "Mass", "Body mass", "min=1e-30\ndef=1" );
    PRM_PARAMD( f_mx, 0, "Max Ff",  "Max dry friction force (if constant) f_mx", "min=0\ndef=0.4" );

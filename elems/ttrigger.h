@@ -43,7 +43,7 @@ class TTrigger : public TMiso  {
    /** main computation function */
    virtual double f() noexcept override;
    /** reimplemented from TMiso to init state */
-   virtual int miso_startLoop( int acnx, int acny ) override;
+   virtual int miso_startLoop( long acnx, long acny ) override;
 
    PRM_LIST( type, efNRC, "Type", "Type of trigger", "enum=TriggType" );
    PRM_INT( cst, efInner, "state", "current state", "" );
