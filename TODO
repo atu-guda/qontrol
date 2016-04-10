@@ -1,6 +1,6 @@
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
 DataHolders: ToXMLString
-Holder*Array -> long indexes, More dimensions. Measure vector::size_t.
+Holder*Array -> long indexes, More dimensions. Measure vector::size_type=8, size_t=8. win32?
 TOutArr: use InputSimple (need conversion)
 TModel::startRun: list on vars to copy. List for engine aliases?
 chrono sleep_untill

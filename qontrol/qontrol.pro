@@ -38,6 +38,7 @@ SOURCES += \
   laboview.cpp \
   labowin.cpp \
   linkcompleter.cpp \
+  longvalidator.cpp \
   mglview.cpp \
   outdataview.cpp \
   runview.cpp \
@@ -119,6 +120,7 @@ HEADERS += \
   laboview.h \
   labowin.h \
   linkcompleter.h \
+  longvalidator.h \
   mglview.h \
   outdataview.h \
   runview.h \

@@ -326,6 +326,7 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE void setParmIfEmpty( const QString &pname, const QString &val );
   Q_INVOKABLE QString getParm( const QString &pname, const QString &dfl = QString() ) const;
   Q_INVOKABLE int getParmInt( const QString &pname, int dfl = 0 ) const;
+  Q_INVOKABLE long getParmLong( const QString &pname, long dfl = 0 ) const;
   Q_INVOKABLE double getParmDouble( const QString &pname, double dfl = 0 ) const;
   Q_INVOKABLE bool setDatas( const QString &datas ); //* data sep: newline
   Q_INVOKABLE QString getType() const { return getClassInfo()->className; };
@@ -487,6 +488,26 @@ class HolderList : public HolderInt {
 
 #define PRM_LIST( name, flags, vname, descr, extra ) \
  HolderList name ={ #name, this, flags, vname, descr, extra };
+static_assert( sizeof(long) == sizeof(long long), "long and long long is not the same" );
+
+/** Holder of long values */
+class HolderLong : public HolderValue {
+  Q_OBJECT
+ public:
+  DCL_CTOR(HolderLong);
+  DCL_CREATE;
+  DCL_STD_INF;
+  DCL_STD_GETSET;
+  STD_CONVERSIONS(long);
+  INNER_ASSIGN(HolderLong);
+ protected:
+  long v;
+  Q_CLASSINFO( "nameHintBase",  "lv_" );
+  DCL_DEFAULT_STATIC;
+};
+
+#define PRM_LONG( name, flags, vname, descr, extra ) \
+ HolderLong name = { #name, this, flags, vname, descr, extra  } ;
 
 /** Holder of double values */
 class HolderDouble : public HolderValue {

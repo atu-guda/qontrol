@@ -11,6 +11,7 @@
 
 #include "miscfun.h"
 #include "datawidget.h"
+#include "longvalidator.h"
 #include "labowin.h"
 #include "addelemdia.h"
 #include "linkcompleter.h"
@@ -423,6 +424,45 @@ bool ListDataWidget::get() const
 }
 
 DW_REG_FUN_STD( ListDataWidget, "INT,LIST" );
+
+
+// ------------------- LongDataWidget ---------------------------
+
+LongDataWidget::LongDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
+  : DataWidget( h, parent, hideLabel ),
+  le( new QLineEdit( this ) )
+{
+  main_w = le;
+  if( h.isRoTree( efROAny ) ) {
+    le->setReadOnly( true );
+  }
+
+  long v_min = h.getParmLong( QSL("min"), LMIN );
+  long v_max = h.getParmLong( QSL("max"), LMAX );
+  le->setValidator( new LongValidator( v_min, v_max, le ) );
+
+  auto lay =  new QHBoxLayout( this );
+  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->addWidget( lbl );
+  lay->addWidget( le, 1 );
+  setLayout( lay );
+}
+
+bool LongDataWidget::set()
+{
+  le->setText( QSN( ho.get().toLongLong() ) );
+  return true;
+}
+
+bool LongDataWidget::get() const
+{
+  bool ok;
+  QVariant v = (qlonglong)( le->text().toLong( &ok, 0 ) );
+  ho.set( v );
+  return ok;
+}
+
+DW_REG_FUN_STD( LongDataWidget, "LONG,SIMPLE" );
 
 
 // ------------------- DoubleDataWidget ---------------------------

@@ -32,7 +32,8 @@ struct DatasInfo {
 };
 
 /** converts string to int with some special values: RND, IMIN, IMAX */
-int QString2IntEx( const QString &s, bool *ok = nullptr );
+int  QString2IntEx(  const QString &s, bool *ok = nullptr );
+long QString2LongEx( const QString &s, bool *ok = nullptr );
 
 /** gets real time in seconds.ms */
 double get_real_time();
@@ -63,6 +64,8 @@ inline bool isInBoundsNE(    int l,    int x,    int r ) { return (x>l)  && (x<r
 inline double vBound(   double l, double x, double r )
   { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
 inline int    vBound(      int l,    int x,    int r )
+  { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
+inline long    vBound(     long l,   long x,   long r )
   { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
 template< typename T > bool isGoodIndex( long idx, const T& container )
   {

@@ -419,6 +419,19 @@ int HolderData::getParmInt( const QString &pname, int dfl ) const
   return dfl;
 }
 
+long HolderData::getParmLong( const QString &pname, long dfl ) const
+{
+  if( parms.contains( pname ) ) {
+    const QString &p = parms[pname];
+    bool ok;
+    long v = p.toLongLong( &ok, 0 );
+    if( ok ) {
+      return v;
+    }
+  }
+  return dfl;
+}
+
 double HolderData::getParmDouble( const QString &pname, double dfl ) const
 {
   if( parms.contains( pname ) ) {
@@ -1662,6 +1675,78 @@ void HolderList::do_post_set()
 const char* HolderList::helpstr { "Contains integer data - list iface" };
 
 DEFAULT_FUNCS_REG(HolderList);
+
+
+// ---------------- HolderLong ---------
+STD_CLASSINFO_ALIAS(HolderLong,clpData,long);
+
+CTOR(HolderLong,HolderValue) , v(0)
+{
+  tp=QVariant::LongLong;
+  setParmIfEmpty( QSL("props"), QSL("LONG,SIMPLE") );
+  post_set();
+}
+
+void HolderLong::reset_dfl()
+{
+  HolderValue::reset_dfl();
+}
+
+
+bool HolderLong::set( const QVariant & x, int /* idx */ )
+{
+  auto v0 = v;
+  bool ok;
+  if( x.type() == QVariant::LongLong ) {
+    v = (long)x.toLongLong( &ok );
+  } else if( x.type() == QVariant::Int ) {
+    v = x.toInt( &ok );
+  } else {
+    v = QString2LongEx( x.toString(), &ok );
+  }
+  post_set();
+  if( v != v0 ) {
+    setModified();
+  }
+  return ok;
+}
+
+QVariant HolderLong::get( int /* idx */ ) const
+{
+  return QVariant( (long long)v );
+}
+
+double HolderLong::getDouble( int /* idx = 0 */ ) const
+{
+  return v;
+}
+
+void HolderLong::do_post_set()
+{
+  auto v_min = getParmLong( QSL("min"), LMIN );
+  auto v_max = getParmLong( QSL("max"), LMAX );
+  v = vBound( v_min, v, v_max );
+}
+
+QString HolderLong::toString() const
+{
+  return QSN( v );
+}
+
+QString HolderLong::textVisual() const
+{
+  return QSN( v );
+}
+
+bool HolderLong::fromString( const QString &s )
+{
+  return set( s );
+}
+
+const char* HolderLong::helpstr { "Contains long integer data" };
+
+
+DEFAULT_FUNCS_REG(HolderLong);
 
 
 

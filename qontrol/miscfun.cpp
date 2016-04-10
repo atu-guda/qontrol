@@ -36,14 +36,31 @@ const char* getStateString( int stat_num )
 int QString2IntEx( const QString &s, bool *ok )
 {
   bool r_ok;
-  int v = s.toInt( &r_ok, 0 ); // first try as simple int
+  long r = QString2LongEx( s, &r_ok );
+  if( r < (long)IMIN || r > (long)IMAX ) {
+    r_ok = false;
+  }
+  if( ok ) {
+    *ok = r_ok;
+  }
+  return int( r );
+}
+
+long QString2LongEx( const QString &s, bool *ok )
+{
+  bool r_ok;
+  long v = s.toLongLong( &r_ok, 0 ); // first try as simple int
   if( ! r_ok ) {
     if( s == "RND" ) {
       v = rand(); r_ok = true;
     } else if( s == "IMIN" ) {
       v = IMIN; r_ok = true;
+    } else if( s == "LMIN" ) {
+      v = LMIN; r_ok = true;
     } else if( s == "IMAX" ) {
       v = IMAX; r_ok = true;
+    } else if( s == "LMAX" ) {
+      v = LMAX; r_ok = true;
     }
   }
   if( ok ) {

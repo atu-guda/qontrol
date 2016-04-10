@@ -35,8 +35,12 @@
 
 constexpr const int IMIN      { std::numeric_limits<int>::min() };
 constexpr const int IMAX      { std::numeric_limits<int>::max() };
+constexpr const long LMIN      { std::numeric_limits<long>::min() };
+constexpr const long LMAX      { std::numeric_limits<long>::max() };
 constexpr const unsigned UMIN { std::numeric_limits<unsigned int>::min() };
 constexpr const unsigned UMAX { std::numeric_limits<unsigned int>::max() };
+constexpr const unsigned long ULMIN { std::numeric_limits<unsigned long>::min() };
+constexpr const unsigned long ULMAX { std::numeric_limits<unsigned long>::max() };
 constexpr const double DMIN   { std::numeric_limits<double>::lowest() };
 constexpr const double DMAX   { std::numeric_limits<double>::max() };
 constexpr const double D_EPS  { 1.0e-6 }; // default error

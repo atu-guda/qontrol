@@ -140,6 +140,15 @@ class ListDataWidget: public DataWidget {
   QComboBox *cb;
 };
 
+class LongDataWidget: public DataWidget {
+ public:
+  LongDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
+  DW_DCL_STD_FUN;
+ protected:
+  QLineEdit *le;
+};
+
+
 class DoubleDataWidget: public DataWidget {
  public:
   DoubleDataWidget( HolderData &h, QWidget *parent = nullptr, bool hideLabel = false );
