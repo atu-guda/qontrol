@@ -1242,13 +1242,16 @@ void DataDialog::showSimpleHelp()
   }
 
   auto dia = new QDialog( this );
-  dia->setMinimumSize( 500, 480 );
-  dia->setWindowTitle( PACKAGE ": Help on element" );
+  int em = LaboWin::Em();
+  dia->setMinimumSize( 60*em, 50*em );
+  dia->setWindowTitle( PACKAGE ": Help for element" );
 
   auto lay = new QGridLayout;
 
   auto brow = new QTextBrowser( this );
   brow->insertHtml( help_str );
+
+  brow->setStyleSheet( QSL("QTextEdit { background-color: white; }") );
   lay->addWidget( brow, 0, 0 );
 
   auto bt_ok = new QPushButton( QSL("&Ok"), dia );

@@ -1,9 +1,7 @@
 More trigger types.
 TMatrix3D + rotate (separate/same) + Quaternion?
 TDyn3D - free d{xyz} inputs
-TDynAuto3D Auto->XXX?
-Latch - controlled.
-Help - color.
+TDynAuto3D Auto->XXX,Self??
 DataDialog: Reset to default all/elem, revert elem. May be menu button. Or R mouse button
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
 DataHolders: ToXMLString
