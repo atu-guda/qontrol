@@ -404,7 +404,7 @@ QString InputAbstract::prepTextVisual( bool isLong ) const
 {
   bool isScaled = ( fabs(factor-1) > D_AZERO ) || ( fabs(shift) > D_AZERO );
   QString s = isScaled ? QSL("!") : QSL("");
-  // readAllInputs(); // ;-( -- fail, no const
+
   int lt  = linkType;
   switch( lt ) {
     case LinkNone:
@@ -413,18 +413,20 @@ QString InputAbstract::prepTextVisual( bool isLong ) const
       }
       break;
     case LinkElm:
-      s += QChar( 0x27BC ); // >>->
       if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
         s += QChar( 0x2794 ); // ->
+      } else {
+        s += QChar( 0x27BC ); // >>-> // unlikely
       }
       if( isLong ) {
         s += source.cval();
       }
       break;
     case LinkSpec:
-      s += QChar( 0x27A4 ); // >>
       if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
         s += QChar( 0x27A0 ); // =>
+      } else {
+        s += QChar( 0x27A4 ); // >>
       }
       if( isLong ) {
         s += source.cval();

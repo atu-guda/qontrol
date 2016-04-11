@@ -1,3 +1,11 @@
+More trigger types.
+Smaller icon for inputSimple
+TMatrix3D + rotate (separate/same) + Quaternion?
+TDyn3D - free d{xyz} inputs
+TDynAuto3D Auto->XXX?
+Latch - controlled.
+Help - color.
+DataDialog: Reset to default all/elem, revert elem. May be menu button. Or R mouse button
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
 DataHolders: ToXMLString
 Holder*Array -> long indexes, More dimensions. Measure vector::size_type=8, size_t=8. win32?
