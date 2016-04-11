@@ -3,7 +3,7 @@
                           tlorenz.h  -  description
                              -------------------
     begin                : Fri Mar 09 2012
-    copyright            : (C) 2012-1024 by atu
+    copyright            : (C) 2012-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

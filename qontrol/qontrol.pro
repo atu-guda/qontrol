@@ -80,6 +80,7 @@ SOURCES += \
   ../elems/tlogic.cpp \
   ../elems/tlorenz.cpp \
   ../elems/trossler.cpp \
+  ../elems/tmatrix34.cpp \
   ../elems/tmaxnum.cpp \
   ../elems/tmultipl.cpp \
   ../elems/tmulsumn.cpp \
@@ -161,6 +162,7 @@ HEADERS += \
   ../elems/tlogic.h \
   ../elems/tlorenz.h \
   ../elems/trossler.h \
+  ../elems/tmatrix34.h \
   ../elems/tmaxnum.h \
   ../elems/tmultipl.h \
   ../elems/tmulsumn.h \

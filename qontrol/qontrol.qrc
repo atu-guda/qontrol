@@ -30,6 +30,8 @@
     <file>icons/elm_tcorranalysis.png</file>
     <file>icons/elm_tcounter.png</file>
     <file>icons/elm_tcriterion.png</file>
+    <file>icons/elm_tdyn3d.png</file>
+    <file>icons/elm_tdynlink3d.png</file>
     <file>icons/elm_tfilesimple.png</file>
     <file>icons/elm_tfilesource.png</file>
     <file>icons/elm_tdatacontainer.png</file>
@@ -50,6 +52,7 @@
     <file>icons/elm_tlogic.png</file>
     <file>icons/elm_tlorenz.png</file>
     <file>icons/elm_trossler.png</file>
+    <file>icons/elm_tmatrix34.png</file>
     <file>icons/elm_tmaxnum.png</file>
     <file>icons/elm_tmultipl.png</file>
     <file>icons/elm_tmulsumn.png</file>
