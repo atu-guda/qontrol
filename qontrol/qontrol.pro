@@ -65,6 +65,7 @@ SOURCES += \
   ../elems/tcriterion.cpp \
   ../elems/tdelay.cpp \
   ../elems/tdiffin.cpp \
+  ../elems/tdyn3d.cpp \
   ../elems/textrlatch.cpp \
   ../elems/tfriction.cpp \
   ../elems/tfilesimple.cpp \
@@ -147,6 +148,7 @@ HEADERS += \
   ../elems/tcriterion.h \
   ../elems/tdelay.h \
   ../elems/tdiffin.h \
+  ../elems/tdyn3d.h \
   ../elems/textrlatch.h \
   ../elems/tfilesimple.h \
   ../elems/tfilesource.h \

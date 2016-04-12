@@ -1,8 +1,8 @@
 /***************************************************************************
-                          tlorenz.cpp  -  description
+  tdyn3d.cpp - TDyn3D class definition
                              -------------------
-    begin                : Fri Mar 09 2012
-    copyright            : (C) 2012-2016 by atu
+    begin                : 2016.04.12
+    copyright            : (C) 2016-2016 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -18,53 +18,46 @@
 #include <ctime>
 #include <cmath>
 #include "miscfun.h"
-#include "tlorenz.h"
+#include "tdyn3d.h"
 
 using namespace std;
 
-const char* TLorenz::helpstr = "<H1>TLorenz</H1>\n"
- "<p>Simulator element for Lorenz system <br>\n"
- " \\dot{x} = \\sigma ( y-x ); + in_x<br>\n"
- " \\dot{y} = x (r-z ) - y + in_y; <br>\n"
- " \\dot{z} = xy - bz.<br> + in_z\n"
+const char* TDyn3D::helpstr = "<h1>TDyn3D</h1>\n"
+ "<p>Simple 3D integrator <br/>\n"
+ " \\dot{x} = c_x * v_x; <br/>\n"
+ " \\dot{y} = c_y * v_y; <br/>\n"
+ " \\dot{z} = c_z * v_z; <br/>\n"
  " <br>\n"
- " Inputs 0-2: add to x, y, z <br>\n"
- " <br>\n"
- " Main output out0= x variable<br>\n"
- " <br>\n"
- "Have 6 parameters: 3 from system, <b>sigma, r ,b </b>, <br>"
- "and 3 inital state: <b> x_0, y_0, z_0 </b>, <br>"
- "First 3 may can be changed at any time.</p>";
+ " Inputs 0-2: v_x, v_y, v_z <br/>\n"
+ " <br/>\n"
+ " Main outputs out0= x variable.</p>\n";
 
-STD_CLASSINFO(TLorenz,clpElem );
+STD_CLASSINFO(TDyn3D,clpElem );
 
-CTOR(TLorenz,TMiso)
+CTOR(TDyn3D,TMiso)
 {
 }
 
-double TLorenz::f() noexcept
+double TDyn3D::f() noexcept
 {
-  vx = ( sigma * (y-x) );
-  vy = ( x * (r-z) - y );
-  vz = ( x*y - b*z );
-  v = sqrt( vx*vx + vy*vy + vz*vz );
+  v = sqrt( v_x*v_x + v_y*v_y + v_z*v_z );
 
-  x += ctdt * vx + in_x;
-  y += ctdt * vy + in_y;
-  z += ctdt * vz + in_z;
+  x += ctdt * v_x * c_x;
+  y += ctdt * v_y * c_y;
+  z += ctdt * v_z * c_z;
   return x;
 }
 
 
-int TLorenz::miso_startLoop( long /*acnx*/, long /*acny*/ )
+int TDyn3D::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
   out0 = x; // ????
   return 1;
 }
 
-DEFAULT_FUNCS_REG(TLorenz)
+DEFAULT_FUNCS_REG(TDyn3D)
 
 
-// end of tlorenz.cpp
+// end of tdyn3d.cpp
 
