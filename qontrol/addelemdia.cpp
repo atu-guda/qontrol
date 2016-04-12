@@ -32,7 +32,7 @@ SelectTypeDialog::SelectTypeDialog( HolderData *a_pobj,  QWidget *aparent,
 
 void SelectTypeDialog::setupUi()
 {
-  setWindowTitle( "Select object type" );
+  setWindowTitle( QSL("Select object type") );
 
   auto lay = new QVBoxLayout( this );
 
@@ -72,7 +72,8 @@ void SelectTypeDialog::setupUi()
   lay->addWidget( bbox );
   connect( bbox, &QDialogButtonBox::accepted, this, &SelectTypeDialog::accept );
   connect( bbox, &QDialogButtonBox::rejected, this, &SelectTypeDialog::reject );
-  resize( 720, 400 );
+
+  resize( def_sz.width()*9, def_sz.height()*8 );
 }
 
 void SelectTypeDialog::accept()
