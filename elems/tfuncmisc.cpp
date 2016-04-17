@@ -40,7 +40,7 @@ double TFuncMisc::f() noexcept
 {
   double v;
   y = in_0 - in_1 - x0;
-  switch( (int)type ) {
+  switch( (FuncType)(int)type ) {
     case ft_deadLine     : v = a * deadLine( y, b ); break;
     case ft_limitLine    : v = a * limitLine( y, b ); break;
     case ft_dealLimitLine: v = a * deadLimitLine( y, b, c, d ); break;
@@ -50,7 +50,7 @@ double TFuncMisc::f() noexcept
     case ft_threeState   : v = a * threeStateLine( y, b ); break;
     case ft_triangle     : v = a * triangleLine( y , b ); break;
     case ft_reactLine    : v = a * rectLine( y, b, c ); break;
-    case ft_2slope       : v = ( y >= 0 ) ? (a * y) : ( b * y ); break;
+    case ft_2slope       : v = ( y >= 0 ) ? ( a * y ) : ( b * y ); break;
     case ft_div          : v = a * in_0 / ( in_1 +  b );  break;
     case ft_int          : v = a * int( y * b );  break;
     case ft_frac         : v = a * ( ( y * b ) - int( y * b ) );  break;
@@ -58,6 +58,8 @@ double TFuncMisc::f() noexcept
     case ft_erf          : v = a * erf( y*b );  break;
     case ft_min          : v = a * fmin( in_0, in_1 );  break;
     case ft_max          : v = a * fmax( in_0, in_1 );  break;
+    case ft_2slopeEx     : v = a * (( y >= 0 ) ? ( b * y ) : ( c * y )); break;
+    case ft_copysign     : v = a * copysign( in_0, in_1 ); break;
     default: v = 0;
   };
   v += g;

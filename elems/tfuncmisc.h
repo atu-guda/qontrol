@@ -34,7 +34,7 @@ class TFuncMisc : public TMiso  {
    enum FuncType {
      ft_deadLine = 0, ft_limitLine, ft_dealLimitLine, ft_sign, ft_theta, ft_diod,
      ft_threeState, ft_triangle, ft_reactLine, ft_2slope, ft_div, ft_int,
-     ft_frac, ft_aasin, ft_erf, ft_min, ft_max
+     ft_frac, ft_aasin, ft_erf, ft_min, ft_max, ft_2slopeEx, ft_copysign
    };
    Q_ENUMS(FuncType);
    Q_CLASSINFO( "enum_FuncType_0",  "a*deadLine(y,b)+g"          );    // ft_deadLine
@@ -47,13 +47,15 @@ class TFuncMisc : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_7",  "a*triangle(y,b)+g"          );    // ft_triangle
    Q_CLASSINFO( "enum_FuncType_8",  "a*rectLine(y,b,c)+g"        );    // ft_reactLine
    Q_CLASSINFO( "enum_FuncType_9",  "((y>0)?a:b)*y+g"            );    // ft_2slope
-   Q_CLASSINFO( "enum_FuncType_10", "a*u0/(u1+b)+g"              );    // ft_div
+   Q_CLASSINFO( "enum_FuncType_10", "a*in_0/(in_1+b)+g"          );    // ft_div
    Q_CLASSINFO( "enum_FuncType_11", "a*int(y*b)+g"               );    // ft_int
    Q_CLASSINFO( "enum_FuncType_12", "a*frac(y*b)+g"              );    // ft_frac
    Q_CLASSINFO( "enum_FuncType_13", "a*asin(abs(sin(y*b)))+g"    );    // ft_aasin
    Q_CLASSINFO( "enum_FuncType_14", "a*erf(y*b)+g"               );    // ft_erf
-   Q_CLASSINFO( "enum_FuncType_15", "a*min(u0,u1)+g"             );    // ft_min
-   Q_CLASSINFO( "enum_FuncType_16", "a*max(u0,u1)+g"             );    // ft_max
+   Q_CLASSINFO( "enum_FuncType_15", "a*min(in_0,in_1)+g"         );    // ft_min
+   Q_CLASSINFO( "enum_FuncType_16", "a*max(in_0,in_1)+g"         );    // ft_max
+   Q_CLASSINFO( "enum_FuncType_17", "a*((y>0)?b:c)*y+g"          );    // ft_2slopeEx
+   Q_CLASSINFO( "enum_FuncType_18", "a*copysign(in_0,in_1)+g"    );    // ft_copysign
  protected:
    /** main computation function */
    virtual double f() noexcept override;
