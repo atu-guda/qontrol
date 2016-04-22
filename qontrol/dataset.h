@@ -39,7 +39,7 @@ typedef PTDataSet (*PFDataSet)( PTDataSet aparent );
 /** properties of class -- bitfield */
 enum ClassProps {
   clpElem = 1,          //* element of scheme
-  clpPure = 2,          //* abstract - no create (TODO: check)
+  clpAbstract = 2,      //* abstract - no create (TODO: check)
   clpSpecial = 8,       //* have special meaning for structure
   clpData = 16,         //* simple data
   clpArray = 32,        //* array

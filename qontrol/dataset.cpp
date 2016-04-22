@@ -20,7 +20,7 @@ using namespace std;
 
 // ================================================================
 // ---------------- HolderData .... ----------------------
-STD_CLASSINFO(HolderData,clpSpecial|clpPure);
+STD_CLASSINFO(HolderData,clpSpecial|clpAbstract);
 
 HolderData::HolderData( ARGS_CTOR_MIN )
      :QAbstractItemModel( a_parent ),
@@ -824,7 +824,7 @@ int HolderData::isValidType(  const QString &cl_name  ) const
   if( ! ci ) {
     return false;
   }
-  if( ci->props & clpPure ) {
+  if( ci->props & clpAbstract ) {
     return false;
   }
 
@@ -1511,7 +1511,7 @@ const char* HolderData::helpstr { "Abstract data holder" };
 #undef CURR_CLASS
 
 // ---------------- HolderValue ---------
-STD_CLASSINFO(HolderValue,clpData|clpPure);
+STD_CLASSINFO(HolderValue,clpData|clpAbstract);
 
 CTOR(HolderValue,HolderData)
 {
@@ -2618,7 +2618,7 @@ DEFAULT_FUNCS_REG(HolderStringArray);
 //=====================================================================
 //=====================================================================
 // ---------------- TDataSet ------------------------
-STD_CLASSINFO(TDataSet,clpSpecial|clpPure);
+STD_CLASSINFO(TDataSet,clpSpecial|clpAbstract);
 
 
 const char* TDataSet::helpstr =

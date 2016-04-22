@@ -12,7 +12,7 @@
 using namespace std;
 
 
-STD_CLASSINFO(LinkedObj,clpPure);
+STD_CLASSINFO(LinkedObj,clpAbstract);
 
 
 const char* LinkedObj::helpstr =
@@ -333,7 +333,7 @@ QString LinkedObj::lsInputs() const
 
 // ------------------------------------ InputAbstract ---------
 //
-STD_CLASSINFO(InputAbstract,clpSpecial|clpPure);
+STD_CLASSINFO(InputAbstract,clpSpecial|clpAbstract);
 
 
 CTOR(InputAbstract,LinkedObj)

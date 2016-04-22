@@ -33,7 +33,7 @@ HolderData* ObjFactory::createObj( const QString &a_type,
   }
 
   // check for manual abstract elements
-  if( i.value()->props & clpPure ) {
+  if( i.value()->props & clpAbstract ) {
     qWarning() << "refuse to create object" << obj_name << " with abstract type " << a_type << WHE;
     return nullptr;
   }
@@ -77,7 +77,7 @@ bool ObjFactory::registerObjType( const TClassInfo *cl_info )
 QStringList ObjFactory::goodTypeNames( const QString & allows, const QString &hidden_types ) const
 {
   QStringList res;
-  int mask = clpPure | clpSpecial;
+  int mask = clpAbstract | clpSpecial;
   if( allows.contains( "+SPECIAL" ) ) {
     mask &= ~clpSpecial;
   }

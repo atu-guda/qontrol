@@ -28,7 +28,7 @@ using namespace  std;
 const char* TMiso::helpstr = "<H1>TMiso</H1>\n"
  "Base class for all active elements. Never should be used.";
 
-STD_CLASSINFO(TMiso,clpSpecial|clpPure);
+STD_CLASSINFO(TMiso,clpSpecial|clpAbstract);
 
 
 CTOR(TMiso,LinkedObj)
