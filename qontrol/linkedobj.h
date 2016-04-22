@@ -152,6 +152,7 @@ class InputAbstract : public LinkedObj {
   //* return ptr to LinkedObj, which holds element or nullptr;
   const LinkedObj* getSourceObj() const noexcept { return src_obj; };
   void readInput() noexcept { out0 = *p * factor + shift; } ;
+  void setInput( double v ) noexcept { out0 = v; } ; // to use while f_d();
   int  getLinkType() const noexcept { return linkType; }
   int  getOnlyFirst() const noexcept { return onlyFirst; }
   /** find and set link to source or fake source */

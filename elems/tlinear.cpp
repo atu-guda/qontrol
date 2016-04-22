@@ -33,6 +33,12 @@ double TLinear::f() noexcept
   return a * ( in_0*a0 + in_1*a1 + in_2*a2 + in_3*a3 + b );
 }
 
+double TLinear::f_d( double arg0, double arg1, double arg2, double arg3 )
+{
+  // setInput not used: too simple
+  return a * ( arg0*a0 + arg1*a1 + arg2*a2 + arg3*a3 + b );
+}
+
 DEFAULT_FUNCS_REG(TLinear)
 
 

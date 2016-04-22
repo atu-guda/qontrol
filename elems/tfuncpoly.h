@@ -56,6 +56,7 @@ class TFuncPoly : public TMiso  {
  protected:
    /** main computation function */
    virtual double f() noexcept override;
+   Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
 
    /** type of function */
    PRM_LIST( type, 0, "Type", "Function type", "enum=FuncType" );

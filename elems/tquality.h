@@ -43,6 +43,8 @@ class TQuality : public TMiso  {
    Q_CLASSINFO( "enum_QualType_4",  "Logariphmic" );    // qa_Log
  protected:
    virtual double f() noexcept override;
+   Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
+
    static const constexpr double oneMinusEm1 { 1.0 - 1.0/M_E };
    static const constexpr double eMinus1 { M_E - 1.0 };
    static const constexpr double logQaScale { oneMinusEm1 / M_LN2 };

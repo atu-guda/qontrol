@@ -44,6 +44,8 @@ class TMiso : public LinkedObj  {
 
    /** external computation function + in/out */
    double fun( IterType itype ) noexcept;
+   //* to call directly - only for some pure types
+   Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 );
 
    /** check, if element have given visual coords */
    bool isAtCoord( int ax, int ay ) const

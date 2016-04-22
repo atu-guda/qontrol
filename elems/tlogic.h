@@ -43,6 +43,7 @@ class TLogic : public TMiso  {
  protected:
    /** main computation function */
    virtual double f() noexcept override;
+   Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
 
    /** type of logic element */
    PRM_LIST( type, efNRC, "Type", "Type of logic", "enum=LogicType" );

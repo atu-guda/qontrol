@@ -61,6 +61,13 @@ double TQuality::f() noexcept
   return v;
 }
 
+double TQuality::f_d( double arg0, double arg1, double /*arg2*/, double /*arg3*/ )
+{
+  q_o.setInput( arg0 );
+  q_m.setInput( arg1 );
+  return f();
+}
+
 DEFAULT_FUNCS_REG(TQuality)
 
 

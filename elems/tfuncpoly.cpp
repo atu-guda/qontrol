@@ -89,6 +89,15 @@ double TFuncPoly::f() noexcept
   return v;
 }
 
+double TFuncPoly::f_d( double arg0, double arg1, double arg2, double arg3 )
+{
+  in_0.setInput( arg0 );
+  in_1.setInput( arg1 );
+  in_2.setInput( arg2 );
+  in_3.setInput( arg3 );
+  return f();
+}
+
 DEFAULT_FUNCS_REG(TFuncPoly)
 
 

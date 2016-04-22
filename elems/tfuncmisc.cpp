@@ -66,6 +66,13 @@ double TFuncMisc::f() noexcept
   return v;
 }
 
+double TFuncMisc::f_d( double arg0, double arg1, double /*arg2*/, double /*arg3*/ )
+{
+  in_0.setInput( arg0 );
+  in_1.setInput( arg1 );
+  return f();
+}
+
 DEFAULT_FUNCS_REG(TFuncMisc)
 
 

@@ -71,6 +71,10 @@ double TMiso::f() noexcept
   return 0;
 }
 
+double TMiso::f_d( double /*arg0*/, double /*arg1*/, double /*arg2*/, double /*arg3*/ )
+{
+  return 0;
+}
 
 
 int TMiso::do_startLoop( long acnx, long acny )
