@@ -13,6 +13,7 @@
 #include <QString>
 #include <QStringList>
 #include <QTextStream>
+#include "cmath"
 #include "defs.h"
 
 class HolderData;
@@ -56,12 +57,22 @@ inline double sign( double x ) {  return ( x>0 ) ? 1 : ( ( x<0 ) ? -1 : 0 ); };
 /** Heaviside */
 inline double thetta( double x ) { return ( x>0 ) ? 1 : 0; };
 inline double posval( double x ) { return ( x>=0 ) ? x : 0; };
+// first power functions
+inline double pow2( double x ) {  return x * x; };
+inline double pow3( double x ) {  return x * x * x; };
+inline double pow4( double x ) {  return pow2( pow2 ( x ) ); };
+inline double pow5( double x ) {  return pow2( x ) * pow3( x ); };
+inline double pow6( double x ) {  return pow2( pow3( x ) ); };
+inline double sqrtabs( double x ) {  return std::sqrt( std::fabs( x ) ); };
+inline double sinqa( double x ) {  return std::sin( std::sqrt( std::fabs( x ) ) ); };
+// limit checks
 inline bool isInBounds(   double l, double x, double r ) { return (x>=l) && (x<=r); };
 inline bool isInBounds(      int l,    int x,    int r ) { return (x>=l) && (x<=r); };
 inline bool isInBounds(     long l,   long x,   long r ) { return (x>=l) && (x<=r); };
 inline bool isInBoundsNE( double l, double x, double r ) { return (x>l)  && (x<r);  };
 inline bool isInBoundsNE(    int l,    int x,    int r ) { return (x>l)  && (x<r);  };
 inline bool isInBoundsNE(   long l,   long x,   long r ) { return (x>l)  && (x<r);  };
+// bound to given region
 inline double vBound(   double l, double x, double r )
   { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
 inline int    vBound(      int l,    int x,    int r )

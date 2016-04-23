@@ -19,7 +19,6 @@
 
 #include <tmiso.h>
 
-
 /** Special functions to test extremum searching algorithms
   * @author atu
   */
@@ -46,14 +45,15 @@ class TExtrTest : public TMiso  {
      ft_Bosom,
      ft_EggHolder,
      ft_Himmelblau,
-     ft_Kentikov,
+     ft_Kantikov,
      ft_PotentialMult,
      ft_Rana,
      ft_ShekelsFoxholes,
      ft_Sombrero,
      ft_Multi1,
      ft_Multi2,
-     ft_Wave
+     ft_Wave,
+     ft_Easom
    };
    Q_ENUMS(FuncType);
    Q_CLASSINFO( "enum_FuncType_0",  "Ackley"          );    // ft_Ackley
@@ -70,7 +70,7 @@ class TExtrTest : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_11", "Bosom"           );    // ft_Bosom
    Q_CLASSINFO( "enum_FuncType_12", "EggHolder"       );    // ft_EggHolder
    Q_CLASSINFO( "enum_FuncType_13", "Himmelblau"      );    // ft_Himmelblau
-   Q_CLASSINFO( "enum_FuncType_14", "Kentikov"        );    // ft_Kentikov
+   Q_CLASSINFO( "enum_FuncType_14", "Kantikov"        );    // ft_Kantikov
    Q_CLASSINFO( "enum_FuncType_15", "PotentialMult"   );    // ft_PotentialMult
    Q_CLASSINFO( "enum_FuncType_16", "Rana"            );    // ft_Rana
    Q_CLASSINFO( "enum_FuncType_17", "ShekelsFoxholes" );    // ft_ShekelsFoxholes
@@ -78,6 +78,7 @@ class TExtrTest : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_19", "Multi1"          );    // ft_Multi1
    Q_CLASSINFO( "enum_FuncType_20", "Multi2"          );    // ft_Multi2
    Q_CLASSINFO( "enum_FuncType_21", "Wave"            );    // ft_Wave
+   Q_CLASSINFO( "enum_FuncType_22", "Easom"           );    // ft_Easom
  protected:
    /** main computation function */
    virtual double f() noexcept override;
@@ -103,6 +104,9 @@ class TExtrTest : public TMiso  {
 
    PRM_INPUT( in_0, 0, "in_0", "First coordinate",  "sep=block" );
    PRM_INPUT( in_1, 0, "in_1", "Second coordinate", "sep=col" );
+
+   static constexpr const int n_foxhole = 25;
+   static const int foxhole_xy[n_foxhole][2];
 
    Q_CLASSINFO( "nameHintBase",  "extr_" );
    DCL_DEFAULT_STATIC;
