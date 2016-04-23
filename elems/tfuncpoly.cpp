@@ -61,13 +61,11 @@ double TFuncPoly::f() noexcept
       t1 = b*b - y2; t1 *= t1;
       v = 1 / sqrt( t1 + a * a *y2 ); break;
     case  ft_msquare:
-      t1 = ( 1- in_0 ); t1 *= t1;
-      t2 = ( in_1 - in_0 * in_0 );
-      t2 *= t2;
+      t1 = pow2( 1 - in_0 );
+      t2 = pow2( in_1 - pow2( in_0 ) );
       v = a * t2 + b * t1; break;
     case  ft_xExp:
-      t1 = in_0 * in_0 + in_1 * in_1 - 1;
-      t1 *= t1;
+      t1 = pow2( in_0 * in_0 + in_1 * in_1 - 1 );
       v = 1 - exp( -a * ( t1 - b * in_0 - c * in_1 ) ); break;
     case  ft_lin2:
       v = a * ( 1 + b*y ) ; break;
