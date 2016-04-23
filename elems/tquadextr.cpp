@@ -40,12 +40,17 @@ double TQuadExtr::f() noexcept
     y_ce = y_c;
   }
   // fallback values
-  a_1 = 0; a_2 = 0; x_cnt = 0; x_cn = x_ce;  y_cn = y_ce; dy = 0; dy_sx = 0;
+  a_1 = 0; a_2 = 0; x_cnt = 0; x_cn = x_ce;  y_cn = y_ce; dy = 0; dy_sx = 0; f_c = 0;
 
+  // relative values with limits
   x_lt = x_l  - x_ce;
+  if( x_lt >= -D_EPS ) { x_lt = -D_EPS; };
   x_rt = x_r  - x_ce;
+  if( x_rt <=  D_EPS ) { x_rt =  D_EPS; };
   y_lt = y_l  - y_ce;
   y_rt = y_r  - y_ce;
+
+  f_c = 1.0 / pow2( x_lt ) - 1.0 / pow2( x_rt );
 
   // limit values
   double lim_x_lt, lim_x_rt;

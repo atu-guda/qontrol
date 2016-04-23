@@ -49,6 +49,7 @@ class TQuadExtr : public TMiso  {
    PRM_DOUBLE( dy,    efInner, "dy",     "y_cn - y_c", "" );
    PRM_DOUBLE( dy_dx, efInner, "dy/dx",  "dy/(x_cn-x_c)", "" );
    PRM_DOUBLE( dy_sx, efInner, "dy_sx",  "dy*sign(x_cnt)", "" );
+   PRM_DOUBLE( f_c,   efInner, "f_c",    "a-la Coulomb force", "" );
    // aux
    PRM_DOUBLE( x_lt,  efInner, "x_{lt}", "Relative x left point = x_l-x_c", "" );
    PRM_DOUBLE( x_rt,  efInner, "x_{rt}", "Relative x right point = x_r-x_c", "" );
