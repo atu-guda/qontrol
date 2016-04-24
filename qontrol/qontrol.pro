@@ -60,6 +60,7 @@ SOURCES += \
   toutarr.cpp \
   rand_gen.cpp \
   ../elems/tadjgen.cpp \
+  ../elems/tbarrier.cpp \
   ../elems/tcorralalysis.cpp \
   ../elems/tcounter.cpp \
   ../elems/tcriterion.cpp \
@@ -145,6 +146,7 @@ HEADERS += \
   toutarr.h \
   rand_gen.h \
   ../elems/tadjgen.h \
+  ../elems/tbarrier.h \
   ../elems/tcorralalysis.h \
   ../elems/tcounter.h \
   ../elems/tcriterion.h \

@@ -212,13 +212,13 @@ double waveMhat( double x )
 double barrierHypUp( double x, double lv ) noexcept
 {
   x = limitUpEps( x, lv );
-  return 1.0 / ( x - lv );
+  return 1.0 / ( lv - x );
 }
 
 double barrierHypDown( double x, double lv ) noexcept
 {
   x = limitDownEps( x, lv );
-  return 1.0 / ( lv - x );
+  return 1.0 / ( x - lv );
 }
 
 double barrierHypUpUp( double x, double lv ) noexcept
@@ -234,13 +234,13 @@ double barrierHypUpDown( double x, double lv ) noexcept
 double barrierHyp2Up( double x, double lv ) noexcept
 {
   x = limitUpEps( x, lv );
-  return 1.0 / pow2( x - lv );
+  return 1.0 / pow2( lv - x );
 }
 
 double barrierHyp2Down( double x, double lv ) noexcept
 {
   x = limitDownEps( x, lv );
-  return 1.0 / pow2( lv - x );
+  return 1.0 / pow2( x - lv );
 }
 
 double barrierHyp2UpUp( double x, double lv ) noexcept
