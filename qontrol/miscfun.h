@@ -59,12 +59,30 @@ inline double thetta( double x ) { return ( x>0 ) ? 1 : 0; };
 inline double posval( double x ) { return ( x>=0 ) ? x : 0; };
 // first power functions
 inline double pow2( double x ) {  return x * x; };
+inline double pow2s( double x ) {  return x * fabs(x); };
 inline double pow3( double x ) {  return x * x * x; };
 inline double pow4( double x ) {  return pow2( pow2 ( x ) ); };
+inline double pow4s( double x ) {  return pow3( x ) * fabs( x ); };
 inline double pow5( double x ) {  return pow2( x ) * pow3( x ); };
 inline double pow6( double x ) {  return pow2( pow3( x ) ); };
+inline double pow6s( double x ) {  return pow5( x ) * fabs( x ); };
 inline double sqrtabs( double x ) {  return std::sqrt( std::fabs( x ) ); };
 inline double sinqa( double x ) {  return std::sin( std::sqrt( std::fabs( x ) ) ); };
+
+// misc math functions
+double deadLine( double x, double x0 );
+double limitLine( double x, double x0 );
+double deadLimitLine( double x, double x0, double x1, double a );
+double triangleLine( double x, double x0 );
+double rectLine( double x, double xl, double xr );
+double threeStateLine( double x, double x0 );
+double waveWave( double x );
+double waveMhat( double x );
+
+double limitAngleDeg( double a ); // limits angle to [0;360)
+
+void beautifyScale( double &a, double &b ); // make gooa scale for plot
+
 // limit checks
 inline bool isInBounds(   double l, double x, double r ) { return (x>=l) && (x<=r); };
 inline bool isInBounds(      int l,    int x,    int r ) { return (x>=l) && (x<=r); };
@@ -79,6 +97,24 @@ inline int    vBound(      int l,    int x,    int r )
   { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
 inline long    vBound(     long l,   long x,   long r )
   { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
+// bounds with EPS
+inline double limitUpEps( double x, double lv )
+  { return ( x < lv - D_EPS ) ? x : (lv - D_EPS); }
+inline double limitDownEps( double x, double lv )
+  { return ( x > lv + D_EPS ) ? x : (lv + D_EPS); }
+// barriers:
+double barrierHypUp(      double x, double lv ) noexcept;
+double barrierHypDown(    double x, double lv ) noexcept;
+double barrierHypUpUp(    double x, double lv ) noexcept;
+double barrierHypUpDown(  double x, double lv ) noexcept;
+double barrierHyp2Up(     double x, double lv ) noexcept;
+double barrierHyp2Down(   double x, double lv ) noexcept;
+double barrierHyp2UpUp(   double x, double lv ) noexcept;
+double barrierHyp2UpDown( double x, double lv ) noexcept;
+// TODO: log, tan
+
+
+// index checks
 template< typename T > bool isGoodIndex( long idx, const T& container )
   {
     static_assert( sizeof(long) >= sizeof(typename T::size_type), "index size is incompatible to long!");
@@ -92,18 +128,6 @@ const typename T::value_type atd( const T& container, typename T::size_type idx,
     }
     return container[idx];
   }
-double deadLine( double x, double x0 );
-double limitLine( double x, double x0 );
-double deadLimitLine( double x, double x0, double x1, double a );
-double triangleLine( double x, double x0 );
-double rectLine( double x, double xl, double xr );
-double threeStateLine( double x, double x0 );
-double waveWave( double x );
-double waveMhat( double x );
-
-double limitAngleDeg( double a ); // limits angle to [0;360)
-
-void beautifyScale( double &a, double &b ); // make gooa scale for plot
 
 //* implementation in tex2label.cpp
 QString tex2label( const QString &t, bool noSub = false );

@@ -123,6 +123,8 @@ QString flags2str( int fl )
   return s;
 }
 
+// ----------------------- math functions ---------------
+
 double deadLine( double x, double x0 )
 {
   if( x > x0 ) {
@@ -207,8 +209,55 @@ double waveMhat( double x )
   return ( 1 - x2 ) * exp( -0.5 * x2 );
 }
 
+double barrierHypUp( double x, double lv ) noexcept
+{
+  x = limitUpEps( x, lv );
+  return 1.0 / ( x - lv );
+}
+
+double barrierHypDown( double x, double lv ) noexcept
+{
+  x = limitDownEps( x, lv );
+  return 1.0 / ( lv - x );
+}
+
+double barrierHypUpUp( double x, double lv ) noexcept
+{
+  return barrierHypUp( x, lv ) + barrierHypDown( x, -lv );
+}
+
+double barrierHypUpDown( double x, double lv ) noexcept
+{
+  return barrierHypUp( x, lv ) - barrierHypDown( x, -lv );
+}
+
+double barrierHyp2Up( double x, double lv ) noexcept
+{
+  x = limitUpEps( x, lv );
+  return 1.0 / pow2( x - lv );
+}
+
+double barrierHyp2Down( double x, double lv ) noexcept
+{
+  x = limitDownEps( x, lv );
+  return 1.0 / pow2( lv - x );
+}
+
+double barrierHyp2UpUp( double x, double lv ) noexcept
+{
+  return barrierHyp2Up( x, lv ) + barrierHyp2Down( x, -lv );
+}
+
+double barrierHyp2UpDown( double x, double lv ) noexcept
+{
+  return barrierHyp2Up( x, lv ) - barrierHyp2Down( x, -lv );
+}
 
 
+
+
+
+// ---------------------- DatasInfo -------------------------------
 
 int DatasInfo::dump( QTextStream& os, const QString &delim )
 {
