@@ -39,61 +39,22 @@ double TQuadExtr::f() noexcept
     x_ce = x_c;
     y_ce = y_c;
   }
+  QuadExtrIn in { x_l, x_ce, x_r, y_l, y_ce, y_r, lim_s, x_min, x_max, limitX, limitG };
+  QuadExtrOut out;
   // fallback values
   a_1 = 0; a_2 = 0; x_cnt = 0; x_cn = x_ce;  y_cn = y_ce; dy = 0; dy_sx = 0; f_c = 0;
 
-  // relative values with limits
-  x_lt = x_l  - x_ce;
-  if( x_lt >= -D_EPS ) { x_lt = -D_EPS; };
-  x_rt = x_r  - x_ce;
-  if( x_rt <=  D_EPS ) { x_rt =  D_EPS; };
-  y_lt = y_l  - y_ce;
-  y_rt = y_r  - y_ce;
-
-  f_c = 1.0 / pow2( x_lt ) - 1.0 / pow2( x_rt );
-
-  // limit values
-  double lim_x_lt, lim_x_rt;
-  if( limitG ) { // given
-    lim_x_lt = x_min - x_ce; lim_x_rt = x_max - x_ce;
-  } else {       // relative
-    lim_x_lt = lim_s * x_lt; lim_x_rt = lim_s * x_rt;
+  if( calcQuadExtr( in, out ) ) {
+    x_cn = out.x_e; x_cnt = out.x_et; y_cn = out.y_e;
+    x_lt = out.x_lt; x_rt = out.x_rt; y_lt = out.x_lt; y_rt = out.y_rt;
+    a_1 = out.a_1; a_2 = out.a_2;
+    dy = y_cn - y_c;
+    dy_dx = dy / x_cnt;
+    dy_sx = dy * sign( x_cnt );
+    f_c = 1.0 / pow2( x_lt ) - 1.0 / pow2( x_rt ); // TODO: remove, not here
   }
 
-  double x_lt2 = x_lt * x_lt;
-  double x_rt2 = x_rt * x_rt;
-  double denom = x_lt2 * x_rt - x_lt * x_rt2;
-  if( fabs( denom ) < D_AZERO ) { // x_r and x_l is too near
-    return x_cn;
-  }
-
-  a_1 = ( y_rt * x_lt2 - y_lt * x_rt2 ) / denom;
-  a_2 = - ( y_rt * x_lt - y_lt * x_rt ) / denom;
-  if( fabs( a_2 ) < D_AZERO ) { // near straigh line
-    return x_cn; // TODO: check! ???
-  }
-
-  x_cnt = - 0.5 * a_1 / a_2;
-
-  if( limitX ) { // often need, else - for tests
-
-    if( !  ( a_2 < 0  &&  isInBoundsNE( lim_x_lt, x_cnt, lim_x_rt ) )  ) {
-
-      if( y_r > y_l ) { //  bound to point with large y, NOT nearest to x_cn!
-        x_cnt = lim_x_rt;
-      } else {
-        x_cnt = lim_x_lt;
-      }
-    }
-  }
-
-  x_cn = x_ce + x_cnt;
-  dy = a_2 * x_cnt * x_cnt + a_1 * x_cnt;
-  y_cn = y_ce + dy;
-  dy_dx = dy / x_cnt;
-  dy_sx = dy * sign( x_cnt );
   return x_cn;
-
 }
 
 
