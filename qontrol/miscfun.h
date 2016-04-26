@@ -113,6 +113,25 @@ double barrierHyp2UpUp(   double x, double lv ) noexcept;
 double barrierHyp2UpDown( double x, double lv ) noexcept;
 // TODO: log, tan
 
+// extremum quadtatic approximation funcs and data
+struct QuadExtrIn {
+  double x_l, x_c, x_r;
+  double y_l, y_c, y_r;
+  double lim_s, x_min, x_max;
+  bool limitX, limitG;
+};
+
+struct QuadExtrOut {
+  double x_e, y_e; // extremum point itself;
+  double x_lt, x_rt, y_lt, y_rt, x_et, y_et; // relaTive to (x_c, y_c) coordinates
+  double a_1, a_2;  // coeffs it x, x^2
+  bool was_limited;
+};
+
+// calculation itself. returns true in some resoanable calculations ins done,
+// even if limitations was done;
+bool calcQuadExtr( const QuadExtrIn &in, QuadExtrOut &out );
+
 
 // index checks
 template< typename T > bool isGoodIndex( long idx, const T& container )

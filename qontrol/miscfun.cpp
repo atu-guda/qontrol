@@ -254,6 +254,69 @@ double barrierHyp2UpDown( double x, double lv ) noexcept
 }
 
 
+// extremum quadtatic approximation funcs and data
+
+bool calcQuadExtr( const QuadExtrIn &in, QuadExtrOut &out )
+{
+  // fallback values
+  out.a_1 = out.a_2 = out.x_et = 0; out.x_e = in.x_c;  out.y_e = in.y_c;
+  out.was_limited = false;
+
+  if( in.x_l >= in.x_c  || in.x_c >= in.x_r ) {
+    return false;
+  }
+
+  // relative values with limits
+  out.x_lt = in.x_l  - in.x_c;
+  if( out.x_lt >= -D_EPS ) { out.x_lt = -D_EPS; };
+  out.x_rt = in.x_r  - in.x_c;
+  if( out.x_rt <=  D_EPS ) { out.x_rt =  D_EPS; };
+  out.y_lt = in.y_l  - in.y_c;
+  out.y_rt = in.y_r  - in.y_c;
+
+  // limit values
+  double lim_x_lt, lim_x_rt;
+  if( in.limitG ) { // given
+    lim_x_lt = in.x_min - in.x_c; lim_x_rt = in.x_max - in.x_c;
+  } else {       // relative
+    lim_x_lt = in.lim_s * out.x_lt; lim_x_rt = in.lim_s * out.x_rt;
+  }
+
+  double x_lt2 = pow2( out.x_lt );
+  double x_rt2 = pow2( out.x_rt );
+  double denom = x_lt2 * out.x_rt - out.x_lt * x_rt2;
+  if( fabs( denom ) < D_AZERO ) { // x_r and x_l is too near
+    out.was_limited = true;
+    return true;
+  }
+
+  out.a_1 =   ( out.y_rt * x_lt2 - out.y_lt * x_rt2 ) / denom;
+  out.a_2 = - ( out.y_rt * out.x_lt - out.y_lt * out.x_rt ) / denom;
+  if( fabs( out.a_2 ) < D_AZERO ) { // near straigh line
+    out.was_limited = true;
+    return true;
+  }
+
+  out.x_et = - 0.5 * out.a_1 / out.a_2;
+
+  if( in.limitX ) { // often need, else - for tests
+
+    if( !  ( out.a_2 < 0  &&  isInBoundsNE( lim_x_lt, out.x_et, lim_x_rt ) )  ) {
+
+      if( in.y_r > in.y_l ) { //  bound to point with large y, NOT nearest to x_cn!
+        out.x_et = lim_x_rt;
+      } else {
+        out.x_et = lim_x_lt;
+      }
+      out.was_limited = true;
+    }
+  }
+
+  out.x_e = in.x_c + out.x_et;
+  double dy = out.a_2 * pow2( out.x_et )  + out.a_1 * out.x_et;
+  out.y_e = in.y_c + dy;
+  return true;
+}
 
 
 
