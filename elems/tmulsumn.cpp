@@ -85,21 +85,11 @@ double TMulsumN::f() noexcept
     } else {
       ple = spl / 3.0;
     }
-    // a-la tquadexrt: TODO: separate func
-    double p_lt = pl - pc;
-    double p_rt = pr - pc;
-    double f_lt = fl - fc;
-    double f_rt = fr - fc;
-    double denom = p_lt * p_lt * p_rt - p_lt * p_rt * p_rt;
-    if( fabs( denom ) > D_AZERO ) {
-      double a_1 = ( f_rt * p_lt * p_lt - f_lt * p_rt * p_rt ) / denom;
-      double a_2 = - ( f_rt * p_lt - f_lt * p_rt ) / denom;
-      if( a_2 < - D_AZERO ) { // only negative a2 here
-        pee = pc - 0.5 * a_1 / a_2; // rel
-        pee = vBound( pl, (double)pee, pr );
-        double pee_t = pee - pc;
-        fee = fc + a_2 * pee_t * pee_t + a_1 * pee_t;
-      }
+
+    QuadExtrIn in { pl, pc, pr, fl, fc, fr, 0.999, 0, 0, true, false };
+    QuadExtrOut out;
+    if( calcQuadExtr( in, out ) ) {
+      pee = out.x_e; fee = out.y_e;
     }
   }
   return spf;
