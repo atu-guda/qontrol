@@ -28,32 +28,46 @@ CTOR(TSearcher,TMiso)
 {
 }
 
+// out0 is p_c;
+
 int TSearcher::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
-  // out0 = p_c = (double)out0_init;
+  L_l0 = out0 - p_l;
+  L_r0 = p_r  - out0;
   return 1;
 }
 
 
 double TSearcher::f() noexcept
 {
-  // QuadExtrIn in { p_l, p_ce, p_r, F_l, F_ce, F_r, lim_s, p_min, p_max, limitX, limitG };
-  // QuadExtrOut out;
-  // // fallback values
-  // a_1 = 0; a_2 = 0; p_cnt = 0; p_cn = p_ce;  F_cn = F_ce; dy = 0; dF_sx = 0; f_c = 0;
-  //
-  // if( calcQuadExtr( in, out ) ) {
-  //   p_cn = out.p_e; p_cnt = out.p_et; F_cn = out.F_e;
-  //   p_lt = out.p_lt; p_rt = out.p_rt; F_lt = out.p_lt; F_rt = out.F_rt;
-  //   a_1 = out.a_1; a_2 = out.a_2;
-  //   dy = F_cn - F_c;
-  //   dF_dx = dy / p_cnt;
-  //   dF_sx = dy * sign( p_cnt );
-  //   f_c = 1.0 / pow2( p_lt ) - 1.0 / pow2( p_rt ); // TODO: remove, not here
-  // }
-  //
-  // return p_cn;
-  return 0;
+  double p_c = out0;
+  QuadExtrIn in { p_l, p_c, p_r, F_l, F_c, F_r, lim_s, 0, 0, true, false };
+  QuadExtrOut out;
+  // fallback values
+  a_1 = 0; a_2 = 0; p_et = 0; p_e = p_c;  dF = 0; dF_dp = 0;
+  f_c = 0; f_n = 0; f_g = 0;
+  double p_ct0 = p_c - out0_init;
+
+  if( calcQuadExtr( in, out ) ) {
+    p_e = out.x_e; p_et = out.x_et; F_e = out.y_e;
+    p_lt = out.x_lt; p_rt = out.x_rt; F_lt = out.y_lt; F_rt = out.y_rt;
+    a_1 = out.a_1; a_2 = out.a_2;
+    dF = F_e - F_c;
+    dF_dp = dF / p_et;
+  }
+
+  f_c = - k_cl  * ( p_ct0 )
+        + k_ch  * barrierHypUp(    p_ct0, L_r0 )
+        - k_ch  * barrierHypDown(  p_ct0, L_l0 )
+        + k_ch2 * barrierHyp2Up(   p_ct0, L_r0 )
+        - k_ch2 * barrierHyp2Down( p_ct0, L_l0 );
+  f_n = - k_nl  * ( p_r - 2*p_c + p_l );
+//        + k_nh  * barrierHypUp
+
+  f_t = f_c + f_n + f_g;
+  p_c += f_t * v_f * ctdt;
+
+  return p_c;
 }
 
 
