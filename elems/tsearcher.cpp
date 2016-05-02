@@ -32,15 +32,18 @@ CTOR(TSearcher,TMiso)
 
 int TSearcher::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
-  L_l0 = out0 - p_l;
-  L_r0 = p_r  - out0;
+  L_l0 = out0_init - p_l;
+  L_r0 = p_r  - out0_init;
+  if( autocalc_minmax ) {
+    p_min = out0_init - c_mm * L_l0;
+    p_max = out0_init + c_mm * L_r0;
+  }
   return 1;
 }
 
 
 double TSearcher::f() noexcept
 {
-  double p_c = out0;
   QuadExtrIn in { p_l, p_c, p_r, F_l, F_c, F_r, lim_s, 0, 0, true, false };
   QuadExtrOut out;
   // fallback values
@@ -57,17 +60,33 @@ double TSearcher::f() noexcept
   }
 
   f_c = - k_cl  * ( p_ct0 )
-        + k_ch  * barrierHypUp(    p_ct0, L_r0 )
-        - k_ch  * barrierHypDown(  p_ct0, L_l0 )
-        + k_ch2 * barrierHyp2Up(   p_ct0, L_r0 )
-        - k_ch2 * barrierHyp2Down( p_ct0, L_l0 );
-  f_n = - k_nl  * ( p_r - 2*p_c + p_l );
-//        + k_nh  * barrierHypUp
+        - k_ch  * barrierHypUp(    p_c, p_max )
+        + k_ch  * barrierHypDown(  p_c, p_min )
+        - k_ch2 * barrierHyp2Up(   p_c, p_max )
+        + k_ch2 * barrierHyp2Down( p_c, p_min );
+  f_n =   k_nl  * ( p_r - 2*p_c + p_l )
+        - k_nh  * barrierHypUp(    p_c, p_r )
+        + k_nh  * barrierHypDown(  p_c, p_l )
+        - k_nh2 * barrierHyp2Up(   p_c, p_r )
+        + k_nh2 * barrierHyp2Down( p_c, p_l ); // TODO: constant shift
+
+  switch( (F_g_Type)(int)(f_g_type) ) {
+    case fg_p_e:
+      f_g = ( p_e - p_c );
+      break;
+    case fg_diff:
+      f_g = ( F_r - F_l ) / ( p_r - p_l );
+      break;
+    default:
+      f_g = 0;
+      break;
+  }
+  f_g *= k_g;
 
   f_t = f_c + f_n + f_g;
-  p_c += f_t * v_f * ctdt;
+  double p_cn = out0 + (double)f_t * v_f * ctdt;
 
-  return p_c;
+  return p_cn;
 }
 
 
