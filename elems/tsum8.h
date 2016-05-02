@@ -32,16 +32,16 @@ class TSum8 : public TMiso  {
  protected:
    /** main computation function */
    virtual double f() noexcept override;
-   /** coefficients on input and shift */
-   PRM_PARAMD( a_0, 0, "a_0", "factor in input 0", "def=1" );
+   PRM_PARAMD( a,  0, "a", "common factor shift", "def=1" );
+   PRM_PARAMD( b,  0, "b", "static shift", "sep=col" );
+   PRM_PARAMD( a_0, 0, "a_0", "factor in input 0", "def=1\nsep=block" );
    PRM_PARAMD( a_1, 0, "a_1", "factor in input 1", "def=-1" );
-   PRM_PARAMD( a_2, 0, "a_2", "factor in input 2", "" );
+   PRM_PARAMD( a_2, 0, "a_2", "factor in input 2", "sep=col" );
    PRM_PARAMD( a_3, 0, "a_3", "factor in input 3", "" );
    PRM_PARAMD( a_4, 0, "a_4", "factor in input 4", "sep=col" );
    PRM_PARAMD( a_5, 0, "a_5", "factor in input 5", "" );
-   PRM_PARAMD( a_6, 0, "a_6", "factor in input 6", "" );
+   PRM_PARAMD( a_6, 0, "a_6", "factor in input 6", "sep=col" );
    PRM_PARAMD( a_7, 0, "a_7", "factor in input 7", "" );
-   PRM_PARAMD( b,  0, "b", "static shift", "sep=col" );
 
    PRM_INPUT( u_0, 0, "u_0", "Input 0",  "sep=block" );
    PRM_INPUT( u_1, 0, "u_1", "Input 1", "" );

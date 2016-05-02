@@ -19,7 +19,7 @@
 
 const char* TSum8::helpstr = "<H1>TSum8</H1>\n"
  "8-input Linear summator: <br>\n"
- "<b>x = a_0*u_0 + a_1*u_1 + ... + a_7*u_7 + b</b><br>\n";
+ "<b>x = a * ( a_0*u_0 + a_1*u_1 + ... + a_7*u_7 + b)</b><br>\n";
 
 STD_CLASSINFO(TSum8,clpElem|clpCalcAtStart);
 
@@ -29,8 +29,9 @@ CTOR(TSum8,TMiso)
 
 double TSum8::f() noexcept
 {
-  return u_0*a_0 + u_1*a_1 + u_2*a_2 + u_3*a_3 +
-         u_4*a_4 + u_5*a_5 + u_6*a_6 + u_7*a_7 + b;
+  return a * ( u_0*a_0 + u_1*a_1 + u_2*a_2 + u_3*a_3 +
+               u_4*a_4 + u_5*a_5 + u_6*a_6 + u_7*a_7
+               + b );
 }
 
 DEFAULT_FUNCS_REG(TSum8)
