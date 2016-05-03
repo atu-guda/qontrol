@@ -57,7 +57,7 @@ QVariant GraphElem::dataObj( int col, int role ) const
     // }
 
     // real statustip + buttons
-    QString s = src;
+    QString s = objectName() % QSL(":") % src.cval();
     QStringList el = getEnumStrings( "DataType" );
     s += " (" % el.at( type );
     if( is2D ) {
