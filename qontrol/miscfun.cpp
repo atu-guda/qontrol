@@ -19,6 +19,7 @@
 #include "miscfun.h"
 #include "datawidget.h"
 #include "prog_opts.h"
+#include "linkedobj.h"
 
 using namespace std;
 
@@ -466,6 +467,10 @@ QString substValues( const QString &s, const HolderData *ho )
   if( !su.isValid() ) {
     return QSL("BAD_RE");
   }
+  HolderData *main_s = ho->getObj( "schems.main_s" ); // may be nullptr
+
+  // for double get in form of "V.object.value"
+  const LinkedObj *lobj = qobject_cast<const LinkedObj*>( ho );
 
   int n_subst = 0;
   const int max_n_subst = 100;
@@ -489,22 +494,38 @@ QString substValues( const QString &s, const HolderData *ho )
     r.remove( idx, l );
 
     QString repl = QSL("???");
-    HolderData *da = ho->getObj( nm );
-    if( da && da->isChildOf( QSL("TMiso") ) )  { // auto 'out0' add for TMiso
-      da = ho->getObj( nm % QSL(".out0") );
-    }
-    if( da ) {
-      if( da->getTp() == QVariant::Double ) {
-        double v = 0;
-        HolderDouble *hod = qobject_cast<HolderDouble*>( da );
-        if( hod ) {
-          v = hod->cval();
+
+    if( nm.startsWith( QSL("V.") ) ) { // special case 'V.value.name'
+      nm.remove( 0, 2 );
+      if( lobj ) {
+         const double *pv = lobj->getSchemeDoublePtr( nm );
+         if( pv ) {
+           repl = QString::asprintf( sl[2].toLatin1(), *pv );
+         }
+      }
+    } else {
+      HolderData *da = ho->getObj( nm );
+      if( !da && main_s ) { // may be in main scheme
+        da = main_s->getObj( nm );
+      }
+
+      if( da && da->isChildOf( QSL("LinkedObj") ) )  { // auto 'out0' add for TMiso
+        da = da->getObj( QSL("out0") );
+      }
+
+      if( da ) {
+        if( da->getTp() == QVariant::Double ) {
+          double v = 0;
+          HolderDouble *hod = qobject_cast<HolderDouble*>( da );
+          if( hod ) {
+            v = hod->cval();
+          }
+          repl = QString::asprintf( sl[2].toLatin1(), v );
+        } else if ( da->isChildOf( QSL("HolderValue") ) ) {
+          repl = da->toString();
+        } else {
+          repl = da->objectName();
         }
-        repl = QString::asprintf( sl[2].toLatin1(), v );
-      } else if ( da->isChildOf( QSL("HolderValue") ) ) {
-        repl = da->toString();
-      } else {
-        repl = da->objectName();
       }
     }
 
