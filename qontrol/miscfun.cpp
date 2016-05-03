@@ -483,11 +483,11 @@ QString substValues( const QString &s, const HolderData *ho )
     // qWarning() << "cap[1] = " << su.cap(1) << " n= " << sl.size() << WHE;
 
     if( sl.size() < 1 ) { sl << QSL("NONAMED"); }
-    if( sl.size() < 2 ) { sl << QSL("64"); }
+    if( sl.size() < 2 ) { sl << QSL("256"); }
     if( sl.size() < 3 ) { sl << QSL("%.7g"); }
     QString nm = sl[0];
     int maxlen = sl[1].toInt();
-    if( maxlen < 1 ) { maxlen = 64; };
+    if( maxlen < 1 ) { maxlen = 256; };
 
     ++n_subst;
     // qWarning() << "nm = " << nm << " maxlen= " << maxlen << " dprec= " << dprec <<  " cnv= " << cnvType << WHE;
