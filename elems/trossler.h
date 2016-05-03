@@ -34,6 +34,7 @@ class TRossler : public TMiso  {
    virtual double f() noexcept override;
    /** called before each inner param loop. Unused param - -1 */
    virtual int miso_startLoop( long acnx, long acny ) override;
+   void calcAux() noexcept;
 
    /** main system parameters */
    PRM_PARAMD( a, 0, "a", "Parameter a", "def=0.25" );
@@ -52,6 +53,13 @@ class TRossler : public TMiso  {
    PRM_DOUBLE( vy, efInner, "vy", "dy/dt", "" );
    PRM_DOUBLE( vz, efInner, "vz", "dz/dt", "" );
    PRM_DOUBLE( v,  efInner, "v",  "dr/dt", ""  );
+   /** misc usefull output values */
+   PRM_DOUBLE( x2, efInner, "x2", "x^2", "" );
+   PRM_DOUBLE( y2, efInner, "y2", "y^2", ""  );
+   PRM_DOUBLE( z2, efInner, "z2", "z^2", ""  );
+   PRM_DOUBLE( xy, efInner, "xy", "x*y", "" );
+   PRM_DOUBLE( xz, efInner, "xz", "x*z", "" );
+   PRM_DOUBLE( yz, efInner, "yz", "y*z", "" );
 
    PRM_INPUT( in_x, 0, "x+", "Addition to x",  "sep=block" );
    PRM_INPUT( in_y, 0, "y+", "Addition to y",  "sep=col" );

@@ -44,21 +44,29 @@ CTOR(TLorenz,TMiso)
 
 double TLorenz::f() noexcept
 {
-  vx = ( sigma * (y-x) );
-  vy = ( x * (r-z) - y );
-  vz = ( x*y - b*z );
-  v = sqrt( vx*vx + vy*vy + vz*vz );
+  vx = sigma * (y-x);
+  vy = x * r - xz - y;
+  vz = xy - b*z;
 
   x += ctdt * vx + in_x;
   y += ctdt * vy + in_y;
   z += ctdt * vz + in_z;
+  calcAux();
   return x;
+}
+
+void TLorenz::calcAux() noexcept
+{
+  x2 = pow2( x ); y2 = pow2( y ); z2 = pow2( z );
+  xy = x * y; xz = x * z; yz = y * z;
+  v = sqrt( vx*vx + vy*vy + vz*vz );
 }
 
 
 int TLorenz::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
+  calcAux();
   out0 = x; // ????
   return 1;
 }

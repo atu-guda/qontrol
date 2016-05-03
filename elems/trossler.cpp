@@ -44,19 +44,27 @@ CTOR(TRossler,TMiso)
 double TRossler::f() noexcept
 {
   vx = -y - z;
-  vy = x  + a*y;
-  vz = b + z*(x-c);
-  v = sqrt( vx*vx + vy*vy + vz*vz );
+  vy =  x + a*y;
+  vz =  b + xz - z*c;
 
   x += ctdt * vx + in_x;
   y += ctdt * vy + in_y;
   z += ctdt * vz + in_z;
+  calcAux();
   return x;
+}
+
+void TRossler::calcAux() noexcept
+{
+  x2 = pow2( x ); y2 = pow2( y ); z2 = pow2( z );
+  xy = x * y; xz = x * z; yz = y * z;
+  v = sqrt( vx*vx + vy*vy + vz*vz );
 }
 
 int TRossler::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
+  calcAux();
   out0 = x;
   return 1;
 }
