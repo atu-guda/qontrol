@@ -32,11 +32,13 @@ class TSearcher : public TMiso  {
 
    enum F_g_Type  {
      fg_p_e = 0,
-     fg_diff
+     fg_diff,
+     fg_a1
    };
    Q_ENUMS(F_g_Type);
    Q_CLASSINFO( "enum_F_g_Type_0",  "p_e based"            );    // fg_p_e
    Q_CLASSINFO( "enum_F_g_Type_1",  "dF/dp based"          );    // fg_diff
+   Q_CLASSINFO( "enum_F_g_Type_2",  "a1 based"             );    // fg_diff
 
  protected:
    virtual double f() noexcept override;

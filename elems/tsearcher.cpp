@@ -77,6 +77,9 @@ double TSearcher::f() noexcept
     case fg_diff:
       f_g = ( F_r - F_l ) / ( p_r - p_l );
       break;
+    case fg_a1:
+      f_g = a_1;
+      break;
     default:
       f_g = 0;
       break;
