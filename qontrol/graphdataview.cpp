@@ -124,7 +124,7 @@ bool GraphDataView::exportObj()
 
   QString fnq = QFileDialog::getSaveFileName( this,
       QSL("Export data from \"") % gra->objectName() % QSL("\""),
-      gra->objectName() % data_file_suff, data_files_sel );
+      gra->hintFileName() % data_file_suff, data_files_sel );
   if( fnq.isEmpty() ) {
     return false;
   }

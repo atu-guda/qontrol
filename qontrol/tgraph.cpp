@@ -1339,7 +1339,7 @@ mglPoint TGraph::CalcXYZ( int mx, int my, int w, int h,
 
 void TGraph::plotToPng( const QString &fn )
 {
-  QString efn = fn.isEmpty() ? hintFileName() : fn;
+  QString efn = fn.isEmpty() ? (hintFileName() % QSL(".png")) : fn;
 
   reset(); // to reread all
   int w =  scd->w0, h = scd->h0;
@@ -1523,7 +1523,7 @@ QString TGraph::hintFileName() const
     base += s.replace( '\\', '_' );
   }
 
-  return base %  QSL(".png");
+  return base; // %  QSL(".png");
 }
 
 // ---------------- misc funcs -------------------------- 

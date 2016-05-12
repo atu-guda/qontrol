@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include <QtWidgets>
+#include <QString>
 #include <QPrinter>
 #include <QPrintDialog>
 
@@ -612,7 +613,7 @@ void MglView::print()
 
 void MglView::exportPlot()
 {
-  QString fn0 = gra->hintFileName();
+  QString fn0 = gra->hintFileName() % QSL(".png");
   QString fn = QFileDialog::getSaveFileName( this, "Save Picture", fn0,
                "PNG files (*.png);;All files (*)" );
   if( fn.isEmpty() ) {
