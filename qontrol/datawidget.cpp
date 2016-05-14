@@ -18,12 +18,41 @@
 
 using namespace std;
 
+// ------------------------------ DataLabel ---------------------------------------------------
+
+DataLabel::DataLabel( HolderData &_ho, const QString &text, DataWidget *parent, Qt::WindowFlags f )
+   : QLabel( text, parent, f ),
+     ho( _ho ), dw( parent )
+{
+}
+
+void DataLabel::contextMenuEvent( QContextMenuEvent *ev )
+{
+  QMenu *mnu = new QMenu( this );
+  auto act = mnu->addAction( "&Information" );
+  // connect( act, &QAction::triggered, this, &DataLabel::editObj );
+  act = mnu->addAction( "&What's this" );
+  // connect( act, &QAction::triggered, this, &DataLabel::editObj );
+  act = mnu->addAction( "&Copy object" );
+  // connect( act, &QAction::triggered, this, &DataLabel::editObj );
+  act = mnu->addAction( "&Delete object" );
+  // connect( act, &QAction::triggered, this, &DataLabel::editObj );
+  act = mnu->addAction( "Re&vert changes" );
+  // connect( act, &QAction::triggered, this, &DataLabel::editObj );
+  act = mnu->addAction( "Default value" );
+  // connect( act, &QAction::triggered, this, &DataLabel::editObj );
+  mnu->exec( ev->globalPos() );
+  delete mnu;
+}
+
+// ------------------------------ DataWidget ---------------------------------------------------
+
 static const int MAX_COLS_PER_WIDGET  = 20;
 static const int MAX_WIDGETS_PER_COL  = 16;
 
 DataWidget::DataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   : QFrame( parent ), ho( h ), main_w( nullptr ),
-    lbl( new QLabel( this ) )
+    lbl( new DataLabel( h, QSL(""), this ) )
 {
   if( ! hideLabel ) {
     // lbl->setMinimumWidth( 5 * LaboWin::Em() );

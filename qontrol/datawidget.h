@@ -18,6 +18,18 @@
 
 class DataWidget;
 
+class DataLabel : public QLabel {
+  Q_OBJECT;
+  public:
+    DataLabel( HolderData &_ho, const QString &text, DataWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags() );
+  protected:
+    virtual void contextMenuEvent( QContextMenuEvent *ev ) override;
+
+    HolderData &ho;
+    DataWidget *dw;
+};
+
+
 #define DW_DCL_STD_FUN \
  public: \
   virtual bool set() override; \
