@@ -40,7 +40,7 @@ class TSourceLin : public TMiso  {
    /** times of lines, <=0 - end */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   PRM_PARAMD( a,  0, "a", "Common factor", "sep=col\ndef=1" );
+   PRM_PARAMD( a,  0, "&a", "Common factor", "sep=col\ndef=1" );
 
    // time 0 means end of sequence - to start
    PRM_DOUBLE_ARR( t_int, efNRC, "t_int", "Time intervals", "N=16\ndef=0\nmin=0\ndefs=1 1 1  1  1 0\nsep=tab\ntabname=Arrays" );

@@ -44,24 +44,24 @@ class TSearcher : public TMiso  {
    virtual double f() noexcept override;
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   PRM_PARAMD( v_f,    0,     "v_f",     "Velocity factor", "def=1\nsep=col" );
+   PRM_PARAMD( v_f,    0,     "&v_f",     "Velocity factor", "def=1\nsep=col" );
    // PRM_SWITCH( limitG, efNRC, "Limit as given", "Limit X by given values", "sep=col" );
    // f_c
-   PRM_PARAMD( k_cl,  0,     "k_{cl}",  "Linear f_c factor", "def=0.1\nsep=block" );
+   PRM_PARAMD( k_cl,  0,     "k_{&cl}", "Linear f_c factor", "def=0.1\nsep=block" );
    PRM_PARAMD( p_min, 0,     "p_{min}", "Low p limit (for f_c)", "def=-1000.0" );
    PRM_PARAMD( k_ch,  0,     "k_{ch}",  "Hyperbolic f_c factor", "def=1.0\nsep=col" );
    PRM_PARAMD( p_max, 0,     "p_{max}", "High p limit (for f_c)", "def=1000.0" );
    PRM_PARAMD( k_ch2, 0,     "k_{ch2}", "Hyperbolic^2 f_c factor", "def=0.0\nsep=col" );
-   PRM_SWITCH( autocalc_minmax, 0, "Autocalc", "Automaticaly calculate p_min, p_max", "def=1\nsep=col" );
-   PRM_PARAMD( c_mm,  0,     "c_{mm}", "MinMax factor (for autocalc)", "def=1.49" );
+   PRM_SWITCH( autocalc_minmax, 0,      "Autocalc", "Automaticaly calculate p_min, p_max", "def=1\nsep=col" );
+   PRM_PARAMD( c_mm,  0,     "c_{mm}",  "MinMax factor (for autocalc)", "def=1.49" );
    // f_n
-   PRM_PARAMD( k_nl,  0,     "k_{nl}",  "Linear f_n factor", "def=0.0\nsep=block" );
-   PRM_PARAMD( k_nh,  0,     "k_{nh}",  "Hyperbolic f_n factor", "def=0.0\nsep=col" );
-   PRM_PARAMD( k_nh2, 0,     "k_{nh2}", "Hyperbolic^2 f_n factor", "def=1.0\nsep=col" );
+   PRM_PARAMD( k_nl,  0,     "k_{&nl}",  "Linear f_n factor", "def=0.0\nsep=block" );
+   PRM_PARAMD( k_nh,  0,     "k_{nh}",   "Hyperbolic f_n factor", "def=0.0\nsep=col" );
+   PRM_PARAMD( k_nh2, 0,     "k_{nh2}",  "Hyperbolic^2 f_n factor", "def=1.0\nsep=col" );
    // f_g
-   PRM_LIST( f_g_type, 0, "Type", "f_g type", "enum=F_g_Type\nsep=block" );
-   PRM_PARAMD( lim_s,  0,     "lim_{s}", "Limit Scale", "def=0.99\nsep=col" );
-   PRM_PARAMD( k_g,   0,     "k_g",    "f_g factor", "def=2.0\nsep=col" );
+   PRM_LIST( f_g_type, 0,    "&Type",    "f_g type", "enum=F_g_Type\nsep=block" );
+   PRM_PARAMD( lim_s,  0,    "lim_{s}",  "Limit Scale", "def=0.99\nsep=col" );
+   PRM_PARAMD( k_g,    0,    "k_{&g}",   "f_g factor", "def=2.0\nsep=col" );
 
    // Outputs
    PRM_DOUBLE( L_l0,  efInner, "L_{l0}", "Initial distance to left model", "" );
@@ -84,12 +84,12 @@ class TSearcher : public TMiso  {
    PRM_DOUBLE( F_lt,  efInner, "F_{lt}", "Relative y left point = F_l-F_c", "" );
    PRM_DOUBLE( F_rt,  efInner, "F_{rt}", "Relative y right point = F_r-F_c", "" );
 
-   PRM_INPUT( p_l,   0, "p_l", "Left point parameter",  "sep=block" );
-   PRM_INPUT( F_l,   0, "F_l", "Left point F",  "" );
-   PRM_INPUT( p_c,   0, "p_c", "Cental point parameter (old)",  "sep=col" );
-   PRM_INPUT( F_c,   0, "F_c", "Central point F",  "" );
-   PRM_INPUT( p_r,   0, "p_r", "Right point parameter",  "sep=col" );
-   PRM_INPUT( F_r,   0, "F_r", "Right point F",  "" );
+   PRM_INPUT( p_l,   0, "p_{&l}", "Left point parameter",  "sep=block" );
+   PRM_INPUT( F_l,   0, "&F_l",   "Left point F",  "" );
+   PRM_INPUT( p_c,   0, "p_{&c}", "Cental point parameter (old)",  "sep=col" );
+   PRM_INPUT( F_c,   0, "F_c",    "Central point F",  "" );
+   PRM_INPUT( p_r,   0, "p_{&r}", "Right point parameter",  "sep=col" );
+   PRM_INPUT( F_r,   0, "F_r",    "Right point F",  "" );
 
    Q_CLASSINFO( "nameHintBase",  "se_" );
    DCL_DEFAULT_STATIC;

@@ -37,11 +37,11 @@ class TRelaxGen : public TMiso  {
    /** reimplemented from TMiso to reset */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   PRM_PARAMD( c, 0, "c", "Capacitance", "def=1\nmin=1e-16" );
-   PRM_PARAMD( r_1, 0, "r_1", "Charge resistance", "def=1\nmin=1e-6\nsep=col" );
-   PRM_PARAMD( r_2, 0, "r_2", "Discharge resistance", "def=0.2\nmin=1e-6" );
-   PRM_PARAMD( v_1, 0, "v_1", "Charge limit", "def=2\nsep=col" );
-   PRM_PARAMD( v_2, 0, "v_2", "Discharge limit", "def=0.1" );
+   PRM_PARAMD( c,   0, "&c",   "Capacitance", "def=1\nmin=1e-16" );
+   PRM_PARAMD( r_1, 0, "&r_1", "Charge resistance", "def=1\nmin=1e-6\nsep=col" );
+   PRM_PARAMD( r_2, 0, "r_2",  "Discharge resistance", "def=0.2\nmin=1e-6" );
+   PRM_PARAMD( v_1, 0, "&v_1", "Charge limit", "def=2\nsep=col" );
+   PRM_PARAMD( v_2, 0, "v_2",  "Discharge limit", "def=0.1" );
    /** misc flags */
    PRM_SWITCH( useCharge, efNRC, "Use i_{ch}", "Use i_ch as charge current", "sep=block" );
    PRM_SWITCH( useDischarge, efNRC, "Use i_{dis}", "Use i_dis as discharge current", "" );
@@ -55,7 +55,7 @@ class TRelaxGen : public TMiso  {
    PRM_DOUBLE( dv_ch, efInner, "dv_{ch}", "charging voltage difference ", "def=0" );
    PRM_DOUBLE( dv_dis,efInner, "dv_{ch}", "discharging voltage difference ", "def=0" );
 
-   PRM_INPUT( v_in,  0, "v_{in}",  "Voltage input",     "sep=block" );
+   PRM_INPUT( v_in,  0, "v_{&in}", "Voltage input",     "sep=block" );
    PRM_INPUT( i_ch,  0, "i_{ch}",  "Charge current",    "sep=col" );
    PRM_INPUT( i_dis, 0, "i_{dis}", "Discharge current", "sep=col" );
    PRM_INPUT( trig,  0, "trig",    "Force discharge",   "sep=col" );

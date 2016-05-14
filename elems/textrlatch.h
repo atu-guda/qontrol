@@ -48,28 +48,27 @@ class TExtrLatch : public TMiso  {
    virtual int miso_startLoop( long acnx, long acny ) override;
    void reset_vars();
 
-   /** type of extremum */
-   PRM_LIST( type, efNRC, "Type", "Type of catching extremum", "enum=ExtrType" );
-   PRM_SWITCH( useLocal, efNRC, "Local extr", "Catch local extremums", "sep=col" );
-   PRM_SWITCH( useFirst, efNRC, "Only first", "Catch only first local extremum", "");
-   PRM_SWITCH( outT, efNRC, "Output T", "Output time of catched extremum, not value", "" );
-   PRM_SWITCH( useReset, efNRC, "use Reset", "Use in_rst as reset signal", "" );
-   PRM_INT( wasExtr, efInner,  "wasExtr", "flag: extremum detected", "" );
-   PRM_INT( isStart, efInner, "isStart", "Was start", "");
-   /** start time */
-   PRM_PARAMD( tStart, efNRC, "Time start", "Time start", "sep=col");
-   /** holders for extr levels and old values */
-   PRM_DOUBLE( u_max, efInner, "u_max", "u_max", "");
-   PRM_DOUBLE( t_max, efInner, "t_max", "t_max", "");
-   PRM_DOUBLE( u_min, efInner, "u_min", "u_min", "");
-   PRM_DOUBLE( t_min, efInner, "t_min", "t_min", "");
-   PRM_DOUBLE( u_abs, efInner, "u_abs", "u_abs", "");
-   PRM_DOUBLE( t_abs, efInner, "t_abs", "t_abs", "");
-   PRM_DOUBLE( u_ex,  efInner, "u_ex",  "u_ex" , "");
-   PRM_DOUBLE( t_ex,  efInner, "t_ex",  "t_ex" , "");
+   PRM_LIST(       type, efNRC, "&Type", "Type of catching extremum", "enum=ExtrType" );
+   PRM_SWITCH( useLocal, efNRC, "&Local extr", "Catch local extremums", "sep=col" );
+   PRM_SWITCH( useFirst, efNRC, "Only &first", "Catch only first local extremum", "");
+   PRM_SWITCH(     outT, efNRC, "Output T", "Output time of catched extremum, not value", "" );
+   PRM_SWITCH( useReset, efNRC, "use &Reset", "Use in_rst as reset signal", "" );
+   PRM_PARAMD(   tStart, efNRC, "Time &start", "Time start", "sep=col");
 
-   PRM_INPUT( in_u,   0, "in_u", "Main input",  "sep=block" );
-   PRM_INPUT( in_rst, 0, "rst", "Signal to reset", "sep=col" );
+   PRM_INT(    wasExtr, efInner, "wasExtr", "flag: extremum detected", "" );
+   PRM_INT(    isStart, efInner, "isStart", "Was start", "");
+   /** holders for extr levels and old values */
+   PRM_DOUBLE( u_max,   efInner, "u_max", "u_max", "" );
+   PRM_DOUBLE( t_max,   efInner, "t_max", "t_max", "" );
+   PRM_DOUBLE( u_min,   efInner, "u_min", "u_min", "" );
+   PRM_DOUBLE( t_min,   efInner, "t_min", "t_min", "" );
+   PRM_DOUBLE( u_abs,   efInner, "u_abs", "u_abs", "" );
+   PRM_DOUBLE( t_abs,   efInner, "t_abs", "t_abs", "" );
+   PRM_DOUBLE(  u_ex,   efInner, "u_ex",  "u_ex" , "" );
+   PRM_DOUBLE(  t_ex,   efInner, "t_ex",  "t_ex" , "" );
+
+   PRM_INPUT(   in_u,         0, "&in_u", "Main input",  "sep=block" );
+   PRM_INPUT( in_rst,         0, "rst", "Signal to reset", "sep=col" );
 
    double  u_old = 0, u_old2 = 0, t_old = 0;
 

@@ -49,18 +49,18 @@ class TQuality : public TMiso  {
    static const constexpr double eMinus1 { M_E - 1.0 };
    static const constexpr double logQaScale { oneMinusEm1 / M_LN2 };
 
-   PRM_LIST( type, 0, "Type", "Function type", "enum=QualType" );
-   PRM_PARAMD( q_gamma,  0, "q_\\gamma", "Quality scale", "sep=col\ndef=1\nmin=1e-100" );
-   PRM_PARAMD( F_min,  0, "F_{min}", "Minimal F value", "def=-1e100\nsep=col" );
-   PRM_PARAMD( F_max,  0, "F_{max}", "Maximal F value", "def=1e100" );
+   PRM_LIST( type,       0, "&Type", "Function type", "enum=QualType" );
+   PRM_PARAMD( q_gamma,  0, "&q_\\gamma", "Quality scale", "sep=col\ndef=1\nmin=1e-100" );
+   PRM_PARAMD( F_min,    0, "&F_{min}", "Minimal F value", "def=-1e100\nsep=col" );
+   PRM_PARAMD( F_max,    0, "F_{max}", "Maximal F value", "def=1e100" );
 
    PRM_DOUBLE( q,    efInner, "q",     "q_o - q_m", "" );
    PRM_DOUBLE( q_r,  efInner, "q_r",   "q/q_\\gamma", "" );
    PRM_DOUBLE( aq_r, efInner, "aq_r",  "|q_r|", "" );
    PRM_DOUBLE( q_r2, efInner, "q_r^2", "q_r^2", "" );
 
-   PRM_INPUT( q_o, 0, "in_0", "Object q",  "sep=block" );
-   PRM_INPUT( q_m, 0, "in_1", "Model q",   "sep=col" );
+   PRM_INPUT( q_o, 0, "in_{&o}", "Object q",  "sep=block" );
+   PRM_INPUT( q_m, 0, "in_{&m}", "Model q",   "sep=col" );
 
    Q_CLASSINFO( "nameHintBase",  "qa_" );
    DCL_DEFAULT_STATIC;

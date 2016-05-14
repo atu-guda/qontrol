@@ -34,17 +34,15 @@ class TVibro : public TMiso  {
    virtual int miso_startLoop( long acnx, long acny ) override;
    virtual int do_preRun() override;
 
-   PRM_PARAMD( c0, 0, "c_0", "Damping coefficient", "def=0.4" );
-   PRM_PARAMD( Omega, 0, "\\Omega", "Natural frequency if c_0=0 and f(x)=x", "def=1.2" );
-   PRM_PARAMD( v0, efNRC, "v_0", "v(0)", "sep=col" );
-   PRM_SWITCH( use_u1, efNRC, "use Force",
-        "Use in_force as return force element output", "" );
+   PRM_PARAMD( c0,         0, "&c_0",    "Damping coefficient", "def=0.4" );
+   PRM_PARAMD( Omega,      0, "\\Omega", "Natural frequency if c_0=0 and f(x)=x", "def=1.2" );
+   PRM_PARAMD( v0,     efNRC, "&v_0",    "v(0)", "sep=col" );
+   PRM_SWITCH( use_u1, efNRC, "use Force", "Use in_force as return force element output", "" );
 
-   /** Current velocity dx/dt */
-   PRM_DOUBLE( v, efInner, "v", "v(t)", "" );
+   PRM_DOUBLE( v,    efInner, "v", "v(t)", "" );
 
-   PRM_INPUT( in_u, 0, "u(t)", "Main input",  "sep=block" );
-   PRM_INPUT( in_f, 0, "f(x)", "Force input (if enabled)", "sep=col" );
+   PRM_INPUT( in_u,        0, "&u(t)", "Main input",  "sep=block" );
+   PRM_INPUT( in_f,        0, "&f(x)", "Force input (if enabled)", "sep=col" );
 
    /** flag for start(1,2,0)  */
    int isStart = 1;

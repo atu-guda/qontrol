@@ -37,9 +37,9 @@ class TRossler : public TMiso  {
    void calcAux() noexcept;
 
    /** main system parameters */
-   PRM_PARAMD( a, 0, "a", "Parameter a", "def=0.25" );
-   PRM_PARAMD( b, 0, "b", "Parameter b", "def=1" );
-   PRM_PARAMD( c, 0, "c", "Parameter c", "def=5.58" );
+   PRM_PARAMD(   a,     0, "&a", "Parameter a", "def=0.25" );
+   PRM_PARAMD(   b,     0, "&b", "Parameter b", "def=1" );
+   PRM_PARAMD(   c,     0, "&c", "Parameter c", "def=5.58" );
    /** start x, y, x values */
    PRM_PARAMD( x_0, efNRC, "x_0", "Initial x value", "def=0.1\nsep=col" );
    PRM_PARAMD( y_0, efNRC, "y_0", "Initial y value", "" );

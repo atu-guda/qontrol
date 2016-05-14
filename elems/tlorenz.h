@@ -37,9 +37,9 @@ class TLorenz : public TMiso  {
    void calcAux() noexcept;
 
    /** main system parameters */
-   PRM_PARAMD( sigma, 0, "\\sigma", "\\sigma parameter", "def=10.0" );
-   PRM_PARAMD( r, 0, "r", "r parameter", "def=28.0" );
-   PRM_PARAMD( b, 0, "b", "b parameter", "def=2.667" );
+   PRM_PARAMD( sigma,   0, "\\sigma", "\\sigma parameter", "def=10.0" );
+   PRM_PARAMD( r,       0, "&r",      "r parameter",       "def=28.0" );
+   PRM_PARAMD( b,       0, "&b",      "b parameter",       "def=2.6666667" );
    /** start x, y, x values */
    PRM_PARAMD( x_0, efNRC, "x_0", "Initial value of x", "sep=col\ndef=3.05" );
    PRM_PARAMD( y_0, efNRC, "y_0", "Initial value of y", "def=1.58" );
@@ -61,12 +61,9 @@ class TLorenz : public TMiso  {
    PRM_DOUBLE( xz, efInner, "xz", "x*z", "" );
    PRM_DOUBLE( yz, efInner, "yz", "y*z", "" );
 
-   PRM_INPUT( in_x, 0, "x+", "X additional input",  "sep=block" );
-   PRM_INPUT( in_y, 0, "y+", "Y additional input", "sep=col" );
-   PRM_INPUT( in_z, 0, "z+", "Z additional input",  "sep=col" );
-
-   /** values to store some model vars */
-   double tt;
+   PRM_INPUT( in_x, 0, "&x+", "X additional input",  "sep=block" );
+   PRM_INPUT( in_y, 0, "y+",  "Y additional input",  "sep=col" );
+   PRM_INPUT( in_z, 0, "z+",  "Z additional input",  "sep=col" );
 
    Q_CLASSINFO( "nameHintBase",  "lor_" );
    DCL_DEFAULT_STATIC;

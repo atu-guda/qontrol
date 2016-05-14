@@ -69,13 +69,13 @@ class TSource : public TMiso  {
    virtual int miso_startLoop( long acnx, long acny ) override;
 
    /** type of input and misc flags */
-   PRM_LIST( type, efNRC, "Type", "Source type", "enum=SourceType" ); //TODO
+   PRM_LIST( type, efNRC, "&Type", "Source type", "enum=SourceType" ); //TODO
    /** Amplitude */
-   PRM_PARAMD( uu, 0, "U", "Amplitude of signal (or pulse max)", "def=1\nsep=col" );
+   PRM_PARAMD( uu, 0, "&U", "Amplitude of signal (or pulse max)", "def=1\nsep=col" );
    /** Frequency */
    PRM_PARAMD( omega, 0, "\\omega", "Frequency of source (or pulse width)", "def=0.7" );
    /** constant shift */
-   PRM_PARAMD( cc, 0, "C", "Constant base", "sep=col" );
+   PRM_PARAMD( cc, 0, "&C", "Constant base", "sep=col" );
    /** phase shift */
    PRM_PARAMD( phi, 0, "\\phi", "Phase shift", "def=0" );
 

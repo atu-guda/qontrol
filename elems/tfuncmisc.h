@@ -62,20 +62,20 @@ class TFuncMisc : public TMiso  {
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
 
    /** type of function */
-   PRM_LIST( type, 0, "Type", "Function type", "enum=FuncType" );
+   PRM_LIST( type, 0, "&Type", "Function type", "enum=FuncType" );
    /** coefficients and shift */
-   PRM_PARAMD( a,  0, "a", "Parameter a", "sep=col\ndef=1" );
-   PRM_PARAMD( b,  0, "b", "Parameter b", "def=1" );
-   PRM_PARAMD( c,  0, "c", "Parameter c", "" );
-   PRM_PARAMD( d,  0, "d", "Parameter d", "sep=col" );
-   PRM_PARAMD( e,  0, "e", "Parameter e", "" );
-   PRM_PARAMD( g,  0, "g", "Parameter g", "" );
+   PRM_PARAMD( a,  0, "&a", "Parameter a", "sep=col\ndef=1" );
+   PRM_PARAMD( b,  0, "&b", "Parameter b", "def=1" );
+   PRM_PARAMD( c,  0, "&c", "Parameter c", "" );
+   PRM_PARAMD( d,  0, "&d", "Parameter d", "sep=col" );
+   PRM_PARAMD( e,  0, "&e", "Parameter e", "" );
+   PRM_PARAMD( g,  0, "&g", "Parameter g", "" );
    PRM_PARAMD( x0, 0, "x0", "Input shift: y = u[0] - u[1] - x0;", "" );
 
    PRM_DOUBLE( y,  efInner, "y",   "in_0 - in_1 - x0", "" );
 
-   PRM_INPUT( in_0, 0, "in_0", "First input",  "sep=block" );
-   PRM_INPUT( in_1, 0, "in_1", "Second input", "sep=col" );
+   PRM_INPUT( in_0, 0, "in_{&0}", "First input",  "sep=block" );
+   PRM_INPUT( in_1, 0, "in_{&1}", "Second input", "sep=col" );
 
    Q_CLASSINFO( "nameHintBase",  "fm_" );
    DCL_DEFAULT_STATIC;

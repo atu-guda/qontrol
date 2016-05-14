@@ -43,24 +43,23 @@ class TLatch : public TMiso  {
    /** reimplemented from TMiso to init state */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   /** type of */
-   PRM_LIST( type, efNRC, "Type", "Latch type", "enum=LatchType" );
-   /** time to latch */
-   PRM_PARAMD( t0, 0, "Time", "Time to latch" , "sep=col" );
-   /** current value */
+   PRM_LIST( type, efNRC, "&Type", "Latch type", "enum=LatchType" );
+   PRM_PARAMD( t0, 0, "Ti&me", "Time to latch" , "sep=col" );
+
    PRM_DOUBLE( v, efInner, "v", "Current value", "" );
-   /** old input  */
-   double u_old = 0;
+
    /** flags, state */
-   PRM_SWITCH( usePulse, efNRC, "use Pulse", "latch on jump of (in_latch >0.5), not level", "sep=col" );
-   PRM_SWITCH( useFirst, efNRC, "use First", "count only first signal to latch", "" );
+   PRM_SWITCH( usePulse, efNRC, "use &Pulse", "latch on jump of (in_latch >0.5), not level", "sep=col" );
+   PRM_SWITCH( useFirst, efNRC, "use &First", "count only first signal to latch", "" );
    PRM_SWITCH( useAdd,   efNRC, "use Add", "add current in_u to value, not set", "" );
+
    PRM_DOUBLE( lt, efInner, "Latch Time", "Time whan latch occurs" , "" );
 
-   PRM_INPUT( in_u, 0, "in_u", "Main input",  "sep=block" );
+   PRM_INPUT( in_u,     0, "&in_u", "Main input",  "sep=block" );
    PRM_INPUT( in_latch, 0, "in_{latch}", "Latch input", "sep=col" );
 
    int wasLatch = -1;
+   double u_old = 0;
 
    Q_CLASSINFO( "nameHintBase",  "latch_" );
    DCL_DEFAULT_STATIC;

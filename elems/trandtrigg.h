@@ -47,10 +47,8 @@ class TRandTrigg : public TMiso  {
    /** reimplemented from TMiso to set start values */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   /** Probability of spontatious flip  */
-   PRM_PARAMD( prob, 0, "Probability", "Probability of spontatious flip","def=0.5");
-   /** Forced every */
-   PRM_INT( nforce, 0, "Forced every N", "Forced every N changes", "def=2" );
+   PRM_PARAMD( prob, 0, "&probability", "Probability of spontatious flip","def=0.5");
+   PRM_INT(  nforce, 0, "Forced every &N", "Forced every N changes", "def=2" );
    /* flags */
    PRM_SWITCH( useLevel, efNRC, "Use Level to trigg",
        "Use Level to trigger, not +- pulse", "sep=col" );
@@ -66,9 +64,9 @@ class TRandTrigg : public TMiso  {
    PRM_SWITCH( addBaseSeed, efNRC, "add Base to Seed",
        "add Base (model) value to Seed", "def=1" );
 
-   PRM_INPUT( in_u, 0, "in_u", "Main input",  "sep=block" );
+   PRM_INPUT( in_u,     0, "&in_u", "Main input",  "sep=block" );
    PRM_INPUT( in_force, 0, "in_f", "Signal : force trigg", "sep=col" );
-   PRM_INPUT( in_lock, 0, "in_{lock}", "Signal: lock",  "sep=col" );
+   PRM_INPUT( in_lock,  0, "in_{lock}", "Signal: lock",  "sep=col" );
 
 
    int ns = 0, currOut = 0;

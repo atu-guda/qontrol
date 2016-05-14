@@ -49,12 +49,12 @@ class TCorrAnalysis : public TMiso  {
 
    /* ============= data members ================== */
    /** type of data collection, flags */
-   PRM_LIST( type, efNRC, "Type", "Collection type", "enum=CallType" );
-   PRM_SWITCH( useCalc,  efNRC, "use Calc", "Use in_calc>0 as signal to calc", "" );
-   PRM_SWITCH( useReset, efNRC, "use Reset", "Use u_rst>0 as signal to reset", "" );
+   PRM_LIST( type, efNRC, "&Type", "Collection type", "enum=CallType" );
+   PRM_SWITCH( useCalc,  efNRC, "use &Calc", "Use in_calc>0 as signal to calc", "" );
+   PRM_SWITCH( useReset, efNRC, "use &Reset", "Use u_rst>0 as signal to reset", "" );
    /** time start / stop values */
-   PRM_PARAMD( t0, efNRC, "t0", "Time to start on given type", "min=0\nsep=col" );
-   PRM_PARAMD( t1, efNRC, "t1", "Time to stop on given type", "min=0\ndef=10000" );
+   PRM_PARAMD( t0, efNRC, "t&0", "Time to start on given type", "min=0\nsep=col" );
+   PRM_PARAMD( t1, efNRC, "t&1", "Time to stop on given type", "min=0\ndef=10000" );
    /** current loop # and number of collected data,  ok state - calculated */
    PRM_INT( ii, efInner, "ii", "current loop number", "" );
    PRM_INT( n, efInner, "n", "number of collected data", "" );
@@ -78,9 +78,9 @@ class TCorrAnalysis : public TMiso  {
    PRM_DOUBLE( ave_x2, efInner, "aver_x2", "aver(x^2)", "" );
    PRM_DOUBLE( ave_y2, efInner, "aver_y2", "aver(y^2)", "" );
 
-   PRM_INPUT( in_x, 0, "in_x", "First input",  "sep=block" );
-   PRM_INPUT( in_y, 0, "in_y", "Second input", "" );
-   PRM_INPUT( in_add, 0, "in_{add}", "Signal to add",  "sep=col" );
+   PRM_INPUT( in_x, 0, "in_{&x}", "First input",  "sep=block" );
+   PRM_INPUT( in_y, 0, "in_{&y}", "Second input", "" );
+   PRM_INPUT( in_add, 0, "in_{a&dd}", "Signal to add",  "sep=col" );
    PRM_INPUT( in_rst, 0, "rst", "Reset signal", "" );
    PRM_INPUT( in_calc, 0, "calc", "Calc signal", "sep=col" );
 

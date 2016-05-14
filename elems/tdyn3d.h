@@ -33,9 +33,9 @@ class TDyn3D : public TMiso  {
    virtual double f() noexcept override;
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   PRM_PARAMD( c_x, 0, "c_x", "Factor for v_x", "def=1.0" );
-   PRM_PARAMD( c_y, 0, "c_y", "Factor for v_y", "def=1.0" );
-   PRM_PARAMD( c_z, 0, "c_z", "Factor for v_z", "def=1.0" );
+   PRM_PARAMD( c_x,     0, "c_{&x}", "Factor for v_x", "def=1.0" );
+   PRM_PARAMD( c_y,     0, "c_{&y}", "Factor for v_y", "def=1.0" );
+   PRM_PARAMD( c_z,     0, "c_{&z}", "Factor for v_z", "def=1.0" );
    /** start x, y, x values */
    PRM_PARAMD( x_0, efNRC, "x_0", "Initial value of x", "sep=col" );
    PRM_PARAMD( y_0, efNRC, "y_0", "Initial value of y", "" );
@@ -45,11 +45,11 @@ class TDyn3D : public TMiso  {
    PRM_DOUBLE( y, efInner, "y", "y current value", ""  );
    PRM_DOUBLE( z, efInner, "z", "z current value", ""  );
    /** net speed */
-   PRM_DOUBLE( v,  efInner, "v",  "Scalar speed", ""  );
+   PRM_DOUBLE( v, efInner, "v",  "Scalar speed", ""  );
 
-   PRM_INPUT( v_x, 0, "v_x", "X speed input",  "sep=block" );
-   PRM_INPUT( v_y, 0, "v_y", "Y speed input",  "sep=col" );
-   PRM_INPUT( v_z, 0, "v_z", "Z speed input",  "sep=col" );
+   PRM_INPUT( v_x, 0, "&v_x", "X speed input",  "sep=block" );
+   PRM_INPUT( v_y, 0, "v_y",  "Y speed input",  "sep=col" );
+   PRM_INPUT( v_z, 0, "v_z",  "Z speed input",  "sep=col" );
 
    Q_CLASSINFO( "nameHintBase",  "d3_" );
    DCL_DEFAULT_STATIC;

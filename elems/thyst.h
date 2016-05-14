@@ -42,29 +42,20 @@ class THyst : public TMiso  {
    Q_CLASSINFO( "enum_HystType_5", "tanh(s+\\alpha*d)" );   // ht_tanhSAlphaD
 
  protected:
-   /** main computation function */
    virtual double f() noexcept override;
-   /** reimplemented from TMiso to set init state */
    virtual int miso_startLoop( long acnx, long acny ) override;
    void fixState(void);
  protected:
-   /** type of hysteresis */
-   PRM_LIST( type, efNRC, "Type",  "Type of hysteresis", "enum=HystType" );
-   /** width of hysteresis  */
-   PRM_PARAMD( x0, 0, "x_0",  "x0 - width if hysteresis", "min=0\nsep=col\ndef=1\nfixparm=1" );
-   /** slope of hysteresis  */
-   PRM_PARAMD( alpha, 0, "\\alpha", "Hysteresis slope", "def=0.2"  );
-   /** output scale */
-   PRM_PARAMD( a, 0, "a scale", "output scale", "sep=col\ndef=1" );
-   /** output shift */
-   PRM_PARAMD( b, 0, "b shift", "output shift", ""  );
+   PRM_LIST(    type, efNRC, "&Type",  "Type of hysteresis", "enum=HystType" );
+   PRM_PARAMD(    x0,     0, "&x_0",  "x0 - width if hysteresis", "min=0\nsep=col\ndef=1\nfixparm=1" );
+   PRM_PARAMD( alpha,     0, "\\alpha", "Hysteresis slope", "def=0.2"  );
+   PRM_PARAMD(     a,     0, "&a scale", "output scale", "sep=col\ndef=1" );
+   PRM_PARAMD(     b,     0, "&b shift", "output shift", ""  );
 
-   /** state d */
-   PRM_DOUBLE( d, efInner, "d", "inner state 'd'", "" );
-   /** state s */
-   PRM_DOUBLE( s, efInner, "s", "inner state 's'", "" );
+   PRM_DOUBLE(   d, efInner, "d", "inner state 'd'", "" );
+   PRM_DOUBLE(   s, efInner, "s", "inner state 's'", "" );
 
-   PRM_INPUT( in_u, 0, "in_u", "Single input",  "sep=block" );
+   PRM_INPUT( in_u,       0, "&in_u", "Single input",  "sep=block" );
 
    Q_CLASSINFO( "nameHintBase",  "hyst_" );
    DCL_DEFAULT_STATIC;

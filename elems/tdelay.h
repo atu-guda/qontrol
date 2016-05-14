@@ -43,10 +43,10 @@ class TDelay : public TMiso  {
    /** reimplemented from TMiso to reset array */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   PRM_DOUBLE( mdelay, efNRC, "Max. delay", "Maximum delay", "min=0\nmax=1e20\ndef=1.5");
-   PRM_PARAMD( cdelay, 0, "Current delay", "Current delay", "min=0\nmax=1e20\ndef=1.0\nsep=col" );
+   PRM_PARAMD( cdelay,     0, "&Delay",     "Current delay", "min=0\nmax=1e20\ndef=1.0" );
+   PRM_DOUBLE( mdelay, efNRC, "Max. delay", "Maximum delay", "min=0\nmax=1e20\ndef=1.5\nsep=col");
 
-   PRM_INPUT( in_u, 0, "in_u", "Single input",  "sep=block" );
+   PRM_INPUT( in_u,        0, "&in_u",      "Input",  "sep=block" );
 
    double v1 = 0;
    double v2 = 0;

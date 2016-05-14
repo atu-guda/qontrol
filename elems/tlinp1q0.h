@@ -37,23 +37,16 @@ class TLinP1Q0 : public TMiso  {
    DCL_CREATE;
    DCL_STD_INF;
  protected:
-   /** main computation function */
    virtual double f() noexcept override;
-   /** reimplemented from TMiso to init state */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   /** coefficient near f(x) */
-   PRM_PARAMD( a, 0, "a", "a in dx/dt = a*f(ku*u(t)-x)", "def=1" );
-   /** coefficient near u(t)  */
-   PRM_PARAMD( ku, 0, "k_u",  "Amplification", "def=1" );
-   /** Use u[1] as f(x) */
-   PRM_SWITCH( use_u1, 0, "use in_f as f()",
-        "Use in_f as source of f()", "sep=col" );
-   PRM_SWITCH( use_u2, 0, "u^2",
-        "Calculate u^2 before usage", "" );
+   PRM_PARAMD( a,      0, "&a", "a in dx/dt = a*f(ku*u(t)-x)", "def=1" );
+   PRM_PARAMD( ku,     0, "&k_u",  "Amplification: coefficient near u(t) ", "def=1" );
+   PRM_SWITCH( use_u1, 0, "&use in_f as f()", "Use in_f as source of f()", "sep=col" );
+   PRM_SWITCH( use_u2, 0, "u^&2", "Calculate u^2 before usage", "" );
 
-   PRM_INPUT( in_u, 0, "in_u", "Signal input",  "sep=block" );
-   PRM_INPUT( in_f, 0, "in_f", "Functional input", "sep=col" );
+   PRM_INPUT( in_u,    0, "&in_u", "Signal input",  "sep=block" );
+   PRM_INPUT( in_f,    0, "in_f", "Functional input", "sep=col" );
 
    /** old value of x  */
    double x_old = 0;

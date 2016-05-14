@@ -42,9 +42,9 @@ class TMaxNum : public TMiso  {
  protected:
    virtual double f() noexcept override;
 
-   PRM_LIST(   type,   efNRC,    "Type",  "Type of extremum", "enum=ExtrType" );
-   PRM_INT(    n_in,   efNRC, "N_{in}",   "Number of inputs", "def=8\nmin=1\nmax=8" );
-   PRM_INT(   n_min,   efNRC, "N_{min}",  "Minimum number", "def=0\nmin=0\nmax=7\nsep=col" );
+   PRM_LIST(   type,   efNRC,   "&Type",  "Type of extremum", "enum=ExtrType" );
+   PRM_INT(    n_in,   efNRC, "&N_{in}",  "Number of inputs", "def=8\nmin=1\nmax=8" );
+   PRM_INT(   n_min,   efNRC, "N_{&min}", "Minimum number", "def=0\nmin=0\nmax=7\nsep=col" );
    PRM_INT(   n_max,   efNRC, "N_{max}",  "Miximum number", "def=7\nmin=1\nmax=7" );
 
    PRM_DOUBLE(  im,  efInner, "im",   "Index on maximum input", "" );
@@ -56,14 +56,14 @@ class TMaxNum : public TMiso  {
    PRM_DOUBLE(  vm_prev,  efInner, "vm_prev",   "Value of previous input", "" );
    PRM_DOUBLE(  vm_next,  efInner, "vm_next",   "Value of next input", "" );
 
-   PRM_INPUT( in_0, 0, "in_0", "Input 0",  "sep=block" );
-   PRM_INPUT( in_1, 0, "in_1", "Input 1",  "" );
-   PRM_INPUT( in_2, 0, "in_2", "Input 2",  "sep=col" );
-   PRM_INPUT( in_3, 0, "in_1", "Input 3",  "" );
-   PRM_INPUT( in_4, 0, "in_4", "Input 4",  "sep=col" );
-   PRM_INPUT( in_5, 0, "in_5", "Input 5",  "" );
-   PRM_INPUT( in_6, 0, "in_6", "Input 6",  "sep=col" );
-   PRM_INPUT( in_7, 0, "in_7", "Input 7",  "" );
+   PRM_INPUT( in_0, 0, "in_{&0}", "Input 0",  "sep=block" );
+   PRM_INPUT( in_1, 0, "in_{&1}", "Input 1",  "" );
+   PRM_INPUT( in_2, 0, "in_{&2}", "Input 2",  "sep=col" );
+   PRM_INPUT( in_3, 0, "in_{&3}", "Input 3",  "" );
+   PRM_INPUT( in_4, 0, "in_{&4}", "Input 4",  "sep=col" );
+   PRM_INPUT( in_5, 0, "in_{&5}", "Input 5",  "" );
+   PRM_INPUT( in_6, 0, "in_{&6}", "Input 6",  "sep=col" );
+   PRM_INPUT( in_7, 0, "in_{&7}", "Input 7",  "" );
 
    static constexpr const int m_n_in = 8; // change in changed number of inputs ^
 

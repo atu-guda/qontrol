@@ -36,14 +36,14 @@ class TIntegrator : public TMiso  {
    /** reimplemented from TMiso to init state */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   PRM_PARAMD( ki, 0, "k_i",  "Factor before integral", "def=1" );
-   PRM_PARAMD( dis, 0, "Disc coeff", "Discharde coeff (if enabled)", "def=1e-4" );
+   PRM_PARAMD( ki,   0, "&k_i",  "Factor before integral", "def=1" );
+   PRM_PARAMD( dis,  0, "Disc coeff", "Discharde coeff (if enabled)", "def=1e-4" );
    PRM_PARAMD( vmin, 0, "Min limit", "Limit min value", "def=-10000" );
    PRM_PARAMD( vmax, 0, "Max limit", "Limit max value", "def=10000" );
 
-   PRM_DOUBLE( v, efInner, "v", "Current value", "" );
+   PRM_DOUBLE( v,     efInner, "v", "Current value", "" );
    PRM_DOUBLE( t_rst, efInner, "t_{rst}", "time from last reset", "" );
-   PRM_DOUBLE( v_a, efInner, "v_a", "Average value", "" );
+   PRM_DOUBLE( v_a,   efInner, "v_a", "Average value", "" );
    /** flags */
    PRM_SWITCH( useMin,   efNRC, "use Min value", "limit output to minimum value", "sep=col" );
    PRM_SWITCH( useMax,   efNRC, "use Max value", "limit output to maximum value", "" );
@@ -52,11 +52,11 @@ class TIntegrator : public TMiso  {
    PRM_SWITCH( useAdd,   efNRC, "add base", "Add base to level", "" );
    PRM_SWITCH( useDis,   efNRC, "use Discharge", "Use discharge coefficient", "sep=col" );
    PRM_SWITCH( useHold,  efNRC, "Hold", "Hold output 1 tick after reset", "" );
-   PRM_SWITCH( useAver,  efNRC, "Calc Aver", "Calculate average value", "" );
-   PRM_SWITCH( useSqIn,  efNRC, "x^2 on input", "Calculate square on input", "");
-   PRM_SWITCH( useSqrOut,efNRC, "\\sqrt(output)", "Calculate square root on output", "");
+   PRM_SWITCH( useAver,  efNRC, "&Calc Aver", "Calculate average value", "" );
+   PRM_SWITCH( useSqIn,  efNRC, "x^{&2} on input", "Calculate square on input", "");
+   PRM_SWITCH( useSqrOut,efNRC, "\u221As&qrt(output)", "Calculate square root on output", "");
 
-   PRM_INPUT( in_u, 0, "in_u", "Main input",  "sep=block" );
+   PRM_INPUT( in_u, 0, "&in_u", "Main input",  "sep=block" );
    PRM_INPUT( in_rst, 0, "rst", "Reset signal", "sep=col" );
    PRM_INPUT( in_base, 0, "Base", "Fourth input", "sep=col" );
 

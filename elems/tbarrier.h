@@ -54,13 +54,13 @@ class TBarrier : public TMiso  {
    virtual double f() noexcept override;
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
 
-   PRM_LIST( type, 0, "Type", "Barrier type", "enum=BarrierType" );
-   PRM_PARAMD( b,  0, "b", "Barrier x value", "sep=col\ndef=5" );
-   PRM_PARAMD( scale,  0, "scale", "Output scale", "sep=col\ndef=1" );
-   PRM_PARAMD( shift,  0, "shift", "Output shift", "" );
-   PRM_PARAMD( x_0,  0, "x_0", "Parameter shift", "" );
+   PRM_LIST( type,     0, "&Type",  "Barrier type", "enum=BarrierType" );
+   PRM_PARAMD( b,      0, "&b",     "Barrier x value", "sep=col\ndef=5" );
+   PRM_PARAMD( scale,  0, "sc&ale", "Output scale", "sep=col\ndef=1" );
+   PRM_PARAMD( shift,  0, "&shift", "Output shift", "" );
+   PRM_PARAMD( x_0,    0, "x_{&0}", "Parameter shift", "" );
 
-   PRM_INPUT( x, 0, "x", "X input",  "sep=block" );
+   PRM_INPUT( x, 0, "&x", "X input",  "sep=block" );
 
    Q_CLASSINFO( "nameHintBase",  "br_" );
    DCL_DEFAULT_STATIC;

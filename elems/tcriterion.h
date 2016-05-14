@@ -47,27 +47,25 @@ class TCriterion : public TMiso  {
    /** reimplemented from TMiso to init state */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   /** type of criterion */
-   PRM_LIST( type, efNRC, "Type", "Type of criterion", "enum=CritType" );
-   /** coefficients  */
-   PRM_PARAMD( a, 0, "a", "level 'a'", "def=0.5" );
-   PRM_PARAMD( b, 0, "b", "level 'b'", "def=1" );
-   PRM_PARAMD( t0, 0, "t0",  "Start time", "" );
+   PRM_LIST( type,       efNRC, "&Type", "Type of criterion", "enum=CritType" );
+   PRM_PARAMD(  a,           0, "&a",    "level 'a'", "def=0.5" );
+   PRM_PARAMD(  b,           0, "&b",    "level 'b'", "def=1" );
+   PRM_PARAMD( t0,           0, "&t0",   "Start time", "" );
    /** flags and state */
-   PRM_SWITCH( useA, efNRC, "Use in_a is a", "Use in_a as 'a' value", "sep=col" );
-   PRM_SWITCH( useT0, efNRC, "t0", "Dont work before given time (t0)", "" );
+   PRM_SWITCH( useA,      efNRC, "Use in_a is a", "Use in_a as 'a' value", "sep=col" );
+   PRM_SWITCH( useT0,     efNRC, "t0", "Dont work before given time (t0)", "" );
    PRM_SWITCH( useEnable, efNRC, "use Enable", "Use in_ena signal as Enable", "" );
-   PRM_SWITCH( useLock, efNRC, "Lock", "Lock after first front", "sep=col" );
-   PRM_SWITCH( usePulse, efNRC, "Pulse Output", "output is pulse +1, 0, -1", "" );
-   PRM_SWITCH( termSim,  efNRC, "Terminate simulation", "Terminate simulation if condition is true", "" );
-   PRM_INT( termCode, efNRC, "Term code", "Terminations code in !=0", "def=1" );
+   PRM_SWITCH( useLock,   efNRC, "Lock", "Lock after first front", "sep=col" );
+   PRM_SWITCH( usePulse,  efNRC, "Pulse Output", "output is pulse +1, 0, -1", "" );
+   PRM_SWITCH( termSim,   efNRC, "Terminate simulation", "Terminate simulation if condition is true", "" );
+   PRM_INT( termCode,     efNRC, "Term code", "Terminations code in !=0", "def=1" );
 
-   PRM_INT( st, efInner, "state", "current state", "");
+   PRM_INT( st,         efInner, "state", "current state", "");
 
-   PRM_INPUT( in_pos, 0, "in+", "Positive input",  "sep=block" );
-   PRM_INPUT( in_neg, 0, "in-", "Negative input", "sep=col" );
-   PRM_INPUT( in_ena, 0, "en", "Signal to enable",  "sep=col" );
-   PRM_INPUT( in_a,   0, "in_a", "Reference signal", "sep=col" );
+   PRM_INPUT( in_pos,         0, "in_{&pos}", "Positive input",  "sep=block" );
+   PRM_INPUT( in_neg,         0, "in_{&neg}", "Negative input", "sep=col" );
+   PRM_INPUT( in_ena,         0, "en",        "Signal to enable",  "sep=col" );
+   PRM_INPUT( in_a,           0, "in_a",      "Reference signal", "sep=col" );
 
    Q_CLASSINFO( "nameHintBase",  "crit_" );
    DCL_DEFAULT_STATIC;

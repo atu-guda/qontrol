@@ -43,17 +43,14 @@ class TCounter : public TMiso  {
    /** reimplemented from TMiso to reset counter */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   /** type of output from counter */
-   PRM_LIST( type, efNRC, "Type", "Type of counters output", "enum=CountType" );
-   //* n of counts */
-   PRM_INT( n, efNRC, "n", "Number to count", "sep=col\ndef=2" );
-   //* current counter */
-   PRM_INT( cn, efInner, "cn", "Current counter value", "" );
-   /** use u[1] as reset */
-   PRM_SWITCH( useReset, 0, "use Reset", "Use in_rst as Reset signal", "sep=col" );
+   PRM_LIST( type,    efNRC, "&Type", "Type of counters output", "enum=CountType" );
+   PRM_INT(  n,       efNRC, "&n", "Number to count", "sep=col\ndef=2" );
+   PRM_SWITCH( useReset,  0, "use Reset", "Use in_rst as Reset signal", "sep=col" );
 
-   PRM_INPUT( in_x,   0, "in", "Input source",  "sep=block" );
-   PRM_INPUT( in_rst, 0, "rst", "Signal to reset counter", "sep=col" );
+   PRM_INPUT( in_x,       0, "&in", "Input source",  "sep=block" );
+   PRM_INPUT( in_rst,     0, "rst", "Signal to reset counter", "sep=col" );
+
+   PRM_INT( cn,     efInner, "cn", "Current counter value", "" );
 
    int flip;
    /** old value of input */

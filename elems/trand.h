@@ -73,20 +73,16 @@ class TRand : public TMiso  {
    /** reimplemented from TMiso to init generator and variables */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   /** type of distribution */
-   PRM_LIST( type, efNRC, "Type", "Distribution type", "enum=DistrType" );
-   /** time of const output value, if <=0 -- change every tick */
-   PRM_PARAMD( tau, 0, "\\tau", "time of const output value, if <=0 -- change every tick ", "def=0.05" );
-   /** amplitude of output */
-   PRM_PARAMD( ampl, 0, "Ampl", "Amplitude scale of output", "def=1" );
-   /** zero value of output */
-   PRM_PARAMD( zval, 0, "Base", "Base (zero) value of output ", "" );
+   PRM_LIST(  type, efNRC, "&Type", "Distribution type", "enum=DistrType" );
+   PRM_PARAMD( tau,     0, "\\tau", "time of const output value, if <=0 -- change every tick ", "def=0.05" );
+   PRM_PARAMD( ampl,    0, "A&mpl", "Amplitude scale of output", "def=1" );
+   PRM_PARAMD( zval,    0, "&Zero", "Base (zero) value of output ", "" );
    PRM_SWITCH( inputTime, efNRC, " input Time", "input is time, not[0]", "def=1" );
    /** coefficients of distribution */
    PRM_PARAMD( sigma, 0, "\\sigma", "\\sigma value of distrinution", "sep=col\ndef=1" );
-   PRM_PARAMD( a, 0, "a", "Parameter a", "def=1" );
-   PRM_PARAMD( b, 0, "b", "Parameter b", "def=1" );
-   PRM_PARAMD( c, 0, "c", "Parameter c", "def=1" );
+   PRM_PARAMD(     a, 0, "&a", "Parameter a", "def=1" );
+   PRM_PARAMD(     b, 0, "&b", "Parameter b", "def=1" );
+   PRM_PARAMD(     c, 0, "&c", "Parameter c", "def=1" );
    /** seed value for generator */
    PRM_INT( seed, efNRC, "Seed", "Seed value for generator", "sep=col\ndef=RND" );
    /** when seed generator: 0 - every run 1- 1d loop .. 3-by model */
@@ -95,7 +91,7 @@ class TRand : public TMiso  {
    PRM_SWITCH( addBaseSeed, efNRC, "Add base", "Add base seed to element seed ", "def=1" );
    PRM_SWITCH( addHash,     efNRC, "Add hash", "Add hash value of full name ", "def=1" );
 
-   PRM_INPUT( in_t, 0, "in_t", "Input t if not used automaticaly",  "sep=block" );
+   PRM_INPUT( in_t, 0, "&in_t", "Input t if not used automaticaly",  "sep=block" );
 
    /** time (may not be time) after previos value change */
    double sp_time = DMAX;

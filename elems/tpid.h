@@ -30,23 +30,18 @@ class TPid : public TMiso  {
    DCL_CREATE;
    DCL_STD_INF;
  protected:
-   /** main computation function */
    virtual double f() noexcept override;
-   /** will be called before any action -- good place for allocs */
    virtual int do_preRun() override;
-   /** reimplemented from TMiso to reset integrators and diffs */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   /** coefficients  */
-   PRM_PARAMD( kd2, 0, "k_{d2}", "Coefficient in second derivation", "");
-   PRM_PARAMD( kd1, 0, "k_{d1}", "Coefficient in first derivation" , "");
-   PRM_PARAMD( kp,  0, "k_p" ,   "Coefficient in proportional part", "sep=col\ndef=1");
-   PRM_PARAMD( ki1, 0, "k_{i1}", "Coefficient in first integrator" , "sep=col");
-   PRM_PARAMD( ki2, 0, "k_{i2}", "Coefficient in second integrator", "");
-   /** should output be devided to t */
-   PRM_SWITCH( aver, efNRC, "Average", "Calculate average value", "sep=col" );
+   PRM_PARAMD( kd2,      0, "k_{d2}",   "Coefficient in second derivation", "");
+   PRM_PARAMD( kd1,      0, "k_{&d1}",  "Coefficient in first derivation" , "");
+   PRM_PARAMD( kp,       0, "k_{&p}" ,  "Coefficient in proportional part", "sep=col\ndef=1");
+   PRM_PARAMD( ki1,      0, "k_{&i1}",  "Coefficient in first integrator" , "sep=col");
+   PRM_PARAMD( ki2,      0, "k_{i2}",   "Coefficient in second integrator", "");
+   PRM_SWITCH( aver, efNRC, "&Average", "Calculate average value", "sep=col" );
 
-   PRM_INPUT( in_u, 0, "in_u", "Single input u(x)",  "sep=block" );
+   PRM_INPUT( in_u,      0, "in_{&u}",  "Input u(x)",  "sep=block" );
 
    /** accumulators and old values */
    double vi1 = 0, vi2 = 0, u_old = 0, u_old2 = 0, tdt2 = 1;

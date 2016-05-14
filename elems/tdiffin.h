@@ -49,12 +49,12 @@ class TDiffIn : public TMiso  {
    PRM_DOUBLE( dlt_y_rl, efInner, "dlt_y_rl", "y_r-y_l", "" );
    PRM_DOUBLE( dlt_y_cl, efInner, "dlt_y_cl", "y_c-y_l", "" );
 
-   PRM_INPUT( x_r,   0, "x_r", "Coordinate on right point",  "sep=block" );
-   PRM_INPUT( y_r,   0, "y_r", "Value on right point",  "" );
-   PRM_INPUT( x_c,   0, "x_c", "Coordinate on central point",  "sep=col" );
-   PRM_INPUT( y_c,   0, "y_c", "Value on central point",  "" );
-   PRM_INPUT( x_l,   0, "x_l", "Coordinate on left point",  "sep=col" );
-   PRM_INPUT( y_l,   0, "y_l", "Value on left point",  "" );
+   PRM_INPUT( x_r,   0, "x_{&r}", "Coordinate on right point",  "sep=block" );
+   PRM_INPUT( y_r,   0, "&y_r",   "Value on right point",  "" );
+   PRM_INPUT( x_c,   0, "x_{&c}", "Coordinate on central point",  "sep=col" );
+   PRM_INPUT( y_c,   0, "y_c",    "Value on central point",  "" );
+   PRM_INPUT( x_l,   0, "x_{&l}", "Coordinate on left point",  "sep=col" );
+   PRM_INPUT( y_l,   0, "y_l",    "Value on left point",  "" );
 
    Q_CLASSINFO( "nameHintBase",  "dif_" );
    DCL_DEFAULT_STATIC;
