@@ -1,6 +1,7 @@
 *.o
 qontrol
 *.pro.user
+tags
 Makefile
 moc_*.cpp
 moc_*.h

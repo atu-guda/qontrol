@@ -91,7 +91,10 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent, bool hideLab
   if( h.isRoTree( efROAny ) ) {
     le->setReadOnly( true );
   }
-  lbl->setBuddy( le );
+
+  if( !hideLabel ) {
+    lbl->setBuddy( le );
+  }
 
   int v_max = h.getParmInt( QSL("max"), 4096 ); // not IMAX - good limit for single-line string
   le->setMaxLength( v_max );
@@ -142,6 +145,11 @@ StringMLDataWidget::StringMLDataWidget( HolderData &h, QWidget *parent, bool hid
   if( h.isRoTree( efROAny ) ) {
     te->setReadOnly( true );
   }
+
+  if( !hideLabel ) {
+    lbl->setBuddy( te );
+  }
+
   // setMaxLength( h.getMax() ); ???
   // TODO: min size
   te->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred );
@@ -267,6 +275,10 @@ IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
     le->setReadOnly( true );
   }
 
+  if( !hideLabel ) {
+    lbl->setBuddy( le );
+  }
+
   int v_min = h.getParmInt( QSL("min"), IMIN );
   int v_max = h.getParmInt( QSL("max"), IMAX );
   le->setValidator( new QIntValidator( v_min, v_max, le ) );
@@ -304,6 +316,10 @@ IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent, bool hideL
   main_w = sb;
   if( h.isRoTree( efROAny ) ) {
     sb->setReadOnly( true );
+  }
+
+  if( !hideLabel ) {
+    lbl->setBuddy( sb );
   }
 
   int v_min = h.getParmInt( QSL("min"), IMIN );
@@ -355,6 +371,8 @@ SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent, bool /*hideL
     cb->setDisabled( true );
   }
 
+  // label is olways hidden
+
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
@@ -389,6 +407,11 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   if( h.isRoTree( efROAny ) ) {
     cb->setDisabled( true );
   }
+
+  if( !hideLabel ) {
+    lbl->setBuddy( cb );
+  }
+
   QString enum_name = ho.getParm( QSL("enum") );
   QStringList sl;
   if( ! enum_name.isEmpty() ) {
@@ -437,6 +460,10 @@ LongDataWidget::LongDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
     le->setReadOnly( true );
   }
 
+  if( !hideLabel ) {
+    lbl->setBuddy( le );
+  }
+
   long v_min = h.getParmLong( QSL("min"), LMIN );
   long v_max = h.getParmLong( QSL("max"), LMAX );
   le->setValidator( new LongValidator( v_min, v_max, le ) );
@@ -474,6 +501,10 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent, bool hideLab
   main_w = le;
   if( h.isRoTree( efROAny ) ) {
     le->setReadOnly( true );
+  }
+
+  if( !hideLabel ) {
+    lbl->setBuddy( le );
   }
 
   int decimals = h.getParmInt( QSL("decimals"), DOUBLE_PREC );
@@ -517,6 +548,10 @@ DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent, bool
   main_w = sb;
   if( h.isRoTree( efROAny ) ) {
     sb->setReadOnly( true );
+  }
+
+  if( !hideLabel ) {
+    lbl->setBuddy( sb );
   }
 
   double v_min = h.getParmDouble( QSL("min"), DMIN );
@@ -567,6 +602,10 @@ ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent, bool hideLabel
     cb->setDisabled( true ); // TODO: real read-only
   }
   cb->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Expanding );
+
+  if( !hideLabel ) {
+    lbl->setBuddy( cb );
+  }
 
   auto lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
@@ -621,6 +660,10 @@ FontDataWidget::FontDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   }
   cb->setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Expanding );
 
+  if( !hideLabel ) {
+    lbl->setBuddy( cb );
+  }
+
   auto lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
@@ -653,6 +696,10 @@ DateDataWidget::DateDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   main_w = de;
   if( h.isRoTree( efROAny ) ) {
     de->setDisabled( true );
+  }
+
+  if( !hideLabel ) {
+    lbl->setBuddy( de );
   }
 
   QString s_min = h.getParm( QSL("min") );
@@ -700,6 +747,10 @@ TimeDataWidget::TimeDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   main_w = te;
   if( h.isRoTree( efROAny ) ) {
     te->setDisabled( true );
+  }
+
+  if( !hideLabel ) {
+    lbl->setBuddy( te );
   }
 
   QString s_min = h.getParm( QSL("min") );
@@ -931,6 +982,7 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
     pb->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
   } else {
     pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
+    lbl->setBuddy( pb );
   }
   updateLabel();
   connect( pb, &QPushButton::clicked, this, &ObjDataWidget::edit );
@@ -990,6 +1042,10 @@ InputDataWidget::InputDataWidget( HolderData &h, QWidget *parent, bool hideLabel
     le->setReadOnly( true );
   }
   // ow->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
+
+  if( !hideLabel ) {
+    lbl->setBuddy( le );
+  }
 
   le->setMinimumWidth( 6 * LaboWin::Em() );
   le->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );

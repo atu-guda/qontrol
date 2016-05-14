@@ -59,8 +59,6 @@ order -> only hint? or not use at all
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
   -- TMovingAver
   -- TDefuzzy (fixed/variable number of inputs)
-  -- TQuality (TCriterion is busy/TCrit)
-  -- Rastrigin and more
   -- or File Source input/output: TFileSource
   -- array of similar elements
   -- Collections of data - add to Scheme, Simul, Model
