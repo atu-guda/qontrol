@@ -60,6 +60,19 @@ DataWidget::DataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   : QFrame( parent ), ho( h ), main_w( nullptr ),
     lbl( new DataLabel( h, QSL(""), this ) )
 {
+  DataDialog *ddia = nullptr; // find DataDialog among parents
+  for( QObject *par = parent; par; par = par->parent() ) {
+    ddia = qobject_cast<DataDialog*>( par );
+    if( ddia ) {
+      break;
+    }
+  }
+
+  if( ddia ) {
+    connect( this, &DataWidget::delMe, ddia, &DataDialog::delObjByName, Qt::QueuedConnection );
+  } else {
+    qWarning() << "Not DataDialog for " << ho.getFullName() << WHE;
+  }
   if( ! hideLabel ) {
     // lbl->setMinimumWidth( 5 * LaboWin::Em() );
     lbl->setTextFormat( Qt::RichText );
@@ -108,10 +121,13 @@ void DataWidget::copyObj() const
 
 void DataWidget::deleteObj()
 {
-  if( isWriteAllowed( QSL("delete" ) ) ) {
+  if( ! isWriteAllowed( QSL("delete" ) ) ) {
+    return;
   }
-  // TODO: pass to parent
-
+  if( confirmDelete( this, QSL("Object"), ho.objectName() ) ) {
+    emit delMe( ho.objectName() );
+  }
+  // TODO: check!!!!
 }
 
 void DataWidget::revertObj()
@@ -159,8 +175,7 @@ bool DataWidget::isWriteAllowed( const QString &actName )
 // -------------  DummyDataWidget ----------------
 
 DummyDataWidget::DummyDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
-  : DataWidget( h, parent, hideLabel ),
-  lbl_d( new QLabel( this ) )
+  : DataWidget( h, parent, hideLabel )
 {
   main_w = lbl_d;
   auto lay =  new QHBoxLayout( this );
@@ -1464,8 +1479,15 @@ bool DataDialog::delObj()
   if( !ok ) {
     return false;
   }
+  return delObjByName( ob_name );
+}
 
-  ok = ds.delObj( ob_name );
+bool DataDialog::delObjByName( const QString &name )
+{
+  if( ro ) {
+    return false;
+  }
+  bool ok = ds.delObj( name );
   createWidgets();
   obj2visAll();
   update();

@@ -17,6 +17,7 @@
 #include "fontbtn.h"
 
 class DataWidget;
+class DataDialog;
 
 class DataLabel : public QLabel {
   Q_OBJECT;
@@ -64,6 +65,8 @@ class DataWidget : public QFrame {
   QVariant::Type getTp() const { return ho.getTp(); }
   static DataWidget* create( HolderData & /*ho*/, QWidget * /*parent*/ )
     { return nullptr;}
+ Q_SIGNALS:
+  void delMe( const QString &name );
  public Q_SLOTS:
   void infoObj() const;
   void showWhats() const;
@@ -325,6 +328,7 @@ class DataDialog : public QDialog {
    void revertData();
    bool addObj();
    bool delObj();
+   bool delObjByName( const QString &name );
    bool copyOne();
    bool copyAll();
    bool pasteOne();
