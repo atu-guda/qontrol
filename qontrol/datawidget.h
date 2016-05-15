@@ -32,8 +32,8 @@ class DataLabel : public QLabel {
 
 #define DW_DCL_STD_FUN \
  public: \
-  virtual bool set() override; \
-  virtual bool get() const override; \
+  virtual bool obj2vis() override; \
+  virtual bool vis2obj() const override; \
   static DataWidget* create( HolderData &h, QWidget *parent ); \
  protected: \
   static int reg(); \
@@ -54,19 +54,31 @@ class DataLabel : public QLabel {
 /** Abstract class for any widgets for data editing in DataDialog...
  * */
 class DataWidget : public QFrame {
+ Q_OBJECT;
  public:
   DataWidget( HolderData &d, QWidget *parent = nullptr, bool hideLabel = false );
   virtual QSize        minimumSizeHint() const;
   virtual QSize        sizeHint() const;
-  virtual bool set() = 0;
-  virtual bool get() const = 0;
+  virtual bool obj2vis() = 0;
+  virtual bool vis2obj() const = 0;
   QVariant::Type getTp() const { return ho.getTp(); }
   static DataWidget* create( HolderData & /*ho*/, QWidget * /*parent*/ )
     { return nullptr;}
+ public Q_SLOTS:
+  void infoObj() const;
+  void showWhats() const;
+  void copyObj() const;
+  void deleteObj();
+  void revertObj();
+  void defaultVal();
+  void editPropsObj();
  protected:
+  bool isWriteAllowed( const QString &actName );
+
   HolderData &ho;
   QWidget *main_w;
-  QLabel *lbl;
+  DataLabel *lbl;
+  QString saved_data;
 };
 
 /** properties of DataWidget */
@@ -303,8 +315,8 @@ class DataDialog : public QDialog {
   Q_OBJECT
   public:
    DataDialog( HolderData &a_ds, QWidget *parent = nullptr );
-   int getAll(); // from object to wigets
-   int setAll(); // from widgets to object
+   int obj2visAll();
+   int vis2objAll();
   public Q_SLOTS:
    virtual void accept();
    void showHelp();

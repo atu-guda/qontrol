@@ -30,17 +30,23 @@ void DataLabel::contextMenuEvent( QContextMenuEvent *ev )
 {
   QMenu *mnu = new QMenu( this );
   auto act = mnu->addAction( "&Information" );
-  // connect( act, &QAction::triggered, this, &DataLabel::editObj );
+  connect( act, &QAction::triggered, dw, &DataWidget::infoObj );
   act = mnu->addAction( "&What's this" );
-  // connect( act, &QAction::triggered, this, &DataLabel::editObj );
+  connect( act, &QAction::triggered, dw, &DataWidget::showWhats );
   act = mnu->addAction( "&Copy object" );
-  // connect( act, &QAction::triggered, this, &DataLabel::editObj );
-  act = mnu->addAction( "&Delete object" );
-  // connect( act, &QAction::triggered, this, &DataLabel::editObj );
-  act = mnu->addAction( "Re&vert changes" );
-  // connect( act, &QAction::triggered, this, &DataLabel::editObj );
-  act = mnu->addAction( "Default value" );
-  // connect( act, &QAction::triggered, this, &DataLabel::editObj );
+  connect( act, &QAction::triggered, dw, &DataWidget::copyObj );
+  if( ho.isDyn() ) {
+    act = mnu->addAction( "&Delete object" );
+    connect( act, &QAction::triggered, dw, &DataWidget::deleteObj );
+    act = mnu->addAction( "&Propetries" );
+    connect( act, &QAction::triggered, dw, &DataWidget::editPropsObj );
+  }
+  if( !ho.isRoTree( efROAny ) ) {
+    act = mnu->addAction( "Re&vert changes" );
+    connect( act, &QAction::triggered, dw, &DataWidget::revertObj );
+    act = mnu->addAction( "Default value" );
+    connect( act, &QAction::triggered, dw, &DataWidget::defaultVal );
+  }
   mnu->exec( ev->globalPos() );
   delete mnu;
 }
@@ -61,6 +67,7 @@ DataWidget::DataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   } else {
     lbl->setFixedSize( 0, 0 );
   }
+  saved_data = ho.toString();
   // setFrameStyle( QFrame::Panel | QFrame::Sunken );
 }
 
@@ -83,6 +90,72 @@ QSize DataWidget::sizeHint() const
   return QSize( 50, 20 ); // fallback value;
 }
 
+void DataWidget::infoObj() const
+{
+}
+
+void DataWidget::showWhats() const
+{
+}
+
+
+
+void DataWidget::copyObj() const
+{
+  QString s = ho.toXML( true );
+  setClipboardStr( s );
+}
+
+void DataWidget::deleteObj()
+{
+  if( isWriteAllowed( QSL("delete" ) ) ) {
+  }
+  // TODO: pass to parent
+
+}
+
+void DataWidget::revertObj()
+{
+  if( isWriteAllowed( QSL("revert" ) ) ) {
+    ho.suspendHandleStructChange();
+    ho.delAllDyn(); // TODO: suppress errors during recreate.
+    ho.fromString( saved_data );
+    ho.setUnModified();
+    ho.resumeHandleStructChange();
+    obj2vis();
+  }
+}
+
+void DataWidget::defaultVal()
+{
+  if( isWriteAllowed( QSL("make dafault" ) ) ) {
+    ho.reset_dfl();
+    obj2vis();
+  }
+}
+
+void DataWidget::editPropsObj()
+{
+  if( !isWriteAllowed( QSL("edit properties" ) ) ) {
+    return;
+  }
+  if( !ho.isDyn() ) {
+    qWarning() << "attemp to edit non-dynamic object properties" << WHE;
+    return;
+  }
+  qWarning() << "TODO: editPropsObj" << WHE;
+}
+
+bool DataWidget::isWriteAllowed( const QString &actName )
+{
+  if( ho.isRoTree( efROAny ) ) {
+    qWarning() << "Attemt to " << actName << " RO object " << ho.getFullName();
+    return false;
+  }
+  return true;
+}
+
+
 // -------------  DummyDataWidget ----------------
 
 DummyDataWidget::DummyDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
@@ -96,13 +169,13 @@ DummyDataWidget::DummyDataWidget( HolderData &h, QWidget *parent, bool hideLabel
   lay->addWidget( lbl_d );
 }
 
-bool DummyDataWidget::set()
+bool DummyDataWidget::obj2vis()
 {
   lbl_d->setText( QSL("@ ") + ho.toString().left(20) );
   return true;
 }
 
-bool DummyDataWidget::get() const
+bool DummyDataWidget::vis2obj() const
 {
   return true;
 }
@@ -149,13 +222,13 @@ StringDataWidget::StringDataWidget( HolderData &h, QWidget *parent, bool hideLab
   setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred ); // TODO: check?
 }
 
-bool StringDataWidget::set()
+bool StringDataWidget::obj2vis()
 {
   le->setText( ho.toString() );
   return true;
 }
 
-bool StringDataWidget::get() const
+bool StringDataWidget::vis2obj() const
 {
   ho.fromString( le->text() );
   return true;
@@ -193,13 +266,13 @@ StringMLDataWidget::StringMLDataWidget( HolderData &h, QWidget *parent, bool hid
   setSizePolicy( QSizePolicy::Expanding,  QSizePolicy::Preferred );
 }
 
-bool StringMLDataWidget::set()
+bool StringMLDataWidget::obj2vis()
 {
   te->setPlainText( ho.toString() );
   return true;
 }
 
-bool StringMLDataWidget::get() const
+bool StringMLDataWidget::vis2obj() const
 {
   ho.fromString( te->toPlainText() );
   return true;
@@ -239,13 +312,13 @@ StringExtDataWidget::StringExtDataWidget( HolderData &h, QWidget *parent, bool h
   setLayout( lay );
 }
 
-bool StringExtDataWidget::set()
+bool StringExtDataWidget::obj2vis()
 {
   ts = ho.toString();
   return true;
 }
 
-bool StringExtDataWidget::get() const
+bool StringExtDataWidget::vis2obj() const
 {
   ho.fromString( ts );
   return true;
@@ -319,13 +392,13 @@ IntDataWidget::IntDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   setLayout( lay );
 }
 
-bool IntDataWidget::set()
+bool IntDataWidget::obj2vis()
 {
   le->setText( QSN( ho.get().toInt() ) );
   return true;
 }
 
-bool IntDataWidget::get() const
+bool IntDataWidget::vis2obj() const
 {
   bool ok;
   QVariant v = le->text().toInt( &ok, 0 );
@@ -373,13 +446,13 @@ IntSpinDataWidget::IntSpinDataWidget( HolderData &h, QWidget *parent, bool hideL
 
 }
 
-bool IntSpinDataWidget::set()
+bool IntSpinDataWidget::obj2vis()
 {
   sb->setValue(  ho.get().toInt() );
   return true;
 }
 
-bool IntSpinDataWidget::get() const
+bool IntSpinDataWidget::vis2obj() const
 {
   QVariant v = sb->value();
   ho.set( v );
@@ -410,13 +483,13 @@ SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent, bool /*hideL
   setLayout( lay );
 }
 
-bool SwitchDataWidget::set()
+bool SwitchDataWidget::obj2vis()
 {
   cb->setChecked(  ho.get().toBool() );
   return true;
 }
 
-bool SwitchDataWidget::get() const
+bool SwitchDataWidget::vis2obj() const
 {
   QVariant v = (int)cb->isChecked();
   ho.set( v );
@@ -462,13 +535,13 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   setLayout( lay );
 }
 
-bool ListDataWidget::set()
+bool ListDataWidget::obj2vis()
 {
   cb->setCurrentIndex( ho.get().toInt() );
   return true;
 }
 
-bool ListDataWidget::get() const
+bool ListDataWidget::vis2obj() const
 {
   QVariant v = cb->currentIndex();
   ho.set( v );
@@ -504,13 +577,13 @@ LongDataWidget::LongDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   setLayout( lay );
 }
 
-bool LongDataWidget::set()
+bool LongDataWidget::obj2vis()
 {
   le->setText( QSN( ho.get().toLongLong() ) );
   return true;
 }
 
-bool LongDataWidget::get() const
+bool LongDataWidget::vis2obj() const
 {
   bool ok;
   QVariant v = (qlonglong)( le->text().toLong( &ok, 0 ) );
@@ -549,13 +622,13 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent, bool hideLab
   setLayout( lay );
 }
 
-bool DoubleDataWidget::set()
+bool DoubleDataWidget::obj2vis()
 {
   le->setText( QSND( ho.getDouble() ) );
   return true;
 }
 
-bool DoubleDataWidget::get() const
+bool DoubleDataWidget::vis2obj() const
 {
   bool ok;
   QVariant v = le->text().toDouble( &ok );
@@ -604,13 +677,13 @@ DoubleSpinDataWidget::DoubleSpinDataWidget( HolderData &h, QWidget *parent, bool
   setLayout( lay );
 }
 
-bool DoubleSpinDataWidget::set()
+bool DoubleSpinDataWidget::obj2vis()
 {
   sb->setValue(  ho.get().toDouble() );
   return true;
 }
 
-bool DoubleSpinDataWidget::get() const
+bool DoubleSpinDataWidget::vis2obj() const
 {
   QVariant v = sb->value();
   ho.set( v );
@@ -643,7 +716,7 @@ ColorDataWidget::ColorDataWidget( HolderData &h, QWidget *parent, bool hideLabel
   setLayout( lay );
 }
 
-bool ColorDataWidget::set()
+bool ColorDataWidget::obj2vis()
 {
   QColor c;
   QVariant v = ho.get();
@@ -665,7 +738,7 @@ bool ColorDataWidget::set()
   return true;
 }
 
-bool ColorDataWidget::get() const
+bool ColorDataWidget::vis2obj() const
 {
   QColor c = cb->color();
   // int c_i = c.rgba();
@@ -700,13 +773,13 @@ FontDataWidget::FontDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   setLayout( lay );
 }
 
-bool FontDataWidget::set()
+bool FontDataWidget::obj2vis()
 {
   cb->set_Font( ho.get().toString() );
   return true;
 }
 
-bool FontDataWidget::get() const
+bool FontDataWidget::vis2obj() const
 {
   QFont c = cb->font();
   ho.set( c.key() );
@@ -751,13 +824,13 @@ DateDataWidget::DateDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
 
 }
 
-bool DateDataWidget::set()
+bool DateDataWidget::obj2vis()
 {
   de->setDate( ho.get().toDate() );
   return true;
 }
 
-bool DateDataWidget::get() const
+bool DateDataWidget::vis2obj() const
 {
   ho.set( de->date() );
   return true;
@@ -801,13 +874,13 @@ TimeDataWidget::TimeDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
 
 }
 
-bool TimeDataWidget::set()
+bool TimeDataWidget::obj2vis()
 {
   te->setTime( ho.get().toTime() );
   return true;
 }
 
-bool TimeDataWidget::get() const
+bool TimeDataWidget::vis2obj() const
 {
   ho.set( te->time() );
   return true;
@@ -851,7 +924,7 @@ IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent, bool /*h
   pwi->setLayout( lay ); // ???
 }
 
-bool IntArrayDataWidget::set()
+bool IntArrayDataWidget::obj2vis()
 {
   int n = les.size();
   for( int i=0; i<n; ++i ) {
@@ -860,7 +933,7 @@ bool IntArrayDataWidget::set()
   return true;
 }
 
-bool IntArrayDataWidget::get() const
+bool IntArrayDataWidget::vis2obj() const
 {
   bool ok = false;
   int n = les.size();
@@ -911,7 +984,7 @@ DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent, bo
   pwi->setLayout( lay ); // ???
 }
 
-bool DoubleArrayDataWidget::set()
+bool DoubleArrayDataWidget::obj2vis()
 {
   int n = les.size();
   for( int i=0; i<n; ++i ) {
@@ -920,7 +993,7 @@ bool DoubleArrayDataWidget::set()
   return true;
 }
 
-bool DoubleArrayDataWidget::get() const
+bool DoubleArrayDataWidget::vis2obj() const
 {
   bool ok = false;
   int n = les.size();
@@ -973,7 +1046,7 @@ StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent, bo
   pwi->setLayout( lay ); // ???
 }
 
-bool StringArrayDataWidget::set()
+bool StringArrayDataWidget::obj2vis()
 {
   int n = les.size();
   for( int i=0; i<n; ++i ) {
@@ -982,7 +1055,7 @@ bool StringArrayDataWidget::set()
   return true;
 }
 
-bool StringArrayDataWidget::get() const
+bool StringArrayDataWidget::vis2obj() const
 {
   bool ok = false;
   int n = les.size();
@@ -1023,13 +1096,13 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   setLayout( lay );
 }
 
-bool ObjDataWidget::set()
+bool ObjDataWidget::obj2vis()
 {
   // TODO:
   return true;
 }
 
-bool ObjDataWidget::get() const
+bool ObjDataWidget::vis2obj() const
 {
   // TODO:
   return true;
@@ -1100,7 +1173,7 @@ InputDataWidget::InputDataWidget( HolderData &h, QWidget *parent, bool hideLabel
   connect( ow, &ObjDataWidget::editingFinished, this, &InputDataWidget::objToLine );
 }
 
-bool InputDataWidget::set()
+bool InputDataWidget::obj2vis()
 {
   QString s = ho.getDataD( QSL("source"), QSL("") );
   le->setText( s );
@@ -1108,7 +1181,7 @@ bool InputDataWidget::set()
   return true;
 }
 
-bool InputDataWidget::get() const
+bool InputDataWidget::vis2obj() const
 {
   // TODO:
   return true;
@@ -1236,11 +1309,11 @@ DataDialog::DataDialog( HolderData &a_ds, QWidget *parent )
       "border: 1px solid #909090;"
       "border-radius: 2px; }");
 
-  getAll();
+  obj2visAll();
   saved_data = ds.toString();
 }
 
-int DataDialog::getAll() // from object to wigets
+int DataDialog::obj2visAll()
 {
   QString s = ds.getType()  %  ' ' %  ds.getFullName();
   if( ds.getModified() ) {
@@ -1252,14 +1325,14 @@ int DataDialog::getAll() // from object to wigets
 
   int ng = 0;
   for( auto w : dwm  ) {
-    w->set();
+    w->obj2vis();
     ++ng;
   }
 
   return ng;
 }
 
-int DataDialog::setAll() // from widgets to object
+int DataDialog::vis2objAll() // from widgets to object
 {
   if( ro ) {
     return 0;
@@ -1267,7 +1340,7 @@ int DataDialog::setAll() // from widgets to object
   int ns = 0;
 
   for( auto w : dwm ) {
-    w->get();
+    w->vis2obj();
     ++ns;
   }
   ds.post_set();
@@ -1276,7 +1349,7 @@ int DataDialog::setAll() // from widgets to object
 
 void DataDialog::accept()
 {
-  setAll();
+  vis2objAll();
   QDialog::accept();
 }
 
@@ -1287,8 +1360,8 @@ void DataDialog::checkData()
 
 void DataDialog::refreshData()
 {
-  setAll();
-  getAll();
+  vis2objAll();
+  obj2visAll();
 }
 
 void DataDialog::revertData()
@@ -1301,7 +1374,7 @@ void DataDialog::revertData()
   ds.fromString( saved_data );
   ds.setUnModified();
   ds.resumeHandleStructChange();
-  getAll();
+  obj2visAll();
 }
 
 void DataDialog::showHelp()
@@ -1364,7 +1437,7 @@ bool DataDialog::addObj()
   }
 
   createWidgets(); // recreate iface
-  getAll();
+  obj2visAll();
   update();
   return true;
 }
@@ -1394,7 +1467,7 @@ bool DataDialog::delObj()
 
   ok = ds.delObj( ob_name );
   createWidgets();
-  getAll();
+  obj2visAll();
   update();
   return ok;
 }
@@ -1474,7 +1547,7 @@ bool DataDialog::pasteOne() // like CmdView::pasteObj() TODO: move common code
     handleWarn( this, tr("fail to set params:  %1").arg( errstr ) );
   }
   createWidgets();
-  getAll();
+  obj2visAll();
   update();
   return true;
 }
@@ -1492,7 +1565,7 @@ bool DataDialog::pasteAll()
   }
 
   createWidgets();
-  getAll();
+  obj2visAll();
   update();
   return true;
 }
