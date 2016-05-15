@@ -196,7 +196,8 @@ bool DataWidget::isWriteAllowed( const QString &actName )
 // -------------  DummyDataWidget ----------------
 
 DummyDataWidget::DummyDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
-  : DataWidget( h, parent, hideLabel )
+  : DataWidget( h, parent, hideLabel ),
+    lbl_d( new QLabel( this ) )
 {
   main_w = lbl_d;
   auto lay =  new QHBoxLayout( this );

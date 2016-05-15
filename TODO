@@ -1,5 +1,5 @@
 More correct arrays in dialog (+DataLabel, QFrame).
-Ignore props on object load?
+Fix/limit props on object load/create?
 More trigger types.
 TMatrix3D + rotate (separate/same) + Quaternion?
 DataDialog: Reset to default all/elem, revert elem. May be menu button. Or R mouse button
