@@ -68,8 +68,8 @@ class DataWidget : public QFrame {
  Q_SIGNALS:
   void delMe( const QString &name );
  public Q_SLOTS:
-  void infoObj() const;
-  void showWhats() const;
+  void infoObj();
+  void showWhats();
   void copyObj() const;
   void deleteObj();
   void revertObj();

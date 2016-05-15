@@ -103,11 +103,32 @@ QSize DataWidget::sizeHint() const
   return QSize( 50, 20 ); // fallback value;
 }
 
-void DataWidget::infoObj() const
+void DataWidget::infoObj()
 {
+  QString extr { QSL("; // ") };
+  if( ho.isDyn() ) {
+    extr += QSL("dyn, ");
+  }
+  if( ho.getModified() ) {
+    extr += QSL("mod");
+  }
+  QString s = QSL("<p><b> Object ") % ho.getFullName() % QSL("</b><hr/>\n<h3>")
+            % ho.getType() % QSL(" ") % ho.objectName() % extr % QSL("</h3>\n")
+            % ho.textVisual() % QSL("<hr/>\n")
+            % ho.getParm( QSL("descr" ) ) % QSL("<hr/>")
+            % flags2str( ho.getFlags() )
+            % QSL("<hr/></p>\n<p>\n");
+
+  auto parms = ho.getAllParms();
+  for( auto p = parms.cbegin(); p != parms.cend(); ++p ) {
+    s += p.key() % QSL(" = \"") % p.value().toHtmlEscaped() % QSL("\";<br/>\n");
+  }
+  s += QSL("<hr/></p>\n");
+
+  QMessageBox::information( this, PACKAGE "Object info", s );
 }
 
-void DataWidget::showWhats() const
+void DataWidget::showWhats()
 {
 }
 

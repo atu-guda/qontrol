@@ -331,6 +331,8 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE int getParmInt( const QString &pname, int dfl = 0 ) const;
   Q_INVOKABLE long getParmLong( const QString &pname, long dfl = 0 ) const;
   Q_INVOKABLE double getParmDouble( const QString &pname, double dfl = 0 ) const;
+  const QSSMap& getAllParms() const { return parms; }
+
   Q_INVOKABLE bool setDatas( const QString &datas ); //* data sep: newline
   Q_INVOKABLE QString getType() const { return getClassInfo()->className; };
   virtual const char* getHelp() const  = 0;

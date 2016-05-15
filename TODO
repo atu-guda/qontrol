@@ -1,3 +1,4 @@
+More correct arrays in dialog (+DataLabel, QFrame).
 Ignore props on object load?
 More trigger types.
 TMatrix3D + rotate (separate/same) + Quaternion?
