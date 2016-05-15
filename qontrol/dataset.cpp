@@ -589,6 +589,7 @@ void HolderData::extraToParm()
     }
   }
   dyn = getParmInt( QSL("dyn"), dyn ); // mod if manualy set
+  parms.remove( QSL("extra") ); // not need anymore
 }
 
 
@@ -989,6 +990,9 @@ bool HolderData::restoreParmsFromDom( QDomElement &de )
     // qDebug() << "dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
     if( ! attr_name.startsWith( QSL("prm_") ) ) { continue; } // only special names
     attr_name.remove( 0, 4 ); // remove "prm_";
+    if( attr_name == QSL("extra") ) { // ignore pseude param, used only in static creation
+      continue;
+    }
     setParm( attr_name, dattr.value() );
     // qDebug() << "set dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
   }
