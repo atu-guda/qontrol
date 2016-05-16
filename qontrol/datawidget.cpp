@@ -502,9 +502,10 @@ DW_REG_FUN_STD( IntSpinDataWidget, "INT,SPIN" );
 // ------------------- SwitchDataWidget ---------------------------
 
 SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent, bool /*hideLabel*/ )
-  : DataWidget( h, parent, true ),
+  : DataWidget( h, parent, false ),
   cb( new QCheckBox( ho.getParm( QSL("vis_name")), this )  )
 {
+  lbl->setText( QSL(">") );
   main_w = cb;
   if( h.isRoTree( efROAny ) ) {
     cb->setDisabled( true );
