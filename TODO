@@ -1,7 +1,7 @@
+"N" parm may used only while initial array creation.
 Fix/limit props on object load/create? Check setParm("props") in ctors.
 List elems as params (for dyn).
 TMatrix3D(done) + rotate (separate/same) + Quaternion?
-DataDialog: Reset to default all. May be menu button.
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
 DataHolders: ToXMLString
 Holder*Array -> long indexes, More dimensions. Measure vector::size_type=8, size_t=8. win32?

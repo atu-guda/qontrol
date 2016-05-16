@@ -1423,6 +1423,18 @@ void DataDialog::revertData()
   obj2visAll();
 }
 
+void DataDialog::defaultData()
+{
+  if( ro ) {
+    return;
+  }
+  ds.suspendHandleStructChange();
+  ds.reset_dfl();
+  ds.resumeHandleStructChange();
+  obj2visAll();
+}
+
+
 void DataDialog::showHelp()
 {
   // TODO: file
@@ -1811,23 +1823,29 @@ void DataDialog::createButtons()
     connect( btn_refresh, &QPushButton::clicked, this, &DataDialog::refreshData );
   }
   lay_btn->addWidget( btn_refresh );
+
   //
-  auto btn_revert = new QPushButton( QIcon::fromTheme(QSL("document-revert")), QSL("Revert") );
-  if( ro ) {
-    btn_revert->setDisabled( true );
-  } else {
-    connect( btn_revert, &QPushButton::clicked, this, &DataDialog::revertData );
+  auto btn_more = new QPushButton( QSL("More...") );
+  QMenu *mnu = new QMenu( this );
+  //
+  auto act = mnu->addAction( "Copy Object" );
+  connect( act, &QAction::triggered, this, &DataDialog::copyOne );
+  //
+  act = mnu->addAction( "Copy All" );
+  connect( act, &QAction::triggered, this, &DataDialog::copyAll );
+  //
+  if( !ro ) {
+    act = mnu->addAction( QIcon::fromTheme(QSL("document-revert")), QSL("Revert") );
+    connect( act, &QAction::triggered, this, &DataDialog::revertData );
+    act = mnu->addAction( QSL("reset to Default") );
+    connect( act, &QAction::triggered, this, &DataDialog::defaultData );
   }
-  lay_btn->addWidget( btn_revert );
   //
-  auto btn_copyOne = new QPushButton( QSL("Copy Obj") );
-  connect( btn_copyOne, &QPushButton::clicked, this, &DataDialog::copyOne );
-  lay_btn->addWidget( btn_copyOne );
+  btn_more->setMenu( mnu );
+  lay_btn->addWidget( btn_more );
   //
-  auto btn_copyAll = new QPushButton( QSL("Copy All") );
-  connect( btn_copyAll, &QPushButton::clicked, this, &DataDialog::copyAll );
-  lay_btn->addWidget( btn_copyAll );
-  //
+
+
   auto btn_help = new QPushButton( QIcon::fromTheme(QSL("help-contents")), QSL("Help") );
   connect( btn_help, &QPushButton::clicked, this, &DataDialog::showHelp );
   lay_btn->addWidget( btn_help );

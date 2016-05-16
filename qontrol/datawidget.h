@@ -326,6 +326,7 @@ class DataDialog : public QDialog {
    void checkData();
    void refreshData();
    void revertData();
+   void defaultData();
    bool addObj();
    bool delObj();
    bool delObjByName( const QString &name );
