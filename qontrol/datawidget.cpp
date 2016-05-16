@@ -124,7 +124,7 @@ void DataWidget::infoObj()
             % flags2str( ho.getFlags() )
             % QSL("<hr/></p>\n<p>\n");
 
-  auto parms = ho.getAllParms();
+  const auto& parms = ho.getAllParms();
   for( auto p = parms.cbegin(); p != parms.cend(); ++p ) {
     s += p.key() % QSL(" = \"") % p.value().toHtmlEscaped() % QSL("\";<br/>\n");
   }
@@ -185,7 +185,28 @@ void DataWidget::editPropsObj()
     qWarning() << "attemp to edit non-dynamic object properties" << WHE;
     return;
   }
-  qWarning() << "TODO: editPropsObj" << WHE;
+
+  const auto& parms = ho.getAllParms();
+  QString s;
+  for( auto p = parms.cbegin(); p != parms.cend(); ++p ) {
+    const auto &ke = p.key();
+    if( ke == QSL("props") || ke == QSL("extra") ) {
+      continue;
+    }
+    s += p.key() % QSL("=") % p.value() % QSL("\n");
+  }
+
+  bool ok = false;
+  s = QInputDialog::getMultiLineText( this, QSL("Edit properties"),
+      ho.objectName() % QSL(" properties"), s, &ok );
+
+  if( ok ) {
+    ho.setParm( QSL("extra"), s );
+    ho.extraToParm();
+    obj2vis();
+    // TODO: dialog reread
+  }
+
 }
 
 bool DataWidget::isWriteAllowed( const QString &actName )

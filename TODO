@@ -1,5 +1,5 @@
-"N" parm may used only while initial array creation.
-Fix/limit props on object load/create? Check setParm("props") in ctors.
+"N" parm may used only while initial array creation. Need more design.
+Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
 List elems as params (for dyn).
 TMatrix3D(done) + rotate (separate/same) + Quaternion?
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
@@ -55,8 +55,10 @@ Edit large arrays
 TCircBuf + TDelay re*
 order -> only hint? or not use at all
 
+aliases/synlinks: to use 'current' subobjects.
 
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
+  -- TErrorMeasure
   -- TMovingAver
   -- TDefuzzy (fixed/variable number of inputs)
   -- or File Source input/output: TFileSource
