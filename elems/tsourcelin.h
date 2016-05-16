@@ -43,9 +43,9 @@ class TSourceLin : public TMiso  {
    PRM_PARAMD( a,  0, "&a", "Common factor", "sep=col\ndef=1" );
 
    // time 0 means end of sequence - to start
-   PRM_DOUBLE_ARR( t_int, efNRC, "t_int", "Time intervals", "N=16\ndef=0\nmin=0\ndefs=1 1 1  1  1 0\nsep=tab\ntabname=Arrays" );
-   PRM_DOUBLE_ARR( vs, efNRC, "vs", "start value",          "N=16\ndef=0\ndefs=0 0 1 -1 -1 0\nsep=col" );
-   PRM_DOUBLE_ARR( ve, efNRC, "ve", "end value",            "N=16\ndef=0\ndefs=0 1 1 -1  0 0\nsep=col" );
+   PRM_DOUBLE_ARR( t_int, efNRC, "t_{i}", "Time intervals", "N=16\ndef=0\ndefs=1 1 1  1  1 0\nmin=0\nsep=tab\ntabname=Arrays" );
+   PRM_DOUBLE_ARR( vs,    efNRC, "vs",    "start value",    "N=16\ndef=0\ndefs=0 0 1 -1 -1 0\nsep=col" );
+   PRM_DOUBLE_ARR( ve,    efNRC, "ve",    "end value",      "N=16\ndef=0\ndefs=0 1 1 -1  0 0\nsep=col" );
 
    /** slope values of each line */
    dvector slopes;

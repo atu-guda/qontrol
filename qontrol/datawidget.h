@@ -237,7 +237,7 @@ class IntArrayDataWidget: public DataWidget {
   DW_DCL_STD_FUN;
  protected:
   std::vector<QLineEdit*> les;
-  QWidget *pwi;
+  QFrame *pwi;
 };
 
 
@@ -247,7 +247,7 @@ class DoubleArrayDataWidget: public DataWidget {
   DW_DCL_STD_FUN;
  protected:
   std::vector<QLineEdit*> les;
-  QWidget *pwi;
+  QFrame *pwi;
 };
 
 class StringArrayDataWidget: public DataWidget {
@@ -256,7 +256,7 @@ class StringArrayDataWidget: public DataWidget {
   DW_DCL_STD_FUN;
  protected:
   std::vector<QLineEdit*> les;
-  QWidget *pwi;
+  QFrame *pwi;
 };
 
 

@@ -957,8 +957,8 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
           continue; // ignore unused params
         }
       }
-      ho->fromString( txt );
       ho->restoreParmsFromDom( ee );
+      ho->fromString( txt );
 
     } else { // ----------- unknown element
       errstr = QString("TDataSet::fromDom: bad element %1 %2 ")
@@ -2008,13 +2008,13 @@ bool HolderFont::set( const QVariant & x, int /* idx */  )
     if(  fn == QSL("DEFAULT")  ||  fn.isEmpty()  ) {
       v = vt;
     } else if( fn == QSL("SMALL") ) {
-      vt.setPointSize( v.pointSize() * 7 / 10 );
+      vt.setPointSize( vt.pointSize() * 7 / 10 );
       v = vt;
     } else if( fn == QSL("TINY") ) {
-      vt.setPointSize( v.pointSize() * 5 / 10 );
+      vt.setPointSize( vt.pointSize() * 5 / 10 );
       v = vt;
     } else if( fn == QSL("LARGE") ) {
-      vt.setPointSize( v.pointSize() * 14 / 10 );
+      vt.setPointSize( vt.pointSize() * 14 / 10 );
       v = vt;
     } else {
       v.fromString( fn );
@@ -2029,7 +2029,7 @@ bool HolderFont::set( const QVariant & x, int /* idx */  )
 
 QVariant HolderFont::get( int /* idx */ ) const
 {
-  return QVariant( v.key() );
+  return QVariant( v );
 }
 
 double HolderFont::getDouble( int /* idx = 0 */ ) const
@@ -2043,7 +2043,7 @@ void HolderFont::do_post_set()
 
 QString HolderFont::toString() const
 {
-  return v.key();
+  return v.toString();
 }
 
 QString HolderFont::textVisual() const
@@ -2323,11 +2323,12 @@ QString HolderIntArray::toString() const
 
 QString HolderIntArray::textVisual() const
 {
-  QString s { QSL("[") }, sep { QSL("") };
+  QString s { QSL("[ ") }, sep { QSL("") };
   for( auto vc : v ) {
     s += sep + QSN( vc );
     sep = QSL(", ");
   }
+  s += QSL(" ]");
   return s;
 }
 
@@ -2457,11 +2458,12 @@ QString HolderDoubleArray::toString() const
 
 QString HolderDoubleArray::textVisual() const
 {
-  QString s { QSL("[") }, sep { QSL("") };
+  QString s { QSL("[ ") }, sep { QSL("") };
   for( auto vc : v ) {
     s += sep + QSND( vc );
     sep = QSL(", ");
   }
+  s += QSL(" ]");
   return s;
 }
 
@@ -2588,11 +2590,12 @@ QString HolderStringArray::toString() const
 
 QString HolderStringArray::textVisual() const
 {
-  QString s { QSL("[") }, sep { QSL("") };
+  QString s { QSL("[ ") }, sep { QSL("") };
   for( auto vc : v ) {
     s += sep % QSL("\"") % vc  % QSL("\"");
     sep = QSL(", ");
   }
+  s += QSL(" ]");
   return s;
 }
 

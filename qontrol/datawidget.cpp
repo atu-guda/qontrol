@@ -71,7 +71,7 @@ DataWidget::DataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   if( ddia ) {
     connect( this, &DataWidget::delMe, ddia, &DataDialog::delObjByName, Qt::QueuedConnection );
   } else {
-    qWarning() << "Not DataDialog for " << ho.getFullName() << WHE;
+    qWarning() << "No DataDialog for " << ho.getFullName() << WHE;
   }
   if( ! hideLabel ) {
     // lbl->setMinimumWidth( 5 * LaboWin::Em() );
@@ -106,12 +106,17 @@ QSize DataWidget::sizeHint() const
 void DataWidget::infoObj()
 {
   QString extr { QSL("; // ") };
+  auto na = ho.arrSize();
+  if( na != 1 ) {
+    extr += QSL(" [") % QSN( na ) % QSL("] ");
+  }
   if( ho.isDyn() ) {
     extr += QSL("dyn, ");
   }
   if( ho.getModified() ) {
     extr += QSL("mod");
   }
+
   QString s = QSL("<p><b> Object ") % ho.getFullName() % QSL("</b><hr/>\n<h3>")
             % ho.getType() % QSL(" ") % ho.objectName() % extr % QSL("</h3>\n")
             % ho.textVisual() % QSL("<hr/>\n")
@@ -813,14 +818,14 @@ FontDataWidget::FontDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
 
 bool FontDataWidget::obj2vis()
 {
-  cb->set_Font( ho.get().toString() );
+  cb->set_Font( ho.get().value<QFont>() );
   return true;
 }
 
 bool FontDataWidget::vis2obj() const
 {
   QFont c = cb->font();
-  ho.set( c.key() );
+  ho.set( c );
   return true;
 }
 
@@ -931,35 +936,36 @@ DW_REG_FUN_STD( TimeDataWidget, "TIME" );
 // ------------------- IntArrayDataWidget ---------------------------
 
 IntArrayDataWidget::IntArrayDataWidget( HolderData &h, QWidget *parent, bool /*hideLabel*/ )
-  : DataWidget( h, parent, true ),
-  pwi( new QWidget( this ) )
+  : DataWidget( h, parent, false ),
+  pwi( new QFrame( this ) )
 {
   main_w = pwi;
+  pwi->setFrameStyle( QFrame::StyledPanel | QFrame::Raised );
   bool ro = h.isRoTree( efROAny );
   int n = h.arrSize();
   les.reserve(n);
-  QString vn = h.getParm( QSL("vis_name"), h.objectName() ) % QSL("[");
 
   int v_min = h.getParmInt( QSL("min"), IMIN );
   int v_max = h.getParmInt( QSL("max"), IMAX );
 
-  // lbl->setText( QSL("") ); // hack: hide common name
   auto lay = new QGridLayout( pwi );
+
+  lay->addWidget( lbl, 0, 1 );
 
   for( int i=0; i<n; ++i ) {
     auto la = new QLabel( pwi );
-    la->setText( vn + QSN(i) + ']' );
-    lay->addWidget( la, i, 0 );
+    la->setText( QSL("[") % QSN(i) + QSL("]") );
+    lay->addWidget( la, i+1, 0 );
 
     auto le = new QLineEdit( pwi );
     le->setReadOnly( ro );
     le->setValidator( new QIntValidator( v_min, v_max, le ) );
-    lay->addWidget( le, i, 1 );
+    lay->addWidget( le, i+1, 1 );
     les.push_back( le );
   }
 
-  lay->setContentsMargins( 0, 0, 0, 0 );
-  pwi->setLayout( lay ); // ???
+  lay->setContentsMargins( 1, 1, 1, 1 );
+  pwi->setLayout( lay );
 }
 
 bool IntArrayDataWidget::obj2vis()
@@ -989,36 +995,37 @@ DW_REG_FUN_STD( IntArrayDataWidget, "ARRAY_INT,INLINE" );
 // ------------------- DoubleArrayDataWidget ---------------------------
 
 DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent, bool /*hideLabel*/ )
-  : DataWidget( h, parent, true ),
-  pwi( new QWidget( this ) )
+  : DataWidget( h, parent, false ),
+  pwi( new QFrame( this ) )
 {
   main_w = pwi;
+  pwi->setFrameStyle( QFrame::StyledPanel | QFrame::Raised );
   bool ro = h.isRoTree( efROAny );
   int n = h.arrSize();
 
   les.reserve(n);
-  QString vn = h.getParm( QSL("vis_name"), h.objectName() ) % QSL("[");
 
   double v_min = h.getParmDouble( QSL("min"), DMIN );
   double v_max = h.getParmDouble( QSL("max"), DMAX );
   int decimals = h.getParmInt( QSL("decimals"), DOUBLE_PREC );
 
-  // lbl->setText( QSL("") ); // hack: hide common name
   auto lay = new QGridLayout( pwi );
+
+  lay->addWidget( lbl, 0, 1 );
 
   for( int i=0; i<n; ++i ) {
     auto la = new QLabel( pwi );
-    la->setText( vn + QSN(i) + ']' );
-    lay->addWidget( la, i, 0 );
+    la->setText( QSL("[") % QSN(i) + QSL("]") );
+    lay->addWidget( la, i+1, 0 );
 
     auto le = new QLineEdit( pwi );
     le->setReadOnly( ro );
     le->setValidator( new QDoubleValidator( v_min, v_max, decimals, le ) );
-    lay->addWidget( le, i, 1 );
+    lay->addWidget( le, i+1, 1 );
     les.push_back( le );
   }
 
-  lay->setContentsMargins( 0, 0, 0, 0 );
+  lay->setContentsMargins( 1, 1, 1, 1 );
   pwi->setLayout( lay ); // ???
 }
 
@@ -1049,26 +1056,27 @@ DW_REG_FUN_STD( DoubleArrayDataWidget, "ARRAY_DOUBLE,INLINE" );
 // ------------------- StringArrayDataWidget ---------------------------
 
 StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent, bool /*hideLabel*/ )
-  : DataWidget( h, parent, true ),
-  pwi( new QWidget( this ) )
+  : DataWidget( h, parent, false ),
+  pwi( new QFrame( this ) )
 {
   main_w = pwi;
+  pwi->setFrameStyle( QFrame::StyledPanel | QFrame::Raised );
   bool ro = h.isRoTree( efROAny );
   int n = h.arrSize();
 
   les.reserve(n);
-  QString vn = h.getParm( QSL("vis_name"), h.objectName() ) % QSL("[");
 
   int len_max = h.getParmInt( QSL("max"), 4096 ); // not IMAX - good limit for single-line string
   QString mask = h.getParm( QSL("mask") );
 
-  lbl->setText( QSL("") ); // hack: hide common name
   auto lay = new QGridLayout( pwi );
+
+  lay->addWidget( lbl, 0, 1 );
 
   for( int i=0; i<n; ++i ) {
     auto la = new QLabel( pwi );
-    la->setText( vn + QSN(i) + ']' );
-    lay->addWidget( la, i, 0 );
+    la->setText( QSL("[") % QSN(i) + QSL("]") );
+    lay->addWidget( la, i+1, 0 );
 
     auto le = new QLineEdit( pwi );
     le->setReadOnly( ro );
@@ -1076,12 +1084,12 @@ StringArrayDataWidget::StringArrayDataWidget( HolderData &h, QWidget *parent, bo
     if( !mask.isEmpty() ) {
       le->setInputMask( mask );
     }
-    lay->addWidget( le, i, 1 );
+    lay->addWidget( le, i+1, 1 );
     les.push_back( le );
   }
 
-  lay->setContentsMargins( 0, 0, 0, 0 );
-  pwi->setLayout( lay ); // ???
+  lay->setContentsMargins( 1, 1, 1, 1 );
+  pwi->setLayout( lay );
 }
 
 bool StringArrayDataWidget::obj2vis()
@@ -1204,7 +1212,7 @@ InputDataWidget::InputDataWidget( HolderData &h, QWidget *parent, bool hideLabel
   frr->setFrameStyle( QFrame::VLine );
   lay->addWidget( frr );
   setLayout( lay );
-  // setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  setFrameStyle( QFrame::Panel | QFrame::Sunken );
   setMinimumWidth( lbl->width() + (6+3) * LaboWin::Em() ); // hack
 
   connect( le, &QLineEdit::editingFinished, this, &InputDataWidget::lineToObj );

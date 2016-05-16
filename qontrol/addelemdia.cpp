@@ -207,7 +207,11 @@ bool SelectTypeDialog::getTypeAndParams( HolderData *pobj, QWidget *aparent, Add
   prm.descr = ed_descr->text();
   prm.vis_name = ed_vis_name->text();
   if( prm.vis_name.isEmpty() ) {
-    prm.vis_name = QSL("<div>") % prm.name % QSL("</div>" );
+    if( prm.name.contains('_') ) {
+      prm.vis_name = QSL("<div>") % prm.name % QSL("</div>" );
+    } else {
+      prm.vis_name = prm.name;
+    }
   }
 
   QString sep = lws->currentData().toString();
@@ -244,7 +248,10 @@ HolderData* SelectTypeDialog::askAndCreateObj( HolderData *pobj, QWidget *aparen
   ho->setParm( "vis_name", prm.vis_name );
   ho->setParm( "extra", prm.extra );
   ho->extraToParm();
-  ho->setDatas( prm.values );
+  ho->reset_dfl();
+  if( !prm.values.isEmpty() ) {
+     ho->setDatas( prm.values );
+  }
   return ho;
 }
 

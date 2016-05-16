@@ -44,11 +44,12 @@ void FontBtn::set_Font( const QString &s )
 
 void FontBtn::slotClicked()
 {
-  QFont nfont;
   bool ok = false;
-  nfont =  QFontDialog::getFont( &ok, cfont, this, QSL("Select font"),
+  QFont nfont =  QFontDialog::getFont( &ok, cfont, this, QSL("Select font"),
               QFontDialog::DontUseNativeDialog );
-  cfont = nfont;
+  if( ok ) {
+    cfont = nfont;
+  }
   repaint();
   emit changed( cfont );
 }

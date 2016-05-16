@@ -74,9 +74,9 @@ class TThrum : public TMiso  {
    PRM_INPUT( in2, 0, "in&2", "Third input",  "sep=col" );
 
    // PRM_STRING( p_strn, 0, "ML String", "Large string", "sep=block\nprops=STRING,MLINE\nncol=-1" );
-   PRM_INT_ARR( a_int, 0, "int[]", "int array", "N=5\ndef=1\ndefs=0 2 4 \nsep=tab\ntabname=X1" );
-   PRM_DOUBLE_ARR( a_dou, 0, "dou[]", "double array", "N=5\ndef=0.1\ndefs=7 1.2e-5 3e7 \nsep=col,tabend" );
-   PRM_STRING_ARR( a_str, 0, "str[]", "string array", "N=5\ndef=a b c\ndefs=first\x01second x x\x01last" );
+   PRM_INT_ARR(    a_int, 0, "<div>a_int[]</div>", "int array", "N=5\ndef=1\ndefs=0 2 4 \nsep=tab\ntabname=X1" );
+   PRM_DOUBLE_ARR( a_dou, 0, "<div>a_dou[]</div>", "double array", "N=5\ndef=0.1\ndefs=7 1.2e-5 3e7 \nsep=col,tabend" );
+   PRM_STRING_ARR( a_str, 0, "<div>a_str[]</div>", "string array", "N=5\ndef=a b c\ndefs=first\x01second x x\x01last" );
 
    Q_CLASSINFO( "nameHintBase",  "thrum_" );
    DCL_DEFAULT_STATIC;
