@@ -30,12 +30,10 @@ Indicate corresponding outs for selected plot
 Customized colors: struct view...
 Inputs - may be Elements? like TFileSource?
 Dump TOutArr/TGraph commandline (-p/-P)
-More functional labels in dialogs: go to buddy, autoset ....
 Outputs - or even IO - for external data.
 Custom legend/labels/axis(scale factor) in Mgl
 Tests
 Autocorrelation?
-Placeholder object: param is the type of real object or template object name?
 Shadow/backup/undo main scheme?
 More stylesheets
 props: v_min, v_max: precalculate?
@@ -59,7 +57,6 @@ aliases/synlinks: to use 'current' subobjects.
 
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
   -- TErrorMeasure
-  -- TMovingAver
   -- TDefuzzy (fixed/variable number of inputs)
   -- or File Source input/output: TFileSource
   -- array of similar elements

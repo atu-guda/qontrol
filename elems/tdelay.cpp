@@ -54,6 +54,7 @@ double TDelay::f() noexcept
 
   buf->add( cu );
   a1 = (*buf)[icd]; a2 = (*buf)[icd+1];
+  aver = buf->aver();
   if( ct < cdelay ) {
     return u00;
   }

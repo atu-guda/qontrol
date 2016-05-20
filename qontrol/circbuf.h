@@ -31,6 +31,7 @@ class TCircBuf {
    int getN() const { return nf; }
    double operator[]( int i ) const;
    double sum() const { return su; }
+   double aver() const { return (nf>0) ? ( su / nf ) : 0; }
    double sumCalc(); // force recalc sum
  protected:
    unsigned nb; //* buffer size
