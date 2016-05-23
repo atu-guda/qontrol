@@ -55,14 +55,11 @@ double TErrMeasure::f() noexcept
   er2 = pow2( er );
   erp = pow( er1, p );
 
-  mi1 += er1 * ctdt;
-  s2  += er2 * ctdt;  mi2 = sqrt( s2 );
-  sp  += erp * ctdt;  mip = pow( sp, (1.0/p) );
   t_rst += ctdt;
+  mi1 += er1 * ctdt;  m1 = mi1 / t_rst;
+  s2  += er2 * ctdt;  m2 = sqrt( s2 / t_rst );          mi2 = t_rst * m2; // horrorfull but works.
+  sp  += erp * ctdt;  mp = pow(  sp / t_rst, (1.0/p) ); mip = mp * t_rst;
 
-  m1 = mi1 / t_rst;
-  m2 = mi2 / t_rst;
-  mp = mip / t_rst;
   if( mmax < er1 ) {
     mmax = er1;
   }
