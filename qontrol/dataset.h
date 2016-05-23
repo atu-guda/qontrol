@@ -322,6 +322,8 @@ class HolderData : public QAbstractItemModel {
     { return ( n<size() && n >= 0 ) ? children().at( n )->objectName() : QSL(""); }
   //* return strings for given enum
   Q_INVOKABLE QStringList getEnumStrings( const QString &enum_name ) const;
+  //* return list strings for current object
+  Q_INVOKABLE QStringList getListStrings() const { return list_strings; }
 
   /** returns full name of object: aaa.bbb.cc  */
   Q_INVOKABLE QString getFullName() const;
@@ -399,6 +401,7 @@ class HolderData : public QAbstractItemModel {
   virtual void do_structChanged();
   bool restoreParmsFromDom( QDomElement &de );
   void saveParmsToDom( QDomElement &de ) const;
+  void fillListStrings();
 
   int dyn = 0; //* flag: is created dynamically i.e. can be deleted
   int flags;   //* use bitset of _ELEM_FLAGS: efRO, efNRC, ...
@@ -416,6 +419,7 @@ class HolderData : public QAbstractItemModel {
   //* flag: show active/inactive state in Qt::CheckStateRole
   bool show_active = false;
   QSSMap parms;
+  QStringList list_strings;
   QString allowed_types = ""; // separator=','
   Q_CLASSINFO( "nameHintBase",  "holder_" );
   DCL_DEFAULT_STATIC;
@@ -482,6 +486,7 @@ class HolderList : public HolderInt {
   DCL_CTOR(HolderList);
   DCL_CREATE;
   DCL_STD_INF;
+  virtual void reset_dfl() override;
   // most functions from HolderInt
   int operator=( int a ) { v=a; post_set(); return v; }
  protected:

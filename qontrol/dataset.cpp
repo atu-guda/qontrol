@@ -30,7 +30,7 @@ HolderData::HolderData( ARGS_CTOR_MIN )
   setObjectName( obj_name );
 
   if( a_v_name.isEmpty() )  {
-    setParm( QSL("vis_name"), QSL("<div>") % obj_name % QSL("</div>") );
+    setParm( QSL("vis_name"), QSL("<div>") % obj_name % QSL("</div>") ); // TODO: not always, see .....
   } else {
     setParm( QSL("vis_name"), a_v_name );
   }
@@ -958,6 +958,7 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
         }
       }
       ho->restoreParmsFromDom( ee );
+      ho->reset_dfl();
       ho->fromString( txt );
 
     } else { // ----------- unknown element
@@ -990,7 +991,7 @@ bool HolderData::restoreParmsFromDom( QDomElement &de )
     // qDebug() << "dyn attr: " <<  attr_name << " to " << dattr.value() << NWHE;
     if( ! attr_name.startsWith( QSL("prm_") ) ) { continue; } // only special names
     attr_name.remove( 0, 4 ); // remove "prm_";
-    if( attr_name == QSL("extra") ) { // ignore pseude param, used only in static creation
+    if( attr_name == QSL("extra") ) { // ignore pseudo param, used only in static creation
       continue;
     }
     setParm( attr_name, dattr.value() );
@@ -1329,6 +1330,23 @@ QStringList HolderData::getEnumStrings( const QString &enum_name ) const
   return r;
 }
 
+void HolderData::fillListStrings()
+{
+  list_strings.clear();
+  QString enum_name = getParm( QSL("enum") );
+  if( ! enum_name.isEmpty() ) {
+    if( par ) {
+      list_strings = par->getEnumStrings( enum_name );
+    }
+  } else {
+    QString s = getParm( QSL("list_strings" ) );
+    if( !s.isEmpty() ) {
+      list_strings = s.split(",");
+    }
+  }
+  setParm( QSL("max"), QSN( list_strings.size()-1 ) );
+}
+
 HolderData* HolderData::addObjToSubP( const QString &subname, const QString &tp, const QString &ob_name )
 {
   HolderData *sub = getObj( subname );
@@ -1512,8 +1530,6 @@ void HolderData::do_post_set()
 
 const char* HolderData::helpstr { "Abstract data holder" };
 
-#undef CURR_CLASS
-
 // ---------------- HolderValue ---------
 STD_CLASSINFO(HolderValue,clpData|clpAbstract);
 
@@ -1581,7 +1597,7 @@ CTOR(HolderInt,HolderValue) , v(0)
 {
   tp=QVariant::Int;
   setParmIfEmpty( QSL("props"), QSL("INT,SIMPLE") );
-  post_set();
+  reset_dfl();
 }
 
 void HolderInt::reset_dfl()
@@ -1653,7 +1669,7 @@ CTOR(HolderSwitch,HolderInt)
     setParm( QSL("props"), QSL("INT,SWITCH") );
   }
   setParm( QSL("min"), QSL("0") ); setParm( QSL("max"), QSL("1") );
-  post_set();
+  reset_dfl();
 }
 
 
@@ -1676,20 +1692,14 @@ CTOR(HolderList,HolderInt)
   if( getParm(QSL("props")) == QSL("INT,SIMPLE") ) {
     setParm( QSL("props"), QSL("INT,LIST") );
   }
-
-  // may be overkill, but one cone - one place
-  QString enum_name = getParm( QSL("enum") );
-  QStringList sl;
-  if( ! enum_name.isEmpty() ) {
-    if( par ) {
-      sl = par->getEnumStrings( enum_name );
-    }
-  }
-  setParm( QSL("max"), QSN( sl.size()-1 ) );
-
-  post_set();
+  reset_dfl();
 }
 
+void HolderList::reset_dfl()
+{
+  fillListStrings();
+  HolderInt::reset_dfl();
+}
 
 void HolderList::do_post_set()
 {
@@ -1709,7 +1719,7 @@ CTOR(HolderLong,HolderValue) , v(0)
 {
   tp=QVariant::LongLong;
   setParmIfEmpty( QSL("props"), QSL("LONG,SIMPLE") );
-  post_set();
+  reset_dfl();
 }
 
 void HolderLong::reset_dfl()
@@ -1783,6 +1793,7 @@ CTOR(HolderDouble,HolderValue), v(0)
   tp=QVariant::Double;
   post_set();
   setParmIfEmpty( QSL("props"), QSL("DOUBLE,SIMPLE") );
+  reset_dfl();
 }
 
 void HolderDouble::reset_dfl()
@@ -1849,6 +1860,7 @@ CTOR(HolderString,HolderValue)
   tp=QVariant::String;
   post_set();
   setParmIfEmpty( QSL("props"), QSL("STRING,SIMPLE") );
+  reset_dfl();
 }
 
 void HolderString::reset_dfl()
@@ -1912,6 +1924,7 @@ CTOR(HolderColor,HolderValue)
   tp=QVariant::Color;
   v = QColor(Qt::red);
   setParmIfEmpty( QSL("props"), QSL("COLOR,INT") );
+  reset_dfl();
 }
 
 void HolderColor::reset_dfl()
@@ -1989,6 +2002,7 @@ CTOR(HolderFont,HolderValue)
 {
   tp=QVariant::Font;
   setParmIfEmpty( QSL("props"), QSL("FONT,STRING") );
+  reset_dfl();
 }
 
 void HolderFont::reset_dfl()
@@ -2068,8 +2082,8 @@ STD_CLASSINFO_ALIAS(HolderDate,clpData,date);
 CTOR(HolderDate,HolderValue)
 {
   tp=QVariant::Date;
-  post_set();
   setParmIfEmpty( QSL("props"), QSL("DATE,STRING") );
+  reset_dfl();
 }
 
 void HolderDate::reset_dfl()
@@ -2149,8 +2163,8 @@ STD_CLASSINFO_ALIAS(HolderTime,clpData,time);
 CTOR(HolderTime,HolderValue)
 {
   tp=QVariant::Time;
-  post_set();
   setParmIfEmpty( QSL("props"), QSL("TIME,STRING") );
+  reset_dfl();
 }
 
 void HolderTime::reset_dfl()
@@ -2231,6 +2245,7 @@ CTOR(HolderIntArray,HolderValue)
   tp=QVariant::UserType;
   setParmIfEmpty( QSL("props"), QSL("ARRAY_INT") );
   // all done by reset_dfl
+  reset_dfl();
 }
 
 void HolderIntArray::reset_dfl()
@@ -2365,6 +2380,7 @@ CTOR(HolderDoubleArray,HolderValue)
 {
   tp=QVariant::UserType;
   setParmIfEmpty( QSL("props"), QSL("ARRAY_DOUBLE") );
+  reset_dfl();
 }
 
 void HolderDoubleArray::reset_dfl()
@@ -2499,6 +2515,7 @@ CTOR(HolderStringArray,HolderValue)
 {
   tp=QVariant::UserType;
   setParmIfEmpty( QSL("props"), QSL("ARRAY_STRING") );
+  reset_dfl();
 }
 
 void HolderStringArray::reset_dfl()
@@ -2636,6 +2653,7 @@ CTOR(TDataSet,HolderData)
 {
   tp=QVariant::UserType;
   setParmIfEmpty( QSL("props"), QSL("OBJ") );
+  reset_dfl();
 }
 
 TDataSet::~TDataSet()

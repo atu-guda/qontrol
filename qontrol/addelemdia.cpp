@@ -99,8 +99,7 @@ QString SelectTypeDialog::getType( HolderData *pobj, QWidget *aparent,
     return tp;
   }
 
-  int rc = dia->exec();
-  if( rc == QDialog::Accepted ) {
+  if( dia->exec() == QDialog::Accepted ) {
     tp = dia->getSelType();
   };
   return tp;
@@ -119,7 +118,7 @@ bool SelectTypeDialog::getTypeAndParams( HolderData *pobj, QWidget *aparent, Add
   prm.tp = tp;
   prm.name = pobj->hintName( tp, prm.name );
 
-  auto dia = new QDialog( aparent );
+  auto dia = new QDialog( aparent ); // TODO: unique_ptr
   auto lay_h = new QHBoxLayout( dia );
 
   auto lay_m = new QVBoxLayout; // main mart
@@ -172,21 +171,6 @@ bool SelectTypeDialog::getTypeAndParams( HolderData *pobj, QWidget *aparent, Add
   lws->addItem( QSL("Tab after"), QSL("\nsep=tabend") );
   lay_ex->addWidget( lws );
 
-  // auto cb_col = new QCheckBox( QSL("Column") );
-  // lay_ex->addWidget( cb_col );
-  // auto cb_colend = new QCheckBox( QSL("Column after") );
-  // lay_ex->addWidget( cb_colend );
-  // auto cb_row = new QCheckBox( QSL("Row") );
-  // lay_ex->addWidget( cb_row );
-  // auto cb_block = new QCheckBox( QSL("Block") );
-  // lay_ex->addWidget( cb_block );
-  // auto cb_blockend = new QCheckBox( QSL("Block after") );
-  // lay_ex->addWidget( cb_blockend );
-  // auto cb_tab = new QCheckBox( QSL("Tab") );
-  // lay_ex->addWidget( cb_tab );
-  // auto cb_tabend = new QCheckBox( QSL("Tab after") );
-  // lay_ex->addWidget( cb_tabend );
-
   auto lbl_extra = new QLabel( QSL("Extra"), dia );
   lay_ex->addWidget( lbl_extra );
   auto ed_extra = new QTextEdit( dia );
@@ -201,12 +185,16 @@ bool SelectTypeDialog::getTypeAndParams( HolderData *pobj, QWidget *aparent, Add
   connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
   connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
 
-  int rc = dia->exec();
+  if( dia->exec() != QDialog::Accepted  || ed_name->text().isEmpty() ) {
+    delete dia;
+    return false;
+  }
+
   prm.name = ed_name->text();
   prm.values = ed_val->toPlainText();
   prm.descr = ed_descr->text();
   prm.vis_name = ed_vis_name->text();
-  if( prm.vis_name.isEmpty() ) {
+  if( prm.vis_name.isEmpty() ) { // TODO: common func with HolderData ctor ?
     if( prm.name.contains('_') ) {
       prm.vis_name = QSL("<div>") % prm.name % QSL("</div>" );
     } else {
@@ -218,9 +206,6 @@ bool SelectTypeDialog::getTypeAndParams( HolderData *pobj, QWidget *aparent, Add
   prm.extra = ed_extra->toPlainText() % sep;
 
   delete dia;
-  if( rc != QDialog::Accepted || prm.name.isEmpty() ) {
-    return false;
-  }
   return true;
 }
 

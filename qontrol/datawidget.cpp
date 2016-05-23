@@ -578,14 +578,7 @@ ListDataWidget::ListDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
     lbl->setBuddy( cb );
   }
 
-  QString enum_name = ho.getParm( QSL("enum") );
-  QStringList sl;
-  if( ! enum_name.isEmpty() ) {
-    HolderData *par = h.getParent();
-    if( par ) {
-      sl = par->getEnumStrings( enum_name );
-    }
-  }
+  QStringList sl = ho.getListStrings();
   QString noTeX = ho.getParm( QSL("noTeX") );
   if( noTeX != QSL("y") ) {
     for( auto &s : sl ) { s = tex2label( s, true ); }
