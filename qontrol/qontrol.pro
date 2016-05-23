@@ -69,6 +69,7 @@ SOURCES += \
   ../elems/tdyn3d.cpp \
   ../elems/tdynlink3d.cpp \
   ../elems/textrlatch.cpp \
+  ../elems/terrmeasure.cpp \
   ../elems/textrtest.cpp \
   ../elems/tfriction.cpp \
   ../elems/tfilesimple.cpp \
@@ -155,6 +156,7 @@ HEADERS += \
   ../elems/tdiffin.h \
   ../elems/tdyn3d.h \
   ../elems/tdynlink3d.h \
+  ../elems/terrmeasure.h \
   ../elems/textrlatch.h \
   ../elems/textrtest.h \
   ../elems/tfilesimple.h \

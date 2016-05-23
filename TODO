@@ -1,6 +1,5 @@
 "N" parm may used only while initial array creation. Need more design.
 Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
-List elems as params (for dyn).
 TMatrix3D(done) + rotate (separate/same) + Quaternion?
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
 DataHolders: ToXMLString
@@ -17,7 +16,6 @@ Redesign post_set(), *structChange. (half done?)
 Fill, import, export special arrays.
 Script 'help' function + list of top-level objects and functions.
 Documentaion: cmdline options (partial), common workflow.
-Show(edit?) HolderData props
 StatusTip(col=2) for StatusModel More: clarify 'col' meaning for objects
 1D{v,h}/2D slider inputs + 2-double pair data
 Create Action fun + subclass QAction? (menu to place, flags)
@@ -25,7 +23,6 @@ Controlled Scheme size.
 Error handling (from inner to iface)
 Store script errors (and data?)
 Excess? error in fromDom ... and/or show last error?
-New buttons for ObjDataWidget: need better (simple) labels.
 Indicate corresponding outs for selected plot
 Customized colors: struct view...
 Inputs - may be Elements? like TFileSource?
@@ -56,7 +53,6 @@ order -> only hint? or not use at all
 aliases/synlinks: to use 'current' subobjects.
 
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
-  -- TErrorMeasure
   -- TDefuzzy (fixed/variable number of inputs)
   -- or File Source input/output: TFileSource
   -- array of similar elements
