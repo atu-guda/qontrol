@@ -3,7 +3,6 @@ Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
 TMatrix3D(done) + rotate (separate/same) + Quaternion?
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
 DataHolders: ToXMLString
-Holder*Array -> long indexes, More dimensions. Measure vector::size_type=8, size_t=8. win32?
 TOutArr: use InputSimple (need conversion)
 TModel::startRun: list on vars to copy. List for engine aliases?
 chrono sleep_untill
@@ -33,9 +32,10 @@ Tests
 Autocorrelation?
 Shadow/backup/undo main scheme?
 More stylesheets
+Export/import file dialog with extra elements.
 props: v_min, v_max: precalculate?
 PlotLabel: real TeX, common TeX preambula +/= per label - or external program
-Allow to hide elems (like TMiso) in dialog
+Holder*Array -> More dimensions. Measure vector::size_type=8, size_t=8. win32?
 
 
 JS run dialog. + one-line above log viewer
@@ -47,12 +47,11 @@ Sub simulation? / set of dialog-ed values before run
 RunWindow?
 
 Edit large arrays
-TCircBuf + TDelay re*
-order -> only hint? or not use at all
 
 aliases/synlinks: to use 'current' subobjects.
 
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
+  -- Jumping ball (and similar) method
   -- TDefuzzy (fixed/variable number of inputs)
   -- or File Source input/output: TFileSource
   -- array of similar elements

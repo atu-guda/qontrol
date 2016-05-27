@@ -62,8 +62,11 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   setAttribute(Qt::WA_DeleteOnClose);
 
 
+  const int gr_marg = 1;
   auto grLay = new QGridLayout( main_part );
-  grLay->setContentsMargins( 2, 2, 2, 2 );
+  //grLay->setContentsMargins( gr_marg, gr_marg, gr_marg, gr_marg );
+  grLay->setHorizontalSpacing( gr_marg );
+  grLay->setVerticalSpacing( gr_marg );
 
   scrollArea = new QScrollArea( main_part );
 
@@ -96,11 +99,16 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   stam = new StatusModel( this );
   stam->setObjectName( "stam" );
 
-  grLay->addWidget( scrollArea, 0, 0, 2, 1 );
-  grLay->addWidget( outs_view, 0, 1 );
+  grLay->addWidget( scrollArea, 0, 0, 3, 1 );
+  grLay->addWidget( outs_view, 0, 1, 3, 1 );
   grLay->addWidget( plots_view, 0, 2 );
-  grLay->addWidget( sims_view, 1, 1 );
-  grLay->addWidget( schems_view, 1, 2 );
+  grLay->addWidget( sims_view, 1, 2 );
+  grLay->addWidget( schems_view, 2, 2 );
+
+  grLay->setRowStretch( 0, 2 );
+  grLay->setRowStretch( 1, 1 );
+  grLay->setRowStretch( 2, 1 );
+  grLay->setRowStretch( 3, 0 );
 
   main_part->setLayout( grLay );
 
