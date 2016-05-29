@@ -17,12 +17,13 @@
 
 #include <cmath>
 #include "tintegrator.h"
+#include "miscfun.h"
 
 using namespace std;
 
 const char* TIntegrator::helpstr = "<H1>TIntegrator</H1>\n"
  "<p>Realistic integrator: <br>\n"
- "Can has limits, discharge, reset, floating base.<br></p>\n";
+ "Can has limits, discharge, reset.<br></p>\n";
 
 STD_CLASSINFO(TIntegrator,clpElem );
 
@@ -35,62 +36,43 @@ CTOR(TIntegrator,TMiso)
 
 int TIntegrator::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
-  v_old = v = v_a = (double)out0_init;
-  t_rst = 0;
+  last_rst =  (double)out0_init;
+  v_old = v = v_a = last_rst;
+  t_rst = 0; was_rst = true;
   return 1;
 }
 
 
 double TIntegrator::f() noexcept
 {
-  double v_ret, base = 0, in;
-  if( useBase ) {
-    base = in_base;
-  }
-  if( useAdd ) {
-    base += out0_init;
-  }
-  if( useSqIn ) {
-    in = in_u * in_u;
-  }  else {
-    in = in_u;
-  }
+  double in = ( bool (useSqIn) ) ? pow2( in_u ) : in_u;
 
-  if( useReset && in_rst > 0.1 ) {
+  if( in_rst > 0.1 ) { // TODO: InputLogic
     t_rst = 0;
+    last_rst = (double)( v_rst );
+    v   = last_rst;
+    v_a = last_rst;
+    was_rst = true;
   };
 
-  if( t_rst < (ctdt/2) ) {  // start or reset case
-    v_ret = v;
-    if( useAver ) {
-      v = 0;  v_ret = v_a = in;
-    } else {
-      v = v_ret = v_a = out0_init;
-    };
-    if( useHold ) {
-      v_ret = v_old;
-    }
-  } else {
-    v += in * ctdt * ki;
-    if( useDis ) {
-      v -= ctdt * ( v - base ) * dis;
-    };
-    if( useMin  &&  v < vmin ) {
-      v = (double)vmin;
-    }
-    if( useMax  &&  v > vmax ) {
-      v = (double)vmax;
-    }
-    v_ret = v;
-    v_a = v_ret  / t_rst;
-    if( useAver ) {
-       v_ret = v_a;
-    };
+  v_old = v;
+  v += in * ctdt * ki; // TODO: different methods
+  if( useDis ) {
+    v -= ctdt * ( v - last_rst ) * dis;
   };
+  if( useMin  &&  v < vmin ) {
+    v = (double)vmin;
+  }
+  if( useMax  &&  v > vmax ) {
+    v = (double)vmax;
+  }
+  v_a = v / t_rst;
 
-  t_rst += ctdt; v_old = v_ret;
+  double v_ret = (useAver) ? v_a : v;
+
+  t_rst += ctdt; was_rst = false;
   if( useSqrOut ) {
-    v_ret = ( v_ret > 0 ) ? sqrt( v_ret ) : 0.0;
+    v_ret = sqrt0( v_ret );
   }
   return v_ret;
 }

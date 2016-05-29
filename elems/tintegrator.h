@@ -45,22 +45,20 @@ class TIntegrator : public TMiso  {
    PRM_DOUBLE( t_rst, efInner, "t_{rst}", "time from last reset", "" );
    PRM_DOUBLE( v_a,   efInner, "v_a", "Average value", "" );
    /** flags */
-   PRM_SWITCH( useMin,   efNRC, "use Min value", "limit output to minimum value", "sep=col" );
-   PRM_SWITCH( useMax,   efNRC, "use Max value", "limit output to maximum value", "" );
-   PRM_SWITCH( useReset, efNRC, "use Reset", "Use in_rst as Reset signal", "" );
-   PRM_SWITCH( useBase,  efNRC, "use Base",  "Use in_base as base signal", "" );
-   PRM_SWITCH( useAdd,   efNRC, "add base", "Add base to level", "" );
-   PRM_SWITCH( useDis,   efNRC, "use Discharge", "Use discharge coefficient", "sep=col" );
-   PRM_SWITCH( useHold,  efNRC, "Hold", "Hold output 1 tick after reset", "" );
-   PRM_SWITCH( useAver,  efNRC, "&Calc Aver", "Calculate average value", "" );
-   PRM_SWITCH( useSqIn,  efNRC, "x^{&2} on input", "Calculate square on input", "");
-   PRM_SWITCH( useSqrOut,efNRC, "\u221As&qrt(output)", "Calculate square root on output", "");
+   PRM_SWITCH( useAver,  efNRC, "output &Average", "Output average value", "sep=col" );
+   PRM_SWITCH( useDis,   efNRC, "use Discharge", "Use discharge coefficient", "" );
+   PRM_SWITCH( useMin,   efNRC, "limit Min value", "limit output to minimum value", "" );
+   PRM_SWITCH( useMax,   efNRC, "limit Max value", "limit output to maximum value", "" );
+   PRM_SWITCH( useSqIn,  efNRC, "x^{&2} on input", "Calculate square on input", "sep=col" );
+   PRM_SWITCH( useSqrOut,efNRC, "\u221As&qrt(output)", "Calculate square root on output", "" );
 
    PRM_INPUT( in_u, 0, "&in_u", "Main input",  "sep=block" );
    PRM_INPUT( in_rst, 0, "rst", "Reset signal", "sep=col" );
-   PRM_INPUT( in_base, 0, "Base", "Fourth input", "sep=col" );
+   PRM_INPUT( v_rst, 0, "v_{rst}", "Value of v on reset", "sep=col" );
 
    double v_old = 0;
+   double last_rst = 0;
+   bool was_rst = true;
 
    Q_CLASSINFO( "nameHintBase",  "int_" );
    DCL_DEFAULT_STATIC;

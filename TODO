@@ -1,3 +1,5 @@
+Common parts in TIntegrator, TLinP1Q0, TVibro.
+InputLogic: different ways to get bool value: Raise, Fall Both, Level....
 "N" parm may used only while initial array creation. Need more design.
 Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
 TMatrix3D(done) + rotate (separate/same) + Quaternion?

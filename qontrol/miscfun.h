@@ -67,6 +67,7 @@ inline double pow5( double x ) {  return pow2( x ) * pow3( x ); };
 inline double pow6( double x ) {  return pow2( pow3( x ) ); };
 inline double pow6s( double x ) {  return pow5( x ) * fabs( x ); };
 inline double sqrtabs( double x ) {  return std::sqrt( std::fabs( x ) ); };
+inline double sqrt0( double x ) {  return std::sqrt( posval( x ) ); };
 inline double sinqa( double x ) {  return std::sin( std::sqrt( std::fabs( x ) ) ); };
 
 // misc math functions
