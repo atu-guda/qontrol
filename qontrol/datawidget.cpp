@@ -1443,7 +1443,11 @@ void DataDialog::defaultData()
     return;
   }
   ds.suspendHandleStructChange();
-  ds.reset_dfl();
+  for( auto ho : ds.TCHILD(HolderData*) ) {
+    if( !ho->isRoTree( efROAny ) ) {
+      ho->reset_dfl();
+    }
+  }
   ds.resumeHandleStructChange();
   obj2visAll();
 }
