@@ -37,7 +37,6 @@ class TIntegrator : public TMiso  {
    virtual int miso_startLoop( long acnx, long acny ) override;
 
    PRM_PARAMD( ki,   0, "&k_i",  "Factor before integral", "def=1" );
-   PRM_PARAMD( dis,  0, "Disc coeff", "Discharde coeff (if enabled)", "def=1e-4" );
    PRM_PARAMD( vmin, 0, "Min limit", "Limit min value", "def=-10000" );
    PRM_PARAMD( vmax, 0, "Max limit", "Limit max value", "def=10000" );
 
@@ -46,7 +45,6 @@ class TIntegrator : public TMiso  {
    PRM_DOUBLE( v_a,   efInner, "v_a", "Average value", "" );
    /** flags */
    PRM_SWITCH( useAver,  efNRC, "output &Average", "Output average value", "sep=col" );
-   PRM_SWITCH( useDis,   efNRC, "use Discharge", "Use discharge coefficient", "" );
    PRM_SWITCH( useMin,   efNRC, "limit Min value", "limit output to minimum value", "" );
    PRM_SWITCH( useMax,   efNRC, "limit Max value", "limit output to maximum value", "" );
    PRM_SWITCH( useSqIn,  efNRC, "x^{&2} on input", "Calculate square on input", "sep=col" );

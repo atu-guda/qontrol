@@ -57,9 +57,6 @@ double TIntegrator::f() noexcept
 
   v_old = v;
   v += in * ctdt * ki; // TODO: different methods
-  if( useDis ) {
-    v -= ctdt * ( v - last_rst ) * dis;
-  };
   if( useMin  &&  v < vmin ) {
     v = (double)vmin;
   }
