@@ -15,19 +15,22 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "miscfun.h"
 #include "tlinp1q0.h"
 
-const char* TLinP1Q0::helpstr = "<H1>TLinP1Q0</H1>\n"
- "Integrate (linear if f(x)==x) diffefentional equation: <br>\n"
- "<b> dx/dt = a * f( ku * u(t) - x ) </b><br>\n"
- "Parameter <b>ku</b> -- amplification, can be changed at any time.<br>\n"
- "Parameter <b>a</b> -- frequency, can be changed at any time.<br>\n"
- " <b>a = 1 / tau; </B> "
- "where <B> tau </B> -- time constant.<br>\n"
- "Linear transfer function: <br>\n"
- "<B>W = ku / ( tau * p + 1 ) </B>.<br>\n"
- "If u(t) = theta(t) than x(t) = ku * ( 1 - exp(-t/tau) ), and<br>\n"
- " x(tau) = 0.6321 * ku \n"
+const char* TLinP1Q0::helpstr = "<h1>TLinP1Q0</h1>\n"
+ "<p>Integrate (linear if f(x)==x) differential equation: <br/>\n"
+ "<b> dx/dt = a * ( ku * u(t) - x ) </b><br/>\n"
+ "or<br/>\n"
+ "<b> dx/dt = a * ( ku * u(t) - f ) </b><br/>\n"
+ "Parameter <b>ku</b> -- amplification, can be changed at any time.<br/>\n"
+ "Parameter <b>a</b> -- frequency, can be changed at any time.<br/>\n"
+ " <b>a = 1 / tau; </b> "
+ "where <b> tau </b> -- time constant.<br/>\n"
+ "Linear transfer function: <br/>\n"
+ "<b>W = ku / ( tau * p + 1 ) </b>.<br/>\n"
+ "If u(t) = theta(t), than x(t) = ku * ( 1 - exp(-t/tau) ), and<br/>\n"
+ " x(tau) = 0.6321 * ku </p>\n"
  ;
 
 STD_CLASSINFO(TLinP1Q0,clpElem );
@@ -46,14 +49,11 @@ int TLinP1Q0::miso_startLoop( long /*acnx*/, long /*acny*/ )
 double TLinP1Q0::f() noexcept
 {
   double f = ( use_u1 ) ? in_f : x_old;
-  double u = in_u;
-  if( use_u2 ) {
-    u *= u;
-  };
+  double u = ( use_u2 ) ? pow2( in_u ) : in_u;
   // TODO: check this for stability
   double x = x_old + a * ctdt * ( ku * u - f );
   x_old = x;
-  return x;
+  return ( use_sqrt0 ) ? sqrt0( x ) : x;
 }
 
 DEFAULT_FUNCS_REG(TLinP1Q0)

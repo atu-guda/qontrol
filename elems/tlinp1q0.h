@@ -40,10 +40,11 @@ class TLinP1Q0 : public TMiso  {
    virtual double f() noexcept override;
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   PRM_PARAMD( a,      0, "&a", "a in dx/dt = a*f(ku*u(t)-x)", "def=1" );
-   PRM_PARAMD( ku,     0, "&k_u",  "Amplification: coefficient near u(t) ", "def=1" );
-   PRM_SWITCH( use_u1, 0, "&use in_f as f()", "Use in_f as source of f()", "sep=col" );
-   PRM_SWITCH( use_u2, 0, "u^&2", "Calculate u^2 before usage", "" );
+   PRM_PARAMD( a,         0, "&a", "a in dx/dt = a*f(ku*u(t)-x)", "def=1" );
+   PRM_PARAMD( ku,        0, "&k_u",  "Amplification: coefficient near u(t) ", "def=1" );
+   PRM_SWITCH( use_u1,    0, "use in_f as &f()", "Use in_f as source of f()", "sep=col" );
+   PRM_SWITCH( use_u2,    0, "u^&2", "Calculate u^2 before usage", "" );
+   PRM_SWITCH( use_sqrt0, 0, "sqrt0(x)", "Output sqrt0(x)", "" );
 
    PRM_INPUT( in_u,    0, "&in_u", "Signal input",  "sep=block" );
    PRM_INPUT( in_f,    0, "in_f", "Functional input", "sep=col" );
