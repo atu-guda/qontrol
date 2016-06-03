@@ -63,11 +63,12 @@ double TIntegrator::f() noexcept
   if( useMax  &&  v > vmax ) {
     v = (double)vmax;
   }
-  v_a = v / t_rst;
 
-  double v_ret = (useAver) ? v_a : v;
 
   t_rst += ctdt; was_rst = false;
+  v_a = v / t_rst;
+  double v_ret = (useAver) ? v_a : v;
+
   if( useSqrOut ) {
     v_ret = sqrt0( v_ret );
   }

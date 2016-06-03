@@ -55,9 +55,6 @@ double TFriction::f() noexcept
 {
   double f, x, f_fd, cf_mx;
   double fx = in_u;
-  if( mass <= 0 ) { // failsafe
-    mass = 1e-20;
-  }
 
   if( useMf ) {
     cf_mx = in_f_mx;

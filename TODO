@@ -1,4 +1,5 @@
 InputLogic: different ways to get bool value: Raise, Fall Both, Level....
+Need correct place for TOutArr get call.
 "N" parm may used only while initial array creation. Need more design.
 Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
 Common parts in TIntegrator, TLinP1Q0, TVibro.
