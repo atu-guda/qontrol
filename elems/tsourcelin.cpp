@@ -41,7 +41,7 @@ CTOR(TSourceLin,TMiso),
 double TSourceLin::f() noexcept
 {
   double tr, v;
-  tr = ct - t_start;
+  tr = u - t_start;
   while( tr > t_int[curr_lin] ) { // find next line (may be not the next)
     tr -= t_int[curr_lin]; t_start += t_int[curr_lin];
     curr_lin++;
@@ -49,8 +49,13 @@ double TSourceLin::f() noexcept
       curr_lin = 0;
   };
   v = vs[curr_lin] + slopes[curr_lin] * tr;
-  v *= a;
+  v *= a; v += b;
   return v;
+}
+
+void TSourceLin::do_post_set()
+{
+  recalc();
 }
 
 
@@ -66,6 +71,7 @@ void TSourceLin::recalc(void)
 {
   int n = t_int.arrSize();
   slopes.assign( n, 0 );
+  T_c = 0; omega = 1e10;
 
   // fail-safe
   if( t_int[0] <= 0 )
@@ -77,7 +83,9 @@ void TSourceLin::recalc(void)
       break;
     };
     slopes[i] = ( ve[i] - vs[i] ) / t_int[i];
+    T_c += t_int[i];
   };
+  omega = 2 * M_PI / T_c;
 }
 
 

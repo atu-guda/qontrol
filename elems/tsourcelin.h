@@ -35,12 +35,20 @@ class TSourceLin : public TMiso  {
    /** called before each inner param loop. Unused param - -1 */
    void recalc(void);
  protected:
-   /** main computation function */
    virtual double f() noexcept override;
-   /** times of lines, <=0 - end */
    virtual int miso_startLoop( long acnx, long acny ) override;
+   virtual void do_post_set() override;
 
    PRM_PARAMD( a,  0, "&a", "Common factor", "sep=col\ndef=1" );
+   PRM_PARAMD( b,  0, "&b", "Shift", "" );
+
+   PRM_SWITCH( cycle_before, 0, "Cycle bef&ore", "Continue function periodicaly at t<0", "sep=col\ndef=1" );
+   PRM_SWITCH( cycle_after,  0, "Cycle af&ter",  "Continue function periodicaly at t>T_c", "def=1" );
+
+   PRM_DOUBLE( T_c,    efRO, "T_c",     "Period", "sep=block" );
+   PRM_DOUBLE( omega,  efRO, "\\omega", "Frequency", "sep=col" );
+
+   PRM_INPUT( u, 0, "&u", "Input",  "sep=block\ndef=t" );
 
    // time 0 means end of sequence - to start
    PRM_DOUBLE_ARR( t_int, efNRC, "t_{i}", "Time intervals", "N=16\ndef=0\ndefs=1 1 1  1  1 0\nmin=0\nsep=tab\ntabname=Arrays" );

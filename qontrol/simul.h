@@ -52,7 +52,6 @@ class Simulation : public LinkedObj  {
   //virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
   virtual QIcon getIcon() const override;
 
-  virtual void do_post_set() override;
 
  protected:
   // simulation parameters, borrowed/renamed from TModel
@@ -104,6 +103,8 @@ class Simulation : public LinkedObj  {
   PRM_LONG( n1_eff, efInner, "n1_eff", "Effective number of iteration in inner loop" , "" );
   PRM_LONG( n2_eff, efInner, "n2_eff", "Effective number of iteration in outer loop" , "" );
   PRM_LONG( n_tot, efInner, "n_tot", "Total number of iterations" , "" );
+
+  virtual void do_post_set() override;
 
   Q_CLASSINFO( "nameHintBase",  "sim" );
   DCL_DEFAULT_STATIC;
