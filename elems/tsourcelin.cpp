@@ -61,15 +61,19 @@ double TSourceLin::f() noexcept
     }
   }
 
-  curr_lin = 0; // TODO: lower_bound....
-  double t_rr = t_r; // reative from current slopy start
-  while( t_rr > t_int[curr_lin] ) { // find next line (may be not the next)
-    t_rr -= t_int[curr_lin]; t_start += t_int[curr_lin];
-    curr_lin++;
-    if( curr_lin >= n_lin ) {
-      curr_lin = 0; break;
-    }
-  };
+  auto clp = upper_bound( tsta.begin(), tsta.end(), (double)(t_r) );
+  // if( clp == tsta.end() ) { // failsafe, unlikely
+  //   qWarning() << " t_r override: t_r= " << t_r << " back: " << tsta.back() << NWHE;
+  // }
+  if( clp != tsta.begin() ) { // failsafe, likely, as started from 0
+    --clp;
+  }
+
+  int curr_lin = clp - tsta.begin();
+  n_rr = curr_lin;
+
+  t_r0 = *clp;
+  t_rr = t_r - t_r0; // reative from current slopy start
   v = vs[curr_lin] + slopes[curr_lin] * t_rr;
   v *= a; v += b;
   return v;
@@ -84,7 +88,6 @@ void TSourceLin::do_post_set()
 int TSourceLin::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   recalc();
-  t_start = 0; curr_lin = 0;
   out0 = vs[0];
   return 1;
 }
@@ -92,12 +95,13 @@ int TSourceLin::miso_startLoop( long /*acnx*/, long /*acny*/ )
 void TSourceLin::recalc(void)
 {
   int n = t_int.arrSize();
-  slopes.assign( n, 0 );
+  slopes.assign( n, 0 ); tsta.assign( n, 1e100 );
   T_c = 0; omega = 1e10;
 
   // fail-safe
-  if( t_int[0] <= 0 )
+  if( t_int[0] <= 0 ) {
     t_int[0] = 1;
+  }
 
   for( int i=0; i<n; ++i ) {
     if( t_int[i] <= 0 ) {
@@ -105,9 +109,15 @@ void TSourceLin::recalc(void)
       break;
     };
     slopes[i] = ( ve[i] - vs[i] ) / t_int[i];
+    tsta[i] = T_c;
     T_c += t_int[i];
   };
+  tsta[n_lin] = T_c;
   omega = 2 * M_PI / T_c;
+
+  // for( int j=0; j<n_lin; ++j ) {
+  //   qWarning() << "tsta[" << j << "]= " << tsta[j] << " a = " << slopes[j];
+  // }
 }
 
 

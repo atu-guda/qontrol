@@ -48,6 +48,9 @@ class TSourceLin : public TMiso  {
    PRM_DOUBLE( T_c,    efRO, "T_c",     "Period", "sep=block" );
    PRM_DOUBLE( omega,  efRO, "\\omega", "Frequency", "sep=col" );
    PRM_DOUBLE( t_r,  efInner, "t_r", "relative time", "" );
+   PRM_DOUBLE( t_rr,  efInner, "t_{rr}", "relative to slope start time", "" );
+   PRM_DOUBLE( t_r0,  efInner, "t_{r0}", "slope start time", "" );
+   PRM_DOUBLE( n_rr,  efInner, "n_{rr}", "slope number", "" );
 
    PRM_INPUT( u, 0, "&u", "Input",  "sep=block\ndef=t" );
 
@@ -58,10 +61,9 @@ class TSourceLin : public TMiso  {
 
    /** slope values of each line */
    dvector slopes;
-   /** number of lines, current line */
-   int n_lin = 0, curr_lin = 0;
-   /** start time of current line */
-   double t_start = 0;
+   dvector tsta; //* start time of every slope
+   /** number of lines */
+   int n_lin = 0;
 
    Q_CLASSINFO( "nameHintBase",  "solin_" );
    DCL_DEFAULT_STATIC;
