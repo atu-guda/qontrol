@@ -48,9 +48,9 @@ double TLorenz::f() noexcept
   vy = x * r - xz - y;
   vz = xy - b*z;
 
-  x += ctdt * vx + in_x;
-  y += ctdt * vy + in_y;
-  z += ctdt * vz + in_z;
+  x += ctdt * ( vx + in_x );
+  y += ctdt * ( vy + in_y );
+  z += ctdt * ( vz + in_z );
   calcAux();
   return x;
 }

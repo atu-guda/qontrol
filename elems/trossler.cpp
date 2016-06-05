@@ -47,9 +47,9 @@ double TRossler::f() noexcept
   vy =  x + a*y;
   vz =  b + xz - z*c;
 
-  x += ctdt * vx + in_x;
-  y += ctdt * vy + in_y;
-  z += ctdt * vz + in_z;
+  x += ctdt * ( vx + in_x );
+  y += ctdt * ( vy + in_y );
+  z += ctdt * ( vz + in_z );
   calcAux();
   return x;
 }
