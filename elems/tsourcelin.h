@@ -47,6 +47,7 @@ class TSourceLin : public TMiso  {
 
    PRM_DOUBLE( T_c,    efRO, "T_c",     "Period", "sep=block" );
    PRM_DOUBLE( omega,  efRO, "\\omega", "Frequency", "sep=col" );
+   PRM_DOUBLE( t_r,  efInner, "t_r", "relative time", "" );
 
    PRM_INPUT( u, 0, "&u", "Input",  "sep=block\ndef=t" );
 

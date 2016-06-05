@@ -40,15 +40,37 @@ CTOR(TSourceLin,TMiso),
 
 double TSourceLin::f() noexcept
 {
-  double tr, v;
-  tr = u - t_start;
-  while( tr > t_int[curr_lin] ) { // find next line (may be not the next)
-    tr -= t_int[curr_lin]; t_start += t_int[curr_lin];
+  double v;
+  t_r = u;
+
+  if( (double)(t_r) < 0 ) {
+    if( cycle_before )  {
+      int nc = floor( t_r / T_c );
+      t_r -= nc * T_c;
+    } else {
+      t_r = 0;
+    }
+  }
+
+  if( (double)(t_r) > (double)(T_c) ) {
+    if( cycle_after ) {
+      int nc = floor( t_r / T_c );
+      t_r -= nc * T_c;
+    } else {
+      t_r = T_c;
+    }
+  }
+
+  curr_lin = 0; // TODO: lower_bound....
+  double t_rr = t_r; // reative from current slopy start
+  while( t_rr > t_int[curr_lin] ) { // find next line (may be not the next)
+    t_rr -= t_int[curr_lin]; t_start += t_int[curr_lin];
     curr_lin++;
-    if( curr_lin >= n_lin )
-      curr_lin = 0;
+    if( curr_lin >= n_lin ) {
+      curr_lin = 0; break;
+    }
   };
-  v = vs[curr_lin] + slopes[curr_lin] * tr;
+  v = vs[curr_lin] + slopes[curr_lin] * t_rr;
   v *= a; v += b;
   return v;
 }
