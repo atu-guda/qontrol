@@ -2750,7 +2750,7 @@ QDomElement TDataSet::toDom( QDomDocument &dd, bool forceType ) const
 void TDataSet::do_post_set()
 {
   // do nothing
-};
+}
 
 
 // end of dataset.cpp

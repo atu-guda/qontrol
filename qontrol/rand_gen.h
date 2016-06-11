@@ -9,8 +9,8 @@
 class RandGenerator {
   public:
    RandGenerator() = default;
-   ~RandGenerator() { gsl_rng_free( rng );  rng = nullptr; };
-   void set( unsigned long s ) { gsl_rng_set( rng, s ); };
+   ~RandGenerator() { gsl_rng_free( rng );  rng = nullptr; }
+   void set( unsigned long s ) { gsl_rng_set( rng, s ); }
    unsigned long min() const { return gsl_rng_min( rng ); }
    unsigned long max() const { return gsl_rng_max( rng ); }
    unsigned long get() { return gsl_rng_get( rng ); }

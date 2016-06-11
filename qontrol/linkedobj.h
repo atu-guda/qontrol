@@ -150,7 +150,7 @@ class InputAbstract : public LinkedObj {
   QString prepTextVisual( bool isLong ) const;
   Q_INVOKABLE virtual QString textVisual() const override;
   //* return ptr to LinkedObj, which holds element or nullptr;
-  const LinkedObj* getSourceObj() const noexcept { return src_obj; };
+  const LinkedObj* getSourceObj() const noexcept { return src_obj; }
   void readInput() noexcept { out0 = *p * factor + shift; } ;
   void setInput( double v ) noexcept { out0 = v; } ; // to use while f_d();
   int  getLinkType() const noexcept { return linkType; }
@@ -159,8 +159,8 @@ class InputAbstract : public LinkedObj {
   virtual void set_link();
 
   // less operators for double: const only
-  operator double() const noexcept { return out0; };
-  const double* caddr() const noexcept { return p; };
+  operator double() const noexcept { return out0; }
+  const double* caddr() const noexcept { return p; }
   Q_INVOKABLE double vc() const noexcept { return out0; } // synonims
   double cval() const noexcept { return out0; }
 
@@ -226,10 +226,10 @@ class ParamDouble : public InputAbstract {
   // virtual ~ParamDouble() override;
   DCL_CREATE;
   DCL_STD_INF;
-  virtual QIcon getIcon() const override { return QIcon(); }; // empty icon: save space
-  operator double&() { return out0; };
+  virtual QIcon getIcon() const override { return QIcon(); } // empty icon: save space
+  operator double&() { return out0; }
   double& operator=( double rhs ) { out0 = rhs; return out0; }
-  Q_INVOKABLE bool isFixparmNeed() const { return need_fixparm; };
+  Q_INVOKABLE bool isFixparmNeed() const { return need_fixparm; }
   // virtual void set_link() override;
  protected:
   // virtual void do_post_set() override;

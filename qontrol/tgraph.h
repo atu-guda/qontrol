@@ -161,7 +161,7 @@ class PlotLabel : public LinkedObj {
    // virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
    DCL_CREATE;
    DCL_STD_INF;
-   virtual void do_reset() override { labelReady = false; labelWithSubst = QString(); };
+   virtual void do_reset() override { labelReady = false; labelWithSubst = QString(); }
    virtual void do_post_set() override;
 
    enum CoordType {

@@ -23,7 +23,7 @@ class TRootData : public TDataSet {
    virtual ~TRootData() override;
    DCL_CREATE;
    DCL_STD_INF;
-   const LaboDoc* getDoc() const { return doc; };
+   const LaboDoc* getDoc() const { return doc; }
    void setDoc( const LaboDoc *a_doc ) { doc = a_doc; }
    TModel *getModel() { return model; }
    QString getFilePath() const; // pass to doc, in exists

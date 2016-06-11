@@ -13,7 +13,7 @@
 class AutoIncDec {
   public:
    explicit AutoIncDec( int &av ) : v(av) { ++v; }
-   ~AutoIncDec() { --v; };
+   ~AutoIncDec() { --v; }
   private:
    int &v;
 };
@@ -22,7 +22,7 @@ class AutoIncDec {
 class AtScopeExit {
   public:
    using ExitFunType = const std::function<void()>;
-   explicit AtScopeExit( ExitFunType &a_action ) : action( a_action ) {};
+   explicit AtScopeExit( ExitFunType &a_action ) : action( a_action ) {}
    ~AtScopeExit() {  try {    action(); } catch(...) {}   }
   private:
     ExitFunType action;

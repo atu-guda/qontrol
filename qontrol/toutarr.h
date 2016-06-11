@@ -90,7 +90,7 @@ class TOutArr : public LinkedObj  {
    Q_INVOKABLE double getAbsDev() const {  return absdev_x; }
    Q_INVOKABLE double getAutoCorr() const { return acorr; }
    Q_INVOKABLE QString getAllStats( QString sep = "; ") const;
-   Q_INVOKABLE bool isAllFinite() const { return isfin; };
+   Q_INVOKABLE bool isAllFinite() const { return isfin; }
  protected:
    virtual void do_reset() override;
    virtual void do_structChanged() override;

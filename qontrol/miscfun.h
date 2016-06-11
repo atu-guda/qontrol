@@ -53,22 +53,22 @@ int isGoodName( const QString &s );
 QString flags2str( int fl );
 
 /** signum function y = -1:0:1 */
-inline double sign( double x ) {  return ( x>0 ) ? 1 : ( ( x<0 ) ? -1 : 0 ); };
+inline double sign( double x ) {  return ( x>0 ) ? 1 : ( ( x<0 ) ? -1 : 0 ); }
 /** Heaviside */
-inline double thetta( double x ) { return ( x>0 ) ? 1 : 0; };
-inline double posval( double x ) { return ( x>=0 ) ? x : 0; };
+inline double thetta( double x ) { return ( x>0 ) ? 1 : 0; }
+inline double posval( double x ) { return ( x>=0 ) ? x : 0; }
 // first power functions
-inline double pow2( double x ) {  return x * x; };
-inline double pow2s( double x ) {  return x * fabs(x); };
-inline double pow3( double x ) {  return x * x * x; };
-inline double pow4( double x ) {  return pow2( pow2 ( x ) ); };
-inline double pow4s( double x ) {  return pow3( x ) * fabs( x ); };
-inline double pow5( double x ) {  return pow2( x ) * pow3( x ); };
-inline double pow6( double x ) {  return pow2( pow3( x ) ); };
-inline double pow6s( double x ) {  return pow5( x ) * fabs( x ); };
-inline double sqrtabs( double x ) {  return std::sqrt( std::fabs( x ) ); };
-inline double sqrt0( double x ) {  return std::sqrt( posval( x ) ); };
-inline double sinqa( double x ) {  return std::sin( std::sqrt( std::fabs( x ) ) ); };
+inline double pow2( double x ) {  return x * x; }
+inline double pow2s( double x ) {  return x * fabs(x); }
+inline double pow3( double x ) {  return x * x * x; }
+inline double pow4( double x ) {  return pow2( pow2 ( x ) ); }
+inline double pow4s( double x ) {  return pow3( x ) * fabs( x ); }
+inline double pow5( double x ) {  return pow2( x ) * pow3( x ); }
+inline double pow6( double x ) {  return pow2( pow3( x ) ); }
+inline double pow6s( double x ) {  return pow5( x ) * fabs( x ); }
+inline double sqrtabs( double x ) {  return std::sqrt( std::fabs( x ) ); }
+inline double sqrt0( double x ) {  return std::sqrt( posval( x ) ); }
+inline double sinqa( double x ) {  return std::sin( std::sqrt( std::fabs( x ) ) ); }
 
 // misc math functions
 double deadLine( double x, double x0 );
@@ -85,19 +85,19 @@ double limitAngleDeg( double a ); // limits angle to [0;360)
 void beautifyScale( double &a, double &b ); // make gooa scale for plot
 
 // limit checks
-inline bool isInBounds(   double l, double x, double r ) { return (x>=l) && (x<=r); };
-inline bool isInBounds(      int l,    int x,    int r ) { return (x>=l) && (x<=r); };
-inline bool isInBounds(     long l,   long x,   long r ) { return (x>=l) && (x<=r); };
-inline bool isInBoundsNE( double l, double x, double r ) { return (x>l)  && (x<r);  };
-inline bool isInBoundsNE(    int l,    int x,    int r ) { return (x>l)  && (x<r);  };
-inline bool isInBoundsNE(   long l,   long x,   long r ) { return (x>l)  && (x<r);  };
+inline bool isInBounds(   double l, double x, double r ) { return (x>=l) && (x<=r); }
+inline bool isInBounds(      int l,    int x,    int r ) { return (x>=l) && (x<=r); }
+inline bool isInBounds(     long l,   long x,   long r ) { return (x>=l) && (x<=r); }
+inline bool isInBoundsNE( double l, double x, double r ) { return (x>l)  && (x<r);  }
+inline bool isInBoundsNE(    int l,    int x,    int r ) { return (x>l)  && (x<r);  }
+inline bool isInBoundsNE(   long l,   long x,   long r ) { return (x>l)  && (x<r);  }
 // bound to given region
 inline double vBound(   double l, double x, double r )
-  { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
+  { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; }
 inline int    vBound(      int l,    int x,    int r )
-  { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
+  { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; }
 inline long    vBound(     long l,   long x,   long r )
-  { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; };
+  { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; }
 // bounds with EPS
 inline double limitUpEps( double x, double lv )
   { return ( x < lv - D_EPS ) ? x : (lv - D_EPS); }

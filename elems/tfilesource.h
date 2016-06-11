@@ -44,7 +44,7 @@ class TFileSource : public TMiso  {
    struct LineData {
      double v[max_col];
      LineData() { reset(); }
-     void reset() { for( auto &a :v ) { a = 0.0; }; };
+     void reset() { for( auto &a :v ) { a = 0.0; }; }
    };
  protected:
 

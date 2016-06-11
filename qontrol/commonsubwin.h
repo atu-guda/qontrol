@@ -35,7 +35,7 @@ class CommonSubwin : public QMainWindow  {
    QString getFileBase() const;
    void updateTitle();
    bool isMainWin() const { return main_win; }
-   LaboDoc *getDocument() const { return  doc; };
+   LaboDoc *getDocument() const { return  doc; }
    virtual bool callSlot( const char *nm ) = 0;
    virtual bool checkSlot( const char *nm ) = 0;
    using ViewNameMap = QMap<QString,CmdView*>;

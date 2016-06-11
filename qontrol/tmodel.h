@@ -49,9 +49,9 @@ class TModel : public LinkedObj  {
   double* getMapDoublePtr( const QString &nm );
   Q_INVOKABLE QString getOutValue( const QString &nm ) const;
 
-  Scheme* getActiveScheme() const { return schems->getObjT<Scheme*>( "main_s" ); };
+  Scheme* getActiveScheme() const { return schems->getObjT<Scheme*>( "main_s" ); }
   //* returns active Simulation
-  Simulation* getActiveSimulation() const { return sims->getActiveObjT<Simulation*>(); };
+  Simulation* getActiveSimulation() const { return sims->getActiveObjT<Simulation*>(); }
 
 
   /** returns ptr to TOutArr by name */

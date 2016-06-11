@@ -30,7 +30,7 @@ class SubOutput : public LinkedObj {
   // virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
   DCL_CREATE;
   DCL_STD_INF;
-  void getInput() { out0 = *p; };
+  void getInput() { out0 = *p; }
   double value() const { return *p; }
   bool set_link();
  protected:

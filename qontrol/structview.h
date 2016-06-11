@@ -77,7 +77,7 @@ class StructView : public CmdView  {
     /** returns ptr to selected element or nullptr if none */
     TMiso* getSelElm() const { return selObj; }
     virtual void handleSelChange() override;
-    virtual HolderData* getSelObj() const override { return selObj; };
+    virtual HolderData* getSelObj() const override { return selObj; }
     /** returns ptr to marked element or nullptr if none */
     TMiso* getMarkElm() const { return markObj; }
     /** returns level for aux objects selection */

@@ -85,7 +85,7 @@ struct TClassInfo {
 
 //* declare common ctor
 #define DCL_CTOR(clname) \
-  clname( ARGS_CTOR );
+  clname( ARGS_CTOR )
 
 //* and header for ctor _definition_
 #define CTOR(clname,par_class) \
@@ -94,12 +94,12 @@ struct TClassInfo {
 
 //* declare creator function
 #define DCL_CREATE \
-  static HolderData* create( ARGS_CTOR );
+  static HolderData* create( ARGS_CTOR )
 
 //* declare common info functions
 #define DCL_STD_INF \
   virtual const TClassInfo* getClassInfo() const override; \
-  virtual const char* getHelp() const override; \
+  virtual const char* getHelp() const override
 
 //* declare common data manipulation functions
 #define DCL_STD_GETSET \
@@ -139,7 +139,7 @@ struct TClassInfo {
 // class_info definition under alias (for data holders HolderInt->int)
 #define STD_CLASSINFO_ALIAS(clname,clp,alias) \
   TClassInfo clname::class_info =  \
-    { QStringLiteral( #alias ), clname::create, helpstr, clp, &staticMetaObject };
+    { QStringLiteral( #alias ), clname::create, helpstr, clp, &staticMetaObject }
 
 // standard class_info definition
 #define STD_CLASSINFO(clname,clp) STD_CLASSINFO_ALIAS(clname,clp,clname)
@@ -196,16 +196,16 @@ class HolderData : public QAbstractItemModel {
     * returns true if this object is base or save of given type.
     * if cl_name is empty, return true in >= TDataSet */
   Q_INVOKABLE bool isObject( const QString &cl_name = QString() ) const;
-  Q_INVOKABLE int getClassProps() const { return getClassInfo()->props; };
-  Q_INVOKABLE int hasClassProps( int clp ) const { return (getClassInfo()->props) & clp; };
+  Q_INVOKABLE int getClassProps() const { return getClassInfo()->props; }
+  Q_INVOKABLE int hasClassProps( int clp ) const { return (getClassInfo()->props) & clp; }
   // count number of elements of given type, optionally with named started with nm_start
   Q_INVOKABLE int countObjsOfType( const QString &tp, const QString &nm_start = QString() ) const;
   Q_INVOKABLE QString hintName( const QString &tp, const QString &nm_start = QString() ) const;
   Q_INVOKABLE void addFlags( int a_flags ) noexcept { flags |= a_flags; }
   Q_INVOKABLE void setImmutable() noexcept { flags |= efImmutable; }
   Q_INVOKABLE int  getFlags() const noexcept { return flags; }
-  Q_INVOKABLE bool hasAllFlags( int flg ) const noexcept { return ( flags & flg ) == flg; };
-  Q_INVOKABLE bool hasAnyFlags( int flg ) const noexcept { return ( flags & flg ); };
+  Q_INVOKABLE bool hasAllFlags( int flg ) const noexcept { return ( flags & flg ) == flg; }
+  Q_INVOKABLE bool hasAnyFlags( int flg ) const noexcept { return ( flags & flg ); }
   Q_INVOKABLE bool isRoTree( int flg = efRO ) const;
   HolderData* getParent() const noexcept { return par; } // no Q_INVOKABLE: need reg HolderData
   // return ptr to ancestor of given type
@@ -336,7 +336,7 @@ class HolderData : public QAbstractItemModel {
   const QSSMap& getAllParms() const { return parms; }
 
   Q_INVOKABLE bool setDatas( const QString &datas ); //* data sep: newline
-  Q_INVOKABLE QString getType() const { return getClassInfo()->className; };
+  Q_INVOKABLE QString getType() const { return getClassInfo()->className; }
   virtual const char* getHelp() const  = 0;
   Q_INVOKABLE virtual void reset_dfl() = 0; // reset to default value ("def" parm). No TMiso reset()!
   Q_INVOKABLE virtual bool set( const QVariant & x, int idx = 0 ) = 0;
@@ -361,7 +361,7 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE int getActiveIdx() const { return active_idx; }
   Q_INVOKABLE void setActiveIdx( int i );
   Q_INVOKABLE bool setActiveObj( const QString &nm );
-  HolderData* getActiveObj() const { return getObj( active_idx ); };
+  HolderData* getActiveObj() const { return getObj( active_idx ); }
   template<typename T> T getActiveObjT() const
       {
         return qobject_cast<T>( getActiveObj() );
@@ -396,7 +396,7 @@ class HolderData : public QAbstractItemModel {
    void sigStructChanged();
  protected:
   virtual void do_post_set() = 0;
-  virtual void do_reset() {}; //* adjustable reset function
+  virtual void do_reset() {} //* adjustable reset function
   /** do real actions after structure changed */
   virtual void do_structChanged();
   bool restoreParmsFromDom( QDomElement &de );
@@ -575,7 +575,7 @@ class HolderColor : public HolderValue {
   DCL_STD_GETSET;
   STD_CONVERSIONS(QColor);
   INNER_ASSIGN(HolderColor);
-  int toInt() const { return (int)( v.rgb() ); };
+  int toInt() const { return (int)( v.rgb() ); }
   int red() const { return v.red(); }
   int green() const { return v.green(); }
   int blue() const { return v.blue(); }
@@ -623,7 +623,7 @@ class HolderDate : public HolderValue {
   DCL_STD_GETSET;
   STD_CONVERSIONS(QDate);
   INNER_ASSIGN(HolderDate);
-  int toInt() const { return (int)( v.toJulianDay() ); };
+  int toInt() const { return (int)( v.toJulianDay() ); }
   int day() const { return v.day(); }
   int month() const { return v.month(); }
   int year() const { return v.year(); }
@@ -648,7 +648,7 @@ class HolderTime : public HolderValue {
   DCL_STD_GETSET;
   STD_CONVERSIONS(QTime);
   INNER_ASSIGN(HolderTime);
-  int toInt() const { return (int)( v.msecsSinceStartOfDay() ); };
+  int toInt() const { return (int)( v.msecsSinceStartOfDay() ); }
   int msec() const { return v.msec(); }
   int second() const { return v.second(); }
   int minute() const { return v.minute(); }
@@ -677,8 +677,8 @@ class HolderIntArray : public HolderValue {
   virtual arrsize_type arrSize() const override { return v.size(); }
   STD_CONVERSIONS(std::vector<int>);
   INNER_ASSIGN(HolderIntArray);
-  int operator[]( arrsize_type i ) const { return v[i]; };
-  int& operator[]( arrsize_type i ) { return v[i]; };
+  int operator[]( arrsize_type i ) const { return v[i]; }
+  int& operator[]( arrsize_type i ) { return v[i]; }
  protected:
   std::vector<int> v;
   Q_CLASSINFO( "nameHintBase",  "ia_" );
@@ -700,8 +700,8 @@ class HolderDoubleArray : public HolderValue {
   virtual arrsize_type arrSize() const override { return v.size(); }
   STD_CONVERSIONS(std::vector<double>);
   INNER_ASSIGN(HolderDoubleArray);
-  double operator[]( arrsize_type i ) const { return v[i]; };
-  double& operator[]( arrsize_type i ) { return v[i]; };
+  double operator[]( arrsize_type i ) const { return v[i]; }
+  double& operator[]( arrsize_type i ) { return v[i]; }
  protected:
   std::vector<double> v;
   Q_CLASSINFO( "nameHintBase",  "da_" );
@@ -723,8 +723,8 @@ class HolderStringArray : public HolderValue {
   virtual arrsize_type arrSize() const override { return v.size(); }
   STD_CONVERSIONS(QStringList);
   INNER_ASSIGN(HolderStringArray);
-  QString operator[]( arrsize_type i ) const { return v[i]; };
-  QString& operator[]( arrsize_type i ) { return v[i]; };
+  QString operator[]( arrsize_type i ) const { return v[i]; }
+  QString& operator[]( arrsize_type i ) { return v[i]; }
  protected:
   QStringList v;
   Q_CLASSINFO( "nameHintBase",  "sa_" );
