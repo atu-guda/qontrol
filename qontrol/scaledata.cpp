@@ -21,10 +21,6 @@ CTOR(ScaleData,TDataSet)
   reset_dfl();
 }
 
-ScaleData::~ScaleData()
-{
-}
-
 
 DEFAULT_FUNCS_REG(ScaleData)
 

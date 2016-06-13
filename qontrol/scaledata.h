@@ -19,7 +19,7 @@ class ScaleData : public TDataSet
   Q_OBJECT
   public:
    DCL_CTOR(ScaleData);
-   virtual ~ScaleData() override;
+   // virtual ~ScaleData() override;
    DCL_CREATE;
    DCL_STD_INF;
 

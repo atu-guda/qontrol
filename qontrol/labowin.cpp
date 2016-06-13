@@ -38,7 +38,6 @@ LaboWin::LaboWin()
     log_timer( new QTimer( this ) ),
     setti( new SettingsData( "settings", nullptr, 0, "settings", "Data settings" ) )
 {
-  setti->reset_dfl();
   setti->load();
   setWindowTitle( PACKAGE " " VERSION );
 
