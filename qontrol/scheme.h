@@ -68,8 +68,8 @@ class Scheme : public LinkedObj  {
   virtual int post_startLoop() override; // for preCalc
 
 
-  PRM_STRING( descr, efNRC, "description", "Scheme description", "max=1024\nprops=STRING,MLINE\nncol=-1\nsep=blockend");
-  PRM_STRING( breakObjNm, efInner, "Break objname", "Name of object, which call fback", "");
+  PRM_STRING( descr, efNRC, "description", "Scheme description", "max=1024\nprops=STRING,MLINE\nncol=-1\nsep=tabend\ntabname=objs");
+  PRM_STRING( breakObjNm, efInner, "Break objname", "Name of object, which called fback", "");
   // ======================= invisible vars ======================
   /** run type */
   int run_type = -1; // reset

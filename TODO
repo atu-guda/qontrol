@@ -5,6 +5,7 @@ TOutArr skip/range[min,max], enable.
 InputLogic: different ways to get bool value: Raise, Fall Both, Level....
 "N" parm may used only while initial array creation. Need more design.
 Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
+Tabname on tabend: fix by additional element, like label?
 Common parts in TIntegrator, TLinP1Q0, TVibro.
 TMatrix3D(done) + rotate (separate/same) + Quaternion?
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
