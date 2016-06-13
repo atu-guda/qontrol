@@ -1,3 +1,4 @@
+Bug: reset_dfl for complex object for dialog: RODial
 InputLogic: different ways to get bool value: Raise, Fall Both, Level....
 Need correct place for TOutArr get call.
 "N" parm may used only while initial array creation. Need more design.

@@ -537,8 +537,6 @@ SwitchDataWidget::SwitchDataWidget( HolderData &h, QWidget *parent, bool /*hideL
     cb->setDisabled( true );
   }
 
-  // label is olways hidden
-
   QHBoxLayout *lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
   lay->addWidget( lbl );
@@ -1133,9 +1131,11 @@ DW_REG_FUN_STD( StringArrayDataWidget, "ARRAY_STRING,INLINE" );
 // ------------------- ObjDataWidget ---------------------------
 
 ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
-  : DataWidget( h, parent, true ),
+  : DataWidget( h, parent, hideLabel ),
    pb( new QPushButton( this ) )
 {
+  lbl->setText( QSL(">") );
+  lbl->setBuddy( pb );
   main_w = pb; // no R/O handling here
   if( hideLabel ) {
     int w0 = 3 * LaboWin::Em() + 6;
@@ -1144,7 +1144,6 @@ ObjDataWidget::ObjDataWidget( HolderData &h, QWidget *parent, bool hideLabel )
     pb->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Preferred );
   } else {
     pb->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
-    lbl->setBuddy( pb );
   }
   updateLabel();
   connect( pb, &QPushButton::clicked, this, &ObjDataWidget::edit );
