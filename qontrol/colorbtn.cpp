@@ -27,9 +27,6 @@ ColorBtn::ColorBtn( QWidget *parent )
   col = Qt::black;
 }
 
-ColorBtn::~ColorBtn()
-{
-}
 
 int ColorBtn::colorInt() const
 {
@@ -51,7 +48,8 @@ void ColorBtn::setColor( int ic )
 void ColorBtn::slotClicked()
 {
   QColor ncol;
-  ncol = QColorDialog::getColor( col, this, "Choose color", QColorDialog::ShowAlphaChannel );
+  ncol = QColorDialog::getColor( col, this, "Choose color",
+          QColorDialog::ShowAlphaChannel | QColorDialog::DontUseNativeDialog );
   if( ncol.isValid() ) {
     col = ncol;
   }

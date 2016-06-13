@@ -29,7 +29,7 @@ class ColorBtn : public QPushButton  {
  Q_OBJECT
  public:
    explicit ColorBtn( QWidget *parent );
-   virtual ~ColorBtn();
+   // virtual ~ColorBtn();
    const QColor& color() const { return col; }
    int colorInt() const;
    void setColor( const QColor &c );
