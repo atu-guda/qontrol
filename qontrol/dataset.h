@@ -103,7 +103,6 @@ struct TClassInfo {
 
 //* declare common data manipulation functions
 #define DCL_STD_GETSET \
-  virtual void reset_dfl() override; \
   virtual bool set( const QVariant & x, int idx = 0 ) override; \
   virtual QVariant get( int idx = 0 ) const override; \
   Q_INVOKABLE virtual double getDouble( int idx = 0 ) const override; \
@@ -434,6 +433,7 @@ class HolderValue : public HolderData {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET; // just for working create (need for register)
+  virtual void reset_dfl() override;
  protected:
   Q_CLASSINFO( "nameHintBase",  "data_" );
   DCL_DEFAULT_STATIC;
@@ -674,6 +674,7 @@ class HolderIntArray : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
+  virtual void reset_dfl() override;
   virtual arrsize_type arrSize() const override { return v.size(); }
   STD_CONVERSIONS(std::vector<int>);
   INNER_ASSIGN(HolderIntArray);
@@ -697,6 +698,7 @@ class HolderDoubleArray : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
+  virtual void reset_dfl() override;
   virtual arrsize_type arrSize() const override { return v.size(); }
   STD_CONVERSIONS(std::vector<double>);
   INNER_ASSIGN(HolderDoubleArray);
@@ -720,6 +722,7 @@ class HolderStringArray : public HolderValue {
   DCL_CREATE;
   DCL_STD_INF;
   DCL_STD_GETSET;
+  virtual void reset_dfl() override;
   virtual arrsize_type arrSize() const override { return v.size(); }
   STD_CONVERSIONS(QStringList);
   INNER_ASSIGN(HolderStringArray);
@@ -747,6 +750,7 @@ class TDataSet : public HolderData {
    DCL_CREATE;
    DCL_STD_INF; // to _TYPE as \|/
    DCL_STD_GETSET;
+   virtual void reset_dfl() override;
 
    QDomElement toDom( QDomDocument &dd, bool forceType = false ) const override;
  protected:

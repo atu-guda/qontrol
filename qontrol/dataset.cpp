@@ -1600,11 +1600,6 @@ CTOR(HolderInt,HolderValue) , v(0)
   reset_dfl();
 }
 
-void HolderInt::reset_dfl()
-{
-  HolderValue::reset_dfl();
-}
-
 
 bool HolderInt::set( const QVariant & x, int /* idx */ )
 {
@@ -1722,11 +1717,6 @@ CTOR(HolderLong,HolderValue) , v(0)
   reset_dfl();
 }
 
-void HolderLong::reset_dfl()
-{
-  HolderValue::reset_dfl();
-}
-
 
 bool HolderLong::set( const QVariant & x, int /* idx */ )
 {
@@ -1796,11 +1786,6 @@ CTOR(HolderDouble,HolderValue), v(0)
   reset_dfl();
 }
 
-void HolderDouble::reset_dfl()
-{
-  HolderValue::reset_dfl();
-}
-
 
 bool HolderDouble::set( const QVariant & x, int /* idx */ )
 {
@@ -1863,10 +1848,6 @@ CTOR(HolderString,HolderValue)
   reset_dfl();
 }
 
-void HolderString::reset_dfl()
-{
-  HolderValue::reset_dfl();
-}
 
 bool HolderString::set( const QVariant & x, int /* idx */  )
 {
@@ -1925,11 +1906,6 @@ CTOR(HolderColor,HolderValue)
   v = QColor(Qt::red);
   setParmIfEmpty( QSL("props"), QSL("COLOR,INT") );
   reset_dfl();
-}
-
-void HolderColor::reset_dfl()
-{
-  HolderValue::reset_dfl();
 }
 
 
@@ -2005,10 +1981,6 @@ CTOR(HolderFont,HolderValue)
   reset_dfl();
 }
 
-void HolderFont::reset_dfl()
-{
-  HolderValue::reset_dfl();
-}
 
 
 bool HolderFont::set( const QVariant & x, int /* idx */  )
@@ -2086,10 +2058,6 @@ CTOR(HolderDate,HolderValue)
   reset_dfl();
 }
 
-void HolderDate::reset_dfl()
-{
-  HolderValue::reset_dfl();
-}
 
 bool HolderDate::set( const QVariant & x, int /* idx */  )
 {
@@ -2167,10 +2135,6 @@ CTOR(HolderTime,HolderValue)
   reset_dfl();
 }
 
-void HolderTime::reset_dfl()
-{
-  HolderValue::reset_dfl();
-}
 
 bool HolderTime::set( const QVariant & x, int /* idx */  )
 {
