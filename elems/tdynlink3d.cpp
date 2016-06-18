@@ -17,6 +17,7 @@
 
 #include <ctime>
 #include <cmath>
+#include <gsl/gsl_math.h>
 #include "miscfun.h"
 #include "tdynlink3d.h"
 
@@ -58,7 +59,7 @@ double TDynLink3D::f() noexcept
       + cz_x2 * x2  + cz_y2 * y2  +  cz_z2 * z2
       + cz_xy * xy  + cz_yz * yz  +  cz_xz * xz;
 
-  v = sqrt( v_x*v_x + v_y*v_y + v_z*v_z );
+  v = gsl_hypot3( v_x, v_y, v_z );
 
   x += ctdt * v_x;
   y += ctdt * v_y;

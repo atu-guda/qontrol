@@ -470,10 +470,10 @@ int TModel::runOneLoop( IterType itype )
 {
   // readInputs(); // too slow here
 
-  int rc = c_sch->runOneLoop( itype );
-
   outs->takeAllVals();
   ct += ctdt; t = ct; t_r += ctdt; ++ii;
+
+  int rc = c_sch->runOneLoop( itype );
 
   if( !rc ) {
     end_loop = 1;

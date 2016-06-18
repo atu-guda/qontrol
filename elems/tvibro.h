@@ -40,14 +40,14 @@ class TVibro : public TMiso  {
    PRM_SWITCH( use_u1, efNRC, "use Force", "Use in_force as return force element output", "" );
 
    PRM_DOUBLE( v,    efInner, "v", "v(t)", "" );
+   PRM_DOUBLE( x2,   efInner, "x^2", "x^2", "" );
+   PRM_DOUBLE( a,    efInner, "a", "a", "" );
 
    PRM_INPUT( in_u,        0, "&u(t)", "Main input",  "sep=block" );
    PRM_INPUT( in_f,        0, "&f(x)", "Force input (if enabled)", "sep=col" );
 
-   /** flag for start(1,2,0)  */
-   int isStart = 1;
    /** old values and misc */
-   double u_old = 0, f_old = 0, x_old = 0, x_old2 = 0, tdt2 = 1;
+   double x_old = 0, x_old2 = 0, tdt2 = 1;
 
    Q_CLASSINFO( "nameHintBase",  "vi_" );
    DCL_DEFAULT_STATIC;

@@ -30,9 +30,9 @@ class TLinear : public TMiso  {
    DCL_CREATE;
    DCL_STD_INF;
  protected:
-   /** main computation function */
    virtual double f() noexcept override;
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
+
    /** coefficients on input and shift */
    PRM_PARAMD( a,  0, "&a",  "common factor", "def=1" );
    PRM_PARAMD( b,  0, "&b",  "static shift", "sep=col" );

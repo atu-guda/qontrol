@@ -38,7 +38,7 @@ int TIntegrator::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   last_rst =  (double)out0_init;
   v_old = v = v_a = last_rst;
-  t_rst = 0; was_rst = true;
+  t_rst = 0;
   return 1;
 }
 
@@ -52,7 +52,6 @@ double TIntegrator::f() noexcept
     last_rst = (double)( v_rst );
     v   = last_rst;
     v_a = last_rst;
-    was_rst = true;
   };
 
   v_old = v;
@@ -65,7 +64,7 @@ double TIntegrator::f() noexcept
   }
 
 
-  t_rst += ctdt; was_rst = false;
+  t_rst += ctdt;
   v_a = v / t_rst;
   double v_ret = (useAver) ? v_a : v;
 

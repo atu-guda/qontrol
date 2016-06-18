@@ -1,4 +1,3 @@
-Need correct place for TOutArr get call. dynamic objects check
 Bug: reset_dfl for complex object for dialog: RODial, set? context?
 post_parm_set.
 flag: post_set on parent with wait?

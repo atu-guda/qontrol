@@ -56,7 +56,6 @@ class TIntegrator : public TMiso  {
 
    double v_old = 0;
    double last_rst = 0;
-   bool was_rst = true;
 
    Q_CLASSINFO( "nameHintBase",  "int_" );
    DCL_DEFAULT_STATIC;

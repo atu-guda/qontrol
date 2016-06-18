@@ -17,6 +17,7 @@
 
 #include <ctime>
 #include <cmath>
+#include <gsl/gsl_math.h>
 #include "miscfun.h"
 #include "tdyn3d.h"
 
@@ -40,7 +41,7 @@ CTOR(TDyn3D,TMiso)
 
 double TDyn3D::f() noexcept
 {
-  v = sqrt( v_x*v_x + v_y*v_y + v_z*v_z );
+  v = gsl_hypot3( v_x, v_y, v_z );
 
   x += ctdt * v_x * c_x;
   y += ctdt * v_y * c_y;

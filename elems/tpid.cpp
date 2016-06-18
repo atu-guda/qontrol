@@ -46,18 +46,10 @@ double TPid::f() noexcept
 {
   double v = 0, d1, d2, uc = in_u;
 
-  if( start == 1 ) {
-    start = 2; u_old = uc; vi1 += uc * ctdt; vi2 += vi1 * ctdt;
-    v = kp * uc + ki1 * vi1 + ki2 * vi2;
-    return v;
-  };
-  if( start == 2 ) {
-    start = 0; d1 = ( uc - u_old ) / ctdt;
-    vi1 += uc * ctdt; vi2 += vi1 * ctdt;
-    u_old2 = u_old; u_old = uc;
-    v = kd1 * d1 + kp * uc + ki1 * vi1 + ki2 * vi2;
-    return v;
-  };
+  if( start ) {
+    u_old = u_old2 = uc;
+    start = 0;
+  }
 
   d1 = ( uc - u_old ) / ctdt;
   d2 = ( uc - 2*u_old + u_old2 ) / tdt2;

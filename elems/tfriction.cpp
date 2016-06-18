@@ -46,7 +46,7 @@ CTOR(TFriction,TMiso)
 int TFriction::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   x_old = out0_init;
-  v = v_old = Ff = 0;
+  v = v_old = Ff = a = 0;
   bodyState = 0;
   return 1;
 }
@@ -69,7 +69,8 @@ double TFriction::f() noexcept
     } else { // launch
       f_fd = - cf_mx * sign(fx);
       Ff = f = fx + f_fd;  // skip viscous now ?
-      v = f * ctdt / mass;
+      a = f / mass;
+      v = a * ctdt;
       x = x_old + v * ctdt / 2;
       bodyState = 1;  // begin to move;
     };
@@ -77,10 +78,12 @@ double TFriction::f() noexcept
     f_fd = - sign(v_old) * cf_mx;
     double f_fv = - v_old * kfv;
     Ff = f = fx + f_fd + f_fv;
-    v = v_old + f * ctdt / mass;
+    a = f / mass;
+    v = v_old + a * ctdt;
     if( v * v_old > 0 ) {
       x = x_old + ( v + v_old ) * ctdt / 2;
     } else { // start to  sleep
+      a = -v / ctdt;
       v = 0; bodyState = 0;
       x = x_old + v_old * ctdt * fabs( v_old / (v_old - v) ) / 2;
     };

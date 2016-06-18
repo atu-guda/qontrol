@@ -15,13 +15,14 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "miscfun.h"
 #include "tvibro.h"
 
 const char* TVibro::helpstr = "<H1>TVibro</H1>\n"
  "Vibrational element <b> d2x/dt^2 + c0*dx/dt + Omega^2*f(x) = u</b>: <br>\n"
  "Parameters <b>c0</b> and <b>Omega</b> can be changed at any time.<br>\n";
 
-STD_CLASSINFO(TVibro,clpElem );
+STD_CLASSINFO(TVibro,clpElem ); // no calc at start
 
 CTOR(TVibro,TMiso)
 {
@@ -36,33 +37,25 @@ int TVibro::do_preRun()
 
 int TVibro::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
-  u_old = f_old = 0;
   v = (double)v0;
   x_old = out0_init;
   x_old2 = out0_init - v0 * ctdt;
-  isStart = 1;
+  x2 = pow2( x_old );
+  a = 0;
   return 1;
 }
 
 double TVibro::f() noexcept
 {
-  double x, ctau = ctdt * c0 / 2; // c0 can be changed at any time, so here, TODO: use mod_prm
+  double ctau = ctdt * c0 / 2; // c0 can be changed at any time, so here, TODO: use mod_prm
+  double f = use_u1 ? in_f : out0;
 
-  if( isStart == 1 ) {  // first step
-    isStart = 2; x = out0_init; v = (double)v0;
-  } else if ( isStart == 2 ) {  // second step
-    isStart = 0;
-    x = x_old + v0 * ctdt + 0.5 * tdt2 * u_old;
-    v = v0 + u_old * ctdt;
-  } else {  // all other steps
-    x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * (u_old - Omega * Omega * f_old) )
-      / ( 1 + ctau );
-    v = ( x - x_old2 ) / ( 2 * ctdt );
-  }
+  double x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * ( in_u - Omega * Omega * f ) )
+          / ( 1 + ctau );
+  v = ( x - x_old2 ) / ( 2 * ctdt );
+  a = ( x - 2 * x_old + x_old2 ) / tdt2;
+  x2 = pow2( x );
 
-  f_old = use_u1 ? in_f : x;
-
-  u_old = in_u;
   x_old2 = x_old; x_old = x;
   return x;
 }

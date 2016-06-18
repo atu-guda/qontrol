@@ -42,6 +42,7 @@ class TFriction : public TMiso  {
    PRM_SWITCH( useMf, efNRC, "use in_f_mx", "Use in_f_mx as maximum friction force", "sep=col"  );
 
    PRM_DOUBLE( v,   efInner, "v", "current speed", "" );
+   PRM_DOUBLE( a,   efInner, "a", "a", "" );
    PRM_DOUBLE( Ff,  efInner, "Ff", "current friction force", "" );
    PRM_INT( bodyState, efInner, "State", "State: 0=Sleep, 1=Run", ""  );
 
