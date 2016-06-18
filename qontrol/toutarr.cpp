@@ -161,7 +161,10 @@ long TOutArr::take_val()
   if( type != OutArrType::outSimple ) {
     return 0;
   }
-  put_next_val();
+  ct = *p_t_model;
+  if( ct >= t_s && ct <= t_e ) {
+    put_next_val();
+  }
   return n;
 }
 
@@ -176,7 +179,16 @@ int TOutArr::do_preRun()
   arrsize = 0;
   switch( type ) {
     case OutArrType::outSimple:
-      arrsize = an / nq; nx = an; ny = 1;
+      {
+      double r_t_s = rinf->t_0;
+      double r_t_e = r_t_s + rinf->T;
+      r_t_s = max( r_t_s, t_s.cval() );
+      r_t_e = min( r_t_e, t_e.cval() );
+      if( r_t_e < r_t_s ) { r_t_e = r_t_s + D_EPS; }
+      double fill_k = ( r_t_e - r_t_s ) / rinf->T;
+      arrsize = long( ceil( an * fill_k / nq )); nx = arrsize; ny = 1;
+      qWarning() << "r_t_s= " << r_t_s << " r_t_e= " << r_t_e << " fill_k= " << fill_k << " arrsize=" << arrsize << NWHE;
+      }
       break;
     case OutArrType::outParm1:
       arrsize = anx / nq; nx = anx; ny = 1;
@@ -314,7 +326,7 @@ double TOutArr::atT( double T ) const
     return 0;
   }
   double tdt = model->getDataD( "tdt", 1.0 );
-  long idx = (long)( 0.5 + T / tdt );
+  long idx = (long)( 0.5 + (T-t_s) / ( tdt * nq ) );
   return at( idx );
 }
 

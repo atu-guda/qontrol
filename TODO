@@ -2,7 +2,7 @@ Bug: reset_dfl for complex object for dialog: RODial, set? context?
 post_parm_set.
 flag: post_set on parent with wait?
 TIntegrator2: + combine TVibro, TFriction?
-TOutArr skip/range[min,max], enable.
+TOutArr enable collect signal.
 InputLogic: different ways to get bool value: Raise, Fall Both, Level....
 "N" parm may used only while initial array creation. Need more design.
 Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.

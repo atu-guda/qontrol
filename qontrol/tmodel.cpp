@@ -268,7 +268,7 @@ int TModel::startRun()
   t = t_0; ct = t_0; t_r = 0;
   rinf.run_tp = run_type; rinf.N = N; rinf.nx = n1_eff; rinf.ny = n2_eff;
   rinf.fakeRT = fakeRT;
-  rinf.tdt = tdt; rinf.T = T;
+  rinf.tdt = tdt; rinf.T = T; rinf.t_0 = t_0;
   rinf.p_t_model = t.caddr();
   rinf.model = this; rinf.sim = c_sim; rinf.sch = c_sch;
 

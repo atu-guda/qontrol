@@ -31,6 +31,7 @@ struct RunInfo {
   int fakeRT;
   double tdt;
   double T;
+  double t_0;
   const double *p_t_model;
   TModel *model;
   Simulation *sim;

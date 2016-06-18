@@ -105,12 +105,14 @@ class TOutArr : public LinkedObj  {
    PRM_STRING( descr,   efNRC, "description", "Output array description", "max=256\nncol=-1");
    PRM_STRING( name,    efNRC, "&Source", "Name of element to use", "sep=block\nmax=128\nprops=STRING,SIMPLE,LINK\ncmpl=in" );
    PRM_STRING( label,   efNRC, "&Label", "Label of data", "max=32" );
-   PRM_SWITCH( allStat, efNRC, "All stat", "calculate all statistics", "def=0" );
-   PRM_INT(         nq, efNRC, "Every &n", "each n-th data collect. ", "min=1\nmax=1000000\ndef=1" );
+   PRM_DOUBLE( scale,   efNRC, "Sc&ale", "input factor", "def=1" );
+   PRM_DOUBLE( shift,   efNRC, "Shift", "input shift", "" );
+   PRM_DOUBLE(   t_s,   efNRC, "t_s", "start time", "sep=col" );
+   PRM_DOUBLE(   t_e,   efNRC, "t_e", "end time", "def=1e100" );
+   PRM_INT(       nq,   efNRC, "Every &n", "each n-th data collect. ", "min=1\nmax=1000000\ndef=1" );
    PRM_INT( lnq, efNRC, "Catch at n=", "latch value of counter", "min=0\nmax=1000000" );
+   PRM_SWITCH( allStat, efNRC, "All stat", "calculate all statistics", "def=0\nsep=col" );
    PRM_INT( cnq, efInner, "Current n", "current value of counter(0..nq-1)", "" );
-   PRM_DOUBLE( scale, efNRC, "Sc&ale", "input factor", "def=1" );
-   PRM_DOUBLE( shift, efNRC, "Shift", "input shift", "" );
    // statistics
    PRM_DOUBLE( dmin, efInner, "min", "min value", "" );
    PRM_DOUBLE( dmax, efInner, "max", "max value", "" );
@@ -123,7 +125,7 @@ class TOutArr : public LinkedObj  {
    PRM_DOUBLE( absdev_x,  efInner, "absvar_x", "Absolute deviation", "" );
    PRM_DOUBLE( acorr,  efInner, "acorr", "autocorrelation", "" );
    /** array size */
-   PRM_LONG( arrsize, efRO | efNoSave, "arrsize", "Full array size", "sep=col" );
+   PRM_LONG( arrsize, efRO | efNoSave, "arrsize", "Full array size", "" );
    PRM_LONG( nx, efRO | efNoSave, "nx","size of x dimensions arrays", "def=1"  );
    PRM_LONG( ny, efRO | efNoSave, "ny","size of x=const block in 2-d arrays", "def=1"  );
    /** current number of datas */
