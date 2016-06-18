@@ -37,23 +37,23 @@ CTOR(TLogic,TMiso)
 double TLogic::f() noexcept
 {
   int ou;
-  int iu0 = ( in_0 > level );
-  int iu1 = ( in_1 > level );
-  int iu2 = ( in_2 > level );
-  int iu3 = ( in_3 > level );
-  if( useNInp0 ) { iu0 = ! iu0; }
-  if( useNInp1 ) { iu1 = ! iu1; }
-  if( useNInp2 ) { iu2 = ! iu2; }
-  if( useNInp3 ) { iu3 = ! iu3; }
+  bool iu0 = in_0.lval();
+  bool iu1 = in_1.lval();
+  bool iu2 = in_2.lval();
+  bool iu3 = in_3.lval();
+  // if( useNInp0 ) { iu0 = ! iu0; }
+  // if( useNInp1 ) { iu1 = ! iu1; }
+  // if( useNInp2 ) { iu2 = ! iu2; }
+  // if( useNInp3 ) { iu3 = ! iu3; }
   ou = 0;
   switch( (int)type ) {
     case logAnd:
-      if( iu0 > 0 && iu1 > 0 && iu2 > 0 && iu3 > 0 ) {
+      if( iu0 && iu1 && iu2 && iu3 ) {
         ou = 1;
       }
       break;
     case logOr:
-      if( iu0 > 0 || iu1 > 0 || iu2 > 0 || iu3 > 0 ) {
+      if( iu0 || iu1 || iu2 || iu3 ) {
         ou = 1;
       }
       break;
@@ -77,6 +77,8 @@ double TLogic::f() noexcept
       ou = 0; break;
     case logOne:
       ou = 1; break;
+    case logEq:
+      ou = ( iu0 == iu1 ); break;
     default: ;
   };
   if( useNOut ) {

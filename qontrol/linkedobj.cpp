@@ -477,12 +477,53 @@ const char* InputSimple::helpstr { "Link to source of simple double data" };
 DEFAULT_FUNCS_REG(InputSimple);
 
 
+// ------------------------------------ InputLogic ---------
+STD_CLASSINFO(InputLogic,0);
+
+CTOR(InputLogic,InputSimple)
+{
+  HolderColor *co = getObjT<HolderColor*>( QSL("line_color" ) );
+  if( co ) {
+    co->setParm( QSL("def"), QSL("blue" ) );
+  }
+}
+
+void InputLogic::post_readInput()
+{
+  bool keep = false;
+  switch( (InputLogicType)(int)(type ) ) {
+    case itLevel: ll = (out0 >= l1); break;
+    case itRise:  ll = ( (out0 - old_out0) >=  l1 ); break;
+    case itFall:  ll = ( (out0 - old_out0) <= -l1 ); break;
+    case itBoth:  ll = ( fabs(out0 - old_out0) >= l1 ); break;
+    case itShmitt:
+         if( out0 >= l1 ) { ll = 1; break; }
+         if( out0 <  l0 ) { ll = 0; break; }
+         keep = true;
+         break;
+  }
+  if( inv_in && !keep ) {
+    ll = !ll;
+  }
+  old_out0 = out0;
+}
+
+const char* InputLogic::helpstr { "Link to source, converted to logic value (lval)" };
+
+DEFAULT_FUNCS_REG(InputLogic);
+
+
+
 // ------------------------------------ ParamDouble ---------
 STD_CLASSINFO(ParamDouble,0);
 
 CTOR(ParamDouble,InputAbstract)
 {
   need_fixparm = getParmInt( "fixparm", 0 );
+  HolderColor *co = getObjT<HolderColor*>( QSL("line_color" ) );
+  if( co ) {
+    co->setParm( QSL("def"), QSL("red" ) );
+  }
 }
 
 

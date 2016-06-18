@@ -152,7 +152,7 @@ class InputAbstract : public LinkedObj {
   Q_INVOKABLE virtual QString textVisual() const override;
   //* return ptr to LinkedObj, which holds element or nullptr;
   const LinkedObj* getSourceObj() const noexcept { return src_obj; }
-  void readInput() noexcept { out0 = *p * factor + shift; } ;
+  void readInput() noexcept { out0 = *p * factor + shift; post_readInput(); } ;
   void setInput( double v ) noexcept { out0 = v; } ; // to use while f_d();
   int  getLinkType() const noexcept { return linkType; }
   int  getOnlyFirst() const noexcept { return onlyFirst; }
@@ -169,6 +169,7 @@ class InputAbstract : public LinkedObj {
   // virtual void do_post_set() override;
   /** do real actions after structure changed */
   virtual void do_structChanged() override;
+  virtual void post_readInput() {};
 
   PRM_STRING( source, efNRC, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
   PRM_SWITCH( onlyFirst, 0, "only First", "apply only at start of run", "" );
@@ -211,12 +212,59 @@ class InputSimple : public InputAbstract {
   PRM_INT( channel, efNRC, "Channel", "Channel number of this input", "sep=block" );
   PRM_INT( subchannel, efNRC, "Subchannel", "Subchannel number of this input", "sep=col" );
 
+  double old_out0 { 0.0 };
+
   Q_CLASSINFO( "nameHintBase",  "in_" );
   DCL_DEFAULT_STATIC;
 };
 
 #define PRM_INPUT( name, flags, vname, descr, extra ) \
   InputSimple name = { #name, this, flags, vname, descr, extra  } ;
+
+// ---------------------------------------------------------------------
+/** Special input: to be used as logic value */
+class InputLogic : public InputSimple {
+  Q_OBJECT
+ public:
+   enum InputLogicType {
+     itLevel  = 0,
+     itRise,
+     itFall,
+     itBoth,
+     itShmitt
+   };
+   Q_ENUMS(InputLogicType);
+   Q_CLASSINFO( "enum_InputLogicType_0", "Level" );     // itLevel
+   Q_CLASSINFO( "enum_InputLogicType_1", "Rise" );      // itRise
+   Q_CLASSINFO( "enum_InputLogicType_2", "Fall" );      // itFall
+   Q_CLASSINFO( "enum_InputLogicType_3", "Both" );      // itBoth
+   Q_CLASSINFO( "enum_InputLogicType_4", "Shmitt" );    // itShmitt
+  DCL_CTOR(InputLogic);
+  // virtual ~InputLogic() override;
+  DCL_CREATE;
+  DCL_STD_INF;
+  bool lval() const { return ll; };
+  operator bool() const { return ll; }
+ protected:
+  virtual int do_startLoop( long /*acnx*/, long /*acny*/ ) override { ll = 0; old_out0 = out0; return 1; }
+  virtual void post_readInput() override;
+
+  PRM_LIST( type, efNRC, "&Type", "Function type", "enum=InputLogicType\nsep=block" );
+  PRM_DOUBLE( l0, efNRC, "level 0", "level of '0' if need", "def=0.01\nsep=col" );
+  PRM_DOUBLE( l1, efNRC, "level 1", "level of '1' if need", "def=0.1" );
+  PRM_SWITCH( inv_in, efNRC, "Not", "Inverse input", ""  );
+
+  PRM_INT( ll, efInner, "ll", "current logic level", "" );
+
+  double old_out0;
+
+  Q_CLASSINFO( "nameHintBase",  "in_" );
+  DCL_DEFAULT_STATIC;
+};
+
+#define PRM_LOGICIN( name, flags, vname, descr, extra ) \
+  InputLogic name = { #name, this, flags, vname, descr, extra  } ;
+
 
 // ---------------------------------------------------------------------
 /** Special input - paramertic / value, can be used as double */
