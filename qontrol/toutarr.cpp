@@ -187,7 +187,6 @@ int TOutArr::do_preRun()
       if( r_t_e < r_t_s ) { r_t_e = r_t_s + D_EPS; }
       double fill_k = ( r_t_e - r_t_s ) / rinf->T;
       arrsize = long( ceil( an * fill_k / nq )); nx = arrsize; ny = 1;
-      qWarning() << "r_t_s= " << r_t_s << " r_t_e= " << r_t_e << " fill_k= " << fill_k << " arrsize=" << arrsize << NWHE;
       }
       break;
     case OutArrType::outParm1:
@@ -210,7 +209,7 @@ int TOutArr::do_postRun( int /*good*/ )
   return 1;
 }
 
-int TOutArr::do_startLoop( long acnx, long acny )
+int TOutArr::do_startLoop( long acnx, long /*acny*/ )
 {
   switch( type ) {
     case OutArrType::outSimple:
@@ -222,9 +221,7 @@ int TOutArr::do_startLoop( long acnx, long acny )
       }
       break;
     case OutArrType::outParm2:
-      if( acnx == 0 && acny == 0 ) { // not much sense, as reset at preRun
-        reset();
-      }
+      // reset at preRun
       break;
     default:
       break;

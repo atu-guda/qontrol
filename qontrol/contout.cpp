@@ -43,7 +43,10 @@ int ContOut::do_preRun()
   vo.clear();
   // fill array for pure TOutArr entries: for fast access later
   for( auto arr : TCHILD(TOutArr*) ) {
-    vo.push_back( arr );
+    int tp = arr->getDataD( "type", 0 );
+    if( tp == TOutArr::OutArrType::outSimple ) {
+      vo.push_back( arr );
+    }
   }
   return 1;
 }
