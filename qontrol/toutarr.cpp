@@ -36,6 +36,7 @@ STD_CLASSINFO(TOutArr,clpSpecial);
 
 CTOR(TOutArr,LinkedObj)
 {
+  // needReadInputsRecurse = true;
 }
 
 QVariant TOutArr::dataObj( int col, int role ) const
@@ -144,6 +145,7 @@ void TOutArr::do_structChanged()
 void TOutArr::set_link()
 {
   // #warning use InputSimple
+  // LinkedObj::set_link();
   so = nullptr;
   TModel *mod = getAncestorT<TModel>();
   int lt; const LinkedObj *so_ob;
@@ -154,6 +156,7 @@ void TOutArr::set_link()
     so = &fake_so;
     // qWarning() << "Fake source used for " << name << NWHE;
   }
+  enable.set_link();
 }
 
 long TOutArr::take_val()
@@ -162,6 +165,7 @@ long TOutArr::take_val()
     return 0;
   }
   ct = *p_t_model;
+  enable.readInput();
   if( ct >= t_s && ct <= t_e ) {
     put_next_val();
   }
@@ -329,11 +333,10 @@ double TOutArr::atT( double T ) const
 
 void TOutArr::put( long i, double v )
 {
-  v *= scale;  v += shift;
   if( i >=n || i<0 ) {
     return;
   }
-  arr[i] = v;
+  arr[i] = v * scale + shift;
   if( v != v /*!isfinite( v )*/ ) {
     isfin = 0;
   }
@@ -347,14 +350,17 @@ void TOutArr::put( long x, long y, double v )
 
 void TOutArr::add( double v )
 {
-  v *= scale;  v += shift;
   if( n >= arrsize ) {
     qWarning() << " n (" << n << ") >= arrsize (" << arrsize << ") " << NWHE;
     return;
   }
 
+  if( !enable.lval() ) {
+    return;
+  }
+
   if( cnq == lnq ) {
-    arr[n] = v;
+    arr[n] = v * scale + shift;
     ++n;
     if( /* !isfinite( v ) || */ (v != v) ) {
       isfin = 0;

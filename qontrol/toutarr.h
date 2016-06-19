@@ -56,11 +56,11 @@ class TOutArr : public LinkedObj  {
    /** access to array value */
    const dvector* getArray() const { return &arr; }
    /** request to allocate array: only for special arrays now */
-   Q_INVOKABLE int alloc( long anx, int long = 1 );
+   Q_INVOKABLE int alloc( long anx, long any = 1 );
    Q_INVOKABLE virtual arrsize_type arrSize() const override { return arrsize; }
    Q_INVOKABLE arrsize_type getN() const { return n; }
 
-   /** get and push next value. pushed only if level >= type */
+   /** get and push next value. only for OutArrType::outSimple TODO: protected, */
    virtual long take_val();
 
    /** dumps data to file */
@@ -111,6 +111,7 @@ class TOutArr : public LinkedObj  {
    PRM_DOUBLE(   t_e,   efNRC, "t_e", "end time", "def=1e100" );
    PRM_INT(       nq,   efNRC, "Every &n", "each n-th data collect. ", "min=1\nmax=1000000\ndef=1" );
    PRM_INT( lnq, efNRC, "Catch at n=", "latch value of counter", "min=0\nmax=1000000" );
+   PRM_LOGICIN( enable, efNRC, "Enable", "Enable signal", "def=1" );
    PRM_SWITCH( allStat, efNRC, "All stat", "calculate all statistics", "def=0\nsep=col" );
    PRM_INT( cnq, efInner, "Current n", "current value of counter(0..nq-1)", "" );
    // statistics
