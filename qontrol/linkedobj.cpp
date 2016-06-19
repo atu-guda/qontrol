@@ -45,6 +45,7 @@ const double* LinkedObj::getDoublePtr( const QString &nm, int *lt,
   if( nm_type == badName ) {
     *plt = LinkBad;
     qWarning() << "bad source name " << nm << NWHE;
+    // abort();
     return nullptr;
   }
 

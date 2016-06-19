@@ -3,7 +3,6 @@ post_parm_set.
 flag: post_set on parent with wait?
 TTrigger and TRandTrigger redesign.
 TIntegrator2: + combine TVibro, TFriction?
-TOutArr: use InputSimple (need conversion) ?? or keep
 "N" parm may used only while initial array creation. Need more design.
 Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
 Tabname on tabend: fix by additional element, like label?

@@ -103,10 +103,8 @@ class TOutArr : public LinkedObj  {
 
    PRM_LIST(    type,   efNRC, "&Type", "Type of array", "enum=OutArrType" );
    PRM_STRING( descr,   efNRC, "description", "Output array description", "max=256\nncol=-1");
-   PRM_STRING( name,    efNRC, "&Source", "Name of element to use", "sep=block\nmax=128\nprops=STRING,SIMPLE,LINK\ncmpl=in" );
+   PRM_INPUT(  name,        0, "&Source", "Input source", "sep=block" );
    PRM_STRING( label,   efNRC, "&Label", "Label of data", "max=32" );
-   PRM_DOUBLE( scale,   efNRC, "Sc&ale", "input factor", "def=1" );
-   PRM_DOUBLE( shift,   efNRC, "Shift", "input shift", "" );
    PRM_DOUBLE(   t_s,   efNRC, "t_s", "start time", "sep=col" );
    PRM_DOUBLE(   t_e,   efNRC, "t_e", "end time", "def=1e100" );
    PRM_INT(       nq,   efNRC, "Every &n", "each n-th data collect. ", "min=1\nmax=1000000\ndef=1" );
@@ -136,10 +134,10 @@ class TOutArr : public LinkedObj  {
    PRM_LONG( isfin, efInner, "isfin", "Flag: all values was finite", "def=1" );
    /** data storage */
    dvector arr;
-   /** fake source */
-   double fake_so = 0;
-   /** ptr to source */
-   const double *so = &fake_so;
+   // /** fake source */
+   // double fake_so = 0;
+   // /** ptr to source */
+   // const double *so = &fake_so;
    //* flag: need to calc statistics
    bool need_calc_stat = false;
 

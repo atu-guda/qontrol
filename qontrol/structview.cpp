@@ -502,7 +502,7 @@ void StructView::drawAll( QPainter &p )
       for( auto arr : outs->TCHILD(TOutArr*) ) {
         int out_nu = arr->getMyIndexInParent();
 
-        src_name = arr->getDataD( QSL("name"), QString() );
+        src_name = arr->getDataD( QSL("name.source"), QString() );
         int out_tp = arr->getDataD( QSL("type"), -1 );
         int lt  = LinkBad;
         const LinkedObj *lob = nullptr;

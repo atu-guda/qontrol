@@ -73,7 +73,7 @@ bool OutDataView::addObj()
     return false;
   }
 
-  ob->setData( QSL("name"), tgt_nm ); // really source
+  ob->setData( QSL("name.source"), tgt_nm );
   ob->setData( QSL("label"), tgt_nm );
   ::editObj( this, ob );
   ob->reset();

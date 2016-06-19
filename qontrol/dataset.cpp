@@ -941,6 +941,10 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
           ho->setData( QSL("line_color"), QSL("red") );
           continue;
         }
+        if( ho->getType() == QSL("InputSimple") ) { // TODO: remove after TOutArr conversion
+          ho->setData( QSL("source"), txt );
+          continue;
+        }
         // --------- end conversion (TMP) --------
         errstr = QString("TDataSet::fromDom: param \"%1\" is an object type \"%2\" ")
                  .arg(elname).arg(ho->getType());

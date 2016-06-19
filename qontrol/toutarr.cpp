@@ -41,6 +41,7 @@ CTOR(TOutArr,LinkedObj)
 
 QVariant TOutArr::dataObj( int col, int role ) const
 {
+  const QString &nm = name.getDataD( QSL("source"), QSL("") ) ; //.cval();
   if( role == Qt::BackgroundRole ) {
     if( col != 0 ) {
       return TDataSet::dataObj( col, role );
@@ -48,12 +49,11 @@ QVariant TOutArr::dataObj( int col, int role ) const
     if( !isfin ) {
       return QBrush( QColor(254,0,0) ) ;
     }
-    if( so == &fake_so && type != OutArrType::outSpec ) {
+    if( name.getLinkType() == LinkBad && type != OutArrType::outSpec ) {
       return QBrush( QColor(254,128,128) ) ;
     }
 
-    const QString &nm = name.cval();
-    bool isPrm = nm == "t" || nm == "prm0" || nm == "prm1" ;
+    bool isPrm =  ( nm == QSL("t") || nm == QSL("prm0") || nm == QSL("prm1")  );
     if( n < 1 ) {
       if( isPrm ) {
         return QBrush( QColor( 120,220,252 ).darker( 130 ) );
@@ -81,7 +81,7 @@ QVariant TOutArr::dataObj( int col, int role ) const
     if( col > 1 ) {
       return TDataSet::dataObj( col, role );
     }
-    QString s = objectName() % QChar(0x21A2) %  name.cval();
+    QString s = objectName() % QChar(0x21A2) %  nm;
     return s;
   }
 
@@ -91,7 +91,7 @@ QVariant TOutArr::dataObj( int col, int role ) const
 QString TOutArr::textVisual() const
 {
   int idx = getMyIndexInParent();
-  QString s = QSL("(") % QSN(idx) % QSL(") ") % name.cval() % QSL(" [") % QSN(n)
+  QString s = QSL("(") % QSN(idx) % QSL(") ") % name.getDataD( QSL("source"), QSL("?") ) % QSL(" [") % QSN(n)
     % QSL("] [")  % QSN(nx) % " x " % QSN(ny) % QSL("]");
   return s;
 }
@@ -144,19 +144,8 @@ void TOutArr::do_structChanged()
 
 void TOutArr::set_link()
 {
-  // #warning use InputSimple
-  // LinkedObj::set_link();
-  so = nullptr;
-  TModel *mod = getAncestorT<TModel>();
-  int lt; const LinkedObj *so_ob;
-  if( mod  &&  type != OutArrType::outSpec ) {
-    so = mod->getSchemeDoublePtr( name, &lt, &so_ob, 0 );
-  }
-  if( !so ) {
-    so = &fake_so;
-    // qWarning() << "Fake source used for " << name << NWHE;
-  }
   enable.set_link();
+  name.set_link();
 }
 
 long TOutArr::take_val()
@@ -165,7 +154,6 @@ long TOutArr::take_val()
     return 0;
   }
   ct = *p_t_model;
-  enable.readInput();
   if( ct >= t_s && ct <= t_e ) {
     put_next_val();
   }
@@ -292,7 +280,9 @@ int TOutArr::dump( const QString &fn, const QString &delim )
 
 void TOutArr::put_next_val()
 {
-  add( *so ); // scale inside
+  name.readInput();
+  enable.readInput();
+  add( name.cval() );
 }
 
 double TOutArr::at( long i ) const
@@ -336,7 +326,7 @@ void TOutArr::put( long i, double v )
   if( i >=n || i<0 ) {
     return;
   }
-  arr[i] = v * scale + shift;
+  arr[i] = v;
   if( v != v /*!isfinite( v )*/ ) {
     isfin = 0;
   }
@@ -360,7 +350,7 @@ void TOutArr::add( double v )
   }
 
   if( cnq == lnq ) {
-    arr[n] = v * scale + shift;
+    arr[n] = v;
     ++n;
     if( /* !isfinite( v ) || */ (v != v) ) {
       isfin = 0;
