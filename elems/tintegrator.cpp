@@ -47,7 +47,7 @@ double TIntegrator::f() noexcept
 {
   double in = ( bool (useSqIn) ) ? pow2( in_u ) : in_u;
 
-  if( in_rst > 0.1 ) { // TODO: InputLogic
+  if( in_rst ) {
     t_rst = 0;
     last_rst = (double)( v_rst );
     v   = last_rst;

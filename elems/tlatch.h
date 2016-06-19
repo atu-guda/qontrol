@@ -49,17 +49,15 @@ class TLatch : public TMiso  {
    PRM_DOUBLE( v, efInner, "v", "Current value", "" );
 
    /** flags, state */
-   PRM_SWITCH( usePulse, efNRC, "use &Pulse", "latch on jump of (in_latch >0.5), not level", "sep=col" );
-   PRM_SWITCH( useFirst, efNRC, "use &First", "count only first signal to latch", "" );
+   PRM_SWITCH( useFirst, efNRC, "use &First", "count only first signal to latch", "sep=col" );
    PRM_SWITCH( useAdd,   efNRC, "use Add", "add current in_u to value, not set", "" );
 
    PRM_DOUBLE( lt, efInner, "Latch Time", "Time whan latch occurs" , "" );
 
-   PRM_INPUT( in_u,     0, "&in_u", "Main input",  "sep=block" );
-   PRM_INPUT( in_latch, 0, "in_{latch}", "Latch input", "sep=col" );
+   PRM_INPUT(       in_u, 0, "&in_u",      "Main input",  "sep=block" );
+   PRM_LOGICIN( in_latch, 0, "in_{latch}", "Latch input", "sep=col" );
 
-   int wasLatch = -1;
-   double u_old = 0;
+   bool wasLatch { false };
 
    Q_CLASSINFO( "nameHintBase",  "latch_" );
    DCL_DEFAULT_STATIC;

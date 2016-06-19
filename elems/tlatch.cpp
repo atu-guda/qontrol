@@ -38,20 +38,13 @@ CTOR(TLatch,TMiso)
 
 int TLatch::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
-  v = (double)out0_init; u_old = lt = 0;  wasLatch = -1;
+  v = (double)out0_init; lt = 0;  wasLatch = false;
   return 1;
 }
 
 double TLatch::f() noexcept
 {
-  double dv, bv;
-  int ok;
-  dv = in_latch - u_old;
-  u_old = in_latch;
-  if( wasLatch == -1 ) {
-    dv = 0; wasLatch = 0; // first step
-  };
-  bv = useAdd ? v : 0;
+  double bv = useAdd ? v : 0;
 
   switch( (int)type ) {
     case latchTime:
@@ -59,20 +52,15 @@ double TLatch::f() noexcept
         if( wasLatch ) {
           break;
         }
-        wasLatch = 1; lt = ct; v = bv + in_u;
+        wasLatch = true; lt = ct; v = bv + in_u;
       };
       break;
     case latchSignal:
-      if( useFirst && (wasLatch > 0) ) {
+      if( useFirst && wasLatch  ) {
         break;
       }
-      if( usePulse ) {
-        ok = ( dv > 0.5 );
-      } else {
-        ok = ( in_latch > 0.1 );
-      };
-      if( ok ) {
-        wasLatch = 1; lt = ct; v = bv + in_u;
+      if( in_latch ) {
+        wasLatch = true; lt = ct; v = bv + in_u;
       };
       break;
     default: ;

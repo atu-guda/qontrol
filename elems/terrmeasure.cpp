@@ -46,7 +46,7 @@ void TErrMeasure::reset_vals()
 
 double TErrMeasure::f() noexcept
 {
-  if( rst > 0.1 ) {
+  if( rst ) {
     reset_vals();
   };
 

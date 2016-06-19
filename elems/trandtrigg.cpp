@@ -73,11 +73,11 @@ double TRandTrigg::f() noexcept
   double du, uc = in_u;
   du = uc - u_old; u_old = uc;
   if( ns == -1 ) { du = 0; ns = 0; };
-  if( useForce && in_force > 0.1 ) {
+  if( in_force ) {
     ns = 0; currOut = !currOut;
     return ( currOut ) ? 1 : ( useZero ? 0 : -1 );
   };
-  if( useLock && in_lock > 0.1 ) {
+  if( in_lock ) {
     // ns++;
     return ( currOut ) ? 1 : ( useZero ? 0 : -1 );
   };

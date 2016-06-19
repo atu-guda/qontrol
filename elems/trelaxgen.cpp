@@ -78,7 +78,7 @@ double TRelaxGen::f() noexcept
       I -= dv_dis / r_2;
     }
     v += I * ctdt / c;
-    if( v >= v_1 || ( useTrig && trig > 0.1 ) ) {
+    if( v >= v_1 || ( useTrig && trig ) ) {
       isDis = 1;
     }
   }

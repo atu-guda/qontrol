@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "miscfun.h"
 #include "tcounter.h"
 
 const char* TCounter::helpstr = "<H1>TCounter</H1>\n"
@@ -22,7 +23,6 @@ const char* TCounter::helpstr = "<H1>TCounter</H1>\n"
  "Parameters:<br>\n"
  " - <b>type</b> -- output type: level, pulse{+, +-}.. ;<br>\n"
  " - <b>n</b> -- up to count;<br>\n"
- " - <b>useReset</b> -- use in_rst as reset counter signal;<br>\n"
  " - <b>cn</b> -- counter [0;n-1] (ro).<br>\n";
 
 STD_CLASSINFO(TCounter,clpElem );
@@ -34,38 +34,27 @@ CTOR(TCounter,TMiso)
 
 int TCounter::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
-  u_old = DMAX;
-  cn = flip = 0;
+  cn = (int)(out0_init);
   return 1;
 }
 
 double TCounter::f() noexcept
 {
-  double v, du;
-  int tick;
-  du = in_x - u_old; u_old  = in_x; tick = 0;
-  if( useReset && in_rst > 0.1 ) {
-    cn = flip = 0;
+  if( in_p ) {
+    ++cn;
+  }
+  if( in_m ) {
+    --cn;
+  }
+  if( in_rst ) {
+    cn = (int)(out0_init);
+  }
+  if( modn ) {
+    cn %= n;
   } else {
-    if( du > 0.1 ) {
-      ++cn;
-      if( cn >= n ) {
-        cn = 0; tick = 1; flip = ! flip;
-      };
-    };
-  };
-  switch( (int)type ) {
-    case co_level:
-      v = flip; break;
-    case co_plus:
-      v = tick; break;
-    case co_pm:
-      v = tick ? ( -1 + 2*flip ) : 0; break;
-    case co_n:
-      v = cn; break; // count;
-    default: v = 0;
-  };
-  return v;
+    cn = vBound( 0, (int)(cn), (int)(n) );
+  }
+  return a * cn + b;
 }
 
 DEFAULT_FUNCS_REG(TCounter)

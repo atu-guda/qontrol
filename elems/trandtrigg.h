@@ -52,8 +52,6 @@ class TRandTrigg : public TMiso  {
    /* flags */
    PRM_SWITCH( useLevel, efNRC, "Use Level to trigg",
        "Use Level to trigger, not +- pulse", "sep=col" );
-   PRM_SWITCH( useForce, efNRC, "use Force", "Use in_force to force flip", "" );
-   PRM_SWITCH( useLock,  efNRC, "use Lock", "Use in_lock to lock", "" );
    PRM_SWITCH( useZero,  efNRC, "0 = neg. output",
        "Use 0 as negative output, not -1", "");
    /** seed value for generator */
@@ -64,9 +62,9 @@ class TRandTrigg : public TMiso  {
    PRM_SWITCH( addBaseSeed, efNRC, "add Base to Seed",
        "add Base (model) value to Seed", "def=1" );
 
-   PRM_INPUT( in_u,     0, "&in_u", "Main input",  "sep=block" );
-   PRM_INPUT( in_force, 0, "in_f", "Signal : force trigg", "sep=col" );
-   PRM_INPUT( in_lock,  0, "in_{lock}", "Signal: lock",  "sep=col" );
+   PRM_INPUT(       in_u,  0, "&in_u", "Main input",  "sep=block" );
+   PRM_LOGICIN( in_force,  0, "in_f", "Signal : force trigg", "sep=col" );
+   PRM_LOGICIN(  in_lock,  0, "in_{lock}", "Signal: lock",  "sep=col" );
 
 
    int ns = 0, currOut = 0;

@@ -35,7 +35,7 @@ class TTrigger : public TMiso  {
    };
    Q_ENUMS(TriggType);
    Q_CLASSINFO( "enum_TriggType_0", "RS"            ); // tr_rs
-   Q_CLASSINFO( "enum_TriggType_1", "Shmitt(X)"     ); // tr_shmitt
+   Q_CLASSINFO( "enum_TriggType_1", "(X)"           ); // tr_shmitt -- really in_x
    Q_CLASSINFO( "enum_TriggType_2", "CountRise(X)"  ); // tr_crise
    Q_CLASSINFO( "enum_TriggType_3", "CountDown(X)"  ); // tr_cdown
    Q_CLASSINFO( "enum_TriggType_4", "CountLevel(X)" ); // tr_clev   
@@ -44,12 +44,9 @@ class TTrigger : public TMiso  {
    virtual int miso_startLoop( long acnx, long acny ) override;
 
    PRM_LIST(     type, efNRC, "&Type", "Type of trigger", "enum=TriggType" );
-   PRM_PARAMD( level0,     0, "Level of &0", "Level of '0' signal", "def=0.1" );
-   PRM_PARAMD( level1,     0, "Level of &1", "Level of '1' signal (for shmidt)", "def=0.5"  );
-   PRM_PARAMD(     t0,     0, "t0", "Autoreset time (if enabled)", "def=2" );
+   PRM_PARAMD(     t0,     0, "t0",    "Autoreset time (if enabled)", "def=2" );
 
-   PRM_SWITCH( useInit1,  efNRC, "Set on start", "Set triggers value to 1 of start", "sep=col" );
-   PRM_SWITCH( useEnable, efNRC, "use Enable", "Use in_ena as enable signal", "" );
+   PRM_SWITCH( useEnable, efNRC, "use Enable", "Use in_ena as enable signal", "sep=col" );
    PRM_SWITCH( usePulse,  efNRC, "&Pulse output",  "Output is pulse, no level", "sep=col" );
    PRM_SWITCH( useMinus,  efNRC, "&Negative pulse", "Drop pulse is negative, not 0", "" );
    PRM_SWITCH( useT0,     efNRC, "&Autoreset (t0)", "Use autoreset after t0 time elapsed", "");
@@ -57,10 +54,10 @@ class TTrigger : public TMiso  {
    PRM_DOUBLE( et, efInner, "et",    "Elapsed time",  "" );
    PRM_INT(   cst, efInner, "state", "current state", "" );
 
-   PRM_INPUT( in_r,      0, "&R",  "Reset input",    "sep=block" );
-   PRM_INPUT( in_s,      0, "&S",  "Set input",      "sep=col" );
-   PRM_INPUT( in_x,      0, "&X",  "X input",        "sep=col" );
-   PRM_INPUT( in_ena,    0, "&EN", "'enable' input", "sep=col" );
+   PRM_LOGICIN( in_r,      0, "&R",  "Reset input",    "sep=block" );
+   PRM_LOGICIN( in_s,      0, "&S",  "Set input",      "sep=col" );
+   PRM_LOGICIN( in_x,      0, "&X",  "X input",        "sep=col" );
+   PRM_LOGICIN( in_ena,    0, "&EN", "'enable' input", "sep=col" );
 
    double u2_old = 0;
 

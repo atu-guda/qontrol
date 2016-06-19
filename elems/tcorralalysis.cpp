@@ -52,7 +52,7 @@ double TCorrAnalysis::f() noexcept
   int add;
   double x = in_x, y = in_y;
   ++ii;
-  if( useReset && in_rst > 0.1 ) { // history was < 0.1
+  if( useReset && in_rst ) { // history was < 0.1
     reset_data();
   };
   switch( (int)type ) {
@@ -70,7 +70,7 @@ double TCorrAnalysis::f() noexcept
     s_xy += x * y;
     ++n;
   };
-  if( ( ii >= (int)(rinf->N-1) || ( useCalc && in_calc > 0.1 ))   ) {
+  if( ( ii >= (int)(rinf->N-1) || ( useCalc && in_calc ))   ) {
     calc();
   };
   return s_x;

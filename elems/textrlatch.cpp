@@ -25,7 +25,6 @@ const char* TExtrLatch::helpstr = "<H1>TExtrLatch</H1>\n"
  "-<B>useFirst </B> - latch only first extremum; <br>\n"
  "-<B>useLocal </B> - latch local extremums; <br>\n"
  "-<B>outT </B> - output time of latching; <br>\n"
- "-<B>useReset </B> - reset on u[1] strobe; <br>\n"
  "-<B>tStart </B> - start time; <br>\n"
  "-<B>fuzzy </B> - fuzzy level; <br>\n"
  "";
@@ -49,7 +48,7 @@ double TExtrLatch::f() noexcept
      return u;
   }
 
-  if( useReset && in_rst > 0.1 ) {   // reset on in_rst signal
+  if( in_rst ) {
     reset_vars();
   }
 

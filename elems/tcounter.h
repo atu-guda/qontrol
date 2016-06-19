@@ -30,31 +30,21 @@ class TCounter : public TMiso  {
    DCL_CTOR(TCounter);
    DCL_CREATE;
    DCL_STD_INF;
-   enum CountType { co_level=0, co_plus, co_pm, co_n };
-   Q_ENUMS(CountType);
-   Q_CLASSINFO( "enum_CountType_0",  "Level" );      // co_level
-   Q_CLASSINFO( "enum_CountType_1",  "Pulse+" );     // co_plus
-   Q_CLASSINFO( "enum_CountType_2",  "Pulse+-" );    // co_pm
-   Q_CLASSINFO( "enum_CountType_3",  "N" );          // co_n
 
  protected:
-   /** main computation function */
    virtual double f() noexcept override;
-   /** reimplemented from TMiso to reset counter */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   PRM_LIST( type,    efNRC, "&Type", "Type of counters output", "enum=CountType" );
-   PRM_INT(  n,       efNRC, "&n", "Number to count", "sep=col\ndef=2" );
-   PRM_SWITCH( useReset,  0, "use Reset", "Use in_rst as Reset signal", "sep=col" );
+   PRM_INT(        n,  efNRC, "&n",    "Number to count", "sep=col\ndef=2" );
+   PRM_SWITCH(  modn,  efNRC, "&modn", "Calc to mod(N), else - limit", "sep=col\ndef=1" );
+   PRM_PARAMD(     a,      0, "&a",    "output scale", "sep=block\ndef=1" );
+   PRM_PARAMD(     b,      0, "&b",    "output shift", "sep=col\ndef=0" );
 
-   PRM_INPUT( in_x,       0, "&in", "Input source",  "sep=block" );
-   PRM_INPUT( in_rst,     0, "rst", "Signal to reset counter", "sep=col" );
+   PRM_LOGICIN(   in_p,     0, "in_p", "+ input source",  "sep=block" );
+   PRM_LOGICIN(   in_m,     0, "in_m", "- input source",  "sep=col" );
+   PRM_LOGICIN( in_rst,     0, "rst", "Signal to reset counter", "sep=col" );
 
    PRM_INT( cn,     efInner, "cn", "Current counter value", "" );
-
-   int flip;
-   /** old value of input */
-   double u_old = DMAX;
 
    Q_CLASSINFO( "nameHintBase",  "cnt_" );
    DCL_DEFAULT_STATIC;

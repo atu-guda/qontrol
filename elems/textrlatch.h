@@ -52,7 +52,6 @@ class TExtrLatch : public TMiso  {
    PRM_SWITCH( useLocal, efNRC, "&Local extr", "Catch local extremums", "sep=col" );
    PRM_SWITCH( useFirst, efNRC, "Only &first", "Catch only first local extremum", "");
    PRM_SWITCH(     outT, efNRC, "Output T", "Output time of catched extremum, not value", "" );
-   PRM_SWITCH( useReset, efNRC, "use &Reset", "Use in_rst as reset signal", "" );
    PRM_PARAMD(   tStart, efNRC, "Time &start", "Time start", "sep=col");
 
    PRM_INT(    wasExtr, efInner, "wasExtr", "flag: extremum detected", "" );
@@ -68,7 +67,7 @@ class TExtrLatch : public TMiso  {
    PRM_DOUBLE(  t_ex,   efInner, "t_ex",  "t_ex" , "" );
 
    PRM_INPUT(   in_u,         0, "&in_u", "Main input",  "sep=block" );
-   PRM_INPUT( in_rst,         0, "rst", "Signal to reset", "sep=col" );
+   PRM_LOGICIN(in_rst,        0, "rst", "Signal to reset", "sep=col" );
 
    double  u_old = 0, u_old2 = 0, t_old = 0;
 

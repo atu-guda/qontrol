@@ -50,9 +50,9 @@ class TErrMeasure : public TMiso  {
    PRM_DOUBLE( mp,     efInner, "mp",  "mip/t_{rst}", "" );
    PRM_DOUBLE( mmax,   efInner, "mmax", "max(er1)", "" );
 
-   PRM_INPUT( in_x, 0, "in_{&x}", "First input",  "sep=block" );
-   PRM_INPUT( in_y, 0, "in_{&y}", "Second input", "sep=col" );
-   PRM_INPUT( rst,  0, "&rst",    "Reset signal", "sep=col" );
+   PRM_INPUT(  in_x, 0, "in_{&x}", "First input",  "sep=block" );
+   PRM_INPUT(  in_y, 0, "in_{&y}", "Second input", "sep=col" );
+   PRM_LOGICIN( rst, 0, "&rst",    "Reset signal", "sep=col" );
 
    double s2, sp; //* summs for integrals;
 

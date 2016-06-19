@@ -50,9 +50,9 @@ class TIntegrator : public TMiso  {
    PRM_SWITCH( useSqIn,  efNRC, "x^{&2} on input", "Calculate square on input", "sep=col" );
    PRM_SWITCH( useSqrOut,efNRC, "\u221As&qrt(output)", "Calculate square root on output", "" );
 
-   PRM_INPUT( in_u, 0, "&in_u", "Main input",  "sep=block" );
-   PRM_INPUT( in_rst, 0, "rst", "Reset signal", "sep=col" );
-   PRM_INPUT( v_rst, 0, "v_{rst}", "Value of v on reset", "sep=col" );
+   PRM_INPUT(     in_u, 0, "&in_u",   "Main input",  "sep=block" );
+   PRM_LOGICIN( in_rst, 0, "rst",   "Reset signal", "sep=col" );
+   PRM_INPUT(    v_rst, 0, "v_{rst}", "Value of v on reset", "sep=col" );
 
    double v_old = 0;
    double last_rst = 0;

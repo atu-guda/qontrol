@@ -55,10 +55,10 @@ double TAdjGen::f() noexcept
   real_tick = 0; tick = 0;
   switch( (int)type ) {
     case gen_def: ig += om * ctdt;                 // Pi=int_0^T(om*dt);
-            if( useReset && in_rst > 0.01 ) {
+            if( in_rst ) {
               real_tick = 1; break;
             };
-            if( useLock && in_lock > 0.01 ) {
+            if( in_lock ) {
               break;
             }
             if( ig > M_PI ) {
@@ -70,11 +70,12 @@ double TAdjGen::f() noexcept
               om = 1.0e-50;
             ctt += ctdt; ff = 1.0 / om;  df = ctdt * ff;
             ig += df * M_PI;
-            if( useReset && in_rst > 0.01 ) {
+            if( in_rst ) {
               real_tick = 1; break;
             };
-            if( useLock && in_lock > 0.01 )
+            if( in_lock  ) {
               break;
+            }
             if( ctt*ctt > ig ) {
               real_tick = 1;
             };
@@ -82,10 +83,10 @@ double TAdjGen::f() noexcept
     case gen_dual: ig += om * ctdt; ig2 += om2 * ctdt;
             g1 = ( ig  > M_PI );
             g2 = ( ig2 > M_PI );
-            if( useReset && in_rst > 0.01 ) {
+            if( in_rst ) {
               real_tick = 1; break;
             };
-            if( useLock && in_lock > 0.01 ) {
+            if( in_lock ) {
               break;
             }
             if( g1 && g2 ) {
@@ -112,14 +113,17 @@ double TAdjGen::f() noexcept
   }
 
   v = currOut ? 1.0 : ( useZero ? 0.0 : -1.0 );
-  if( !outStrobe )
+  if( !outStrobe ) {
     return v;
+  }
 
-  if( !real_tick )
+  if( !real_tick ) {
     return 0;
+  }
 
-  if( usePlusStrobe && v < 1 )
+  if( usePlusStrobe && v < 1 ) {
     return 0;
+  }
 
   return ( useSignStrobe ) ? v : 1;
 }

@@ -49,9 +49,10 @@ double TCriterion::f() noexcept
     return 0;
   }
   x = in_pos - in_neg;
-  if( useLock && st > 0 )
+  if( useLock && st > 0 ) {
     return usePulse ? 0 : 1;
-  if( useEnable && in_ena < 0.1 ) { // disabled
+  }
+  if( useEnable && !in_ena  ) { // disabled
     if( !st ) {
       return 0;
     }
@@ -92,7 +93,6 @@ double TCriterion::f() noexcept
   }
 
   st = ok;
-  // TODO: break all computation action
   return rv;
 }
 

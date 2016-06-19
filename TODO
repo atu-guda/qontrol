@@ -1,6 +1,7 @@
 Bug: reset_dfl for complex object for dialog: RODial, set? context?
 post_parm_set.
 flag: post_set on parent with wait?
+TTrigger and TRandTrigger redesign.
 TIntegrator2: + combine TVibro, TFriction?
 TOutArr enable collect signal.
 TOutArr: use InputSimple (need conversion) ?? or keep

@@ -44,8 +44,8 @@ class TAdjGen : public TMiso  {
    /** type of averaging, */
    PRM_LIST( type, efNRC, "&Type", "Type of generator", "enum=GenType" );
    /** misc flags */
-   PRM_SWITCH( useReset, efNRC, "use &Reset", "Use in_rst  signal", "sep=col" );
-   PRM_SWITCH( useLock, efNRC, "use Lock", "Use lock signal", "" );
+   // PRM_SWITCH( useReset, efNRC, "use &Reset", "Use in_rst  signal", "sep=col" );
+   // PRM_SWITCH( useLock, efNRC, "use Lock", "Use lock signal", "" );
    PRM_SWITCH( outStrobe, efNRC, "Output Strobe", "Output only at switching moments", "" );
    PRM_SWITCH( useZero, efNRC, "0 is neg. out", "Negative output is 0, not -1", "sep=col" );
    PRM_SWITCH( useSignStrobe, efNRC, "Signed strobe", "Output +1 - switch to ON, -1 - OFF", "" );
@@ -66,9 +66,9 @@ class TAdjGen : public TMiso  {
    PRM_DOUBLE( av2, efInner, "av2", "Average 2", "" );
    PRM_DOUBLE( av_diff, efInner, "av_diff", "difference of averages", "" );
 
-   PRM_INPUT( in_omega,  0, "\\omega_{&in}", "omega input",  "sep=block" );
-   PRM_INPUT( in_rst,    0, "reset",         "reset input input", "sep=col" );
-   PRM_INPUT( in_lock,   0, "lock",          "lock input",  "sep=col" );
+   PRM_INPUT(  in_omega, 0, "\\omega_{&in}", "omega input",  "sep=block" );
+   PRM_LOGICIN(  in_rst, 0, "reset",         "reset input input", "sep=col" );
+   PRM_LOGICIN( in_lock, 0, "lock",          "lock input",  "sep=col" );
    PRM_INPUT( in_omega2, 0, "\\omega_{&2}",  "second omega input", "sep=col" );
 
    PRM_INT( currOut, efInner, "Current out", "Current INT output", "");
