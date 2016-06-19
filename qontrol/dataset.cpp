@@ -933,18 +933,18 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
       QString txt = getDomText( ee );
       if( ho && ho->isObject() ) {
         //* TODO: remove after newlink conversion
-        if( ho->getType() == QSL("ParamDouble") ) {
-          double vt = txt.toDouble(); // hack: limit number of digits on conversion
-          txt = QSN( vt, 'g', DOUBLE_PREC );
-          ho->setData( QSL("source"), txt );
-          ho->setData( QSL("line_w"), 2 );
-          ho->setData( QSL("line_color"), QSL("red") );
-          continue;
-        }
-        if( ho->getType() == QSL("InputSimple") ) { // TODO: remove after TOutArr conversion
-          ho->setData( QSL("source"), txt );
-          continue;
-        }
+        // if( ho->getType() == QSL("ParamDouble") ) {
+        //   double vt = txt.toDouble(); // hack: limit number of digits on conversion
+        //   txt = QSN( vt, 'g', DOUBLE_PREC );
+        //   ho->setData( QSL("source"), txt );
+        //   ho->setData( QSL("line_w"), 2 );
+        //   ho->setData( QSL("line_color"), QSL("red") );
+        //   continue;
+        // }
+        // if( ho->getType() == QSL("InputSimple") ) { // TODO: remove after TOutArr conversion
+        //   ho->setData( QSL("source"), txt );
+        //   continue;
+        // }
         // --------- end conversion (TMP) --------
         errstr = QString("TDataSet::fromDom: param \"%1\" is an object type \"%2\" ")
                  .arg(elname).arg(ho->getType());

@@ -14,7 +14,7 @@
 #include <QString>
 #include <QStringList>
 
-#define VERSION "0.0.3"
+#define VERSION "0.0.4"
 
 /* Name of package */
 #define PACKAGE "qontrol"
