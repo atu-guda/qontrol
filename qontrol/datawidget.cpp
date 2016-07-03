@@ -1412,6 +1412,13 @@ void DataDialog::accept()
   QDialog::accept();
 }
 
+void DataDialog::reject()
+{
+  revertData();
+  QDialog::reject();
+}
+
+
 void DataDialog::checkData()
 {
   // TODO:

@@ -1,4 +1,6 @@
+BUG: Cancel in DataDialog do not work!
 Bug: reset_dfl for complex object for dialog: RODial, set? context?
+List of presets for element.
 post_parm_set.
 flag: post_set on parent with wait?
 TTrigger and TRandTrigger redesign.
