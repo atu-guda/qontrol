@@ -246,7 +246,7 @@ class InputLogic : public InputSimple {
   bool lval() const { return ll; };
   operator bool() const { return ll; }
  protected:
-  virtual int do_startLoop( long /*acnx*/, long /*acny*/ ) override { ll = 0; old_out0 = out0; return 1; }
+  virtual int do_startLoop( long /*acnx*/, long /*acny*/ ) override { old_out0 = out0; post_readInput(); return 1; }
   virtual void post_readInput() override;
 
   PRM_LIST( type, efNRC, "&Type", "Function type", "enum=InputLogicType\nsep=block" );

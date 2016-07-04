@@ -89,12 +89,15 @@ double TTrigger::f() noexcept
   int act = 0;
   switch( sw ) {
     case 0:  break;
-    case 1:  if( cst == 0 ) act = 1;
-             cst = 1; et = 0; break;
-    case -1: if( cst == 1 ) act = -1;
-             cst = 0; break;
+    case 1:  if( cst == 0 ) { act = 1; }
+             cst = 1; et = 0;
+             break;
+    case -1: if( cst == 1 ) { act = -1; }
+             cst = 0;
+             break;
     case 2:  cst = !cst;  act = cst ? 1 : -1;
-             if( cst ) et = 0; break;
+             if( cst ) { et = 0; }
+             break;
     default: break;
   };
   if( usePulse ) {
