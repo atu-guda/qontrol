@@ -41,6 +41,7 @@ SOURCES += \
   longvalidator.cpp \
   mglview.cpp \
   outdataview.cpp \
+  paramsdialog.cpp \
   runview.cpp \
   statusmodel.cpp \
   structview.cpp \
@@ -108,6 +109,7 @@ SOURCES += \
 
 HEADERS += \
   addelemdia.h \
+  askedparam.h \
   autoact.h \
   circbuf.h \
   cmdview.h \
@@ -130,6 +132,7 @@ HEADERS += \
   longvalidator.h \
   mglview.h \
   outdataview.h \
+  paramsdialog.h \
   runview.h \
   statusmodel.h \
   structview.h \

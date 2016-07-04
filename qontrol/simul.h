@@ -55,38 +55,37 @@ class Simulation : public LinkedObj  {
 
  protected:
   // simulation parameters, borrowed/renamed from TModel
-  PRM_LIST( runType,  efNRC, "&Run type",  "type of simulation run", "enum=RunType" );
-  PRM_DOUBLE(     T,  efNRC, "&T", "Full Run Time", "min=0\nmax=1e300\ndef=100" );
-  PRM_DOUBLE(   t_0,  efNRC, "t_0", "Start time", "def=0" );
-  PRM_DOUBLE( T_brk,  efNRC, "T_{brk}", "Break time", "min=0\nmax=1e300\ndef=1e100" );
-  PRM_LONG(       N,  efNRC, "&N", "Number of steps in one run", "min=1\nmax=200000000\nsep=col\ndef=10000"  );
-  PRM_DOUBLE(   tdt,  efNRC | efRODial | efNoSave, "\\tau", "step time", "def=1" );
-  PRM_INT(    n_pre,  efNRC, "N pre", "Number of calculations at startLoop ", "def=5" );
-  PRM_SWITCH( syncRT, efNRC, "Sync RT", "Real and model time synchronization ", "sep=col" );
-  PRM_DOUBLE( io_t,   efNRC, "I/O time", "Time per each I/O action", "def=0.1\nmin=1e-4" );
-  PRM_SWITCH( fakeRT, efNRC, "Fake RT",  "Real time is set to model time", "" );
+  PRM_LIST(     runType,      efNRC, "&Run type",  "type of simulation run", "enum=RunType" );
+  PRM_DOUBLE(         T,      efNRC, "&T", "Full Run Time", "min=0\nmax=1e300\ndef=100" );
+  PRM_DOUBLE(       t_0,      efNRC, "t_0", "Start time", "def=0" );
+  PRM_DOUBLE(     T_brk,      efNRC, "T_{brk}", "Break time", "min=0\nmax=1e300\ndef=1e100" );
+  PRM_LONG(           N,      efNRC, "&N", "Number of steps in one run", "min=1\nmax=200000000\nsep=col\ndef=10000"  );
+  PRM_DOUBLE(       tdt,  efNRC | efRODial | efNoSave, "\\tau", "step time", "def=1" );
+  PRM_INT(        n_pre,       efNRC, "N pre", "Number of calculations at startLoop ", "def=5" );
+  PRM_SWITCH(    syncRT,       efNRC, "Sync RT", "Real and model time synchronization ", "sep=col" );
+  PRM_DOUBLE(      io_t,       efNRC, "I/O time", "Time per each I/O action", "def=0.1\nmin=1e-4" );
+  PRM_SWITCH(    fakeRT,       efNRC, "Fake RT",  "Real time is set to model time", "" );
 
   /** Loop parameter values */
-  PRM_LONG( N1, efNRC, "N&1",
+  PRM_LONG(          N1,       efNRC, "N&1",
        "Number of inner parametric loops iterations",
        "min=1\nmax=10000\nsep=block\ndef=1" );
-  PRM_DOUBLE( prm0s, efNRC, "prm0s", "Initial prm0 value", "" );
-  PRM_DOUBLE( prm0d, efNRC, "prm0+=", "Parameter 0 delta", "" );
-  PRM_STRING( prm0_map,  efNRC, "Map to(0)", "Change parameter with prm0", "max=128\ncmpl=in" );
-  PRM_LONG( N2, efNRC, "N&2",
+  PRM_DOUBLE(     prm0s,       efNRC, "prm0s", "Initial prm0 value", "" );
+  PRM_DOUBLE(     prm0d,       efNRC, "prm0+=", "Parameter 0 delta", "" );
+  PRM_STRING(  prm0_map,       efNRC, "Map to(0)", "Change parameter with prm0", "max=128\ncmpl=in" );
+  PRM_LONG(          N2,       efNRC, "N&2",
        "Number of outer parametric loops iterations",
        "min=1\nmax=10000\nsep=col\ndef=1\nsep=col" );
-  PRM_DOUBLE( prm1s, efNRC, "prm1s", "Initial prm1 value", "" );
-  PRM_DOUBLE( prm1d, efNRC, "prm1+=", "Parameter 1 delta", "" );
-  PRM_STRING( prm1_map,  efNRC, "Map to(1)", "Change parameter with prm1", "max=128\ncmpl=in" );
-  PRM_DOUBLE( prm2s, efInner, "prm2s", "Initial prm2 value", ""  );
-  PRM_DOUBLE( prm3s, efInner, "prm3s", "Initial prm3 value", ""  );
-  PRM_SWITCH( saveParams,efNRC, "Save params",
-      "Save mapped parameters during run, and restore after", "def=1\nsep=col" );
-  PRM_SWITCH( autoStart, efNRC, "auto start",
-      "Start simulation without key awaiting", "" );
-  PRM_INT( seed, efNRC, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
-  PRM_LIST( seedType, efNRC, "Seed type",  "type of seeding", "enum=SeedType" );
+  PRM_DOUBLE(     prm1s,       efNRC, "prm1s", "Initial prm1 value", "" );
+  PRM_DOUBLE(     prm1d,       efNRC, "prm1+=", "Parameter 1 delta", "" );
+  PRM_STRING(  prm1_map,       efNRC, "Map to(1)", "Change parameter with prm1", "max=128\ncmpl=in" );
+  PRM_DOUBLE(     prm2s,     efInner, "prm2s", "Initial prm2 value", ""  );
+  PRM_DOUBLE(     prm3s,     efInner, "prm3s", "Initial prm3 value", ""  );
+  PRM_SWITCH(saveParams,       efNRC, "Save params", "Save mapped parameters during run, and restore after", "def=1\nsep=col" );
+  PRM_SWITCH( autoStart,       efNRC, "auto start",  "Start simulation without key awaiting", "" );
+  PRM_INT(         seed,       efNRC, "Seed", "Seed for random generator" , "min=-1\ndef=RND" );
+  PRM_LIST(    seedType,       efNRC, "Seed type",  "type of seeding", "enum=SeedType" );
+  PRM_STRING( askParams,       efNRC, "Ask params:", "Ask this parameters before run: var1,var2", "ncol=-1\nsep=block" );
   //* -------- script params -------------------------------
   PRM_SWITCH( useScripts,      efNRC, "use &scripts", "Turn on all script usage", "def=0\nsep=block" );
   PRM_SWITCH( initEng,         efNRC, "Init engine", "Init engine before run", "def=1" );
@@ -102,7 +101,7 @@ class Simulation : public LinkedObj  {
   //* helper values to simplify usage
   PRM_LONG( n1_eff, efInner, "n1_eff", "Effective number of iteration in inner loop" , "" );
   PRM_LONG( n2_eff, efInner, "n2_eff", "Effective number of iteration in outer loop" , "" );
-  PRM_LONG( n_tot, efInner, "n_tot", "Total number of iterations" , "" );
+  PRM_LONG( n_tot,  efInner, "n_tot", "Total number of iterations" , "" );
 
   virtual void do_post_set() override;
 

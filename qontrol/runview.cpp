@@ -27,6 +27,7 @@
 #include "simul.h"
 
 #include "runview.h"
+#include "paramsdialog.h"
 
 using namespace std;
 
@@ -77,14 +78,33 @@ void RunView::slotStartRun()
     model->reset();
     state = stateBad;
     qWarning() << "model->startRun failed" << WHE;
+    reject();
     return;
   };
 
+
   runner = new ModelRunner( model, &sem_io, this );
   if( !runner ) {
+    model->reset();
+    reject();
     return;
   }
   // connect signals
+
+  QList<AskedParam> &plist = model->getAskedParams();
+
+  if( !plist.isEmpty() ) {
+    auto *dia = new ParamsDialog( plist, this );
+    auto rc = dia->exec();
+    delete dia;
+    if( rc  == QDialog::Accepted ) {
+      model->applyAskedParams();
+    } else {
+      model->reset();
+      reject();
+      return;
+    }
+  }
 
   if( syncRT ) {
     setMouseTracking(1);

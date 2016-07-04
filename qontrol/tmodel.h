@@ -25,6 +25,7 @@
 #include "toutarr.h"
 #include "tgraph.h"
 #include "simul.h"
+#include "askedparam.h"
 
 
 class QSemaphore;
@@ -75,9 +76,13 @@ class TModel : public LinkedObj  {
   long get_i_tot() const { return i_tot; }
   long get_il1() const { return il1; }
   long get_il2() const { return il2; }
+  QList<AskedParam>& getAskedParams() { return asked_params; };
+  void applyAskedParams(); // and save old
  protected:
   virtual void do_reset() override;
   int runOneLoop( IterType itype );
+  void fillAskedParams( const QString &names );
+  void restoreAskedParams();
 
   // interface to commands like above, but with names - to use from JS
  public Q_SLOTS:
@@ -196,6 +201,7 @@ class TModel : public LinkedObj  {
   double fake_map_target = 0;
   // ptr to mapped parameters
   double *prm0_targ = &fake_map_target, *prm1_targ = &fake_map_target;
+  QList<AskedParam> asked_params;
 
   //* current scheme during run, else - 0
   Scheme *c_sch = nullptr;

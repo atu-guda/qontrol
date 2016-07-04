@@ -1,14 +1,15 @@
-BUG: Cancel in DataDialog do not work!
 Bug: reset_dfl for complex object for dialog: RODial, set? context?
 List of presets for element.
+Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
 post_parm_set.
 flag: post_set on parent with wait?
+Rename in DataDialog (label).
+Label color (mod)
 TTrigger and TRandTrigger redesign.
 TIntegrator2: + combine TVibro, TFriction?
-"N" parm may used only while initial array creation. Need more design.
-Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
-Tabname on tabend: fix by additional element, like label?
 Common parts in TIntegrator, TLinP1Q0, TVibro.
+"N" parm may used only while initial array creation. Need more design.
+Tabname on tabend: fix by additional element, like label?
 TMatrix3D(done) + rotate (separate/same) + Quaternion?
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
 TModel::startRun: list on vars to copy. List for engine aliases?
@@ -49,7 +50,6 @@ JS run dialog. + one-line above log viewer
 QScintilla? Dialog or SubWindow?
 js/large text edit widget + button/dialog + external editor (partial done)?
 
-Sub simulation? / set of dialog-ed values before run
 
 RunWindow?
 

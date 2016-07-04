@@ -1421,7 +1421,7 @@ void LaboWin::importAllSchemes()
 
 void LaboWin::slotRunRun()
 {
-  callLaboViewSlot( "runRun", tr( "Running simple loop..." ) );
+  callLaboViewSlot( "runRun", tr( "Running simulation..." ) );
 }
 
 

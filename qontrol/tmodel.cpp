@@ -265,6 +265,9 @@ int TModel::startRun()
   prm0_targ = getMapDoublePtr( ">prm0_map" );
   prm1_targ = getMapDoublePtr( ">prm1_map" );
 
+  QString askParams = c_sim->getDataD( QSL("askParams"), QString() );
+  fillAskedParams( askParams );
+
   t = t_0; ct = t_0; t_r = 0;
   rinf.run_tp = run_type; rinf.N = N; rinf.nx = n1_eff; rinf.ny = n2_eff;
   rinf.fakeRT = fakeRT;
@@ -323,16 +326,18 @@ long TModel::run( QSemaphore *sem )
   double rt0 = get_real_time();
 
   prm0_save = *prm0_targ; prm1_save = *prm1_targ;
+  // applyAskedParams();
+
 
   QString scriptPreRun, scriptPostRun, scriptStartLoop, scriptEndLoop;
   QScriptValue v_il1, v_il2;
 
-  int useScripts  = c_sim->getDataD( "useScripts", 0 );
+  int useScripts  = c_sim->getDataD( QSL("useScripts"), 0 );
   if( useScripts ) {
-    scriptPreRun    = c_sim->getDataD( "scriptPreRun", QString() );
-    scriptPostRun   = c_sim->getDataD( "scriptPostRun", QString() );
-    scriptStartLoop = c_sim->getDataD( "scriptStartLoop", QString() );
-    scriptEndLoop   = c_sim->getDataD( "scriptEndLoop", QString() );
+    scriptPreRun    = c_sim->getDataD( QSL("scriptPreRun"), QString() );
+    scriptPostRun   = c_sim->getDataD( QSL("scriptPostRun"), QString() );
+    scriptStartLoop = c_sim->getDataD( QSL("scriptStartLoop"), QString() );
+    scriptEndLoop   = c_sim->getDataD( QSL("scriptEndLoop"), QString() );
   }
 
   runScript( scriptPreRun ); // test for empty - inside
@@ -435,6 +440,7 @@ int TModel::stopRun()
   int saveParams = c_sim->getDataD( "saveParams", 1 );
   if( saveParams ) {
     *prm0_targ = prm0_save;  *prm1_targ = prm1_save;
+    restoreAskedParams();
   }
 
   if( plots ) { // TODO: remove? move to ContGraph::do_endLoop or stopRun?
@@ -470,7 +476,6 @@ int TModel::runOneLoop( IterType itype )
 {
   // readInputs(); // too slow here
 
-  //outs->readInputs();
   outs->takeAllVals();
   ct += ctdt; t = ct; t_r += ctdt; ++ii;
 
@@ -485,6 +490,42 @@ int TModel::runOneLoop( IterType itype )
 }
 
 
+void TModel::fillAskedParams( const QString &names )
+{
+  asked_params.clear();
+  if( names.isEmpty() || names[0] == '#' ) {
+    return;
+  }
+  QStringList nms = names.split( ',' );
+
+  for( auto nm : nms ) {
+    if( nm[0] == '-' ) { // symbol to comment one param
+      continue;
+    }
+    double *p = getMapDoublePtr( nm );
+    if( !p || p == &fake_map_target ) {
+      continue;
+    }
+    asked_params.push_back( { nm, *p, *p, p } );
+    qWarning() << "Added param " << nm << NWHE;
+  }
+
+}
+
+void TModel::applyAskedParams()
+{
+  for( auto &apa : asked_params ) {
+    apa.saved = *( apa.targ );
+    *( apa.targ ) = apa.cur;
+  }
+}
+
+void TModel::restoreAskedParams()
+{
+  for( auto &apa : asked_params ) {
+    *( apa.targ ) = apa.saved;
+  }
+}
 
 
 // ------------------------------------------
