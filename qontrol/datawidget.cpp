@@ -24,6 +24,9 @@ DataLabel::DataLabel( HolderData &_ho, const QString &text, DataWidget *parent, 
    : QLabel( text, parent, f ),
      ho( _ho ), dw( parent )
 {
+  if( ho.getModified() ) {
+    setStyleSheet( QSL("QLabel { color : red; }") );
+  }
 }
 
 void DataLabel::contextMenuEvent( QContextMenuEvent *ev )
