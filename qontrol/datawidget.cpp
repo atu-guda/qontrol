@@ -1370,6 +1370,7 @@ DataDialog::DataDialog( HolderData &a_ds, QWidget *parent )
 
   obj2visAll();
   saved_data = ds.toString();
+  was_modified = ds.getModified();
 }
 
 int DataDialog::obj2visAll()
@@ -1438,7 +1439,9 @@ void DataDialog::revertData()
   ds.suspendHandleStructChange();
   ds.delAllDyn(); // TODO: suppress errors during recreate.
   ds.fromString( saved_data );
-  ds.setUnModified();
+  if( ! was_modified ) {
+    ds.setUnModified();
+  }
   ds.resumeHandleStructChange();
   obj2visAll();
 }

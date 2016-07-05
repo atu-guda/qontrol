@@ -345,6 +345,7 @@ class DataDialog : public QDialog {
    QString saved_data;
    bool ro;
    bool buttons_created = false;
+   bool was_modified = false;
    QVBoxLayout *lay_main = nullptr;
    QTabWidget *tw = nullptr; // pane for all data widgets
 };
