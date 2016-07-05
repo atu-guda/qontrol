@@ -1415,7 +1415,9 @@ void DataDialog::accept()
 
 void DataDialog::reject()
 {
-  revertData();
+  if( was_modified || ds.getModified() ) {
+    revertData();
+  }
   QDialog::reject();
 }
 
