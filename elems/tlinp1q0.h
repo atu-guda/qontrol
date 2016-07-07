@@ -48,6 +48,7 @@ class TLinP1Q0 : public TMiso  {
 
    PRM_INPUT( in_u,    0, "&in_u", "Signal input",  "sep=block" );
    PRM_INPUT( in_f,    0, "in_f", "Functional input", "sep=col" );
+   PRM_DOUBLE(  tau,  efInner, "\\tau",   "Effective time",  "def=1"  );
 
    /** old value of x  */
    double x_old = 0;

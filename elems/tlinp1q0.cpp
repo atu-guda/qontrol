@@ -50,6 +50,7 @@ double TLinP1Q0::f() noexcept
 {
   double f = ( use_u1 ) ? in_f : x_old;
   double u = ( use_u2 ) ? pow2( in_u ) : in_u;
+  tau = 1.0 / a;
   // TODO: check this for stability
   double x = x_old + a * ctdt * ( ku * u - f );
   x_old = x;
