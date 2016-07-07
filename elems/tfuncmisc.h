@@ -77,6 +77,10 @@ class TFuncMisc : public TMiso  {
    PRM_INPUT( in_0, 0, "in_{&0}", "First input",  "sep=block" );
    PRM_INPUT( in_1, 0, "in_{&1}", "Second input", "sep=col" );
 
+   // misc values
+   PRM_DOUBLE(  ax,  efInner, "ax",   "|x|",  ""  );
+   PRM_DOUBLE(  ay,  efInner, "ay",   "|y|",  ""  );
+
    Q_CLASSINFO( "nameHintBase",  "fm_" );
    DCL_DEFAULT_STATIC;
 };

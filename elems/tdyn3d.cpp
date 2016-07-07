@@ -41,6 +41,10 @@ CTOR(TDyn3D,TMiso)
 
 double TDyn3D::f() noexcept
 {
+  x2 = x*x; y2 = y*y; z2 = z*z;
+  xy = x*y; yz = y*z; xz = x*z;
+  ax = fabs( x ); ay = fabs( y ); az = fabs( z );
+
   v = gsl_hypot3( v_x, v_y, v_z );
 
   x += ctdt * v_x * c_x;

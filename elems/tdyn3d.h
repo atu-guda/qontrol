@@ -51,6 +51,18 @@ class TDyn3D : public TMiso  {
    PRM_INPUT( v_y, 0, "v_y",  "Y speed input",  "sep=col" );
    PRM_INPUT( v_z, 0, "v_z",  "Z speed input",  "sep=col" );
 
+   /** misc values */
+   PRM_DOUBLE(  x2,  efInner, "x2",    "x^2", ""  );
+   PRM_DOUBLE(  y2,  efInner, "y2",    "y^2", ""  );
+   PRM_DOUBLE(  z2,  efInner, "z2",    "z^2", ""  );
+   PRM_DOUBLE(  xy,  efInner, "xy",    "xy",  ""  );
+   PRM_DOUBLE(  yz,  efInner, "yz",    "yz",  ""  );
+   PRM_DOUBLE(  xz,  efInner, "xz",    "xz",  ""  );
+   PRM_DOUBLE(  ax,  efInner, "ax",   "|x|",  ""  );
+   PRM_DOUBLE(  ay,  efInner, "ay",   "|y|",  ""  );
+   PRM_DOUBLE(  az,  efInner, "az",   "|z|",  ""  );
+
+
    Q_CLASSINFO( "nameHintBase",  "d3_" );
    DCL_DEFAULT_STATIC;
 };

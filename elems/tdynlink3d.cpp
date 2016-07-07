@@ -43,6 +43,7 @@ double TDynLink3D::f() noexcept
 {
   x2 = x*x; y2 = y*y; z2 = z*z;
   xy = x*y; yz = y*z; xz = x*z;
+  ax = fabs( x ); ay = fabs( y ); az = fabs( z );
 
   v_x = cx_0 + v_xa
       + cx_x  * x   + cx_y  *  y  +  cx_z  * z

@@ -94,6 +94,9 @@ class TDynLink3D : public TMiso  {
    PRM_DOUBLE(  xy,  efInner, "xy",    "xy",  ""  );
    PRM_DOUBLE(  yz,  efInner, "yz",    "yz",  ""  );
    PRM_DOUBLE(  xz,  efInner, "xz",    "xz",  ""  );
+   PRM_DOUBLE(  ax,  efInner, "ax",   "|x|",  ""  );
+   PRM_DOUBLE(  ay,  efInner, "ay",   "|y|",  ""  );
+   PRM_DOUBLE(  az,  efInner, "az",   "|z|",  ""  );
 
    Q_CLASSINFO( "nameHintBase",  "d3l_" );
    DCL_DEFAULT_STATIC;

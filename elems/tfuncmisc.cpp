@@ -40,6 +40,7 @@ double TFuncMisc::f() noexcept
 {
   double v;
   y = in_0 - in_1 - x0;
+  ax = fabs( in_0 ); ay = fabs( y );
   double cy = c * y;
   switch( (FuncType)(int)type ) {
     case ft_deadLine     : v = a * deadLine( y, b ) + cy; break;
