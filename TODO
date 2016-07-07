@@ -1,4 +1,5 @@
 Bug: reset_dfl for complex object for dialog: RODial, set? context?
+modification flag/usage rethink: only real data holder count?
 List of presets for element.
 Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
 post_parm_set.
