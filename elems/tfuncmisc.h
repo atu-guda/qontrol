@@ -46,7 +46,7 @@ class TFuncMisc : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_6",  "a*threeState(y,b)+c*y+g"    );    // ft_threeState
    Q_CLASSINFO( "enum_FuncType_7",  "a*triangle(y,b)+c*y+g"      );    // ft_triangle
    Q_CLASSINFO( "enum_FuncType_8",  "a*rectLine(y,b,c)+c*y+g"    );    // ft_reactLine
-   Q_CLASSINFO( "enum_FuncType_9",  "((y>f)?a:b)*y+g"            );    // ft_2slope
+   Q_CLASSINFO( "enum_FuncType_9",  "((y>e)?a:b)*y+g"            );    // ft_2slope
    Q_CLASSINFO( "enum_FuncType_10", "a*in_0/(in_1+b)+c*y+g"      );    // ft_div
    Q_CLASSINFO( "enum_FuncType_11", "a*int(y*b)+c*y+g"           );    // ft_int
    Q_CLASSINFO( "enum_FuncType_12", "a*frac(y*b)+g"              );    // ft_frac
@@ -54,7 +54,7 @@ class TFuncMisc : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_14", "a*erf(y*b)+g"               );    // ft_erf
    Q_CLASSINFO( "enum_FuncType_15", "a*min(in_0,in_1)+g"         );    // ft_min
    Q_CLASSINFO( "enum_FuncType_16", "a*max(in_0,in_1)+g"         );    // ft_max
-   Q_CLASSINFO( "enum_FuncType_17", "a*((y>f)?b:c)*y+g"          );    // ft_2slopeEx
+   Q_CLASSINFO( "enum_FuncType_17", "a*((y>e)?b:c)*y+g"          );    // ft_2slopeEx
    Q_CLASSINFO( "enum_FuncType_18", "a*copysign(in_0,in_1)+g"    );    // ft_copysign
  protected:
    /** main computation function */

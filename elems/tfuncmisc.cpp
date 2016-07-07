@@ -51,7 +51,7 @@ double TFuncMisc::f() noexcept
     case ft_threeState   : v = a * threeStateLine( y, b ) + cy; break;
     case ft_triangle     : v = a * triangleLine( y , b ) + cy; break;
     case ft_reactLine    : v = a * rectLine( y, b, c ) + cy; break;
-    case ft_2slope       : v = ( y >= f ) ? ( a * y ) : ( b * y ); break;
+    case ft_2slope       : v = ( y >= e ) ? ( a * y ) : ( b * y ); break;
     case ft_div          : v = a * in_0 / ( in_1 +  b ) + cy;  break;
     case ft_int          : v = a * int( y * b ) + cy;  break;
     case ft_frac         : v = a * ( ( y * b ) - int( y * b ) ) + cy;  break;
@@ -59,7 +59,7 @@ double TFuncMisc::f() noexcept
     case ft_erf          : v = a * erf( y*b );  break;
     case ft_min          : v = a * fmin( in_0, in_1 );  break;
     case ft_max          : v = a * fmax( in_0, in_1 );  break;
-    case ft_2slopeEx     : v = a * (( y >= f ) ? ( b * y ) : ( c * y )); break;
+    case ft_2slopeEx     : v = a * (( y >= e ) ? ( b * y ) : ( c * y )); break;
     case ft_copysign     : v = a * copysign( in_0, in_1 ); break;
     default: v = 0;
   };
