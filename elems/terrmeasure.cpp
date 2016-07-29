@@ -23,7 +23,10 @@
 using namespace std;
 
 const char* TErrMeasure::helpstr = "<H1>TErrMeasure</H1>\n"
- "<p>Misc error measures\n";
+ "<p>Misc error measures:<br/>\n"
+ "m1 - ave(abs(|err|))<br/>\n"
+ "m2 - sqrt(ave(abs(err^2)))<br/>\n"
+ "mp - the same, but for the 'p' power</p>\n";
 
 STD_CLASSINFO(TErrMeasure,clpElem );
 
@@ -33,6 +36,7 @@ CTOR(TErrMeasure,TMiso)
 
 int TErrMeasure::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
+  er1 = 0 ; er2 = 0; erp = 0;
   reset_vals();
   return 1;
 }
@@ -42,18 +46,22 @@ void TErrMeasure::reset_vals()
   t_rst = 0;
   s2 = sp = 0;
   mi1 = mi2 = mip = mmax = 0;
+  m1 = er1; m2 = sqrt(er2); mp = pow( erp, (1.0/p) );
 }
 
 double TErrMeasure::f() noexcept
 {
-  if( rst ) {
-    reset_vals();
-  };
-
   er = in_x - in_y;
   er1 = fabs( er );
   er2 = pow2( er );
   erp = pow( er1, p );
+  if( rst ) {
+    reset_vals();
+  };
+
+  if( !enable.lval() ) {
+    return m2;
+  }
 
   t_rst += ctdt;
   mi1 += er1 * ctdt;  m1 = mi1 / t_rst;
