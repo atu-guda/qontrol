@@ -1,3 +1,6 @@
+Need correct time to gather info to PlotLabel
+BUG: Paste Holder( testd on string) loss values
+Add meta about plot scale, angles to export fig.
 Bug: reset_dfl for complex object for dialog: RODial, set? context?
 modification flag/usage rethink: only real data holder count?
 List of presets for element.
