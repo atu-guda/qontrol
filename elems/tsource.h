@@ -32,9 +32,9 @@ class TSource : public TMiso  {
    DCL_CREATE;
    DCL_STD_INF;
    enum SourceType {
-     so_sin = 0, so_sign = 1, so_sin_raise = 2, so_sign_raise = 3, so_dirac = 4,
-     so_theta = 5, so_raise = 6, so_saw = 7, so_saw2 = 8, so_chaos_wave = 9,
-     so_triangle = 10, so_phase = 11
+     so_sin = 0, so_sign, so_sin_raise, so_sign_raise, so_dirac,
+     so_theta, so_raise, so_saw, so_saw2, so_chaos_wave, // = 9
+     so_triangle, so_phase, so_pulse // =12
    };
    Q_ENUMS(SourceType);
    Q_CLASSINFO( "enum_SourceType_0",  "U*sin(\\omega*t+\\phi)" );           // so_sin
@@ -49,6 +49,7 @@ class TSource : public TMiso  {
    Q_CLASSINFO( "enum_SourceType_9",  "U*chaos Wave(\\phi)" );              // so_chaos_wave
    Q_CLASSINFO( "enum_SourceType_10", "U*triangle(\\omega*t+\\phi)" );      // so_triangle
    Q_CLASSINFO( "enum_SourceType_11", "Phase" );                            // so_phase
+   Q_CLASSINFO( "enum_SourceType_12", "Pulse" );                            // so_pulse
 
 
    enum SeedType {
@@ -100,6 +101,10 @@ class TSource : public TMiso  {
    PRM_LIST( seedType_p, efNRC,"F seed type"  , "When to seed", "def=3\nenum=SeedType" );
    PRM_SWITCH( addBaseSeed_p, efNRC, "F add base to seed", "Add seed from base(model)", "def=1" );
    PRM_SWITCH( addHash_p, efNRC, "F add hash", "Add hash(fullname) to seed", "def=1");
+
+   // inners
+   PRM_DOUBLE( pha,   efInner, "pha",   "current phase: 2\\pi t=1", ""  );
+   PRM_DOUBLE( pha_0, efInner, "pha_0", "current phase in [0;1) range", ""  );
 
    // NO inputs
 

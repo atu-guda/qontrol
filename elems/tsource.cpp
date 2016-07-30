@@ -36,7 +36,7 @@ CTOR(TSource,TMiso)
 
 double TSource::f() noexcept
 {
-  double v, omet, uu_s, omet_s, lt, u_ch, f_ch, pha, pha_0;
+  double v, omet, uu_s, omet_s, lt, u_ch, f_ch;
   int n;
   omet = ct * omega + phi; u_ch = 1; f_ch = 0;
 
@@ -66,7 +66,9 @@ double TSource::f() noexcept
 
   uu_s = uu * u_ch; omet_s = omet + f_ch; // note u: * fi +
   pha = omet_s * M_1_PI * 0.5;
+  double old_pha_0 = pha_0;
   pha_0 = fmod( pha, 1 ); // phase in range [ 0; 1 )
+  bool pha_flip = pha_0 < old_pha_0;
 
   switch( (int)type ) {
     case so_sin:
@@ -109,7 +111,11 @@ double TSource::f() noexcept
         v = uu_s * ( -1 +4*(pha_0-0.75));
       break;
     case so_phase:
-      v = pha_0; break;
+      v = pha_0;
+      break;
+    case so_pulse:
+      v = cc + (pha_flip ? uu : 0) ;
+      break;
     default: v = 0;
   };
   v += cc;
@@ -156,6 +162,8 @@ int TSource::do_preRun()
 int TSource::miso_startLoop( long acnx, long acny )
 {
   was_pulse = 0;
+  pha = phi * M_1_PI * 0.5;
+  pha_0 = fmod( pha, 1 );
 
   // U rnd init
   if( use_u_ch ) {
