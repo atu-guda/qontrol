@@ -40,12 +40,11 @@ class TCorrAnalysis : public TMiso  {
    /** reimplemented from TMiso to reset summators */
    virtual int miso_startLoop( long acnx, long acny ) override;
    /* ============= function members ================== */
-   /** resets collocted and computed data */
+   /** resets collected and computed data */
    void reset_data();
+   void reset_counters(); // reset only counters: to call at reset()
    /** calculate all output values */
    int calc();
-   /** retrives data from model arrays */
-   int getDataFromArrays();
 
    /* ============= data members ================== */
    /** type of data collection, flags */
@@ -80,7 +79,7 @@ class TCorrAnalysis : public TMiso  {
 
    PRM_INPUT(     in_x,  0, "in_{&x}", "First input",  "sep=block" );
    PRM_INPUT(     in_y,  0, "in_{&y}", "Second input", "" );
-   PRM_INPUT(   in_add,  0, "in_{a&dd}", "Signal to add",  "sep=col" );
+   PRM_LOGICIN( in_add,  0, "in_{a&dd}", "Signal to add",  "sep=col" );
    PRM_LOGICIN( in_rst,  0, "rst", "Reset signal", "" );
    PRM_LOGICIN( in_calc, 0, "calc", "Calc signal", "sep=col" );
 

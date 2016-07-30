@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include <cmath>
-#include "toutarr.h"
+#include "miscfun.h"
 #include "tcorralalysis.h"
 
 
@@ -35,9 +35,16 @@ CTOR(TCorrAnalysis,TMiso)
 void TCorrAnalysis::reset_data()
 {
   ok = n = ii = 0;
-  s_x = s_x2 = s_y = s_y2 = s_xy = corr = cov = a = b = dis_x = dis_y = 0;
+  corr = cov = a = b = dis_x = dis_y = a = b = corr = cov = 0;
   sigma_x = sigma_y = 0;
   ave_x = ave_y = ave_x2 = ave_y2 = 0;
+  reset_counters();
+}
+
+void TCorrAnalysis::reset_counters()
+{
+  s_x = s_x2 = s_y = s_y2 = s_xy = 0;
+  n = 0;
 }
 
 int TCorrAnalysis::miso_startLoop( long /*acnx*/, long /*acny*/ )
@@ -49,21 +56,18 @@ int TCorrAnalysis::miso_startLoop( long /*acnx*/, long /*acny*/ )
 
 double TCorrAnalysis::f() noexcept
 {
-  int add;
+  bool add = true;
   double x = in_x, y = in_y;
   ++ii;
-  if( useReset && in_rst ) { // history was < 0.1
-    reset_data();
-  };
   switch( (int)type ) {
     case call_all:
-      add = 1; break;
+      break;
     case call_time:
-      add = ( ct >= t0 ) && ( ct <= t1 ); break;
+      add = isInBounds( t0, ct, t1 ); break;
     case call_u2:
-      add = ( in_add > 0.1 ); break;
+      add = in_add.lval(); break;
     default:
-      add = 0;
+      add = false;
   };
   if( add ) {
     s_x += x; s_x2 += x*x; s_y += y; s_y2 += y*y;
@@ -72,6 +76,9 @@ double TCorrAnalysis::f() noexcept
   };
   if( ( ii >= (int)(rinf->N-1) || ( useCalc && in_calc ))   ) {
     calc();
+  };
+  if( useReset && in_rst ) {
+    reset_counters();
   };
   return s_x;
 }
