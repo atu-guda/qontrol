@@ -86,36 +86,29 @@ double TCorrAnalysis::f() noexcept
 
 int TCorrAnalysis::calc()
 {
-  double dd;
+  a = b = corr = 0; ok = 0;
   if( n < 1 ) {
-    ok = 0;
     return 0;
   };
-  double dn = (double)(n);
-  double dn2 = dn * dn;
+  const double dn = (double)(n); // const here and down: error catch + optim?
+  const double dn2 = dn * dn;
 
   ave_x  = s_x  / dn; ave_y  = s_y  / dn;
   ave_x2 = s_x2 / dn; ave_y2 = s_y2 / dn;
   dis_x = ( s_x2 * dn - s_x * s_x ) / dn2;
-  if( dis_x < 0 ) { // may be due to estimation error
-    dis_x = 0;
-  }
   dis_y = ( s_y2 * dn - s_y * s_y ) / dn2;
-  if( dis_y < 0 ) {
-    dis_y = 0;
-  }
-  sigma_x = sqrt( dis_x );
-  sigma_y = sqrt( dis_y );
+  sigma_x = sqrt0( dis_x );
+  sigma_y = sqrt0( dis_y );
 
-  dd = n * s_x2 - s_x * s_x;
-  cov = ( n * s_xy - s_x * s_y ) / ( dn2 );
-  a = b = corr = 0; ok = 0;
+  const double dd = n * s_x2 - s_x * s_x;
+  const double t1 = n * s_xy - s_x * s_y;
+  cov = t1 / dn2;
   if( dd > 0 ) {
-    a = ( n * s_xy - s_x * s_y ) / dd;
+    a = t1 / dd;
     b = ( s_y * s_x2 - s_x * s_xy ) / dd;
-    double dz = ( n*s_x2 - s_x*s_x ) * ( n*s_y2 - s_y*s_y );
+    const double dz = ( n*s_x2 - s_x*s_x ) * ( n*s_y2 - s_y*s_y );
     if( dz > 0 ) {
-      corr = ( n * s_xy - s_x * s_y )  / sqrt( dz );
+      corr = t1 / sqrt( dz );
       ok = 1;
     }
   }
