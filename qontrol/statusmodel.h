@@ -31,7 +31,7 @@ class QLabel;
 class StatusModel : public QStatusBar  {
  Q_OBJECT
  public:
-   StatusModel( CommonSubwin *a_up_view );
+   explicit StatusModel( CommonSubwin *a_up_view );
    void update();
 
  protected:

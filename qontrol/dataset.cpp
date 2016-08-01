@@ -119,8 +119,7 @@ QVariant HolderData::dataObj( int col, int role ) const
         s = getType(); break;
       case 2:
         s = textVisual();
-        int ls;
-        if( (ls = s.size()) > 80 ) {
+        if( s.size() > 80 ) {
           s.truncate( 72 );
           s += QSL( "..." );
           if( s[0] == '"' ) {
@@ -227,9 +226,8 @@ int HolderData::indexOfHolder( const HolderData *ho ) const
 
 const HolderData* HolderData::findChildBySubchild( const HolderData *subch ) const
 {
-  const HolderData *prev = nullptr;
   while( subch ) {
-    prev = subch;
+    const HolderData *prev = subch;
     subch = subch->getParent();
     if( subch == this ) {
       return prev;
