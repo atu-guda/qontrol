@@ -21,25 +21,32 @@
 
 class TCircBuf {
  public:
-   explicit TCircBuf( unsigned nn );
+   using sz_type = dvector::size_type;
+   explicit TCircBuf( sz_type nn, double v = 0 );
    TCircBuf( const TCircBuf &r ) = default;
-   ~TCircBuf();
+   // ~TCircBuf();
    TCircBuf& operator=( const TCircBuf &r ) = default;
    void reset();
-   void resize( unsigned n ); // reset implied
+   void resize( sz_type n, double v = 0 ); // reset implied
    void add( double a );
-   int getN() const { return nf; }
-   double operator[]( int i ) const;
+   sz_type getN() const { return nf; }
+   double at( sz_type i ) const;
+   double operator[]( sz_type i ) const {
+     ptrdiff_t j = (ptrdiff_t)s - i - 1;
+     if( j < 0 ) { j += nb;  }
+     return d[j];
+   }
    double sum() const { return su; }
    double aver() const { return (nf>0) ? ( su / nf ) : 0; }
    double sumCalc(); // force recalc sum
  protected:
-   unsigned nb; //* buffer size
-   unsigned s;  //* start index
-   unsigned nf; //* number of inserted points [0;nb-1]
-   unsigned ni; //* number of insertion after sum recalc
+   sz_type nb; //* buffer size
+   sz_type s;  //* start index
+   sz_type nf; //* number of inserted points [0;nb-1]
+   sz_type ni; //* number of insertion after sum recalc
    double su;   //* current sum
+   double dfl;  //* default value
    std::vector<double> d;
-   static const constexpr unsigned recalc_after = 10000;
+   static const constexpr sz_type recalc_after = 10000;
 };
 

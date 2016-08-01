@@ -52,9 +52,8 @@ class TDelay : public TMiso  {
 
    double v1 = 0;
    double v2 = 0;
-   double u00 = 0;
    /** max and current delays indexes ... */
-   int imd = 0, icd = 0;
+   size_t imd = 0, icd = 0;
    /** data container */
    std::unique_ptr<TCircBuf> buf;
 

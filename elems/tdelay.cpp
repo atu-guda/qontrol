@@ -42,29 +42,26 @@ double TDelay::f() noexcept
       cdelay = (double)mdelay;
     }
     double v = cdelay / ctdt;
-    icd = int( v );
+    icd = size_t( v );
     v2 = v - icd; v1 = 1.0 - v2;
     prm_mod = 0;
   }
 
   double cu = in_u;
-  if( ct < 1.3 * ctdt ) {
-    u00 = cu;
-  }
 
   buf->add( cu );
   a1 = (*buf)[icd]; a2 = (*buf)[icd+1];
   aver = buf->aver();
   if( ct < cdelay ) {
-    return u00;
+    return out0_init;
   }
   return v1 * a1 + v2 * a2;
 }
 
 int TDelay::do_preRun()
 {
-  imd = int( mdelay / ctdt );
-  buf.reset( new TCircBuf( imd ) );
+  imd = size_t( mdelay / ctdt );
+  buf.reset( new TCircBuf( imd, out0_init ) );
   return 1;
 }
 
@@ -80,9 +77,9 @@ int TDelay::miso_startLoop( long /*acnx*/, long /*acny*/ )
     cdelay = mdelay;
   }
   double v;
-  buf->reset(); u00 = 0;
+  buf->reset();
   v = cdelay / ctdt;
-  icd = int( v );
+  icd = size_t( v );
   v2 = v - icd; v1 = 1.0 - v2;
   return 1;
 }

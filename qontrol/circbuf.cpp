@@ -18,16 +18,10 @@
 #include "miscfun.h"
 #include "circbuf.h"
 
-TCircBuf::TCircBuf( unsigned nn ) :
-  nb(nn), s(0), nf(0), ni(0), su(0),
-  d( nb, 0 )
+TCircBuf::TCircBuf( sz_type nn, double v ) :
+  nb(nn), s(0), nf(0), ni(0), su(0), dfl( v ),
+  d( nb, v )
 {
-  reset();
-}
-
-TCircBuf::~TCircBuf()
-{
-  reset();
 }
 
 void TCircBuf::reset()
@@ -35,10 +29,11 @@ void TCircBuf::reset()
   s = nf = ni = 0; su = 0;
 }
 
-void TCircBuf::resize( unsigned n )
+void TCircBuf::resize( sz_type n, double v )
 {
   reset();
-  d.resize( n, 0 );
+  d.resize( n, v );
+  dfl = v;
   nb = n;
 }
 
@@ -62,24 +57,20 @@ void TCircBuf::add( double a )
   }
 }
 
-double TCircBuf::operator[]( int i ) const
+
+double TCircBuf::at( sz_type i ) const
 {
-  int j;
   if( ! isInBounds( 0, i, nf-1 ) ) { // first comparison rejects bad values for second
-    return 0;
+    return dfl;
   }
-  j = s - i - 1;
-  if( j < 0 ) {
-    j += nb;
-  }
-  return d[j];
+  return operator[]( i );
 }
 
 
 double TCircBuf::sumCalc()
 {
   su = 0; ni = 0;
-  for( unsigned i=0; i<nf; ++i ) {
+  for( sz_type i=0; i<nf; ++i ) {
     su += d[i];
   }
   return su;
