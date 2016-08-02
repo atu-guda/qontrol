@@ -17,8 +17,6 @@
  ***************************************************************************/
 
 
-#include <memory>
-
 #include "tmiso.h"
 #include "circbuf.h"
 
@@ -46,7 +44,7 @@ class TDelay : public TMiso  {
    PRM_PARAMD( cdelay,     0, "&Delay",     "Current delay", "min=0\nmax=1e20\ndef=1.0" );
    PRM_DOUBLE( mdelay, efNRC, "Max. delay", "Maximum delay", "min=0\nmax=1e20\ndef=1.5\nsep=col" );
 
-   PRM_DOUBLE( aver, efInner, "avarage", "Average avlue", "" );
+   PRM_DOUBLE( aver, efInner, "avarage",    "Average value", "" );
 
    PRM_INPUT( in_u,        0, "&in_u",      "Input",  "sep=block" );
 

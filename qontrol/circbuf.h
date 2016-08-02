@@ -22,7 +22,7 @@
 class TCircBuf {
  public:
    using sz_type = dvector::size_type;
-   explicit TCircBuf( sz_type nn, double v = 0 );
+   explicit TCircBuf( sz_type nn = 1, double v = 0.0 );
    TCircBuf( const TCircBuf &r ) = default;
    // ~TCircBuf();
    TCircBuf& operator=( const TCircBuf &r ) = default;

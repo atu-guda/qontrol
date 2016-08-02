@@ -30,22 +30,18 @@ CTOR(TMovingCorr,TMiso)
 {
 }
 
-
-
 void TMovingCorr::reset_data()
 {
-  ok = n = 0;
+  ok = 0;
   corr = cov = a = b = dis_x = dis_y = a = b = corr = cov = 0;
   sigma_x = sigma_y = 0;
   ave_x = ave_y = ave_x2 = ave_y2 = 0;
-  reset_counters();
+  s_x = s_x2 = s_y = s_y2 = s_xy = 0;
+  for( auto a : bufs ) {
+   a->reset();
+  }
 }
 
-void TMovingCorr::reset_counters()
-{
-  s_x = s_x2 = s_y = s_y2 = s_xy = 0;
-  n = 0;
-}
 
 int TMovingCorr::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
@@ -54,12 +50,31 @@ int TMovingCorr::miso_startLoop( long /*acnx*/, long /*acny*/ )
 }
 
 
+int TMovingCorr::do_preRun()
+{
+  auto imd = size_t( ceil( tw / ctdt ) );
+  for( auto a : bufs ) {
+   a->resize( imd, 0.0 );
+  }
+  return 1;
+}
+
+int TMovingCorr::do_postRun( int /*good*/ )
+{
+  for( auto a : bufs ) {
+    a->clear();   a->shrink_to_fit();
+  }
+  return 1;
+}
+
 double TMovingCorr::f() noexcept
 {
-  double x = in_x, x2 = x*x, y = in_y, y2 = y*y, xy = x * y;
-  s_x += x; s_x2 += x*x; s_y += y; s_y2 += y*y;
-  s_xy += x * y;
-  ++n;
+  double x = in_x, y = in_y;
+  a_x.push_back(    x );
+  a_x2.push_back( x*x );
+  a_y.push_back(    y );
+  a_y2.push_back( y*y );
+  a_xy.push_back( x*y );
   calc();
   return a;
 }
@@ -68,16 +83,19 @@ double TMovingCorr::f() noexcept
 int TMovingCorr::calc()
 {
   a = b = corr = 0; ok = 0;
+  auto n = a_x.getN();
   if( n < 1 ) {
     return 0;
   };
-  const double dn = (double)(n); // const here and down: error catch + optim?
+  const double dn = (double)(n);
   const double dn2 = dn * dn;
 
-  ave_x  = s_x  / dn; ave_y  = s_y  / dn;
-  ave_x2 = s_x2 / dn; ave_y2 = s_y2 / dn;
-  dis_x = ( s_x2 * dn - s_x * s_x ) / dn2;
-  dis_y = ( s_y2 * dn - s_y * s_y ) / dn2;
+  s_x = a_x.sum();  s_x2 = a_x2.sum();  s_y = a_y.sum(); s_y2 = a_y2.sum(); s_xy = a_xy.sum();
+
+  ave_x  = a_x.aver();  ave_y  = a_y.aver();
+  ave_x2 = a_x2.aver(); ave_y2 = a_y2.aver();
+  dis_x = ( s_x2 * dn - pow2( s_x ) ) / dn2;
+  dis_y = ( s_y2 * dn - pow2( s_y ) ) / dn2;
   sigma_x = sqrt0( dis_x );
   sigma_y = sqrt0( dis_y );
 

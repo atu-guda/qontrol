@@ -27,7 +27,6 @@ const char* TDelay::helpstr = "<H1>TDelay</H1>\n"
 STD_CLASSINFO(TDelay,clpElem );
 
 CTOR(TDelay,TMiso)
-  , buf( 1, 0.0 )
 {
 }
 

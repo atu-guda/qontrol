@@ -90,6 +90,7 @@ SOURCES += \
   ../elems/trossler.cpp \
   ../elems/tmatrix34.cpp \
   ../elems/tmaxnum.cpp \
+  ../elems/tmovingcorr.cpp \
   ../elems/tmultipl.cpp \
   ../elems/tmulsumn.cpp \
   ../elems/tpid.cpp \
@@ -180,6 +181,7 @@ HEADERS += \
   ../elems/trossler.h \
   ../elems/tmatrix34.h \
   ../elems/tmaxnum.h \
+  ../elems/tmovingcorr.h \
   ../elems/tmultipl.h \
   ../elems/tmulsumn.h \
   ../elems/tpid.h \
