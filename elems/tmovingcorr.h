@@ -46,6 +46,9 @@ class TMovingCorr : public TMiso  {
 
    /* ============= data members ================== */
    PRM_DOUBLE(      tw,   efNRC, "tm", "Window time", "def=1\nmin=1e-6" );
+   PRM_DOUBLE(     slp,   efNRC, "Sleep part", "Part of tw to mute outouts", "def=0.5\nmin=0" );
+   PRM_SWITCH(  diff_x,   efNRC,  "diff x", "Calc dx/dt", "sep=col" );
+   PRM_SWITCH(  diff_y,   efNRC,  "diff y", "Calc dy/dt", "" );
    // PRM_SWITCH( useReset, efNRC, "use &Reset", "Use in_rst as signal to reset", "" );
    PRM_INT(         ok, efInner, "ok", "ok state", "" );
    /** collectors, out values */
@@ -69,11 +72,13 @@ class TMovingCorr : public TMiso  {
 
    PRM_INPUT(     in_x,       0, "in_{&x}", "First input",  "sep=block" );
    PRM_INPUT(     in_y,       0, "in_{&y}", "Second input", "sep=col" );
-   PRM_LOGICIN( in_rst,       0, "rst",     "Reset signal", "sep=col" );
 
    // ring arrays
    TCircBuf             a_x,  a_x2,  a_y,  a_y2 , a_xy;
    TCircBuf *bufs[5] { &a_x, &a_x2, &a_y, &a_y2, &a_xy }; // is std::reference_wrapper better?
+
+   double x_old {0.0}, y_old {0.0}, slpt {0.0};
+   bool on_start { true };
 
    Q_CLASSINFO( "nameHintBase",  "mcorr_" );
    DCL_DEFAULT_STATIC;

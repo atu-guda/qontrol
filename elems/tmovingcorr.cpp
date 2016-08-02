@@ -37,6 +37,8 @@ void TMovingCorr::reset_data()
   sigma_x = sigma_y = 0;
   ave_x = ave_y = ave_x2 = ave_y2 = 0;
   s_x = s_x2 = s_y = s_y2 = s_xy = 0;
+  x_old = y_old = 0; on_start = true;
+  slpt = slp * tw;
   for( auto a : bufs ) {
    a->reset();
   }
@@ -70,6 +72,18 @@ int TMovingCorr::do_postRun( int /*good*/ )
 double TMovingCorr::f() noexcept
 {
   double x = in_x, y = in_y;
+  if( on_start ) {
+    x_old = x; y_old = y;
+    on_start = false;
+  }
+  if( diff_x ) {
+    x -= x_old; x /= ctdt;
+  }
+  if( diff_y ) {
+    y -= y_old; y /= ctdt;
+  }
+  x_old = in_x; y_old = in_y; // old, not diff value
+
   a_x.push_back(    x );
   a_x2.push_back( x*x );
   a_y.push_back(    y );
@@ -82,7 +96,7 @@ double TMovingCorr::f() noexcept
 
 int TMovingCorr::calc()
 {
-  a = b = corr = 0; ok = 0;
+  a = out0_init.cval(); b = corr = 0; ok = 0;
   auto n = a_x.getN();
   if( n < 1 ) {
     return 0;
@@ -102,7 +116,7 @@ int TMovingCorr::calc()
   const double dd = n * s_x2 - s_x * s_x;
   const double t1 = n * s_xy - s_x * s_y;
   cov = t1 / dn2;
-  if( dd > 0 ) {
+  if( dd > 0  &&  ct > slpt ) {
     a = t1 / dd;
     b = ( s_y * s_x2 - s_x * s_xy ) / dd;
     const double dz = ( n*s_x2 - s_x*s_x ) * ( n*s_y2 - s_y*s_y );

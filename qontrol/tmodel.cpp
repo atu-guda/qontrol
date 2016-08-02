@@ -506,7 +506,7 @@ void TModel::fillAskedParams( const QString &names )
       continue;
     }
     asked_params.push_back( { nm, *p, *p, p } );
-    qWarning() << "Added param " << nm << NWHE;
+    // qWarning() << "Added param " << nm << NWHE;
   }
 
 }
