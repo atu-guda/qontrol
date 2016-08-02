@@ -27,15 +27,13 @@ const char* TDelay::helpstr = "<H1>TDelay</H1>\n"
 STD_CLASSINFO(TDelay,clpElem );
 
 CTOR(TDelay,TMiso)
+  , buf( 1, 0.0 )
 {
 }
 
 double TDelay::f() noexcept
 {
   double a1, a2;
-  if( !buf ) {
-    return 0;
-  }
 
   if( prm_mod ) {
     if( mdelay < cdelay ) {
@@ -49,9 +47,9 @@ double TDelay::f() noexcept
 
   double cu = in_u;
 
-  buf->add( cu );
-  a1 = (*buf)[icd]; a2 = (*buf)[icd+1];
-  aver = buf->aver();
+  buf.push_back( cu );
+  a1 = buf[icd]; a2 = buf[icd+1];
+  aver = buf.aver();
   if( ct < cdelay ) {
     return out0_init;
   }
@@ -60,14 +58,15 @@ double TDelay::f() noexcept
 
 int TDelay::do_preRun()
 {
-  imd = size_t( mdelay / ctdt );
-  buf.reset( new TCircBuf( imd, out0_init ) );
+  imd = size_t( ceil( mdelay / ctdt ) );
+  buf.resize( imd, out0_init );
   return 1;
 }
 
 int TDelay::do_postRun( int /*good*/ )
 {
-  buf.release();
+  buf.clear();
+  buf.shrink_to_fit();
   return 1;
 }
 
@@ -77,7 +76,7 @@ int TDelay::miso_startLoop( long /*acnx*/, long /*acny*/ )
     cdelay = mdelay;
   }
   double v;
-  buf->reset();
+  buf.reset();
   v = cdelay / ctdt;
   icd = size_t( v );
   v2 = v - icd; v1 = 1.0 - v2;

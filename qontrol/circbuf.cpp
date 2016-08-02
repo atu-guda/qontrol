@@ -37,7 +37,7 @@ void TCircBuf::resize( sz_type n, double v )
   nb = n;
 }
 
-void TCircBuf::add( double a )
+void TCircBuf::push_back( double a )
 {
   if( nf >= nb ) {
     su -= d[s];

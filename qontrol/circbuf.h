@@ -27,8 +27,10 @@ class TCircBuf {
    // ~TCircBuf();
    TCircBuf& operator=( const TCircBuf &r ) = default;
    void reset();
+   void clear() { reset(); d.clear(); };
+   void shrink_to_fit() { d.shrink_to_fit(); }
    void resize( sz_type n, double v = 0 ); // reset implied
-   void add( double a );
+   void push_back( double a );
    sz_type getN() const { return nf; }
    double at( sz_type i ) const;
    double operator[]( sz_type i ) const {

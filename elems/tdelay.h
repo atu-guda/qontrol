@@ -55,7 +55,7 @@ class TDelay : public TMiso  {
    /** max and current delays indexes ... */
    size_t imd = 0, icd = 0;
    /** data container */
-   std::unique_ptr<TCircBuf> buf;
+   TCircBuf buf;
 
    Q_CLASSINFO( "nameHintBase",  "dly_" );
    DCL_DEFAULT_STATIC;
