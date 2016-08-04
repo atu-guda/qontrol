@@ -1,5 +1,5 @@
 /***************************************************************************
-     tmovingcorr.cpp - Moving correlation analisys definition
+     tmovingcorr.cpp - Moving correlation analysis definition
                              -------------------
     begin                : 2016.08.02
     copyright            : (C) 2016-2016 by atu
@@ -21,7 +21,7 @@
 
 
 const char* TMovingCorr::helpstr = "<H1>TMovingCorr</H1>\n"
- "<p>Moving correlational analysis for x_in, y_in  <br>\n"
+ "<p>Moving correlation analysis for x_in, y_in  <br>\n"
  "</p>\n";
 
 STD_CLASSINFO(TMovingCorr,clpElem );

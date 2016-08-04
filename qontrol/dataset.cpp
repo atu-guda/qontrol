@@ -930,15 +930,15 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
       HolderData *ho = getObj( elname );
       QString txt = getDomText( ee );
       if( ho && ho->isObject() ) {
-        //* TODO: remove after newlink conversion
-        // if( ho->getType() == QSL("ParamDouble") ) {
-        //   double vt = txt.toDouble(); // hack: limit number of digits on conversion
-        //   txt = QSN( vt, 'g', DOUBLE_PREC );
-        //   ho->setData( QSL("source"), txt );
-        //   ho->setData( QSL("line_w"), 2 );
-        //   ho->setData( QSL("line_color"), QSL("red") );
-        //   continue;
-        // }
+        //* TODO: remove after newlink conversion. or no: more converions
+        if( ho->getType() == QSL("ParamDouble") ) {
+          double vt = txt.toDouble(); // hack: limit number of digits on conversion
+          txt = QSN( vt, 'g', DOUBLE_PREC );
+          ho->setData( QSL("source"), txt );
+          ho->setData( QSL("line_w"), 2 );
+          ho->setData( QSL("line_color"), QSL("red") );
+          continue;
+        }
         // if( ho->getType() == QSL("InputSimple") ) { // TODO: remove after TOutArr conversion
         //   ho->setData( QSL("source"), txt );
         //   continue;

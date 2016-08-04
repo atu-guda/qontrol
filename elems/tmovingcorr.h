@@ -1,6 +1,6 @@
 #pragma once
 /***************************************************************************
-     tmovingcorr.h - Moving correlation analisys declaration
+     tmovingcorr.h - Moving correlation analysis declaration
                              -------------------
     begin                : 2016.08.02
     copyright            : (C) 2016-2016 by atu
@@ -20,7 +20,7 @@
 #include <circbuf.h>
 #include <tmiso.h>
 
-/** Moving correlation analisator
+/** Moving correlation analyser
   *@author atu
   */
 
@@ -45,8 +45,8 @@ class TMovingCorr : public TMiso  {
    int calc();
 
    /* ============= data members ================== */
-   PRM_DOUBLE(      tw,   efNRC, "tm", "Window time", "def=1\nmin=1e-6" );
-   PRM_DOUBLE(     slp,   efNRC, "Sleep part", "Part of tw to mute outouts", "def=0.5\nmin=0" );
+   PRM_PARAMD(      tw,   efNRC, "tw", "Window time", "def=1\nmin=1e-6" );
+   PRM_DOUBLE(     slp,   efNRC, "Sleep part", "Part of tw to mute outputs", "def=0.5\nmin=0" );
    PRM_SWITCH(  diff_x,   efNRC,  "diff x", "Calc dx/dt", "sep=col" );
    PRM_SWITCH(  diff_y,   efNRC,  "diff y", "Calc dy/dt", "" );
    // PRM_SWITCH( useReset, efNRC, "use &Reset", "Use in_rst as signal to reset", "" );
