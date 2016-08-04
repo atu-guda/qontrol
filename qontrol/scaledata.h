@@ -31,7 +31,7 @@ class ScaleData : public TDataSet
    PRM_INT(    w0,    efNRC, "width", "Initial plot width", "def=800\nmin=100\nmax=10000" );
    PRM_INT(    h0,    efNRC, "height", "Initial plot height", "def=600\nmin=100\nmax=10000\nsep=col" );
    PRM_DOUBLE( plotFactor,  efNRC, "Plot factor", "Plot scale relative to canvas", "def=1.4\nmin=0.5\nmax=10\nsep=block" );
-   PRM_DOUBLE( fontSise,  efNRC, "Font size", "Base font size", "def=2.0\nmin=0.1\nmax=10" );
+   PRM_DOUBLE( fontSise,  efNRC, "Font size", "Base font size", "def=2.5\nmin=0.1\nmax=10" );
    PRM_DOUBLE( phi,  efNRC, "Phi", "Phi angle", "def=0.0" );
    PRM_DOUBLE( theta,  efNRC, "Theta", "Theta angle", "def=0.0" );
    PRM_DOUBLE( maxErr,  efNRC, "Max Err", "Maximum plot error", "def=0.6" );
@@ -46,9 +46,9 @@ class ScaleData : public TDataSet
    PRM_DOUBLE( alpha,     efNRC, "Alpha", "transparency value", "def=0.7\nmin=0.0\nmax=1.0" );
    PRM_INT( legend_pos,   efNRC, "Legend pos", "Legend position index", "def=3\nmin=0\nmax=4" );
 
-   PRM_COLOR( bgcolor, efNRC, "BG color", "Background color", "sep=col\ndef=#FFFFFF" );
-   PRM_COLOR( axis_color, efNRC, "Axis color", "Axis color", "def=#000000" );
-   PRM_COLOR( grid_color, efNRC, "Grid color", "Grid color", "def=#CCCCCC" );
+   PRM_COLOR( bgcolor, efNRC, "BG color", "Background color", "sep=col\ndef=#FFFFFFFF" );
+   PRM_COLOR( axis_color, efNRC, "Axis color", "Axis color", "def=#FF000000" );
+   PRM_COLOR( grid_color, efNRC, "Grid color", "Grid color", "def=#FFCCCCCC" );
    PRM_STRING( extra, efNRC, "Extra", "Extra options to plot", "max=128" );
    PRM_STRING( colorScheme, efNRC, "Color scheme", "Color Scheme for 2D plot", "max=128\ndef=BbcyrR" );
 
@@ -82,7 +82,7 @@ class ScaleData : public TDataSet
    PRM_DOUBLE(    baseX, efNRC,    "Base X", "X coord of base", "def=0\nsep=block" );
    PRM_DOUBLE(    baseY, efNRC,    "Base Y", "Y coord of base", "def=0\nsep=col" );
    PRM_DOUBLE(    baseZ, efNRC,    "Base Z", "Z coord of base", "def=0\nsep=col" );
-   PRM_SWITCH( drawBase, efNRC,    "Draw Base", "Draw base lines", "def=1\nsep=col" );
+   PRM_SWITCH( drawBase, efNRC,    "Draw Base", "Draw base lines", "sep=col" );
   protected:
    DCL_DEFAULT_STATIC;
 };

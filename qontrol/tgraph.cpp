@@ -1433,8 +1433,8 @@ int TGraph::addOutArr( const QString &o_name )
 {
   static constexpr const unsigned dc_num = 14;
   static const unsigned def_col[dc_num] =
-    {        0, 0x880000, 0x008800, 0x000088, 0x888800, 0x880088, 0x000088,
-      0x404040, 0xAA4444, 0x44AA44, 0x4444AA, 0xAAAA44, 0xAA44AA, 0x4444AA };
+    { 0xFF000000, 0xFF880000, 0xFF008800, 0xFF000088, 0xFF888800, 0xFF880088, 0xFF000088,
+      0xFF404040, 0xFFAA4444, 0xFF44AA44, 0xFF4444AA, 0xFFAAAA44, 0xFFAA44AA, 0xFF4444AA };
 
   bool was_x = false, was_y = false;
 
