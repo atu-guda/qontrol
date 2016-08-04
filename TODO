@@ -1,10 +1,9 @@
 Need correct time to gather info to PlotLabel
-BUG: Paste Holder (tested on string) loss values
 BUG: "all changes" after small [sub]edit and cancel. Tmp obj? Swap?
+BUG: reset_dfl for complex object for dialog: RODial, set? context?
 Rethink start iterations: separate func!
 Special TMiso (or ???) function: on_param_changed();
 Add meta about plot scale, angles to export fig.
-BUG: reset_dfl for complex object for dialog: RODial, set? context?
 modification flag/usage rethink: only real data holder count?
 List of presets for element.
 Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.

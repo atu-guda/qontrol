@@ -878,6 +878,12 @@ void HolderData::saveParmsToDom( QDomElement &de ) const
 bool HolderData::fromDom( QDomElement &de, QString &errstr )
 {
   IGNORE_STRUCT_CHANGE_HERE;
+
+  if( ! isObject() ) {
+    QString txt = getDomText( de );
+    return fromString( txt );
+  }
+
   for( QDomNode no = de.firstChild(); !no.isNull() ; no = no.nextSibling() ) {
 
     if ( ! no.isElement() ) {
