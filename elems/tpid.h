@@ -34,11 +34,12 @@ class TPid : public TMiso  {
    virtual int do_preRun() override;
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   PRM_PARAMD( kd2,      0, "k_{d2}",   "Coefficient in second derivation", "");
-   PRM_PARAMD( kd1,      0, "k_{&d1}",  "Coefficient in first derivation" , "");
-   PRM_PARAMD( kp,       0, "k_{&p}" ,  "Coefficient in proportional part", "sep=col\ndef=1");
-   PRM_PARAMD( ki1,      0, "k_{&i1}",  "Coefficient in first integrator" , "sep=col");
-   PRM_PARAMD( ki2,      0, "k_{i2}",   "Coefficient in second integrator", "");
+   PRM_PARAMD( kd2,      0, "k_{d2}",   "Coefficient in second derivation", "" );
+   PRM_PARAMD( kd1,      0, "k_{&d1}",  "Coefficient in first derivation" , "" );
+   PRM_PARAMD( kp,       0, "k_{&p}" ,  "Coefficient in proportional part", "sep=col\ndef=1" );
+   PRM_PARAMD( b,        0, "&b",       "Const shift", "" );
+   PRM_PARAMD( ki1,      0, "k_{&i1}",  "Coefficient in first integrator" , "sep=col" );
+   PRM_PARAMD( ki2,      0, "k_{i2}",   "Coefficient in second integrator", "" );
    PRM_SWITCH( aver, efNRC, "&Average", "Calculate average value", "sep=col" );
 
    PRM_INPUT( in_u,      0, "in_{&u}",  "Input u(x)",  "sep=block" );

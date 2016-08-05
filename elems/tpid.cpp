@@ -18,7 +18,7 @@
 #include "tpid.h"
 
 const char* TPid::helpstr = "<H1>TPid</H1>\n"
- "<p>Integrators, differenciators and proportional element: <br>\n"
+ "<p>Integrators, differentiators and proportional element: <br>\n"
  "Have 6 parameters: <b>kd2, kd1, kp, ki1, ki1, aver</b>.\n"
  "Coefficients can be changed at any time, aver - no.</p>";
 
@@ -55,7 +55,7 @@ double TPid::f() noexcept
   d2 = ( uc - 2*u_old + u_old2 ) / tdt2;
   vi1 += uc * ctdt;
   vi2 += vi1 * ctdt;
-  double v = kd2 * d2 + kd1 * d1 + kp * uc + ki1 * vi1 + ki2 * vi2;
+  double v = kd2 * d2 + kd1 * d1 + kp * uc + ki1 * vi1 + ki2 * vi2 + b;
 
   if( aver && ct > 0 ) {
     v /= ct;

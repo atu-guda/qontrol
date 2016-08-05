@@ -79,7 +79,7 @@ class TRand : public TMiso  {
    PRM_PARAMD( zval,    0, "&Zero", "Base (zero) value of output ", "" );
    PRM_SWITCH( inputTime, efNRC, " input Time", "input is time, not[0]", "def=1" );
    /** coefficients of distribution */
-   PRM_PARAMD( sigma, 0, "\\sigma", "\\sigma value of distrinution", "sep=col\ndef=1" );
+   PRM_PARAMD( sigma, 0, "\\sigma", "\\sigma value of distribution", "sep=col\ndef=1" );
    PRM_PARAMD(     a, 0, "&a", "Parameter a", "def=1" );
    PRM_PARAMD(     b, 0, "&b", "Parameter b", "def=1" );
    PRM_PARAMD(     c, 0, "&c", "Parameter c", "def=1" );
@@ -91,22 +91,22 @@ class TRand : public TMiso  {
    PRM_SWITCH( addBaseSeed, efNRC, "Add base", "Add base seed to element seed ", "def=1" );
    PRM_SWITCH( addHash,     efNRC, "Add hash", "Add hash value of full name ", "def=1" );
 
-   PRM_INPUT( in_t, 0, "&in_t", "Input t if not used automaticaly",  "sep=block" );
+   PRM_INPUT( in_t, 0, "&in_t", "Input t if not used automatically",  "sep=block" );
    PRM_INPUT( in_v, 0, "&in_v", "Additional input",  "sep=col" );
 
    PRM_DOUBLE(  x2, efInner, "x2", "x^2", "" );
 
-   /** time (may not be time) after previos value change */
+   /** time (may not be time) after previous value change */
    double sp_time = DMAX;
-   /** old input (usualy time) to calc difference */
+   /** old input (usually time) to calc difference */
    double old_in = 0;
-   /** keeped const output value */
+   /** stored const output value */
    double old_val = 0;
    /** start value of seed */
    int sseed = 1;
    /** effective value of seedType */
    int eff_seedType = 0;
-   /** copy valuse of base seed */
+   /** copy values of base seed */
    int bseed = 1;
    int hseed = 0; // seed from full name hash value. Required for subschemes.
    /** generator structure from GSL */
