@@ -43,6 +43,8 @@ class TPid : public TMiso  {
 
    PRM_INPUT( in_u,      0, "in_{&u}",  "Input u(x)",  "sep=block" );
 
+   PRM_DOUBLE(  d1, efInner, "d1", "dx/dt", "" );
+   PRM_DOUBLE(  d2, efInner, "d2", "d^2x/dt^2", "" );
    /** accumulators and old values */
    double vi1 = 0, vi2 = 0, u_old = 0, u_old2 = 0, tdt2 = 1;
    /** flag for special handling initial steps */

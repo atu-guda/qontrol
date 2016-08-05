@@ -44,7 +44,7 @@ int TPid::miso_startLoop( long /*acnx*/, long /*acny*/ )
 
 double TPid::f() noexcept
 {
-  double v = 0, d1, d2, uc = in_u;
+  double uc = in_u;
 
   if( start ) {
     u_old = u_old2 = uc;
@@ -55,7 +55,7 @@ double TPid::f() noexcept
   d2 = ( uc - 2*u_old + u_old2 ) / tdt2;
   vi1 += uc * ctdt;
   vi2 += vi1 * ctdt;
-  v = kd2 * d2 + kd1 * d1 + kp * uc + ki1 * vi1 + ki2 * vi2;
+  double v = kd2 * d2 + kd1 * d1 + kp * uc + ki1 * vi1 + ki2 * vi2;
 
   if( aver && ct > 0 ) {
     v /= ct;
