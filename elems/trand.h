@@ -94,6 +94,8 @@ class TRand : public TMiso  {
    PRM_INPUT( in_t, 0, "&in_t", "Input t if not used automaticaly",  "sep=block" );
    PRM_INPUT( in_v, 0, "&in_v", "Additional input",  "sep=col" );
 
+   PRM_DOUBLE(  x2, efInner, "x2", "x^2", "" );
+
    /** time (may not be time) after previos value change */
    double sp_time = DMAX;
    /** old input (usualy time) to calc difference */

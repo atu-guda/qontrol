@@ -121,7 +121,9 @@ double TRand::f() noexcept
   };
   du = in - old_in; old_in = in;
   sp_time += du;
-  return old_val + in_v.cval();
+  double v =  old_val + in_v.cval();
+  x2 = pow2( v );
+  return v;
 }
 
 DEFAULT_FUNCS_REG(TRand)
