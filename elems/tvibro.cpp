@@ -49,8 +49,9 @@ double TVibro::f() noexcept
 {
   double f = use_u1 ? in_f : out0; // out0 = x_old
   double ctau = ctdt * c0 / 2; // c0 can be changed at any time, so here
+  double fa = mul_fa ? ( in_fa * v ) : in_fa;
 
-  double x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * ( in_u - in_fa - Omega * Omega * f ) )
+  double x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * ( in_u - fa - Omega * Omega * f ) )
           / ( 1 + ctau );
   v = ( x - x_old2 ) / ( 2 * ctdt );
   a = ( x - 2 * x_old + x_old2 ) / tdt2;
