@@ -37,8 +37,11 @@ class TVibro : public TMiso  {
    PRM_PARAMD( c0,         0, "&c_0",    "Damping coefficient", "def=0.4" );
    PRM_PARAMD( Omega,      0, "\\Omega", "Natural frequency if c_0=0 and f(x)=x", "def=1.2" );
    PRM_PARAMD( v0,     efNRC, "&v_0",    "v(0)", "" );
+   PRM_PARAMD( beta,       0, "\\beta",  "Coefficient near x^3", "def=0" );
+
    PRM_SWITCH( use_u1, efNRC, "use f_x", "Use in_f as return force element output", "sep=col" );
    PRM_SWITCH( mul_fa, efNRC, "v * f_a", "Multiply f_a to v", "" );
+   PRM_SWITCH( no_ome2,efNRC, "no Omega^2", "Coefficient near x is Omega, not Omega^2", "" );
 
    PRM_DOUBLE( v,    efInner, "v", "v(t)", "" );
    PRM_DOUBLE( x2,   efInner, "x^2", "x^2", "" );

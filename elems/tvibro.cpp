@@ -19,8 +19,10 @@
 #include "tvibro.h"
 
 const char* TVibro::helpstr = "<H1>TVibro</H1>\n"
- "Vibrational element <b> d2x/dt^2 + c0*dx/dt + Omega^2*f(...) + f_a(...)= u</b>: <br>\n"
- "Parameters <b>c0</b> and <b>Omega</b> can be changed at any time.<br>\n";
+ "Vibrational element <b> d2x/dt^2 + c0*dx/dt + Omega^2 * x + beta * x^3 + f_a(...)= u</b>: <br>\n"
+ "'x' may by replaced by f(...): <br>\n"
+ "'Omega' may without square: <br>\n"
+ "Parameters <b>c0</b>, <b>Omega</b> and <b>beta</b> can be changed at any time.<br>\n";
 
 STD_CLASSINFO(TVibro,clpElem ); // no calc at start
 
@@ -50,8 +52,9 @@ double TVibro::f() noexcept
   double f = use_u1 ? in_f : out0; // out0 = x_old
   double ctau = ctdt * c0 / 2; // c0 can be changed at any time, so here
   double fa = mul_fa ? ( in_fa * v ) : in_fa;
+  double alp = no_ome2 ? Omega : pow2( Omega );
 
-  double x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * ( in_u - fa - Omega * Omega * f ) )
+  double x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * ( in_u - fa - alp * f - beta * pow3(f) ) )
           / ( 1 + ctau );
   v = ( x - x_old2 ) / ( 2 * ctdt );
   a = ( x - 2 * x_old + x_old2 ) / tdt2;

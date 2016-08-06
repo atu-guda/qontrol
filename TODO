@@ -63,6 +63,7 @@ Edit large arrays
 aliases/synlinks: to use 'current' subobjects.
 
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
+  -- TBjt
   -- Jumping ball (and similar) method
   -- TDefuzzy (fixed/variable number of inputs)
   -- or File Source input/output: TFileSource
