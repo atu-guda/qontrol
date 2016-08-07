@@ -25,7 +25,8 @@ using namespace std;
 const char* TErrMeasure::helpstr = "<H1>TErrMeasure</H1>\n"
  "<p>Misc error measures:<br/>\n"
  "m1 - ave(abs(|err|))<br/>\n"
- "m2 - sqrt(ave(abs(err^2)))<br/>\n"
+ "m2 - sqrt(ave(err^2))<br/>\n"
+ "m22 - ave(err^2)<br/>\n"
  "mp - the same, but for the 'p' power</p>\n";
 
 STD_CLASSINFO(TErrMeasure,clpElem );
@@ -46,7 +47,7 @@ void TErrMeasure::reset_vals()
   t_rst = 0;
   s2 = sp = 0;
   mi1 = mi2 = mip = mmax = 0;
-  m1 = er1; m2 = sqrt(er2); mp = pow( erp, (1.0/p) );
+  m1 = er1; m22 = er2; m2 = sqrt( er2 ); mp = pow( erp, (1.0/p) );
 }
 
 double TErrMeasure::f() noexcept
@@ -65,8 +66,8 @@ double TErrMeasure::f() noexcept
 
   t_rst += ctdt;
   mi1 += er1 * ctdt;  m1 = mi1 / t_rst;
-  s2  += er2 * ctdt;  m2 = sqrt( s2 / t_rst );          mi2 = t_rst * m2; // horrorfull but works.
-  sp  += erp * ctdt;  mp = pow(  sp / t_rst, (1.0/p) ); mip = mp * t_rst;
+  s2  += er2 * ctdt;  m22 = s2 / t_rst; m2 = sqrt( m22 );    mi2 = t_rst * m2; // horrorfull but works.
+  sp  += erp * ctdt;  mp = pow(  sp / t_rst, (1.0/p) );      mip = mp * t_rst;
 
   if( mmax < er1 ) {
     mmax = er1;
