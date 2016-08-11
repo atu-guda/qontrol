@@ -1,9 +1,9 @@
 Need correct time to gather info to PlotLabel
 BUG: "all changes" after small [sub]edit and cancel. Tmp obj? Swap?
 BUG: reset_dfl for complex object for dialog: RODial, set? context?
+BUG: ignored elements try to start
 Rethink start iterations: separate func!
 Special TMiso (or ???) function: on_param_changed();
-Add meta about plot scale, angles to export fig.
 modification flag/usage rethink: only real data holder count?
 List of presets for element.
 Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
@@ -78,6 +78,6 @@ Distributions analysis + plot
 vector icons (language=SVG?) (may be dynamic)
 Hue of elements
 Label of element (or/and floating labels on structure view)
-Report with macros -- overrided by scripts? + js iface to substValues
+Report with macros -- overridden by scripts? + js iface to substValues
 
 

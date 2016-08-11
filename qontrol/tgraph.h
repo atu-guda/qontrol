@@ -359,7 +359,7 @@ class TGraph : public LinkedObj  {
    void plotTo( mglGraph &gr, const ViewData *a_vd = nullptr, const ScaleData *scda = nullptr );
    void plot1( mglGraph &gr, const GraphElem *pl );
    void setupMglGraph( mglGraph &grs, const ViewData *a_vd, const ScaleData *scda, bool full = true );
-   void addMetaData( QImage &img ) const;
+   void addMetaData( QImage &img, const ViewData *a_vd, const ScaleData *scda ) const;
 
    /** title of graph  */
    PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nncol=-1\ndef=fig. " );

@@ -894,7 +894,7 @@ long TGraph::fillSqueeze( vector<uint8_t> &plp )
   return np;
 }
 
-void TGraph::addMetaData( QImage &img ) const
+void TGraph::addMetaData( QImage &img, const ViewData *a_vd, const ScaleData *scda ) const
 {
   QString model_file = QSL("Unknown");
   TRootData *root = getAncestorT<TRootData>();
@@ -909,12 +909,27 @@ void TGraph::addMetaData( QImage &img ) const
       sim_name = sim->objectName();
     }
   }
-  img.setText( QSL("Graph"), objectName() );
+  img.setText( QSL("Graph"),      objectName() );
   img.setText( QSL("Model_file"), model_file );
   img.setText( QSL("Simulation"), sim_name );
-  img.setText( QSL("Title"), title.cval() );
+  img.setText( QSL("Title"),      title.cval() );
   img.setText( QSL("Decription"), descr.cval() );
-  img.setText( QSL("Creator"), QSL(PACKAGE "-" VERSION) );
+  img.setText( QSL("Creator"),    QSL(PACKAGE "-" VERSION) );
+
+  if( a_vd ) {
+    img.setText( QSL("x_min"), QSND( a_vd->pv_min.x ) );
+    img.setText( QSL("x_max"), QSND( a_vd->pv_max.x ) );
+    img.setText( QSL("y_min"), QSND( a_vd->pv_min.y ) );
+    img.setText( QSL("y_max"), QSND( a_vd->pv_max.y ) );
+    img.setText( QSL("z_min"), QSND( a_vd->pv_min.z ) );
+    img.setText( QSL("z_max"), QSND( a_vd->pv_max.z ) );
+  }
+
+  if( scda ) {
+    img.setText( QSL("phi"),    QSND( scda->phi.cval()        ) );
+    img.setText( QSL("theta"),  QSND( scda->theta.cval()      ) );
+    img.setText( QSL("factor"), QSND( scda->plotFactor.cval() ) );
+  }
 
   for( auto lbl : TCHILD(PlotLabel*) ) {
     QString s = lbl->getMetaStr();
@@ -956,7 +971,7 @@ QSize TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda
     lbl->render( &img, &gr, false );
   }
 
-  addMetaData( img );
+  addMetaData( img, &vd, scda );
 
   return QSize( gw, gh );
 }
