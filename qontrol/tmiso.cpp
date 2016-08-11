@@ -79,6 +79,9 @@ double TMiso::f_d( double /*arg0*/, double /*arg1*/, double /*arg2*/, double /*a
 
 int TMiso::do_startLoop( long acnx, long acny )
 {
+  if( ignored ) {
+    return 1;
+  }
   state = stateRun;
   out0 = (double)out0_init;
   // readAllInputs(); // moved to LinkedObj

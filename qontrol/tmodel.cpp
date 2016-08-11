@@ -385,7 +385,7 @@ long TModel::run( QSemaphore *sem )
         IterType itype = IterMid;
         if( i == 0 ) {
           itype = IterFirst;
-        } else if ( i == (N-1) ) {
+        } else if ( i >= (N-2) ) { // -2 : 2 "last" as real last not collected by TOutArr
           itype = IterLast;
         }
 

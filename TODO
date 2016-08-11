@@ -1,7 +1,6 @@
 Need correct time to gather info to PlotLabel
 BUG: "all changes" after small [sub]edit and cancel. Tmp obj? Swap?
 BUG: reset_dfl for complex object for dialog: RODial, set? context?
-BUG: ignored elements try to start
 Rethink start iterations: separate func!
 Special TMiso (or ???) function: on_param_changed();
 modification flag/usage rethink: only real data holder count?
