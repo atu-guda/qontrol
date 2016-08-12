@@ -26,7 +26,7 @@ Reorder objects in list-alike containers. - require artificial numeration
 Redesign post_set(), *structChange. (half done?)
 Fill, import, export special arrays.
 Script 'help' function + list of top-level objects and functions.
-Documentaion: cmdline options (partial), common workflow.
+Documentation: cmdline options (partial), common workflow.
 StatusTip(col=2) for StatusModel More: clarify 'col' meaning for objects
 1D{v,h}/2D slider inputs + 2-double pair data
 Create Action fun + subclass QAction? (menu to place, flags)
