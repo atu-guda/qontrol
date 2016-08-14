@@ -40,7 +40,7 @@ double TBjt::f() noexcept
 
   // TODO: IF(mode)
 
-  I_c = I_s * exp( V_be / ( V_t * N_f ) - 1 ) * ( 1 + V_ce / V_af );
+  I_c = I_s * expm1( V_be / ( V_t * N_f ) )  * ( 1 + V_ce / V_af );
   I_b = I_c / h_FE;
   I_e = I_c + I_b;
 

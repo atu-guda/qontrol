@@ -51,7 +51,7 @@ class TBjt : public TMiso  {
 
    PRM_INPUT( V_b, 0, "V_{&b}", "Base potential",  "sep=block" );
    PRM_INPUT( V_c, 0, "V_{&c}", "Collector potential",  "sep=col" );
-   PRM_INPUT( V_e, 0, "V_{&b}", "Emitter potential",  "sep=col" );
+   PRM_INPUT( V_e, 0, "V_{&e}", "Emitter potential",  "sep=col" );
 
    Q_CLASSINFO( "nameHintBase",  "bjt_" );
    DCL_DEFAULT_STATIC;
