@@ -37,11 +37,33 @@ double TBjt::f() noexcept
   V_t = k1 * Temp;
   V_be = V_b - V_e;
   V_ce = V_c - V_e;
+  V_cb = V_c - V_b;
 
-  // TODO: IF(mode)
+  double I_c0 = I_s * expm1( V_be / ( V_t * N_f ) )  * ( 1 + V_ce / V_af );
+  if( I_c0 < 1e-12 ) { // 1pA
+    I_c0 = 1e-12;
+  }
+  I_b = I_c0 / h_FE;
+  double R_ce = V_ce / I_c0 + R_ce0;
+  I_c = V_ce / R_ce;
+  if( I_c < 1e-12 ) { // 1pA
+    I_c = 1e-12;
+  }
+  // I_c = I_s * expm1( V_be / ( V_t * N_f ) )  * ( 1 + V_ce / V_af );
 
-  I_c = I_s * expm1( V_be / ( V_t * N_f ) )  * ( 1 + V_ce / V_af );
-  I_b = I_c / h_FE;
+  // TODO: IF(mode) make better
+  // if( V_cb < 0.2 ) { // saturation mode: bad approach
+  //   double I_c_lim = ( V_cc - V_ee ) / ( R_cs + R_es + R_ces );
+  //   I_c *= V_cb / 0.2;
+  //   if( I_c < 0 ) {
+  //     I_c = 0;
+  //   }
+  //   // I_c = V_ce / R_ces;
+  //   if( I_c > I_c_lim ) {
+  //     I_c = I_c_lim;
+  //   }
+  // }
+
   I_e = I_c + I_b;
 
   return I_c;

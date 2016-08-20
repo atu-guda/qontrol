@@ -1,3 +1,4 @@
+BUG: old value holed for object w/o clpCalcAtStart or disabled noCalcStart
 Need correct time to gather info to PlotLabel
 BUG: "all changes" after small [sub]edit and cancel. Tmp obj? Swap?
 BUG: reset_dfl for complex object for dialog: RODial, set? context?

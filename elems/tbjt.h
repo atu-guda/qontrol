@@ -40,6 +40,12 @@ class TBjt : public TMiso  {
    PRM_PARAMD( N_f,        0, "N_f",      "Forward emission coefficient", "def=1.3\nmin=0.1" );
    PRM_PARAMD( Temp,       0, "Temp",     "Temperature (K)", "def=300\nsep=col\nmin=1" );
    PRM_PARAMD( V_af,       0, "V_{af}",   "Forward Early voltage", "def=75\nmin=1" );
+   PRM_PARAMD( R_ce0,      0, "R_{ce0}",  "Effective C-E resistance", "def=1\nmin=0.01" );
+   PRM_PARAMD( V_cc,       0, "V_{cc}",   "V_cc for saturation mode", "def=5\nsep=col" );
+   PRM_PARAMD( R_cs,       0, "R_{cs}",   "R_c for saturation mode", "def=100\nmin=0.01" );
+   PRM_PARAMD( V_ee,       0, "V_{ee}",   "V_ee for saturation mode", "def=0" );
+   PRM_PARAMD( R_es,       0, "R_{es}",   "R_c for saturation mode", "def=0\nmin=0" );
+   PRM_PARAMD( R_ces,      0, "R_{ces}",  "R_ce for saturation mode", "def=0.5\nmin=0.01" );
 
    // * Outputs and misc states
    PRM_DOUBLE( I_c, efInner, "I_c", "Collector current = main output", "" );
@@ -48,6 +54,7 @@ class TBjt : public TMiso  {
    PRM_DOUBLE( V_t, efInner, "V_t", "Thermal voltage = k_b T / q_e", "" );
    PRM_DOUBLE( V_be, efInner, "V_{be}", "Base-emitter voltage", "" );
    PRM_DOUBLE( V_ce, efInner, "V_{ce}", "Collector-emitter voltage", "" );
+   PRM_DOUBLE( V_cb, efInner, "V_{cb}", "Collector-base voltage", "" );
 
    PRM_INPUT( V_b, 0, "V_{&b}", "Base potential",  "sep=block" );
    PRM_INPUT( V_c, 0, "V_{&c}", "Collector potential",  "sep=col" );
