@@ -53,10 +53,14 @@ class TBjt : public TMiso  {
    PRM_DOUBLE( V_be, efInner, "V_{be}", "Base-emitter voltage", "" );
    PRM_DOUBLE( V_ce, efInner, "V_{ce}", "Collector-emitter voltage", "" );
    PRM_DOUBLE( V_cb, efInner, "V_{cb}", "Collector-base voltage", "" );
+   PRM_DOUBLE( V_co, efInner, "V_{co}", "Output V_c for useRc", "" );
 
    PRM_INPUT( V_b, 0, "V_{&b}", "Base potential",  "sep=block" );
    PRM_INPUT( V_c, 0, "V_{&c}", "Collector potential",  "sep=col" );
    PRM_INPUT( V_e, 0, "V_{&e}", "Emitter potential",  "sep=col" );
+
+   static const constexpr double I_c_min = 1e-12; // 1pA
+   static const constexpr double I_c_max = 1e+03; // 1kA
 
    Q_CLASSINFO( "nameHintBase",  "bjt_" );
    DCL_DEFAULT_STATIC;

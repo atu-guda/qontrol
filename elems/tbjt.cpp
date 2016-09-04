@@ -15,8 +15,9 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <gsl/gsl_const_mksa.h>
 #include "tbjt.h"
-#include "gsl/gsl_const_mksa.h"
+#include "miscfun.h"
 
 const char* TBjt::helpstr = "<h1>TBjt</h1>\n"
  "<p>Simple (Ebers-Moll alike) BJT transistor simulation <br>\n"
@@ -36,21 +37,36 @@ double TBjt::f() noexcept
 
   V_t = k1 * Temp;
   V_be = V_b - V_e;
-  V_ce = V_c - V_e;
-  V_cb = V_c - V_b;
+  int n_iter = 1;
 
-  double I_c0 = I_s * expm1( V_be / ( V_t * N_f ) )  * ( 1 + V_ce / V_af );
-  if( I_c0 < 1e-12 ) { // 1pA
-    I_c0 = 1e-12;
+  if( useRc ) {
+    V_co = 0.5 * V_cc + 1.5 * V_e; // ( V_cc - V_e ) / 2 + V_e;
+    n_iter = 3;
+  } else {
+    V_co = V_c;
   }
-  I_b = I_c0 / h_FE;
-  double R_ce = V_ce / I_c0 + R_ce0;
-  I_c = V_ce / R_ce;
-  if( I_c < 1e-12 ) { // 1pA
-    I_c = 1e-12;
+
+  for( int i=0; i<n_iter; ++i ) {
+
+    V_ce = V_co - V_e;
+    double I_c0 = I_s * expm1( V_be / ( V_t * N_f ) )  * ( 1 + V_ce / V_af );
+    I_c0 = vBound( I_c_min, I_c0, I_c_max );
+    I_b = I_c0 / h_FE;
+    double R_ce = V_ce / I_c0 + R_ce0;
+
+    if( useRc ) {
+      I_c = ( V_cc - V_e ) / ( R_ce + R_c );
+      V_co = V_e + I_c * R_ce;
+    } else {
+      I_c = V_ce / R_ce;
+    }
+
+    // I_c = vBound( I_c_min, I_c.cval(), I_c_max );
+
   }
 
   I_e = I_c + I_b;
+  V_cb = V_co - V_b;
 
   return I_c;
 }
