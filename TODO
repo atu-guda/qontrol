@@ -1,10 +1,12 @@
-BUG: old value holed for object w/o clpCalcAtStart or disabled noCalcStart
+BUG: old value holded for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
+Rethink start iterations: separate func!
+modification flag/usage rethink: only real data holder count?
 Need correct time to gather info to PlotLabel
+correct places for reset, set_link, *structChange..
 BUG: "all changes" after small [sub]edit and cancel. Tmp obj? Swap?
 BUG: reset_dfl for complex object for dialog: RODial, set? context?
-Rethink start iterations: separate func!
+BUG: Scheme view: vertival part of link not shown if y shift (+ backward?)
 Special TMiso (or ???) function: on_param_changed();
-modification flag/usage rethink: only real data holder count?
 List of presets for element.
 Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
 post_parm_set.
@@ -19,7 +21,6 @@ TMatrix3D(done) + rotate (separate/same) + Quaternion?
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
 TModel::startRun: list on vars to copy. List for engine aliases?
 chrono sleep_untill
-correct places for reset, set_link, *structChange..
 BUG: modified state (i.e. after autocreated scheme removal)
 BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params
 Long descriptions in schems, (button) - how to edit?

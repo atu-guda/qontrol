@@ -34,18 +34,16 @@ class TBjt : public TMiso  {
    // Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
 
    /** coefficients on input and shift */
-   PRM_SWITCH( isPNP,  efNRC, "PNP",  "Is this transistor PNP type (not working now)", "" );
+   PRM_SWITCH( isPNP,  efNRC, "PNP",      "Is this transistor PNP type (not working now)", "" );
    PRM_PARAMD( h_FE,       0, "&h_{FE}",  "Forward beta", "def=250\nmin=0.1" );
    PRM_PARAMD( I_s,        0, "I_s",      "Transport saturation current", "def=1.4e-14\nmin=0" );
    PRM_PARAMD( N_f,        0, "N_f",      "Forward emission coefficient", "def=1.3\nmin=0.1" );
    PRM_PARAMD( Temp,       0, "Temp",     "Temperature (K)", "def=300\nsep=col\nmin=1" );
    PRM_PARAMD( V_af,       0, "V_{af}",   "Forward Early voltage", "def=75\nmin=1" );
    PRM_PARAMD( R_ce0,      0, "R_{ce0}",  "Effective C-E resistance", "def=1\nmin=0.01" );
-   PRM_PARAMD( V_cc,       0, "V_{cc}",   "V_cc for saturation mode", "def=5\nsep=col" );
-   PRM_PARAMD( R_cs,       0, "R_{cs}",   "R_c for saturation mode", "def=100\nmin=0.01" );
-   PRM_PARAMD( V_ee,       0, "V_{ee}",   "V_ee for saturation mode", "def=0" );
-   PRM_PARAMD( R_es,       0, "R_{es}",   "R_c for saturation mode", "def=0\nmin=0" );
-   PRM_PARAMD( R_ces,      0, "R_{ces}",  "R_ce for saturation mode", "def=0.5\nmin=0.01" );
+   PRM_SWITCH( useRc,  efNRC, "use R_c",  "Use only R_c in collector part", "sep=col" );
+   PRM_PARAMD( V_cc,       0, "V_{cc}",   "V_cc for useRc", "def=5" );
+   PRM_PARAMD( R_c,        0, "R_{c}",    "R_c for useRc", "def=100\nmin=0.01" );
 
    // * Outputs and misc states
    PRM_DOUBLE( I_c, efInner, "I_c", "Collector current = main output", "" );

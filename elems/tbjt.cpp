@@ -49,20 +49,6 @@ double TBjt::f() noexcept
   if( I_c < 1e-12 ) { // 1pA
     I_c = 1e-12;
   }
-  // I_c = I_s * expm1( V_be / ( V_t * N_f ) )  * ( 1 + V_ce / V_af );
-
-  // TODO: IF(mode) make better
-  // if( V_cb < 0.2 ) { // saturation mode: bad approach
-  //   double I_c_lim = ( V_cc - V_ee ) / ( R_cs + R_es + R_ces );
-  //   I_c *= V_cb / 0.2;
-  //   if( I_c < 0 ) {
-  //     I_c = 0;
-  //   }
-  //   // I_c = V_ce / R_ces;
-  //   if( I_c > I_c_lim ) {
-  //     I_c = I_c_lim;
-  //   }
-  // }
 
   I_e = I_c + I_b;
 
