@@ -25,9 +25,9 @@ using namespace std;
 
 const char* TDynLink3D::helpstr = "<h1>TDynLink3D</h1>\n"
  "<p>3D integrator with self links: <br/>\n"
- " \\dot{x} = c_x * v_x; <br/>\n"
- " \\dot{y} = c_y * v_y; <br/>\n"
- " \\dot{z} = c_z * v_z; <br/>\n"
+ " \\dot{x} = a_x * ( cx_0 + cx_x x + cx_y y ... +  v_x ); <br/>\n"
+ " \\dot{y} = a_y * ( cy_0 + cy_x x + cy_y y ... +  v_y ); <br/>\n"
+ " \\dot{z} = a_z * ( cz_0 + cz_x x + cz_y y ... +  v_z ); <br/>\n"
  " <br>\n"
  " Inputs 0-2: v_xa, v_ya, v_za <br/>\n"
  " <br/>\n"
@@ -49,16 +49,19 @@ double TDynLink3D::f() noexcept
       + cx_x  * x   + cx_y  *  y  +  cx_z  * z
       + cx_x2 * x2  + cx_y2 * y2  +  cx_z2 * z2
       + cx_xy * xy  + cx_yz * yz  +  cx_xz * xz;
+  v_x *= a_x;
 
   v_y = cy_0 + v_ya
       + cy_x  * x   + cy_y  *  y  +  cy_z  * z
       + cy_x2 * x2  + cy_y2 * y2  +  cy_z2 * z2
       + cy_xy * xy  + cy_yz * yz  +  cy_xz * xz;
+  v_y *= a_y;
 
   v_z = cz_0 + v_za
       + cz_x  * x   + cz_y  *  y  +  cz_z  * z
       + cz_x2 * x2  + cz_y2 * y2  +  cz_z2 * z2
       + cz_xy * xy  + cz_yz * yz  +  cz_xz * xz;
+  v_z *= a_z;
 
   v = gsl_hypot3( v_x, v_y, v_z );
 

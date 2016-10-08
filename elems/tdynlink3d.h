@@ -1,6 +1,6 @@
 #pragma once
 /***************************************************************************
-  tdynlink3d.h.h - TDynLink3D class declaration
+  tdynlink3d.h - TDynLink3D class declaration
                              -------------------
     begin                : 2016.04.12
     copyright            : (C) 2016-2016 by atu
@@ -34,49 +34,52 @@ class TDynLink3D : public TMiso  {
    virtual int miso_startLoop( long acnx, long acny ) override;
 
    // X
-   PRM_PARAMD(  x_0, efNRC, "&x_0",    "Initial value of x", "" );
+   PRM_PARAMD(  x_0, efNRC, "&x_0",    "Initial value of x",    "" );
    PRM_PARAMD( cx_0,     0, "cx_0",    "Steady component to x", "sep=col" );
-   PRM_PARAMD( cx_x,     0, "cx_x",    "Factor from x to x", "sep=block" );
-   PRM_PARAMD( cx_y,     0, "cx_y",    "Factor from y to x", "sep=col" );
-   PRM_PARAMD( cx_z,     0, "cx_z",    "Factor from z to x", "sep=col" );
-   PRM_PARAMD( cx_x2,    0, "cx_{x2}", "Factor from x^2 to x", "sep=block" );
-   PRM_PARAMD( cx_y2,    0, "cx_{y2}", "Factor from y^2 to x", "sep=col" );
-   PRM_PARAMD( cx_z2,    0, "cx_{z2}", "Factor from z^2 to x", "sep=col" );
-   PRM_PARAMD( cx_xy,    0, "cx_{xy}", "Factor from xy to  x", "sep=block" );
-   PRM_PARAMD( cx_yz,    0, "cx_{yz}", "Factor from yz to  x", "sep=col" );
-   PRM_PARAMD( cx_xz,    0, "cx_{xz}", "Factor from xz to  x", "sep=col" );
+   PRM_PARAMD(  a_x,     0,  "a_x",    "Common factor for x",   "def=1\nsep=col" );
+   PRM_PARAMD( cx_x,     0, "cx_x",    "Factor from x to x",    "sep=block" );
+   PRM_PARAMD( cx_y,     0, "cx_y",    "Factor from y to x",    "sep=col" );
+   PRM_PARAMD( cx_z,     0, "cx_z",    "Factor from z to x",    "sep=col" );
+   PRM_PARAMD( cx_x2,    0, "cx_{x2}", "Factor from x^2 to x",  "sep=block" );
+   PRM_PARAMD( cx_y2,    0, "cx_{y2}", "Factor from y^2 to x",  "sep=col" );
+   PRM_PARAMD( cx_z2,    0, "cx_{z2}", "Factor from z^2 to x",  "sep=col" );
+   PRM_PARAMD( cx_xy,    0, "cx_{xy}", "Factor from xy  to x",  "sep=block" );
+   PRM_PARAMD( cx_yz,    0, "cx_{yz}", "Factor from yz  to x",  "sep=col" );
+   PRM_PARAMD( cx_xz,    0, "cx_{xz}", "Factor from xz  to x",  "sep=col" );
    //
-   PRM_INPUT( v_xa,      0, "&v_{xa}", "X speed addition",  "sep=block" );
+   PRM_INPUT( v_xa,      0, "&v_{xa}", "X speed addition",      "sep=block" );
 
    // Y
-   PRM_PARAMD(  y_0, efNRC, "&y_0",    "Initial value of y", "sep=tab\ntabname=Y" );
+   PRM_PARAMD(  y_0, efNRC, "&y_0",    "Initial value of y",    "sep=tab\ntabname=Y" );
    PRM_PARAMD( cy_0,     0, "cy_0",    "Steady component to y", "sep=col" );
-   PRM_PARAMD( cy_x,     0, "cy_x",    "Factor from x to y", "sep=block" );
-   PRM_PARAMD( cy_y,     0, "cy_y",    "Factor from y to y", "sep=col" );
-   PRM_PARAMD( cy_z,     0, "cy_z",    "Factor from z to y", "sep=col" );
-   PRM_PARAMD( cy_x2,    0, "cy_{x2}", "Factor from x^2 to y", "sep=block" );
-   PRM_PARAMD( cy_y2,    0, "cy_{y2}", "Factor from y^2 to y", "sep=col" );
-   PRM_PARAMD( cy_z2,    0, "cy_{z2}", "Factor from z^2 to y", "sep=col" );
-   PRM_PARAMD( cy_xy,    0, "cy_{xy}", "Factor from xy to  y", "sep=block" );
-   PRM_PARAMD( cy_yz,    0, "cy_{yz}", "Factor from yz to  y", "sep=col" );
-   PRM_PARAMD( cy_xz,    0, "cy_{xz}", "Factor from xz to  y", "sep=col" );
+   PRM_PARAMD(  a_y,     0,  "a_y",    "Common factor for y",   "def=1\nsep=col" );
+   PRM_PARAMD( cy_x,     0, "cy_x",    "Factor from x to y",    "sep=block" );
+   PRM_PARAMD( cy_y,     0, "cy_y",    "Factor from y to y",    "sep=col" );
+   PRM_PARAMD( cy_z,     0, "cy_z",    "Factor from z to y",    "sep=col" );
+   PRM_PARAMD( cy_x2,    0, "cy_{x2}", "Factor from x^2 to y",  "sep=block" );
+   PRM_PARAMD( cy_y2,    0, "cy_{y2}", "Factor from y^2 to y",  "sep=col" );
+   PRM_PARAMD( cy_z2,    0, "cy_{z2}", "Factor from z^2 to y",  "sep=col" );
+   PRM_PARAMD( cy_xy,    0, "cy_{xy}", "Factor from xy to  y",  "sep=block" );
+   PRM_PARAMD( cy_yz,    0, "cy_{yz}", "Factor from yz to  y",  "sep=col" );
+   PRM_PARAMD( cy_xz,    0, "cy_{xz}", "Factor from xz to  y",  "sep=col" );
    //
-   PRM_INPUT( v_ya,      0, "&v_{ya}", "Y speed addition",  "sep=block" );
+   PRM_INPUT( v_ya,      0, "&v_{ya}", "Y speed addition",      "sep=block" );
 
    // Z
-   PRM_PARAMD(  z_0, efNRC, "&z_0",    "Initial value of z", "sep=tab\ntabname=Z" );
+   PRM_PARAMD(  z_0, efNRC, "&z_0",    "Initial value of z",    "sep=tab\ntabname=Z" );
    PRM_PARAMD( cz_0,     0, "cz_0",    "Steady component to z", "sep=col" );
-   PRM_PARAMD( cz_x,     0, "cz_x",    "Factor from x to z", "sep=block" );
-   PRM_PARAMD( cz_y,     0, "cz_y",    "Factor from y to z", "sep=col" );
-   PRM_PARAMD( cz_z,     0, "cz_z",    "Factor from z to z", "sep=col" );
-   PRM_PARAMD( cz_x2,    0, "cz_{x2}", "Factor from x^2 to z", "sep=block" );
-   PRM_PARAMD( cz_y2,    0, "cz_{y2}", "Factor from y^2 to z", "sep=col" );
-   PRM_PARAMD( cz_z2,    0, "cz_{z2}", "Factor from z^2 to z", "sep=col" );
-   PRM_PARAMD( cz_xy,    0, "cz_{xy}", "Factor from xy to  z", "sep=block" );
-   PRM_PARAMD( cz_yz,    0, "cz_{yz}", "Factor from yz to  z", "sep=col" );
-   PRM_PARAMD( cz_xz,    0, "cz_{xz}", "Factor from xz to  z", "sep=col" );
+   PRM_PARAMD(  a_z,     0,  "a_z",    "Common factor for z",   "def=1\nsep=col" );
+   PRM_PARAMD( cz_x,     0, "cz_x",    "Factor from x to z",    "sep=block" );
+   PRM_PARAMD( cz_y,     0, "cz_y",    "Factor from y to z",    "sep=col" );
+   PRM_PARAMD( cz_z,     0, "cz_z",    "Factor from z to z",    "sep=col" );
+   PRM_PARAMD( cz_x2,    0, "cz_{x2}", "Factor from x^2 to z",  "sep=block" );
+   PRM_PARAMD( cz_y2,    0, "cz_{y2}", "Factor from y^2 to z",  "sep=col" );
+   PRM_PARAMD( cz_z2,    0, "cz_{z2}", "Factor from z^2 to z",  "sep=col" );
+   PRM_PARAMD( cz_xy,    0, "cz_{xy}", "Factor from xy to  z",  "sep=block" );
+   PRM_PARAMD( cz_yz,    0, "cz_{yz}", "Factor from yz to  z",  "sep=col" );
+   PRM_PARAMD( cz_xz,    0, "cz_{xz}", "Factor from xz to  z",  "sep=col" );
    //
-   PRM_INPUT( v_za,      0, "&v_{za}", "Z speed addition",  "sep=block" );
+   PRM_INPUT( v_za,      0, "&v_{za}", "Z speed addition",      "sep=block" );
 
    /** state/output variables */
    PRM_DOUBLE( x,  efInner, "x", "x current value", "" );
