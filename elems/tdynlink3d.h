@@ -32,6 +32,8 @@ class TDynLink3D : public TMiso  {
  protected:
    virtual double f() noexcept override;
    virtual int miso_startLoop( long acnx, long acny ) override;
+   void calc_misc();
+   void calc_v();
 
    // X
    PRM_PARAMD(  x_0, efNRC, "&x_0",    "Initial value of x",    "" );
@@ -91,15 +93,23 @@ class TDynLink3D : public TMiso  {
    PRM_DOUBLE( v_z,  efInner, "v_z",  "Z speed", ""  );
    PRM_DOUBLE(   v,  efInner, "v",    "Scalar speed", ""  );
    /** misc values */
-   PRM_DOUBLE(  x2,  efInner, "x2",    "x^2", ""  );
-   PRM_DOUBLE(  y2,  efInner, "y2",    "y^2", ""  );
-   PRM_DOUBLE(  z2,  efInner, "z2",    "z^2", ""  );
-   PRM_DOUBLE(  xy,  efInner, "xy",    "xy",  ""  );
-   PRM_DOUBLE(  yz,  efInner, "yz",    "yz",  ""  );
-   PRM_DOUBLE(  xz,  efInner, "xz",    "xz",  ""  );
-   PRM_DOUBLE(  ax,  efInner, "ax",   "|x|",  ""  );
-   PRM_DOUBLE(  ay,  efInner, "ay",   "|y|",  ""  );
-   PRM_DOUBLE(  az,  efInner, "az",   "|z|",  ""  );
+   PRM_DOUBLE(                 x2, efInner,       "x2",         "x^2", "" );
+   PRM_DOUBLE(                 y2, efInner,       "y2",         "y^2", "" );
+   PRM_DOUBLE(                 z2, efInner,       "z2",         "z^2", "" );
+   PRM_DOUBLE(                 xy, efInner,       "xy",          "xy", "" );
+   PRM_DOUBLE(                 yz, efInner,       "yz",          "yz", "" );
+   PRM_DOUBLE(                 xz, efInner,       "xz",          "xz", "" );
+   PRM_DOUBLE(                 ax, efInner,       "ax",         "|x|", "" );
+   PRM_DOUBLE(                 ay, efInner,       "ay",         "|y|", "" );
+   PRM_DOUBLE(                 az, efInner,       "az",         "|z|", "" );
+   PRM_DOUBLE(           x_plus_y, efInner,      "x+y",         "x+y", "" );
+   PRM_DOUBLE(           x_plus_z, efInner,      "x+z",         "x+z", "" );
+   PRM_DOUBLE(           y_plus_z, efInner,      "y+z",         "y+z", "" );
+   PRM_DOUBLE(    x_plus_y_plus_z, efInner,    "x+y+z",       "x+y+z", "" );
+   PRM_DOUBLE(         x2_plus_y2, efInner,    "x2+y2",     "x^2+y^2", "" );
+   PRM_DOUBLE(         x2_plus_z2, efInner,    "x2+z2",     "x^2+z^2", "" );
+   PRM_DOUBLE(         y2_plus_z2, efInner,    "y2+z2",     "y^2+z^2", "" );
+   PRM_DOUBLE( x2_plus_y2_plus_z2, efInner, "x2+y2+z2", "x^2+y^2+z^2", "" );
 
    Q_CLASSINFO( "nameHintBase",  "d3l_" );
    DCL_DEFAULT_STATIC;

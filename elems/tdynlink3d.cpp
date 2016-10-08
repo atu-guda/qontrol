@@ -39,12 +39,19 @@ CTOR(TDynLink3D,TMiso)
 {
 }
 
-double TDynLink3D::f() noexcept
+void TDynLink3D::calc_misc()
 {
   x2 = x*x; y2 = y*y; z2 = z*z;
   xy = x*y; yz = y*z; xz = x*z;
   ax = fabs( x ); ay = fabs( y ); az = fabs( z );
+  x_plus_y   =   x + y;    x_plus_z = x + z;  y_plus_z   = y +  z;
+  x2_plus_y2 = x2 + y2; x2_plus_z2 = x2 + z2; y2_plus_z2 = y2 + z2;
+  x_plus_y_plus_z = x + y + z;  x2_plus_y2_plus_z2 = x2 + y2 + z2;
+}
 
+
+void TDynLink3D::calc_v()
+{
   v_x = cx_0 + v_xa
       + cx_x  * x   + cx_y  *  y  +  cx_z  * z
       + cx_x2 * x2  + cx_y2 * y2  +  cx_z2 * z2
@@ -62,12 +69,17 @@ double TDynLink3D::f() noexcept
       + cz_x2 * x2  + cz_y2 * y2  +  cz_z2 * z2
       + cz_xy * xy  + cz_yz * yz  +  cz_xz * xz;
   v_z *= a_z;
-
   v = gsl_hypot3( v_x, v_y, v_z );
+}
+
+double TDynLink3D::f() noexcept
+{
+  calc_v();
 
   x += ctdt * v_x;
   y += ctdt * v_y;
   z += ctdt * v_z;
+  calc_misc();
   return x;
 }
 
@@ -76,6 +88,9 @@ int TDynLink3D::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
   out0 = x; // ????
+
+  calc_misc();
+  calc_v();
   return 1;
 }
 
