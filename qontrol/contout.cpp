@@ -163,12 +163,8 @@ int  ContOut::transLin( const QString &nm_in, const QString &nm_out,
     return 0;
   }
 
-  TOutArr *in_out = getObjT<TOutArr*>( nm_out );
+  TOutArr *in_out = getArrWithType( nm_out, TOutArr::OutArrType::outSpec );
   if( !in_out ) {
-    return 0;
-  }
-  int tp = in_out->getDataD( "type", 0 );
-  if( tp != TOutArr::OutArrType::outSpec ) {
     return 0;
   }
 
@@ -182,30 +178,46 @@ int  ContOut::transLin( const QString &nm_in, const QString &nm_out,
   return n;
 }
 
+TOutArr* ContOut::getArrWithType( const QString &nm, int rq_tp )
+{
+  TOutArr *r = getObjT<TOutArr*>( nm );
+  if( !r ) {
+    return nullptr;
+  }
+  if( rq_tp == -1 ) { // any type
+    return r;
+  }
+  int tp = r->getDataD( "type", 0 );
+  if( tp != rq_tp ) {
+      return nullptr;
+  }
+  return r;
+}
+
 // ---------------------- Fourier --------------------------
 
 int ContOut::fft( const QString &nm_in, const QString &nm_omega,
-                const QString &nm_a, const QString &nm_phi, double ome_max )
+                const QString &nm_a, const QString &nm_phi, double ome_max, bool angular_freq )
 {
-  return fftx( nm_in, nm_omega, nm_a, nm_phi, ome_max, false );
+  return fftx( nm_in, nm_omega, nm_a, nm_phi, ome_max, false, angular_freq );
 }
 
 int ContOut::fftc( const QString &nm_in, const QString &nm_omega,
-                const QString &nm_re, const QString &nm_im, double ome_max )
+                const QString &nm_re, const QString &nm_im, double ome_max, bool angular_freq )
 {
-  return fftx( nm_in, nm_omega, nm_re, nm_im, ome_max, true );
+  return fftx( nm_in, nm_omega, nm_re, nm_im, ome_max, true, angular_freq );
 }
 
 
 int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
-                const QString &nm_a, const QString &nm_phi, double ome_max, bool cmpl )
+                const QString &nm_a, const QString &nm_phi, double ome_max, bool cmpl, bool angular_freq )
 {
-  int n = 0;
+  const double freq_scale = angular_freq ? ( 2*M_PI ) : 1.0;
   TOutArr *in = getObjT<TOutArr*>( nm_in );
   if( !in ) {
     return 0;
   }
-  n = in->getDataD( "n", 0 );
+  const int n = in->getDataD( "n", 0 );
   if( n < 2 ) {
     return 0;
   }
@@ -215,32 +227,13 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
     qWarning() << "not found model in" << getFullName() << WHE;
     return 0;
   }
-  double tdt = model->getDataD( "tdt", 1.0 );
+  const double tdt = model->getDataD( "tdt", 1.0 );
+  const double tdt_n = tdt * n;
 
   // output arrays may not exist, but must be special
-  TOutArr *o_omega = getObjT<TOutArr*>( nm_omega );
-  if( o_omega ) {
-    int tp = o_omega->getDataD( "type", 0 );
-    if( tp != TOutArr::OutArrType::outSpec ) {
-      o_omega = nullptr;
-    }
-  }
-
-  TOutArr *o_a = getObjT<TOutArr*>( nm_a );
-  if( o_a ) {
-    int tp = o_a->getDataD( "type", 0 );
-    if( tp != TOutArr::OutArrType::outSpec ) {
-      o_a = nullptr;
-    }
-  }
-
-  TOutArr *o_phi = getObjT<TOutArr*>( nm_phi );
-  if( o_phi ) {
-    int tp = o_phi->getDataD( "type", 0 );
-    if( tp != TOutArr::OutArrType::outSpec ) {
-      o_phi = nullptr;
-    }
-  }
+  TOutArr *o_omega = getArrWithType( nm_omega, TOutArr::OutArrType::outSpec );
+  TOutArr *o_a     = getArrWithType( nm_a,     TOutArr::OutArrType::outSpec );
+  TOutArr *o_phi   = getArrWithType( nm_phi,   TOutArr::OutArrType::outSpec );
 
   if( ome_max <= 0.0 ) {
     ome_max = DMAX;
@@ -251,14 +244,14 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
 
 
 
-  int o_n = 1 + n/2;
+  const int o_n = 1 + n/2;
   fftw_complex *out = (fftw_complex*) fftw_malloc( (2+o_n) * sizeof( fftw_complex ) );
   fftw_plan plan = fftw_plan_dft_r2c_1d( n, pv, out, FFTW_ESTIMATE );
 
   fftw_execute( plan );
   fftw_destroy_plan( plan );
 
-  int i_m = (int)( n * tdt * ome_max / ( 2*M_PI ) );
+  int i_m = (int)( n * tdt * ome_max / ( freq_scale ) );
   if( i_m > o_n ) {
     i_m = o_n;
   }
@@ -280,7 +273,7 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
 
   double scl = 2.0 / double(n); // common scale
   for( int i=0; i<i_m ; ++i ) {
-    double ome = 2*M_PI*i/(tdt*n);
+    double ome = freq_scale*i / tdt_n;
     if( o_omega ) {
       o_omega->add( ome );
     }

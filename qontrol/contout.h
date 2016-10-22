@@ -46,14 +46,17 @@ class ContOut : public LinkedObj {
 
    // fft tranform
    Q_INVOKABLE int fft( const QString &nm_in, const QString &nm_omega,
-                        const QString &nm_a, const QString &nm_phi, double ome_max );
+                        const QString &nm_a, const QString &nm_phi, double ome_max, bool angular_freq = true );
    Q_INVOKABLE int fftc( const QString &nm_in, const QString &nm_omega,
-                        const QString &nm_re, const QString &nm_im, double ome_max );
+                        const QString &nm_re, const QString &nm_im, double ome_max, bool angular_freq = true  );
+
+   TOutArr* getArrWithType( const QString &nm, int rq_tp = -1 ); // -1 = any, or some of TOutArr::OutArrType
   protected:
+   //* prepare to operations, wich requres 2 arrays, fills 2 ptr to dvectors
    int prep_2in( const QString &nm_x, const QString &nm_y,
                  const dvector **p_d_x, const dvector **p_d_y ) const;
    int fftx( const QString &nm_in, const QString &nm_omega,
-             const QString &nm_a, const QString &nm_phi, double ome_max, bool cmpl );
+             const QString &nm_a, const QString &nm_phi, double ome_max, bool cmpl, bool angular_freq );
 
    virtual int do_preRun() override;
    virtual int do_postRun( int good ) override;
