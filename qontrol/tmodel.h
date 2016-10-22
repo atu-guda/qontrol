@@ -43,7 +43,7 @@ class TModel : public LinkedObj  {
   DCL_CREATE;
   DCL_STD_INF;
 
-  //* redirects request to active scheme (may be more)
+  //* redirects request to active scheme, simulation, self params
   const double* getSchemeDoublePtr( const QString &nm, int *lt,
         const LinkedObj **src_ob, int lev ) const override;
   // to automatically copy prm[10] to other parameters
