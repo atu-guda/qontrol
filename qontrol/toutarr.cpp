@@ -367,6 +367,14 @@ void TOutArr::add( double v )
 
 }
 
+void  TOutArr::transLin( double a, double b ) // every x: x*a+b
+{
+  for( auto &x : arr ) {
+    x = x * a + b;
+  }
+  calc_stat();
+}
+
 void TOutArr::reset_stat()
 {
   dmin = 0; dmax = 0.5; // bad, but safe values
