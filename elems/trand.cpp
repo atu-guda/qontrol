@@ -95,7 +95,7 @@ double TRand::f() noexcept
     if( sp_time >= tau ) {
       sp_time = 0;
     }
-    double v = 0;
+    double v;
     switch( (int)type ) {
       case dt_flat     :  v = rng.flat( -sigma, sigma ); break;
       case dt_gauss    :  v = rng.gaussian( sigma ); break;
@@ -115,13 +115,21 @@ double TRand::f() noexcept
       case dt_pareto   :  v = rng.pareto( a, b ); break;
       case dt_rayleigh :  v = rng.rayleigh( sigma ); break;
       case dt_weibull  :  v = rng.weibull( a, b ); break;
-      default: break;
+      case dt_none     :  v = 0;  break;
+      default          :  v = 0;  break;
     };
     old_val = zval + ampl * v;
   };
   du = in - old_in; old_in = in;
   sp_time += du;
   double v =  old_val + in_v.cval();
+
+  if( useDiscr ) {
+    v -= d_base;
+    long k = (long)round( ( v ) / d_h );
+    v = k * d_h;
+    v += d_base;
+  }
   x2 = pow2( v );
   return v;
 }

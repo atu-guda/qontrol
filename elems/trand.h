@@ -35,7 +35,7 @@ class TRand : public TMiso  {
    enum DistrType {
      dt_flat = 0, dt_gauss, dt_gausstail, dt_exp, dt_laplace, dt_exppow, dt_beta,
      dt_cauchy, dt_chisq, dt_erlang, dt_fdist, dt_gamma, dt_levy, dt_logistic,
-     dt_lognorm, dt_pareto, dt_rayleigh, dt_weibull
+     dt_lognorm, dt_pareto, dt_rayleigh, dt_weibull, dt_none
    };
    Q_ENUMS(DistrType);
    Q_CLASSINFO( "enum_DistrType_0" , "flat(-\\sigma,\\sigma)"   ); // dt_flat
@@ -56,6 +56,7 @@ class TRand : public TMiso  {
    Q_CLASSINFO( "enum_DistrType_15", "pareto(a,b)"              ); // dt_pareto
    Q_CLASSINFO( "enum_DistrType_16", "rayleigh(\\sigma)"        ); // dt_rayleigh
    Q_CLASSINFO( "enum_DistrType_17", "weibull(a,b)"             ); // dt_weibull
+   Q_CLASSINFO( "enum_DistrType_18", "none"                     ); // dt_none
 
    enum SeedType {
      everyRun = 0, startLoop, start2DLoop, asModel
@@ -90,6 +91,10 @@ class TRand : public TMiso  {
    /** flag: add base seed to element seed */
    PRM_SWITCH( addBaseSeed, efNRC, "Add base", "Add base seed to element seed ", "def=1" );
    PRM_SWITCH( addHash,     efNRC, "Add hash", "Add hash value of full name ", "def=1" );
+
+   PRM_SWITCH( useDiscr,  efNRC, "Discretization", "Use discretization noise ", "def=0\nsep=block" );
+   PRM_PARAMD(      d_h,      0, "d_{h}",    "Discretization step", "def=0.1\nmin=1e-12\nsep=col" );
+   PRM_PARAMD(   d_base,      0, "d_{base}", "Discretization base", "def=0\nsep=col" );
 
    PRM_INPUT( in_t, 0, "&in_t", "Input t if not used automatically",  "sep=block" );
    PRM_INPUT( in_v, 0, "&in_v", "Additional input",  "sep=col" );
