@@ -71,8 +71,9 @@ int TFileSimple::readLine() noexcept
       if( sub0 ) {     v[0] -= v00;   }
       v[1] = v[1] * a1 + b1;
       if( first_read ) {  v10 = v[1];  }
-      if( sub0 ) {     v[1] -= v10;   }
+      if( sub1 ) {     v[1] -= v10;   }
       x = cx0 * v[0] + cx1 * v[1] + cx2 * v[2] + cx3 * v[3] + bx;
+      y = cy0 * v[0] + cy1 * v[1] + cy2 * v[2] + cy3 * v[3] + by;
       ++n_total; hold_i = 0;
       first_read = false;
       break;
@@ -108,7 +109,7 @@ int TFileSimple::do_postRun( int /*good*/ )
 
 int TFileSimple::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
-  n_total = 0; hold_i = 0; n_col = 0; x = 0;
+  n_total = 0; hold_i = 0; n_col = 0; x = 0; y = 0;
   first_read = true;
   if( ! file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
     qWarning() << "Fail to open data file " << file.fileName() << NWHE;

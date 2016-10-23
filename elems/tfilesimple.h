@@ -70,9 +70,16 @@ class TFileSimple : public TMiso  {
    PRM_PARAMD(   cx1,       0, "cx1"     , "factor for v[1] in x"          , "def=-1.0" );
    PRM_PARAMD(   cx2,       0, "cx2"     , "factor for v[2] in x"          , "sep=col" );
    PRM_PARAMD(   cx3,       0, "cx3"     , "factor for v[3] in x"          , "" );
-   PRM_PARAMD(    bx,       0, "bx"      , "shift for  x"                  , "sep=col" );
+   PRM_PARAMD(    bx,       0, "bx"      , "shift for x"                   , "sep=col" );
+
+   PRM_PARAMD(   cy0,       0, "cy0"     , "factor for v[0] in y"          , "def=0.0\nsep=block" );
+   PRM_PARAMD(   cy1,       0, "cy1"     , "factor for v[1] in y"          , "def=1.0" );
+   PRM_PARAMD(   cy2,       0, "cy2"     , "factor for v[2] in y"          , "def=-1.0\nsep=col" );
+   PRM_PARAMD(   cy3,       0, "cy3"     , "factor for v[3] in y"          , "" );
+   PRM_PARAMD(   by ,       0, "by"      , "shift for y"                   , "sep=col" );
 
    PRM_DOUBLE(    x,  efInner, "x"       , "linear combination for v[0..3]", "" );
+   PRM_DOUBLE(    y,  efInner, "y"       , "linear combination for v[0..3]", "" );
 
    PRM_INT( n_total,  efInner, "n_total", "Total number of read and converted lines", "" );
    PRM_INT(   n_col,  efInner, "n_{col}", "Current number of read columns ", "" );
