@@ -96,7 +96,7 @@ void TSourceLin::recalc(void)
 {
   int n = t_int.arrSize();
   slopes.assign( n, 0 ); tsta.assign( n, 1e100 );
-  T_c = 0; omega = 1e10;
+  T_c = 0; freq = 1e10; omega = 2 * M_PI * freq;
 
   // fail-safe
   if( t_int[0] <= 0 ) {
@@ -113,7 +113,7 @@ void TSourceLin::recalc(void)
     T_c += t_int[i];
   };
   tsta[n_lin] = T_c;
-  omega = 2 * M_PI / T_c;
+  freq = 1.0 / T_c; omega = 2 * M_PI * freq;
 
   // for( int j=0; j<n_lin; ++j ) {
   //   qWarning() << "tsta[" << j << "]= " << tsta[j] << " a = " << slopes[j];

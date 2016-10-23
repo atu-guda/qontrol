@@ -45,8 +45,9 @@ class TSourceLin : public TMiso  {
    PRM_SWITCH( cycle_before, 0, "Cycle bef&ore", "Continue function periodicaly at t<0", "sep=col\ndef=1" );
    PRM_SWITCH( cycle_after,  0, "Cycle af&ter",  "Continue function periodicaly at t>T_c", "def=1" );
 
-   PRM_DOUBLE( T_c,    efRO, "T_c",     "Period", "sep=block" );
-   PRM_DOUBLE( omega,  efRO, "\\omega", "Frequency", "sep=col" );
+   PRM_DOUBLE( T_c,    efRO | efNoSave, "T_c",     "Period", "sep=block" );
+   PRM_DOUBLE( omega,  efRO | efNoSave, "\\omega", "Angular frequency", "sep=col" ); // just for information
+   PRM_DOUBLE( freq,   efRO | efNoSave, "f", "frequency", "sep=col" );
    PRM_DOUBLE( t_r,  efInner, "t_r", "relative time", "" );
    PRM_DOUBLE( t_rr,  efInner, "t_{rr}", "relative to slope start time", "" );
    PRM_DOUBLE( t_r0,  efInner, "t_{r0}", "slope start time", "" );
