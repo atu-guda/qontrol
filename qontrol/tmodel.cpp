@@ -293,13 +293,14 @@ int TModel::startRun()
     initEngine();
   }
   if( useScripts ) {
-    eng->globalObject().setProperty( "T", eng->newVariant( (double)T ) );
-    eng->globalObject().setProperty( "tdt", eng->newVariant( (double)tdt ) );
-    eng->globalObject().setProperty( "N", eng->newVariant( (long long)N ) );
-    eng->globalObject().setProperty( "N1", eng->newVariant( (long long)n1_eff ) );
-    eng->globalObject().setProperty( "N2", eng->newVariant( (long long)n2_eff ) );
+    auto gobj = eng->globalObject();
+    gobj.setProperty( "T", eng->newVariant( (double)T ) );
+    gobj.setProperty( "tdt", eng->newVariant( (double)tdt ) );
+    gobj.setProperty( "N", eng->newVariant( (long long)N ) );
+    gobj.setProperty( "N1", eng->newVariant( (long long)n1_eff ) );
+    gobj.setProperty( "N2", eng->newVariant( (long long)n2_eff ) );
     // alias objs
-    eng->globalObject().setProperty( "c_sim", eng->newQObject( c_sim ) );
+    gobj.setProperty( "c_sim", eng->newQObject( c_sim ) );
   }
   if( execModelScript ) {
     runModelScript();
@@ -365,10 +366,11 @@ long TModel::run( QSemaphore *sem )
         return 0;
       }
       if( useScripts ) {
-        eng->globalObject().setProperty( "il1", eng->newVariant( (int)(il1) ) );
-        eng->globalObject().setProperty( "il2", eng->newVariant( (int)(il2) ) );
-        eng->globalObject().setProperty( "prm0", eng->newVariant( (double)(prm0) ) );
-        eng->globalObject().setProperty( "prm1", eng->newVariant( (double)(prm1) ) );
+        auto gobj = eng->globalObject();
+        gobj.setProperty( "il1", eng->newVariant( (int)(il1) ) );
+        gobj.setProperty( "il2", eng->newVariant( (int)(il2) ) );
+        gobj.setProperty( "prm0", eng->newVariant( (double)(prm0) ) );
+        gobj.setProperty( "prm1", eng->newVariant( (double)(prm1) ) );
         runScript( scriptStartLoop );
       }
 
@@ -707,20 +709,26 @@ void TModel::initEngine()
 
   qScriptRegisterMetaType( eng, TripleFtoScriptValue, fromScriptValuetoTripleF );
 
-  eng->globalObject().setProperty( "model", eng->newQObject( this ) );
+  auto gobj = eng->globalObject();
+
+  gobj.setProperty( "model",   eng->newQObject( this ) );
   // aliases
-  eng->globalObject().setProperty( "main_s", eng->newQObject( main_s ) );
-  eng->globalObject().setProperty( "outs", eng->newQObject( outs ) );
-  eng->globalObject().setProperty( "plots", eng->newQObject( plots ) );
+  gobj.setProperty( "main_s",  eng->newQObject( main_s ) );
+  gobj.setProperty( "outs",    eng->newQObject( outs ) );
+  gobj.setProperty( "plots",   eng->newQObject( plots ) );
   // funcs
-  eng->globalObject().setProperty( "int2str", eng->newFunction( script_int2str ) );
-  eng->globalObject().setProperty( "print", eng->newFunction( script_print ) );
-  eng->globalObject().setProperty( "isNear", eng->newFunction( script_isNear ) );
-  eng->globalObject().setProperty( "include", eng->newFunction( script_include ) );
+  gobj.setProperty( "int2str", eng->newFunction( script_int2str ) );
+  gobj.setProperty( "print",   eng->newFunction( script_print ) );
+  gobj.setProperty( "isNear",  eng->newFunction( script_isNear ) );
+  gobj.setProperty( "include", eng->newFunction( script_include ) );
 }
 
 QString TModel::runScript( const QString& script )
 {
+  if( !eng ) {
+    qCritical() << "No engine!" << NWHE;
+    return QSL("Error"); // TODO : bool
+  }
   if( script.isEmpty() ) {
     return QString();
   }
@@ -730,7 +738,10 @@ QString TModel::runScript( const QString& script )
   QString r;
   if( eng->hasUncaughtException() ) {
     int line = eng->uncaughtExceptionLineNumber();
-    r = "Error: uncaught exception at line " % QSN( line ) % " : \n";
+    auto bt = eng->uncaughtExceptionBacktrace();
+    auto err = eng->uncaughtException();
+    r = "Error: uncaught exception at line " % QSN( line ) % QSL(". ") % err.toString() % " : \n" % bt.join('\n');
+    qCritical() << r << NWHE;
   }
   r += res.toString();
   // qWarning() << "PROF: drt= " << drt << WHE;

@@ -1,5 +1,7 @@
 BUG: old value holded for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
 Rethink start iterations: separate func!
+Better runScript: place for errors.
+Better engine: QJSEngine?
 modification flag/usage rethink: only real data holder count?
 Need correct time to gather info to PlotLabel
 correct places for reset, set_link, *structChange..
