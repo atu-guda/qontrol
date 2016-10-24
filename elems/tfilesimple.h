@@ -44,7 +44,7 @@ class TFileSimple : public TMiso  {
 
    int readLine() noexcept;
 
-   PRM_STRING( filename, efNRC, "File name"   , "Input file name"          , "" );
+   PRM_STRING( filename,     0, "File name"   , "Input file name"          , "" );
    PRM_STRING(      sep, efNRC, "Separator"   , "Input field separator"    , "def= " );
    PRM_INT(         rnc, efNRC, "N of columns", "Number of columns to read", "min=1\nmax=32\ndef=1" );
 
