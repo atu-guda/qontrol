@@ -111,16 +111,35 @@ void LaboWin::registerAction( QAction *act, const char *nm )
   acts[ nm ] = act;
 }
 
-QAction* LaboWin::makeAction( const QString &text, const char *actName, SlotVV targetSlot )
+QAction* LaboWin::makeAction( const QString &text, const char *actName, SlotVV targetSlot,
+        const QString &icon_str, QMenu *tmenu, unsigned aflags )
 {
   auto a = new QAction( text, this );
-  // a->setShortcuts( QKeySequence::New );
-  // a->setProperty( "alwaysVisible", true );
+  // a->setShortcuts( shortcuts );
   registerAction( a, actName );
   connect( a, &QAction::triggered, this, targetSlot );
-  // pFileMenu->addAction( a );
-  // pFileMenu->addSeparator();
-  // fileToolbar->addAction( a );
+  if( tmenu ) {
+    tmenu->addAction( a );
+    if( aflags & ActionMenuSep ) {
+      tmenu->addSeparator();
+    }
+  }
+  if( ! icon_str.isEmpty() ) {
+    if( icon_str[0] == ':' ) { // from resource
+      a->setIcon( QIcon( icon_str ) );
+    } else {
+      a->setIcon( QIcon::fromTheme( icon_str ) );
+    }
+  }
+  if( aflags & ActionAlwaysVis ) {
+    a->setProperty( "alwaysVisible", true );
+  }
+  if( aflags & ActionToolBar ) {
+    mainToolBar->addAction( a );
+  }
+  if( aflags & ActionToolSep ) {
+    mainToolBar->addSeparator();
+  }
   return a;
 }
 
@@ -140,489 +159,331 @@ void LaboWin::initIface()
   pHelpMenu = menuBar()->addMenu( tr("&Help") );
 
   // and toolbars make too
-  fileToolbar = addToolBar( tr("File") );
-  elmToolbar = addToolBar( tr("Element") );
+  mainToolBar = addToolBar( tr("Main") );
 
   // Actions
   // File group
 
   {
-    auto a = makeAction( "&New model", "fileNew", &LaboWin::slotFileNew );
+    auto a = makeAction( "&New model", "fileNew", &LaboWin::slotFileNew,
+        QSL(":icons/filenew.png"), pFileMenu, ActionAlwaysVis | ActionToolBar | ActionMenuSep );
     a->setShortcuts( QKeySequence::New );
-    a->setIcon( QIcon( ":icons/filenew.png" ) );
-    a->setProperty( "alwaysVisible", true );
-    pFileMenu->addAction( a );
-    pFileMenu->addSeparator();
-    fileToolbar->addAction( a );
   }
 
   {
-    auto a = new QAction( QIcon::fromTheme("document-open"), "Open model", this );
+    auto a = makeAction( "&Open model", "fileOpen", &LaboWin::slotFileOpen,
+        QSL("document-open"), pFileMenu, ActionAlwaysVis | ActionToolBar );
     a->setShortcuts( QKeySequence::Open );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "fileOpen" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotFileOpen );
-    pFileMenu->addAction( a );
-    fileToolbar->addAction( a );
   }
 
   {
-    auto a = new QAction( QIcon::fromTheme("document-save"), "Save model",  this );
+    auto a = makeAction( "&Save model", "fileSave", &LaboWin::slotFileSave,
+        QSL("document-save"), pFileMenu, ActionToolBar );
     a->setShortcuts( QKeySequence::Save );
-    registerAction( a, "fileSave" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotFileSave );
-    pFileMenu->addAction( a );
-    fileToolbar->addAction( a );
-    fileToolbar->addSeparator();
   }
 
   {
-    auto a = new QAction(QIcon::fromTheme("document-save-as"), "Save model As", this );
-    registerAction( a, "fileSaveAs" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotFileSaveAs );
-    pFileMenu->addAction( a );
-    pFileMenu->addSeparator();
+    /* auto a = */ makeAction( "Save model &As", "fileSaveAs", &LaboWin::slotFileSaveAs,
+        QSL("document-save-as"), pFileMenu, ActionMenuSep );
   }
 
   {
-    auto a = new QAction(  QIcon::fromTheme("document-print"), "&Print", this );
+    auto a = makeAction( "&Print", "print", &LaboWin::slotFilePrint,
+        QSL("document-print"), pFileMenu, ActionMenuSep );
     a->setShortcuts( QKeySequence::Print );
-    registerAction( a, "print" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotFilePrint );
-    pFileMenu->addAction( a );
-    pFileMenu->addSeparator();
   }
 
   {
-    auto a = new QAction( "&Close", this );
-    connect( a, &QAction::triggered, this, &LaboWin::slotFileClose );
-    registerAction( a, "fileClose" );
-    pFileMenu->addSeparator();
-    pFileMenu->addAction( a );
+    auto a = makeAction( "&Close", "fileClose", &LaboWin::slotFileClose,
+        QSL("document-close"), pFileMenu, ActionMenuSep );
+    a->setShortcuts( QKeySequence::Close );
   }
 
   {
-    auto a = new QAction( "Sett&ings", this );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "fileSettings" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotFileSettings );
-    pFileMenu->addAction( a );
+    /* auto a = */ makeAction( "Sett&ings", "fileSettings", &LaboWin::slotFileSettings,
+        QSL("preferences-system"), pFileMenu, ActionAlwaysVis );
   }
 
   {
-    auto a = new QAction( "Save s&ettings", this );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "fileSaveSett" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotFileSaveSett );
-    pFileMenu->addAction( a );
-    pFileMenu->addSeparator();
+    /* auto a = */ makeAction( "Save s&ettings", "fileSaveSett", &LaboWin::slotFileSaveSett,
+        QSL(""), pFileMenu, ActionAlwaysVis  | ActionMenuSep );
   }
 
 
   {
-    auto a = new QAction(  QIcon::fromTheme("application-exit"), "&Quit", this );
+    auto a = makeAction( "&Quit", "fileQuit", &LaboWin::slotFileQuit,
+        QSL("application-exit"), pFileMenu, ActionAlwaysVis );
     a->setShortcuts( QKeySequence::Quit );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "fileQuit" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotFileQuit );
-    pFileMenu->addAction( a );
   }
 
   // ==== Edit + Object group
   {
-    auto a = new QAction( QIcon::fromTheme("edit-undo"), "&Undo", this );
+    auto a = makeAction( "&Undo", "editUndo", &LaboWin::slotEditUndo,
+        QSL("edit-undo"), pEditMenu, ActionMenuSep );
     a->setShortcuts( QKeySequence::Undo );
-    registerAction( a, "editUndo" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotEditUndo );
-    pEditMenu->addAction( a );
   }
 
   // -- object part
   {
-    auto a = new QAction(  QIcon::fromTheme("list-add"),"Add object", this ); // icon?
+    auto a = makeAction( "&Add object", "addObj", &LaboWin::slotAddObj,
+        QSL("list-add"), pEditMenu, 0 );
     a->setShortcut( Qt::Key_Insert );
-    registerAction( a, "addObj" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotAddObj );
-    pEditMenu->addAction( a );
   }
   {
-    auto a = new QAction(  QIcon::fromTheme("edit-delete"),"Delete object", this );
+    auto a = makeAction( "&Delete object", "delObj", &LaboWin::slotDelObj,
+        QSL("edit-delete"), pEditMenu, 0 );
     a->setShortcut( Qt::Key_Delete );
-    registerAction( a, "delObj" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotDelObj );
-    pEditMenu->addAction( a );
   }
   {
-    auto a = new QAction(  QIcon::fromTheme("document-properties"),"Edit object", this );
+    auto a = makeAction( "&Edit object", "editObj", &LaboWin::slotEditObj,
+        QSL("document-properties"), pEditMenu, 0 );
     a->setShortcut( Qt::Key_Enter );
-    registerAction( a, "editObj" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotEditObj );
-    pEditMenu->addAction( a );
   }
   {
-    auto a = new QAction(  QIcon::fromTheme("edit-cut"),"Cut Object", this );
+    auto a = makeAction( "&Cut object", "cutObj", &LaboWin::slotCutObj,
+        QSL("edit-cut"), pEditMenu, 0 );
     a->setShortcuts( QKeySequence::Cut );
-    registerAction( a, "cutObj" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotCutObj );
-    pEditMenu->addSeparator();
-    pEditMenu->addAction( a );
   }
   {
-    auto a = new QAction( QIcon::fromTheme("edit-copy"), "Copy Object", this );
+    auto a = makeAction( "c&Opy object", "copyObj", &LaboWin::slotCopyObj,
+        QSL("edit-copy"), pEditMenu, 0 );
     a->setShortcuts( QKeySequence::Copy );
-    registerAction( a, "copyObj" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotCopyObj );
-    pEditMenu->addAction( a );
   }
   {
-    auto a = new QAction( QIcon::fromTheme("edit-paste"), "Paste Object", this );
+    auto a = makeAction( "&Paste object", "pasteObj", &LaboWin::slotPasteObj,
+        QSL("edit-paste"), pEditMenu, ActionMenuSep );
     a->setShortcuts( QKeySequence::Paste );
-    registerAction( a, "pasteObj" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotPasteObj );
-    pEditMenu->addAction( a );
-    pEditMenu->addSeparator();
   }
   {
-    auto a = new QAction( QIcon::fromTheme("edit-rename"), "Rename object", this );
-    registerAction( a, "renameObj" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotRenameObj );
-    pEditMenu->addAction( a );
+    /* auto a = */ makeAction( "&Rename object", "renameObj", &LaboWin::slotRenameObj,
+        QSL("edit-rename"), pEditMenu, 0 );
   }
   {
-    auto a = new QAction( QIcon( ":icons/edit-clone.png" ), "Clone object", this );
-    registerAction( a, "cloneObj" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotCloneObj );
-    pEditMenu->addAction( a );
-    pEditMenu->addSeparator();
+    /* auto a = */ makeAction( "c&Lone object", "cloneObj", &LaboWin::slotCloneObj,
+        QSL(":icons/edit-clone.png"), pEditMenu, ActionMenuSep );
   }
   {
-    auto a = new QAction( QIcon( ":icons/info-obj.png" ), "show &Info", this );
+    auto a = makeAction( "show &Info", "infoObj", &LaboWin::slotInfoObj,
+        QSL(":icons/info-obj.png"), pEditMenu, ActionToolBar | ActionMenuSep | ActionToolSep );
     a->setShortcut( Qt::Key_I );
-    registerAction( a, "infoObj" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotInfoObj );
-    pEditMenu->addAction( a );
-    elmToolbar->addAction( a );
-    elmToolbar->addSeparator();
   }
   {
-    auto a = new QAction( QIcon::fromTheme("view-list-tree"), "show object tree", this );
-    registerAction( a, "showTreeObj" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotShowTreeObj );
-    pEditMenu->addAction( a );
-    pEditMenu->addSeparator();
+    /* auto a = */ makeAction( "show object &Tree", "showTreeObj", &LaboWin::slotShowTreeObj,
+        QSL("view-list-tree"), pEditMenu, ActionMenuSep );
   }
   {
-    auto a = new QAction( "test object", this );
-    registerAction( a, "testObj" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotTestObj );
-    pEditMenu->addAction( a );
-    pEditMenu->addSeparator();
+    /* auto a = */ makeAction( "Test object", "testObj", &LaboWin::slotTestObj,
+        QSL("tools-check-spelling"), pEditMenu, ActionMenuSep );
   }
+  {
+    /* auto a = */ makeAction( "Test", "test", &LaboWin::slotTest,
+        QSL(":icons/test.png"), pEditMenu, ActionAlwaysVis | ActionToolBar | ActionToolSep );
+  }
+
 
 
   // ==== Element group
   {
-    auto a = new QAction( QIcon::fromTheme("insert-link"), "&Quick link element", this );
+    auto a = makeAction( "&Quick link element", "qlinkElm", &LaboWin::slotqLinkElm,
+        QSL("insert-link"), pElmMenu, ActionToolBar );
     a->setShortcut( Qt::CTRL+Qt::Key_L );
-    registerAction( a, "qlinkElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotqLinkElm );
-    pElmMenu->addAction( a );
   }
   {
-    auto a = new QAction( "&Parametr link element", this );
+    auto a = makeAction( "&Parametr link element", "qplinkElm", &LaboWin::slotqpLinkElm,
+        QSL(""), pElmMenu, 0 );
     a->setShortcut(  Qt::SHIFT+Qt::CTRL+Qt::Key_L );
-    registerAction( a, "qplinkElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotqpLinkElm );
-    pElmMenu->addAction( a );
   }
   {
-    auto a = new QAction( "&Unlink element", this );
-    registerAction( a, "unlinkElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotUnlinkElm );
-    pElmMenu->addAction( a );
-    pElmMenu->addSeparator();
+    /* auto a = */ makeAction( "&Unlink element", "unlinkElm", &LaboWin::slotUnlinkElm,
+        QSL("network-offline"), pElmMenu, ActionMenuSep );
   }
   {
-    auto a = new QAction( QIcon( ":icons/lockelm.png" ), "Loc&k element",  this );
+    auto a = makeAction( "Loc&k element", "lockElm", &LaboWin::slotLockElm,
+        QSL(":icons/lockelm.png"), pElmMenu, 0 );
     a->setShortcut( Qt::CTRL+Qt::Key_K );
-    registerAction( a, "lockElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotLockElm );
-    pElmMenu->addAction( a );
   }
   {
-    auto a= new QAction( QIcon( ":icons/markelm.png" ), "&Mark element", this );
+    auto a = makeAction( "&Mark element", "markElm", &LaboWin::slotMarkElm,
+        QSL(":icons/markelm.png"), pElmMenu, ActionToolBar );
     a->setShortcut( Qt::Key_M );
-    registerAction( a, "markElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotMarkElm );
-    pElmMenu->addAction( a );
-    elmToolbar->addAction( a );
   }
   {
-    auto a = new QAction( "Move element", this );
+    auto a = makeAction( "Move element", "moveElm", &LaboWin::slotMoveElm,
+        QSL("go-down"), pElmMenu, 0 );
     a->setShortcut( Qt::SHIFT+Qt::Key_M );
-    registerAction( a, "moveElm" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotMoveElm );
-    pElmMenu->addAction( a );
-    pElmMenu->addSeparator();
   }
   // ==== out group
   {
-    auto a = new QAction( QIcon( ":icons/newout.png" ), "&New Out", this );
+    auto a = makeAction( "&New Out", "addOut", &LaboWin::slotNewOut,
+        QSL(":icons/newout.png"), pOutMenu, ActionToolBar );
     a->setShortcut( Qt::Key_U );
-    registerAction( a, "addOut" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotNewOut );
-    pOutMenu->addAction( a );
-    elmToolbar->addAction( a );
   }
   {
-    auto a = new QAction( QIcon::fromTheme("arrow-right"), "Add out to plot", this );
+    auto a = makeAction( "Add out to plo&t", "graphAddOut", &LaboWin::slotGraphAddOut,
+        QSL("arrow-right"), pOutMenu, ActionMenuSep );
     a->setShortcut( Qt::CTRL | Qt::Key_U );
-    registerAction( a, "graphAddOut" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotGraphAddOut );
-    pOutMenu->addAction( a );
-    pOutMenu->addSeparator();
   }
   {
-    auto a = new QAction( QIcon( ":icons/showoutdata.png" ), "&Show out data", this );
-    registerAction( a, "showOutData" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotShowOutData );
-    pOutMenu->addAction( a );
-    elmToolbar->addAction( a );
-    elmToolbar->addSeparator();
+    /* auto a = */ makeAction( "&Show out data", "showOutData", &LaboWin::slotShowOutData,
+        QSL(":icons/showoutdata.png"), pOutMenu, ActionToolBar | ActionToolSep );
   }
   {
-    auto a = new QAction( QIcon::fromTheme("document-export"), "E&xport out data", this );
+    auto a = makeAction( "E&xport out data", "exportOut", &LaboWin::slotExportOut,
+        QSL("document-export"), pOutMenu, 0 );
     a->setShortcut( Qt::CTRL+Qt::Key_E );
-    registerAction( a, "exportOut" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotExportOut );
-    pOutMenu->addAction( a );
   }
 
   // ==== graph=plot group
   {
-    auto a = new QAction( QIcon( ":icons/newgraph.png" ), "&New Plot", this );
+    auto a = makeAction( "&New Plot", "addGraph", &LaboWin::slotNewGraph,
+        QSL(":icons/newgraph.png"), pGraphMenu, ActionToolBar );
     a->setShortcut( Qt::Key_P );
-    registerAction( a, "addGraph" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotNewGraph );
-    pGraphMenu->addAction( a );
-    elmToolbar->addAction( a );
   }
   {
-    auto a = new QAction( QIcon( ":icons/showgraph.png" ), "&Show plot", this );
+    auto a = makeAction( "&Show plot", "showGraph", &LaboWin::slotShowGraph,
+        QSL(":icons/showgraph.png"), pGraphMenu, ActionMenuSep | ActionToolBar );
     a->setShortcut( Qt::Key_S );
-    registerAction( a, "showGraph" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotShowGraph );
-    pGraphMenu->addAction( a );
-    pGraphMenu->addSeparator();
-    elmToolbar->addAction( a );
   }
 
   {
-    auto a = new QAction( QIcon( ":icons/showgraphdata.png" ), "show plot Data", this );
+    auto a = makeAction( "show plot &Data", "showGraphData", &LaboWin::slotShowGraphData,
+        QSL(":icons/showgraphdata.png"), pGraphMenu, ActionToolBar );
     a->setShortcut(  Qt::SHIFT+Qt::Key_D );
-    registerAction( a, "showGraphData" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotShowGraphData );
-    pGraphMenu->addAction( a );
-    elmToolbar->addAction( a );
-    elmToolbar->addSeparator();
   }
   {
-    auto a = new QAction( QIcon::fromTheme("document-export"), "E&xport plot data", this );
+    auto a = makeAction( "E&xport plot data", "exportGraphData", &LaboWin::slotExportGraphData,
+        QSL("document-export"), pGraphMenu, 0 );
     a->setShortcut( Qt::SHIFT+Qt::Key_E );
-    registerAction( a, "exportGraphData" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotExportGraphData);
-    pGraphMenu->addAction( a );
   }
   // ==== simulation group
   {
-    auto a = new QAction( QIcon::fromTheme("list-add"), "&New Simulation", this );
-    registerAction( a, "addSimul" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotNewSimul );
-    pSimulMenu->addAction( a );
+    /* auto a = */ makeAction( "&New Simulation", "addSimul", &LaboWin::slotNewSimul,
+        QSL("list-add"), pSimulMenu, 0 );
   }
   {
-    auto a = new QAction( QIcon::fromTheme("checkmark"), "Set Active Simulation", this );
+    auto a = makeAction( "Set &Active Simulation", "setActiveSimul", &LaboWin::slotSetActiveSimul,
+        QSL("checkmark"), pSimulMenu, 0 );
     a->setShortcut( Qt::ALT+Qt::CTRL+Qt::Key_Y );
-    registerAction( a, "setActiveSimul" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotSetActiveSimul );
-    pSimulMenu->addAction( a );
   }
 
   // ==== model/Scheme group
   {
-    auto a = new QAction( QIcon( ":icons/editmodel.png" ), "&Edit Model", this );
+    auto a = makeAction( "&Edit Model", "editModel", &LaboWin::slotEditModel,
+        QSL(":icons/editmodel.png"), pModelMenu, ActionToolBar | ActionToolSep | ActionMenuSep );
     a->setShortcut(  Qt::CTRL+Qt::Key_R );
-    registerAction( a, "editModel" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotEditModel );
-    pModelMenu->addAction( a );
-    elmToolbar->addAction( a );
-    elmToolbar->addSeparator();
   }
   {
-    auto a = new QAction( QIcon::fromTheme("view-list-tree"), "show model tree", this );
+    auto a = makeAction( "show model &Tree", "showTreeModel", &LaboWin::slotShowTreeModel,
+        QSL("view-list-tree"), pModelMenu, ActionMenuSep );
     a->setShortcut( Qt::CTRL+Qt::Key_T );
-    registerAction( a, "showTreeModel" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotShowTreeModel );
-    pModelMenu->addAction( a );
-    pModelMenu->addSeparator();
   }
   //
   {
-    auto a = new QAction( QIcon::fromTheme("list-add"), "&New Scheme", this );
-    registerAction( a, "addScheme" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotNewScheme );
-    pModelMenu->addAction( a );
+    /* auto a = */ makeAction( "&New Scheme", "addScheme", &LaboWin::slotNewScheme,
+        QSL("list-add"), pModelMenu, 0 );
   }
   {
-    auto a = new QAction( QIcon::fromTheme("document-import"), "Import Schemes", this );
-    registerAction( a, "importAllSchemes" );
-    connect( a, &QAction::triggered, this, &LaboWin::importAllSchemes );
-    pModelMenu->addAction( a );
+    /* auto a = */ makeAction( "&Import schemes", "importAllSchemes", &LaboWin::importAllSchemes,
+        QSL("document-import"), pModelMenu, 0 );
   }
 
   // ====  run group
   {
-    auto a = new QAction( QIcon( ":icons/run.png" ), "&Run", this );
+    auto a = makeAction( "&Run", "runRun", &LaboWin::slotRunRun,
+        QSL(":icons/run.png"), pRunMenu, ActionToolBar | ActionMenuSep );
     a->setShortcut( Qt::Key_F9 );
-    registerAction( a, "runRun" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotRunRun );
-    pRunMenu->addAction( a );
-    pRunMenu->addSeparator();
-    elmToolbar->addAction( a );
   }
   {
-    auto a = new QAction( "Rese&t", this );
-    registerAction( a, "reset" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotReset );
-    pRunMenu->addSeparator();
-    pRunMenu->addAction( a );
+    /* auto a = */ makeAction( "Rese&t", "resetModel", &LaboWin::slotReset,
+        QSL(""), pRunMenu, 0 );
   }
   {
-    auto a = new QAction( "Init engine", this );
-    registerAction( a, "initEngine" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotInitEngine );
-    pRunMenu->addAction( a );
+    /* auto a = */ makeAction( "Init &engine", "initEngine", &LaboWin::slotInitEngine,
+        QSL(""), pRunMenu, 0 );
   }
   {
-    auto a = new QAction( QIcon::fromTheme("application-x-javascript"), "run &Script", this );
+    auto a = makeAction( "run &Script", "runScript", &LaboWin::slotRunScript,
+        QSL("application-x-javascript"), pRunMenu, ActionToolBar );
     a->setShortcut( Qt::SHIFT+Qt::Key_F9 );
-    connect( a, &QAction::triggered, this, &LaboWin::slotRunScript );
-    pRunMenu->addAction( a );
-    elmToolbar->addAction( a );
   }
   {
-    auto a = new QAction( "run &Model script", this );
-    registerAction( a, "runModelScript" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotRunModelScript );
-    pRunMenu->addAction( a );
+    /* auto a = */ makeAction( "run &Model script", "runModelScript", &LaboWin::slotRunModelScript,
+        QSL(""), pRunMenu, 0 );
   }
 
   // ==== iface group
   {
-    auto a = new QAction( "View &Toolbar", this );
+    auto a = makeAction( "show &Toolbar", "viewToolBar", &LaboWin::slotViewToolBar,
+        QSL("configure-toolbars"), pViewMenu, ActionAlwaysVis );
     a->setCheckable( true );
     a->setChecked( true );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "viewToolBar" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotViewToolBar );
     pViewMenu->addAction( a );
     act_tbar = a; // to on/off
   }
   {
-    auto a = new QAction( "View &Statusbar", this );
+    auto a = makeAction( "show &Statusbar", "viewStatusBar", &LaboWin::slotViewStatusBar,
+        QSL("kt-show-statusbar"), pViewMenu, ActionAlwaysVis | ActionMenuSep );
     a->setCheckable( true );
     a->setChecked( true );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "viewStatusBar" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotViewStatusBar );
-    pViewMenu->addAction( a );
-    pViewMenu->addSeparator();
     act_sbar = a;
   }
   {
-    auto a = new QAction( "Show &Grid", this );
+    auto a = makeAction( "Show &Grid", "showGrid", &LaboWin::slotShowGrid,
+        QSL("view-grid"), pViewMenu, ActionAlwaysVis );
     a->setCheckable( true );
     a->setChecked( setti->getDataD( QSL("showGrid"), 1 ) );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "showGrid" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotShowGrid );
-    pViewMenu->addAction( a );
   }
   {
-    auto a = new QAction( "Show &Names", this );
+    auto a = makeAction( "Show &Names", "showNames", &LaboWin::slotShowNames,
+        QSL(""), pViewMenu, ActionAlwaysVis );
     a->setCheckable( true );
     a->setChecked( setti->getDataD( QSL("showNames"), 0 ) );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "showNames" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotShowNames );
-    pViewMenu->addAction( a );
   }
   {
-    auto a = new QAction( "Show &Icons", this );
+    auto a = makeAction( "Show &Icons", "showIcons", &LaboWin::slotShowIcons,
+        QSL(""), pViewMenu, ActionAlwaysVis );
     a->setCheckable( true );
     a->setChecked( setti->getDataD( QSL("showIcons"), 0 ) );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "showIcons" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotShowIcons );
-    pViewMenu->addAction( a );
   }
   {
-    auto a = new QAction( "Show &Links", this );
+    auto a = makeAction( "Show &Links", "showLinks", &LaboWin::slotShowLinks,
+        QSL(""), pViewMenu, ActionAlwaysVis | ActionMenuSep );
     a->setCheckable( true );
     a->setChecked( setti->getDataD( QSL("showLinks"), 0 ) );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "showLinks" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotShowLinks );
-    pViewMenu->addAction( a );
-    pViewMenu->addSeparator();
   }
   {
-    auto a = new QAction( "Clear log", this );
+    auto a = makeAction( "Clear log", "logClear", &LaboWin::slotLogClear,
+        QSL("edit-clear"), pViewMenu, ActionAlwaysVis );
     a->setShortcut(  Qt::CTRL | Qt::SHIFT | Qt::Key_C );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "logClear" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotLogClear );
-    pViewMenu->addAction( a );
   }
   {
-    auto a = new QAction( "Save log", this );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "logSave" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotLogSave );
-    pViewMenu->addAction( a );
+    /* auto a = */ makeAction( "Save log", "logSave", &LaboWin::slotLogSave,
+        QSL("document-save"), pViewMenu, ActionAlwaysVis );
   }
 
-  // ==== window group
+  // ==== window group // most autorecreated by windowMenuAboutToShow()
   {
-    auto a = new QAction( QIcon::fromTheme("window-close"), "Cl&ose Window", this);
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "windowClose" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotWindowClose );
-    act_winClose = a;
+    auto a = makeAction( "Cl&ose Window", "windowClose", &LaboWin::slotWindowClose,
+        QSL("window-close"), pWindowMenu, ActionAlwaysVis );
+    act_winClose = a; // for autorecreation
   }
   {
-    auto a = new QAction( "Close &All Windows",  this );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "windowCloseAll" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotWindowCloseAll );
+    auto a = makeAction( "Close &All Windows", "windowCloseAll", &LaboWin::slotWindowCloseAll,
+        QSL(""), pWindowMenu, ActionAlwaysVis );
     act_winCloseAll = a;
   }
   {
-    auto a = new QAction( "&Tile Windows",  this );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "windowTile" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotWindowTile );
+    auto a = makeAction( "&Tile Windows", "windowTile", &LaboWin::slotWindowTile,
+        QSL(""), pWindowMenu, ActionAlwaysVis );
     act_winTile = a;
   }
   {
-    auto a = new QAction( "&Cascade Windows",  this );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "windowCascase" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotWindowCascade );
+    auto a = makeAction( "&Cascade Windows", "windowCascase", &LaboWin::slotWindowCascade,
+        QSL(""), pWindowMenu, ActionAlwaysVis );
     act_winCascade = a;
   }
   {
-    auto a = new QAction( "Next window",  this );
+    auto a = new QAction( "Next window",  this ); // old approach: not my member
     a->setShortcut( Qt::Key_F6 );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "nextSubWindow" );
@@ -640,28 +501,12 @@ void LaboWin::initIface()
 
   // ==== help group
   {
-    auto a = new QAction( QIcon::fromTheme("help-about"), "&About", this );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "helpAbout" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotHelpAbout );
-    pHelpMenu->addAction( a );
+    /* auto a = */ makeAction( "&About", "helpAbout", &LaboWin::slotHelpAbout,
+        QSL("help-about"), pHelpMenu, ActionAlwaysVis );
   }
   {
-    auto a = new QAction( "About &Qt", this );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "helpAboutQt" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotHelpAboutQt );
-    pHelpMenu->addAction( a );
-  }
-
-  {
-    auto a = new QAction( QIcon( ":icons/test.png" ), "&Test", this );
-    a->setProperty( "alwaysVisible", true );
-    registerAction( a, "test" );
-    connect( a, &QAction::triggered, this, &LaboWin::slotTest );
-    pEditMenu->addAction( a );
-    fileToolbar->addAction( a );
-    fileToolbar->addSeparator();
+    /* auto a = */ makeAction( "About &Qt", "helpAboutQt", &LaboWin::slotHelpAboutQt,
+        QSL(""), pHelpMenu, ActionAlwaysVis );
   }
 
 
@@ -1059,13 +904,11 @@ void LaboWin::slotViewToolBar()
   ///////////////////////////////////////////////////////////////////
   // turn Toolbar on or off
 
-  if( fileToolbar->isVisible() ) {
-    fileToolbar->hide();
-    elmToolbar->hide();
+  if( mainToolBar->isVisible() ) {
+    mainToolBar->hide();
     act_tbar->setChecked( false );
   } else {
-    fileToolbar->show();
-    elmToolbar->show();
+    mainToolBar->show();
     act_tbar->setChecked( true );
   };
   statusBar()->showMessage( tr( "Ready." ) );

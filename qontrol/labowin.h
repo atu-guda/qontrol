@@ -43,6 +43,13 @@ class QTimer;
 class LaboDoc;
 class LaboView;
 
+enum ActionFlags {
+  ActionToolBar   = 1,
+  ActionToolSep   = 2,
+  ActionMenuSep   = 4,
+  ActionAlwaysVis = 8
+};
+
 
 /**
   * LaboWin is the main window class for application. It sets up the main
@@ -78,7 +85,8 @@ class LaboWin : public QMainWindow
     //* call gives simple slot from active LaboView
     void callLaboViewSlot( const char *slot, const QString &mess );
     //* make action and link to slot, set property
-    QAction* makeAction( const QString &text, const char *actName, SlotVV targetSlot );
+    QAction* makeAction( const QString &text, const char *actName, SlotVV targetSlot,
+        const QString &icon_str = QString(), QMenu *tmenu = nullptr, unsigned aflags = 0 );
 
   private Q_SLOTS:
 
@@ -248,8 +256,7 @@ class LaboWin : public QMainWindow
     QMenu *pHelpMenu;
     QMenu *pWindowMenu;
 
-    QToolBar *fileToolbar;
-    QToolBar *elmToolbar;
+    QToolBar *mainToolBar;
 
     /** actions: only special */
     QAction *act_tbar, *act_sbar,
