@@ -178,8 +178,6 @@ class LaboWin : public QMainWindow
     // ==== view related
     /** toggle the toolbar*/
     void slotViewToolBar();
-    /** toggle the statusbar*/
-    void slotViewStatusBar();
     /** toggle the showgrid flag */
     void slotShowGrid();
     /** toggle the shownames flag */
@@ -259,7 +257,7 @@ class LaboWin : public QMainWindow
     QToolBar *mainToolBar;
 
     /** actions: only special */
-    QAction *act_tbar, *act_sbar,
+    QAction *act_tbar,
             // win
             *act_winClose, *act_winCloseAll, *act_winTile, *act_winCascade,
             *act_winNext, *act_winPrev;

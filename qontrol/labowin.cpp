@@ -421,13 +421,6 @@ void LaboWin::initIface()
     act_tbar = a; // to on/off
   }
   {
-    auto a = makeAction( "show &Statusbar", "viewStatusBar", &LaboWin::slotViewStatusBar,
-        QSL("kt-show-statusbar"), pViewMenu, ActionAlwaysVis | ActionMenuSep );
-    a->setCheckable( true );
-    a->setChecked( true );
-    act_sbar = a;
-  }
-  {
     auto a = makeAction( "Show &Grid", "showGrid", &LaboWin::slotShowGrid,
         QSL("view-grid"), pViewMenu, ActionAlwaysVis );
     a->setCheckable( true );
@@ -914,22 +907,6 @@ void LaboWin::slotViewToolBar()
   statusBar()->showMessage( tr( "Ready." ) );
 }
 
-void LaboWin::slotViewStatusBar()
-{
-  statusBar()->showMessage( tr( "Toggle statusbar..." ) );
-  ///////////////////////////////////////////////////////////////////
-  //turn Statusbar on or off
-
-  if( statusBar()->isVisible() ) {
-    statusBar()->hide();
-    act_sbar->setChecked( false );
-  } else {
-    statusBar()->show();
-    act_sbar->setChecked( true );
-  };
-
-  statusBar()->showMessage( tr( "Ready." ) );
-}
 
 
 void LaboWin::slotShowGrid()
@@ -1026,7 +1003,7 @@ void LaboWin::slotHelpAboutQt()
 }
 
 
-void LaboWin::slotStatusHelpMsg(const QString &text)
+void LaboWin::slotStatusHelpMsg( const QString &text )
 {
   ///////////////////////////////////////////////////////////////////
   // change status message of whole statusbar temporary (text, msec)
