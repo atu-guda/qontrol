@@ -362,9 +362,6 @@ long TModel::run( QSemaphore *sem )
       }
       rtime = 0; ct = t_0; t = t_0; t_r = 0;
 
-      if( ! startLoop( il1, il2 ) ) {
-        return 0;
-      }
       if( useScripts ) {
         auto gobj = eng->globalObject();
         gobj.setProperty( "il1", eng->newVariant( (int)(il1) ) );
@@ -372,6 +369,9 @@ long TModel::run( QSemaphore *sem )
         gobj.setProperty( "prm0", eng->newVariant( (double)(prm0) ) );
         gobj.setProperty( "prm1", eng->newVariant( (double)(prm1) ) );
         runScript( scriptStartLoop );
+      }
+      if( ! startLoop( il1, il2 ) ) {
+        return 0;
       }
 
       for( long i=0; i<N; ++i, ++i_tot ) { // <------- main loop
