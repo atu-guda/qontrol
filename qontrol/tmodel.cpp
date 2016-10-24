@@ -699,6 +699,9 @@ bool TModel::cloneScheme( const QString &old_name, const QString &new_name )
 
 void TModel::initEngine()
 {
+  if( run_type >= 0 && eng != nullptr ) { // dont reinit during run
+    return;
+  }
   delete eng;
   eng = new QScriptEngine( this );
 
