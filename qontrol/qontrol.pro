@@ -52,6 +52,7 @@ SOURCES += \
   scheme.cpp \
   schemeview.cpp \
   scriptfuncs.cpp \
+  scriptdialog.cpp \
   settingsdata.cpp \
   simul.cpp \
   simulview.cpp \
@@ -144,6 +145,7 @@ HEADERS += \
   scaledata.h \
   scheme.h \
   schemeview.h \
+  scriptdialog.h \
   scriptfuncs.h \
   settingsdata.h \
   simul.h \

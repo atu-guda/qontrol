@@ -151,8 +151,6 @@ class LaboView : public CommonSubwin
    virtual void closeEvent( QCloseEvent* );
    virtual void resizeEvent( QResizeEvent* );
    // int checkState( CheckType ctp );
-   //* call engine and returns result, casted to QString
-   QString runScript( const QString& script );
 
  protected:
    QScrollArea *scrollArea;

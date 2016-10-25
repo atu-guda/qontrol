@@ -31,6 +31,7 @@
 #include "schemeview.h"
 #include "statusmodel.h"
 #include "doubletable.h"
+#include "scriptdialog.h"
 #include "runview.h"
 #include "mglview.h"
 #include "simulview.h"
@@ -469,15 +470,6 @@ void LaboView::initEngine()
   model->initEngine();
 }
 
-QString LaboView::runScript( const QString& script )
-{
-  if( ! model ) {
-    qCritical() << "no model" << WHE;
-    return QString::null;
-  }
-  QString r = model->runScript( script );
-  return r;
-}
 
 QString LaboView::runModelScript()
 {
@@ -491,60 +483,18 @@ QString LaboView::runModelScript()
 
 
 
-// TODO: 2-pane dialog + script pool
-void LaboView::runScript()
+void LaboView::runScript() // TODO: saved script or pool
 {
   if( ! model ) {
     qCritical() << "no model" << WHE;
     return;
   }
-  // TODO: special class to edit js and view results
 
-  auto dia = new QDialog( this );
-  dia->setWindowTitle( "Edit script" );
-  auto lv = new QVBoxLayout( dia );
+  auto dia0 = new ScriptDialog( scr, model, this );
+  dia0->exec();
+  delete dia0; // BUG here?
 
-  auto ted = new QTextEdit( dia );
-  ted->setText( scr );
-  lv->addWidget( ted );
-
-  auto bt_ok = new QPushButton( "&Ok", dia );
-  lv->addWidget( bt_ok );
-
-  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-
-  dia->resize( 80*em, 60*em );
-
-  int rc = dia->exec();
-  QString res;
-  if( rc != QDialog::Accepted ) {
-    delete dia; dia = nullptr;
-    return;
-  }
-  scr = ted->toPlainText();
-  delete dia; dia = nullptr;
-
-  res = runScript( scr );
-
-  auto dia1 = new QDialog( this );
-  dia1->setWindowTitle( "Script result" );
-  auto lv1 = new QVBoxLayout( dia1 );
-
-  auto ted1 = new QTextEdit( dia1 );
-  ted1->setText( res );
-  ted1->setReadOnly( true );
-  lv1->addWidget( ted1 );
-
-  auto bt_ok1 = new QPushButton( "&Ok", dia1 );
-  lv1->addWidget( bt_ok1 );
-
-  connect( bt_ok1, &QPushButton::clicked, dia1, &QDialog::accept );
-
-  dia1->resize( 80*em, 60*em );
-  dia1->exec();
-  delete dia1; dia1 = nullptr;
   emit viewChanged();
-
 }
 
 
