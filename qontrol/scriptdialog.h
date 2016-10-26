@@ -10,6 +10,9 @@
 
 #include <QtWidgets>
 
+#include <Qsci/qsciscintilla.h>
+#include <Qsci/qscilexerjavascript.h>
+
 #include "tmodel.h"
 
 
@@ -38,7 +41,7 @@ class ScriptDialog : public QDialog {
    QString errstr;  //* error text
    TModel *model;
  //
-   QTextEdit *sced  = nullptr;  //* script editor, TODO: Qscintilla
+   QsciScintilla *sced  = nullptr;  //* script editor
    QTextEdit *outed = nullptr;  //* show output
    QTextEdit *erred = nullptr;  //* show errors
 };

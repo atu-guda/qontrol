@@ -37,7 +37,31 @@ void ScriptDialog::setupUi()
   auto lay_h = new QVBoxLayout;
   lay_v->addLayout( lay_h );
 
-  sced = new QTextEdit( this );
+  sced = new QsciScintilla( this );
+  sced->setLexer( new QsciLexerJavaScript( this ) );
+  // TODO: common
+  sced->setUtf8( true );
+  sced->setCaretLineVisible( true );
+  sced->setCaretLineBackgroundColor( QColor(QSL("gainsboro")) );
+  sced->setAutoIndent( true );
+  sced->setIndentationGuides( false );
+  sced->setIndentationsUseTabs(false);
+  sced->setIndentationWidth( 2 );
+  // sced->setMarginsBackgroundColor( QColor("gainsboro") );
+  // sced->setMarginLineNumbers( 1, true );
+  // sced->setMarginWidth( 1, 50 );
+  sced->setAutoCompletionSource( QsciScintilla::AcsAll );
+  // sced->setAutoCompletionCaseSensitivity( true );
+  // sced->setAutoCompletionReplaceWord( true );
+  // sced->setAutoCompletionUseSingle( QsciScintilla::AcusAlways );
+  sced->setAutoCompletionThreshold( 2 );
+  sced->setBraceMatching( QsciScintilla::SloppyBraceMatch );
+  sced->setMatchedBraceBackgroundColor( Qt::yellow );
+  sced->setUnmatchedBraceForegroundColor( Qt::blue );
+  sced->markerDefine( QsciScintilla::MarkerSymbol::Circle, 1 );
+  sced->setMarkerBackgroundColor( Qt::red, 1 );
+
+
   sced->setText( scr );
   lay_h->addWidget( sced, 4 );
 
@@ -91,12 +115,15 @@ void ScriptDialog::runScr( const QString &s )
   int rc = model->runScript( s, &sres );
   errstr = QSL("== rc= " ) % QSN( rc ) % QSL("\n");
   if( sres.err_line != 0 ) {
-    errstr += sres.err % QSL("Line: ") % QSN( sres.err_line ) % QSL("\n" );
+    errstr += sres.err % QSL(" Line: ") % QSN( sres.err_line ) % QSL("\n" );
     errstr += sres.bt.join( "\n" );
+    sced->markerAdd( sres.err_line-1, 1 );
   } else {
     out += sres.str % QSL("\n");
+    sced->markerDeleteAll(-1 );
   }
 
+  // sced->annotate( 1, QSL("Annontation"), 0 );
   outed->setText( out );
   erred->setText( errstr );
 }
@@ -104,7 +131,7 @@ void ScriptDialog::runScr( const QString &s )
 
 void ScriptDialog::run()
 {
-  scr = sced->toPlainText();
+  scr = sced->text();
   runScr( scr );
 }
 
@@ -134,7 +161,7 @@ void ScriptDialog::clearOutput()
 
 void ScriptDialog::save()
 {
-  scr = sced->toPlainText();
+  scr = sced->text();
   scr0 = scr;
 }
 
