@@ -63,7 +63,7 @@ LaboWin::LaboWin()
   initIface();
   initStatusBar();
 
-  setWindowIcon( QIcon( ":icons/app.png" ) );
+  setWindowIcon( QIcon( QSL(":icons/app.png") ) );
   if( setti->getDataD( QSL("showMax"),0 ) ) {
     showMaximized();
   }
@@ -165,118 +165,118 @@ void LaboWin::initIface()
   // File group
 
   {
-    auto a = makeAction( "&New model", "fileNew", &LaboWin::slotFileNew,
+    auto a = makeAction( QSL("&New model"), "fileNew", &LaboWin::slotFileNew,
         QSL(":icons/filenew.png"), pFileMenu, ActionAlwaysVis | ActionToolBar | ActionMenuSep );
     a->setShortcuts( QKeySequence::New );
   }
 
   {
-    auto a = makeAction( "&Open model", "fileOpen", &LaboWin::slotFileOpen,
+    auto a = makeAction( QSL("&Open model"), "fileOpen", &LaboWin::slotFileOpen,
         QSL("document-open"), pFileMenu, ActionAlwaysVis | ActionToolBar );
     a->setShortcuts( QKeySequence::Open );
   }
 
   {
-    auto a = makeAction( "&Save model", "fileSave", &LaboWin::slotFileSave,
+    auto a = makeAction( QSL("&Save model"), "fileSave", &LaboWin::slotFileSave,
         QSL("document-save"), pFileMenu, ActionToolBar );
     a->setShortcuts( QKeySequence::Save );
   }
 
   {
-    /* auto a = */ makeAction( "Save model &As", "fileSaveAs", &LaboWin::slotFileSaveAs,
+    /* auto a = */ makeAction( QSL("Save model &As"), "fileSaveAs", &LaboWin::slotFileSaveAs,
         QSL("document-save-as"), pFileMenu, ActionMenuSep );
   }
 
   {
-    auto a = makeAction( "&Print", "print", &LaboWin::slotFilePrint,
+    auto a = makeAction( QSL("&Print"), "print", &LaboWin::slotFilePrint,
         QSL("document-print"), pFileMenu, ActionMenuSep );
     a->setShortcuts( QKeySequence::Print );
   }
 
   {
-    auto a = makeAction( "&Close", "fileClose", &LaboWin::slotFileClose,
+    auto a = makeAction( QSL("&Close"), "fileClose", &LaboWin::slotFileClose,
         QSL("document-close"), pFileMenu, ActionMenuSep );
     a->setShortcuts( QKeySequence::Close );
   }
 
   {
-    /* auto a = */ makeAction( "Sett&ings", "fileSettings", &LaboWin::slotFileSettings,
+    /* auto a = */ makeAction( QSL("Sett&ings"), "fileSettings", &LaboWin::slotFileSettings,
         QSL("preferences-system"), pFileMenu, ActionAlwaysVis );
   }
 
   {
-    /* auto a = */ makeAction( "Save s&ettings", "fileSaveSett", &LaboWin::slotFileSaveSett,
+    /* auto a = */ makeAction( QSL("Save s&ettings"), "fileSaveSett", &LaboWin::slotFileSaveSett,
         QSL(""), pFileMenu, ActionAlwaysVis  | ActionMenuSep );
   }
 
 
   {
-    auto a = makeAction( "&Quit", "fileQuit", &LaboWin::slotFileQuit,
+    auto a = makeAction( QSL("&Quit"), "fileQuit", &LaboWin::slotFileQuit,
         QSL("application-exit"), pFileMenu, ActionAlwaysVis );
     a->setShortcuts( QKeySequence::Quit );
   }
 
   // ==== Edit + Object group
   {
-    auto a = makeAction( "&Undo", "editUndo", &LaboWin::slotEditUndo,
+    auto a = makeAction( QSL("&Undo"), "editUndo", &LaboWin::slotEditUndo,
         QSL("edit-undo"), pEditMenu, ActionMenuSep );
     a->setShortcuts( QKeySequence::Undo );
   }
 
   // -- object part
   {
-    auto a = makeAction( "&Add object", "addObj", &LaboWin::slotAddObj,
+    auto a = makeAction( QSL("&Add object"), "addObj", &LaboWin::slotAddObj,
         QSL("list-add"), pEditMenu, 0 );
     a->setShortcut( Qt::Key_Insert );
   }
   {
-    auto a = makeAction( "&Delete object", "delObj", &LaboWin::slotDelObj,
+    auto a = makeAction( QSL("&Delete object"), "delObj", &LaboWin::slotDelObj,
         QSL("edit-delete"), pEditMenu, 0 );
     a->setShortcut( Qt::Key_Delete );
   }
   {
-    auto a = makeAction( "&Edit object", "editObj", &LaboWin::slotEditObj,
+    auto a = makeAction( QSL("&Edit object"), "editObj", &LaboWin::slotEditObj,
         QSL("document-properties"), pEditMenu, 0 );
     a->setShortcut( Qt::Key_Enter );
   }
   {
-    auto a = makeAction( "&Cut object", "cutObj", &LaboWin::slotCutObj,
+    auto a = makeAction( QSL("&Cut object"), "cutObj", &LaboWin::slotCutObj,
         QSL("edit-cut"), pEditMenu, 0 );
     a->setShortcuts( QKeySequence::Cut );
   }
   {
-    auto a = makeAction( "c&Opy object", "copyObj", &LaboWin::slotCopyObj,
+    auto a = makeAction( QSL("c&Opy object"), "copyObj", &LaboWin::slotCopyObj,
         QSL("edit-copy"), pEditMenu, 0 );
     a->setShortcuts( QKeySequence::Copy );
   }
   {
-    auto a = makeAction( "&Paste object", "pasteObj", &LaboWin::slotPasteObj,
+    auto a = makeAction( QSL("&Paste object"), "pasteObj", &LaboWin::slotPasteObj,
         QSL("edit-paste"), pEditMenu, ActionMenuSep );
     a->setShortcuts( QKeySequence::Paste );
   }
   {
-    /* auto a = */ makeAction( "&Rename object", "renameObj", &LaboWin::slotRenameObj,
+    /* auto a = */ makeAction( QSL("&Rename object"), "renameObj", &LaboWin::slotRenameObj,
         QSL("edit-rename"), pEditMenu, 0 );
   }
   {
-    /* auto a = */ makeAction( "c&Lone object", "cloneObj", &LaboWin::slotCloneObj,
+    /* auto a = */ makeAction( QSL("c&Lone object"), "cloneObj", &LaboWin::slotCloneObj,
         QSL(":icons/edit-clone.png"), pEditMenu, ActionMenuSep );
   }
   {
-    auto a = makeAction( "show &Info", "infoObj", &LaboWin::slotInfoObj,
+    auto a = makeAction( QSL("show &Info"), "infoObj", &LaboWin::slotInfoObj,
         QSL(":icons/info-obj.png"), pEditMenu, ActionToolBar | ActionMenuSep | ActionToolSep );
     a->setShortcut( Qt::Key_I );
   }
   {
-    /* auto a = */ makeAction( "show object &Tree", "showTreeObj", &LaboWin::slotShowTreeObj,
+    /* auto a = */ makeAction( QSL("show object &Tree"), "showTreeObj", &LaboWin::slotShowTreeObj,
         QSL("view-list-tree"), pEditMenu, ActionMenuSep );
   }
   {
-    /* auto a = */ makeAction( "Test object", "testObj", &LaboWin::slotTestObj,
+    /* auto a = */ makeAction( QSL("Test object"), "testObj", &LaboWin::slotTestObj,
         QSL("tools-check-spelling"), pEditMenu, ActionMenuSep );
   }
   {
-    /* auto a = */ makeAction( "Test", "test", &LaboWin::slotTest,
+    /* auto a = */ makeAction( QSL("Test"), "test", &LaboWin::slotTest,
         QSL(":icons/test.png"), pEditMenu, ActionAlwaysVis | ActionToolBar | ActionToolSep );
   }
 
@@ -284,136 +284,136 @@ void LaboWin::initIface()
 
   // ==== Element group
   {
-    auto a = makeAction( "&Quick link element", "qlinkElm", &LaboWin::slotqLinkElm,
+    auto a = makeAction( QSL("&Quick link element"), "qlinkElm", &LaboWin::slotqLinkElm,
         QSL("insert-link"), pElmMenu, ActionToolBar );
     a->setShortcut( Qt::CTRL+Qt::Key_L );
   }
   {
-    auto a = makeAction( "&Parametr link element", "qplinkElm", &LaboWin::slotqpLinkElm,
+    auto a = makeAction( QSL("&Parametr link element"), "qplinkElm", &LaboWin::slotqpLinkElm,
         QSL(""), pElmMenu, 0 );
     a->setShortcut(  Qt::SHIFT+Qt::CTRL+Qt::Key_L );
   }
   {
-    /* auto a = */ makeAction( "&Unlink element", "unlinkElm", &LaboWin::slotUnlinkElm,
+    /* auto a = */ makeAction( QSL("&Unlink element"), "unlinkElm", &LaboWin::slotUnlinkElm,
         QSL("network-offline"), pElmMenu, ActionMenuSep );
   }
   {
-    auto a = makeAction( "Loc&k element", "lockElm", &LaboWin::slotLockElm,
+    auto a = makeAction( QSL("Loc&k element"), "lockElm", &LaboWin::slotLockElm,
         QSL(":icons/lockelm.png"), pElmMenu, 0 );
     a->setShortcut( Qt::CTRL+Qt::Key_K );
   }
   {
-    auto a = makeAction( "&Mark element", "markElm", &LaboWin::slotMarkElm,
+    auto a = makeAction( QSL("&Mark element"), "markElm", &LaboWin::slotMarkElm,
         QSL(":icons/markelm.png"), pElmMenu, ActionToolBar );
     a->setShortcut( Qt::Key_M );
   }
   {
-    auto a = makeAction( "Move element", "moveElm", &LaboWin::slotMoveElm,
+    auto a = makeAction( QSL("Move element"), "moveElm", &LaboWin::slotMoveElm,
         QSL("go-down"), pElmMenu, 0 );
     a->setShortcut( Qt::SHIFT+Qt::Key_M );
   }
   // ==== out group
   {
-    auto a = makeAction( "&New Out", "addOut", &LaboWin::slotNewOut,
+    auto a = makeAction( QSL("&New Out"), "addOut", &LaboWin::slotNewOut,
         QSL(":icons/newout.png"), pOutMenu, ActionToolBar );
     a->setShortcut( Qt::Key_U );
   }
   {
-    auto a = makeAction( "Add out to plo&t", "graphAddOut", &LaboWin::slotGraphAddOut,
+    auto a = makeAction( QSL("Add out to plo&t"), "graphAddOut", &LaboWin::slotGraphAddOut,
         QSL("arrow-right"), pOutMenu, ActionMenuSep );
     a->setShortcut( Qt::CTRL | Qt::Key_U );
   }
   {
-    /* auto a = */ makeAction( "&Show out data", "showOutData", &LaboWin::slotShowOutData,
+    /* auto a = */ makeAction( QSL("&Show out data"), "showOutData", &LaboWin::slotShowOutData,
         QSL(":icons/showoutdata.png"), pOutMenu, ActionToolBar | ActionToolSep );
   }
   {
-    auto a = makeAction( "E&xport out data", "exportOut", &LaboWin::slotExportOut,
+    auto a = makeAction( QSL("E&xport out data"), "exportOut", &LaboWin::slotExportOut,
         QSL("document-export"), pOutMenu, 0 );
     a->setShortcut( Qt::CTRL+Qt::Key_E );
   }
 
   // ==== graph=plot group
   {
-    auto a = makeAction( "&New Plot", "addGraph", &LaboWin::slotNewGraph,
+    auto a = makeAction( QSL("&New Plot"), "addGraph", &LaboWin::slotNewGraph,
         QSL(":icons/newgraph.png"), pGraphMenu, ActionToolBar );
     a->setShortcut( Qt::Key_P );
   }
   {
-    auto a = makeAction( "&Show plot", "showGraph", &LaboWin::slotShowGraph,
+    auto a = makeAction( QSL("&Show plot"), "showGraph", &LaboWin::slotShowGraph,
         QSL(":icons/showgraph.png"), pGraphMenu, ActionMenuSep | ActionToolBar );
     a->setShortcut( Qt::Key_S );
   }
 
   {
-    auto a = makeAction( "show plot &Data", "showGraphData", &LaboWin::slotShowGraphData,
+    auto a = makeAction( QSL("show plot &Data"), "showGraphData", &LaboWin::slotShowGraphData,
         QSL(":icons/showgraphdata.png"), pGraphMenu, ActionToolBar );
     a->setShortcut(  Qt::SHIFT+Qt::Key_D );
   }
   {
-    auto a = makeAction( "E&xport plot data", "exportGraphData", &LaboWin::slotExportGraphData,
+    auto a = makeAction( QSL("E&xport plot data"), "exportGraphData", &LaboWin::slotExportGraphData,
         QSL("document-export"), pGraphMenu, 0 );
     a->setShortcut( Qt::SHIFT+Qt::Key_E );
   }
   // ==== simulation group
   {
-    /* auto a = */ makeAction( "&New Simulation", "addSimul", &LaboWin::slotNewSimul,
+    /* auto a = */ makeAction( QSL("&New Simulation"), "addSimul", &LaboWin::slotNewSimul,
         QSL("list-add"), pSimulMenu, 0 );
   }
   {
-    auto a = makeAction( "Set &Active Simulation", "setActiveSimul", &LaboWin::slotSetActiveSimul,
+    auto a = makeAction( QSL("Set &Active Simulation"), "setActiveSimul", &LaboWin::slotSetActiveSimul,
         QSL("checkmark"), pSimulMenu, 0 );
     a->setShortcut( Qt::ALT+Qt::CTRL+Qt::Key_Y );
   }
 
   // ==== model/Scheme group
   {
-    auto a = makeAction( "&Edit Model", "editModel", &LaboWin::slotEditModel,
+    auto a = makeAction( QSL("&Edit Model"), "editModel", &LaboWin::slotEditModel,
         QSL(":icons/editmodel.png"), pModelMenu, ActionToolBar | ActionToolSep | ActionMenuSep );
     a->setShortcut(  Qt::CTRL+Qt::Key_R );
   }
   {
-    auto a = makeAction( "show model &Tree", "showTreeModel", &LaboWin::slotShowTreeModel,
+    auto a = makeAction( QSL("show model &Tree"), "showTreeModel", &LaboWin::slotShowTreeModel,
         QSL("view-list-tree"), pModelMenu, ActionMenuSep );
     a->setShortcut( Qt::CTRL+Qt::Key_T );
   }
   //
   {
-    /* auto a = */ makeAction( "&New Scheme", "addScheme", &LaboWin::slotNewScheme,
+    /* auto a = */ makeAction( QSL("&New Scheme"), "addScheme", &LaboWin::slotNewScheme,
         QSL("list-add"), pModelMenu, 0 );
   }
   {
-    /* auto a = */ makeAction( "&Import schemes", "importAllSchemes", &LaboWin::importAllSchemes,
+    /* auto a = */ makeAction( QSL("&Import schemes"), "importAllSchemes", &LaboWin::importAllSchemes,
         QSL("document-import"), pModelMenu, 0 );
   }
 
   // ====  run group
   {
-    auto a = makeAction( "&Run", "runRun", &LaboWin::slotRunRun,
+    auto a = makeAction( QSL("&Run"), "runRun", &LaboWin::slotRunRun,
         QSL(":icons/run.png"), pRunMenu, ActionToolBar | ActionMenuSep );
     a->setShortcut( Qt::Key_F9 );
   }
   {
-    /* auto a = */ makeAction( "Rese&t", "resetModel", &LaboWin::slotReset,
+    /* auto a = */ makeAction( QSL("Rese&t"), "resetModel", &LaboWin::slotReset,
         QSL(""), pRunMenu, 0 );
   }
   {
-    /* auto a = */ makeAction( "Init &engine", "initEngine", &LaboWin::slotInitEngine,
+    /* auto a = */ makeAction( QSL("Init &engine"), "initEngine", &LaboWin::slotInitEngine,
         QSL(""), pRunMenu, 0 );
   }
   {
-    auto a = makeAction( "run &Script", "runScript", &LaboWin::slotRunScript,
+    auto a = makeAction( QSL("run &Script"), "runScript", &LaboWin::slotRunScript,
         QSL("application-x-javascript"), pRunMenu, ActionToolBar );
     a->setShortcut( Qt::SHIFT+Qt::Key_F9 );
   }
   {
-    /* auto a = */ makeAction( "run &Model script", "runModelScript", &LaboWin::slotRunModelScript,
+    /* auto a = */ makeAction( QSL("run &Model script"), "runModelScript", &LaboWin::slotRunModelScript,
         QSL(""), pRunMenu, 0 );
   }
 
   // ==== iface group
   {
-    auto a = makeAction( "show &Toolbar", "viewToolBar", &LaboWin::slotViewToolBar,
+    auto a = makeAction( QSL("show &Toolbar"), "viewToolBar", &LaboWin::slotViewToolBar,
         QSL("configure-toolbars"), pViewMenu, ActionAlwaysVis );
     a->setCheckable( true );
     a->setChecked( true );
@@ -421,62 +421,62 @@ void LaboWin::initIface()
     act_tbar = a; // to on/off
   }
   {
-    auto a = makeAction( "Show &Grid", "showGrid", &LaboWin::slotShowGrid,
+    auto a = makeAction( QSL("Show &Grid"), "showGrid", &LaboWin::slotShowGrid,
         QSL("view-grid"), pViewMenu, ActionAlwaysVis );
     a->setCheckable( true );
     a->setChecked( setti->getDataD( QSL("showGrid"), 1 ) );
   }
   {
-    auto a = makeAction( "Show &Names", "showNames", &LaboWin::slotShowNames,
+    auto a = makeAction( QSL("Show &Names"), "showNames", &LaboWin::slotShowNames,
         QSL(""), pViewMenu, ActionAlwaysVis );
     a->setCheckable( true );
     a->setChecked( setti->getDataD( QSL("showNames"), 0 ) );
   }
   {
-    auto a = makeAction( "Show &Icons", "showIcons", &LaboWin::slotShowIcons,
+    auto a = makeAction( QSL("Show &Icons"), "showIcons", &LaboWin::slotShowIcons,
         QSL(""), pViewMenu, ActionAlwaysVis );
     a->setCheckable( true );
     a->setChecked( setti->getDataD( QSL("showIcons"), 0 ) );
   }
   {
-    auto a = makeAction( "Show &Links", "showLinks", &LaboWin::slotShowLinks,
+    auto a = makeAction( QSL("Show &Links"), "showLinks", &LaboWin::slotShowLinks,
         QSL(""), pViewMenu, ActionAlwaysVis | ActionMenuSep );
     a->setCheckable( true );
     a->setChecked( setti->getDataD( QSL("showLinks"), 0 ) );
   }
   {
-    auto a = makeAction( "Clear log", "logClear", &LaboWin::slotLogClear,
+    auto a = makeAction( QSL("Clear log"), "logClear", &LaboWin::slotLogClear,
         QSL("edit-clear"), pViewMenu, ActionAlwaysVis );
     a->setShortcut(  Qt::CTRL | Qt::SHIFT | Qt::Key_C );
   }
   {
-    /* auto a = */ makeAction( "Save log", "logSave", &LaboWin::slotLogSave,
+    /* auto a = */ makeAction( QSL("Save log"), "logSave", &LaboWin::slotLogSave,
         QSL("document-save"), pViewMenu, ActionAlwaysVis );
   }
 
   // ==== window group // most autorecreated by windowMenuAboutToShow()
   {
-    auto a = makeAction( "Cl&ose Window", "windowClose", &LaboWin::slotWindowClose,
+    auto a = makeAction( QSL("Cl&ose Window"), "windowClose", &LaboWin::slotWindowClose,
         QSL("window-close"), pWindowMenu, ActionAlwaysVis );
     act_winClose = a; // for autorecreation
   }
   {
-    auto a = makeAction( "Close &All Windows", "windowCloseAll", &LaboWin::slotWindowCloseAll,
+    auto a = makeAction( QSL("Close &All Windows"), "windowCloseAll", &LaboWin::slotWindowCloseAll,
         QSL(""), pWindowMenu, ActionAlwaysVis );
     act_winCloseAll = a;
   }
   {
-    auto a = makeAction( "&Tile Windows", "windowTile", &LaboWin::slotWindowTile,
+    auto a = makeAction( QSL("&Tile Windows"), "windowTile", &LaboWin::slotWindowTile,
         QSL(""), pWindowMenu, ActionAlwaysVis );
     act_winTile = a;
   }
   {
-    auto a = makeAction( "&Cascade Windows", "windowCascase", &LaboWin::slotWindowCascade,
+    auto a = makeAction( QSL("&Cascade Windows"), "windowCascase", &LaboWin::slotWindowCascade,
         QSL(""), pWindowMenu, ActionAlwaysVis );
     act_winCascade = a;
   }
   {
-    auto a = new QAction( "Next window",  this ); // old approach: not my member
+    auto a = new QAction( QSL("Next window"),  this ); // old approach: not my member
     a->setShortcut( Qt::Key_F6 );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "nextSubWindow" );
@@ -484,7 +484,7 @@ void LaboWin::initIface()
     act_winNext = a;
   }
   {
-    auto a = new QAction( "Previous window",  this );
+    auto a = new QAction( QSL("Previous window"),  this );
     a->setProperty( "alwaysVisible", true );
     registerAction( a, "prevSubWindow" );
     connect( a, &QAction::triggered, mdiArea, &QMdiArea::activatePreviousSubWindow );
@@ -494,11 +494,11 @@ void LaboWin::initIface()
 
   // ==== help group
   {
-    /* auto a = */ makeAction( "&About", "helpAbout", &LaboWin::slotHelpAbout,
+    /* auto a = */ makeAction( QSL("&About"), "helpAbout", &LaboWin::slotHelpAbout,
         QSL("help-about"), pHelpMenu, ActionAlwaysVis );
   }
   {
-    /* auto a = */ makeAction( "About &Qt", "helpAboutQt", &LaboWin::slotHelpAboutQt,
+    /* auto a = */ makeAction( QSL("About &Qt"), "helpAboutQt", &LaboWin::slotHelpAboutQt,
         QSL(""), pHelpMenu, ActionAlwaysVis );
   }
 
@@ -572,14 +572,14 @@ void LaboWin::closeEvent ( QCloseEvent *e )
 QMdiSubWindow* LaboWin::addChild( CommonSubwin *w )
 {
   if( !w ) {
-    qWarning() << "w is nullptr in " << WHE;
+    qWarning() << QSL("w is nullptr in ") << WHE;
     return nullptr;
   }
   w->setAttribute( Qt::WA_DeleteOnClose );
 
   QMdiSubWindow *subw = mdiArea->addSubWindow( w );
   if( !subw ) {
-    qWarning() << "subw is nullptr in " << WHE;
+    qWarning() << QSL("subw is nullptr in ") << WHE;
     return nullptr;
   }
   w->updateTitle();
@@ -815,7 +815,7 @@ void LaboWin::slotFileQuit()
 
 void LaboWin::slotEditUndo()
 {
-  // callLaboViewSlot( "undo", tr ( "Reverting last action..." ) );
+  // callLaboViewSlot( QSL("undo"), tr ( "Reverting last action..." ) );
 }
 
 void LaboWin::slotEditCut()
@@ -913,14 +913,14 @@ void LaboWin::slotShowGrid()
 {
   int v = ! setti->getDataD( QSL("showGrid"), 0 );
   setti->setData( QSL("showGrid"), v );
-  callLaboViewSlot( "update", "Updating View" );
+  callLaboViewSlot( "update", QSL("Updating View") );
 }
 
 void LaboWin::slotShowNames()
 {
   int v = ! setti->getDataD( QSL("showNames"), 0 );
   setti->setData( QSL("showNames"), v );
-  callLaboViewSlot( "update", "Updating View" );
+  callLaboViewSlot( "update", QSL("Updating View") );
 }
 
 void LaboWin::slotShowIcons()
@@ -1091,15 +1091,15 @@ void LaboWin::windowMenuAboutToShow()
     QMdiSubWindow *swin = windows.at(i);
     QWidget *child = swin->widget();
     if( !child ) {
-      qWarning() << "Null child i=" << QSN(i) << WHE;
+      qWarning() << QSL("Null child i=") << QSN(i) << WHE;
       continue;
     }
 
     QString text;
     if( i < 9 ) {
-      text = QSL( "&" );
+      text = QSL("&");
     }
-    text += QSN( i+1 ) + QSL( " " ) + child->windowTitle();
+    text += QSN( i+1 ) + QSL(" ") + child->windowTitle();
 
     QAction *action  = pWindowMenu->addAction( text );
     action->setCheckable( true );
