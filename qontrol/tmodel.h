@@ -150,6 +150,8 @@ class TModel : public LinkedObj  {
       "props=STRING,MLINE\nncol=-1\nsep=block" );
   PRM_STRING( script, efNRC, "Script", "Model scripts",
       "props=STRING,EXT,LARGETEXT\nfileext=.js" );
+  PRM_STRING( scriptpad, efNRC | efNoDial, "script pad", "Script scratch pad",
+      "props=STRING,EXT,LARGETEXT\nfileext=.js\ndef=model.lsf();\r//" );
   PRM_SWITCH( autoImport, efNRC, "Auto Import", "Automatically import schemes before run",
       "sep=tab\ntabname=libs");
   PRM_STRING( imports, efNRC, "Imports", "From where to get schemes: file:scheme",

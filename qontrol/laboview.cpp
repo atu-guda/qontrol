@@ -489,10 +489,12 @@ void LaboView::runScript() // TODO: saved script or pool
     qCritical() << "no model" << WHE;
     return;
   }
+  QString scr = model->getDataD( QSL("scriptpad"), QSL("// comment") );
 
   auto dia0 = new ScriptDialog( scr, model, this );
   dia0->exec();
   delete dia0; // BUG here?
+  model->setData( QSL("scriptpad"), scr );
 
   emit viewChanged();
 }

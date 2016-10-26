@@ -169,8 +169,6 @@ class LaboView : public CommonSubwin
    ContGraph *plots;
    ContSimul *sims;
 
-   // TODO: from file (config)
-   QString scr = R"(main_s.addObjDatas("TLinear","ob","vis_x=4\nvis_y=1\na0=3.14");)";
    //* copy of LaboWin em;
    int em = 10;
 };
