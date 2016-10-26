@@ -128,7 +128,7 @@ class LaboView : public CommonSubwin
    void runRun();
    void resetModel();
    void runScript();
-   QString runModelScript();
+   int runModelScript();
    void initEngine();
 
    /** returns level for aux objects selection */

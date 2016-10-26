@@ -92,6 +92,7 @@ class Simulation : public LinkedObj  {
   PRM_SWITCH( execModelScript, efNRC, "Exec model script", "Execute model script before run", "def=1" );
   PRM_STRING( scriptPreRun,    efNRC, "preRun",  "Execute this before all loops", "sep=col" );
   PRM_STRING( scriptPostRun,   efNRC, "postRun", "Execute this after all loops", "" );
+  PRM_SWITCH( brkOnZero,       efNRC, "Break if rc ==0", "Break execution, if one of pre scripts returns 0", "def=0" );
   PRM_STRING( scriptStartLoop, efNRC, "startLoop",  "Execute this is star of loop (il1, il2)", "sep=col" );
   PRM_STRING( scriptEndLoop,   efNRC, "endLoop", "Execute this after loop (il1, il2)", "sep=blockend" );
   // -------- TODO: input/output channels -------

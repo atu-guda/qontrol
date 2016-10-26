@@ -180,14 +180,17 @@ int batch_process( const QString &model_file )
     }
   }
 
+  ScriptResult sres;
+
   if( prog_opts.mod_scr ) {
     if( prog_opts.dbg > 0 ) {
       cerr << "Running model script" << endl;
     }
-    QString o = model->runModelScript();
-    cerr << "Model script result: \"" << qP(o) << "\"" << endl;
+    int rc_s = model->runModelScript( &sres );
+    const QString &o = sres.str;
+    cerr << "Model script rc= " << rc_s << " str: \"" << qP(o) << "\"" << endl;
     if( prog_opts.exit_st ) {
-      rc = (int)( o.toDouble() ); // to allow narrowing
+      rc = rc_s;
     }
   }
 
@@ -195,21 +198,21 @@ int batch_process( const QString &model_file )
     if( prog_opts.dbg > 0 ) {
       cerr << "Executing script file " << qP(f) << endl;
     }
-    QString o = model->runFileScript( f );
-    cerr << "Script result: \"" << qP(o) << "\"" << endl;
+    int rc_s = model->runFileScript( f, &sres );
+    const QString &o = sres.str;
+    cerr << "Script rc= \"" << rc_s << " str: \"" << qP(o) << "\"" << endl;
     if( prog_opts.exit_st ) {
-      rc = (int)( o.toDouble() ); // to allow narrowing
+      rc = rc_s;
     }
   }
 
+
   if( ! prog_opts.script.isEmpty() ) {
-    QString o = model->runScript( prog_opts.script );
-    cerr << "Script result: \"" << qP(o) << "\"" << endl;
+    int rc_s = model->runScript( prog_opts.script, &sres );
+    const QString &o = sres.str;
+    cerr << "Script rc=: \"" << rc_s << " string:\"" << qP(o) << "\"" << endl;
     if( prog_opts.exit_st ) {
-      rc = (int)( o.toDouble() ); // to allow narrowing
-      if( prog_opts.dbg > 0 ) {
-        cerr << "Script return value: " << rc <<  endl;
-      }
+      rc = rc_s;
     }
   }
 

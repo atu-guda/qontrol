@@ -20,6 +20,8 @@ class ScriptDialog : public QDialog {
   public Q_SLOTS:
    virtual void accept() override;
    virtual void run();
+   virtual void runModelScript();
+   virtual void initEngine();
    virtual void clearScript();
    virtual void clearOutput();
    virtual void save();
@@ -27,6 +29,7 @@ class ScriptDialog : public QDialog {
    virtual void revert();
   protected:
    void setupUi();
+   void runScr( const QString &s );
   //
    QString &scr0;   //* ref to original script
    QString scr;     //* current script

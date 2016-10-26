@@ -31,6 +31,15 @@
 class QSemaphore;
 class QScriptEngine;
 
+//* contains information about the script results
+struct ScriptResult {
+  int rc;       //* return code = inInt( last action ); in error -> 0
+  int err_line; //* line with error: 0=no error
+  QString str;  //* result in the string form // what about QScriptValue?
+  QString err;  //* Error string
+  QStringList bt; //* backtrace
+};
+
 /**Contains all elements of model
   *@author atu
   */
@@ -111,10 +120,10 @@ class TModel : public LinkedObj  {
   bool cloneScheme( const QString &old_name, const QString &new_name );
 
   void initEngine();
-  QString runScript( const QString& script );
-  QString runFileScript( const QString& sfile );
+  int runScript( const QString& script, ScriptResult *r ); // r may be nullptr
+  int runFileScript( const QString& sfile, ScriptResult *r  );
   //* run inner model script
-  QString runModelScript();
+  int runModelScript( ScriptResult *r );
 
   Q_INVOKABLE bool importScheme( const QString &fn, const QString &schName );
   Q_INVOKABLE bool importAllSchemes();

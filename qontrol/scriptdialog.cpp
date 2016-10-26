@@ -25,8 +25,14 @@ void ScriptDialog::setupUi()
   auto em = QFontMetrics( font() ).width( 'W' );
 
   resize( 80*em, 60*em );
-
   auto lay_v = new QHBoxLayout( this );
+
+  if( !model ) {
+    auto lbl = new QLabel( "No model detected", this );
+    lay_v->addWidget( lbl );
+    return;
+  }
+
 
   auto lay_h = new QVBoxLayout;
   lay_v->addLayout( lay_h );
@@ -52,6 +58,12 @@ void ScriptDialog::setupUi()
   auto btClose = bbox->addButton( "&Close", QDialogButtonBox::ActionRole );
   connect( btClose, &QPushButton::pressed, this, &ScriptDialog::reject );
 
+  auto btRunMdl = bbox->addButton( "Run model scr", QDialogButtonBox::ActionRole );
+  connect( btRunMdl, &QPushButton::pressed, this, &ScriptDialog::runModelScript );
+
+  auto btInitEng = bbox->addButton( "Init engine", QDialogButtonBox::ActionRole );
+  connect( btInitEng, &QPushButton::pressed, this, &ScriptDialog::initEngine );
+
   auto btClearScript = bbox->addButton( "clear Script", QDialogButtonBox::ActionRole );
   connect( btClearScript, &QPushButton::pressed, this, &ScriptDialog::clearScript );
 
@@ -73,18 +85,40 @@ void ScriptDialog::accept()
   QDialog::accept();
 }
 
+void ScriptDialog::runScr( const QString &s )
+{
+  ScriptResult sres;
+  int rc = model->runScript( s, &sres );
+  errstr = QSL("== rc= " ) % QSN( rc ) % QSL("\n");
+  if( sres.err_line != 0 ) {
+    errstr += sres.err % QSL("Line: ") % QSN( sres.err_line ) % QSL("\n" );
+    errstr += sres.bt.join( "\n" );
+  } else {
+    out += sres.str % QSL("\n");
+  }
+
+  outed->setText( out );
+  erred->setText( errstr );
+}
+
+
 void ScriptDialog::run()
 {
-  errstr = QString();
-  if( !model ) {
-    errstr = QSL("No model detected!");
-    update();
-    return;
-  }
   scr = sced->toPlainText();
-  out = model->runScript( scr );
-  outed->setText( out );
+  runScr( scr );
 }
+
+void ScriptDialog::runModelScript()
+{
+  QString s = model->getDataD( QSL("script"), QSL("") );
+  runScr( s );
+}
+
+void ScriptDialog::initEngine()
+{
+  model->initEngine();
+}
+
 
 void ScriptDialog::clearScript()
 {

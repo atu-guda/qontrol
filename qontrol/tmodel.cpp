@@ -284,6 +284,7 @@ int TModel::startRun()
   state = stateRun;
 
   int useScripts  = c_sim->getDataD( "useScripts", 0 );
+  int brkOnZero  = c_sim->getDataD( QSL("brkOnZero"), 0 );
   int initEng = 0, execModelScript = 0;
   if( useScripts ) {
     initEng         = c_sim->getDataD( "initEng", 1 );
@@ -302,8 +303,13 @@ int TModel::startRun()
     // alias objs
     gobj.setProperty( "c_sim", eng->newQObject( c_sim ) );
   }
+  ScriptResult sres;
   if( execModelScript ) {
-    runModelScript();
+    int rc_s = runModelScript( &sres ); // TODO: check
+    if( brkOnZero && rc_s == 0 ) {
+      qWarning() << "Main model script failed" << NWHE;
+      return 0;
+    }
   }
 
   // double rtx = prfl_t[0], rt0 = rtx; int sz = prfl_t.size();
@@ -329,6 +335,7 @@ long TModel::run( QSemaphore *sem )
   // applyAskedParams();
 
 
+  int brkOnZero = 0;
   QString scriptPreRun, scriptPostRun, scriptStartLoop, scriptEndLoop;
   QScriptValue v_il1, v_il2;
 
@@ -338,13 +345,20 @@ long TModel::run( QSemaphore *sem )
     scriptPostRun   = c_sim->getDataD( QSL("scriptPostRun"), QString() );
     scriptStartLoop = c_sim->getDataD( QSL("scriptStartLoop"), QString() );
     scriptEndLoop   = c_sim->getDataD( QSL("scriptEndLoop"), QString() );
+    brkOnZero       = c_sim->getDataD( QSL("brkOnZero"), 0 );
   }
 
-  runScript( scriptPreRun ); // test for empty - inside
+  AtScopeExit ase1( [this](){ this->stopRun(); } );
+
+  ScriptResult sres;
+  int rc_s = runScript( scriptPreRun, &sres ); // test for empty - inside
+  if( brkOnZero && rc_s == 0 ) {
+    qWarning() << "preRun script failed" << NWHE;
+    return 0;
+  }
 
   double rt1 = get_real_time();
 
-  AtScopeExit ase1( [this](){ this->stopRun(); } );
 
   int rc = 0;
   for( il2 = 0; il2 < n2_eff; ++il2 ) { // <--------- outer param loop
@@ -362,13 +376,18 @@ long TModel::run( QSemaphore *sem )
       }
       rtime = 0; ct = t_0; t = t_0; t_r = 0;
 
+      rc_s = 1;
       if( useScripts ) {
         auto gobj = eng->globalObject();
         gobj.setProperty( "il1", eng->newVariant( (int)(il1) ) );
         gobj.setProperty( "il2", eng->newVariant( (int)(il2) ) );
         gobj.setProperty( "prm0", eng->newVariant( (double)(prm0) ) );
         gobj.setProperty( "prm1", eng->newVariant( (double)(prm1) ) );
-        runScript( scriptStartLoop );
+        rc_s = runScript( scriptStartLoop, &sres );
+      }
+      if( brkOnZero && rc_s == 0 ) {
+        qWarning() << "startLoop script failed" << NWHE;
+        return 0;
       }
       if( ! startLoop( il1, il2 ) ) {
         return 0;
@@ -415,13 +434,13 @@ long TModel::run( QSemaphore *sem )
       } // -- main loop (i)
 
       endLoop();
-      runScript( scriptEndLoop );
+      (void)runScript( scriptEndLoop, &sres );
 
     } // -- inner loop (il1)
   }   // -- outer loop (il2)
   double rt2 = get_real_time();
 
-  runScript( scriptPostRun );
+  (void)runScript( scriptPostRun, &sres );
   double rt3 = get_real_time();
 
   qWarning() << "Times: pre:" << (rt1-rt0) << "run:" << (rt2-rt1) << "post:" << (rt3-rt2) << WHE;
@@ -723,55 +742,79 @@ void TModel::initEngine()
   gobj.setProperty( "include", eng->newFunction( script_include ) );
 }
 
-QString TModel::runScript( const QString& script )
+int TModel::runScript( const QString& script, ScriptResult *r )
 {
+  if( r ) {
+    r->rc = 0; r->err_line = 0; r->str = QString(); r->err = QString(); r->bt = QStringList();
+  }
   if( !eng ) {
     qCritical() << "No engine!" << NWHE;
-    return QSL("Error"); // TODO : bool
+    if( r ) {
+      r->err_line = -1; r->err = QSL("Missing engine");
+    }
+    return 0;
   }
   if( script.isEmpty() ) {
-    return QString();
+    if( r ) {
+      r->rc = 1;
+    }
+    return 1;
   }
   // double rt0 = get_real_time();
   QScriptValue res = eng->evaluate( script );
   // double drt = get_real_time() - rt0;
-  QString r;
   if( eng->hasUncaughtException() ) {
     int line = eng->uncaughtExceptionLineNumber();
     auto bt = eng->uncaughtExceptionBacktrace();
     auto err = eng->uncaughtException();
-    r = "Error: uncaught exception at line " % QSN( line ) % QSL(". ") % err.toString() % " : \n" % bt.join('\n');
-    qCritical() << r << NWHE;
+    if( r ) {
+      r->rc = 0; r->err_line = line; r->err = err.toString(); r->bt = bt;
+    }
+    qCritical() <<  "Error at line " % QSN( line ) % QSL(" : ") % err.toString() << NWHE;
+    return 0;
   }
-  r += res.toString();
+  QString s = res.toString();
+  int rc = (int)( s.toDouble() );
+  if( r ) {
+    r->rc = rc; r->str = s;
+  }
   // qWarning() << "PROF: drt= " << drt << WHE;
-  return r;
+  return rc;
 }
 
-QString TModel::runFileScript( const QString& sfile )
+int TModel::runFileScript( const QString& sfile, ScriptResult *r )
 {
   QString f = QSL( SCRIPT_DIR ":" ) + sfile;
   if( ! QFile::exists( f ) ) {
-    return QString::null;
+    if( r ) {
+      r->rc = 0; r->err_line = -1; r->err = QSL( "File not exist: \"" ) % f % QSL("\""); r->str = QString();
+    }
+    return 0;
   }
 
   QFile sf( f );
   if( ! sf.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
+    if( r ) {
+      r->rc = 0; r->err_line = -1; r->err = QSL( "Fail to open file: \"" ) % f % QSL("\""); r->str = QString();
+    }
     qWarning() << "Fail to open script file " << sfile << WHE;
-    return QString::null;
+    return 0;
   }
 
   QByteArray scr = sf.readAll();
   if( scr.isEmpty() ) {
-    return QString::null;
+    if( r ) {
+      r->rc = 1; r->err_line = 0; r->err = QString(); r->str = QString();
+    }
+    return 1;
   }
 
-  return runScript( scr );
+  return runScript( scr, r );
 }
 
-QString TModel::runModelScript()
+int TModel::runModelScript( ScriptResult *r )
 {
-  return runScript( script );
+  return runScript( script, r );
 }
 
 bool TModel::importScheme( const QString &fn, const QString &schName )

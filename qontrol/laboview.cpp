@@ -471,14 +471,15 @@ void LaboView::initEngine()
 }
 
 
-QString LaboView::runModelScript()
+int LaboView::runModelScript()
 {
   if( ! model ) {
     qCritical() << "no model" << WHE;
-    return QString::null;
+    return 0;
   }
-  QString r = model->runModelScript();
-  return r;
+  ScriptResult sres;
+  int rc = model->runModelScript( &sres );
+  return rc;
 }
 
 
