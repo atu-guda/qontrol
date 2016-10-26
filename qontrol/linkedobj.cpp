@@ -25,7 +25,6 @@ CTOR(LinkedObj,TDataSet)
 
 DEFAULT_FUNCS_REG(LinkedObj);
 
-
 const double* LinkedObj::getDoublePtr( const QString &nm, int *lt,
               const LinkedObj **targ, int lev  ) const
 {
@@ -350,6 +349,17 @@ void InputAbstract::reset_dfl()
   QString s = getParm( QSL("def") );
   source = s;
 }
+
+bool InputAbstract::fromString( const QString &s )
+{
+  if( s[0] == '<' || s.length() > 256 ) {
+    return LinkedObj::fromString( s );
+  }
+  source = s;
+  set_link(); // in special case only
+  return true;
+}
+
 
 void InputAbstract::do_structChanged()
 {

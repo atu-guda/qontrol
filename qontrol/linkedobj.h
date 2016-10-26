@@ -148,6 +148,7 @@ class InputAbstract : public LinkedObj {
   DCL_CREATE;
   DCL_STD_INF;
   Q_INVOKABLE virtual double getDouble( int /*idx*/ = 0 ) const override { return out0; }
+  Q_INVOKABLE virtual bool fromString( const QString &s ) override; // special handling non XML
   QString prepTextVisual( bool isLong ) const;
   Q_INVOKABLE virtual QString textVisual() const override;
   //* return ptr to LinkedObj, which holds element or nullptr;
