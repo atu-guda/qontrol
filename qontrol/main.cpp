@@ -121,7 +121,12 @@ int batch_process( const QString &model_file )
     qCritical() << "Fail to read file " << model_file << WHE;
     return 3;
   }
-  TModel *model = doc.getRoot()->getObjT<TModel*>( "model" ); // TODO: fun
+  TRootData *root = doc.getRoot();
+  if( !root ) {
+    qCritical() << "Not found root in file" << model_file << WHE;
+    return 5;
+  }
+  TModel *model = root->getObjT<TModel*>( QSL("model") ); // TODO: fun
   if( !model ) {
     qCritical() << "Not found model in file" << model_file << WHE;
     return 5;
@@ -173,10 +178,51 @@ int batch_process( const QString &model_file )
         if( pc.size() > 1 ) {
           gfile = pc[1];
         }
-        cerr << qP( gname) << "\" file: \"" << qP( gfile ) << "\" .";
+        cerr << qP( gname ) << "\" file: \"" << qP( gfile ) << "\" .";
         model->plotToPng( gname, gfile );
         cerr << ".. DONE" << endl;
       };
+
+      // output arrays data ( -p arr:[file] )
+      for( auto nm : prog_opts.out_outs ) {
+        cerr << "Processing array \"" << qP( nm ) << "\" obj: \"";
+        QStringList pc = nm.split( ":" );
+        if( pc.size() < 1 ) { continue; }
+        QString arrname = pc[0];
+        QString dfile = root->getFileBase() % QSL("-") % arrname % QSL(".dat");
+        if( pc.size() > 1 ) {
+          dfile = pc[1];
+        }
+        cerr << qP( arrname ) << "\" file: \"" << qP( dfile ) << "\" .";
+        TOutArr *arr = model->getOutArr( arrname );
+        if( !arr ) {
+          cerr << " .. not found" << endl;
+          continue;
+        }
+        arr->dump( dfile, QSL(" ") );
+        cerr << ".. DONE" << endl;
+      }
+
+      // output plots data -P plot[:file]
+      for( auto nm : prog_opts.grdata_outs ) {
+        cerr << "Processing plot \"" << qP( nm ) << "\" obj: \"";
+        QStringList pc = nm.split( ":" );
+        if( pc.size() < 1 ) { continue; }
+        QString gname = pc[0];
+        QString dfile = root->getFileBase() % QSL("-") % gname % QSL(".dat");
+        if( pc.size() > 1 ) {
+          dfile = pc[1];
+        }
+        cerr << qP( gname ) << "\" file: \"" << qP( dfile ) << "\" .";
+        TGraph *gra = model->getGraph( gname );
+        if( !gra ) {
+          cerr << " .. not found" << endl;
+          continue;
+        }
+        gra->dump( dfile, QSL(" ") );
+        cerr << ".. DONE" << endl;
+      }
+
     }
   }
 
@@ -295,7 +341,7 @@ bool parse_cmdline( QApplication &app )
       { QSL("e"), QSL("convert script Exit status to program exit status") },
       { QSL("g"), QSL("output graph file (or ALL) after run..."), QSL("graph[:file_name]")  },
       { QSL("I"), QSL("add scripts include dir..."), QSL("directory") },
-      { QSL("l"), QSL("list objects of given type..."), QSL("parent[:type]") },
+      { QSL("l"), QSL("list objects of given type (relative to model=.) ..."), QSL("parent[:type]") },
       { QSL("L"), QSL("add model libs dir..."), QSL("directory") },
       { QSL("M"), QSL("Run model script (for batch run)") },
       { QSL("N"), QSL("No-Run - only load (for batch run)") },

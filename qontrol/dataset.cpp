@@ -1483,7 +1483,7 @@ QStringList HolderData::getNamesOfType( const QString &subObjName,
 {
   QStringList r;
   const HolderData *subObj = this;
-  if( ! subObjName.isEmpty() ) {
+  if( ! subObjName.isEmpty() && subObjName != QSL(".") ) {
     subObj = getObj( subObjName );
   }
   if( !subObj ) { return r; }

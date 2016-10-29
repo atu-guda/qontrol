@@ -40,7 +40,6 @@ Excess? error in fromDom ... and/or show last error?
 Indicate corresponding outs for selected plot
 Customized colors: struct view...
 Inputs - may be Elements? like TFileSource?
-Dump TOutArr/TGraph commandline (-p/-P)
 Outputs - or even IO - for external data.
 Custom legend/labels/axis(scale factor) in Mgl
 Tests
