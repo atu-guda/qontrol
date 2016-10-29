@@ -87,11 +87,15 @@ class TModel : public LinkedObj  {
   long get_il2() const { return il2; }
   QList<AskedParam>& getAskedParams() { return asked_params; };
   void applyAskedParams(); // and save old
+  const QStringList& getScriptNames() const { return scriptNames; }
  protected:
   virtual void do_reset() override;
   int runOneLoop( IterType itype );
   void fillAskedParams( const QString &names );
   void restoreAskedParams();
+
+  bool addScriptObject( const QString &nm, QObject *ob );
+  bool addScriptFunc(   const QString &nm, QScriptEngine::FunctionSignature fun );
 
   // interface to commands like above, but with names - to use from JS
  public Q_SLOTS:
@@ -221,6 +225,8 @@ class TModel : public LinkedObj  {
 
   //* script engine for current model
   QScriptEngine *eng = nullptr;
+
+  QStringList scriptNames;
 
   Q_CLASSINFO( "nameHintBase",  "model" );
   DCL_DEFAULT_STATIC;

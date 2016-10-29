@@ -725,21 +725,45 @@ void TModel::initEngine()
   }
   delete eng;
   eng = new QScriptEngine( this );
+  scriptNames.clear();
+  scriptNames << QSL("Math");
 
   qScriptRegisterMetaType( eng, TripleFtoScriptValue, fromScriptValuetoTripleF );
 
   auto gobj = eng->globalObject();
 
-  gobj.setProperty( "model",   eng->newQObject( this ) );
-  // aliases
-  gobj.setProperty( "main_s",  eng->newQObject( main_s ) );
-  gobj.setProperty( "outs",    eng->newQObject( outs ) );
-  gobj.setProperty( "plots",   eng->newQObject( plots ) );
+  addScriptObject( QSL("model"),   this );
+  addScriptObject( QSL("main_s"),  main_s ); // aliases
+  addScriptObject( QSL("outs"),    outs   );
+  addScriptObject( QSL("plots"),   plots  );
   // funcs
-  gobj.setProperty( "int2str", eng->newFunction( script_int2str ) );
-  gobj.setProperty( "print",   eng->newFunction( script_print ) );
-  gobj.setProperty( "isNear",  eng->newFunction( script_isNear ) );
-  gobj.setProperty( "include", eng->newFunction( script_include ) );
+  addScriptFunc( QSL("int2str"), script_int2str );
+  addScriptFunc( QSL("print"),   script_print );
+  addScriptFunc( QSL("isNear"),  script_isNear );
+  addScriptFunc( QSL("include"), script_include );
+}
+
+bool TModel::addScriptObject( const QString &nm, QObject *ob )
+{
+  if( !eng || !ob ) {
+    return false;
+  }
+  eng->globalObject().setProperty( nm,  eng->newQObject( ob ) );
+  scriptNames << nm;
+  for( auto chi : ob->children() ) {
+    scriptNames << nm % QSL(".") % chi->objectName();
+  }
+  return true;
+}
+
+bool TModel::addScriptFunc(   const QString &nm, QScriptEngine::FunctionSignature fun )
+{
+  if( !eng || !fun ) {
+    return false;
+  }
+  eng->globalObject().setProperty( nm, eng->newFunction( fun ) );
+  scriptNames << nm;
+  return true;
 }
 
 int TModel::runScript( const QString& script, ScriptResult *r )

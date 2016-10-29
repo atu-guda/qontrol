@@ -9,6 +9,8 @@
 #include "defs.h"
 #include "scriptdialog.h"
 
+#include <Qsci/qsciapis.h>
+
 using namespace std;
 
 ScriptDialog::ScriptDialog( QString &_scr, TModel *_model, QWidget *_parent )
@@ -38,7 +40,6 @@ void ScriptDialog::setupUi()
   lay_v->addLayout( lay_h );
 
   sced = new QsciScintilla( this );
-  sced->setLexer( new QsciLexerJavaScript( this ) );
   // TODO: common
   sced->setUtf8( true );
   sced->setCaretLineVisible( true );
@@ -61,8 +62,19 @@ void ScriptDialog::setupUi()
   sced->markerDefine( QsciScintilla::MarkerSymbol::Circle, 1 );
   sced->setMarkerBackgroundColor( Qt::red, 1 );
 
+  auto lexer =  new QsciLexerJavaScript( sced );
+  QsciAPIs *apis = new QsciAPIs( lexer );
+
+  auto words = model->getScriptNames();
+  for( auto w : words ) {
+    apis->add( w );
+  }
+
+  apis->prepare();
+  sced->setLexer( lexer );
 
   sced->setText( scr );
+
   lay_h->addWidget( sced, 4 );
 
   outed = new QTextEdit( this );
