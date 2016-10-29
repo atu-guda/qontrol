@@ -55,21 +55,15 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   main_win = true;
   title_prefix = QSL("model");
 
-  em = LaboWin::Em();
+  em = QFontMetrics( font() ).width( 'W' );
 
-  auto main_part = new QWidget( this );
-  setCentralWidget( main_part );
+  auto split_h = new QSplitter( Qt::Horizontal, this );
+  setCentralWidget( split_h );
 
   setAttribute(Qt::WA_DeleteOnClose);
 
-
-  const int gr_marg = 1;
-  auto grLay = new QGridLayout( main_part );
-  //grLay->setContentsMargins( gr_marg, gr_marg, gr_marg, gr_marg );
-  grLay->setHorizontalSpacing( gr_marg );
-  grLay->setVerticalSpacing( gr_marg );
-
-  scrollArea = new QScrollArea( main_part );
+  scrollArea = new QScrollArea( this );
+  scrollArea->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
   outs_view = new OutDataView( outs, this );
   outs_view->setObjectName( "outs_view" );
@@ -100,32 +94,31 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   stam = new StatusModel( this );
   stam->setObjectName( "stam" );
 
-  grLay->addWidget( scrollArea, 0, 0, 3, 1 );
-  grLay->addWidget( outs_view, 0, 1, 3, 1 );
-  grLay->addWidget( plots_view, 0, 2 );
-  grLay->addWidget( sims_view, 1, 2 );
-  grLay->addWidget( schems_view, 2, 2 );
+  split_h->addWidget( scrollArea );
+  split_h->addWidget( outs_view );
+  auto split_v = new QSplitter( Qt::Vertical, this );
+  split_h->addWidget( split_v );
+  split_v->addWidget( plots_view );
+  split_v->addWidget( sims_view );
+  split_v->addWidget( schems_view );
 
-  grLay->setRowStretch( 0, 2 );
-  grLay->setRowStretch( 1, 1 );
-  grLay->setRowStretch( 2, 1 );
-  grLay->setRowStretch( 3, 0 );
-
-  main_part->setLayout( grLay );
+  split_h->setStretchFactor( 0, 7 );
+  split_h->setStretchFactor( 1, 1 );
+  split_h->setStretchFactor( 2, 1 );
 
   setStatusBar( stam );
 
-  connect( this, &LaboView::viewChanged, this, &LaboView::updateViews ); // todo: from sview ?
-  connect( sview, &StructView::viewChanged, this, &LaboView::updateViews );
-  connect( outs_view, &OutDataView::viewChanged, this, &LaboView::updateViews );
-  connect( plots_view, &OutDataView::viewChanged, this, &LaboView::updateViews );
-  connect( sims_view, &OutDataView::viewChanged, this, &LaboView::updateViews );
+  connect( this,        &LaboView::viewChanged,    this, &LaboView::updateViews ); // todo: from sview ?
+  connect( sview,       &StructView::viewChanged,  this, &LaboView::updateViews );
+  connect( outs_view,   &OutDataView::viewChanged, this, &LaboView::updateViews );
+  connect( plots_view,  &OutDataView::viewChanged, this, &LaboView::updateViews );
+  connect( sims_view,   &OutDataView::viewChanged, this, &LaboView::updateViews );
   connect( schems_view, &OutDataView::viewChanged, this, &LaboView::updateViews );
 
-  connect( outs_view, &OutDataView::focusChanged, stam, &StatusModel::update );
-  connect( plots_view, &GraphDataView::focusChanged, stam, &StatusModel::update );
-  connect( sims_view, &SimulView::focusChanged, stam, &StatusModel::update );
-  connect( schems_view, &SchemeView::focusChanged, stam, &StatusModel::update );
+  connect( outs_view,   &OutDataView::focusChanged,   stam, &StatusModel::update );
+  connect( plots_view,  &GraphDataView::focusChanged, stam, &StatusModel::update );
+  connect( sims_view,   &SimulView::focusChanged,     stam, &StatusModel::update );
+  connect( schems_view, &SchemeView::focusChanged,    stam, &StatusModel::update );
 
   initEngine();
 }
