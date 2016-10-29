@@ -29,11 +29,7 @@ HolderData::HolderData( ARGS_CTOR_MIN )
 {
   setObjectName( obj_name );
 
-  if( a_v_name.isEmpty() )  {
-    setParm( QSL("vis_name"), QSL("<div>") % obj_name % QSL("</div>") ); // TODO: not always, see .....
-  } else {
-    setParm( QSL("vis_name"), a_v_name );
-  }
+  setParm( QSL("vis_name"), autoVisName( a_v_name, obj_name ) ); // TODO: not always, see .....
   setParm( QSL("descr"), a_descr );
   setParm( QSL("extra"), a_extra );
   extraToParm();

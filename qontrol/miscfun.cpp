@@ -70,6 +70,18 @@ long QString2LongEx( const QString &s, bool *ok )
   return v;
 }
 
+QString autoVisName( const QString &in_vis_name, const QString &objName )
+{
+  if( !in_vis_name.isEmpty() ) {
+    return in_vis_name;
+  }
+  QString r = objName;
+  if( r.contains('_') ) {
+    r = QSL("<div>") % r % QSL("</div>" );
+  }
+  return r;
+}
+
 
 
 double get_real_time()

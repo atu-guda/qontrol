@@ -35,6 +35,8 @@ struct DatasInfo {
 int  QString2IntEx(  const QString &s, bool *ok = nullptr );
 long QString2LongEx( const QString &s, bool *ok = nullptr );
 
+QString autoVisName( const QString &in_vis_name, const QString &objName );
+
 /** gets real time in seconds.ms */
 double get_real_time();
 

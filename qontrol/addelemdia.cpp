@@ -9,6 +9,7 @@
 #include <memory>
 #include "dataset.h"
 #include "addelemdia.h"
+#include "miscfun.h"
 
 using namespace std;
 
@@ -193,14 +194,7 @@ bool SelectTypeDialog::getTypeAndParams( HolderData *pobj, QWidget *aparent, Add
   prm.name = ed_name->text();
   prm.values = ed_val->toPlainText();
   prm.descr = ed_descr->text();
-  prm.vis_name = ed_vis_name->text();
-  if( prm.vis_name.isEmpty() ) { // TODO: common func with HolderData ctor ?
-    if( prm.name.contains('_') ) {
-      prm.vis_name = QSL("<div>") % prm.name % QSL("</div>" );
-    } else {
-      prm.vis_name = prm.name;
-    }
-  }
+  prm.vis_name = autoVisName( ed_vis_name->text(), prm.name );
 
   QString sep = lws->currentData().toString();
   prm.extra = ed_extra->toPlainText() % sep;

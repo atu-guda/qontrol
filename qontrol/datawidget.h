@@ -67,6 +67,7 @@ class DataWidget : public QFrame {
     { return nullptr;}
  Q_SIGNALS:
   void delMe( const QString &name );
+  void bigChanges();
  public Q_SLOTS:
   void infoObj();
   void showWhats();
@@ -75,6 +76,7 @@ class DataWidget : public QFrame {
   void revertObj();
   void defaultVal();
   void editPropsObj();
+  void renameObj();
  protected:
   bool isWriteAllowed( const QString &actName );
 
@@ -335,6 +337,7 @@ class DataDialog : public QDialog {
    bool copyAll();
    bool pasteOne();
    bool pasteAll();
+   bool reactBigChanges();
   protected:
    virtual int createWidgets();
    virtual void createButtons();

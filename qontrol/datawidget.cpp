@@ -34,8 +34,8 @@ void DataLabel::contextMenuEvent( QContextMenuEvent *ev )
   QMenu *mnu = new QMenu( this );
   auto act = mnu->addAction( "&Information" );
   connect( act, &QAction::triggered, dw, &DataWidget::infoObj );
-  act = mnu->addAction( "&What's this" );
-  connect( act, &QAction::triggered, dw, &DataWidget::showWhats );
+  // act = mnu->addAction( "&What's this" );
+  // connect( act, &QAction::triggered, dw, &DataWidget::showWhats );
   act = mnu->addAction( "&Copy object" );
   connect( act, &QAction::triggered, dw, &DataWidget::copyObj );
   if( ho.isDyn() ) {
@@ -43,6 +43,8 @@ void DataLabel::contextMenuEvent( QContextMenuEvent *ev )
     connect( act, &QAction::triggered, dw, &DataWidget::deleteObj );
     act = mnu->addAction( "&Propetries" );
     connect( act, &QAction::triggered, dw, &DataWidget::editPropsObj );
+    act = mnu->addAction( "Rename" );
+    connect( act, &QAction::triggered, dw, &DataWidget::renameObj );
   }
   if( !ho.isRoTree( efROAny ) ) {
     act = mnu->addAction( "Re&vert changes" );
@@ -72,7 +74,8 @@ DataWidget::DataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   }
 
   if( ddia ) {
-    connect( this, &DataWidget::delMe, ddia, &DataDialog::delObjByName, Qt::QueuedConnection );
+    connect( this, &DataWidget::delMe     , ddia, &DataDialog::delObjByName   , Qt::QueuedConnection );
+    connect( this, &DataWidget::bigChanges, ddia, &DataDialog::reactBigChanges, Qt::QueuedConnection );
   } else {
     qWarning() << "No DataDialog for " << ho.getFullName() << WHE;
   }
@@ -159,6 +162,28 @@ void DataWidget::deleteObj()
   // TODO: check!!!!
 }
 
+void DataWidget::renameObj()
+{
+  if( ! isWriteAllowed( QSL("rename" ) ) ) {
+    return;
+  }
+  auto opar = ho.getParent();
+  if( !opar ) { // dangling object?
+    return;
+  }
+  QString old_name = ho.objectName();
+  bool ok;
+  QString new_name = QInputDialog::getText( this, "Rename:" + ho.getFullName(),
+      "Enter new name:", QLineEdit::Normal, old_name, &ok );
+  if( !ok || ! isGoodName( new_name ) || old_name == new_name ) {
+    return;
+  }
+  opar->renameObj( old_name, new_name );
+  ho.setParm( QSL("vis_name"), autoVisName( QString(), new_name ) );
+  emit bigChanges();
+}
+
+
 void DataWidget::revertObj()
 {
   if( isWriteAllowed( QSL("revert" ) ) ) {
@@ -201,13 +226,13 @@ void DataWidget::editPropsObj()
 
   bool ok = false;
   s = QInputDialog::getMultiLineText( this, QSL("Edit properties"),
-      ho.objectName() % QSL(" properties"), s, &ok );
+      ho.getFullName() % QSL(" properties"), s, &ok );
 
   if( ok ) {
     ho.setParm( QSL("extra"), s );
     ho.extraToParm();
     obj2vis();
-    // TODO: dialog reread
+    emit bigChanges();
   }
 
 }
@@ -1526,9 +1551,7 @@ bool DataDialog::addObj()
     return false;
   }
 
-  createWidgets(); // recreate iface
-  obj2visAll();
-  update();
+  reactBigChanges();
   return true;
 }
 
@@ -1563,9 +1586,7 @@ bool DataDialog::delObjByName( const QString &name )
     return false;
   }
   bool ok = ds.delObj( name );
-  createWidgets();
-  obj2visAll();
-  update();
+  reactBigChanges();
   return ok;
 }
 
@@ -1643,9 +1664,7 @@ bool DataDialog::pasteOne() // like CmdView::pasteObj() TODO: move common code
   if( !ob->fromDom( ee, errstr ) ) {
     handleWarn( this, tr("fail to set params:  %1").arg( errstr ) );
   }
-  createWidgets();
-  obj2visAll();
-  update();
+  reactBigChanges();
   return true;
 }
 
@@ -1661,9 +1680,16 @@ bool DataDialog::pasteAll()
     return false;
   }
 
+  reactBigChanges();
+  return true;
+}
+
+bool DataDialog::reactBigChanges()
+{
+  auto t_idx = tw->currentIndex();
   createWidgets();
   obj2visAll();
-  update();
+  tw->setCurrentIndex( t_idx ); // another tw, object, index may be the same
   return true;
 }
 
