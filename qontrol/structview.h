@@ -45,7 +45,7 @@ class StructView : public CmdView  {
     struct ElemInfo {
       // from element
       QString name, type;
-      int vis_x, vis_y, locked, ignored, onlyFirst, onlyLast, flip, noIcon;
+      int vis_x, vis_y, locked, ignored, onlyFirst, onlyLast, flip, noIcon, showBaloon;
       // number of signal and parametric inputs
       int n_inp, n_pinp;
       // calculated

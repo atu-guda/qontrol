@@ -157,7 +157,7 @@ QString TModel::getOutValue( const QString &nm ) const
 {
   QString r;
   Scheme *sch = getActiveScheme();
-  if( sch  &&  sch->getData( nm + ".out0", r, false ) ) {
+  if( sch  &&  sch->getData( nm + QSL(".out0"), r, false ) ) {
     return r;
   };
   Simulation *cs = getActiveSimulation();

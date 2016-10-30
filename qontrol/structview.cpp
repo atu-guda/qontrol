@@ -175,8 +175,9 @@ void StructView::printAll()
 
 bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
 {
-  if( ! ob )
+  if( ! ob ) {
     return false;
+  }
 
   ei.name = ob->objectName();
   ei.type = ob->getType();
@@ -191,6 +192,7 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   ob->getData( QSL("onlyLast"), &ei.onlyLast );
   ob->getData( QSL("flip"), &ei.flip );
   ob->getData( QSL("noIcon"), &ei.noIcon );
+  ob->getData( QSL("showBaloon"), &ei.showBaloon );
   ei.flip_factor = ei.flip ? 1 : -1;
   ei.n_inp = ob->getN_SimpleInputs();
 
@@ -291,16 +293,15 @@ void StructView::drawAll( QPainter &p )
     };
     p.setPen( Qt::black );  p.setBrush( Qt::red );
 
-    // special marks: TODO: icons
+    // special marks
     if( ei.locked ) {
-      // p.drawRect( ei.xs + 4, ei.ys + 8, 20, 8 );
       lockedIcon.paint( &p, ei.xs, ei.ys, obj_sz, obj_sz );
     }
     if( ei.ignored ) {
       ignoredIcon.paint( &p, ei.xs, ei.ys, obj_sz, obj_sz );
     }
     if( ei.onlyFirst ) {
-      p.drawRect( ei.xs + 4, ei.ys + 14, 6, 6 );
+      p.drawRect( ei.xs + 4, ei.ys + 14, 6, 6 ); // TODO: icons
     }
     if( ei.onlyLast ) {
       p.drawRect( ei.xs + 20, ei.ys +14, 6, 6 );
@@ -329,8 +330,19 @@ void StructView::drawAll( QPainter &p )
     p.setBrush( Qt::NoBrush ); p.setPen( QPen(Qt::black,1) );
     st_y = ei.ys + line_busy*ex_small;
 
+    if( ei.ignored ) {
+      continue;
+    }
 
-    if( !showLinks || ei.ignored ) {
+    if( ei.showBaloon ) {
+      double v;
+      ob->getData( QSL("out0"), &v, false );
+      p.setPen( Qt::black ); p.setBrush( QColor(255,255,220) );
+      p.drawRect( ei.xs+obj_sz-3, ei.ys-ex_small+1, em_small*9, ex_small );
+      p.drawText( ei.xs + obj_sz, ei.ys, QSNL( v, 12 ) );
+    }
+
+    if( !showLinks ) {
       continue;
     }
 
