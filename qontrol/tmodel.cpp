@@ -41,7 +41,7 @@ STD_CLASSINFO(TModel,clpSpecial);
 CTOR(TModel,LinkedObj)
 {
   allowed_types = "HolderValue,ParamDouble,"
-                  "ContScheme,ContSimul,ContOut,ContGraph"; // +SPECIAL
+                  "ContScheme,ContSimul,ContOut,ContGraph,DataPool"; // +SPECIAL
   needReadInputsRecurse = true;
 
   schems = addObjT<ContScheme>( "schems" );

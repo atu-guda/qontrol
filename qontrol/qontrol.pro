@@ -28,6 +28,7 @@ SOURCES += \
   commonsubwin.cpp \
   contgraph.cpp \
   contout.cpp \
+  datapool.cpp \
   dataset.cpp \
   elemfact.cpp \
   linkedobj.cpp \
@@ -123,6 +124,7 @@ HEADERS += \
   commonsubwin.h \
   contgraph.h \
   contout.h \
+  datapool.h \
   dataset.h \
   defs.h \
   linkedobj.h \

@@ -1,15 +1,16 @@
 BUG: old value holded for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
 Rethink start iterations: separate func!
-Better runScript: place for errors.
-Better engine: QJSEngine?
+Special TMiso (or ???) function: on_param_changed();
+No: Better engine: QJSEngine? -- now in not better, see qjsengine branch
 modification flag/usage rethink: only real data holder count? + containers: object+-
 Need correct time to gather info to PlotLabel
 correct places for reset, set_link, *structChange..
 BUG: "all changes" after small [sub]edit and cancel. Tmp obj? Swap?
 BUG: reset_dfl for complex object for dialog: RODial, set? context?
 BUG: Scheme view: vertival part of link not shown if y shift (+ backward?)
-Special TMiso (or ???) function: on_param_changed();
 List of presets for element.
+Newline representation in param/default string
+Named constants in links
 Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
 post_parm_set.
 flag: post_set on parent with wait?
@@ -64,11 +65,10 @@ Edit large arrays
 aliases/synlinks: to use 'current' subobjects.
 
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
-  -- Jumping ball (and similar) method
+  -- Jumping ball (and similar) method - actions in TIntegrator
   -- TDefuzzy (fixed/variable number of inputs)
   -- or File Source input/output: TFileSource
   -- array of similar elements
-  -- Collections of data - add to Scheme, Simul, Model
 may be new field in TClassInfo to misc flags: can f() w/o preRun...,
     class group.. etc
 
