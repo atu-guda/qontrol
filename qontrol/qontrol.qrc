@@ -6,8 +6,10 @@
     <file>icons/editmodel.png</file>
     <file>icons/elm_color.png</file>
     <file>icons/elm_datapool.png</file>
+    <file>icons/elm_date.png</file>
     <file>icons/elm_double.png</file>
     <file>icons/elm_double_arr.png</file>
+    <file>icons/elm_font.png</file>
     <file>icons/elm_graphelem.png</file>
     <file>icons/elm_inputparam.png</file>
     <file>icons/elm_inputsimple.png</file>
@@ -15,9 +17,11 @@
     <file>icons/elm_int.png</file>
     <file>icons/elm_int_arr.png</file>
     <file>icons/elm_list.png</file>
+    <file>icons/elm_long.png</file>
     <file>icons/elm_string.png</file>
     <file>icons/elm_string_arr.png</file>
     <file>icons/elm_none.png</file>
+    <file>icons/elm_paramdouble.png</file>
     <file>icons/elm_plotlabel.png</file>
     <file>icons/elm_plotflippery.png</file>
     <file>icons/elm_scaledata.png</file>
@@ -51,6 +55,7 @@
     <file>icons/elm_tfunctrans.png</file>
     <file>icons/elm_tgraph.png</file>
     <file>icons/elm_thyst.png</file>
+    <file>icons/elm_time.png</file>
     <file>icons/elm_tintegrator.png</file>
     <file>icons/elm_tlatch.png</file>
     <file>icons/elm_tlinear.png</file>
