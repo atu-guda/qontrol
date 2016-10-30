@@ -871,6 +871,9 @@ QDomElement HolderData::toDom( QDomDocument &dd, bool forceType ) const
 void HolderData::saveParmsToDom( QDomElement &de ) const
 {
   for( auto p = parms.cbegin(); p != parms.cend(); ++p ) {
+    if( p.key() == QSL("props") && isObject() ) { // TODO: or default props
+      continue;
+    }
     de.setAttribute( QSL("prm_") + p.key(), p.value() );
   }
 }
@@ -1000,6 +1003,9 @@ bool HolderData::restoreParmsFromDom( QDomElement &de )
     if( ! attr_name.startsWith( QSL("prm_") ) ) { continue; } // only special names
     attr_name.remove( 0, 4 ); // remove "prm_";
     if( attr_name == QSL("extra") ) { // ignore pseudo param, used only in static creation
+      continue;
+    }
+    if( attr_name == QSL("props") && isObject() ) { // ignore props for object
       continue;
     }
     setParm( attr_name, dattr.value() );

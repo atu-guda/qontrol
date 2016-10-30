@@ -210,7 +210,7 @@ void DataWidget::editPropsObj()
     return;
   }
   if( !ho.isDyn() ) {
-    qWarning() << "attemp to edit non-dynamic object properties" << WHE;
+    qWarning() << "attempt to edit non-dynamic object properties" << WHE;
     return;
   }
 
@@ -240,7 +240,7 @@ void DataWidget::editPropsObj()
 bool DataWidget::isWriteAllowed( const QString &actName )
 {
   if( ho.isRoTree( efROAny ) ) {
-    qWarning() << "Attemt to " << actName << " RO object " << ho.getFullName();
+    qWarning() << "Attempt to " << actName << " RO object " << ho.getFullName();
     return false;
   }
   return true;

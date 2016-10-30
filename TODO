@@ -11,7 +11,7 @@ BUG: Scheme view: vertival part of link not shown if y shift (+ backward?)
 List of presets for element.
 Newline representation in param/default string
 Named constants in links
-Fix/limit props on object load/create? Check setParm("props") in ctors. Edit it.
+Fix/limit props on object load/create?
 post_parm_set.
 flag: post_set on parent with wait?
 TTrigger and TRandTrigger redesign.
