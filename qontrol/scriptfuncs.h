@@ -19,6 +19,7 @@
 
 #include <QString>
 #include <QScriptEngine>
+#include "defs.h"
 
 // ----------------  misc types --------------------------------------------
 
@@ -32,6 +33,19 @@ struct TripleF {
 Q_DECLARE_METATYPE(TripleF);
 QScriptValue TripleFtoScriptValue( QScriptEngine *eng, const TripleF &s );
 void fromScriptValuetoTripleF( const QScriptValue &obj, TripleF &s );
+
+class XsScriptExtension : public QObject {
+  Q_OBJECT
+  public:
+    XsScriptExtension( QScriptEngine *par = nullptr ) : QObject( par ), eng( par ) {};
+    virtual ~XsScriptExtension() = default;
+    Q_INVOKABLE QString int2str( long v, int fw, QChar fc = ' ', int base = 10 ) const;
+    Q_INVOKABLE bool isNear( double a, double b, double eps = D_EPS ) const;
+    Q_INVOKABLE bool include( const QString &file );
+  protected:
+    QScriptEngine *eng;
+};
+
 
 QScriptValue script_int2str( QScriptContext *ctx, QScriptEngine *eng );
 QScriptValue script_print( QScriptContext *ctx, QScriptEngine *eng );

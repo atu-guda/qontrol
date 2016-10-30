@@ -21,10 +21,53 @@
 #include <QFile>
 #include <QDebug>
 
-#include "defs.h"
 #include "scriptfuncs.h"
 
 using namespace std;
+
+QString XsScriptExtension::int2str( long v, int fw, QChar fc, int base ) const
+{
+  QString r =  QString( "%1" ).arg( v, fw, base, fc );
+  return r;
+}
+
+bool XsScriptExtension::isNear( double a, double b, double eps ) const
+{
+  return fabs( a-b ) <= eps;
+}
+
+
+bool XsScriptExtension::include( const QString &file )
+{
+  QString sfile = QSL("scripts:") + file;
+  if( ! QFile::exists( sfile ) ) {
+    return false;
+  }
+
+  QFile sf( sfile );
+  if( ! sf.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
+    qWarning() << "Fail to open script file " << sfile << WHE;
+    return false;
+  }
+
+  QByteArray scr = sf.readAll();
+  if( scr.isEmpty() ) {
+    return false;
+  }
+
+  QScriptValue res = eng->evaluate( scr );
+  if( res.isError() ) {
+    int line = res.property( QSL("lineNumber") ).toInt32();
+    QString msg = res.property( QSL("mesage") ).toString();
+    qWarning() << "Exception at line " << line <<  " file: " << sfile
+               << " error: " << msg;
+    return false;
+  }
+
+  return true;
+
+}
+
 
 // -------------------- helper JS functions ---------------------------------------
 QScriptValue script_int2str( QScriptContext *ctx, QScriptEngine * /*eng*/ )

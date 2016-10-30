@@ -736,6 +736,7 @@ void TModel::initEngine()
   addScriptObject( QSL("main_s"),  main_s ); // aliases
   addScriptObject( QSL("outs"),    outs   );
   addScriptObject( QSL("plots"),   plots  );
+  addScriptObject( QSL("Xs"),      new XsScriptExtension( eng )  );
   // funcs
   addScriptFunc( QSL("int2str"), script_int2str );
   addScriptFunc( QSL("print"),   script_print );
