@@ -464,9 +464,10 @@ bool HolderData::setDatas( const QString &datas )
     if( re.indexIn( s ) != -1 ) {
       QString nm  = re.cap(1);
       QString val = re.cap(2);
+      val.replace( '\r', '\n' ); // newline representation
       was_set = setData( nm, val ) || was_set; // Order!
     } else {
-      qWarning() << "bad param string part: " << s << NWHE;
+      qWarning() << QSL("bad param string part: ") << s << NWHE;
     }
   }
   return was_set;
@@ -679,19 +680,30 @@ bool HolderData::addObjDatas( const QString &cl_name, const QString &ob_name,
   return true;
 }
 
-int HolderData::delObj( const QString &ob_name )
+HolderData* HolderData::canDoActionObj( const QString &ob_name, const QString &act_name ) const
 {
   HolderData *ho = getObj( ob_name );
   if( !ho ) {
-    qWarning() << "not found element " << ob_name << " in " << NWHE;
-    return 0;
-  }
-  if( ! ho->isDyn() ) {
-    qWarning() << "object " << ob_name << " is not created dynamicaly in " << getFullName() << NWHE;
-    return 0;
+    qWarning() << QSL("not found element ") << ob_name << QSL(" to " ) << act_name << NWHE;
+    return nullptr;
   }
   if( ho->hasAnyFlags( efImmutable ) ) {
-    qWarning() << "object " << ob_name << " is Immutable in " << getFullName() << NWHE;
+    qWarning() << "element " << ho->getFullName() << " is Immutable to " << act_name << NWHE;
+    return nullptr;
+  }
+
+  if( ! ho->isDyn() ) {
+    qWarning() << "element " << ho->getFullName() << " is not created dynamicaly" << NWHE;
+    return nullptr;
+  }
+  return ho;
+}
+
+
+int HolderData::delObj( const QString &ob_name )
+{
+  HolderData *ho = canDoActionObj( ob_name, QSL("delete") );
+  if( !ho ) {
     return 0;
   }
 
@@ -738,28 +750,20 @@ int HolderData::delAllDyn()
 
 int HolderData::renameObj( const QString &ob_name, const QString &new_name )
 {
+  HolderData *ho = canDoActionObj( ob_name, QSL("rename") );
+  if( !ho ) {
+    return 0;
+  }
+
   if( ! isGoodName( new_name ) ) {
     qWarning() << "bad name " << new_name << " to rename" << NWHE;
     return 0;
   }
-  HolderData *ho = getObj( ob_name );
-  if( !ho ) {
-    qWarning() << "not found element " << ob_name << " to rename" << NWHE;
-    return 0;
-  }
-  if( ho->hasAnyFlags( efImmutable ) ) {
-    qWarning() << "element " << ob_name << " is Immutable to rename" << NWHE;
-    return 0;
-  }
-
   if( getObj( new_name ) ) {
     qWarning() << "element " << ob_name << " is already exists " << NWHE;
     return 0;
   }
-  if( ! ho->isDyn() ) {
-    qWarning() << "element " << ob_name << " is not created dynamicaly" << NWHE;
-    return 0;
-  }
+
   ho->setObjectName( new_name );
   setModified();
 
@@ -771,7 +775,7 @@ bool HolderData::cloneObj( const QString &old_name, const QString &new_name )
 {
   HolderData *old_obj = getObj( old_name );
   if( !old_obj ) {
-    qWarning() << " old plot not exist: " << old_name << NWHE;
+    qWarning() << " old object not exist: " << old_name << NWHE;
     return false;
   }
 
@@ -1152,6 +1156,58 @@ bool HolderData::getData( const QString &nm, QColor &da, bool er ) const
   return true;
 }
 
+bool HolderData::getData( const QString &nm, QFont &da, bool er ) const
+{
+  QVariant vda;
+  bool rc = getData( nm, vda, er );
+  if( ! rc ) {
+    return false;
+  }
+  if( vda.type() == QVariant::Font ) {
+    da = vda.value<QFont>();
+    return true;
+  }
+  QFont v;
+  v.fromString( vda.toString() );
+  da = v;
+  return true;
+}
+
+
+bool HolderData::getData( const QString &nm, QTime &da, bool er ) const
+{
+  QVariant vda;
+  bool rc = getData( nm, vda, er );
+  if( ! rc ) {
+    return false;
+  }
+  if( vda.type() == QVariant::Time ) {
+    da = vda.toTime();
+    return true;
+  }
+  QTime v;
+  v.fromString( vda.toString() );
+  da = v;
+  return true;
+}
+
+bool HolderData::getData( const QString &nm, QDate &da, bool er ) const
+{
+  QVariant vda;
+  bool rc = getData( nm, vda, er );
+  if( ! rc ) {
+    return false;
+  }
+  if( vda.type() == QVariant::Date ) {
+    da = vda.toDate();
+    return true;
+  }
+  QDate v;
+  v.fromString( vda.toString() );
+  da = v;
+  return true;
+}
+
 
 int HolderData::getDataD( const QString &nm, int dfl ) const
 {
@@ -1184,6 +1240,27 @@ QString HolderData::getDataD( const QString &nm, const QString &dfl ) const
 QColor HolderData::getDataD( const QString &nm, const QColor &dfl ) const
 {
   QColor r = dfl;
+  getData( nm, r );
+  return r;
+}
+
+QFont  HolderData::getDataD( const QString &nm, const QFont &dfl ) const
+{
+  QFont r = dfl;
+  getData( nm, r );
+  return r;
+}
+
+QTime HolderData::getDataD( const QString &nm, const QTime &dfl ) const
+{
+  QTime r = dfl;
+  getData( nm, r );
+  return r;
+}
+
+QDate HolderData::getDataD( const QString &nm, const QDate &dfl ) const
+{
+  QDate r = dfl;
   getData( nm, r );
   return r;
 }

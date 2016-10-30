@@ -260,29 +260,35 @@ class HolderData : public QAbstractItemModel {
   void setModified();/** set modified flag : and to parents*/
   void setUnModified(); //* drop modified flag: and from children
   Q_INVOKABLE void post_set();
-  virtual bool getData( const QString &nm, int *da, bool er = true ) const;
-  virtual bool getData( const QString &nm, long *da, bool er = true ) const;
-  virtual bool getData( const QString &nm, double *da, bool er = true ) const;
-  virtual bool getData( const QString &nm, QVariant &da, bool er = true ) const;
-  virtual bool getData( const QString &nm, QString &da, bool er = true ) const;
-  virtual bool getData( const QString &nm, QColor &da, bool er = true ) const;
+  virtual bool getData( const QString &nm, QVariant &da, bool er = true ) const; // er = output errors
+  virtual bool getData( const QString &nm, int      *da, bool er = true ) const;
+  virtual bool getData( const QString &nm, long     *da, bool er = true ) const;
+  virtual bool getData( const QString &nm, double   *da, bool er = true ) const;
+  virtual bool getData( const QString &nm, QString  &da, bool er = true ) const;
+  virtual bool getData( const QString &nm, QColor   &da, bool er = true ) const;
+  virtual bool getData( const QString &nm, QFont    &da, bool er = true ) const;
+  virtual bool getData( const QString &nm, QTime    &da, bool er = true ) const;
+  virtual bool getData( const QString &nm, QDate    &da, bool er = true ) const;
   // the same but with default and direct return
-  Q_INVOKABLE int     getDataD( const QString &nm, int dfl ) const;
-  Q_INVOKABLE long    getDataD( const QString &nm, long dfl ) const;
-  Q_INVOKABLE double  getDataD( const QString &nm, double dfl ) const;
+  Q_INVOKABLE int     getDataD( const QString &nm, int            dfl ) const;
+  Q_INVOKABLE long    getDataD( const QString &nm, long           dfl ) const;
+  Q_INVOKABLE double  getDataD( const QString &nm, double         dfl ) const;
   Q_INVOKABLE QString getDataD( const QString &nm, const QString &dfl ) const;
-  Q_INVOKABLE QColor  getDataD( const QString &nm, const QColor &dfl ) const;
+  Q_INVOKABLE QColor  getDataD( const QString &nm, const QColor  &dfl ) const;
+  Q_INVOKABLE QFont   getDataD( const QString &nm, const QFont   &dfl ) const;
+  Q_INVOKABLE QTime   getDataD( const QString &nm, const QTime   &dfl ) const;
+  Q_INVOKABLE QDate   getDataD( const QString &nm, const QDate   &dfl ) const;
 
   using QAbstractItemModel::setData;
-  virtual bool setData( const QString &nm, const QVariant &da );
-  Q_INVOKABLE bool setD( const QString &nm, int da );
-  Q_INVOKABLE bool setD( const QString &nm, double da );
-  Q_INVOKABLE bool setD( const QString &nm, const QString &da );
-  Q_INVOKABLE bool setD( const QString &nm, const QColor &da );
+  virtual bool setData(  const QString &nm, const QVariant &da );
+  Q_INVOKABLE bool setD( const QString &nm, int             da );
+  Q_INVOKABLE bool setD( const QString &nm, double          da );
+  Q_INVOKABLE bool setD( const QString &nm, const QString  &da );
+  Q_INVOKABLE bool setD( const QString &nm, const QColor   &da );
   //* get data from some of parent
-  bool getUpData( const QString &nm, int *da ) const;
-  bool getUpData( const QString &nm, double *da ) const;
-  bool getUpData( const QString &nm, QString &da ) const;
+  bool getUpData( const QString &nm, int      *da ) const;
+  bool getUpData( const QString &nm, double   *da ) const;
+  bool getUpData( const QString &nm, QString  &da ) const;
   bool getUpData( const QString &nm, QVariant &da ) const;
 
   /** add new object and it's description (new)*/
@@ -292,6 +298,7 @@ class HolderData : public QAbstractItemModel {
     T* addObjT( const QString &ob_name ) {
       return qobject_cast<T*>( addObjP( T::staticMetaObject.className(), ob_name ) );
     }
+
   Q_INVOKABLE bool addObj( const QString &cl_name, const QString &ob_name );
   /** is given type of subelement valid for this object */
   virtual int isValidType( const QString &cl_name ) const;
@@ -351,6 +358,7 @@ class HolderData : public QAbstractItemModel {
   /** create object with parameters as string */
   Q_INVOKABLE bool addObjDatas( const QString &cl_name, const QString &ob_name, const QString &datas );
   /** delete given object by name, returns 0 - error, !=0 = ok */
+  HolderData* canDoActionObj( const QString &ob_name, const QString &act_name ) const;
   Q_INVOKABLE int delObj( const QString &ob_name );
   Q_INVOKABLE int delAllDyn();
   Q_INVOKABLE bool cloneObj( const QString &old_name, const QString &new_name );
