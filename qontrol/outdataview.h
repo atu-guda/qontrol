@@ -46,6 +46,8 @@ class OutDataView : public CmdListView {
     virtual bool exportObj() override;
     // specific functions
     bool addToPlot();
+    bool importTxt();
+    bool fill();
   protected:
    void init_actions();
 };

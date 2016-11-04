@@ -788,12 +788,6 @@ void LaboWin::slotFileSettings()
 {
   statusBar()->showMessage( tr ( "Edit settings..." ) );
 
-  // auto dia = new Mo2SettDlg( sett, this );
-  // if ( dia->exec() == QDialog::Accepted ) {
-  //   setFonts();
-  // };
-  // delete dia;
-
   ::editObj( this, setti );
 
   statusBar()->showMessage( tr ( "Ready." ) );
@@ -803,7 +797,6 @@ void LaboWin::slotFileSettings()
 void LaboWin::slotFileSaveSett()
 {
   statusBar()->showMessage( tr ( "Saving settings..." ) );
-  // sett.save();
   setti->save();
   statusBar()->showMessage( tr ( "Ready." ) );
 }

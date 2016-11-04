@@ -1,6 +1,7 @@
 BUG: old value holded for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
 Rethink start iterations: separate func!
 Special TMiso (or ???) function: on_param_changed();
+LinesDialog : simple table, return QStringList, format string "sddil"
 No: Better engine: QJSEngine? -- now in not better, see qjsengine branch
 modification flag/usage rethink: only real data holder count? + containers: object+-
 Need correct time to gather info to PlotLabel
@@ -28,7 +29,6 @@ BUG/Feature: only First flag dont work in TSubScheme: only to out0/init params
 Long descriptions in schems, (button) - how to edit?
 Reorder objects in list-alike containers. - require artificial numeration
 Redesign post_set(), *structChange. (half done?)
-Fill, import, export special arrays.
 Script 'help' function + list of top-level objects and functions.
 Documentation: cmdline options (partial), common workflow.
 StatusTip(col=2) for StatusModel More: clarify 'col' meaning for objects

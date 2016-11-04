@@ -23,6 +23,7 @@
 #include "outdataview.h"
 #include "commonsubwin.h"
 #include "tgraph.h"
+#include "longvalidator.h"
 
 
 OutDataView::OutDataView( HolderData *a_mod, CommonSubwin *a_par )
@@ -44,6 +45,14 @@ void OutDataView::init_actions()
   a = new QAction( QIcon::fromTheme(QSL("document-export")), QSL("Export"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(exportObj()) );
+
+  a = new QAction( QIcon::fromTheme(QSL("document-Import")), QSL("Import as text"), this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(importTxt()) );
+
+  a = new QAction( QSL("Fill"), this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(fill()) );
 
   a = new QAction(  QIcon( QSL(":icons/showoutdata.png") ), QSL("&Show data"), this );
   lv->addAction( a );
@@ -163,6 +172,142 @@ bool OutDataView::addToPlot()
   }
   // TODO: model reset
   emit viewChanged();
+  return true;
+}
+
+
+bool OutDataView::importTxt()
+{
+  TOutArr *arr = qobject_cast<TOutArr*>( getSelObj() );
+  if( !arr ) {
+    return false;
+  }
+
+  QString fnq = QFileDialog::getOpenFileName( this,
+       QSL("Import text data from file"),
+       QSL("."), data_files_sel );
+  if( fnq.isEmpty() ) {
+     return false;
+  }
+
+  int col = 0; long n_start = 0, n_max = 100000000; char sep = ' ';
+
+  auto dia = new QDialog( this );
+  dia->setWindowTitle( QSL("Import data array: ") % arr->getFullName() );
+  auto lay = new QGridLayout( dia );
+
+  auto lbl_col = new QLabel( QSL("column"), dia );
+  lay->addWidget( lbl_col, 0, 0 );
+
+  auto ed_col = new QLineEdit( this );
+  ed_col->setText( QSN( col  ) );
+  ed_col->setValidator( new QIntValidator( 0, INT_MAX, this ) );
+  lay->addWidget( ed_col, 0, 1 );
+
+  auto lbl_start = new QLabel( QSL("start"), dia );
+  lay->addWidget( lbl_start, 1, 0 );
+
+  auto ed_start = new QLineEdit( this );
+  ed_start->setText( QSL("0") );
+  ed_start->setValidator( new LongValidator( 0, LONG_MAX, this ) );
+  lay->addWidget( ed_start, 1, 1 );
+
+  auto lbl_max = new QLabel( QSL("max"), dia );
+  lay->addWidget( lbl_max, 2, 0 );
+
+  auto ed_max = new QLineEdit( this );
+  ed_max->setText( QSN( n_max ) );
+  ed_max->setValidator( new LongValidator( 1, LONG_MAX, this ) );
+  lay->addWidget( ed_max, 2, 1 );
+
+  auto lbl_sep = new QLabel( QSL("separator"), dia );
+  lay->addWidget( lbl_sep, 3, 0 );
+
+  auto ed_sep = new QLineEdit( this );
+  ed_sep->setText( QSL(" ") );
+  lay->addWidget( ed_sep, 3, 1 );
+
+  auto bbox
+    = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
+  lay->addWidget( bbox, 4, 0, 1, 2 );
+  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
+
+  dia->setLayout( lay );
+
+  if ( dia->exec() == QDialog::Accepted ) {
+    col  = ed_col->text().toInt();
+    n_start = ed_start->text().toLong();
+    n_max   = ed_max->text().toLong();
+    QString ssep = ed_sep->text();
+    if( ssep.length() > 0 ) {
+      sep = ssep[0].toLatin1();
+    }
+    long n_new = arr->importTxt( fnq, col, n_start, n_max, sep );
+    qWarning() << "Imported " << n_new << "rows to " << arr->getFullName() << WHE;
+  };
+
+  delete dia;
+
+  return arr->getN() > 0;
+}
+
+
+bool OutDataView::fill()
+{
+  TOutArr *arr = qobject_cast<TOutArr*>( getSelObj() );
+  if( !arr ) {
+    return false;
+  }
+
+  long a_nn = arr->getN();
+  double start = 0, step = 0.1;
+
+  auto dia = new QDialog( this );
+  dia->setWindowTitle( QSL("Fill data array: ") % arr->getFullName() );
+  auto lay = new QGridLayout( dia );
+
+  auto lbl_n = new QLabel( QSL("n"), dia );
+  lay->addWidget( lbl_n, 0, 0 );
+
+  auto ed_n = new QLineEdit( this );
+  ed_n->setText( QSN( a_nn  ) );
+  ed_n->setValidator( new LongValidator( 1, LONG_MAX, this ) );
+  lay->addWidget( ed_n, 0, 1 );
+
+  auto lbl_start = new QLabel( QSL("start"), dia );
+  lay->addWidget( lbl_start, 1, 0 );
+
+  auto ed_start = new QLineEdit( this );
+  ed_start->setText( QSL("0.0") );
+  ed_start->setValidator( new QDoubleValidator( this ) );
+  lay->addWidget( ed_start, 1, 1 );
+
+  auto lbl_step = new QLabel( QSL("step"), dia );
+  lay->addWidget( lbl_step, 2, 0 );
+
+  auto ed_step = new QLineEdit( this );
+  ed_step->setText( QSL("0.1") );
+  ed_step->setValidator( new QDoubleValidator( this ) );
+  lay->addWidget( ed_step, 2, 1 );
+
+  auto bbox
+    = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel );
+  lay->addWidget( bbox, 3, 0, 1, 2 );
+  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
+
+  dia->setLayout( lay );
+
+  if ( dia->exec() == QDialog::Accepted ) {
+    a_nn  = ed_n->text().toLong();
+    start = ed_start->text().toDouble();
+    step  = ed_step->text().toDouble();
+    arr->fill( a_nn, start, step );
+  };
+
+  delete dia;
+
   return true;
 }
 

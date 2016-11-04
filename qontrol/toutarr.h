@@ -96,6 +96,7 @@ class TOutArr : public LinkedObj  {
    Q_INVOKABLE QString getAllStats( QString sep = "; ") const;
    Q_INVOKABLE bool isAllFinite() const { return isfin; }
    Q_INVOKABLE void  transLin( double a, double b ); // every x: x*a+b
+   Q_INVOKABLE long  fill( long nn, double start, double step );
  protected:
    virtual void do_reset() override;
    virtual void do_structChanged() override;

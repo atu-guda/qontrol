@@ -121,9 +121,9 @@ int TOutArr::alloc( long anx, long any )
     anx = 1;
   }
 
-  nx = anx; ny = any; arrsize = nx * ny;
+  nx = anx; ny = any; n = arrsize = nx * ny;
   arr.resize( arrsize );
-  reset();
+  reset_stat();
   return 1;
 }
 
@@ -416,6 +416,20 @@ void  TOutArr::transLin( double a, double b ) // every x: x*a+b
     x = x * a + b;
   }
   calc_stat();
+}
+
+long  TOutArr::fill( long nn, double start, double step )
+{
+  if( type != OutArrType::outSpec ) {
+    qWarning() << "Filling is allowed only to special arrays" << NWHE;
+    return 0;
+  }
+  alloc( nn, 1 );
+  for( long i=0; i<nn; ++i ) {
+    arr[i] = start + i *step;
+  };
+  calc_stat();
+  return n;
 }
 
 void TOutArr::reset_stat()
