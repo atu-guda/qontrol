@@ -102,7 +102,7 @@ QIcon TOutArr::getIcon() const
   if( xtype > OutArrType::outSpec ) { // bad type
     xtype = OutArrType::outSpec + 1;
   }
-  QString iconName = QString( ":icons/elm_toutarr_" ) + QSN(xtype) + ".png";
+  QString iconName = QSL(":icons/elm_toutarr_") % QSN(xtype) + QSL(".png");
   QIcon el_ico( iconName );
   return el_ico;
 }
@@ -275,6 +275,49 @@ int TOutArr::dump( const QString &fn, const QString &delim )
   QTextStream os( &of );
 
   n = di.dump( os, delim );
+  return n;
+}
+
+
+long TOutArr::importTxt( const QString &fn, int col, long n_start, long n_max, char sep )
+{
+  static const constexpr int buf_sz  = 1024*32;
+  if( type != OutArrType::outSpec ) {
+    qWarning() << "import allowed only to special arrays" << NWHE;
+    return 0;
+  }
+  if( col < 0 ) {
+    qWarning() << "Matrix read unimplemented now" << NWHE; // TODO: implement
+    return 0;
+  }
+  QFile file( fn );
+  if( ! file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
+    qWarning() << "Fail to open data file " << file.fileName() << NWHE;
+    return 0;
+  }
+  QByteArray lin;
+  long skipped = 0;
+  reset(); arr.resize( 0 ); arr.reserve( 1024 );
+
+  for( long i=0; i<n_max && !file.atEnd(); ++i ) { // skip lines before
+    lin = file.readLine( buf_sz ).simplified();
+    if( lin.size() < 1 || lin[0] == '#' || lin[0] == ';' ) { // empty or comment
+      continue;
+    }
+    if( skipped < n_start ) {
+      ++skipped;
+      continue;
+    }
+    double v = 0;
+    QList<QByteArray> lba = lin.split( sep );
+    if( col < lba.size() ) {
+      v = lba[col].toDouble();
+    }
+    arr.push_back( v );
+  }
+  n = nx = arrsize = arr.size(); ny = 1;
+  calc_stat();
+
   return n;
 }
 

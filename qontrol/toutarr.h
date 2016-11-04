@@ -63,8 +63,12 @@ class TOutArr : public LinkedObj  {
    /** get and push next value. only for OutArrType::outSimple TODO: protected, */
    virtual long take_val();
 
+   void put_next_val(); //* read(v, enable), add
+
    /** dumps data to file */
    Q_INVOKABLE int dump( const QString &fn, const QString &delim );
+   Q_INVOKABLE long importTxt( const QString &fn, int col = 0, long n_start = 0, long n_max = 100000000, char sep = ' ' );
+     // if col == -1, try to read all to form a 2D
    /** fills fields in DatasInfo structure, return number of elements (nn) */
    int fillDatasInfo( DatasInfo *di ) const;
    //* access to one element by 1 ind 2 index
@@ -134,8 +138,6 @@ class TOutArr : public LinkedObj  {
 
    dvector arr;                 //* data storage
    bool need_calc_stat = false; //* flag: need to calc statistics
-
-   void put_next_val();
 
    Q_CLASSINFO( "nameHintBase",  "out_" );
    DCL_DEFAULT_STATIC;
