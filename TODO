@@ -9,9 +9,9 @@ BUG: "all changes" after small [sub]edit and cancel. Tmp obj? Swap?
 BUG: reset_dfl for complex object for dialog: RODial, set? context?
 BUG: Scheme view: vertival part of link not shown if y shift (+ backward?)
 List of presets for element.
-Newline representation in param/default string
 Named constants in links
 Fix/limit props on object load/create?
+String props: filename, (+local)
 post_parm_set.
 flag: post_set on parent with wait?
 TTrigger and TRandTrigger redesign.
@@ -36,7 +36,6 @@ StatusTip(col=2) for StatusModel More: clarify 'col' meaning for objects
 Create Action fun + subclass QAction? (menu to place, flags)
 Controlled Scheme size.
 Error handling (from inner to iface)
-Store script errors (and data?)
 Excess? error in fromDom ... and/or show last error?
 Indicate corresponding outs for selected plot
 Customized colors: struct view...

@@ -102,45 +102,38 @@ class TOutArr : public LinkedObj  {
    virtual int do_startLoop( long acnx, long acny ) override;
    virtual int do_endLoop() override;
 
-   PRM_LIST(    type,   efNRC, "&Type", "Type of array", "enum=OutArrType" );
-   PRM_STRING( descr,   efNRC, "description", "Output array description", "max=256\nncol=-1");
-   PRM_INPUT(  name,        0, "&Source", "Input source", "sep=block" );
-   PRM_STRING( label,   efNRC, "&Label", "Label of data", "max=32" );
-   PRM_DOUBLE(   t_s,   efNRC, "t_s", "start time", "sep=col" );
-   PRM_DOUBLE(   t_e,   efNRC, "t_e", "end time", "def=1e100" );
-   PRM_INT(       nq,   efNRC, "Every &n", "each n-th data collect. ", "min=1\nmax=1000000\ndef=1" );
-   PRM_INT( lnq, efNRC, "Catch at n=", "latch value of counter", "min=0\nmax=1000000" );
-   PRM_LOGICIN( enable, efNRC, "Enable", "Enable signal", "def=1" );
-   PRM_SWITCH( allStat, efNRC, "All stat", "calculate all statistics", "def=0\nsep=col" );
-   PRM_INT( cnq, efInner, "Current n", "current value of counter(0..nq-1)", "" );
+   PRM_LIST(       type,   efNRC, "&Type",   "Type of array", "enum=OutArrType" );
+   PRM_STRING(    descr,   efNRC, "description", "Output array description", "max=256\nncol=-1");
+   PRM_INPUT(      name,       0, "&Source",  "Input source", "sep=block" );
+   PRM_STRING(    label,   efNRC, "&Label",   "Label of data", "max=32" );
+   PRM_DOUBLE(      t_s,   efNRC, "t_s",      "start time", "" );
+   PRM_DOUBLE(      t_e,   efNRC, "t_e",      "end time", "def=1e100" );
+   PRM_INT(          nq,   efNRC, "Every &n", "each n-th data collect. ", "min=1\nmax=1000000\ndef=1" );
+   PRM_INT(         lnq,   efNRC, "Catch at n=", "latch value of counter", "min=0\nmax=1000000" );
+   PRM_LOGICIN ( enable,   efNRC, "Enable",   "Enable signal", "def=1" );
+   PRM_SWITCH(  allStat,   efNRC, "All stat", "calculate all statistics", "def=0" );
+   PRM_INT(         cnq,   efTmp, "cnqn",     "current value of counter(0..nq-1)", "sep=col" );
    // statistics
-   PRM_DOUBLE( dmin, efInner, "min", "min value", "" );
-   PRM_DOUBLE( dmax, efInner, "max", "max value", "" );
-   PRM_DOUBLE( s_x,  efInner, "s_x", "summ of elements", "" );
-   PRM_DOUBLE( s_x2,  efInner, "s_x2", "summ of x^2", "" );
-   PRM_DOUBLE( a_x,  efInner, "a_x", "average of elements", "" );
-   PRM_DOUBLE( a_x2,  efInner, "a_x2", "average of squares", "" );
-   PRM_DOUBLE( var_x,  efInner, "var_x", "Variance", "" );
-   PRM_DOUBLE( sd_x,  efInner, "sd_x", "Standard deviation", "" );
-   PRM_DOUBLE( absdev_x,  efInner, "absvar_x", "Absolute deviation", "" );
-   PRM_DOUBLE( acorr,  efInner, "acorr", "autocorrelation", "" );
-   /** array size */
-   PRM_LONG( arrsize, efRO | efNoSave, "arrsize", "Full array size", "" );
-   PRM_LONG( nx, efRO | efNoSave, "nx","size of x dimensions arrays", "def=1"  );
-   PRM_LONG( ny, efRO | efNoSave, "ny","size of x=const block in 2-d arrays", "def=1"  );
-   /** current number of datas */
-   PRM_LONG( n, efRO | efNoSave, "n", "Current number of datas", "" );
-   PRM_LONG( imin, efInner, "imin", "index of minimal element", "def=-1" );
-   PRM_LONG( imax, efInner, "imax", "index of maximal element", "def=-1" );
-   PRM_LONG( isfin, efInner, "isfin", "Flag: all values was finite", "def=1" );
-   /** data storage */
-   dvector arr;
-   // /** fake source */
-   // double fake_so = 0;
-   // /** ptr to source */
-   // const double *so = &fake_so;
-   //* flag: need to calc statistics
-   bool need_calc_stat = false;
+   PRM_DOUBLE(     dmin,   efTmp, "min",      "min value", "" );
+   PRM_DOUBLE(     dmax,   efTmp, "max",      "max value", "" );
+   PRM_DOUBLE(      s_x,   efTmp, "s_x",      "summ of elements", "" );
+   PRM_DOUBLE(     s_x2,   efTmp, "s_x2",     "summ of x^2", "" );
+   PRM_DOUBLE(      a_x,   efTmp, "a_x",      "average of elements", "" );
+   PRM_DOUBLE(     a_x2,   efTmp, "a_x2",     "average of squares", "" );
+   PRM_DOUBLE(    var_x,   efTmp, "var_x",    "Variance", "" );
+   PRM_DOUBLE(     sd_x,   efTmp, "sd_x",     "Standard deviation", "sep=col" );
+   PRM_DOUBLE( absdev_x,   efTmp, "absvar_x", "Absolute deviation", "" );
+   PRM_DOUBLE(    acorr,   efTmp, "acorr",    "autocorrelation", "" );
+   PRM_LONG(    arrsize,   efTmp, "arrsize",  "Full array size", "" );
+   PRM_LONG(         nx,   efTmp, "nx",       "size of x dimensions arrays", "def=1"  );
+   PRM_LONG(         ny,   efTmp, "ny",       "size of x=const block in 2-d arrays", "def=1"  );
+   PRM_LONG(          n,   efTmp, "n",        "Current number of datas", "" );
+   PRM_LONG(       imin, efInner, "imin",     "index of minimal element", "def=-1" );
+   PRM_LONG(       imax, efInner, "imax",     "index of maximal element", "def=-1" );
+   PRM_INT(       isfin, efInner, "isfin",    "Flag: all values was finite", "def=1" );
+
+   dvector arr;                 //* data storage
+   bool need_calc_stat = false; //* flag: need to calc statistics
 
    void put_next_val();
 
