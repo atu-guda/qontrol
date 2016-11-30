@@ -72,14 +72,14 @@ int HolderData::columnCount( const QModelIndex & /*par*/ ) const
 //   return r;
 // }
 
-int HolderData::rowCount( const QModelIndex &par ) const
+int HolderData::rowCount( const QModelIndex &a_par ) const
 {
   auto sz = size();
-  if( ! par.isValid() ) { // invalid: assume self (examples: root)
+  if( ! a_par.isValid() ) { // invalid: assume self (examples: root)
     return sz;
   }
 
-  HolderData *po = static_cast<HolderData*>( par.internalPointer() );
+  HolderData *po = static_cast<HolderData*>( a_par.internalPointer() );
   if( !po ) {
     return 0;
   }
@@ -170,14 +170,14 @@ QVariant HolderData::dataObj( int col, int role ) const
 }
 
 
-QModelIndex HolderData::index( int row, int column, const QModelIndex &par ) const
+QModelIndex HolderData::index( int row, int column, const QModelIndex &o_par ) const
 {
 
-  if( ! hasIndex( row, column, par ) ) {
+  if( ! hasIndex( row, column, o_par ) ) {
     return QModelIndex();
   }
 
-  const HolderData *d_par = static_cast<HolderData*>( par.internalPointer() );
+  const HolderData *d_par = static_cast<HolderData*>( o_par.internalPointer() );
   if( !d_par ) {
     d_par = this;
   }
@@ -483,10 +483,10 @@ bool HolderData::isObject( const QString & cl_name ) const
   return isChildOf( cn );
 }
 
-QString HolderData::hintName( const QString &tp, const QString &nm_start ) const
+QString HolderData::hintName( const QString &ob_tp, const QString &nm_start ) const
 {
   QString nm = nm_start;
-  QString tpx = tp;
+  QString tpx = ob_tp;
 
   if( nm.isEmpty() ) {
     nm = QSL("xx_");
@@ -507,12 +507,8 @@ QString HolderData::hintName( const QString &tp, const QString &nm_start ) const
     }
   }
 
-  // 'name!' - try to force name w/o index: TOutArr for example
-  if( nm.endsWith( QSL("!") ) ) {
-    nm = nm.left( nm.size() - 1 );
-    if( !getObj( nm ) ) {
-      return nm;
-    }
+  if( !getObj( nm ) ) {
+    return nm;
   }
 
   //             nameDIGITS
@@ -526,7 +522,7 @@ QString HolderData::hintName( const QString &tp, const QString &nm_start ) const
     // qWarning() << "bname= " << bname << " ne " << ne << NWHE;
   }
 
-  int neo = countObjsOfType( tp, bname );
+  int neo = countObjsOfType( tpx, bname );
   if( neo > ne ) {
     ne = neo;
   }
@@ -552,11 +548,11 @@ bool HolderData::isRoTree( int flg ) const
   return false;
 }
 
-int HolderData::countObjsOfType( const QString &tp, const QString &nm_start ) const
+int HolderData::countObjsOfType( const QString &ob_tp, const QString &nm_start ) const
 {
   int n_el = 0, l_nm = nm_start.size();
   for( auto ho : TCHILD(HolderData*) ) {
-    if( ho->isChildOf( tp ) ) {
+    if( ho->isChildOf( ob_tp ) ) {
       if( l_nm < 1 || ho->objectName().startsWith( nm_start ) ) {
         ++n_el;
       }
@@ -779,12 +775,12 @@ bool HolderData::cloneObj( const QString &old_name, const QString &new_name )
     return false;
   }
 
-  QString tp = old_obj->getType();
+  QString ob_tp = old_obj->getType();
   QString s = old_obj->toString();
 
-  HolderData *new_obj = addObjP( tp, new_name );
+  HolderData *new_obj = addObjP( ob_tp, new_name );
   if( !new_obj ) {
-    qWarning() << "fail to create new object" << new_name << " type " << tp << NWHE;
+    qWarning() << "fail to create new object" << new_name << " type " << ob_tp << NWHE;
     return false;
   }
   bool ok =  new_obj->fromString( s );
@@ -817,7 +813,7 @@ bool HolderData::setActiveObj( const QString &nm )
 
 
 
-int HolderData::isValidType(  const QString &cl_name  ) const
+bool HolderData::isValidType(  const QString &cl_name  ) const
 {
   const TClassInfo *ci = EFACT.getInfo( cl_name );
   if( ! ci ) {
@@ -1434,20 +1430,20 @@ void HolderData::fillListStrings()
   setParm( QSL("max"), QSN( list_strings.size()-1 ) );
 }
 
-HolderData* HolderData::addObjToSubP( const QString &subname, const QString &tp, const QString &ob_name )
+HolderData* HolderData::addObjToSubP( const QString &subname, const QString &ob_tp, const QString &ob_name )
 {
   HolderData *sub = getObj( subname );
   if( !sub ) {
     // warn
     return nullptr;
   }
-  HolderData *ob = sub->addObjP( tp, ob_name );
+  HolderData *ob = sub->addObjP( ob_tp, ob_name );
   return ob;
 }
 
-bool HolderData::addObjToSub( const QString &subname, const QString &tp, const QString &ob_name )
+bool HolderData::addObjToSub( const QString &subname, const QString &ob_tp, const QString &ob_name )
 {
-  HolderData *ho = addObjToSubP( subname, tp, ob_name );
+  HolderData *ho = addObjToSubP( subname, ob_tp, ob_name );
   return ( ho != nullptr );
 }
 
@@ -1562,7 +1558,7 @@ int HolderData::fillComplForInputs( QStandardItem *it0, const QString &prefix ) 
 }
 
 QStringList HolderData::getNamesOfType( const QString &subObjName,
-       const QString tp, bool withType ) const
+       const QString ob_tp, bool withType ) const
 {
   QStringList r;
   const HolderData *subObj = this;
@@ -1572,9 +1568,9 @@ QStringList HolderData::getNamesOfType( const QString &subObjName,
   if( !subObj ) { return r; }
   // qWarning() << "Parent: " << subObj->getFullName() << NWHE;
 
-  bool ignoreType = tp.isEmpty();
+  bool ignoreType = ob_tp.isEmpty();
   for( auto ho: subObj->TCHILD(HolderData*) ) {
-    if( ignoreType || EFACT.isChildOf( ho->getType(), tp ) ) { // not ho->isChildOf: aliases
+    if( ignoreType || EFACT.isChildOf( ho->getType(), ob_tp ) ) { // not ho->isChildOf: aliases
       QString s = ho->objectName();
       if( withType ) {
         QString val;
@@ -1728,7 +1724,7 @@ QString HolderInt::toString() const
 
 QString HolderInt::textVisual() const
 {
-  return QSN( v );
+  return toString();
 }
 
 bool HolderInt::fromString( const QString &s )
@@ -1847,7 +1843,7 @@ QString HolderLong::toString() const
 
 QString HolderLong::textVisual() const
 {
-  return QSN( v );
+  return toString();
 }
 
 bool HolderLong::fromString( const QString &s )
@@ -1880,7 +1876,7 @@ bool HolderDouble::set( const QVariant & x, int /* idx */ )
   auto v0 = v;
   v = x.toDouble( &ok );
   post_set();
-  if( v != v0 ) {
+  if( v != v0 ) { // sic! even one bit does metter
     setModified();
   }
   return ok;
@@ -1910,7 +1906,7 @@ QString HolderDouble::toString() const
 
 QString HolderDouble::textVisual() const
 {
-  return QSND( v );
+  return toString();
 }
 
 bool HolderDouble::fromString( const QString &s )
@@ -2476,7 +2472,7 @@ bool HolderDoubleArray::set( const QVariant & x, int idx )
   auto v0 = v[idx];
   v[idx] = x.toDouble( &ok );
   post_set();
-  if( v[idx] != v0 ) {
+  if( v[idx] != v0 ) { // sic! obe bit does metter
     setModified();
   }
   return ok;

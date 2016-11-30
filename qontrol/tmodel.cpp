@@ -165,9 +165,7 @@ QString TModel::getOutValue( const QString &nm ) const
     return r;
   };
   // may be some model params?
-  if( getData( nm, r, false ) ) {
-    return r;
-  }
+  getData( nm, r, false ); // no if, in false, r is empty
   return r;
 }
 
@@ -523,7 +521,7 @@ void TModel::fillAskedParams( const QString &names )
       continue;
     }
     double *p = getMapDoublePtr( nm );
-    if( !p || p == &fake_map_target ) {
+    if( p == &fake_map_target ) { // p is not nullptr, see getMapDoublePtr
       continue;
     }
     asked_params.push_back( { nm, *p, *p, p } );
@@ -767,7 +765,7 @@ bool TModel::addScriptFunc(   const QString &nm, QScriptEngine::FunctionSignatur
   return true;
 }
 
-int TModel::runScript( const QString& script, ScriptResult *r )
+int TModel::runScript( const QString& script_text, ScriptResult *r )
 {
   if( r ) {
     r->rc = 0; r->err_line = 0; r->str = QString(); r->err = QString(); r->bt = QStringList();
@@ -779,14 +777,14 @@ int TModel::runScript( const QString& script, ScriptResult *r )
     }
     return 0;
   }
-  if( script.isEmpty() ) {
+  if( script_text.isEmpty() ) {
     if( r ) {
       r->rc = 1;
     }
     return 1;
   }
   // double rt0 = get_real_time();
-  QScriptValue res = eng->evaluate( script );
+  QScriptValue res = eng->evaluate( script_text );
   // double drt = get_real_time() - rt0;
   if( eng->hasUncaughtException() ) {
     int line = eng->uncaughtExceptionLineNumber();

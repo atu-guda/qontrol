@@ -301,7 +301,7 @@ class HolderData : public QAbstractItemModel {
 
   Q_INVOKABLE bool addObj( const QString &cl_name, const QString &ob_name );
   /** is given type of subelement valid for this object */
-  virtual int isValidType( const QString &cl_name ) const;
+  virtual bool isValidType( const QString &cl_name ) const;
   void dumpStruct() const;
 
   /** initiates reactions to structure change: common: to root */

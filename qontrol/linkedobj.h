@@ -213,8 +213,6 @@ class InputSimple : public InputAbstract {
   PRM_INT( channel, efNRC, "Channel", "Channel number of this input", "sep=block" );
   PRM_INT( subchannel, efNRC, "Subchannel", "Subchannel number of this input", "sep=col" );
 
-  double old_out0 { 0.0 };
-
   Q_CLASSINFO( "nameHintBase",  "in_" );
   DCL_DEFAULT_STATIC;
 };
@@ -257,7 +255,7 @@ class InputLogic : public InputSimple {
 
   PRM_INT( ll, efInner, "ll", "current logic level", "" );
 
-  double old_out0;
+  double old_out0 { 0.0 };
 
   Q_CLASSINFO( "nameHintBase",  "in_" );
   DCL_DEFAULT_STATIC;

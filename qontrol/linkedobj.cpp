@@ -502,20 +502,23 @@ CTOR(InputLogic,InputSimple)
 void InputLogic::post_readInput()
 {
   bool keep = false;
+  bool cll = ll.cval();
   switch( (InputLogicType)(int)(type ) ) {
-    case itLevel: ll = (out0 >= l1); break;
-    case itRise:  ll = ( (out0 - old_out0) >=  l1 ); break;
-    case itFall:  ll = ( (out0 - old_out0) <= -l1 ); break;
-    case itBoth:  ll = ( fabs(out0 - old_out0) >= l1 ); break;
+    case itLevel: cll = (out0 >= l1); break;
+    case itRise:  cll = ( (out0 - old_out0) >=  l1 ); break;
+    case itFall:  cll = ( (out0 - old_out0) <= -l1 ); break;
+    case itBoth:  cll = ( fabs(out0 - old_out0) >= l1 ); break;
     case itShmitt:
-         if( out0 >= l1 ) { ll = 1; break; }
-         if( out0 <  l0 ) { ll = 0; break; }
+         if( out0 >= l1 ) { cll = true;  break; }
+         if( out0 <  l0 ) { cll = false; break; }
          keep = true;
          break;
+    default: cll = false; // unlikely
   }
   if( inv_in && !keep ) {
-    ll = !ll;
+    cll = !cll;
   }
+  ll = cll;
   old_out0 = out0;
 }
 

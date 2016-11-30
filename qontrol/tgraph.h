@@ -377,7 +377,7 @@ class TGraph : public LinkedObj  {
    bool was_2D = false;
    bool need_c_axis = false;
    long nn = 0, nx = 0, ny = 1;
-   GraphElem* tli[LineRole::sz];  // type line ptrs
+   std::vector<GraphElem*> tli;   // [LineRole::sz] - type line ptrs
    std::vector<GraphElem*> pli;   // data line ptrs - only plottted lines
 
    // special elements, not in common tree, just to present missing axis/data

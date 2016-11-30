@@ -43,8 +43,8 @@ int ContOut::do_preRun()
   vo.clear();
   // fill array for pure TOutArr entries: for fast access later
   for( auto arr : TCHILD(TOutArr*) ) {
-    int tp = arr->getDataD( "type", 0 );
-    if( tp == TOutArr::OutArrType::outSimple ) {
+    int arr_tp = arr->getDataD( "type", 0 );
+    if( arr_tp == TOutArr::OutArrType::outSimple ) {
       vo.push_back( arr );
     }
   }
@@ -77,9 +77,6 @@ int ContOut::prep_2in( const QString &nm_x, const QString &nm_y,
     return 0;
   }
   const dvector *d_x  = in_x->getArray();
-  if( ! d_x ) {
-    return 0;
-  }
 
   int nx = in_x->getDataD( "n", 0 );
 
@@ -88,9 +85,6 @@ int ContOut::prep_2in( const QString &nm_x, const QString &nm_y,
     return 0;
   }
   const dvector *d_y  = in_y->getArray();
-  if( ! d_y ) {
-    return 0;
-  }
   int ny = in_y->getDataD( "n", 0 );
   int n = min( nx, ny );
   if( n < 2 ) {
@@ -155,9 +149,6 @@ int  ContOut::transLin( const QString &nm_in, const QString &nm_out,
     return 0;
   }
   const dvector *d_in  = in_in->getArray();
-  if( ! d_in ) {
-    return 0;
-  }
   int n = in_in->getDataD( "n", 0 );
   if( n < 1 ) {
     return 0;
@@ -187,8 +178,8 @@ TOutArr* ContOut::getArrWithType( const QString &nm, int rq_tp )
   if( rq_tp == -1 ) { // any type
     return r;
   }
-  int tp = r->getDataD( "type", 0 );
-  if( tp != rq_tp ) {
+  int arr_tp = r->getDataD( "type", 0 );
+  if( arr_tp != rq_tp ) {
       return nullptr;
   }
   return r;

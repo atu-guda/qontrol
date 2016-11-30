@@ -260,10 +260,9 @@ int TOutArr::fillDatasInfo( DatasInfo *di ) const
 
 int TOutArr::dump( const QString &fn, const QString &delim )
 {
-  int n;
   DatasInfo di;
-  n = fillDatasInfo( &di );
-  if( !n ) {
+  int n_filled = fillDatasInfo( &di );
+  if( !n_filled ) {
     return 0;
   }
 
@@ -274,8 +273,8 @@ int TOutArr::dump( const QString &fn, const QString &delim )
   }
   QTextStream os( &of );
 
-  n = di.dump( os, delim );
-  return n;
+  n_filled = di.dump( os, delim );
+  return n_filled;
 }
 
 

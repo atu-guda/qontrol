@@ -84,11 +84,6 @@ void RunView::slotStartRun()
 
 
   runner = new ModelRunner( model, &sem_io, this );
-  if( !runner ) {
-    model->reset();
-    reject();
-    return;
-  }
   // connect signals
 
   QList<AskedParam> &plist = model->getAskedParams();
@@ -160,8 +155,8 @@ void RunView::resizeEvent( QResizeEvent *e )
 {
   w_h = height(); w_w = width();
   g_h = w_h - 20; g_w = w_w;
-  c_x = g_w / 2; c_y = g_h / 2;
-  gkx = g_w / 2; gky = g_h / 2;
+  c_x = g_w / 2.0; c_y = g_h / 2.0;
+  gkx = g_w / 2.0; gky = g_h / 2.0;
   QWidget::resizeEvent( e );
 }
 

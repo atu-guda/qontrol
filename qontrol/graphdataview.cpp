@@ -94,17 +94,17 @@ bool GraphDataView::showDataObj()
   int em = fm.width( 'W' );
 
   dia->setWindowTitle( QSL("Plot data: ") % di.title );
-  auto lv = new QVBoxLayout( dia );
+  auto lay_v = new QVBoxLayout( dia ); // TODO: chack "lv" name from parents
 
   auto dmod = new DoubleTableModel( di, dia );
   auto dtv = new QTableView( dia );
   dtv->setModel( dmod );
-  lv->addWidget( dtv );
+  lay_v->addWidget( dtv );
 
   auto bt_ok = new QPushButton( QSL("Done"), dia );
   bt_ok->setDefault( true );
   connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  lv->addWidget( bt_ok );
+  lay_v->addWidget( bt_ok );
 
   int w0 = di.size() * 12 * em;
   dia->resize( w0, em*40 );

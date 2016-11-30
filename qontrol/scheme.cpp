@@ -117,12 +117,9 @@ const double* Scheme::getSchemeDoublePtr( const QString &nm, int *lt,
     return p;
   }
 
+  qWarning() << "fail to find target " << nm << NWHE;
 
-  if( !p ) {
-    qWarning() << "fail to find target " << nm << NWHE;
-  }
-
-  return p;
+  return nullptr;
 }
 
 // must be in correspondence with getSchemeDoublePtr

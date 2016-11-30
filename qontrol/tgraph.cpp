@@ -46,14 +46,14 @@ GraphElem::~GraphElem()
   reset();
 }
 
-QVariant GraphElem::dataObj( int col, int role ) const
+QVariant GraphElem::dataObj( int col, int a_role ) const
 {
-  if( role == Qt::StatusTipRole ) { // used for button labels in dialogs
+  if( a_role == Qt::StatusTipRole ) { // used for button labels in dialogs
     if( col > 1 ) {
       return QVariant();
     }
     // if( col == 1 ) {
-    //   return TDataSet::dataObj( col, role ); // for buttons
+    //   return TDataSet::dataObj( col, a_role ); // for buttons
     // }
 
     // real statustip + buttons
@@ -73,7 +73,7 @@ QVariant GraphElem::dataObj( int col, int role ) const
     return s;
   }
 
-  return TDataSet::dataObj( col, role );
+  return TDataSet::dataObj( col, a_role );
 }
 
 
@@ -473,6 +473,9 @@ void PlotFlippery::do_post_set()
 
 bool PlotFlippery::render( mglGraph *gr ) const
 {
+  if( !gr ) {
+    return false;
+  }
   if( ! drawFlippery ) {
     return true;
   }
@@ -547,10 +550,7 @@ bool PlotFlippery::render( mglGraph *gr ) const
       break;
   }
 
-
-  if( !gr ) { return false; }
-
-  return false;
+  return true;
 }
 
 
@@ -565,7 +565,8 @@ const char* TGraph::helpstr = "<H1>TGraph</H1>\n"
 STD_CLASSINFO(TGraph,clpSpecial);
 
 CTOR(TGraph,LinkedObj) ,
-     scd( new ScaleData( "scd", this, 0, "scale", "scale data", "sep=blockend" ) )
+     scd( new ScaleData( "scd", this, 0, "scale", "scale data", "sep=blockend" ) ),
+     tli( LineRole::sz, nullptr )
 {
   allowed_types = "GraphElem,PlotLabel,PlotFlippery,+SPECICAL";
   scd->setImmutable();

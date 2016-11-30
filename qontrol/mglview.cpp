@@ -646,7 +646,7 @@ QString MglView::getInfo( bool more ) const
   mglPoint base_point = scd->getBase();
   mglPoint rel_p = mark_point - base_point;
   double kyx = 0.0, kzx = 0.0;
-  if( rel_p.x != 0 ) {
+  if( fabs( rel_p.x )  > D_EPS ) {
     kyx = rel_p.y / rel_p.x;
     kzx = rel_p.z / rel_p.x;
   }
