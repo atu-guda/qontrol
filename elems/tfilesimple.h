@@ -68,18 +68,26 @@ class TFileSimple : public TMiso  {
 
    PRM_PARAMD(   cx0,       0, "cx0"     , "factor for v[0] in x"          , "def=1.0\nsep=block" );
    PRM_PARAMD(   cx1,       0, "cx1"     , "factor for v[1] in x"          , "def=-1.0" );
-   PRM_PARAMD(   cx2,       0, "cx2"     , "factor for v[2] in x"          , "sep=col" );
-   PRM_PARAMD(   cx3,       0, "cx3"     , "factor for v[3] in x"          , "" );
-   PRM_PARAMD(    bx,       0, "bx"      , "shift for x"                   , "sep=col" );
+   PRM_PARAMD(   cx2,       0, "cx2"     , "factor for v[2] in x"          , "" );
+   PRM_PARAMD(   cx3,       0, "cx3"     , "factor for v[3] in x"          , "sep=col" );
+   PRM_PARAMD(   cx4,       0, "cx4"     , "factor for v[4] in x"          , "" );
+   PRM_PARAMD(   cx5,       0, "cx5"     , "factor for v[5] in x"          , "" );
+   PRM_PARAMD(    ax,       0, "ax"      , "scale for x"                   , "def=1\nsep=col" );
+   PRM_PARAMD(    dx,       0, "dx"      , "denominator for x"             , "def=1" );
+   PRM_PARAMD(    bx,       0, "bx"      , "shift for x"                   , "" );
 
    PRM_PARAMD(   cy0,       0, "cy0"     , "factor for v[0] in y"          , "def=0.0\nsep=block" );
    PRM_PARAMD(   cy1,       0, "cy1"     , "factor for v[1] in y"          , "def=1.0" );
-   PRM_PARAMD(   cy2,       0, "cy2"     , "factor for v[2] in y"          , "def=-1.0\nsep=col" );
-   PRM_PARAMD(   cy3,       0, "cy3"     , "factor for v[3] in y"          , "" );
-   PRM_PARAMD(   by ,       0, "by"      , "shift for y"                   , "sep=col" );
+   PRM_PARAMD(   cy2,       0, "cy2"     , "factor for v[2] in y"          , "def=-1.0" );
+   PRM_PARAMD(   cy3,       0, "cy3"     , "factor for v[3] in y"          , "sep=col" );
+   PRM_PARAMD(   cy4,       0, "cy4"     , "factor for v[4] in y"          , "" );
+   PRM_PARAMD(   cy5,       0, "cy5"     , "factor for v[5] in y"          , "" );
+   PRM_PARAMD(    ay,       0, "ay"      , "scale for y"                   , "def=1\nsep=col" );
+   PRM_PARAMD(    dy,       0, "dy"      , "denominator for y"             , "def=1" );
+   PRM_PARAMD(    by,       0, "by"      , "shift for y"                   , "" );
 
-   PRM_DOUBLE(    x,  efInner, "x"       , "linear combination for v[0..3]", "" );
-   PRM_DOUBLE(    y,  efInner, "y"       , "linear combination for v[0..3]", "" );
+   PRM_DOUBLE(    x,  efInner, "x"       , "linear combination for v[0..5]", "" );
+   PRM_DOUBLE(    y,  efInner, "y"       , "linear combination for v[0..5]", "" );
 
    PRM_INT( n_total,  efInner, "n_total", "Total number of read and converted lines", "" );
    PRM_INT(   n_col,  efInner, "n_{col}", "Current number of read columns ", "" );

@@ -72,8 +72,8 @@ int TFileSimple::readLine() noexcept
       v[1] = v[1] * a1 + b1;
       if( first_read ) {  v10 = v[1];  }
       if( sub1 ) {     v[1] -= v10;   }
-      x = cx0 * v[0] + cx1 * v[1] + cx2 * v[2] + cx3 * v[3] + bx;
-      y = cy0 * v[0] + cy1 * v[1] + cy2 * v[2] + cy3 * v[3] + by;
+      x = ( ax / dx ) * ( cx0 * v[0] + cx1 * v[1] + cx2 * v[2] + cx3 * v[3] + cx4 * v[4] + cx4 * v[5] ) + bx;
+      y = ( ay / dy ) * ( cy0 * v[0] + cy1 * v[1] + cy2 * v[2] + cy3 * v[3] + cy4 * v[4] + cy5 * v[5] ) + by;
       ++n_total; hold_i = 0;
       first_read = false;
       break;

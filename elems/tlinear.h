@@ -36,6 +36,7 @@ class TLinear : public TMiso  {
    /** coefficients on input and shift */
    PRM_PARAMD( a,  0, "&a",  "common factor", "def=1" );
    PRM_PARAMD( b,  0, "&b",  "static shift", "sep=col" );
+   PRM_PARAMD( d,  0, "&d",  "denuminator", "def=1\nsep=col" );
    PRM_PARAMD( a0, 0, "a&0", "factor in input 0", "def=1\nsep=block" );
    PRM_PARAMD( a1, 0, "a&1", "factor in input 1", "def=-1\nsep=col" );
    PRM_PARAMD( a2, 0, "a&2", "factor in input 2", "sep=col" );
