@@ -66,14 +66,16 @@ void ContOut::takeAllVals()
 }
 
 int ContOut::prep_2in( const QString &nm_x, const QString &nm_y,
-                 const dvector **p_d_x, const dvector **p_d_y ) const 
+                 const dvector **p_d_x, const dvector **p_d_y ) const
 {
   if( !p_d_x && !p_d_y ) {
+    qWarning() << "input ptr[s] is null in " << getFullName() << WHE;
     return 0;
   }
 
   TOutArr *in_x = getObjT<TOutArr*>( nm_x );
   if( !in_x ) {
+    qWarning() << "not found X array " << nm_x << " in " << getFullName() << WHE;
     return 0;
   }
   const dvector *d_x  = in_x->getArray();
@@ -82,12 +84,14 @@ int ContOut::prep_2in( const QString &nm_x, const QString &nm_y,
 
   TOutArr *in_y = getObjT<TOutArr*>( nm_y );
   if( !in_y ) {
+    qWarning() << "not found output array " << nm_y << " in " << getFullName() << WHE;
     return 0;
   }
   const dvector *d_y  = in_y->getArray();
   int ny = in_y->getDataD( "n", 0 );
   int n = min( nx, ny );
   if( n < 2 ) {
+    qWarning() << "operation required at least 2 elements, given " << n << " in " << getFullName() << WHE;
     return 0;
   }
   *p_d_x = d_x;
@@ -146,6 +150,7 @@ int  ContOut::transLin( const QString &nm_in, const QString &nm_out,
 {
   TOutArr *in_in = getObjT<TOutArr*>( nm_in );
   if( !in_in ) {
+    qWarning() << "not found input array " << nm_in << " in " << getFullName() << WHE;
     return 0;
   }
   const dvector *d_in  = in_in->getArray();
@@ -156,6 +161,7 @@ int  ContOut::transLin( const QString &nm_in, const QString &nm_out,
 
   TOutArr *in_out = getArrWithType( nm_out, TOutArr::OutArrType::outSpec );
   if( !in_out ) {
+    qWarning() << "not found output array " << nm_out << " in " << getFullName() << WHE;
     return 0;
   }
 
@@ -206,10 +212,12 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
   const double freq_scale = angular_freq ? ( 2*M_PI ) : 1.0;
   TOutArr *in = getObjT<TOutArr*>( nm_in );
   if( !in ) {
+    qWarning() << "not found input array " << nm_in << " in " << getFullName() << WHE;
     return 0;
   }
   const int n = in->getDataD( "n", 0 );
-  if( n < 2 ) {
+  if( n < 16 ) {
+    qWarning() << "not enough data for FFT " << n <<  " in " << getFullName() << WHE;
     return 0;
   }
 
@@ -225,6 +233,7 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
   TOutArr *o_omega = getArrWithType( nm_omega, TOutArr::OutArrType::outSpec );
   TOutArr *o_a     = getArrWithType( nm_a,     TOutArr::OutArrType::outSpec );
   TOutArr *o_phi   = getArrWithType( nm_phi,   TOutArr::OutArrType::outSpec );
+  vector<TOutArr*> arrs { o_omega, o_a, o_phi };
 
   if( ome_max <= 0.0 ) {
     ome_max = DMAX;
@@ -236,7 +245,7 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
 
 
   const int o_n = 1 + n/2;
-  fftw_complex *out = (fftw_complex*) fftw_malloc( (2+o_n) * sizeof( fftw_complex ) );
+  fftw_complex *out = (fftw_complex*) fftw_malloc( (2+o_n) * sizeof( fftw_complex ) ); // TODO: hide in class
   fftw_plan plan = fftw_plan_dft_r2c_1d( n, pv, out, FFTW_ESTIMATE );
 
   fftw_execute( plan );
@@ -247,20 +256,13 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
     i_m = o_n;
   }
 
-  if( o_omega ) {
-    o_omega->reset();
-    o_omega->alloc( i_m );
+  for( auto arr : arrs ) {
+    if( arr ) {
+      arr->reset();
+      arr->alloc( i_m );
+    }
   }
 
-  if( o_a ) {
-    o_a->reset();
-    o_a->alloc( i_m );
-  }
-
-  if( o_phi ) {
-    o_phi->reset();
-    o_phi->alloc( i_m );
-  }
 
   double scl = 2.0 / double(n); // common scale
   for( int i=0; i<i_m ; ++i ) {

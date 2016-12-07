@@ -112,6 +112,7 @@ QIcon TOutArr::getIcon() const
 int TOutArr::alloc( long anx, long any )
 {
   if( type != OutArrType::outSpec ) {
+    qWarning() << "Try to alloc ordinary array " << NWHE;
     return 0;
   }
   if( any < 1 ) {
@@ -121,7 +122,8 @@ int TOutArr::alloc( long anx, long any )
     anx = 1;
   }
 
-  nx = anx; ny = any; n = arrsize = nx * ny;
+  nx = anx; ny = any; arrsize = nx * ny;
+  n = 0;
   arr.resize( arrsize );
   reset_stat();
   return 1;
@@ -423,7 +425,7 @@ long  TOutArr::fill( long nn, double start, double step )
     qWarning() << "Filling is allowed only to special arrays" << NWHE;
     return 0;
   }
-  alloc( nn, 1 );
+  alloc( nn, 1 ); n = nn;
   for( long i=0; i<nn; ++i ) {
     arr[i] = start + i *step;
   };
