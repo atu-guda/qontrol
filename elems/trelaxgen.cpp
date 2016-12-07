@@ -39,7 +39,8 @@ CTOR(TRelaxGen,TMiso)
 int TRelaxGen::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   v = (double)out0_init;
-  isDis = I =  dv_ch = dv_dis = 0;
+  I =  I_in = I_out = dv_ch = dv_dis = 0;
+  isDis = ( v >= v_1 ) ? 1 : 0;
   return 1;
 }
 
@@ -54,31 +55,34 @@ double TRelaxGen::f() noexcept
   // TODO: external I calc
   dv_ch  = ( v_in - v );
   dv_dis = (double)v;
+  double i_ch_local = 0, i_dis_local = 0;
 
   if( isDis ) {
     if( useDischarge ) {
-      I = -i_dis;
+      i_dis_local = - i_dis;
     } else {
-      I = -dv_dis / r_2;
+      i_dis_local = -dv_dis / r_2;
     }
     if( useContCharge ) {
-      I += dv_ch / r_1;
+      i_ch_local = dv_ch / r_1;
     }
+    I_in = i_ch_local; I_out = i_dis_local; I = i_ch_local + i_dis_local;
     v += I * ctdt / c;
     if( v <= v_2 ) {
       isDis = 0;
     }
   } else { // -------- charging
     if( useCharge ) {
-      I = i_ch;
+      i_ch_local = i_ch;
     } else {
-      I = dv_ch / r_1;
+      i_ch_local = dv_ch / r_1;
     }
     if( useContDischarge ) {
-      I -= dv_dis / r_2;
+      i_dis_local = dv_dis / r_2;
     }
+    I_in = i_ch_local; I_out = i_dis_local; I = i_ch_local + i_dis_local;
     v += I * ctdt / c;
-    if( v >= v_1 || ( useTrig && trig ) ) {
+    if( v >= v_1 || trig ) {
       isDis = 1;
     }
   }
