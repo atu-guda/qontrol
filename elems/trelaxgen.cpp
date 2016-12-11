@@ -50,42 +50,45 @@ double TRelaxGen::f() noexcept
     if( c <= 0 )   { c   = 1e-16; };
     if( r_1 <= 0 ) { r_1 = 1e-6;  };
     if( r_2 <= 0 ) { r_2 = 1e-6;  };
+    if( r_lc <= 0 ) { r_lc = 1e-6;  };
+    if( r_ld <= 0 ) { r_ld = 1e-6;  };
     prm_mod = 0;
   }
   // TODO: external I calc
   dv_ch  = ( v_in - v );
+  if( noDischargeSrc && dv_ch < 0 ) {
+    dv_ch = 0;
+  }
   dv_dis = (double)v;
-  double i_ch_local = 0, i_dis_local = 0;
+  double i_ch_local  =    dv_ch / r_lc;
+  double i_dis_local =  -dv_dis / r_ld;
 
-  if( isDis ) {
-    if( useDischarge ) {
-      i_dis_local = - i_dis;
-    } else {
-      i_dis_local = -dv_dis / r_2;
-    }
-    if( useContCharge ) {
-      i_ch_local = dv_ch / r_1;
-    }
-    I_in = i_ch_local; I_out = i_dis_local; I = i_ch_local + i_dis_local;
-    v += I * ctdt / c;
-    if( v <= v_2 ) {
-      isDis = 0;
-    }
-  } else { // -------- charging
-    if( useCharge ) {
-      i_ch_local = i_ch;
-    } else {
-      i_ch_local = dv_ch / r_1;
-    }
-    if( useContDischarge ) {
-      i_dis_local = dv_dis / r_2;
-    }
-    I_in = i_ch_local; I_out = i_dis_local; I = i_ch_local + i_dis_local;
-    v += I * ctdt / c;
-    if( v >= v_1 || trig ) {
-      isDis = 1;
+  if( isDis || useContDischarge ) {
+    i_dis_local += useDischarge ? ( - i_dis ) : ( -dv_dis / r_2 );
+  }
+  if( !isDis || useContCharge ) {
+    i_ch_local += useCharge     ? (    i_ch ) : (  dv_ch  / r_1 );
+  }
+  I_in = i_ch_local; I_out = i_dis_local; I = i_ch_local + i_dis_local;
+  v += I * ctdt / c;
+
+  int new_isDis = isDis;
+  if( isDis && v <= v_2 ) {
+    new_isDis = 0;
+    if( limitDis ) {
+      v = min( v_2.cval(), v_in.cval() );
     }
   }
+  if( !isDis && v >= v_1 ) {
+    new_isDis = 1;
+    if( limitCh ) {
+      v = v_1;
+    }
+  }
+  if( trig ) {
+    new_isDis = 1;
+  }
+  isDis = new_isDis;
 
   return v;
 }
