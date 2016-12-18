@@ -549,6 +549,20 @@ QString substValues( const QString &s, const HolderData *ho )
   return r;
 }
 
+int splitNameNum( const QString &nm, QString &bname )
+{
+  QRegExp re( "^([_a-zA-Z][_a-zA-Z0-9]*[_a-zA-Z])([0-9]+)$" );
+  int ne = -1;
+
+  if( re.indexIn( nm ) != -1 ) {
+    bname  = re.cap( 1 );
+    ne     = re.cap( 2 ).toInt();
+  } else {
+    bname = nm;
+  }
+  return ne;
+}
+
 QString getClipboardStr()
 {
   QClipboard *clp = QApplication::clipboard();

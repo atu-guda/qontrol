@@ -168,6 +168,10 @@ QString getDomText( QDomNode &p );
 const constexpr char* SUBST_RE { "@\\{([a-zA-z0-9_.%:]+)\\}" };
 QString substValues( const QString &s, const HolderData *ho );
 
+//* split name like aaa_0, bbb123 to base aaa_, bbb and number
+//* @returns number, if exists, or -1 (in this case bname = name)
+int splitNameNum( const QString &nm, QString &bname );
+
 // ------------- for iface ---------------------------------------
 
 void handleError( QWidget* par, const QString &s );

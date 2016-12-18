@@ -512,22 +512,10 @@ QString HolderData::hintName( const QString &ob_tp, const QString &nm_start ) co
   }
 
   //             nameDIGITS
-  QRegExp re( "^([_a-zA-Z][_a-zA-Z0-9]*[_a-zA-Z])([0-9]+)$" );
-  QString bname = nm;
-  int ne = 0;
+  QString bname;
+  int ne = splitNameNum( nm, bname ) + 1; // -1 -> 0
 
-  if( re.indexIn( nm ) != -1 ) {
-    bname  = re.cap( 1 );
-    ne     = re.cap( 2 ).toInt();
-    // qWarning() << "bname= " << bname << " ne " << ne << NWHE;
-  }
-
-  int neo = countObjsOfType( tpx, bname );
-  if( neo > ne ) {
-    ne = neo;
-  }
-
-  for( int i=ne; i<ne+1000; ++i ) {
+  for( int i=ne; i<ne+2000; ++i ) {
     nm = bname + QSN( i );
     if( !getObj( nm ) ) {
       return nm;

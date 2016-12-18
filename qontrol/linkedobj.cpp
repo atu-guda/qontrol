@@ -207,6 +207,13 @@ void LinkedObj::readAllInputs() noexcept
   prm_mod += prm_will_mod;
 }
 
+void LinkedObj::iterateSources( int dn )
+{
+  for( auto ia : TCHILD(InputAbstract*) ) {
+    ia->iterateSource( dn );
+  }
+}
+
 int LinkedObj::preRun( const RunInfo *rinf_ )
 {
   if( !rinf_ ) {
@@ -470,6 +477,27 @@ QString InputAbstract::textVisual() const
   return prepTextVisual( true );
 }
 
+int InputAbstract::iterateSource( int dn )
+{
+  if( fixedSource || linkType != LinkElm ) {
+    return -1000000;
+  }
+  QString bname;
+  int ne = splitNameNum( source, bname );
+  if( ne < 0 ) {
+    return -1000000;
+  }
+  ne += dn;
+  int ene = ne;
+  QString so_new = bname;
+  if( ne < 0 ) {
+    ene = -ene; so_new += 'Z';
+  }
+  so_new += QSN( ene );
+  source = so_new;
+  set_link();
+  return ne;
+}
 
 const char* InputAbstract::helpstr { "Abstract link" };
 

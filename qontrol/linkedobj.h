@@ -93,6 +93,7 @@ class LinkedObj : public TDataSet {
 
    void readInputs() noexcept;
    void readAllInputs() noexcept;
+   Q_INVOKABLE virtual void iterateSources( int dn = 1 );
  protected:
 
 
@@ -166,27 +167,30 @@ class InputAbstract : public LinkedObj {
   Q_INVOKABLE double vc() const noexcept { return out0; } // synonims
   double cval() const noexcept { return out0; }
 
+  Q_INVOKABLE virtual int iterateSource( int dn = 1 ); // return new number or -1000000
+
  protected:
   // virtual void do_post_set() override;
   /** do real actions after structure changed */
   virtual void do_structChanged() override;
   virtual void post_readInput() {};
 
-  PRM_STRING( source, efNRC, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
-  PRM_SWITCH( onlyFirst, 0, "only First", "apply only at start of run", "" );
-  PRM_DOUBLE( factor, 0, "factor", "Input factor", "def=1" );
-  PRM_DOUBLE( shift,  0, "shift",  "Input shift",  "def=0" );
-  PRM_STRING( label,  efNRC, "Label", "Label to display on structure", "max=64"  );
-  PRM_INT( x_shift, 0, "X shift", "Shift on x-part of link representation", "sep=col" );
-  PRM_INT( y_shift, 0, "Y shift", "Shift on y-part of link representation", "" );
-  PRM_INT( line_w,  0, "Line width", "Line width on scheme", "def=1\nmin=0\nmax=20" );
-  PRM_COLOR( line_color,  0, "Line color", "Line color on scheme", "def=black" );
-  PRM_SWITCH( onlyLabel, 0, "only Label", "draw only link label on scheme", "" );
+  PRM_STRING(      source, efNRC, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
+  PRM_SWITCH(   onlyFirst, efNRC, "only First", "apply only at start of run", "" );
+  PRM_DOUBLE(      factor,     0, "factor", "Input factor", "def=1" );
+  PRM_DOUBLE(       shift,     0, "shift",  "Input shift",  "def=0" );
+  PRM_STRING(       label, efNRC, "Label", "Label to display on structure", "max=64"  );
+  PRM_INT(        x_shift,     0, "X shift", "Shift on x-part of link representation", "sep=col" );
+  PRM_INT(        y_shift,     0, "Y shift", "Shift on y-part of link representation", "" );
+  PRM_INT(         line_w,     0, "Line width", "Line width on scheme", "def=1\nmin=0\nmax=20" );
+  PRM_COLOR(   line_color,     0, "Line color", "Line color on scheme", "def=black" );
+  PRM_SWITCH(   onlyLabel,     0, "only Label", "draw only link label on scheme", "" );
+  PRM_SWITCH( fixedSource,     0, "fixed source", "do not change source name with iterate", "" );
 
-  PRM_INT( linkType,  efInner | efRO, "Link type", "Describes link type", "def=3" ); // def=LinkBad
-  PRM_STRING( srcObjName, efInner | efRO, "Source object", "Name of the source object", ""  );
+  PRM_INT(       linkType, efInner | efRO, "Link type", "Describes link type", "def=3" ); // def=LinkBad
+  PRM_STRING(  srcObjName, efInner | efRO, "Source object", "Name of the source object", ""  );
 
-  PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
+  PRM_DOUBLE(        out0, efInner, "Output", "Main output", "" );
 
   double direct_in = 0;
   const double *p = &direct_in;
