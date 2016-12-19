@@ -23,6 +23,7 @@
 #include "commonsubwin.h"
 #include "miscfun.h"
 #include "addelemdia.h"
+#include "pastedialog.h"
 
 CmdView::CmdView( CommonSubwin *a_par, HolderData *a_storage )
   : QWidget( a_par ), storage( a_storage ), par( a_par )
@@ -223,14 +224,15 @@ bool CmdView::pasteObj()
 
   QString otype = ee.attribute( QSL("otype") );
   QString oname = ee.attribute( QSL("name") );
-  oname = storage->hintName( otype, oname );
 
-  bool ok;
-  oname = QInputDialog::getText( this, "Object: " + oname,
-      QSL("Enter new name (type ") % otype % QSL("):"), QLineEdit::Normal, oname, &ok );
-  if( !ok ) {
+  PasteObjParams pp;
+  pp.old_name = oname % QSL(" type(") % otype % QSL(")");
+  pp.new_name = storage->hintName( otype, oname );
+
+  if( ! PasteDialog::getPasteData( pp, this ) ) {
     return false;
   }
+  oname = pp.new_name;
 
   HolderData *ob = storage->addObjP( otype, oname );
   if( !ob  ) {
@@ -241,9 +243,28 @@ bool CmdView::pasteObj()
   if( !ob->fromDom( ee, errstr ) ) {
     handleWarn( this, tr("fail to set params:  %1").arg( errstr ) );
   }
+
+  // TMP: TODO: use postPaste
+  LinkedObj *el = qobject_cast<LinkedObj*>( ob );
+  if( el && pp.iterateSrc ) {
+    el->iterateSources( pp.dn );
+  }
   return true;
 }
 
+bool CmdView::iterateSources()
+{
+  LinkedObj *el = qobject_cast<LinkedObj*>( getSelObj() );
+  if( !el ) {
+    return false;
+  }
+  bool ok = false;
+  int dn = QInputDialog::getInt( this, QSL("Input source step"), QSL("dN"), 1, -2147483647, 2147483647, 1, &ok );
+  if( ok ) {
+    el->iterateSources( dn );
+  }
+  return true;
+}
 
 bool CmdView::infoObj()
 {

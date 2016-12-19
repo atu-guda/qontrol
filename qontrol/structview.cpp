@@ -943,7 +943,8 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     menu->addSeparator();
     act = menu->addAction( QIcon( ":icons/markelm.png" ), QSL("Mark") );
     connect( act, &QAction::triggered, this, &StructView::markElm );
-    menu->addSeparator();
+    act = menu->addAction( QSL("iterate sources") );
+    connect( act, &QAction::triggered, this, &StructView::iterateSources );
     act = menu->addAction( QIcon( ":icons/info-obj.png" ), "show &Info" );
     connect( act, &QAction::triggered, this, &StructView::infoObj );
     act = menu->addAction( QIcon::fromTheme("view-list-tree"), "show object tree" );

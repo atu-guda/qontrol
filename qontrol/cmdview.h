@@ -41,6 +41,7 @@ class CmdView : public QWidget {
     virtual bool cutObj();
     virtual bool copyObj();
     virtual bool pasteObj();
+    virtual bool iterateSources();
     virtual bool infoObj();
     virtual bool showTreeObj();
     virtual bool testObj();

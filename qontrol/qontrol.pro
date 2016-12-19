@@ -46,6 +46,7 @@ SOURCES += \
   mglview.cpp \
   outdataview.cpp \
   paramsdialog.cpp \
+  pastedialog.cpp \
   runview.cpp \
   statusmodel.cpp \
   structview.cpp \
@@ -141,6 +142,7 @@ HEADERS += \
   mglview.h \
   outdataview.h \
   paramsdialog.h \
+  pastedialog.h \
   runview.h \
   statusmodel.h \
   structview.h \

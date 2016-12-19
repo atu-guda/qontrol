@@ -210,6 +210,7 @@ void LinkedObj::readAllInputs() noexcept
 void LinkedObj::iterateSources( int dn )
 {
   for( auto ia : TCHILD(InputAbstract*) ) {
+    ia->set_link(); // to have correct type
     ia->iterateSource( dn );
   }
 }
