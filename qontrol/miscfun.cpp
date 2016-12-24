@@ -77,6 +77,12 @@ QString autoVisName( const QString &in_vis_name, const QString &objName )
   }
   QString r = objName;
 
+  QRegExp re0( QSL("^([a-zA-Z]+)$") ); // over simple case nnn, kappa
+  if( re0.indexIn( r ) != -1 ) {
+    r = texword2str( r, true );
+    return r;
+  }
+
   if( r.contains('_') ) {
     QRegExp re( QSL("^([a-zA-Z0-9]+)_([a-zA-Z0-9_]+)$") ); // simple case
     if( re.indexIn( r ) != -1 ) {
