@@ -1396,6 +1396,7 @@ DataDialog::DataDialog( HolderData &a_ds, QWidget *parent )
       "border: 1px solid #909090;"
       "border-radius: 2px; }");
 
+  ds.post_set(); // BUG: may be not here, but sometimes post_set not work as required
   obj2visAll();
   saved_data = ds.toString();
   was_modified = ds.getModified();

@@ -49,3 +49,19 @@ class SelectTypeDialog : public QDialog {
 };
 
 
+class NameAndParamsDialog : public QDialog {
+ Q_OBJECT
+  public:
+   NameAndParamsDialog( QWidget *aparent, AddObjParams &aprm );
+   static bool getNameAndParams( QWidget *aparent, AddObjParams &prm );
+  public Q_SLOTS:
+   virtual void accept();
+   virtual void suggestVisName();
+  protected:
+   void setupUi();
+   AddObjParams &prm;
+   QLineEdit *ed_name = nullptr, *ed_descr = nullptr, *ed_vis_name = nullptr;
+   QTextEdit *ed_val = nullptr, *ed_extra = nullptr;
+   QComboBox *lws = nullptr;
+};
+

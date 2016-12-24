@@ -64,6 +64,7 @@ CTOR(TModel,LinkedObj)
   sims->setParm( "tabname", "Params" );
   sims->setImmutable();
   Simulation *sim0 = sims->addObjT<Simulation>( "sim0" );
+  sim0->post_set();
   sim0->setImmutable();
   sims->setActiveObj( "sim0" );
 

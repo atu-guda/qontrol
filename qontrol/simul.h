@@ -60,7 +60,7 @@ class Simulation : public LinkedObj  {
   PRM_DOUBLE(       t_0,      efNRC, "t_0", "Start time", "def=0" );
   PRM_DOUBLE(     T_brk,      efNRC, "T_{brk}", "Break time", "min=0\nmax=1e300\ndef=1e100" );
   PRM_LONG(           N,      efNRC, "&N", "Number of steps in one run", "min=1\nmax=200000000\nsep=col\ndef=10000"  );
-  PRM_DOUBLE(       tdt,  efNRC | efRODial | efNoSave, "\\tau", "step time", "def=1" );
+  PRM_DOUBLE(       tdt,  efNRC | efRODial | efNoSave, "\\tau", "step time", "def=0.01" );
   PRM_INT(        n_pre,       efNRC, "N pre", "Number of calculations at startLoop ", "def=5" );
   PRM_SWITCH(    syncRT,       efNRC, "Sync RT", "Real and model time synchronization ", "sep=col" );
   PRM_DOUBLE(      io_t,       efNRC, "I/O time", "Time per each I/O action", "def=0.1\nmin=1e-4" );

@@ -311,20 +311,23 @@ QString HolderData::ls() const
   }
   r += QSL("\n;------------------------------------\n");
   int n_el = 0;
+  QStringList sl;
   for( const auto c : children() ) {
-    r += c->objectName() + ' ';
+    QString r1 = c->objectName() + ' ';
     ++n_el;
     const HolderData *ho = qobject_cast<HolderData*>( c );
     if( ho ) {
-      r += ho->getType();
+      r1 += ho->getType();
       if( ! ho->isObject() ) {
         QString vs = ho->textVisual();
         vs.truncate( 80 );
-        r += QSL(" = \"") % vs + QSL("\"");
+        r1 += QSL(" = \"") % vs + QSL("\"");
       }
     }
-    r += '\n';
+    sl << r1;
   }
+  sl.sort();
+  r += sl.join( '\n' );
   r += QSL("\n;------------------------------------");
 
   r += QSL("\n;n_el = ") + QSN(n_el) + QSL("\n;Params:\n");
@@ -336,18 +339,22 @@ QString HolderData::ls() const
 
 QString HolderData::lsf() const
 {
-  QString r;
   const QMetaObject *mo = metaObject();
+  if( !mo ) {
+    return QSL("ERROR_NO_METAOBJECT");
+  }
+  QStringList sl;
   int nf = mo->methodCount();
   for( int i=0; i<nf; ++i ) {
     QMetaMethod mm = mo->method( i );
     if( mm.isValid()  &&  mm.access() == QMetaMethod::Access::Public
         && ( mm.methodType() == QMetaMethod::MethodType::Method
           || mm.methodType() == QMetaMethod::MethodType::Slot ) ) {
-      r += mm.methodSignature() + '\n';
+      sl << mm.methodSignature();
     }
   }
-  return r;
+  sl.sort();
+  return sl.join( '\n' );
 }
 
 HolderData* HolderData::getObj( size_type i ) const

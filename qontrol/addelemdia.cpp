@@ -119,88 +119,7 @@ bool SelectTypeDialog::getTypeAndParams( HolderData *pobj, QWidget *aparent, Add
   prm.tp = tp;
   prm.name = pobj->hintName( tp, prm.name );
 
-  auto dia = new QDialog( aparent ); // TODO: unique_ptr
-  auto lay_h = new QHBoxLayout( dia );
-
-  auto lay_m = new QVBoxLayout; // main mart
-  lay_h->addLayout( lay_m );
-
-  auto lay_ex = new QVBoxLayout; // extra part
-  lay_h->addLayout( lay_ex );
-
-  auto lay_btn = new QVBoxLayout; // right button part
-  lay_h->addLayout( lay_btn );
-
-
-  dia->setWindowTitle( QSL( "Creating object with type ") % tp );
-
-  auto lbl_name = new QLabel( "Name", dia );
-  lay_m->addWidget( lbl_name );
-  auto ed_name = new QLineEdit( dia );
-  ed_name->setValidator( new QRegExpValidator( QRegExp(RE_NAME), dia ) );
-  ed_name->setText( prm.name );
-  lay_m->addWidget( ed_name );
-
-  auto lbl_val = new QLabel( "Value(s)", dia );
-  lay_m->addWidget( lbl_val );
-  auto ed_val = new QTextEdit( dia );
-  ed_val->setText( prm.values );
-  lay_m->addWidget( ed_val );
-
-  auto lbl_descr = new QLabel( "Description", dia );
-  lay_m->addWidget( lbl_descr );
-  auto ed_descr = new QLineEdit( dia );
-  lay_m->addWidget( ed_descr );
-
-  auto lbl_vis_name = new QLabel( "Visual name", dia );
-  lay_m->addWidget( lbl_vis_name );
-  auto ed_vis_name = new QLineEdit( dia );
-  lay_m->addWidget( ed_vis_name );
-
-
-
-  auto lbl_sep = new QLabel( QSL("End current"), dia );
-  lay_ex->addWidget( lbl_sep );
-  auto lws = new QComboBox( dia );
-  lws->addItem( QSL("None"), QSL("") );
-  lws->addItem( QSL("Column"), QSL("\nsep=col") );
-  lws->addItem( QSL("Column after"), QSL("\nsep=col") );
-  lws->addItem( QSL("Row"), QSL("\nsep=row") );
-  lws->addItem( QSL("Block"), QSL("\nsep=block") );
-  lws->addItem( QSL("Block afer"), QSL("\nsep=blockend") );
-  lws->addItem( QSL("Tab"), QSL("\nsep=tab") );
-  lws->addItem( QSL("Tab after"), QSL("\nsep=tabend") );
-  lay_ex->addWidget( lws );
-
-  auto lbl_extra = new QLabel( QSL("Extra"), dia );
-  lay_ex->addWidget( lbl_extra );
-  auto ed_extra = new QTextEdit( dia );
-  ed_extra->setText( prm.extra );
-  lay_ex->addWidget( ed_extra );
-
-  auto bbox
-    = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Vertical, dia );
-  lay_btn->addWidget( bbox );
-  lay_btn->addStretch( 1 );
-
-  connect( bbox, &QDialogButtonBox::accepted, dia, &QDialog::accept );
-  connect( bbox, &QDialogButtonBox::rejected, dia, &QDialog::reject );
-
-  if( dia->exec() != QDialog::Accepted  || ed_name->text().isEmpty() ) {
-    delete dia;
-    return false;
-  }
-
-  prm.name = ed_name->text();
-  prm.values = ed_val->toPlainText();
-  prm.descr = ed_descr->text();
-  prm.vis_name = autoVisName( ed_vis_name->text(), prm.name );
-
-  QString sep = lws->currentData().toString();
-  prm.extra = ed_extra->toPlainText() % sep;
-
-  delete dia;
-  return true;
+  return( NameAndParamsDialog::getNameAndParams( aparent, prm ) && ! prm.name.isEmpty() );
 }
 
 HolderData* SelectTypeDialog::askAndCreateObj( HolderData *pobj, QWidget *aparent, AddObjParams &prm,
@@ -232,5 +151,107 @@ HolderData* SelectTypeDialog::askAndCreateObj( HolderData *pobj, QWidget *aparen
      ho->setDatas( prm.values );
   }
   return ho;
+}
+
+// -------------------------------------- NameAndParamsDialog ---------
+
+NameAndParamsDialog::NameAndParamsDialog( QWidget *aparent, AddObjParams &aprm )
+  : QDialog( aparent ), prm( aprm )
+{
+  setupUi();
+}
+
+void NameAndParamsDialog::setupUi()
+{
+  auto lay_h = new QHBoxLayout( this );
+
+  auto lay_m = new QVBoxLayout; // main mart
+  lay_h->addLayout( lay_m );
+
+  auto lay_ex = new QVBoxLayout; // extra part
+  lay_h->addLayout( lay_ex );
+
+  auto lay_btn = new QVBoxLayout; // right button part
+  lay_h->addLayout( lay_btn );
+
+  setWindowTitle( QSL( "Creating object with type ") % prm.tp );
+
+  auto lbl_name = new QLabel( "Name", this );
+  lay_m->addWidget( lbl_name );
+  ed_name = new QLineEdit( this );
+  ed_name->setValidator( new QRegExpValidator( QRegExp(RE_NAME), this ) );
+  ed_name->setText( prm.name );
+  lay_m->addWidget( ed_name );
+
+  auto lbl_val = new QLabel( "Value(s)", this );
+  lay_m->addWidget( lbl_val );
+  ed_val = new QTextEdit( this );
+  ed_val->setText( prm.values );
+  lay_m->addWidget( ed_val );
+
+  auto lbl_descr = new QLabel( "Description", this );
+  lay_m->addWidget( lbl_descr );
+  ed_descr = new QLineEdit( this );
+  lay_m->addWidget( ed_descr );
+
+  auto lbl_vis_name = new QLabel( "Visual name", this );
+  lay_m->addWidget( lbl_vis_name );
+  ed_vis_name = new QLineEdit( this );
+  lay_m->addWidget( ed_vis_name );
+
+
+  auto lbl_sep = new QLabel( QSL("End current"), this );
+  lay_ex->addWidget( lbl_sep );
+  lws = new QComboBox( this );
+  lws->addItem( QSL("None"), QSL("") );
+  lws->addItem( QSL("Column"), QSL("\nsep=col") );
+  lws->addItem( QSL("Column after"), QSL("\nsep=col") );
+  lws->addItem( QSL("Row"), QSL("\nsep=row") );
+  lws->addItem( QSL("Block"), QSL("\nsep=block") );
+  lws->addItem( QSL("Block after"), QSL("\nsep=blockend") );
+  lws->addItem( QSL("Tab"), QSL("\nsep=tab") );
+  lws->addItem( QSL("Tab after"), QSL("\nsep=tabend") );
+  lay_ex->addWidget( lws );
+
+  auto lbl_extra = new QLabel( QSL("Extra"), this );
+  lay_ex->addWidget( lbl_extra );
+  ed_extra = new QTextEdit( this );
+  ed_extra->setText( prm.extra );
+  lay_ex->addWidget( ed_extra );
+
+  auto bbox
+    = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Vertical, this );
+  lay_btn->addWidget( bbox );
+  lay_btn->addStretch( 1 );
+
+  connect( bbox, &QDialogButtonBox::accepted,    this, &NameAndParamsDialog::accept );
+  connect( bbox, &QDialogButtonBox::rejected,    this, &NameAndParamsDialog::reject );
+  connect( ed_name, &QLineEdit::editingFinished, this, &NameAndParamsDialog::suggestVisName );
+}
+
+bool NameAndParamsDialog::getNameAndParams( QWidget *aparent, AddObjParams &aprm )
+{
+  auto dia = new NameAndParamsDialog( aparent, aprm );
+  return( dia->exec() == QDialog::Accepted );
+}
+
+void NameAndParamsDialog::accept()
+{
+  prm.name = ed_name->text();
+  prm.values = ed_val->toPlainText();
+  prm.descr = ed_descr->text();
+  prm.vis_name = autoVisName( ed_vis_name->text(), prm.name );
+  QString sep = lws->currentData().toString();
+  prm.extra = ed_extra->toPlainText() % sep;
+  QDialog::accept();
+}
+
+void NameAndParamsDialog::suggestVisName()
+{
+  if( ! ed_vis_name->text().isEmpty()  ) {
+    return;
+  }
+  QString t = ed_name->text();
+  ed_vis_name->setText( autoVisName( QString(), t ) );
 }
 

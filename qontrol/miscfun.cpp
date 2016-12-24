@@ -76,8 +76,14 @@ QString autoVisName( const QString &in_vis_name, const QString &objName )
     return in_vis_name;
   }
   QString r = objName;
+
   if( r.contains('_') ) {
-    r = QSL("<div>") % r % QSL("</div>" );
+    QRegExp re( QSL("^([a-zA-Z0-9]+)_([a-zA-Z0-9_]+)$") ); // simple case
+    if( re.indexIn( r ) != -1 ) {
+      r = texword2str( re.cap(1) , true ) % QSL("_{") % texword2str( re.cap(2), true ) % QSL("}");
+    } else {
+      r = QSL("<div>") % r % QSL("</div>" );
+    }
   }
   return r;
 }

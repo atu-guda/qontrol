@@ -29,7 +29,7 @@ CTOR(Simulation,LinkedObj)
   show_active = true;
   // allowed_types = "double"; // double + inputs? TODO: check alias
   allowed_types = "HolderValue,ParamDouble,DataPool"; // double + inputs? TODO: check alias
-  do_post_set(); // need recalc
+  // do_post_set(); // need recalc BUG: not here, need common
 }
 
 
@@ -48,7 +48,8 @@ QIcon Simulation::getIcon() const
 void Simulation::do_post_set()
 {
   LinkedObj::do_post_set();
-  tdt = T / N;
+  tdt.set( T / N );
+  // qWarning() << "T= " << T << " N= " << N << " tdt= " << tdt << NWHE;
 
   n1_eff = n2_eff = 1;
   if( runType > Simulation::runSingle ) {

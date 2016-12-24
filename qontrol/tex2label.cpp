@@ -11,17 +11,11 @@
 #include <QStringList>
 #include <QMap>
 
-#include "defs.h"
+#include "miscfun.h"
 
 using namespace std;
 
-struct TexCodeChar {
-  const char *t;
-  uint16_t c;
-};
-
-
-TexCodeChar tex_cc[] = {
+const TexCodeChar tex_cc[] = {
   { "alpha",         0x03B1 },
   { "beta",          0x03B2 },
   { "gamma",         0x03B3 },
@@ -118,6 +112,7 @@ TexCodeChar tex_cc[] = {
 
 using MapSC = QMap<QString,QChar>;
 
+
 MapSC init_tex_map()
 {
   MapSC r;
@@ -128,12 +123,36 @@ MapSC init_tex_map()
   return r;
 }
 
+static MapSC tex_map = init_tex_map();
+
+QString texword2str( const QString &t, bool esc )
+{
+  if( t.length() < 2 ) { // small string: "pm", "xi", "pi" ...
+    return t;
+  }
+  if( t[0] == '<' ) {
+    return t;
+  }
+  QString t1 = t;
+  if( t1[0] == '\\' ) {
+    t1.remove( 0, 1 );
+  }
+  QString r = t1;
+  if( tex_map.contains( t1 ) ) {
+    if( esc ) {
+      r = QSL("\\" ) + t1;
+    } else {
+      r = tex_map[ t1 ];
+    }
+  }
+  return r;
+}
+
 QString tex2label( const QString &t, bool noSub )
 {
-  static MapSC tex_map = init_tex_map();
 
-  // way to ignore conversion
-  if( t.startsWith( QSL("<div") ) ) {
+  // way to ignore conversion, a-la <div>, <h2>
+  if( t.startsWith( QSL("<") ) ) {
     return t;
   }
 

@@ -151,8 +151,15 @@ const typename T::value_type atd( const T& container, typename T::size_type idx,
     return container[idx];
   }
 
+struct TexCodeChar {
+  const char *t;
+  uint16_t c;
+};
 //* implementation in tex2label.cpp
+QString texword2str( const QString &s, bool esc ); // esc: false: pi => QChar(PI), true: pi => \pi,
 QString tex2label( const QString &t, bool noSub = false );
+
+extern const TexCodeChar tex_cc[];
 
 /** computes length of perpendicular from point p to line s-e */
 // double perpLen( double xs, double ys, double xe, double ye,

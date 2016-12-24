@@ -31,6 +31,7 @@ void PasteDialog::setupUi()
   lay->addWidget( lbl, nl, 0 );
   ed_new_name = new QLineEdit( this );
   ed_new_name->setText( pp.new_name );
+  ed_new_name->setValidator( new QRegExpValidator( QRegExp(RE_NAME), this ) );
   lay->addWidget( ed_new_name, nl, 1 );
   ++nl;
 
