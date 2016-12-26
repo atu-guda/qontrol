@@ -312,7 +312,7 @@ long TOutArr::importTxt( const QString &fn, int col, long n_start, long n_max, c
     double v = 0;
     QList<QByteArray> lba = lin.split( sep );
     if( col < lba.size() ) {
-      v = lba[col].toDouble();
+      v = toDoubleEx( lba[col] );
     }
     arr.push_back( v );
   }

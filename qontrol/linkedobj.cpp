@@ -384,9 +384,9 @@ void InputAbstract::set_link()
   }
 
   bool ok = false;
-  double v = source.cval().toDouble( &ok );
+  double v = toDoubleEx( source.cval() , &ok );
   if( ok ) {
-    direct_in = v * factor + shift; out0 = v;
+    direct_in = v * factor + shift; out0 = direct_in;
     linkType = LinkNone;  srcObjName = QSL("=") % QSN( v );
     return;
   }

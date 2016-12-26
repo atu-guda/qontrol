@@ -692,11 +692,11 @@ DoubleDataWidget::DoubleDataWidget( HolderData &h, QWidget *parent, bool hideLab
     lbl->setBuddy( le );
   }
 
-  int decimals = h.getParmInt( QSL("decimals"), DOUBLE_PREC );
-  double v_min = h.getParmDouble( QSL("min"), DMIN );
-  double v_max = h.getParmDouble( QSL("max"), DMAX );
-
-  le->setValidator( new QDoubleValidator( v_min, v_max, decimals, le ) );
+  // int decimals = h.getParmInt( QSL("decimals"), DOUBLE_PREC );
+  // double v_min = h.getParmDouble( QSL("min"), DMIN );
+  // double v_max = h.getParmDouble( QSL("max"), DMAX );
+  //
+  // le->setValidator( new QDoubleValidator( v_min, v_max, decimals, le ) ); // TODO: revive
 
   auto lay =  new QHBoxLayout( this );
   lay->setContentsMargins( 0, 0, 0, 0 );
@@ -714,7 +714,7 @@ bool DoubleDataWidget::obj2vis()
 bool DoubleDataWidget::vis2obj() const
 {
   bool ok;
-  QVariant v = le->text().toDouble( &ok );
+  QVariant v = toDoubleEx(le->text(), &ok );
   if( ok ) {
     ho.set( v );
   }
@@ -1045,9 +1045,9 @@ DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent, bo
 
   les.reserve(n);
 
-  double v_min = h.getParmDouble( QSL("min"), DMIN );
-  double v_max = h.getParmDouble( QSL("max"), DMAX );
-  int decimals = h.getParmInt( QSL("decimals"), DOUBLE_PREC );
+  // double v_min = h.getParmDouble( QSL("min"), DMIN );
+  // double v_max = h.getParmDouble( QSL("max"), DMAX );
+  // int decimals = h.getParmInt( QSL("decimals"), DOUBLE_PREC );
 
   auto lay = new QGridLayout( pwi );
 
@@ -1060,7 +1060,7 @@ DoubleArrayDataWidget::DoubleArrayDataWidget( HolderData &h, QWidget *parent, bo
 
     auto le = new QLineEdit( pwi );
     le->setReadOnly( ro );
-    le->setValidator( new QDoubleValidator( v_min, v_max, decimals, le ) );
+    // le->setValidator( new QDoubleValidator( v_min, v_max, decimals, le ) ); TODO: revive! DoubleValidatorEx
     lay->addWidget( le, i+1, 1 );
     les.push_back( le );
   }
@@ -1084,7 +1084,7 @@ bool DoubleArrayDataWidget::vis2obj() const
   int n = les.size();
   QVariant v;
   for( int i=0; i<n; ++i ) {
-    v = les[i]->text().toDouble( &ok );
+    v = toDoubleEx( les[i]->text(), &ok );
     ho.set( v, i );
   }
   return ok;

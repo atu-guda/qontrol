@@ -489,9 +489,9 @@ void MglView::setMark()
 
   int rc = dia->exec();
   if( rc == QDialog::Accepted ) {
-    scd->markX = markX_ed->text().toDouble();
-    scd->markY = markY_ed->text().toDouble();
-    scd->markZ = markZ_ed->text().toDouble();
+    scd->markX = toDoubleEx( markX_ed->text() );
+    scd->markY = toDoubleEx( markY_ed->text() );
+    scd->markZ = toDoubleEx( markZ_ed->text() );
   };
   delete dia;
   update();

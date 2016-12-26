@@ -128,7 +128,6 @@ void Scheme::fillComplModelForInputs( QStandardItemModel *mdl ) const
   if( ! mdl ) { return; }
   auto root_item = mdl->invisibleRootItem();
 
-
   fillComplForInputs( root_item );
 
   // if( !par ) { return; }

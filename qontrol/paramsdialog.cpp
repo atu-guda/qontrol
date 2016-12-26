@@ -6,7 +6,7 @@
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
-#include "defs.h"
+#include "miscfun.h"
 #include "paramsdialog.h"
 
 using namespace std;
@@ -30,7 +30,7 @@ void ParamsDialog::setupUi()
     QLabel *lbl = new QLabel( p.name, this );
     lay->addWidget( lbl, nr, 0 );
     QLineEdit *ed = new QLineEdit( this );
-    ed->setValidator( new QDoubleValidator );
+    // ed->setValidator( new QDoubleValidator );
     ed->setText( QSND( p.saved ) );
     lay->addWidget( ed, nr, 1 );
     eds[ p.name ] = ed;
@@ -50,7 +50,7 @@ void ParamsDialog::accept()
   for( auto &p : plist ) {
     QLineEdit *ed = eds[ p.name ];
     if( !ed ) { continue; }
-    p.cur = ed->text().toDouble();
+    p.cur = toDoubleEx( ed->text() );
   }
   eds.clear();
   QDialog::accept();

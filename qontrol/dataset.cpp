@@ -438,7 +438,7 @@ double HolderData::getParmDouble( const QString &pname, double dfl ) const
   if( parms.contains( pname ) ) {
     const QString &p = parms[pname];
     bool ok;
-    double v = p.toDouble( &ok );
+    double v = toDoubleEx( p, &ok );
     if( ok ) {
       return v;
     }
@@ -639,6 +639,14 @@ HolderData* HolderData::addObjP( const QString &cl_name, const QString &ob_name 
                << " not allowed in " << NWHE;
     return nullptr;
   }
+
+  bool ok;
+  toDoubleEx( ob_name, &ok );
+  if( ok ) {
+    qWarning() << "Cannot use special name " << ob_name << "for object " << NWHE;
+    return nullptr;
+  }
+
   beginResetModel();
 
   HolderData *ob = EFACT.createObj( cl_name, ob_name, this );
@@ -1524,6 +1532,12 @@ int HolderData::fillComplForInputs( QStandardItem *it0, const QString &prefix ) 
   // auto it = new QStandardItem( QSL("==") % prefix % getFullName() );
   // it0->appendRow( it );
 
+  auto mc = getMathConstants();
+  for( auto e = mc.constBegin(); e != mc.constEnd(); ++e ) {
+    auto it = new QStandardItem( e.key() );
+    it0->appendRow( it );
+  }
+
   for( auto e: children() ) {
 
     if( auto hd = qobject_cast<HolderDouble*>( e ) ) {
@@ -1869,7 +1883,11 @@ bool HolderDouble::set( const QVariant & x, int /* idx */ )
 {
   bool ok;
   auto v0 = v;
-  v = x.toDouble( &ok );
+  if( x.type() == QVariant::String ) {
+    v = toDoubleEx( x.toString(), &ok );
+  } else {
+    v = x.toDouble( &ok );
+  }
   post_set();
   if( v != v0 ) { // sic! even one bit does metter
     setModified();
@@ -1945,7 +1963,7 @@ QVariant HolderString::get( int /* idx */ ) const
 
 double HolderString::getDouble( int /* idx = 0 */ ) const
 {
-  return v.toDouble();
+  return toDoubleEx( v );
 }
 
 void HolderString::do_post_set()
@@ -2443,7 +2461,7 @@ void HolderDoubleArray::reset_dfl()
     int i = 0;
     bool ok;
     for( auto cs : sl ) {
-      double vc = cs.toDouble( &ok );
+      double vc = toDoubleEx( cs, &ok );
       if( ok ) {
         v[i] = vc;
       }
@@ -2465,7 +2483,11 @@ bool HolderDoubleArray::set( const QVariant & x, int idx )
     return false;
   }
   auto v0 = v[idx];
-  v[idx] = x.toDouble( &ok );
+  if( x.type() == QVariant::String ) {
+    v[idx] = toDoubleEx( x.toString(), &ok );
+  } else {
+    v[idx] = x.toDouble( &ok );
+  }
   post_set();
   if( v[idx] != v0 ) { // sic! obe bit does metter
     setModified();
@@ -2533,7 +2555,7 @@ bool HolderDoubleArray::fromString( const QString &s )
   v.clear(); v.reserve( sl.size() );
 
   for( auto s : sl ) {
-    double vc = s.toDouble( &ok );
+    double vc = toDoubleEx( s, &ok );
     v.push_back( vc );
   }
 
@@ -2624,7 +2646,7 @@ double HolderStringArray::getDouble( int idx ) const
   if( ! isGoodIndex( idx, v ) ) {
     return 0;
   }
-  return v[idx].toDouble();
+  return toDoubleEx( v[idx] );
 }
 
 void HolderStringArray::do_post_set()

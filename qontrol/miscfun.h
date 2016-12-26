@@ -116,6 +116,16 @@ double barrierHyp2UpUp(   double x, double lv ) noexcept;
 double barrierHyp2UpDown( double x, double lv ) noexcept;
 // TODO: log, tan
 
+struct MathConstantsC {
+  const char * const name;
+  double val;
+};
+using MapStrDouble = QMap<QString,double>;
+extern const MathConstantsC mathConstantsC[];
+double toDoubleEx( const QString &s, bool *ok = nullptr );
+const QMap<QString,double>& getMathConstants();
+
+
 // extremum quadtatic approximation funcs and data
 struct QuadExtrIn {
   double x_l, x_c, x_r;

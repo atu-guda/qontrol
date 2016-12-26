@@ -343,7 +343,61 @@ bool calcQuadExtr( const QuadExtrIn &in, QuadExtrOut &out )
   return true;
 }
 
+const MathConstantsC mathConstantsC [] = {
+  { "M_E"        , M_E        }, // Value of e
+  { "M_LOG2E"    , M_LOG2E    }, // Value of log_2 e
+  { "M_LOG10E"   , M_LOG10E   }, // Value of log_10 e
+  { "M_LN2"      , M_LN2      }, // Value of log_e 2
+  { "M_LN10"     , M_LN10     }, // Value of log_e 10
+  { "M_PI"       , M_PI       }, // Value of π
+  { "M_PI_2"     , M_PI_2     }, // Value of π/2
+  { "M_PI_4"     , M_PI_4     }, // Value of π/4
+  { "M_2PI"      , 2*M_PI     }, // Value of 2π
+  { "M_1_PI"     , M_1_PI     }, // Value of 1/π
+  { "M_2_PI"     , M_2_PI     }, // Value of 2/π
+  { "M_2_SQRTPI" , M_2_SQRTPI }, // Value of 2/√π
+  { "M_SQRT2"    , M_SQRT2    }, // Value of √2
+  { "M_SQRT1_2"  , M_SQRT1_2  }  // Value of 1/√2
 
+};
+
+
+MapStrDouble init_math_constants()
+{
+  MapStrDouble m;
+  for( auto e : mathConstantsC ) {
+    QString nm = L8B( e.name );
+    m[nm] = e.val;
+  }
+  return m;
+}
+
+static MapStrDouble mathConstantsQ = init_math_constants();
+
+const MapStrDouble& getMathConstants()
+{
+  return mathConstantsQ;
+}
+
+double toDoubleEx( const QString &s, bool *ok )
+{
+  bool ok1;
+  bool *p_ok = ( ok ) ? ok : &ok1;
+  double v = s.toDouble( p_ok );
+  if( *p_ok ) {
+    return v;
+  }
+
+  if( mathConstantsQ.contains( s ) ) {
+    *p_ok = true;
+    return mathConstantsQ[s];
+  }
+
+  // TODO: more, for example "=expr"
+
+  *p_ok = false;
+  return 0;
+}
 
 // ---------------------- DatasInfo -------------------------------
 

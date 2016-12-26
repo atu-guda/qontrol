@@ -280,7 +280,7 @@ bool OutDataView::fill()
 
   auto ed_start = new QLineEdit( this );
   ed_start->setText( QSL("0.0") );
-  ed_start->setValidator( new QDoubleValidator( this ) );
+  // ed_start->setValidator( new QDoubleValidator( this ) );
   lay->addWidget( ed_start, 1, 1 );
 
   auto lbl_step = new QLabel( QSL("step"), dia );
@@ -288,7 +288,7 @@ bool OutDataView::fill()
 
   auto ed_step = new QLineEdit( this );
   ed_step->setText( QSL("0.1") );
-  ed_step->setValidator( new QDoubleValidator( this ) );
+  // ed_step->setValidator( new QDoubleValidator( this ) );
   lay->addWidget( ed_step, 2, 1 );
 
   auto bbox
@@ -301,8 +301,8 @@ bool OutDataView::fill()
 
   if ( dia->exec() == QDialog::Accepted ) {
     a_nn  = ed_n->text().toLong();
-    start = ed_start->text().toDouble();
-    step  = ed_step->text().toDouble();
+    start = toDoubleEx( ed_start->text() );
+    step  = toDoubleEx( ed_step->text() );
     arr->fill( a_nn, start, step );
   };
 
