@@ -106,6 +106,7 @@ SOURCES += \
   ../elems/trelaxgen.cpp \
   ../elems/tsource.cpp \
   ../elems/tsearcher.cpp \
+  ../elems/tsinsum.cpp \
   ../elems/tsourcelin.cpp \
   ../elems/tsubscheme.cpp \
   ../elems/tsum8.cpp \
@@ -200,6 +201,7 @@ HEADERS += \
   ../elems/trandtrigg.h \
   ../elems/trelaxgen.h \
   ../elems/tsearcher.h \
+  ../elems/tsinsum.h \
   ../elems/tsource.h \
   ../elems/tsourcelin.h \
   ../elems/tsubscheme.h \
