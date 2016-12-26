@@ -180,6 +180,7 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   }
 
   ei.name = ob->objectName();
+  ei.vis_name = ob->getParm( QSL("vis_name"), ei.name );
   ei.type = ob->getType();
   ei.vis_x  = ei.vis_y =  ei.locked = ei.onlyFirst
     =  ei.onlyLast = ei.flip = ei.noIcon = 0;

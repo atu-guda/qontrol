@@ -44,14 +44,13 @@ class TSearcher : public TMiso  {
    virtual double f() noexcept override;
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   PRM_PARAMD( v_f,    0,     "&v_f",     "Velocity factor", "def=1\nsep=col" );
-   // PRM_SWITCH( limitG, efNRC, "Limit as given", "Limit X by given values", "sep=col" );
    // f_c
    PRM_PARAMD( k_cl,  0,     "k_{&cl}", "Linear f_c factor", "def=0.1\nsep=block" );
-   PRM_PARAMD( p_min, 0,     "p_{min}", "Low p limit (for f_c)", "def=-1000.0" );
+   PRM_PARAMD( v_f,   0,     "&v_f",     "Velocity factor", "def=1" );
    PRM_PARAMD( k_ch,  0,     "k_{ch}",  "Hyperbolic f_c factor", "def=1.0\nsep=col" );
-   PRM_PARAMD( p_max, 0,     "p_{max}", "High p limit (for f_c)", "def=1000.0" );
+   PRM_PARAMD( p_min, 0,     "p_{min}", "Low p limit (for f_c)", "def=-1000.0" );
    PRM_PARAMD( k_ch2, 0,     "k_{ch2}", "Hyperbolic^2 f_c factor", "def=0.0\nsep=col" );
+   PRM_PARAMD( p_max, 0,     "p_{max}", "High p limit (for f_c)", "def=1000.0" );
    PRM_SWITCH( autocalc_minmax, 0,      "Autocalc", "Automaticaly calculate p_min, p_max", "def=1\nsep=col" );
    PRM_PARAMD( c_mm,  0,     "c_{mm}",  "MinMax factor (for autocalc)", "def=1.49" );
    // f_n

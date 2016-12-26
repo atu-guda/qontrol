@@ -51,10 +51,9 @@ class TMiso : public LinkedObj  {
    bool isAtCoord( int ax, int ay ) const
      { return (vis_x == ax && vis_y == ay ); }
    virtual void fillComplModelForParams( QStandardItemModel *mdl ) const;
-   void preCalc();
+   virtual void preCalc();
  protected:
    /** main computation function
-    * \param t current time
     * \return output value of element
     * */
    virtual double f() noexcept;
@@ -78,18 +77,18 @@ class TMiso : public LinkedObj  {
        "X-coordinate of element in scheme", "min=0\nmax=64\nsep=block" );
    PRM_INT( vis_y, efRODial | efNRC, "Visual y",
        "Y-coordinate of element in scheme", "min=0\nmax=64" );
-   PRM_PARAMD( out0_init, efNRC, "Init value", "Initial value of output", "def=0.0" );
+   PRM_PARAMD( out0_init  , efNRC, "Init value", "Initial value of output", "def=0.0" );
    PRM_SWITCH( noCalcStart, efNRC, "No calc at start", "Disable out0 at startLoop ", ""  );
 
-   PRM_SWITCH( locked, efNRC, "Locked", "Bypass out0_init to output", "sep=col"  );
-   PRM_SWITCH( ignored, efNRC, "Ignored", "Ignore element while run", ""  );
-   PRM_SWITCH( onlyFirst, efNRC, "only First", "Process element only at first iteration", "" );
-   PRM_SWITCH( onlyLast, efNRC , "only Last", "Process element only at last iteration", "" );
-   PRM_SWITCH( flip, efNRC, "flip image", "flip left-right element icon", "sep=col" );
-   PRM_SWITCH( noIcon, efNRC, "no Icon", "don't show element icon", "" );
-   PRM_SWITCH( showBaloon, efNRC, "show Baloon", "Show baloon on scheme with out0", "sep=blockend" );
+   PRM_SWITCH( locked     , efNRC , "Locked"      , "Bypass out0_init to output"              , "sep=col"  );
+   PRM_SWITCH( ignored    , efNRC , "Ignored"     , "Ignore element while run"                , ""  );
+   PRM_SWITCH( onlyFirst  , efNRC , "only First"  , "Process element only at first iteration" , "" );
+   PRM_SWITCH( onlyLast   , efNRC , "only Last"   , "Process element only at last iteration"  , "" );
+   PRM_SWITCH( flip       , efNRC , "flip image"  , "flip left-right element icon"            , "sep=col" );
+   PRM_SWITCH( noIcon     , efNRC , "no Icon"     , "don't show element icon"                 , "" );
+   PRM_SWITCH( showBaloon , efNRC , "show Baloon" , "Show baloon on scheme with out0"         , "" );
 
-   PRM_DOUBLE( out0, efInner, "Output", "Main output", "" );
+   PRM_DOUBLE( out0    , efRO | efNoSave, "Output", "Main output", "sep=blockend" );
 
    DCL_DEFAULT_STATIC;
 

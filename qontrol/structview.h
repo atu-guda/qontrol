@@ -44,7 +44,7 @@ class StructView : public CmdView  {
     //* information about element to draw
     struct ElemInfo {
       // from element
-      QString name, type;
+      QString name, type, vis_name;
       int vis_x, vis_y, locked, ignored, onlyFirst, onlyLast, flip, noIcon, showBaloon;
       // number of signal and parametric inputs
       int n_inp, n_pinp;

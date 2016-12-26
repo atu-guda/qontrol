@@ -26,7 +26,7 @@ using namespace  std;
 // ------------------------ TMiso -------------------------------
 
 const char* TMiso::helpstr = "<H1>TMiso</H1>\n"
- "Base class for all active elements. Never should be used.";
+ "Base class for all active elements. Never should be used directly.";
 
 STD_CLASSINFO(TMiso,clpSpecial|clpAbstract);
 

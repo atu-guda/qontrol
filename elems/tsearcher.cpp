@@ -19,8 +19,9 @@
 #include "miscfun.h"
 
 const char* TSearcher::helpstr = "<H1>TSearcher</H1>\n"
- "Realizes some tactics in extremum search "
- "in non-linear dynamic system identification task.";
+ "Realizes some F-based tactics in extremum search "
+ "in non-linear dynamic system identification task.<br/>"
+ "Main output: p_cn - new central point position.";
 
 STD_CLASSINFO(TSearcher,clpElem|clpCalcAtStart);
 
