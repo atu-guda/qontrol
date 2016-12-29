@@ -129,8 +129,8 @@ LineRole GraphElem::fillForPlot( long &g_nn, long &g_ny, int igc )
   if( label == QSL(".") ||  label == QSL(" ") ) {
     pl_label = label.toStdString();
   } else {
-    QString label_c = QSL("\\big\\i{"); // TODO: better!
-    label_c += label.isEmpty() ? QString( "y" ) : label;
+    QString label_c = QSL("\\i{"); // TODO: better!
+    label_c += label.isEmpty() ? QSL("y") : label;
     label_c += QSL("}");
     pl_label = label_c.toStdString();
   }
@@ -1022,9 +1022,10 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
 
 
   if( scda->drawBox ) { gr.Box( axis_style.c_str() ); }
+  gr.SetRotatedText( false );
   if( scda->drawAxis ) {
-    gr.Grid( "xyz", grid_style.c_str() );
-    gr.Axis( "xyzU3AKDTVISO",  axis_style.c_str() );
+    gr.Grid( was_2D ? "xyz" : "xy", grid_style.c_str() );
+    gr.Axis( was_2D ? "xyzU3AKDTVISO" : "xyU3AKDTVISO",  axis_style.c_str() );
     char main_label_axis = 'y';
     gr.Label( 'x', tli[LineRole::axisX]->pl_label.c_str() );
     if( was_2D ) {
@@ -1032,7 +1033,9 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
       main_label_axis = 'z';
     }
     if( ! scda->mainLabel.isEmpty() ) {
+      gr.SetFontSize( scda->fontSise * scda->mainScale );
       gr.Label( main_label_axis, scda->mainLabel.c_str() );
+      gr.SetFontSize( scda->fontSise );
     }
   }
 
@@ -1049,7 +1052,9 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
   }
 
   if( scda->legend_pos < 4 ) {
+    gr.SetFontSize( scda->fontSise * scda->legend_scale );
     gr.Legend( scda->legend_pos, "#" );
+    gr.SetFontSize( scda->fontSise ); // back??
   }
 
 }
