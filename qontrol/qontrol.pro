@@ -101,6 +101,7 @@ SOURCES += \
   ../elems/tpid.cpp \
   ../elems/tquadextr.cpp \
   ../elems/tquality.cpp \
+  ../elems/tqsearcher.cpp \
   ../elems/trand.cpp \
   ../elems/trandtrigg.cpp \
   ../elems/trelaxgen.cpp \
@@ -197,6 +198,7 @@ HEADERS += \
   ../elems/tpid.h \
   ../elems/tquadextr.h \
   ../elems/tquality.h \
+  ../elems/tqsearcher.h \
   ../elems/trand.h \
   ../elems/trandtrigg.h \
   ../elems/trelaxgen.h \
