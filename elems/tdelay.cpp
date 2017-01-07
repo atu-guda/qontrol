@@ -19,10 +19,11 @@
 #include "miscfun.h"
 #include "circbuf.h"
 
-const char* TDelay::helpstr = "<H1>TDelay</H1>\n"
- "Delay signal for given time: <br>\n"
- "Have 2 parameters: <b>mdelay</b> - maximum delay, <br>\n"
- "<b>cdelay</b> - current delay, can changed at any time, but <= <b>mdelay</b>.";
+const char* TDelay::helpstr = "<h1>TDelay</h1>\n"
+ "<p>Delay signal for given time: <br>\n"
+ "Have 2 parameters: <b>mdelay</b> - maximum delay, <br/>\n"
+ "<b>cdelay</b> - current delay, can changed at any time, but <= <b>mdelay</b>.<br/>\n"
+ "Also calculated <b>aver</b> - moving average, based on <b>mdelay</b>.</p>";
 
 STD_CLASSINFO(TDelay,clpElem );
 
@@ -55,32 +56,29 @@ double TDelay::f() noexcept
   return v1 * a1 + v2 * a2;
 }
 
-int TDelay::do_preRun()
-{
-  imd = size_t( ceil( mdelay / ctdt ) );
-  buf.resize( imd, out0_init );
-  return 1;
-}
 
-int TDelay::do_postRun( int /*good*/ )
-{
-  buf.clear();
-  buf.shrink_to_fit();
-  return 1;
-}
 
 int TDelay::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
-  if( cdelay > mdelay ) {
-    cdelay = mdelay;
+  imd = size_t( ceil( mdelay / ctdt ) );
+  buf.resize( imd, out0_init ); // reset is here
+
+  if( cdelay.cval() > mdelay.cval() ) {
+    cdelay = mdelay.cval();
   }
-  double v;
-  buf.reset();
-  v = cdelay / ctdt;
+
+  double v = cdelay / ctdt;
   icd = size_t( v );
   v2 = v - icd; v1 = 1.0 - v2;
   return 1;
 }
+
+// int TDelay::miso_endLoop() // no such fun
+// {
+//   buf.clear();
+//   buf.shrink_to_fit();
+//   return 1;
+// }
 
 
 DEFAULT_FUNCS_REG(TDelay)

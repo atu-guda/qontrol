@@ -32,17 +32,13 @@ class TDelay : public TMiso  {
    DCL_CREATE;
    DCL_STD_INF;
  protected:
-   /** main computation function */
    virtual double f() noexcept override;
-   /** calc values & alloc buf */
-   virtual int do_preRun() override;
-   /** deallocates buf */
-   virtual int do_postRun( int good ) override;
-   /** reimplemented from TMiso to reset array */
+   // virtual int do_preRun() override;
+   // virtual int do_postRun( int good ) override;
    virtual int miso_startLoop( long acnx, long acny ) override;
 
    PRM_PARAMD( cdelay,     0, "&Delay",     "Current delay", "min=0\nmax=1e20\ndef=1.0" );
-   PRM_DOUBLE( mdelay, efNRC, "Max. delay", "Maximum delay", "min=0\nmax=1e20\ndef=1.5\nsep=col" );
+   PRM_PARAMD( mdelay, efNRC, "Max. delay", "Maximum delay", "min=0\nmax=1e20\ndef=1.1\nsep=col" );
 
    PRM_DOUBLE( aver, efInner, "avarage",    "Average value", "" );
 
