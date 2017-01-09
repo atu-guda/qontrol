@@ -29,7 +29,8 @@ const char* TErrMeasure::helpstr = "<H1>TErrMeasure</H1>\n"
  "m2 - sqrt(ave(err^2))<br/>\n"
  "m22 - ave(err^2)<br/>\n"
  "mmax - max(|err|)<br/>\n"
- "mp - the same, but for the 'p' power</p>\n";
+ "mp - the same, but for the 'p' power<br>\n"
+ "Plus some relative values</p>\n";
 
 STD_CLASSINFO(TErrMeasure,clpElem );
 
@@ -39,7 +40,7 @@ CTOR(TErrMeasure,TMiso)
 
 int TErrMeasure::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
-  er1 = 0 ; er2 = 0; erp = 0;
+  er1 = 0 ; er2 = 0; er2_0 = 0; erp = 0;
   reset_vals();
   return 1;
 }
@@ -47,17 +48,19 @@ int TErrMeasure::miso_startLoop( long /*acnx*/, long /*acny*/ )
 void TErrMeasure::reset_vals()
 {
   t_rst = 0;
-  s2 = sp = 0;
+  s2 = s2_0 = sp = 0;
   mi1 = mi2 = mip = mmax = 0;
   m1 = er1; m1sq = sqrt( m1 );
-  m22 = er2; m2 = sqrt( er2 );  mp = pow( erp, (1.0/p) );
+  m22 = er2; m2 = sqrt( er2 );  m2_0 = sqrt( er2_0 ); mp = pow( erp, (1.0/p) );
 }
 
 double TErrMeasure::f() noexcept
 {
   er = in_x - in_y;
+  double er_0 = in_x - in_y0;
   er1 = fabs( er );
   er2 = pow2( er );
+  er2_0 = pow2( er_0 );
   erp = pow( er1, p );
   if( rst ) {
     reset_vals();
@@ -68,13 +71,17 @@ double TErrMeasure::f() noexcept
   }
 
   t_rst += ctdt;
-  mi1 += er1 * ctdt;  m1  = mi1 / t_rst;  m1sq = sqrt( m1 );
-  s2  += er2 * ctdt;  m22 = s2 / t_rst;   m2 = sqrt( m22 );    mi2 = t_rst * m2; // horrorfull but works.
-  sp  += erp * ctdt;  mp  = pow(  sp / t_rst, (1.0/p) );       mip = mp * t_rst;
+  mi1   += er1   * ctdt;  m1   = mi1 / t_rst;                  m1sq = sqrt( m1 );
+  s2    += er2   * ctdt;  m22  = s2 / t_rst;                   m2 = sqrt( m22 );    mi2 = t_rst * m2; // horrorfull but works.
+  s2_0  += er2_0 * ctdt;  m2_0 = sqrt( s2_0/ t_rst );          mi2_0 = t_rst * m2_0;
+  sp    += erp   * ctdt;  mp   = pow(  sp / t_rst, (1.0/p) );  mip = mp * t_rst;
 
   if( mmax < er1 ) {
     mmax = er1;
   }
+
+  r1 = m1 / m2_0; r1sq = m1 / m2_0; r2 = m2 / m2_0; r22 = m22 / pow2( m2_0 );
+  rp = mp / m2_0; rmax = mmax / m2_0;
 
   return m2;
 }

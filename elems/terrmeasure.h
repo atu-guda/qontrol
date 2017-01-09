@@ -41,23 +41,33 @@ class TErrMeasure : public TMiso  {
    PRM_DOUBLE( er,     efInner, "er",  "Current error value", "" );
    PRM_DOUBLE( er1,    efInner, "er1", "Current error absolute value", "" );
    PRM_DOUBLE( er2,    efInner, "er2", "Current error squared value", "" );
+   PRM_DOUBLE( er2_0,  efInner, "er2_0", "Compare current error squared value", "" );
    PRM_DOUBLE( erp,    efInner, "erp", "Current error absolute value in the p power", "" );
    PRM_DOUBLE( mi1,    efInner, "mi1", "Integral of er1", "" );
    PRM_DOUBLE( mi2,    efInner, "mi2", "sqrt (integral of er2)", "" );
+   PRM_DOUBLE( mi2_0,  efInner, "mi2_0", "sqrt (integral of er2_0)", "" );
    PRM_DOUBLE( mip,    efInner, "mip", "(integral of erp)^{1/p} ", "" );
    PRM_DOUBLE( m1,     efInner, "m1",  "mi1/t_{rst}", "" );
    PRM_DOUBLE( m1sq,   efInner, "m1sq","sqrt(mi1)", "" );
    PRM_DOUBLE( m2,     efInner, "m2",  "mi2/t_{rst}", "" );
+   PRM_DOUBLE( m2_0,   efInner, "m2_0", "mi2_0/t_{rst}", "" );
    PRM_DOUBLE( m22,    efInner, "m22", "m2^2", "" );
    PRM_DOUBLE( mp,     efInner, "mp",  "mip/t_{rst}", "" );
-   PRM_DOUBLE( mmax,   efInner, "mmax", "max(er1)", "" );
+   PRM_DOUBLE( mmax,   efInner, "mmax","max(er1)", "" );
+   PRM_DOUBLE( r1,     efInner, "r1",  "relative m1", "" );
+   PRM_DOUBLE( r1sq,   efInner, "r1sq","relative m1sq", "" );
+   PRM_DOUBLE( r2,     efInner, "r2",  "relative m2", "" );
+   PRM_DOUBLE( r22,    efInner, "r22", "relative m22", "" );
+   PRM_DOUBLE( rp,     efInner, "rp",  "relative mp", "" );
+   PRM_DOUBLE( rmax,   efInner, "rmax","relative mmax", "" );
 
    PRM_INPUT(  in_x,    0, "in_{&x}", "First input",  "sep=block" );
    PRM_INPUT(  in_y,    0, "in_{&y}", "Second input", "" );
+   PRM_INPUT(  in_y0,   0, "in_{y0}", "Input to compare with", "" );
    PRM_LOGICIN( rst,    0, "&rst",    "Reset signal", "sep=col" );
    PRM_LOGICIN( enable, 0, "&enable", "Enable signal", "def=1" );
 
-   double s2, sp; //* summs for integrals;
+   double s2, s2_0, sp; //* summs for integrals;
 
 
    Q_CLASSINFO( "nameHintBase",  "err_" );

@@ -105,6 +105,7 @@ class TSource : public TMiso  {
    // inners
    PRM_DOUBLE( pha,   efInner, "pha",   "current phase: 2\\pi t=1", ""  );
    PRM_DOUBLE( pha_0, efInner, "pha_0", "current phase in [0;1) range", ""  );
+   PRM_DOUBLE( u2,    efInner, "u2", "u^2", ""  );
 
    // NO inputs
 

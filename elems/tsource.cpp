@@ -119,6 +119,7 @@ double TSource::f() noexcept
     default: v = 0;
   };
   v += cc;
+  u2 = pow2( v );
   return v;
 }
 
