@@ -132,6 +132,9 @@ double TQSearcher::f() noexcept
 
   f_t = f_c + f_n + f_e;
   double p_cn = out0 + (double)f_t * v_f * ctdt;
+  if( limitP ) {
+    p_cn = vBound( p_min.cval(), p_cn, p_max.cval() );
+  }
 
   return p_cn;
 }

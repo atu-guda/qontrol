@@ -73,6 +73,7 @@ class TQSearcher : public TMiso  {
    PRM_LIST( F_type    , 0 , "F type"      , "Quality type"           , "enum=QualType\nsep=block" );
    PRM_PARAMD( q_gamma , 0 , "q_{\\gamma}" , "f_e factor"             , "def=2.0\nsep=col" );
    PRM_SWITCH( limitF  , 0 , "Limit F"     , "Limit F to [0;1]"       , "def=1\nsep=col" );
+   PRM_SWITCH( limitP  , 0 , "Limit p"     , "Limit p to [p_min;p_max]", "def=1\nsep=col" );
 
    // Outputs
    PRM_DOUBLE( p_e,   efInner, "p_e", "x of calculated extremum point", "" );
