@@ -1039,13 +1039,16 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
     }
   }
 
+  mglPoint mark_point( scda->markX, scda->markY, scda->markZ );
   if( scda->drawMark ) {
-    mglPoint mark_point( scda->markX, scda->markY, scda->markZ );
     gr.Mark( mark_point, "3r+" );
   }
   if( scda->drawBase ) {
     mglPoint base_point( scda->baseX, scda->baseY, scda->baseZ );
     gr.Error( base_point, pe_dlt, "B" );
+    if( scda->drawMark ) {
+      gr.Line( base_point, mark_point, "b=", 1 );
+    }
   }
   if( scda->drawColorbar ) {
     gr.Colorbar();
