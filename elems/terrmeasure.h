@@ -49,6 +49,7 @@ class TErrMeasure : public TMiso  {
    PRM_DOUBLE( mip,    efInner, "mip", "(integral of erp)^{1/p} ", "" );
    PRM_DOUBLE( m1,     efInner, "m1",  "mi1/t_{rst}", "" );
    PRM_DOUBLE( m1sq,   efInner, "m1sq","sqrt(mi1)", "" );
+   PRM_DOUBLE( m12,    efInner, "m12", "m1^2", "" );
    PRM_DOUBLE( m2,     efInner, "m2",  "mi2/t_{rst}", "" );
    PRM_DOUBLE( m2_0,   efInner, "m2_0", "mi2_0/t_{rst}", "" );
    PRM_DOUBLE( m22,    efInner, "m22", "m2^2", "" );
