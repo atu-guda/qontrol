@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "miscfun.h"
 #include "tquality.h"
 
 using namespace std;
@@ -43,19 +44,9 @@ double TQuality::f() noexcept
   double v;
   q = q_o - q_m;
   q_r = q / q_gamma;
-  aq_r = fabs( q_r );
-  q_r2 = q_r * q_r;
 
-  switch( (int)type ) {
-    case qa_Gauss  : v = exp( - q_r2 ); break;
-    case qa_Para   : v = 1.0 - q_r2 * oneMinusEm1; break;
-    case qa_Lin    : v = 1.0 - aq_r * oneMinusEm1; break;
-    case qa_Hyper  : v = 1.0 / ( 1.0 + aq_r * eMinus1 ); break;
-    case qa_Log    : v = 1.0 - log( 1.0 + aq_r ) * logQaScale; break;
-    default        : v = 0.0; break;
-  };
+  v = qF_fun( q, q_gamma, type, false ); //  special limit
 
-  // v = qRange( (double)F_min, v, (double)(F_max) ); // TODO: inline func
   if( v > (double)F_max ) { v = (double)F_max; };
   if( v < (double)F_min ) { v = (double)F_min; };
   return v;

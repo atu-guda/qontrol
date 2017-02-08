@@ -38,7 +38,7 @@ class TQSearcher : public TMiso  {
    Q_CLASSINFO( "enum_FeType_1",  "Sign"         );    // fe_sign
    Q_CLASSINFO( "enum_FeType_2",  "Limit"        );    // fe_lim
 
-   enum QualType { // like TQuality
+   enum QualType { // keep in sinc with miscfun.h::QualFunType
      qa_Gauss = 0, qa_Para, qa_Lin, qa_Hyper, qa_Log
    };
    Q_ENUMS(QualType);
@@ -48,9 +48,6 @@ class TQSearcher : public TMiso  {
    Q_CLASSINFO( "enum_QualType_3",  "Hyperbolic"  );    // qa_Hyper
    Q_CLASSINFO( "enum_QualType_4",  "Logariphmic" );    // qa_Log
 
-   static const constexpr double oneMinusEm1 { 1.0 - 1.0/M_E };
-   static const constexpr double eMinus1 { M_E - 1.0 };
-   static const constexpr double logQaScale { oneMinusEm1 / M_LN2 };
 
  protected:
    virtual double f() noexcept override;

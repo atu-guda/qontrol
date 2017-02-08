@@ -54,9 +54,13 @@ NameType splitName( const QString &name, QString &first, QString &rest, int &idx
 int isGoodName( const QString &s );
 QString flags2str( int fl );
 
+const constexpr double oneMinusEm1 { 1.0 - 1.0/M_E };
+const constexpr double eMinus1 { M_E - 1.0 };
+const constexpr double logQaScale { oneMinusEm1 / M_LN2 };
+
 /** signum function y = -1:0:1 */
 inline double sign( double x ) {  return ( x>0 ) ? 1 : ( ( x<0 ) ? -1 : 0 ); }
-/** Heaviside */
+/**  Heaviside */
 inline double thetta( double x ) { return ( x>0 ) ? 1 : 0; }
 inline double posval( double x ) { return ( x>=0 ) ? x : 0; }
 // first power functions
@@ -115,6 +119,11 @@ double barrierHyp2Down(   double x, double lv ) noexcept;
 double barrierHyp2UpUp(   double x, double lv ) noexcept;
 double barrierHyp2UpDown( double x, double lv ) noexcept;
 // TODO: log, tan
+
+enum QualFunType { // keep in sync with TQuality, TQSearcher
+   qaf_Gauss = 0, qaf_Para, qaf_Lin, qaf_Hyper, qaf_Log
+};
+double qF_fun( double q, double q_gamma, int tp, bool limitF = true );
 
 struct MathConstantsC {
   const char * const name;

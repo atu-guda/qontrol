@@ -32,7 +32,7 @@ class TQuality : public TMiso  {
    DCL_CREATE;
    DCL_STD_INF;
 
-   enum QualType {
+   enum QualType { // keep in sinc with miscfun.h::QualFunType
      qa_Gauss = 0, qa_Para, qa_Lin, qa_Hyper, qa_Log
    };
    Q_ENUMS(QualType);
@@ -44,10 +44,6 @@ class TQuality : public TMiso  {
  protected:
    virtual double f() noexcept override;
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
-
-   static const constexpr double oneMinusEm1 { 1.0 - 1.0/M_E };
-   static const constexpr double eMinus1 { M_E - 1.0 };
-   static const constexpr double logQaScale { oneMinusEm1 / M_LN2 };
 
    PRM_LIST( type,       0, "&Type", "Function type", "enum=QualType" );
    PRM_PARAMD( q_gamma,  0, "&q_\\gamma", "Quality scale", "sep=col\ndef=1\nmin=1e-100" );

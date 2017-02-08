@@ -48,20 +48,7 @@ double TQSearcher::f() noexcept
   brIdx = 0;
   double sure_coeff = 0.0;
 
-  double q_rel_a = fabs( qr_c / q_gamma );
-  double q_rel2 = q_rel_a * q_rel_a;
-
-  switch( (int)F_type ) {
-    case qa_Gauss  : F_c = exp( - q_rel2 ); break;
-    case qa_Para   : F_c = 1.0 - q_rel2  * oneMinusEm1; break;
-    case qa_Lin    : F_c = 1.0 - q_rel_a * oneMinusEm1; break;
-    case qa_Hyper  : F_c = 1.0 / ( 1.0 + q_rel_a * eMinus1 ); break;
-    case qa_Log    : F_c = 1.0 - log( 1.0 + q_rel_a ) * logQaScale; break;
-    default        : F_c = 0.0; break;
-  };
-  if( limitF ) {
-    F_c = vBound( 0.0, F_c, 1.0 );
-  }
+  F_c = qF_fun( qr_c, q_gamma, F_type, limitF );
 
   double pr_e0 = 0.0, pr_b = 1e7; // pr_b - active bound relative
   do { // calculate p_e, S_e with local exit via break

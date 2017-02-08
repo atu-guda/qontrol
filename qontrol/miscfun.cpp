@@ -278,6 +278,26 @@ double barrierHyp2UpDown( double x, double lv ) noexcept
   return barrierHyp2Up( x, lv ) - barrierHyp2Down( x, -lv );
 }
 
+double qF_fun( double q, double q_gamma, int tp, bool limitF /* = true */ )
+{
+  double q_rel_a = fabs( q / q_gamma );
+  double q_rel2 = q_rel_a * q_rel_a;
+  double F_c;
+
+  switch( tp ) {
+    case qaf_Gauss  : F_c = exp( - q_rel2 ); break;
+    case qaf_Para   : F_c = 1.0 - q_rel2  * oneMinusEm1; break;
+    case qaf_Lin    : F_c = 1.0 - q_rel_a * oneMinusEm1; break;
+    case qaf_Hyper  : F_c = 1.0 / ( 1.0 + q_rel_a * eMinus1 ); break;
+    case qaf_Log    : F_c = 1.0 - log( 1.0 + q_rel_a ) * logQaScale; break;
+    default         : F_c = 0.0; break;
+  };
+  if( limitF ) {
+    F_c = vBound( 0.0, F_c, 1.0 );
+  }
+  return F_c;
+}
+
 
 // extremum quadtatic approximation funcs and data
 
