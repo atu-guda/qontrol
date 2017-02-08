@@ -3,7 +3,7 @@
   tqsearcher.h - q-based searcher element declaration
                              -------------------
     begin                : 2016.12.30
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2017 by atu
  ***************************************************************************/
 
 /***************************************************************************
@@ -74,13 +74,16 @@ class TQSearcher : public TMiso  {
    PRM_PARAMD( q_gamma , 0 , "q_{\\gamma}" , "f_e factor"             , "def=2.0\nsep=col" );
    PRM_SWITCH( limitF  , 0 , "Limit F"     , "Limit F to [0;1]"       , "def=1\nsep=col" );
    PRM_SWITCH( limitP  , 0 , "Limit p"     , "Limit p to [p_min;p_max]", "def=1\nsep=col" );
+   PRM_SWITCH( limitPe , 0 , "Limit p_e"   , "Limit p_e to [p_min;p_max]", "def=1\nsep=col" );
 
    // Outputs
-   PRM_DOUBLE( p_e,   efInner, "p_e", "x of calculated extremum point", "" );
+   PRM_DOUBLE( p_e,   efInner, "p_e", "x of calculated p point", "" );
+   PRM_DOUBLE( p_e0,  efInner, "p_{e0}", "unconstrained p_e", "" );
    PRM_DOUBLE( pr_e,  efInner, "pr_e", "Relative p of calculated extremum point", "" );
    PRM_DOUBLE( F_c,   efInner, "F_c", "F of central point", "" );
    PRM_DOUBLE( S_e,   efInner, "S_e", "Sure level for extremum point", "" );
    PRM_DOUBLE( FS_e,  efInner, "FS_e", "F_C * S_e", "" );
+   PRM_DOUBLE( brIdx, efInner, "brIdx", "branch index", "" );
    // forces
    PRM_DOUBLE( f_c,   efInner, "f_c",    "force to initial parameter value", "" );
    PRM_DOUBLE( f_n,   efInner, "f_n",    "force to neigbours", "" );
