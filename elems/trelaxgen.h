@@ -3,7 +3,7 @@
                           trelaxgen.h  -  description
                              -------------------
     begin                : 2014.10.28
-    copyright            : (C) 2014-2016 by atu
+    copyright            : (C) 2014-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -44,12 +44,15 @@ class TRelaxGen : public TMiso  {
    PRM_PARAMD(    r_2, 0,    "r_2",      "Discharge resistance", "def=0.2\nmin=1e-6" );
    PRM_PARAMD(    v_1, 0,   "&v_1",              "Charge limit", "def=2\nsep=col" );
    PRM_PARAMD(    v_2, 0,    "v_2",           "Discharge limit", "def=0.1" );
+   PRM_PARAMD(    I_0, 0,    "I_0",  "Junction discharge scale", "def=1e-14" );
+   PRM_PARAMD(    V_m, 0,    "V_m",  "Junction discharge coeff", "def=5.32e-2\nmin=1e-6" );
    /** misc flags */
    PRM_SWITCH(        useCharge, efNRC,             "Use i_{ch}", "Use i_ch as charge current", "sep=block" );
    PRM_SWITCH(     useDischarge, efNRC,            "Use i_{dis}", "Use i_dis as discharge current", "" );
    PRM_SWITCH(          useTrig, efOld,               "Use trig", "Use trig as signal to discharge", "" );
    PRM_SWITCH(    useContCharge, efNRC,      "Contiguous charge", "Use contiguous charging", "sep=col" );
    PRM_SWITCH( useContDischarge, efNRC,   "Contiguous discharge", "Use contiguous discharging", "" );
+   PRM_SWITCH( useJuncDischarge, efNRC,     "Junction discharge", "Use diode-like discharging", "" );
    PRM_SWITCH(   noDischargeSrc, efNRC, "No discharge to source", "No discarge, if v_in<v", "sep=col" );
    PRM_SWITCH(          limitCh, efNRC,           "Limit charge", "Limit charge to v_1", "" );
    PRM_SWITCH(         limitDis, efNRC,        "Limit discharge", "Limit discharge to v_2", "" );

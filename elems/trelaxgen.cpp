@@ -47,9 +47,9 @@ int TRelaxGen::miso_startLoop( long /*acnx*/, long /*acny*/ )
 double TRelaxGen::f() noexcept
 {
   if( prm_mod ) {
-    if( c <= 0 )   { c   = 1e-16; };
-    if( r_1 <= 0 ) { r_1 = 1e-6;  };
-    if( r_2 <= 0 ) { r_2 = 1e-6;  };
+    if( c <= 0 )    { c    = 1e-16; };
+    if( r_1 <= 0 )  { r_1  = 1e-6;  };
+    if( r_2 <= 0 )  { r_2  = 1e-6;  };
     if( r_lc <= 0 ) { r_lc = 1e-6;  };
     if( r_ld <= 0 ) { r_ld = 1e-6;  };
     prm_mod = 0;
@@ -66,6 +66,10 @@ double TRelaxGen::f() noexcept
   if( isDis || useContDischarge ) {
     i_dis_local += useDischarge ? ( - i_dis ) : ( -dv_dis / r_2 );
   }
+  if( useJuncDischarge ) {
+    i_dis_local += - I_0 * expm1( dv_dis / V_m );
+  }
+
   if( !isDis || useContCharge ) {
     i_ch_local += useCharge     ? (    i_ch ) : (  dv_ch  / r_1 );
   }

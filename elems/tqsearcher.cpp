@@ -52,11 +52,11 @@ double TQSearcher::f() noexcept
 
   double pr_e0 = 0.0, pr_b = 1e7; // pr_b - active bound relative
   do { // calculate p_e, S_e with local exit via break
-    if( F_c > 0.99999 ) { // precise
+    if( F_c > 0.999999 ) { // precise
       S_e = 1.0; sure_coeff = 1.0; brIdx = 1;
       break;
     }
-    qr_l /= qr_c; qr_r /= qr_c; // final relative q calculation, qr_c !=0 as F_c < 1
+    qr_l /= qr_c; qr_r /= qr_c; qr_c = 1; // final relative q calculation, qr_c !=0 as F_c < 1
     if( pr_l > -1e-12 || pr_r < 1e-12 ) { // BEWARE: dimension!
       brIdx = 2;
       break;

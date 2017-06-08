@@ -90,7 +90,7 @@ class TQSearcher : public TMiso  {
    PRM_DOUBLE( pr_l,  efInner, "pr_l", "Relative x left point = p_l-p_c", "" );
    PRM_DOUBLE( pr_r,  efInner, "pr_r", "Relative x right point = p_r-p_c", "" );
    PRM_DOUBLE( qr_l,  efInner, "qr_l", "Relative y left point = (q_l-q_p)/q_c", "" );
-   PRM_DOUBLE( qr_c,  efInner, "qr_l", "Relative y left point = (q_l-q_p)/q_c", "" );
+   PRM_DOUBLE( qr_c,  efInner, "qr_c", "Relative y center point = (q_c-q_p)/q_c", "" );
    PRM_DOUBLE( qr_r,  efInner, "qr_r", "Relative y right point = (q_r-q_o)/q_c", "" );
 
    PRM_INPUT( p_l,   0, "p_{&l}", "Left point parameter",  "sep=block" );
