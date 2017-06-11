@@ -234,14 +234,16 @@ class InputLogic : public InputSimple {
      itRise,
      itFall,
      itBoth,
-     itShmitt
+     itShmitt,
+     itShmittRise
    };
    Q_ENUMS(InputLogicType);
-   Q_CLASSINFO( "enum_InputLogicType_0", "Level" );     // itLevel
-   Q_CLASSINFO( "enum_InputLogicType_1", "Rise" );      // itRise
-   Q_CLASSINFO( "enum_InputLogicType_2", "Fall" );      // itFall
-   Q_CLASSINFO( "enum_InputLogicType_3", "Both" );      // itBoth
-   Q_CLASSINFO( "enum_InputLogicType_4", "Shmitt" );    // itShmitt
+   Q_CLASSINFO( "enum_InputLogicType_0", "Level" );       // itLevel
+   Q_CLASSINFO( "enum_InputLogicType_1", "Rise" );        // itRise
+   Q_CLASSINFO( "enum_InputLogicType_2", "Fall" );        // itFall
+   Q_CLASSINFO( "enum_InputLogicType_3", "Both" );        // itBoth
+   Q_CLASSINFO( "enum_InputLogicType_4", "Shmitt" );      // itShmitt
+   Q_CLASSINFO( "enum_InputLogicType_5", "ShmittRise" );  // itShmittRise
   DCL_CTOR(InputLogic);
   // virtual ~InputLogic() override;
   DCL_CREATE;
@@ -249,17 +251,22 @@ class InputLogic : public InputSimple {
   bool lval() const { return ll; };
   operator bool() const { return ll; }
  protected:
-  virtual int do_startLoop( long /*acnx*/, long /*acny*/ ) override { old_out0 = out0; post_readInput(); return 1; }
+  virtual int do_startLoop( long /*acnx*/, long /*acny*/ ) override
+  {
+    old_out0 = out0; sll = false; post_readInput(); return 1;
+  }
   virtual void post_readInput() override;
 
-  PRM_LIST( type, efNRC, "&Type", "Function type", "enum=InputLogicType\nsep=block" );
-  PRM_DOUBLE( l0, efNRC, "level 0", "level of '0' if need", "def=0.01\nsep=col" );
-  PRM_DOUBLE( l1, efNRC, "level 1", "level of '1' if need", "def=0.1" );
-  PRM_SWITCH( inv_in, efNRC, "Not", "Inverse input", ""  );
+  PRM_LIST(     type,   efNRC,   "&Type",        "Function type", "enum=InputLogicType\nsep=block" );
+  PRM_DOUBLE(     l0,       0, "level 0", "level of '0' if need", "def=0.01\nsep=col" );
+  PRM_DOUBLE(     l1,       0, "level 1", "level of '1' if need", "def=0.1" );
+  PRM_SWITCH( inv_in,   efNRC,     "Not",        "Inverse input", ""  );
 
-  PRM_INT( ll, efInner, "ll", "current logic level", "" );
+  PRM_INT(        ll, efInner,      "ll",           "current logic level", "" );
+  PRM_DOUBLE(    llv, efInner,     "llv", "current logic level in double", "" );
 
   double old_out0 { 0.0 };
+  bool sll = false; // saved logic level, = ll except itShmittRise, where like itShmitt
 
   Q_CLASSINFO( "nameHintBase",  "in_" );
   DCL_DEFAULT_STATIC;

@@ -2,7 +2,7 @@
                           tcounter.cpp  -  description
                              -------------------
     begin                : Sun Nov 19 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -35,19 +35,32 @@ CTOR(TCounter,TMiso)
 int TCounter::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   cn = (int)(out0_init);
+  avT = 1.0; lastT = 1.0; avF = 1.0; lastF = 1.0; // fake values
+  tick_t = 0; rst_t = 0;
   return 1;
 }
 
 double TCounter::f() noexcept
 {
-  if( in_p ) {
+  double old_tick_t = tick_t;
+  if( in_p.lval() ) {
     ++cn;
+    tick_t = ct;
+    lastT = tick_t - old_tick_t;
+    lastF = 1 / lastT;
+    lastOm = 2 * M_PI * lastF;
+    avT = ( tick_t - rst_t ) / cn;
+    avF = 1 / avT;
+    avOm = 2 * M_PI * avF;
+
   }
-  if( in_m ) {
+  if( in_m.lval() ) {
     --cn;
   }
   if( in_rst ) {
     cn = (int)(out0_init);
+    tick_t = ct;
+    rst_t = ct;
   }
   if( modn ) {
     cn %= n;

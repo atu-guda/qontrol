@@ -530,24 +530,35 @@ CTOR(InputLogic,InputSimple)
 
 void InputLogic::post_readInput()
 {
-  bool keep = false;
-  bool cll = ll.cval();
+  bool cll = sll;
   switch( (InputLogicType)(int)(type ) ) {
-    case itLevel: cll = (out0 >= l1); break;
-    case itRise:  cll = ( (out0 - old_out0) >=  l1 ); break;
-    case itFall:  cll = ( (out0 - old_out0) <= -l1 ); break;
-    case itBoth:  cll = ( fabs(out0 - old_out0) >= l1 ); break;
+    case itLevel: sll = cll = (out0 >= l1);                    break;
+    case itRise:  sll = cll = ( (out0 - old_out0) >=  l1 );    break;
+    case itFall:  sll = cll = ( (out0 - old_out0) <= -l1 );    break;
+    case itBoth:  sll = cll = ( fabs(out0 - old_out0) >= l1 ); break;
     case itShmitt:
          if( out0 >= l1 ) { cll = true;  break; }
          if( out0 <  l0 ) { cll = false; break; }
-         keep = true;
+         sll = cll;
          break;
-    default: cll = false; // unlikely
+    case itShmittRise:
+         cll = 0;
+         if( out0 >= l1 ) {
+           if( !sll ) {
+             cll = true;
+           }
+           sll = true;  break;
+         }
+         if( out0 <  l0 ) {
+           sll = cll = false; break;
+         }
+         break;
+    default: sll = cll = false; // unlikely
   }
-  if( inv_in && !keep ) {
+  if( inv_in ) {
     cll = !cll;
   }
-  ll = cll;
+  ll = cll; llv = cll ? 1.0 : 0.0;
   old_out0 = out0;
 }
 
