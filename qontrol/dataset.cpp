@@ -357,7 +357,7 @@ QString HolderData::lsf() const
   return sl.join( '\n' );
 }
 
-HolderData* HolderData::getObj( size_type i ) const
+HolderData* HolderData::getObj( unsigned long i ) const
 {
   if( isGoodIndex( i, *this ) ) {
     return qobject_cast<HolderData*>(children().at(i));

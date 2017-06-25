@@ -188,3 +188,4 @@ void fromScriptValuetoTripleF( const QScriptValue &obj, TripleF &s )
   s.c = obj.property("c").toNumber();
 }
 
+

@@ -158,7 +158,6 @@ bool calcQuadExtr( const QuadExtrIn &in, QuadExtrOut &out );
 // index checks
 template< typename T > bool isGoodIndex( long idx, const T& container )
   {
-    static_assert( sizeof(long) >= sizeof(typename T::size_type), "index size is incompatible to long!");
     return (idx>=0) && idx<(long)container.size();
   }
 template< typename T >
