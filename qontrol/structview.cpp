@@ -73,6 +73,7 @@ QPoint StructView::getSelCoords() const
 
 void StructView::update()
 {
+  handleSelChange(); // selected me be removed by JS.....
   resize( getElemsBound() );
   QWidget::update();
 }

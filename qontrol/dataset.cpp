@@ -1288,7 +1288,7 @@ bool HolderData::setData( const QString &nm, const QVariant &da )
 
   HolderData *ho = getObj( first );
   if( !ho ) {
-    qWarning() << "fail to nind name " << first << NWHE;
+    qWarning() << "fail to find name " << first << NWHE;
     return false;
   }
   if( nm_type == simpleName ) { // first only

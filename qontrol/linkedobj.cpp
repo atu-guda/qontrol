@@ -363,7 +363,16 @@ bool InputAbstract::fromString( const QString &s )
   if( s[0] == '<' || s.length() > 256 ) {
     return LinkedObj::fromString( s );
   }
-  source = s;
+  QString t = s;
+  if( t.endsWith( QSL("!") ) ) {
+    onlyFirst = 1;
+    t.resize( t.length() - 1 );
+  }
+  if( t.endsWith( QSL("$") ) ) {
+    onlyLabel = 1;
+    t.resize( t.length() - 1 );
+  }
+  source = t;
   set_link(); // in special case only
   return true;
 }

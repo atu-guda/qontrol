@@ -356,8 +356,8 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE int getState() const { return state; }
   /** create object with parameters as string */
   Q_INVOKABLE bool addObjDatas( const QString &cl_name, const QString &ob_name, const QString &datas );
-  /** delete given object by name, returns 0 - error, !=0 = ok */
   HolderData* canDoActionObj( const QString &ob_name, const QString &act_name ) const;
+  /** delete given object by name, returns 0 - error, !=0 = ok */
   Q_INVOKABLE int delObj( const QString &ob_name );
   Q_INVOKABLE int delAllDyn();
   Q_INVOKABLE bool cloneObj( const QString &old_name, const QString &new_name );
