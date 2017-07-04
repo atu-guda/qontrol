@@ -222,6 +222,7 @@ class HolderData : public QAbstractItemModel {
   virtual const TClassInfo* getClassInfo() const = 0;
   /** returns list of registered (exists) child elements names */
   Q_INVOKABLE QStringList elemNames() const;
+  Q_INVOKABLE QStringList elemNamesByNameType( const QString &nm_templ, const QString &tp_name ) const;
   /** returns list of registered child + type */
   Q_INVOKABLE QString ls() const;
   /** returns list of registered functions + signatures */
@@ -230,6 +231,7 @@ class HolderData : public QAbstractItemModel {
   HolderData* getObj( unsigned long i ) const;
   /** find holder for object by name */ //  elm relative.name.elm
   HolderData* getObj( const QString &oname ) const;
+  Q_INVOKABLE bool hasObj( const QString &oname ) const;
   /** find holder for object by index, safely cast to type T */
   template<typename T> T getObjT( int idx ) const
     {  return qobject_cast<T>( getObj( idx ) );  }
@@ -360,6 +362,7 @@ class HolderData : public QAbstractItemModel {
   /** delete given object by name, returns 0 - error, !=0 = ok */
   Q_INVOKABLE int delObj( const QString &ob_name );
   Q_INVOKABLE int delAllDyn();
+  Q_INVOKABLE int delByNameType( const QString &nm_templ, const QString &tp_name );
   Q_INVOKABLE bool cloneObj( const QString &old_name, const QString &new_name );
   //* rename object (if created dynamically)
   Q_INVOKABLE int renameObj( const QString &ob_name, const QString &new_name );

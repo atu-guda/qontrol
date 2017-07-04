@@ -301,6 +301,24 @@ QStringList HolderData::elemNames() const
   return cl;
 }
 
+QStringList HolderData::elemNamesByNameType( const QString &nm_templ, const QString &tp_name ) const
+{
+  QStringList cl;
+  for( const auto c : children() ) {
+    HolderData *ho = qobject_cast<HolderData*>( c );
+    if( !ho ) {
+      continue;
+    }
+    if( nm_templ.isEmpty() || ho->objectName().startsWith( nm_templ ) ) {
+      if( tp_name.isEmpty() || ho->getType() == tp_name ) {
+        cl << c->objectName();
+      }
+    }
+  }
+  return cl;
+}
+
+
 QString HolderData::ls() const
 {
   QString r;
@@ -394,6 +412,11 @@ HolderData* HolderData::getObj( const QString &oname ) const
 
   qWarning() << "unknown name type: " << nt << NWHE;
   return nullptr;
+}
+
+bool HolderData::hasObj( const QString &oname ) const
+{
+  return getObj( oname ) != nullptr;
 }
 
 void HolderData::setParm( const QString &pname, const QString &value )
@@ -743,6 +766,16 @@ int HolderData::delAllDyn()
   int n = 0;
   for( const auto nm : nms ) {
     n += delObj( nm );
+  }
+  return n;
+}
+
+int HolderData::delByNameType( const QString &nm_templ, const QString &tp_name )
+{
+  int n = 0;
+  QStringList els = elemNamesByNameType( nm_templ, tp_name );
+  for( auto el : els ) {
+    n += delObj( el );
   }
   return n;
 }
