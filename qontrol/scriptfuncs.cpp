@@ -138,6 +138,7 @@ QScriptValue script_include( QScriptContext *ctx, QScriptEngine *eng )
 
   sfile.prepend( "scripts:" );
   if( ! QFile::exists( sfile ) ) {
+    qWarning() << "file to include " << sfile << " not exists" << WHE;
     return QScriptValue( false );
   }
 
@@ -158,6 +159,9 @@ QScriptValue script_include( QScriptContext *ctx, QScriptEngine *eng )
     int line = eng->uncaughtExceptionLineNumber();
     qWarning() << "uncaught exception at line " << line <<  " file: " << sfile
                << " error: " << r;
+    return QScriptValue( false );
+  } else {
+    qWarning() << "included file " << sf.fileName() << WHE;
   }
 
   return QScriptValue( true );
