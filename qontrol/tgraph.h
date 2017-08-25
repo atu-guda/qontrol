@@ -394,7 +394,7 @@ class TGraph : public LinkedObj  {
    const mglData *d_c0 = nullptr;
    // mglGraph gr { 0, 800, 600 }; // 0 - def, 1 - OpenGL - dont work
 
-   Q_CLASSINFO( "nameHintBase",  "plot_" );
+   Q_CLASSINFO( "nameHintBase",  "p_" );
    DCL_DEFAULT_STATIC;
 };
 typedef TGraph *PTGraph;

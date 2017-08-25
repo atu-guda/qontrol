@@ -2,7 +2,7 @@
   tbjt.cpp - Simple BJT transistor model
                              -------------------
     begin                : 2016.08.12
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -29,11 +29,12 @@ CTOR(TBjt,TMiso)
 {
 }
 
+
 double TBjt::f() noexcept
 {
-  const constexpr double k_b = GSL_CONST_MKSA_BOLTZMANN;       // 1.3806504e-23)  kg m^2 / K s^2
-  const constexpr double q_e = GSL_CONST_MKSA_ELECTRON_CHARGE; // 1.602176487e-19)  A s
-  const constexpr double k1 = k_b / q_e;
+  const constexpr double k1 =  GSL_CONST_MKSA_BOLTZMANN / GSL_CONST_MKSA_ELECTRON_CHARGE;
+  // GSL_CONST_MKSA_BOLTZMANN;       // 1.3806504e-23  kg m^2 / K s^2
+  // GSL_CONST_MKSA_ELECTRON_CHARGE; // 1.602176487e-19  A s
 
   V_t = k1 * Temp;
   V_be = V_b - V_e;
@@ -50,7 +51,7 @@ double TBjt::f() noexcept
 
     V_ce = V_co - V_e;
     double I_c0 = I_s * expm1( V_be / ( V_t * N_f ) )  * ( 1 + V_ce / V_af );
-    I_c0 = vBound( I_c_min, I_c0, I_c_max );
+    I_c0 = vBound( I_c_min, I_c0, I_c_max.cval() );
     I_b = I_c0 / h_FE;
     double R_ce = V_ce / I_c0 + R_ce0;
 
@@ -60,8 +61,6 @@ double TBjt::f() noexcept
     } else {
       I_c = V_ce / R_ce;
     }
-
-    // I_c = vBound( I_c_min, I_c.cval(), I_c_max );
 
   }
 

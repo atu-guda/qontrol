@@ -3,7 +3,7 @@
   tbjt.h - Simple BJT transistor model (declarations)
                              -------------------
     begin                : 2016.08.12
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -44,25 +44,25 @@ class TBjt : public TMiso  {
    PRM_SWITCH( useRc,  efNRC, "use R_c",  "Use only R_c in collector part", "sep=col" );
    PRM_PARAMD( V_cc,       0, "V_{cc}",   "V_cc for useRc", "def=5" );
    PRM_PARAMD( R_c,        0, "R_{c}",    "R_c for useRc", "def=100\nmin=0.01" );
+   PRM_PARAMD( I_c_max,    0, "I_{c max}","Maximum I_c", "def=100\nmin=0.00001" );
 
    // * Outputs and misc states
-   PRM_DOUBLE( I_c, efInner, "I_c", "Collector current = main output", "" );
-   PRM_DOUBLE( I_b, efInner, "I_b", "Base current", "" );
-   PRM_DOUBLE( I_e, efInner, "I_e", "Emitter current", "" );
-   PRM_DOUBLE( V_t, efInner, "V_t", "Thermal voltage = k_b T / q_e", "" );
-   PRM_DOUBLE( V_be, efInner, "V_{be}", "Base-emitter voltage", "" );
-   PRM_DOUBLE( V_ce, efInner, "V_{ce}", "Collector-emitter voltage", "" );
-   PRM_DOUBLE( V_cb, efInner, "V_{cb}", "Collector-base voltage", "" );
-   PRM_DOUBLE( V_co, efInner, "V_{co}", "Output V_c for useRc", "" );
+   PRM_DOUBLE( I_c,     efInner, "I_c",  "Collector current = main output", "" );
+   PRM_DOUBLE( I_b,     efInner, "I_b", "Base current", "" );
+   PRM_DOUBLE( I_e,     efInner, "I_e", "Emitter current", "" );
+   PRM_DOUBLE( V_t,     efInner, "V_t", "Thermal voltage = k_b T / q_e", "" );
+   PRM_DOUBLE( V_be,    efInner, "V_{be}", "Base-emitter voltage", "" );
+   PRM_DOUBLE( V_ce,    efInner, "V_{ce}", "Collector-emitter voltage", "" );
+   PRM_DOUBLE( V_cb,    efInner, "V_{cb}", "Collector-base voltage", "" );
+   PRM_DOUBLE( V_co,    efInner, "V_{co}", "Output V_c for useRc", "" );
 
    PRM_INPUT( V_b, 0, "V_{&b}", "Base potential",  "sep=block" );
    PRM_INPUT( V_c, 0, "V_{&c}", "Collector potential",  "sep=col" );
    PRM_INPUT( V_e, 0, "V_{&e}", "Emitter potential",  "sep=col" );
 
-   static const constexpr double I_c_min = 1e-12; // 1pA
-   static const constexpr double I_c_max = 1e+03; // 1kA
+   static const constexpr double I_c_min = 1e-15; // 1fA
 
-   Q_CLASSINFO( "nameHintBase",  "bjt_" );
+   Q_CLASSINFO( "nameHintBase",  "q_" );
    DCL_DEFAULT_STATIC;
 };
 
