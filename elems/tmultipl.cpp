@@ -2,7 +2,7 @@
                           tmultipl.cpp  -  description
                              -------------------
     begin                : Fri Aug 25 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -16,10 +16,14 @@
  ***************************************************************************/
 
 #include "tmultipl.h"
+#include "miscfun.h"
 
 const char* TMultipl::helpstr = "<H1>TMultipl</H1>\n"
- "<p>Simple multiplicator: <br>\n"
- "it multimplies all enabled inputs and parametr <b>a</b>\n"
+ "<p>Simple multiplicator: <br/>\n"
+ "it multimplies all enabled inputs and parametr <b>a</b><br/>\n"
+ "a ( in_0 * in_1 * in_2 * in_3 ) / c + b</b> <br/>\n"
+ " or <br/>\n"
+ "a sqrt0( in_0 * in_1 * in_2 * in_3 ) / c + b</b> \n"
  "</p>";
 
 STD_CLASSINFO(TMultipl,clpElem|clpCalcAtStart);
@@ -31,11 +35,16 @@ CTOR(TMultipl,TMiso)
 
 double TMultipl::f() noexcept
 {
-  double v = a;
+  double v = 1;
   v *= in_0;
   v *= in_1;
   v *= in_2;
   v *= in_3;
+  if( use_sqrt ) {
+    v = sqrt0( v );
+  }
+  v *= a / c;
+  v += b;
   return v;
 }
 

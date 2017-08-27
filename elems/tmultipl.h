@@ -3,7 +3,7 @@
                           tmultipl.h  -  description
                              -------------------
     begin                : Fri Aug 25 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -30,11 +30,13 @@ class TMultipl : public TMiso  {
    DCL_CREATE;
    DCL_STD_INF;
  protected:
-   /** main computation function */
    virtual double f() noexcept override;
 
-   /** common coefficient */
-   PRM_PARAMD( a,   0, "&a", "Common factor", "sep=col\ndef=1" );
+   /** common coefficients */
+   PRM_PARAMD( a,            0,     "&a", "Common factor", "sep=col\ndef=1" );
+   PRM_PARAMD( b,            0,     "&b", "Common shift",  "sep=col" );
+   PRM_PARAMD( c,            0,     "&c", "Common div",    "sep=col\ndef=1" );
+   PRM_SWITCH( use_sqrt, efNRC, "s&qrt0", "use sqrt0(mult) w/o b", "sep=col" );
 
    PRM_INPUT( in_0, 0, "in_{&0}", "First input",  "def=1\nsep=block" );
    PRM_INPUT( in_1, 0, "in_{&1}", "Second input", "def=1\nsep=col" );
