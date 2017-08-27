@@ -22,7 +22,7 @@ const char* TLinP1Q0::helpstr = "<h1>TLinP1Q0</h1>\n"
  "<p>Integrate (linear if f(x)==x) differential equation: <br/>\n"
  "<b> dx/dt = a * ( ku * u(t) - x ) </b><br/>\n"
  "or<br/>\n"
- "<b> dx/dt = a * ( ku * u(t) - f ) </b><br/>\n"
+ "<b> dx/dt = a * ( ku * u(t) - f() ) </b><br/>\n"
  "Parameter <b>ku</b> -- amplification, can be changed at any time.<br/>\n"
  "Parameter <b>a</b> -- frequency, can be changed at any time.<br/>\n"
  " <b>a = 1 / tau; </b> "
@@ -50,7 +50,7 @@ double TLinP1Q0::f() noexcept
 {
   double f = ( use_u1 ) ? in_f : x_old;
   double u = ( use_u2 ) ? pow2( in_u ) : in_u;
-  tau = 1.0 / a;
+  tau = 1.0 / a; // ? only at param change?
   // TODO: check this for stability
   double x = x_old + a * ctdt * ( ku * u - f );
   x_old = x;
