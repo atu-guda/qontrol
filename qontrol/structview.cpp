@@ -204,9 +204,9 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   ei.ys = ei.ys0 + el_marg;
   ei.xc = ei.xs + obj_sz/2;
   ei.yc = ei.ys + obj_sz/2;
-  ei.li_dst_x = ei.xc + ei.flip_factor*(obj_sz/2);
+  ei.li_dst_x  = ei.xc + ei.flip_factor * (obj_sz/2); // left bound
   ei.pre_dst_x = ei.li_dst_x + el_marg * ei.flip_factor;
-  ei.li_src_x = ei.xc - ei.flip_factor*(obj_sz/2);
+  ei.li_src_x  = ei.xc - ei.flip_factor * (2*obj_sz/3);
   ei.li_pdst_y = ei.yc + (obj_sz/2);
 
   ei.n_pinp = ob->getN_ActiveParmInputs();
@@ -218,7 +218,6 @@ void StructView::drawAll( QPainter &p )
 {
   int h, w, nh, nw;
   int line_busy;
-  int li_src_y, li_dst_y;
   int st_y; /* label on elems start y */
   QString src_name;
   h = height(); w = width(); nh = 1 + h / grid_sz; nw = 1 + w / grid_sz;
@@ -341,7 +340,7 @@ void StructView::drawAll( QPainter &p )
       ob->getData( QSL("out0"), &v, false );
       p.setPen( Qt::black ); p.setBrush( QColor(255,255,220) );
       p.drawRect( ei.xs+obj_sz-3, ei.ys-ex_small+1, em_small*9, ex_small );
-      p.drawText( ei.xs + obj_sz, ei.ys, QSNL( v, 12 ) );
+      p.drawText( ei.xs + obj_sz, ei.ys, QSNL( v, 12 ) ); // TODO: format + any format string
     }
 
     if( !showLinks ) {
@@ -362,7 +361,7 @@ void StructView::drawAll( QPainter &p )
       }
       int lt = in->getDataD( QSL("linkType"), LinkBad );
       const TDataSet* sobj = in->getSourceObj();
-      li_dst_y = ei.ys + i_in*in_sep_sz;
+      int li_dst_y = ei.ys + i_in*in_sep_sz;
       int line_width = in->getDataD( QSL("line_w"), 1 );
       int x_shift    = in->getDataD( QSL("x_shift"), 0 );
       int y_shift    = in->getDataD( QSL("y_shift"), 0 );
@@ -383,7 +382,7 @@ void StructView::drawAll( QPainter &p )
 
       QString lbl = in->getDataD( QSL("label"), QString() );
       if( ! lbl.isEmpty() ) {
-        p.drawText( x_vert-2*ei.flip_factor, li_dst_y-2, lbl );
+        p.drawText( x_vert-2*ei.flip_factor, li_dst_y-2, lbl ); // TODO: + data?
       }
 
       if( lt == LinkBad ) {
@@ -408,22 +407,25 @@ void StructView::drawAll( QPainter &p )
       fill_elmInfo( so_obj, sei );
       QString so = in->getDataD( QSL("source"), QString() );
 
-      if( ei.vis_y != sei.vis_y ) {
-        li_src_y = sei.yc - y_shift;
-      } else {
-        li_src_y = li_dst_y - y_shift; // special case: one line
-      }
+      int  li_src_y0 = sei.yc;
+      // if( ei.vis_y == sei.vis_y ) { // special case: one line // TODO: remove?
+      //   li_src_y0 = li_dst_y;
+      // }
 
-      if( so.contains(".") ) { // complex - not 'out0' source
-        QChar qshc = (so.right(1))[0];
-        char shc = qshc.toLatin1();
-        li_src_y += 2 + ( shc  & 0x07 );
-        p.drawLine( sei.li_src_x + el_marg*sei.flip_factor/2, li_src_y,
-                    sei.li_src_x + el_marg*sei.flip_factor/2, li_src_y+3 );
-      }
 
-      p.drawLine( sei.li_src_x, li_src_y,
-                  sei.li_src_x + el_marg*sei.flip_factor, li_src_y );
+      if( so.contains(".") ) { // complex - not 'out0' source - special mark
+        char shc = (so.right(1))[0].toLatin1(); // semi-random offset by rightest char
+        li_src_y0 += 2 + ( shc  & 0x07 );
+        p.drawLine( sei.li_src_x - el_marg*sei.flip_factor /2 , li_src_y0,
+                    sei.li_src_x - el_marg*sei.flip_factor /2 , li_src_y0+2 );
+      }
+      int  li_src_y = li_src_y0 - y_shift;
+
+      // small horizontal line from source output
+      int xcc = sei.li_src_x + el_marg*sei.flip_factor;
+      p.drawLine( sei.li_src_x, li_src_y0,  xcc, li_src_y0 );
+      // first vertical segment after output pin
+      p.drawLine( sei.li_src_x, li_src_y0, sei.li_src_x, li_src_y );
 
       int only_lbl = in->getDataD( QSL("onlyLabel"), 0 );
       if( only_lbl ) {
@@ -433,8 +435,8 @@ void StructView::drawAll( QPainter &p )
         continue;
       }
 
-      p.drawLine( x_vert, li_dst_y, x_vert, li_src_y ); // vertical part
-      p.drawLine( x_vert, li_src_y, sei.li_src_x, li_src_y); // horiz. from src
+      p.drawLine( x_vert, li_dst_y, x_vert, li_src_y ); // main vertical part before arrow
+      p.drawLine( x_vert, li_src_y, sei.li_src_x, li_src_y); // main horiz before vertical ^
 
     } // end of simple input loop
 
@@ -483,16 +485,16 @@ void StructView::drawAll( QPainter &p )
 
       fill_elmInfo( so_obj, sei );
 
-      li_src_y = sei.yc - y_shift;
+      int li_src_py = sei.yc - y_shift;
 
       // TODO: label
       int only_lbl = ips->getDataD( QSL("onlyLabel"), 0 );
 
       int x_vert = sei.li_src_x - ( x_shift + el_marg ) * sei.flip_factor;
 
-      p.drawLine( sei.li_src_x, li_src_y, x_vert, li_src_y ); // from src
+      p.drawLine( sei.li_src_x, li_src_py, x_vert, li_src_py ); // from src
       if( ! only_lbl ) {
-        p.drawLine( x_vert, ei.li_pdst_y+el_marg,  x_vert, li_src_y ); // vert line
+        p.drawLine( x_vert, ei.li_pdst_y+el_marg,  x_vert, li_src_py ); // vert line
         p.drawLine( p_bott, QPoint( x_vert, ei.li_pdst_y+el_marg ) );  // to dst.bottom
       }
 

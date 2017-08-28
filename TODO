@@ -10,7 +10,6 @@ Need correct time to gather info to PlotLabel
 correct places for reset, set_link, *structChange..
 BUG: "all changes" after small [sub]edit and cancel. Tmp obj? Swap?
 BUG: reset_dfl for complex object for dialog: RODial, set? context?
-BUG: Scheme view: vertival part of link not shown if y shift (+ backward?)
 List of presets for element.
 Named constants in links
 Fix/limit props on object load/create?

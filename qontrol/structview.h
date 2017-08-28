@@ -134,7 +134,7 @@ class StructView : public CmdView  {
     bool isPrinter = false;
     int margin_l = 4, margin_t = 4; // scheme offsets from left top
     /** object size, elements margin, grid size  */
-    int obj_sz = 32, el_marg = 1, grid_sz = obj_sz + el_marg * 2 + 12;
+    int obj_sz = 32, el_marg = 7, grid_sz = obj_sz + el_marg * 2;
     int em = 10, em_small = 10, ex_small = 10; //* base and small font metrics
     // selections
     int sel = -1, sel_x = 0, sel_y = 0, level = 0;
