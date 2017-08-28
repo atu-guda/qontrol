@@ -2,7 +2,7 @@
                           structview.cpp  -  description
                              -------------------
     begin                : Sat Aug 12 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -31,7 +31,7 @@
 
 
 StructView::StructView( CommonSubwin *a_par, Scheme *a_sch )
-            : CmdView( a_par, a_sch ), sch( a_sch ), ro( sch->isRoTree( efROAny ) )
+            : CmdView( a_par, a_sch ), sch( a_sch ), scheme_ro( sch->isRoTree( efROAny ) )
 {
   em = LaboWin::Em();
   QPalette pal;
@@ -142,7 +142,7 @@ void StructView::paintEvent( QPaintEvent * /*pe*/ )
   if( ! sch ) {
     return;
   }
-  devTp = 0;
+  isPrinter = false;
   QPainter p( this );
 
   drawAll( p );
@@ -166,7 +166,7 @@ void StructView::printAll()
     return;
   }
 
-  devTp = 1;
+  isPrinter = true;
   pr->setFullPage( false );
   pr->newPage();
   QPainter p( pr );
@@ -186,20 +186,20 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   ei.vis_x  = ei.vis_y =  ei.locked = ei.onlyFirst
     =  ei.onlyLast = ei.flip = ei.noIcon = 0;
 
-  ob->getData( QSL("vis_x"), &ei.vis_x );
-  ob->getData( QSL("vis_y"), &ei.vis_y );
-  ob->getData( QSL("locked"), &ei.locked );
-  ob->getData( QSL("ignored"), &ei.ignored );
-  ob->getData( QSL("onlyFirst"), &ei.onlyFirst );
-  ob->getData( QSL("onlyLast"), &ei.onlyLast );
-  ob->getData( QSL("flip"), &ei.flip );
-  ob->getData( QSL("noIcon"), &ei.noIcon );
-  ob->getData( QSL("showBaloon"), &ei.showBaloon );
+  ob->getData( QSL("vis_x")      , &ei.vis_x );
+  ob->getData( QSL("vis_y")      , &ei.vis_y );
+  ob->getData( QSL("locked")     , &ei.locked );
+  ob->getData( QSL("ignored")    , &ei.ignored );
+  ob->getData( QSL("onlyFirst")  , &ei.onlyFirst );
+  ob->getData( QSL("onlyLast")   , &ei.onlyLast );
+  ob->getData( QSL("flip")       , &ei.flip );
+  ob->getData( QSL("noIcon")     , &ei.noIcon );
+  ob->getData( QSL("showBaloon") , &ei.showBaloon );
   ei.flip_factor = ei.flip ? 1 : -1;
   ei.n_inp = ob->getN_SimpleInputs();
 
-  ei.xs0 = lm + ei.vis_x * grid_sz;
-  ei.ys0 = lm + ei.vis_y * grid_sz;
+  ei.xs0 = margin_l + ei.vis_x * grid_sz;
+  ei.ys0 = margin_l + ei.vis_y * grid_sz;
   ei.xs = ei.xs0 + el_marg;
   ei.ys = ei.ys0 + el_marg;
   ei.xc = ei.xs + obj_sz/2;
@@ -244,7 +244,7 @@ void StructView::drawAll( QPainter &p )
   auto ignoredIcon = QIcon( ":icons/state-ignored.png" );
 
 
-  QColor bgCol { ro ? QColor(255,240,240) : Qt::white };
+  QColor bgCol { scheme_ro ? QColor(255,240,240) : Qt::white };
   if( ! hasFocus() ) {
     bgCol = bgCol.darker( 110 );
   }
@@ -256,12 +256,12 @@ void StructView::drawAll( QPainter &p )
   if( showGrid ) {
     p.setPen( QPen( bgCol.darker(150), 0, Qt::DotLine ) ); // TODO: config
     for( int i=0; i<nw; i++ ) {
-      int x = lm + i*grid_sz;
-      p.drawLine( x, tm, x, h );
+      int x = margin_l + i*grid_sz;
+      p.drawLine( x, margin_t, x, h );
     }
     for( int i=0; i<nh; i++ ) {
-      int y = tm + i*grid_sz;
-      p.drawLine( lm, y, w, y );
+      int y = margin_t + i*grid_sz;
+      p.drawLine( margin_l, y, w, y );
     }
   };
 
@@ -538,7 +538,7 @@ void StructView::drawAll( QPainter &p )
         if( sel_out == out_nu ) {
           p.setPen( QPen(QColor(100,100,255), 3, Qt::SolidLine ) );
           p.setBrush( Qt::NoBrush );
-          p.drawRect( sei.xs0+lm-1, sei.ys0+tm-1, obj_sz+4, obj_sz+4 );
+          p.drawRect( sei.xs0+margin_l-1, sei.ys0+margin_t-1, obj_sz+4, obj_sz+4 );
         }
         p.setPen( Qt::black );
 
@@ -565,12 +565,12 @@ void StructView::drawAll( QPainter &p )
 
 
   // ----------- draw selection
-  if( devTp != 1 ) {
+  if( ! isPrinter ) {
     QPainter::CompositionMode old_op = p.compositionMode();
     p.setCompositionMode( QPainter::RasterOp_SourceXorDestination );
     p.setPen( Qt::NoPen );
     p.setBrush( QColor(64,64,32) );
-    p.drawRect( lm + sel_x*grid_sz, tm + sel_y*grid_sz, grid_sz, grid_sz );
+    p.drawRect( margin_l + sel_x*grid_sz, margin_t + sel_y*grid_sz, grid_sz, grid_sz );
     p.setCompositionMode( old_op );
   };
 
@@ -877,7 +877,7 @@ void StructView::mousePressEvent( QMouseEvent *me )
   }
   h = height(); w = width(); nh = h / grid_sz - 1; nw = w / grid_sz - 1;
   x = me->x(); y = me->y();
-  ex = ( x - lm ) / grid_sz; ey = ( y - tm ) / grid_sz;
+  ex = ( x - margin_l ) / grid_sz; ey = ( y - margin_t ) / grid_sz;
   if( ! isInBounds( 0, ex, nw-1) || ! isInBounds( 0, ey, nh-1) ) {
     return;
   }
@@ -925,7 +925,7 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     menu->addSeparator();
     act = menu->addAction( QIcon::fromTheme("document-properties"), "&Edit element" );
     connect( act, &QAction::triggered, this, &StructView::editObj );
-    if( !ro ) {
+    if( !scheme_ro ) {
       act = menu->addAction( QIcon::fromTheme("list-remove"), "&Delete element" );
       connect( act, &QAction::triggered, this, &StructView::delObj );
       menu->addSeparator();
@@ -953,7 +953,7 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     connect( act, &QAction::triggered, this, &StructView::showTreeObj );
     menu->addSeparator();
   } else {
-    if( !ro ) {
+    if( !scheme_ro ) {
       act = menu->addAction( QIcon::fromTheme("list-add"), "&New element" );
       connect( act, &QAction::triggered, this, &StructView::addObj );
       if( markObj ) {

@@ -3,7 +3,7 @@
                           structview.h  -  description
                              -------------------
     begin                : Sat Aug 12 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -52,7 +52,7 @@ class StructView : public CmdView  {
       int xs0, ys0, xs, ys, xc, yc, flip_factor;
       int li_dst_x, pre_dst_x, li_src_x, li_pdst_y;
     };
-    /** enumeration for chate checking */
+    /** enumeration for state checking */
     enum CheckType { validCheck = 0, selCheck, linkToCheck,
                      noselCheck, moveCheck, doneCheck
     };
@@ -122,32 +122,25 @@ class StructView : public CmdView  {
   protected:
     /** fill and calc info about element */
     bool fill_elmInfo( const TMiso *ob, ElemInfo &el ) const;
-    /** draw itself */
     virtual void paintEvent( QPaintEvent *pe );
-    /** reaction to mouse */
     virtual void mousePressEvent( QMouseEvent *me );
-    /** reaction on mouse doubleclick */
     virtual void mouseDoubleClickEvent( QMouseEvent *me );
-    /** reaction to keyboard */
     virtual void keyPressEvent( QKeyEvent *ke );
-    /** paint all in given painter */
-    void drawAll( QPainter &p );
-    /** create popup menu */
+    void drawAll( QPainter &p ); //* paint all in given painter
     QMenu* createPopupMenu( const QString &title, bool has_elem );
 
   protected:
-    /** pointer to TModel to be drawed */
-    Scheme *sch;
-    /** type of output device */
-    int devTp = 0;
-    /** grid size, left, top margin size, object size,  elements margin */
-    int grid_sz = 46, lm = 4, tm = 4, obj_sz = 32, el_marg = 1, em_small = 10, ex_small = 10;
+    Scheme *sch; //* pointer to Scheme to be drawed
+    bool isPrinter = false;
+    int margin_l = 4, margin_t = 4; // scheme offsets from left top
+    /** object size, elements margin, grid size  */
+    int obj_sz = 32, el_marg = 1, grid_sz = obj_sz + el_marg * 2 + 12;
+    int em = 10, em_small = 10, ex_small = 10; //* base and small font metrics
     // selections
     int sel = -1, sel_x = 0, sel_y = 0, level = 0;
     TMiso *selObj = nullptr;  //* ptr to selected object or nullptr
     TMiso *markObj = nullptr; //* prt to marked object or nullptr
-    int em = 10;
-    bool ro;
+    bool scheme_ro;           //* some schemes useless to edit: autocreated by template
 };
 
 
