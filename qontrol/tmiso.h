@@ -3,7 +3,7 @@
                           tmiso.h  -  description
                              -------------------
     begin                : Mon Jul 24 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -24,6 +24,32 @@
 
 #include "linkedobj.h"
 
+// aux element params: TODO: move here from TMiso
+class ElemParams : public TDataSet  {
+  Q_OBJECT
+ public:
+   DCL_CTOR(ElemParams);
+   // virtual ~ElemParams() override;
+   DCL_CREATE;
+   DCL_STD_INF;
+
+ public: // SIC, this is a structure!
+   PRM_INT(          vis_x, efNRC,         "Visual x", "X-coordinate of element in scheme", "min=0\nmax=1024" );
+   PRM_INT(          vis_y, efNRC,         "Visual y", "Y-coordinate of element in scheme", "min=0\nmax=1024" );
+   PRM_SWITCH( noCalcStart, efNRC, "No calc at start", "Disable out0 at startLoop ", ""  );
+
+   PRM_SWITCH(      locked, efNRC,           "Locked", "Bypass out0_init to output"              , "sep=col"  );
+   PRM_SWITCH(     ignored, efNRC,          "Ignored", "Ignore element while run"                , ""  );
+   PRM_SWITCH(   onlyFirst, efNRC,       "only First", "Process element only at first iteration" , "" );
+   PRM_SWITCH(    onlyLast, efNRC,        "only Last", "Process element only at last iteration"  , "" );
+   PRM_SWITCH(        flip, efNRC,       "flip image", "flip left-right element icon"            , "sep=col" );
+   PRM_SWITCH(      noIcon, efNRC,          "no Icon", "don't show element icon"                 , "" );
+   PRM_SWITCH(  showBaloon, efNRC,      "show Baloon", "Show baloon on scheme with out0"         , "" );
+
+   PRM_STRING(   baloonStr, efNRC,    "Baloon string", "Baloon format string", "sep=block\nmax=256\nncol=-1");
+
+   DCL_DEFAULT_STATIC;
+};
 
 // -------------------------- TMiso -----------------------------
 
@@ -70,28 +96,23 @@ class TMiso : public LinkedObj  {
    /** do real actions after structure changed - refills inputs */
    virtual void do_structChanged() override;
 
-   PRM_STRING( descr, efNRC, "description", "Object description", "max=128\nncol=-1");
-   PRM_INT( ord, efOld, "Order", "obsoleted", "" );
-   /** visual coordinates */
-   PRM_INT( vis_x, efRODial | efNRC, "Visual x",
-       "X-coordinate of element in scheme", "min=0\nmax=64\nsep=block" );
-   PRM_INT( vis_y, efRODial | efNRC, "Visual y",
-       "Y-coordinate of element in scheme", "min=0\nmax=64" );
-   PRM_PARAMD( out0_init  , efNRC, "Init value", "Initial value of output", "def=0.0" );
-   PRM_SWITCH( noCalcStart, efNRC, "No calc at start", "Disable out0 at startLoop ", ""  );
+   PRM_STRING(       descr, efNRC, "description", "Object description", "max=128\nncol=-1");
+   PRM_INT(            ord, efOld, "Order", "obsoleted", "" );
+   PRM_INT(          vis_x, efNoDial | efNRC, "Visual x", "X-coordinate of element in scheme", "min=0\nmax=64" );
+   PRM_INT(          vis_y, efNoDial | efNRC, "Visual y", "Y-coordinate of element in scheme", "min=0\nmax=64" );
+   PRM_PARAMD(   out0_init, efNRC,       "Init value", "Initial value of output", "def=0.0\nsep=block" );
+   PRM_DOUBLE(        out0, efRO | efNoSave, "Output", "Main output", "" );
+   PRM_SWITCH( noCalcStart,  efNRC, "No calc at start", "Disable out0 at startLoop ", ""  );
 
-   PRM_SWITCH( locked     , efNRC , "Locked"      , "Bypass out0_init to output"              , "sep=col"  );
-   PRM_SWITCH( ignored    , efNRC , "Ignored"     , "Ignore element while run"                , ""  );
-   PRM_SWITCH( onlyFirst  , efNRC , "only First"  , "Process element only at first iteration" , "" );
-   PRM_SWITCH( onlyLast   , efNRC , "only Last"   , "Process element only at last iteration"  , "" );
-   PRM_SWITCH( flip       , efNRC , "flip image"  , "flip left-right element icon"            , "sep=col" );
-   PRM_SWITCH( noIcon     , efNRC , "no Icon"     , "don't show element icon"                 , "" );
-   PRM_SWITCH( showBaloon , efNRC , "show Baloon" , "Show baloon on scheme with out0"         , "" );
-
-   PRM_DOUBLE( out0    , efRO | efNoSave, "Output", "Main output", "sep=blockend" );
+   PRM_SWITCH( locked     ,  efNRC,          "Locked", "Bypass out0_init to output"              , "sep=col"  );
+   PRM_SWITCH( ignored    ,  efNRC,         "Ignored", "Ignore element while run"                , ""  );
+   PRM_SWITCH( onlyFirst  ,  efNRC,      "only First", "Process element only at first iteration" , "" );
+   PRM_SWITCH( onlyLast   ,  efNRC,       "only Last", "Process element only at last iteration"  , "" );
+   PRM_SWITCH( flip       ,  efNRC,      "flip image", "flip left-right element icon"            , "sep=col" );
+   PRM_SWITCH( noIcon     ,  efNRC,         "no Icon", "don't show element icon"                 , "" );
+   PRM_SWITCH( showBaloon ,  efNRC,     "show Baloon", "Show baloon on scheme with out0"         , "sep=blockend" );
 
    DCL_DEFAULT_STATIC;
-
 };
 
 typedef TMiso* PTMiso;

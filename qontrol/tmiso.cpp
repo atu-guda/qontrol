@@ -21,7 +21,18 @@
 
 using namespace  std;
 
+// ------------------------ ElemParams --------------------------
 
+const char* ElemParams::helpstr = "<h1>ElemParams</h1>\n"
+ "<p>Structure to hold misc auxilary element parameters.</p>\n";
+
+STD_CLASSINFO(ElemParams,clpSpecial);
+
+CTOR(ElemParams,TDataSet)
+{
+}
+
+DEFAULT_FUNCS_REG(ElemParams);
 
 // ------------------------ TMiso -------------------------------
 

@@ -3,7 +3,7 @@
                           tmodel.h  -  description
                              -------------------
     begin                : Tue Aug 1 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -64,10 +64,8 @@ class TModel : public LinkedObj  {
   Simulation* getActiveSimulation() const { return sims->getActiveObjT<Simulation*>(); }
 
 
-  /** returns ptr to TOutArr by name */
   TOutArr* getOutArr( const QString &oname );
-  /** returns ptr to TGraph by name */
-  TGraph* getGraph( const QString &name );
+  TGraph*  getGraph( const QString &name );
 
   // Simulation* getSimul( int idx );
   Simulation* getSimul( const QString &name );
@@ -81,10 +79,10 @@ class TModel : public LinkedObj  {
   Q_INVOKABLE void plotToPng( const QString &gname, const QString &fn );
 
   // for fast access in RunView
-  double get_t() const { return t; }
+  double   get_t() const { return t; }
   long get_i_tot() const { return i_tot; }
-  long get_il1() const { return il1; }
-  long get_il2() const { return il2; }
+  long   get_il1() const { return il1; }
+  long   get_il2() const { return il2; }
   QList<AskedParam>& getAskedParams() { return asked_params; };
   void applyAskedParams(); // and save old
   const QStringList& getScriptNames() const { return scriptNames; }
@@ -140,10 +138,10 @@ class TModel : public LinkedObj  {
   // --------------- convenience ptrs to obligatory elements
   // init not in init list - special handling?
   ContScheme *schems  = nullptr;
-  ContOut   *outs  = nullptr;
-  ContGraph *plots = nullptr;
-  ContSimul *sims = nullptr;
-  Scheme* main_s = nullptr;
+  ContOut    *outs    = nullptr;
+  ContGraph  *plots   = nullptr;
+  ContSimul  *sims    = nullptr;
+  Scheme     *main_s  = nullptr;
   // =============== iface objects ==============================
   // copy of simulation vars - just for speed;
   PRM_DOUBLE(     T, efInner, "T", "Total simulation time (copy)", "def=1" );
