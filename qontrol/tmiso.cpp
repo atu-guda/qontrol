@@ -44,6 +44,9 @@ STD_CLASSINFO(TMiso,clpSpecial|clpAbstract);
 
 CTOR(TMiso,LinkedObj)
 {
+  allowed_types = "ElemParams";
+  eprm = addObjT<ElemParams>( "eprm" );
+  eprm->setParm( "sep", "blockend" );
 }
 
 

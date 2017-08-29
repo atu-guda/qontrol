@@ -110,7 +110,9 @@ class TMiso : public LinkedObj  {
    PRM_SWITCH( onlyLast   ,  efNRC,       "only Last", "Process element only at last iteration"  , "" );
    PRM_SWITCH( flip       ,  efNRC,      "flip image", "flip left-right element icon"            , "sep=col" );
    PRM_SWITCH( noIcon     ,  efNRC,         "no Icon", "don't show element icon"                 , "" );
-   PRM_SWITCH( showBaloon ,  efNRC,     "show Baloon", "Show baloon on scheme with out0"         , "sep=blockend" );
+   PRM_SWITCH( showBaloon ,  efNRC,     "show Baloon", "Show baloon on scheme with out0"         , "" );
+
+   ElemParams *eprm = nullptr;
 
    DCL_DEFAULT_STATIC;
 };
