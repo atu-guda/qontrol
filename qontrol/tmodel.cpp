@@ -215,29 +215,29 @@ int TModel::startRun()
   c_sim->post_set();
   reportStructChanged();
 
-  T   = c_sim->getDataD( "T", 1.0 );
-  t_0 = c_sim->getDataD( "t_0", 0.0 );
-  T_brk = c_sim->getDataD( "T_brk", 1e200 );
-  N   = c_sim->getDataD( "N", 1l );
+  T        = c_sim->getDataD( QSL("T")        , 1.0   );
+  t_0      = c_sim->getDataD( QSL("t_0")      , 0.0   );
+  T_brk    = c_sim->getDataD( QSL("T_brk")    , 1e200 );
+  N        = c_sim->getDataD( QSL("N")        , 1l    );
+  N1       = c_sim->getDataD( QSL("N1")       , 1l    );
+  N2       = c_sim->getDataD( QSL("N2")       , 1l    );
+  n1_eff   = c_sim->getDataD( QSL("n1_eff")   , N1    );
+  n2_eff   = c_sim->getDataD( QSL("n2_eff")   , N2    );
+  n_tot    = c_sim->getDataD( QSL("n_tot")    , N     );
+  syncRT   = c_sim->getDataD( QSL("syncRT")   , 0     );
+  fakeRT   = c_sim->getDataD( QSL("fakeRT")   , 0     );
+  prm0s    = c_sim->getDataD( QSL("prm0s")    , 0.0   );
+  prm1s    = c_sim->getDataD( QSL("prm1s")    , 0.0   );
+  prm2s    = c_sim->getDataD( QSL("prm2s")    , 0.0   );
+  prm3s    = c_sim->getDataD( QSL("prm3s")    , 0.0   );
+  prm0d    = c_sim->getDataD( QSL("prm0d")    , 0.0   );
+  prm1d    = c_sim->getDataD( QSL("prm1d")    , 0.0   );
+  seed     = c_sim->getDataD( QSL("seed")     , 1     );
+  seedType = c_sim->getDataD( QSL("seedType") , 0     );
   if( N < 1 ) { N = 1; }
-  N1  = c_sim->getDataD( "N1", 1l );
-  N2  = c_sim->getDataD( "N2", 1l );
-  n1_eff = c_sim->getDataD( "n1_eff", N1 );
-  n2_eff = c_sim->getDataD( "n2_eff", N2 );
-  n_tot  = c_sim->getDataD( "n_tot",  N );
-  syncRT = c_sim->getDataD( "syncRT", 0 );
-  fakeRT = c_sim->getDataD( "fakeRT", 0 );
-  prm0s = c_sim->getDataD( "prm0s", 0.0 );
-  prm1s = c_sim->getDataD( "prm1s", 0.0 );
-  prm2s = c_sim->getDataD( "prm2s", 0.0 );
-  prm3s = c_sim->getDataD( "prm3s", 0.0 );
-  prm0d = c_sim->getDataD( "prm0d", 0.0 );
-  prm1d = c_sim->getDataD( "prm1d", 0.0 );
-  seed = c_sim->getDataD( "seed", 1 );
-  seedType = c_sim->getDataD( "seedType",  0 );
   // qWarning() << "pre: n2_eff= " << n2_eff << " n1_eff= " << n1_eff << " N= " << N << WHE;
 
-  int type = c_sim->getDataD( "runType", (int)Simulation::runSingle );
+  int type = c_sim->getDataD( QSL("runType"), (int)Simulation::runSingle );
 
   if( type     !=  Simulation::runSingle
       &&  type !=  Simulation::runLoop
@@ -282,7 +282,7 @@ int TModel::startRun()
 
   state = stateRun;
 
-  int useScripts  = c_sim->getDataD( "useScripts", 0 );
+  int useScripts  = c_sim->getDataD( QSL("useScripts"), 0 );
   int brkOnZero  = c_sim->getDataD( QSL("brkOnZero"), 0 );
   int initEng = 0, execModelScript = 0;
   if( useScripts ) {
@@ -294,13 +294,13 @@ int TModel::startRun()
   }
   if( useScripts ) {
     auto gobj = eng->globalObject();
-    gobj.setProperty( "T", eng->newVariant( (double)T ) );
-    gobj.setProperty( "tdt", eng->newVariant( (double)tdt ) );
-    gobj.setProperty( "N", eng->newVariant( (long long)N ) );
-    gobj.setProperty( "N1", eng->newVariant( (long long)n1_eff ) );
-    gobj.setProperty( "N2", eng->newVariant( (long long)n2_eff ) );
+    gobj.setProperty( QSL("T"),   eng->newVariant( (double)T ) );
+    gobj.setProperty( QSL("tdt"), eng->newVariant( (double)tdt ) );
+    gobj.setProperty( QSL("N"),   eng->newVariant( (long long)N ) );
+    gobj.setProperty( QSL("N1"),  eng->newVariant( (long long)n1_eff ) );
+    gobj.setProperty( QSL("N2"),  eng->newVariant( (long long)n2_eff ) );
     // alias objs
-    gobj.setProperty( "c_sim", eng->newQObject( c_sim ) );
+    gobj.setProperty( QSL("c_sim"), eng->newQObject( c_sim ) );
   }
   ScriptResult sres;
   if( execModelScript ) {
@@ -378,10 +378,10 @@ long TModel::run( QSemaphore *sem )
       rc_s = 1;
       if( useScripts ) {
         auto gobj = eng->globalObject();
-        gobj.setProperty( "il1", eng->newVariant( (int)(il1) ) );
-        gobj.setProperty( "il2", eng->newVariant( (int)(il2) ) );
-        gobj.setProperty( "prm0", eng->newVariant( (double)(prm0) ) );
-        gobj.setProperty( "prm1", eng->newVariant( (double)(prm1) ) );
+        gobj.setProperty( QSL("il1"), eng->newVariant( (int)(il1) ) );
+        gobj.setProperty( QSL("il2"), eng->newVariant( (int)(il2) ) );
+        gobj.setProperty( QSL("prm0"), eng->newVariant( (double)(prm0) ) );
+        gobj.setProperty( QSL("prm1"), eng->newVariant( (double)(prm1) ) );
         rc_s = runScript( scriptStartLoop, &sres );
       }
       if( brkOnZero && rc_s == 0 ) {
@@ -456,7 +456,7 @@ int TModel::stopRun()
 
   postRun( 1 );
 
-  int saveParams = c_sim->getDataD( "saveParams", 1 );
+  int saveParams = c_sim->getDataD( QSL("saveParams"), 1 );
   if( saveParams ) {
     *prm0_targ = prm0_save;  *prm1_targ = prm1_save;
     restoreAskedParams();
@@ -576,7 +576,7 @@ TOutArr* TModel::addOut( const QString &outname, const QString &objname )
     return nullptr;
   }
 
-  arr->setData( "name", objname );
+  arr->setData( QSL("name"), objname );
 
   QString lbl = objname;
   if( lbl.left( 4 ) == QSL("out_") ) {
@@ -586,7 +586,7 @@ TOutArr* TModel::addOut( const QString &outname, const QString &objname )
     lbl.remove( 0, 1 );
   }
 
-  arr->setData( "label", lbl );
+  arr->setData( QSL("label"), lbl );
 
   reset();
   return arr;
@@ -596,7 +596,7 @@ TOutArr* TModel::addOut( const QString &outname, const QString &objname )
 
 int TModel::addGraph( const QString &gname )
 {
-  if( addObjToSub( "plots", "TGraph", gname ) ) {
+  if( addObjToSub( QSL("plots"), QSL("TGraph"), gname ) ) {
     reset();
     return 1;
   }
@@ -607,12 +607,12 @@ int TModel::addGraph( const QString &gname )
 
 int TModel::delOut( const QString &name )
 {
-  return delObjFromSub( "outs", name );
+  return delObjFromSub( QSL("outs"), name );
 }
 
 int TModel::delGraph( const QString &name )
 {
-  return delObjFromSub( "plots", name );
+  return delObjFromSub( QSL("plots"), name );
 }
 
 int TModel::addOutToGraph( const QString &o_name, const QString &g_name )
@@ -630,19 +630,19 @@ int TModel::addOutToGraph( const QString &o_name, const QString &g_name )
 
 bool TModel::cloneGraph( const QString &old_name, const QString &new_name )
 {
-  return cloneObjInSub( "plots", old_name, new_name );
+  return cloneObjInSub( QSL("plots"), old_name, new_name );
 }
 
 // ------------------------------------------
 
 int TModel::addSimul( const QString &name )
 {
-  return addObjToSub( "sims", "Simulation", name );
+  return addObjToSub( QSL("sims"), QSL("Simulation"), name );
 }
 
 int TModel::delSimul( const QString &name )
 {
-  return delObjFromSub( "sims", name );
+  return delObjFromSub( QSL("sims"), name );
 }
 
 QString TModel::getSimulName( int idx )
@@ -664,7 +664,7 @@ Simulation* TModel::getSimul( const QString &name )
 
 bool TModel::cloneSimul( const QString &old_name, const QString &new_name )
 {
-  return cloneObjInSub( "sims", old_name, new_name );
+  return cloneObjInSub( QSL("sims"), old_name, new_name );
 }
 
 bool TModel::setActiveSimul( const QString &name )
@@ -684,12 +684,12 @@ bool TModel::setActiveSimul( const QString &name )
 
 int TModel::addScheme( const QString &name )
 {
-  return addObjToSub( "schems", "Scheme", name );
+  return addObjToSub( QSL("schems"), QSL("Scheme"), name );
 }
 
 int TModel::delScheme( const QString &name )
 {
-  return delObjFromSub( "schems", name );
+  return delObjFromSub( QSL("schems"), name );
 }
 
 QString TModel::getSchemeName( int idx )
@@ -711,7 +711,7 @@ Scheme* TModel::getScheme( const QString &name )
 
 bool TModel::cloneScheme( const QString &old_name, const QString &new_name )
 {
-  return cloneObjInSub( "schems", old_name, new_name );
+  return cloneObjInSub( QSL("schems"), old_name, new_name );
 }
 
 

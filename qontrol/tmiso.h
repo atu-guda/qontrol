@@ -47,6 +47,8 @@ class ElemParams : public TDataSet  {
    PRM_SWITCH(  showBaloon, efNRC,      "show Baloon", "Show baloon on scheme with out0"         , "" );
 
    PRM_STRING(   baloonStr, efNRC,    "Baloon string", "Baloon format string", "sep=block\nmax=256\nncol=-1");
+ protected:
+   virtual int do_postFileRead() override;
 
    DCL_DEFAULT_STATIC;
 };

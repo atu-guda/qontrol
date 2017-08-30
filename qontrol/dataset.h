@@ -3,7 +3,7 @@
    dataset.h  -  base definitions and classes
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2016 by atu
+    copyright            : GPL (C) 2000-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -376,6 +376,8 @@ class HolderData : public QAbstractItemModel {
         return qobject_cast<T>( getActiveObj() );
       }
   void extraToParm();
+  Q_INVOKABLE int getCvtCount() const { return cvtCount; }
+  Q_INVOKABLE int postFileRead();
 
   // functions to work with substructure
   HolderData* addObjToSubP( const QString &subname, const QString &tp, const QString &ob_name );
@@ -411,6 +413,7 @@ class HolderData : public QAbstractItemModel {
   bool restoreParmsFromDom( QDomElement &de );
   void saveParmsToDom( QDomElement &de ) const;
   void fillListStrings();
+  virtual int do_postFileRead();
 
   int dyn = 0; //* flag: is created dynamically i.e. can be deleted
   int flags;   //* use bitset of _ELEM_FLAGS: efRO, efNRC, ...
@@ -427,6 +430,7 @@ class HolderData : public QAbstractItemModel {
   int active_idx = -1;
   //* flag: show active/inactive state in Qt::CheckStateRole
   bool show_active = false;
+  int cvtCount = 0; //* increased after every fromDom
   QSSMap parms;
   QStringList list_strings;
   QString allowed_types = ""; // separator=','

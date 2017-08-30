@@ -146,6 +146,7 @@ bool LaboDoc::openDocument( const QString &filename )
     return false;
   }
 
+  rootdata->postFileRead();
   rootdata->resumeHandleStructChange();
   rootdata->setUnModified();
   rootdata->reset();

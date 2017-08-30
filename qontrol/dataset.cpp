@@ -601,6 +601,20 @@ void HolderData::extraToParm()
   parms.remove( QSL("extra") ); // not need anymore
 }
 
+int HolderData::postFileRead()
+{
+  int rc = 0;
+  for( auto ho : TCHILD(HolderData*) ) {
+    rc += ho->postFileRead();
+  }
+  rc += do_postFileRead();
+  return rc;
+}
+
+int HolderData::do_postFileRead()
+{
+  return 0;
+}
 
 void HolderData::reportStructChanged()
 {
@@ -913,6 +927,7 @@ void HolderData::saveParmsToDom( QDomElement &de ) const
 bool HolderData::fromDom( QDomElement &de, QString &errstr )
 {
   IGNORE_STRUCT_CHANGE_HERE;
+  ++cvtCount;
 
   if( ! isObject() ) {
     QString txt = getDomText( de );
@@ -980,10 +995,6 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
           ho->setData( QSL("line_color"), QSL("red") );
           continue;
         }
-        // if( ho->getType() == QSL("InputSimple") ) { // TODO: remove after TOutArr conversion
-        //   ho->setData( QSL("source"), txt );
-        //   continue;
-        // }
         // --------- end conversion (TMP) --------
         errstr = QString("TDataSet::fromDom: param \"%1\" is an object type \"%2\" ")
                  .arg(elname).arg(ho->getType());
