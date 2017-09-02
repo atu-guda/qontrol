@@ -2,7 +2,7 @@
  dataset.cpp  -   base definifions and classes implementation
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2016 by atu
+    copyright            : GPL (C) 2000-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -1567,7 +1567,7 @@ int HolderData::fillComplForInputs( QStandardItem *it0, const QString &prefix ) 
   int n = 0;
 
   int ign = 0;
-  getData( QSL("ignored"), &ign, false );
+  getData( QSL("eprm.ignored"), &ign, false );
   if( ign ) {
     return 0;
   }

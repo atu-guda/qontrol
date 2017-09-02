@@ -2,7 +2,7 @@
                           linkedobj.h - object with link capabilities
                              -------------------
     begin                : 2015.10.24
-    copyright            : GPL (C) 2015-2016 by atu
+    copyright            : GPL (C) 2015-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -142,7 +142,7 @@ bool LinkedObj::isIgnored() const
 {
   int ign = 0;
   for( const HolderData *p = this; p; p=p->getParent() ) {
-    p->getData( "ignored", &ign, false ); // not direct access, TMiso+... property
+    p->getData( "eprm.ignored", &ign, false ); // not direct access, TMiso+... property
     if( ign ) {
       return true;
     }

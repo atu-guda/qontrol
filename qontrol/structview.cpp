@@ -116,8 +116,8 @@ void StructView::changeSel( int x, int y, int rel )
             ++n_obj;
             ob =  sch->getObjT<TMiso*>( n_obj );
             if( ob ) {
-              sel_x = ob->getDataD( QSL("vis_x"), 0 );
-              sel_y = ob->getDataD( QSL("vis_y"), 0 );
+              sel_x = ob->getDataD( QSL("eprm.vis_x"), 0 );
+              sel_y = ob->getDataD( QSL("eprm.vis_y"), 0 );
             };
             break;
     default: break;
@@ -186,15 +186,15 @@ bool StructView::fill_elmInfo( const TMiso * ob, ElemInfo &ei ) const
   ei.vis_x  = ei.vis_y =  ei.locked = ei.onlyFirst
     =  ei.onlyLast = ei.flip = ei.noIcon = 0;
 
-  ob->getData( QSL("vis_x")      , &ei.vis_x );
-  ob->getData( QSL("vis_y")      , &ei.vis_y );
-  ob->getData( QSL("locked")     , &ei.locked );
-  ob->getData( QSL("ignored")    , &ei.ignored );
-  ob->getData( QSL("onlyFirst")  , &ei.onlyFirst );
-  ob->getData( QSL("onlyLast")   , &ei.onlyLast );
-  ob->getData( QSL("flip")       , &ei.flip );
-  ob->getData( QSL("noIcon")     , &ei.noIcon );
-  ob->getData( QSL("showBaloon") , &ei.showBaloon );
+  ob->getData( QSL("eprm.vis_x")      , &ei.vis_x );
+  ob->getData( QSL("eprm.vis_y")      , &ei.vis_y );
+  ob->getData( QSL("eprm.locked")     , &ei.locked );
+  ob->getData( QSL("eprm.ignored")    , &ei.ignored );
+  ob->getData( QSL("eprm.onlyFirst")  , &ei.onlyFirst );
+  ob->getData( QSL("eprm.onlyLast")   , &ei.onlyLast );
+  ob->getData( QSL("eprm.flip")       , &ei.flip );
+  ob->getData( QSL("eprm.noIcon")     , &ei.noIcon );
+  ob->getData( QSL("eprm.showBaloon") , &ei.showBaloon );
   ei.flip_factor = ei.flip ? 1 : -1;
   ei.n_inp = ob->getN_SimpleInputs();
 
@@ -719,9 +719,9 @@ void StructView::lockElm()
     return;
   }
 
-  int lck = selObj->getDataD( QSL("locked"), 0 );
+  int lck = selObj->getDataD( QSL("eprm.locked"), 0 );
   lck = !lck;
-  selObj->setData( QSL("locked"), lck );
+  selObj->setData( QSL("eprm.locked"), lck );
 
   sch->reset();
   emit viewChanged();
@@ -826,8 +826,8 @@ bool StructView::cloneObj()
   if( !ob ) {
     return false; // unli
   }
-  int ox = ob->getDataD( QSL("vis_x"), 0 );
-  int oy = ob->getDataD( QSL("vis_y"), 0 );
+  int ox = ob->getDataD( QSL("eprm.vis_x"), 0 );
+  int oy = ob->getDataD( QSL("eprm.vis_y"), 0 );
 
   // find new good place near
   for( unsigned v=1; v<128; ++v ) {
@@ -837,8 +837,8 @@ bool StructView::cloneObj()
     int noy = oy + ady;
     TMiso *oob = sch->xy2Miso( nox, noy );
     if( oob ) { continue; } // place busy
-    ob->setData( QSL("vis_x"), nox );
-    ob->setData( QSL("vis_y"), noy );
+    ob->setData( QSL("eprm.vis_x"), nox );
+    ob->setData( QSL("eprm.vis_y"), noy );
     break;
   }
   return true;
@@ -860,8 +860,8 @@ bool StructView::pasteObj()
     return false;
   }
 
-  ob->setData( QSL("vis_x"), sel_x );
-  ob->setData( QSL("vis_y"), sel_y );
+  ob->setData( QSL("eprm.vis_x"), sel_x );
+  ob->setData( QSL("eprm.vis_y"), sel_y );
   ob->reportStructChanged();
   changeSel( 0, 0, 1 ); // update sel
   return true;

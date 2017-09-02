@@ -2,7 +2,7 @@
                           scheme.cpp
                              -------------------
     begin                : 2013.09.01
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -209,8 +209,8 @@ int Scheme::fback( int code, TMiso *obj )
 TMiso* Scheme::xy2Miso( int avis_x, int avis_y ) const
 {
   for( auto ob : TCHILD(TMiso*) ) {
-    int ox = ob->getDataD( "vis_x", -1 );
-    int oy = ob->getDataD( "vis_y", -1 );
+    int ox = ob->getDataD( QSL("eprm.vis_x"), -1 );
+    int oy = ob->getDataD( QSL("eprm.vis_y"), -1 );
     if( ox == avis_x && oy == avis_y ) {
       return ob;
     }
@@ -222,8 +222,8 @@ QSize Scheme::getMaxXY() const
 {
   int mx = 0, my = 0;
   for( auto ob : TCHILD(TMiso*) ) {
-    int ox = ob->getDataD( "vis_x", 0 );
-    int oy = ob->getDataD( "vis_y", 0 );
+    int ox = ob->getDataD( QSL("eprm.vis_x"), 0 );
+    int oy = ob->getDataD( QSL("eprm.vis_y"), 0 );
     if( ox > mx ) {
       mx = ox;
     }
@@ -242,8 +242,8 @@ TMiso* Scheme::addElem( const QString &cl_name, const QString &ob_name, int avis
   if( !ob ) {
     return nullptr;
   }
-  ob->setData( "vis_x", avis_x );
-  ob->setData( "vis_y", avis_y );
+  ob->setData( QSL("eprm.vis_x"), avis_x );
+  ob->setData( QSL("eprm.vis_y"), avis_y );
   reset();
   return ob;
 }
@@ -274,8 +274,8 @@ int Scheme::moveElem( const QString &nm, int newx, int newy )
     return -1; // busy
   }
 
-  ob->setData( "vis_x", newx );
-  ob->setData( "vis_y", newy );
+  ob->setData( QSL("eprm.vis_x"), newx );
+  ob->setData( QSL("eprm.vis_y"), newy );
   reset();
   return 0;
 }
@@ -288,7 +288,7 @@ void Scheme::do_structChanged()
 
   for( auto ob : TCHILD(TMiso*) ) {
     int ign = 0;
-    ob->getData( "ignored", &ign, false );
+    ob->getData( QSL("eprm.ignored"), &ign, false );
     if( ign ) {
       continue;
     }

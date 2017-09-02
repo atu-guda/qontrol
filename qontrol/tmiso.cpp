@@ -2,7 +2,7 @@
                           tmiso.cpp  -  description
                              -------------------
     begin                : Mon Jul 24 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -40,6 +40,7 @@ int ElemParams::do_postFileRead()
     return 0;
   }
 
+  // convert from old
   vis_x       = par->getDataD( QSL("vis_x"), 1 );
   vis_y       = par->getDataD( QSL("vis_y"), 1 );
   noCalcStart = par->getDataD( QSL("noCalcStart"), 0 );
@@ -79,15 +80,15 @@ QString TMiso::textVisual() const
 double TMiso::fun( IterType itype ) noexcept
 {
   iter_c = itype;
-  if( locked || ignored ) {
+  if( ca_locked || ca_ignored ) {
     return out0 = (double)out0_init;
   }
 
-  if( onlyFirst && itype != IterFirst ) {
+  if( ca_onlyFirst && itype != IterFirst ) {
     return out0;
   }
 
-  if( onlyLast && itype != IterLast ) {
+  if( ca_onlyLast && itype != IterLast ) {
     return out0;
   }
 
@@ -112,7 +113,12 @@ double TMiso::f_d( double /*arg0*/, double /*arg1*/, double /*arg2*/, double /*a
 
 int TMiso::do_startLoop( long acnx, long acny )
 {
-  if( ignored ) {
+  ca_noCalcStart = getDataD( QSL("eprm.noCalcStart"), 0 );
+  ca_locked      = getDataD( QSL("eprm.locked"),      0 );
+  ca_ignored     = getDataD( QSL("eprm.ignored"),     0 );
+  ca_onlyFirst   = getDataD( QSL("eprm.onlyFirst"),   0 );
+  ca_onlyLast    = getDataD( QSL("eprm.onlyLast"),    0 );
+  if( ca_ignored ) {
     return 1;
   }
   state = stateRun;
@@ -123,7 +129,10 @@ int TMiso::do_startLoop( long acnx, long acny )
 
 void TMiso::preCalc()
 {
-  if( hasClassProps( clpCalcAtStart ) && ! noCalcStart  ) {
+  if( !eprm ) {
+    return;
+  }
+  if( hasClassProps( clpCalcAtStart ) && ! ca_noCalcStart  ) {
     readAllInputs();
     fun( IterFirst );
   }

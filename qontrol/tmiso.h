@@ -98,23 +98,25 @@ class TMiso : public LinkedObj  {
    /** do real actions after structure changed - refills inputs */
    virtual void do_structChanged() override;
 
-   PRM_STRING(       descr, efNRC, "description", "Object description", "max=128\nncol=-1");
-   PRM_INT(            ord, efOld, "Order", "obsoleted", "" );
-   PRM_INT(          vis_x, efNoDial | efNRC, "Visual x", "X-coordinate of element in scheme", "min=0\nmax=64" );
-   PRM_INT(          vis_y, efNoDial | efNRC, "Visual y", "Y-coordinate of element in scheme", "min=0\nmax=64" );
-   PRM_PARAMD(   out0_init, efNRC,       "Init value", "Initial value of output", "def=0.0\nsep=block" );
+   PRM_STRING(       descr, efNRC,  "description", "Object description", "max=128\nncol=-1");
+   PRM_INT(            ord, efOld,  "Order", "obsoleted", "" );
+   PRM_INT(          vis_x, efOld,  "Visual x", "X-coordinate of element in scheme", "min=0\nmax=64" );
+   PRM_INT(          vis_y, efOld,  "Visual y", "Y-coordinate of element in scheme", "min=0\nmax=64" );
+   PRM_PARAMD(   out0_init, efNRC,  "Init value", "Initial value of output", "def=0.0\nsep=block" );
    PRM_DOUBLE(        out0, efRO | efNoSave, "Output", "Main output", "" );
-   PRM_SWITCH( noCalcStart,  efNRC, "No calc at start", "Disable out0 at startLoop ", ""  );
+   PRM_SWITCH( noCalcStart,  efOld, "No calc at start", "Disable out0 at startLoop ", ""  );
 
-   PRM_SWITCH( locked     ,  efNRC,          "Locked", "Bypass out0_init to output"              , "sep=col"  );
-   PRM_SWITCH( ignored    ,  efNRC,         "Ignored", "Ignore element while run"                , ""  );
-   PRM_SWITCH( onlyFirst  ,  efNRC,      "only First", "Process element only at first iteration" , "" );
-   PRM_SWITCH( onlyLast   ,  efNRC,       "only Last", "Process element only at last iteration"  , "" );
-   PRM_SWITCH( flip       ,  efNRC,      "flip image", "flip left-right element icon"            , "sep=col" );
-   PRM_SWITCH( noIcon     ,  efNRC,         "no Icon", "don't show element icon"                 , "" );
-   PRM_SWITCH( showBaloon ,  efNRC,     "show Baloon", "Show baloon on scheme with out0"         , "" );
+   PRM_SWITCH( locked     ,  efOld,          "Locked", "Bypass out0_init to output"              , "sep=col"  );
+   PRM_SWITCH( ignored    ,  efOld,         "Ignored", "Ignore element while run"                , ""  );
+   PRM_SWITCH( onlyFirst  ,  efOld,      "only First", "Process element only at first iteration" , "" );
+   PRM_SWITCH( onlyLast   ,  efOld,       "only Last", "Process element only at last iteration"  , "" );
+   PRM_SWITCH( flip       ,  efOld,      "flip image", "flip left-right element icon"            , "sep=col" );
+   PRM_SWITCH( noIcon     ,  efOld,         "no Icon", "don't show element icon"                 , "" );
+   PRM_SWITCH( showBaloon ,  efOld,     "show Baloon", "Show baloon on scheme with out0"         , "" );
 
    ElemParams *eprm = nullptr;
+   // cached vars, set in TMiso::do_startLoop
+   int ca_noCalcStart = 0, ca_locked = 0, ca_ignored = 0, ca_onlyFirst = 0, ca_onlyLast = 0;
 
    DCL_DEFAULT_STATIC;
 };
