@@ -80,6 +80,7 @@ enum _ELEM_FLAGS {
   efStructCh    = 0x200,   //* SS - changes hits common structure [9]
   efROAny = efRO | efRODial,
   efInner = efNoDial | efNoSave | efRO,
+  efDummy = efNoDial | efNoSave, // for dummy elements, like dialog hidden separators
   efTmp = efNoSave | efRO,
   efOld = efNRC | efNoDial | efNoSave
 };

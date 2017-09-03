@@ -1723,9 +1723,6 @@ int DataDialog::createWidgets()
   was_tab = true;
 
   for( auto ho :  ds.TCHILD(HolderData*) ) {
-    if( ho->hasAnyFlags( efNoDial ) ) {
-      continue;
-    }
 
     QString sep =  ho->getParm( QSL("sep") );
     QStringList seps = sep.split( QSL(",") );
@@ -1771,25 +1768,27 @@ int DataDialog::createWidgets()
       nr = nr_max; nc = 0;
     }
 
-    QString name = ho->objectName();
+    if( ! ho->hasAnyFlags( efNoDial ) ) {
+      QString name = ho->objectName();
 
-    DataWidget *w = FactoryDataWidget::theFactory().createDataWidget( *ho, tw );
-    if( !w ) {
-      qWarning() << "not found edit widget for object " << name << WHE;
-      continue;
-    }
+      DataWidget *w = FactoryDataWidget::theFactory().createDataWidget( *ho, tw );
+      if( !w ) {
+        qWarning() << "not found edit widget for object " << name << WHE;
+        continue;
+      }
 
-    dwm[name] = w;
-    QString whats = ho->getType() % QSL(" ") % ho->objectName() % QSL("; ")
-                  % ho->dataObj( 0, Qt::WhatsThisRole ).toString();
-    w->setWhatsThis( whats );
-    // w->setStatusTip( whats ); // TODO: just for test
-    // w->setToolTip( whats ); // TODO: just for test
-    lay_gr->addWidget( w, nr, nc, 1, ncol );
+      dwm[name] = w;
+      QString whats = ho->getType() % QSL(" ") % ho->objectName() % QSL("; ")
+        % ho->dataObj( 0, Qt::WhatsThisRole ).toString();
+      w->setWhatsThis( whats );
+      // w->setStatusTip( whats ); // TODO: just for test
+      // w->setToolTip( whats ); // TODO: just for test
+      lay_gr->addWidget( w, nr, nc, 1, ncol );
 
-    ++nr;
-    if( nr > nr_max ) {
-      nr_max = nr;
+      ++nr;
+      if( nr > nr_max ) {
+        nr_max = nr;
+      }
     }
 
     was_col = was_block = was_tab = false;

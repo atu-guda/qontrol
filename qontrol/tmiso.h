@@ -76,7 +76,7 @@ class TMiso : public LinkedObj  {
    PRM_INT(          vis_y, efOld,  "Visual y", "Y-coordinate of element in scheme", "min=0\nmax=64" );
    PRM_PARAMD(   out0_init, efNRC,  "Init value", "Initial value of output", "def=0.0\nsep=block" );
    PRM_DOUBLE(        out0, efRO | efNoSave, "Output", "Main output", "sep=col" );
-   PRM_SWITCH( noCalcStart,  efOld, "No calc at start", "Disable out0 at startLoop ", ""  );
+   PRM_SWITCH( noCalcStart, efOld, "No calc at start", "Disable out0 at startLoop ", ""  );
 
    // these parameters is moed to ElemParams, remove after conversion
    PRM_SWITCH( locked     ,  efOld,          "Locked", "Bypass out0_init to output"              , "sep=col"  );
