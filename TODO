@@ -1,7 +1,8 @@
 BUG: old value holded for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
+BUG: object button may change place in dialog: may by uncontrolled order?
 Rethink start iterations: separate func!
 Special TMiso (or ???) function: on_param_changed();
-Element baloon string and/or Scheme large label + show/hide.
+Scheme large label + show/hide.
 Element extra graphics: bar/offset, SVG, other lang.
 LinesDialog : simple table, return QStringList, format string "sddil"
 No: Better engine: QJSEngine? -- now in not better, see qjsengine branch

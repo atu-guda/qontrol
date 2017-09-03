@@ -336,11 +336,15 @@ void StructView::drawAll( QPainter &p )
     }
 
     if( ei.showBaloon ) {
-      double v;
-      ob->getData( QSL("out0"), &v, false );
+      QString bs;
+      ob->getData( QSL("eprm.baloonStr"), bs, false );
+      if( bs.isEmpty() ) {
+        bs = QSL("@{out0}") ;
+      }
+      QString showStr = substValues( bs, ob );
       p.setPen( Qt::black ); p.setBrush( QColor(255,255,220) );
-      p.drawRect( ei.xs+obj_sz-3, ei.ys-ex_small+1, em_small*9, ex_small );
-      p.drawText( ei.xs + obj_sz, ei.ys, QSNL( v, 12 ) ); // TODO: format + any format string
+      p.drawRect( ei.xs+obj_sz-3, ei.ys-ex_small+1, small_fm.width( showStr ) + 4, ex_small );
+      p.drawText( ei.xs + obj_sz, ei.ys, showStr );
     }
 
     if( !showLinks ) {
