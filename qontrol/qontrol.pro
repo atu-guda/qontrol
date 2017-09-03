@@ -31,6 +31,7 @@ SOURCES += \
   datapool.cpp \
   dataset.cpp \
   elemfact.cpp \
+  elemparams.cpp \
   linkedobj.cpp \
   main.cpp \
   miscfun.cpp \
@@ -130,6 +131,7 @@ HEADERS += \
   datapool.h \
   dataset.h \
   defs.h \
+  elemparams.h \
   linkedobj.h \
   miscfun.h \
   colorbtn.h \

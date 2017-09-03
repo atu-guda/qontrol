@@ -1,6 +1,6 @@
 #pragma once
 /***************************************************************************
-                          tmiso.h  -  description
+                          tmiso.h  - base for scheme elements description
                              -------------------
     begin                : Mon Jul 24 2000
     copyright            : (C) 2000-2017 by atu
@@ -23,35 +23,7 @@
 
 
 #include "linkedobj.h"
-
-// aux element params: TODO: move here from TMiso
-class ElemParams : public TDataSet  {
-  Q_OBJECT
- public:
-   DCL_CTOR(ElemParams);
-   // virtual ~ElemParams() override;
-   DCL_CREATE;
-   DCL_STD_INF;
-
- public: // SIC, this is a structure!
-   PRM_INT(          vis_x, efNRC,         "Visual x", "X-coordinate of element in scheme", "min=0\nmax=1024" );
-   PRM_INT(          vis_y, efNRC,         "Visual y", "Y-coordinate of element in scheme", "min=0\nmax=1024" );
-   PRM_SWITCH( noCalcStart, efNRC, "No calc at start", "Disable out0 at startLoop ", ""  );
-
-   PRM_SWITCH(      locked, efNRC,           "Locked", "Bypass out0_init to output"              , "sep=col"  );
-   PRM_SWITCH(     ignored, efNRC,          "Ignored", "Ignore element while run"                , ""  );
-   PRM_SWITCH(   onlyFirst, efNRC,       "only First", "Process element only at first iteration" , "" );
-   PRM_SWITCH(    onlyLast, efNRC,        "only Last", "Process element only at last iteration"  , "" );
-   PRM_SWITCH(        flip, efNRC,       "flip image", "flip left-right element icon"            , "sep=col" );
-   PRM_SWITCH(      noIcon, efNRC,          "no Icon", "don't show element icon"                 , "" );
-   PRM_SWITCH(  showBaloon, efNRC,      "show Baloon", "Show baloon on scheme with out0"         , "" );
-
-   PRM_STRING(   baloonStr, efNRC,    "Baloon string", "Baloon format string", "sep=block\nmax=256\nncol=-1");
- protected:
-   virtual int do_postFileRead() override;
-
-   DCL_DEFAULT_STATIC;
-};
+#include "elemparams.h"
 
 // -------------------------- TMiso -----------------------------
 
@@ -103,9 +75,10 @@ class TMiso : public LinkedObj  {
    PRM_INT(          vis_x, efOld,  "Visual x", "X-coordinate of element in scheme", "min=0\nmax=64" );
    PRM_INT(          vis_y, efOld,  "Visual y", "Y-coordinate of element in scheme", "min=0\nmax=64" );
    PRM_PARAMD(   out0_init, efNRC,  "Init value", "Initial value of output", "def=0.0\nsep=block" );
-   PRM_DOUBLE(        out0, efRO | efNoSave, "Output", "Main output", "" );
+   PRM_DOUBLE(        out0, efRO | efNoSave, "Output", "Main output", "sep=col" );
    PRM_SWITCH( noCalcStart,  efOld, "No calc at start", "Disable out0 at startLoop ", ""  );
 
+   // these parameters is moed to ElemParams, remove after conversion
    PRM_SWITCH( locked     ,  efOld,          "Locked", "Bypass out0_init to output"              , "sep=col"  );
    PRM_SWITCH( ignored    ,  efOld,         "Ignored", "Ignore element while run"                , ""  );
    PRM_SWITCH( onlyFirst  ,  efOld,      "only First", "Process element only at first iteration" , "" );

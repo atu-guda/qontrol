@@ -1,5 +1,5 @@
 /***************************************************************************
-                          tmiso.cpp  -  description
+                          tmiso.h  - base for scheme elements
                              -------------------
     begin                : Mon Jul 24 2000
     copyright            : (C) 2000-2017 by atu
@@ -21,38 +21,6 @@
 
 using namespace  std;
 
-// ------------------------ ElemParams --------------------------
-
-const char* ElemParams::helpstr = "<h1>ElemParams</h1>\n"
- "<p>Structure to hold misc auxilary element parameters.</p>\n";
-
-STD_CLASSINFO(ElemParams,clpSpecial);
-
-CTOR(ElemParams,TDataSet)
-{
-}
-
-DEFAULT_FUNCS_REG(ElemParams);
-
-int ElemParams::do_postFileRead()
-{
-  if( !par || cvtCount > 0 ) { // only on conversion
-    return 0;
-  }
-
-  // convert from old
-  vis_x       = par->getDataD( QSL("vis_x"), 1 );
-  vis_y       = par->getDataD( QSL("vis_y"), 1 );
-  noCalcStart = par->getDataD( QSL("noCalcStart"), 0 );
-  locked      = par->getDataD( QSL("locked"), 0 );
-  ignored     = par->getDataD( QSL("ignored"), 0 );
-  onlyFirst   = par->getDataD( QSL("onlyFirst"), 0 );
-  onlyLast    = par->getDataD( QSL("onlyLast"), 0 );
-  flip        = par->getDataD( QSL("flip"), 0 );
-  noIcon      = par->getDataD( QSL("noIcon"), 0 );
-  showBaloon  = par->getDataD( QSL("showBaloon"), 0 );
-  return 1;
-}
 
 // ------------------------ TMiso -------------------------------
 
