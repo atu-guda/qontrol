@@ -565,7 +565,11 @@ QString substValues( const QString &s, const HolderData *ho )
   if( !su.isValid() ) {
     return QSL("BAD_RE");
   }
-  HolderData *main_s = ho->getObj( "schems.main_s" ); // may be nullptr
+  HolderData *main_s = nullptr;
+  const HolderData *r_root = ho->getRootConst();
+  if( r_root ) {
+    main_s = r_root->getObj( "model.schems.main_s" ); // may be nullptr - different structures
+  }
 
   // for double get in form of "V.object.value"
   const LinkedObj *lobj = qobject_cast<const LinkedObj*>( ho );

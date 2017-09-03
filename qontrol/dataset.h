@@ -206,6 +206,8 @@ class HolderData : public QAbstractItemModel {
   Q_INVOKABLE bool hasAnyFlags( int flg ) const noexcept { return ( flags & flg ); }
   Q_INVOKABLE bool isRoTree( int flg = efRO ) const;
   HolderData* getParent() const noexcept { return par; } // no Q_INVOKABLE: need reg HolderData
+  HolderData* getRoot() noexcept; // not const, as we may be root
+  const HolderData* getRootConst() const noexcept;
   // return ptr to ancestor of given type
   template<typename T> T* getAncestorT() const {
     HolderData *pa = par;

@@ -566,6 +566,24 @@ bool HolderData::isRoTree( int flg ) const
   return false;
 }
 
+HolderData* HolderData::getRoot() noexcept
+{
+  HolderData *p = this, *np;
+  while( (np = p->getParent()) != nullptr ) { // find root
+    p = np;
+  }
+  return p;
+}
+
+const HolderData* HolderData::getRootConst() const noexcept
+{
+  const HolderData *p = this, *np;
+  while( (np = p->getParent()) != nullptr ) { // find root
+    p = np;
+  }
+  return p;
+}
+
 int HolderData::countObjsOfType( const QString &ob_tp, const QString &nm_start ) const
 {
   int n_el = 0, l_nm = nm_start.size();
@@ -622,12 +640,8 @@ void HolderData::reportStructChanged()
     return;
   }
 
-  HolderData *p = this, *np;
-  while( (np = p->getParent()) != nullptr ) { // find root
-    p = np;
-  }
-  // p is root now
-  p->handleStructChanged();
+  HolderData *r_root = getRoot();
+  r_root->handleStructChanged();
 }
 
 
