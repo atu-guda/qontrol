@@ -347,6 +347,35 @@ void StructView::drawAll( QPainter &p )
       p.drawText( ei.xs + obj_sz, ei.ys, showStr );
     }
 
+    if( ob->getDataD( QSL("eprm.showBar"), 0 ) ) {
+      QString bar_s = ob->getDataD( QSL("eprm.barValue"), QSL("out0") );
+      QColor bar_c;
+      ob->getData( QSL("eprm.barColor"), bar_c );
+      double bar_min = ob->getDataD( QSL("eprm.barMin"),  0.0 );
+      double bar_max = ob->getDataD( QSL("eprm.barMax"),  1.0 );
+      if( bar_max <= bar_min ) {
+        bar_max = bar_min + 1;
+      }
+      double bar_x0  = ob->getDataD( QSL("eprm.barX0") ,  0.5 );
+      double bar_y0  = ob->getDataD( QSL("eprm.barY0") , -0.5 );
+      double bar_w   = ob->getDataD( QSL("eprm.barW")  ,  0.2 );
+      double bar_h   = ob->getDataD( QSL("eprm.barH")  ,  1.0 );
+      int b_x0 = ei.xc + (int)( bar_x0 * obj_sz );
+      int b_y0 = ei.yc - (int)( bar_y0 * obj_sz );
+      int b_w  =  (int)( bar_w * obj_sz );
+      int b_h0 = -(int)( bar_h * obj_sz );
+
+      double vb = ob->getDataD( bar_s, bar_min );
+      double rvb = ( vb - bar_min ) / ( bar_max - bar_min );
+      rvb = vBound( 0.0, rvb, 1.0 );
+      int b_h  = -(int)( bar_h * obj_sz  * rvb );
+
+      p.setBrush( Qt::NoBrush );
+      p.drawRect( b_x0, b_y0, b_w, b_h0 );
+      p.setBrush( bar_c );
+      p.drawRect( b_x0, b_y0, b_w, b_h );
+    }
+
     if( !showLinks ) {
       continue;
     }
