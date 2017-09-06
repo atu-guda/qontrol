@@ -459,7 +459,7 @@ void beautifyScale( double &a, double &b )
 
   double dlt = b - a;
   double k1 = log10( dlt * 0.99 );
-  k1 = pow10( floor( k1 ) );
+  k1 = pow( 10, floor( k1 ) );
   double k2 = 0.1 * dlt / k1;
   k2 = ( k2 > 0.5 ) ? 1 : ( ( k2 > 0.2 ) ? 0.5 : 0.2 ) ;
   k1 *= k2;

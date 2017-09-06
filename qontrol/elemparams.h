@@ -45,7 +45,7 @@ class ElemParams : public TDataSet  {
    PRM_STRING(    barValue, efNRC,        "bar Value", "Source for bar value (def=out0)"         , "" );
    PRM_DOUBLE(      barMin, efNRC,          "bar Min", "Bar minimal value"                       , "def=0" );
    PRM_DOUBLE(      barMax, efNRC,          "bar Max", "Bar maximum value"                       , "def=1" );
-   PRM_DOUBLE(       barX0, efNRC,           "bar X0", "Bar X start position (in obj size)"      , "def=0.5\nsep=col" );
+   PRM_DOUBLE(       barX0, efNRC,           "bar X0", "Bar X start position (in obj size)"      , "def=0.3\nsep=col" );
    PRM_DOUBLE(       barY0, efNRC,           "bar Y0", "Bar Y start position (in obj size)"      , "def=-0.5" );
    PRM_DOUBLE(        barW, efNRC,        "bar Width", "Bar width (in obj size)"                 , "def=0.2" );
    PRM_DOUBLE(        barH, efNRC,       "bar Heigth", "Bar height (in obj size)"                , "def=1.0" );
