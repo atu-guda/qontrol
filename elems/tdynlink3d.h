@@ -3,7 +3,7 @@
   tdynlink3d.h - TDynLink3D class declaration
                              -------------------
     begin                : 2016.04.12
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -110,6 +110,9 @@ class TDynLink3D : public TMiso  {
    PRM_DOUBLE(         x2_plus_z2, efInner,    "x2+z2",     "x^2+z^2", "" );
    PRM_DOUBLE(         y2_plus_z2, efInner,    "y2+z2",     "y^2+z^2", "" );
    PRM_DOUBLE( x2_plus_y2_plus_z2, efInner, "x2+y2+z2", "x^2+y^2+z^2", "" );
+   PRM_DOUBLE(              sq_xy, efInner,    "sq_xy",   "sqrt0(xy)", "" );
+   PRM_DOUBLE(              sq_xz, efInner,    "sq_xz",   "sqrt0(xz)", "" );
+   PRM_DOUBLE(              sq_yz, efInner,    "sq_yz",   "sqrt0(yz)", "" );
 
    Q_CLASSINFO( "nameHintBase",  "d3l_" );
    DCL_DEFAULT_STATIC;

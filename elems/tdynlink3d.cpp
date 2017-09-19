@@ -2,7 +2,7 @@
   tdynlink3d.cpp - TDynLink3D class definition
                              -------------------
     begin                : 2016.04.12
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -47,6 +47,7 @@ void TDynLink3D::calc_misc()
   x_plus_y   =   x + y;    x_plus_z = x + z;  y_plus_z   = y +  z;
   x2_plus_y2 = x2 + y2; x2_plus_z2 = x2 + z2; y2_plus_z2 = y2 + z2;
   x_plus_y_plus_z = x + y + z;  x2_plus_y2_plus_z2 = x2 + y2 + z2;
+  sq_xy = sqrt0( xy ); sq_xz = sqrt0( xz ); sq_yz = sqrt0( yz );
 }
 
 
