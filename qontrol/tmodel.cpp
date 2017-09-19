@@ -442,7 +442,8 @@ long TModel::run( QSemaphore *sem )
   (void)runScript( scriptPostRun, &sres );
   double rt3 = get_real_time();
 
-  qWarning() << "Times: pre:" << (rt1-rt0) << "run:" << (rt2-rt1) << "post:" << (rt3-rt2) << WHE;
+  // qWarning() << "Times: pre:" << (rt1-rt0) << "run:" << (rt2-rt1) << "post:" << (rt3-rt2) << WHE;
+  time_pre = rt1 - rt0; time_run = rt2 - rt1; time_post = rt3 - rt2;
   return i_tot;
 }
 

@@ -182,10 +182,13 @@ class TModel : public LinkedObj  {
   PRM_DOUBLE( t_r, efInner, "t_r", "model relative time (from 0)", "" );
   PRM_DOUBLE( rtime, efInner, "rtime", "real world time", "" );
   /** parameters */
-  PRM_DOUBLE( prm0, efInner, "prm0", "Current prm0 value", "" );
-  PRM_DOUBLE( prm1, efInner, "prm1", "Current prm1 value", "" );
-  PRM_DOUBLE( prm2, efInner, "prm2", "Current prm2 value", "" );
-  PRM_DOUBLE( prm3, efInner, "prm3", "Current prm3 value", "" );
+  PRM_DOUBLE( prm0,      efInner, "prm0", "Current prm0 value", "" );
+  PRM_DOUBLE( prm1,      efInner, "prm1", "Current prm1 value", "" );
+  PRM_DOUBLE( prm2,      efInner, "prm2", "Current prm2 value", "" );
+  PRM_DOUBLE( prm3,      efInner, "prm3", "Current prm3 value", "" );
+  PRM_DOUBLE( time_pre,  efInner, "time_{pre}", "time for prep state", "" );
+  PRM_DOUBLE( time_run,  efInner, "time_{run}", "time for run state", "" );
+  PRM_DOUBLE( time_post, efInner, "time_{run}", "time for post state", "" );
   /** signature to check from plot painters, etc... */
   PRM_INT( sgnt, efInner, "sgnt", "signature to check", "" );
 
