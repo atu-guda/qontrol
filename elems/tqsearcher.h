@@ -77,8 +77,10 @@ class TQSearcher : public TMiso  {
    PRM_DOUBLE( p_e,   efInner, "p_e", "x of calculated p point", "" );
    PRM_DOUBLE( p_e0,  efInner, "p_{e0}", "unconstrained p_e", "" );
    PRM_DOUBLE( pr_e,  efInner, "pr_e", "Relative p of calculated extremum point", "" );
-   PRM_DOUBLE( F_c,   efInner, "F_c", "F of central point", "" );
-   PRM_DOUBLE( S_e,   efInner, "S_e", "Sure level for extremum point", "" );
+   PRM_DOUBLE( pr_e0, efInner, "pr_{e0}", "unconstrained pr_e", "" );
+   PRM_DOUBLE( F_c,   efInner, "F_c",  "F of central point", "" );
+   PRM_DOUBLE( S_e,   efInner, "S_e",  "Sure level for extremum point", "" );
+   PRM_DOUBLE( S_e3,  efInner, "S_e3", "Sure level for extremum point by 3 points", "" );
    PRM_DOUBLE( FS_e,  efInner, "FS_e", "F_C * S_e", "" );
    PRM_DOUBLE( brIdx, efInner, "brIdx", "branch index", "" );
    // forces
