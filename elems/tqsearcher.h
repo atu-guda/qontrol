@@ -48,6 +48,15 @@ class TQSearcher : public TMiso  {
    Q_CLASSINFO( "enum_QualType_3",  "Hyperbolic"  );    // qa_Hyper
    Q_CLASSINFO( "enum_QualType_4",  "Logariphmic" );    // qa_Log
 
+   enum FSOutType {
+     fso_FcSe = 0, fso_FcSe3, fso_Se3, fso_Fc
+   };
+   Q_ENUMS(FSOutType);
+   Q_CLASSINFO( "enum_FSOutType_0",  "FcSe"       );    // fso_FcSe
+   Q_CLASSINFO( "enum_FSOutType_1",  "FcSe3"      );    // fso_FcSe3
+   Q_CLASSINFO( "enum_FSOutType_2",  "Se3"        );    // fso_Se3
+   Q_CLASSINFO( "enum_FSOutType_3",  "Fc"         );    // fso_Fc
+
 
  protected:
    virtual double f() noexcept override;
@@ -67,22 +76,24 @@ class TQSearcher : public TMiso  {
    PRM_PARAMD( k_nl    , 0 , "k_{&nl}"     , "Linear f_n factor"      , "def=1.0\nsep=block" );
    PRM_PARAMD( k_nh    , 0 , "k_{nh}"      , "Hyperbolic f_n factor"  , "def=0.0\nsep=col" );
    // F
-   PRM_LIST( F_type    , 0 , "F type"      , "Quality type"           , "enum=QualType\nsep=block" );
-   PRM_PARAMD( q_gamma , 0 , "q_{\\gamma}" , "f_e factor"             , "def=2.0\nsep=col" );
-   PRM_SWITCH( limitF  , 0 , "Limit F"     , "Limit F to [0;1]"       , "def=1\nsep=col" );
-   PRM_SWITCH( limitP  , 0 , "Limit p"     , "Limit p to [p_min;p_max]", "def=1\nsep=col" );
+   PRM_LIST(   F_type  , 0 , "F type"      , "Quality type"              , "enum=QualType\nsep=block" );
+   PRM_PARAMD( q_gamma , 0 , "q_{\\gamma}" , "f_e factor"                , "def=2.0\nsep=col" );
+   PRM_LIST(  FS_type  , 0 , "FS type"     , "FcSe type"                 , "enum=FSOutType\nsep=col" );
+   PRM_SWITCH(  limitF , 0 , "Limit F"     , "Limit F to [0;1]"          , "def=1\nsep=block" );
+   PRM_SWITCH(  limitP , 0 , "Limit p"     , "Limit p to [p_min;p_max]"  , "def=1\nsep=col" );
    PRM_SWITCH( limitPe , 0 , "Limit p_e"   , "Limit p_e to [p_min;p_max]", "def=1\nsep=col" );
 
    // Outputs
-   PRM_DOUBLE( p_e,   efInner, "p_e", "x of calculated p point", "" );
-   PRM_DOUBLE( p_e0,  efInner, "p_{e0}", "unconstrained p_e", "" );
-   PRM_DOUBLE( pr_e,  efInner, "pr_e", "Relative p of calculated extremum point", "" );
+   PRM_DOUBLE( p_e,   efInner, "p_e",     "x of calculated p point", "" );
+   PRM_DOUBLE( p_e0,  efInner, "p_{e0}",  "unconstrained p_e", "" );
+   PRM_DOUBLE( pr_e,  efInner, "pr_e",    "Relative p of calculated extremum point", "" );
    PRM_DOUBLE( pr_e0, efInner, "pr_{e0}", "unconstrained pr_e", "" );
-   PRM_DOUBLE( F_c,   efInner, "F_c",  "F of central point", "" );
-   PRM_DOUBLE( S_e,   efInner, "S_e",  "Sure level for extremum point", "" );
-   PRM_DOUBLE( S_e3,  efInner, "S_e3", "Sure level for extremum point by 3 points", "" );
-   PRM_DOUBLE( FS_e,  efInner, "FS_e", "F_C * S_e", "" );
-   PRM_DOUBLE( brIdx, efInner, "brIdx", "branch index", "" );
+   PRM_DOUBLE( F_c,   efInner, "F_c",     "F of central point", "" );
+   PRM_DOUBLE( S_e,   efInner, "S_e",     "Sure level for extremum point", "" );
+   PRM_DOUBLE( S_e3,  efInner, "S_e3",    "Sure level for extremum point by 3 points", "" );
+   PRM_DOUBLE( FS_e,  efInner, "FS_e",    "FSe output eqiv value", "" );
+   PRM_DOUBLE( FS_e0, efInner, "FS_e0",   "real F_c * S_e", "" );
+   PRM_DOUBLE( brIdx, efInner, "brIdx",   "branch index", "" );
    // forces
    PRM_DOUBLE( f_c,   efInner, "f_c",    "force to initial parameter value", "" );
    PRM_DOUBLE( f_n,   efInner, "f_n",    "force to neigbours", "" );

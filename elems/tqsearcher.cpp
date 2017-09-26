@@ -140,7 +140,20 @@ double TQSearcher::f() noexcept
   dp_min = std::min( fabs( pr_e0 - pr_r ), dp_min );
   dp_min *= dist_coeff; // * 3.0; // 3.0 - scale
   S_e3  = exp( -pow2( dp_min / ( pr_r - pr_l ) ) );
-  FS_e = F_c * S_e;
+  FS_e0 = F_c * S_e;
+
+  switch( (FSOutType)(int)(FS_type) ) {
+    case fso_FcSe:
+      FS_e = FS_e0; break;
+    case fso_FcSe3:
+      FS_e = F_c * S_e3; break;
+    case fso_Se3:
+      FS_e = S_e3; break;
+    case fso_Fc:
+      FS_e = F_c; break;
+    default:
+      FS_e = 0;
+  }
 
   switch( (FeType)(int)(fe_type) ) {
     case fe_lin:
