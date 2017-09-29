@@ -938,7 +938,8 @@ void StructView::mousePressEvent( QMouseEvent *me )
                 }
                 break;
     case Qt::MidButton:
-                editObj();
+                // editObj();
+                markObj = selObj;
                 break;
     default:
                 break;// none
