@@ -486,8 +486,9 @@ bool HolderData::setDatas( const QString &datas )
   QStringList sl = datas.split( QSL("\n"), QString::SkipEmptyParts );
   QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9.]*)\s*=(.+)$)" ); // '.' - for complex strings
 
-  for( const auto &s : sl ) {
-    if( s.isEmpty() ) {
+  for( auto s : sl ) {
+    s = s.trimmed();
+    if( s.isEmpty() || s[0] == '#' || s[0] == ';' ) {
       continue;
     }
 
@@ -495,6 +496,9 @@ bool HolderData::setDatas( const QString &datas )
       QString nm  = re.cap(1);
       QString val = re.cap(2);
       val.replace( '\r', '\n' ); // newline representation
+      if( val.startsWith( QSL("\"") ) && val.endsWith( QSL("\"") ) ) { // remove " ", if have (only one)
+        val = val.mid( 1, val.size()-2 );
+      }
       was_set = setData( nm, val ) || was_set; // Order!
     } else {
       qWarning() << QSL("bad param string part: ") << s << NWHE;
