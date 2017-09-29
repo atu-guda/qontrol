@@ -47,8 +47,8 @@ class Scheme : public LinkedObj  {
   QSize getMaxXY() const;
   //* return number of elements of TMiso-alike
   Q_INVOKABLE int getNMiso() const { return v_el.size(); }
-  /** inserts active element @returns: nullptr - bad  else - ptr to inserted element */
-  TMiso* addElem( const QString &cl_name, const QString &ob_name, int avis_x, int avis_y );
+  /** inserts active element, not for iface, just for JS */
+  Q_INVOKABLE bool addElem( const QString &cl_name, const QString &ob_name, int avis_x, int avis_y );
   /** delete active element by name !0 = sucess */
   Q_INVOKABLE int delElem( const QString &ename );
   /** moves element to new position if free */

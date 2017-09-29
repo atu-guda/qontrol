@@ -484,7 +484,7 @@ bool HolderData::setDatas( const QString &datas )
 
   bool was_set = false;
   QStringList sl = datas.split( QSL("\n"), QString::SkipEmptyParts );
-  QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=(.+)$)" );
+  QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9.]*)\s*=(.+)$)" ); // '.' - for complex strings
 
   for( const auto &s : sl ) {
     if( s.isEmpty() ) {

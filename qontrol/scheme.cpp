@@ -235,17 +235,17 @@ QSize Scheme::getMaxXY() const
 }
 
 
-TMiso* Scheme::addElem( const QString &cl_name, const QString &ob_name, int avis_x, int avis_y )
+bool Scheme::addElem( const QString &cl_name, const QString &ob_name, int avis_x, int avis_y )
 {
   // not addObjT, downcast
   TMiso *ob = qobject_cast<TMiso*>( addObjP( cl_name, ob_name ) );
   if( !ob ) {
-    return nullptr;
+    return false;
   }
   ob->setData( QSL("eprm.vis_x"), avis_x );
   ob->setData( QSL("eprm.vis_y"), avis_y );
   reset();
-  return ob;
+  return true;
 }
 
 int Scheme::delElem( const QString &ename )

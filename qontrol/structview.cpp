@@ -810,8 +810,8 @@ bool StructView::addObj()
 
   AddObjParams prm;
   prm.name = objName;
-  prm.values = QSL("vis_x=") % QSN( sel_x ) % QSL("\n") %
-               QSL("vis_y=") % QSN( sel_y ) % QSL("\n");
+  prm.values = QSL("eprm.vis_x=") % QSN( sel_x ) % QSL("\n") %
+               QSL("eprm.vis_y=") % QSN( sel_y ) % QSL("\n");
 
   HolderData *ho = SelectTypeDialog::askAndCreateObj( storage, this, prm );
   if( !ho ) {
