@@ -1,3 +1,4 @@
+MGL script in ScaleData
 BUG: old value holded for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
 BUG: object button may change place in dialog: may by uncontrolled order?
 Rethink start iterations: separate func!
