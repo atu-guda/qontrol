@@ -30,29 +30,18 @@ class ScaleData : public TDataSet
 
    PRM_INT(    w0           , efNRC, "width"        , "Initial plot width"                   , "def=800\nmin=100\nmax=10000" );
    PRM_INT(    h0           , efNRC, "height"       , "Initial plot height"                  , "def=600\nmin=100\nmax=10000\nsep=col" );
-   PRM_DOUBLE( plotFactor   , efNRC, "Plot factor"  , "Plot scale relative to canvas"        , "def=1.4\nmin=0.5\nmax=10\nsep=block" );
-   PRM_DOUBLE( fontSise     , efNRC, "Font size"    , "Base font size"                       , "def=2.5\nmin=0.1\nmax=10" );
-   PRM_DOUBLE( phi          , efNRC, "Phi"          , "Phi angle"                            , "def=0.0" );
+
+   PRM_DOUBLE( phi          , efNRC, "Phi"          , "Phi angle"                            , "def=0.0\nsep=block" );
    PRM_DOUBLE( theta        , efNRC, "Theta"        , "Theta angle"                          , "def=0.0" );
-   PRM_DOUBLE( maxErr       , efNRC, "Max Err"      , "Maximum plot error"                   , "def=0.6" );
 
    PRM_SWITCH( drawAxis     , efNRC, "Axes"         , "Draw axes"                            , "def=1\nsep=col" );
    PRM_SWITCH( drawBox      , efNRC, "Box"          , "Draw box"                             , "def=1" );
-   PRM_SWITCH( drawColorbar , efNRC, "Colorbar"     , "Draw colorbar"                        , "def=0" );
-   PRM_STRING( mainLabel    , efNRC, "Main label"   , "Label for main axis (Y/Z)"            , "max=128" );
+
+   PRM_STRING( mainLabel    , efNRC, "Main label"   , "Label for main axis (Y/Z)"            , "max=128\nsep=col" );
    PRM_DOUBLE( mainScale    , efNRC, "Main scale"   , "Main label font scale"                , "def=1.0\nmin=0.1\nmax=10" );
 
-   PRM_SWITCH(     useLight , efNRC, "Light"        , "Use lighting"                         , "def=0\nsep=col" );
-   PRM_SWITCH(     useAlpha , efNRC, "Use alpha"    , "Use transparency"                     , "def=0" );
-   PRM_DOUBLE(        alpha , efNRC, "Alpha"        , "transparency value"                   , "def=0.7\nmin=0.0\nmax=1.0" );
-   PRM_INT(      legend_pos , efNRC, "Legend pos"   , "Legend position index"                , "def=3\nmin=0\nmax=4" );
+   PRM_INT(      legend_pos , efNRC, "Legend pos"   , "Legend position index"                , "def=3\nmin=0\nmax=4\nsep=col" );
    PRM_DOUBLE( legend_scale , efNRC, "Legend scale" , "Legend font scale"                    , "def=1.2\nmin=0.1\nmax=10" );
-
-   PRM_COLOR( bgcolor       , efNRC, "BG color"     , "Background color"                     , "sep=col\ndef=#FFFFFFFF" );
-   PRM_COLOR( axis_color    , efNRC, "Axis color"   , "Axis color"                           , "def=#FF000000" );
-   PRM_COLOR( grid_color    , efNRC, "Grid color"   , "Grid color"                           , "def=#FFCCCCCC" );
-   PRM_STRING( extra        , efNRC, "Extra"        , "Extra options to plot"                , "max=128" );
-   PRM_STRING( colorScheme  , efNRC, "Color scheme" , "Color Scheme for 2D plot"             , "max=128\ndef=BbcyrR" );
 
    // X-scale
    PRM_SWITCH(  autoScX     , efNRC, "Autoscale X"  , "Automaticaly make X scale"            , "def=1\nsep=block" );
@@ -85,6 +74,30 @@ class ScaleData : public TDataSet
    PRM_DOUBLE(    baseY     , efNRC, "Base Y"       , "Y coord of base"                      , "def=0\nsep=col" );
    PRM_DOUBLE(    baseZ     , efNRC, "Base Z"       , "Z coord of base"                      , "def=0\nsep=col" );
    PRM_SWITCH( drawBase     , efNRC, "Draw Base"    , "Draw base lines"                      , "sep=col" );
+
+  // ------------------------ tab
+
+   PRM_DOUBLE( plotFactor   , efNRC, "Plot factor"  , "Plot scale relative to canvas"        , "def=1.4\nmin=0.5\nmax=10\nsep=tab\ntabname=More" );
+   PRM_DOUBLE( fontSise     , efNRC, "Font size"    , "Base font size"                       , "def=2.5\nmin=0.1\nmax=10" );
+   PRM_INT(    tuneTick     , efNRC, "Tune ticks"   , "bit 0 = for large, bit 1 - small"     , "def=3" );
+   PRM_DOUBLE( multPos      , efNRC, "Mult. pos"    , "Position of the scale multipliers"    , "def=1.05\nmin=0.1\nmax=2" );
+
+   PRM_COLOR( bgcolor       , efNRC, "BG color"     , "Background color"                     , "sep=col\ndef=#FFFFFFFF" );
+   PRM_COLOR( axis_color    , efNRC, "Axis color"   , "Axis color"                           , "def=#FF000000" );
+   PRM_COLOR( grid_color    , efNRC, "Grid color"   , "Grid color"                           , "def=#FFCCCCCC" );
+
+   PRM_SWITCH( drawColorbar , efNRC, "Colorbar"     , "Draw colorbar"                        , "def=0\nsep=col" );
+   PRM_SWITCH(     useLight , efNRC, "Light"        , "Use lighting"                         , "def=0" );
+   PRM_SWITCH(     useAlpha , efNRC, "Use alpha"    , "Use transparency"                     , "def=0" );
+   PRM_DOUBLE(        alpha , efNRC, "Alpha"        , "transparency value"                   , "def=0.7\nmin=0.0\nmax=1.0" );
+
+   PRM_STRING( extra        , efNRC, "Extra"        , "Extra options to plot"                , "max=128\nsep=col" );
+   PRM_STRING( colorScheme  , efNRC, "Color scheme" , "Color Scheme for 2D plot"             , "max=128\ndef=BbcyrR" );
+   PRM_STRING( axisType     , efNRC, "Axis type"    , "Axis properties w/o xy/xyz"           , "max=64\ndef=U3AKDTVISO" );
+   PRM_DOUBLE( maxErr       , efNRC, "Max Err"      , "Maximum plot error"                   , "def=0.6" );
+
+   PRM_STRING( mglScript, 0, "MGL script", "Script to be rub before plot",
+       "props=STRING,MLINE\nncol=-1\nsep=block");
   protected:
    DCL_DEFAULT_STATIC;
 };

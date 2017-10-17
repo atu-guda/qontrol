@@ -1020,24 +1020,33 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
     plot1( gr, pli[sel] );
   }
 
+  gr.SetTuneTicks( scda->tuneTick.cval(), scda->multPos.cval() );
 
   if( scda->drawBox ) { gr.Box( axis_style.c_str() ); }
   gr.SetRotatedText( false );
+
   if( scda->drawAxis ) {
-    gr.Grid( was_2D ? "xyz" : "xy", grid_style.c_str() );
-    gr.Axis( was_2D ? "xyzU3AKDTVISO" : "xyU3AKDTVISO",  axis_style.c_str() );
     char main_label_axis = 'y';
     gr.Label( 'x', tli[LineRole::axisX]->pl_label.c_str() );
+    string a_type;
     if( was_2D ) {
+      gr.Grid( "xyz", grid_style.c_str() );
       gr.Label( 'y', tli[LineRole::axisY]->pl_label.c_str() );
       main_label_axis = 'z';
+      a_type = "xyz"s + scda->axisType.toStdString();
+    } else {
+      gr.Grid( "xy", grid_style.c_str() );
+      a_type = "xy"s + scda->axisType.toStdString();
     }
+    gr.Axis( a_type.c_str(),  axis_style.c_str() );
+
     if( ! scda->mainLabel.isEmpty() ) {
       gr.SetFontSize( scda->fontSise * scda->mainScale );
       gr.Label( main_label_axis, scda->mainLabel.c_str() );
       gr.SetFontSize( scda->fontSise );
     }
   }
+
 
   mglPoint mark_point( scda->markX, scda->markY, scda->markZ );
   if( scda->drawMark ) {
