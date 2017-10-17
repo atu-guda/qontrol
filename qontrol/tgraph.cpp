@@ -996,6 +996,11 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
   // d_z = tli[LineRole::axisZ]->md;
   d_c0 = tli[LineRole::c0]->md;
 
+  if( ! scda->mglScript.isEmpty() ) {
+    mglParse parser;
+    parser.Execute( &gr, scda->mglScript.c_str() );
+  }
+
   int ig = -1;
   for( auto pl : pli ) {
     ++ig;
@@ -1068,6 +1073,7 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
     gr.Legend( scda->legend_pos, "#" );
     gr.SetFontSize( scda->fontSise ); // back??
   }
+
 
 }
 
