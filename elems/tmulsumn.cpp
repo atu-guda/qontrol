@@ -2,7 +2,7 @@
         tmulsumn.h  - N-input multiplicator/summator + COG
                              -------------------
     begin                : 2015.11.15
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -20,8 +20,8 @@
 
 const char* TMulsumN::helpstr = "<h1>TMulsumN</h1>\n"
  "N-input multiplicator/summator + COG calculator: <br>\n"
- "p_i - input with subchannel 0,  <br>\n"
- "f_i - input with subchannel 1, <br>\n"
+ "p_i - input with subchannel 0, (channel=i),  <br>\n"
+ "f_i - input with subchannel 1, (channel=i), <br>\n"
  "i   - channel number (i>=0), <br>\n"
  "spf = \\sum_i p_i \\cdot f_i ;<br>\n"
  "sp  = \\sum_i p_i ;<br>\n"
@@ -29,7 +29,7 @@ const char* TMulsumN::helpstr = "<h1>TMulsumN</h1>\n"
  "ple,spfl,spl - local (near extremum variant);<br>\n"
  "pee,fee, - quadratic approximation;<br>\n"
  "ne - index of extremal point <br>\n"
- "pe - coordinate in extremal point <br>\n"
+ "pe - coordinate in extremal point (=p_{bm})<br>\n"
  "fe - function in extremal point <br>\n";
 
 STD_CLASSINFO(TMulsumN,clpElem);
@@ -97,16 +97,20 @@ double TMulsumN::f() noexcept
 
 int TMulsumN::do_preRun()
 {
+  // find correct (p_i,F_i) pairs
   QMap<int,ChInSim2> ipairs;
   pf_ins.clear();
   np = 0;
-  for( auto i : inps_s ) {
-    int ch  = i->getDataD( "channel", -1 );
-    int sch = i->getDataD( "subchannel", -1 );
+  for( auto in_ptr : inps_s ) {
+    if( !in_ptr ) {
+      continue;
+    }
+    int ch  = in_ptr->getDataD( QSL("channel"),    -1 );
+    int sch = in_ptr->getDataD( QSL("subchannel"), -1 );
     if( sch == 0 ) {
-      ipairs[ch].in_p = i;
+      ipairs[ch].in_p = in_ptr;
     } else if ( sch == 1 ) {
-      ipairs[ch].in_f = i;
+      ipairs[ch].in_f = in_ptr;
     } else {
       continue;
     }

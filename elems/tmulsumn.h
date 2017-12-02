@@ -3,7 +3,7 @@
         tmulsumn.cpp  - N-input multiplicator/summator + COG
                              -------------------
     begin                : 2015.11.15
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -48,7 +48,7 @@ class TMulsumN : public TMiso  {
    PRM_DOUBLE( pee,   efInner, "pee",  "quadratic extremum approximation (p)", "" );
    PRM_DOUBLE( fee,   efInner, "fee",  "quadratic extremum approximation (f)", "" );
    PRM_DOUBLE( ne,    efInner, "ne",   "Index of point near extremum", "" );
-   PRM_DOUBLE( pe,    efInner, "pe",   "Coorditate of point near extremum (p)", "" );
+   PRM_DOUBLE( pe,    efInner, "pe",   "Coorditate of point near extremum (p) (p_{bm})", "" );
    PRM_DOUBLE( fe,    efInner, "fe",   "Value at point near extremum (f)", "" );
    PRM_DOUBLE( np,    efInner, "np",   "Number of detected points", "" );
 
