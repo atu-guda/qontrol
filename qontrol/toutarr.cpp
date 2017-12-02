@@ -450,20 +450,28 @@ void TOutArr::calc_stat( bool force, bool forceAll )
     return;
   }
   reset_stat();
-  dmin = DMAX; dmax = DMIN;
+  dmin = DMAX; dmax = DMIN; damin = DMAX; damax = DMIN;
 
   for( long i=0; i<n; ++i ) {
     double v = arr[i];
+    double va = fabs( v );
     if( v < dmin ) {
       dmin = v; imin = i;
     }
     if( v > dmax ) {
       dmax = v; imax = i;
     }
+    if( va < damin ) {
+      damin = va;
+    }
+    if( va > damax ) {
+      damax = va;
+    }
     s_x += v;
     s_x2 += v*v;
+    s_xa += va;
   }
-  a_x = s_x / n;  a_x2 = s_x2 / n;
+  a_x = s_x / n;  a_x2 = s_x2 / n; a_xa = s_xa / n;
   if( allStat || forceAll ) {
     acorr = gsl_stats_lag1_autocorrelation_m( arr.data(), 1, n, a_x );
     var_x =  gsl_stats_variance_m( arr.data(), 1, n, a_x );
@@ -480,10 +488,14 @@ QString TOutArr::getAllStats( QString sep ) const
     QSL("n = ") % QSN( n ) % sep %
     QSL("min = ") % QSN( dmin ) % QSL(" at " ) % QSN( imin ) % sep %
     QSL("max = ") % QSN( dmax ) % QSL(" at " ) % QSN( imax ) % sep %
+    QSL("min|| = ") % QSN( damin ) % sep %
+    QSL("max|| = ") % QSN( damax ) % sep %
     sum % QSL("x = " ) % QSN( s_x ) % sep %
     sum % QSL("x") % QChar( 0x00B2 ) % QSL(" = " ) % QSN( s_x2 ) % sep %
+    sum % QSL("|x| = ") % QSN( s_xa ) % sep %
     mu  % QSL("x = " ) % QSN( a_x ) % sep %
     mu  % QSL("x") % QChar( 0x00B2 ) % QSL(" = " ) % QSN( a_x2 ) % sep %
+    mu  % QSL("|x| =") % QSN( a_xa ) % sep %
     QSL("Dx = ") % QSN( var_x ) % sep %
     QChar( 0x03C3) % QSL("x = ") % QSN( sd_x ) % sep %
     QSL("absdev(x) = ") % QSN( absdev_x ) % sep %

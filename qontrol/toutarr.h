@@ -3,7 +3,7 @@
                           toutarr.h  -  description
                              -------------------
     begin                : Sat Aug 5 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -81,18 +81,22 @@ class TOutArr : public LinkedObj  {
    Q_INVOKABLE void add( double v );
    // fact access to statistics. calc_stat is cheap w/o force
    Q_INVOKABLE void calc_stat( bool force = false, bool forceAll = false );
-   Q_INVOKABLE double getMin() const   {  return dmin; }
-   Q_INVOKABLE double getMax() const   {  return dmax; }
-   Q_INVOKABLE long   getIMin() const  {  return imin; }
-   Q_INVOKABLE long   getIMax() const  {  return imax; }
-   Q_INVOKABLE double getSum() const   {  return s_x; }
-   Q_INVOKABLE double getSum2() const  {  return s_x2; }
-   Q_INVOKABLE double getAver() const  {  return a_x; }
-   Q_INVOKABLE double getAver2() const {  return a_x2; }
-   Q_INVOKABLE double getVariance() const {  return var_x; }
-   Q_INVOKABLE double getStdDev() const {  return sd_x; }
-   Q_INVOKABLE double getAbsDev() const {  return absdev_x; }
-   Q_INVOKABLE double getAutoCorr() const { return acorr; }
+   Q_INVOKABLE double getMin()   const     {  return dmin; }
+   Q_INVOKABLE double getMax()   const     {  return dmax; }
+   Q_INVOKABLE double getAMin()  const     {  return damin; }
+   Q_INVOKABLE double getAMax()  const     {  return damax; }
+   Q_INVOKABLE long   getIMin()  const     {  return imin; }
+   Q_INVOKABLE long   getIMax()  const     {  return imax; }
+   Q_INVOKABLE double getSum()   const     {  return s_x; }
+   Q_INVOKABLE double getSum2()  const     {  return s_x2; }
+   Q_INVOKABLE double getSumA()  const     {  return s_xa; }
+   Q_INVOKABLE double getAver()  const     {  return a_x; }
+   Q_INVOKABLE double getAver2() const     {  return a_x2; }
+   Q_INVOKABLE double getAverA() const     {  return a_xa; }
+   Q_INVOKABLE double getVariance() const  {  return var_x; }
+   Q_INVOKABLE double getStdDev()   const  {  return sd_x; }
+   Q_INVOKABLE double getAbsDev()   const  {  return absdev_x; }
+   Q_INVOKABLE double getAutoCorr() const  { return acorr; }
    Q_INVOKABLE QString getAllStats( QString sep = "; ") const;
    Q_INVOKABLE bool isAllFinite() const { return isfin; }
    Q_INVOKABLE void  transLin( double a, double b ); // every x: x*a+b
@@ -121,10 +125,14 @@ class TOutArr : public LinkedObj  {
    // statistics
    PRM_DOUBLE(     dmin,   efTmp, "min",      "min value", "" );
    PRM_DOUBLE(     dmax,   efTmp, "max",      "max value", "" );
+   PRM_DOUBLE(    damin,   efTmp, "min||",    "min(bas) value", "" );
+   PRM_DOUBLE(    damax,   efTmp, "max||",    "max(bas) value", "" );
    PRM_DOUBLE(      s_x,   efTmp, "s_x",      "summ of elements", "" );
    PRM_DOUBLE(     s_x2,   efTmp, "s_x2",     "summ of x^2", "" );
+   PRM_DOUBLE(     s_xa,   efTmp, "s_xa",     "summ of |x|", "" );
    PRM_DOUBLE(      a_x,   efTmp, "a_x",      "average of elements", "" );
    PRM_DOUBLE(     a_x2,   efTmp, "a_x2",     "average of squares", "" );
+   PRM_DOUBLE(     a_xa,   efTmp, "a_xa",     "average of abs values", "" );
    PRM_DOUBLE(    var_x,   efTmp, "var_x",    "Variance", "" );
    PRM_DOUBLE(     sd_x,   efTmp, "sd_x",     "Standard deviation", "sep=col" );
    PRM_DOUBLE( absdev_x,   efTmp, "absvar_x", "Absolute deviation", "" );

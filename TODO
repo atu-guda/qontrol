@@ -1,4 +1,4 @@
-MGL script in ScaleData
+MGL script in ScaleData + pre/post ?
 BUG: old value holded for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
 BUG: object button may change place in dialog: may by uncontrolled order?
 Rethink start iterations: separate func!
@@ -22,7 +22,7 @@ TTrigger and TRandTrigger redesign.
 TIntegrator2: + combine TVibro, TFriction?
 Common parts in TIntegrator, TLinP1Q0, TVibro.
 "N" parm may used only while initial array creation. Need more design.
-Tabname on tabend: fix by additional element, like label?
+Tabname on tabend: fix by additional element, like label? - can be done by hidden element (efNoDial...)
 TMatrix3D(done) + rotate (separate/same) + Quaternion?
 Combine subscheme links with ordinary. TSubScheme I/O redesign?
 TModel::startRun: list on vars to copy. List for engine aliases?
