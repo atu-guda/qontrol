@@ -1005,15 +1005,20 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
   for( auto pl : pli ) {
     ++ig;
     uint64_t msk = 1ull << ig;
-    if( a_vd->off & msk ) {
+    bool is_selected = a_vd->sel == ig;
+    if( ( a_vd->off & msk ) && !is_selected ) {
       continue;
     }
-    const char *clbl = pl->pl_label.c_str();
+    auto lbl = pl->pl_label + " ("s +  to_string( ig ) + ")"s;
+    if( is_selected ) {
+      lbl += '*';
+    }
+    const char *clbl = lbl.c_str();
     // qWarning() << "clbl= " << clbl << NWHE;
     if( ! ( pl->pl_label == "." || pl->pl_label == " "  ) ) {
       gr.AddLegend( clbl, pl->pl_extra.c_str() );
     }
-    if( a_vd->sel == ig ) { // selected plotted last
+    if( is_selected ) { // selected plotted last
       continue;
     }
 
@@ -1021,7 +1026,7 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
   }
 
   int sel = a_vd->sel;
-  if(sel >=0  &&  sel < (int)pli.size() ) {
+  if( sel >=0  &&  sel < (int)pli.size() ) {
     plot1( gr, pli[sel] );
   }
 
