@@ -824,7 +824,7 @@ int HolderData::renameObj( const QString &ob_name, const QString &new_name )
     return 0;
   }
   if( getObj( new_name ) ) {
-    qWarning() << "element " << ob_name << " is already exists " << NWHE;
+    qWarning() << "element " << new_name << " is already exists " << NWHE;
     return 0;
   }
 

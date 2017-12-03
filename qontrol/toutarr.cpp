@@ -437,7 +437,7 @@ void TOutArr::reset_stat()
 {
   dmin = 0; dmax = 0.5; // bad, but safe values
   imin = imax = -1;
-  s_x = s_x2 = a_x = a_x2 = acorr = var_x = sd_x = absdev_x = 0;
+  s_x = s_x2 = s_xa = a_x = a_x2 = a_xa = acorr = var_x = sd_x = absdev_x = 0;
   need_calc_stat = true;
 }
 
