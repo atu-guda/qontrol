@@ -1,7 +1,9 @@
-MGL script in ScaleData + pre/post ?
 BUG: old value holded for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
 BUG: object button may change place in dialog: may by uncontrolled order?
 Object wide link?
+Search in views.
+Alt select in views - for simple swap?
+MGL script in ScaleData + pre/post ?
 Rethink start iterations: separate func!
 Special TMiso (or ???) function: on_param_changed();
 Scheme large label + show/hide.

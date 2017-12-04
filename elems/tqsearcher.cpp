@@ -56,11 +56,14 @@ double TQSearcher::f() noexcept
   double p_ct0 = out0 - out0_init;
   pr_l = p_l - out0; pr_r = p_r - out0;
   qr_l = q_l - q_o;  qr_c = q_c - q_o; qr_r = q_r - q_o; // not full: need /qr_c
-  p_e = out0; p_e0 = out0; pr_e = 0.0; F_c = 0.0; S_e = 0.0; S_e3 = 0.0;
+  p_e = out0; p_e0 = out0; pr_e = 0.0; F_c = 0.0; F_l = 0.0; F_r = 0.0; S_e = 0.0; S_e3 = 0.0;
+  W = 0.0; FS_e = 0.0;
   brIdx = 0;
   double sure_coeff = 0.0, dist_coeff = 1000.0;
 
   F_c = qF_fun( qr_c, q_gamma, F_type, limitF );
+  F_l = qF_fun( qr_l, q_gamma, F_type, limitF );
+  F_r = qF_fun( qr_r, q_gamma, F_type, limitF );
 
   double pr_b = 1e7; // pr_b - active bound relative
   pr_e0 = 0.0;
@@ -133,8 +136,8 @@ double TQSearcher::f() noexcept
   }
 
 
-  p_e0 = pr_e + out0;
-  p_e  = pr_e + out0;
+  p_e0 = pr_e0 + out0;
+  p_e  = pr_e  + out0;
   S_e  = sure_coeff * exp( -pow2( pr_e0 / pr_b ) );
   double dp_min = std::min( fabs( pr_e0 - pr_l ), fabs( pr_e0 ) );
   dp_min = std::min( fabs( pr_e0 - pr_r ), dp_min );
@@ -154,17 +157,30 @@ double TQSearcher::f() noexcept
     default:
       FS_e = 0;
   }
+  W = FS_e;
+
+  // TODO: scale for f_e instead of fixed S_e
+  double fef_val = 0.0;
+  switch( (FeFactorType)(int)(fef_type) ) {
+    case fef_Se:  fef_val = S_e;   break;
+    case fef_one: fef_val = 1.0;   break;
+    case fef_F:   fef_val = F_c;   break;
+    case fef_Se3: fef_val = S_e3;  break;
+    case fef_W:   fef_val = W;     break;
+    default: break;
+  }
 
   switch( (FeType)(int)(fe_type) ) {
     case fe_lin:
-       f_e = S_e * k_e * ( p_e - out0 ); break;
+       f_e = pr_e; break;
     case fe_sign:
-       f_e = S_e * k_e * sign( p_e - out0 ); break;
+       f_e = sign( pr_e ); break;
     case fe_lim:
-       f_e = S_e * k_e * limitLine( p_e - out0, ( p_max - p_min ) * lin_rlim ); break;
+       f_e = limitLine( pr_e, ( p_max - p_min ) * lin_rlim ); break;
     default:
        f_e = 0;
   }
+  f_e *= fef_val * k_e;
 
   f_c = - k_cl  * ( p_ct0 )
         - k_ch  * barrierHypUp(    out0, p_max )
