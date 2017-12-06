@@ -45,7 +45,8 @@ int TSearcher::miso_startLoop( long /*acnx*/, long /*acny*/ )
 
 double TSearcher::f() noexcept
 {
-  QuadExtrIn in { p_l, p_c, p_r, F_l, F_c, F_r, lim_s, 0, 0, true, false };
+  //              x_l, x_c, x_r, y_l, y_c, y_r, lim_s, xmin, xmax, limitX, limitG=given[xmin,xmax]
+  QuadExtrIn in { p_l, p_c, p_r, F_l, F_c, F_r, lim_s,    0,    0,   true,  false };
   QuadExtrOut out;
   // fallback values
   a_1 = 0; a_2 = 0; p_et = 0; p_e = p_c;  dF = 0; dF_dp = 0;

@@ -162,7 +162,7 @@ void TQSearcher::calc_pe_q3p()
 {
   do { // calculate p_e, sure_coeff with local exit via break
     if( F_c > 0.999999 ) { // precise
-      dist_coeff = 1.0; brIdx = 1;
+      dist_coeff = 1.0; sure_coeff = 1.0; brIdx = 1;
       break;
     }
     if( pr_l > -1e-12 || pr_r < 1e-12 ) { // BEWARE: dimension! TODO: eps
@@ -231,12 +231,16 @@ void TQSearcher::calc_pe_q3p()
 
 void TQSearcher::calc_pe_Fquad()
 {
-  QuadExtrIn in { pr_l, 0.0, pr_r, F_l, F_c, F_r, 1.0, 0, 0, false, false };
+  //               x_l, x_c,  x_r, y_l, y_c, y_r, lim_s, xmin, xmax, limitX, limitG=given[xmin,xmax]
+  QuadExtrIn in { pr_l, 0.0, pr_r, F_l, F_c, F_r,  0.99,    0,    0,   true, false };
   QuadExtrOut out;
 
   if( calcQuadExtr( in, out ) ) {
     pr_e0 = out.x_e;
     sure_coeff = 1.0; dist_coeff = 1.0; pr_b = pr_r - pr_l; // TODO: real values
+    if( out.was_limited ) {
+      sure_coeff = 0.2; dist_coeff = 10.0;
+    }
   }
 
 }
