@@ -308,6 +308,7 @@ int Scheme::do_startLoop( long acnx, long acny )
 
 int Scheme::post_startLoop()
 {
+  // LinkedObj::post_startLoop(); // = return 1
   if( !rinf || !rinf->sim ) {
     return 0;
   }

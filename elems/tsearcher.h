@@ -42,7 +42,7 @@ class TSearcher : public TMiso  {
 
  protected:
    virtual double f() noexcept override;
-   virtual int miso_startLoop( long acnx, long acny ) override;
+   virtual void preCalc() override;
 
    // f_c
    PRM_PARAMD( k_cl,  0,     "k_{&cl}", "Linear f_c factor", "def=0.1\nsep=block" );

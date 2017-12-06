@@ -97,11 +97,8 @@ int TMiso::do_startLoop( long acnx, long acny )
 
 void TMiso::preCalc()
 {
-  if( !eprm ) {
-    return;
-  }
+  readAllInputs();
   if( hasClassProps( clpCalcAtStart ) && ! ca_noCalcStart  ) {
-    readAllInputs();
     fun( IterFirst );
   }
 }

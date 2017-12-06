@@ -31,15 +31,16 @@ CTOR(TSearcher,TMiso)
 
 // out0 is p_c;
 
-int TSearcher::miso_startLoop( long /*acnx*/, long /*acny*/ )
+
+void TSearcher::preCalc()
 {
+  TMiso::preCalc();
   L_l0 = out0_init - p_l;
   L_r0 = p_r  - out0_init;
   if( autocalc_minmax ) {
     p_min = out0_init - c_mm * L_l0;
     p_max = out0_init + c_mm * L_r0;
   }
-  return 1;
 }
 
 
