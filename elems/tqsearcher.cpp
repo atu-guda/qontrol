@@ -20,6 +20,8 @@
 #include "tqsearcher.h"
 #include "miscfun.h"
 
+using namespace std;
+
 const char* TQSearcher::helpstr = "<h1>TQSearcher</h1>\n"
  "<p>Realizes some q-based tactics in search "
  "in non-linear dynamic system identification task.<br/>"
@@ -193,7 +195,8 @@ double TQSearcher::f() noexcept
   f_t = f_c + f_n + f_e;
   double p_cn = out0 + (double)f_t * v_f * ctdt;
   if( limitP ) {
-    p_cn = vBound( p_min.cval(), p_cn, p_max.cval() );
+    // p_cn = vBound( p_min.cval(), p_cn, p_max.cval() );
+    p_cn = clamp( p_cn, p_min.cval(), p_max.cval() );
   }
 
   return p_cn;
