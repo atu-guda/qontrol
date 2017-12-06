@@ -80,6 +80,11 @@ class TQSearcher : public TMiso  {
  protected:
    virtual double f() noexcept override;
    virtual int miso_startLoop( long acnx, long acny ) override;
+   // PeType dependant calculation
+   void calc_pe_q3p();
+   void calc_pe_Fquad();
+   void calc_pe_FCog();
+   void calc_pe_qquad();
 
    //  F
    PRM_LIST(   F_type  , 0 , "&F type"     , "Quality function type"     , "enum=QualType\nsep=block" );
@@ -126,6 +131,9 @@ class TQSearcher : public TMiso  {
    PRM_DOUBLE( FS_e,  efInner, "FS_e",    "FSe output eqiv value = W", "" );
    PRM_DOUBLE( FS_e0, efInner, "FS_e0",   "real F_c * S_e", "" );
    PRM_DOUBLE( brIdx, efInner, "brIdx",   "branch index", "" );
+   PRM_DOUBLE( pr_b,  efInner, "pr_b",    "active bound relative", "" );
+   PRM_DOUBLE( sure_coeff, efInner, "sure_coeff",   "Coeff for sureness", "" );
+   PRM_DOUBLE( dist_coeff, efInner, "dist_coeff",   "Distance coeff", "" );
    // forces
    PRM_DOUBLE( f_c,   efInner, "f_c",    "force to initial parameter value", "" );
    PRM_DOUBLE( f_n,   efInner, "f_n",    "force to neigbours", "" );

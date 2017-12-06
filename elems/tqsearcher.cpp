@@ -2,7 +2,7 @@
   tqsearcher.cpp - q-based searcher element declaration
                              -------------------
     begin                : 2016.12.30
-    copyright            : (C) 2017-2017 by atu
+    copyright            : (C) 2016-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -55,34 +55,130 @@ double TQSearcher::f() noexcept
 {
   // fallback values
   f_c = 0; f_n = 0; f_e = 0;
-  double p_ct0 = out0 - out0_init;
-  pr_l = p_l - out0; pr_r = p_r - out0;
-  qr_l = q_l - q_o;  qr_c = q_c - q_o; qr_r = q_r - q_o; // not full: need /qr_c
-  p_e = out0; p_e0 = out0; pr_e = 0.0; F_c = 0.0; F_l = 0.0; F_r = 0.0; S_e = 0.0; S_e3 = 0.0;
+  p_e = out0; p_e0 = out0; pr_e = 0.0; S_e = 0.0; S_e3 = 0.0;
   W = 0.0; FS_e = 0.0;
   brIdx = 0;
-  double sure_coeff = 0.0, dist_coeff = 1000.0;
+
+  sure_coeff = 0.0; dist_coeff = 1000.0;  pr_b = 1e7;
+  pr_l = p_l - out0; pr_r = p_r - out0;
+  qr_l = q_l - q_o;  qr_c = q_c - q_o; qr_r = q_r - q_o; // not full: need /qr_c
 
   F_c = qF_fun( qr_c, q_gamma, F_type, limitF );
   F_l = qF_fun( qr_l, q_gamma, F_type, limitF );
   F_r = qF_fun( qr_r, q_gamma, F_type, limitF );
 
-  double pr_b = 1e7; // pr_b - active bound relative
+  if( fabs( qr_c ) > 1e-20 ) {
+    qr_l /= qr_c; qr_r /= qr_c; qr_c = 1; // final relative q calculation, qr_c !=0 as F_c < 1
+  } else {
+    qr_l = -1000; qr_r = 1000; qr_c = 1; // fake values
+  }
+
+  /// if( pr_l > -1e-12 || pr_r < 1e-12 ) { // Too near
+
   pr_e0 = 0.0;
+
+  switch( (PeType)(int)(pe_type) ) {
+    case pe_q3p:    calc_pe_q3p();   break;
+    case pe_Fquad:  calc_pe_Fquad(); break;
+    case pe_FCog:   calc_pe_FCog();  break;
+    case pe_qquad:  calc_pe_qquad(); break;
+    default: break;
+  }
+
+  if( limitPe ) {
+    pr_e = vBound( pr_l.cval(), pr_e0, pr_r.cval() );
+  } else {
+    pr_e = pr_e0;
+  }
+
+  p_e0 = pr_e0 + out0;
+  p_e  = pr_e  + out0;
+  S_e  = sure_coeff * exp( -pow2( pr_e0 / pr_b ) );
+  double dp_min = std::min( fabs( pr_e0 - pr_l ), fabs( pr_e0 ) );
+  dp_min = std::min( fabs( pr_e0 - pr_r ), dp_min );
+  dp_min *= dist_coeff;
+  S_e3  = exp( -pow2( dp_min / ( pr_r - pr_l ) ) );
+  FS_e0 = F_c * S_e;
+
+  switch( (FSOutType)(int)(FS_type) ) {
+    case fso_FcSe:
+      FS_e = FS_e0; break;
+    case fso_FcSe3:
+      FS_e = F_c * S_e3; break;
+    case fso_Se3:
+      FS_e = S_e3; break;
+    case fso_Fc:
+      FS_e = F_c; break;
+    default:
+      FS_e = 0;
+  }
+  W = FS_e; // alias
+
+  double fef_val = 0.0;
+  switch( (FeFactorType)(int)(fef_type) ) {
+    case fef_Se:  fef_val = S_e;   break;
+    case fef_one: fef_val = 1.0;   break;
+    case fef_F:   fef_val = F_c;   break;
+    case fef_Se3: fef_val = S_e3;  break;
+    case fef_W:   fef_val = W;     break;
+    default: break;
+  }
+
+  switch( (FeType)(int)(fe_type) ) {
+    case fe_lin:
+       f_e = pr_e; break;
+    case fe_sign:
+       f_e = sign( pr_e ); break;
+    case fe_lim:
+       f_e = limitLine( pr_e, ( p_max - p_min ) * lin_rlim ); break;
+    default:
+       f_e = 0;
+  }
+  f_e *= fef_val * k_e;
+
+  // TODO: f_c types
+  double p_ct0 = out0 - out0_init;
+  f_c = - k_cl  * ( p_ct0 )
+        - k_ch  * barrierHypUp(    out0, p_max )
+        + k_ch  * barrierHypDown(  out0, p_min );
+
+  // TODO: f_n types
+  f_n =   k_nl  * ( p_r - 2*out0 + p_l )
+        - k_nh  * barrierHypUp(    out0, p_r )
+        + k_nh  * barrierHypDown(  out0, p_l );
+
+
+  f_t = f_c + f_n + f_e;
+  double p_cn = out0 + (double)f_t * v_f * ctdt;
+  if( limitP ) {
+    // p_cn = vBound( p_min.cval(), p_cn, p_max.cval() );
+    p_cn = clamp( p_cn, p_min.cval(), p_max.cval() );
+  }
+
+  return p_cn;
+}
+
+void TQSearcher::calc_pe_q3p()
+{
   do { // calculate p_e, sure_coeff with local exit via break
     if( F_c > 0.999999 ) { // precise
-      S_e = 1.0; S_e3 = 1.0; sure_coeff = 1.0; dist_coeff = 1.0; brIdx = 1;
+      dist_coeff = 1.0; brIdx = 1;
       break;
     }
-    qr_l /= qr_c; qr_r /= qr_c; qr_c = 1; // final relative q calculation, qr_c !=0 as F_c < 1
     if( pr_l > -1e-12 || pr_r < 1e-12 ) { // BEWARE: dimension! TODO: eps
       brIdx = 2;
       break;
     }
 
     // relative coordinates of crosses
-    double pr_el = pr_l / ( 1.0 - qr_l ); // zero?
-    double pr_er = pr_r / ( 1.0 - qr_r );
+    double pr_el = 100.0 * pr_l; // fallback
+    if( fabs( 1.0 - qr_l ) > 1e-12 ) {
+      pr_el = pr_l / ( 1.0 - qr_l );
+    }
+    double pr_er = 100.0 * pr_r;
+    if( fabs( 1.0 - qr_r ) > 1e-12 ) {
+      pr_er = pr_r / ( 1.0 - qr_r );
+    }
 
     if( qr_l > 0 && qr_r > 0 ) {  // ----------- one side from q_o ----------------
       if( qr_l > 1.0 ) {
@@ -131,75 +227,29 @@ double TQSearcher::f() noexcept
     break;
   } while( false ); // p_e, sure_coeff calculate
 
-  if( limitPe ) {
-    pr_e = vBound( pr_l.cval(), pr_e0, pr_r.cval() );
-  } else {
-    pr_e = pr_e0;
+}
+
+void TQSearcher::calc_pe_Fquad()
+{
+  QuadExtrIn in { pr_l, 0.0, pr_r, F_l, F_c, F_r, 1.0, 0, 0, false, false };
+  QuadExtrOut out;
+
+  if( calcQuadExtr( in, out ) ) {
+    pr_e0 = out.x_e;
+    sure_coeff = 1.0; dist_coeff = 1.0; pr_b = pr_r - pr_l; // TODO: real values
   }
 
+}
 
-  p_e0 = pr_e0 + out0;
-  p_e  = pr_e  + out0;
-  S_e  = sure_coeff * exp( -pow2( pr_e0 / pr_b ) );
-  double dp_min = std::min( fabs( pr_e0 - pr_l ), fabs( pr_e0 ) );
-  dp_min = std::min( fabs( pr_e0 - pr_r ), dp_min );
-  dp_min *= dist_coeff; // * 3.0; // 3.0 - scale
-  S_e3  = exp( -pow2( dp_min / ( pr_r - pr_l ) ) );
-  FS_e0 = F_c * S_e;
+void TQSearcher::calc_pe_FCog()
+{
+  pr_e0 = ( pr_l * F_l /* + pr_c * F_c =0 +*/ + pr_r * F_r ) / ( F_r + F_c + F_l );
+  sure_coeff = 1.0; dist_coeff = 1.0; pr_b = pr_r - pr_l; // TODO: real values
+}
 
-  switch( (FSOutType)(int)(FS_type) ) {
-    case fso_FcSe:
-      FS_e = FS_e0; break;
-    case fso_FcSe3:
-      FS_e = F_c * S_e3; break;
-    case fso_Se3:
-      FS_e = S_e3; break;
-    case fso_Fc:
-      FS_e = F_c; break;
-    default:
-      FS_e = 0;
-  }
-  W = FS_e;
+void TQSearcher::calc_pe_qquad()
+{
 
-  // TODO: scale for f_e instead of fixed S_e
-  double fef_val = 0.0;
-  switch( (FeFactorType)(int)(fef_type) ) {
-    case fef_Se:  fef_val = S_e;   break;
-    case fef_one: fef_val = 1.0;   break;
-    case fef_F:   fef_val = F_c;   break;
-    case fef_Se3: fef_val = S_e3;  break;
-    case fef_W:   fef_val = W;     break;
-    default: break;
-  }
-
-  switch( (FeType)(int)(fe_type) ) {
-    case fe_lin:
-       f_e = pr_e; break;
-    case fe_sign:
-       f_e = sign( pr_e ); break;
-    case fe_lim:
-       f_e = limitLine( pr_e, ( p_max - p_min ) * lin_rlim ); break;
-    default:
-       f_e = 0;
-  }
-  f_e *= fef_val * k_e;
-
-  f_c = - k_cl  * ( p_ct0 )
-        - k_ch  * barrierHypUp(    out0, p_max )
-        + k_ch  * barrierHypDown(  out0, p_min );
-  f_n =   k_nl  * ( p_r - 2*out0 + p_l )
-        - k_nh  * barrierHypUp(    out0, p_r )
-        + k_nh  * barrierHypDown(  out0, p_l );
-
-
-  f_t = f_c + f_n + f_e;
-  double p_cn = out0 + (double)f_t * v_f * ctdt;
-  if( limitP ) {
-    // p_cn = vBound( p_min.cval(), p_cn, p_max.cval() );
-    p_cn = clamp( p_cn, p_min.cval(), p_max.cval() );
-  }
-
-  return p_cn;
 }
 
 
