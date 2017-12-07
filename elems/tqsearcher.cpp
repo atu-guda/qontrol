@@ -142,10 +142,17 @@ double TQSearcher::f() noexcept
         - k_ch  * barrierHypUp(    out0, p_max )
         + k_ch  * barrierHypDown(  out0, p_min );
 
-  // TODO: f_n types
-  f_n =   k_nl  * ( p_r - 2*out0 + p_l )
-        - k_nh  * barrierHypUp(    out0, p_r )
-        + k_nh  * barrierHypDown(  out0, p_l );
+  // f_n calculation
+  switch( (FnType)(int)(fn_type) ) {
+    case fn_lin:
+       f_n = ( p_r - 2*out0 + p_l ); break;
+    case fn_log:
+       f_n = (  log( ( p_r - out0 ) / nl_d ) - log( ( out0 - p_l ) / nl_d ) ); break;
+    default:
+       f_n = 0;
+  }
+  f_n *= k_nl;
+  f_n += k_nh  * ( barrierHypDown( out0, p_l ) -  barrierHypUp( out0, p_r ) );
 
 
   f_t = f_c + f_n + f_e;

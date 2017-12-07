@@ -57,6 +57,13 @@ class TQSearcher : public TMiso  {
    Q_CLASSINFO( "enum_FeFactorType_3",  "Se3"     );  // fef_Se3
    Q_CLASSINFO( "enum_FeFactorType_4",  "W"       );  // fef_W
 
+   enum FnType {
+     fn_lin = 0, fn_log
+   };
+   Q_ENUMS(FnType);
+   Q_CLASSINFO( "enum_FnType_0",  "Linear"       );    // fn_lin
+   Q_CLASSINFO( "enum_FnType_1",  "Log"          );    // fn_log
+
    enum QualType { // keep in sinc with miscfun.h::QualFunType
      qa_Gauss = 0, qa_Para, qa_Lin, qa_Hyper, qa_Log
    };
@@ -109,7 +116,9 @@ class TQSearcher : public TMiso  {
    PRM_PARAMD(     k_ch, 0 , "k_{ch}"      , "Hyperbolic f_c factor"  , "def=0.0\nsep=col" );
 
    // f_n
-   PRM_PARAMD(     k_nl, 0 , "k_{&nl}"     , "Linear f_n factor"      , "def=1.0\nsep=block" );
+   PRM_LIST(    fn_type, 0 , "f_n type"    , "f_n calculation rule"   , "enum=FnType\nsep=block" );
+   PRM_PARAMD(     k_nl, 0 , "k_{&nl}"     , "Linear f_n factor"      , "def=1.0\nsep=col" );
+   PRM_PARAMD(     nl_d, 0 , "nl_{d}"      , "Non-linear f_n scale"   , "def=1.0\nsep=col" );
    PRM_PARAMD(     k_nh, 0 , "k_{nh}"      , "Hyperbolic f_n factor"  , "def=0.0\nsep=col" );
 
    // dynamics
