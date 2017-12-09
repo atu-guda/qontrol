@@ -2,8 +2,8 @@
 /***************************************************************************
     tsinsum.h -- sum of sinuses
                              -------------------
-    begin                : 2016.1226
-    copyright            : (C) 2016-2016 by atu
+    begin                : 2016.12.26
+    copyright            : (C) 2016-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -30,9 +30,14 @@ class TSinSum : public TMiso  {
    virtual double f() noexcept override;
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
 
-   PRM_PARAMD( c_0   , 0 , "&c_0"    , "Constant base"        , "" );
+   PRM_PARAMD( x0    , 0 , "&x0"     , "Input shift "         , "def=0" );
+   PRM_PARAMD( c_0   , 0 , "&c_0"    , "Constant base"        , "sep=col" );
    PRM_PARAMD( c_lin , 0 , "c_{lin}" , "Linear coeff"         , "sep=col" );
-   PRM_PARAMD( b     , 0 , "&b"      , "Coeff for all params" , "def=1\nsep=col" );
+
+   PRM_PARAMD( b     , 0 , "&b"      , "Scale for input "     , "def=1\nsep=block" );
+   PRM_PARAMD( d     , 0 , "&d"      , "Denominator"          , "def=1\nsep=col" );
+   PRM_SWITCH( mul_pi, 0, "*Pi"      , "sing arg *\\pi"       , "sep=col" );
+
 
    PRM_PARAMD( a_1   , 0 , "a_1"     , "Amplitude for ch 1"   , "sep=block" );
    PRM_PARAMD( f_1   , 0 , "f_1"     , "Frequency  for ch 1"  , "sep=col" );

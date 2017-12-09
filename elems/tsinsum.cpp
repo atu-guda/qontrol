@@ -1,8 +1,8 @@
 /***************************************************************************
     tsinsum.cpp -- sum of sinuses
                              -------------------
-    begin                : 2016.1226
-    copyright            : (C) 2016-2016 by atu
+    begin                : 2016.12.26
+    copyright            : (C) 2016-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -22,10 +22,10 @@
 using namespace std;
 
 const char* TSinSum::helpstr = "<h1>TSinSum</h1>\n"
- "Sum of sinuses of gives amplitudes, frequnces and phases. <br/>\n"
+ "Sum of sinuses of gives amplitudes, frequencies and phases. <br/>\n"
  "And linear part too<br/>\n"
- "<b>p = u_0 * b</b><br>\n"
- "x = c_0 + c_lin * u_0 + \\sum a_i * sin( p * f_i + p_i )\n";
+ "<b>p = ( u_0 - x_0 ) * b / d</b><br>\n"
+ "x = c_0 + c_lin * (u_0 - x_0)  + \\sum a_i * sin( p * f_i + p_i )\n";
 
 
 STD_CLASSINFO(TSinSum,clpElem|clpCalcAtStart);
@@ -37,14 +37,16 @@ CTOR(TSinSum,TMiso)
 
 double TSinSum::f() noexcept
 {
-  double v = c_0 + c_lin * u_0;
-  p = u_0 * b;
+  double u = u_0 - x0;
+  double v = c_0 + c_lin * u;
+  p = u * b / d;
+  double mult = mul_pi ? M_PI : 1.0;
 
-  v += a_1 * sin( p * f_1 + p_1 );
-  v += a_2 * sin( p * f_2 + p_2 );
-  v += a_3 * sin( p * f_3 + p_3 );
-  v += a_4 * sin( p * f_4 + p_4 );
-  v += a_5 * sin( p * f_5 + p_5 );
+  v += a_1 * sin( mult * ( p * f_1 + p_1 ) );
+  v += a_2 * sin( mult * ( p * f_2 + p_2 ) );
+  v += a_3 * sin( mult * ( p * f_3 + p_3 ) );
+  v += a_4 * sin( mult * ( p * f_4 + p_4 ) );
+  v += a_5 * sin( mult * ( p * f_5 + p_5 ) );
   return v;
 }
 
@@ -57,6 +59,6 @@ double TSinSum::f_d( double arg0, double /*arg1*/, double /*arg2*/, double /*arg
 DEFAULT_FUNCS_REG(TSinSum)
 
 
-// end of tfuncmisc.cpp
+// end of tsinsum.cpp
 
 
