@@ -37,6 +37,7 @@ class TSinSum : public TMiso  {
    PRM_PARAMD( b     , 0 , "&b"      , "Scale for input "     , "def=1\nsep=block" );
    PRM_PARAMD( d     , 0 , "&d"      , "Denominator"          , "def=1\nsep=col" );
    PRM_SWITCH( mul_pi, 0, "*Pi"      , "sing arg *\\pi"       , "sep=col" );
+   PRM_SWITCH( use_bd, 0, "use b/d"  , "use 8b/d fir linear"  , "sep=col" );
 
 
    PRM_PARAMD( a_1   , 0 , "a_1"     , "Amplitude for ch 1"   , "sep=block" );

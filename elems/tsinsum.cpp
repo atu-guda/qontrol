@@ -25,7 +25,7 @@ const char* TSinSum::helpstr = "<h1>TSinSum</h1>\n"
  "Sum of sinuses of gives amplitudes, frequencies and phases. <br/>\n"
  "And linear part too<br/>\n"
  "<b>p = ( u_0 - x_0 ) * b / d</b><br>\n"
- "x = c_0 + c_lin * (u_0 - x_0)  + \\sum a_i * sin( p * f_i + p_i )\n";
+ "x = c_0 + c_lin * (u_0 - x_0)[?b/d]  + \\sum a_i * sin( p * f_i + p_i )\n";
 
 
 STD_CLASSINFO(TSinSum,clpElem|clpCalcAtStart);
@@ -38,8 +38,8 @@ CTOR(TSinSum,TMiso)
 double TSinSum::f() noexcept
 {
   double u = u_0 - x0;
-  double v = c_0 + c_lin * u;
   p = u * b / d;
+  double v = c_0 + c_lin * ( use_bd ? p : u );
   double mult = mul_pi ? M_PI : 1.0;
 
   v += a_1 * sin( mult * ( p * f_1 + p_1 ) );
