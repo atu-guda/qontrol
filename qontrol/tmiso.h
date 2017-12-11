@@ -87,6 +87,12 @@ class TMiso : public LinkedObj  {
    PRM_SWITCH( noIcon     ,  efOld,         "no Icon", "don't show element icon"                 , "" );
    PRM_SWITCH( showBaloon ,  efOld,     "show Baloon", "Show baloon on scheme with out0"         , "" );
 
+   PRM_DOUBLE(      debug0, efInner, "debug0", "Debug value 0", "" );
+   PRM_DOUBLE(      debug1, efInner, "debug1", "Debug value 1", "" );
+   PRM_DOUBLE(      debug2, efInner, "debug2", "Debug value 2", "" );
+   PRM_DOUBLE(      debug3, efInner, "debug3", "Debug value 3", "" );
+
+
    ElemParams *eprm = nullptr;
    // cached vars, set in TMiso::do_startLoop
    int ca_noCalcStart = 0, ca_locked = 0, ca_ignored = 0, ca_onlyFirst = 0, ca_onlyLast = 0;

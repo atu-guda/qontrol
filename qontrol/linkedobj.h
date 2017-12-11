@@ -96,7 +96,6 @@ class LinkedObj : public TDataSet {
    Q_INVOKABLE virtual void iterateSources( int dn = 1 );
  protected:
 
-
    double ct { 0.0 };
    double ctdt { 1.0 };
    const RunInfo *rinf = nullptr;

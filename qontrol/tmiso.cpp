@@ -92,6 +92,7 @@ int TMiso::do_startLoop( long acnx, long acny )
   state = stateRun;
   out0 = (double)out0_init;
   // readAllInputs(); // moved to LinkedObj
+  debug0 = 0; debug1 = 0; debug2 = 0; debug3 = 0;
   return miso_startLoop( acnx, acny );
 }
 
