@@ -168,14 +168,21 @@ double TQSearcher::f() noexcept
 void TQSearcher::calc_pe_q3p()
 {
   do { // calculate p_e, sure_coeff with local exit via break
+    debug0 = 0.0;
     if( F_c > 0.999999 ) { // precise
       dist_coeff = 1.0; sure_coeff = 1.0; brIdx = 1;
       break;
     }
     if( pr_l > -1e-12 || pr_r < 1e-12 ) { // BEWARE: dimension! TODO: eps
-      brIdx = 2;
+      brIdx = 2; debug0 = 1e6;
       break;
     }
+
+    double qr_cl = ( qr_l * pr_r - qr_r * pr_l ) / ( pr_r - pr_l ); // use pr_b?
+    double eqrcl = fabs( qr_cl - qr_c );
+    double adp = fabs( pr_r - pr_l );
+    debug0 = adp / ( eqrcl + adp );
+    debug1 = qr_cl;
 
     // relative coordinates of crosses
     double pr_el = 100.0 * pr_l; // fallback
