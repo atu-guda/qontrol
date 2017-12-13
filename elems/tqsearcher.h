@@ -97,6 +97,7 @@ class TQSearcher : public TMiso  {
    PRM_LIST(   F_type  , 0 , "&F type"     , "Quality function type"     , "enum=QualType\nsep=block" );
    PRM_PARAMD( q_gamma , 0 , "q_{\\gamma}" , "f_e factor"                , "def=2.0\nsep=col" );
    PRM_SWITCH(  limitF , 0 , "Limit F"     , "Limit F to [0;1]"          , "def=1\nsep=col" );
+   PRM_SWITCH( use_k_l , 0 , "use k_l"     , "Multiply S to k_l"         , "def=0\nsep=col" );
    PRM_LIST(  FS_type  , 0 , "&W type"     , "Worthines stype"           , "enum=FSOutType\nsep=col" );
 
    // p_e
@@ -141,6 +142,7 @@ class TQSearcher : public TMiso  {
    PRM_DOUBLE( FS_e0, efInner, "FS_e0",   "real F_c * S_e", "" );
    PRM_DOUBLE( brIdx, efInner, "brIdx",   "branch index", "" );
    PRM_DOUBLE( pr_b,  efInner, "pr_b",    "active bound relative", "" );
+   PRM_DOUBLE( k_l,   efInner, "k_l",     "Linearity est. coeff", "" );
    PRM_DOUBLE( sure_coeff, efInner, "sure_coeff",   "Coeff for sureness", "" );
    PRM_DOUBLE( dist_coeff, efInner, "dist_coeff",   "Distance coeff", "" );
    // forces

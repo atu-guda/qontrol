@@ -59,7 +59,7 @@ double TQSearcher::f() noexcept
   W = 0.0; FS_e = 0.0;
   brIdx = 0;
 
-  sure_coeff = 0.0; dist_coeff = 1000.0;  pr_b = 0.5 * ( p_r - p_l );
+  sure_coeff = 0.0; dist_coeff = 1000.0;  pr_b = 0.5 * ( p_r - p_l ); k_l = 1.0;
   pr_l = p_l - out0; pr_r = p_r - out0;
   qr_l = q_l - q_o;  qr_c = q_c - q_o; qr_r = q_r - q_o; // not full: need /qr_c
 
@@ -98,6 +98,9 @@ double TQSearcher::f() noexcept
   dp_min = std::min( fabs( pr_e0 - pr_r ), dp_min );
   dp_min *= dist_coeff;
   S_e3  = exp( -pow2( dp_min / pr_b ) );
+  if( use_k_l ) {
+    S_e *= k_l; S_e3 *= k_l;
+  }
   FS_e0 = F_c * S_e;
 
   switch( (FSOutType)(int)(FS_type) ) {
@@ -168,21 +171,21 @@ double TQSearcher::f() noexcept
 void TQSearcher::calc_pe_q3p()
 {
   do { // calculate p_e, sure_coeff with local exit via break
-    debug0 = 0.0;
     if( F_c > 0.999999 ) { // precise
       dist_coeff = 1.0; sure_coeff = 1.0; brIdx = 1;
+      debug0 = 0; debug1 = 0;
       break;
     }
     if( pr_l > -1e-12 || pr_r < 1e-12 ) { // BEWARE: dimension! TODO: eps
-      brIdx = 2; debug0 = 1e6;
+      brIdx = 2; k_l = 0.1;
       break;
     }
 
     double qr_cl = ( qr_l * pr_r - qr_r * pr_l ) / ( pr_r - pr_l ); // use pr_b?
     double eqrcl = fabs( qr_cl - qr_c );
     double adp = fabs( pr_r - pr_l );
-    debug0 = adp / ( eqrcl + adp );
-    debug1 = qr_cl;
+    k_l = adp / ( eqrcl + adp );
+    debug0 = qr_cl; debug1 = eqrcl; debug2 = adp;
 
     // relative coordinates of crosses
     double pr_el = 100.0 * pr_l; // fallback
@@ -231,11 +234,17 @@ void TQSearcher::calc_pe_q3p()
     }
 
     // near to best: one cross inside
+    if( qr_l == 0.0 ) { // sic: precise 0 handling
+      qr_l = - qr_r * 1e-10;
+    }
+    if( qr_r == 0.0 ) {
+      qr_r = - qr_l * 1e-10;
+    }
     if( qr_l < 0  ) { // 2L
-      pr_e0 = pr_el;  pr_b = -pr_l; sure_coeff = 1.0; dist_coeff = 1.0;
+      pr_e0 = pr_el;  pr_b = -pr_l; sure_coeff = 1.0; dist_coeff = 0.5;
       brIdx = 100;
     } else {          // 2R
-      pr_e0 = pr_er;  pr_b =  pr_r; sure_coeff = 1.0; dist_coeff = 1.0;
+      pr_e0 = pr_er;  pr_b =  pr_r; sure_coeff = 1.0; dist_coeff = 0.5;
       brIdx = 101;
     }
     break;
