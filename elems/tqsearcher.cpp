@@ -183,9 +183,9 @@ void TQSearcher::calc_pe_q3p()
 
     double qr_cl = ( qr_l * pr_r - qr_r * pr_l ) / ( pr_r - pr_l ); // use pr_b?
     double eqrcl = fabs( qr_cl - qr_c );
-    double adp = fabs( pr_r - pr_l );
-    k_l = adp / ( eqrcl + adp );
-    debug0 = qr_cl; debug1 = eqrcl; debug2 = adp;
+    double adq = fabs( qr_r - qr_l );
+    k_l = adq / ( eqrcl + adq );
+    debug0 = qr_cl; debug1 = eqrcl; debug2 = adq;
 
     // relative coordinates of crosses
     double pr_el = 100.0 * pr_l; // fallback
