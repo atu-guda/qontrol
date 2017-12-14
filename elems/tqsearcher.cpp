@@ -93,14 +93,18 @@ double TQSearcher::f() noexcept
 
   p_e0 = pr_e0 + out0;
   p_e  = pr_e  + out0;
+  double pr_e0_eff = pr_e0;
+  if( use_k_l ) {
+    pr_e0_eff /= k_l;
+  }
   S_e  = sure_coeff * exp( -pow2( pr_e0 / pr_b ) );
   double dp_min = std::min( fabs( pr_e0 - pr_l ), fabs( pr_e0 ) );
   dp_min = std::min( fabs( pr_e0 - pr_r ), dp_min );
   dp_min *= dist_coeff;
-  S_e3  = exp( -pow2( dp_min / pr_b ) );
   if( use_k_l ) {
-    S_e *= k_l; S_e3 *= k_l;
+    dp_min /= k_l;
   }
+  S_e3  = exp( -pow2( dp_min / pr_b ) );
   FS_e0 = F_c * S_e;
 
   switch( (FSOutType)(int)(FS_type) ) {
@@ -171,9 +175,9 @@ double TQSearcher::f() noexcept
 void TQSearcher::calc_pe_q3p()
 {
   do { // calculate p_e, sure_coeff with local exit via break
-    if( F_c > 0.999999 ) { // precise
+    if( F_c > 0.9999999 ) { // precise
       dist_coeff = 1.0; sure_coeff = 1.0; brIdx = 1;
-      debug0 = 0; debug1 = 0;
+      // debug0 = 0; debug1 = 0;
       break;
     }
     if( pr_l > -1e-12 || pr_r < 1e-12 ) { // BEWARE: dimension! TODO: eps
@@ -184,8 +188,8 @@ void TQSearcher::calc_pe_q3p()
     double qr_cl = ( qr_l * pr_r - qr_r * pr_l ) / ( pr_r - pr_l ); // use pr_b?
     double eqrcl = fabs( qr_cl - qr_c );
     double adq = fabs( qr_r - qr_l );
-    k_l = adq / ( eqrcl + adq );
-    debug0 = qr_cl; debug1 = eqrcl; debug2 = adq;
+    k_l = adq / ( eqrcl + adq + 1e-6 ); // 1e-6 to catch /0
+    // debug0 = qr_cl; debug1 = eqrcl; debug2 = adq;
 
     // relative coordinates of crosses
     double pr_el = 100.0 * pr_l; // fallback
@@ -218,7 +222,7 @@ void TQSearcher::calc_pe_q3p()
             pr_e0 = pr_r; pr_b = pr_r;
           }
           brIdx = 6;
-          sure_coeff = 0.1; dist_coeff = 50.0;
+          sure_coeff = 0.1; dist_coeff = 20.0;
         }
       }
       break;
