@@ -86,7 +86,7 @@ double TQSearcher::f() noexcept
   }
 
   if( limitPe ) {
-    pr_e = clamp( pr_e0.cval(), pr_l.cval(), pr_r.cval() );
+    pr_e = clamp( pr_e0.cval(), pr_l.cval() * lPeScale, pr_r.cval() * lPeScale );
   } else {
     pr_e = pr_e0;
   }

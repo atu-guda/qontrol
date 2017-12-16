@@ -102,9 +102,8 @@ class TQSearcher : public TMiso  {
 
    // p_e
    PRM_LIST(   pe_type , 0 , "p_e type"    , "Algorithm for p_e estimation", "enum=PeType\nsep=block" );
-   PRM_SWITCH( limitPe , 0 , "Limit p_e"   , "Limit p_e to [p_min;p_max]",   "def=1\nsep=col" );
-   PRM_PARAMD(   p_min , 0 , "p_{min}"     , "Low p_* limit (for f_c)"  ,    "def=-1000.0\nsep=col" );
-   PRM_PARAMD(   p_max , 0 , "p_{max}"     , "High p_* limit (for f_c)" ,    "def=1000.0\nsep=col" );
+   PRM_SWITCH( limitPe , 0 , "Limit p_e"   , "Limit p_e to [p_l;p_r]*",      "def=1\nsep=col" );
+   PRM_PARAMD( lPeScale, 0 , "lPeScale"    , "Scale for p_e limit",          "def=2\nsep=col" );
 
    // f_e
    PRM_LIST(    fe_type, 0 , "f_e type"    , "f_e calculation rule"   , "enum=FeType\nsep=block" );
@@ -126,6 +125,8 @@ class TQSearcher : public TMiso  {
    // TODO: dynamics type
    PRM_PARAMD(      v_f, 0 , "&v_f"        , "Velocity factor"        , "def=1\nsep=block" );
    PRM_SWITCH(   limitP, 0 , "Limit p"     , "Limit p to [p_min;p_max]"  , "def=1\nsep=col" );
+   PRM_PARAMD(   p_min , 0 , "p_{min}"     , "Low p_* limit (for f_c)"  ,    "def=-1000.0\nsep=col" );
+   PRM_PARAMD(   p_max , 0 , "p_{max}"     , "High p_* limit (for f_c)" ,    "def=1000.0\nsep=col" );
 
    // Outputs
    PRM_DOUBLE( p_e,   efInner, "p_e",     "x of calculated p point", "" );
