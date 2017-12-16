@@ -94,31 +94,28 @@ double TQSearcher::f() noexcept
   p_e0 = pr_e0 + out0;
   p_e  = pr_e  + out0;
   double pr_e0_eff = pr_e0;
+  double dp_min = dist_coeff * min3( fabs( pr_e0 - pr_l ), fabs( pr_e0 ), fabs( pr_e0 - pr_r )  );
   if( use_k_l ) {
     pr_e0_eff /= k_l;
+    dp_min    /= k_l;
   }
-  S_e  = sure_coeff * exp( -pow2( pr_e0 / pr_b ) );
-  double dp_min = min3( fabs( pr_e0 - pr_l ), fabs( pr_e0 ), fabs( pr_e0 - pr_r )  );
-  dp_min *= dist_coeff;
-  if( use_k_l ) {
-    dp_min /= k_l;
-  }
+  S_e  = sure_coeff * exp( -pow2( pr_e0_eff / pr_b ) );
   S_e3  = exp( -pow2( dp_min / pr_b ) );
   FS_e0 = F_c * S_e;
 
   switch( (FSOutType)(int)(FS_type) ) { // really W
     case fso_FcSe:
-      FS_e = FS_e0; break;
+      W = FS_e0; break;
     case fso_FcSe3:
-      FS_e = F_c * S_e3; break;
+      W = F_c * S_e3; break;
     case fso_Se3:
-      FS_e = S_e3; break;
+      W = S_e3; break;
     case fso_Fc:
-      FS_e = F_c; break;
+      W = F_c; break;
     default:
-      FS_e = 0;
+      W = 0;
   }
-  W = FS_e; // alias
+  FS_e = W; // alias
 
   // scale factor for f_e
   double fef_val = 0.0;
