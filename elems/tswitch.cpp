@@ -18,6 +18,8 @@
 #include "miscfun.h"
 #include "tswitch.h"
 
+using namespace std;
+
 const char* TSwitch::helpstr = "<H1>TSwitch</H1>\n"
  "<p>Connects output to one of inputs, accrding to values of u_s: <br>\n</p>";
 
@@ -31,7 +33,7 @@ CTOR(TSwitch,TMiso)
 double TSwitch::f() noexcept
 {
   if( fabs(step) < D_AZERO ) { step = D_AZERO; }
-  double vn = vBound( 0.0, ( in_s - level_0 ) / step, double(n_max) );
+  double vn = clamp( ( in_s - level_0 ) / step, 0.0, double(n_max) );
   int n = int( vn );
   n_cur = n;
 

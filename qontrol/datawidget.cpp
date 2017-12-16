@@ -1731,7 +1731,7 @@ int DataDialog::createWidgets()
       tabname = ctn;
     }
     int ncol =  ho->getParmInt( QSL("ncol"), 1 ); // number of columns per widget
-    ncol = vBound( -1, ncol, MAX_COLS_PER_WIDGET );
+    ncol = clamp( ncol, -1,MAX_COLS_PER_WIDGET );
 
     if( seps.contains( QSL("tab") ) || was_tab ) {
       if( lay_gr ) {

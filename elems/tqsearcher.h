@@ -18,7 +18,7 @@
 
 #include <tmiso.h>
 
-/** Realizes some tactics in q-search
+/** Realizes some tactics in q and F based search
  * in non-linear dynamic system identification task.
   *@author atu
   */

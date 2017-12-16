@@ -18,6 +18,8 @@
 #include "miscfun.h"
 #include "tcounter.h"
 
+using namespace std;
+
 const char* TCounter::helpstr = "<H1>TCounter</H1>\n"
  "Counts input pulses up to <b>n</b>, and changes output by type.<br>\n"
  "Parameters:<br>\n"
@@ -65,7 +67,7 @@ double TCounter::f() noexcept
   if( modn ) {
     cn %= n;
   } else {
-    cn = vBound( 0, (int)(cn), (int)(n) );
+    cn = clamp( (int)(cn), 0, (int)(n) );
   }
   return a * cn + b;
 }

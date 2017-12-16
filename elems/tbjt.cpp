@@ -19,6 +19,8 @@
 #include "tbjt.h"
 #include "miscfun.h"
 
+using namespace std;
+
 const char* TBjt::helpstr = "<h1>TBjt</h1>\n"
  "<p>Simple (Ebers-Moll alike) BJT transistor simulation <br>\n"
  "</p>\n";
@@ -51,7 +53,7 @@ double TBjt::f() noexcept
 
     V_ce = V_co - V_e;
     double I_c0 = I_s * expm1( V_be / ( V_t * N_f ) )  * ( 1 + V_ce / V_af );
-    I_c0 = vBound( I_c_min, I_c0, I_c_max.cval() );
+    I_c0 = clamp( I_c0, I_c_min, I_c_max.cval() );
     I_b = I_c0 / h_FE;
     double R_ce = V_ce / I_c0 + R_ce0;
 

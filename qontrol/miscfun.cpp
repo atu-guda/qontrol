@@ -293,7 +293,7 @@ double qF_fun( double q, double q_gamma, int tp, bool limitF /* = true */ )
     default         : F_c = 0.0; break;
   };
   if( limitF ) {
-    F_c = vBound( 0.0, F_c, 1.0 );
+    F_c = clamp(  F_c, 0.0, 1.0 );
   }
   return F_c;
 }

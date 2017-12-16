@@ -23,7 +23,7 @@
 using namespace std;
 
 const char* TQSearcher::helpstr = "<h1>TQSearcher</h1>\n"
- "<p>Realizes some q-based tactics in search "
+ "<p>Realizes some q and F based tactics in search "
  "in non-linear dynamic system identification task.<br/>"
  "Main output: p_e - new central point position.</p>\n"
  "<p> brIdx: 0: unknown, 1: precise, "
@@ -86,7 +86,7 @@ double TQSearcher::f() noexcept
   }
 
   if( limitPe ) {
-    pr_e = vBound( pr_l.cval(), pr_e0, pr_r.cval() );
+    pr_e = clamp( pr_e0.cval(), pr_l.cval(), pr_r.cval() );
   } else {
     pr_e = pr_e0;
   }
@@ -98,8 +98,7 @@ double TQSearcher::f() noexcept
     pr_e0_eff /= k_l;
   }
   S_e  = sure_coeff * exp( -pow2( pr_e0 / pr_b ) );
-  double dp_min = std::min( fabs( pr_e0 - pr_l ), fabs( pr_e0 ) );
-  dp_min = std::min( fabs( pr_e0 - pr_r ), dp_min );
+  double dp_min = min3( fabs( pr_e0 - pr_l ), fabs( pr_e0 ), fabs( pr_e0 - pr_r )  );
   dp_min *= dist_coeff;
   if( use_k_l ) {
     dp_min /= k_l;
@@ -107,7 +106,7 @@ double TQSearcher::f() noexcept
   S_e3  = exp( -pow2( dp_min / pr_b ) );
   FS_e0 = F_c * S_e;
 
-  switch( (FSOutType)(int)(FS_type) ) {
+  switch( (FSOutType)(int)(FS_type) ) { // really W
     case fso_FcSe:
       FS_e = FS_e0; break;
     case fso_FcSe3:
@@ -121,6 +120,7 @@ double TQSearcher::f() noexcept
   }
   W = FS_e; // alias
 
+  // scale factor for f_e
   double fef_val = 0.0;
   switch( (FeFactorType)(int)(fef_type) ) {
     case fef_Se:  fef_val = S_e;   break;
@@ -131,6 +131,7 @@ double TQSearcher::f() noexcept
     default: break;
   }
 
+  // f_e( p_e, ... )
   switch( (FeType)(int)(fe_type) ) {
     case fe_lin:
        f_e = pr_e; break;
@@ -165,7 +166,6 @@ double TQSearcher::f() noexcept
   f_t = f_c + f_n + f_e;
   double p_cn = out0 + (double)f_t * v_f * ctdt;
   if( limitP ) {
-    // p_cn = vBound( p_min.cval(), p_cn, p_max.cval() );
     p_cn = clamp( p_cn, p_min.cval(), p_max.cval() );
   }
 
@@ -285,7 +285,7 @@ void TQSearcher::calc_pe_FCog()
 
 void TQSearcher::calc_pe_qquad()
 {
-
+  // TODO: implement
 }
 
 

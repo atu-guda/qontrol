@@ -75,6 +75,8 @@ inline double pow6s( double x ) {  return pow5( x ) * fabs( x ); }
 inline double sqrtabs( double x ) {  return std::sqrt( std::fabs( x ) ); }
 inline double sqrt0( double x ) {  return std::sqrt( posval( x ) ); }
 inline double sinqa( double x ) {  return std::sin( std::sqrt( std::fabs( x ) ) ); }
+inline double min3( double a, double b, double c ) {  return std::min( a, std::min( b, c ) ); }
+inline double max3( double a, double b, double c ) {  return std::max( a, std::max( b, c ) ); }
 
 // misc math functions
 double deadLine( double x, double x0 );
@@ -97,13 +99,13 @@ inline bool isInBounds(     long l,   long x,   long r ) { return (x>=l) && (x<=
 inline bool isInBoundsNE( double l, double x, double r ) { return (x>l)  && (x<r);  }
 inline bool isInBoundsNE(    int l,    int x,    int r ) { return (x>l)  && (x<r);  }
 inline bool isInBoundsNE(   long l,   long x,   long r ) { return (x>l)  && (x<r);  }
-// bound to given region
-inline double vBound(   double l, double x, double r )
-  { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; }
-inline int    vBound(      int l,    int x,    int r )
-  { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; }
-inline long    vBound(     long l,   long x,   long r )
-  { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; }
+// bound to given region: use new std::clamp
+// inline double vBound(   double l, double x, double r )
+//   { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; }
+// inline int    vBound(      int l,    int x,    int r )
+//   { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; }
+// inline long    vBound(     long l,   long x,   long r )
+//   { auto t = x; if( t > r ) { t=r; }; if( t<l ) { t=l;}  return t; }
 // bounds with EPS
 inline double limitUpEps( double x, double lv )
   { return ( x < lv - D_EPS ) ? x : (lv - D_EPS); }

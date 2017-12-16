@@ -18,6 +18,8 @@
 #include "miscfun.h"
 #include "tmulsumn.h"
 
+using namespace std;
+
 const char* TMulsumN::helpstr = "<h1>TMulsumN</h1>\n"
  "N-input multiplicator/summator + COG calculator: <br>\n"
  "p_i - input with subchannel 0, (channel=i),  <br>\n"
@@ -70,7 +72,7 @@ double TMulsumN::f() noexcept
 
   // local extemums (le,ee) estimation
   if( n >= 3 ) { // 3 - minimum amount to use these methods
-    int lne = vBound( 1, (int)ne, n-2 ); // shift from boundary
+    int lne   = clamp( (int)ne, 1, n-2 ); // shift from boundary
     double pl = *(pf_ins[lne-1].in_p);
     double pc = *(pf_ins[lne  ].in_p);
     double pr = *(pf_ins[lne+1].in_p);

@@ -28,7 +28,7 @@
 #include "outdataview.h"
 #include "addelemdia.h"
 
-
+using namespace std;
 
 StructView::StructView( CommonSubwin *a_par, Scheme *a_sch )
             : CmdView( a_par, a_sch ), sch( a_sch ), scheme_ro( sch->isRoTree( efROAny ) )
@@ -86,8 +86,8 @@ void StructView::print()
 void StructView::handleSelChange()
 {
   selObj = nullptr;
-  sel_x = vBound( 0, sel_x, MODEL_MX-1 );
-  sel_y = vBound( 0, sel_y, MODEL_MY-1 );
+  sel_x = clamp( sel_x, 0, MODEL_MX-1 );
+  sel_y = clamp( sel_y, 0, MODEL_MY-1 );
   sel = -1;
   auto ob = sch->xy2Miso( sel_x, sel_y );
   if( ob ) {
@@ -130,7 +130,7 @@ void StructView::changeSel( int x, int y, int rel )
 
 void StructView::changeLevel( int lev )
 {
-  level = vBound( 0, lev, 64-1 ); // TODO: define
+  level = clamp( lev, 0, 64-1 ); // TODO: define
   // update();
   emit viewChanged();
 }
@@ -367,7 +367,7 @@ void StructView::drawAll( QPainter &p )
 
       double vb = ob->getDataD( bar_s, bar_min );
       double rvb = ( vb - bar_min ) / ( bar_max - bar_min );
-      rvb = vBound( 0.0, rvb, 1.0 ); // TODO: overlimit indicator
+      rvb = clamp( rvb, 0.0, 1.0 ); // TODO: overlimit indicator
       int b_h  = -(int)( bar_h * grid_sz  * rvb );
 
       p.setBrush( Qt::NoBrush );
