@@ -96,11 +96,11 @@ double TQSearcher::f() noexcept
   double pr_e0_eff = pr_e0;
   double dp_min = dist_coeff * min3( fabs( pr_e0 - pr_l ), fabs( pr_e0 ), fabs( pr_e0 - pr_r )  );
   if( use_k_l ) {
-    pr_e0_eff /= k_l;
-    dp_min    /= k_l;
+    pr_e0_eff *= k_l;
+    dp_min    *= k_l;
   }
-  S_e  = sure_coeff * exp( -pow2( pr_e0_eff / pr_b ) );
-  S_e3  = exp( -pow2( dp_min / pr_b ) );
+  S_e   = sure_coeff * exp( -pow2( pr_e0_eff / pr_b ) );
+  S_e3  = sure_coeff * exp( -pow2(    dp_min / pr_b ) );
   FS_e0 = F_c * S_e;
 
   switch( (FSOutType)(int)(FS_type) ) { // really W
@@ -174,19 +174,22 @@ void TQSearcher::calc_pe_q3p()
   do { // calculate p_e, sure_coeff with local exit via break
     if( F_c > 0.9999999 ) { // precise
       dist_coeff = 1.0; sure_coeff = 1.0; brIdx = 1;
-      // debug0 = 0; debug1 = 0;
       break;
     }
     if( pr_l > -1e-12 || pr_r < 1e-12 ) { // BEWARE: dimension! TODO: eps
-      brIdx = 2; k_l = 0.1;
+      brIdx = 2; k_l = 10;
       break;
     }
 
     double qr_cl = ( qr_l * pr_r - qr_r * pr_l ) / ( pr_r - pr_l ); // use pr_b?
     double eqrcl = fabs( qr_cl - qr_c );
     double adq = fabs( qr_r - qr_l );
-    k_l = adq / ( eqrcl + adq + 1e-6 ); // 1e-6 to catch /0
-    // debug0 = qr_cl; debug1 = eqrcl; debug2 = adq;
+    if( adq > 1e-12 ) {
+      k_l = 1.0 + eqrcl / adq;
+    } else {
+      k_l = 100;
+    }
+    k_l = clamp( k_l.cval(), 1.0, 100.0 );
 
     // relative coordinates of crosses
     double pr_el = 100.0 * pr_l; // fallback
@@ -202,15 +205,15 @@ void TQSearcher::calc_pe_q3p()
       if( qr_l > 1.0 ) {
         if( qr_r > 1.0 ) {    // :.: central point is better, but not good
           pr_e0 = 0.1 * pr_el + 0.1 * pr_er;
-          sure_coeff = 0.2; dist_coeff = 20.0;
+          sure_coeff = 0.5; dist_coeff = 2.0 * c_pen;
           brIdx = 3;
         } else {            // ::.
-          pr_e0 = pr_er; pr_b = pr_r;   sure_coeff = 0.7; dist_coeff = 5.0;
+          pr_e0 = pr_er; pr_b = pr_r;   sure_coeff = 0.9; dist_coeff = c_pen;
           brIdx = 4;
         }
       } else {
         if( qr_r > 1 ) {    // .::
-          pr_e0 = pr_el;  pr_b = -pr_l; sure_coeff = 0.7; dist_coeff = 5.0;
+          pr_e0 = pr_el;  pr_b = -pr_l; sure_coeff = 0.9; dist_coeff = c_pen;
           brIdx = 5;
         } else {            // .:.
           if(  qr_l < qr_r ) {
@@ -219,7 +222,7 @@ void TQSearcher::calc_pe_q3p()
             pr_e0 = pr_r; pr_b = pr_r;
           }
           brIdx = 6;
-          sure_coeff = 0.1; dist_coeff = 20.0;
+          sure_coeff = 0.2; dist_coeff = 2.0 * c_pen;
         }
       }
       break;
@@ -227,9 +230,8 @@ void TQSearcher::calc_pe_q3p()
 
     if( qr_l < 0 && qr_r < 0 ) { // ------------- double cross ---------------
       pr_e0 = 0.1 * pr_el + 0.1 * pr_er;
-      pr_b = 0.5 * ( pr_r - pr_l );
       // mix?
-      sure_coeff = 0.5; dist_coeff = 5.0;
+      sure_coeff = 0.5; dist_coeff = 0.5 * c_pen;
       brIdx = 10;
       break;
     }
@@ -256,7 +258,7 @@ void TQSearcher::calc_pe_q3p()
 void TQSearcher::calc_pe_Fquad()
 {
   //               x_l, x_c,  x_r, y_l, y_c, y_r, lim_s, xmin, xmax, limitX, limitG=given[xmin,xmax]
-  QuadExtrIn in { pr_l, 0.0, pr_r, F_l, F_c, F_r,  1.49,    0,    0,   true, false };
+  QuadExtrIn in { pr_l, 0.0, pr_r, F_l, F_c, F_r,  3.00,    0,    0,   true, false };
   QuadExtrOut out;
 
   if( calcQuadExtr( in, out ) ) {

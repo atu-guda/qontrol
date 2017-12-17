@@ -104,6 +104,7 @@ class TQSearcher : public TMiso  {
    PRM_LIST(   pe_type , 0 , "p_e type"    , "Algorithm for p_e estimation", "enum=PeType\nsep=block" );
    PRM_SWITCH( limitPe , 0 , "Limit p_e"   , "Limit p_e to [p_l;p_r]*",      "def=1\nsep=col" );
    PRM_PARAMD( lPeScale, 0 , "lPeScale"    , "Scale for p_e limit",          "def=2\nsep=col" );
+   PRM_PARAMD(    c_pen, 0 , "c_{pen}"     , "Penalty base coeff for S",     "def=2\nsep=col" );
 
    // f_e
    PRM_LIST(    fe_type, 0 , "f_e type"    , "f_e calculation rule"   , "enum=FeType\nsep=block" );
