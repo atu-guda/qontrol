@@ -3,7 +3,7 @@
                           scaledata.h  -  description
                              -------------------
     begin                : 19 Jul 29 2012
-    copyright            : GPL (C) 2012-2016 by atu
+    copyright            : GPL (C) 2012-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -40,7 +40,7 @@ class ScaleData : public TDataSet
    PRM_STRING( mainLabel    , efNRC, "Main label"   , "Label for main axis (Y/Z)"            , "max=128\nsep=col" );
    PRM_DOUBLE( mainScale    , efNRC, "Main scale"   , "Main label font scale"                , "def=1.0\nmin=0.1\nmax=10" );
 
-   PRM_INT(      legend_pos , efNRC, "Legend pos"   , "Legend position index"                , "def=3\nmin=0\nmax=4\nsep=col" );
+   PRM_INT(      legend_pos , efNRC, "Legend pos"   , "Legend position index 0-3,4,tXXYY"    , "def=3\nmin=0\nsep=col" );
    PRM_DOUBLE( legend_scale , efNRC, "Legend scale" , "Legend font scale"                    , "def=1.2\nmin=0.1\nmax=10" );
 
    // X-scale

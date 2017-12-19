@@ -2,7 +2,7 @@
                           tgraph.cpp  -  description
                              -------------------
     begin                : Sat Aug 5 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -1073,12 +1073,22 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
     gr.Colorbar();
   }
 
-  if( scda->legend_pos < 4 ) {
-    gr.SetFontSize( scda->fontSise * scda->legend_scale );
-    gr.Legend( scda->legend_pos, "#" );
-    gr.SetFontSize( scda->fontSise ); // back??
+  int l_pos = scda->legend_pos;
+  //                                  0    1    2    3     4     5    6     7     8    9
+  static const char* lg_t_chars[] = { "", "#", "-", "#-", "r", "r#", "r-", "r#=", "", " ", "?", "?" };
+  gr.Push();
+  gr.SetFontSize( scda->fontSise * scda->legend_scale );
+  if( l_pos < 4 ) { // predefined pos 0-3
+    gr.Legend( l_pos, "#" );
+  } else if ( l_pos >= 10000  &&  l_pos <= 99999 ) { // manual coords: tXXYY
+    int ltype = l_pos / 10000;
+    l_pos %= 10000;
+    int l_pos_x = ( l_pos / 100 ) - 25; // some magic to handle wierd MGL legend coords
+    int l_pos_y = ( l_pos % 100 ) - 25;
+    gr.Legend( 2.0*l_pos_x/100.0, 2.0*l_pos_y/100.0, lg_t_chars[ltype] );
   }
-
+  gr.SetFontSize( scda->fontSise ); // back??
+  gr.Pop();
 
 }
 
