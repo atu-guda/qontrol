@@ -359,6 +359,8 @@ void MglView::keyPressEvent( QKeyEvent *ke )
     case Qt::Key_7: vd.sel = 7;  break;
     case Qt::Key_8: vd.sel = 8;  break;
     case Qt::Key_9: vd.sel = 9;  break;
+    case Qt::Key_BracketLeft | Ct:  --vd.sel; if( vd.sel < 0 ) { vd.sel = 0; }; break;
+    case Qt::Key_BracketRight | Ct: ++vd.sel; if( vd.sel >= vd.ng ) { vd.sel = 0; }; break;
   }
 
   update(); // even on unused keys
@@ -693,11 +695,12 @@ static const QString plot_helpstr = QSL("<b>Hot keys:</b><br/>\n"
  "<b>F1</b> - this help <br/>\n"
  "<b>a/A</b> - change alpha <br/>\n"
  "<b>o/O</b> - on/off non-selected plots <br/>\n"
+ "<b>Ctrl [ ]</b> - next/prev plot <br/><hr/>\n"
  "<b>s/S</b> - scale dialog / save current scale <br/>\n"
  "<b>Ctrl-P</b> - print<br/>\n"
  "<b>r</b> - reset and redraw<br/>\n"
  "<b>R</b> - Reload add Redraw<br/>\n"
- "<b>e</b> - export image to png <br/>\n"
+ "<b>e</b> - export image  <br/>\n"
  "<b>b</b> - set base to mark<br/>\n"
  "<b>B</b> -hide/how base lines<br/>\n"
  "<b>f</b> - toggle light<br/>\n"
