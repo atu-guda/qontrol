@@ -1086,6 +1086,9 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
     int l_pos_x = ( l_pos / 100 ) - 25; // some magic to handle wierd MGL legend coords
     int l_pos_y = ( l_pos % 100 ) - 25;
     gr.Legend( 2.0*l_pos_x/100.0, 2.0*l_pos_y/100.0, lg_t_chars[ltype] );
+    gr.ClearLegend(); // try to reset styles
+    gr.AddLegend("","");
+    gr.Legend( 2.0, 2.0, "" );
   }
   gr.SetFontSize( scda->fontSise ); // back??
   gr.Pop();
