@@ -1007,12 +1007,12 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
     ++ig;
     uint64_t msk = 1ull << ig;
     bool is_selected = sel == ig;
-    if( ( a_vd->off & msk ) && !is_selected ) {
-      continue;
-    }
+    bool is_masked = a_vd->off & msk;
     auto lbl = pl->pl_label + " ("s +  to_string( ig ) + ")"s;
     if( is_selected ) {
-      lbl += ( a_vd->off & msk ) ? '.' : '*';
+      lbl += is_masked ? '.' : '*';
+    } else {
+      lbl += is_masked ? '-' : ' ';
     }
     const char *clbl = lbl.c_str();
     // qWarning() << "clbl= " << clbl << NWHE;
@@ -1023,7 +1023,9 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
       continue;
     }
 
-    plot1( gr, pl );
+    if( ! is_masked ) {
+      plot1( gr, pl );
+    }
   }
 
   if( sel >=0  &&  sel < (int)pli.size() ) {
