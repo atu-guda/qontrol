@@ -2,7 +2,7 @@ BUG: old value holded for object w/o clpCalcAtStart or disabled noCalcStart: nee
 BUG: object button may change place in dialog: may by uncontrolled order?
 Info dialog: copy all to clipboard <Tab>, <NL>
 Snapshots of objects data: auto at end, + controlled: use by plots...
-Legend move near to bounds
+RightClick menu in mglview
 Object wide link?
 Search in views.
 Alt select in views - for simple swap?

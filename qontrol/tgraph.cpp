@@ -237,6 +237,12 @@ PlotLabel::~PlotLabel()
 {
 }
 
+QString PlotLabel::textVisual() const
+{
+  prepareText();
+  return labelWithSubst;
+}
+
 void PlotLabel::do_post_set()
 {
   LinkedObj::do_post_set();

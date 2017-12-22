@@ -674,7 +674,12 @@ QString MglView::getInfo( bool more ) const
   s += QChar( 0x03C6 ) % QSL(": ") % QSN( scd->phi ) % QSL(" ")
      % QChar( 0x03B8 ) % QSL(": ") % QSN( scd->theta )
      % QSL(" wg= ") % QSN( wg ) % QSL( " hg= " ) % QSN( hg ) % QSL(" h_tot= ") % QSN( h_tot )
-     % QSL(" mx= ") % QSN( mouse_x ) % QSL( " my= " ) % QSN( mouse_y );
+     % QSL(" mx= ") % QSN( mouse_x ) % QSL( " my= " ) % QSN( mouse_y ) % nl;
+
+  for( const auto la : gra->TCHILD(PlotLabel*) ) {
+    if( !la ) { continue; }
+    s += la->objectName() % QSL("= \"") % la->textVisual() % QSL("\"") % nl;
+  }
   return s;
 }
 
@@ -707,7 +712,7 @@ static const QString plot_helpstr = QSL("<b>Hot keys:</b><br/>\n"
  "<b>u</b> - toggle footer<br/>\n"
  "<b>g</b> - set mark to given point <br/>\n"
  "<b>l/L</b> - link/Unlink to data <br/>\n"
- "<b>d</b> - data info <br/>\n"
+ "<b>i</b> - data info <br/>\n"
  "<b>z</b> - zoom base - mark, or near mark <br/>\n"
  "<b>Z</b> - zoom reset <br/><hr/>\n"
  "<b>PageUp, PageDown</b> - move Up/Down <br>\n"
