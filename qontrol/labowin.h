@@ -178,6 +178,7 @@ class LaboWin : public QMainWindow
     // ==== run related
     void slotRunRun();
     void slotReset();
+    void slotRunPreScript();
     void slotInitEngine();
     void slotRunScript();
     void slotRunModelScript();

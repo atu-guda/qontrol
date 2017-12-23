@@ -43,7 +43,7 @@ class SimulView : public CmdListView {
     //  specific:
     bool setActive();
     bool run();
-    bool preRun();
+    bool runPreScript();
   protected:
     void init_actions();
 };

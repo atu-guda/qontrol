@@ -75,6 +75,7 @@ class TModel : public LinkedObj  {
   int stopRun();
   long run( QSemaphore *sem );
   Q_INVOKABLE long run_bg(); // startRun and stopRun to use w/o iface
+  Q_INVOKABLE bool runPreScript();
   // pass to real TGraph
   Q_INVOKABLE void plotToPng( const QString &gname, const QString &fn );
 
@@ -91,6 +92,9 @@ class TModel : public LinkedObj  {
   int runOneLoop( IterType itype );
   void fillAskedParams( const QString &names );
   void restoreAskedParams();
+  bool setCurrentSimSchem();
+  bool copyParamsFromSim();
+  bool addProprsToEngine();
 
   bool addScriptObject( const QString &nm, QObject *ob );
   bool addScriptFunc(   const QString &nm, QScriptEngine::FunctionSignature fun );

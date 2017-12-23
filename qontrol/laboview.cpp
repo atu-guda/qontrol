@@ -1,7 +1,7 @@
 /***************************************************************************
   laboview.cpp  - combined model view
   begin                : Mon Jul 31 16:51:57 EEST 2000
-  copyright            : (C) 2000-2016 by atu
+  copyright            : (C) 2000-2017 by atu
   email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -510,6 +510,14 @@ void LaboView::runRun()
   emit viewChanged();
   sview->setFocus();
 }
+
+void LaboView::runPreScript()
+{
+  model->runPreScript();
+  emit viewChanged();
+  sview->setFocus();
+}
+
 
 
 void LaboView::resetModel()

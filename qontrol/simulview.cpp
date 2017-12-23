@@ -38,7 +38,7 @@ void SimulView::init_actions()
 
   a = new QAction(  "preRun", this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(preRun()) );
+  connect( a, SIGNAL(triggered()), this, SLOT(runPreScript()) );
 
   a = new QAction( QIcon( QSL(":icons/run.png") ), "Run", this );
   lv->addAction( a );
@@ -71,11 +71,17 @@ bool SimulView::run()
   return true;
 }
 
-bool SimulView::preRun()
+bool SimulView::runPreScript()
 {
   if( !setActive() ) {
     return false;
   }
+  LaboWin *main_win = MAINWIN;
+  if( !main_win ) {
+    qWarning() << "Main window not detected in SimulView::run";
+    return false;
+  }
+  main_win->slotRunPreScript();
   return true;
 }
 

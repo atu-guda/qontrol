@@ -394,6 +394,10 @@ void LaboWin::initIface()
     a->setShortcut( Qt::Key_F9 );
   }
   {
+    /* auto a = */ makeAction( QSL("run preRun script"), "runPreScript", &LaboWin::slotRunPreScript,
+        QSL(""), pRunMenu, ActionToolBar  );
+  }
+  {
     /* auto a = */ makeAction( QSL("Rese&t"), "resetModel", &LaboWin::slotReset,
         QSL(""), pRunMenu, 0 );
   }
@@ -1235,6 +1239,11 @@ void LaboWin::importAllSchemes()
 void LaboWin::slotRunRun()
 {
   callLaboViewSlot( "runRun", tr( "Running simulation..." ) );
+}
+
+void LaboWin::slotRunPreScript()
+{
+  callLaboViewSlot( "runPreScript", tr( "Running preRun script..." ) );
 }
 
 

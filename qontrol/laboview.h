@@ -126,6 +126,7 @@ class LaboView : public CommonSubwin
 
    // runs
    void runRun();
+   void runPreScript();
    void resetModel();
    void runScript();
    int runModelScript();

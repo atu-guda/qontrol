@@ -197,81 +197,18 @@ int TModel::startRun()
     importAllSchemes(); // TODO: check?
   }
 
-  c_sim = getActiveSimulation();
-  if( !c_sim ) {
-    qWarning() << "No active simulation" << NWHE;
-    return 0;
-  }
-
-  c_sch = getActiveScheme();
-  if( !c_sch ) {
-    qWarning() << "No active scheme" << NWHE;
-    c_sim = nullptr;
+  if( ! setCurrentSimSchem() ) {
     return 0;
   }
 
 
   // TODO: all_post_set? remove debug?
   c_sim->post_set();
+
+  if( !  copyParamsFromSim() )  {
+    return false;
+  }
   reportStructChanged();
-
-  T        = c_sim->getDataD( QSL("T")        , 1.0   );
-  t_0      = c_sim->getDataD( QSL("t_0")      , 0.0   );
-  T_brk    = c_sim->getDataD( QSL("T_brk")    , 1e200 );
-  N        = c_sim->getDataD( QSL("N")        , 1l    );
-  N1       = c_sim->getDataD( QSL("N1")       , 1l    );
-  N2       = c_sim->getDataD( QSL("N2")       , 1l    );
-  n1_eff   = c_sim->getDataD( QSL("n1_eff")   , N1    );
-  n2_eff   = c_sim->getDataD( QSL("n2_eff")   , N2    );
-  n_tot    = c_sim->getDataD( QSL("n_tot")    , N     );
-  syncRT   = c_sim->getDataD( QSL("syncRT")   , 0     );
-  fakeRT   = c_sim->getDataD( QSL("fakeRT")   , 0     );
-  prm0s    = c_sim->getDataD( QSL("prm0s")    , 0.0   );
-  prm1s    = c_sim->getDataD( QSL("prm1s")    , 0.0   );
-  prm2s    = c_sim->getDataD( QSL("prm2s")    , 0.0   );
-  prm3s    = c_sim->getDataD( QSL("prm3s")    , 0.0   );
-  prm0d    = c_sim->getDataD( QSL("prm0d")    , 0.0   );
-  prm1d    = c_sim->getDataD( QSL("prm1d")    , 0.0   );
-  seed     = c_sim->getDataD( QSL("seed")     , 1     );
-  seedType = c_sim->getDataD( QSL("seedType") , 0     );
-  if( N < 1 ) { N = 1; }
-  // qWarning() << "pre: n2_eff= " << n2_eff << " n1_eff= " << n1_eff << " N= " << N << WHE;
-
-  int type = c_sim->getDataD( QSL("runType"), (int)Simulation::runSingle );
-
-  if( type     !=  Simulation::runSingle
-      &&  type !=  Simulation::runLoop
-      &&  type !=  Simulation::run2DLoop ) {
-    type = Simulation::runSingle;
-  }
-
-  run_type = type;
-
-  i_tot = ii = il1 = il2 = 0;
-  sgnt = int( time( 0 ) );
-  if( T < TDT_MIN ) {
-    qWarning() << "Too small full time time T" << T << NWHE;
-    return 0;
-  }
-  tdt = T / N;
-  if( tdt < TDT_MIN ) {
-    qWarning() << "Too small time step tdt" << tdt << NWHE;
-    return 0;
-  }
-  prm2 = (double)prm2s; prm3 = (double)prm3s;
-
-  prm0_targ = getMapDoublePtr( ">prm0_map" );
-  prm1_targ = getMapDoublePtr( ">prm1_map" );
-
-  QString askParams = c_sim->getDataD( QSL("askParams"), QString() );
-  fillAskedParams( askParams );
-
-  t = t_0; ct = t_0; t_r = 0;
-  rinf.run_tp = run_type; rinf.N = N; rinf.nx = n1_eff; rinf.ny = n2_eff;
-  rinf.fakeRT = fakeRT;
-  rinf.tdt = tdt; rinf.T = T; rinf.t_0 = t_0;
-  rinf.p_t_model = t.caddr();
-  rinf.model = this; rinf.sim = c_sim; rinf.sch = c_sch;
 
   rc = preRun( &rinf );
   if( !rc ) {
@@ -283,24 +220,17 @@ int TModel::startRun()
   state = stateRun;
 
   int useScripts  = c_sim->getDataD( QSL("useScripts"), 0 );
-  int brkOnZero  = c_sim->getDataD( QSL("brkOnZero"), 0 );
+  int brkOnZero   = c_sim->getDataD( QSL("brkOnZero"), 0 );
   int initEng = 0, execModelScript = 0;
   if( useScripts ) {
-    initEng         = c_sim->getDataD( "initEng", 1 );
-    execModelScript = c_sim->getDataD( "execModelScript", 1 );
+    initEng         = c_sim->getDataD( QSL("initEng"), 1 );
+    execModelScript = c_sim->getDataD( QSL("execModelScript"), 1 );
   }
   if( initEng ) {
     initEngine();
   }
   if( useScripts ) {
-    auto gobj = eng->globalObject();
-    gobj.setProperty( QSL("T"),   eng->newVariant( (double)T ) );
-    gobj.setProperty( QSL("tdt"), eng->newVariant( (double)tdt ) );
-    gobj.setProperty( QSL("N"),   eng->newVariant( (long long)N ) );
-    gobj.setProperty( QSL("N1"),  eng->newVariant( (long long)n1_eff ) );
-    gobj.setProperty( QSL("N2"),  eng->newVariant( (long long)n2_eff ) );
-    // alias objs
-    gobj.setProperty( QSL("c_sim"), eng->newQObject( c_sim ) );
+    addProprsToEngine();
   }
   ScriptResult sres;
   if( execModelScript ) {
@@ -483,6 +413,55 @@ long TModel::run_bg()
   return rc;
 }
 
+bool TModel::runPreScript()
+{
+  if( run_type >= 0 ) { // in progress now
+    qWarning() << "bad run_type during runPreScript " << run_type << NWHE;
+    return false;
+  }
+  if( !setCurrentSimSchem() ) { // set c_sch, c_sim
+    qCritical() << "bad init!" << NWHE;
+    return false;
+  }
+
+  QString scriptPreRun = c_sim->getDataD( QSL("scriptPreRun"), QString() );
+  int initEng          = c_sim->getDataD( QSL("initEng"), 1 );
+  int execModelScript  = c_sim->getDataD( QSL("execModelScript"), 1 );
+  int  brkOnZero       = c_sim->getDataD( QSL("brkOnZero"), 0 );
+
+  if( initEng ) {
+    initEngine();
+  }
+
+  auto gobj = eng->globalObject();
+  gobj.setProperty( QSL("c_sim"), eng->newQObject( c_sim ) );
+  if( !  copyParamsFromSim() )  {
+    run_type = -1;
+    return false;
+  }
+  addProprsToEngine();
+
+  ScriptResult sres;
+  if( execModelScript ) {
+    int rc_s = runModelScript( &sres ); // TODO: check
+    if( brkOnZero && rc_s == 0 ) {
+      c_sch = nullptr; c_sim = nullptr;
+      qWarning() << "Main model script failed" << NWHE;
+      run_type = -1;
+      return false;
+    }
+  }
+
+  int rc_s = runScript( scriptPreRun, &sres ); // test for empty - inside
+  c_sch = nullptr; c_sim = nullptr; run_type = -1;
+
+  if( brkOnZero && rc_s == 0 ) {
+    qWarning() << "preRun script failed" << scriptPreRun << " rc_s= " << rc_s << NWHE;
+    return false;
+  }
+  return true;
+}
+
 void TModel::plotToPng( const QString &gname, const QString &fn )
 {
   TGraph *gra = getGraph( gname );
@@ -547,6 +526,98 @@ void TModel::restoreAskedParams()
   }
 }
 
+bool TModel::setCurrentSimSchem()
+{
+  c_sim = getActiveSimulation();
+  if( !c_sim ) {
+    qWarning() << "No active simulation" << NWHE;
+    return false;
+  }
+
+  c_sch = getActiveScheme();
+  if( !c_sch ) {
+    qWarning() << "No active scheme" << NWHE;
+    c_sim = nullptr;
+    return false;
+  }
+  return true;
+
+}
+
+bool TModel::copyParamsFromSim()
+{
+  T        = c_sim->getDataD( QSL("T")        , 1.0   );
+  t_0      = c_sim->getDataD( QSL("t_0")      , 0.0   );
+  T_brk    = c_sim->getDataD( QSL("T_brk")    , 1e200 );
+  N        = c_sim->getDataD( QSL("N")        , 1l    );
+  N1       = c_sim->getDataD( QSL("N1")       , 1l    );
+  N2       = c_sim->getDataD( QSL("N2")       , 1l    );
+  n1_eff   = c_sim->getDataD( QSL("n1_eff")   , N1    );
+  n2_eff   = c_sim->getDataD( QSL("n2_eff")   , N2    );
+  n_tot    = c_sim->getDataD( QSL("n_tot")    , N     );
+  syncRT   = c_sim->getDataD( QSL("syncRT")   , 0     );
+  fakeRT   = c_sim->getDataD( QSL("fakeRT")   , 0     );
+  prm0s    = c_sim->getDataD( QSL("prm0s")    , 0.0   );
+  prm1s    = c_sim->getDataD( QSL("prm1s")    , 0.0   );
+  prm2s    = c_sim->getDataD( QSL("prm2s")    , 0.0   );
+  prm3s    = c_sim->getDataD( QSL("prm3s")    , 0.0   );
+  prm0d    = c_sim->getDataD( QSL("prm0d")    , 0.0   );
+  prm1d    = c_sim->getDataD( QSL("prm1d")    , 0.0   );
+  seed     = c_sim->getDataD( QSL("seed")     , 1     );
+  seedType = c_sim->getDataD( QSL("seedType") , 0     );
+  if( N < 1 ) { N = 1; }
+  // qWarning() << "pre: n2_eff= " << n2_eff << " n1_eff= " << n1_eff << " N= " << N << WHE;
+
+  int type = c_sim->getDataD( QSL("runType"), (int)Simulation::runSingle );
+
+  if( type     !=  Simulation::runSingle
+      &&  type !=  Simulation::runLoop
+      &&  type !=  Simulation::run2DLoop ) {
+    type = Simulation::runSingle;
+  }
+
+  run_type = type;
+
+  i_tot = ii = il1 = il2 = 0;
+  sgnt = int( time( 0 ) );
+  if( T < TDT_MIN ) {
+    qWarning() << "Too small full time time T" << T << NWHE;
+    return false;
+  }
+  tdt = T / N;
+  if( tdt < TDT_MIN ) {
+    qWarning() << "Too small time step tdt" << tdt << NWHE;
+    return false;
+  }
+  prm2 = (double)prm2s; prm3 = (double)prm3s;
+
+  prm0_targ = getMapDoublePtr( ">prm0_map" );
+  prm1_targ = getMapDoublePtr( ">prm1_map" );
+
+  QString askParams = c_sim->getDataD( QSL("askParams"), QString() );
+  fillAskedParams( askParams );
+
+  t = t_0; ct = t_0; t_r = 0;
+  rinf.run_tp = run_type; rinf.N = N; rinf.nx = n1_eff; rinf.ny = n2_eff;
+  rinf.fakeRT = fakeRT;
+  rinf.tdt = tdt; rinf.T = T; rinf.t_0 = t_0;
+  rinf.p_t_model = t.caddr();
+  rinf.model = this; rinf.sim = c_sim; rinf.sch = c_sch;
+  return true;
+}
+
+bool TModel::addProprsToEngine()
+{
+  auto gobj = eng->globalObject();
+  gobj.setProperty( QSL("T"),   eng->newVariant( (double)T ) );
+  gobj.setProperty( QSL("tdt"), eng->newVariant( (double)tdt ) );
+  gobj.setProperty( QSL("N"),   eng->newVariant( (long long)N ) );
+  gobj.setProperty( QSL("N1"),  eng->newVariant( (long long)n1_eff ) );
+  gobj.setProperty( QSL("N2"),  eng->newVariant( (long long)n2_eff ) );
+  // alias objs
+  gobj.setProperty( QSL("c_sim"), eng->newQObject( c_sim ) );
+  return true;
+}
 
 // ------------------------------------------
 

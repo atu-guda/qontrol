@@ -33,7 +33,7 @@ CmdListView::CmdListView( HolderData *a_mod, CommonSubwin *a_par )
   init_base_actions();
 
   auto em = QFontMetrics( font() ).width( 'W' );
-  setMinimumWidth( 10*em );
+  setMinimumWidth( 12*em );
   setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Preferred );
 
   lv->setContextMenuPolicy( Qt::ActionsContextMenu );
