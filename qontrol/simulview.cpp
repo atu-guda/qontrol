@@ -35,6 +35,14 @@ void SimulView::init_actions()
   auto a = new QAction( QIcon::fromTheme("checkmark"), "set Active", this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(setActive()) );
+
+  a = new QAction(  "preRun", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(preRun()) );
+
+  a = new QAction( QIcon( QSL(":icons/run.png") ), "Run", this );
+  lv->addAction( a );
+  connect( a, SIGNAL(triggered()), this, SLOT(run()) );
 }
 
 bool SimulView::setActive()
@@ -46,6 +54,28 @@ bool SimulView::setActive()
   storage->setActiveObj( sim->objectName() );
   storage->reportStructChanged();
   emit viewChanged();
+  return true;
+}
+
+bool SimulView::run()
+{
+  if( !setActive() ) {
+    return false;
+  }
+  LaboWin *main_win = MAINWIN;
+  if( !main_win ) {
+    qWarning() << "Main window not detected in SimulView::run";
+    return false;
+  }
+  main_win->slotRunRun();
+  return true;
+}
+
+bool SimulView::preRun()
+{
+  if( !setActive() ) {
+    return false;
+  }
   return true;
 }
 

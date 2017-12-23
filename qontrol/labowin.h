@@ -95,7 +95,14 @@ class LaboWin : public QMainWindow
     void setWndTitle();
     /** automaticaly enables/disable actions */
     void updateActions();
+    /** gets called when the window menu is activated; recreates
+        the window menu with all opened window titles. */
+    void windowMenuAboutToShow();
 
+    //* called by timer to update log view
+    void slotUpdateLog();
+
+  public Q_SLOTS:
     /** generate a new document in the actual view */
     void slotFileNew();
     /** open a document */
@@ -204,12 +211,6 @@ class LaboWin : public QMainWindow
     void slotTest();
     /** change the status message of the whole statusbar temporary */
     void slotStatusHelpMsg(const QString &text);
-    /** gets called when the window menu is activated; recreates
-        the window menu with all opened window titles. */
-    void windowMenuAboutToShow();
-
-    //* called by timer to update log view
-    void slotUpdateLog();
 
   private:
     /** handle close command */

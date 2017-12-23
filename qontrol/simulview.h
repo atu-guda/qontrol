@@ -42,6 +42,8 @@ class SimulView : public CmdListView {
     // virtual bool exportObj() override;
     //  specific:
     bool setActive();
+    bool run();
+    bool preRun();
   protected:
     void init_actions();
 };
