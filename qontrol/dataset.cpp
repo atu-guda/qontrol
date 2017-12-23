@@ -1856,6 +1856,15 @@ void HolderList::do_post_set()
 }
 
 
+QString HolderList::textVisual() const
+{
+  if( v < 0 || v >= list_strings.size() ) {
+    return QSN(v) % QSL("?");
+  }
+  return list_strings[v];
+}
+
+
 const char* HolderList::helpstr { "Contains integer data - list iface" };
 
 DEFAULT_FUNCS_REG(HolderList);

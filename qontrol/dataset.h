@@ -505,6 +505,7 @@ class HolderList : public HolderInt {
   virtual void reset_dfl() override;
   // most functions from HolderInt
   int operator=( int a ) { v=a; post_set(); return v; }
+  virtual QString textVisual() const override;
  protected:
   virtual void do_post_set() override;
   Q_CLASSINFO( "nameHintBase",  "list_" );
