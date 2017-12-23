@@ -2,7 +2,7 @@
                           mglview.cpp - window to show plots via MathGL
                              -------------------
     begin                : 2014.11.29
-    copyright            : (C) 2014-2016 by atu
+    copyright            : (C) 2014-2017 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -532,7 +532,8 @@ void MglView::togglePlot()
   if( ! isInBounds( 0, vd.sel, (int)sizeof(vd.off)*8 ) ) {
     return;
   }
-  uint64_t msk = 1ull << vd.sel;
+  static_assert( sizeof(long long) == sizeof(vd.off) );
+  decltype(vd.off) msk = 1ull << vd.sel;
   vd.off ^= msk;
 
   update();
@@ -543,7 +544,7 @@ void MglView::toggleAllPlots()
   if( ! isInBounds( 0, vd.sel, (int)sizeof(vd.off)*8 ) ) {
     return;
   }
-  uint64_t msk = ~( 1ull << vd.sel );
+  decltype(vd.off) msk = ~( 1ull << vd.sel );
   vd.off ^= msk;
 
   update();
@@ -676,10 +677,6 @@ QString MglView::getInfo( bool more ) const
      % QSL(" wg= ") % QSN( wg ) % QSL( " hg= " ) % QSN( hg ) % QSL(" h_tot= ") % QSN( h_tot )
      % QSL(" mx= ") % QSN( mouse_x ) % QSL( " my= " ) % QSN( mouse_y ) % nl;
 
-  for( const auto la : gra->TCHILD(PlotLabel*) ) {
-    if( !la ) { continue; }
-    s += la->objectName() % QSL("= \"") % la->textVisual() % QSL("\"") % nl;
-  }
   return s;
 }
 
@@ -691,6 +688,11 @@ void MglView::showInfo()
     s +=  gra->getPrintInfo( vd.sel );
   }
   s += "\n</pre>\n";
+
+  for( const auto la : gra->TCHILD(PlotLabel*) ) {
+    if( !la ) { continue; }
+    s += QSL("<p>") % la->objectName() % QSL("= \"") % la->textVisual() % QSL("\"") % QSL("</p>\n");
+  }
 
   QMessageBox::information( this,"Data info", s );
 }
@@ -704,10 +706,10 @@ static const QString plot_helpstr = QSL("<b>Hot keys:</b><br/>\n"
  "<b>s/S</b> - scale dialog / save current scale <br/>\n"
  "<b>Ctrl-P</b> - print<br/>\n"
  "<b>r</b> - reset and redraw<br/>\n"
- "<b>R</b> - Reload add Redraw<br/>\n"
+ "<b>R</b> - Reload add redraw<br/>\n"
  "<b>e</b> - export image  <br/>\n"
  "<b>b</b> - set base to mark<br/>\n"
- "<b>B</b> -hide/how base lines<br/>\n"
+ "<b>B</b> - hide/show base lines<br/>\n"
  "<b>f</b> - toggle light<br/>\n"
  "<b>u</b> - toggle footer<br/>\n"
  "<b>g</b> - set mark to given point <br/>\n"
