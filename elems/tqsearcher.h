@@ -34,10 +34,10 @@ class TQSearcher : public TMiso  {
      pe_q3p = 0, pe_Fquad, pe_FCog, pe_qquad
    };
    Q_ENUMS(PeType);
-   Q_CLASSINFO( "enum_PeType_0",  "q-3points"     );  // pe_q3p
-   Q_CLASSINFO( "enum_PeType_1",  "F-quad"        );  // pe_Fquad
-   Q_CLASSINFO( "enum_PeType_2",  "F-COG"         );  // pe_FCog
-   Q_CLASSINFO( "enum_PeType_3",  "q-quad"        );  // pe_qquad
+   Q_CLASSINFO( "enum_PeType_0",  "ql"     );  // pe_q3p
+   Q_CLASSINFO( "enum_PeType_1",  "Fq"     );  // pe_Fquad
+   Q_CLASSINFO( "enum_PeType_2",  "Fc"     );  // pe_FCog
+   Q_CLASSINFO( "enum_PeType_3",  "qq"     );  // pe_qquad
 
    enum FeType {
      fe_lin = 0, fe_sign, fe_lim
@@ -45,16 +45,16 @@ class TQSearcher : public TMiso  {
    Q_ENUMS(FeType);
    Q_CLASSINFO( "enum_FeType_0",  "Linear"       );    // fe_lin
    Q_CLASSINFO( "enum_FeType_1",  "Sign"         );    // fe_sign
-   Q_CLASSINFO( "enum_FeType_2",  "Limit"        );    // fe_lim
+   Q_CLASSINFO( "enum_FeType_2",  "u"            );    // fe_lim
 
    enum FeFactorType {
      fef_Se = 0, fef_one, fef_F, fef_Se3, fef_W
    };
    Q_ENUMS(FeFactorType);
-   Q_CLASSINFO( "enum_FeFactorType_0",  "Se"      );  // fef_Se
-   Q_CLASSINFO( "enum_FeFactorType_1",  "1"       );  // fef_one
+   Q_CLASSINFO( "enum_FeFactorType_0",  "Se1"     );  // fef_Se
+   Q_CLASSINFO( "enum_FeFactorType_1",  "o"       );  // fef_one
    Q_CLASSINFO( "enum_FeFactorType_2",  "F"       );  // fef_F
-   Q_CLASSINFO( "enum_FeFactorType_3",  "Se3"     );  // fef_Se3
+   Q_CLASSINFO( "enum_FeFactorType_3",  "S"       );  // fef_Se3
    Q_CLASSINFO( "enum_FeFactorType_4",  "W"       );  // fef_W
 
    enum FnType {
