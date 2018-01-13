@@ -2,7 +2,7 @@
                           tlorenz.cpp  -  description
                              -------------------
     begin                : Fri Mar 09 2012
-    copyright            : (C) 2012-2016 by atu
+    copyright            : (C) 2012-2018 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -17,6 +17,7 @@
 
 #include <ctime>
 #include <cmath>
+#include <gsl/gsl_math.h>
 #include "miscfun.h"
 #include "tlorenz.h"
 
@@ -24,11 +25,11 @@ using namespace std;
 
 const char* TLorenz::helpstr = "<H1>TLorenz</H1>\n"
  "<p>Simulator element for Lorenz system <br>\n"
- " \\dot{x} = \\sigma ( y-x ); + in_x<br>\n"
+ " \\dot{x} = \\sigma ( y-x ) + in_x<br>\n"
  " \\dot{y} = x (r-z ) - y + in_y; <br>\n"
  " \\dot{z} = xy - bz.<br> + in_z\n"
  " <br>\n"
- " Inputs 0-2: add to x, y, z <br>\n"
+ " Inputs 0-2: add to vx, vy, vz <br>\n"
  " <br>\n"
  " Main output out0= x variable<br>\n"
  " <br>\n"
@@ -59,7 +60,7 @@ void TLorenz::calcAux() noexcept
 {
   x2 = pow2( x ); y2 = pow2( y ); z2 = pow2( z );
   xy = x * y; xz = x * z; yz = y * z;
-  v = sqrt( vx*vx + vy*vy + vz*vz );
+  v = gsl_hypot3( vx, vy, vz );
 }
 
 

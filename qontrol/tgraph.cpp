@@ -2,7 +2,7 @@
                           tgraph.cpp  -  description
                              -------------------
     begin                : Sat Aug 5 2000
-    copyright            : (C) 2000-2017 by atu
+    copyright            : (C) 2000-2018 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <gsl/gsl_math.h>
 #include <mgl2/base.h>
 
 #include "tmodel.h"
@@ -1609,13 +1610,13 @@ QString toQString( const mglPoint &p )
 
 double mglLen( const mglPoint &a, const mglPoint &b )
 {
-  return sqrt( (b.x-a.x)*(b.x-a.x) +(b.y-a.y)*(b.y-a.y) +(b.z-a.z)*(b.z-a.z) );
+  return gsl_hypot3( (b.x-a.x), (b.y-a.y), (b.z-a.z) );
 }
 
 
 mglPoint CalcScr( const mglPoint &p, mglGraph &gr )
 {
-  // gr must be setuped beforehand
+  // gr must be set beforehand
   mglBase *base = gr.Self();
 
   mglPoint s = gr.CalcScr( p );

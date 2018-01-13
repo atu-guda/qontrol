@@ -2,7 +2,7 @@
                           trossler.cpp  -  description
                              -------------------
     begin                : Thu May 03 2012
-    copyright            : (C) 2012-2414 by atu
+    copyright            : (C) 2012-2418 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -17,18 +17,19 @@
 
 #include <time.h>
 #include <cmath>
+#include <gsl/gsl_math.h>
 #include "miscfun.h"
 #include "trossler.h"
 
 const char* TRossler::helpstr = "<h1>TRossler</h1>\n"
  "<p>Simulator element for Rossler system <br/>\n"
- " \\dot{x} = -y -x + in_x;   <br/>\n"
+ " \\dot{x} = -y -z + in_x;   <br/>\n"
  " \\dot{y} = x + a * y + in_y; <br/>\n"
  " \\dot{z} = b + z * (x-c) + in_z<br/>\n"
  " <br/>\n"
- " Inputs in_[xyz]: add to x, y, z <br/>\n"
+ " Inputs in_[xyz]: add to \\dot{x}, \\dot{y}, \\dot{z} <br/>\n"
  " <br/>\n"
- " Outputs <b>x</b> variable - other can be get by TIinputAny<br/>\n"
+ " Outputs <b>x</b> variable<br/>\n"
  " <br/>\n"
  "Have 6 parameters: 3 from system, <b>a, b ,c </b>, <br/>"
  "and 3 inital state: <b> x_0, y_0, z_0 </b>, <br/>"
@@ -58,7 +59,7 @@ void TRossler::calcAux() noexcept
 {
   x2 = pow2( x ); y2 = pow2( y ); z2 = pow2( z );
   xy = x * y; xz = x * z; yz = y * z;
-  v = sqrt( vx*vx + vy*vy + vz*vz );
+  v = gsl_hypot3( vx, vy, vz );
 }
 
 int TRossler::miso_startLoop( long /*acnx*/, long /*acny*/ )
