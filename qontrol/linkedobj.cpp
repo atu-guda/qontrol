@@ -2,7 +2,7 @@
                           linkedobj.h - object with link capabilities
                              -------------------
     begin                : 2015.10.24
-    copyright            : GPL (C) 2015-2017 by atu
+    copyright            : GPL (C) 2015-2018 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -537,6 +537,14 @@ CTOR(InputLogic,InputSimple)
   }
 }
 
+int InputLogic::do_startLoop( long /*acnx*/, long /*acny*/ )
+{
+  old_out0 = out0;
+  sll = false;
+  post_readInput();
+  return 1;
+}
+
 void InputLogic::post_readInput()
 {
   bool cll = sll;
@@ -546,9 +554,9 @@ void InputLogic::post_readInput()
     case itFall:  sll = cll = ( (out0 - old_out0) <= -l1 );    break;
     case itBoth:  sll = cll = ( fabs(out0 - old_out0) >= l1 ); break;
     case itShmitt:
-         if( out0 >= l1 ) { cll = true;  break; }
-         if( out0 <  l0 ) { cll = false; break; }
-         sll = cll;
+         if( out0 >= l1 ) { sll = cll = true;  break; }
+         if( out0 <  l0 ) { sll = cll = false; break; }
+         // sll = cll;
          break;
     case itShmittRise:
          cll = 0;
@@ -562,6 +570,7 @@ void InputLogic::post_readInput()
            sll = cll = false; break;
          }
          break;
+    case itRange: sll = cll = (out0 >= l0) && ( out0 <= l1 );  break;
     default: sll = cll = false; // unlikely
   }
   if( inv_in ) {

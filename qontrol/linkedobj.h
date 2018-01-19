@@ -3,7 +3,7 @@
                           linkedobj.h - object with link capabilities
                              -------------------
     begin                : 2015.10.24
-    copyright            : GPL (C) 2015-2016 by atu
+    copyright            : GPL (C) 2015-2018 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -234,7 +234,8 @@ class InputLogic : public InputSimple {
      itFall,
      itBoth,
      itShmitt,
-     itShmittRise
+     itShmittRise,
+     itRange
    };
    Q_ENUMS(InputLogicType);
    Q_CLASSINFO( "enum_InputLogicType_0", "Level" );       // itLevel
@@ -243,6 +244,7 @@ class InputLogic : public InputSimple {
    Q_CLASSINFO( "enum_InputLogicType_3", "Both" );        // itBoth
    Q_CLASSINFO( "enum_InputLogicType_4", "Shmitt" );      // itShmitt
    Q_CLASSINFO( "enum_InputLogicType_5", "ShmittRise" );  // itShmittRise
+   Q_CLASSINFO( "enum_InputLogicType_6", "Range" );       // itRange
   DCL_CTOR(InputLogic);
   // virtual ~InputLogic() override;
   DCL_CREATE;
@@ -250,10 +252,7 @@ class InputLogic : public InputSimple {
   bool lval() const { return ll; };
   operator bool() const { return ll; }
  protected:
-  virtual int do_startLoop( long /*acnx*/, long /*acny*/ ) override
-  {
-    old_out0 = out0; sll = false; post_readInput(); return 1;
-  }
+  virtual int do_startLoop( long acnx, long acny ) override;
   virtual void post_readInput() override;
 
   PRM_LIST(     type,   efNRC,   "&Type",        "Function type", "enum=InputLogicType\nsep=block" );
