@@ -2,7 +2,7 @@
                           tpid.cpp  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2018 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

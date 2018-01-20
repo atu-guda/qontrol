@@ -3,7 +3,7 @@
                           tpid.h  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2018 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -44,10 +44,12 @@ class TPid : public TMiso  {
 
    PRM_INPUT( in_u,      0, "in_{&u}",  "Input u(x)",  "sep=block" );
 
-   PRM_DOUBLE(  d1, efInner, "d1", "dx/dt", "" );
-   PRM_DOUBLE(  d2, efInner, "d2", "d^2x/dt^2", "" );
+   PRM_DOUBLE(  d1, efInner, "d1",          "dx/dt", "" );
+   PRM_DOUBLE(  d2, efInner, "d2",      "d^2x/dt^2", "" );
+   PRM_DOUBLE( vi1, efInner, "vi1", "integral x dt", "" );
+   PRM_DOUBLE( vi2, efInner, "vi2",  "int int x dt", "" );
    /** accumulators and old values */
-   double vi1 = 0, vi2 = 0, u_old = 0, u_old2 = 0, tdt2 = 1;
+   double u_old = 0, u_old2 = 0, tdt2 = 1;
    /** flag for special handling initial steps */
    int start = 0;
 
