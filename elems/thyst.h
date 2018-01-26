@@ -3,7 +3,7 @@
                           thyst.h  -  description
                              -------------------
     begin                : Sat Aug 26 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2018 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -46,16 +46,21 @@ class THyst : public TMiso  {
    virtual int miso_startLoop( long acnx, long acny ) override;
    void fixState(void);
  protected:
-   PRM_LIST(    type, efNRC, "&Type",  "Type of hysteresis", "enum=HystType" );
-   PRM_PARAMD(    x0,     0, "&x_0",  "x0 - width if hysteresis", "min=0\nsep=col\ndef=1\nfixparm=1" );
-   PRM_PARAMD( alpha,     0, "\\alpha", "Hysteresis slope", "def=0.2"  );
+   PRM_LIST(    type, efNRC,    "&Type", "Type of hysteresis", "enum=HystType" );
+   PRM_PARAMD(    x0,     0,     "&x_0", "x0 - width if hysteresis", "min=0\nsep=col\ndef=1\nfixparm=1" );
+   PRM_PARAMD( alpha,     0,  "\\alpha", "Hysteresis slope", "def=0.2"  );
+   PRM_PARAMD(   s_u,     0,      "s_u", "u input shift", ""  );
+   PRM_SWITCH(  absU, efNRC,      "|u|", "use |u| on input", "" );
    PRM_PARAMD(     a,     0, "&a scale", "output scale", "sep=col\ndef=1" );
    PRM_PARAMD(     b,     0, "&b shift", "output shift", ""  );
+   PRM_SWITCH(  mulU, efNRC,       "*u",  "multiply to u on output", "" );
+   PRM_SWITCH( mulsU, efNRC, "*sing(u)",  "multiply to sign(u) on output", "" );
+   PRM_PARAMD(    au,     0,       "au", "out: +u*au", ""  );
 
-   PRM_DOUBLE(   d, efInner, "d", "inner state 'd'", "" );
-   PRM_DOUBLE(   s, efInner, "s", "inner state 's'", "" );
+   PRM_DOUBLE(   d, efInner,        "d", "inner state 'd'", "" );
+   PRM_DOUBLE(   s, efInner,        "s", "inner state 's'", "" );
 
-   PRM_INPUT( in_u,       0, "&in_u", "Single input",  "sep=block" );
+   PRM_INPUT( in_u,       0,    "&in_u", "input u(t)",  "sep=block" );
 
    Q_CLASSINFO( "nameHintBase",  "hyst_" );
    DCL_DEFAULT_STATIC;

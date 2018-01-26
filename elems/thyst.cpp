@@ -2,7 +2,7 @@
                           thyst.cpp  -  description
                              -------------------
     begin                : Sat Aug 26 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2018 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -44,8 +44,10 @@ double THyst::f() noexcept
   }
   // atu test TODO: check!
   u_old = d + s;
+  double u = ( absU ) ? ( fabs( in_u ) ) : in_u;
+  u -= s_u;
   //
-  ud = in_u - u_old;
+  ud = u - u_old;
   ts = s + ud;
   if( ts >= x0 ) {
     s = (double)x0;  d += ts - x0;
@@ -56,6 +58,7 @@ double THyst::f() noexcept
       s = ts;
     };
   };
+
   switch( (int)type ) {
     case ht_sAlphaD:
       v = s + alpha * d; break;
@@ -72,7 +75,17 @@ double THyst::f() noexcept
     default:
       v = 0; break;
   };
+
+  if( mulU ) {
+    v *= in_u;
+  }
+  if( mulsU ) {
+    v *= sign( in_u );
+  }
+  v += in_u * au;
+
   v = a * v + b;
+
   return v;
 }
 
