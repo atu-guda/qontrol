@@ -3,7 +3,7 @@
                           runview.h  -  description
                              -------------------
     begin                : Fri Aug 17 2001
-    copyright            : (C) 2001-2016 by atu
+    copyright            : (C) 2001-2018 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -21,6 +21,7 @@
 #include "defs.h"
 #include <QDialog>
 #include <QSemaphore>
+#include <QSound>
 
 class TModel; class Scheme; class ModelRunner;
 // class QPaintEvent; class QMouseEvent; class QKeyEvent;
@@ -84,7 +85,7 @@ class RunView : public QDialog  {
     Scheme *sch = nullptr;
     /** timer to send timer events */
     QTimer *timer;
-    //* sync with 
+    //* sync with
     QSemaphore sem_io;
     //* model runner in thread
     ModelRunner *runner = nullptr;
@@ -111,7 +112,7 @@ class RunView : public QDialog  {
     long i_tot = 0;
     int il1 = 0, il2 = 0;
     //* current time
-    double t;
+    double t = 0;
     //* total time
     double T = 1.0;
     /** flag for real and scheme time synchronization */
@@ -120,6 +121,7 @@ class RunView : public QDialog  {
     double io_t = 1.0;
     /** flag to start w/o keyboard hit */
     int autoStart = 0;
+    QSound end_sound;
 };
 
 

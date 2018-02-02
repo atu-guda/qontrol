@@ -115,6 +115,7 @@
     <file>icons/state-locked.png</file>
     <file>icons/struct.png</file>
     <file>icons/test.png</file>
+    <file>icons/endrun.wav</file>
 </qresource>
 </RCC>
 

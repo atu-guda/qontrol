@@ -1,4 +1,4 @@
-QT += core widgets xml script printsupport
+QT += core widgets xml script printsupport multimedia
 TEMPLATE = app
 TARGET = qontrol
 CONFIG += c++17 release warn_on qt thread

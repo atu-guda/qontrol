@@ -2,7 +2,7 @@
                           runview.cpp  -  description
                              -------------------
     begin                : Sat Aug 18 2001
-    copyright            : (C) 2001-2016 by atu
+    copyright            : (C) 2001-2018 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -20,6 +20,7 @@
 #include <QApplication>
 #include <QtWidgets>
 #include <QSemaphore>
+#include <QSound>
 
 #include "miscfun.h"
 #include "dataset.h"
@@ -33,7 +34,8 @@ using namespace std;
 
 RunView::RunView( TModel *a_mod, QWidget *parent )
           : QDialog( parent ), model( a_mod ), timer( new QTimer( this ) ),
-            sem_io( 1 )
+            sem_io( 1 ),
+            end_sound( ":/icons/endrun.wav" )
 {
   s_h = 40;
   // setBackgroundMode( Qt::NoBackground );
@@ -143,8 +145,8 @@ void RunView::slotRunNext()
   if( state != stateRun ) {
     timer->stop();
     setMouseTracking( 0 );
-    if( s_time > 0  &&  ( get_real_time() - s_time ) > 10 ) {
-      qApp->beep();
+    if( s_time > 0  &&  ( get_real_time() - s_time ) > 5 ) {
+      end_sound.play();
     }
   };
   update();
