@@ -3,7 +3,7 @@
                           mglview.h  -  window to show plots via MathGL
                              -------------------
     begin                : 2014.11.29
-    copyright            : (C) 2014-2016 by atu
+    copyright            : (C) 2014-2018 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -72,6 +72,7 @@ class MglView : public QWidget  {
    void unlinkFromPlot();
    void nextPointInPlot( int step = 1 );
    int getSelNum() const { return vd.sel; }
+   void toggleLabels();
 
  Q_SIGNALS:
    void closeMe(); // ask main window to close me

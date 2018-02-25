@@ -969,14 +969,18 @@ QSize TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda
     flp->render( &gr );
   }
 
-  for( auto lbl : TCHILD(PlotLabel*) ) {
-    lbl->render( &img, &gr, true ); // only MGL plots
+  if( a_vd->show_labels ) {
+    for( auto lbl : TCHILD(PlotLabel*) ) {
+      lbl->render( &img, &gr, true ); // only MGL plots
+    }
   }
 
   gr.GetBGRN( img.bits(), 4 * w * h );
 
-  for( auto lbl : TCHILD(PlotLabel*) ) {
-    lbl->render( &img, &gr, false );
+  if( a_vd->show_labels ) {
+    for( auto lbl : TCHILD(PlotLabel*) ) {
+      lbl->render( &img, &gr, false );
+    }
   }
 
   addMetaData( img, &vd, scda );

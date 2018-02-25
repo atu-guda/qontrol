@@ -3,7 +3,7 @@
                           tgraph.h  -  description
                              -------------------
     begin                : Sat Aug 5 2000
-    copyright            : (C) 2000-2017 by atu
+    copyright            : (C) 2000-2018 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -148,6 +148,7 @@ struct ViewData {
   long nn {0}, nx {0}, ny {1}; // same
   uint64_t off = 0; // lines, not to show (from View to TGraph while plot)
   int sel {0};
+  bool show_labels { true };
 };
 
 // --------------------------------------------------------------------

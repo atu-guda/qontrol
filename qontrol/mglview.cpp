@@ -2,7 +2,7 @@
                           mglview.cpp - window to show plots via MathGL
                              -------------------
     begin                : 2014.11.29
-    copyright            : (C) 2014-2017 by atu
+    copyright            : (C) 2014-2018 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -231,12 +231,14 @@ void MglView::keyPressEvent( QKeyEvent *ke )
     case Qt::Key_O:
       togglePlot();
       break;
+    case Qt::Key_V:
+      toggleLabels();
+      break;
     case Qt::Key_O | Sh:
       toggleAllPlots();
       break;
     case Qt::Key_Q:
       emit closeMe();
-      // parentWidget()->parentWidget()->close();
       break;
     case Qt::Key_R:
       resetScale();
@@ -359,7 +361,7 @@ void MglView::keyPressEvent( QKeyEvent *ke )
     case Qt::Key_7: vd.sel = 7;  break;
     case Qt::Key_8: vd.sel = 8;  break;
     case Qt::Key_9: vd.sel = 9;  break;
-    case Qt::Key_BracketLeft | Ct:  --vd.sel; if( vd.sel < 0 ) { vd.sel = 0; }; break;
+    case Qt::Key_BracketLeft  | Ct: --vd.sel; if( vd.sel <  0     ) { vd.sel = 0; }; break;
     case Qt::Key_BracketRight | Ct: ++vd.sel; if( vd.sel >= vd.ng ) { vd.sel = 0; }; break;
   }
 
@@ -577,6 +579,12 @@ void MglView::nextPointInPlot( int step )
   setMarkToLink(); // bound and update in it
 }
 
+void MglView::toggleLabels()
+{
+  vd.show_labels = ! vd.show_labels;
+  update();
+}
+
 void MglView::setMarkToLink()
 {
   if( linkPlot < 0 ) {
@@ -712,6 +720,7 @@ static const QString plot_helpstr = QSL("<b>Hot keys:</b><br/>\n"
  "<b>B</b> - hide/show base lines<br/>\n"
  "<b>f</b> - toggle light<br/>\n"
  "<b>u</b> - toggle footer<br/>\n"
+ "<b>v</b> - toggle labels<br/>\n"
  "<b>g</b> - set mark to given point <br/>\n"
  "<b>l/L</b> - link/Unlink to data <br/>\n"
  "<b>i</b> - data info <br/>\n"
