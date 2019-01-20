@@ -961,7 +961,8 @@ QSize TGraph::renderTo( QImage &img, const ViewData *a_vd, const ScaleData *scda
 
   mglGraph gr( 0, w, h );
   int gw = gr.GetWidth(), gh = gr.GetHeight();
-  setupMglGraph( gr, a_vd, scda, true );
+  // qWarning() << "w= " << w << " gw= " << gw << " h= " << h << " gh= " << gh << WHE;
+  setupMglGraph( gr, &vd, scda, true );
 
   plotTo( gr, &vd, scda );
 
@@ -1252,21 +1253,23 @@ void TGraph::setupMglGraph( mglGraph &grs, const ViewData *a_vd, const ScaleData
 
   if( scda->autoScX ) {
     if( scda->beauScX ) {
-      beautifyScale( pe_min.x, pr_max.x );
+      beautifyScale( pe_min.x, pe_max.x );
     }
   } else {
     pe_min.x = scda->plotMinX; pe_max.x = scda->plotMaxX;
   }
+
   if( scda->autoScY ) {
     if( scda->beauScY ) {
-      beautifyScale( pe_min.y, pr_max.y );
+      beautifyScale( pe_min.y, pe_max.y );
     }
   } else {
     pe_min.y = scda->plotMinY; pe_max.y = scda->plotMaxY;
   }
+
   if( scda->autoScZ ) {
     if( scda->beauScY ) {
-      beautifyScale( pe_min.z, pr_max.z );
+      beautifyScale( pe_min.z, pe_max.z );
     }
   } else {
     pe_min.z = scda->plotMinZ; pe_max.z = scda->plotMaxZ;
@@ -1394,7 +1397,7 @@ mglPoint TGraph::CalcXYZ( int mx, int my, int w, int h,
   if( a_vd ) { vd = *a_vd; }
 
   mglGraph gr( 0, w, h );
-  setupMglGraph( gr, a_vd, scda, false );
+  setupMglGraph( gr, &vd, scda, false );
   return gr.CalcXYZ( mx, my ); // main return
 
   // mglPoint r = gr.CalcXYZ( mx, my ); // ----------- test CalcScr

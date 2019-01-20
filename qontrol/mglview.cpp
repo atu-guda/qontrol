@@ -44,8 +44,8 @@ MglView::MglView( TGraph *agra, QWidget *parent )
   bottom_h = 4 * ex;
 
   Reload();
-  QSize sz0 = getSize0();
-  resize( sz0 + QSize( 0, bottom_h ) );
+  // QSize sz0 = getSize0();
+  // resize( sz0 + QSize( 0, bottom_h ) );
 
   setMinimumSize( 480, 420 );
   setCursor( Qt::CrossCursor );
@@ -88,6 +88,7 @@ void MglView::Reload( )
   }
   gra->prepare();
   if( ! gra->fillViewData( &vd ) ) {
+    qWarning() << "Fail to fillViewData " << WHE;
     return;
   }
   pr_min = vd.pv_min; pr_max = vd.pv_max; pr_dlt = vd.pv_dlt;
@@ -132,6 +133,7 @@ void MglView::drawAll( QPainter &p )
     hg -= bottom_h;
   }
   QImage timg( wg, hg, QImage::Format_RGB32 );
+  // qWarning() << "renderTo: " << wg  << " x " << hg << WHE;
   gsz = gra->renderTo( timg, &vd, scd.get() );
 
   p.drawImage( 0, 0, timg );
@@ -146,7 +148,6 @@ void MglView::paintEvent( QPaintEvent * /*pe*/ )
   QPainter p( this );
   drawAll( p );
   p.end();
-
 }
 
 void MglView::drawFooter( QPainter &p )

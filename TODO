@@ -3,6 +3,8 @@ BUG: object button may change place in dialog: may by uncontrolled order?
 Info dialog: copy all to clipboard <Tab>, <NL>
 Snapshots of objects data: auto at end, + controlled: use by plots...
 RightClick menu in mglview
+Y-label in MGL: better place
+Filters: generic, Butter, cheb ....
 Object wide link?
 Search in views.
 Alt select in views - for simple swap?
