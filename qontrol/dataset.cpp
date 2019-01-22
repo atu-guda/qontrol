@@ -541,6 +541,10 @@ QString HolderData::hintName( const QString &ob_tp, const QString &nm_start ) co
     }
   }
 
+  if( nm.endsWith('_') ) {
+    nm += '0';
+  }
+
   if( !getObj( nm ) ) {
     return nm;
   }
