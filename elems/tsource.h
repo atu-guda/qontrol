@@ -3,7 +3,7 @@
                           tsource.h  -  description
                              -------------------
     begin                : Thu Aug 24 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -34,7 +34,7 @@ class TSource : public TMiso  {
    enum SourceType {
      so_sin = 0, so_sign, so_sin_raise, so_sign_raise, so_dirac,
      so_theta, so_raise, so_saw, so_saw2, so_chaos_wave, // = 9
-     so_triangle, so_phase, so_pulse // =12
+     so_triangle, so_phase, so_pulse, so_pwm // = 13
    };
    Q_ENUMS(SourceType);
    Q_CLASSINFO( "enum_SourceType_0",  "U*sin(\\omega*t+\\phi)" );           // so_sin
@@ -50,6 +50,7 @@ class TSource : public TMiso  {
    Q_CLASSINFO( "enum_SourceType_10", "U*triangle(\\omega*t+\\phi)" );      // so_triangle
    Q_CLASSINFO( "enum_SourceType_11", "Phase" );                            // so_phase
    Q_CLASSINFO( "enum_SourceType_12", "Pulse" );                            // so_pulse
+   Q_CLASSINFO( "enum_SourceType_13", "PWM" );                              // so_pwm
 
 
    enum SeedType {
@@ -71,6 +72,7 @@ class TSource : public TMiso  {
 
    /** type of input and misc flags */
    PRM_LIST( type, efNRC, "&Type", "Source type", "enum=SourceType" ); //TODO
+   PRM_SWITCH( use_rfreq, efNRC, "Regual frequency", "Use natural frequency instead of \\omega", "" );
    /** Amplitude */
    PRM_PARAMD( uu, 0, "&U", "Amplitude of signal (or pulse max)", "def=1\nsep=col" );
    /** Frequency */
@@ -79,6 +81,7 @@ class TSource : public TMiso  {
    PRM_PARAMD( cc, 0, "&C", "Constant base", "sep=col" );
    /** phase shift */
    PRM_PARAMD( phi, 0, "\\phi", "Phase shift", "def=0" );
+   PRM_PARAMD( dc,  0,    "dc", "Duty cycle",  "def=0.5" );
 
    // ----------- U chaos ----------------------
    PRM_SWITCH( use_u_ch, efNRC, "use U chaos", "Use amplitude perturbations", "sep=tab\ntabname=Chaos" );

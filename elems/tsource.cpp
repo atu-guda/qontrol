@@ -2,7 +2,7 @@
                           tsource.cpp  -  description
                              -------------------
     begin                : Thu Aug 24 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -36,9 +36,13 @@ CTOR(TSource,TMiso)
 
 double TSource::f() noexcept
 {
-  double v, omet, uu_s, omet_s, lt, u_ch, f_ch;
   int n;
-  omet = ct * omega + phi; u_ch = 1; f_ch = 0;
+  double omega_x = omega;
+  if( use_rfreq ) {
+    omega_x *= 2 * M_PI;
+  }
+  double omet = ct * omega_x + phi;
+  double u_ch = 1;
 
   if( use_u_ch ) { // chaos on U
     if( ct < u_ch_te ) {
@@ -52,6 +56,7 @@ double TSource::f() noexcept
     };
   }; // end if( u_chaos )
 
+  double f_ch = 0;
   if( use_f_ch ) { // chaos on phase
     if( ct < f_ch_te ) {
       f_ch = f_ch_vs + ( ct - f_ch_ts ) * f_ch_k;
@@ -64,12 +69,14 @@ double TSource::f() noexcept
     };
   }; // end if( f_chaos )
 
-  uu_s = uu * u_ch; omet_s = omet + f_ch; // note u: * fi +
+  double uu_s = uu * u_ch;
+  double omet_s = omet + f_ch; // note u: * fi +
   pha = omet_s * M_1_PI * 0.5;
   double old_pha_0 = pha_0;
   pha_0 = fmod( pha, 1 ); // phase in range [ 0; 1 )
   bool pha_flip = pha_0 < old_pha_0;
 
+  double v;
   switch( (int)type ) {
     case so_sin:
       v = uu_s * sin( omet_s ); break;
@@ -81,21 +88,21 @@ double TSource::f() noexcept
       v = uu_s * sign( sin( omet_s ) ) * ct / tt; break;
     case so_dirac:
       v = 0;
-      if( was_pulse == 0 && ct >= omega ) {
+      if( was_pulse == 0 && ct >= omega_x ) {
         v = uu_s / ctdt; was_pulse = 1;
       };
       break;
     case so_theta:
-      v = ( ct > omega ) ? uu_s : 0; break;
+      v = ( ct > omega_x ) ? uu_s : 0; break;
     case so_raise:
       v = uu_s * ( ct + f_ch ) / tt; break;
     case so_saw:
-      n = int( ct / omega ); lt = ct - n * omega;
-      v = uu_s * ( lt + f_ch ) / omega;
+      n = int( ct / omega_x );
+      v = uu_s * ( ( ct - n * omega_x ) + f_ch ) / omega_x;
       break;
     case so_saw2:
-      n = int( 2 * ct / omega ); lt = 2 * ct - n * omega;
-      v = 0.5 * uu_s - 2 * ( lt + f_ch ) * uu / omega;
+      n = int( 2 * ct / omega_x );
+      v = 0.5 * uu_s - 2 * ( ( 2 * ct - n * omega_x ) + f_ch ) * uu / omega_x;
       if( ! (n & 1)  ) {
         v = -v;
       };
@@ -115,6 +122,9 @@ double TSource::f() noexcept
       break;
     case so_pulse:
       v = cc + (pha_flip ? uu : 0) ;
+      break;
+    case so_pwm:
+      v = ( pha_0 < dc ) ? uu_s : 0;
       break;
     default: v = 0;
   };
