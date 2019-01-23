@@ -36,14 +36,14 @@ CTOR(TSource,TMiso)
 
 double TSource::f() noexcept
 {
-  int n;
+  double tau_x = omega;
   double omega_x = omega;
   if( use_rfreq ) {
     omega_x *= 2 * M_PI;
   }
   double omet = ct * omega_x + phi;
-  double u_ch = 1;
 
+  double u_ch = 1;
   if( use_u_ch ) { // chaos on U
     if( ct < u_ch_te ) {
       u_ch = u_ch_vs + ( ct - u_ch_ts ) * u_ch_k;
@@ -79,36 +79,38 @@ double TSource::f() noexcept
   double v;
   switch( (int)type ) {
     case so_sin:
-      v = uu_s * sin( omet_s ); break;
+      v = uu_s * sin( omet_s ); cv = -v; break;
     case so_sign:
-      v = uu_s * sign( sin( omet_s ) ); break;
+      v = uu_s * sign( sin( omet_s ) ); cv = -v; break;
     case so_sin_raise:
-      v = uu_s * sin( omet_s ) * ct / tt; break;
+      v = uu_s * sin( omet_s ) * ct / tt; cv = -v; break;
     case so_sign_raise:
-      v = uu_s * sign( sin( omet_s ) ) * ct / tt; break;
+      v = uu_s * sign( sin( omet_s ) ) * ct / tt; cv = -v; break;
     case so_dirac:
       v = 0;
-      if( was_pulse == 0 && ct >= omega_x ) {
+      if( was_pulse == 0 && ct >= tau_x ) {
         v = uu_s / ctdt; was_pulse = 1;
       };
+      cv = -v;
       break;
     case so_theta:
-      v = ( ct > omega_x ) ? uu_s : 0; break;
+      v = ( ct > tau_x ) ? uu_s : 0;  cv = uu_s - v; break;
     case so_raise:
-      v = uu_s * ( ct + f_ch ) / tt; break;
+      v = uu_s * ( ct + f_ch ) / tt;  cv = uu_s - v; break;
     case so_saw:
-      n = int( ct / omega_x );
-      v = uu_s * ( ( ct - n * omega_x ) + f_ch ) / omega_x;
+      v = uu_s * pha_0;
+      cv = uu_s - v;
       break;
     case so_saw2:
-      n = int( 2 * ct / omega_x );
-      v = 0.5 * uu_s - 2 * ( ( 2 * ct - n * omega_x ) + f_ch ) * uu / omega_x;
-      if( ! (n & 1)  ) {
-        v = -v;
-      };
+      v = 2 * pha_0;
+      if( v > 1 ) {
+        v = 2 - v;
+      }
+      v *= uu_s;
+      cv = uu_s - v;
       break;
     case so_chaos_wave:
-      v = uu_s * f_ch; break;
+      v = uu_s * f_ch;  cv = uu_s - v; break;
     case so_triangle:
       if( pha_0 <= 0.25 )
         v = uu_s * 4 * pha_0;
@@ -116,19 +118,24 @@ double TSource::f() noexcept
         v = uu_s * ( 1 - 4*(pha_0-0.25));
       else
         v = uu_s * ( -1 +4*(pha_0-0.75));
+      cv = - v;
       break;
     case so_phase:
-      v = pha_0;
+      v = pha_0; cv = 1 - v;
       break;
     case so_pulse:
-      v = cc + (pha_flip ? uu : 0) ;
+      v = (pha_flip ? uu_s : 0) ;    cv = uu_s - v;
       break;
     case so_pwm:
-      v = ( pha_0 < dc ) ? uu_s : 0;
+      v = ( pha_0 >= dc0 && pha_0 < dc ) ? uu_s : 0;  cv = uu_s - v;
+      break;
+    case so_ladder:
+      v = uu_s * int( pha );
+      cv = - v;
       break;
     default: v = 0;
   };
-  v += cc;
+  v += cc; cv += cc;
   u2 = pow2( v );
   return v;
 }

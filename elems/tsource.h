@@ -34,7 +34,7 @@ class TSource : public TMiso  {
    enum SourceType {
      so_sin = 0, so_sign, so_sin_raise, so_sign_raise, so_dirac,
      so_theta, so_raise, so_saw, so_saw2, so_chaos_wave, // = 9
-     so_triangle, so_phase, so_pulse, so_pwm // = 13
+     so_triangle, so_phase, so_pulse, so_pwm, so_ladder // = 14
    };
    Q_ENUMS(SourceType);
    Q_CLASSINFO( "enum_SourceType_0",  "U*sin(\\omega*t+\\phi)" );           // so_sin
@@ -44,13 +44,14 @@ class TSource : public TMiso  {
    Q_CLASSINFO( "enum_SourceType_4",  "Dirac(t-\\tau)" );                   // so_dirac
    Q_CLASSINFO( "enum_SourceType_5",  "U*Thetta(t-\\tau)" );                // so_theta
    Q_CLASSINFO( "enum_SourceType_6",  "U*t/T" );                            // so_raise
-   Q_CLASSINFO( "enum_SourceType_7",  "U*saw(t,\\tau) /|/|/| " );           // so_saw
-   Q_CLASSINFO( "enum_SourceType_8",  "U*saw2(t,\\tau) /\\\\/\\\\ " );      // so_saw2
+   Q_CLASSINFO( "enum_SourceType_7",  "U*saw(t) /|/|/| " );                 // so_saw
+   Q_CLASSINFO( "enum_SourceType_8",  "U*saw2(t) /\\\\/\\\\ " );            // so_saw2
    Q_CLASSINFO( "enum_SourceType_9",  "U*chaos Wave(\\phi)" );              // so_chaos_wave
    Q_CLASSINFO( "enum_SourceType_10", "U*triangle(\\omega*t+\\phi)" );      // so_triangle
    Q_CLASSINFO( "enum_SourceType_11", "Phase" );                            // so_phase
    Q_CLASSINFO( "enum_SourceType_12", "Pulse" );                            // so_pulse
    Q_CLASSINFO( "enum_SourceType_13", "PWM" );                              // so_pwm
+   Q_CLASSINFO( "enum_SourceType_14", "ladder" );                           // so_ladder
 
 
    enum SeedType {
@@ -81,7 +82,8 @@ class TSource : public TMiso  {
    PRM_PARAMD( cc, 0, "&C", "Constant base", "sep=col" );
    /** phase shift */
    PRM_PARAMD( phi, 0, "\\phi", "Phase shift", "def=0" );
-   PRM_PARAMD( dc,  0,    "dc", "Duty cycle",  "def=0.5" );
+   PRM_PARAMD( dc0, 0,    "dc0", "Duty start",  "def=0.0" );
+   PRM_PARAMD( dc,  0,    "dc",  "Duty cycle",  "def=0.5" );
 
    // ----------- U chaos ----------------------
    PRM_SWITCH( use_u_ch, efNRC, "use U chaos", "Use amplitude perturbations", "sep=tab\ntabname=Chaos" );
@@ -109,6 +111,7 @@ class TSource : public TMiso  {
    PRM_DOUBLE( pha,   efInner, "pha",   "current phase: 2\\pi t=1", ""  );
    PRM_DOUBLE( pha_0, efInner, "pha_0", "current phase in [0;1) range", ""  );
    PRM_DOUBLE( u2,    efInner, "u2", "u^2", ""  );
+   PRM_DOUBLE( cv,    efInner, "cv", "Complement to v", ""  );
 
    // NO inputs
 
