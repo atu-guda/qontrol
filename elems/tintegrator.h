@@ -3,7 +3,7 @@
                           tintegrator.h  -  description
                              -------------------
     begin                : Wed Aug 30 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -49,6 +49,7 @@ class TIntegrator : public TMiso  {
    PRM_SWITCH( useMax,   efNRC, "limit Max value", "limit output to maximum value", "" );
    PRM_SWITCH( useSqIn,  efNRC, "x^{&2} on input", "Calculate square on input", "sep=col" );
    PRM_SWITCH( useSqrOut,efNRC, "\u221As&qrt(output)", "Calculate square root on output", "" );
+   PRM_SWITCH( invKi,    efNRC, "Inverse k_i", "Use 1/ki instead of ki", "" );
 
    PRM_INPUT(     in_u, 0, "&in_u",   "Main input",  "sep=block" );
    PRM_LOGICIN( in_rst, 0, "rst",   "Reset signal", "sep=col" );

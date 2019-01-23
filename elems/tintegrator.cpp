@@ -2,7 +2,7 @@
                           tintegrator.cpp  -  description
                              -------------------
     begin                : Wed Aug 30 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -55,7 +55,8 @@ double TIntegrator::f() noexcept
   };
 
   v_old = v;
-  v += in * ctdt * ki; // TODO: different methods
+  double eki = invKi ? ( 1.0/ki ) : ki;
+  v += in * ctdt * eki; // TODO: different methods
   if( useMin  &&  v < vmin ) {
     v = (double)vmin;
   }
