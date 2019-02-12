@@ -3,7 +3,7 @@
                           tfuncpoly.h  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -33,7 +33,7 @@ class TFuncPoly : public TMiso  {
    enum FuncType {
      ft_lin = 0, ft_square, ft_cube, ft_biSquare, ft_sqrt, ft_hypot, ft_4square,
      ft_vibro, ft_msquare, ft_xExp, ft_lin2, ft_linAbs,
-     ft_pow4, ft_pow5, ft_pow, ft_pows, ft_hypot4
+     ft_pow4, ft_pow5, ft_pow, ft_pows, ft_hypot4, ft_muldiv
    };
    Q_ENUMS(FuncType);
    Q_CLASSINFO( "enum_FuncType_0", "a*y+g"                                 ); // ft_lin
@@ -53,6 +53,7 @@ class TFuncPoly : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_14","a*pow(b*y,c)+g"                        ); // ft_pow
    Q_CLASSINFO( "enum_FuncType_15","a*pow(b*|y|,c)*sign(y)+g"              ); // ft_pows
    Q_CLASSINFO( "enum_FuncType_16", "e*hypot4(a*u0,b*u1,c*u2,d*u3)+g"      ); // ft_hypot4
+   Q_CLASSINFO( "enum_FuncType_17", "a*(y*in_2)/b+g"                       ); // ft_muldiv
  protected:
    /** main computation function */
    virtual double f() noexcept override;
