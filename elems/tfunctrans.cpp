@@ -2,7 +2,7 @@
                           tfunctrans.cpp  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -88,6 +88,8 @@ double TFuncTrans::f() noexcept
       v = a * sinh( y * b ); break;
     case ft_cosh:
       v = a * cosh( y * b ); break;
+    case ft_expm1:
+      v = a * expm1( y * b ); break;
     default:  v = 0;
   };
   v += g;

@@ -3,7 +3,7 @@
                           tfunctrans.h  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -34,7 +34,7 @@ class TFuncTrans : public TMiso  {
      ft_sin = 0, ft_signSin, ft_tanh, ft_atan2, ft_exp, ft_expM2, ft_wave, ft_mhat,
      ft_ln, ft_yExp, ft_yExp2, ft_sin2, ft_cos, ft_cos2, ft_tan, ft_exp1Msin,
      ft_1Mexp1Msin2, ft_expM2d, ft_divMod,
-     ft_expMod, ft_sinh, ft_cosh
+     ft_expMod, ft_sinh, ft_cosh, ft_expm1
    };
    Q_ENUMS(FuncType);
    Q_CLASSINFO( "enum_FuncType_0",  "a*sin(b*y)+g"                         ); //  ft_sin
@@ -59,6 +59,7 @@ class TFuncTrans : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_19", "a*exp(-|y|/b)+g"                      ); //  ft_expMod
    Q_CLASSINFO( "enum_FuncType_20", "a*sinh(b*y)+g"                        ); //  ft_sinh
    Q_CLASSINFO( "enum_FuncType_21", "a*cosh(b*y)+g"                        ); //  ft_cosh
+   Q_CLASSINFO( "enum_FuncType_22", "a*(exp(b*y)-1)+g"                     ); //  ft_expm1
  protected:
    /** main computation function */
    virtual double f() noexcept override;
