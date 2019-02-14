@@ -3,7 +3,7 @@
                           defs.h  -  common definitions and descriptions
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2016 by atu
+    copyright            : GPL (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  *************************************************************************/
 
@@ -19,7 +19,7 @@
 /* Name of package */
 #define PACKAGE "qontrol"
 #define ORG "atu.atunet"
-#define COPYRIGHT "(c) 2000-2016 atu; under GPLv2+"
+#define COPYRIGHT "(c) 2000-2019 atu; under GPLv2+"
 
 /* Model constants */
 
@@ -33,25 +33,25 @@
 
 #define TCHILD(T) findChildren<T>( QString(), Qt::FindDirectChildrenOnly )
 
-constexpr const int IMIN      { std::numeric_limits<int>::min() };
-constexpr const int IMAX      { std::numeric_limits<int>::max() };
+constexpr const int  IMIN      { std::numeric_limits<int>::min() };
+constexpr const int  IMAX      { std::numeric_limits<int>::max() };
 constexpr const long LMIN      { std::numeric_limits<long>::min() };
 constexpr const long LMAX      { std::numeric_limits<long>::max() };
-constexpr const unsigned UMIN { std::numeric_limits<unsigned int>::min() };
-constexpr const unsigned UMAX { std::numeric_limits<unsigned int>::max() };
+constexpr const unsigned UMIN  { std::numeric_limits<unsigned int>::min() };
+constexpr const unsigned UMAX  { std::numeric_limits<unsigned int>::max() };
 constexpr const unsigned long ULMIN { std::numeric_limits<unsigned long>::min() };
 constexpr const unsigned long ULMAX { std::numeric_limits<unsigned long>::max() };
-constexpr const double DMIN   { std::numeric_limits<double>::lowest() };
-constexpr const double DMAX   { std::numeric_limits<double>::max() };
-constexpr const double D_EPS  { 1.0e-6 }; // default error
-constexpr const double D_AZERO  { 1.0e-100 }; // a near-zero value
+constexpr const double DMIN    { std::numeric_limits<double>::lowest() };
+constexpr const double DMAX    { std::numeric_limits<double>::max() };
+constexpr const double D_EPS   { 1.0e-6 }; // default error
+constexpr const double D_AZERO { 1.0e-100 }; // a near-zero value
 
 constexpr const char *const DATE_FORMAT { "yyyy.MM.dd" };
 constexpr const char *const TIME_FORMAT { "hh:mm:ss.zzz" };
 
 constexpr const char *const model_file_suff { ".qol" };
 constexpr const char *const model_files_sel { "Model *.qol files (*.qol);;All files(*)" };
-constexpr const char *const data_file_suff  { ".dat" };
+constexpr const char *const data_file_suff  { ".txt" };
 constexpr const char *const data_files_sel  { "Data files (*.txt *.dat *.csv);;All files (*)" };
 
 #define L8B QString::fromLocal8Bit
@@ -97,7 +97,7 @@ const char* getStateString( int stat_num );
 
 constexpr char RE_NAME[] { R"!(^[_a-zA-Z][_0-9A-Za-z]*$)!" };
 constexpr char RE_NAME_IDX[] { R"!(^([_a-zA-Z][_0-9A-Za-z]*)(?:\[(\d+)\])?$)!" };
-// not good, allowing "a..b", buf fast
+// not good, allowing "a..b", buf fast, catched in miscfun.cpp: splitName()
 constexpr char RE_FULLNAME[]
   { R"(^([_a-zA-Z]+[_0-9A-Za-z]*)\.([_a-zA-Z]+[_0-9A-Za-z.]*(?:\[(\d+)\])?)$)" } ;
 

@@ -52,7 +52,9 @@ class TIntegrator : public TMiso  {
    PRM_SWITCH( invKi,    efNRC, "Inverse k_i", "Use 1/ki instead of ki", "" );
 
    PRM_INPUT(     in_u, 0, "&in_u",   "Main input",  "sep=block" );
-   PRM_LOGICIN( in_rst, 0, "rst",   "Reset signal", "sep=col" );
+   PRM_INPUT(    in_u1, 0, "in_{u1}", "Negative input", "" );
+   PRM_INPUT(    in_u2, 0, "in_{u2}", "Third+ input",  "" );
+   PRM_LOGICIN( in_rst, 0, "rst",     "Reset signal", "sep=col" );
    PRM_INPUT(    v_rst, 0, "v_{rst}", "Value of v on reset", "sep=col" );
 
    double v_old = 0;

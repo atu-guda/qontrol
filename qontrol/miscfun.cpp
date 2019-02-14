@@ -107,6 +107,10 @@ double get_real_time()
 
 NameType splitName( const QString &name, QString &first, QString &rest, int &idx )
 {
+  if( name.contains( ".." )  ||  name.contains( ' ' ) ) {
+    return badName;
+  }
+
   QRegExp re( RE_NAME_IDX );
   if( re.indexIn( name ) != -1 ) {
     first = re.cap(1); rest = QString();

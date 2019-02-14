@@ -23,7 +23,7 @@ using namespace std;
 
 const char* TIntegrator::helpstr = "<H1>TIntegrator</H1>\n"
  "<p>Realistic integrator: <br>\n"
- "Can has limits, discharge, reset.<br></p>\n";
+ "Can has 3 inputs (sum), limits, discharge, reset.<br></p>\n";
 
 STD_CLASSINFO(TIntegrator,clpElem );
 
@@ -45,7 +45,10 @@ int TIntegrator::miso_startLoop( long /*acnx*/, long /*acny*/ )
 
 double TIntegrator::f() noexcept
 {
-  double in = ( bool (useSqIn) ) ? pow2( in_u ) : in_u;
+  double in = in_u - in_u1 + in_u2;
+  if( useSqIn ) {
+    in *= in;
+  }
 
   if( in_rst ) {
     t_rst = 0;
