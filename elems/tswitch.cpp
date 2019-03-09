@@ -2,7 +2,7 @@
                           tswitch.cpp  -  description
                              -------------------
     begin                : Sun Nov 19 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -21,7 +21,7 @@
 using namespace std;
 
 const char* TSwitch::helpstr = "<H1>TSwitch</H1>\n"
- "<p>Connects output to one of inputs, accrding to values of u_s: <br>\n</p>";
+ "<p>Connects output to one of inputs, according to value of (in_s+in_s1+in_s2): <br/>\n</p>";
 
 STD_CLASSINFO(TSwitch,clpElem|clpCalcAtStart);
 
@@ -33,7 +33,8 @@ CTOR(TSwitch,TMiso)
 double TSwitch::f() noexcept
 {
   if( fabs(step) < D_AZERO ) { step = D_AZERO; }
-  double vn = clamp( ( in_s - level_0 ) / step, 0.0, double(n_max) );
+  in_all = in_s + in_s1  + in_s2 - level_0;
+  double vn = clamp( in_all / step, 0.0, double(n_max) );
   int n = int( vn );
   n_cur = n;
 
