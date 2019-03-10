@@ -113,6 +113,7 @@ class TSource : public TMiso  {
    PRM_DOUBLE( u2,    efInner, "u2", "u^2", ""  );
    PRM_DOUBLE( cv,    efInner, "cv", "Complement to v", ""  );
    PRM_DOUBLE( T_0,   efInner, "T_0", "Period", "def=1"  );
+   PRM_DOUBLE( T_1,   efInner, "T_1", "dc part of period", "def=1"  );
 
    // NO inputs
 

@@ -42,6 +42,7 @@ double TSource::f() noexcept
     omega_x *= 2 * M_PI;
   }
   T_0 = 2 * M_PI / omega_x;
+  T_1 = T_0 * ( dc - dc0 );
   double omet = ct * omega_x + phi;
 
   double u_ch = 1;
