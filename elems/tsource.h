@@ -112,6 +112,7 @@ class TSource : public TMiso  {
    PRM_DOUBLE( pha_0, efInner, "pha_0", "current phase in [0;1) range", ""  );
    PRM_DOUBLE( u2,    efInner, "u2", "u^2", ""  );
    PRM_DOUBLE( cv,    efInner, "cv", "Complement to v", ""  );
+   PRM_DOUBLE( T_0,   efInner, "T_0", "Period", "def=1"  );
 
    // NO inputs
 

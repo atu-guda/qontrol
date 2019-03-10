@@ -41,6 +41,7 @@ double TSource::f() noexcept
   if( use_rfreq ) {
     omega_x *= 2 * M_PI;
   }
+  T_0 = 2 * M_PI / omega_x;
   double omet = ct * omega_x + phi;
 
   double u_ch = 1;
