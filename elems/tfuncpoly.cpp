@@ -83,6 +83,8 @@ double TFuncPoly::f() noexcept
       v = e * sqrt( a*a*in_0*in_0 + b*b*in_1*in_1 +c*c*in_2*in_2 +d*d*in_3*in_3 ); break;
     case  ft_muldiv:
       v = a * ( y * in_2 ) / b; break;
+    case  ft_mulsum:
+      v = a * ( c * in_0 * in_1 + d * in_2 * in_3 ) / b; break;
     default: v = 0;
   };
   v += g;

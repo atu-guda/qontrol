@@ -33,7 +33,7 @@ class TFuncPoly : public TMiso  {
    enum FuncType {
      ft_lin = 0, ft_square, ft_cube, ft_biSquare, ft_sqrt, ft_hypot, ft_4square,
      ft_vibro, ft_msquare, ft_xExp, ft_lin2, ft_linAbs,
-     ft_pow4, ft_pow5, ft_pow, ft_pows, ft_hypot4, ft_muldiv
+     ft_pow4, ft_pow5, ft_pow, ft_pows, ft_hypot4, ft_muldiv, ft_mulsum
    };
    Q_ENUMS(FuncType);
    Q_CLASSINFO( "enum_FuncType_0", "a*y+g"                                 ); // ft_lin
@@ -54,8 +54,8 @@ class TFuncPoly : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_15","a*pow(b*|y|,c)*sign(y)+g"              ); // ft_pows
    Q_CLASSINFO( "enum_FuncType_16", "e*hypot4(a*u0,b*u1,c*u2,d*u3)+g"      ); // ft_hypot4
    Q_CLASSINFO( "enum_FuncType_17", "a*(y*in_2)/b+g"                       ); // ft_muldiv
+   Q_CLASSINFO( "enum_FuncType_18", "a/b*(c*u0*u1 + d*u2*u3) +g"           ); // ft_mulsum
  protected:
-   /** main computation function */
    virtual double f() noexcept override;
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
 
