@@ -39,7 +39,7 @@ double TQuadExtr::f() noexcept
     x_ce = x_c;
     y_ce = y_c;
   }
-  QuadExtrIn in { x_l, x_ce, x_r, y_l, y_ce, y_r, lim_s, x_min, x_max, limitX, limitG };
+  QuadExtrIn in { x_l, x_ce, x_r, y_l, y_ce, y_r, lim_s, x_min, x_max, (bool)limitX, (bool)limitG };
   QuadExtrOut out;
   // fallback values
   a_1 = 0; a_2 = 0; x_cnt = 0; x_cn = x_ce;  y_cn = y_ce; dy = 0; dy_sx = 0; f_c = 0;
