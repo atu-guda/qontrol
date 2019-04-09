@@ -3,7 +3,7 @@
                           tfuncmisc.h  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -34,7 +34,7 @@ class TFuncMisc : public TMiso  {
    enum FuncType {
      ft_deadLine = 0, ft_limitLine, ft_dealLimitLine, ft_sign, ft_theta, ft_diod,
      ft_threeState, ft_triangle, ft_reactLine, ft_2slope, ft_div, ft_int,
-     ft_frac, ft_aasin, ft_erf, ft_min, ft_max, ft_2slopeEx, ft_copysign
+     ft_frac, ft_aasin, ft_erf, ft_min, ft_max, ft_2slopeEx, ft_copysign, ft_clamp, ft_switch
    };
    Q_ENUMS(FuncType);
    Q_CLASSINFO( "enum_FuncType_0",  "a*deadLine(y,b)+c*y+g"      );    // ft_deadLine
@@ -56,8 +56,9 @@ class TFuncMisc : public TMiso  {
    Q_CLASSINFO( "enum_FuncType_16", "a*max(in_0,in_1)+g"         );    // ft_max
    Q_CLASSINFO( "enum_FuncType_17", "a*((y>e)?b:c)*y+g"          );    // ft_2slopeEx
    Q_CLASSINFO( "enum_FuncType_18", "a*copysign(in_0,in_1)+g"    );    // ft_copysign
+   Q_CLASSINFO( "enum_FuncType_19", "a*clamp(y,b,d)+c*t+g"       );    // ft_clamp
+   Q_CLASSINFO( "enum_FuncType_20", "a*((in_2>d)?(b*in_0):(c*in_1))+g" );  // ft_switch
  protected:
-   /** main computation function */
    virtual double f() noexcept override;
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
 
@@ -76,10 +77,12 @@ class TFuncMisc : public TMiso  {
 
    PRM_INPUT( in_0, 0, "in_{&0}", "First input",  "sep=block" );
    PRM_INPUT( in_1, 0, "in_{&1}", "Second input", "sep=col" );
+   PRM_INPUT( in_2, 0, "in_{&2}", "Input N 2",    "sep=col" );
 
    // misc values
-   PRM_DOUBLE(  ax,  efInner, "ax",   "|x|",  ""  );
-   PRM_DOUBLE(  ay,  efInner, "ay",   "|y|",  ""  );
+   PRM_DOUBLE(  ax,  efInner, "ax",   "|in_0|",  ""  );
+   PRM_DOUBLE(  ay,  efInner, "ay",   "|y|",     ""  );
+   PRM_DOUBLE(  ao,  efInner, "ao",   "|out|",   ""  );
 
    Q_CLASSINFO( "nameHintBase",  "fm_" );
    DCL_DEFAULT_STATIC;

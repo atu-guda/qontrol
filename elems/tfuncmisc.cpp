@@ -2,7 +2,7 @@
                           tfuncmisc.cpp  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -62,9 +62,12 @@ double TFuncMisc::f() noexcept
     case ft_max          : v = a * fmax( in_0, in_1 );  break;
     case ft_2slopeEx     : v = a * (( y >= e ) ? ( b * y ) : ( c * y )); break;
     case ft_copysign     : v = a * copysign( in_0, in_1 ); break;
+    case ft_clamp        : v = a * clamp( (double)y, (double)b, (double)d ) + cy; break;
+    case ft_switch       : v = a * ( ( (double)in_2 > d ) ? ( b * in_0 ) : ( c * in_1 ) ) ; break;
     default: v = 0;
   };
   v += g;
+  ao = fabs( v );
   return v;
 }
 
