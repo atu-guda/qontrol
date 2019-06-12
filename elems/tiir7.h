@@ -44,7 +44,7 @@ class TIIR7 : public TMiso  {
    PRM_DOUBLE_ARR( uo,  efInner, "uo", "Input  values (0=now)",  "N=7" );
    PRM_DOUBLE_ARR( xo,  efInner, "xo", "Output values (0=now)",  "N=7" );
 
-   bool on_start = true;
+   PRM_DOUBLE( x2, efInner, "x^2", "Squared output", "" );
 
    Q_CLASSINFO( "nameHintBase",  "iir_" );
    DCL_DEFAULT_STATIC;

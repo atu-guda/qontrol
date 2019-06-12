@@ -34,13 +34,6 @@ double TIIR7::f() noexcept
 {
   double uc = clamp( u.cval(), u_min.cval(), u_max.cval() );
 
-  if( on_start ) {
-    for( unsigned i=0; i<n_val; ++i ) {
-      xo[i] = out0_init;
-      uo[i] = out0_init;
-    }
-    on_start = false;
-  }
   if( hold ) {
     return xo[0];
   }
@@ -59,6 +52,7 @@ double TIIR7::f() noexcept
 
   v = clamp( v, x_min.cval(), x_max.cval() );
   xo[0] = v;
+  x2 = v * v;
 
   return v;
 }
@@ -67,7 +61,12 @@ double TIIR7::f() noexcept
 
 int TIIR7::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
-  on_start = true;
+  double v = out0_init;
+  for( unsigned i=0; i<n_val; ++i ) {
+    xo[i] = v;
+    uo[i] = v;
+  }
+  x2 = v * v;
   return 1;
 }
 
