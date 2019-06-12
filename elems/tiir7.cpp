@@ -36,8 +36,8 @@ double TIIR7::f() noexcept
 
   if( on_start ) {
     for( unsigned i=0; i<n_val; ++i ) {
-      xo[i] = 0;
-      uo[i] = 0;
+      xo[i] = out0_init;
+      uo[i] = out0_init;
     }
     on_start = false;
   }
