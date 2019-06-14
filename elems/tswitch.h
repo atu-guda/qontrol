@@ -52,6 +52,8 @@ class TSwitch : public TMiso  {
    PRM_INPUT( in_s1,         0, "in_{s1}", "switch input 1", "" );
    PRM_INPUT( in_s2,         0, "in_{s1}", "switch input 2", "" );
 
+   PRM_DOUBLE( x2, efInner, "x^2", "Squared output", "" );
+
    Q_CLASSINFO( "nameHintBase",  "swi_" );
    DCL_DEFAULT_STATIC;
 };

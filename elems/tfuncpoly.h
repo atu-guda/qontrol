@@ -78,6 +78,8 @@ class TFuncPoly : public TMiso  {
    PRM_INPUT( in_2, 0, "in_{&2}", "Third input",  "sep=block" );
    PRM_INPUT( in_3, 0, "in_{&3}", "Fourth input", "sep=col" );
 
+   PRM_DOUBLE( x2, efInner, "x^2", "Squared output", "" );
+
    Q_CLASSINFO( "nameHintBase",  "fp_" );
    DCL_DEFAULT_STATIC;
 };

@@ -2,7 +2,7 @@
      tquality.cpp -- TQuality element definition
                              -------------------
     begin                : 2016.02.29
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -49,6 +49,7 @@ double TQuality::f() noexcept
 
   if( v > (double)F_max ) { v = (double)F_max; };
   if( v < (double)F_min ) { v = (double)F_min; };
+  x2 = v * v;
   return v;
 }
 

@@ -77,6 +77,7 @@ class TFuncTrans : public TMiso  {
    PRM_PARAMD( x0, 0, "x0", "Input shift: y = in_0 - in_1 - x0;", "" );
 
    PRM_DOUBLE( y,  efInner, "y",   "in_0 - in_1 - x0", "" );
+   PRM_DOUBLE( x2, efInner, "x^2", "Squared output", "" );
 
    PRM_INPUT( in_0, 0, "in_{&0}", "First input",  "sep=block" );
    PRM_INPUT( in_1, 0, "in_{&1}", "Second input", "sep=col" );

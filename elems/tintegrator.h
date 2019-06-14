@@ -57,6 +57,8 @@ class TIntegrator : public TMiso  {
    PRM_LOGICIN( in_rst, 0, "rst",     "Reset signal", "sep=col" );
    PRM_INPUT(    v_rst, 0, "v_{rst}", "Value of v on reset", "sep=col" );
 
+   PRM_DOUBLE( x2, efInner, "x^2", "Squared output", "" );
+
    double v_old = 0;
    double last_rst = 0;
 

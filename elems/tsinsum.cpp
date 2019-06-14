@@ -2,7 +2,7 @@
     tsinsum.cpp -- sum of sinuses
                              -------------------
     begin                : 2016.12.26
-    copyright            : (C) 2016-2017 by atu
+    copyright            : (C) 2016-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -47,6 +47,7 @@ double TSinSum::f() noexcept
   v += a_3 * sin( mult * ( p * f_3 + p_3 ) );
   v += a_4 * sin( mult * ( p * f_4 + p_4 ) );
   v += a_5 * sin( mult * ( p * f_5 + p_5 ) );
+  x2 = v * v;
   return v;
 }
 

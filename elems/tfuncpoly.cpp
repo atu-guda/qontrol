@@ -88,6 +88,7 @@ double TFuncPoly::f() noexcept
     default: v = 0;
   };
   v += g;
+  x2 = v * v;
   return v;
 }
 

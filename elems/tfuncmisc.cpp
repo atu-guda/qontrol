@@ -68,6 +68,7 @@ double TFuncMisc::f() noexcept
   };
   v += g;
   ao = fabs( v );
+  x2 = v * v;
   return v;
 }
 

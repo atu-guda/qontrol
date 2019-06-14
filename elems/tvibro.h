@@ -3,7 +3,7 @@
                           tvibro.h  -  description
                              -------------------
     begin                : Mon Aug 28 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -43,9 +43,9 @@ class TVibro : public TMiso  {
    PRM_SWITCH( mul_fa, efNRC, "v * f_a", "Multiply f_a to v", "" );
    PRM_SWITCH( no_ome2,efNRC, "no Omega^2", "Coefficient near x is Omega, not Omega^2", "" );
 
-   PRM_DOUBLE( v,    efInner, "v", "v(t)", "" );
-   PRM_DOUBLE( x2,   efInner, "x^2", "x^2", "" );
-   PRM_DOUBLE( a,    efInner, "a", "a", "" );
+   PRM_DOUBLE(  v,   efInner, "v",   "v(t)", "" );
+   PRM_DOUBLE( x2,   efInner, "x^2", "Squared output", "" );
+   PRM_DOUBLE(  a,   efInner, "a",    "a", "" );
 
    PRM_INPUT( in_u,        0, "&u(t)",  "Main input",  "sep=block" );
    PRM_INPUT( in_f,        0, "&f()",   "Return force input (if enabled), multiplied to \\Omega", "sep=col" );

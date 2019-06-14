@@ -3,7 +3,7 @@
                           tfriction.h  -  description
                              -------------------
     begin                : Jul 18 2003
-    copyright            : (C) 2003-2016 by atu
+    copyright            : (C) 2003-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -48,6 +48,8 @@ class TFriction : public TMiso  {
 
    PRM_INPUT( in_u,    0,  "&in_u",   "Main (source) input",  "sep=block" );
    PRM_INPUT( in_f_mx, 0, "in_{fmx}", "Maximum for input (if enabled)", "sep=col" );
+
+   PRM_DOUBLE( x2, efInner, "x^2", "Squared output", "" );
 
    /** old values and misc */
    double v_old = 0, x_old = 0;

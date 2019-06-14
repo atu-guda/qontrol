@@ -3,7 +3,7 @@
                           tlinear.h  -  description
                              -------------------
     begin                : Tue Aug 1 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -46,6 +46,8 @@ class TLinear : public TMiso  {
    PRM_INPUT( in_1, 0, "i&n_1", "Second input", "sep=col" );
    PRM_INPUT( in_2, 0, "in_2",  "Third input",  "sep=col" );
    PRM_INPUT( in_3, 0, "in_3",  "Fourth input", "sep=col" );
+
+   PRM_DOUBLE( x2, efInner, "x^2", "Squared output", "" );
 
    Q_CLASSINFO( "nameHintBase",  "sum_" );
    DCL_DEFAULT_STATIC;

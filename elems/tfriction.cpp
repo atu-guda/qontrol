@@ -2,7 +2,7 @@
                           tfriction.cpp  -  description
                              -------------------
     begin                : Jul 18 2003
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -90,6 +90,7 @@ double TFriction::f() noexcept
   };
 
   v_old = v; x_old = x;
+  x2 = x * x;
   return x;
 }
 

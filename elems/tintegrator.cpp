@@ -75,6 +75,7 @@ double TIntegrator::f() noexcept
   if( useSqrOut ) {
     v_ret = sqrt0( v_ret );
   }
+  x2 = v_ret * v_ret;
   return v_ret;
 }
 

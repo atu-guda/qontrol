@@ -2,7 +2,7 @@
                           tpid.cpp  -  description
                              -------------------
     begin                : Sun Aug 27 2000
-    copyright            : (C) 2000-2018 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -61,6 +61,7 @@ double TPid::f() noexcept
     v /= ct;
   }
   u_old2 = u_old; u_old = uc;
+  x2 = v * v;
   return v;
 }
 

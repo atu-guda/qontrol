@@ -80,9 +80,10 @@ class TFuncMisc : public TMiso  {
    PRM_INPUT( in_2, 0, "in_{&2}", "Input N 2",    "sep=col" );
 
    // misc values
-   PRM_DOUBLE(  ax,  efInner, "ax",   "|in_0|",  ""  );
-   PRM_DOUBLE(  ay,  efInner, "ay",   "|y|",     ""  );
-   PRM_DOUBLE(  ao,  efInner, "ao",   "|out|",   ""  );
+   PRM_DOUBLE(  ax,  efInner,  "ax", "|in_0|",  ""  );
+   PRM_DOUBLE(  ay,  efInner,  "ay", "|y|",     ""  );
+   PRM_DOUBLE(  ao,  efInner,  "ao", "|out|",   ""  );
+   PRM_DOUBLE(  x2,  efInner, "x^2", "Squared output", "" );
 
    Q_CLASSINFO( "nameHintBase",  "fm_" );
    DCL_DEFAULT_STATIC;

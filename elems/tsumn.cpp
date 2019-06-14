@@ -2,7 +2,7 @@
                           tsumn.h  - N-input linear summator
                              -------------------
     begin                : 2015.10.31
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -37,6 +37,7 @@ double TSumN::f() noexcept
 
   r *= a;
   r += b;
+  x2 = r * r;
   return r;
 }
 

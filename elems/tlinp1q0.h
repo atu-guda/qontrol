@@ -3,7 +3,7 @@
                           tlinp1q0.h  -  description
                              -------------------
     begin                : Fri Sep 1 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -46,9 +46,11 @@ class TLinP1Q0 : public TMiso  {
    PRM_SWITCH( use_u2,    0, "u^&2", "Calculate u^2 before usage", "sep=col" );
    PRM_SWITCH( use_sqrt0, 0, "sqrt0(x)", "Output sqrt0(x)", "" );
 
-   PRM_INPUT( in_u,    0, "&in_u", "Signal input",  "sep=block" );
-   PRM_INPUT( in_f,    0, "in_f", "Functional input", "sep=col" );
-   PRM_DOUBLE(  tau,  efInner, "\\tau",   "Effective time",  "def=1"  );
+   PRM_INPUT( in_u,        0, "&in_u",     "Signal input",  "sep=block" );
+   PRM_INPUT( in_f,        0,  "in_f", "Functional input",  "sep=col" );
+   PRM_DOUBLE( tau,  efInner, "\\tau",   "Effective time",  "def=1"  );
+
+   PRM_DOUBLE(  x2,  efInner, "x^2",     "Squared output", "" );
 
    /** old value of x  */
    double x_old = 0;

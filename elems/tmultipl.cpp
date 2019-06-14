@@ -2,7 +2,7 @@
                           tmultipl.cpp  -  description
                              -------------------
     begin                : Fri Aug 25 2000
-    copyright            : (C) 2000-2017 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -45,6 +45,7 @@ double TMultipl::f() noexcept
   }
   v *= a / c;
   v += b;
+  x2 = v * v;
   return v;
 }
 

@@ -3,7 +3,7 @@
                           tsumn.h  - N-input linear summator
                              -------------------
     begin                : 2015.10.31
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -30,11 +30,12 @@ class TSumN : public TMiso  {
    DCL_CREATE;
    DCL_STD_INF;
  protected:
-   /** main computation function */
    virtual double f() noexcept override;
 
-   PRM_PARAMD( a, 0, "a", "common factor", "def=1\nsep=colend" );
-   PRM_PARAMD( b,  0, "b", "static shift", "sep=blockend" );
+   PRM_PARAMD( a,  0, "a", "common factor", "def=1\nsep=colend" );
+   PRM_PARAMD( b,  0, "b",  "static shift", "sep=blockend" );
+
+   PRM_DOUBLE( x2, efInner, "x^2", "Squared output", "" );
 
    Q_CLASSINFO( "nameHintBase",  "sumn_" );
    DCL_DEFAULT_STATIC;

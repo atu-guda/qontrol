@@ -2,7 +2,7 @@
                           tlinear.cpp  -  description
                              -------------------
     begin                : Tue Aug 1 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -30,13 +30,17 @@ CTOR(TLinear,TMiso)
 
 double TLinear::f() noexcept
 {
-  return ( a / d ) * ( in_0*a0 + in_1*a1 + in_2*a2 + in_3*a3 + b );
+  double v = ( a / d ) * ( in_0*a0 + in_1*a1 + in_2*a2 + in_3*a3 + b );
+  x2 = v * v;
+  return v;
 }
 
 double TLinear::f_d( double arg0, double arg1, double arg2, double arg3 )
 {
   // setInput not used: too simple
-  return ( a / d ) * ( arg0*a0 + arg1*a1 + arg2*a2 + arg3*a3 + b );
+  double v = ( a / d ) * ( arg0*a0 + arg1*a1 + arg2*a2 + arg3*a3 + b );
+  x2 = v * v;
+  return v;
 }
 
 DEFAULT_FUNCS_REG(TLinear)

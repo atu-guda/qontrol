@@ -3,7 +3,7 @@
                           tsum8.h  - 8-input linear summator
                              -------------------
     begin                : 2015.02.22
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -51,6 +51,8 @@ class TSum8 : public TMiso  {
    PRM_INPUT( u_5, 0, "u_5",  "Input 5", "" );
    PRM_INPUT( u_6, 0, "u_6",  "Input 6",  "sep=col" );
    PRM_INPUT( u_7, 0, "u_7",  "Input 7", "" );
+
+   PRM_DOUBLE( x2, efInner, "x^2", "Squared output", "" );
 
    Q_CLASSINFO( "nameHintBase",  "sum_" );
    DCL_DEFAULT_STATIC;

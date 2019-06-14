@@ -3,7 +3,7 @@
                           tmultipl.h  -  description
                              -------------------
     begin                : Fri Aug 25 2000
-    copyright            : (C) 2000-2017 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -42,6 +42,8 @@ class TMultipl : public TMiso  {
    PRM_INPUT( in_1, 0, "in_{&1}", "Second input", "def=1\nsep=col" );
    PRM_INPUT( in_2, 0, "in_{&2}", "Third input",  "def=1\nsep=col" );
    PRM_INPUT( in_3, 0, "in_{&3}", "Fourth input", "def=1\nsep=col" );
+
+   PRM_DOUBLE( x2, efInner, "x^2", "Squared output", "" );
 
    Q_CLASSINFO( "nameHintBase",  "mul_" );
    DCL_DEFAULT_STATIC;

@@ -3,7 +3,7 @@
     tsinsum.h -- sum of sinuses
                              -------------------
     begin                : 2016.12.26
-    copyright            : (C) 2016-2017 by atu
+    copyright            : (C) 2016-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -63,6 +63,7 @@ class TSinSum : public TMiso  {
    PRM_INPUT(  u_0   , 0 , "u_{&0}"  , "input"                ,  "sep=block" );
 
    PRM_DOUBLE( p     , efInner , "p"    , ""       , "" );
+   PRM_DOUBLE( x2    , efInner, "x^2"   , "Squared output", "" );
 
    Q_CLASSINFO( "nameHintBase",  "si_" );
    DCL_DEFAULT_STATIC;

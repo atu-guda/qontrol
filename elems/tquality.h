@@ -3,7 +3,7 @@
      tquality.h -- TQuality element decription
                              -------------------
     begin                : 2016.02.29
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -57,6 +57,8 @@ class TQuality : public TMiso  {
 
    PRM_INPUT( q_o, 0, "in_{&o}", "Object q",  "sep=block" );
    PRM_INPUT( q_m, 0, "in_{&m}", "Model q",   "sep=col" );
+
+   PRM_DOUBLE( x2, efInner, "x^2", "Squared output", "" );
 
    Q_CLASSINFO( "nameHintBase",  "qa_" );
    DCL_DEFAULT_STATIC;

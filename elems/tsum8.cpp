@@ -2,7 +2,7 @@
                           tsum8.cpp  - 8-in summator implementation
                              -------------------
     begin                : 2015.02.22
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -29,9 +29,12 @@ CTOR(TSum8,TMiso)
 
 double TSum8::f() noexcept
 {
-  return a * ( u_0*a_0 + u_1*a_1 + u_2*a_2 + u_3*a_3 +
+  double v = a * ( u_0*a_0 + u_1*a_1 + u_2*a_2 + u_3*a_3 +
                u_4*a_4 + u_5*a_5 + u_6*a_6 + u_7*a_7
                + b );
+  x2 = v * v;
+  return v;
+
 }
 
 DEFAULT_FUNCS_REG(TSum8)

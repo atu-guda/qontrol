@@ -38,17 +38,20 @@ double TSwitch::f() noexcept
   int n = int( vn );
   n_cur = n;
 
+  double v;
   switch( n ) {
-    case 0: return in_0;
-    case 1: return in_1;
-    case 2: return in_2;
-    case 3: return in_3;
-    case 4: return in_4;
-    case 5: return in_5;
-    case 6: return in_6;
-    case 7: return in_7;
+    case 0: v = in_0; break;
+    case 1: v = in_1; break;
+    case 2: v = in_2; break;
+    case 3: v = in_3; break;
+    case 4: v = in_4; break;
+    case 5: v = in_5; break;
+    case 6: v = in_6; break;
+    case 7: v = in_7; break;
+    default: v = 0; break;
   }
-  return 0;
+  x2 = v * v;
+  return v;
 }
 
 DEFAULT_FUNCS_REG(TSwitch)

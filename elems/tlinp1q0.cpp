@@ -2,7 +2,7 @@
                           tlinp1q0.cpp  -  description
                              -------------------
     begin                : Fri Sep 1 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -43,6 +43,7 @@ CTOR(TLinP1Q0,TMiso)
 int TLinP1Q0::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   x_old = ( use_sqrt0 ) ? pow2( out0_init ) : out0_init;
+  x2 = pow2( x_old );
   return 1;
 }
 
@@ -51,10 +52,11 @@ double TLinP1Q0::f() noexcept
   double f = ( use_u1 ) ? in_f : x_old;
   double u = ( use_u2 ) ? pow2( in_u ) : in_u;
   tau = 1.0 / a; // ? only at param change?
-  // TODO: check this for stability
   double x = x_old + a * ctdt * ( ku * u - f );
   x_old = x;
-  return ( use_sqrt0 ) ? sqrt0( x ) : x;
+  double v =  ( use_sqrt0 ) ? sqrt0( x ) : x;
+  x2 = v * v;
+  return v;
 }
 
 DEFAULT_FUNCS_REG(TLinP1Q0)
