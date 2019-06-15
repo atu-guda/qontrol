@@ -3,7 +3,7 @@
      tmovingcorr.h - Moving correlation analysis declaration
                              -------------------
     begin                : 2016.08.02
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -49,7 +49,6 @@ class TMovingCorr : public TMiso  {
    PRM_DOUBLE(     slp,   efNRC, "Sleep part", "Part of tw to mute outputs", "def=0.5\nmin=0" );
    PRM_SWITCH(  diff_x,   efNRC,  "diff x", "Calc dx/dt", "sep=col" );
    PRM_SWITCH(  diff_y,   efNRC,  "diff y", "Calc dy/dt", "" );
-   // PRM_SWITCH( useReset, efNRC, "use &Reset", "Use in_rst as signal to reset", "" );
    PRM_INT(         ok, efInner, "ok", "ok state", "" );
    /** collectors, out values */
    PRM_DOUBLE(     s_x, efInner, "s_x", "sum(x)", "" );
@@ -69,6 +68,7 @@ class TMovingCorr : public TMiso  {
    PRM_DOUBLE(   ave_y, efInner, "aver_y", "aver(y)", "" );
    PRM_DOUBLE(  ave_x2, efInner, "aver_x2", "aver(x^2)", "" );
    PRM_DOUBLE(  ave_y2, efInner, "aver_y2", "aver(y^2)", "" );
+   PRM_DOUBLE(   n_sam, efInner,   "n_sam", "Number of samples", "" );
 
    PRM_INPUT(     in_x,       0, "in_{&x}", "First input",  "sep=block" );
    PRM_INPUT(     in_y,       0, "in_{&y}", "Second input", "sep=col" );

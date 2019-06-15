@@ -2,7 +2,7 @@
      tmovingcorr.cpp - Moving correlation analysis definition
                              -------------------
     begin                : 2016.08.02
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -47,6 +47,10 @@ void TMovingCorr::reset_data()
 
 int TMovingCorr::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
+  auto imd = size_t( ceil( tw / ctdt ) );
+  for( auto a : bufs ) {
+   a->resize( imd, 0.0 );
+  }
   reset_data();
   return 1;
 }
@@ -54,10 +58,6 @@ int TMovingCorr::miso_startLoop( long /*acnx*/, long /*acny*/ )
 
 int TMovingCorr::do_preRun()
 {
-  auto imd = size_t( ceil( tw / ctdt ) );
-  for( auto a : bufs ) {
-   a->resize( imd, 0.0 );
-  }
   return 1;
 }
 
@@ -72,16 +72,19 @@ int TMovingCorr::do_postRun( int /*good*/ )
 double TMovingCorr::f() noexcept
 {
   double x = in_x, y = in_y;
+
   if( on_start ) {
     x_old = x; y_old = y;
     on_start = false;
   }
+
   if( diff_x ) {
     x -= x_old; x /= ctdt;
   }
   if( diff_y ) {
     y -= y_old; y /= ctdt;
   }
+
   x_old = in_x; y_old = in_y; // old, not diff value
 
   a_x.push_back(    x );
@@ -89,7 +92,9 @@ double TMovingCorr::f() noexcept
   a_y.push_back(    y );
   a_y2.push_back( y*y );
   a_xy.push_back( x*y );
+
   calc();
+
   return a;
 }
 
@@ -101,7 +106,9 @@ int TMovingCorr::calc()
   if( n < 1 ) {
     return 0;
   };
+
   const double dn = (double)(n);
+  n_sam = dn;
   const double dn2 = dn * dn;
 
   s_x = a_x.sum();  s_x2 = a_x2.sum();  s_y = a_y.sum(); s_y2 = a_y2.sum(); s_xy = a_xy.sum();
