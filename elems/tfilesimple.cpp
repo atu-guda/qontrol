@@ -18,7 +18,8 @@
 #include "tfilesimple.h"
 
 const char* TFileSimple::helpstr = "<H1>TFileSimple</H1>\n"
- "<p>Simple (without interpolation and bind to time) text data file reader<br>\n";
+ "<p>Simple (without interpolation and bind to time) text data file reader.<br>\n"
+ "Some minimal calculations may be done</p>\n";
 
 STD_CLASSINFO(TFileSimple,clpElem);
 
@@ -36,7 +37,7 @@ double TFileSimple::f() noexcept
   hold_i = 0;
 
   if( useDef ) {
-    v.val().assign( (unsigned)(rnc), (double)(defVal) );
+    v.val().assign( (unsigned)(max_col), (double)(defVal) );
   }
 
   readLine();
@@ -82,9 +83,14 @@ int TFileSimple::readLine() noexcept
   n_col = nread_col;
 
   // skip every_n-1 lines
-  for( int i=1; i<every_n; ++i ) { // 1: sic, one line is read beforehand
-    file.readLine( buf_sz );
+  for( int i=1; i<every_n && ! file.atEnd(); /* NOP */ ) { // 1: sic, one line is read beforehand
+    lin = file.readLine( buf_sz ).simplified();
+    if( lin.size() < 1 || lin[0] == '#' || lin[0] == ';' ) { // empty or comment
+      continue;
+    }
+    ++i;
   }
+
   return nread_col;
 }
 
