@@ -36,9 +36,7 @@ double TFileSimple::f() noexcept
   }
   hold_i = 0;
 
-  if( useDef ) {
-    v.val().assign( (unsigned)(max_col), (double)(defVal) );
-  }
+  v.val().assign( (unsigned)(max_col), (double)(defVal) );
 
   readLine();
 
@@ -73,8 +71,18 @@ int TFileSimple::readLine() noexcept
       v[1] = v[1] * a1 + b1;
       if( first_read ) {  v10 = v[1];  }
       if( sub1 ) {     v[1] -= v10;   }
-      x = ( ax / dx ) * ( cx0 * v[0] + cx1 * v[1] + cx2 * v[2] + cx3 * v[3] + cx4 * v[4] + cx5 * v[5] + cx6 * v[6] + cx7 * v[7] ) + bx;
-      y = ( ay / dy ) * ( cy0 * v[0] + cy1 * v[1] + cy2 * v[2] + cy3 * v[3] + cy4 * v[4] + cy5 * v[5] + cy6 * v[6] + cy7 * v[7] ) + by;
+
+      if( calcMore ) {
+        x = ( ax / dx ) * ( cx0 * v[0] + cx1 * v[1] + cx2 * v[2] + cx3 * v[3] + cx4 * v[4] + cx5 * v[5] + cx6 * v[6] + cx7 * v[7] ) + bx;
+        y = ( ay / dy ) * ( cy0 * v[0] + cy1 * v[1] + cy2 * v[2] + cy3 * v[3] + cy4 * v[4] + cy5 * v[5] + cy6 * v[6] + cy7 * v[7] ) + by;
+        if( first_read ) {
+          xo = x; yo = y;
+        }
+        vx = ( x - xo ) / ctdt;
+        vy = ( y - yo ) / ctdt;
+        xo = x; yo = y;
+      };
+
       ++n_total; hold_i = 0;
       first_read = false;
       break;
@@ -82,7 +90,7 @@ int TFileSimple::readLine() noexcept
   };
   n_col = nread_col;
 
-  // skip every_n-1 lines
+  // skip every_n-1 lines TODO: in common loop
   for( int i=1; i<every_n && ! file.atEnd(); /* NOP */ ) { // 1: sic, one line is read beforehand
     lin = file.readLine( buf_sz ).simplified();
     if( lin.size() < 1 || lin[0] == '#' || lin[0] == ';' ) { // empty or comment
@@ -114,7 +122,7 @@ int TFileSimple::do_postRun( int /*good*/ )
 
 int TFileSimple::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
-  n_total = 0; hold_i = 0; n_col = 0; x = 0; y = 0;
+  n_total = 0; hold_i = 0; n_col = 0; x = 0; y = 0; xo = 0; yo = 0; vx = 0; vy = 0;
   first_read = true;
   file.setFileName( filename );
   // qWarning() << "obj_filename: " << filename << " QFile filename" << file.fileName() << NWHE;

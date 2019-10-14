@@ -46,15 +46,15 @@ class TFileSimple : public TMiso  {
 
    PRM_STRING( filename,     0, "File name"   , "Input file name"          , "" );
    PRM_STRING(      sep, efNRC, "Separator"   , "Input field separator"    , "def= " );
-   PRM_INT(         rnc, efNRC, "N of columns", "Number of columns to read", "min=1\nmax=32\ndef=1" );
+   PRM_DOUBLE(   findex, efNRC, "File index"  , "value to substitute in file name", "" );
 
    PRM_INT( skipBefore, efNRC, "Skip before", "Number of lines to skip before run", "min=0\ndef=0\nsep=col" );
    PRM_INT(    every_n, efNRC, "Every N", "Skip (n-1) lines after converted first", "min=1\ndef=1" );
    PRM_INT(     hold_n, efNRC, "Hold  N", "Hold converted line for N steps"       , "min=1\ndef=1" );
 
-   PRM_PARAMD ( scale,      0, "scale", "common coefficient for all outputs"            , "def=1.0\nsep=col" );
-   PRM_PARAMD( defVal,      0, "Default", "Default value for EOF and EOL case"          , "def=0.0" );
-   PRM_SWITCH( useDef,  efNRC, "Use default", "Use default value, old value - elsewhere", "def=0" );
+   PRM_PARAMD (   scale,      0, "scale", "common coefficient for all inputs"             , "def=1.0\nsep=col" );
+   PRM_PARAMD(   defVal,      0, "Default", "Default value for EOF and EOL case"          , "def=0.0" );
+   PRM_SWITCH( calcMore,  efNRC, "Calc More", "Calculate more values (x,y,dv...)"         , "def=1" );
 
    PRM_PARAMD(    a0,       0, "a0"      , "scale for v[0]"                , "def=1.0\nsep=block" );
    PRM_PARAMD(    b0,       0, "b0"      , "shift v[0]"                    , "def=0\nsep=col" );
@@ -92,6 +92,10 @@ class TFileSimple : public TMiso  {
 
    PRM_DOUBLE(    x,  efInner, "x"       , "linear combination for v[0..7]", "" );
    PRM_DOUBLE(    y,  efInner, "y"       , "linear combination for v[0..7]", "" );
+   PRM_DOUBLE(   vx,  efInner, "vx"      , "dx/dt", "" );
+   PRM_DOUBLE(   vy,  efInner, "vy"      , "dy/dt", "" );
+   PRM_DOUBLE(   xo,  efInner, "xo"      , "old x", "" );
+   PRM_DOUBLE(   yo,  efInner, "yo"      , "old y", "" );
 
    PRM_INT( n_total,  efInner, "n_total", "Total number of read and converted lines", "" );
    PRM_INT(   n_col,  efInner, "n_{col}", "Current number of read columns ", "" );
