@@ -124,7 +124,8 @@ int TFileSimple::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   n_total = 0; hold_i = 0; n_col = 0; x = 0; y = 0; xo = 0; yo = 0; vx = 0; vy = 0;
   first_read = true;
-  file.setFileName( filename );
+  QString c_fn = filename.cval().arg( (int)(findex), index_w.cval(), 10, QChar('0') );
+  file.setFileName( c_fn );
   // qWarning() << "obj_filename: " << filename << " QFile filename" << file.fileName() << NWHE;
   if( ! file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
     qWarning() << "Fail to open data file " << file.fileName() << NWHE;

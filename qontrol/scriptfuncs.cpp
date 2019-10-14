@@ -27,8 +27,7 @@ using namespace std;
 
 QString XsScriptExtension::int2str( long v, int fw, QChar fc, int base ) const
 {
-  QString r =  QString( "%1" ).arg( v, fw, base, fc );
-  return r;
+  return QString( "%1" ).arg( v, fw, base, fc );
 }
 
 bool XsScriptExtension::isNear( double a, double b, double eps ) const
