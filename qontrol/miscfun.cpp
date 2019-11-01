@@ -52,15 +52,15 @@ long QString2LongEx( const QString &s, bool *ok )
   bool r_ok;
   long v = s.toLongLong( &r_ok, 0 ); // first try as simple int
   if( ! r_ok ) {
-    if( s == "RND" ) {
+    if( s == QSL("RND") ) {
       v = rand(); r_ok = true;
-    } else if( s == "IMIN" ) {
+    } else if( s == QSL("IMIN") ) {
       v = IMIN; r_ok = true;
-    } else if( s == "LMIN" ) {
+    } else if( s == QSL("LMIN") ) {
       v = LMIN; r_ok = true;
-    } else if( s == "IMAX" ) {
+    } else if( s == QSL("IMAX") ) {
       v = IMAX; r_ok = true;
-    } else if( s == "LMAX" ) {
+    } else if( s == QSL("LMAX") ) {
       v = LMAX; r_ok = true;
     }
   }
@@ -98,11 +98,9 @@ QString autoVisName( const QString &in_vis_name, const QString &objName )
 
 double get_real_time()
 {
-  double t;
   timeval tv;
   gettimeofday( &tv, 0 );
-  t = (double)( tv.tv_sec ) + 1e-6 * (double)( tv.tv_usec );
-  return t;
+  return (double)( tv.tv_sec ) + 1e-6 * (double)( tv.tv_usec );
 }
 
 NameType splitName( const QString &name, QString &first, QString &rest, int &idx )
@@ -138,7 +136,7 @@ int isGoodName( const QString &s )
 }
 
 
-QString flags2str( int fl )
+QString flags2str( int fl ) // TODO: common code
 {
   static const char *elem_flag_names[elm_known_flags+1]
     { "MR", "NRC", "ND", "ROD", "NS", "RO", "St", "Im", "Pp", "SS", "?10" };
