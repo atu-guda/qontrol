@@ -2,7 +2,7 @@
                           labodoc.cpp  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -68,12 +68,12 @@ QString LaboDoc::getFileBase() const
 bool LaboDoc::newDocument()
 {
   if( rootdata ) {
-    qWarning() << "non-null rootdata while creation new doc" << WHE;
+    qWarning() << QSL("non-null rootdata while creation new doc") << WHE;
     delete rootdata;
     rootdata = nullptr;
   }
 
-  rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
+  rootdata = new TRootData( QSL("root"), nullptr, 0, QSL("root"), QSL("root of all objects") );
   rootdata->setDoc( this );
 
   // rootdata->dumpStruct();
@@ -87,7 +87,7 @@ bool LaboDoc::openDocument( const QString &filename )
 {
   QFile file( filename );
   if( !file.open( QFile::ReadOnly) ) {
-    handleError( MAINWIN, tr("Cannot read file %1: %2.").arg( filename, file.errorString() ) );
+    handleError( MAINWIN, QSL("Cannot read file %1: %2.").arg( filename, file.errorString() ) );
     return false;
   }
   QTextStream in( &file );
@@ -115,9 +115,9 @@ bool LaboDoc::openDocument( const QString &filename )
   while( ! cnode.isNull() ) {
     if ( cnode.isElement()) {
       QDomElement ee = cnode.toElement();
-      QString elname = ee.attribute( "name" );
+      QString elname = ee.attribute( QSL("name") );
       QString tagname = ee.tagName();
-      if( elname == "root" || tagname == "obj" ) {
+      if( elname == QSL("root") || tagname == QSL("obj") ) {
         obj_root = ee;
         break;
       }
@@ -130,11 +130,11 @@ bool LaboDoc::openDocument( const QString &filename )
   m_filename = filename;
 
   if( rootdata ) {
-    qWarning() << "non-null rootdata while opening new doc" << WHE;
+    qWarning() << QSL("non-null rootdata while opening new doc") << WHE;
     delete rootdata;
     rootdata = nullptr;
   }
-  rootdata = new TRootData( "root", nullptr, 0, "root", "root of all objects" );
+  rootdata = new TRootData( QSL("root"), nullptr, 0, QSL("root"), QSL("root of all objects") );
   rootdata->setDoc( this );
 
   rootdata->suspendHandleStructChange();
@@ -269,8 +269,8 @@ bool LaboDoc::canCloseFrame( LaboView* pFrame )
 
   ret = false;
   if( ! saveDocument( false ) ) {
-    if( QMessageBox::critical( pFrame, tr("I/O Error !"),
-          tr( "Could not save the current document !\n" "Close anyway ?" ),
+    if( QMessageBox::critical( pFrame, QSL("I/O Error !"),
+          QSL( "Could not save the current document !\n" "Close anyway ?" ),
           QMessageBox::Yes ,QMessageBox::No ) == QMessageBox::Yes ) {
       ret=true;
     };

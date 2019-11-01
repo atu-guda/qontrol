@@ -3,7 +3,7 @@
                           tmiso.h  - base for scheme elements description
                              -------------------
     begin                : Mon Jul 24 2000
-    copyright            : (C) 2000-2017 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

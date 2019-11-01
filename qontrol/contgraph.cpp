@@ -1,9 +1,9 @@
 /***************************************************************************
-                          contgraph.cpp  - inplementation of ContGraph,
+                          contgraph.cpp  - implementation of ContGraph,
                           containter for TGraph
                              -------------------
     begin                : 2014.11.14
-    copyright            : (C) 2014-2016 by atu
+    copyright            : (C) 2014-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -29,7 +29,7 @@ STD_CLASSINFO(ContGraph,clpSpecial);
 
 CTOR(ContGraph,LinkedObj)
 {
-  allowed_types = "TGraph,+SPECIAL";
+  allowed_types = QSL("TGraph,+SPECIAL");
   needReadInputsRecurse = true;
 }
 

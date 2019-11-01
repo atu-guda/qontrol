@@ -105,7 +105,7 @@ double get_real_time()
 
 NameType splitName( const QString &name, QString &first, QString &rest, int &idx )
 {
-  if( name.contains( ".." )  ||  name.contains( ' ' ) ) {
+  if( name.contains( QSL("..") )  ||  name.contains( ' ' ) ) {
     return badName;
   }
 
@@ -526,7 +526,7 @@ bool showTree( QWidget *par, HolderData *obj )
   lay->addWidget( treeView );
 
 
-  auto bt_ok = new QPushButton( "Done", dia );
+  auto bt_ok = new QPushButton( QSL("Done"), dia );
   bt_ok->setDefault( true );
   lay->addWidget( bt_ok );
   dia->setLayout( lay );
@@ -570,7 +570,7 @@ QString substValues( const QString &s, const HolderData *ho )
   HolderData *main_s = nullptr;
   const HolderData *r_root = ho->getRootConst();
   if( r_root ) {
-    main_s = r_root->getObj( "model.schems.main_s" ); // may be nullptr - different structures
+    main_s = r_root->getObj( QSL("model.schems.main_s") ); // may be nullptr - different structures
   }
 
   // for double get in form of "V.object.value"

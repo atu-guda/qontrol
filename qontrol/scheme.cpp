@@ -2,7 +2,7 @@
                           scheme.cpp
                              -------------------
     begin                : 2013.09.01
-    copyright            : (C) 2000-2017 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -36,7 +36,7 @@ STD_CLASSINFO(Scheme,clpSpecial);
 
 CTOR(Scheme,LinkedObj)
 {
-  allowed_types = "TMiso";
+  allowed_types = QSL("TMiso");
   const int ELM_RES = 64;
   v_el.reserve( ELM_RES );
   needReadInputsRecurse = true;

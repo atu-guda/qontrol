@@ -2,7 +2,7 @@
                       cmdlistview.h - common base for list-alike viewvs
                              -------------------
     begin                : 2015.10.31
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -86,47 +86,47 @@ QModelIndex CmdListView::currentIndex() const
 
 void CmdListView::init_base_actions()
 {
-  auto a = new QAction( QIcon::fromTheme("document-properties"), "&Edit", this );
+  auto a = new QAction( QIcon::fromTheme( QSL("document-properties") ), QSL("&Edit"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(editObj()) );
+  connect( a, SIGNAL(triggered()), this, SLOT(editObj()) ); // TODO: new connect ::
 
-  a = new QAction( QIcon::fromTheme("list-add"), "&New", this );
+  a = new QAction( QIcon::fromTheme( QSL("list-add") ), QSL("&New"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(addObj()) );
 
-  a = new QAction( QIcon::fromTheme("list-remove"), "&Delete", this );
+  a = new QAction( QIcon::fromTheme( QSL("list-remove") ), QSL("&Delete"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(delObj()) );
 
-  a = new QAction( QIcon::fromTheme("edit-cut"), "Cu&t", this );
+  a = new QAction( QIcon::fromTheme( QSL("edit-cut") ), QSL("Cu&t"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(cutObj()) );
 
-  a = new QAction( QIcon::fromTheme("edit-copy"), "&Copy", this );
+  a = new QAction( QIcon::fromTheme( QSL("edit-copy") ), QSL("&Copy"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(copyObj()) );
 
-  a = new QAction( QIcon::fromTheme("edit-paste"), "&Paste", this );
+  a = new QAction( QIcon::fromTheme( QSL("edit-paste") ), QSL("&Paste"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(pasteObj()) );
 
-  a = new QAction( QIcon::fromTheme("edit-rename"), "Rename", this );
+  a = new QAction( QIcon::fromTheme( QSL("edit-rename") ), QSL("Rename"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(renameObj()) );
 
-  a = new QAction( QIcon( ":icons/edit-clone.png" ), "Clone", this );
+  a = new QAction( QIcon( QSL(":icons/edit-clone.png") ), QSL("Clone"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(cloneObj()) );
 
-  a = new QAction( QIcon( ":icons/info-obj.png" ), "Info", this );
+  a = new QAction( QIcon( QSL(":icons/info-obj.png") ), QSL("Info"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(infoObj()) );
 
-  a = new QAction( QIcon::fromTheme("view-list-tree"), "Show Tree", this );
+  a = new QAction( QIcon::fromTheme( QSL("view-list-tree") ), QSL("Show Tree"), this );
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(showTreeObj()) );
 
-  a = new QAction( "", this ); a->setSeparator( true );
+  a = new QAction( QSL(""), this ); a->setSeparator( true );
   lv->addAction( a );
 
   connect( lv, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editObj()) );

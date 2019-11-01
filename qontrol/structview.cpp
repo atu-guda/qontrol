@@ -2,7 +2,7 @@
                           structview.cpp  -  description
                              -------------------
     begin                : Sat Aug 12 2000
-    copyright            : (C) 2000-2017 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -239,8 +239,8 @@ void StructView::drawAll( QPainter &p )
   if( nh >= MODEL_MY ) { nh = MODEL_MY-1; };
   if( nw >= MODEL_MX ) { nh = MODEL_MX-1; };
 
-  auto lockedIcon  = QIcon( ":icons/state-locked.png" );
-  auto ignoredIcon = QIcon( ":icons/state-ignored.png" );
+  auto lockedIcon  = QIcon( QSL(":icons/state-locked.png") );
+  auto ignoredIcon = QIcon( QSL(":icons/state-ignored.png") );
 
 
   QColor bgCol { scheme_ro ? QColor(255,240,240) : Qt::white };
@@ -973,29 +973,29 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
       }
     }
     menu->addSeparator();
-    act = menu->addAction( QIcon::fromTheme("edit-copy"), "&Copy" );
+    act = menu->addAction( QIcon::fromTheme( QSL("edit-copy") ), "&Copy" );
     connect( act, &QAction::triggered, this, &StructView::copyObj );
-    act = menu->addAction( QIcon( ":icons/edit-clone.png" ), QSL("Clone") );
+    act = menu->addAction( QIcon( QSL(":icons/edit-clone.png") ), QSL("Clone") );
     connect( act, &QAction::triggered, this, &StructView::cloneObj );
     menu->addSeparator();
-    act = menu->addAction( QIcon( ":icons/markelm.png" ), QSL("Mark") );
+    act = menu->addAction( QIcon( QSL(":icons/markelm.png") ), QSL("Mark") );
     connect( act, &QAction::triggered, this, &StructView::markElm );
     act = menu->addAction( QSL("iterate sources") );
     connect( act, &QAction::triggered, this, &StructView::iterateSources );
-    act = menu->addAction( QIcon( ":icons/info-obj.png" ), "show &Info" );
+    act = menu->addAction( QIcon( QSL(":icons/info-obj.png") ), QSL("show &Info") );
     connect( act, &QAction::triggered, this, &StructView::infoObj );
-    act = menu->addAction( QIcon::fromTheme("view-list-tree"), "show object tree" );
+    act = menu->addAction( QIcon::fromTheme( QSL("view-list-tree") ), QSL("show object tree") );
     connect( act, &QAction::triggered, this, &StructView::showTreeObj );
     menu->addSeparator();
   } else {
     if( !scheme_ro ) {
-      act = menu->addAction( QIcon::fromTheme("list-add"), "&New element" );
+      act = menu->addAction( QIcon::fromTheme("list-add"), QSL("&New element") );
       connect( act, &QAction::triggered, this, &StructView::addObj );
       if( markObj ) {
-        act = menu->addAction( "&Move to" );
+        act = menu->addAction( QSL("&Move to") );
         connect( act, &QAction::triggered, this, &StructView::moveElm );
       }
-      act = menu->addAction( QIcon::fromTheme("edit-paste"), "&Paste" );
+      act = menu->addAction( QIcon::fromTheme("edit-paste"), QSL("&Paste") );
       connect( act, &QAction::triggered, this, &StructView::pasteObj );
     }
   };
@@ -1003,12 +1003,12 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
   CmdView *outs_view = par->getView( QSL("outs_view") );
   if( outs_view ) {
     menu->addSeparator();
-    act = menu->addAction( QIcon( ":icons/newout.png" ), "New outp&ut" );
+    act = menu->addAction( QIcon( QSL(":icons/newout.png") ), QSL("New outp&ut") );
     connect( act, SIGNAL(triggered()), outs_view, SLOT(addObj()) );
   }
   if( par->isMainWin() ) {
     menu->addSeparator();
-    act = menu->addAction( QIcon( ":icons/editmodel.png" ), "Edit model" );
+    act = menu->addAction( QIcon( QSL(":icons/editmodel.png") ), QSL("Edit model") );
     connect( act, SIGNAL(triggered()), par, SLOT(editModel()) );
   }
 

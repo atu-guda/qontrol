@@ -2,7 +2,7 @@
                           labowin.cpp  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -36,7 +36,7 @@ LaboWin::LaboWin()
     logViewer( new QTextEdit(this) ),
     printer( new QPrinter ),
     log_timer( new QTimer( this ) ),
-    setti( new SettingsData( "settings", nullptr, 0, "settings", "Data settings" ) )
+    setti( new SettingsData( QSL("settings"), nullptr, 0, QSL("settings"), QSL("Data settings") ) )
 {
   setti->load();
   setWindowTitle( PACKAGE " " VERSION );
@@ -515,7 +515,7 @@ void LaboWin::initIface()
 
 void LaboWin::initStatusBar()
 {
-  statusBar()->showMessage( tr( "Ready." ) );
+  statusBar()->showMessage( QSL( "Ready." ) );
 }
 
 void LaboWin::slotHandleSubWindowActivated( QMdiSubWindow *swin )
@@ -666,7 +666,7 @@ void LaboWin::callLaboViewSlot( const char *slot, const QString &mess )
 
   sv->callSlot( slot );
   sv->update();
-  statusBar()->showMessage( tr( "Ready." ) );
+  statusBar()->showMessage( QSL( "Ready." ) );
 }
 
 
@@ -681,25 +681,25 @@ void LaboWin::slotFileNew()
 
   auto  doc = new LaboDoc();
   ++untitledCount;
-  QString fileName = QString( "untitled_" ) % QSN( untitledCount ) % model_file_suff;
+  QString fileName = QSL( "untitled_" ) % QSN( untitledCount ) % model_file_suff;
   doc->newDocument();
   doc->setPathName( fileName );
 
   auto  cw = new LaboView( doc, this );
   addChild( cw );
-  statusBar()->showMessage( tr( "Ready." ) );
+  statusBar()->showMessage( QSL( "Ready." ) );
 }
 
 
 void LaboWin::slotFileOpen()
 {
-  statusBar()->showMessage( tr( "Opening model file..." ) );
+  statusBar()->showMessage( QSL( "Opening model file..." ) );
   QString fileName =
     QFileDialog::getOpenFileName( this, tr("Open model file"),
         ".", model_files_sel );
 
   if ( fileName.isEmpty() ) {
-     statusBar()->showMessage( tr( "Open canceled." ) );
+     statusBar()->showMessage( QSL( "Open canceled." ) );
      updateActions();
      return;
   };
@@ -708,14 +708,14 @@ void LaboWin::slotFileOpen()
   QMdiSubWindow *existing = findMdiChild(fileName);
   if( existing ) {
     mdiArea->setActiveSubWindow(existing);
-    statusBar()->showMessage( tr( "Already opened." ) );
+    statusBar()->showMessage( QSL( "Already opened." ) );
     updateActions();
     return;
   }
 
   bool rc = doFileOpen( fileName );
 
-  statusBar()->showMessage( rc ? tr( "Ready." ) : tr( "Fail" ) );
+  statusBar()->showMessage( rc ? QSL( "Ready." ) : QSL( "Fail" ) );
 }
 
 
@@ -725,7 +725,7 @@ bool LaboWin::doFileOpen( const QString &fn )
   if( ! doc->openDocument( fn ) ) { // message inside
     delete doc; doc = nullptr;
     updateActions();
-    statusBar()->showMessage( tr( "Open Failed." ) );
+    statusBar()->showMessage( QSL( "Open Failed." ) );
     return false;
   };
 
@@ -737,7 +737,7 @@ bool LaboWin::doFileOpen( const QString &fn )
 
 void LaboWin::slotFileSave()
 {
-  statusBar()->showMessage( tr( "Saving model file...") );
+  statusBar()->showMessage( QSL( "Saving model file...") );
   LaboView* m =  qobject_cast<LaboView*>( activeView() );
   if( m ) {
     LaboDoc* doc = m->getDocument();
@@ -749,22 +749,22 @@ void LaboWin::slotFileSave()
     m->update();
   };
   updateActions();
-  statusBar()->showMessage( tr( "Ready." ) );
+  statusBar()->showMessage( QSL( "Ready." ) );
 }
 
 
 void LaboWin::slotFileSaveAs()
 {
-  statusBar()->showMessage( tr ( "Saving model file under new filename..." ) );
+  statusBar()->showMessage( QSL( "Saving model file under new filename..." ) );
   LaboView* m =  qobject_cast<LaboView*>( activeView() );
   if( !m ) {
-    handleError( this, tr("Fail to find active window while saving file!") );
+    handleError( this, QSL("Fail to find active window while saving file!") );
     return;
   }
 
   LaboDoc* doc = m->getDocument();
   if( !doc ) {
-    handleError( this, tr("Fail to get document!") );
+    handleError( this, QSL("Fail to get document!") );
     return;
   }
 
@@ -772,7 +772,7 @@ void LaboWin::slotFileSaveAs()
 
   m->updateTitle();
   updateActions();
-  statusBar()->showMessage( tr( "Ready." ) );
+  statusBar()->showMessage( QSL( "Ready." ) );
 }
 
 void LaboWin::slotFileClose()
@@ -782,24 +782,24 @@ void LaboWin::slotFileClose()
 
 void LaboWin::slotFilePrint()
 {
-  callLaboViewSlot( "print", tr ( "Printing..." ) );
+  callLaboViewSlot( "print", QSL("Printing...") );
 }
 
 void LaboWin::slotFileSettings()
 {
-  statusBar()->showMessage( tr ( "Edit settings..." ) );
+  statusBar()->showMessage( QSL("Edit settings...") );
 
   ::editObj( this, setti );
 
-  statusBar()->showMessage( tr ( "Ready." ) );
+  statusBar()->showMessage( QSL("Ready.") );
 }
 
 
 void LaboWin::slotFileSaveSett()
 {
-  statusBar()->showMessage( tr ( "Saving settings..." ) );
+  statusBar()->showMessage( QSL( "Saving settings..." ) );
   setti->save();
-  statusBar()->showMessage( tr ( "Ready." ) );
+  statusBar()->showMessage( QSL( "Ready." ) );
 }
 
 void LaboWin::slotFileQuit()
@@ -814,23 +814,23 @@ void LaboWin::slotEditUndo()
 
 void LaboWin::slotEditCut()
 {
-  callLaboViewSlot( "cutElm", tr( "Cutting selection..." ) );
+  callLaboViewSlot( "cutElm", QSL( "Cutting selection..." ) );
 }
 
 void LaboWin::slotEditCopy()
 {
-  callLaboViewSlot( "copyElm", tr( "Copying selection to clipboard..." ) );
+  callLaboViewSlot( "copyElm", QSL( "Copying selection to clipboard..." ) );
 }
 
 void LaboWin::slotEditPaste()
 {
-  callLaboViewSlot( "pasteElm", tr( "Inserting clipboard contents..." ) );
+  callLaboViewSlot( "pasteElm", QSL( "Inserting clipboard contents..." ) );
 }
 
 
 void LaboWin::slotAddObj()
 {
-  callLaboViewSlot( "addObj", tr( "Creating object..." ) );
+  callLaboViewSlot( "addObj", QSL( "Creating object..." ) );
 }
 
 void LaboWin::slotDelObj()
@@ -921,14 +921,14 @@ void LaboWin::slotShowIcons()
 {
   int v = ! setti->getDataD( QSL("showIcons"), 0 );
   setti->setData( QSL("showIcons"), v );
-  callLaboViewSlot( "update", "Updating View" );
+  callLaboViewSlot( "update", QSL("Updating View") );
 }
 
 void LaboWin::slotShowLinks()
 {
   int v = ! setti->getDataD( QSL("showLinks"), 0 );
   setti->setData( QSL("showLinks"), v );
-  callLaboViewSlot( "update", "Updating View" );
+  callLaboViewSlot( "update", QSL("Updating View") );
 }
 
 void LaboWin::slotLogClear()
@@ -939,7 +939,7 @@ void LaboWin::slotLogClear()
 
 void LaboWin::slotLogSave()
 {
-  statusBar()->showMessage( tr ( "Saving log to file..." ) );
+  statusBar()->showMessage( QSL( "Saving log to file..." ) );
 
   QString fn = QFileDialog::getSaveFileName( this, tr("Save log"),
       PACKAGE ".log", "Log files (*.log);;All files(*)" );
@@ -947,7 +947,7 @@ void LaboWin::slotLogSave()
   if ( !fn.isEmpty() ) {
     QFile of( fn );
     if( ! of.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-      handleError( this, tr("Fail to open file \"") % fn % QSL("\"") );
+      handleError( this, QSL("Fail to open file \"") % fn % QSL("\"") );
       return;
     }
     QTextStream os( &of );
@@ -986,9 +986,9 @@ void LaboWin::slotWindowCascade()
 
 void LaboWin::slotHelpAbout()
 {
-  QString ostr = QString( PACKAGE "\nVersion " VERSION " build: "
+  QString ostr = QSL( PACKAGE "\nVersion " VERSION " build: "
       __DATE__ " " __TIME__ "\n"  COPYRIGHT );
-  QMessageBox::about( this, tr( "About..." ), ostr );
+  QMessageBox::about( this, QSL( "About..." ), ostr );
 }
 
 void LaboWin::slotHelpAboutQt()
@@ -1007,14 +1007,14 @@ void LaboWin::slotStatusHelpMsg( const QString &text )
 
 void LaboWin::slotTest()
 {
-  QString ostr( "Test called" );
-  statusBar()->showMessage( tr( "Test something..." ) );
-  qDebug() << "Test0 in " << objectName() << WHE;
+  QString ostr( QSL("Test called") );
+  statusBar()->showMessage( QSL( "Test something...") );
+  qDebug() << QSL("Test0 in ") << objectName() << WHE;
 
   ostr += QString(" <b>em</b>=" ) + QSN(em) + "<br/>\n";
 
-  QString ts = "a_0^1{b}c\\approx \\alpha\\cdot\\phi^2 \\omega{}\\n"
-               "\\sum_{i=0}^{N-1}{(a+b+\\epsilon)} {\\Psi}^\\gamma \\Bad" % QChar(0x2222);
+  QString ts = QSL("a_0^1{b}c\\approx \\alpha\\cdot\\phi^2 \\omega{}\\n"
+               "\\sum_{i=0}^{N-1}{(a+b+\\epsilon)} {\\Psi}^\\gamma \\Bad") % QChar(0x2222);
 
   QString ls = tex2label( ts );
   //qDebug() <<  " ts=" << ts << WHE;
@@ -1060,8 +1060,8 @@ void LaboWin::slotTest()
   }
   // ostr += QSL("<br>\n");
 
-  QMessageBox::information( this, tr( "Test" ), ostr, QMessageBox::Ok );
-  statusBar()->showMessage( tr( "Ready." ) );
+  QMessageBox::information( this, QSL("Test"), ostr, QMessageBox::Ok );
+  statusBar()->showMessage( QSL("Ready.") );
 }
 
 void LaboWin::windowMenuAboutToShow()

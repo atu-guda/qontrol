@@ -1,7 +1,7 @@
 /***************************************************************************
   laboview.cpp  - combined model view
   begin                : Mon Jul 31 16:51:57 EEST 2000
-  copyright            : (C) 2000-2017 by atu
+  copyright            : (C) 2000-2019 by atu
   email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -45,12 +45,12 @@ using namespace std;
 LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
 : CommonSubwin( parent, pDoc, QString() ),
   root( doc->getRoot() ),
-  model( root->getObjT<TModel*>( "model" ) ),
-  schems( model->getObjT<ContScheme*>( "schems" ) ),
-  main_s( schems->getObjT<Scheme*>("main_s") ),
-  outs( model->getObjT<ContOut*>( "outs" ) ),
-  plots( model->getObjT<ContGraph*>( "plots" ) ),
-  sims( model->getObjT<ContSimul*>( "sims" ) )
+  model( root->getObjT<TModel*>( QSL("model") ) ),
+  schems( model->getObjT<ContScheme*>( QSL("schems") ) ),
+  main_s( schems->getObjT<Scheme*>( QSL("main_s") ) ),
+  outs( model->getObjT<ContOut*>( QSL("outs") ) ),
+  plots( model->getObjT<ContGraph*>( QSL("plots") ) ),
+  sims( model->getObjT<ContSimul*>( QSL("sims") ) )
 {
   main_win = true;
   title_prefix = QSL("model");
@@ -66,24 +66,24 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   scrollArea->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
 
   outs_view = new OutDataView( outs, this );
-  outs_view->setObjectName( "outs_view" );
-  vmap["outs_view"] = outs_view;
+  outs_view->setObjectName( QSL("outs_view") );
+  vmap[QSL("outs_view")] = outs_view;
 
   plots_view = new GraphDataView( plots, this );
-  plots_view->setObjectName( "plots_view" );
-  vmap["plots_view"] = plots_view;
+  plots_view->setObjectName( QSL("plots_view") );
+  vmap[QSL("plots_view")] = plots_view;
 
   sims_view = new SimulView( sims, this );
-  sims_view->setObjectName( "sims_view" );
-  vmap["sims_view"] = sims_view;
+  sims_view->setObjectName( QSL("sims_view") );
+  vmap[QSL("sims_view")] = sims_view;
 
   schems_view = new SchemeView( schems, this );
-  schems_view->setObjectName( "schems_view" );
-  vmap["schems_view"] = schems_view;
+  schems_view->setObjectName( QSL("schems_view") );
+  vmap[QSL("schems_view")] = schems_view;
 
   sview = new StructView( this, main_s );
-  sview->setObjectName( "sview" );
-  vmap["sview"] = sview;
+  sview->setObjectName( QSL("sview") );
+  vmap[QSL("sview")] = sview;
 
   scrollArea->setWidget( sview );
   scrollArea->setLineWidth( 1 );
@@ -92,7 +92,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   scrollArea->setFocusProxy( sview );
 
   stam = new StatusModel( this );
-  stam->setObjectName( "stam" );
+  stam->setObjectName( QSL("stam") );
 
   split_h->addWidget( scrollArea );
   split_h->addWidget( outs_view );
@@ -298,7 +298,7 @@ bool LaboView::actionObj( const char *action )
 
 bool LaboView::addObj()
 {
-  return actionObj( "addObj" );
+  return actionObj( "addObj" ); // no QSL!
 }
 
 bool LaboView::delObj()
@@ -448,7 +448,7 @@ void LaboView::addScheme()
 void LaboView::importAllSchemes()
 {
   if( ! model ) {
-    qCritical() << "no model" << WHE;
+    qCritical() << QSL("no model") << WHE;
     return;
   }
   model->importAllSchemes();
@@ -457,7 +457,7 @@ void LaboView::importAllSchemes()
 void LaboView::initEngine()
 {
   if( ! model ) {
-    qCritical() << "no model" << WHE;
+    qCritical() << QSL("no model") << WHE;
     return;
   }
   model->initEngine();
@@ -467,7 +467,7 @@ void LaboView::initEngine()
 int LaboView::runModelScript()
 {
   if( ! model ) {
-    qCritical() << "no model" << WHE;
+    qCritical() << QSL("no model") << WHE;
     return 0;
   }
   ScriptResult sres;
@@ -480,7 +480,7 @@ int LaboView::runModelScript()
 void LaboView::runScript() // TODO: saved script or pool
 {
   if( ! model ) {
-    qCritical() << "no model" << WHE;
+    qCritical() << QSL("no model") << WHE;
     return;
   }
   QString scr = model->getDataD( QSL("scriptpad"), QSL("// comment") );
@@ -501,7 +501,7 @@ void LaboView::runRun()
 {
   Simulation *sim = sims->getActiveObjT<Simulation*>();
   if( !sim ) {
-    handleError( this, "No active simulations" );
+    handleError( this, QSL("No active simulations") );
     return;
   }
 

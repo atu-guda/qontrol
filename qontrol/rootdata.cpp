@@ -2,7 +2,7 @@
                           root.cpp  -  TRootData implementation
                              -------------------
     begin                : Thu Apr 20 2000
-    copyright            : GPL (C) 2000-2016 by atu
+    copyright            : GPL (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -21,8 +21,8 @@ STD_CLASSINFO(TRootData,clpSpecial );
 CTOR(TRootData,TDataSet)
 {
   flags |= efImmutable;
-  allowed_types = "TModel";
-  model = addObjT<TModel>( "model" );
+  allowed_types = QSL("TModel");
+  model = addObjT<TModel>( QSL("model") );
   model->setImmutable(); // TODO: need check?
 
 }

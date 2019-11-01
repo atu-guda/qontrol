@@ -2,7 +2,7 @@
                           tmiso.h  - base for scheme elements
                              -------------------
     begin                : Mon Jul 24 2000
-    copyright            : (C) 2000-2017 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -32,9 +32,9 @@ STD_CLASSINFO(TMiso,clpSpecial|clpAbstract);
 
 CTOR(TMiso,LinkedObj)
 {
-  allowed_types = "ElemParams";
-  eprm = addObjT<ElemParams>( "eprm" );
-  eprm->setParm( "sep", "blockend" );
+  allowed_types = QSL("ElemParams");
+  eprm = addObjT<ElemParams>( QSL("eprm") );
+  eprm->setParm( QSL("sep"), QSL("blockend") );
 }
 
 

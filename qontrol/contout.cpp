@@ -1,9 +1,9 @@
 /***************************************************************************
-                          contout.cpp  - inplementation of ContOut,
+                          contout.cpp  - implementation of ContOut,
                           containter for TOutArr
                              -------------------
     begin                : 2014.11.14
-    copyright            : (C) 2014-2016 by atu
+    copyright            : (C) 2014-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -43,7 +43,7 @@ int ContOut::do_preRun()
   vo.clear();
   // fill array for pure TOutArr entries: for fast access later
   for( auto arr : TCHILD(TOutArr*) ) {
-    int arr_tp = arr->getDataD( "type", 0 );
+    int arr_tp = arr->getDataD( QSL("type"), 0 );
     if( arr_tp == TOutArr::OutArrType::outSimple ) {
       vo.push_back( arr );
     }
@@ -69,7 +69,7 @@ int ContOut::prep_2in( const QString &nm_x, const QString &nm_y,
                  const dvector **p_d_x, const dvector **p_d_y ) const
 {
   if( !p_d_x && !p_d_y ) {
-    qWarning() << "input ptr[s] is null in " << getFullName() << WHE;
+    qWarning() << QSL("input ptr[s] is null in ") << getFullName() << WHE;
     return 0;
   }
 
@@ -80,7 +80,7 @@ int ContOut::prep_2in( const QString &nm_x, const QString &nm_y,
   }
   const dvector *d_x  = in_x->getArray();
 
-  int nx = in_x->getDataD( "n", 0 );
+  int nx = in_x->getDataD( QSL("n"), 0 );
 
   TOutArr *in_y = getObjT<TOutArr*>( nm_y );
   if( !in_y ) {
@@ -88,7 +88,7 @@ int ContOut::prep_2in( const QString &nm_x, const QString &nm_y,
     return 0;
   }
   const dvector *d_y  = in_y->getArray();
-  int ny = in_y->getDataD( "n", 0 );
+  int ny = in_y->getDataD( QSL("n"), 0 );
   int n = min( nx, ny );
   if( n < 2 ) {
     qWarning() << "operation required at least 2 elements, given " << n << " in " << getFullName() << WHE;
@@ -154,7 +154,7 @@ int  ContOut::transLin( const QString &nm_in, const QString &nm_out,
     return 0;
   }
   const dvector *d_in  = in_in->getArray();
-  int n = in_in->getDataD( "n", 0 );
+  int n = in_in->getDataD( QSL("n"), 0 );
   if( n < 1 ) {
     return 0;
   }
@@ -184,7 +184,7 @@ TOutArr* ContOut::getArrWithType( const QString &nm, int rq_tp )
   if( rq_tp == -1 ) { // any type
     return r;
   }
-  int arr_tp = r->getDataD( "type", 0 );
+  int arr_tp = r->getDataD( QSL("type"), 0 );
   if( arr_tp != rq_tp ) {
       return nullptr;
   }
@@ -215,7 +215,7 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
     qWarning() << "not found input array " << nm_in << " in " << getFullName() << WHE;
     return 0;
   }
-  const int n = in->getDataD( "n", 0 );
+  const int n = in->getDataD( QSL("n"), 0 );
   if( n < 16 ) {
     qWarning() << "not enough data for FFT " << n <<  " in " << getFullName() << WHE;
     return 0;
@@ -226,7 +226,7 @@ int ContOut::fftx( const QString &nm_in, const QString &nm_omega,
     qWarning() << "not found model in" << getFullName() << WHE;
     return 0;
   }
-  const double tdt = model->getDataD( "tdt", 1.0 );
+  const double tdt = model->getDataD( QSL("tdt"), 1.0 );
   const double tdt_n = tdt * n;
 
   // output arrays may not exist, but must be special

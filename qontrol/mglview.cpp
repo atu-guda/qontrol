@@ -2,7 +2,7 @@
                           mglview.cpp - window to show plots via MathGL
                              -------------------
     begin                : 2014.11.29
-    copyright            : (C) 2014-2018 by atu
+    copyright            : (C) 2014-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -81,7 +81,7 @@ void MglView::Reload( )
     return;
   }
 
-  scd_o =  gra->getObjT<ScaleData*>( "scd" );
+  scd_o =  gra->getObjT<ScaleData*>( QSL("scd") );
   if( scd_o ) {
     QString s = scd_o->toString();// terrble copy
     scd->fromString( s );
@@ -458,7 +458,7 @@ void MglView::setAlpha( double al, bool rel )
 void MglView::setMark()
 {
   auto dia = new QDialog( this );
-  dia->setWindowTitle( "Set mark to point: " );
+  dia->setWindowTitle( QSL("Set mark to point: ") );
   auto lay = new QGridLayout( dia );
 
   auto markX_ed = new QLineEdit( dia );
@@ -476,13 +476,13 @@ void MglView::setMark()
   markZ_ed->setText( QSN( scd->markZ ) );
   lay->addWidget( markZ_ed, 2, 1 );
 
-  auto la_x = new QLabel( "&X value", dia );
+  auto la_x = new QLabel( QSL("&X value"), dia );
   la_x->setBuddy( markX_ed );
   lay->addWidget( la_x, 0, 0 );
-  auto la_y = new QLabel( "&Y value", dia );
+  auto la_y = new QLabel( QSL("&Y value"), dia );
   la_y->setBuddy( markY_ed );
   lay->addWidget( la_y, 1, 0 );
-  auto la_z = new QLabel( "&Z value", dia );
+  auto la_z = new QLabel( QSL("&Z value"), dia );
   la_z->setBuddy( markZ_ed );
   lay->addWidget( la_z, 2, 0 );
 
@@ -647,11 +647,11 @@ void MglView::exportPlot()
 QString MglView::getInfo( bool more ) const
 {
   if( ! data_loaded ) {
-    return QString( "No Data" );
+    return QSL("No Data");
   }
-  QString nl = "\n", nl1 = " ";
+  QString nl = QSL("\n"), nl1 = QSL(" ");
   if( more ) {
-    nl = "<br/>\n"; nl1 = nl;
+    nl = QSL("<br/>\n"); nl1 = nl;
   }
 
   mglPoint mark_point = scd->getMark();
@@ -663,7 +663,7 @@ QString MglView::getInfo( bool more ) const
     kzx = rel_p.z / rel_p.x;
   }
 
-  QString s = QString( "mark: ") % toQString( mark_point )
+  QString s = QSL( "mark: ") % toQString( mark_point )
      % "  base: " % toQString( base_point ) % nl1
      % "  rel: " % toQString( rel_p ) % " kyx: " % QSN( kyx ) % " kzx: " % QSN( kzx )
      % "  [ " % QSN( vd.nx ) % " x " % QSN( vd.ny ) % " ]"

@@ -2,7 +2,7 @@
  dataset.cpp  -   base definifions and classes implementation
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2017 by atu
+    copyright            : GPL (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -969,13 +969,13 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
     if( tagname == QSL("obj") ) {  // ------------------------------- object
       QString cl_name = ee.attribute(QSL("otype"));
       if( cl_name.isEmpty() ) {
-        errstr = QString( "err: element \"%1\" without type" ).arg(elname);
+        errstr = QSL( "err: element \"%1\" without type" ).arg(elname);
         qWarning() << errstr << NWHE;
         return false;
       }
       HolderData *ho = getObj( elname );
       if( ho && ! ho->isObject() ) {
-        errstr = QString("err: read elem \"%1\" failed. "
+        errstr = QSL("err: read elem \"%1\" failed. "
             "required: \"%2\" but have \"%3\" in \"%4\"" )
                 .arg( elname, tagname, ho->getType(), getFullName() );
         qWarning() << errstr << NWHE;
@@ -983,7 +983,7 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
       }
       if( !ho ) { // name not found
         if( ! addObj( cl_name, elname ) ) {
-          errstr = QString("TDataSet::fromDom: fail to create obj %1 %2 ")
+          errstr = QSL("TDataSet::fromDom: fail to create obj %1 %2 ")
                    .arg( cl_name, elname );
           qWarning() << errstr << NWHE;
           continue; // for conversion: ignore unknown
@@ -993,7 +993,7 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
 
       TDataSet* ob = getObjT<TDataSet*>( elname );
       if( !ob ) {
-        errstr = QString("TDataSet::fromDom: fail to find created obj %1 %2 in %3")
+        errstr = QSL("TDataSet::fromDom: fail to find created obj %1 %2 in %3")
                  .arg( cl_name, elname, objectName() );
         qWarning() << errstr << NWHE;
         return false;
@@ -1647,7 +1647,7 @@ QStringList HolderData::getNamesOfType( const QString &subObjName,
       QString s = ho->objectName();
       if( withType ) {
         QString val;
-        if( ! ho->isChildOf( "TDataSet" ) ) {
+        if( ! ho->isChildOf( QSL("TDataSet") ) ) {
           val = QSL(" = \"") % ho->toString() % QSL("\"");
         }
         s += QSL(" ") % ho->getType() % val;

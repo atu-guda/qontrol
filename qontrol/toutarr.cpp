@@ -2,7 +2,7 @@
                           toutarr.cpp  -  description
                              -------------------
     begin                : Sat Aug 5 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -360,7 +360,7 @@ double TOutArr::atT( double T ) const
   if( !model ) {
     return 0;
   }
-  double tdt = model->getDataD( "tdt", 1.0 );
+  double tdt = model->getDataD( QSL("tdt"), 1.0 );
   long idx = (long)( 0.5 + (T-t_s) / ( tdt * nq ) );
   return at( idx );
 }

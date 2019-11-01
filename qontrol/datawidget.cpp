@@ -2,7 +2,7 @@
                           datawidget.cpp  - widgets for DataDialog
                              -------------------
     begin                : 2012.03.27
-    copyright            : GPL (C) 2012-2016 by atu
+    copyright            : GPL (C) 2012-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -32,24 +32,24 @@ DataLabel::DataLabel( HolderData &_ho, const QString &text, DataWidget *parent, 
 void DataLabel::contextMenuEvent( QContextMenuEvent *ev )
 {
   QMenu *mnu = new QMenu( this );
-  auto act = mnu->addAction( "&Information" );
+  auto act = mnu->addAction( QSL("&Information") );
   connect( act, &QAction::triggered, dw, &DataWidget::infoObj );
-  // act = mnu->addAction( "&What's this" );
+  // act = mnu->addAction( QSL("&What's this") );
   // connect( act, &QAction::triggered, dw, &DataWidget::showWhats );
-  act = mnu->addAction( "&Copy object" );
+  act = mnu->addAction( QSL("&Copy object") );
   connect( act, &QAction::triggered, dw, &DataWidget::copyObj );
   if( ho.isDyn() ) {
-    act = mnu->addAction( "&Delete object" );
+    act = mnu->addAction( QSL("&Delete object") );
     connect( act, &QAction::triggered, dw, &DataWidget::deleteObj );
-    act = mnu->addAction( "&Propetries" );
+    act = mnu->addAction( QSL("&Propetries") );
     connect( act, &QAction::triggered, dw, &DataWidget::editPropsObj );
-    act = mnu->addAction( "Rename" );
+    act = mnu->addAction( QSL("Rename") );
     connect( act, &QAction::triggered, dw, &DataWidget::renameObj );
   }
   if( !ho.isRoTree( efROAny ) ) {
-    act = mnu->addAction( "Re&vert changes" );
+    act = mnu->addAction( QSL("Re&vert changes") );
     connect( act, &QAction::triggered, dw, &DataWidget::revertObj );
-    act = mnu->addAction( "Default value" );
+    act = mnu->addAction( QSL("Default value") );
     connect( act, &QAction::triggered, dw, &DataWidget::defaultVal );
   }
   mnu->exec( ev->globalPos() );
@@ -1390,11 +1390,11 @@ bool FactoryDataWidget::unregisterWidgetType( const QString &wname )
 DataDialog::DataDialog( HolderData &a_ds, QWidget *parent )
   : QDialog( parent ), ds( a_ds ), ro( ds.isRoTree( efROAny ) )
 {
-  setStyleSheet( "*[readOnly=\"true\"] {"
+  setStyleSheet( QSL("*[readOnly=\"true\"] {"
       "color: #000000;"
       "background-color: #C0C0C0;"
       "border: 1px solid #909090;"
-      "border-radius: 2px; }");
+      "border-radius: 2px; }") );
 
   ds.post_set(); // BUG: may be not here, but sometimes post_set not work as required
   obj2visAll();
@@ -1886,14 +1886,14 @@ void DataDialog::createButtons()
   auto btn_more = new QPushButton( QSL("More...") );
   QMenu *mnu = new QMenu( this );
   //
-  auto act = mnu->addAction( "Copy Object" );
+  auto act = mnu->addAction( QSL("Copy Object") );
   connect( act, &QAction::triggered, this, &DataDialog::copyOne );
   //
-  act = mnu->addAction( "Copy All" );
+  act = mnu->addAction( QSL("Copy All") );
   connect( act, &QAction::triggered, this, &DataDialog::copyAll );
   //
   if( !ro ) {
-    act = mnu->addAction( QIcon::fromTheme(QSL("document-revert")), QSL("Revert") );
+    act = mnu->addAction( QIcon::fromTheme( QSL("document-revert")), QSL("Revert") );
     connect( act, &QAction::triggered, this, &DataDialog::revertData );
     act = mnu->addAction( QSL("reset to Default") );
     connect( act, &QAction::triggered, this, &DataDialog::defaultData );

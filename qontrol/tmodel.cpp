@@ -2,7 +2,7 @@
                           tmodel.cpp  -  description
                              -------------------
     begin                : Tue Aug 1 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -40,33 +40,33 @@ STD_CLASSINFO(TModel,clpSpecial);
 
 CTOR(TModel,LinkedObj)
 {
-  allowed_types = "HolderValue,ParamDouble,"
-                  "ContScheme,ContSimul,ContOut,ContGraph,DataPool"; // +SPECIAL
+  allowed_types = QSL( "HolderValue,ParamDouble,"
+                       "ContScheme,ContSimul,ContOut,ContGraph,DataPool" ); // +SPECIAL
   needReadInputsRecurse = true;
 
-  schems = addObjT<ContScheme>( "schems" );
-  schems->setParm( "sep", "tab" );
-  schems->setParm( "tabname", "Containers" );
+  schems = addObjT<ContScheme>( QSL("schems") );
+  schems->setParm( QSL("sep"), QSL("tab") );
+  schems->setParm( QSL("tabname"), QSL("Containers") );
   schems->setImmutable();
-  main_s = schems->addObjT<Scheme>( "main_s" );
+  main_s = schems->addObjT<Scheme>( QSL("main_s") );
   main_s->setImmutable();
-  schems->setActiveObj( "main_s" );
+  schems->setActiveObj( QSL("main_s") );
 
-  outs = addObjT<ContOut>( "outs" );
+  outs = addObjT<ContOut>( QSL("outs") );
   outs->setImmutable();
 
-  plots = addObjT<ContGraph>( "plots" );
-  plots->setParm( "sep", "col" );
+  plots = addObjT<ContGraph>( QSL("plots") );
+  plots->setParm( QSL("sep"), QSL("col") );
   plots->setImmutable();
 
-  sims = addObjT<ContSimul>( "sims" );
-  sims->setParm( "sep", "tabend" );
-  sims->setParm( "tabname", "Params" );
+  sims = addObjT<ContSimul>( QSL("sims") );
+  sims->setParm( QSL("sep"), QSL("tabend") );
+  sims->setParm( QSL("tabname"), QSL("Params") );
   sims->setImmutable();
-  Simulation *sim0 = sims->addObjT<Simulation>( "sim0" );
+  Simulation *sim0 = sims->addObjT<Simulation>( QSL("sim0") );
   sim0->post_set();
   sim0->setImmutable();
-  sims->setActiveObj( "sim0" );
+  sims->setActiveObj( QSL("sim0") );
 
   initEngine();
 }
@@ -591,8 +591,8 @@ bool TModel::copyParamsFromSim()
   }
   prm2 = (double)prm2s; prm3 = (double)prm3s;
 
-  prm0_targ = getMapDoublePtr( ">prm0_map" );
-  prm1_targ = getMapDoublePtr( ">prm1_map" );
+  prm0_targ = getMapDoublePtr( QSL(">prm0_map") );
+  prm1_targ = getMapDoublePtr( QSL(">prm1_map") );
 
   QString askParams = c_sim->getDataD( QSL("askParams"), QString() );
   fillAskedParams( askParams );

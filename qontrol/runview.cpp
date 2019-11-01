@@ -2,7 +2,7 @@
                           runview.cpp  -  description
                              -------------------
     begin                : Sat Aug 18 2001
-    copyright            : (C) 2001-2018 by atu
+    copyright            : (C) 2001-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -332,12 +332,12 @@ void RunView::getSchemeData()
 {
   Simulation *c_sim = model->getActiveSimulation();
   if( c_sim ) {
-    n_tot = c_sim->getDataD( "n_tot", 100l );
-    T = c_sim->getDataD( "T", 1.0 );
-    N = c_sim->getDataD( "N", 1 );
-    syncRT = c_sim->getDataD( "syncRT", 0 );
-    autoStart = c_sim->getDataD( "autoStart", 0 );
-    io_t = c_sim->getDataD( "io_t", 0.5 );
+    n_tot = c_sim->getDataD( QSL("n_tot"), 100l );
+    T = c_sim->getDataD( QSL("T"), 1.0 );
+    N = c_sim->getDataD( QSL("N"), 1 );
+    syncRT = c_sim->getDataD( QSL("syncRT"), 0 );
+    autoStart = c_sim->getDataD( QSL("autoStart"), 0 );
+    io_t = c_sim->getDataD( QSL("io_t"), 0.5 );
   } else {
     qWarning() << "no active simulation!" << WHE;
   }

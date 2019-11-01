@@ -2,7 +2,7 @@
                           linkedobj.h - object with link capabilities
                              -------------------
     begin                : 2015.10.24
-    copyright            : GPL (C) 2015-2018 by atu
+    copyright            : GPL (C) 2015-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -43,7 +43,7 @@ const double* LinkedObj::getDoublePtr( const QString &nm, int *lt,
   auto nm_type = splitName( nm, first, rest, idx );
   if( nm_type == badName ) {
     *plt = LinkBad;
-    qWarning() << "bad source name " << nm << NWHE;
+    qWarning() << QSL("bad source name ") << nm << NWHE;
     // abort();
     return nullptr;
   }
@@ -142,7 +142,7 @@ bool LinkedObj::isIgnored() const
 {
   int ign = 0;
   for( const HolderData *p = this; p; p=p->getParent() ) {
-    p->getData( "eprm.ignored", &ign, false ); // not direct access, TMiso+... property
+    p->getData( QSL("eprm.ignored"), &ign, false ); // not direct access, TMiso+... property
     if( ign ) {
       return true;
     }
@@ -441,7 +441,7 @@ QString InputAbstract::prepTextVisual( bool isLong ) const
       }
       break;
     case LinkElm:
-      if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
+      if( src_obj && src_obj->isChildOf( QSL("TMiso") ) ) {
         s += QChar( 0x2794 ); // ->
       } else {
         s += QChar( 0x27BC ); // >>-> // unlikely
@@ -451,7 +451,7 @@ QString InputAbstract::prepTextVisual( bool isLong ) const
       }
       break;
     case LinkSpec:
-      if( src_obj && src_obj->isChildOf( "TMiso" ) ) {
+      if( src_obj && src_obj->isChildOf( QSL("TMiso") ) ) {
         s += QChar( 0x27A0 ); // =>
       } else {
         s += QChar( 0x27A4 ); // >>
@@ -591,7 +591,7 @@ STD_CLASSINFO(ParamDouble,0);
 
 CTOR(ParamDouble,InputAbstract)
 {
-  need_fixparm = getParmInt( "fixparm", 0 );
+  need_fixparm = getParmInt( QSL("fixparm"), 0 );
   HolderColor *co = getObjT<HolderColor*>( QSL("line_color" ) );
   if( co ) {
     co->setParm( QSL("def"), QSL("red" ) );

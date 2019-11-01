@@ -2,7 +2,7 @@
                       cmdview.cpp  -  common base for views vith std actions
                              -------------------
     begin                : 2015.10.27
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -210,7 +210,7 @@ bool CmdView::pasteObj()
   QString errstr;
   QDomDocument x_dd;
   if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
-    handleWarn( this, tr("Cannot parse clipboard string:\n%2\nLine %3 column %4.")
+    handleWarn( this, QSL("Cannot parse clipboard string:\n%2\nLine %3 column %4.")
                 .arg(errstr).arg(err_line).arg(err_column) );
     return false;
   }

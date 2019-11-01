@@ -2,7 +2,7 @@
   linkcompleter.cpp - completer for links fields
   -------------------
 begin                : 2015.01.20
-copyright            : (C) 2015-2016 by atu
+copyright            : (C) 2015-2019 by atu
 email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -29,7 +29,7 @@ LinkCompleter::LinkCompleter( QAbstractItemModel *mdl, QObject *parent )
 
 QStringList LinkCompleter::splitPath( const QString &path ) const
 {
-  return path.split( "." );
+  return path.split( '.' );
 }
 
 QString LinkCompleter::pathFromIndex( const QModelIndex &idx ) const
@@ -39,7 +39,7 @@ QString LinkCompleter::pathFromIndex( const QModelIndex &idx ) const
     dataList.prepend( model()->data( i, completionRole()).toString() );
   }
 
-  return dataList.join( "." );
+  return dataList.join( '.' );
 }
 
 

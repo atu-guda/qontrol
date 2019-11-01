@@ -2,7 +2,7 @@
      scriptdialog.cpp - dialog to edit and run scripts
                              -------------------
     begin                : 2016.10.25
-    copyright            : GPL (C) 2016-2016 by atu
+    copyright            : GPL (C) 2016-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -30,7 +30,7 @@ void ScriptDialog::setupUi()
   auto lay_v = new QHBoxLayout( this );
 
   if( !model ) {
-    auto lbl = new QLabel( "No model detected", this );
+    auto lbl = new QLabel( QSL("No model detected"), this );
     lay_v->addWidget( lbl );
     return;
   }
@@ -88,31 +88,31 @@ void ScriptDialog::setupUi()
   auto bbox = new QDialogButtonBox( Qt::Vertical, this );
   lay_v->addWidget( bbox );
 
-  auto btRun = bbox->addButton( "&Run", QDialogButtonBox::ActionRole );
+  auto btRun = bbox->addButton( QSL("&Run"), QDialogButtonBox::ActionRole );
   connect( btRun, &QPushButton::pressed, this, &ScriptDialog::run );
 
-  auto btClose = bbox->addButton( "&Close", QDialogButtonBox::ActionRole );
+  auto btClose = bbox->addButton( QSL("&Close"), QDialogButtonBox::ActionRole );
   connect( btClose, &QPushButton::pressed, this, &ScriptDialog::reject );
 
-  auto btRunMdl = bbox->addButton( "Run model scr", QDialogButtonBox::ActionRole );
+  auto btRunMdl = bbox->addButton( QSL("Run model scr"), QDialogButtonBox::ActionRole );
   connect( btRunMdl, &QPushButton::pressed, this, &ScriptDialog::runModelScript );
 
-  auto btInitEng = bbox->addButton( "Init engine", QDialogButtonBox::ActionRole );
+  auto btInitEng = bbox->addButton( QSL("Init engine"), QDialogButtonBox::ActionRole );
   connect( btInitEng, &QPushButton::pressed, this, &ScriptDialog::initEngine );
 
-  auto btClearScript = bbox->addButton( "clear Script", QDialogButtonBox::ActionRole );
+  auto btClearScript = bbox->addButton( QSL("clear Script"), QDialogButtonBox::ActionRole );
   connect( btClearScript, &QPushButton::pressed, this, &ScriptDialog::clearScript );
 
-  auto btClearOutput = bbox->addButton( "clear Output", QDialogButtonBox::ActionRole );
+  auto btClearOutput = bbox->addButton( QSL("clear Output"), QDialogButtonBox::ActionRole );
   connect( btClearOutput, &QPushButton::pressed, this, &ScriptDialog::clearOutput );
 
-  auto btSave = bbox->addButton( "Save", QDialogButtonBox::ActionRole );
+  auto btSave = bbox->addButton( QSL("Save"), QDialogButtonBox::ActionRole );
   connect( btSave, &QPushButton::pressed, this, &ScriptDialog::save );
 
-  auto btReload = bbox->addButton( "Reload", QDialogButtonBox::ActionRole );
+  auto btReload = bbox->addButton( QSL("Reload"), QDialogButtonBox::ActionRole );
   connect( btReload, &QPushButton::pressed, this, &ScriptDialog::reload );
 
-  auto btRevert = bbox->addButton( "Revert", QDialogButtonBox::ActionRole );
+  auto btRevert = bbox->addButton( QSL("Revert"), QDialogButtonBox::ActionRole );
   connect( btRevert, &QPushButton::pressed, this, &ScriptDialog::revert );
 }
 
@@ -128,7 +128,7 @@ void ScriptDialog::runScr( const QString &s )
   errstr = QSL("== rc= " ) % QSN( rc ) % QSL("\n");
   if( sres.err_line != 0 ) {
     errstr += sres.err % QSL(" Line: ") % QSN( sres.err_line ) % QSL("\n" );
-    errstr += sres.bt.join( "\n" );
+    errstr += sres.bt.join( '\n' );
     sced->markerAdd( sres.err_line-1, 1 );
   } else {
     out += sres.str % QSL("\n");

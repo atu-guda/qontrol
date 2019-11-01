@@ -2,7 +2,7 @@
                      scriptfuncs.cpp - functions and types to use from JS
                              -------------------
     begin                : 2015.01.20 - partial copy from model.cpp
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -27,7 +27,7 @@ using namespace std;
 
 QString XsScriptExtension::int2str( long v, int fw, QChar fc, int base ) const
 {
-  return QString( "%1" ).arg( v, fw, base, fc );
+  return QSL("%1").arg( v, fw, base, fc );
 }
 
 bool XsScriptExtension::isNear( double a, double b, double eps ) const
@@ -58,8 +58,8 @@ bool XsScriptExtension::include( const QString &file )
   if( res.isError() ) {
     int line = res.property( QSL("lineNumber") ).toInt32();
     QString msg = res.property( QSL("mesage") ).toString();
-    qWarning() << "Exception at line " << line <<  " file: " << sfile
-               << " error: " << msg;
+    qWarning() << QSL("Exception at line ") << line <<  QSL(" file: ") << sfile
+               << QSL(" error: ") << msg;
     return false;
   }
 
@@ -88,7 +88,7 @@ QScriptValue script_int2str( QScriptContext *ctx, QScriptEngine * /*eng*/ )
   if( narg > 3 ) {
     base = ctx->argument(3).toInt32();
   }
-  QString s = QString( "%1" ).arg( n, fw, base, fc );
+  QString s = QSL( "%1" ).arg( n, fw, base, fc );
   return QScriptValue( s );
 }
 
@@ -135,9 +135,9 @@ QScriptValue script_include( QScriptContext *ctx, QScriptEngine *eng )
   }
   QString sfile = ctx->argument(0).toString();
 
-  sfile.prepend( "scripts:" );
+  sfile.prepend( QSL("scripts:") );
   if( ! QFile::exists( sfile ) ) {
-    qWarning() << "file to include " << sfile << " not exists" << WHE;
+    qWarning() << QSL("file to include ") << sfile << QSL(" not exists") << WHE;
     return QScriptValue( false );
   }
 
@@ -172,7 +172,7 @@ QScriptValue script_include( QScriptContext *ctx, QScriptEngine *eng )
 
 QString TripleF::toString() const
 {
-  return QString( "[ %1; %2; $3 ]").arg(a).arg(b).arg(c);
+  return QSL( "[ %1; %2; $3 ]").arg(a).arg(b).arg(c);
 }
 
 QScriptValue TripleFtoScriptValue( QScriptEngine *eng, const TripleF &s )

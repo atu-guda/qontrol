@@ -2,7 +2,7 @@
     elemfact.cpp  - widgets factory for DataDialog
                              -------------------
     begin                : 2012.07.03
-    copyright            : GPL (C) 2012-2016 by atu
+    copyright            : GPL (C) 2012-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -28,7 +28,7 @@ HolderData* ObjFactory::createObj( const QString &a_type,
 {
   auto i = str_class.find( a_type );
   if( i == str_class.end() ) {
-    qWarning() << "fail to find class " << a_type << " for object " << obj_name << WHE;
+    qWarning() << QSL("fail to find class \"") << a_type << QSL("\" for object ") << obj_name << WHE;
     return nullptr;
   }
 
@@ -78,7 +78,7 @@ QStringList ObjFactory::goodTypeNames( const QString & allows, const QString &hi
 {
   QStringList res;
   int mask = clpAbstract | clpSpecial;
-  if( allows.contains( "+SPECIAL" ) ) {
+  if( allows.contains( QSL("+SPECIAL") ) ) {
     mask &= ~clpSpecial;
   }
 

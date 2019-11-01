@@ -3,7 +3,7 @@
                           linkedobj.h - object with link capabilities
                              -------------------
     begin                : 2015.10.24
-    copyright            : GPL (C) 2015-2018 by atu
+    copyright            : GPL (C) 2015-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

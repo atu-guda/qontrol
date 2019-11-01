@@ -48,7 +48,7 @@ QString CommonSubwin::getFileBase() const
 void CommonSubwin::updateTitle()
 {
   if( !doc ) {
-    setWindowTitle( "NO_DOC" );
+    setWindowTitle( QSL("NO_DOC") );
   }
   setWindowTitle( title_prefix % QSL(": ") % objName % QSL(" - ") % doc->pathName() );
 }

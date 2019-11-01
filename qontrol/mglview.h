@@ -3,7 +3,7 @@
                           mglview.h  -  window to show plots via MathGL
                              -------------------
     begin                : 2014.11.29
-    copyright            : (C) 2014-2018 by atu
+    copyright            : (C) 2014-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

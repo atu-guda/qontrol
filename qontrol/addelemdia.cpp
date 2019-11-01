@@ -2,7 +2,7 @@
                           addelemdia.cpp  - widgets for DataDialog
                              -------------------
     begin                : Jul 30 2012
-    copyright            : GPL (C) 2012-2016 by atu
+    copyright            : GPL (C) 2012-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -137,14 +137,14 @@ HolderData* SelectTypeDialog::askAndCreateObj( HolderData *pobj, QWidget *aparen
     return nullptr;
   }
 
-  HolderString *o_dsc = ho->getObjT<HolderString*>( "descr" );
+  HolderString *o_dsc = ho->getObjT<HolderString*>( QSL("descr") );
   if( o_dsc ) {
     o_dsc->set( prm.descr );
   } else {
-    ho->setParm( "descr", prm.descr );
+    ho->setParm( QSL("descr"), prm.descr );
   }
-  ho->setParm( "vis_name", prm.vis_name );
-  ho->setParm( "extra", prm.extra );
+  ho->setParm( QSL("vis_name"), prm.vis_name );
+  ho->setParm( QSL("extra"), prm.extra );
   ho->extraToParm();
   ho->reset_dfl();
   if( !prm.values.isEmpty() ) {
@@ -176,25 +176,25 @@ void NameAndParamsDialog::setupUi()
 
   setWindowTitle( QSL( "Creating object with type ") % prm.tp );
 
-  auto lbl_name = new QLabel( "Name", this );
+  auto lbl_name = new QLabel( QSL("Name"), this );
   lay_m->addWidget( lbl_name );
   ed_name = new QLineEdit( this );
   ed_name->setValidator( new QRegExpValidator( QRegExp(RE_NAME), this ) );
   ed_name->setText( prm.name );
   lay_m->addWidget( ed_name );
 
-  auto lbl_val = new QLabel( "Value(s)", this );
+  auto lbl_val = new QLabel( QSL("Value(s)"), this );
   lay_m->addWidget( lbl_val );
   ed_val = new QTextEdit( this );
   ed_val->setText( prm.values );
   lay_m->addWidget( ed_val );
 
-  auto lbl_descr = new QLabel( "Description", this );
+  auto lbl_descr = new QLabel( QSL("Description"), this );
   lay_m->addWidget( lbl_descr );
   ed_descr = new QLineEdit( this );
   lay_m->addWidget( ed_descr );
 
-  auto lbl_vis_name = new QLabel( "Visual name", this );
+  auto lbl_vis_name = new QLabel( QSL("Visual name"), this );
   lay_m->addWidget( lbl_vis_name );
   ed_vis_name = new QLineEdit( this );
   lay_m->addWidget( ed_vis_name );

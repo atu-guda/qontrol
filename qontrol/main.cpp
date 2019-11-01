@@ -171,7 +171,7 @@ int batch_process( const QString &model_file )
       }
       for( const auto &nm : qAsConst( prog_opts.out_plots ) ) {
         cerr << "Processing plot \"" << qP( nm ) << "\" obj: \"";
-        const QStringList pc = nm.split( ":" );
+        const QStringList pc = nm.split( ':' );
         if( pc.size() < 1 ) { continue; }
         const QString gname = pc[0];
         const QString gfile = ( pc.size() > 1 ) ? pc[1] : QSL(""); // means: use hintFileName()
@@ -183,7 +183,7 @@ int batch_process( const QString &model_file )
       // output arrays data ( -p arr:[file] )
       for( const auto &nm : qAsConst( prog_opts.out_outs ) ) {
         cerr << "Processing array \"" << qP( nm ) << "\" obj: \"";
-        const QStringList pc = nm.split( ":" );
+        const QStringList pc = nm.split( ':' );
         if( pc.size() < 1 ) { continue; }
         const QString arrname = pc[0];
         QString dfile =( pc.size() > 1 ) ? pc[1] : ( root->getFileBase() % QSL("-") % arrname % QSL(".dat") );
@@ -200,7 +200,7 @@ int batch_process( const QString &model_file )
       // output plots data -P plot[:file]
       for( const auto &nm : qAsConst( prog_opts.grdata_outs ) ) {
         cerr << "Processing plot \"" << qP( nm ) << "\" obj: \"";
-        QStringList pc = nm.split( ":" );
+        QStringList pc = nm.split( ':' );
         if( pc.size() < 1 ) { continue; }
         QString gname = pc[0];
         QString dfile = root->getFileBase() % QSL("-") % gname % QSL(".dat");
@@ -257,7 +257,7 @@ int batch_process( const QString &model_file )
   }
 
   if( ! prog_opts.list_obj.isEmpty() ) {
-    QStringList nmtp = prog_opts.list_obj.split( ":", QString::KeepEmptyParts );
+    QStringList nmtp = prog_opts.list_obj.split( ':', QString::KeepEmptyParts );
     QString parentName, objTp;
     if( nmtp.size() > 0 ) { parentName = nmtp[0]; };
     if( nmtp.size() > 1 ) { objTp      = nmtp[1]; };

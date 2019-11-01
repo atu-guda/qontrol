@@ -2,7 +2,7 @@
                           tgraph.cpp  -  description
                              -------------------
     begin                : Sat Aug 5 2000
-    copyright            : (C) 2000-2018 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -59,7 +59,7 @@ QVariant GraphElem::dataObj( int col, int a_role ) const
 
     // real statustip + buttons
     QString s = objectName() % QSL(":") % src.cval();
-    QStringList el = getEnumStrings( "DataType" );
+    QStringList el = getEnumStrings( QSL("DataType") );
     s += " (" % el.at( type );
     if( is2D ) {
       s += ",2D";
@@ -106,11 +106,11 @@ LineRole GraphElem::fillForPlot( long &g_nn, long &g_ny, int igc )
     return LineRole::none;
   }
 
-  nn = arr->getDataD( "n", 0 );
+  nn = arr->getDataD( QSL("n"), 0 );
   if( nn < 1 ) {
     return rl;
   }
-  ny = arr->getDataD( "ny", 1 );
+  ny = arr->getDataD( QSL("ny"), 1 );
   ve = arr->getArray();
   if( ny < 1 ) {
     return rl;
@@ -124,8 +124,8 @@ LineRole GraphElem::fillForPlot( long &g_nn, long &g_ny, int igc )
     return rl;
   }
 
-  v_min = arr->getDataD( "dmin", 0.0 );
-  v_max = arr->getDataD( "dmax", 0.0 );
+  v_min = arr->getDataD( QSL("dmin"), 0.0 );
+  v_max = arr->getDataD( QSL("dmax"), 0.0 );
 
   if( label == QSL(".") ||  label == QSL(" ") ) {
     pl_label = label.toStdString();
@@ -1440,7 +1440,7 @@ int TGraph::fillDatasInfo( DatasInfo *di ) const
   long nn = LMAX, ny = 0; // 0 is special: not found
 
   for( auto ge : TCHILD(GraphElem*) ) {
-    QString s = ge->getDataD( "src", QString() );
+    const QString s = ge->getDataD( QSL("src"), QString() );
     if( s.isEmpty() ) {
       continue;
     }
@@ -1449,12 +1449,12 @@ int TGraph::fillDatasInfo( DatasInfo *di ) const
     if( !arr ) {
       continue;
     }
-    long nn_c = arr->getDataD( "n", 0l );
+    long nn_c = arr->getDataD( QSL("n"), 0l );
     if( nn_c < 1 ) {
       continue;
     }
     if( ny < 1 ) {
-      ny = arr->getDataD( "ny", 0l ); // default 0 = not found / bad
+      ny = arr->getDataD( QSL("ny"), 0l ); // default 0 = not found / bad
     }
     const dvector *ve = arr->getArray();
     if( !ve ) {
@@ -1463,7 +1463,7 @@ int TGraph::fillDatasInfo( DatasInfo *di ) const
     if( nn_c < nn ) {
       nn = nn_c;
     }
-    QString lbl = ge->getDataD( "label",  QString( "v_%1" ).arg( QSN( di->ves.size() ) ) );
+    QString lbl = ge->getDataD( QSL("label"),  QSL( "v_%1" ).arg( QSN( di->ves.size() ) ) );
     di->labels.push_back( lbl );
     di->ves.push_back( ve );
   }
@@ -1513,7 +1513,7 @@ int TGraph::addOutArr( const QString &o_name )
 
   int ne = 0; // plot elements
   for( auto ge : TCHILD(GraphElem*) ) {
-    int dtype = ge->getDataD( "type", (int)GraphElem::DataType::DataNone );
+    int dtype = ge->getDataD( QSL("type"), (int)GraphElem::DataType::DataNone );
     if( dtype == GraphElem::DataType::DataAxisX ) {
       was_x = true;
       continue;
@@ -1547,17 +1547,17 @@ int TGraph::addOutArr( const QString &o_name )
     qWarning() << " Fail to create GraphElem " <<  nm << NWHE;
     return 0;
   }
-  ge->setData( "src", o_name );
+  ge->setData( QSL("src"), o_name );
   int dtype = GraphElem::DataType::DataPlot;
   if( !was_x ) {
     dtype = GraphElem::DataType::DataAxisX;
   }
-  ge->setData( "type", dtype );
+  ge->setData( QSL("type"), dtype );
   unsigned nc = ne;
   if( nc >= dc_num ) {
     nc = 0;
   }
-  ge->setData( "color", def_col[nc] );
+  ge->setData( QSL("color"), def_col[nc] );
 
   // now we have element, but can improve it
 
@@ -1570,11 +1570,11 @@ int TGraph::addOutArr( const QString &o_name )
   if( !arr ) {
     return 1;
   }
-  QString lbl = arr->getDataD( "label", nm );
-  ge->setData( "label", lbl );
-  int otype = arr->getDataD( "type", 0 );
+  QString lbl = arr->getDataD( QSL("label"), nm );
+  ge->setData( QSL("label"), lbl );
+  int otype = arr->getDataD( QSL("type"), 0 );
   if( otype == TOutArr::OutArrType::outParm2 ) {
-    ge->setData( "is2D", 1 );
+    ge->setData( QSL("is2D"), 1 );
   }
 
 
@@ -1611,7 +1611,7 @@ QString color2style( int color, int lw, const QString &extra )
 
 QString toQString( const mglPoint &p )
 {
-  QString s = QString( "[ %1; %2; %3 ]" ).arg( p.x ).arg( p.y ).arg( p.z );
+  QString s = QSL( "[ %1; %2; %3 ]" ).arg( p.x ).arg( p.y ).arg( p.z );
   return s;
 }
 

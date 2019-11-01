@@ -2,7 +2,7 @@
                           simul.cpp  -  description
                              -------------------
     begin                : 2013.10.05
-    copyright            : (C) 2013-2016 by atu
+    copyright            : (C) 2013-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -28,7 +28,7 @@ CTOR(Simulation,LinkedObj)
 {
   show_active = true;
   // allowed_types = "double"; // double + inputs? TODO: check alias
-  allowed_types = "HolderValue,ParamDouble,DataPool"; // double + inputs? TODO: check alias
+  allowed_types = QSL("HolderValue,ParamDouble,DataPool"); // double + inputs? TODO: check alias
   // do_post_set(); // need recalc BUG: not here, need common
 }
 
@@ -39,7 +39,7 @@ QIcon Simulation::getIcon() const
   if( xtype >= 3 ) { // bad type
     xtype = 3;
   }
-  QString iconName = QString( ":icons/elm_simul_" ) + QSN(xtype) + ".png";
+  const QString iconName = QSL( ":icons/elm_simul_" ) + QSN(xtype) + QSL(".png");
   QIcon el_ico( iconName );
   return el_ico;
 }
