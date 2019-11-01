@@ -428,7 +428,7 @@ int DatasInfo::dump( QTextStream& os, const QString &delim )
   int no = 0;
   long dl_sz0 = delim.size() + 2, dl_sz = dl_sz0 - 1;
   os << "#";
-  for( auto lbl : labels ) {
+  for( const auto &lbl : qAsConst( labels ) ) {
     os << qSetFieldWidth( DOUBLE_PREC+6 ) << lbl << qSetFieldWidth( dl_sz ) << delim;
     dl_sz = dl_sz0; // to more actions, but less then 'if'
   }
@@ -490,7 +490,7 @@ void handleWarn( QWidget* par, const QString &s )
 bool confirmDelete( QWidget *par, const QString &obj, const QString &nm )
 {
   int rpl = QMessageBox::question( par, PACKAGE " delete confirmation",
-       QString("Do you really want to delete %1 \"%2\"?").arg(obj).arg(nm) );
+       QString("Do you really want to delete %1 \"%2\"?").arg( obj, nm ) );
   return rpl == QMessageBox::Yes;
 }
 

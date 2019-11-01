@@ -54,8 +54,8 @@ class Scheme : public LinkedObj  {
   /** moves element to new position if free */
   Q_INVOKABLE int moveElem( const QString &nm, int newx, int newy );
 
-  /** reimplemented to real Elems */
-  virtual void do_structChanged();
+
+  virtual void do_structChanged() override;
   /** performs one loop */
   virtual int runOneLoop( IterType itype );
 

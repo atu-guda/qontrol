@@ -64,13 +64,13 @@ class LaboView : public CommonSubwin
    ~LaboView();
    /** gets called to redraw the document contents if it has been modified */
    void update();
-   // /** implement preferred size */
+   //
    // QSize sizeHint();
    /** inner size for structure view */
    QSize svSize() const;
 
-   virtual bool callSlot( const char *nm );
-   virtual bool checkSlot( const char *nm );
+   virtual bool callSlot( const char *nm ) override;
+   virtual bool checkSlot( const char *nm ) override;
 
  Q_SIGNALS:
    void viewChanged();
@@ -149,8 +149,8 @@ class LaboView : public CommonSubwin
    /** returns ptr to marked element or nullptr if none */
    TMiso* getMarkElm() const;
  protected:
-   virtual void closeEvent( QCloseEvent* );
-   virtual void resizeEvent( QResizeEvent* );
+   virtual void closeEvent( QCloseEvent* ) override;
+   virtual void resizeEvent( QResizeEvent* ) override;
    // int checkState( CheckType ctp );
 
  protected:

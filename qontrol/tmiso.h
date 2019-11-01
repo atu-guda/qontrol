@@ -50,7 +50,7 @@ class TMiso : public LinkedObj  {
    /** check, if element have given visual coords */
    bool isAtCoord( int ax, int ay ) const
      { return (vis_x == ax && vis_y == ay ); }
-   virtual void fillComplModelForParams( QStandardItemModel *mdl ) const;
+   virtual void fillComplModelForParams( QStandardItemModel *mdl ) const override;
    virtual void preCalc();
  protected:
    /** main computation function

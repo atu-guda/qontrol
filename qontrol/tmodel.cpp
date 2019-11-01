@@ -651,10 +651,10 @@ TOutArr* TModel::addOut( const QString &outname, const QString &objname )
   arr->setData( QSL("name"), objname );
 
   QString lbl = objname;
-  if( lbl.left( 4 ) == QSL("out_") ) {
+  if( lbl.leftRef( 4 ) == QSL("out_") ) {
     lbl.remove( 0, 4 );
   }
-  if( lbl.left( 1 ) == ":" ) {
+  if( lbl.startsWith( ':' ) ) {
     lbl.remove( 0, 1 );
   }
 
@@ -958,16 +958,16 @@ bool TModel::importAllSchemes()
 {
   // TODO: remove old imported schemes
   bool only_good = true;
-  QStringList incs = imports.cval().split( QSL("\n" ) );
-  for( auto s : incs ) {
+  const QStringList incs = imports.cval().split( QSL("\n" ) );
+  for( const auto &s : incs ) {
     QStringList sl = s.split( QSL(":") );
     if( sl.size() < 2 ) {
       qWarning() << "Bad import string: " << s << NWHE;
       only_good = false;
       continue;
     }
-    QString fn = QSL( "lib:" ) % sl[0];
-    QString schName = sl[1];
+    const QString fn = QSL( "lib:" ) % sl[0];
+    const QString schName = sl[1];
     qWarning() << "import: file: " << fn << " scheme: " << schName << NWHE;
     if( ! importScheme( fn, schName ) ) {
       only_good = false;

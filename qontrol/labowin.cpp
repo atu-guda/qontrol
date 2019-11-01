@@ -95,7 +95,6 @@ LaboWin::~LaboWin()
 
 void LaboWin::setFonts()
 {
-  QVariant v;
   const QFont &mainFont = setti->getAsFont( QSL("mainFont") );
   QFontMetrics fm( mainFont );
   em = fm.width( 'W' );
@@ -605,8 +604,7 @@ QMdiSubWindow* LaboWin::findMdiChild( const QString &fileName )
     if( !chi ) {
       continue;
     }
-    QString cp = chi->getFilePath();
-    if( cp  == canonicalFilePath ) {
+    if( chi->getFilePath()  == canonicalFilePath ) {
       return window;
     }
   }
@@ -620,8 +618,7 @@ QMdiSubWindow* LaboWin::findMdiByTitle( const QString &tit, bool activate )
     if( !mdiChild ) {
       continue;
     }
-    QString wtit = mdiChild->windowTitle();
-    if( wtit  == tit ) {
+    if( mdiChild->windowTitle() == tit ) {
       if( activate ) {
         mdiArea->setActiveSubWindow( subw );
       }
@@ -1051,14 +1048,14 @@ void LaboWin::slotTest()
   // }
 
   ostr += QSL("<hr/>\n");
-  auto scriptsDirs = QDir::searchPaths( SCRIPT_DIR );
+  const auto scriptsDirs = QDir::searchPaths( SCRIPT_DIR );
   ostr += "<b>Scripts dirs</b>: <br/>\n";
-  for( auto s: scriptsDirs ) {
+  for( const auto &s: scriptsDirs ) {
     ostr += QSL(" \"") % s % QSL("\"<br>\n");
   }
-  auto libDirs = QDir::searchPaths( LIB_DIR );
+  const auto libDirs = QDir::searchPaths( LIB_DIR );
   ostr += "<b>Lib dirs</b>: <br/>\n";
-  for( auto s: libDirs ) {
+  for( const auto &s: libDirs ) {
     ostr += QSL(" \"") % s % QSL("\"<br>\n");
   }
   // ostr += QSL("<br>\n");

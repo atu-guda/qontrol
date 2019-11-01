@@ -236,12 +236,12 @@ bool CmdView::pasteObj()
 
   HolderData *ob = storage->addObjP( otype, oname );
   if( !ob  ) {
-    handleError( this, QString("Fail to add Obj: %1 %2").arg(otype).arg(oname) );
+    handleError( this, QSL("Fail to add Obj: %1 %2").arg( otype, oname ) );
     return false;
   }
   lastObjName = oname;
   if( !ob->fromDom( ee, errstr ) ) {
-    handleWarn( this, tr("fail to set params:  %1").arg( errstr ) );
+    handleWarn( this, QSL("fail to set params:  %1").arg( errstr ) );
   }
 
   // TMP: TODO: use postPaste

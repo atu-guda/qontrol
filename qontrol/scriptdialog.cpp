@@ -66,7 +66,7 @@ void ScriptDialog::setupUi()
   QsciAPIs *apis = new QsciAPIs( lexer );
 
   auto words = model->getScriptNames();
-  for( auto w : words ) {
+  for( const auto &w : words ) {
     apis->add( w );
   }
 

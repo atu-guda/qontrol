@@ -87,7 +87,7 @@ bool LaboDoc::openDocument( const QString &filename )
 {
   QFile file( filename );
   if( !file.open( QFile::ReadOnly) ) {
-    handleError( MAINWIN, tr("Cannot read file %1: %2.").arg(filename).arg(file.errorString() ) );
+    handleError( MAINWIN, tr("Cannot read file %1: %2.").arg( filename, file.errorString() ) );
     return false;
   }
   QTextStream in( &file );
@@ -103,7 +103,7 @@ bool LaboDoc::openDocument( const QString &filename )
 
   if( ! dd.setContent( &xml_src, &xml_reader, &errstr, &err_line, &err_column ) ) {
     handleError( MAINWIN, tr("Cannot parse file %1:\n%2\nLine %3 column %4.")
-                         .arg(filename).arg(errstr).arg(err_line).arg(err_column) );
+                         .arg( filename, errstr, QSN(err_line), QSN(err_column) ) );
     m_filename = "";
     return false;
   }
@@ -121,7 +121,7 @@ bool LaboDoc::openDocument( const QString &filename )
         obj_root = ee;
         break;
       }
-      handleError( MAINWIN, tr("Bad first element: %1 %2 ").arg(tagname).arg(elname) );
+      handleError( MAINWIN, QSL("Bad first element: %1 %2 ").arg( tagname, elname ) );
       return false;
     }
     cnode = cnode.nextSibling();
@@ -198,7 +198,7 @@ bool LaboDoc::saveDocument( bool forceNewName )
 
   QSaveFile file( fn );
   if ( ! file.open( QFile::WriteOnly )) {
-    handleError( mwin, tr("Cannot write file %1:\n%2.").arg(fn).arg(file.errorString()) );
+    handleError( mwin, tr("Cannot write file %1:\n%2.").arg( fn, file.errorString() ) );
     return false;
   }
   auto perms =  file.permissions() | QFileDevice::ReadUser | QFileDevice::WriteUser;
@@ -206,7 +206,7 @@ bool LaboDoc::saveDocument( bool forceNewName )
   file.setPermissions( perms );
   QTextStream out( &file );
   out.setCodec("UTF-8");
-  QApplication::setOverrideCursor(Qt::WaitCursor);
+  QApplication::setOverrideCursor( Qt::WaitCursor );
 
   QString textData;
   textData = toString();
@@ -214,7 +214,7 @@ bool LaboDoc::saveDocument( bool forceNewName )
   QApplication::restoreOverrideCursor();
 
   if( ! file.commit() ) {
-    handleError( mwin, tr("Cannot write file %1:\n%2.").arg(fn).arg(file.errorString()) );
+    handleError( mwin, tr("Cannot write file %1:\n%2.").arg( fn, file.errorString() ) );
     return false;
   }
 

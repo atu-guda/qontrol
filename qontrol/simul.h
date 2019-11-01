@@ -35,7 +35,7 @@ class Simulation : public LinkedObj  {
   enum RunType {
     runSingle = 0, runLoop, run2DLoop
   };
-  Q_ENUMS(RunType);
+  Q_ENUM( RunType );
   Q_CLASSINFO( "enum_RunType_0", "Single" );      // runSingle
   Q_CLASSINFO( "enum_RunType_1", "1D loop" );     // runLoop
   Q_CLASSINFO( "enum_RunType_2", "2D loop" );     // run2DLoop
@@ -43,7 +43,7 @@ class Simulation : public LinkedObj  {
   enum SeedType {
     everyRun = 0, startLoop, start2DLoop
   };
-  Q_ENUMS(SeedType);
+  Q_ENUM( SeedType );
   Q_CLASSINFO( "enum_SeedType_0", "Every Run" );               // everyRun
   Q_CLASSINFO( "enum_SeedType_1", "On start on 1D loop" );     // startLoop
   Q_CLASSINFO( "enum_SeedType_2", "On start on 2D loop" );     // start2DLoop

@@ -42,7 +42,7 @@ void SelectTypeDialog::setupUi()
   QSize def_sz( 80, 60 ); // TODO: calculate;
 
   bool first_add = true;
-  for( QString cname : cl_names ) {
+  for( const QString &cname : qAsConst(cl_names) ) {
     QString fcname = cname.toLower();
     if( fcname.endsWith( QSL("[]" ) ) ) {
       fcname.chop( 2 );

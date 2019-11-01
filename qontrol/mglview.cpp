@@ -638,8 +638,8 @@ void MglView::exportPlot()
   gra->renderTo( timg, &vd, scd.get() );
 
   if( ! timg.save( fn, "PNG", 50 ) ) {
-    QString err = strerror(errno);
-    handleError( this, QSL("Fail fo save picture file: \"%1\": %2").arg( fn ).arg( err ) );
+    QString err = strerror( errno );
+    handleError( this, QSL("Fail fo save picture file: \"%1\": %2").arg( fn, err ) );
   }
 
 }
@@ -698,7 +698,7 @@ void MglView::showInfo()
   }
   s += "\n</pre>\n";
 
-  for( const auto la : gra->TCHILD(PlotLabel*) ) {
+  for( const auto &la : gra->TCHILD(PlotLabel*) ) {
     if( !la ) { continue; }
     s += QSL("<p>") % la->objectName() % QSL("= \"") % la->textVisual() % QSL("\"") % QSL("</p>\n");
   }

@@ -114,8 +114,8 @@ class MglSubwin : public CommonSubwin {
   public:
    MglSubwin( QWidget *a_par, LaboDoc *a_doc, TGraph *a_gra  );
    ~MglSubwin();
-   virtual bool callSlot( const char *nm );
-   virtual bool checkSlot( const char *nm );
+   virtual bool callSlot( const char *nm ) override;
+   virtual bool checkSlot( const char *nm ) override;
   public Q_SLOTS:
    virtual int getLevel() const override;
   protected:

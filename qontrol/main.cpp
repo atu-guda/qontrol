@@ -67,8 +67,8 @@ int main( int argc, char *argv[] )
 
     main_win->show();
 
-    for( auto fn : prog_opts.models ) {
-      if( prog_opts.dbg>0 ) {
+    for( const auto &fn : qAsConst( prog_opts.models ) ) {
+      if( prog_opts.dbg > 0 ) {
         qDebug() << "Try to open file" << fn << WHE;
       }
       main_win->doFileOpen( fn );
@@ -82,7 +82,7 @@ int main( int argc, char *argv[] )
   if( prog_opts.models.size() != 1 ) { // only one positional allowed here
     cerr << "Single input filename required for batch procession, "
          << prog_opts.models.size() << " is given" << endl;
-    for( auto fn : prog_opts.models ) {
+    for( const auto &fn : qAsConst( prog_opts.models ) ) {
       cerr << qP( fn ) << endl;
     }
     return 2;
@@ -137,7 +137,7 @@ int batch_process( const QString &model_file )
     return 4;
   }
 
-  for( auto nmv : prog_opts.set_vars ) {
+  for( const auto &nmv : qAsConst( prog_opts.set_vars ) ) {
     QStringList n_mv = nmv.split( QSL("=") );
     if( n_mv.size() != 2 ) {
       cerr << "Bad set variable syntax: \"" << qP( nmv ) << "\", ignoring." << endl;
@@ -157,8 +157,8 @@ int batch_process( const QString &model_file )
 
     if( rc ) {
       // output values
-      for( auto nm : prog_opts.out_vars ) {
-        QString v = model->getOutValue( nm );
+      for( const auto &nm : qAsConst( prog_opts.out_vars ) ) {
+        const QString v = model->getOutValue( nm );
         cout << qP(nm) << " = " << qP( v ) << endl;
         if( os ) {
           *os << nm << " = " << v << endl;
@@ -169,30 +169,24 @@ int batch_process( const QString &model_file )
       if( prog_opts.out_plots.size() == 1 && prog_opts.out_plots[0] == QSL("ALL") ) {
         prog_opts.out_plots = model->getNamesOfType( QSL("plots"), QSL("TGraph") );
       }
-      for( auto nm : prog_opts.out_plots ) {
+      for( const auto &nm : qAsConst( prog_opts.out_plots ) ) {
         cerr << "Processing plot \"" << qP( nm ) << "\" obj: \"";
-        QStringList pc = nm.split( ":" );
+        const QStringList pc = nm.split( ":" );
         if( pc.size() < 1 ) { continue; }
-        QString gname = pc[0];
-        QString gfile = QSL(""); // means: use hintFileName()
-        if( pc.size() > 1 ) {
-          gfile = pc[1];
-        }
+        const QString gname = pc[0];
+        const QString gfile = ( pc.size() > 1 ) ? pc[1] : QSL(""); // means: use hintFileName()
         cerr << qP( gname ) << "\" file: \"" << qP( gfile ) << "\" .";
         model->plotToPng( gname, gfile );
         cerr << ".. DONE" << endl;
       };
 
       // output arrays data ( -p arr:[file] )
-      for( auto nm : prog_opts.out_outs ) {
+      for( const auto &nm : qAsConst( prog_opts.out_outs ) ) {
         cerr << "Processing array \"" << qP( nm ) << "\" obj: \"";
-        QStringList pc = nm.split( ":" );
+        const QStringList pc = nm.split( ":" );
         if( pc.size() < 1 ) { continue; }
-        QString arrname = pc[0];
-        QString dfile = root->getFileBase() % QSL("-") % arrname % QSL(".dat");
-        if( pc.size() > 1 ) {
-          dfile = pc[1];
-        }
+        const QString arrname = pc[0];
+        QString dfile =( pc.size() > 1 ) ? pc[1] : ( root->getFileBase() % QSL("-") % arrname % QSL(".dat") );
         cerr << qP( arrname ) << "\" file: \"" << qP( dfile ) << "\" .";
         TOutArr *arr = model->getOutArr( arrname );
         if( !arr ) {
@@ -204,7 +198,7 @@ int batch_process( const QString &model_file )
       }
 
       // output plots data -P plot[:file]
-      for( auto nm : prog_opts.grdata_outs ) {
+      for( const auto &nm : qAsConst( prog_opts.grdata_outs ) ) {
         cerr << "Processing plot \"" << qP( nm ) << "\" obj: \"";
         QStringList pc = nm.split( ":" );
         if( pc.size() < 1 ) { continue; }
@@ -240,7 +234,7 @@ int batch_process( const QString &model_file )
     }
   }
 
-  for( auto f: prog_opts.s_files ) {
+  for( const auto &f : qAsConst( prog_opts.s_files ) ) {
     if( prog_opts.dbg > 0 ) {
       cerr << "Executing script file " << qP(f) << endl;
     }
@@ -270,7 +264,7 @@ int batch_process( const QString &model_file )
     cout << "=== list of object in \"" << qP( parentName )
          << "\" of type \"" << qP( objTp ) << "\"===" << endl;
     QStringList nms = model->getNamesOfType( parentName, objTp, true );
-    for( auto s : nms ) {
+    for( const auto &s : nms ) {
       cout << qP( s ) << endl;
     }
 
@@ -318,7 +312,7 @@ void initAppDirs()
   // "/usr/local/share/qontrol/scripts"
   // "/usr/share/qontrol/scripts"
   auto dataDirs = QStandardPaths::standardLocations( QStandardPaths::AppLocalDataLocation );
-  for( auto d: dataDirs ) {
+  for( const auto &d : dataDirs ) {
     QString s = d % QSL( "/" LIB_DIR );
     if( tst_dir.exists( s ) ) {
        prog_opts.lib_dirs << s;
@@ -398,7 +392,7 @@ bool parse_cmdline( QApplication &app )
   if( prog_opts.dbg > 0 ) {
     cerr << "dbg = " << prog_opts.dbg << endl;
     cerr << "Found options:" << endl;
-    for( auto nm : prs.optionNames() ) {
+    for( const auto &nm : prs.optionNames() ) {
       cerr << qP(nm) << ' ';
     }
     cerr << endl;

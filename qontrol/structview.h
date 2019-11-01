@@ -65,7 +65,7 @@ class StructView : public CmdView  {
     int getGridSize() const { return grid_sz; }
     /** bound of all elements in model */
     QSize getElemsBound() const;
-    virtual QSize sizeHint () const;
+    virtual QSize sizeHint () const override;
     /** gets coordinates on selected element */
     QPoint getSelCoords() const;
     /** returns x-coordinate for selected cell */
@@ -122,10 +122,10 @@ class StructView : public CmdView  {
   protected:
     /** fill and calc info about element */
     bool fill_elmInfo( const TMiso *ob, ElemInfo &el ) const;
-    virtual void paintEvent( QPaintEvent *pe );
-    virtual void mousePressEvent( QMouseEvent *me );
-    virtual void mouseDoubleClickEvent( QMouseEvent *me );
-    virtual void keyPressEvent( QKeyEvent *ke );
+    virtual void paintEvent( QPaintEvent *pe ) override;
+    virtual void mousePressEvent( QMouseEvent *me ) override;
+    virtual void mouseDoubleClickEvent( QMouseEvent *me ) override;
+    virtual void keyPressEvent( QKeyEvent *ke ) override;
     void drawAll( QPainter &p ); //* paint all in given painter
     QMenu* createPopupMenu( const QString &title, bool has_elem );
 
@@ -151,8 +151,8 @@ class StructSubwin : public CommonSubwin {
   public:
    StructSubwin( QWidget *a_par, LaboDoc *a_doc, Scheme *a_sch );
    ~StructSubwin();
-   virtual bool callSlot( const char *nm );
-   virtual bool checkSlot( const char *nm );
+   virtual bool callSlot( const char *nm ) override;
+   virtual bool checkSlot( const char *nm ) override;
   public Q_SLOTS:
    virtual int getLevel() const override;
   protected:

@@ -27,7 +27,7 @@
 #include "linkedobj.h"
 #include "scaledata.h"
 
-class DatasInfo;
+struct DatasInfo;
 class TGraph;
 
 enum LineRole {
@@ -67,7 +67,7 @@ class GraphElem : public TDataSet {
      DataCont, DataContF, DataContD,
      DataC0, DataC1, DataC2, DataC3, DataC4, DataC5, // aux data for misc plots
    };
-   Q_ENUMS( DataType );
+   Q_ENUM( DataType );
    Q_CLASSINFO( "enum_DataType_0",   "None   " );     // DataNone
    Q_CLASSINFO( "enum_DataType_1",   "AxisX  " );     // DataAxisX
    Q_CLASSINFO( "enum_DataType_2",   "AxisY  " );     // DataAxisY
@@ -170,7 +170,7 @@ class PlotLabel : public LinkedObj {
      CoordScreen,
      CoordFirst    // main coorrd system, a-la gnuplot
    };
-   Q_ENUMS( CoordType );
+   Q_ENUM( CoordType );
    Q_CLASSINFO( "enum_CoordType_0",   "Graph " );    // CoordGraph
    Q_CLASSINFO( "enum_CoordType_1",   "Screen" );    // CoordScreen
    Q_CLASSINFO( "enum_CoordType_2",   "First " );    // CoordFirst
@@ -182,7 +182,7 @@ class PlotLabel : public LinkedObj {
      LabelMGL,
      LabelTeX
    };
-   Q_ENUMS( LabelType );
+   Q_ENUM( LabelType );
    Q_CLASSINFO( "enum_LabelType_0",   "Plain " );    // LabelPlain
    Q_CLASSINFO( "enum_LabelType_1",   "HTML" );      // LabelHTML,
    Q_CLASSINFO( "enum_LabelType_2",   "MiniTeX" );   // LabelMiniTeX
@@ -263,7 +263,7 @@ class PlotFlippery : public LinkedObj {
      FlipperyArc,
      FlipperyPolygon
    };
-   Q_ENUMS( FlipperyType );
+   Q_ENUM( FlipperyType );
    Q_CLASSINFO( "enum_FlipperyType_0",   "Ball(p0)"        );         // FlipperyBall
    Q_CLASSINFO( "enum_FlipperyType_1",   "Circle(p0,v_0)"  );         // FlipperyCircle
    Q_CLASSINFO( "enum_FlipperyType_2",   "Sphere(p0,v_0) " );         // FlipperySphere

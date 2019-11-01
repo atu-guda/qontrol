@@ -44,7 +44,7 @@ class TOutArr : public LinkedObj  {
      outParm2  = 2,
      outSpec   = 3
    };
-   Q_ENUMS(OutArrType);
+   Q_ENUM( OutArrType );
    Q_CLASSINFO( "enum_OutArrType_0", "Simple" );     // outSimple
    Q_CLASSINFO( "enum_OutArrType_1", "Parm 1" );     // outParm1
    Q_CLASSINFO( "enum_OutArrType_2", "Parm 2" );     // outParm1

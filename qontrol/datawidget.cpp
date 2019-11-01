@@ -825,7 +825,7 @@ bool ColorDataWidget::vis2obj() const
 {
   QColor c = cb->color();
   // int c_i = c.rgba();
-  QVariant v = c;
+  // QVariant v = c;
   ho.set( c );
   return true;
 }
@@ -1413,7 +1413,7 @@ int DataDialog::obj2visAll()
   createWidgets(); // recreate iface
 
   int ng = 0;
-  for( auto w : dwm  ) {
+  for( auto w : qAsConst( dwm ) ) {
     w->obj2vis();
     ++ng;
   }
@@ -1428,7 +1428,7 @@ int DataDialog::vis2objAll() // from widgets to object
   }
   int ns = 0;
 
-  for( auto w : dwm ) {
+  for( auto w : qAsConst( dwm ) ) {
     w->vis2obj();
     ++ns;
   }

@@ -800,7 +800,7 @@ int HolderData::delAllDyn()
   }
 
   int n = 0;
-  for( const auto nm : nms ) {
+  for( const auto &nm : qAsConst( nms ) ) {
     n += delObj( nm );
   }
   return n;
@@ -809,8 +809,8 @@ int HolderData::delAllDyn()
 int HolderData::delByNameType( const QString &nm_templ, const QString &tp_name )
 {
   int n = 0;
-  QStringList els = elemNamesByNameType( nm_templ, tp_name );
-  for( auto el : els ) {
+  const QStringList els = elemNamesByNameType( nm_templ, tp_name );
+  for( const auto &el : els ) {
     n += delObj( el );
   }
   return n;
@@ -895,8 +895,8 @@ bool HolderData::isValidType(  const QString &cl_name  ) const
     return false;
   }
 
-  QStringList atp = QString(allowTypes()).split(',');
-  for( auto c : atp ) {
+  const QStringList atp = QString( allowTypes() ).split( ',' );
+  for( const auto &c : atp ) {
     if( EFACT.isChildOf( cl_name, c ) ) {
       return true;
     }
@@ -977,14 +977,14 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
       if( ho && ! ho->isObject() ) {
         errstr = QString("err: read elem \"%1\" failed. "
             "required: \"%2\" but have \"%3\" in \"%4\"" )
-                .arg(elname).arg(tagname).arg(ho->getType()).arg( getFullName() );
+                .arg( elname, tagname, ho->getType(), getFullName() );
         qWarning() << errstr << NWHE;
         return false;
       }
       if( !ho ) { // name not found
         if( ! addObj( cl_name, elname ) ) {
           errstr = QString("TDataSet::fromDom: fail to create obj %1 %2 ")
-                   .arg(cl_name).arg(elname);
+                   .arg( cl_name, elname );
           qWarning() << errstr << NWHE;
           continue; // for conversion: ignore unknown
           // return false;
@@ -994,7 +994,7 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
       TDataSet* ob = getObjT<TDataSet*>( elname );
       if( !ob ) {
         errstr = QString("TDataSet::fromDom: fail to find created obj %1 %2 in %3")
-                 .arg(cl_name).arg(elname).arg( objectName() );
+                 .arg( cl_name, elname, objectName() );
         qWarning() << errstr << NWHE;
         return false;
       }
@@ -1019,7 +1019,7 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
         }
         // --------- end conversion (TMP) --------
         errstr = QString("TDataSet::fromDom: param \"%1\" is an object type \"%2\" ")
-                 .arg(elname).arg(ho->getType());
+                 .arg( elname, ho->getType() );
         qWarning() << errstr << NWHE;
         return false;
       }
@@ -1027,7 +1027,7 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
         ho =  addObjP( tp_name, elname );
         if( !ho  ) {
           errstr = QString("TDataSet::fromDom: fail to create param \"%1\" in \"%2\" ")
-                   .arg(tp_name).arg(elname);
+                   .arg( tp_name,elname );
           qWarning() << errstr << NWHE;
           // return false;
           continue; // ignore unused params
@@ -1039,7 +1039,7 @@ bool HolderData::fromDom( QDomElement &de, QString &errstr )
 
     } else { // ----------- unknown element
       errstr = QString("TDataSet::fromDom: bad element %1 %2 ")
-               .arg(tagname).arg(elname);
+               .arg( tagname, elname );
       qWarning() << errstr << NWHE;
       return false;
     }
@@ -1464,12 +1464,10 @@ QStringList HolderData::getEnumStrings( const QString &enum_name ) const
   }
 
   int n = me.keyCount();
-  QString nm, snm, lbl;
   QMetaClassInfo ci;
   for( int i=0; i<n; ++i ) {
     int val = me.value( i ); // now the same as i, but ...
-    snm = me.key( i );
-    nm = QSL( "enum_" ) % enum_name % QSL("_") % QSN( val );
+    QString nm = QSL( "enum_" ) % enum_name % QSL("_") % QSN( val );
     int ci_idx = mci->indexOfClassInfo( nm.toLocal8Bit().data() );
     if( ci_idx < 0 ) {
       r << enum_name % QSL("_") % QSN( val );
@@ -2485,11 +2483,11 @@ QString HolderIntArray::textVisual() const
 bool HolderIntArray::fromString( const QString &s )
 {
   bool ok;
-  QStringList sl = s.split(QSL(" "), QString::SkipEmptyParts );
+  const QStringList sl = s.split( QSL(" "), QString::SkipEmptyParts );
   auto v0 = v;
   v.clear(); v.reserve( sl.size() );
 
-  for( auto s : sl ) {
+  for( const auto &s : sl ) {
     int vc = s.toInt( &ok, 0 ); // 0 = auto base
     v.push_back( vc );
   }
@@ -2528,14 +2526,14 @@ void HolderDoubleArray::reset_dfl()
 
   auto s = getParm( QSL("defs") );
   if( ! s.isEmpty() ) {
-    QStringList sl = s.split( QSL(" "), QString::SkipEmptyParts );
+    const QStringList sl = s.split( QSL(" "), QString::SkipEmptyParts );
     if( sl.size() > (int)v.size() ) {
       v.assign( sl.size(), v1 );
     }
 
     int i = 0;
     bool ok;
-    for( auto cs : sl ) {
+    for( const auto &cs : sl ) {
       double vc = toDoubleEx( cs, &ok );
       if( ok ) {
         v[i] = vc;
@@ -2625,11 +2623,11 @@ QString HolderDoubleArray::textVisual() const
 bool HolderDoubleArray::fromString( const QString &s )
 {
   bool ok;
-  QStringList sl = s.split(QSL(" "), QString::SkipEmptyParts );
+  const QStringList sl = s.split( QSL(" "), QString::SkipEmptyParts );
   auto v0 = v;
   v.clear(); v.reserve( sl.size() );
 
-  for( auto s : sl ) {
+  for( const auto &s : sl ) {
     double vc = toDoubleEx( s, &ok );
     v.push_back( vc );
   }
@@ -2747,9 +2745,11 @@ QString HolderStringArray::toString() const
 QString HolderStringArray::textVisual() const
 {
   QString s { QSL("[ ") }, sep { QSL("") };
-  for( auto vc : v ) {
+  for( const auto &vc : qAsConst( v ) ) {
     s += sep % QSL("\"") % vc  % QSL("\"");
-    sep = QSL(", ");
+    if( sep.isEmpty() ) {
+      sep = QSL(", ");
+    }
   }
   s += QSL(" ]");
   return s;

@@ -77,7 +77,7 @@ void SettingsData::save() const
   sets.setValue( "view/showLinks", showLinks.cval() );
   sets.setValue( "view/showmax", showMax.cval() );
   /* ---------- fonts ------------- */
-  QString v = mainFont.cval().key();
+  // QString v = mainFont.cval().key();
   // qWarning() << "mainFont: " << v << WHE;
   sets.setValue( "fonts/main", mainFont.get() );
   sets.setValue( "fonts/small", smallFont.get() );

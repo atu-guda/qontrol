@@ -187,7 +187,7 @@ void LinkedObj::readInputs() noexcept
     }
   }
 
-  for( auto in : inps_a ) {
+  for( auto in : qAsConst( inps_a ) ) {
     in->readInput();
   }
   prm_mod += prm_will_mod;
@@ -201,7 +201,7 @@ void LinkedObj::readAllInputs() noexcept
     }
   }
 
-  for( auto in : inps  ) {
+  for( auto in : qAsConst( inps ) ) {
     in->readInput();
   }
   prm_mod += prm_will_mod;

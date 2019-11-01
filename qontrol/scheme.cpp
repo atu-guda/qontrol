@@ -221,7 +221,7 @@ TMiso* Scheme::xy2Miso( int avis_x, int avis_y ) const
 QSize Scheme::getMaxXY() const
 {
   int mx = 0, my = 0;
-  for( auto ob : TCHILD(TMiso*) ) {
+  for( auto ob : TCHILD(TMiso*)  ) {
     int ox = ob->getDataD( QSL("eprm.vis_x"), 0 );
     int oy = ob->getDataD( QSL("eprm.vis_y"), 0 );
     if( ox > mx ) {

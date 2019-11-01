@@ -476,7 +476,7 @@ void StructView::drawAll( QPainter &p )
 
     // ----------- parametric inputs
     i_in=0;
-    in_sep_sz = obj_sz/(ei.n_pinp+1);
+    in_sep_sz = obj_sz / ( ei.n_pinp + 1 );
     for( const auto ips : ob->TCHILD(const ParamDouble*) ) {
       if( !ips ) { continue; }
       int lt = ips->getLinkType();
@@ -723,7 +723,6 @@ void StructView::unlinkElm()
     return;
   }
 
-  QString lnkname;
   for( InputSimple *in : selObj->TCHILD(InputSimple*) ) {
     if( ! in ) {   continue;  }
     in->setData( QSL("source"), QSL("") );
