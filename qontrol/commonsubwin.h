@@ -3,7 +3,7 @@
                           commonsubwin.h - common MDI subwindow inner widget
                              -------------------
     begin                : 2015.10.12
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -44,9 +44,8 @@ class CommonSubwin : public QMainWindow  {
    HolderData* getSelectedInView( const QString& view_name ) const;
    QString getSelNameInView( const QString& view_name ) const;
    HolderData* getSelectedInFocus() const;
- public Q_SLOTS:
-   QString getSelNameInFocus() const;
-   virtual int getLevel() const = 0;
+   Q_INVOKABLE QString getSelNameInFocus() const;
+   Q_INVOKABLE virtual int getLevel() const = 0;
  Q_SIGNALS:
    void closeMe(); // ask main window to close me
 
