@@ -435,7 +435,7 @@ class HolderData : public QAbstractItemModel {
   int cvtCount = 0; //* increased after every fromDom
   QSSMap parms;
   QStringList list_strings;
-  QString allowed_types = ""; // separator=','
+  QString allowed_types = QSL(""); // separator=','
   Q_CLASSINFO( "nameHintBase",  "holder_" );
   DCL_DEFAULT_STATIC;
 };

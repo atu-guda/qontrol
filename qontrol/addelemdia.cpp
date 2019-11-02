@@ -179,7 +179,7 @@ void NameAndParamsDialog::setupUi()
   auto lbl_name = new QLabel( QSL("Name"), this );
   lay_m->addWidget( lbl_name );
   ed_name = new QLineEdit( this );
-  ed_name->setValidator( new QRegExpValidator( QRegExp(RE_NAME), this ) );
+  ed_name->setValidator( new QRegExpValidator( QRegExp(QSL(RE_NAME)), this ) );
   ed_name->setText( prm.name );
   lay_m->addWidget( ed_name );
 

@@ -95,11 +95,12 @@ enum _STATE_VALUES {
 
 const char* getStateString( int stat_num );
 
-constexpr char RE_NAME[] { R"!(^[_a-zA-Z][_0-9A-Za-z]*$)!" };
-constexpr char RE_NAME_IDX[] { R"!(^([_a-zA-Z][_0-9A-Za-z]*)(?:\[(\d+)\])?$)!" };
+// constexpr char RE_NAME[] { R"!(^[_a-zA-Z][_0-9A-Za-z]*$)!" };
+// constexpr char RE_NAME_IDX[] { R"!(^([_a-zA-Z][_0-9A-Za-z]*)(?:\[(\d+)\])?$)!" };
+#define RE_NAME R"!(^[_a-zA-Z][_0-9A-Za-z]*$)!"
+#define RE_NAME_IDX R"!(^([_a-zA-Z][_0-9A-Za-z]*)(?:\[(\d+)\])?$)!"
 // not good, allowing "a..b", buf fast, catched in miscfun.cpp: splitName()
-constexpr char RE_FULLNAME[]
-  { R"(^([_a-zA-Z]+[_0-9A-Za-z]*)\.([_a-zA-Z]+[_0-9A-Za-z.]*(?:\[(\d+)\])?)$)" } ;
+#define RE_FULLNAME R"(^([_a-zA-Z]+[_0-9A-Za-z]*)\.([_a-zA-Z]+[_0-9A-Za-z.]*(?:\[(\d+)\])?)$)"
 
 extern QString log_app;
 

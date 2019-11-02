@@ -28,7 +28,7 @@ struct DatasInfo {
   QString title; //* obviosly, used for display
   void reset() { nn = nx = 0; ny = 1; labels.clear(); ves.clear(); title = QString(); }
   long size() const { return ves.size(); }
-  int dump( QTextStream& os, const QString &delim = " " );
+  int dump( QTextStream& os, const QString &delim = QSL(" ") );
 };
 
 /** converts string to int with some special values: RND, IMIN, IMAX */
