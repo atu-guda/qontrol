@@ -184,8 +184,13 @@ void MglView::mousePressEvent( QMouseEvent *me )
       update();
       break;
     case Qt::RightButton:
-      return QWidget::mousePressEvent( me );
-      // break;
+      {
+        QMenu *menu = createPopupMenu();
+        menu->exec( mapToGlobal( QPoint( mouse_x, mouse_y ) ) );
+        delete menu;
+      }
+      break;
+      // return QWidget::mousePressEvent( me );
     case Qt::MidButton:
       return QWidget::mousePressEvent( me );
       // break;
@@ -193,6 +198,50 @@ void MglView::mousePressEvent( QMouseEvent *me )
       break;
   };
 
+}
+
+QMenu* MglView::createPopupMenu()
+{
+  auto menu = new QMenu( this );
+
+  QAction *act;
+
+  act = menu->addAction( QSL("&Reset scale") );
+  connect( act, &QAction::triggered, this, &MglView::resetScale );
+  act = menu->addAction( QSL("set &Base") );
+  connect( act, &QAction::triggered, this, &MglView::markToBase );
+  menu->addSeparator();
+
+  act = menu->addAction( QSL("&Zoom base-mark") );
+  connect( act, &QAction::triggered, this, &MglView::zoom );
+  act = menu->addAction( QSL("reset z&oom") );
+  connect( act, &QAction::triggered, this, &MglView::zoomReset );
+  act = menu->addAction( QSL("Set sca&le") );
+  connect( act, &QAction::triggered, this, &MglView::setScale );
+  act = menu->addAction( QSL("Save scale") );
+  connect( act, &QAction::triggered, this, &MglView::saveScale );
+  menu->addSeparator();
+
+  act = menu->addAction( QSL("Print") );
+  connect( act, &QAction::triggered, this, &MglView::print );
+  act = menu->addAction( QSL("&Export") );
+  connect( act, &QAction::triggered, this, &MglView::exportPlot );
+  act = menu->addAction( QSL("&Info") );
+  connect( act, &QAction::triggered, this, &MglView::showInfo );
+  act = menu->addAction( QSL("&Help") );
+  connect( act, &QAction::triggered, this, &MglView::showHelp );
+  menu->addSeparator();
+
+  act = menu->addAction( QSL("&Toggle plot") );
+  connect( act, &QAction::triggered, this, &MglView::togglePlot );
+  act = menu->addAction( QSL("Toggle &All plots") );
+  connect( act, &QAction::triggered, this, &MglView::toggleAllPlots );
+  act = menu->addAction( QSL("Link to plot") );
+  connect( act, &QAction::triggered, this, &MglView::linkToPlot );
+  act = menu->addAction( QSL("Toggle labels") );
+  connect( act, &QAction::triggered, this, &MglView::toggleLabels );
+
+  return menu;
 }
 
 void MglView::keyPressEvent( QKeyEvent *ke )

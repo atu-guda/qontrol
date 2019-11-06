@@ -157,7 +157,7 @@ void StructView::printAll()
 
   QPrinter *pr = MAINWIN->getPrinter();
   if( !pr ) {
-    qWarning() << "Printer not found!";
+    qWarning() << QSL("Printer not found!");
     return;
   }
 
@@ -275,7 +275,7 @@ void StructView::drawAll( QPainter &p )
   ElemInfo ei, sei;
   for( auto ob : sch->TCHILD(TMiso*) ) {
     if( ! fill_elmInfo( ob, ei ) ) {
-      qWarning() << "Fail fo fill info for " << ob->getFullName() << WHE;
+      qWarning() << QSL("Fail fo fill info for ") << ob->getFullName() << WHE;
       continue;
     }
     line_busy = 0;
@@ -544,7 +544,7 @@ void StructView::drawAll( QPainter &p )
   if( outs_view ) {
     ContOut *outs = qobject_cast<ContOut*>( outs_view->getStorage() );
     if( !outs ) {
-      qWarning() << "not found 'outs' in model"  << WHE;
+      qWarning() << QSL("not found 'outs' in model")  << WHE;
     } else {
       auto sel_mod = outs_view->currentIndex();
       int sel_out = sel_mod.row();
@@ -621,36 +621,34 @@ void StructView::drawAll( QPainter &p )
 
 int StructView::checkState( CheckType ctp )
 {
-  QString msg;
-  int state;
   if( !sch ) {
-    handleError( this, "Scheme is absent!" );
+    handleError( this, QSL("Scheme is absent!") );
     return 0;
   };
+
+  QString msg;
   switch( ctp ) {
     case validCheck: break;
     case selCheck:
                      if( !selObj )
-                       msg = "You must select object to do this";
+                       msg = QSL("You must select object to do this");
                      break;
     case linkToCheck:
                      if( !selObj || !markObj || level < 0 )
-                       msg = "You need selected and marked objects to link";
+                       msg = QSL("You need selected and marked objects to link");
                      break;
     case noselCheck: if( selObj != nullptr )
-                       msg = "You heed empty sell to do this";
+                       msg = QSL("You heed empty sell to do this");
                      break;
     case moveCheck: if( selObj != nullptr || !markObj )
-                      msg = "You need marked object and empty cell to move";
+                      msg = QSL("You need marked object and empty cell to move");
                     break;
     case doneCheck:
-                    state = sch->getState();
-                    if( state < stateDone ) {
-                      msg = QString("Nothing to plot: state '%1', not 'Done' !").arg(
-                          getStateString(state)  );
+                    if( auto state = sch->getState(); state < stateDone ) {
+                      msg = QSL("Nothing to plot: state '%1', not 'Done' !").arg( getStateString(state) );
                     };
                     break;
-    default: msg = "Unknown check?";
+    default: msg = QSL("Unknown check?");
   };
   if( ! msg.isEmpty() ) {
     handleWarn( this, msg );
@@ -690,16 +688,16 @@ void StructView::qlinkElm()
 
   auto inputs =  selObj->TCHILD(InputSimple*);
   if( ! isGoodIndex( level, inputs ) ) {
-    qWarning() << "bad level " << level << " to link " << selObj->getFullName() << WHE;
+    qWarning() << QSL("bad level ") << level << QSL(" to link ") << selObj->getFullName() << WHE;
     return;
   }
   InputSimple *in = inputs[ level ];
   if( ! in ) {
-    qWarning() << "in == nullptr in " << selObj->getFullName() << WHE;
+    qWarning() << QSL("in == nullptr in ") << selObj->getFullName() << WHE;
     return;
   }
   if( ! in->setData( QSL("source"), toname ) ) {
-    qWarning() << "fail to set source " << toname << " in " << in->getFullName() << WHE;
+    qWarning() << QSL("fail to set source ") << toname << QSL(" in ") << in->getFullName() << WHE;
     return;
   }
   sch->reportStructChanged();
@@ -710,7 +708,7 @@ void StructView::qlinkElm()
 
 void StructView::qplinkElm()
 {
-  qWarning() << "No good way to implement, sorry" << WHE;
+  qWarning() << QSL("No good way to implement, sorry") << WHE;
 }
 
 void StructView::unlinkElm()
@@ -922,7 +920,7 @@ void StructView::mousePressEvent( QMouseEvent *me )
     elmname = ob->getFullName();
     // double outval = ob->getDataD( QSL("out0"), 0.0 );
     if( elmname.isEmpty() ) {
-      elmname = "?unknown?";
+      elmname = QSL("?unknown?");
     }
   };
 
@@ -949,31 +947,32 @@ void StructView::mousePressEvent( QMouseEvent *me )
 QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
 {
   auto menu = new QMenu( this );
-  QAction *act;
   (void) menu->addSeparator();
   if( title.isEmpty() ) {
-    (void) menu->addSection( "  ** Empty **  ");
+    (void) menu->addSection( QSL("  ** Empty **  ") );
   } else {
     (void) menu->addSection( title );
   }
+
+  QAction *act;
   if( has_elem ) {
     menu->addSeparator();
-    act = menu->addAction( QIcon::fromTheme("document-properties"), "&Edit element" );
+    act = menu->addAction( QIcon::fromTheme( QSL("document-properties") ), QSL("&Edit element") );
     connect( act, &QAction::triggered, this, &StructView::editObj );
     if( !scheme_ro ) {
-      act = menu->addAction( QIcon::fromTheme("list-remove"), "&Delete element" );
+      act = menu->addAction( QIcon::fromTheme( QSL("list-remove") ), QSL("&Delete element") );
       connect( act, &QAction::triggered, this, &StructView::delObj );
       menu->addSeparator();
-      act = menu->addAction( QIcon::fromTheme("edit-rename"), "Rename element" );
+      act = menu->addAction( QIcon::fromTheme( QSL("edit-rename")), QSL("Rename element") );
       connect( act, &QAction::triggered, this, &StructView::renameObj );
       if( markObj ) {
         menu->addSeparator();
-        act = menu->addAction( QIcon::fromTheme("insert-link"), "&Link" );
+        act = menu->addAction( QIcon::fromTheme( QSL("insert-link") ), QSL("&Link") );
         connect( act, &QAction::triggered, this, &StructView::qlinkElm );
       }
     }
     menu->addSeparator();
-    act = menu->addAction( QIcon::fromTheme( QSL("edit-copy") ), "&Copy" );
+    act = menu->addAction( QIcon::fromTheme( QSL("edit-copy") ), QSL("&Copy") );
     connect( act, &QAction::triggered, this, &StructView::copyObj );
     act = menu->addAction( QIcon( QSL(":icons/edit-clone.png") ), QSL("Clone") );
     connect( act, &QAction::triggered, this, &StructView::cloneObj );
@@ -989,13 +988,13 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
     menu->addSeparator();
   } else {
     if( !scheme_ro ) {
-      act = menu->addAction( QIcon::fromTheme("list-add"), QSL("&New element") );
+      act = menu->addAction( QIcon::fromTheme( QSL("list-add") ), QSL("&New element") );
       connect( act, &QAction::triggered, this, &StructView::addObj );
       if( markObj ) {
         act = menu->addAction( QSL("&Move to") );
         connect( act, &QAction::triggered, this, &StructView::moveElm );
       }
-      act = menu->addAction( QIcon::fromTheme("edit-paste"), QSL("&Paste") );
+      act = menu->addAction( QIcon::fromTheme( QSL("edit-paste") ), QSL("&Paste") );
       connect( act, &QAction::triggered, this, &StructView::pasteObj );
     }
   };
@@ -1004,7 +1003,7 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
   if( outs_view ) {
     menu->addSeparator();
     act = menu->addAction( QIcon( QSL(":icons/newout.png") ), QSL("New outp&ut") );
-    connect( act, SIGNAL(triggered()), outs_view, SLOT(addObj()) );
+    connect( act, SIGNAL(triggered()), outs_view, SLOT(addObj()) ); // TODO: new connect &::
   }
   if( par->isMainWin() ) {
     menu->addSeparator();
@@ -1013,7 +1012,7 @@ QMenu* StructView::createPopupMenu( const QString &title, bool has_elem )
   }
 
   menu->addSeparator();
-  act = menu->addAction( QIcon::fromTheme("document-print"),"Print scheme" );
+  act = menu->addAction( QIcon::fromTheme( QSL("document-print") ), QSL("Print scheme") );
   connect( act, &QAction::triggered, this, &StructView::print );
 
   return menu;
@@ -1027,9 +1026,9 @@ void StructView::mouseDoubleClickEvent( QMouseEvent * /*me*/ )
 
 void StructView::keyPressEvent( QKeyEvent *ke )
 {
-  int k, /*h, w, nh, nw,*/ st, btnShift, /*btnCtrl,*/ xy_delta;
-  k = ke->key(); st = ke->modifiers();
-  btnShift = ( ( st & Qt::ShiftModifier ) != 0 );
+  auto k = ke->key();
+  auto st = ke->modifiers();
+  bool btnShift = ( ( st & Qt::ShiftModifier ) != 0 );
   QString title;
   if( selObj ) {
     title = selObj->getFullName();
@@ -1039,7 +1038,7 @@ void StructView::keyPressEvent( QKeyEvent *ke )
   // w = width();
   // nh = h / grid_sz - 1;
   // nw = w / grid_sz - 1;
-  xy_delta = btnShift ? 5 : 1;
+  int xy_delta = btnShift ? 5 : 1;
   switch( k ) {
     case Qt::Key_Return: editObj(); break; // to catch both keys
     case Qt::Key_Home:  changeSel( 0, 0, 0 ); break;
@@ -1082,7 +1081,7 @@ StructSubwin::StructSubwin( QWidget *a_par, LaboDoc *a_doc, Scheme *a_sch )
   scrollArea->setFrameStyle( QFrame::Box | QFrame::Sunken );
 
   sview = new StructView( this, a_sch );
-  vmap["sview"] = sview;
+  vmap[ QSL("sview") ] = sview;
 
   scrollArea->setWidget( sview );
   setCentralWidget( scrollArea );

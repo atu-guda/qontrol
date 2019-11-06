@@ -89,6 +89,7 @@ class MglView : public QWidget  {
    QSize getSize0() const;
    void drawFooter( QPainter &p );
    void setMarkToLink();
+   QMenu* createPopupMenu();
  protected:
    TGraph *gra;
    ViewData vd;
