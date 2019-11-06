@@ -46,7 +46,7 @@ class TFileSimple : public TMiso  {
 
    PRM_STRING( filename,     0, "File name"   , "Input file name"          , "" );
    PRM_STRING(      sep, efNRC, "Separator"   , "Input field separator"    , "def= " );
-   PRM_DOUBLE(   findex, efNRC, "File index"  , "value to substitute in file name", "" );
+   PRM_PARAMD(   findex, efNRC, "File index"  , "value to substitute in file name", "" );
    PRM_INT(     index_w, efNRC, "Index width" , "Number of digits in index", "def=2" );
 
    PRM_INT( skipBefore, efNRC, "Skip before", "Number of lines to skip before run", "min=0\ndef=0\nsep=col" );
