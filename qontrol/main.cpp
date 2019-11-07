@@ -283,7 +283,12 @@ void appMsgOut( QtMsgType type, const QMessageLogContext & /*ctx*/, const QStrin
   if( type > QtFatalMsg ) {
     type = QtCriticalMsg;
   }
-  QByteArray lm = QByteArray(msgStr[type]) + ' ' + msg.toLocal8Bit() + '\n';
+
+  if( msg.startsWith( QSL("QXcb") ) ) {
+    return;
+  }
+
+  QByteArray lm = QByteArray( msgStr[type] ) + ' ' + msg.toLocal8Bit() + '\n';
   //      + "(" + ctx.file + ":" + QByteArray::number(ctx.line) + ", " + ctx.function + '\n';
   cerr << lm.constData();
   log_app.append( lm );
