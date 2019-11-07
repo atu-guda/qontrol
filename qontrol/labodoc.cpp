@@ -87,7 +87,7 @@ bool LaboDoc::openDocument( const QString &filename )
 {
   QFile file( filename );
   if( !file.open( QFile::ReadOnly) ) {
-    handleError( MAINWIN, QSL("Cannot read file %1: %2.").arg( filename, file.errorString() ) );
+    HANDLE_ERROR_W( MAINWIN, QSL("Cannot read file %1: %2.").arg( filename, file.errorString() ) );
     return false;
   }
   QTextStream in( &file );
@@ -102,9 +102,9 @@ bool LaboDoc::openDocument( const QString &filename )
   int err_line, err_column;
 
   if( ! dd.setContent( &xml_src, &xml_reader, &errstr, &err_line, &err_column ) ) {
-    handleError( MAINWIN, tr("Cannot parse file %1:\n%2\nLine %3 column %4.")
+    HANDLE_ERROR_W( MAINWIN, QSL("Cannot parse file %1:\n%2\nLine %3 column %4.")
                          .arg( filename, errstr, QSN(err_line), QSN(err_column) ) );
-    m_filename = "";
+    m_filename = QSL("");
     return false;
   }
   QDomElement domroot = dd.documentElement();
@@ -121,7 +121,7 @@ bool LaboDoc::openDocument( const QString &filename )
         obj_root = ee;
         break;
       }
-      handleError( MAINWIN, QSL("Bad first element: %1 %2 ").arg( tagname, elname ) );
+      HANDLE_ERROR_W( MAINWIN, QSL("Bad first element: %1 %2 ").arg( tagname, elname ) );
       return false;
     }
     cnode = cnode.nextSibling();
@@ -142,7 +142,7 @@ bool LaboDoc::openDocument( const QString &filename )
   if( ! read_ok ) {
     delete rootdata;
     rootdata = nullptr;
-    handleError( MAINWIN, QSL("Fail to parse file: ") % filename % " : " % errstr );
+    HANDLE_ERROR_W( MAINWIN, QSL("Fail to parse file: ") % filename % " : " % errstr );
     return false;
   }
 
@@ -198,7 +198,7 @@ bool LaboDoc::saveDocument( bool forceNewName )
 
   QSaveFile file( fn );
   if ( ! file.open( QFile::WriteOnly )) {
-    handleError( mwin, tr("Cannot write file %1:\n%2.").arg( fn, file.errorString() ) );
+    HANDLE_ERROR_W( MAINWIN, QSL("Cannot write file %1:\n%2.").arg( fn, file.errorString() ) );
     return false;
   }
   auto perms =  file.permissions() | QFileDevice::ReadUser | QFileDevice::WriteUser;
@@ -214,7 +214,7 @@ bool LaboDoc::saveDocument( bool forceNewName )
   QApplication::restoreOverrideCursor();
 
   if( ! file.commit() ) {
-    handleError( mwin, tr("Cannot write file %1:\n%2.").arg( fn, file.errorString() ) );
+    HANDLE_ERROR_W( MAINWIN, QSL("Cannot write file %1:\n%2.").arg( fn, file.errorString() ) );
     return false;
   }
 

@@ -20,6 +20,7 @@
 #include <QPrintDialog>
 
 #include "miscfun.h"
+#include "prog_opts.h"
 #include "structview.h"
 #include "doubletable.h"
 #include "labowin.h"
@@ -622,7 +623,7 @@ void StructView::drawAll( QPainter &p )
 int StructView::checkState( CheckType ctp )
 {
   if( !sch ) {
-    handleError( this, QSL("Scheme is absent!") );
+    HANDLE_ERROR( QSL("Scheme is absent!") );
     return 0;
   };
 
@@ -651,7 +652,7 @@ int StructView::checkState( CheckType ctp )
     default: msg = QSL("Unknown check?");
   };
   if( ! msg.isEmpty() ) {
-    handleWarn( this, msg );
+    HANDLE_WARN( msg );
     return 0;
   };
   return 1;

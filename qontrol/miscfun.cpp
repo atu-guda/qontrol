@@ -471,21 +471,6 @@ void beautifyScale( double &a, double &b )
 
 // ------------- for iface ---------------------------------------
 
-void handleError( QWidget* par, const QString &s )
-{
-  qCritical() << s << WHE; // TODO: macros
-  if( ! prog_opts.batch ) {
-    QMessageBox::critical( par, PACKAGE ": Error", s,  QMessageBox::Ok );
-  }
-}
-
-void handleWarn( QWidget* par, const QString &s )
-{
-  qWarning() << s << WHE; // TODO: macros
-  if( ! prog_opts.batch ) {
-    QMessageBox::warning( par, PACKAGE ": Warning", s,  QMessageBox::Ok );
-  }
-}
 
 bool confirmDelete( QWidget *par, const QString &obj, const QString &nm )
 {

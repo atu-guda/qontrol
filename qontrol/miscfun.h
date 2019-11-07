@@ -201,11 +201,32 @@ int splitNameNum( const QString &nm, QString &bname );
 
 // ------------- for iface ---------------------------------------
 
-void handleError( QWidget* par, const QString &s );
-void handleWarn( QWidget* par, const QString &s );
+// void handleError( QWidget* par, const QString &s );
+// void handleWarn( QWidget* par, const QString &s );
 bool confirmDelete( QWidget *par, const QString &obj, const QString &nm );
 bool editObj( QWidget *par, HolderData *obj );
 bool showTree( QWidget *par, HolderData *obj );
+
+#define HANDLE_ERROR(s) { \
+  qCritical() << (s) << WHE; \
+  if( ! prog_opts.batch ) { \
+    QMessageBox::critical( this, PACKAGE ": Error", (s), QMessageBox::Ok ); \
+  } \
+}
+
+#define HANDLE_ERROR_W(w,s) { \
+  qCritical() << (s) << WHE; \
+  if( ! prog_opts.batch ) { \
+    QMessageBox::critical( (w), PACKAGE ": Error", (s), QMessageBox::Ok ); \
+  } \
+}
+
+#define HANDLE_WARN(s) { \
+  qWarning() << (s) << WHE; \
+  if( ! prog_opts.batch ) { \
+    QMessageBox::critical( this, PACKAGE ": Error", (s), QMessageBox::Ok ); \
+  } \
+}
 
 QString getClipboardStr();
 bool    setClipboardStr( const QString &s );

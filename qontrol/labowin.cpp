@@ -21,6 +21,7 @@
 #include <QTextEdit>
 
 #include "miscfun.h"
+#include "prog_opts.h"
 #include "laboview.h"
 #include "structview.h"
 #include "labodoc.h"
@@ -758,13 +759,13 @@ void LaboWin::slotFileSaveAs()
   statusBar()->showMessage( QSL( "Saving model file under new filename..." ) );
   LaboView* m =  qobject_cast<LaboView*>( activeView() );
   if( !m ) {
-    handleError( this, QSL("Fail to find active window while saving file!") );
+    HANDLE_ERROR( QSL("Fail to find active window while saving file!") );
     return;
   }
 
   LaboDoc* doc = m->getDocument();
   if( !doc ) {
-    handleError( this, QSL("Fail to get document!") );
+    HANDLE_ERROR(  QSL("Fail to get document!") );
     return;
   }
 
@@ -947,7 +948,7 @@ void LaboWin::slotLogSave()
   if ( !fn.isEmpty() ) {
     QFile of( fn );
     if( ! of.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-      handleError( this, QSL("Fail to open file \"") % fn % QSL("\"") );
+      HANDLE_ERROR( QSL("Fail to open file \"") % fn % QSL("\"") );
       return;
     }
     QTextStream os( &of );

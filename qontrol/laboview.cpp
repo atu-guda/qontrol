@@ -20,6 +20,7 @@
 
 
 // application specific includes
+#include "prog_opts.h"
 #include "miscfun.h"
 #include "laboview.h"
 #include "labodoc.h"
@@ -501,7 +502,7 @@ void LaboView::runRun()
 {
   Simulation *sim = sims->getActiveObjT<Simulation*>();
   if( !sim ) {
-    handleError( this, QSL("No active simulations") );
+    HANDLE_ERROR( QSL("No active simulations") );
     return;
   }
 

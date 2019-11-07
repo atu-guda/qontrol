@@ -21,6 +21,7 @@
 #include <QPrintDialog>
 
 #include "miscfun.h"
+#include "prog_opts.h"
 #include "labowin.h"
 #include "toutarr.h"
 #include "tgraph.h"
@@ -688,7 +689,7 @@ void MglView::exportPlot()
 
   if( ! timg.save( fn, "PNG", 50 ) ) {
     QString err = strerror( errno );
-    handleError( this, QSL("Fail fo save picture file: \"%1\": %2").arg( fn, err ) );
+    HANDLE_ERROR( QSL("Fail fo save picture file: \"%1\": %2").arg( fn, err ) );
   }
 
 }

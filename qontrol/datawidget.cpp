@@ -10,6 +10,7 @@
 #include <QInputDialog>
 
 #include "miscfun.h"
+#include "prog_opts.h"
 #include "datawidget.h"
 #include "longvalidator.h"
 #include "labowin.h"
@@ -1634,15 +1635,14 @@ bool DataDialog::pasteOne() // like CmdView::pasteObj() TODO: move common code
   QString errstr;
   QDomDocument x_dd;
   if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
-    handleWarn( this, tr("Cannot parse clipboard string:\n%2\nLine %3 column %4.")
-                .arg(errstr).arg(err_line).arg(err_column) );
+    HANDLE_WARN( QSL( "Cannot parse clipboard string:\n%2\nLine %3 column %4.").arg(errstr).arg(err_line).arg(err_column) );
     return false;
   }
   QDomElement ee = x_dd.documentElement();
 
   QString tagname = ee.tagName();
   // if( tagname != "obj" ) {
-  //   handleWarn( this, tr("element tag is not 'obj':  %2").arg( tagname ) );
+  //   HANDLE_WARN( QSL("element tag is not 'obj':  %2").arg( tagname ) );
   //   return false;
   // }
 
@@ -1651,7 +1651,7 @@ bool DataDialog::pasteOne() // like CmdView::pasteObj() TODO: move common code
   oname = ds.hintName( otype, oname );
 
   bool ok;
-  oname = QInputDialog::getText( this, "Object: " + oname,
+  oname = QInputDialog::getText( this, QSL("Object: ") + oname,
       QSL("Enter new name (type ") % otype % QSL("):"), QLineEdit::Normal, oname, &ok );
   if( !ok ) {
     return false;
@@ -1659,11 +1659,11 @@ bool DataDialog::pasteOne() // like CmdView::pasteObj() TODO: move common code
 
   HolderData *ob = ds.addObjP( otype, oname );
   if( !ob  ) {
-    handleError( this, QString("Fail to add Obj: %1 %2").arg(otype).arg(oname) );
+    HANDLE_ERROR( QSL("Fail to add Obj: %1 %2").arg(otype).arg(oname) );
     return false;
   }
   if( !ob->fromDom( ee, errstr ) ) {
-    handleWarn( this, tr("fail to set params:  %1").arg( errstr ) );
+    HANDLE_WARN( QSL("fail to set params:  %1").arg( errstr ) );
   }
   reactBigChanges();
   return true;
