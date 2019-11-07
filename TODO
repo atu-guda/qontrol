@@ -1,9 +1,8 @@
-main.cpp: common args split code
+DatasInfo -> vector of DataInfo
 BUG: old value holded for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
 BUG: object button may change place in dialog: may by uncontrolled order?
 Info dialog: copy all to clipboard <Tab>, <NL>
 Snapshots of objects data: auto at end, + controlled: use by plots...
-RightClick menu in mglview
 Y-label in MGL: better place
 Filters: generic, Butter, cheb ....
 Object wide link?
@@ -25,7 +24,6 @@ List of presets for element.
 Named constants in links
 Fix/limit props on object load/create?
 String props: filename, (+local)
-post_parm_set.
 flag: post_set on parent with wait?
 TTrigger and TRandTrigger redesign.
 TIntegrator2: + combine TVibro, TFriction?
