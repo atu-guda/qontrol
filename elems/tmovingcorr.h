@@ -70,8 +70,9 @@ class TMovingCorr : public TMiso  {
    PRM_DOUBLE(  ave_y2, efInner, "aver_y2", "aver(y^2)", "" );
    PRM_DOUBLE(   n_sam, efInner,   "n_sam", "Number of samples", "" );
 
-   PRM_INPUT(     in_x,       0, "in_{&x}", "First input",  "sep=block" );
-   PRM_INPUT(     in_y,       0, "in_{&y}", "Second input", "sep=col" );
+   PRM_INPUT(     in_x,       0, "in_{&x}",      "First input",  "sep=block" );
+   PRM_INPUT(     in_y,       0, "in_{&y}",     "Second input", "" );
+   PRM_LOGICIN( in_ena,       0,      "en", "Signal to enable",  "sep=col\ndef=1" );
 
    // ring arrays
    TCircBuf             a_x,  a_x2,  a_y,  a_y2 , a_xy;

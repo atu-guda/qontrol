@@ -71,6 +71,10 @@ int TMovingCorr::do_postRun( int /*good*/ )
 
 double TMovingCorr::f() noexcept
 {
+  if( ! in_ena ) {
+    return a;
+  }
+
   double x = in_x, y = in_y;
 
   if( on_start ) {
