@@ -247,15 +247,16 @@ QMenu* MglView::createPopupMenu()
 
 void MglView::keyPressEvent( QKeyEvent *ke )
 {
-  constexpr int Sh = 0x40000000;
-  constexpr int Ct = 0x80000000;
-  int k = ke->key(), st = ke->modifiers();
+  constexpr unsigned Sh = 0x40000000;
+  constexpr unsigned Ct = 0x80000000;
+  unsigned k = ke->key(), st = ke->modifiers();
   if( st & Qt::ShiftModifier ) {
       k |= Sh;
   }
   if( st & Qt::ControlModifier ) {
       k |= Ct;
   }
+  // qWarning(  "k= %08X st= %08X, r= %08X", k, st, (Qt::Key_Minus | Sh ) );
 
   switch( k ) {
     case Qt::Key_F1:
@@ -387,6 +388,7 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       setYmag( mag_step, true );
       break;
     case Qt::Key_Minus | Sh:
+    case 0x40002212 :
       setYmag( 1.0/mag_step, true );
       break;
     case Qt::Key_Plus | Ct:
