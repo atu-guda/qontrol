@@ -16,6 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <array>
 
 #include <circbuf.h>
 #include <tmiso.h>
@@ -45,38 +46,38 @@ class TMovingCorr : public TMiso  {
    int calc();
 
    /* ============= data members ================== */
-   PRM_PARAMD(      tw,   efNRC, "tw", "Window time", "def=1\nmin=1e-6" );
-   PRM_DOUBLE(     slp,   efNRC, "Sleep part", "Part of tw to mute outputs", "def=0.5\nmin=0" );
-   PRM_SWITCH(  diff_x,   efNRC,  "diff x", "Calc dx/dt", "sep=col" );
-   PRM_SWITCH(  diff_y,   efNRC,  "diff y", "Calc dy/dt", "" );
-   PRM_INT(         ok, efInner, "ok", "ok state", "" );
+   PRM_PARAMD(      tw,   efNRC, QSL("tw"), QSL("Window time"), QSL("def=1\nmin=1e-6") );
+   PRM_DOUBLE(     slp,   efNRC, QSL("Sleep part"), QSL("Part of tw to mute outputs"), QSL("def=0.5\nmin=0") );
+   PRM_SWITCH(  diff_x,   efNRC,  QSL("diff x"), QSL("Calc dx/dt"), QSL("sep=col") );
+   PRM_SWITCH(  diff_y,   efNRC,  QSL("diff y"), QSL("Calc dy/dt"), QSL("") );
+   PRM_INT(         ok, efInner, QSL("ok"), QSL("ok state"), QSL("") );
    /** collectors, out values */
-   PRM_DOUBLE(     s_x, efInner, "s_x", "sum(x)", "" );
-   PRM_DOUBLE(    s_x2, efInner, "s_x2", "sum(x^2)", "" );
-   PRM_DOUBLE(     s_y, efInner, "s_y", "sum(y)", "" );
-   PRM_DOUBLE(    s_y2, efInner, "s_y2", "sum(x^2)", "" );
-   PRM_DOUBLE(    s_xy, efInner, "s_xy", "sum(x*y)", "" );
-   PRM_DOUBLE(       a, efInner, "a", "a coefficient", "" );
-   PRM_DOUBLE(       b, efInner, "b", "b coefficient", "" );
-   PRM_DOUBLE(    corr, efInner, "corr", "coefficient of correlation", "" );
-   PRM_DOUBLE(     cov, efInner, "cov", "coefficient of covariation", "" );
-   PRM_DOUBLE(   dis_x, efInner, "dis_x", "x dispersion", "" );
-   PRM_DOUBLE(   dis_y, efInner, "dis_y", "y dispersion", "" );
-   PRM_DOUBLE( sigma_x, efInner, "sigma_x", "sigma(x)", "" );
-   PRM_DOUBLE( sigma_y, efInner, "sigma_y", "sigma(y)", "" );
-   PRM_DOUBLE(   ave_x, efInner, "aver_x", "aver(x)", "" );
-   PRM_DOUBLE(   ave_y, efInner, "aver_y", "aver(y)", "" );
-   PRM_DOUBLE(  ave_x2, efInner, "aver_x2", "aver(x^2)", "" );
-   PRM_DOUBLE(  ave_y2, efInner, "aver_y2", "aver(y^2)", "" );
-   PRM_DOUBLE(   n_sam, efInner,   "n_sam", "Number of samples", "" );
+   PRM_DOUBLE(     s_x, efInner, QSL("s_x"), QSL("sum(x)"), QSL("") );
+   PRM_DOUBLE(    s_x2, efInner, QSL("s_x2"), QSL("sum(x^2)"), QSL("") );
+   PRM_DOUBLE(     s_y, efInner, QSL("s_y"), QSL("sum(y)"), QSL("") );
+   PRM_DOUBLE(    s_y2, efInner, QSL("s_y2"), QSL("sum(x^2)"), QSL("") );
+   PRM_DOUBLE(    s_xy, efInner, QSL("s_xy"), QSL("sum(x*y)"), QSL("") );
+   PRM_DOUBLE(       a, efInner, QSL("a"), QSL("a coefficient"), QSL("") );
+   PRM_DOUBLE(       b, efInner, QSL("b"), QSL("b coefficient"), QSL("") );
+   PRM_DOUBLE(    corr, efInner, QSL("corr"), QSL("coefficient of correlation"), QSL("") );
+   PRM_DOUBLE(     cov, efInner, QSL("cov"), QSL("coefficient of covariation"), QSL("") );
+   PRM_DOUBLE(   dis_x, efInner, QSL("dis_x"), QSL("x dispersion"), QSL("") );
+   PRM_DOUBLE(   dis_y, efInner, QSL("dis_y"), QSL("y dispersion"), QSL("") );
+   PRM_DOUBLE( sigma_x, efInner, QSL("sigma_x"), QSL("sigma(x)"), QSL("") );
+   PRM_DOUBLE( sigma_y, efInner, QSL("sigma_y"), QSL("sigma(y)"), QSL("") );
+   PRM_DOUBLE(   ave_x, efInner, QSL("aver_x"), QSL("aver(x)"), QSL("") );
+   PRM_DOUBLE(   ave_y, efInner, QSL("aver_y"), QSL("aver(y)"), QSL("") );
+   PRM_DOUBLE(  ave_x2, efInner, QSL("aver_x2"), QSL("aver(x^2)"), QSL("") );
+   PRM_DOUBLE(  ave_y2, efInner, QSL("aver_y2"), QSL("aver(y^2)"), QSL("") );
+   PRM_DOUBLE(   n_sam, efInner,   QSL("n_sam"), QSL("Number of samples"), QSL("") );
 
-   PRM_INPUT(     in_x,       0, "in_{&x}",      "First input",  "sep=block" );
-   PRM_INPUT(     in_y,       0, "in_{&y}",     "Second input", "" );
-   PRM_LOGICIN( in_ena,       0,      "en", "Signal to enable",  "sep=col\ndef=1" );
+   PRM_INPUT(     in_x,       0, QSL("in_{&x}"),      QSL("First input"),  QSL("sep=block") );
+   PRM_INPUT(     in_y,       0, QSL("in_{&y}"),     QSL("Second input"), QSL("") );
+   PRM_LOGICIN( in_ena,       0,      QSL("en"), QSL("Signal to enable"),  QSL("sep=col\ndef=1") );
 
    // ring arrays
    TCircBuf             a_x,  a_x2,  a_y,  a_y2 , a_xy;
-   TCircBuf *bufs[5] { &a_x, &a_x2, &a_y, &a_y2, &a_xy }; // is std::reference_wrapper better?
+   std::array<TCircBuf*, 5> bufs { &a_x, &a_x2, &a_y, &a_y2, &a_xy }; // is std::reference_wrapper better?
 
    double x_old {0.0}, y_old {0.0}, slpt {0.0};
    bool on_start { true };
