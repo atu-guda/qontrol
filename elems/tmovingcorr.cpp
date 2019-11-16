@@ -32,15 +32,13 @@ CTOR(TMovingCorr,TMiso)
 
 void TMovingCorr::reset_data()
 {
-  ok = 0;
-  corr = cov = a = b = dis_x = dis_y = a = b = corr = cov = 0;
+  corr = cov = dis_x = dis_y = corr = cov = 0;
   sigma_x = sigma_y = 0;
   ave_x = ave_y = ave_x2 = ave_y2 = 0;
   s_x = s_x2 = s_y = s_y2 = s_xy = 0;
   x_old = y_old = 0; on_start = true;
-  slpt = slp * tw;
-  for( auto a : bufs ) {
-   a->reset();
+  for( auto bu : bufs ) {
+    bu->reset();
   }
 }
 
@@ -48,18 +46,16 @@ void TMovingCorr::reset_data()
 int TMovingCorr::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   auto imd = size_t( ceil( tw / ctdt ) );
-  for( auto a : bufs ) {
-   a->resize( imd, 0.0 );
+  for( auto bu : bufs ) {
+    bu->resize( imd, 0.0 );
   }
+  ok = 0;
+  slpt = slp * tw;
+  a = out0_init; b = 0;
   reset_data();
   return 1;
 }
 
-
-int TMovingCorr::do_preRun()
-{
-  return 1;
-}
 
 int TMovingCorr::do_postRun( int /*good*/ )
 {
@@ -71,6 +67,13 @@ int TMovingCorr::do_postRun( int /*good*/ )
 
 double TMovingCorr::f() noexcept
 {
+  if( in_rst ) {
+    if( !on_start ) {
+      reset_data();
+    }
+    return a;
+  }
+
   if( ! in_ena ) {
     return a;
   }
@@ -105,7 +108,7 @@ double TMovingCorr::f() noexcept
 
 int TMovingCorr::calc()
 {
-  a = out0_init.cval(); b = corr = 0; ok = 0;
+  corr = 0; ok = 0;
   auto n = a_x.getN();
   if( n < 1 ) {
     return 0;
