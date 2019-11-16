@@ -35,7 +35,7 @@ double TSwitch::f() noexcept
   if( fabs(step) < D_AZERO ) { step = D_AZERO; }
   in_all = in_s + in_s1  + in_s2 - level_0;
   double vn = clamp( in_all / step, 0.0, double(n_max) );
-  int n = int( vn );
+  unsigned n = unsigned( vn );
   n_cur = n;
 
   double v;
