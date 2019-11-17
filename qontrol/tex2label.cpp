@@ -3,7 +3,7 @@
                           some TeX commands to HTML subset for QLabel
                              -------------------
     begin                : 2015.01.15
-    copyright            : GPL (C) 2015-2016 by atu
+    copyright            : GPL (C) 2015-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 #include <list>
@@ -92,6 +92,11 @@ const TexCodeChar tex_cc[] = {
   { "times",         0x00D7 },
   { "to",            0x2192 },
   { "twosuperior",   0x00B2 },
+  { "Ohm",           0x2126 },
+  { "dagger",        0x2020 },
+  { "ldots",         0x2026 },
+  { "No",            0x2116 },
+  { "quad",          0x2003 },
 
   { "arrow",         0x2192 },
   { "Arrow",         0x21D2 },
@@ -228,6 +233,10 @@ QString tex2label( const QString &t, bool noSub )
           r += c; estate = false; break;
         case ' ':
           r += QChar( 0x0080 );  break;
+        case ';':
+          r += QChar( 0x2005 );  break;
+        case ',':
+          r += QChar( 0x200A );  break;
         default:
           r += '?';  break;
       }
