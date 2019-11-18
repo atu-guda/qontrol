@@ -16,3 +16,5 @@ tmp/
 w0.txt
 *.wav
 *.plist
+.kdev4/
+qontrol.kdev4
