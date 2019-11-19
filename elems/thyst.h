@@ -33,7 +33,7 @@ class THyst : public TMiso  {
       ht_sAlphaD = 0, ht_alphaD, ht_thetaD, ht_signD,
       ht_tanhAlphaD, ht_tanhSAlphaD
    };
-   Q_ENUMS(HystType);
+   Q_ENUM(HystType);
    Q_CLASSINFO( "enum_HystType_0", "s+\\alpha*d"       );   // ht_sAlphaD
    Q_CLASSINFO( "enum_HystType_1", "\\alpha*d"         );   // ht_alphaD
    Q_CLASSINFO( "enum_HystType_2", "\\Theta(d)"        );   // ht_thetaD

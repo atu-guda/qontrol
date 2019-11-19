@@ -35,7 +35,7 @@ class TExtrLatch : public TMiso  {
    enum ExtrType {
      extrMax, extrMin, extrModMax, extrAver, extrAmpl
    };
-   Q_ENUMS(ExtrType);
+   Q_ENUM(ExtrType);
    Q_CLASSINFO( "enum_ExtrType_0", "Max" );        // extrMax
    Q_CLASSINFO( "enum_ExtrType_1", "Min" );        // extrMin
    Q_CLASSINFO( "enum_ExtrType_2", "Max||" );      // extrModMax

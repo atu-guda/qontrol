@@ -33,7 +33,7 @@ class TThrum : public TMiso  {
    enum ListType {
      lt_first = 0, lt_second, lt_3rd, lt_fourth, lt_more
    };
-   Q_ENUMS(ListType);
+   Q_ENUM(ListType);
    Q_CLASSINFO( "enum_ListType_0", "First" );   // lt_first
    Q_CLASSINFO( "enum_ListType_1", "Second" );  // lt_second
    Q_CLASSINFO( "enum_ListType_2", "3-rd" );    // lt_3rd

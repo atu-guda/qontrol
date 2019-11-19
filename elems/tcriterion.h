@@ -34,7 +34,7 @@ class TCriterion : public TMiso  {
    enum CritType {
      cr_mod_less = 0, cr_mod_greate, cr_less, cr_greate, cr_between
    };
-   Q_ENUMS(CritType);
+   Q_ENUM(CritType);
    Q_CLASSINFO( "enum_CritType_0", "|x|<a" );    // cr_mod_less
    Q_CLASSINFO( "enum_CritType_1", "|x|>a" );    // cr_mod_greate
    Q_CLASSINFO( "enum_CritType_2", "x<a" );      // cr_less

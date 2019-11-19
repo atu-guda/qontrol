@@ -33,7 +33,7 @@ class TQSearcher : public TMiso  {
    enum PeType {
      pe_q3p = 0, pe_Fquad, pe_FCog, pe_qquad
    };
-   Q_ENUMS(PeType);
+   Q_ENUM(PeType);
    Q_CLASSINFO( "enum_PeType_0",  "ql"     );  // pe_q3p
    Q_CLASSINFO( "enum_PeType_1",  "Fq"     );  // pe_Fquad
    Q_CLASSINFO( "enum_PeType_2",  "Fc"     );  // pe_FCog
@@ -42,7 +42,7 @@ class TQSearcher : public TMiso  {
    enum FeType {
      fe_lin = 0, fe_sign, fe_lim
    };
-   Q_ENUMS(FeType);
+   Q_ENUM(FeType);
    Q_CLASSINFO( "enum_FeType_0",  "Linear"       );    // fe_lin
    Q_CLASSINFO( "enum_FeType_1",  "Sign"         );    // fe_sign
    Q_CLASSINFO( "enum_FeType_2",  "u"            );    // fe_lim
@@ -50,7 +50,7 @@ class TQSearcher : public TMiso  {
    enum FeFactorType {
      fef_Se = 0, fef_one, fef_F, fef_Se3, fef_W
    };
-   Q_ENUMS(FeFactorType);
+   Q_ENUM(FeFactorType);
    Q_CLASSINFO( "enum_FeFactorType_0",  "Se1"     );  // fef_Se
    Q_CLASSINFO( "enum_FeFactorType_1",  "o"       );  // fef_one
    Q_CLASSINFO( "enum_FeFactorType_2",  "F"       );  // fef_F
@@ -60,14 +60,14 @@ class TQSearcher : public TMiso  {
    enum FnType {
      fn_lin = 0, fn_log
    };
-   Q_ENUMS(FnType);
+   Q_ENUM(FnType);
    Q_CLASSINFO( "enum_FnType_0",  "Linear"       );    // fn_lin
    Q_CLASSINFO( "enum_FnType_1",  "Log"          );    // fn_log
 
    enum QualType { // keep in sinc with miscfun.h::QualFunType
      qa_Gauss = 0, qa_Para, qa_Lin, qa_Hyper, qa_Log
    };
-   Q_ENUMS(QualType);
+   Q_ENUM(QualType);
    Q_CLASSINFO( "enum_QualType_0",  "Gauss"       );    // qa_Gauss
    Q_CLASSINFO( "enum_QualType_1",  "Parabola"    );    // qa_Para
    Q_CLASSINFO( "enum_QualType_2",  "Linear"      );    // qa_Lin
@@ -77,7 +77,7 @@ class TQSearcher : public TMiso  {
    enum FSOutType {
      fso_FcSe = 0, fso_FcSe3, fso_Se3, fso_Fc
    };
-   Q_ENUMS(FSOutType);
+   Q_ENUM(FSOutType);
    Q_CLASSINFO( "enum_FSOutType_0",  "FcSe"       );    // fso_FcSe
    Q_CLASSINFO( "enum_FSOutType_1",  "FcSe3"      );    // fso_FcSe3
    Q_CLASSINFO( "enum_FSOutType_2",  "Se3"        );    // fso_Se3

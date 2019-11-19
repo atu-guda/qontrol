@@ -48,7 +48,7 @@ double TMulsumN::f() noexcept
   {
     double f_max = DMIN, p_max = DMIN;
     int i_max = -1, i = 0;
-    for( auto pt : pf_ins ) {
+    for( auto pt : qAsConst(pf_ins) ) {
       double p = *( pt.in_p );
       double f = *( pt.in_f );
       sp += p;
@@ -59,7 +59,7 @@ double TMulsumN::f() noexcept
       }
       ++i;
     }
-    if( fabs( sf ) > D_AZERO ) { // COG global esimations
+    if( fabs( sf ) > D_AZERO ) { // COG global estimations
       pge = spf / sf;
     } else {
       pge = sp / n; // fallback value: average
@@ -103,7 +103,7 @@ int TMulsumN::do_preRun()
   QMap<int,ChInSim2> ipairs;
   pf_ins.clear();
   np = 0;
-  for( auto in_ptr : inps_s ) {
+  for( auto in_ptr : qAsConst( inps_s ) ) {
     if( !in_ptr ) {
       continue;
     }
@@ -119,7 +119,7 @@ int TMulsumN::do_preRun()
   }
   // qWarning() << "ipairs.size= " << ipairs.size() << " max_ch" << max_ch << NWHE;
 
-  for( auto pt : ipairs ) {
+  for( auto pt : qAsConst( ipairs ) ) {
     if( pt.in_p != nullptr &&  pt.in_f != nullptr ) {
       pf_ins.append( pt );
     }

@@ -31,15 +31,14 @@ class TAdjGen : public TMiso  {
    DCL_CREATE;
    DCL_STD_INF;
    enum GenType { gen_def=0, gen_mai, gen_dual };
-   Q_ENUMS(GenType);
+   Q_ENUM(GenType);
    Q_CLASSINFO( "enum_GenType_0", "Default" );                 // gen_def
    Q_CLASSINFO( "enum_GenType_1", "MAI" );                     // gen_mai
    Q_CLASSINFO( "enum_GenType_2", "Dual(\\omega,\\omega_2)" ); // gen_dual
  protected:
-   /** main computation function */
    virtual double f() noexcept override;
    /** reimplemented from TMiso to reset */
-   virtual int miso_startLoop( long acnx, long acny );
+   virtual int miso_startLoop( long acnx, long acny ) override;
 
    /** type of averaging, */
    PRM_LIST( type, efNRC, "&Type", "Type of generator", "enum=GenType" );

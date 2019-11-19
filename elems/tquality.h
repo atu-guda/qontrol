@@ -35,7 +35,7 @@ class TQuality : public TMiso  {
    enum QualType { // keep in sinc with miscfun.h::QualFunType
      qa_Gauss = 0, qa_Para, qa_Lin, qa_Hyper, qa_Log
    };
-   Q_ENUMS(QualType);
+   Q_ENUM(QualType);
    Q_CLASSINFO( "enum_QualType_0",  "Gauss"       );    // qa_Gauss
    Q_CLASSINFO( "enum_QualType_1",  "Parabola"    );    // qa_Para
    Q_CLASSINFO( "enum_QualType_2",  "Linear"      );    // qa_Lin

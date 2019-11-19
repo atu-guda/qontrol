@@ -33,7 +33,7 @@ class TTrigger : public TMiso  {
    enum TriggType {
      tr_rs = 0, tr_shmitt, tr_crise, tr_cdown, tr_clev
    };
-   Q_ENUMS(TriggType);
+   Q_ENUM(TriggType);
    Q_CLASSINFO( "enum_TriggType_0", "RS"            ); // tr_rs
    Q_CLASSINFO( "enum_TriggType_1", "(X)"           ); // tr_shmitt -- really in_x
    Q_CLASSINFO( "enum_TriggType_2", "CountRise(X)"  ); // tr_crise

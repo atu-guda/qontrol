@@ -34,7 +34,7 @@ class TRandTrigg : public TMiso  {
    enum SeedType {
      everyRun = 0, startLoop, start2DLoop, asModel
    };
-   Q_ENUMS(SeedType);
+   Q_ENUM(SeedType);
    Q_CLASSINFO( "enum_SeedType_0", "Every Run" );               // everyRun
    Q_CLASSINFO( "enum_SeedType_1", "On start on 1D loop" );     // startLoop
    Q_CLASSINFO( "enum_SeedType_2", "On start on 2D loop" );     // start2DLoop

@@ -207,7 +207,7 @@ int TFileSource::readLines( int ltr )
     // qWarning() << "Split: [" << lba.size() << "] " << lba << " c=" << (int)sep_c <<  NWHE;
     int i = 0, nr = 0;
     pv[ncl].reset();
-    for( auto s : lba ) {
+    for( const auto &s : lba ) {
       bool ok;
       double a = s.toDouble( &ok );
       if( ok ) {

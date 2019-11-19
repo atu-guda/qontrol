@@ -55,7 +55,7 @@ class TExtrTest : public TMiso  {
      ft_Wave,
      ft_Easom
    };
-   Q_ENUMS(FuncType);
+   Q_ENUM(FuncType);
    Q_CLASSINFO( "enum_FuncType_0",  "Ackley"          );    // ft_Ackley
    Q_CLASSINFO( "enum_FuncType_1",  "Quartic"         );    // ft_Quartic
    Q_CLASSINFO( "enum_FuncType_2",  "Griewangk"       );    // ft_Griewangk

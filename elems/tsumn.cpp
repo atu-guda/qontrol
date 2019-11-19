@@ -31,7 +31,7 @@ CTOR(TSumN,TMiso)
 double TSumN::f() noexcept
 {
   double r = 0;
-  for( auto i : inps_s ) {
+  for( auto i : qAsConst( inps_s ) ) {
     r += static_cast<double>(*i);
   }
 

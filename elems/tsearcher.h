@@ -35,7 +35,7 @@ class TSearcher : public TMiso  {
      fg_diff,
      fg_a1
    };
-   Q_ENUMS(F_g_Type);
+   Q_ENUM(F_g_Type);
    Q_CLASSINFO( "enum_F_g_Type_0",  "p_e based"            );    // fg_p_e
    Q_CLASSINFO( "enum_F_g_Type_1",  "dF/dp based"          );    // fg_diff
    Q_CLASSINFO( "enum_F_g_Type_2",  "a1 based"             );    // fg_diff

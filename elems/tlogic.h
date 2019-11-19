@@ -33,7 +33,7 @@ class TLogic : public TMiso  {
    enum LogicType {
      logAnd = 0, logOr, logXor, logU0, logZero, logOne, logEq
    };
-   Q_ENUMS(LogicType);
+   Q_ENUM(LogicType);
    Q_CLASSINFO( "enum_LogicType_0", "AND" );   // logAnd
    Q_CLASSINFO( "enum_LogicType_1", "OR" );    // logOr
    Q_CLASSINFO( "enum_LogicType_2", "XOR" );   // logXor

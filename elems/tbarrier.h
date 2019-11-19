@@ -41,7 +41,7 @@ class TBarrier : public TMiso  {
      bt_Hyp2UpUp,
      bt_Hyp2UpDown
    };
-   Q_ENUMS(BarrierType);
+   Q_ENUM(BarrierType);
    Q_CLASSINFO( "enum_BarrierType_0",  "HyperbolicUp"      );    // bt_HypUp
    Q_CLASSINFO( "enum_BarrierType_1",  "HyperbolicDown"    );    // bt_HypDown
    Q_CLASSINFO( "enum_BarrierType_2",  "HyperbolicUpUp"    );    // bt_HypUpUp

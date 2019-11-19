@@ -36,7 +36,7 @@ class TSource : public TMiso  {
      so_theta, so_raise, so_saw, so_saw2, so_chaos_wave, // = 9
      so_triangle, so_phase, so_pulse, so_pwm, so_ladder // = 14
    };
-   Q_ENUMS(SourceType);
+   Q_ENUM(SourceType);
    Q_CLASSINFO( "enum_SourceType_0",  "U*sin(\\omega*t+\\phi)" );           // so_sin
    Q_CLASSINFO( "enum_SourceType_1",  "U*sign(sin(\\omega*t+\\phi))" );     // so_sign
    Q_CLASSINFO( "enum_SourceType_2",  "U*t/T*sin(\\omega*t+\\phi)" );       // so_sin_raise
@@ -57,7 +57,7 @@ class TSource : public TMiso  {
    enum SeedType {
      everyRun = 0, startLoop, start2DLoop, asModel
    };
-   Q_ENUMS(SeedType);
+   Q_ENUM(SeedType);
    Q_CLASSINFO( "enum_SeedType_0", "Every Run" );               // everyRun
    Q_CLASSINFO( "enum_SeedType_1", "On start on 1D loop" );     // startLoop
    Q_CLASSINFO( "enum_SeedType_2", "On start on 2D loop" );     // start2DLoop

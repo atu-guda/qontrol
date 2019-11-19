@@ -36,7 +36,7 @@ class TFuncTrans : public TMiso  {
      ft_1Mexp1Msin2, ft_expM2d, ft_divMod,
      ft_expMod, ft_sinh, ft_cosh, ft_expm1
    };
-   Q_ENUMS(FuncType);
+   Q_ENUM(FuncType);
    Q_CLASSINFO( "enum_FuncType_0",  "a*sin(b*y)+g"                         ); //  ft_sin
    Q_CLASSINFO( "enum_FuncType_1",  "a*sign(sin(b*y)+c)+g"                 ); //  ft_signSin
    Q_CLASSINFO( "enum_FuncType_2",  "a*tanh(by)+g"                         ); //  ft_tanh

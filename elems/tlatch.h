@@ -33,7 +33,7 @@ class TLatch : public TMiso  {
    enum LatchType {
      latchTime = 0, latchSignal
    };
-   Q_ENUMS(LatchType);
+   Q_ENUM(LatchType);
    Q_CLASSINFO( "enum_LatchType_0", "Time" );        // latchTime
    Q_CLASSINFO( "enum_LatchType_1", "in_latch" );   // latchSignal
 

@@ -38,7 +38,7 @@ class TFileSource : public TMiso  {
    enum InterpolateType {
      step = 0, linear
    };
-   Q_ENUMS(InterpolateType);
+   Q_ENUM(InterpolateType);
    Q_CLASSINFO( "enum_InterpolateType_0", "Step" );       // step
    Q_CLASSINFO( "enum_InterpolateType_1", "Linear" );     // linear
    struct LineData {

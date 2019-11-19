@@ -30,7 +30,7 @@ class TCorrAnalysis : public TMiso  {
    DCL_CREATE;
    DCL_STD_INF;
    enum CallType { call_all = 0, call_time, call_u2 };
-   Q_ENUMS(CallType);
+   Q_ENUM(CallType);
    Q_CLASSINFO( "enum_CallType_0", "All" );     // call_all
    Q_CLASSINFO( "enum_CallType_1", "t0<t<t1" ); // call_time
    Q_CLASSINFO( "enum_CallType_2", "in_add>0" );// call_u2

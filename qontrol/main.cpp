@@ -396,10 +396,10 @@ bool parse_cmdline( QApplication &app )
 
   if( prog_opts.dbg > 0 ) {
     cerr << "dbg = " << prog_opts.dbg << endl;
-    cerr << "Found options:" << endl;
-    for( const auto &nm : prs.optionNames() ) {
-      cerr << qP(nm) << ' ';
-    }
+    // cerr << "Found options:" << endl;
+    // for( const auto &nm : prs.optionNames() ) {
+    //   cerr << qP(nm) << ' ';
+    // }
     cerr << endl;
   }
 

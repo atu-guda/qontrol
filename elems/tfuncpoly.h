@@ -35,7 +35,7 @@ class TFuncPoly : public TMiso  {
      ft_vibro, ft_msquare, ft_xExp, ft_lin2, ft_linAbs,
      ft_pow4, ft_pow5, ft_pow, ft_pows, ft_hypot4, ft_muldiv, ft_mulsum
    };
-   Q_ENUMS(FuncType);
+   Q_ENUM(FuncType);
    Q_CLASSINFO( "enum_FuncType_0", "a*y+g"                                 ); // ft_lin
    Q_CLASSINFO( "enum_FuncType_1", "a*y^2+b*y+g"                           ); // ft_square
    Q_CLASSINFO( "enum_FuncType_2", "a*y^3+b*y^2+c*y+g"                     ); // ft_cube

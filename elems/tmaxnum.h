@@ -33,7 +33,7 @@ class TMaxNum : public TMiso  {
    enum ExtrType {
       et_MAX = 0, et_MIN, et_MAXMOD, et_MINMOD
    };
-   Q_ENUMS(ExtrType);
+   Q_ENUM(ExtrType);
    Q_CLASSINFO( "enum_ExtrType_0", "MAX"       );   // et_MAX
    Q_CLASSINFO( "enum_ExtrType_1", "MIN"       );   // et_MIN
    Q_CLASSINFO( "enum_ExtrType_2", "MAX||"     );   // et_MAXMOD

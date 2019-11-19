@@ -37,7 +37,7 @@ class TRand : public TMiso  {
      dt_cauchy, dt_chisq, dt_erlang, dt_fdist, dt_gamma, dt_levy, dt_logistic,
      dt_lognorm, dt_pareto, dt_rayleigh, dt_weibull, dt_none
    };
-   Q_ENUMS(DistrType);
+   Q_ENUM(DistrType);
    Q_CLASSINFO( "enum_DistrType_0" , "flat(-\\sigma,\\sigma)"   ); // dt_flat
    Q_CLASSINFO( "enum_DistrType_1" , "gaussian(\\sigma)"        ); // dt_gauss
    Q_CLASSINFO( "enum_DistrType_2" , "gaussian_tail(a,\\sigma)" ); // dt_gausstail
@@ -61,7 +61,7 @@ class TRand : public TMiso  {
    enum SeedType {
      everyRun = 0, startLoop, start2DLoop, asModel
    };
-   Q_ENUMS(SeedType);
+   Q_ENUM(SeedType);
    Q_CLASSINFO( "enum_SeedType_0", "Every Run" );               // everyRun
    Q_CLASSINFO( "enum_SeedType_1", "On start on 1D loop" );     // startLoop
    Q_CLASSINFO( "enum_SeedType_2", "On start on 2D loop" );     // start2DLoop

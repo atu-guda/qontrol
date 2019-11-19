@@ -55,7 +55,7 @@ int TFileSimple::readLine() noexcept
     QList<QByteArray> lba = lin.split( sep_c );
     // qWarning() << "Split: [" << lba.size() << "] " << lba << " c=" << (int)sep_c <<  NWHE;
     int i = 0;
-    for( auto s : lba ) {
+    for( const auto &s : lba ) {
       bool ok;
       double a = s.toDouble( &ok );
       if( ok ) {

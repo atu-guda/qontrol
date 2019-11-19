@@ -36,7 +36,7 @@ class TFuncMisc : public TMiso  {
      ft_threeState, ft_triangle, ft_reactLine, ft_2slope, ft_div, ft_int,
      ft_frac, ft_aasin, ft_erf, ft_min, ft_max, ft_2slopeEx, ft_copysign, ft_clamp, ft_switch
    };
-   Q_ENUMS(FuncType);
+   Q_ENUM(FuncType);
    Q_CLASSINFO( "enum_FuncType_0",  "a*deadLine(y,b)+c*y+g"      );    // ft_deadLine
    Q_CLASSINFO( "enum_FuncType_1",  "a*limitLine(y,b)+c*y+g"     );    // ft_limitLine
    Q_CLASSINFO( "enum_FuncType_2",  "a*deadLimitLine(y,b,c,d)+g" );    // ft_dealLimitLine
