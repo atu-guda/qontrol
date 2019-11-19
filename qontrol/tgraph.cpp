@@ -140,7 +140,7 @@ LineRole GraphElem::fillForPlot( long &g_nn, long &g_ny, int igc )
 
   QString extra_c;
   if( noColor ) {
-    extra_c = extra;
+    extra_c = extra.cval();
   } else {
     extra_c = color2style( i_cc, lw, extra );
   }

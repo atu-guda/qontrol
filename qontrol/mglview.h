@@ -47,6 +47,7 @@ class MglView : public QWidget  {
    ~MglView();
    virtual QSize sizeHint() const override;
    QString getInfo( bool more = false ) const;
+   int getSelNum() const { return vd.sel; }
 
  public Q_SLOTS:
    void resetScale();
@@ -71,7 +72,6 @@ class MglView : public QWidget  {
    void linkToPlot();
    void unlinkFromPlot();
    void nextPointInPlot( int step = 1 );
-   int getSelNum() const { return vd.sel; }
    void toggleLabels();
 
  Q_SIGNALS:
@@ -117,7 +117,6 @@ class MglSubwin : public CommonSubwin {
    ~MglSubwin();
    virtual bool callSlot( const char *nm ) override;
    virtual bool checkSlot( const char *nm ) override;
-  public Q_SLOTS:
    virtual int getLevel() const override;
   protected:
    MglView *mview = nullptr;

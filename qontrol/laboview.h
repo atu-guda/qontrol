@@ -71,6 +71,7 @@ class LaboView : public CommonSubwin
 
    virtual bool callSlot( const char *nm ) override;
    virtual bool checkSlot( const char *nm ) override;
+   virtual int getLevel() const override;
 
  Q_SIGNALS:
    void viewChanged();
@@ -132,8 +133,6 @@ class LaboView : public CommonSubwin
    int runModelScript();
    void initEngine();
 
-   /** returns level for aux objects selection */
-   virtual int getLevel() const override;
 
  public:
    /** returns document model */

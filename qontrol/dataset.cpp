@@ -2397,7 +2397,7 @@ void HolderIntArray::reset_dfl()
 
     int i = 0;
     bool ok;
-    for( auto cs : sl ) {
+    for( const auto &cs : sl ) {
       int vc = cs.toInt( &ok, 0 ); // 0 = auto base
       if( ok ) {
         v[i] = vc;

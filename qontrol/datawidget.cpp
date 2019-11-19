@@ -1640,7 +1640,7 @@ bool DataDialog::pasteOne() // like CmdView::pasteObj() TODO: move common code
   }
   QDomElement ee = x_dd.documentElement();
 
-  QString tagname = ee.tagName();
+  // QString tagname = ee.tagName();
   // if( tagname != "obj" ) {
   //   HANDLE_WARN( QSL("element tag is not 'obj':  %2").arg( tagname ) );
   //   return false;
@@ -1659,7 +1659,7 @@ bool DataDialog::pasteOne() // like CmdView::pasteObj() TODO: move common code
 
   HolderData *ob = ds.addObjP( otype, oname );
   if( !ob  ) {
-    HANDLE_ERROR( QSL("Fail to add Obj: %1 %2").arg(otype).arg(oname) );
+    HANDLE_ERROR( QSL("Fail to add Obj: %1 %2").arg( otype, oname ) );
     return false;
   }
   if( !ob->fromDom( ee, errstr ) ) {

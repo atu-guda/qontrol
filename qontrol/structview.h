@@ -153,7 +153,6 @@ class StructSubwin : public CommonSubwin {
    ~StructSubwin();
    virtual bool callSlot( const char *nm ) override;
    virtual bool checkSlot( const char *nm ) override;
-  public Q_SLOTS:
    virtual int getLevel() const override;
   protected:
    QScrollArea *scrollArea = nullptr; // null only for correct layout create

@@ -1,3 +1,4 @@
+# qmake-qt5 -spec linux-clang QMAKE_CXX="clazy"
 QT += core widgets xml script printsupport multimedia
 TEMPLATE = app
 TARGET = qontrol
@@ -5,10 +6,12 @@ CONFIG += c++17 release warn_on qt thread
 #CONFIG += c++14 debug warn_on qt thread
 CONFIG += no-keywords
 CONFIG += qscintilla2
+
 QMAKE_CXXFLAGS += -g3  -std=gnu++17
 #QMAKE_CXXFLAGS += -g3  -std=gnu++17 -DQT_NO_CAST_FROM_ASCII=1
 #QMAKE_CXXFLAGS += -fgnu-keywords -fext-numeric-literals # -fPIC
 #CONFIG += debug warn_on qt thread
+
 OBJECTS_DIR=.obj
 MOC_DIR=.moc
 
