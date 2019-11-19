@@ -431,7 +431,7 @@ QVariant InputAbstract::dataObj( int col, int role ) const
 QString InputAbstract::prepTextVisual( bool isLong ) const
 {
   bool isScaled = ( fabs(factor-1) > D_AZERO ) || ( fabs(shift) > D_AZERO );
-  QString s = isScaled ? QSL("!") : QSL("");
+  QString s = isScaled ? QSL("!") : QES;
 
   int lt  = linkType;
   switch( lt ) {

@@ -60,6 +60,7 @@ constexpr const char *const data_files_sel  { "Data files (*.txt *.dat *.csv);;A
 #define QSND(n) QString::number((n),'g',DOUBLE_PREC)
 #define QSNL(n,l) QString::number((n),'g',l)
 #define QSL QStringLiteral
+#define QES QString()
 
 #define SCRIPT_DIR "scripts"
 #define LIB_DIR    "lib"

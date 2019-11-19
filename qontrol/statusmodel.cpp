@@ -69,7 +69,7 @@ StatusModel::StatusModel( CommonSubwin *a_up_view )
 void StatusModel::update()
 {
   l_level->setText( QSN( up_view->getLevel() ) );
-  l_name->setText( QSL(".") );  l_desc->setText( QSL(".") );  l_val->setText( QSL("") );
+  l_name->setText( QSL(".") );  l_desc->setText( QSL(".") );  l_val->setText( QES );
 
   LaboDoc *doc = up_view->getDocument();
   if( !doc ) {

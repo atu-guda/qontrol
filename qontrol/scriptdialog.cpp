@@ -149,7 +149,7 @@ void ScriptDialog::run()
 
 void ScriptDialog::runModelScript()
 {
-  QString s = model->getDataD( QSL("script"), QSL("") );
+  QString s = model->getDataD( QSL("script"), QES );
   runScr( s );
 }
 

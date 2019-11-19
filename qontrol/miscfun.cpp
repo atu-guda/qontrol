@@ -140,7 +140,7 @@ QString flags2str( int fl ) // TODO: common code
 {
   static const char *elem_flag_names[elm_known_flags+1]
     { "MR", "NRC", "ND", "ROD", "NS", "RO", "St", "Im", "Pp", "SS", "?10" };
-  QString s { QSL("") }, sep { QSL("") };
+  QString s, sep;
   for( int j=0; j<elm_known_flags; j++ ) {
     if( fl & ( 1 << j ) ) {
       s += sep % elem_flag_names[j];

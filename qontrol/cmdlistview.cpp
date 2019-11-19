@@ -126,7 +126,7 @@ void CmdListView::init_base_actions()
   lv->addAction( a );
   connect( a, SIGNAL(triggered()), this, SLOT(showTreeObj()) );
 
-  a = new QAction( QSL(""), this ); a->setSeparator( true );
+  a = new QAction( QES, this ); a->setSeparator( true );
   lv->addAction( a );
 
   connect( lv, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editObj()) );

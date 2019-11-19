@@ -40,19 +40,19 @@ class TSwitch : public TMiso  {
    PRM_DOUBLE( in_all, efInner, QSL("in_{all}"),    QSL("summ of all inputs - level_0"),  "" );
 
    PRM_INPUT( in_0,          0, QSL("in_{&0}"), QSL("Input 0"),  QSL("sep=block") );
-   PRM_INPUT( in_1,          0, QSL("in_{&1}"), QSL("Input 1"),  QSL("") );
+   PRM_INPUT( in_1,          0, QSL("in_{&1}"), QSL("Input 1"),  QES );
    PRM_INPUT( in_2,          0, QSL("in_{&2}"), QSL("Input 2"),  QSL("sep=col") );
-   PRM_INPUT( in_3,          0, QSL("in_{&1}"), QSL("Input 3"),  QSL("") );
+   PRM_INPUT( in_3,          0, QSL("in_{&1}"), QSL("Input 3"),  QES );
    PRM_INPUT( in_4,          0, QSL("in_{&4}"), QSL("Input 4"),  QSL("sep=col") );
-   PRM_INPUT( in_5,          0, QSL("in_{&5}"), QSL("Input 5"),  QSL("") );
+   PRM_INPUT( in_5,          0, QSL("in_{&5}"), QSL("Input 5"),  QES );
    PRM_INPUT( in_6,          0, QSL("in_{&6}"), QSL("Input 6"),  QSL("sep=col") );
-   PRM_INPUT( in_7,          0, QSL("in_{&7}"), QSL("Input 7"),  QSL("") );
+   PRM_INPUT( in_7,          0, QSL("in_{&7}"), QSL("Input 7"),  QES );
    //
    PRM_INPUT( in_s,          0, QSL("&in_{s}"), QSL("switch input"),   QSL("sep=block") );
    PRM_INPUT( in_s1,         0, QSL("in_{s1}"), QSL("switch input 1"), QSL("sep=col")  );
    PRM_INPUT( in_s2,         0, QSL("in_{s2}"), QSL("switch input 2"), QSL("sep=col")  );
 
-   PRM_DOUBLE( x2, efInner, QSL("x^2"), QSL("Squared output"), QSL("") );
+   PRM_DOUBLE( x2, efInner, QSL("x^2"), QSL("Squared output"), QES );
 
    Q_CLASSINFO( "nameHintBase",  "swi_" );
    DCL_DEFAULT_STATIC;

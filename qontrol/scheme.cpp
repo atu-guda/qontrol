@@ -185,7 +185,7 @@ int Scheme::do_preRun()
 {
   end_loop = 0;
   obj_brk = nullptr;
-  breakObjNm = QSL("");
+  breakObjNm = QES;
   return 1;
 }
 

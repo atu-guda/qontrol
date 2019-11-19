@@ -131,7 +131,7 @@ QString CommonSubwin::getSelNameInFocus() const
 {
   CmdView *cv = getFocusedCmdView();
   if( !cv ) {
-    return QSL("");
+    return QES;
   }
   return cv->getSelName();
 }

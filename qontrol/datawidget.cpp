@@ -64,7 +64,7 @@ static const int MAX_WIDGETS_PER_COL  = 16;
 
 DataWidget::DataWidget( HolderData &h, QWidget *parent, bool hideLabel )
   : QFrame( parent ), ho( h ), main_w( nullptr ),
-    lbl( new DataLabel( h, QSL(""), this ) )
+    lbl( new DataLabel( h, QES, this ) )
 {
   DataDialog *ddia = nullptr; // find DataDialog among parents
   for( QObject *par = parent; par; par = par->parent() ) {
@@ -1263,7 +1263,7 @@ InputDataWidget::InputDataWidget( HolderData &h, QWidget *parent, bool hideLabel
 
 bool InputDataWidget::obj2vis()
 {
-  QString s = ho.getDataD( QSL("source"), QSL("") );
+  QString s = ho.getDataD( QSL("source"), QES );
   le->setText( s );
   // other is done by ObjDataWidget::edit
   return true;
@@ -1285,7 +1285,7 @@ void InputDataWidget::lineToObj()
 
 void InputDataWidget::objToLine()
 {
-  QString s = ho.getDataD(  QSL("source"), QSL("") );
+  QString s = ho.getDataD(  QSL("source"), QES );
   le->setText( s );
 }
 

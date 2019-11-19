@@ -203,7 +203,7 @@ void NameAndParamsDialog::setupUi()
   auto lbl_sep = new QLabel( QSL("End current"), this );
   lay_ex->addWidget( lbl_sep );
   lws = new QComboBox( this );
-  lws->addItem( QSL("None"), QSL("") );
+  lws->addItem( QSL("None"), QES );
   lws->addItem( QSL("Column"), QSL("\nsep=col") );
   lws->addItem( QSL("Column after"), QSL("\nsep=col") );
   lws->addItem( QSL("Row"), QSL("\nsep=row") );

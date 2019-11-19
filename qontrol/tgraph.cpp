@@ -608,7 +608,7 @@ QVariant TGraph::dataObj( int col, int role ) const
 
 QString TGraph::textVisual() const
 {
-  QString s { QSL("[") }, sep { QSL("") };
+  QString s { QSL("[") }, sep;
   for( auto ge : TCHILD(GraphElem*) ) {
     if( ge->type == GraphElem::DataType::DataNone ) { continue; }
     s += sep % ge->src.cval();

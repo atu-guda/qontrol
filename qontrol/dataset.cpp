@@ -2471,7 +2471,7 @@ QString HolderIntArray::toString() const
 
 QString HolderIntArray::textVisual() const
 {
-  QString s { QSL("[ ") }, sep { QSL("") };
+  QString s { QSL("[ ") }, sep;
   for( auto vc : v ) {
     s += sep + QSN( vc );
     sep = QSL(", ");
@@ -2611,7 +2611,7 @@ QString HolderDoubleArray::toString() const
 
 QString HolderDoubleArray::textVisual() const
 {
-  QString s { QSL("[ ") }, sep { QSL("") };
+  QString s { QSL("[ ") }, sep;
   for( auto vc : v ) {
     s += sep + QSND( vc );
     sep = QSL(", ");
@@ -2744,7 +2744,7 @@ QString HolderStringArray::toString() const
 
 QString HolderStringArray::textVisual() const
 {
-  QString s { QSL("[ ") }, sep { QSL("") };
+  QString s { QSL("[ ") }, sep;
   for( const auto &vc : qAsConst( v ) ) {
     s += sep % QSL("\"") % vc  % QSL("\"");
     if( sep.isEmpty() ) {

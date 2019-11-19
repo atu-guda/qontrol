@@ -724,14 +724,14 @@ void StructView::unlinkElm()
 
   for( InputSimple *in : selObj->TCHILD(InputSimple*) ) {
     if( ! in ) {   continue;  }
-    in->setData( QSL("source"), QSL("") );
+    in->setData( QSL("source"), QES );
   }
 
   for( ParamDouble *pin : selObj->TCHILD(ParamDouble*) ) {
     if( ! pin ) { continue; }
     auto lt = pin->getLinkType();
     if( lt != LinkNone ) {
-      pin->setData( QSL("source"), QSL("") );
+      pin->setData( QSL("source"), QES );
     }
   }
 

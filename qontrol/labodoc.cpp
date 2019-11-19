@@ -104,7 +104,7 @@ bool LaboDoc::openDocument( const QString &filename )
   if( ! dd.setContent( &xml_src, &xml_reader, &errstr, &err_line, &err_column ) ) {
     HANDLE_ERROR_W( MAINWIN, QSL("Cannot parse file %1:\n%2\nLine %3 column %4.")
                          .arg( filename, errstr, QSN(err_line), QSN(err_column) ) );
-    m_filename = QSL("");
+    m_filename = QES;
     return false;
   }
   QDomElement domroot = dd.documentElement();

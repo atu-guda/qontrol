@@ -41,7 +41,7 @@ CTOR(TOutArr,LinkedObj)
 
 QVariant TOutArr::dataObj( int col, int role ) const
 {
-  const QString &nm = name.getDataD( QSL("source"), QSL("") ) ; //.cval();
+  const QString &nm = name.getDataD( QSL("source"), QES ) ; //.cval();
   if( role == Qt::BackgroundRole ) {
     if( col != 0 ) {
       return TDataSet::dataObj( col, role );

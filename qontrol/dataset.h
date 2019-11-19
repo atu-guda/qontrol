@@ -328,7 +328,7 @@ class HolderData : public QAbstractItemModel {
   //* returns this object index in parent or -1 on no [my] parent
   Q_INVOKABLE int getMyIndexInParent() const;
   Q_INVOKABLE QString childName( unsigned long n ) const
-    { return ( n<size() ) ? children().at( n )->objectName() : QSL(""); }
+    { return ( n<size() ) ? children().at( n )->objectName() : QES; }
   //* return strings for given enum
   Q_INVOKABLE QStringList getEnumStrings( const QString &enum_name ) const;
   //* return list strings for current object
@@ -435,7 +435,7 @@ class HolderData : public QAbstractItemModel {
   int cvtCount = 0; //* increased after every fromDom
   QSSMap parms;
   QStringList list_strings;
-  QString allowed_types = QSL(""); // separator=','
+  QString allowed_types = QES; // separator=','
   Q_CLASSINFO( "nameHintBase",  "holder_" );
   DCL_DEFAULT_STATIC;
 };

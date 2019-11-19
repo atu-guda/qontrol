@@ -174,7 +174,7 @@ int batch_process( const QString &model_file )
         const QStringList pc = nm.split( ':' );
         if( pc.size() < 1 ) { continue; }
         const QString gname = pc[0];
-        const QString gfile = ( pc.size() > 1 ) ? pc[1] : QSL(""); // means: use hintFileName()
+        const QString gfile = ( pc.size() > 1 ) ? pc[1] : QES; // means: use hintFileName()
         cerr << qP( gname ) << "\" file: \"" << qP( gfile ) << "\" .";
         model->plotToPng( gname, gfile );
         cerr << ".. DONE" << endl;
