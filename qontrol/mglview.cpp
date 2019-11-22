@@ -709,29 +709,32 @@ QString MglView::getInfo( bool more ) const
   mglPoint mark_point = scd->getMark();
   mglPoint base_point = scd->getBase();
   mglPoint rel_p = mark_point - base_point;
-  double kyx = 0.0, kzx = 0.0;
+  double kyx = 0.0, byx = 0.0, kzx = 0.0, bzx = 0.0;
   if( fabs( rel_p.x )  > D_EPS ) {
     kyx = rel_p.y / rel_p.x;
+    byx = mark_point.y - kyx * mark_point.x;
     kzx = rel_p.z / rel_p.x;
+    bzx = mark_point.z - kzx * mark_point.x;
   }
 
   QString s = QSL( "mark: ") % toQString( mark_point )
-     % "  base: " % toQString( base_point ) % nl1
-     % "  rel: " % toQString( rel_p ) % " kyx: " % QSN( kyx ) % " kzx: " % QSN( kzx )
-     % "  [ " % QSN( vd.nx ) % " x " % QSN( vd.ny ) % " ]"
+     % QSL("  base: ") % toQString( base_point ) % nl1
+     % QSL("  rel: ") % toQString( rel_p )
+     % QSL(" kyx: ") % QSN( kyx ) % QSL( " byx= " ) % QSN( byx )
+     % QSL(" kzx: ") % QSN( kzx ) % QSL( " bzx= " ) % QSN( bzx )
+     % QSL("  [ ") % QSN( vd.nx ) % QSL(" x ") % QSN( vd.ny ) % QSL(" ]")
      % nl
-     // % "vis: " % toQString( vd.pv_min ) % " - " % toQString( vd.pv_max )
-     // % nl1
-     // % " D: " % toQString( vd.pv_dlt )
-     % "  mag: " % toQString( vd.mag ) %  " ofs: " % toQString( vd.ofs ) % nl1
-     % "real: " % toQString( pr_min ) % " - " % toQString( pr_max ) % nl
-     % QSN( vd.sel ) % " ";
+     % QSL("  mag: ") % toQString( vd.mag ) %  QSL(" ofs: ") % toQString( vd.ofs )
+     % nl1
+     % QSL("real: ") % toQString( pr_min ) % QSL(" - ") % toQString( pr_max )
+     % nl
+     % QSN( vd.sel ) % QSL(" ");
 
-  s += gra->getPlotLabel( vd.sel ) % "  ";
+  s += gra->getPlotLabel( vd.sel ) % QSL("  ");
 
   if( linkPlot > -1 ) {
-    s += "  Link: " % QSN( linkPlot) % " "
-       % gra->getPlotLabel( linkPlot ) % " [" % QSN( linkIdx ) % "]  ";
+    s += QSL("  Link: ") % QSN( linkPlot) % " "
+       % gra->getPlotLabel( linkPlot ) % QSL(" [") % QSN( linkIdx ) % QSL("]  ");
   }
   s += QChar( 0x03C6 ) % QSL(": ") % QSN( scd->phi ) % QSL(" ")
      % QChar( 0x03B8 ) % QSL(": ") % QSN( scd->theta )
@@ -752,7 +755,7 @@ void MglView::showInfo()
 
   for( const auto &la : gra->TCHILD(PlotLabel*) ) {
     if( !la ) { continue; }
-    s += QSL("<p>") % la->objectName() % QSL("= \"") % la->textVisual() % QSL("\"") % QSL("</p>\n");
+    s += QSL("<p>") % la->objectName() % QSL("= \"") % la->textVisual() % QSL("\"</p>\n");
   }
 
   QMessageBox::information( this,"Data info", s );
