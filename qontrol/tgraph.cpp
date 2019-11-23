@@ -1335,24 +1335,32 @@ long TGraph::findNearest( const mglPoint &p, int ig ) const
   if( !prepared || ! isGoodIndex( ig, pli ) ) {
     return -1;
   }
-  mglPoint p0 = p, p1;
-
-  if( !was_2D ) {
-    p0.z = 0;
-  }
+  // mglPoint p0 = p, p1;
+  //
+  // if( !was_2D ) {
+  //   p0.z = 0;
+  // }
 
   double l_min = DMAX; long i_min = 0;
   const mglData *d_x = tli[LineRole::axisX]->md;
-  const mglData *d_y = tli[LineRole::axisY]->md;
-  const mglData *d_v = pli[ig]->md;
+  // const mglData *d_y = tli[LineRole::axisY]->md;
+  // const mglData *d_v = pli[ig]->md;
 
+  // for( long i=0; i<nn; ++i ) {
+  //   if( was_2D ) {
+  //     p1 = { d_x->a[i], d_y->a[i], d_v->a[i] };
+  //   } else {
+  //     p1 = { d_x->a[i], d_v->a[i], 0 };
+  //   }
+  //   double l = mglLen( p0, p1 );
+  //   if( l < l_min ) {
+  //     l_min = l; i_min = i;
+  //   }
+  // }
+
+  const double xp = p.x;
   for( long i=0; i<nn; ++i ) {
-    if( was_2D ) {
-      p1 = { d_x->a[i], d_y->a[i], d_v->a[i] };
-    } else {
-      p1 = { d_x->a[i], d_v->a[i], 0 };
-    }
-    double l = mglLen( p0, p1 );
+    const double l = fabs( xp - d_x->a[i] );
     if( l < l_min ) {
       l_min = l; i_min = i;
     }
