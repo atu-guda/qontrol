@@ -73,6 +73,9 @@ class MglView : public QWidget  {
    void unlinkFromPlot();
    void nextPointInPlot( int step = 1 );
    void toggleLabels();
+   void setClipboardX();
+   void setClipboardY();
+   void setClipboardXY();
 
  Q_SIGNALS:
    void closeMe(); // ask main window to close me

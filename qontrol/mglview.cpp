@@ -172,7 +172,7 @@ void MglView::drawFooter( QPainter &p )
 void MglView::mousePressEvent( QMouseEvent *me )
 {
   if( !data_loaded ) {
-    return;
+    return QWidget::mousePressEvent( me );
   }
 
   mouse_x = me->x(); mouse_y = me->y();
@@ -191,12 +191,10 @@ void MglView::mousePressEvent( QMouseEvent *me )
         delete menu;
       }
       break;
-      // return QWidget::mousePressEvent( me );
     case Qt::MidButton:
       return QWidget::mousePressEvent( me );
-      // break;
     default:
-      break;
+      return QWidget::mousePressEvent( me );
   };
 
 }
@@ -207,40 +205,48 @@ QMenu* MglView::createPopupMenu()
 
   QAction *act;
 
-  act = menu->addAction( QSL("&Reset scale") );
+  act = menu->addAction( QSL("Reset scale (&r)") );
   connect( act, &QAction::triggered, this, &MglView::resetScale );
-  act = menu->addAction( QSL("set &Base") );
+  act = menu->addAction( QSL("set Base (&b)") );
   connect( act, &QAction::triggered, this, &MglView::markToBase );
   menu->addSeparator();
 
-  act = menu->addAction( QSL("&Zoom base-mark") );
+  act = menu->addAction( QSL("Zoom base-mark (&z)") );
   connect( act, &QAction::triggered, this, &MglView::zoom );
-  act = menu->addAction( QSL("reset z&oom") );
+  act = menu->addAction( QSL("reset zoom (Z)") );
   connect( act, &QAction::triggered, this, &MglView::zoomReset );
-  act = menu->addAction( QSL("Set sca&le") );
+  act = menu->addAction( QSL("Set scale (&s)") );
   connect( act, &QAction::triggered, this, &MglView::setScale );
-  act = menu->addAction( QSL("Save scale") );
+  act = menu->addAction( QSL("Save scale (S)") );
   connect( act, &QAction::triggered, this, &MglView::saveScale );
   menu->addSeparator();
 
-  act = menu->addAction( QSL("Print") );
+  act = menu->addAction( QSL("Print (&p)") );
   connect( act, &QAction::triggered, this, &MglView::print );
-  act = menu->addAction( QSL("&Export") );
+  act = menu->addAction( QSL("Export (&e)") );
   connect( act, &QAction::triggered, this, &MglView::exportPlot );
-  act = menu->addAction( QSL("&Info") );
+  act = menu->addAction( QSL("Info (&i)") );
   connect( act, &QAction::triggered, this, &MglView::showInfo );
-  act = menu->addAction( QSL("&Help") );
+  act = menu->addAction( QSL("Help (F1)") );
   connect( act, &QAction::triggered, this, &MglView::showHelp );
   menu->addSeparator();
 
-  act = menu->addAction( QSL("&Toggle plot") );
+  act = menu->addAction( QSL("Toggle plot (&o)") );
   connect( act, &QAction::triggered, this, &MglView::togglePlot );
-  act = menu->addAction( QSL("Toggle &All plots") );
+  act = menu->addAction( QSL("Toggle &All plots (O)") );
   connect( act, &QAction::triggered, this, &MglView::toggleAllPlots );
-  act = menu->addAction( QSL("Link to plot") );
+  act = menu->addAction( QSL("Link to plot (&l)") );
   connect( act, &QAction::triggered, this, &MglView::linkToPlot );
-  act = menu->addAction( QSL("Toggle labels") );
+  act = menu->addAction( QSL("Toggle labels (&v)") );
   connect( act, &QAction::triggered, this, &MglView::toggleLabels );
+  menu->addSeparator();
+
+  act = menu->addAction( QSL("X to clipboard (&x)") );
+  connect( act, &QAction::triggered, this, &MglView::setClipboardX );
+  act = menu->addAction( QSL("Y to clipboard (&y)") );
+  connect( act, &QAction::triggered, this, &MglView::setClipboardY );
+  act = menu->addAction( QSL("[X;Y] to clipboard") );
+  connect( act, &QAction::triggered, this, &MglView::setClipboardXY );
 
   return menu;
 }
@@ -318,6 +324,12 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       break;
     case Qt::Key_A | Sh :
       setAlpha( -0.1, true );
+      break;
+    case Qt::Key_X:
+      setClipboardX();
+      break;
+    case Qt::Key_Y:
+      setClipboardY();
       break;
     // link/point
     case Qt::Key_L:
@@ -636,6 +648,21 @@ void MglView::toggleLabels()
 {
   vd.show_labels = ! vd.show_labels;
   update();
+}
+
+void MglView::setClipboardX()
+{
+  setClipboardStr( QSN( scd->markX ) );
+}
+
+void MglView::setClipboardY()
+{
+  setClipboardStr( QSN( scd->markY ) );
+}
+
+void MglView::setClipboardXY()
+{
+  setClipboardStr( QSL("[ ") % QSN( scd->markX ) % QSL("; ") % QSN(scd->markY) % QSL(" ]") );
 }
 
 void MglView::setMarkToLink()
