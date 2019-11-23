@@ -182,6 +182,7 @@ void MglView::mousePressEvent( QMouseEvent *me )
     case Qt::LeftButton:
       unlinkFromPlot();
       scd->setMark( po );
+      mark_screen_x = mouse_x; mark_screen_y = mouse_y;
       update();
       break;
     case Qt::RightButton:
@@ -390,6 +391,20 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       setTheta( -angle_step, true );
       break;
 
+    // Move mark
+    case Qt::Key_Up | Ct:
+      moveMark( 0, -1 );
+      break;
+    case Qt::Key_Down | Ct:
+      moveMark( 0, 1 );
+      break;
+    case Qt::Key_Left | Ct:
+      moveMark( -1, 0 );
+      break;
+    case Qt::Key_Right | Ct:
+      moveMark( 1, 0 );
+      break;
+
     case Qt::Key_Plus:
       setXmag( mag_step, true );
       break;
@@ -400,7 +415,7 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       setYmag( mag_step, true );
       break;
     case Qt::Key_Minus | Sh:
-    case 0x40002212 :
+    case 0x40002212 : //  = dash on some keyboard layouts
       setYmag( 1.0/mag_step, true );
       break;
     case Qt::Key_Plus | Ct:
@@ -769,6 +784,15 @@ QString MglView::getInfo( bool more ) const
      % QSL(" mx= ") % QSN( mouse_x ) % QSL( " my= " ) % QSN( mouse_y ) % nl;
 
   return s;
+}
+
+void MglView::moveMark( int dx, int dy )
+{
+  mark_screen_x += dx;
+  mark_screen_y += dy;
+  mglPoint po = gra->CalcXYZ( mark_screen_x, mark_screen_y, wg, hg, &vd, scd.get() );
+  scd->setMark( po );
+  update();
 }
 
 void MglView::showInfo()

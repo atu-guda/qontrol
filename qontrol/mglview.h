@@ -48,6 +48,7 @@ class MglView : public QWidget  {
    virtual QSize sizeHint() const override;
    QString getInfo( bool more = false ) const;
    int getSelNum() const { return vd.sel; }
+   void moveMark( int dx, int dy );
 
  public Q_SLOTS:
    void resetScale();
@@ -104,6 +105,7 @@ class MglView : public QWidget  {
    int wg {100}, hg {100}, h_tot {140}; // current pure graph size and total height;
    QSize gsz { 100, 100 }; // size from mglGraph
    int mouse_x {0}, mouse_y {0};
+   int mark_screen_x {0}, mark_screen_y {0};
    double angle_step = {5.0}, mag_step { M_SQRT1_2 }, scale_step { 0.10 };
    int linkPlot {-1}; //* linked data index
    long linkIdx {0};   //* current point index in linked array

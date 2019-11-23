@@ -336,7 +336,7 @@ class TGraph : public LinkedObj  {
    /** fills fields in DatasInfo structure, return number of elements (nn) */
    int fillDatasInfo( DatasInfo *di ) const;
    /** dumps data to file */
-   Q_INVOKABLE int  dump( const QString &fn, const QString &delim = " " );
+   Q_INVOKABLE int  dump( const QString &fn, const QString &delim = QSL(" ") );
    //* add new GraphElem to given TOutArr
    Q_INVOKABLE int addOutArr( const QString &o_name );
    //* prepare inner data for plotting

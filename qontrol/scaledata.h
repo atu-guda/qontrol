@@ -96,7 +96,7 @@ class ScaleData : public TDataSet
    PRM_STRING( axisType     , efNRC, QSL("Axis type")    , QSL("Axis properties w/o xy/xyz")           , QSL("max=64\ndef=U3AKDTVISO") );
    PRM_DOUBLE( maxErr       , efNRC, QSL("Max Err")      , QSL("Maximum plot error")                   , QSL("def=0.6") );
 
-   PRM_STRING( mglScript, 0, QSL("MGL script"), QSL("Script to be rub before plot"),
+   PRM_STRING( mglScript, 0, QSL("MGL script"), QSL("Script to be run before plot"),
        QSL("props=STRING,MLINE\nncol=-1\nsep=block"));
   protected:
    DCL_DEFAULT_STATIC;
