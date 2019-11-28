@@ -37,27 +37,27 @@ class TFuncMisc : public TMiso  {
      ft_frac, ft_aasin, ft_erf, ft_min, ft_max, ft_2slopeEx, ft_copysign, ft_clamp, ft_switch
    };
    Q_ENUM(FuncType);
-   Q_CLASSINFO( "enum_FuncType_0",  "a*deadLine(y,b)+c*y+g"      );    // ft_deadLine
-   Q_CLASSINFO( "enum_FuncType_1",  "a*limitLine(y,b)+c*y+g"     );    // ft_limitLine
-   Q_CLASSINFO( "enum_FuncType_2",  "a*deadLimitLine(y,b,c,d)+g" );    // ft_dealLimitLine
-   Q_CLASSINFO( "enum_FuncType_3",  "a*sign(y)+c*y+g"            );    // ft_sign
-   Q_CLASSINFO( "enum_FuncType_4",  "a*Thetta(y)+c*y+g"          );    // ft_theta
-   Q_CLASSINFO( "enum_FuncType_5",  "a*posval(y)+c*y+g"          );    // ft_diod
-   Q_CLASSINFO( "enum_FuncType_6",  "a*threeState(y,b)+c*y+g"    );    // ft_threeState
-   Q_CLASSINFO( "enum_FuncType_7",  "a*triangle(y,b)+c*y+g"      );    // ft_triangle
-   Q_CLASSINFO( "enum_FuncType_8",  "a*rectLine(y,b,c)+c*y+g"    );    // ft_reactLine
-   Q_CLASSINFO( "enum_FuncType_9",  "((y>e)?a:b)*y+g"            );    // ft_2slope
-   Q_CLASSINFO( "enum_FuncType_10", "a*in_0/(in_1+b)+c*y+g"      );    // ft_div
-   Q_CLASSINFO( "enum_FuncType_11", "a*int(y*b)+c*y+g"           );    // ft_int
-   Q_CLASSINFO( "enum_FuncType_12", "a*frac(y*b)+g"              );    // ft_frac
-   Q_CLASSINFO( "enum_FuncType_13", "a*asin(abs(sin(y*b)))+g"    );    // ft_aasin
-   Q_CLASSINFO( "enum_FuncType_14", "a*erf(y*b)+g"               );    // ft_erf
-   Q_CLASSINFO( "enum_FuncType_15", "a*min(in_0,in_1)+g"         );    // ft_min
-   Q_CLASSINFO( "enum_FuncType_16", "a*max(in_0,in_1)+g"         );    // ft_max
-   Q_CLASSINFO( "enum_FuncType_17", "a*((y>e)?b:c)*y+g"          );    // ft_2slopeEx
-   Q_CLASSINFO( "enum_FuncType_18", "a*copysign(in_0,in_1)+g"    );    // ft_copysign
-   Q_CLASSINFO( "enum_FuncType_19", "a*clamp(y,b,d)+c*t+g"       );    // ft_clamp
-   Q_CLASSINFO( "enum_FuncType_20", "a*((in_2>d)?(b*in_0):(c*in_1))+g" );  // ft_switch
+   Q_CLASSINFO( "enum_FuncType_0",  "ae*deadLine(y,be)+c*y+g"      );    // ft_deadLine
+   Q_CLASSINFO( "enum_FuncType_1",  "ae*limitLine(y,be)+c*y+g"     );    // ft_limitLine
+   Q_CLASSINFO( "enum_FuncType_2",  "ae*deadLimitLine(y,be,c,d)+g" );    // ft_dealLimitLine
+   Q_CLASSINFO( "enum_FuncType_3",  "ae*sign(y)+c*y+g"             );    // ft_sign
+   Q_CLASSINFO( "enum_FuncType_4",  "ae*Thetta(y)+c*y+g"           );    // ft_theta
+   Q_CLASSINFO( "enum_FuncType_5",  "ae*posval(y)+c*y+g"           );    // ft_diod
+   Q_CLASSINFO( "enum_FuncType_6",  "ae*threeState(y,be)+c*y+g"    );    // ft_threeState
+   Q_CLASSINFO( "enum_FuncType_7",  "ae*triangle(y,be)+c*y+g"      );    // ft_triangle
+   Q_CLASSINFO( "enum_FuncType_8",  "ae*rectLine(y,be,d)+c*y+g"    );    // ft_reactLine
+   Q_CLASSINFO( "enum_FuncType_9",  "((y>e)?ae:be)*y+g"            );    // ft_2slope
+   Q_CLASSINFO( "enum_FuncType_10", "ae*in_0/(in_1+be)+c*y+g"      );    // ft_div
+   Q_CLASSINFO( "enum_FuncType_11", "ae*int(y*be)+c*y+g"           );    // ft_int
+   Q_CLASSINFO( "enum_FuncType_12", "ae*frac(y*be)+g"              );    // ft_frac
+   Q_CLASSINFO( "enum_FuncType_13", "ae*asin(abs(sin(y*be)))+g"    );    // ft_aasin
+   Q_CLASSINFO( "enum_FuncType_14", "ae*erf(y*be)+g"               );    // ft_erf
+   Q_CLASSINFO( "enum_FuncType_15", "ae*min(in_0,in_1)+g"          );    // ft_min
+   Q_CLASSINFO( "enum_FuncType_16", "ae*max(in_0,in_1)+g"          );    // ft_max
+   Q_CLASSINFO( "enum_FuncType_17", "ae*((y>e)?be:c)*y+g"          );    // ft_2slopeEx
+   Q_CLASSINFO( "enum_FuncType_18", "ae*copysign(in_0,in_1)+g"     );    // ft_copysign
+   Q_CLASSINFO( "enum_FuncType_19", "ae*clamp(y,be,d)+c*t+g"       );    // ft_clamp
+   Q_CLASSINFO( "enum_FuncType_20", "ae*((in_2>d)?(be*in_0):(c*in_1))+g" );  // ft_switch
  protected:
    virtual double f() noexcept override;
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
@@ -68,12 +68,16 @@ class TFuncMisc : public TMiso  {
    PRM_PARAMD( a,  0, "&a", "Parameter a", "sep=col\ndef=1" );
    PRM_PARAMD( b,  0, "&b", "Parameter b", "def=1" );
    PRM_PARAMD( c,  0, "&c", "Parameter c", "" );
-   PRM_PARAMD( d,  0, "&d", "Parameter d", "sep=col" );
-   PRM_PARAMD( e,  0, "&e", "Parameter e", "" );
+   PRM_PARAMD( d,  0, "&d", "Parameter d", "" );
+   PRM_PARAMD( e,  0, "&e", "Parameter e", "sep=col" );
    PRM_PARAMD( g,  0, "&g", "Parameter g", "" );
+   PRM_PARAMD( ra, 0, "ra", "Reverse a", "def=1" );
+   PRM_PARAMD( rb, 0, "rb", "Reverse b", "def=1" );
    PRM_PARAMD( x0, 0, "x0", "Input shift: y = u[0] - u[1] - x0;", "" );
 
    PRM_DOUBLE( y,  efInner, "y",   "in_0 - in_1 - x0", "" );
+   PRM_DOUBLE( ae, efInner, "a/ra", "effective a", "" );
+   PRM_DOUBLE( be, efInner, "b/rb", "effective b", "" );
 
    PRM_INPUT( in_0, 0, "in_{&0}", "First input",  "sep=block" );
    PRM_INPUT( in_1, 0, "in_{&1}", "Second input", "sep=col" );

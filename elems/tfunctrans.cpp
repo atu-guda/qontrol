@@ -26,8 +26,9 @@ const char* TFuncTrans::helpstr = "<H1>TFuncTrans</H1>\n"
  "<p>Harmonic-alike functions: <br>\n"
  "Argument <b>y</b> calculates as:<br>\n"
  "<b>y = in_0 - in_1 - x0</b><br>\n"
+ "<b>ae = a/ar,  b = b /br</b><br>\n"
  "Integer parameter <b>type</b> selects type of function.<br>\n"
- "Double parameters <b>a, b, c, d, e, g, x0</b> can be changed at any time\n</p>";
+ "Double parameters <b>a, b, c, d, e, g, ra, rb, x0</b> can be changed at any time\n";
 
 STD_CLASSINFO(TFuncTrans,clpElem|clpCalcAtStart);
 
@@ -39,57 +40,60 @@ CTOR(TFuncTrans,TMiso)
 double TFuncTrans::f() noexcept
 {
   double v, by, tm;
-  y = in_0 - in_1 - x0; by = y * b;
+  ae = a / ra; be = b / rb;
+  y = in_0 - in_1 - x0; by = y * be;
+  double byc = by + c;
+
   switch( (int)type ) {
     case ft_sin:
-      v = a * sin( by ); break;
+      v = ae * sin( byc ); break;
     case ft_signSin:
-      v = a * sign( sin( by ) + c ); break;
+      v = ae * sign( sin( byc ) + d ); break;
     case ft_tanh:
-      v = a * tanh( by ); break;
+      v = ae * tanh( byc ); break;
     case ft_atan2:
-      v = a * atan2( in_0 * b, in_1 ); break;
+      v = ae * atan2( in_0 * be, in_1 ); break;
     case ft_exp:
-      v = a * exp( by ); break;
+      v = ae * exp( byc ); break;
     case ft_expM2:
-      v = a * exp( -by * y ); break;
+      v = ae * exp( -by * y + c ); break;
     case ft_wave:
-      v = a * waveWave( by ); break;
+      v = ae * waveWave( byc ); break;
     case ft_mhat:
-      v = a * waveMhat( by ); break;
+      v = ae * waveMhat( byc ); break;
     case ft_ln:
-      v = ( by > 0 ) ? ( a * log( by ) ) : 0; break;
+      v = ( by > 0 ) ? ( ae * log( byc ) ) : -1e100; break;
     case ft_yExp:
-      v = a * y * exp( -by ); break;
+      v = ae * y * exp( -byc ); break;
     case ft_yExp2:
-      v = a * y * exp( -by * y ); break;
+      v = ae * y * exp( -by * y + c ); break;
     case ft_sin2:
-      tm = sin( by ); v = a * tm * tm; break;
+      tm = sin( byc ); v = ae * tm * tm; break;
     case ft_cos:
-      v = a * cos( by ); break;
+      v = ae * cos( byc ); break;
     case ft_cos2:
-      tm = cos( by ); v = a * tm * tm; break;
+      tm = cos( byc ); v = ae * tm * tm; break;
     case ft_tan:
-      v = a * tan( by ); break;
+      v = ae * tan( byc ); break;
     case ft_exp1Msin:
       tm = sin( d * y );  tm = 1 - c * tm*tm;
-      v = a * exp( -by*y ) * tm; break;
+      v = ae * exp( -by*y ) * tm; break;
     case ft_1Mexp1Msin2:
       tm = sin( d * y );
       tm = 1 - c * tm*tm;
-      v = a * (1-exp( -by*y )) * tm; break;
+      v = ae * (1-exp( -by*y )) * tm; break;
     case ft_expM2d:
-      tm = y/b; v = a * exp( - tm * tm ); break;
+      tm = y/be; v = ae * exp( - tm * tm + c ); break;
     case ft_divMod:
-      v = a / ( fabs(y)/b + 1 ); break;
+      v = ae / ( fabs(y)/be + 1 + c ); break;
     case ft_expMod:
-      v = a * exp( - fabs(y)/ b ); break;
+      v = ae * exp( - fabs(y)/ be + c ); break;
     case ft_sinh:
-      v = a * sinh( y * b ); break;
+      v = ae * sinh( byc ); break;
     case ft_cosh:
-      v = a * cosh( y * b ); break;
+      v = ae * cosh( byc ); break;
     case ft_expm1:
-      v = a * expm1( y * b ); break;
+      v = ae * expm1( byc ); break;
     default:  v = 0;
   };
   v += g;

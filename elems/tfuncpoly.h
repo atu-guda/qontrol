@@ -36,25 +36,25 @@ class TFuncPoly : public TMiso  {
      ft_pow4, ft_pow5, ft_pow, ft_pows, ft_hypot4, ft_muldiv, ft_mulsum
    };
    Q_ENUM(FuncType);
-   Q_CLASSINFO( "enum_FuncType_0", "a*y+g"                                 ); // ft_lin
-   Q_CLASSINFO( "enum_FuncType_1", "a*y^2+b*y+g"                           ); // ft_square
-   Q_CLASSINFO( "enum_FuncType_2", "a*y^3+b*y^2+c*y+g"                     ); // ft_cube
-   Q_CLASSINFO( "enum_FuncType_3", "a*u0^2+b*u0*u1+c*u1^2+g"               ); // ft_biSquare
-   Q_CLASSINFO( "enum_FuncType_4", "a*sqrt(b*y+c)+g"                       ); // ft_sqrt
-   Q_CLASSINFO( "enum_FuncType_5", "hypot(a*u0,b*u1)+g"                    ); // ft_hypot
-   Q_CLASSINFO( "enum_FuncType_6", "a*u0^2+..+d*u3^2+g"                    ); // ft_4square
-   Q_CLASSINFO( "enum_FuncType_7", "Vibro Ampl(\\omega); A=c0 B=\\omega"   ); // ft_vibro
-   Q_CLASSINFO( "enum_FuncType_8", "a*(u1-u0^2)^2+b*(1-u0)^2"              ); // ft_msquare
-   Q_CLASSINFO( "enum_FuncType_9", "1-exp(-a*((u0^2+u1^2-1)^2-b*u0-c*u1))" ); // ft_xExp
-   Q_CLASSINFO( "enum_FuncType_10","a*(1+b*y)+g"                           ); // ft_lin2
-   Q_CLASSINFO( "enum_FuncType_11","a*(b*y+c*abs(y))+g"                    ); // ft_linAbs
-   Q_CLASSINFO( "enum_FuncType_12","a*y^4+b*y^3+c*y^2+d*y+g"               ); // ft_pow4
-   Q_CLASSINFO( "enum_FuncType_13","a*y^5+b*y^4+c*y^3+d*y^2+e*y+g"         ); // ft_pow5
-   Q_CLASSINFO( "enum_FuncType_14","a*pow(b*y,c)+g"                        ); // ft_pow
-   Q_CLASSINFO( "enum_FuncType_15","a*pow(b*|y|,c)*sign(y)+g"              ); // ft_pows
-   Q_CLASSINFO( "enum_FuncType_16", "e*hypot4(a*u0,b*u1,c*u2,d*u3)+g"      ); // ft_hypot4
-   Q_CLASSINFO( "enum_FuncType_17", "a*(y*in_2)/b+g"                       ); // ft_muldiv
-   Q_CLASSINFO( "enum_FuncType_18", "a/b*(c*u0*u1 + d*u2*u3) +g"           ); // ft_mulsum
+   Q_CLASSINFO( "enum_FuncType_0", "ae*y+g"                                  ); // ft_lin
+   Q_CLASSINFO( "enum_FuncType_1", "ae*y^2+be*y+g"                           ); // ft_square
+   Q_CLASSINFO( "enum_FuncType_2", "ae*y^3+be*y^2+c*y+g"                     ); // ft_cube
+   Q_CLASSINFO( "enum_FuncType_3", "ae*u0^2+be*u0*u1+c*u1^2+g"               ); // ft_biSquare
+   Q_CLASSINFO( "enum_FuncType_4", "ae*sqrt(be*y+c)+g"                       ); // ft_sqrt
+   Q_CLASSINFO( "enum_FuncType_5", "e*hypot(ae*u0,be*u1)+g"                  ); // ft_hypot
+   Q_CLASSINFO( "enum_FuncType_6", "ae*u0^2+..+d*u3^2+g"                     ); // ft_4square
+   Q_CLASSINFO( "enum_FuncType_7", "Vibro Ampl(\\omega); A=c0 B=\\omega"     ); // ft_vibro
+   Q_CLASSINFO( "enum_FuncType_8", "ae*(u1-u0^2)^2+be*(1-u0)^2"              ); // ft_msquare
+   Q_CLASSINFO( "enum_FuncType_9", "1-exp(-ae*((u0^2+u1^2-1)^2-be*u0-c*u1))" ); // ft_xExp
+   Q_CLASSINFO( "enum_FuncType_10","ae*(1+be*y)+g"                           ); // ft_lin2
+   Q_CLASSINFO( "enum_FuncType_11","ae*(be*y+c*abs(y))+g"                    ); // ft_linAbs
+   Q_CLASSINFO( "enum_FuncType_12","ae*y^4+be*y^3+c*y^2+d*y+g"               ); // ft_pow4
+   Q_CLASSINFO( "enum_FuncType_13","ae*y^5+be*y^4+c*y^3+d*y^2+e*y+g"         ); // ft_pow5
+   Q_CLASSINFO( "enum_FuncType_14","ae*pow(be*y,c)+g"                        ); // ft_pow
+   Q_CLASSINFO( "enum_FuncType_15","ae*pow(be*|y|,c)*sign(y)+g"              ); // ft_pows
+   Q_CLASSINFO( "enum_FuncType_16", "e*hypot4(ae*u0,be*u1,c*u2,d*u3)+g"      ); // ft_hypot4
+   Q_CLASSINFO( "enum_FuncType_17", "ae*(y*in_2)/be+g"                       ); // ft_muldiv
+   Q_CLASSINFO( "enum_FuncType_18", "ae/be*(c*u0*u1 + d*u2*u3) +g"           ); // ft_mulsum
  protected:
    virtual double f() noexcept override;
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
@@ -65,13 +65,17 @@ class TFuncPoly : public TMiso  {
    PRM_PARAMD( a,  0, "&a", "Parameter a", "sep=col\ndef=1" );
    PRM_PARAMD( b,  0, "&b", "Parameter b", "def=1" );
    PRM_PARAMD( c,  0, "&c", "Parameter c", "" );
-   PRM_PARAMD( d,  0, "&d", "Parameter d", "sep=col" );
-   PRM_PARAMD( e,  0, "&e", "Parameter e", "" );
+   PRM_PARAMD( d,  0, "&d", "Parameter d", "" );
+   PRM_PARAMD( e,  0, "&e", "Parameter e", "sep=col" );
    PRM_PARAMD( g,  0, "&g", "Parameter g", "" );
+   PRM_PARAMD( ra, 0, "ra", "Reverse a", "def=1" );
+   PRM_PARAMD( rb, 0, "rb", "Reverse b", "def=1" );
    PRM_PARAMD( x0, 0, "x0", "Input shift: y = in_0 - in_1 - x0;", "" );
 
    PRM_DOUBLE( y,  efInner, "y",   "in_0 - in_1 - x0", "" );
    PRM_DOUBLE( y2, efInner, "y^2", "y^2", "" );
+   PRM_DOUBLE( ae, efInner, "a/ra", "effective a", "" );
+   PRM_DOUBLE( be, efInner, "b/rb", "effective b", "" );
 
    PRM_INPUT( in_0, 0, "in_{&0}", "First input",  "sep=block" );
    PRM_INPUT( in_1, 0, "in_{&1}", "Second input", "sep=col" );
