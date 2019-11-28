@@ -62,7 +62,7 @@ double TFuncTrans::f() noexcept
     case ft_mhat:
       v = ae * waveMhat( byc ); break;
     case ft_ln:
-      v = ( by > 0 ) ? ( ae * log( byc ) ) : -1e100; break;
+      v = ( byc > 0 ) ? ( ae * log( byc ) ) : -1e100; break;
     case ft_yExp:
       v = ae * y * exp( -byc ); break;
     case ft_yExp2:
@@ -81,7 +81,7 @@ double TFuncTrans::f() noexcept
     case ft_1Mexp1Msin2:
       tm = sin( d * y );
       tm = 1 - c * tm*tm;
-      v = ae * (1-exp( -by*y )) * tm; break;
+      v = ae * ( 1 - exp( -by*y ) ) * tm; break;
     case ft_expM2d:
       tm = y/be; v = ae * exp( - tm * tm + c ); break;
     case ft_divMod:
