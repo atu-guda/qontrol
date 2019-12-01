@@ -26,16 +26,16 @@ void DoubleDialog::setupUi()
 
   auto lay = new QGridLayout( this );
 
-  auto dmod = new DoubleTableModel( di, this );
-  auto dtv = new QTableView( this );
-  dtv->setModel( dmod );
-  lay->addWidget( dtv, 0, 0 );
+  model = new DoubleTableModel( di, this );
+  view = new QTableView( this );
+  view->setModel( model );
+  lay->addWidget( view, 0, 0 );
 
-  int n_col = dmod->columnCount();
+  int n_col = model->columnCount();
   int w_width = 110;
 
   for( int i=0; i<n_col; ++i ) {
-    w_width += dtv->columnWidth( i );
+    w_width += view->columnWidth( i );
   }
 
 
@@ -63,20 +63,36 @@ void DoubleDialog::setupUi()
 void DoubleDialog::btn_clicked( QAbstractButton *button )
 {
   if( button == btn_find ) {
-    return find();
+    return findData();
   } else if ( button == btn_copy ) {
-    return copy();
+    return copySel();
   }
   return;
 }
 
-void DoubleDialog::find()
+void DoubleDialog::findData()
 {
   QMessageBox::information( this, QSL("Find"), QSL("Find called") );
 }
 
-void DoubleDialog::copy()
+void DoubleDialog::copySel()
 {
-  QMessageBox::information( this, QSL("Copy"), QSL("Copy called") );
+  QString s;
+  int old_row = -1;
+  auto indexes = view->selectionModel()->selection().indexes();
+
+  for( const auto& index : indexes ) {
+    if( ! index.isValid() ) {
+      continue;
+    }
+    // s += QSL("( ") % QSN( index.row() ) % QSL(" , ") % QSN( index.column() ) % QSL(" )\n");
+    if( old_row != -1 && old_row != index.row() ) {
+      s += '\n';
+    }
+    s += index.data().toString() + '\t' ;
+    old_row = index.row();
+  }
+  setClipboardStr( s );
+  // QMessageBox::information( this, QSL("Copy"), s );
 }
 
