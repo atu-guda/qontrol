@@ -2,7 +2,7 @@
                           outdataview.cpp - view for outs
                              -------------------
     begin                : 2014.11.15
-    copyright            : (C) 2014-2016 by atu
+    copyright            : (C) 2014-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -40,23 +40,23 @@ void OutDataView::init_actions()
 {
   auto a = new QAction( QIcon::fromTheme(QSL("arrow-right")), QSL("&Add to plot"), this );
   lv->addAction( a  );
-  connect( a, SIGNAL(triggered()), this, SLOT(addToPlot()) );
+  connect( a, &QAction::triggered, this, &OutDataView::addToPlot );
 
   a = new QAction( QIcon::fromTheme(QSL("document-export")), QSL("Export"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(exportObj()) );
+  connect( a, &QAction::triggered, this, &OutDataView::exportObj );
 
   a = new QAction( QIcon::fromTheme(QSL("document-Import")), QSL("Import as text"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(importTxt()) );
+  connect( a, &QAction::triggered, this, &OutDataView::importTxt );
 
   a = new QAction( QSL("Fill"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(fill()) );
+  connect( a, &QAction::triggered, this, &OutDataView::fill );
 
   a = new QAction(  QIcon( QSL(":icons/showoutdata.png") ), QSL("&Show data"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(showDataObj()) );
+  connect( a, &QAction::triggered, this, &OutDataView::showDataObj );
 }
 
 bool OutDataView::addObj()
