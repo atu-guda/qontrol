@@ -2,7 +2,7 @@
                           graphdataview.cpp - view for plots
                              -------------------
     begin                : 2014.11.15
-    copyright            : (C) 2014-2016 by atu
+    copyright            : (C) 2014-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -20,6 +20,7 @@
 #include "labowin.h"
 #include "mglview.h"
 #include "miscfun.h"
+#include "doubledialog.h"
 #include "doubletable.h"
 
 
@@ -88,31 +89,12 @@ bool GraphDataView::showDataObj()
     return false;
   }
 
-  auto dia = new QDialog( this );
-
-  QFontMetrics fm( dia->font() );
-  int em = fm.width( 'W' );
-
-  dia->setWindowTitle( QSL("Plot data: ") % di.title );
-  auto lay_v = new QVBoxLayout( dia ); // TODO: chack "lv" name from parents
-
-  auto dmod = new DoubleTableModel( di, dia );
-  auto dtv = new QTableView( dia );
-  dtv->setModel( dmod );
-  lay_v->addWidget( dtv );
-
-  auto bt_ok = new QPushButton( QSL("Done"), dia );
-  bt_ok->setDefault( true );
-  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  lay_v->addWidget( bt_ok );
-
-  int w0 = di.size() * 12 * em;
-  dia->resize( w0, em*40 );
+  auto dia = new DoubleDialog( di, QES, this );
 
   dia->exec();
   delete dia;
 
-  return false;
+  return true;
 }
 
 bool GraphDataView::exportObj()

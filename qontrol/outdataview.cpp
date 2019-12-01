@@ -18,6 +18,7 @@
 #include "dataset.h"
 #include "labowin.h"
 #include "addelemdia.h"
+#include "doubledialog.h"
 #include "doubletable.h"
 #include "miscfun.h"
 #include "outdataview.h"
@@ -92,13 +93,12 @@ bool OutDataView::addObj()
 
 bool OutDataView::showDataObj()
 {
-  DatasInfo di;
-
   TOutArr *arr = qobject_cast<TOutArr*>( getSelObj() );
   if( !arr ) {
     return false;
   }
 
+  DatasInfo di;
   int k = arr->fillDatasInfo( &di );
   if( !k ) {
     qWarning() << "fail to fill info about output array " <<  arr->getFullName() << WHE;
@@ -110,25 +110,7 @@ bool OutDataView::showDataObj()
   QString sinf = arr->getAllStats( QSL(";\n") );
 
 
-  auto dia = new QDialog( this );
-  dia->setWindowTitle( QSL("Data array: ") % di.title );
-  auto lay = new QGridLayout( dia );
-
-  auto dmod = new DoubleTableModel( di, dia );
-  auto dtv = new QTableView( dia );
-  dtv->setModel( dmod );
-  lay->addWidget( dtv, 0, 0 );
-
-  auto lab = new QLabel( sinf, dia );
-  lab->setTextInteractionFlags( Qt::TextSelectableByMouse
-       | Qt::TextSelectableByKeyboard );
-  lay->addWidget( lab, 0, 1 );
-
-  auto bt_ok = new QPushButton( QSL("Done"), dia );
-  bt_ok->setDefault( true );
-  connect( bt_ok, &QPushButton::clicked, dia, &QDialog::accept );
-  lay->addWidget( bt_ok, 1, 0, 1, 2 );
-  dia->setLayout( lay );
+  auto dia = new DoubleDialog( di, sinf, this );
 
   dia->exec();
   delete dia;

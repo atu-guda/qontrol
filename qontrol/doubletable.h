@@ -3,7 +3,7 @@
                           doubletable.h  -  description
                              -------------------
     begin                : Fri Sep 1 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -24,7 +24,6 @@
 class QPainer; struct DatasInfo;
 
 
-/** new model for model/view Qt4 approach */
 class DoubleTableModel : public QAbstractTableModel {
   public:
    DoubleTableModel( const DatasInfo &a_di, QObject *parent = 0 );

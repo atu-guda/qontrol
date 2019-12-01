@@ -1,4 +1,5 @@
 DatasInfo -> vector of DataInfo
+Dialog for DoubleDataModel (+ more actions there)
 BUG: old value holded for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
 BUG: object button may change place in dialog: may by uncontrolled order?
 Info dialog: copy all to clipboard <Tab>, <NL>

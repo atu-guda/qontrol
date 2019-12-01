@@ -2,7 +2,7 @@
                           doubletable.cpp  -  description
                              -------------------
     begin                : Fri Sep 1 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2019 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -45,7 +45,7 @@ QVariant DoubleTableModel::data( const QModelIndex & index, int role ) const
     return QVariant();
   }
 
-  int col = index.column(), row = index.row();
+  auto col = index.column(), row = index.row();
   if( col >= di.size() || row >= di.nn ) {
     return QVariant();
   }
