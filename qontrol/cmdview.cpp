@@ -131,8 +131,8 @@ bool CmdView::renameObj()
 
   QString old_name = selObj->objectName();
   bool ok;
-  QString new_name = QInputDialog::getText( this, "Rename:" + selObj->getFullName(),
-      "Enter new name:", QLineEdit::Normal, old_name, &ok );
+  QString new_name = QInputDialog::getText( this, QSL("Rename:") % selObj->getFullName(),
+      QSL("Enter new name:"), QLineEdit::Normal, old_name, &ok );
 
   if( ok ) {
     if( storage->renameObj( old_name, new_name ) ) {
@@ -159,8 +159,8 @@ bool CmdView::cloneObj()
   QString nm = selObj->objectName();
   QString new_name = storage->hintName( selObj->getType(), nm );
   bool ok;
-  new_name = QInputDialog::getText( this, "Object:" + selObj->getFullName(),
-      "Enter new name:", QLineEdit::Normal, new_name, &ok );
+  new_name = QInputDialog::getText( this, QSL("Object:") + selObj->getFullName(),
+      QSL("Enter new name:"), QLineEdit::Normal, new_name, &ok );
 
   if( !ok ) {
     return false;
@@ -211,7 +211,7 @@ bool CmdView::pasteObj()
   QString errstr;
   QDomDocument x_dd;
   if( ! x_dd.setContent( s, false, &errstr, &err_line, &err_column ) ) {
-    HANDLE_WARN( QSL("Cannot parse clipboard string:\n%2\nLine %3 column %4.").arg(errstr).arg(err_line).arg(err_column) );
+    HANDLE_WARN( QSL("Cannot parse clipboard string:\n%2\nLine %3 column %4.").arg( errstr, QSN(err_line), QSN(err_column) ) );
     return false;
   }
   QDomElement ee = x_dd.documentElement();
@@ -274,7 +274,7 @@ bool CmdView::infoObj()
   }
 
   auto dia = new QDialog( this );
-  dia->setWindowTitle( QString( PACKAGE ": Structure of ") + selObj->getFullName() );
+  dia->setWindowTitle( QSL( PACKAGE ": Structure of " ) + selObj->getFullName() );
 
   QFontMetrics fm( dia->font() );
   int em = fm.width( 'W' );
@@ -294,29 +294,26 @@ bool CmdView::infoObj()
   QObjectList childs = selObj->children();
 
   int i = 0;
-  for( auto o :  childs ) {
-    QObject *ob = o;
+  for( auto ob :  childs ) {
     tv->setItem( i, 0, new  QTableWidgetItem( ob->objectName() ) );
     HolderData *ho = qobject_cast<HolderData*>(ob);
     if( ho ) {
-      HolderData *ho = qobject_cast<HolderData*>(ob);
       tv->setItem( i, 1, new QTableWidgetItem( ho->getType() ) );
       tv->setItem( i, 2, new QTableWidgetItem( ho->textVisual() ) );
-      tv->setItem( i, 3, new QTableWidgetItem( ho->getParm( QSL("vis_name") ) + " \""
-                    + ho->getParm( QSL("descr") ) + "\"" ) );
+      tv->setItem( i, 3, new QTableWidgetItem( ho->getParm( QSL("vis_name") ) + QSL(" \"")
+                    + ho->getParm( QSL("descr") ) + QSL("\"") ) );
       tv->setItem( i, 4, new QTableWidgetItem( flags2str(ho->getFlags()) ) );
-      // tv->setItem( i, 4, new QTableWidgetItem( QSL(".") ) ); // TODO: more?
 
     } else { // unknown
-      tv->setItem( i, 1, new QTableWidgetItem("???unknown???" ) );
-      tv->setItem( i, 2, new QTableWidgetItem(ob->metaObject()->className() ) );
+      tv->setItem( i, 1, new QTableWidgetItem( QSL("???unknown???") ) );
+      tv->setItem( i, 2, new QTableWidgetItem( ob->metaObject()->className() ) );
     }
     ++i;
   }
 
   lay->addWidget( tv );
 
-  auto bt_ok = new QPushButton( tr("Done"), dia);
+  auto bt_ok = new QPushButton( QSL("Done"), dia );
   bt_ok->setDefault( true );
   lay->addWidget( bt_ok );
   dia->setLayout( lay );
@@ -353,7 +350,7 @@ bool CmdView::testObj()
   QString buf;
 
   auto dia = new QDialog( this );
-  dia->setWindowTitle( QString( PACKAGE ": test1 ") + selObj->objectName() );
+  dia->setWindowTitle( QSL( PACKAGE ": test1 " ) + selObj->objectName() );
 
   QFontMetrics fm( dia->font() );
   int em = fm.width( 'W' );
@@ -368,7 +365,7 @@ bool CmdView::testObj()
   scroll->setWidget( la );
   lay->addWidget( scroll );
 
-  auto bt_ok = new QPushButton( tr("Done"), dia);
+  auto bt_ok = new QPushButton( QSL("Done"), dia);
   bt_ok->setDefault( true );
   lay->addWidget( bt_ok );
   dia->setLayout( lay );
@@ -386,19 +383,19 @@ bool CmdView::testObj()
 
 bool CmdView::showObj()
 {
-  qWarning() << "Unimplemented " << WHE;
+  qWarning() << QSL("Unimplemented") << WHE;
   return false;
 }
 
 bool CmdView::showDataObj()
 {
-  qWarning() << "Unimplemented " << WHE;
+  qWarning() << QSL("Unimplemented") << WHE;
   return false;
 }
 
 bool CmdView::exportObj()
 {
-  qWarning() << "Unimplemented " << WHE;
+  qWarning() << QSL("Unimplemented") << WHE;
   return false;
 }
 

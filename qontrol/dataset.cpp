@@ -1863,7 +1863,7 @@ QString HolderList::textVisual() const
   if( v < 0 || v >= list_strings.size() ) {
     return QSN(v) % QSL("?");
   }
-  return list_strings[v];
+  return list_strings[v] % QSL(" (") % QSN(v) % QSL(")");
 }
 
 

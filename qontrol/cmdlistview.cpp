@@ -51,10 +51,6 @@ CmdListView::CmdListView( HolderData *a_mod, CommonSubwin *a_par )
 
 HolderData* CmdListView::getSelObj() const
 {
-  if( !lv ) {
-    return nullptr;
-  }
-
   QItemSelectionModel *selMod = lv->selectionModel();
   if( !selMod ) {
     return nullptr;
@@ -77,9 +73,6 @@ void CmdListView::handleSelChange()
 
 QModelIndex CmdListView::currentIndex() const
 {
-  if( !lv ) {
-    return QModelIndex();
-  }
   return lv->currentIndex();
 }
 
@@ -88,47 +81,47 @@ void CmdListView::init_base_actions()
 {
   auto a = new QAction( QIcon::fromTheme( QSL("document-properties") ), QSL("&Edit"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(editObj()) ); // TODO: new connect ::
+  connect( a, &QAction::triggered, this, &CmdListView::editObj );
 
   a = new QAction( QIcon::fromTheme( QSL("list-add") ), QSL("&New"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(addObj()) );
+  connect( a, &QAction::triggered, this, &CmdListView::addObj );
 
   a = new QAction( QIcon::fromTheme( QSL("list-remove") ), QSL("&Delete"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(delObj()) );
+  connect( a, &QAction::triggered, this, &CmdListView::delObj );
 
   a = new QAction( QIcon::fromTheme( QSL("edit-cut") ), QSL("Cu&t"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(cutObj()) );
+  connect( a, &QAction::triggered, this, &CmdListView::cutObj );
 
   a = new QAction( QIcon::fromTheme( QSL("edit-copy") ), QSL("&Copy"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(copyObj()) );
+  connect( a, &QAction::triggered, this, &CmdListView::copyObj );
 
   a = new QAction( QIcon::fromTheme( QSL("edit-paste") ), QSL("&Paste"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(pasteObj()) );
+  connect( a, &QAction::triggered, this, &CmdListView::pasteObj );
 
   a = new QAction( QIcon::fromTheme( QSL("edit-rename") ), QSL("Rename"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(renameObj()) );
+  connect( a, &QAction::triggered, this, &CmdListView::renameObj );
 
   a = new QAction( QIcon( QSL(":icons/edit-clone.png") ), QSL("Clone"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(cloneObj()) );
+  connect( a, &QAction::triggered, this, &CmdListView::cloneObj );
 
   a = new QAction( QIcon( QSL(":icons/info-obj.png") ), QSL("Info"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(infoObj()) );
+  connect( a, &QAction::triggered, this, &CmdListView::infoObj );
 
   a = new QAction( QIcon::fromTheme( QSL("view-list-tree") ), QSL("Show Tree"), this );
   lv->addAction( a );
-  connect( a, SIGNAL(triggered()), this, SLOT(showTreeObj()) );
+  connect( a, &QAction::triggered, this, &CmdListView::showTreeObj );
 
   a = new QAction( QES, this ); a->setSeparator( true );
   lv->addAction( a );
 
-  connect( lv, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(editObj()) );
+  connect( lv, &QListView::doubleClicked, this, &CmdListView::editObj );
 }
 
