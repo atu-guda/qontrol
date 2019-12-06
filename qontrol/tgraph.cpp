@@ -1097,7 +1097,22 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
 
     if( ! scda->mainLabel.isEmpty() ) {
       gr.SetFontSize( scda->fontSise * scda->mainScale );
-      gr.Label( main_label_axis, scda->mainLabel.c_str() );
+      if( main_label_axis == 'y' ) {
+        mglPoint p0m { 0.0, 1.0, 0.0 };
+        mglPoint p_min { 0, 0, 0 };
+        mglPoint p_max { 1, 1, 1 };
+        const mglBase *gb = gr.Self();
+        if( gb ) {
+          p_min = gb->Min;  p_max = gb->Max;
+        }
+        p0m.x = p_min.x + -0.10 * ( p_max.x - p_min.x );
+        p0m.y = p_min.y +  1.04 * ( p_max.y - p_min.y );
+        p0m.z = 0;
+        wstring ws = scda->mainLabel.toStdWString();
+        gr.Putsw( p0m, ws.data(), ":L", 3 );
+      } else {
+        gr.Label( main_label_axis, scda->mainLabel.c_str() );
+      }
       gr.SetFontSize( scda->fontSise );
     }
   }

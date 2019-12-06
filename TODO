@@ -2,13 +2,11 @@ DatasInfo -> vector of DataInfo
 More actions in DoubleDialog
 Run mode: update scheme view: for balloons and bars (may be more)
 Current DataPool and selection method/index in TModel and Simulation
-Add plot element: label with cross (or Label property)
-Add label or plot elements in MglView (see previous)
+Add label or plot elements in MglVie
 BUG: old value held for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
 BUG: object button may change place in dialog: may by uncontrolled order?
 Info dialog: copy all to clipboard <Tab>, <NL>
 Snapshots of objects data: auto at end, + controlled: use by plots...
-Y-label in MGL: better place
 Filters: generic, Butter, cheb ....
 Object wide link?
 Search in views.
