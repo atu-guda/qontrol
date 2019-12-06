@@ -77,6 +77,7 @@ class MglView : public QWidget  {
    void setClipboardX();
    void setClipboardY();
    void setClipboardXY();
+   void addLabel();
 
  Q_SIGNALS:
    void closeMe(); // ask main window to close me

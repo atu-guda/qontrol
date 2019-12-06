@@ -347,6 +347,7 @@ class TGraph : public LinkedObj  {
    //* plot to file
    Q_INVOKABLE void plotToPng( const QString &fn );
    Q_INVOKABLE QString hintFileName() const;
+   Q_INVOKABLE void addLabel( const mglPoint &p, const QString &txt );
 
 
    QSize renderTo( QImage &img, const ViewData *a_vd = nullptr, const ScaleData *scda = nullptr );

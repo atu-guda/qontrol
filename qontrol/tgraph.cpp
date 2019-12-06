@@ -1653,6 +1653,22 @@ QString TGraph::hintFileName() const
   return base; // %  QSL(".png");
 }
 
+void TGraph::addLabel( const mglPoint &p, const QString &txt )
+{
+  auto nm = hintName( QSL("PlotLabel"), QSL("albl_") );
+  auto pl = addObjT<PlotLabel>( nm );
+  if( !pl ) {
+    return;
+  }
+  pl->setD( QSL("text"), txt );
+  pl->setD( QSL("substVals"), 1 );
+  pl->setD( QSL("labelX"), p.x );
+  pl->setD( QSL("labelY"), p.y );
+  pl->setD( QSL("labelZ"), p.z );
+  pl->setD( QSL("coordType"), PlotLabel::CoordType::CoordFirst );
+  pl->setD( QSL("drawCross"), 1 );
+}
+
 // ---------------- misc funcs -------------------------- 
 
 QString color2style( int color, int lw, const QString &extra )

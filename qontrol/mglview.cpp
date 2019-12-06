@@ -248,6 +248,8 @@ QMenu* MglView::createPopupMenu()
   connect( act, &QAction::triggered, this, &MglView::setClipboardY );
   act = menu->addAction( QSL("[X;Y] to clipboard") );
   connect( act, &QAction::triggered, this, &MglView::setClipboardXY );
+  act = menu->addAction( QSL("Add label at mark (&t)") );
+  connect( act, &QAction::triggered, this, &MglView::addLabel );
 
   return menu;
 }
@@ -301,6 +303,9 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       break;
     case Qt::Key_R:
       resetScale();
+      break;
+    case Qt::Key_T:
+      addLabel();
       break;
     case Qt::Key_R | Sh:
       Reload();
@@ -680,6 +685,15 @@ void MglView::setClipboardXY()
   setClipboardStr( QSL("[ ") % QSN( scd->markX ) % QSL("; ") % QSN(scd->markY) % QSL(" ]") );
 }
 
+void MglView::addLabel()
+{
+  if( ! gra ) {
+    return;
+  }
+  auto mp =  scd->getMark();
+  gra->addLabel( mp, QSL(" ($X, $Y)") );
+}
+
 void MglView::setMarkToLink()
 {
   if( linkPlot < 0 ) {
@@ -831,6 +845,7 @@ static const QString plot_helpstr = QSL("<b>Hot keys:</b><br/>\n"
  "<b>g</b> - set mark to given point <br/>\n"
  "<b>l/L</b> - link/Unlink to data <br/>\n"
  "<b>i</b> - data info <br/>\n"
+ "<b>t</b> - add label <br/>\n"
  "<b>z</b> - zoom base - mark, or near mark <br/>\n"
  "<b>Z</b> - zoom reset <br/><hr/>\n"
  "<b>PageUp, PageDown</b> - move Up/Down <br>\n"
