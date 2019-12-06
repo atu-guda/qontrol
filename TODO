@@ -1,6 +1,10 @@
 DatasInfo -> vector of DataInfo
 More actions in DoubleDialog
-BUG: old value holded for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
+Run mode: update scheme view: for balloons and bars (may be more)
+Current DataPool and selection method/index in TModel and Simulation
+Add plot element: label with cross (or Label property)
+Add label or plot elements in MglView (see previous)
+BUG: old value held for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
 BUG: object button may change place in dialog: may by uncontrolled order?
 Info dialog: copy all to clipboard <Tab>, <NL>
 Snapshots of objects data: auto at end, + controlled: use by plots...
@@ -50,7 +54,6 @@ Error handling (from inner to iface)
 Excess? error in fromDom ... and/or show last error?
 Indicate corresponding outs for selected plot
 Customized colors: struct view...
-Inputs - may be Elements? like TFileSource?
 Outputs - or even IO - for external data.
 Custom legend/labels/axis(scale factor) in Mgl
 Tests
@@ -72,7 +75,7 @@ RunWindow?
 
 Edit large arrays
 
-aliases/synlinks: to use 'current' subobjects.
+aliases/symlinks: to use 'current' subobjects.
 
 objects: TFileInput, TFileOutput, TSoundInput, -- or IO in model
   -- Jumping ball (and similar) method - actions in TIntegrator

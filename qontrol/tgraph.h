@@ -208,9 +208,12 @@ class PlotLabel : public LinkedObj {
    PRM_SWITCH( drawLabel, 0, "Draw", "Draw label", "def=1\nsep=col" );
    PRM_SWITCH( drawFrame, 0, "Frame", "Draw frame around label", "def=0" );
    PRM_SWITCH( drawBG,    0, "Background", "Draw label background", "def=0" );
+   PRM_SWITCH( drawCross, 0, "Cross", "Draw cross", "def=0" );
 
    PRM_COLOR(    labelColor, 0, "Color", "Label color", "sep=col\ndef=black" );
    PRM_COLOR(  labelBgColor, 0, "BgColor", "Label background color", "def=white" );
+   PRM_COLOR(    crossColor, 0, "Cross color", "Label cross color", "def=black" );
+
    PRM_FONT(      labelFont, 0, "Font", "label font", "sep=col");
    PRM_STRING( labelFontMGL, 0, "MGL Font", "label font in MGL mode", "def=:L@");
    PRM_DOUBLE( labelSizeMGL, 0, "MGL Size", "label font size in MGL mode", "def=2.0");

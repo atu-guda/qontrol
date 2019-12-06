@@ -290,14 +290,15 @@ QString PlotLabel::getFnAddStr() const
 
 bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr ) const
 {
-  if(  onGr && labelType != LabelMGL ) { return false; }
-  if( !onGr && labelType == LabelMGL ) { return false; }
-
-  prepareText();
-
   if( ! drawLabel ) {
     return true;
   }
+
+  if(  onGr && labelType != LabelMGL ) { return false; }
+
+  // if( !onGr && labelType == LabelMGL ) { return false; } // not here, need cross
+
+  prepareText();
 
   if( !img || !gr ) { return false; }
 
@@ -339,22 +340,47 @@ bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr ) const
   // ds = QSL("p0m: " ) % toQString( p0m )  % QSL("  p0p: " ) % toQString( p0p  );
   // qWarning() << ds << NWHE;
 
+  if( drawCross ) {
+    QPainter px( img ); // TODO create common
+    px.setPen( crossColor.cval() );
+    px.drawLine( p0.x()-3,   p0.y(), p0.x()+3, p0.y()   );
+    px.drawLine(   p0.x(), p0.y()-3,   p0.x(), p0.y()+3 );
+  }
+
+  bool rc = false;
   switch( labelType ) {
     case LabelPlain:
-      return renderPlain( img, p0 );
+      rc = renderPlain( img, p0 );
+      break;
     case LabelHTML:
-      return renderHTML( img, p0 );
+      rc = renderHTML( img, p0 );
+      break;
     case LabelMiniTeX:
-      return renderMiniTeX( img, p0 );
+      rc = renderMiniTeX( img, p0 );
+      break;
     case LabelMGL:
-      return renderMGL( gr, p0m );
+      if( onGr ) {
+        rc = renderMGL( gr, p0m );
+      } else {
+        rc = true;
+      }
+      break;
     case LabelTeX:
-      return renderTeX( img, p0 );
+      rc = renderTeX( img, p0 );
+      break;
     default:
       qWarning() << "Unknown label type: " << labelType << NWHE;
       break;
   }
-  return false;
+
+  if( drawCross ) {
+    QPainter px( img ); // TODO create common
+    px.setPen( crossColor.cval() );
+    px.drawLine( p0.x()-3,   p0.y(), p0.x()+3, p0.y()   );
+    px.drawLine(   p0.x(), p0.y()-3,   p0.x(), p0.y()+3 );
+  }
+
+  return rc;
 }
 
 bool PlotLabel::renderPlain( QImage *img, QPoint p0 ) const
