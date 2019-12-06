@@ -253,21 +253,26 @@ void PlotLabel::do_post_set()
 
 void PlotLabel::prepareText() const
 {
-  if( !labelReady ) {
-    QString s;
-    if( substVals ) {
-      TModel *model = getAncestorT<TModel>();
-      s = substValues( text.cval(), model );
-    } else {
-      s = text.cval();
-    }
-    if( labelType == LabelMiniTeX ) {
-      labelWithSubst = tex2label( s, false );
-    } else {
-      labelWithSubst = s;
-    }
-    labelReady = true;
+  if( labelReady ) {
+    return;
   }
+
+  QString s = text.cval();
+  if( substVals ) {
+    QString s1 = s
+      .replace( QRegExp( QSL("\\$X\\b") ), QSN( labelX.cval() ) )
+      .replace( QRegExp( QSL("\\$Y\\b") ), QSN( labelY.cval() ) )
+      .replace( QRegExp( QSL("\\$Z\\b") ), QSN( labelZ.cval() ) );
+    TModel *model = getAncestorT<TModel>();
+    s = substValues( s1, model );
+  }
+
+  if( labelType == LabelMiniTeX ) {
+    labelWithSubst = tex2label( s, false );
+  } else {
+    labelWithSubst = s;
+  }
+  labelReady = true;
 }
 
 QString PlotLabel::getMetaStr() const
@@ -290,15 +295,15 @@ QString PlotLabel::getFnAddStr() const
 
 bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr ) const
 {
-  if( ! drawLabel ) {
-    return true;
-  }
-
   if(  onGr && labelType != LabelMGL ) { return false; }
 
   // if( !onGr && labelType == LabelMGL ) { return false; } // not here, need cross
 
   prepareText();
+
+  if( ! drawLabel ) {
+    return true;
+  }
 
   if( !img || !gr ) { return false; }
 
