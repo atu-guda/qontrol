@@ -21,6 +21,8 @@
 #include "scheme.h"
 #include "tsource.h"
 
+using namespace std;
+
 const char* TSource::helpstr = "<H1>TSource</H1>\n"
  "<p>Source of different kind of signals: <br>\n"
  "Have N parameters: <b>type, U, omega, .. b</b>,"
@@ -36,8 +38,8 @@ CTOR(TSource,TMiso)
 
 double TSource::f() noexcept
 {
-  double tau_x = omega;
   double omega_x = omega;
+  double tau_x   = omega_x;
   if( use_rfreq ) {
     omega_x *= 2 * M_PI;
   }
@@ -78,30 +80,30 @@ double TSource::f() noexcept
   pha_0 = fmod( pha, 1 ); // phase in range [ 0; 1 )
   bool pha_flip = pha_0 < old_pha_0;
 
-  double v;
+  double v, cv1;
   switch( (int)type ) {
     case so_sin:
-      v = uu_s * sin( omet_s ); cv = -v; break;
+      v = uu_s * sin( omet_s ); cv1 = -v; break;
     case so_sign:
-      v = uu_s * sign( sin( omet_s ) ); cv = -v; break;
+      v = uu_s * sign( sin( omet_s ) ); cv1 = -v; break;
     case so_sin_raise:
-      v = uu_s * sin( omet_s ) * ct / tt; cv = -v; break;
+      v = uu_s * sin( omet_s ) * ct / tt; cv1 = -v; break;
     case so_sign_raise:
-      v = uu_s * sign( sin( omet_s ) ) * ct / tt; cv = -v; break;
+      v = uu_s * sign( sin( omet_s ) ) * ct / tt; cv1 = -v; break;
     case so_dirac:
       v = 0;
       if( was_pulse == 0 && ct >= tau_x ) {
         v = uu_s / ctdt; was_pulse = 1;
       };
-      cv = -v;
+      cv1 = -v;
       break;
     case so_theta:
-      v = ( ct > tau_x ) ? uu_s : 0;  cv = uu_s - v; break;
+      v = ( ct > tau_x ) ? uu_s : 0;  cv1 = uu_s - v; break;
     case so_raise:
-      v = uu_s * ( ct + f_ch ) / tt;  cv = uu_s - v; break;
+      v = uu_s * ( ct + f_ch ) / tt;  cv1 = uu_s - v; break;
     case so_saw:
-      v = uu_s * pha_0;
-      cv = uu_s - v;
+      v   = uu_s * pha_0;
+      cv1 = uu_s - v;
       break;
     case so_saw2:
       v = 2 * pha_0;
@@ -109,35 +111,42 @@ double TSource::f() noexcept
         v = 2 - v;
       }
       v *= uu_s;
-      cv = uu_s - v;
+      cv1 = uu_s - v;
       break;
     case so_chaos_wave:
-      v = uu_s * f_ch;  cv = uu_s - v; break;
+      v = uu_s * f_ch;  cv1 = uu_s - v; break;
     case so_triangle:
       if( pha_0 <= 0.25 )
         v = uu_s * 4 * pha_0;
       else if ( pha_0 <= 0.75 )
-        v = uu_s * ( 1 - 4*(pha_0-0.25));
+        v = uu_s * (  1 - 4 * ( pha_0 - 0.25 ) );
       else
-        v = uu_s * ( -1 +4*(pha_0-0.75));
-      cv = - v;
+        v = uu_s * ( -1 + 4 * ( pha_0 - 0.75 ) );
+      cv1 = - v;
       break;
     case so_phase:
-      v = pha_0; cv = 1 - v;
+      v = pha_0; cv1 = 1 - v;
       break;
     case so_pulse:
-      v = (pha_flip ? uu_s : 0) ;    cv = uu_s - v;
+      v = pha_flip ? uu_s : 0;   cv1 = uu_s - v;
       break;
     case so_pwm:
-      v = ( pha_0 >= dc0 && pha_0 < dc ) ? uu_s : 0;  cv = uu_s - v;
+      v = ( pha_0 >= dc0 && pha_0 < dc ) ? uu_s : 0;  cv1 = uu_s - v;
       break;
     case so_ladder:
       v = uu_s * int( pha );
-      cv = - v;
+      cv1 = - v;
       break;
-    default: v = 0;
+    default: v = 0; cv1 = uu_s;
   };
-  v += cc; cv += cc;
+
+  if( !isInBounds( tmin.cval(), ct, tmax.cval() ) ) {
+    v = 0; cv1 = uu_s;
+  }
+
+  v += cc; cv1 += cc;
+  v  = clamp(   v, vmin.cval(), vmax.cval() );
+  cv = clamp( cv1, vmin.cval(), vmax.cval() );
   u2 = pow2( v );
   return v;
 }
@@ -147,12 +156,12 @@ int TSource::do_preRun()
   tt = rinf->T;
   if( use_u_ch ) {
     eff_seedType_u = seedType_u;
-    if( seedType_u == 3 ) { // as model
-      getUpData( "seedType", &eff_seedType_u );
+    if( seedType_u == SeedType::asModel ) {
+      getUpData( QSL("seedType"), &eff_seedType_u );
     };
     bseed_u = 0;
     if( addBaseSeed_u ) {
-      getUpData( "seed", &bseed_u );
+      getUpData( QSL("seed"), &bseed_u );
     };
     hseed_u = 0;
     if( addHash_u ) {
@@ -162,12 +171,12 @@ int TSource::do_preRun()
   // Phi
   if( use_f_ch ) {
     eff_seedType_p = seedType_p;
-    if( seedType_p == 3 ) { // as model
-      getUpData( "seedType", &eff_seedType_p );
+    if( seedType_p == SeedType::asModel ) {
+      getUpData( QSL("seedType"), &eff_seedType_p );
     };
     bseed_p = 0;
     if( addBaseSeed_p ) {
-      getUpData( "seed", &bseed_p );
+      getUpData( QSL("seed"), &bseed_p );
     };
     hseed_p = 0;
     if( addHash_p ) {

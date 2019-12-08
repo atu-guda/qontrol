@@ -71,49 +71,48 @@ class TSource : public TMiso  {
    /** called before each inner param loop. Unused param - -1 */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   /** type of input and misc flags */
-   PRM_LIST( type, efNRC, "&Type", "Source type", "enum=SourceType" ); //TODO
-   PRM_SWITCH( use_rfreq, efNRC, "Regual frequency", "Use natural frequency instead of \\omega", "" );
-   /** Amplitude */
-   PRM_PARAMD( uu, 0, "&U", "Amplitude of signal (or pulse max)", "def=1\nsep=col" );
-   /** Frequency */
-   PRM_PARAMD( omega, 0, "\\omega", "Frequency of source (or pulse width)", "def=0.7" );
-   /** constant shift */
-   PRM_PARAMD( cc, 0, "&C", "Constant base", "sep=col" );
-   /** phase shift */
-   PRM_PARAMD( phi, 0, "\\phi", "Phase shift", "def=0" );
-   PRM_PARAMD( dc0, 0,    "dc0", "Duty start",  "def=0.0" );
-   PRM_PARAMD( dc,  0,    "dc",  "Duty cycle",  "def=0.5" );
+   PRM_LIST(        type, efNRC, QSL("&Type")   , QSL("Source type")                              , QSL("enum=SourceType") ); //TODO
+   PRM_SWITCH( use_rfreq, efNRC, QSL("Natural") , QSL("Use natural frequency instead of \\omega") , QES );
+   PRM_PARAMD(        uu,     0, QSL("&U")      , QSL("Amplitude of signal (or pulse max)")       , QSL("def=1") );
+   PRM_PARAMD(     omega,     0, QSL("\\omega") , QSL("Frequency of source (or pulse width)")     , QSL("def=0.7") );
+   PRM_PARAMD(        cc,     0, QSL("&C")      , QSL("Constant base")                            , QSL("def=0") );
+   PRM_PARAMD(       phi,     0, QSL("\\phi")   , QSL("Phase shift")                              , QSL("def=0") );
+   PRM_PARAMD(      vmin,     0, QSL("vmin")    , QSL("Minimum value")                            , QSL("def=-1e100\nsep=col") );
+   PRM_PARAMD(      vmax,     0, QSL("vmax")    , QSL("Maximum value")                            , QSL("def=1e100") );
+   PRM_PARAMD(       dc0,     0, QSL("dc0")     , QSL("Duty start")                               , QSL("def=0") );
+   PRM_PARAMD(        dc,     0, QSL("dc")      , QSL("Duty cycle")                               , QSL("def=0.5") );
+   PRM_PARAMD(      tmin, efNRC, QSL("tmin")    , QSL("Minimum time")                             , QSL("def=-1e100") );
+   PRM_PARAMD(      tmax, efNRC, QSL("tmax")    , QSL("Maximum time")                             , QSL("def=1e100") );
 
    // ----------- U chaos ----------------------
-   PRM_SWITCH( use_u_ch, efNRC, "use U chaos", "Use amplitude perturbations", "sep=tab\ntabname=Chaos" );
-   PRM_PARAMD(  u_ch_v0, efNRC, "vU min"     , "Minimum value of amplitule factor", "def=0.5" );
-   PRM_PARAMD(  u_ch_vm, efNRC, "vU max"     , "Maximum value of amplitule factor", "def=1.5" );
-   PRM_PARAMD(  u_ch_t0, efNRC, "tU min"     , "Minimum time of change", "def=2\nmin=1e-20\nmax=1e20" );
-   PRM_PARAMD(  u_ch_tm, efNRC, "tU max"     , "Maximum time of change", "def=10\nmin=1e-20\nmax=1e20" );
-   PRM_INT(      seed_u, efNRC, "U seed"     , "Random Generator seed", "def=RND" );
-   PRM_LIST( seedType_u, efNRC, "U seed type", "When to seed", "def=3\nenum=SeedType" );
-   PRM_SWITCH( addBaseSeed_u, efNRC, "U add base seed", "Add seed from base(model)", "def=1");
-   PRM_SWITCH( addHash_u, efNRC, "U add hash", "Add hash(fullname) to seed", "def=1");
+   PRM_SWITCH( use_u_ch, efNRC, QSL("use U chaos"), QSL("Use amplitude perturbations"), QSL("sep=tab\ntabname=Chaos") );
+   PRM_PARAMD(  u_ch_v0, efNRC, QSL("vU min")     , QSL("Minimum value of amplitude factor"), QSL("def=0.5") );
+   PRM_PARAMD(  u_ch_vm, efNRC, QSL("vU max")     , QSL("Maximum value of amplitude factor"), QSL("def=1.5") );
+   PRM_PARAMD(  u_ch_t0, efNRC, QSL("tU min")     , QSL("Minimum time of change"), QSL("def=2\nmin=1e-20\nmax=1e20") );
+   PRM_PARAMD(  u_ch_tm, efNRC, QSL("tU max")     , QSL("Maximum time of change"), QSL("def=10\nmin=1e-20\nmax=1e20") );
+   PRM_INT(      seed_u, efNRC, QSL("U seed")     , QSL("Random Generator seed"), QSL("def=RND") );
+   PRM_LIST( seedType_u, efNRC, QSL("U seed type"), QSL("When to seed"), QSL("def=3\nenum=SeedType") );
+   PRM_SWITCH( addBaseSeed_u, efNRC, QSL("U add base seed"), QSL("Add seed from base(model)"), QSL("def=1"));
+   PRM_SWITCH( addHash_u, efNRC, QSL("U add hash"), QSL("Add hash(fullname) to seed"), QSL("def=1"));
 
    // ----------- Phi chaos ----------------------
-   PRM_SWITCH( use_f_ch,efNRC, "use \\phi chaos", "Use phase perturbations", "sep=col" );
-   PRM_PARAMD( f_ch_v0, efNRC, "vF min"       , "Minimum value of phase factor", "def=-0.2" );
-   PRM_PARAMD( f_ch_vm, efNRC, "vF max"       , "Maximum value of phase factor", "def=0.2" );
-   PRM_PARAMD( f_ch_t0, efNRC, "tF min"       , "Minimum time of change", "def=2\nmin=1e-20\nmax=1e20" );
-   PRM_PARAMD( f_ch_tm, efNRC, "rF max"       , "Maximum time of change", "def=10\nmin=1e-20\nmax=1e20" );
-   PRM_INT( seed_p, efNRC,     "F seed"       , "Random Generator seed", "def=RND" );
-   PRM_LIST( seedType_p, efNRC,"F seed type"  , "When to seed", "def=3\nenum=SeedType" );
-   PRM_SWITCH( addBaseSeed_p, efNRC, "F add base to seed", "Add seed from base(model)", "def=1" );
-   PRM_SWITCH( addHash_p, efNRC, "F add hash", "Add hash(fullname) to seed", "def=1");
+   PRM_SWITCH( use_f_ch,efNRC, QSL("use \\phi chaos"), QSL("Use phase perturbations"), QSL("sep=col") );
+   PRM_PARAMD( f_ch_v0, efNRC, QSL("vF min")       , QSL("Minimum value of phase factor"), QSL("def=-0.2") );
+   PRM_PARAMD( f_ch_vm, efNRC, QSL("vF max")       , QSL("Maximum value of phase factor"), QSL("def=0.2") );
+   PRM_PARAMD( f_ch_t0, efNRC, QSL("tF min")       , QSL("Minimum time of change"), QSL("def=2\nmin=1e-20\nmax=1e20") );
+   PRM_PARAMD( f_ch_tm, efNRC, QSL("rF max")       , QSL("Maximum time of change"), QSL("def=10\nmin=1e-20\nmax=1e20") );
+   PRM_INT( seed_p, efNRC,     QSL("F seed")       , QSL("Random Generator seed"), QSL("def=RND") );
+   PRM_LIST( seedType_p, efNRC,QSL("F seed type")  , QSL("When to seed"), QSL("def=3\nenum=SeedType") );
+   PRM_SWITCH( addBaseSeed_p, efNRC, QSL("F add base to seed"), QSL("Add seed from base(model)"), QSL("def=1") );
+   PRM_SWITCH( addHash_p, efNRC, QSL("F add hash"), QSL("Add hash(fullname) to seed"), QSL("def=1"));
 
    // inners
-   PRM_DOUBLE( pha,   efInner, "pha",   "current phase: 2\\pi t=1", ""  );
-   PRM_DOUBLE( pha_0, efInner, "pha_0", "current phase in [0;1) range", ""  );
-   PRM_DOUBLE( u2,    efInner, "u2", "u^2", ""  );
-   PRM_DOUBLE( cv,    efInner, "cv", "Complement to v", ""  );
-   PRM_DOUBLE( T_0,   efInner, "T_0", "Period", "def=1"  );
-   PRM_DOUBLE( T_1,   efInner, "T_1", "dc part of period", "def=1"  );
+   PRM_DOUBLE( pha,   efInner, QSL("pha"),   QSL("current phase: 2\\pi t=1"), QES  );
+   PRM_DOUBLE( pha_0, efInner, QSL("pha_0"), QSL("current phase in [0;1) range"), QES  );
+   PRM_DOUBLE( u2,    efInner, QSL("u2"),    QSL("u^2"), QES  );
+   PRM_DOUBLE( cv,    efInner, QSL("cv"),    QSL("Complement to v"), QES  );
+   PRM_DOUBLE( T_0,   efInner, QSL("T_0"),   QSL("Period"), QSL("def=1")  );
+   PRM_DOUBLE( T_1,   efInner, QSL("T_1"),   QSL("dc part of period"), QSL("def=1")  );
 
    // NO inputs
 
