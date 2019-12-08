@@ -17,6 +17,8 @@
 
 #include "tpid.h"
 
+using namespace std;
+
 const char* TPid::helpstr = "<H1>TPid</H1>\n"
  "<p>Integrators, differentiators and proportional element: <br>\n"
  "Have 6 parameters: <b>kd2, kd1, kp, ki1, ki1, aver</b>.\n"
@@ -44,7 +46,7 @@ int TPid::miso_startLoop( long /*acnx*/, long /*acny*/ )
 
 double TPid::f() noexcept
 {
-  double uc = in_u;
+  double uc = in_u.cval() - in_n.cval();
 
   if( start ) {
     u_old = u_old2 = uc;
@@ -60,6 +62,7 @@ double TPid::f() noexcept
   if( aver && ct > 0 ) {
     v /= ct;
   }
+  v = clamp( v, vmin.cval(), vmax.cval() );
   u_old2 = u_old; u_old = uc;
   x2 = v * v;
   return v;

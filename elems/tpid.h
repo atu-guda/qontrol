@@ -34,22 +34,25 @@ class TPid : public TMiso  {
    virtual int do_preRun() override;
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   PRM_PARAMD( kd2,      0, "k_{d2}",   "Coefficient in second derivation", "" );
-   PRM_PARAMD( kd1,      0, "k_{&d1}",  "Coefficient in first derivation" , "" );
-   PRM_PARAMD( kp,       0, "k_{&p}" ,  "Coefficient in proportional part", "sep=col\ndef=1" );
-   PRM_PARAMD( b,        0, "&b",       "Const shift", "" );
-   PRM_PARAMD( ki1,      0, "k_{&i1}",  "Coefficient in first integrator" , "sep=col" );
-   PRM_PARAMD( ki2,      0, "k_{i2}",   "Coefficient in second integrator", "" );
-   PRM_SWITCH( aver, efNRC, "&Average", "Calculate average value", "sep=col" );
+   PRM_PARAMD( kd2,      0, QSL("k_{d2}"),   QSL("Coefficient in second derivation"), QES );
+   PRM_PARAMD( kd1,      0, QSL("k_{&d1}"),  QSL("Coefficient in first derivation") , QES );
+   PRM_PARAMD( kp,       0, QSL("k_{&p}") ,  QSL("Coefficient in proportional part"), QSL("sep=col\ndef=1") );
+   PRM_PARAMD( b,        0, QSL("&b"),       QSL("Const shift")                     , QES );
+   PRM_PARAMD( ki1,      0, QSL("k_{&i1}"),  QSL("Coefficient in first integrator") , QSL("sep=col") );
+   PRM_PARAMD( ki2,      0, QSL("k_{i2}"),   QSL("Coefficient in second integrator"), QES );
+   PRM_PARAMD( vmin,     0, QSL("vmin") ,    QSL("Minimum value")                   , QSL("def=-1e100\nsep=col") );
+   PRM_PARAMD( vmax,     0, QSL("vmax") ,    QSL("Maximum value")                   , QSL("def=1e100") );
+   PRM_SWITCH( aver, efNRC, QSL("&Average"), QSL("Calculate average value")         , QSL("sep=block") );
 
-   PRM_INPUT( in_u,      0, "in_{&u}",  "Input u(x)",  "sep=block" );
+   PRM_INPUT( in_u,      0, QSL("in_{&u}"),  QSL("Input u(x)"),     QSL("sep=block") );
+   PRM_INPUT( in_n,      0, QSL("in_{n}") ,  QSL("Negative input"), QSL("sep=col") );
 
-   PRM_DOUBLE(  d1, efInner, "d1",          "dx/dt", "" );
-   PRM_DOUBLE(  d2, efInner, "d2",      "d^2x/dt^2", "" );
-   PRM_DOUBLE( vi1, efInner, "vi1", "integral x dt", "" );
-   PRM_DOUBLE( vi2, efInner, "vi2",  "int int x dt", "" );
+   PRM_DOUBLE(  d1, efInner, QSL("d1"),          QSL("dx/dt"), QES );
+   PRM_DOUBLE(  d2, efInner, QSL("d2"),      QSL("d^2x/dt^2"), QES );
+   PRM_DOUBLE( vi1, efInner, QSL("vi1"), QSL("integral x dt"), QES );
+   PRM_DOUBLE( vi2, efInner, QSL("vi2"),  QSL("int int x dt"), QES );
 
-   PRM_DOUBLE(  x2, efInner, "x^2", "Squared output", "" );
+   PRM_DOUBLE(  x2, efInner, QSL("x^2"), QSL("Squared output"), QES );
 
    /** accumulators and old values */
    double u_old = 0, u_old2 = 0, tdt2 = 1;
