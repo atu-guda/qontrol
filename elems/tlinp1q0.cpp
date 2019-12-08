@@ -18,6 +18,8 @@
 #include "miscfun.h"
 #include "tlinp1q0.h"
 
+using namespace std;
+
 const char* TLinP1Q0::helpstr = "<h1>TLinP1Q0</h1>\n"
  "<p>Integrate (linear if f(x)==x) differential equation: <br/>\n"
  "<b> dx/dt = a * ( ku * u(t) - x ) </b><br/>\n"
@@ -50,11 +52,15 @@ int TLinP1Q0::miso_startLoop( long /*acnx*/, long /*acny*/ )
 double TLinP1Q0::f() noexcept
 {
   double f = ( use_u1 ) ? in_f : x_old;
-  double u = ( use_u2 ) ? pow2( in_u ) : in_u;
-  tau = 1.0 / a; // ? only at param change?
+  double u00 = in_u - in_n;
+  u0 = u00;
+
+  double u = ( use_u2 ) ? pow2( u00 ) : u00;
+  tau = 1.0 / a;
   double x = x_old + a * ctdt * ( ku * u - f );
   x_old = x;
   double v =  ( use_sqrt0 ) ? sqrt0( x ) : x;
+  v = clamp( v, vmin.cval(), vmax.cval() );
   x2 = v * v;
   return v;
 }

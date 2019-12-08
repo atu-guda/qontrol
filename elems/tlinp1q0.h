@@ -40,17 +40,24 @@ class TLinP1Q0 : public TMiso  {
    virtual double f() noexcept override;
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   PRM_PARAMD( a,         0, "&a", "a in dx/dt = a*f(ku*u(t)-x)", "def=1" );
-   PRM_PARAMD( ku,        0, "&k_u",  "Amplification: coefficient near u(t) ", "def=1" );
-   PRM_SWITCH( use_u1,    0, "use in_f as &f()", "Use in_f as source of f()", "sep=col" );
-   PRM_SWITCH( use_u2,    0, "u^&2", "Calculate u^2 before usage", "sep=col" );
-   PRM_SWITCH( use_sqrt0, 0, "sqrt0(x)", "Output sqrt0(x)", "" );
+   PRM_PARAMD( a,         0, QSL("&a"),    QSL("a in dx/dt = a*f(ku*u(t)-x)"),           QSL("def=1") );
+   PRM_PARAMD( ku,        0, QSL("&k_u"),  QSL("Amplification: coefficient near u(t) "), QSL("def=1") );
 
-   PRM_INPUT( in_u,        0, "&in_u",     "Signal input",  "sep=block" );
-   PRM_INPUT( in_f,        0,  "in_f", "Functional input",  "sep=col" );
-   PRM_DOUBLE( tau,  efInner, "\\tau",   "Effective time",  "def=1"  );
+   PRM_PARAMD( vmin,      0, QSL("vmin") , QSL("Minimum value")                        , QSL("def=-1e100\nsep=col") );
+   PRM_PARAMD( vmax,      0, QSL("vmax") , QSL("Maximum value")                        , QSL("def=1e100") );
 
-   PRM_DOUBLE(  x2,  efInner, "x^2",     "Squared output", "" );
+   PRM_SWITCH( use_u1,    0, QSL("use in_f"), QSL("Use in_f as source of f()")         , QSL("sep=col") );
+   PRM_SWITCH( use_u2,    0, QSL("u^&2"),     QSL("Calculate u^2 before usage")        , QSL("sep=col") );
+   PRM_SWITCH( use_sqrt0, 0, QSL("sqrt0(x)"), QSL("Output sqrt0(x)")                   , QES );
+
+   PRM_INPUT( in_u,        0, QSL("&in_u"),  QSL("Signal input"),     QSL("sep=block") );
+   PRM_INPUT( in_n,        0, QSL("in_n"),   QSL("Negative input"),   QSL("sep=col") );
+   PRM_INPUT( in_f,        0, QSL("in_f"),   QSL("Functional input"), QSL("sep=col") );
+
+   PRM_DOUBLE( tau,  efInner, QSL("\\tau"),   QSL("Effective time"),  QSL("def=1")  );
+   PRM_DOUBLE(  u0,  efInner, QSL("u0"),      QSL("u_{in}-u_{n}"),    QES  );
+
+   PRM_DOUBLE(  x2,  efInner, QSL("x^2"),     QSL("Squared output"), QES );
 
    /** old value of x  */
    double x_old = 0;
