@@ -59,30 +59,30 @@ class TFuncPoly : public TMiso  {
    virtual double f() noexcept override;
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
 
-   /** type of function */
-   PRM_LIST( type, 0, "&Type", "Function type", "enum=FuncType" );
-   /** coefficients and shift */
-   PRM_PARAMD( a,  0, "&a", "Parameter a", "sep=col\ndef=1" );
-   PRM_PARAMD( b,  0, "&b", "Parameter b", "def=1" );
-   PRM_PARAMD( c,  0, "&c", "Parameter c", "" );
-   PRM_PARAMD( d,  0, "&d", "Parameter d", "" );
-   PRM_PARAMD( e,  0, "&e", "Parameter e", "sep=col" );
-   PRM_PARAMD( g,  0, "&g", "Parameter g", "" );
-   PRM_PARAMD( ra, 0, "ra", "Reverse a", "def=1" );
-   PRM_PARAMD( rb, 0, "rb", "Reverse b", "def=1" );
-   PRM_PARAMD( x0, 0, "x0", "Input shift: y = in_0 - in_1 - x0;", "" );
+   PRM_LIST(    type, 0, QSL("&Type"), QSL("Function type")                      , QSL("enum=FuncType") );
+   PRM_PARAMD(     a, 0, QSL("&a")   , QSL("Parameter a")                        , QSL("def=1") );
+   PRM_PARAMD(     b, 0, QSL("&b")   , QSL("Parameter b")                        , QSL("def=1") );
+   PRM_PARAMD(     c, 0, QSL("&c")   , QSL("Parameter c")                        , QES );
+   PRM_PARAMD(     d, 0, QSL("&d")   , QSL("Parameter d")                        , QES );
+   PRM_PARAMD(     e, 0, QSL("&e")   , QSL("Parameter e")                        , QES );
+   PRM_PARAMD(     g, 0, QSL("&g")   , QSL("Parameter g")                        , QSL("sep=col") );
+   PRM_PARAMD(    ra, 0, QSL("ra")   , QSL("Reverse a")                          , QSL("def=1") );
+   PRM_PARAMD(    rb, 0, QSL("rb")   , QSL("Reverse b")                          , QSL("def=1") );
+   PRM_PARAMD(    x0, 0, QSL("x0")   , QSL("Input shift: y = in_0 - in_1 - x0;") , QES );
+   PRM_PARAMD(  vmin, 0, QSL("vmin") , QSL("Minimum value")                      , QSL("def=-1e100") );
+   PRM_PARAMD(  vmax, 0, QSL("vmax") , QSL("Maximum value")                      , QSL("def=1e100") );
 
-   PRM_DOUBLE( y,  efInner, "y",   "in_0 - in_1 - x0", "" );
-   PRM_DOUBLE( y2, efInner, "y^2", "y^2", "" );
-   PRM_DOUBLE( ae, efInner, "a/ra", "effective a", "" );
-   PRM_DOUBLE( be, efInner, "b/rb", "effective b", "" );
+   PRM_DOUBLE( y,  efInner, QSL("y"),    QSL("in_0 - in_1 - x0"), QES );
+   PRM_DOUBLE( y2, efInner, QSL("y^2"),  QSL("y^2")             , QES );
+   PRM_DOUBLE( ae, efInner, QSL("a/ra"), QSL("effective a")     , QES );
+   PRM_DOUBLE( be, efInner, QSL("b/rb"), QSL("effective b")     , QES );
 
-   PRM_INPUT( in_0, 0, "in_{&0}", "First input",  "sep=block" );
-   PRM_INPUT( in_1, 0, "in_{&1}", "Second input", "sep=col" );
-   PRM_INPUT( in_2, 0, "in_{&2}", "Third input",  "sep=block" );
-   PRM_INPUT( in_3, 0, "in_{&3}", "Fourth input", "sep=col" );
+   PRM_INPUT( in_0, 0, QSL("in_{&0}"), QSL("First input"),  QSL("sep=block") );
+   PRM_INPUT( in_1, 0, QSL("in_{&1}"), QSL("Second input"), QSL("sep=col") );
+   PRM_INPUT( in_2, 0, QSL("in_{&2}"), QSL("Third input"),  QSL("sep=block") );
+   PRM_INPUT( in_3, 0, QSL("in_{&3}"), QSL("Fourth input"), QSL("sep=col") );
 
-   PRM_DOUBLE( x2, efInner, "x^2", "Squared output", "" );
+   PRM_DOUBLE( x2, efInner, QSL("x^2"), QSL("Squared output"), QES );
 
    Q_CLASSINFO( "nameHintBase",  "fp_" );
    DCL_DEFAULT_STATIC;

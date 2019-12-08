@@ -91,6 +91,7 @@ double TFuncPoly::f() noexcept
     default: v = 0;
   };
   v += g;
+  v = clamp( v, vmin.cval(), vmax.cval() );
   x2 = v * v;
   return v;
 }
