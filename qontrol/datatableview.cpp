@@ -41,6 +41,10 @@ void DataTableView::copySel() // slot
     }
     s += index.data().toString() + '\t' ;
     old_row = index.row();
+    if( s.size() > 100000 ) {
+      QMessageBox::critical( this, PACKAGE ": Error", QSL("Too many data to copy!"), QMessageBox::Ok ); \
+      break;
+    }
   }
   setClipboardStr( s );
 }
@@ -59,7 +63,7 @@ void DataTableView::keyPressEvent( QKeyEvent *ke )
       k |= Ct;
   }
 
-  bool my = false;
+  bool my = true;
   switch( k ) {
     case Qt::Key_C | Ct:
       copySel();
@@ -68,6 +72,7 @@ void DataTableView::keyPressEvent( QKeyEvent *ke )
       findData();
       break;
     default:
+      my = false;
       break;
   }
 
