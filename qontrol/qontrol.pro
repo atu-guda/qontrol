@@ -34,6 +34,7 @@ SOURCES += \
   contout.cpp \
   datapool.cpp \
   dataset.cpp \
+  datatableview.cpp \
   doubledialog.cpp \
   elemfact.cpp \
   elemparams.cpp \
@@ -136,6 +137,7 @@ HEADERS += \
   contout.h \
   datapool.h \
   dataset.h \
+  datatableview.h \
   defs.h \
   doubledialog.h \
   elemparams.h \

@@ -8,6 +8,7 @@
 
 #include "doubledialog.h"
 #include "doubletable.h"
+#include "datatableview.h"
 #include "miscfun.h"
 
 using namespace std;
@@ -27,7 +28,7 @@ void DoubleDialog::setupUi()
   auto lay = new QGridLayout( this );
 
   model = new DoubleTableModel( di, this );
-  view = new QTableView( this );
+  view = new DataTableView( this );
   view->setModel( model );
   lay->addWidget( view, 0, 0 );
 
@@ -77,22 +78,6 @@ void DoubleDialog::findData()
 
 void DoubleDialog::copySel()
 {
-  QString s;
-  int old_row = -1;
-  auto indexes = view->selectionModel()->selection().indexes();
-
-  for( const auto& index : indexes ) {
-    if( ! index.isValid() ) {
-      continue;
-    }
-    // s += QSL("( ") % QSN( index.row() ) % QSL(" , ") % QSN( index.column() ) % QSL(" )\n");
-    if( old_row != -1 && old_row != index.row() ) {
-      s += '\n';
-    }
-    s += index.data().toString() + '\t' ;
-    old_row = index.row();
-  }
-  setClipboardStr( s );
-  // QMessageBox::information( this, QSL("Copy"), s );
+  view->copySel();
 }
 

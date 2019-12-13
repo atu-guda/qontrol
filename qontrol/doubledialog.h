@@ -12,6 +12,7 @@
 
 struct DatasInfo;
 class DoubleTableModel;
+class DataTableView;
 
 class DoubleDialog : public QDialog {
  Q_OBJECT
@@ -28,7 +29,7 @@ class DoubleDialog : public QDialog {
    const QString &stat_str;
 
    DoubleTableModel *model = nullptr;
-   QTableView *view = nullptr;
+   DataTableView *view = nullptr;
 
    QPushButton *btn_find = nullptr;
    QPushButton *btn_copy = nullptr;
