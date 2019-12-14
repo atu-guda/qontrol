@@ -25,6 +25,8 @@
 #include "miscfun.h"
 #include "addelemdia.h"
 #include "pastedialog.h"
+#include "stringtablemodel.h"
+#include "datatableview.h"
 
 CmdView::CmdView( CommonSubwin *a_par, HolderData *a_storage )
   : QWidget( a_par ), storage( a_storage ), par( a_par )
@@ -276,40 +278,42 @@ bool CmdView::infoObj()
   auto dia = new QDialog( this );
   dia->setWindowTitle( QSL( PACKAGE ": Structure of " ) + selObj->getFullName() );
 
+  QStringList hlabels;
+  hlabels << QSL("Name") << QSL("Type") << QSL("Value") << QSL("Description") << QSL("Flags"); // << QSL("x")
+
+  QList<QStringList> d;
+
+  QObjectList childs = selObj->children();
+
+  for( auto ob :  childs ) {
+    HolderData *ho = qobject_cast<HolderData*>(ob);
+    QStringList oi;
+    oi << ob->objectName();
+    if( ho ) {
+      oi << ho->getType()
+         << ho->textVisual()
+         << ( ho->getParm( QSL("vis_name") ) + QSL(" \"") + ho->getParm( QSL("descr") ) + QSL("\"") )
+         <<  flags2str(ho->getFlags());
+
+    } else { // unknown
+      oi << QSL("???unknown???")
+         << ob->metaObject()->className()
+         << QSL("?")
+         << QSL("?");
+    }
+    d.append( oi );
+  }
+
+
   QFontMetrics fm( dia->font() );
   int em = fm.width( 'W' );
 
   auto lay = new QVBoxLayout();
 
-  auto tv = new QTableWidget( selObj->size(), 5, dia );
-  QStringList hlabels;
-  hlabels << QSL("Name") << QSL("Type") << QSL("Value") << QSL("Descr") << QSL("Flags"); // << QSL("x")
-  tv->setHorizontalHeaderLabels( hlabels );
-  tv->setColumnWidth( 0,  8*em );
-  tv->setColumnWidth( 1,  9*em );
-  tv->setColumnWidth( 2, 28*em );
-  tv->setColumnWidth( 3, 23*em );
-  tv->setColumnWidth( 5,  6*em );
+  auto mod = new StringTableModel( &d, &hlabels, this );
 
-  QObjectList childs = selObj->children();
-
-  int i = 0;
-  for( auto ob :  childs ) {
-    tv->setItem( i, 0, new  QTableWidgetItem( ob->objectName() ) );
-    HolderData *ho = qobject_cast<HolderData*>(ob);
-    if( ho ) {
-      tv->setItem( i, 1, new QTableWidgetItem( ho->getType() ) );
-      tv->setItem( i, 2, new QTableWidgetItem( ho->textVisual() ) );
-      tv->setItem( i, 3, new QTableWidgetItem( ho->getParm( QSL("vis_name") ) + QSL(" \"")
-                    + ho->getParm( QSL("descr") ) + QSL("\"") ) );
-      tv->setItem( i, 4, new QTableWidgetItem( flags2str(ho->getFlags()) ) );
-
-    } else { // unknown
-      tv->setItem( i, 1, new QTableWidgetItem( QSL("???unknown???") ) );
-      tv->setItem( i, 2, new QTableWidgetItem( ob->metaObject()->className() ) );
-    }
-    ++i;
-  }
+  auto tv = new DataTableView( this );
+  tv->setModel( mod );
 
   lay->addWidget( tv );
 

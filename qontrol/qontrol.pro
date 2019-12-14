@@ -66,6 +66,7 @@ SOURCES += \
   settingsdata.cpp \
   simul.cpp \
   simulview.cpp \
+  stringtablemodel.cpp \
   tmiso.cpp \
   tmodel.cpp \
   datawidget.cpp \
@@ -168,6 +169,7 @@ HEADERS += \
   settingsdata.h \
   simul.h \
   simulview.h \
+  stringtablemodel.cpp \
   tmiso.h \
   tmodel.h \
   datawidget.h \
