@@ -5,7 +5,6 @@ Current DataPool and selection method/index in TModel and Simulation
 Add label or plot elements in MglVie
 BUG: old value held for object w/o clpCalcAtStart or disabled noCalcStart: need atStartLoop?
 BUG: object button may change place in dialog: may by uncontrolled order?
-Info dialog: copy all to clipboard <Tab>, <NL>
 Snapshots of objects data: auto at end, + controlled: use by plots...
 Filters: generic, Butter, cheb ....
 Object wide link?

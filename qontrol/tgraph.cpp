@@ -60,14 +60,14 @@ QVariant GraphElem::dataObj( int col, int a_role ) const
     // real statustip + buttons
     QString s = objectName() % QSL(":") % src.cval();
     QStringList el = getEnumStrings( QSL("DataType") );
-    s += " (" % el.at( type );
+    s += QSL(" (") % el.at( type );
     if( is2D ) {
-      s += ",2D";
+      s += QSL(",2D");
     }
     if( ! extra.isEmpty() ) {
-      s += QSL("," ) % extra.cval();
+      s += QSL(",") % extra.cval();
     }
-    s += ") ";
+    s += QSL(") ");
     if( ! label.isEmpty() ) {
       s += QSL(" \"" ) % label.cval() % QSL( "\"" );
     }
@@ -92,7 +92,7 @@ LineRole GraphElem::fillForPlot( long &g_nn, long &g_ny, int igc )
   ig = -1;
   TModel *model = getAncestorT<TModel>();
   if( !model ) {
-    qCritical() << "not found model " << NWHE;
+    qCritical() << QSL("model not found!") << NWHE;
     return rl;
   }
   if( src.isEmpty() ) {
@@ -211,7 +211,7 @@ LineRole GraphElem::fillForPlot( long &g_nn, long &g_ny, int igc )
       rl = LineRole::c5;
       break;
     default:
-      qWarning() << "unknown type "<< (int)(type) << " label " << label << NWHE;
+      qWarning() << QSL("unknown type ") << (int)(type) << QSL(" label ") << label << NWHE;
       break;
   }
 
@@ -374,7 +374,7 @@ bool PlotLabel::render( QImage *img, mglGraph *gr, bool onGr ) const
       rc = renderTeX( img, p0 );
       break;
     default:
-      qWarning() << "Unknown label type: " << labelType << NWHE;
+      qWarning() << QSL("Unknown label type: ") << labelType << NWHE;
       break;
   }
 
@@ -603,10 +603,10 @@ const char* TGraph::helpstr = "<H1>TGraph</H1>\n"
 STD_CLASSINFO(TGraph,clpSpecial);
 
 CTOR(TGraph,LinkedObj) ,
-     scd( new ScaleData( "scd", this, 0, "scale", "scale data", "sep=blockend" ) ),
+     scd( new ScaleData( QSL("scd"), this, 0, QSL("scale"), QSL("scale data"), QSL("sep=blockend") ) ),
      tli( LineRole::sz, nullptr )
 {
-  allowed_types = "GraphElem,PlotLabel,PlotFlippery,+SPECICAL";
+  allowed_types = QSL("GraphElem,PlotLabel,PlotFlippery,+SPECICAL");
   scd->setImmutable();
   needReadInputsRecurse = true;
   reset();
@@ -714,13 +714,13 @@ int TGraph::prepare()
         ve_fx[i+j*nx] = i;
       }
     }
-    ge_fx  = make_shared<GraphElem>( "_fx",  nullptr, efInner, "fake X data", "fake X", "" );
+    ge_fx  = make_shared<GraphElem>( QSL("_fx"),  nullptr, efInner, QSL("fake X data"), QSL("fake X"), QES );
     ge_fx->type = GraphElem::DataType::DataAxisX;
-    ge_fx->is2D = was_2D; ge_fx->label = "X_n";
+    ge_fx->is2D = was_2D; ge_fx->label = QSL("X_n");
     ge_fx->role = LineRole::axisX;
     ge_fx->nn = nn; ge_fx->nx = nx; ge_fx->ny = ny;
     ge_fx->pl_label = "X_n";
-    ge_fx->v_min = 0; ge_fx->v_max = nx-1.0;
+    ge_fx->v_min = 0; ge_fx->v_max = nx - 1.0;
     ge_fx->ve = &ve_fx;
 
     tli[LineRole::axisX] = ge_fx.get();
@@ -733,9 +733,9 @@ int TGraph::prepare()
         ve_fy[i+j*nx] = j;
       }
     }
-    ge_fy  = make_shared<GraphElem>( "_fy",  nullptr, efInner, "fake Y data", "fake Y", "" );
+    ge_fy  = make_shared<GraphElem>( QSL("_fy"),  nullptr, efInner, QSL("fake Y data"), QSL("fake Y"), QES );
     ge_fy->type = GraphElem::DataType::DataAxisY;
-    ge_fy->is2D = was_2D; ge_fy->label = "Y_n";
+    ge_fy->is2D = was_2D; ge_fy->label = QSL("Y_n");
     ge_fy->role = LineRole::axisY;
     ge_fy->nn = nn; ge_fy->nx = nx; ge_fy->ny = ny;
     ge_fy->pl_label = "Y_n";
@@ -753,9 +753,9 @@ int TGraph::prepare()
   // create fake zero array
   auto mdz = new mglData( nx, ny );
   for( long i=0; i<np; ++i ) { mdz->a[i] = 0.0; };
-  ge_zero  = make_shared<GraphElem>( "_zero",  nullptr, efInner, "zero data", "zero", "" );
+  ge_zero  = make_shared<GraphElem>( QSL("_zero"),  nullptr, efInner, QSL("zero data"), QSL("zero"), QES );
   ge_zero->type = GraphElem::DataType::DataNone;
-  ge_zero->is2D = was_2D; ge_zero->label = "0!";
+  ge_zero->is2D = was_2D; ge_zero->label = QSL("0!");
   ge_zero->role = LineRole::none;
   ge_zero->nn = nn; ge_zero->nx = nx; ge_zero->ny = ny;
   ge_zero->pl_label = "0!";
@@ -781,6 +781,7 @@ int TGraph::prepare()
     }
     ge->ve = nullptr; // unused from now
   }
+
   if( ge_fx ) { // the same for fake X, if exist. TODO: common array
     const dvector *ve = ge_fx->ve;
     auto md = new mglData( nx, ny );
@@ -795,6 +796,7 @@ int TGraph::prepare()
     }
     ge_fx->ve = nullptr;
   }
+
   if( ge_fy ) { // the same for fake X, if exist. TODO: common array
     const dvector *ve = ge_fy->ve;
     auto md = new mglData( nx, ny );
@@ -835,10 +837,11 @@ int TGraph::prepare()
     z0 = v_min; z1 = v_max;
   }
 
-  for( auto flp : TCHILD(PlotFlippery*) ) {
-    double fl_x0 = flp->getDataD( QSL("x0" ), x0 );
-    double fl_y0 = flp->getDataD( QSL("y0" ), y0 );
-    double fl_z0 = flp->getDataD( QSL("z0" ), z0 );
+  // extend plot area to all Flipperies
+  for( const auto flp : TCHILD(PlotFlippery*) ) {
+    const double fl_x0 = flp->getDataD( QSL("x0" ), x0 );
+    const double fl_y0 = flp->getDataD( QSL("y0" ), y0 );
+    const double fl_z0 = flp->getDataD( QSL("z0" ), z0 );
     if( fl_x0 < x0 ) { x0 = fl_x0; }; // TODO: common action
     if( fl_x0 > x1 ) { x1 = fl_x0; };
     if( fl_y0 < y0 ) { y0 = fl_y0; };
@@ -862,12 +865,12 @@ long TGraph::fillSqueeze( vector<uint8_t> &plp )
   const long max_nn_nosqz = 2000;
   GraphElem *ge_x = tli[LineRole::axisX];
   if( !ge_x ) { // unlikely
-    qWarning() << "warn: X axis not found!!!" << NWHE;
+    qWarning() << QSL("warn: X axis not found!!!") << NWHE;
     return 0;
   }
   const dvector *ve_x = ge_x->ve;
   if( !ve_x ) { // unlikely
-    qWarning() << "X axis array not found!!!" << NWHE;
+    qWarning() << QSL("X axis array not found!!!") << NWHE;
     return 0;
   }
 
@@ -1059,7 +1062,7 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
     }
     const char *clbl = lbl.c_str();
     // qWarning() << "clbl= " << clbl << NWHE;
-    if( ! ( pl->pl_label == "." || pl->pl_label == " "  ) ) {
+    if( ! ( pl->pl_label == "."s || pl->pl_label == " "s  ) ) {
       gr.AddLegend( clbl, pl->pl_extra.c_str() );
     }
     if( is_selected ) { // selected plotted last
@@ -1474,7 +1477,7 @@ void TGraph::plotToPng( const QString &fn )
   renderTo( timg, nullptr, scd );
 
   if( ! timg.save( efn, "PNG", 50 ) ) {
-    qWarning() << "Fail to save png for plot" << NWHE;
+    qWarning() << QSL("Fail to save png for plot") << NWHE;
   }
 }
 
@@ -1486,7 +1489,7 @@ int TGraph::fillDatasInfo( DatasInfo *di ) const
 
   TModel *model = getAncestorT<TModel>();
   if( !model ) {
-    qCritical() << "not found model " << NWHE;
+    qCritical() << QSL("model not found!") << NWHE;
     return 0;
   }
 
@@ -1517,7 +1520,7 @@ int TGraph::fillDatasInfo( DatasInfo *di ) const
     if( nn_c < nn ) {
       nn = nn_c;
     }
-    QString lbl = ge->getDataD( QSL("label"),  QSL( "v_%1" ).arg( QSN( di->ves.size() ) ) );
+    QString lbl = ge->getDataD( QSL("label"),  QSL("v_%1").arg( QSN( di->ves.size() ) ) );
     di->labels.push_back( lbl );
     di->ves.push_back( ve );
   }
@@ -1547,12 +1550,54 @@ int  TGraph::dump( const QString &fn, const QString &delim )
 
   QFile of( fn );
   if( ! of.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-    qWarning() << "fail to open file "<< fn << NWHE;
+    qWarning() << QSL("fail to open file ") << fn << NWHE;
     return 0;
   }
   QTextStream os( &of );
 
   n = di.dump( os, delim );
+  return n;
+}
+
+int  TGraph::dumpPlotted( const QString &fn, const QString &delim )
+{
+  if( !prepared  && prepare() < 1 ) {
+    qWarning() << QSL("Fail prepare data!") << NWHE;
+    return 0;
+  }
+
+  QFile of( fn );
+  if( ! of.open( QIODevice::WriteOnly | QIODevice::Text ) ) {
+    qWarning() << QSL("fail to open file ") << fn << NWHE;
+    return 0;
+  }
+  QTextStream os( &of );
+
+  bool is2D =  pli[0]->is2D;
+  const int out_prec = 10;
+
+  os << qSetFieldWidth( out_prec + 7 );
+  os << ( QSL("# ") + tli[LineRole::axisX]->label + delim );
+  if( is2D ) {
+    os << ( tli[LineRole::axisY]->label + delim );
+  }
+  for( const auto pl : pli ) {
+    os << ( delim + pl->label );
+  }
+  os << endl;
+
+  int n = 0;
+  for( int i=0; i<nn; ++i ) {
+    os << ( QSNL( d_x->a[i], out_prec ) );
+    if( is2D ) {
+      os << ( delim + QSNL( d_x->a[i], out_prec ) );
+    }
+    for( const auto pl : pli ) {
+      os << ( delim + QSNL( (pl->md)->a[i], out_prec ) );
+    }
+    os << endl;
+  }
+
   return n;
 }
 
@@ -1582,11 +1627,11 @@ int TGraph::addOutArr( const QString &o_name )
   }
 
   // find good name
-  QString nm0 = "y", nm = "y0";
+  QString nm0 = QSL("y"), nm = QSL("y0");
   if( ! was_x ) {
-    nm0 = nm = "x";
+    nm0 = nm = QSL("x");
   } else if( was_y ) {
-    nm0 = "z"; nm = "z0";
+    nm0 = QSL("z"); nm = QSL("z0");
   }
 
   for( int j=1; j<100; ++j ) {
@@ -1598,7 +1643,7 @@ int TGraph::addOutArr( const QString &o_name )
 
   GraphElem *ge = addObjT<GraphElem>( nm );
   if( !ge ) {
-    qWarning() << " Fail to create GraphElem " <<  nm << NWHE;
+    qWarning() << QSL("Fail to create GraphElem") <<  nm << NWHE;
     return 0;
   }
   ge->setData( QSL("src"), o_name );
@@ -1681,7 +1726,7 @@ QString color2style( int color, int lw, const QString &extra )
 
 QString toQString( const mglPoint &p )
 {
-  QString s = QSL( "[ %1; %2; %3 ]" ).arg( p.x ).arg( p.y ).arg( p.z );
+  QString s = QSL("[ %1; %2; %3 ]").arg( p.x ).arg( p.y ).arg( p.z );
   return s;
 }
 

@@ -205,6 +205,10 @@ QMenu* MglView::createPopupMenu()
   auto menu = new QMenu( this );
 
   QAction *act;
+  act = menu->addAction( QSL("Help (F1)") );
+  act->setShortcut( Qt::Key_F1 );
+  connect( act, &QAction::triggered, this, &MglView::showHelp );
+  menu->addSeparator();
 
   act = menu->addAction( QSL("Reset scale (&r)") );
   connect( act, &QAction::triggered, this, &MglView::resetScale );
@@ -226,10 +230,10 @@ QMenu* MglView::createPopupMenu()
   connect( act, &QAction::triggered, this, &MglView::print );
   act = menu->addAction( QSL("Export (&e)") );
   connect( act, &QAction::triggered, this, &MglView::exportPlot );
+  act = menu->addAction( QSL("Export data (&d)") );
+  connect( act, &QAction::triggered, this, &MglView::exportPlottedData );
   act = menu->addAction( QSL("Info (&i)") );
   connect( act, &QAction::triggered, this, &MglView::showInfo );
-  act = menu->addAction( QSL("Help (F1)") );
-  connect( act, &QAction::triggered, this, &MglView::showHelp );
   menu->addSeparator();
 
   act = menu->addAction( QSL("Toggle plot (&o)") );
@@ -315,6 +319,9 @@ void MglView::keyPressEvent( QKeyEvent *ke )
       break;
     case Qt::Key_E:
       exportPlot();
+      break;
+    case Qt::Key_D:
+      exportPlottedData();
       break;
     case Qt::Key_G:
       setMark();
@@ -734,8 +741,8 @@ void MglView::print()
 void MglView::exportPlot()
 {
   QString fn0 = gra->hintFileName() % QSL(".png");
-  QString fn = QFileDialog::getSaveFileName( this, "Save Picture", fn0,
-               "PNG files (*.png);;All files (*)" );
+  QString fn = QFileDialog::getSaveFileName( this, QSL("Save picture"), fn0,
+               QSL("PNG files (*.png);;All files (*)" ) );
   if( fn.isEmpty() ) {
     return;
   };
@@ -751,6 +758,19 @@ void MglView::exportPlot()
   }
 
 }
+
+void MglView::exportPlottedData()
+{
+  QString fn0 = gra->hintFileName() % QSL(".txt");
+  QString fn = QFileDialog::getSaveFileName( this, QSL("Save plotted data"), fn0,
+               QSL("Text files (*.txt);;All files (*)") );
+  if( fn.isEmpty() ) {
+    return;
+  };
+
+  gra->dumpPlotted( fn );
+}
+
 
 QString MglView::getInfo( bool more ) const
 {

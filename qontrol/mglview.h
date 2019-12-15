@@ -63,6 +63,7 @@ class MglView : public QWidget  {
    void zoomReset();
    void print();
    void exportPlot();
+   void exportPlottedData();
    void showInfo();
    void showHelp();
    void setMark();
