@@ -2,7 +2,7 @@
                           labowin.cpp  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000-2019 by atu
+    copyright            : (C) 2000-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -72,7 +72,7 @@ LaboWin::LaboWin()
   logViewer->setReadOnly( true );
   logViewer->setMinimumSize( 50*em, 6*em ); // TODO: fix!
   logViewer->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Minimum );
-  QList<int> szs { 640, 80 };
+  QList<int> szs { 800, 80 };
   split->setSizes( szs );
 
 
@@ -98,7 +98,7 @@ void LaboWin::setFonts()
 {
   const QFont &mainFont = setti->getAsFont( QSL("mainFont") );
   QFontMetrics fm( mainFont );
-  em = fm.width( 'W' );
+  em = fm.horizontalAdvance( QSL("W") );
   QApplication::setFont( mainFont );
 }
 
@@ -145,21 +145,22 @@ QAction* LaboWin::makeAction( const QString &text, const char *actName, SlotVV t
 
 void LaboWin::initIface()
 {
-  // make manu beforehand
-  pFileMenu = menuBar()->addMenu( tr("&File") );
-  pEditMenu = menuBar()->addMenu( tr("&Edit") );
-  pElmMenu = menuBar()->addMenu( tr("E&lement") );
-  pOutMenu = menuBar()->addMenu( tr("&Out") );
-  pGraphMenu = menuBar()->addMenu( tr("&Plot") );
-  pSimulMenu = menuBar()->addMenu( tr("&Simulation") );
-  pModelMenu = menuBar()->addMenu( tr("&Model") );
-  pRunMenu = menuBar()->addMenu( tr("&Run") );
-  pViewMenu = menuBar()->addMenu( tr("&View") );
-  pWindowMenu = menuBar()->addMenu( tr("&Window") );
-  pHelpMenu = menuBar()->addMenu( tr("&Help") );
+  // make menu beforehand
+  auto menu = menuBar();
+  pFileMenu   = menu->addMenu( QSL("&File") );
+  pEditMenu   = menu->addMenu( QSL("&Edit") );
+  pElmMenu    = menu->addMenu( QSL("E&lement") );
+  pOutMenu    = menu->addMenu( QSL("&Out") );
+  pGraphMenu  = menu->addMenu( QSL("&Plot") );
+  pSimulMenu  = menu->addMenu( QSL("&Simulation") );
+  pModelMenu  = menu->addMenu( QSL("&Model") );
+  pRunMenu    = menu->addMenu( QSL("&Run") );
+  pViewMenu   = menu->addMenu( QSL("&View") );
+  pWindowMenu = menu->addMenu( QSL("&Window") );
+  pHelpMenu   = menu->addMenu( QSL("&Help") );
 
   // and toolbars make too
-  mainToolBar = addToolBar( tr("Main") );
+  mainToolBar = addToolBar( QSL("Main") );
 
   // Actions
   // File group
@@ -193,11 +194,11 @@ void LaboWin::initIface()
     a->setShortcuts( QKeySequence::Print );
   }
 
-  {
-    auto a = makeAction( QSL("&Close"), "fileClose", &LaboWin::slotFileClose,
-        QSL("document-close"), pFileMenu, ActionMenuSep );
-    a->setShortcuts( QKeySequence::Close );
-  }
+  // {
+  //   auto a = makeAction( QSL("&Close"), "fileClose", &LaboWin::slotFileClose,
+  //       QSL("document-close"), pFileMenu, ActionMenuSep );
+  //   a->setShortcuts( QKeySequence::Close );
+  // }
 
   {
     /* auto a = */ makeAction( QSL("Sett&ings"), "fileSettings", &LaboWin::slotFileSettings,
@@ -395,7 +396,7 @@ void LaboWin::initIface()
   }
   {
     /* auto a = */ makeAction( QSL("run preRun script"), "runPreScript", &LaboWin::slotRunPreScript,
-        QES, pRunMenu, ActionToolBar  );
+        QES, pRunMenu, 0 );
   }
   {
     /* auto a = */ makeAction( QSL("Rese&t"), "resetModel", &LaboWin::slotReset,
