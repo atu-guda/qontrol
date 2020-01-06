@@ -36,11 +36,11 @@ using namespace std;
 MglView::MglView( TGraph *agra, QWidget *parent )
           : QWidget( parent ),
           gra( agra ),
-          scd ( make_shared<ScaleData>( "scd", nullptr, 0, "scale", "current scale data" ) ),
+          scd ( make_shared<ScaleData>( QSL("scd"), nullptr, 0, QSL("scale"), QSL("current scale data") ) ),
           pa_fnt ( SETTINGS->getAsFont( QSL("plotFont") ) )
 {
   QFontMetrics fm( pa_fnt );
-  em = fm.width( 'W' );
+  em = fm.horizontalAdvance( QSL("W") );
   ex = fm.height();
   bottom_h = 4 * ex;
 

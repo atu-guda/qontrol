@@ -2,7 +2,7 @@
                           labodoc.cpp  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000-2019 by atu
+    copyright            : (C) 2000-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -170,7 +170,7 @@ bool LaboDoc::saveDocument( bool forceNewName )
   bool isNewName = false;
   if( ( is_nonamed || forceNewName )  &&  ! prog_opts.batch ) {
     fn = QFileDialog::getSaveFileName( mwin, tr("Save model"),
-           QString::null, model_files_sel );
+           QString(), model_files_sel );
     if( fn.isEmpty() ) {
       return false;
     }

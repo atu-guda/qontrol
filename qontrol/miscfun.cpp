@@ -2,7 +2,7 @@
                           miscfun.cpp  -  description
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2019 by atu
+    copyright            : GPL (C) 2000-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -501,7 +501,7 @@ bool showTree( QWidget *par, HolderData *obj )
   dia->setWindowTitle( QString( PACKAGE ": Element tree: ") + obj->objectName() );
 
   QFontMetrics fm( dia->font() );
-  int em = fm.width( 'W' );
+  int em = fm.horizontalAdvance( QSL("W") );
 
   auto lay = new QVBoxLayout();
 

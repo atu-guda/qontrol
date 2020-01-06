@@ -1,7 +1,7 @@
 /***************************************************************************
   laboview.cpp  - combined model view
   begin                : Mon Jul 31 16:51:57 EEST 2000
-  copyright            : (C) 2000-2019 by atu
+  copyright            : (C) 2000-2020 by atu
   email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -56,7 +56,7 @@ LaboView::LaboView( LaboDoc* pDoc, QWidget *parent )
   main_win = true;
   title_prefix = QSL("model");
 
-  em = QFontMetrics( font() ).width( 'W' );
+  em = QFontMetrics( font() ).horizontalAdvance( QSL("W") );
 
   auto split_h = new QSplitter( Qt::Horizontal, this );
   setCentralWidget( split_h );

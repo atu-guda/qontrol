@@ -2,7 +2,7 @@
                       cmdview.cpp  -  common base for views vith std actions
                              -------------------
     begin                : 2015.10.27
-    copyright            : (C) 2015-2019 by atu
+    copyright            : (C) 2015-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -306,7 +306,7 @@ bool CmdView::infoObj()
 
 
   QFontMetrics fm( dia->font() );
-  int em = fm.width( 'W' );
+  int em = fm.horizontalAdvance( QSL("W") );
 
   auto lay = new QVBoxLayout();
 
@@ -357,7 +357,7 @@ bool CmdView::testObj()
   dia->setWindowTitle( QSL( PACKAGE ": test1 " ) + selObj->objectName() );
 
   QFontMetrics fm( dia->font() );
-  int em = fm.width( 'W' );
+  int em = fm.horizontalAdvance( QSL("W") );
 
   buf = selObj->toString();
 

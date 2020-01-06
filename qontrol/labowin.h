@@ -30,7 +30,6 @@ class QPrinter;
 class QCloseEvent;
 
 class QMdiArea;
-class QSignalMapper;
 class QMenu;
 class QAction;
 class QMdiSubWindow;
@@ -228,8 +227,6 @@ class LaboWin : public QMainWindow
     QSplitter *split;
     QMdiArea *mdiArea;
     QTextEdit *logViewer;
-    QSignalMapper *windowMapper;
-    /** the printer instance */
     QPrinter *printer;
     //* timer to update log
     QTimer *log_timer;

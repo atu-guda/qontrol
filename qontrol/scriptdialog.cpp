@@ -2,7 +2,7 @@
      scriptdialog.cpp - dialog to edit and run scripts
                              -------------------
     begin                : 2016.10.25
-    copyright            : GPL (C) 2016-2019 by atu
+    copyright            : GPL (C) 2016-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -24,7 +24,7 @@ ScriptDialog::ScriptDialog( QString &_scr, TModel *_model, QWidget *_parent )
 void ScriptDialog::setupUi()
 {
   setWindowTitle( QSL("Script:") );
-  auto em = QFontMetrics( font() ).width( 'W' );
+  auto em = QFontMetrics( font() ).horizontalAdvance( QSL("W") );
 
   resize( 80*em, 60*em );
   auto lay_v = new QHBoxLayout( this );

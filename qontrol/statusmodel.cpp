@@ -2,7 +2,7 @@
                           statusmodel.cpp  -  description
                              -------------------
     begin                : Sat Aug 17 2002
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -33,7 +33,7 @@ StatusModel::StatusModel( CommonSubwin *a_up_view )
   // labels creation
   l_mod = new QLabel( this );
   QFontMetrics fm = l_mod->fontMetrics();
-  mw = fm.width("9");
+  mw = fm.horizontalAdvance( QSL("9") );
   l_mod->setFixedWidth( mw + label_sep );
   l_mod->setLineWidth( label_lw ); l_mod->setFrameStyle( label_fs );
   addWidget( l_mod );

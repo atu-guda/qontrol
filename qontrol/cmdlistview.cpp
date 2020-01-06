@@ -2,7 +2,7 @@
                       cmdlistview.h - common base for list-alike viewvs
                              -------------------
     begin                : 2015.10.31
-    copyright            : (C) 2015-2019 by atu
+    copyright            : (C) 2015-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -32,7 +32,7 @@ CmdListView::CmdListView( HolderData *a_mod, CommonSubwin *a_par )
 
   init_base_actions();
 
-  auto em = QFontMetrics( font() ).width( 'W' );
+  auto em = QFontMetrics( font() ).horizontalAdvance( QSL("W") );
   setMinimumWidth( 12*em );
   setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Preferred );
 

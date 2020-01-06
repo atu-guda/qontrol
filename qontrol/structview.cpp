@@ -2,7 +2,7 @@
                           structview.cpp  -  description
                              -------------------
     begin                : Sat Aug 12 2000
-    copyright            : (C) 2000-2019 by atu
+    copyright            : (C) 2000-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -234,7 +234,7 @@ void StructView::drawAll( QPainter &p )
   p.setFont( strf );
   const QFont &smlf = sett->getAsFont( QSL("smallFont" ) );
   QFontMetrics small_fm( smlf );
-  em_small = small_fm.width( 'W' );
+  em_small = small_fm.horizontalAdvance( QSL("W") );
   ex_small = small_fm.height();
   el_marg = (grid_sz-obj_sz) / 2;
   if( nh >= MODEL_MY ) { nh = MODEL_MY-1; };
@@ -344,7 +344,7 @@ void StructView::drawAll( QPainter &p )
       }
       QString showStr = substValues( bs, ob );
       p.setPen( Qt::black ); p.setBrush( QColor(255,255,220) );
-      p.drawRect( ei.xs+obj_sz-3, ei.ys-ex_small+1, small_fm.width( showStr ) + 4, ex_small );
+      p.drawRect( ei.xs+obj_sz-3, ei.ys-ex_small+1, small_fm.horizontalAdvance( showStr ) + 4, ex_small );
       p.drawText( ei.xs + obj_sz, ei.ys, showStr );
     }
 

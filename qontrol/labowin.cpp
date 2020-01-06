@@ -51,11 +51,6 @@ LaboWin::LaboWin()
   setCentralWidget( split );
 
   connect( mdiArea, &QMdiArea::subWindowActivated, this, &LaboWin::slotHandleSubWindowActivated );
-  windowMapper = new QSignalMapper(this);
-  connect( windowMapper,
-      static_cast<void (QSignalMapper::*)(QWidget*)>(&QSignalMapper::mapped),
-      this, &LaboWin::setActiveSubWindow );
-
 
   untitledCount = 0;
 
@@ -1087,7 +1082,7 @@ void LaboWin::windowMenuAboutToShow()
     QMdiSubWindow *swin = windows.at(i);
     QWidget *child = swin->widget();
     if( !child ) {
-      qWarning() << QSL("Null child i=") << QSN(i) << WHE;
+      qWarning() << QSL("Null child i= ") << QSN(i) << WHE;
       continue;
     }
 
@@ -1097,13 +1092,11 @@ void LaboWin::windowMenuAboutToShow()
     }
     text += QSN( i+1 ) + QSL(" ") + child->windowTitle();
 
-    QAction *action  = pWindowMenu->addAction( text );
+    QAction *action  = pWindowMenu->addAction( text, swin,
+        [this,swin]() { mdiArea->setActiveSubWindow( swin ); }
+    );
     action->setCheckable( true );
     action->setChecked( swin == aswin );
-    // cast to fight unbiguity:
-    connect( action, &QAction::triggered, windowMapper,
-        static_cast<void (QSignalMapper::*)()>(&QSignalMapper::map) );
-    windowMapper->setMapping( action, swin );
   }
 
   updateActions();
