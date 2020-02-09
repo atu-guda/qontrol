@@ -3,7 +3,7 @@
          tfilesimple.h  - element to simple read text data from file (defs)
                              -------------------
     begin                : 2016.01.25
-    copyright            : (C) 2015-2019 by atu
+    copyright            : (C) 2015-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

@@ -2,7 +2,7 @@
          tfilesimple.c  - element to simple read text data from file (implementation)
                           -------------------
     begin                : 2016.01.25
-    copyright            : (C) 2016-2019 by atu
+    copyright            : (C) 2016-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -124,9 +124,16 @@ int TFileSimple::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   n_total = 0; hold_i = 0; n_col = 0; x = 0; y = 0; xo = 0; yo = 0; vx = 0; vy = 0;
   first_read = true;
-  QString c_fn = filename.cval().arg( (int)(findex), index_w.cval(), 10, QChar('0') );
+
+  QString c_fn;
+  if( filename.cval().contains( QSL("%1") ) ) {
+    c_fn = filename.cval().arg( (int)(findex), index_w.cval(), 10, QChar('0') );
+  } else {
+    c_fn = filename.cval();
+  }
   file.setFileName( c_fn );
   // qWarning() << "obj_filename: " << filename << " QFile filename" << file.fileName() << NWHE;
+
   if( ! file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
     qWarning() << "Fail to open data file " << file.fileName() << NWHE;
     return 0;

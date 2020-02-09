@@ -2,7 +2,7 @@
 <!DOCTYPE QontrolLabML>
 <QontrolLabML>
  <obj otype="TRootData" name="root">
-  <obj dyn="1" prm_descr="" prm_props="OBJ" prm_vis_name="&lt;div>model&lt;/div>" otype="TModel" name="model">
+  <obj dyn="1" prm_descr="" prm_props="OBJ" prm_vis_name="model" otype="TModel" name="model">
    <param name="long_descr">Test Sum8 element
 Prereq: TLinear</param>
    <param name="script">function vtst( obj, nm, val )
