@@ -238,7 +238,7 @@ class InputLogic : public InputSimple {
      itRange
    };
    Q_ENUM( InputLogicType );
-   Q_CLASSINFO( "enum_InputLogicType_0", "Level" );       // itLevel
+   Q_CLASSINFO( "enum_InputLogicType_0", "Level1" );      // itLevel
    Q_CLASSINFO( "enum_InputLogicType_1", "Rise" );        // itRise
    Q_CLASSINFO( "enum_InputLogicType_2", "Fall" );        // itFall
    Q_CLASSINFO( "enum_InputLogicType_3", "Both" );        // itBoth

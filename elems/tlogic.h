@@ -3,7 +3,7 @@
                           tlogic.h  -  description
                              -------------------
     begin                : Mon Sep 4 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -46,20 +46,20 @@ class TLogic : public TMiso  {
    virtual double f() noexcept override;
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
 
-   PRM_LIST(    type, efNRC, "&Type", "Type of logic", "enum=LogicType" );
-   // PRM_PARAMD( level, efOld, "&level of 1", "Minimal level of '1' signal on input", "def=0.1" );
+   PRM_LIST(    type, efNRC, QSL("&Type"), QSL("Type of logic"), QSL("enum=LogicType") );
+   // PRM_PARAMD( level, efOld, QSL("&level of 1"), QSL("Minimal level of '1' signal on input"), QSL("def=0.1") );
    /** misc flags */
-   PRM_SWITCH( useNInp0, efOld, "Inverse u_0", "Inverse input u_0", "sep=col" );
-   PRM_SWITCH( useNInp1, efOld, "Inverse u_1", "Inverse input u_1", ""  );
-   PRM_SWITCH( useNInp2, efOld, "Inverse u_2", "Inverse input u_2", ""  );
-   PRM_SWITCH( useNInp3, efOld, "Inverse u_3", "Inverse input u_3", ""  );
-   PRM_SWITCH(  useNOut, efNRC, "Inverse out" , "Inverse input output", "sep=col"  );
-   PRM_SWITCH( useMinus, efNRC, "&Negative out", "Negative output is -1, not 0", "" );
+   PRM_SWITCH( useNInp0, efOld, QSL("Inverse u_0"),   QSL("Inverse input u_0"), QSL("sep=col") );
+   PRM_SWITCH( useNInp1, efOld, QSL("Inverse u_1"),   QSL("Inverse input u_1"), ""  );
+   PRM_SWITCH( useNInp2, efOld, QSL("Inverse u_2"),   QSL("Inverse input u_2"), ""  );
+   PRM_SWITCH( useNInp3, efOld, QSL("Inverse u_3"),   QSL("Inverse input u_3"), ""  );
+   PRM_SWITCH(  useNOut, efNRC, QSL("Inverse out") ,  QSL("Inverse input output"), QSL("sep=col")  );
+   PRM_SWITCH( useMinus, efNRC, QSL("&Negative out"), QSL("Negative output is -1, not 0"), "" );
 
-   PRM_LOGICIN(    in_0,     0, "u_{&0}", "First input",  "sep=block" );
-   PRM_LOGICIN(    in_1,     0, "u_{&1}", "Second input", "sep=col" );
-   PRM_LOGICIN(    in_2,     0, "u_{&2}", "Third input",  "sep=col" );
-   PRM_LOGICIN(    in_3,     0, "u_{&3}", "Fourth input", "sep=col" );
+   PRM_LOGICIN(    in_0,     0, QSL("u_{&0}"), QSL("First input"),  QSL("sep=block") );
+   PRM_LOGICIN(    in_1,     0, QSL("u_{&1}"), QSL("Second input"), QSL("sep=col") );
+   PRM_LOGICIN(    in_2,     0, QSL("u_{&2}"), QSL("Third input"),  QSL("sep=block") );
+   PRM_LOGICIN(    in_3,     0, QSL("u_{&3}"), QSL("Fourth input"), QSL("sep=col") );
 
    Q_CLASSINFO( "nameHintBase",  "lgc_" );
    DCL_DEFAULT_STATIC;

@@ -3,7 +3,7 @@
    tbarrier.h - barrier functions object declararion
                              -------------------
     begin                : 2016.04.24
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -55,12 +55,13 @@ class TBarrier : public TMiso  {
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
 
    PRM_LIST( type,     0, "&Type",  "Barrier type", "enum=BarrierType" );
-   PRM_PARAMD( b,      0, "&b",     "Barrier x value", "sep=col\ndef=5" );
+   PRM_PARAMD( b,      0, "&b",     "Barrier x value", "def=5" );
    PRM_PARAMD( scale,  0, "sc&ale", "Output scale", "sep=col\ndef=1" );
    PRM_PARAMD( shift,  0, "&shift", "Output shift", "" );
    PRM_PARAMD( x_0,    0, "x_{&0}", "Parameter shift", "" );
 
-   PRM_INPUT( x, 0, "&x", "X input",  "sep=block" );
+   PRM_INPUT( x,   0, "&x",   "X input",  "sep=block" );
+   PRM_INPUT( x_n, 0, "&x_n", "negative input",  "sep=col" );
 
    Q_CLASSINFO( "nameHintBase",  "br_" );
    DCL_DEFAULT_STATIC;

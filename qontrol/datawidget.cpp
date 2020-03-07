@@ -2,7 +2,7 @@
                           datawidget.cpp  - widgets for DataDialog
                              -------------------
     begin                : 2012.03.27
-    copyright            : GPL (C) 2012-2019 by atu
+    copyright            : GPL (C) 2012-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -25,6 +25,7 @@ DataLabel::DataLabel( HolderData &_ho, const QString &text, DataWidget *parent, 
    : QLabel( text, parent, f ),
      ho( _ho ), dw( parent )
 {
+  setMinimumWidth( 4 * LaboWin::Em() );
   if( ho.getModified() ) {
     setStyleSheet( QSL("QLabel { color : red; }") );
   }
@@ -33,12 +34,16 @@ DataLabel::DataLabel( HolderData &_ho, const QString &text, DataWidget *parent, 
 void DataLabel::contextMenuEvent( QContextMenuEvent *ev )
 {
   QMenu *mnu = new QMenu( this );
+
+  mnu->addSection( ho.getType() % QSL(" ") % ho.objectName() );
+
   auto act = mnu->addAction( QSL("&Information") );
   connect( act, &QAction::triggered, dw, &DataWidget::infoObj );
   // act = mnu->addAction( QSL("&What's this") );
   // connect( act, &QAction::triggered, dw, &DataWidget::showWhats );
   act = mnu->addAction( QSL("&Copy object") );
   connect( act, &QAction::triggered, dw, &DataWidget::copyObj );
+
   if( ho.isDyn() ) {
     act = mnu->addAction( QSL("&Delete object") );
     connect( act, &QAction::triggered, dw, &DataWidget::deleteObj );
@@ -47,12 +52,14 @@ void DataLabel::contextMenuEvent( QContextMenuEvent *ev )
     act = mnu->addAction( QSL("Rename") );
     connect( act, &QAction::triggered, dw, &DataWidget::renameObj );
   }
+
   if( !ho.isRoTree( efROAny ) ) {
     act = mnu->addAction( QSL("Re&vert changes") );
     connect( act, &QAction::triggered, dw, &DataWidget::revertObj );
     act = mnu->addAction( QSL("Default value") );
     connect( act, &QAction::triggered, dw, &DataWidget::defaultVal );
   }
+
   mnu->exec( ev->globalPos() );
   delete mnu;
 }

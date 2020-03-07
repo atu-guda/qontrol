@@ -2,7 +2,7 @@
                           tintegrator.cpp  -  description
                              -------------------
     begin                : Wed Aug 30 2000
-    copyright            : (C) 2000-2019 by atu
+    copyright            : (C) 2000-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

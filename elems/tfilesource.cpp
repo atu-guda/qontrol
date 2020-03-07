@@ -2,7 +2,7 @@
          tfilesource.c  - element to read text data from file (implementation)
                           -------------------
     begin                : 2015.01.21
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

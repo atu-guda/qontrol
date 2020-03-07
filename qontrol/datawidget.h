@@ -3,7 +3,7 @@
                           datawidget.h  - widgets for DataDialog
                              -------------------
     begin                : 2012.03.27
-    copyright            : GPL (C) 2012-2016 by atu
+    copyright            : GPL (C) 2012-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -314,11 +314,11 @@ class FactoryDataWidget {
 // ======================= DataDialog ===========================
 //* simple class for dialog with DataWidgets
 
-typedef QMap<QString,DataWidget*> DaWiMap;
 
 class DataDialog : public QDialog {
   Q_OBJECT
   public:
+   using DaWiMap =  QMap<QString,DataWidget*>;
    DataDialog( HolderData &a_ds, QWidget *parent = nullptr );
    int obj2visAll();
    int vis2objAll();

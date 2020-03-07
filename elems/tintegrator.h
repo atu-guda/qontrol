@@ -3,7 +3,7 @@
                           tintegrator.h  -  description
                              -------------------
     begin                : Wed Aug 30 2000
-    copyright            : (C) 2000-2019 by atu
+    copyright            : (C) 2000-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -36,33 +36,34 @@ class TIntegrator : public TMiso  {
    /** reimplemented from TMiso to init state */
    virtual int miso_startLoop( long acnx, long acny ) override;
 
-   PRM_PARAMD( ki,   0, "&k_i",  "Factor before integral", "def=1" );
-   PRM_PARAMD( vmin, 0, "Min limit", "Limit min value", "def=-10000" );
-   PRM_PARAMD( vmax, 0, "Max limit", "Limit max value", "def=10000" );
+   PRM_PARAMD( ki,   0, QSL("&k_i"),  QSL("Factor before integral"), QSL("def=1") );
+   PRM_PARAMD( vmin, 0, QSL("Min"),   QSL("Limit min value"), QSL("def=-10000") );
+   PRM_PARAMD( vmax, 0, QSL("Max"),   QSL("Limit max value"), QSL("def=10000") );
 
-   PRM_DOUBLE( v,     efInner, "v", "Current value", "" );
-   PRM_DOUBLE( t_rst, efInner, "t_{rst}", "time from last reset", "" );
-   PRM_DOUBLE( v_a,   efInner, "v_a", "Average value", "" );
+   PRM_DOUBLE( v,     efInner, QSL("v"), QSL("Current value"), "" );
+   PRM_DOUBLE( t_rst, efInner, QSL("t_{rst}"), QSL("time from last reset"), "" );
+   PRM_DOUBLE( v_a,   efInner, QSL("v_a"), QSL("Average value"), "" );
    /** flags */
-   PRM_SWITCH( useAver,  efNRC, "output &Average", "Output average value", "sep=col" );
-   PRM_SWITCH( useMin,   efNRC, "limit Min value", "limit output to minimum value", "" );
-   PRM_SWITCH( useMax,   efNRC, "limit Max value", "limit output to maximum value", "" );
-   PRM_SWITCH( useSqIn,  efNRC, "x^{&2} on input", "Calculate square on input", "sep=col" );
-   PRM_SWITCH( useSqrOut,efNRC, "\u221As&qrt(output)", "Calculate square root on output", "" );
-   PRM_SWITCH( invKi,    efNRC, "Inverse k_i", "Use 1/ki instead of ki", "" );
+   PRM_SWITCH( useAver,  efNRC, QSL("output &Average"), QSL("Output average value"), QSL("sep=col") );
+   PRM_SWITCH( useMin,   efNRC, QSL("limit Min value"), QSL("limit output to minimum value"), "" );
+   PRM_SWITCH( useMax,   efNRC, QSL("limit Max value"), QSL("limit output to maximum value"), "" );
+   PRM_SWITCH( useSqIn,  efNRC, QSL("x^{&2} on input"), QSL("Calculate square on input"), QSL("sep=col") );
+   PRM_SWITCH( useSqrOut,efNRC, QSL("\u221As&qrt(output)"), QSL("Calculate square root on output"), "" );
+   PRM_SWITCH( invKi,    efNRC, QSL("Inverse k_i"), QSL("Use 1/ki instead of ki"), "" );
 
-   PRM_INPUT(     in_u, 0, "&in_u",   "Main input",  "sep=block" );
-   PRM_INPUT(    in_u1, 0, "in_{u1}", "Negative input", "" );
-   PRM_INPUT(    in_u2, 0, "in_{u2}", "Third+ input",  "" );
-   PRM_LOGICIN( in_rst, 0, "rst",     "Reset signal", "sep=col" );
-   PRM_INPUT(    v_rst, 0, "v_{rst}", "Value of v on reset", "sep=col" );
+   PRM_INPUT(     in_u, 0, QSL("&in_u"),   QSL("Main input"),     QSL("sep=block") );
+   PRM_INPUT(    in_u1, 0, QSL("in_{u1}"), QSL("Negative input"), QSL("sep=col")  );
+   PRM_INPUT(    in_u2, 0, QSL("in_{u2}"), QSL("Third+ input"),   QSL("sep=col") );
 
-   PRM_DOUBLE( x2, efInner, "x^2", "Squared output", "" );
+   PRM_LOGICIN( in_rst, 0, QSL("rst"),     QSL("Reset signal"), QSL("sep=block") );
+   PRM_INPUT(    v_rst, 0, QSL("v_{rst}"), QSL("Value of v on reset"), QSL("sep=col") );
+
+   PRM_DOUBLE( x2, efInner, QSL("x^2"), QSL("Squared output"), "" );
 
    double v_old = 0;
    double last_rst = 0;
 
-   Q_CLASSINFO( "nameHintBase",  "int_" );
+   Q_CLASSINFO( "nameHintBase",  "ig_" );
    DCL_DEFAULT_STATIC;
 };
 

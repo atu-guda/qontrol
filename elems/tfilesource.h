@@ -3,7 +3,7 @@
          tfilesource.h  - element to read text data from file (defs)
                              -------------------
     begin                : 2015.01.21
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2020 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -55,16 +55,16 @@ class TFileSource : public TMiso  {
    virtual int do_endLoop() override;
 
    PRM_STRING( filename, efNRC, "&File name", "Input file name", "" );
-   PRM_SWITCH( asProc, efNRC, "Assume as &program", "Assume filename as program name with arguments", "" );
-   PRM_STRING( sep,  efNRC, "&Separator", "Input field separator", "def= " );
-   PRM_INT( rnc,  efNRC, "&N of columns", "Number of columns to read", "min=1\nmax=32\ndef=1" ); // max=max_col
+   PRM_SWITCH( asProc, efNRC, "Assume as &program", "Assume filename as program name with arguments", "sep=col" );
+   PRM_STRING( sep,  efNRC, "&Separator", "Input field separator", "sep=col\ndef= " );
 
+   PRM_INT( rnc,  efNRC, "&N of columns", "Number of columns to read", "sep=block\nmin=1\nmax=32\ndef=1" ); // max=max_col
    PRM_INT( greed,  efNRC, "&Greed", "Number of lines to read at once, <1 = all", "min=1\ndef=1\nsep=col" );
-   PRM_DOUBLE( tau, efNRC, "\\tau", "Manual time step before file lines, <0=from simulation", "def=0.001" );
-   PRM_INT( time_col,  efNRC, "Time col&umn", "Determine time dy values in given column, -1 = manual", "def=-1" );
+   PRM_DOUBLE( tau, efNRC, "\\tau", "Manual time step before file lines, <0=from simulation", "sep=col\ndef=0.001" );
 
+   PRM_INT( time_col,  efNRC, "Time col&umn", "Determine time dy values in given column, -1 = manual", "sep=block\ndef=-1" );
    PRM_LIST( itype, efNRC, "&Interpolate", "Interpolation type", "enum=InterpolateType\ndef=1\nsep=col" );
-   PRM_PARAMD( scale, 0, "sc&ale", "common coefficient for all outputs", "def=1.0" );
+   PRM_PARAMD( scale, 0, "sc&ale", "common coefficient for all outputs", "sep=col\ndef=1.0" );
 
    PRM_DOUBLE_ARR( v, efInner, "v", "Current data", "N=32\ndef=0.0" ); // 32 is max_col
 
