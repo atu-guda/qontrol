@@ -440,7 +440,7 @@ void StringExtDataWidget::edit()
 
   {
     QTextStream os( &f );
-    os << ts << endl;
+    os << ts << Qt::endl;
     f.close();
   }
 

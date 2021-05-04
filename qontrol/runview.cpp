@@ -209,9 +209,9 @@ void RunView::mousePressEvent( QMouseEvent *me )
   x = me->x(); y = me->y(); btn = me->button();
   vis2phys( x, y, &vx, &vy );
   switch( btn ) {
-    case Qt::LeftButton:  mouse_l = 1;  break;
-    case Qt::RightButton: mouse_r = 1;  break;
-    case Qt::MidButton:   mouse_m = 1;  break;
+    case Qt::LeftButton:     mouse_l = 1;  break;
+    case Qt::RightButton:    mouse_r = 1;  break;
+    case Qt::MiddleButton:   mouse_m = 1;  break;
     default:         break;
   };
   mouse_x = vx; mouse_y = vy;
@@ -226,9 +226,9 @@ void RunView::mouseReleaseEvent( QMouseEvent *me )
   x = me->x(); y = me->y(); btn = me->button();
   vis2phys( x, y, &vx, &vy );
   switch( btn ) {
-    case Qt::LeftButton:  mouse_l = 0;  break;
-    case Qt::RightButton: mouse_r = 0;  break;
-    case Qt::MidButton:   mouse_m = 0;  break;
+    case Qt::LeftButton:     mouse_l = 0;  break;
+    case Qt::RightButton:    mouse_r = 0;  break;
+    case Qt::MiddleButton:   mouse_m = 0;  break;
     default:         break;
   };
   mouse_x = vx; mouse_y = vy;

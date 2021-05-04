@@ -192,7 +192,7 @@ void MglView::mousePressEvent( QMouseEvent *me )
         delete menu;
       }
       break;
-    case Qt::MidButton:
+    case Qt::MiddleButton:
       return QWidget::mousePressEvent( me );
     default:
       return QWidget::mousePressEvent( me );

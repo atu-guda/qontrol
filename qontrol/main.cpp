@@ -161,7 +161,7 @@ int batch_process( const QString &model_file )
         const QString v = model->getOutValue( nm );
         cout << qP(nm) << " = " << qP( v ) << endl;
         if( os ) {
-          *os << nm << " = " << v << endl;
+          *os << nm << " = " << v << Qt::endl;
         }
       };
 
@@ -257,7 +257,7 @@ int batch_process( const QString &model_file )
   }
 
   if( ! prog_opts.list_obj.isEmpty() ) {
-    QStringList nmtp = prog_opts.list_obj.split( ':', QString::KeepEmptyParts );
+    QStringList nmtp = prog_opts.list_obj.split( ':', Qt::KeepEmptyParts );
     QString parentName, objTp;
     if( nmtp.size() > 0 ) { parentName = nmtp[0]; };
     if( nmtp.size() > 1 ) { objTp      = nmtp[1]; };

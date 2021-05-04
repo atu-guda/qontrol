@@ -3,7 +3,7 @@
    dataset.h  -  base definitions and classes
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2019 by atu
+    copyright            : GPL (C) 2000-2021 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -570,7 +570,7 @@ class HolderString : public HolderValue {
   std::string  toStdString()  const { return v.toStdString(); }
   std::wstring toStdWString() const { return v.toStdWString(); }
   bool isEmpty() const { return v.isEmpty(); }
-  const char* c_str() const { return v.toStdString().c_str(); } // danger
+  // const char* c_str() const { return v.toStdString().c_str(); } // danger
  protected:
   QString v;
   Q_CLASSINFO( "nameHintBase",  "str_" );

@@ -483,7 +483,7 @@ bool HolderData::setDatas( const QString &datas )
   }
 
   bool was_set = false;
-  QStringList sl = datas.split( QSL("\n"), QString::SkipEmptyParts );
+  QStringList sl = datas.split( QSL("\n"), Qt::SkipEmptyParts );
   QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9.]*)\s*=(.+)$)" ); // '.' - for complex strings
 
   for( auto s : sl ) {
@@ -608,7 +608,7 @@ int HolderData::countObjsOfType( const QString &ob_tp, const QString &nm_start )
 void HolderData::extraToParm()
 {
   QRegExp re( R"(^([_a-zA-Z][_a-zA-Z0-9]*)\s*=(.+)$)" );
-  QStringList el = getParm( QSL("extra") ).split( QSL("\n"), QString::SkipEmptyParts );
+  QStringList el = getParm( QSL("extra") ).split( QSL("\n"), Qt::SkipEmptyParts );
 
   for( QString &s : el ) {
     if( s.isEmpty() ) {
@@ -2390,7 +2390,7 @@ void HolderIntArray::reset_dfl()
 
   auto s = getParm(QSL("defs"));
   if( ! s.isEmpty() ) {
-    QStringList sl = s.split( QSL(" "), QString::SkipEmptyParts );
+    QStringList sl = s.split( QSL(" "), Qt::SkipEmptyParts );
     if( sl.size() > (int)v.size() ) {
       v.assign( sl.size(), v1 );
     }
@@ -2483,7 +2483,7 @@ QString HolderIntArray::textVisual() const
 bool HolderIntArray::fromString( const QString &s )
 {
   bool ok;
-  const QStringList sl = s.split( QSL(" "), QString::SkipEmptyParts );
+  const QStringList sl = s.split( QSL(" "), Qt::SkipEmptyParts );
   auto v0 = v;
   v.clear(); v.reserve( sl.size() );
 
@@ -2526,7 +2526,7 @@ void HolderDoubleArray::reset_dfl()
 
   auto s = getParm( QSL("defs") );
   if( ! s.isEmpty() ) {
-    const QStringList sl = s.split( QSL(" "), QString::SkipEmptyParts );
+    const QStringList sl = s.split( QSL(" "), Qt::SkipEmptyParts );
     if( sl.size() > (int)v.size() ) {
       v.assign( sl.size(), v1 );
     }
@@ -2623,7 +2623,7 @@ QString HolderDoubleArray::textVisual() const
 bool HolderDoubleArray::fromString( const QString &s )
 {
   bool ok;
-  const QStringList sl = s.split( QSL(" "), QString::SkipEmptyParts );
+  const QStringList sl = s.split( QSL(" "), Qt::SkipEmptyParts );
   auto v0 = v;
   v.clear(); v.reserve( sl.size() );
 
@@ -2664,7 +2664,7 @@ void HolderStringArray::reset_dfl()
   QStringList sl;
   auto s = getParm( QSL("defs") );
   if( ! s.isEmpty() ) {
-    sl = s.split( '\x01', QString::KeepEmptyParts ); // keep here
+    sl = s.split( '\x01', Qt::KeepEmptyParts ); // keep here
     if( sl.size() > n ) {
       n = sl.size();
     }
@@ -2759,9 +2759,9 @@ bool HolderStringArray::fromString( const QString &s )
 {
   auto v0 = v;
   if( s.contains( QChar(0x2400) ) ) {
-    v = s.split( QChar(0x2400), QString::KeepEmptyParts );
+    v = s.split( QChar(0x2400), Qt::KeepEmptyParts );
   } else {
-    v = s.split('\x01', QString::KeepEmptyParts ); // old strings
+    v = s.split('\x01', Qt::KeepEmptyParts ); // old strings
   }
 
   post_set();

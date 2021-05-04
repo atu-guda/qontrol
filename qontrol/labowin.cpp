@@ -948,7 +948,7 @@ void LaboWin::slotLogSave()
       return;
     }
     QTextStream os( &of );
-    os << log_app << endl;
+    os << log_app << Qt::endl;
 
   };
 

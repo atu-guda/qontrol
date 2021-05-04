@@ -522,7 +522,8 @@ bool PlotFlippery::render( mglGraph *gr ) const
   mglPoint p2( x2, y2, z2 );
   mglPoint p3( x3, y3, z3 );
 
-  const char *style = flStyle.c_str();
+  string style_str = flStyle.toStdString();
+  const char *style = style_str.c_str();
   char sc0 = style[0];
 
 
@@ -1044,7 +1045,8 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
 
   if( ! scda->mglScript.isEmpty() ) {
     mglParse parser;
-    parser.Execute( &gr, scda->mglScript.c_str() );
+    string script_str = scda->mglScript.toStdString();
+    parser.Execute( &gr, script_str.c_str() );
   }
 
   int ig = -1;
@@ -1114,7 +1116,8 @@ void TGraph::plotTo( mglGraph &gr, const ViewData *a_vd, const ScaleData *scda )
         wstring ws = scda->mainLabel.toStdWString();
         gr.Putsw( p0m, ws.data(), ":L", 3 );
       } else {
-        gr.Label( main_label_axis, scda->mainLabel.c_str() );
+        string s =  scda->mainLabel.toStdString();
+        gr.Label( main_label_axis, s.c_str() );
       }
       gr.SetFontSize( scda->fontSise );
     }
@@ -1584,7 +1587,7 @@ int  TGraph::dumpPlotted( const QString &fn, const QString &delim )
   for( const auto pl : pli ) {
     os << ( delim + pl->label );
   }
-  os << endl;
+  os << Qt::endl;
 
   int n = 0;
   for( int i=0; i<nn; ++i ) {
@@ -1595,7 +1598,7 @@ int  TGraph::dumpPlotted( const QString &fn, const QString &delim )
     for( const auto pl : pli ) {
       os << ( delim + QSNL( (pl->md)->a[i], out_prec ) );
     }
-    os << endl;
+    os << Qt::endl;
   }
 
   return n;

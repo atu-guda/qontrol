@@ -14,8 +14,11 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include <string>
 
 #include "tfilesource.h"
+
+using namespace std;
 
 const char* TFileSource::helpstr = "<H1>TFileSource</H1>\n"
  "<p>Reads data from file in textual form<br>\n";
@@ -117,7 +120,8 @@ int TFileSource::do_postRun( int /*good*/ )
 int TFileSource::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   if( asProc.cval() ) {
-    p_fi = popen( filename.c_str(), "r" );
+    string s = filename.toStdString();
+    p_fi = popen( s.c_str(), "r" );
     if( ! p_fi ) {
       qWarning() << "Fail to start program " << filename << NWHE;
       return 0;

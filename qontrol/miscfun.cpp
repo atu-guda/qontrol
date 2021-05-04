@@ -432,14 +432,14 @@ int DatasInfo::dump( QTextStream& os, const QString &delim )
     os << qSetFieldWidth( DOUBLE_PREC+6 ) << lbl << qSetFieldWidth( dl_sz ) << delim;
     dl_sz = dl_sz0; // to more actions, but less then 'if'
   }
-  os << endl;
+  os << Qt::endl;
   os.setRealNumberPrecision( DOUBLE_PREC );
 
   for( long i=0; i<nn; ++i ) {
     for( auto ve: ves ) {
       os << qSetFieldWidth( DOUBLE_PREC+6 ) << (*ve)[i] << qSetFieldWidth( dl_sz ) << delim;
     }
-    os << endl;
+    os << Qt::endl;
     ++no;
   }
   return no;
@@ -566,7 +566,7 @@ QString substValues( const QString &s, const HolderData *ho )
   while( su.indexIn( r, 0 ) >= 0 && n_subst < max_n_subst ) { // return value show '1'?
     int idx = su.pos( 0 );
     int l = su.matchedLength();
-    QStringList sl = su.cap( 1 ).split( ':', QString::KeepEmptyParts );
+    QStringList sl = su.cap( 1 ).split( ':', Qt::KeepEmptyParts );
 
     // qWarning() << "idx = " << idx << " l= " << l << " cap[0]= " << su.cap(0) << WHE;
     // qWarning() << "cap[1] = " << su.cap(1) << " n= " << sl.size() << WHE;
