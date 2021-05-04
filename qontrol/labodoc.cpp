@@ -2,7 +2,7 @@
                           labodoc.cpp  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000-2020 by atu
+    copyright            : (C) 2000-2021 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -90,18 +90,12 @@ bool LaboDoc::openDocument( const QString &filename )
     HANDLE_ERROR_W( MAINWIN, QSL("Cannot read file %1: %2.").arg( filename, file.errorString() ) );
     return false;
   }
-  QTextStream in( &file );
-  QString textData = in.readAll();
-
-  QXmlInputSource xml_src;
-  xml_src.setData( textData );
-  QXmlSimpleReader xml_reader;
 
   QString errstr;
   QDomDocument dd;
   int err_line, err_column;
 
-  if( ! dd.setContent( &xml_src, &xml_reader, &errstr, &err_line, &err_column ) ) {
+  if( ! dd.setContent( &file, &errstr, &err_line, &err_column ) ) {
     HANDLE_ERROR_W( MAINWIN, QSL("Cannot parse file %1:\n%2\nLine %3 column %4.")
                          .arg( filename, errstr, QSN(err_line), QSN(err_column) ) );
     m_filename = QES;
@@ -161,7 +155,7 @@ bool LaboDoc::openDocument( const QString &filename )
 
 bool LaboDoc::saveDocument( bool forceNewName )
 {
-  if( rootdata == 0 ) {
+  if( !rootdata ) {
     return false;
   }
   QWidget *mwin = MAINWIN;
