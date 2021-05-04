@@ -432,11 +432,21 @@ void StringExtDataWidget::edit()
   f.setFileTemplate( ftempl );
   // f.setAutoRemove( false ); // for debug
   if( !f.open() ) {
+    qWarning() << "Fail to open temporary file " << f.fileName() << WHE;
     return;
   }
   QString fn = f.fileName();
   SettingsData *sett = SETTINGS;
-  QString cmd = sett->getDataD( QSL("editCmd"), QSL("gvim -f ") )  %  QSL(" ") % fn;
+  QString cmd  = sett->getDataD( QSL("editCmd"), QSL("gvim") ).trimmed();
+  QString args = sett->getDataD( QSL("editArgs"), QSL("-f") );
+
+  // old approach handling
+  if( cmd == QSL("gvim -f" ) ) {
+    cmd = QSL("gvim");
+  }
+
+  QStringList args_list = args.split( QSL(" ") );
+  args_list << fn;
 
   {
     QTextStream os( &f );
@@ -445,7 +455,7 @@ void StringExtDataWidget::edit()
   }
 
   QProcess proc;
-  int rc = proc.execute( cmd );
+  int rc = proc.execute( cmd, args_list );
   if( rc != 0 ) {
     qWarning() << "Command " << cmd << " returns status " << rc << WHE;
     return;

@@ -99,7 +99,7 @@ void DataTableView::mousePressEvent( QMouseEvent *me )
       }
       my = true;
       break;
-    case Qt::MidButton:
+    case Qt::MiddleButton:
       break;
     default:
       break;

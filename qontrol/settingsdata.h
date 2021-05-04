@@ -41,7 +41,8 @@ class SettingsData : public TDataSet {
    PRM_FONT( plotFont,    0, "Plot font", "Application font for plotting", "def=SMALL" );
    PRM_FONT( structFont,  0, "Struct font", "Font for scheme representing", "def=SMALL" );
 
-   PRM_STRING( editCmd,   0, "Edit command", "Command to edit file", "sep=block\nncol=-1\ndef=gvim -f" );
+   PRM_STRING( editCmd,   0, "Edit command", "Command to edit file", "sep=block\nncol=-1\ndef=gvim" );
+   PRM_STRING( editArgs,  0, "Edit args",    "Additional arguments", "ncol=-1\ndef=-f" );
 
    Q_CLASSINFO( "nameHintBase",  "settings" );
    DCL_DEFAULT_STATIC;
