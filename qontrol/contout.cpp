@@ -41,13 +41,15 @@ CTOR(ContOut,LinkedObj)
 int ContOut::do_preRun()
 {
   vo.clear();
+
   // fill array for pure TOutArr entries: for fast access later
-  for( auto arr : TCHILD(TOutArr*) ) {
-    int arr_tp = arr->getDataD( QSL("type"), 0 );
-    if( arr_tp == TOutArr::OutArrType::outSimple ) {
+  for_type<TOutArr>( [&vo=vo]( auto arr )
+    {
+      if( arr->getDataD( QSL("type"), 0 ) == TOutArr::OutArrType::outSimple  )
       vo.push_back( arr );
     }
-  }
+  );
+
   return 1;
 }
 

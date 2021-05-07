@@ -220,6 +220,18 @@ class HolderData : public QAbstractItemModel {
     }
     return nullptr;
   }
+
+  // for each given type
+  template<typename T, typename F> void for_type(F f) {
+    for( auto pobj : children() ) {
+      T* pt = qobject_cast<T*>( pobj );
+      if( !pt ) {
+        continue;
+      }
+      f( pt );
+    }
+  }
+
   // see DCL_STD_INF, DCL_STD_GETSET for children
   virtual const TClassInfo* getClassInfo() const = 0;
   /** returns list of registered (exists) child elements names */
