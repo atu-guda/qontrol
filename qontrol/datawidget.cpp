@@ -1501,11 +1501,13 @@ void DataDialog::defaultData()
     return;
   }
   ds.suspendHandleStructChange();
-  for( auto ho : ds.TCHILD(HolderData*) ) {
+
+  ds.for_type<HolderData>( []( auto ho ) {
     if( !ho->isRoTree( efROAny ) ) {
       ho->reset_dfl();
     }
-  }
+  } );
+
   ds.resumeHandleStructChange();
   obj2visAll();
 }
@@ -1526,12 +1528,12 @@ void DataDialog::showSimpleHelp()
   }
   QString help_str = QSL( "<p><a name=\"help_head\"></a> </p><hr/>\n" ) % help % QSL("<hr/>\n");
 
-  for( auto ho : ds.TCHILD(HolderData*) ) {
+  ds.for_type_c<HolderData>( [&help_str]( auto ho ) {
     help_str += QSL("<p>") % ho->getType()
       % QSL(" <b> ") % ho->objectName() % QSL(" </b>; // ")
       % ho->getParm( QSL("descr") )  % QSL(" (")
       % ho->getParm( QSL("vis_name") ) % QSL(")</p>\n");
-  }
+   } );
 
   auto dia = new QDialog( this );
   int em = LaboWin::Em();

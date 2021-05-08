@@ -591,13 +591,15 @@ const HolderData* HolderData::getRootConst() const noexcept
 int HolderData::countObjsOfType( const QString &ob_tp, const QString &nm_start ) const
 {
   int n_el = 0, l_nm = nm_start.size();
-  for( auto ho : TCHILD(HolderData*) ) {
+
+  for_type_c<HolderData>( [&n_el,l_nm,&ob_tp,&nm_start]( auto ho ) {
     if( ho->isChildOf( ob_tp ) ) {
       if( l_nm < 1 || ho->objectName().startsWith( nm_start ) ) {
         ++n_el;
       }
     }
-  }
+  } );
+
   return n_el;
 }
 
@@ -626,9 +628,7 @@ void HolderData::extraToParm()
 int HolderData::postFileRead()
 {
   int rc = 0;
-  for( auto ho : TCHILD(HolderData*) ) {
-    rc += ho->postFileRead();
-  }
+  for_type<HolderData>( [&rc]( auto ho ) { rc += ho->postFileRead(); } );
   rc += do_postFileRead();
   return rc;
 }
@@ -655,9 +655,7 @@ void HolderData::handleStructChanged()
     return;
   }
 
-  for( auto ds : TCHILD(HolderData*) ) {
-    ds->handleStructChanged();
-  }
+  for_type<HolderData>( []( auto ho ) { ho->handleStructChanged(); } );
 
   do_structChanged(); // functions to override
 
@@ -787,16 +785,18 @@ int HolderData::delObj( const QString &ob_name )
 int HolderData::delAllDyn()
 {
   QStringList nms;
-  for( auto ho: TCHILD(HolderData*) ) {
-    ho->delAllDyn();
-    if( ! ho->isDyn() || ho->hasAnyFlags( efImmutable ) ) {
-      continue;
-    }
-    nms << ho->objectName();
-  }
+  for_type<HolderData>( [&nms]( auto ho )
+      {
+        ho->delAllDyn();
+        if( ho->isDyn() && !ho->hasAnyFlags( efImmutable ) ) {
+          nms << ho->objectName();
+        }
+      }
+  );
+
 
   int n = 0;
-  for( const auto &nm : qAsConst( nms ) ) {
+  for( const auto &nm : nms ) {
     n += delObj( nm );
   }
   return n;
@@ -1668,9 +1668,6 @@ void HolderData::post_set()
   if( hasAllFlags( efStructCh ) && par != nullptr ) {
     reportStructChanged();
   }
-  // for( auto ho: TCHILD(HolderData*) ) { // propagate to childs
-  //   ho->post_set();
-  // }
 }
 
 void HolderData::do_post_set()
@@ -2802,9 +2799,7 @@ TDataSet::~TDataSet()
 
 void TDataSet::reset_dfl()
 {
-  for( auto o : TCHILD(HolderData*) ) {
-    o->reset_dfl();
-  }
+  for_type<HolderData>( []( auto ho ) { ho->reset_dfl(); } );
 }
 
 
@@ -2858,25 +2853,18 @@ QDomElement TDataSet::toDom( QDomDocument &dd, bool forceType ) const
   QDomElement de = dd.createElement( QSL("obj") );
   de.setAttribute( QSL("name"), objectName() );
   de.setAttribute( QSL("otype"), getType() );
+
   if( dyn || forceType ) { // func
     de.setAttribute( QSL("dyn"), QSL("1") );
-  }
-  if( dyn || forceType ) { // func
     saveParmsToDom( de );
   }
 
-  for( auto ho : TCHILD(HolderData*) ) {
-    if( ho->hasAnyFlags( efNoSave ) ) {
-      continue;
-    }
-
-    if( hasClassProps( clpObsolete ) ) {
-      continue;
-    }
-
-    QDomElement cde = ho->toDom( dd, forceType );
-    de.appendChild( cde );
-  }
+  for_type_c<HolderData>( [&de,&dd,forceType]( auto ho ) {
+      if( ! ho->hasAnyFlags( efNoSave ) && ! ho->hasClassProps( clpObsolete ) ) {
+        QDomElement cde = ho->toDom( dd, forceType );
+        de.appendChild( cde );
+      }
+  } );
 
   return de;
 }

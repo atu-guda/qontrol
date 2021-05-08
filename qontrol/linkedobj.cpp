@@ -250,9 +250,8 @@ int LinkedObj::do_preRun()
 
 int LinkedObj::postRun( int good )
 {
-  for( auto ob : TCHILD(LinkedObj*) ) {
-    ob->postRun( good );
-  };
+  for_type<LinkedObj>( [good]( auto ob ) { ob->postRun( good ); } );
+
   do_postRun( good );
 
   state = good ? stateDone : stateGood; // TODO: or state Bad?
@@ -303,9 +302,7 @@ int LinkedObj::post_startLoop()
 
 int LinkedObj::endLoop()
 {
-  for( auto ob : TCHILD(LinkedObj*) ) {
-    ob->endLoop();
-  };
+  for_type<LinkedObj>( []( auto ob ) { ob->endLoop(); } );
   return do_endLoop();
 }
 
@@ -318,10 +315,12 @@ int LinkedObj::do_endLoop()
 QStringList LinkedObj::getInputsNames() const
 {
   QStringList r;
-  for( auto in : TCHILD(InputAbstract*) ) {
-    if( !in ) { continue; };
-    r << in->objectName();
-  }
+
+  for_type_c<InputAbstract>( [&r]( auto in ) {
+    if( in != nullptr ) {
+      r << in->objectName();
+    };
+  } );
 
   return r;
 }
@@ -329,11 +328,14 @@ QStringList LinkedObj::getInputsNames() const
 QString LinkedObj::lsInputs() const
 {
   QString r;
-  for( auto in : TCHILD(InputAbstract*) ) {
-    if( !in ) { continue; };
-    r += in->getType() % QSL(" ") % in->objectName() % QSL(";  //  ")
-      % in->getParm( QSL("descr") ) % QSL("\n");
-  }
+
+  for_type_c<InputAbstract>( [&r]( auto in ) {
+    if( in != nullptr ) {
+      r += in->getType() % QSL(" ") % in->objectName() % QSL(";  //  ")
+        % in->getParm( QSL("descr") ) % QSL("\n");
+      };
+  } );
+
 
   return r;
 }
