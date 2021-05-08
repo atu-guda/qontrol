@@ -266,16 +266,12 @@ void HolderData::setModified()
 void HolderData::setUnModified()
 {
   modified = 0;
-  for( auto ho : TCHILD(HolderData*) ) {
-    ho->setUnModified();
-  }
+  for_type<HolderData>( []( auto ho ) { ho->setUnModified();} );
 }
 
 void HolderData::reset()
 {
-  for( auto ho : TCHILD(HolderData*) ) {
-    ho->reset();
-  }
+  for_type<HolderData>( []( auto ho ) { ho->reset();} );
   do_reset();
 }
 

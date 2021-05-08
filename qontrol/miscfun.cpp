@@ -50,23 +50,29 @@ int QString2IntEx( const QString &s, bool *ok )
 long QString2LongEx( const QString &s, bool *ok )
 {
   bool r_ok;
-  long v = s.toLongLong( &r_ok, 0 ); // first try as simple int
-  if( ! r_ok ) {
-    if( s == QSL("RND") ) {
-      v = rand(); r_ok = true;
-    } else if( s == QSL("IMIN") ) {
-      v = IMIN; r_ok = true;
-    } else if( s == QSL("LMIN") ) {
-      v = LMIN; r_ok = true;
-    } else if( s == QSL("IMAX") ) {
-      v = IMAX; r_ok = true;
-    } else if( s == QSL("LMAX") ) {
-      v = LMAX; r_ok = true;
-    }
+  if( !ok ) {
+    ok = &r_ok;
   }
-  if( ok ) {
-    *ok = r_ok;
+
+  long v = s.toLong( &r_ok, 0 ); // first try as simple int
+  if( r_ok ) {
+    *ok = true;
+    return v;
   }
+
+  if( s == QSL("RND") ) {
+    v = rand(); r_ok = true;
+  } else if( s == QSL("IMIN") ) {
+    v = IMIN; r_ok = true;
+  } else if( s == QSL("LMIN") ) {
+    v = LMIN; r_ok = true;
+  } else if( s == QSL("IMAX") ) {
+    v = IMAX; r_ok = true;
+  } else if( s == QSL("LMAX") ) {
+    v = LMAX; r_ok = true;
+  }
+
+  *ok = r_ok;
   return v;
 }
 
