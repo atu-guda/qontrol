@@ -58,10 +58,18 @@ class TIntegrator : public TMiso  {
    PRM_LOGICIN( in_rst, 0, QSL("rst"),     QSL("Reset signal"), QSL("sep=block") );
    PRM_INPUT(    v_rst, 0, QSL("v_{rst}"), QSL("Value of v on reset"), QSL("sep=col") );
 
-   PRM_DOUBLE( x2, efInner, QSL("x^2"), QSL("Squared output"), "" );
+   PRM_DOUBLE( x2,   efInner, QSL("x^2"),   QSL("Squared output"), "" );
+   PRM_DOUBLE( in,   efInner, QSL("in"),    QSL("Net input"), "" );
+   PRM_DOUBLE( in_k, efInner, QSL("in_k"),  QSL("Scaled input"), "" );
 
    double v_old = 0;
    double last_rst = 0;
+   bool useAver_c = false; // cached switch values
+   bool useMin_c = false;
+   bool useMax_c = false;
+   bool useSqIn_c = false;
+   bool useSqrOut_c = false;
+   bool invKi_c = false;
 
    Q_CLASSINFO( "nameHintBase",  "ig_" );
    DCL_DEFAULT_STATIC;

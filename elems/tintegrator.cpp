@@ -39,14 +39,20 @@ int TIntegrator::miso_startLoop( long /*acnx*/, long /*acny*/ )
   last_rst =  (double)out0_init;
   v_old = v = v_a = last_rst;
   t_rst = 0;
+  useAver_c   = (bool)useAver;
+  useMin_c    = (bool)useMin;
+  useMax_c    = (bool)useMax;
+  useSqIn_c   = (bool)useSqIn;
+  useSqrOut_c = (bool)useSqrOut;
+  invKi_c     = (bool)invKi;
   return 1;
 }
 
 
 double TIntegrator::f() noexcept
 {
-  double in = in_u - in_u1 + in_u2;
-  if( useSqIn ) {
+  in = in_u - in_u1 + in_u2;
+  if( useSqIn_c ) {
     in *= in;
   }
 
@@ -58,21 +64,23 @@ double TIntegrator::f() noexcept
   };
 
   v_old = v;
-  double eki = invKi ? ( 1.0/ki ) : ki;
-  v += in * ctdt * eki; // TODO: different methods
-  if( useMin  &&  v < vmin ) {
+  double eki = invKi_c ? ( 1.0/ki ) : ki;
+  in_k = in * eki;
+  v += in_k * ctdt; // TODO: different methods
+
+  if( useMin_c  &&  v < vmin ) {
     v = (double)vmin;
   }
-  if( useMax  &&  v > vmax ) {
+  if( useMax_c  &&  v > vmax ) {
     v = (double)vmax;
   }
 
 
   t_rst += ctdt;
   v_a = v / t_rst;
-  double v_ret = (useAver) ? v_a : v;
+  double v_ret = (useAver_c) ? v_a : v;
 
-  if( useSqrOut ) {
+  if( useSqrOut_c ) {
     v_ret = sqrt0( v_ret );
   }
   x2 = v_ret * v_ret;
