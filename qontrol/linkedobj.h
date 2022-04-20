@@ -3,7 +3,7 @@
                           linkedobj.h - object with link capabilities
                              -------------------
     begin                : 2015.10.24
-    copyright            : GPL (C) 2015-2019 by atu
+    copyright            : GPL (C) 2015-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -55,7 +55,8 @@ class LinkedObj : public TDataSet {
     * parmname
     * lt - ptr: store link type,
     * targ - ptr_pre: store ptr to source LinkedObj,
-    * lev - level of recursion, not for user */
+    * lev - level of recursion, not for user 
+    * TODO: return structure ? */
    virtual const double* getDoublePtr( const QString &nm, int *lt = nullptr,
         const LinkedObj **src_ob = nullptr, int lev = 0 ) const;
    //* transmit this request to parent, until scheme detected, where work done
@@ -249,8 +250,8 @@ class InputLogic : public InputSimple {
   // virtual ~InputLogic() override;
   DCL_CREATE;
   DCL_STD_INF;
-  bool lval() const { return ll; };
-  operator bool() const { return ll; }
+  bool lval() const noexcept { return ll; };
+  operator bool() const noexcept { return ll; }
  protected:
   virtual int do_startLoop( long acnx, long acny ) override;
   virtual void post_readInput() override;
@@ -284,14 +285,13 @@ class ParamDouble : public InputAbstract {
   DCL_CREATE;
   DCL_STD_INF;
   virtual QIcon getIcon() const override { return QIcon(); } // empty icon: save space
-  operator double&() { return out0; }
-  double& operator=( double rhs ) { out0 = rhs; return out0; }
-  Q_INVOKABLE bool isFixparmNeed() const { return need_fixparm; }
+  operator double&() noexcept { return out0; }
+  double& operator=( double rhs ) noexcept { out0 = rhs; return out0; }
+  Q_INVOKABLE bool isFixparmNeed() const noexcept { return need_fixparm; }
   // virtual void set_link() override;
  protected:
   // virtual void do_post_set() override;
 
-  PRM_STRING( tparam, efOld, "Param", "old param names - remove after cnv", ""  );
   bool need_fixparm = false;
 
   Q_CLASSINFO( "nameHintBase",  "p_" );
