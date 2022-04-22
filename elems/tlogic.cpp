@@ -2,7 +2,7 @@
                           tlogic.cpp  -  description
                              -------------------
     begin                : Mon Sep 4 2000
-    copyright            : (C) 2000-2020 by atu
+    copyright            : (C) 2000-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -41,10 +41,6 @@ double TLogic::f() noexcept
   bool iu1 = in_1.lval();
   bool iu2 = in_2.lval();
   bool iu3 = in_3.lval();
-  // if( useNInp0 ) { iu0 = ! iu0; }
-  // if( useNInp1 ) { iu1 = ! iu1; }
-  // if( useNInp2 ) { iu2 = ! iu2; }
-  // if( useNInp3 ) { iu3 = ! iu3; }
   ou = 0;
   switch( (int)type ) {
     case logAnd:

@@ -2,16 +2,16 @@
 <!DOCTYPE QontrolLabML>
 <QontrolLabML>
  <obj name="root" otype="TRootData">
-  <obj prm_vis_name="model" name="model" dyn="1" prm_descr="" otype="TModel">
+  <obj name="model" otype="TModel" prm_vis_name="model" prm_descr="" dyn="1">
    <param name="long_descr"></param>
    <param name="script"></param>
    <param name="scriptpad">model.lsf();&#xd;//</param>
    <param name="autoImport">0</param>
    <param name="imports"></param>
-   <obj prm_vis_name="schems" name="schems" prm_sep="tab" prm_tabname="Containers" dyn="1" prm_descr="" otype="ContScheme">
-    <obj prm_vis_name="main_{s}" name="main_s" dyn="1" prm_descr="" otype="Scheme">
+   <obj prm_sep="tab" name="schems" otype="ContScheme" prm_vis_name="schems" prm_tabname="Containers" prm_descr="" dyn="1">
+    <obj name="main_s" otype="Scheme" prm_vis_name="main_{s}" prm_descr="" dyn="1">
      <param name="descr"></param>
-     <obj prm_vis_name="so_{0}" name="so_0" dyn="1" prm_descr="" otype="TSource">
+     <obj name="so_0" otype="TSource" prm_vis_name="so_{0}" prm_descr="" dyn="1">
       <param name="descr"></param>
       <obj name="out0_init" otype="ParamDouble">
        <param name="source">0.0</param>
@@ -26,7 +26,7 @@
        <param name="onlyLabel">0</param>
        <param name="fixedSource">0</param>
       </obj>
-      <obj prm_vis_name="eprm" name="eprm" prm_sep="blockend" dyn="1" prm_descr="" otype="ElemParams">
+      <obj prm_sep="blockend" name="eprm" otype="ElemParams" prm_vis_name="eprm" prm_descr="" dyn="1">
        <param name="vis_x">1</param>
        <param name="vis_y">1</param>
        <param name="noCalcStart">0</param>
@@ -297,8 +297,8 @@
      </obj>
     </obj>
    </obj>
-   <obj prm_vis_name="outs" name="outs" dyn="1" prm_descr="" otype="ContOut">
-    <obj prm_vis_name="out_{t}" name="out_t" dyn="1" prm_descr="" otype="TOutArr">
+   <obj name="outs" otype="ContOut" prm_vis_name="outs" prm_descr="" dyn="1">
+    <obj name="out_t" otype="TOutArr" prm_vis_name="out_{t}" prm_descr="" dyn="1">
      <param name="type">0</param>
      <param name="descr"></param>
      <obj name="name" otype="InputSimple">
@@ -342,7 +342,7 @@
      </obj>
      <param name="allStat">0</param>
     </obj>
-    <obj prm_vis_name="out_{so_0}" name="out_so_0" dyn="1" prm_descr="" otype="TOutArr">
+    <obj name="out_so_0" otype="TOutArr" prm_vis_name="out_{so_0}" prm_descr="" dyn="1">
      <param name="type">0</param>
      <param name="descr"></param>
      <obj name="name" otype="InputSimple">
@@ -386,7 +386,7 @@
      </obj>
      <param name="allStat">0</param>
     </obj>
-    <obj prm_vis_name="out_{so_cv}" name="out_so_cv" dyn="1" prm_descr="" otype="TOutArr">
+    <obj name="out_so_cv" otype="TOutArr" prm_vis_name="out_{so_cv}" prm_descr="" dyn="1">
      <param name="type">0</param>
      <param name="descr"></param>
      <obj name="name" otype="InputSimple">
@@ -431,8 +431,8 @@
      <param name="allStat">0</param>
     </obj>
    </obj>
-   <obj prm_vis_name="plots" name="plots" prm_sep="col" dyn="1" prm_descr="" otype="ContGraph">
-    <obj prm_vis_name="p_{0}" name="p_0" dyn="1" prm_descr="" otype="TGraph">
+   <obj prm_sep="col" name="plots" otype="ContGraph" prm_vis_name="plots" prm_descr="" dyn="1">
+    <obj name="p_0" otype="TGraph" prm_vis_name="p_{0}" prm_descr="" dyn="1">
      <param name="title">fig. </param>
      <param name="descr"></param>
      <obj name="scd" otype="ScaleData">
@@ -489,7 +489,7 @@
       <param name="maxErr">0.6</param>
       <param name="mglScript"></param>
      </obj>
-     <obj prm_vis_name="x" name="x" dyn="1" prm_descr="" otype="GraphElem">
+     <obj name="x" otype="GraphElem" prm_vis_name="x" prm_descr="" dyn="1">
       <param name="type">1</param>
       <param name="is2D">0</param>
       <param name="src">out_t</param>
@@ -500,7 +500,7 @@
       <param name="extra">-</param>
       <param name="opt"></param>
      </obj>
-     <obj prm_vis_name="y0" name="y0" dyn="1" prm_descr="" otype="GraphElem">
+     <obj name="y0" otype="GraphElem" prm_vis_name="y0" prm_descr="" dyn="1">
       <param name="type">4</param>
       <param name="is2D">0</param>
       <param name="src">out_so_0</param>
@@ -511,7 +511,7 @@
       <param name="extra">-</param>
       <param name="opt"></param>
      </obj>
-     <obj prm_vis_name="y1" name="y1" dyn="1" prm_descr="" otype="GraphElem">
+     <obj name="y1" otype="GraphElem" prm_vis_name="y1" prm_descr="" dyn="1">
       <param name="type">4</param>
       <param name="is2D">0</param>
       <param name="src">out_so_cv</param>
@@ -524,8 +524,8 @@
      </obj>
     </obj>
    </obj>
-   <obj prm_vis_name="sims" name="sims" prm_sep="tabend" prm_tabname="Params" dyn="1" prm_descr="" otype="ContSimul">
-    <obj prm_vis_name="sim0" name="sim0" dyn="1" prm_descr="" otype="Simulation">
+   <obj prm_sep="tabend" name="sims" otype="ContSimul" prm_vis_name="sims" prm_tabname="Params" prm_descr="" dyn="1">
+    <obj name="sim0" otype="Simulation" prm_vis_name="sim0" prm_descr="" dyn="1">
      <param name="runType">0</param>
      <param name="T">2</param>
      <param name="t_0">0</param>

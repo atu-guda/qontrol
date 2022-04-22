@@ -64,7 +64,7 @@ class Scheme : public LinkedObj  {
  protected:
   virtual void do_reset() override;
   virtual int do_preRun() override;
-  virtual int do_startLoop( long acnx, long acny ) override;
+  // virtual int do_startLoop( long acnx, long acny ) override; // = parent
   virtual int post_startLoop() override; // for preCalc
 
 

@@ -48,8 +48,7 @@ class TMiso : public LinkedObj  {
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 );
 
    /** check, if element have given visual coords */
-   bool isAtCoord( int ax, int ay ) const
-     { return (vis_x == ax && vis_y == ay ); }
+   bool isAtCoord( int ax, int ay ) const;
    virtual void fillComplModelForParams( QStandardItemModel *mdl ) const override;
    virtual void preCalc();
  protected:
@@ -71,21 +70,8 @@ class TMiso : public LinkedObj  {
    virtual void do_structChanged() override;
 
    PRM_STRING(       descr, efNRC,  "description", "Object description", "max=128\nncol=-1");
-   PRM_INT(            ord, efOld,  "Order", "obsoleted", "" );
-   PRM_INT(          vis_x, efOld,  "Visual x", "X-coordinate of element in scheme", "min=0\nmax=64" );
-   PRM_INT(          vis_y, efOld,  "Visual y", "Y-coordinate of element in scheme", "min=0\nmax=64" );
    PRM_PARAMD(   out0_init, efNRC,  "Init value", "Initial value of output", "def=0.0\nsep=block" );
    PRM_DOUBLE(        out0, efRO | efNoSave, "Output", "Main output", "sep=col" );
-   PRM_SWITCH( noCalcStart, efOld, "No calc at start", "Disable out0 at startLoop ", ""  );
-
-   // these parameters is moed to ElemParams, remove after conversion
-   PRM_SWITCH( locked     ,  efOld,          "Locked", "Bypass out0_init to output"              , "sep=col"  );
-   PRM_SWITCH( ignored    ,  efOld,         "Ignored", "Ignore element while run"                , ""  );
-   PRM_SWITCH( onlyFirst  ,  efOld,      "only First", "Process element only at first iteration" , "" );
-   PRM_SWITCH( onlyLast   ,  efOld,       "only Last", "Process element only at last iteration"  , "" );
-   PRM_SWITCH( flip       ,  efOld,      "flip image", "flip left-right element icon"            , "sep=col" );
-   PRM_SWITCH( noIcon     ,  efOld,         "no Icon", "don't show element icon"                 , "" );
-   PRM_SWITCH( showBaloon ,  efOld,     "show Baloon", "Show baloon on scheme with out0"         , "" );
 
    PRM_DOUBLE(      debug0, efInner, "debug0", "Debug value 0", "" );
    PRM_DOUBLE(      debug1, efInner, "debug1", "Debug value 1", "" );

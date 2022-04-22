@@ -45,6 +45,17 @@ QString TMiso::textVisual() const
   return QSL("=") % QSND( out0 );
 }
 
+bool TMiso::isAtCoord( int ax, int ay ) const
+{
+  int vis_x = getDataD( QSL("eprm.vis_x"), 0 );
+  if( ax != vis_x ) {
+    return false;
+  }
+  int vis_y = getDataD( QSL("eprm.vis_y"), 0 );
+  return vis_y == ay;
+}
+
+
 double TMiso::fun( IterType itype ) noexcept
 {
   iter_c = itype;
@@ -81,14 +92,15 @@ double TMiso::f_d( double /*arg0*/, double /*arg1*/, double /*arg2*/, double /*a
 
 int TMiso::do_startLoop( long acnx, long acny )
 {
-  ca_noCalcStart = getDataD( QSL("eprm.noCalcStart"), 0 );
-  ca_locked      = getDataD( QSL("eprm.locked"),      0 );
   ca_ignored     = getDataD( QSL("eprm.ignored"),     0 );
-  ca_onlyFirst   = getDataD( QSL("eprm.onlyFirst"),   0 );
-  ca_onlyLast    = getDataD( QSL("eprm.onlyLast"),    0 );
   if( ca_ignored ) {
     return 1;
   }
+  ca_noCalcStart = getDataD( QSL("eprm.noCalcStart"), 0 );
+  ca_locked      = getDataD( QSL("eprm.locked"),      0 );
+  ca_onlyFirst   = getDataD( QSL("eprm.onlyFirst"),   0 );
+  ca_onlyLast    = getDataD( QSL("eprm.onlyLast"),    0 );
+
   state = stateRun;
   out0 = (double)out0_init;
   // readAllInputs(); // moved to LinkedObj

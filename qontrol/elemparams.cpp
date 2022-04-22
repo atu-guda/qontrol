@@ -32,23 +32,14 @@ CTOR(ElemParams,TDataSet)
 
 DEFAULT_FUNCS_REG(ElemParams);
 
-int ElemParams::do_postFileRead()
-{
-  if( !par || cvtCount > 0 ) { // only on conversion
-    return 0;
-  }
-
-  // convert from old
-  vis_x       = par->getDataD( QSL("vis_x"), 1 );
-  vis_y       = par->getDataD( QSL("vis_y"), 1 );
-  noCalcStart = par->getDataD( QSL("noCalcStart"), 0 );
-  locked      = par->getDataD( QSL("locked"), 0 );
-  ignored     = par->getDataD( QSL("ignored"), 0 );
-  onlyFirst   = par->getDataD( QSL("onlyFirst"), 0 );
-  onlyLast    = par->getDataD( QSL("onlyLast"), 0 );
-  flip        = par->getDataD( QSL("flip"), 0 );
-  noIcon      = par->getDataD( QSL("noIcon"), 0 );
-  showBaloon  = par->getDataD( QSL("showBaloon"), 0 );
-  return 1;
-}
+// int ElemParams::do_postFileRead()
+// {
+//   if( !par || cvtCount > 0 ) { // only on conversion
+//     return 0;
+//   }
+//
+//   // conversion may be here
+//
+//   return 1;
+// }
 

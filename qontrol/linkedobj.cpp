@@ -547,7 +547,7 @@ int InputLogic::do_startLoop( long /*acnx*/, long /*acny*/ )
   return 1;
 }
 
-void InputLogic::post_readInput()
+void InputLogic::post_readInput() noexcept
 {
   bool cll = sll;
   switch( (InputLogicType)(int)(type ) ) {

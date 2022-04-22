@@ -2,7 +2,7 @@
 <!DOCTYPE QontrolLabML>
 <QontrolLabML>
  <obj otype="TRootData" name="root">
-  <obj otype="TModel" dyn="1" prm_vis_name="&lt;div>model&lt;/div>" prm_descr="" prm_props="OBJ" name="model">
+  <obj otype="TModel" dyn="1" prm_descr="" prm_vis_name="&lt;div>model&lt;/div>" name="model">
    <param name="long_descr">Test for TQuadExrt element</param>
    <param name="script">function vtst( obj, nm, val )
 {
@@ -38,15 +38,14 @@ function test0()
 
 
 </param>
+   <param name="scriptpad">model.lsf();&#xd;//</param>
    <param name="autoImport">0</param>
    <param name="imports"></param>
-   <obj otype="ContScheme" prm_tabname="Containers" dyn="1" prm_vis_name="&lt;div>schems&lt;/div>" prm_descr="" prm_props="OBJ" name="schems" prm_sep="tab">
-    <obj otype="Scheme" dyn="1" prm_vis_name="&lt;div>main_s&lt;/div>" prm_descr="" prm_props="OBJ" name="main_s">
+   <obj otype="ContScheme" dyn="1" prm_descr="" prm_sep="tab" prm_vis_name="&lt;div>schems&lt;/div>" name="schems" prm_tabname="Containers">
+    <obj otype="Scheme" dyn="1" prm_descr="" prm_vis_name="&lt;div>main_s&lt;/div>" name="main_s">
      <param name="descr"></param>
-     <obj otype="TLinear" dyn="1" prm_vis_name="&lt;div>x0&lt;/div>" prm_descr="" prm_props="OBJ" name="x0">
+     <obj otype="TLinear" dyn="1" prm_descr="" prm_vis_name="&lt;div>x0&lt;/div>" name="x0">
       <param name="descr">x_0</param>
-      <param name="vis_x">1</param>
-      <param name="vis_y">8</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -58,14 +57,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">1</param>
+       <param name="vis_y">8</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <obj otype="ParamDouble" name="a">
        <param name="source">1</param>
        <param name="onlyFirst">0</param>
@@ -77,6 +92,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="b">
        <param name="source">-5</param>
@@ -89,6 +105,20 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="d">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a0">
        <param name="source">0</param>
@@ -101,6 +131,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a1">
        <param name="source">0</param>
@@ -113,6 +144,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a2">
        <param name="source">0</param>
@@ -125,6 +157,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a3">
        <param name="source">0</param>
@@ -137,6 +170,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="in_0">
        <param name="source"></param>
@@ -149,6 +183,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -163,6 +198,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -177,6 +213,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -191,14 +228,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TLinear" dyn="1" prm_vis_name="&lt;div>x1&lt;/div>" prm_descr="" prm_props="OBJ" name="x1">
+     <obj otype="TLinear" dyn="1" prm_descr="" prm_vis_name="&lt;div>x1&lt;/div>" name="x1">
       <param name="descr">x_1</param>
-      <param name="vis_x">1</param>
-      <param name="vis_y">6</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -210,14 +246,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">1</param>
+       <param name="vis_y">6</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <obj otype="ParamDouble" name="a">
        <param name="source">1</param>
        <param name="onlyFirst">0</param>
@@ -229,6 +281,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="b">
        <param name="source">-3</param>
@@ -241,6 +294,20 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="d">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a0">
        <param name="source">0</param>
@@ -253,6 +320,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a1">
        <param name="source">0</param>
@@ -265,6 +333,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a2">
        <param name="source">0</param>
@@ -277,6 +346,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a3">
        <param name="source">0</param>
@@ -289,6 +359,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="in_0">
        <param name="source"></param>
@@ -301,6 +372,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -315,6 +387,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -329,6 +402,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -343,14 +417,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TLinear" dyn="1" prm_vis_name="&lt;div>x2&lt;/div>" prm_descr="" prm_props="OBJ" name="x2">
+     <obj otype="TLinear" dyn="1" prm_descr="" prm_vis_name="&lt;div>x2&lt;/div>" name="x2">
       <param name="descr">x_2</param>
-      <param name="vis_x">1</param>
-      <param name="vis_y">4</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -362,14 +435,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">1</param>
+       <param name="vis_y">4</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <obj otype="ParamDouble" name="a">
        <param name="source">1</param>
        <param name="onlyFirst">0</param>
@@ -381,6 +470,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="b">
        <param name="source">-1</param>
@@ -393,6 +483,20 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="d">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a0">
        <param name="source">0</param>
@@ -405,6 +509,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a1">
        <param name="source">0</param>
@@ -417,6 +522,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a2">
        <param name="source">0</param>
@@ -429,6 +535,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a3">
        <param name="source">0</param>
@@ -441,6 +548,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="in_0">
        <param name="source"></param>
@@ -453,6 +561,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -467,6 +576,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -481,6 +591,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -495,14 +606,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TLinear" dyn="1" prm_vis_name="&lt;div>x3&lt;/div>" prm_descr="" prm_props="OBJ" name="x3">
+     <obj otype="TLinear" dyn="1" prm_descr="" prm_vis_name="&lt;div>x3&lt;/div>" name="x3">
       <param name="descr">x_3</param>
-      <param name="vis_x">1</param>
-      <param name="vis_y">2</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -514,14 +624,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">1</param>
+       <param name="vis_y">2</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <obj otype="ParamDouble" name="a">
        <param name="source">1</param>
        <param name="onlyFirst">0</param>
@@ -533,6 +659,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="b">
        <param name="source">1</param>
@@ -545,6 +672,20 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="d">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a0">
        <param name="source">0</param>
@@ -557,6 +698,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a1">
        <param name="source">0</param>
@@ -569,6 +711,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a2">
        <param name="source">0</param>
@@ -581,6 +724,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a3">
        <param name="source">0</param>
@@ -593,6 +737,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="in_0">
        <param name="source"></param>
@@ -605,6 +750,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -619,6 +765,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -633,6 +780,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -647,14 +795,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TLinear" dyn="1" prm_vis_name="&lt;div>x4&lt;/div>" prm_descr="" prm_props="OBJ" name="x4">
+     <obj otype="TLinear" dyn="1" prm_descr="" prm_vis_name="&lt;div>x4&lt;/div>" name="x4">
       <param name="descr">x_4</param>
-      <param name="vis_x">1</param>
-      <param name="vis_y">0</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -666,14 +813,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">1</param>
+       <param name="vis_y">0</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <obj otype="ParamDouble" name="a">
        <param name="source">1</param>
        <param name="onlyFirst">0</param>
@@ -685,6 +848,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="b">
        <param name="source">3</param>
@@ -697,6 +861,20 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="d">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a0">
        <param name="source">0</param>
@@ -709,6 +887,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a1">
        <param name="source">0</param>
@@ -721,6 +900,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a2">
        <param name="source">0</param>
@@ -733,6 +913,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="a3">
        <param name="source">0</param>
@@ -745,6 +926,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="in_0">
        <param name="source"></param>
@@ -757,6 +939,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -771,6 +954,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -785,6 +969,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -799,14 +984,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TFuncPoly" dyn="1" prm_vis_name="&lt;div>y0&lt;/div>" prm_descr="" prm_props="OBJ" name="y0">
+     <obj otype="TFuncPoly" dyn="1" prm_descr="" prm_vis_name="&lt;div>y0&lt;/div>" name="y0">
       <param name="descr">y_0</param>
-      <param name="vis_x">2</param>
-      <param name="vis_y">9</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -818,14 +1002,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">2</param>
+       <param name="vis_y">9</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <param name="type">1</param>
       <obj otype="ParamDouble" name="a">
        <param name="source">-0.01</param>
@@ -838,6 +1038,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="b">
        <param name="source">0</param>
@@ -850,6 +1051,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="c">
        <param name="source">0</param>
@@ -862,6 +1064,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="d">
        <param name="source">0</param>
@@ -874,6 +1077,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="e">
        <param name="source">0</param>
@@ -886,6 +1090,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="g">
        <param name="source">1</param>
@@ -898,6 +1103,33 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="ra">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="rb">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="x0">
        <param name="source">0</param>
@@ -910,6 +1142,33 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="vmin">
+       <param name="source">-1e100</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="vmax">
+       <param name="source">1e100</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="in_0">
        <param name="source">x0</param>
@@ -922,6 +1181,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -936,6 +1196,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -950,6 +1211,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -964,14 +1226,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TFuncPoly" dyn="1" prm_vis_name="&lt;div>y1&lt;/div>" prm_descr="" prm_props="OBJ" name="y1">
+     <obj otype="TFuncPoly" dyn="1" prm_descr="" prm_vis_name="&lt;div>y1&lt;/div>" name="y1">
       <param name="descr">y_1</param>
-      <param name="vis_x">2</param>
-      <param name="vis_y">7</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -983,14 +1244,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">2</param>
+       <param name="vis_y">7</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <param name="type">1</param>
       <obj otype="ParamDouble" name="a">
        <param name="source">-0.01</param>
@@ -1003,6 +1280,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="b">
        <param name="source">0</param>
@@ -1015,6 +1293,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="c">
        <param name="source">0</param>
@@ -1027,6 +1306,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="d">
        <param name="source">0</param>
@@ -1039,6 +1319,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="e">
        <param name="source">0</param>
@@ -1051,6 +1332,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="g">
        <param name="source">1</param>
@@ -1063,6 +1345,33 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="ra">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="rb">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="x0">
        <param name="source">0</param>
@@ -1075,6 +1384,33 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="vmin">
+       <param name="source">-1e100</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="vmax">
+       <param name="source">1e100</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="in_0">
        <param name="source">x1</param>
@@ -1087,6 +1423,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1101,6 +1438,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1115,6 +1453,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1129,14 +1468,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TFuncPoly" dyn="1" prm_vis_name="&lt;div>y2&lt;/div>" prm_descr="" prm_props="OBJ" name="y2">
+     <obj otype="TFuncPoly" dyn="1" prm_descr="" prm_vis_name="&lt;div>y2&lt;/div>" name="y2">
       <param name="descr">y_2</param>
-      <param name="vis_x">2</param>
-      <param name="vis_y">5</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -1148,14 +1486,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">2</param>
+       <param name="vis_y">5</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <param name="type">1</param>
       <obj otype="ParamDouble" name="a">
        <param name="source">-0.01</param>
@@ -1168,6 +1522,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="b">
        <param name="source">0</param>
@@ -1180,6 +1535,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="c">
        <param name="source">0</param>
@@ -1192,6 +1548,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="d">
        <param name="source">0</param>
@@ -1204,6 +1561,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="e">
        <param name="source">0</param>
@@ -1216,6 +1574,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="g">
        <param name="source">1</param>
@@ -1228,6 +1587,33 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="ra">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="rb">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="x0">
        <param name="source">0</param>
@@ -1240,6 +1626,33 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="vmin">
+       <param name="source">-1e100</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="vmax">
+       <param name="source">1e100</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="in_0">
        <param name="source">x2</param>
@@ -1252,6 +1665,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1266,6 +1680,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1280,6 +1695,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1294,14 +1710,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TFuncPoly" dyn="1" prm_vis_name="&lt;div>y3&lt;/div>" prm_descr="" prm_props="OBJ" name="y3">
+     <obj otype="TFuncPoly" dyn="1" prm_descr="" prm_vis_name="&lt;div>y3&lt;/div>" name="y3">
       <param name="descr">y_3</param>
-      <param name="vis_x">2</param>
-      <param name="vis_y">3</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -1313,14 +1728,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">2</param>
+       <param name="vis_y">3</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <param name="type">1</param>
       <obj otype="ParamDouble" name="a">
        <param name="source">-0.01</param>
@@ -1333,6 +1764,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="b">
        <param name="source">0</param>
@@ -1345,6 +1777,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="c">
        <param name="source">0</param>
@@ -1357,6 +1790,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="d">
        <param name="source">0</param>
@@ -1369,6 +1803,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="e">
        <param name="source">0</param>
@@ -1381,6 +1816,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="g">
        <param name="source">1</param>
@@ -1393,6 +1829,33 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="ra">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="rb">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="x0">
        <param name="source">0</param>
@@ -1405,6 +1868,33 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="vmin">
+       <param name="source">-1e100</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="vmax">
+       <param name="source">1e100</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="in_0">
        <param name="source">x3</param>
@@ -1417,6 +1907,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1431,6 +1922,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1445,6 +1937,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1459,14 +1952,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TFuncPoly" dyn="1" prm_vis_name="&lt;div>y4&lt;/div>" prm_descr="" prm_props="OBJ" name="y4">
+     <obj otype="TFuncPoly" dyn="1" prm_descr="" prm_vis_name="&lt;div>y4&lt;/div>" name="y4">
       <param name="descr">y_4</param>
-      <param name="vis_x">2</param>
-      <param name="vis_y">1</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -1478,14 +1970,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">2</param>
+       <param name="vis_y">1</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <param name="type">1</param>
       <obj otype="ParamDouble" name="a">
        <param name="source">-0.01</param>
@@ -1498,6 +2006,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="b">
        <param name="source">0</param>
@@ -1510,6 +2019,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="c">
        <param name="source">0</param>
@@ -1522,6 +2032,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="d">
        <param name="source">0</param>
@@ -1534,6 +2045,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="e">
        <param name="source">0</param>
@@ -1546,6 +2058,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="g">
        <param name="source">1</param>
@@ -1558,6 +2071,33 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="ra">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="rb">
+       <param name="source">1</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="x0">
        <param name="source">0</param>
@@ -1570,6 +2110,33 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="vmin">
+       <param name="source">-1e100</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
+      </obj>
+      <obj otype="ParamDouble" name="vmax">
+       <param name="source">1e100</param>
+       <param name="onlyFirst">0</param>
+       <param name="factor">1</param>
+       <param name="shift">0</param>
+       <param name="label"></param>
+       <param name="x_shift">0</param>
+       <param name="y_shift">0</param>
+       <param name="line_w">1</param>
+       <param name="line_color">#ff0000</param>
+       <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="in_0">
        <param name="source">x4</param>
@@ -1582,6 +2149,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1596,6 +2164,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1610,6 +2179,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1624,14 +2194,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TQuadExtr" dyn="1" prm_vis_name="&lt;div>quad1&lt;/div>" prm_descr="" prm_props="OBJ" name="quad1">
+     <obj otype="TQuadExtr" dyn="1" prm_descr="" prm_vis_name="&lt;div>quad1&lt;/div>" name="quad1">
       <param name="descr">Extr near point x0</param>
-      <param name="vis_x">4</param>
-      <param name="vis_y">6</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -1643,14 +2212,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">4</param>
+       <param name="vis_y">6</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <param name="emulC">0</param>
       <param name="limitX">1</param>
       <obj otype="ParamDouble" name="lim_s">
@@ -1664,6 +2249,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <param name="limitG">0</param>
       <obj otype="ParamDouble" name="x_min">
@@ -1677,6 +2263,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="x_max">
        <param name="source">1</param>
@@ -1689,6 +2276,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="x_l">
        <param name="source">x0</param>
@@ -1701,6 +2289,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1715,6 +2304,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1729,6 +2319,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1743,6 +2334,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1757,6 +2349,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1771,14 +2364,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TQuadExtr" dyn="1" prm_vis_name="&lt;div>quad2&lt;/div>" prm_descr="" prm_props="OBJ" name="quad2">
+     <obj otype="TQuadExtr" dyn="1" prm_descr="" prm_vis_name="&lt;div>quad2&lt;/div>" name="quad2">
       <param name="descr">Extr near point x2</param>
-      <param name="vis_x">4</param>
-      <param name="vis_y">4</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -1790,14 +2382,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">4</param>
+       <param name="vis_y">4</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <param name="emulC">0</param>
       <param name="limitX">1</param>
       <obj otype="ParamDouble" name="lim_s">
@@ -1811,6 +2419,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <param name="limitG">0</param>
       <obj otype="ParamDouble" name="x_min">
@@ -1824,6 +2433,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="x_max">
        <param name="source">1</param>
@@ -1836,6 +2446,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="x_l">
        <param name="source">x1</param>
@@ -1848,6 +2459,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1862,6 +2474,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1876,6 +2489,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1890,6 +2504,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1904,6 +2519,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -1918,14 +2534,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TQuadExtr" dyn="1" prm_vis_name="&lt;div>quad3&lt;/div>" prm_descr="" prm_props="OBJ" name="quad3">
+     <obj otype="TQuadExtr" dyn="1" prm_descr="" prm_vis_name="&lt;div>quad3&lt;/div>" name="quad3">
       <param name="descr">Extr near point x2</param>
-      <param name="vis_x">4</param>
-      <param name="vis_y">2</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -1937,14 +2552,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">4</param>
+       <param name="vis_y">2</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <param name="emulC">0</param>
       <param name="limitX">1</param>
       <obj otype="ParamDouble" name="lim_s">
@@ -1958,6 +2589,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <param name="limitG">0</param>
       <obj otype="ParamDouble" name="x_min">
@@ -1971,6 +2603,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="x_max">
        <param name="source">1</param>
@@ -1983,6 +2616,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="x_l">
        <param name="source">x2</param>
@@ -1995,6 +2629,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2009,6 +2644,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2023,6 +2659,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2037,6 +2674,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2051,6 +2689,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2065,14 +2704,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TQuadExtr" dyn="1" prm_vis_name="&lt;div>quad4&lt;/div>" prm_descr="" prm_props="OBJ" name="quad4">
+     <obj otype="TQuadExtr" dyn="1" prm_descr="" prm_vis_name="&lt;div>quad4&lt;/div>" name="quad4">
       <param name="descr">Extr near point x2</param>
-      <param name="vis_x">4</param>
-      <param name="vis_y">0</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -2084,14 +2722,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">4</param>
+       <param name="vis_y">0</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <param name="emulC">1</param>
       <param name="limitX">1</param>
       <obj otype="ParamDouble" name="lim_s">
@@ -2105,6 +2759,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <param name="limitG">0</param>
       <obj otype="ParamDouble" name="x_min">
@@ -2118,6 +2773,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="x_max">
        <param name="source">1</param>
@@ -2130,6 +2786,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="x_l">
        <param name="source">x3</param>
@@ -2142,6 +2799,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2156,6 +2814,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2170,6 +2829,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2184,6 +2844,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2198,6 +2859,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2212,14 +2874,13 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
-     <obj otype="TQuadExtr" dyn="1" prm_vis_name="&lt;div>quad0&lt;/div>" prm_descr="" prm_props="OBJ" name="quad0">
+     <obj otype="TQuadExtr" dyn="1" prm_descr="" prm_vis_name="&lt;div>quad0&lt;/div>" name="quad0">
       <param name="descr">Extr near point x0</param>
-      <param name="vis_x">4</param>
-      <param name="vis_y">8</param>
       <obj otype="ParamDouble" name="out0_init">
        <param name="source">0</param>
        <param name="onlyFirst">0</param>
@@ -2231,14 +2892,30 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
-      <param name="noCalcStart">0</param>
-      <param name="locked">0</param>
-      <param name="ignored">0</param>
-      <param name="onlyFirst">0</param>
-      <param name="onlyLast">0</param>
-      <param name="flip">0</param>
-      <param name="noIcon">0</param>
+      <obj otype="ElemParams" dyn="1" prm_descr="" prm_sep="blockend" prm_vis_name="eprm" name="eprm">
+       <param name="vis_x">4</param>
+       <param name="vis_y">8</param>
+       <param name="noCalcStart">0</param>
+       <param name="locked">0</param>
+       <param name="ignored">0</param>
+       <param name="onlyFirst">0</param>
+       <param name="onlyLast">0</param>
+       <param name="flip">0</param>
+       <param name="noIcon">0</param>
+       <param name="showBaloon">0</param>
+       <param name="baloonStr"></param>
+       <param name="showBar">0</param>
+       <param name="barValue"></param>
+       <param name="barMin">0</param>
+       <param name="barMax">1</param>
+       <param name="barX0">0.3</param>
+       <param name="barY0">-0.5</param>
+       <param name="barW">0.2</param>
+       <param name="barH">1</param>
+       <param name="barColor">#ff0000</param>
+      </obj>
       <param name="emulC">1</param>
       <param name="limitX">1</param>
       <obj otype="ParamDouble" name="lim_s">
@@ -2252,6 +2929,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <param name="limitG">1</param>
       <obj otype="ParamDouble" name="x_min">
@@ -2265,6 +2943,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="ParamDouble" name="x_max">
        <param name="source">-3</param>
@@ -2277,6 +2956,7 @@ function test0()
        <param name="line_w">2</param>
        <param name="line_color">#ff0000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
       </obj>
       <obj otype="InputSimple" name="x_l">
        <param name="source">x0</param>
@@ -2289,6 +2969,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2303,6 +2984,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2317,6 +2999,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2331,6 +3014,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2345,6 +3029,7 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
@@ -2359,16 +3044,17 @@ function test0()
        <param name="line_w">1</param>
        <param name="line_color">#000000</param>
        <param name="onlyLabel">0</param>
+       <param name="fixedSource">0</param>
        <param name="channel">0</param>
        <param name="subchannel">0</param>
       </obj>
      </obj>
     </obj>
    </obj>
-   <obj otype="ContOut" dyn="1" prm_vis_name="&lt;div>outs&lt;/div>" prm_descr="" prm_props="OBJ" name="outs"/>
-   <obj otype="ContGraph" dyn="1" prm_vis_name="&lt;div>plots&lt;/div>" prm_descr="" prm_props="OBJ" name="plots" prm_sep="col"/>
-   <obj otype="ContSimul" prm_tabname="Params" dyn="1" prm_vis_name="&lt;div>sims&lt;/div>" prm_descr="" prm_props="OBJ" name="sims" prm_sep="tabend">
-    <obj otype="Simulation" dyn="1" prm_vis_name="&lt;div>sim0&lt;/div>" prm_descr="" prm_props="OBJ" name="sim0">
+   <obj otype="ContOut" dyn="1" prm_descr="" prm_vis_name="&lt;div>outs&lt;/div>" name="outs"/>
+   <obj otype="ContGraph" dyn="1" prm_descr="" prm_sep="col" prm_vis_name="&lt;div>plots&lt;/div>" name="plots"/>
+   <obj otype="ContSimul" dyn="1" prm_descr="" prm_sep="tabend" prm_vis_name="&lt;div>sims&lt;/div>" name="sims" prm_tabname="Params">
+    <obj otype="Simulation" dyn="1" prm_descr="" prm_vis_name="&lt;div>sim0&lt;/div>" name="sim0">
      <param name="runType">0</param>
      <param name="T">1</param>
      <param name="t_0">0</param>
@@ -2390,11 +3076,13 @@ function test0()
      <param name="autoStart">0</param>
      <param name="seed">1325212404</param>
      <param name="seedType">0</param>
+     <param name="askParams"></param>
      <param name="useScripts">0</param>
      <param name="initEng">1</param>
      <param name="execModelScript">1</param>
      <param name="scriptPreRun"></param>
      <param name="scriptPostRun"></param>
+     <param name="brkOnZero">0</param>
      <param name="scriptStartLoop"></param>
      <param name="scriptEndLoop"></param>
      <param name="descr"></param>

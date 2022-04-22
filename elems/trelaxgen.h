@@ -3,7 +3,7 @@
                           trelaxgen.h  -  description
                              -------------------
     begin                : 2014.10.28
-    copyright            : (C) 2014-2017 by atu
+    copyright            : (C) 2014-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -49,7 +49,6 @@ class TRelaxGen : public TMiso  {
    /** misc flags */
    PRM_SWITCH(        useCharge, efNRC,             "Use i_{ch}", "Use i_ch as charge current", "sep=block" );
    PRM_SWITCH(     useDischarge, efNRC,            "Use i_{dis}", "Use i_dis as discharge current", "" );
-   PRM_SWITCH(          useTrig, efOld,               "Use trig", "Use trig as signal to discharge", "" );
    PRM_SWITCH(    useContCharge, efNRC,      "Contiguous charge", "Use contiguous charging", "sep=col" );
    PRM_SWITCH( useContDischarge, efNRC,   "Contiguous discharge", "Use contiguous discharging", "" );
    PRM_SWITCH( useJuncDischarge, efNRC,     "Junction discharge", "Use diode-like discharging", "" );

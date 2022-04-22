@@ -23,6 +23,14 @@ enum IterType {
   IterNo    = 3,   // before or after run
 };
 
+/** types of link */
+enum ltype_t {
+  LinkNone = 0, // not linked or direct value
+  LinkElm,      // linked to element
+  LinkSpec,     // linked to special name, like 'prm1', 't'
+  LinkBad       // link source or target not found
+};
+
 struct RunInfo {
   int run_tp;
   long N;
@@ -92,8 +100,8 @@ class LinkedObj : public TDataSet {
    Q_INVOKABLE QStringList getInputsNames() const;
    Q_INVOKABLE QString lsInputs() const;
 
-   void readInputs() noexcept;
-   void readAllInputs() noexcept;
+   Q_INVOKABLE void readInputs() noexcept;
+   Q_INVOKABLE void readAllInputs() noexcept;
    Q_INVOKABLE virtual void iterateSources( int dn = 1 );
  protected:
 
@@ -118,7 +126,7 @@ class LinkedObj : public TDataSet {
 
    /** place of customization of preRun, return: !=0 = Ok */
    virtual int do_preRun();
-   /** will be called after all actions from posrtRun  -- good place for deallocs */
+   /** will be called after all actions from postRun  -- good place for deallocs */
    virtual int do_postRun( int good );
    /** called before each inner param loop from startLoop */
    virtual int do_startLoop( long acnx, long acny );
@@ -129,13 +137,6 @@ class LinkedObj : public TDataSet {
    DCL_DEFAULT_STATIC;
 };
 
-/** types of link */
-enum ltype_t {
-  LinkNone = 0, // not linked or direct value
-  LinkElm,      // linked to element
-  LinkSpec,     // linked to special name, like 'prm1', 't'
-  LinkBad       // link source or target not found
-};
 
 // ---------------------------------------------------------------------
 /** Abstract-alike special holder link, parent for all inputs */
@@ -173,7 +174,7 @@ class InputAbstract : public LinkedObj {
   // virtual void do_post_set() override;
   /** do real actions after structure changed */
   virtual void do_structChanged() override;
-  virtual void post_readInput() {};
+  virtual void post_readInput() noexcept {};
 
   PRM_STRING(      source, efNRC, "Source", "Address of signal source", "max=128\nprops=STRING,SIMPLE,LINK\ncmpl=in"  );
   PRM_SWITCH(   onlyFirst, efNRC, "only First", "apply only at start of run", "" );
@@ -254,7 +255,7 @@ class InputLogic : public InputSimple {
   operator bool() const noexcept { return ll; }
  protected:
   virtual int do_startLoop( long acnx, long acny ) override;
-  virtual void post_readInput() override;
+  virtual void post_readInput() noexcept override;
 
   PRM_LIST(     type,   efNRC,   "&Type",        "Function type", "enum=InputLogicType\nsep=block" );
   PRM_DOUBLE(     l0,       0, "level 0", "level of '0' if need", "def=0.01\nsep=col" );

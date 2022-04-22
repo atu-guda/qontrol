@@ -144,7 +144,7 @@ int TFileSimple::miso_startLoop( long /*acnx*/, long /*acny*/ )
     lin = file.readLine( buf_sz );
   }
 
-  if( !noCalcStart ) {
+  if( !ca_noCalcStart ) {
     readLine(); out0 = v[0];
     hold_i = 0; // to force ignore read
   }

@@ -47,12 +47,6 @@ class TLogic : public TMiso  {
    Q_INVOKABLE virtual double f_d( double arg0, double arg1 = 0, double arg2 = 0, double arg3 = 0 ) override;
 
    PRM_LIST(    type, efNRC, QSL("&Type"), QSL("Type of logic"), QSL("enum=LogicType") );
-   // PRM_PARAMD( level, efOld, QSL("&level of 1"), QSL("Minimal level of '1' signal on input"), QSL("def=0.1") );
-   /** misc flags */
-   PRM_SWITCH( useNInp0, efOld, QSL("Inverse u_0"),   QSL("Inverse input u_0"), QSL("sep=col") );
-   PRM_SWITCH( useNInp1, efOld, QSL("Inverse u_1"),   QSL("Inverse input u_1"), ""  );
-   PRM_SWITCH( useNInp2, efOld, QSL("Inverse u_2"),   QSL("Inverse input u_2"), ""  );
-   PRM_SWITCH( useNInp3, efOld, QSL("Inverse u_3"),   QSL("Inverse input u_3"), ""  );
    PRM_SWITCH(  useNOut, efNRC, QSL("Inverse out") ,  QSL("Inverse input output"), QSL("sep=col")  );
    PRM_SWITCH( useMinus, efNRC, QSL("&Negative out"), QSL("Negative output is -1, not 0"), "" );
 

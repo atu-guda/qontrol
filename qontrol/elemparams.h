@@ -51,7 +51,7 @@ class ElemParams : public TDataSet  {
    PRM_DOUBLE(        barH, efNRC,       "bar Heigth", "Bar height (in obj size)"                , "def=1.0" );
    PRM_COLOR(     barColor, efNRC,        "bar Color", "Bar color"                               , "sep=col\ndef=red" );
  protected:
-   virtual int do_postFileRead() override;
+   // virtual int do_postFileRead() override;
 
    DCL_DEFAULT_STATIC;
 };
