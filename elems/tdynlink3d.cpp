@@ -2,7 +2,7 @@
   tdynlink3d.cpp - TDynLink3D class definition
                              -------------------
     begin                : 2016.04.12
-    copyright            : (C) 2016-2017 by atu
+    copyright            : (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

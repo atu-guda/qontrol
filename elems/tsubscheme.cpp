@@ -2,7 +2,7 @@
                           tsubscheme.cpp  - subscheme element
                              -------------------
     begin                : 2015.10.03
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

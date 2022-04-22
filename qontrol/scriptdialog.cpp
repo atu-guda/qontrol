@@ -2,7 +2,7 @@
      scriptdialog.cpp - dialog to edit and run scripts
                              -------------------
     begin                : 2016.10.25
-    copyright            : GPL (C) 2016-2020 by atu
+    copyright            : GPL (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

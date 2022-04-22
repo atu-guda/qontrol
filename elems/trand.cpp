@@ -2,7 +2,7 @@
                           trand.cpp  -  description
                              -------------------
     begin                : Thu Dec 18 2003
-    copyright            : (C) 2003-2016 by atu
+    copyright            : (C) 2003-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

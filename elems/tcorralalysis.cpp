@@ -2,7 +2,7 @@
                           tcorralalysis.cpp  -  description
                              -------------------
     begin                : Fri Sep 8 2000
-    copyright            : (C) 2000-2016 by atu
+    copyright            : (C) 2000-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

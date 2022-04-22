@@ -3,7 +3,7 @@
                           addelem.h  -  description
                              -------------------
     begin                : Jul 30 2012
-    copyright            : GPL (C) 2012-2019 by atu
+    copyright            : GPL (C) 2012-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

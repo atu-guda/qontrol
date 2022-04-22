@@ -3,7 +3,7 @@
                           circbuf.h - circular buffer class description
                              -------------------
     begin                : 2015.01.14 (move from miscfun.h)
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

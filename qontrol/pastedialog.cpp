@@ -2,7 +2,7 @@
      pastedialog.h - struct and dialog for paste and clone objects
                              -------------------
     begin                : 2016.1220
-    copyright            : GPL (C) 2016-2016 by atu
+    copyright            : GPL (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
 */
 

@@ -2,7 +2,7 @@
                           thyst.cpp  -  description
                              -------------------
     begin                : Sat Aug 26 2000
-    copyright            : (C) 2000-2018 by atu
+    copyright            : (C) 2000-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

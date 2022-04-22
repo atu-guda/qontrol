@@ -3,7 +3,7 @@
     datapool.h - container for misc data header
                              -------------------
     begin                : 2016.10.30
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

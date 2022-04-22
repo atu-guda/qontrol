@@ -3,7 +3,7 @@
  prog_opts.h - description of program options
                              -------------------
     begin                : 2015.12.01
-copyright            : GPL (C) 2015-2021 by atu
+copyright            : GPL (C) 2015-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

@@ -2,7 +2,7 @@
   linkcompleter.cpp - completer for links fields
   -------------------
 begin                : 2015.01.20
-copyright            : (C) 2015-2019 by atu
+copyright            : (C) 2015-2022 by atu
 email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

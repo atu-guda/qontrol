@@ -2,7 +2,7 @@
   terrmeasure.cpp -- error measure element implementation
                              -------------------
     begin                : 2016.05.23
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

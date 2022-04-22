@@ -2,7 +2,7 @@
                           tsum8.cpp  - 8-in summator implementation
                              -------------------
     begin                : 2015.02.22
-    copyright            : (C) 2015-2019 by atu
+    copyright            : (C) 2015-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

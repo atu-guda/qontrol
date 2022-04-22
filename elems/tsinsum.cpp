@@ -2,7 +2,7 @@
     tsinsum.cpp -- sum of sinuses
                              -------------------
     begin                : 2016.12.26
-    copyright            : (C) 2016-2019 by atu
+    copyright            : (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

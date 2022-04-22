@@ -2,7 +2,7 @@
    tbarrier.cpp - barrier functions definitions
                              -------------------
     begin                : 2016.04.24
-    copyright            : (C) 2016-2020 by atu
+    copyright            : (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

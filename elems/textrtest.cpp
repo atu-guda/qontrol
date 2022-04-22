@@ -2,7 +2,7 @@
    textrtest.cpp - testremum test functions definitions
                              -------------------
     begin                : 2016.04.22
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

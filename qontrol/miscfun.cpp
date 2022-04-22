@@ -2,7 +2,7 @@
                           miscfun.cpp  -  description
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2020 by atu
+    copyright            : GPL (C) 2000-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

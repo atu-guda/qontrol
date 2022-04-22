@@ -2,7 +2,7 @@
                           tsumn.h  - N-input linear summator
                              -------------------
     begin                : 2015.10.31
-    copyright            : (C) 2015-2019 by atu
+    copyright            : (C) 2015-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

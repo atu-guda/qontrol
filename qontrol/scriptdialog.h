@@ -3,7 +3,7 @@
      scriptdialog.h - dialog to edit and run scripts (header)
                              -------------------
     begin                : 2016.10.25
-    copyright            : GPL (C) 2016-2016 by atu
+    copyright            : GPL (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

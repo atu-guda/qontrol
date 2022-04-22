@@ -3,7 +3,7 @@
   fontbtn.h - widget to edit font by button
                              -------------------
     begin                : 2015.11.19
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

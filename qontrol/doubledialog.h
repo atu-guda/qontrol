@@ -3,7 +3,7 @@
      doubledialog.h - dialog to data table representation
                              -------------------
     begin                : 2019.12.01
-    copyright            : GPL (C) 2019-2019 by atu
+    copyright            : GPL (C) 2019-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

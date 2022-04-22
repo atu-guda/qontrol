@@ -2,7 +2,7 @@
                           tfriction.cpp  -  description
                              -------------------
     begin                : Jul 18 2003
-    copyright            : (C) 2000-2019 by atu
+    copyright            : (C) 2000-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

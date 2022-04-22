@@ -2,7 +2,7 @@
   tsearcher.cpp - extremum searcher element definition
                              -------------------
     begin                : 2016.04.26
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

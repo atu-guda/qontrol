@@ -3,7 +3,7 @@
                           schemeview.h - view for schems list
                              -------------------
     begin                : 2015.10.04
-    copyright            : (C) 2015-2016 by atu
+    copyright            : (C) 2015-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

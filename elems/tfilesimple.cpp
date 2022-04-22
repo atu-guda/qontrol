@@ -2,7 +2,7 @@
          tfilesimple.c  - element to simple read text data from file (implementation)
                           -------------------
     begin                : 2016.01.25
-    copyright            : (C) 2016-2020 by atu
+    copyright            : (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

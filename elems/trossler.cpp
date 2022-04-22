@@ -2,7 +2,7 @@
                           trossler.cpp  -  description
                              -------------------
     begin                : Thu May 03 2012
-    copyright            : (C) 2012-2418 by atu
+    copyright            : (C) 2012-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

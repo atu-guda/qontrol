@@ -2,7 +2,7 @@
                           graphdataview.cpp - view for plots
                              -------------------
     begin                : 2014.11.15
-    copyright            : (C) 2014-2019 by atu
+    copyright            : (C) 2014-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

@@ -3,7 +3,7 @@
    dataset.h  -  base definitions and classes
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2021 by atu
+    copyright            : GPL (C) 2000-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

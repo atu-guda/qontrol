@@ -2,7 +2,7 @@
                           labowin.cpp  -  description
                              -------------------
     begin                : Mon Jul 31 16:51:57 EEST 2000
-    copyright            : (C) 2000-2020 by atu
+    copyright            : (C) 2000-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

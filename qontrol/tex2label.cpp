@@ -3,7 +3,7 @@
                           some TeX commands to HTML subset for QLabel
                              -------------------
     begin                : 2015.01.15
-    copyright            : GPL (C) 2015-2019 by atu
+    copyright            : GPL (C) 2015-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 #include <list>

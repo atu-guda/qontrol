@@ -2,7 +2,7 @@
   elemparams.h - element parameters
                              -------------------
     begin                : 2017.09.03 (copy from tmiso.cpp)
-    copyright            : (C) 2017-2017 by atu
+    copyright            : (C) 2017-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

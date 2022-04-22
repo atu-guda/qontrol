@@ -3,7 +3,7 @@
                           runview.h  -  description
                              -------------------
     begin                : Fri Aug 17 2001
-    copyright            : (C) 2001-2018 by atu
+    copyright            : (C) 2001-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

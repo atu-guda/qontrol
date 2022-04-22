@@ -2,7 +2,7 @@
      tmovingcorr.cpp - Moving correlation analysis definition
                              -------------------
     begin                : 2016.08.02
-    copyright            : (C) 2016-2019 by atu
+    copyright            : (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

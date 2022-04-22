@@ -2,7 +2,7 @@
    longvalidator.cpp  -  LongValidator definition
                              -------------------
     begin                : 2016.04.10
-    copyright            : GPLv2+ (C) 2016-2016 by atu
+    copyright            : GPLv2+ (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 // simplefied from QIntVlaidator (+allow hex, oct)

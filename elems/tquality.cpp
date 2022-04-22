@@ -2,7 +2,7 @@
      tquality.cpp -- TQuality element definition
                              -------------------
     begin                : 2016.02.29
-    copyright            : (C) 2016-2019 by atu
+    copyright            : (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

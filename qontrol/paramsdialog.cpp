@@ -2,7 +2,7 @@
      paramsdialog.cpp - dialog to ask params before run
                              -------------------
     begin                : 2016.07.04
-    copyright            : GPL (C) 2012-2016 by atu
+    copyright            : GPL (C) 2012-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

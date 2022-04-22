@@ -2,7 +2,7 @@
                           schemeview.cpp - view for Schems list
                              -------------------
     begin                : 2015.10.04
-    copyright            : (C) 2015-2017 by atu
+    copyright            : (C) 2015-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

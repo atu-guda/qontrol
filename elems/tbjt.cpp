@@ -2,7 +2,7 @@
   tbjt.cpp - Simple BJT transistor model
                              -------------------
     begin                : 2016.08.12
-    copyright            : (C) 2016-2017 by atu
+    copyright            : (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

@@ -3,7 +3,7 @@
                           defs.h  -  common definitions and descriptions
                              -------------------
     begin                : Wed Mar 29 2000
-    copyright            : GPL (C) 2000-2019 by atu
+    copyright            : GPL (C) 2000-2022 by atu
     email                : atu@nmetau.edu.ua
  *************************************************************************/
 
