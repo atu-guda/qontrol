@@ -32,6 +32,7 @@ class TDyn3D : public TMiso  {
  protected:
    virtual double f() noexcept override;
    virtual int miso_startLoop( long acnx, long acny ) override;
+   void f_pre() noexcept;
 
    PRM_PARAMD( c_x,     0, "c_{&x}", "Factor for v_x", "def=1.0" );
    PRM_PARAMD( c_y,     0, "c_{&y}", "Factor for v_y", "def=1.0" );

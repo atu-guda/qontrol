@@ -41,11 +41,7 @@ CTOR(TDyn3D,TMiso)
 
 double TDyn3D::f() noexcept
 {
-  x2 = x*x; y2 = y*y; z2 = z*z;
-  xy = x*y; yz = y*z; xz = x*z;
-  ax = fabs( x ); ay = fabs( y ); az = fabs( z );
-
-  v = gsl_hypot3( v_x, v_y, v_z );
+  f_pre();
 
   x += ctdt * v_x * c_x;
   y += ctdt * v_y * c_y;
@@ -53,10 +49,20 @@ double TDyn3D::f() noexcept
   return x;
 }
 
+void TDyn3D::f_pre() noexcept
+{
+  x2 = x*x; y2 = y*y; z2 = z*z;
+  xy = x*y; yz = y*z; xz = x*z;
+  ax = fabs( x ); ay = fabs( y ); az = fabs( z );
+
+  v = gsl_hypot3( v_x, v_y, v_z );
+}
+
 
 int TDyn3D::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
+  f_pre();
   out0 = x; // ????
   return 1;
 }

@@ -65,6 +65,7 @@ void TRossler::calcAux() noexcept
 int TRossler::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
+  vx = vy = vz = 0; // TODO: more?
   calcAux();
   out0 = x;
   return 1;

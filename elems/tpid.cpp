@@ -39,7 +39,9 @@ int TPid::do_preRun()
 
 int TPid::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
+  d1 = 0; d2 = 0;
   vi1 = vi2 = 0; u_old = u_old2 = out0;
+  x2 = out0 * out0;
   start = 1;
   return 1;
 }

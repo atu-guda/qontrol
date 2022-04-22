@@ -38,6 +38,8 @@ int TCounter::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   cn = (int)(out0_init);
   avT = 1.0; lastT = 1.0; avF = 1.0; lastF = 1.0; // fake values
+  avOm = 2 * M_PI * avF;
+  lastOm = 2 * M_PI * lastF;
   tick_t = 0; rst_t = 0;
   return 1;
 }

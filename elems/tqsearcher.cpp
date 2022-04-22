@@ -47,6 +47,7 @@ CTOR(TQSearcher,TMiso)
 
 int TQSearcher::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
+  // TODO: more init
   return 1;
 }
 

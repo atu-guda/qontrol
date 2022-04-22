@@ -66,6 +66,7 @@ void TLorenz::calcAux() noexcept
 
 int TLorenz::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
+  vx = vy = vz = 0;
   x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
   calcAux();
   out0 = x; // ????

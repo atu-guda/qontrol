@@ -123,6 +123,7 @@ int TFileSimple::do_postRun( int /*good*/ )
 int TFileSimple::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   n_total = 0; hold_i = 0; n_col = 0; x = 0; y = 0; xo = 0; yo = 0; vx = 0; vy = 0;
+  v00 = out0_init;
   first_read = true;
 
   QString c_fn;

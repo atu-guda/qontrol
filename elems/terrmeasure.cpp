@@ -50,9 +50,11 @@ void TErrMeasure::reset_vals()
 {
   t_rst = 0;
   s2 = s2_0 = sp = 0;
-  mi1 = mi2 = mip = mmax = 0;
+  mi1 = mi2 = mi2_0 = mip = mmax = 0;
   m1 = er1; m1sq = sqrt( m1 ); m12 = pow2( m1 );
   m22 = er2; m2 = sqrt( er2 );  m2_0 = sqrt( er2_0 ); mp = pow( erp, (1.0/p) );
+  // TODO: more correct?
+  r1 = 0; r1sq = 0; r2 = 0; r22 = 0; rp = 0; rmax = 0;
 }
 
 double TErrMeasure::f() noexcept

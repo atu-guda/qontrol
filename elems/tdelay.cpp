@@ -70,6 +70,7 @@ int TDelay::miso_startLoop( long /*acnx*/, long /*acny*/ )
   double v = cdelay / ctdt;
   icd = size_t( v );
   v2 = v - icd; v1 = 1.0 - v2;
+  aver = 0;
   return 1;
 }
 

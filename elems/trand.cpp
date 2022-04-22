@@ -78,6 +78,7 @@ int TRand::miso_startLoop( long acnx, long acny )
     }
     rng.set( sseed );
   };
+  x2 = out0 * out0;
   return 1;
 }
 

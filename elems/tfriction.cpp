@@ -46,6 +46,7 @@ CTOR(TFriction,TMiso)
 int TFriction::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   x_old = out0_init;
+  x2 = x_old * x_old;
   v = v_old = Ff = a = 0;
   bodyState = 0;
   return 1;

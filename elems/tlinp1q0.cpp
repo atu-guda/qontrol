@@ -45,6 +45,9 @@ CTOR(TLinP1Q0,TMiso)
 int TLinP1Q0::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   x_old = ( use_sqrt0 ) ? pow2( out0_init ) : out0_init;
+  tau = 1.0 / a;
+  double u00 = in_u - in_n;
+  u0 = u00;
   x2 = pow2( x_old );
   return 1;
 }

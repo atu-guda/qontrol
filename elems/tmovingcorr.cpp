@@ -37,6 +37,7 @@ void TMovingCorr::reset_data()
   ave_x = ave_y = ave_x2 = ave_y2 = 0;
   s_x = s_x2 = s_y = s_y2 = s_xy = 0;
   x_old = y_old = 0; on_start = true;
+  n_sam = 0;
   for( auto bu : bufs ) {
     bu->reset();
   }

@@ -87,6 +87,7 @@ void TSourceLin::do_post_set()
 
 int TSourceLin::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
+  t_r = u; t_rr = t_r; t_r0 = 0; n_rr = 0;
   recalc();
   out0 = vs[0];
   return 1;

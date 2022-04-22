@@ -193,7 +193,11 @@ int TSource::miso_startLoop( long acnx, long acny )
   was_pulse = 0;
   pha = phi * M_1_PI * 0.5;
   pha_0 = fmod( pha, 1 );
+  u2 = pow2( cc );
+  cv = 0;
+  T_0 = T_1 = 1; // FAKE
 
+  // TODO: common fun
   // U rnd init
   if( use_u_ch ) {
     if( (eff_seedType_u == 0) ||                // need to seed now

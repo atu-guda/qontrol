@@ -36,15 +36,21 @@ CTOR(TIntegrator,TMiso)
 
 int TIntegrator::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
-  last_rst =  (double)out0_init;
-  v_old = v = v_a = last_rst;
-  t_rst = 0;
-  useAver_c   = (bool)useAver;
+  useAver_c   = (bool)useAver; // TODO:? preRun
   useMin_c    = (bool)useMin;
   useMax_c    = (bool)useMax;
   useSqIn_c   = (bool)useSqIn;
   useSqrOut_c = (bool)useSqrOut;
   invKi_c     = (bool)invKi;
+
+  last_rst =  (double)out0_init;
+  v_old = v = v_a = last_rst;
+  t_rst = 0;
+  x2 = v_old * v_old;
+
+  in = in_u - in_u1 + in_u2; // TODO: better value?
+  double eki = invKi_c ? ( 1.0/ki ) : ki;
+  in_k = in * eki;
   return 1;
 }
 
