@@ -198,7 +198,7 @@ class PlotLabel : public LinkedObj {
    Q_INVOKABLE QString getFnAddStr() const;
 
  protected:
-   PRM_STRING( text, 0, "Text", "label text", "props=STRING,MLINE\nncol=-1\ndef=Label");
+   PRM_STRING( text, 0, "Text", "label text", "props=STRING,MLINE\nsep=block\nncol=-1\ndef=Label");
 
    PRM_LIST(   labelType, 0, "Label type",  "method of label processing", "sep=block\nenum=LabelType" );
    PRM_SWITCH( substVals, 0, "Subst", "Substitute values", "def=0" );
@@ -370,8 +370,8 @@ class TGraph : public LinkedObj  {
    void addMetaData( QImage &img, const ViewData *a_vd, const ScaleData *scda ) const;
 
    /** title of graph  */
-   PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nncol=-1\ndef=fig. " );
-   PRM_STRING( descr, efNRC, "description", "Plot description", "max=256\nncol=-1");
+   PRM_STRING( title, efNRC, "Title", "Plot title", "max=128\nsep=block\nncol=-1\ndef=fig. " );
+   PRM_STRING( descr, efNRC, "description", "Plot description", "sep=block\nmax=256\nncol=-1");
    // inners
    PRM_DOUBLE( v_min, efInner, "v_min", "Minimal plot value", "def=0.0" );
    PRM_DOUBLE( v_max, efInner, "v_max", "Maximal plot value", "def=1.0" );

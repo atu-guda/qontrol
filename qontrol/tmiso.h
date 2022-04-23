@@ -39,7 +39,6 @@ class TMiso : public LinkedObj  {
    // virtual ~TMiso() override;
    DCL_CREATE;
    DCL_STD_INF;
-   Q_INVOKABLE virtual double getDouble( int /*idx*/ = 0 ) const override { return out0; }
    Q_INVOKABLE virtual QString textVisual() const override;
 
    /** external computation function + in/out */
@@ -69,9 +68,8 @@ class TMiso : public LinkedObj  {
    /** do real actions after structure changed - refills inputs */
    virtual void do_structChanged() override;
 
-   PRM_STRING(       descr, efNRC,  "description", "Object description", "max=128\nncol=-1");
-   PRM_PARAMD(   out0_init, efNRC,  "Init value", "Initial value of output", "def=0.0\nsep=block" );
-   PRM_DOUBLE(        out0, efRO | efNoSave, "Output", "Main output", "sep=col" );
+   PRM_STRING(       descr, efNRC,  "description", "Object description", "max=128\nncol=-1\nsep=blockend");
+   PRM_PARAMD(   out0_init, efNRC,  "Init value", "Initial value of output", "def=0.0\nsep=colend" );
 
    PRM_DOUBLE(      debug0, efInner, "debug0", "Debug value 0", "" );
    PRM_DOUBLE(      debug1, efInner, "debug1", "Debug value 1", "" );

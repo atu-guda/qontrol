@@ -112,7 +112,7 @@ class TOutArr : public LinkedObj  {
    virtual int do_endLoop() override;
 
    PRM_LIST(       type,   efNRC, "&Type",   "Type of array", "enum=OutArrType" );
-   PRM_STRING(    descr,   efNRC, "description", "Output array description", "max=256\nncol=-1");
+   PRM_STRING(    descr,   efNRC, "description", "Output array description", "max=256\nsep=block\nncol=-1");
    PRM_INPUT(      name,       0, "&Source",  "Input source", "sep=block" );
    PRM_STRING(    label,   efNRC, "&Label",   "Label of data", "max=32" );
    PRM_DOUBLE(      t_s,   efNRC, "t_s",      "start time", "" );

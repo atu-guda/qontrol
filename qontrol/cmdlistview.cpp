@@ -38,7 +38,12 @@ CmdListView::CmdListView( HolderData *a_mod, CommonSubwin *a_par )
 
   lv->setContextMenuPolicy( Qt::ActionsContextMenu );
 
-  lv->setModel( storage );
+  proxy_model = new QSortFilterProxyModel( this );
+  proxy_model->setSourceModel( storage );
+  proxy_model->setFilterKeyColumn( 0 );
+  proxy_model->setFilterRegExp( "^(?!out0$)" );
+
+  lv->setModel( proxy_model );
 
   auto selMod = lv->selectionModel();
   QModelIndex s_idx = storage->index( 0, 0, QModelIndex() );

@@ -18,6 +18,7 @@
 
 
 #include <QtWidgets>
+#include <QSortFilterProxyModel>
 
 #include "cmdview.h"
 #include "commonsubwin.h"
@@ -46,6 +47,7 @@ class CmdListView : public CmdView {
     // virtual bool exportObj() override;
   protected:
    QListView *lv = nullptr;
+   QSortFilterProxyModel *proxy_model = nullptr;
   protected:
    void init_base_actions();
 };

@@ -55,6 +55,10 @@ class LinkedObj : public TDataSet {
    DCL_CREATE;
    DCL_STD_INF;
 
+   Q_INVOKABLE virtual double getDouble( int /*idx*/ = 0 ) const noexcept override { return out0; }
+   Q_INVOKABLE double vc() const noexcept { return out0; } // synonims
+   double cval() const noexcept { return out0; }
+
    /** returns pointer to given parameter, checking if valid
     * valid values:
     * 1.23e-5 - direct double value -- NO, not here (see set_link)
@@ -105,6 +109,8 @@ class LinkedObj : public TDataSet {
    Q_INVOKABLE virtual void iterateSources( int dn = 1 );
  protected:
 
+   PRM_DOUBLE(        out0, efNoSave | efRODial, "out0", "Main output", "sep=colend" );
+
    double ct { 0.0 };
    double ctdt { 1.0 };
    const RunInfo *rinf = nullptr;
@@ -149,7 +155,6 @@ class InputAbstract : public LinkedObj {
   virtual QVariant dataObj( int col, int role = Qt::DisplayRole ) const override;
   DCL_CREATE;
   DCL_STD_INF;
-  Q_INVOKABLE virtual double getDouble( int /*idx*/ = 0 ) const override { return out0; }
   Q_INVOKABLE virtual bool fromString( const QString &s ) override; // special handling non XML
   QString prepTextVisual( bool isLong ) const;
   Q_INVOKABLE virtual QString textVisual() const override;
@@ -165,8 +170,6 @@ class InputAbstract : public LinkedObj {
   // less operators for double: const only
   operator double() const noexcept { return out0; }
   const double* caddr() const noexcept { return p; }
-  Q_INVOKABLE double vc() const noexcept { return out0; } // synonims
-  double cval() const noexcept { return out0; }
 
   Q_INVOKABLE virtual int iterateSource( int dn = 1 ); // return new number or -1000000
 
@@ -191,7 +194,6 @@ class InputAbstract : public LinkedObj {
   PRM_INT(       linkType, efInner | efRO, "Link type", "Describes link type", "def=3" ); // def=LinkBad
   PRM_STRING(  srcObjName, efInner | efRO, "Source object", "Name of the source object", ""  );
 
-  PRM_DOUBLE(        out0, efInner, "Output", "Main output", "" );
 
   double direct_in = 0;
   const double *p = &direct_in;
