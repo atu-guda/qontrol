@@ -92,6 +92,10 @@ double TMiso::f_d( double /*arg0*/, double /*arg1*/, double /*arg2*/, double /*a
 
 int TMiso::do_startLoop( long acnx, long acny )
 {
+  state = stateRun;
+  out0 = (double)out0_init;
+  debug0 = 0; debug1 = 0; debug2 = 0; debug3 = 0;
+
   ca_ignored     = getDataD( QSL("eprm.ignored"),     0 );
   if( ca_ignored ) {
     return 1;
@@ -101,10 +105,6 @@ int TMiso::do_startLoop( long acnx, long acny )
   ca_onlyFirst   = getDataD( QSL("eprm.onlyFirst"),   0 );
   ca_onlyLast    = getDataD( QSL("eprm.onlyLast"),    0 );
 
-  state = stateRun;
-  out0 = (double)out0_init;
-  // readAllInputs(); // moved to LinkedObj
-  debug0 = 0; debug1 = 0; debug2 = 0; debug3 = 0;
   return miso_startLoop( acnx, acny );
 }
 
