@@ -37,10 +37,10 @@ CTOR(TSinSum,TMiso)
 
 double TSinSum::f() noexcept
 {
-  double u = u_0 - x0;
+  const double u = u_0 - x0;
   p = u * b / d;
   double v = c_0 + c_lin * ( use_bd ? p : u );
-  double mult = mul_pi ? M_PI : 1.0;
+  const double mult = mul_pi ? M_PI : 1.0;
 
   v += a_1 * sin( mult * ( p * f_1 + p_1 ) );
   v += a_2 * sin( mult * ( p * f_2 + p_2 ) );

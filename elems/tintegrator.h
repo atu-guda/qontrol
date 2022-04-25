@@ -3,7 +3,7 @@
                           tintegrator.h  -  description
                              -------------------
     begin                : Wed Aug 30 2000
-    copyright            : (C) 2000-2020 by atu
+    copyright            : (C) 2000-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -35,6 +35,8 @@ class TIntegrator : public TMiso  {
    virtual double f() noexcept override;
    /** reimplemented from TMiso to init state */
    virtual int miso_startLoop( long acnx, long acny ) override;
+   virtual void preCalc() override;
+   void pre_f() noexcept;
 
    PRM_PARAMD( ki,   0, QSL("&k_i"),  QSL("Factor before integral"), QSL("def=1") );
    PRM_PARAMD( vmin, 0, QSL("Min"),   QSL("Limit min value"), QSL("def=-10000") );

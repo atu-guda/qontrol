@@ -73,6 +73,15 @@ void TDynLink3D::calc_v()
   v = gsl_hypot3( v_x, v_y, v_z );
 }
 
+void TDynLink3D::preCalc()
+{
+  readAllInputs();
+  calc_v();
+  calc_misc();
+}
+
+
+
 double TDynLink3D::f() noexcept
 {
   calc_v();
@@ -88,7 +97,7 @@ double TDynLink3D::f() noexcept
 int TDynLink3D::miso_startLoop( long /*acnx*/, long /*acny*/ )
 {
   x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
-  out0 = x; // ????
+  out0 = x;
 
   calc_misc();
   calc_v();

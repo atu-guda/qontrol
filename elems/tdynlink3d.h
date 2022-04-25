@@ -34,6 +34,7 @@ class TDynLink3D : public TMiso  {
    virtual int miso_startLoop( long acnx, long acny ) override;
    void calc_misc();
    void calc_v();
+   virtual void preCalc() override;
 
    // X
    PRM_PARAMD(  x_0, efNRC, "&x_0",    "Initial value of x",    "" );

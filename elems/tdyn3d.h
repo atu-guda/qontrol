@@ -3,7 +3,7 @@
   tdyn3d.h - TDyn3D class declaration
                              -------------------
     begin                : 2016.04.12
-    copyright            : (C) 2016-2016 by atu
+    copyright            : (C) 2016-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -32,7 +32,8 @@ class TDyn3D : public TMiso  {
  protected:
    virtual double f() noexcept override;
    virtual int miso_startLoop( long acnx, long acny ) override;
-   void f_pre() noexcept;
+   void pre_f() noexcept;
+   virtual void preCalc() override;
 
    PRM_PARAMD( c_x,     0, "c_{&x}", "Factor for v_x", "def=1.0" );
    PRM_PARAMD( c_y,     0, "c_{&y}", "Factor for v_y", "def=1.0" );

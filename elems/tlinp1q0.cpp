@@ -52,15 +52,25 @@ int TLinP1Q0::miso_startLoop( long /*acnx*/, long /*acny*/ )
   return 1;
 }
 
+void TLinP1Q0::preCalc()
+{
+  readAllInputs();
+  pre_f();
+}
+
+void TLinP1Q0::pre_f() noexcept
+{
+  u0 = in_u - in_n;
+}
+
 double TLinP1Q0::f() noexcept
 {
-  double f = ( use_u1 ) ? in_f : x_old;
-  double u00 = in_u - in_n;
-  u0 = u00;
+  pre_f();
+  const double f = ( use_u1 ) ? in_f : x_old;
 
-  double u = ( use_u2 ) ? pow2( u00 ) : u00;
+  const double u = ( use_u2 ) ? pow2( u0 ) : u0;
   tau = 1.0 / a;
-  double x = x_old + a * ctdt * ( ku * u - f );
+  const double x = x_old + a * ctdt * ( ku * u - f );
   x_old = x;
   double v =  ( use_sqrt0 ) ? sqrt0( x ) : x;
   v = clamp( v, vmin.cval(), vmax.cval() );

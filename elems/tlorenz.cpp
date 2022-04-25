@@ -43,11 +43,24 @@ CTOR(TLorenz,TMiso)
 {
 }
 
-double TLorenz::f() noexcept
+void TLorenz::preCalc()
+{
+  readAllInputs();
+  pre_f();
+  calcAux();
+}
+
+void TLorenz::pre_f() noexcept
 {
   vx = sigma * (y-x);
   vy = x * r - xz - y;
   vz = xy - b*z;
+  calcAux();
+}
+
+double TLorenz::f() noexcept
+{
+  pre_f();
 
   x += ctdt * ( vx + in_x );
   y += ctdt * ( vy + in_y );
@@ -59,7 +72,7 @@ double TLorenz::f() noexcept
 void TLorenz::calcAux() noexcept
 {
   x2 = pow2( x ); y2 = pow2( y ); z2 = pow2( z );
-  xy = x * y; xz = x * z; yz = y * z;
+  xy = x * y;  xz = x * z;  yz = y * z;
   v = gsl_hypot3( vx, vy, vz );
 }
 
@@ -69,7 +82,7 @@ int TLorenz::miso_startLoop( long /*acnx*/, long /*acny*/ )
   vx = vy = vz = 0;
   x = (double)x_0; y = (double)y_0 ; z = (double)z_0;
   calcAux();
-  out0 = x; // ????
+  out0 = x;
   return 1;
 }
 

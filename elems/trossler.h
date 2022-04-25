@@ -3,7 +3,7 @@
                           trossler.h  -  description
                              -------------------
     begin                : Thu May 03 2012
-    copyright            : (C) 2012-2016 by atu
+    copyright            : (C) 2012-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -35,6 +35,8 @@ class TRossler : public TMiso  {
    /** called before each inner param loop. Unused param - -1 */
    virtual int miso_startLoop( long acnx, long acny ) override;
    void calcAux() noexcept;
+   virtual void preCalc() override;
+   void pre_f() noexcept;
 
    /** main system parameters */
    PRM_PARAMD(   a,     0, "&a", "Parameter a", "def=0.25" );

@@ -43,12 +43,10 @@ int TCriterion::miso_startLoop( long /*acnx*/, long /*acny*/ )
 
 double TCriterion::f() noexcept
 {
-  int ok, rv;
-  double aa, x;
   if( useT0 && ct < t0 ) {
     return 0;
   }
-  x = in_pos - in_neg;
+  double x = in_pos - in_neg;
   if( useLock && st > 0 ) {
     return usePulse ? 0 : 1;
   }
@@ -59,11 +57,12 @@ double TCriterion::f() noexcept
     return usePulse ? 0 : 1;
   };
 
-  aa = a;
+  double aa = a;
   if( useA ) {
     aa = in_a;
   }
 
+  int ok = 0;
   switch( (int)type ) {
     case cr_mod_less:
       ok = ( fabs( x ) < aa ); break;
@@ -78,6 +77,7 @@ double TCriterion::f() noexcept
     default: ok = 0;
   };
 
+  int rv;
   if( usePulse ) {
     if( ok == st ) {
       rv = 0;

@@ -38,14 +38,11 @@ CTOR(TSource,TMiso)
 
 double TSource::f() noexcept
 {
-  double omega_x = omega;
-  double tau_x   = omega_x;
-  if( use_rfreq ) {
-    omega_x *= 2 * M_PI;
-  }
+  const double omega_x = ( use_rfreq ) ? ( omega * 2 * M_PI ) : omega;
+  const double tau_x   = omega;
+  const double omet = ct * omega_x + phi;
   T_0 = 2 * M_PI / omega_x;
   T_1 = T_0 * ( dc - dc0 );
-  double omet = ct * omega_x + phi;
 
   double u_ch = 1;
   if( use_u_ch ) { // chaos on U
@@ -73,10 +70,10 @@ double TSource::f() noexcept
     };
   }; // end if( f_chaos )
 
-  double uu_s = uu * u_ch;
-  double omet_s = omet + f_ch; // note u: * fi +
+  const double uu_s = uu * u_ch;
+  const double omet_s = omet + f_ch; // note u: * fi +
   pha = omet_s * M_1_PI * 0.5;
-  double old_pha_0 = pha_0;
+  const double old_pha_0 = pha_0;
   pha_0 = fmod( pha, 1 ); // phase in range [ 0; 1 )
   bool pha_flip = pha_0 < old_pha_0;
 

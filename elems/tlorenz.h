@@ -3,7 +3,7 @@
                           tlorenz.h  -  description
                              -------------------
     begin                : Fri Mar 09 2012
-    copyright            : (C) 2012-2016 by atu
+    copyright            : (C) 2012-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 
@@ -35,6 +35,8 @@ class TLorenz : public TMiso  {
    /** called before each inner param loop. Unused param - -1 */
    virtual int miso_startLoop( long acnx, long acny ) override;
    void calcAux() noexcept;
+   virtual void preCalc() override;
+   void pre_f() noexcept;
 
    /** main system parameters */
    PRM_PARAMD( sigma,   0, "\\sigma", "\\sigma parameter", "def=10.0" );
@@ -61,9 +63,9 @@ class TLorenz : public TMiso  {
    PRM_DOUBLE( xz, efInner, "xz", "x*z", "" );
    PRM_DOUBLE( yz, efInner, "yz", "y*z", "" );
 
-   PRM_INPUT( in_x, 0, "&x+", "X additional input",  "sep=block" );
-   PRM_INPUT( in_y, 0, "y+",  "Y additional input",  "sep=col" );
-   PRM_INPUT( in_z, 0, "z+",  "Z additional input",  "sep=col" );
+   PRM_INPUT( in_x, 0, "&x+", "vX additional input",  "sep=block" );
+   PRM_INPUT( in_y, 0, "y+",  "vY additional input",  "sep=col" );
+   PRM_INPUT( in_z, 0, "z+",  "vZ additional input",  "sep=col" );
 
    Q_CLASSINFO( "nameHintBase",  "lor_" );
    DCL_DEFAULT_STATIC;

@@ -39,6 +39,8 @@ class TLinP1Q0 : public TMiso  {
  protected:
    virtual double f() noexcept override;
    virtual int miso_startLoop( long acnx, long acny ) override;
+   virtual void preCalc() override;
+   void pre_f() noexcept;
 
    PRM_PARAMD( a,         0, QSL("&a"),    QSL("a in dx/dt = a*f(ku*u(t)-x)"),           QSL("def=1") );
    PRM_PARAMD( ku,        0, QSL("&k_u"),  QSL("Amplification: coefficient near u(t) "), QSL("def=1") );

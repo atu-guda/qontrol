@@ -3,7 +3,7 @@
                           tsource.h  -  description
                              -------------------
     begin                : Thu Aug 24 2000
-    copyright            : (C) 2000-2019 by atu
+    copyright            : (C) 2000-2022 by atu
     email                : atu@nmetau.edu.ua
  ***************************************************************************/
 

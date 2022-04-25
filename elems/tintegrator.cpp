@@ -48,19 +48,22 @@ int TIntegrator::miso_startLoop( long /*acnx*/, long /*acny*/ )
   t_rst = 0;
   x2 = v_old * v_old;
 
-  in = in_u - in_u1 + in_u2; // TODO: better value?
-  double eki = invKi_c ? ( 1.0/ki ) : ki;
-  in_k = in * eki;
   return 1;
 }
 
-
-double TIntegrator::f() noexcept
+void TIntegrator::pre_f() noexcept
 {
   in = in_u - in_u1 + in_u2;
   if( useSqIn_c ) {
     in *= in;
   }
+  double eki = invKi_c ? ( 1.0/ki ) : ki;
+  in_k = in * eki;
+}
+
+double TIntegrator::f() noexcept
+{
+  pre_f();
 
   if( in_rst ) {
     t_rst = 0;
@@ -70,8 +73,6 @@ double TIntegrator::f() noexcept
   };
 
   v_old = v;
-  double eki = invKi_c ? ( 1.0/ki ) : ki;
-  in_k = in * eki;
   v += in_k * ctdt; // TODO: different methods
 
   if( useMin_c  &&  v < vmin ) {
@@ -91,6 +92,12 @@ double TIntegrator::f() noexcept
   }
   x2 = v_ret * v_ret;
   return v_ret;
+}
+
+void TIntegrator::preCalc()
+{
+  readAllInputs();
+  pre_f();
 }
 
 DEFAULT_FUNCS_REG(TIntegrator)

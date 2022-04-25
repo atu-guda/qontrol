@@ -49,13 +49,13 @@ int TVibro::miso_startLoop( long /*acnx*/, long /*acny*/ )
 
 double TVibro::f() noexcept
 {
-  double f = use_u1 ? in_f : out0; // out0 = x_old
-  double ctau = ctdt * c0 / 2; // c0 can be changed at any time, so here
-  double fa = mul_fa ? ( in_fa * v ) : in_fa;
-  double alp = no_ome2 ? Omega : pow2( Omega );
+  const double f = use_u1 ? in_f : out0; // out0 = x_old
+  const double ctau = ctdt * c0 / 2; // c0 can be changed at any time, so here
+  const double fa = mul_fa ? ( in_fa * v ) : in_fa;
+  const double alp = no_ome2 ? Omega : pow2( Omega );
 
-  double x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * ( in_u - fa - alp * f - beta * pow3(f) ) )
-          / ( 1 + ctau );
+  const double x = ( 2*x_old - x_old2 * (1-ctau) + tdt2 * ( in_u - fa - alp * f - beta * pow3(f) ) )
+                  / ( 1 + ctau );
   v = ( x - x_old2 ) / ( 2 * ctdt );
   a = ( x - 2 * x_old + x_old2 ) / tdt2;
   x2 = pow2( x );
